@@ -109,8 +109,8 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
   const optionalBackendAuth = async (request, _response, next) => {
     try {
       request.auth = await authenticate(request);
-    } catch (error) {
-      if (!config.allowInsecureDevAuth) return next(error);
+    } catch {
+      request.auth = null;
     }
     next();
   };

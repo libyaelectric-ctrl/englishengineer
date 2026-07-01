@@ -62,7 +62,8 @@ export const createApp = ({
     response.json(toPublicHealth(config));
   });
 
-  const { requireBackendAuth } = createBackendAuth(config.auth, fetchImpl);
+  const backendAuth = createBackendAuth(config.auth, fetchImpl);
+  const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const aiRateLimiter = createRateLimiter({
     windowMs: config.ai.rateLimitWindowMs,
     max: config.ai.rateLimitMax,
@@ -103,7 +104,8 @@ export const createApp = ({
         createSubscriptionRepository(config.stripe, fetchImpl),
     }),
     requireBackendAuth,
-    billingRateLimiter
+    billingRateLimiter,
+    optionalBackendAuth
   );
 
   app.use((_request, _response, next) => {
