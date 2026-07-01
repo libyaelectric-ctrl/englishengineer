@@ -145,14 +145,26 @@ test('configured provider failure returns a safe unavailable error', async () =>
   assert.equal(JSON.parse(text).error.code, 'ai_provider_error');
 });
 
-test('billing routes report Stripe configuration errors', async () => {
+test('billing routes return a free fallback when Stripe is not configured', async () => {
   const url = await start();
   const response = await fetch(
     `${url}/api/billing/subscription-status?userId=user-1`
   );
   const body = await response.json();
-  assert.equal(response.status, 503);
-  assert.equal(body.error.code, 'stripe_not_configured');
+  assert.equal(response.status, 200);
+  assert.equal(body.planId, 'free');
+  assert.equal(body.status, 'none');
+  assert.equal(body.source, 'backend');
+});
+
+test('legacy subscription status route returns a free fallback when Stripe is not configured', async () => {
+  const url = await start();
+  const response = await fetch(`${url}/subscription-status?userId=user-1`);
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(body.planId, 'free');
+  assert.equal(body.status, 'none');
+  assert.equal(body.source, 'backend');
 });
 
 test('webhook rejects an invalid Stripe signature', async () => {

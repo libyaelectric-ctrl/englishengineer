@@ -87,8 +87,10 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     },
 
     async getSubscriptionStatus(userIdValue) {
-      ensureConfigured();
       const userId = requireText(userIdValue, 'userId');
+      if (!config.configured || !stripeClient) {
+        return emptySubscription();
+      }
       return (
         (await repository.getSubscriptionStatus(userId)) ?? emptySubscription()
       );
@@ -227,19 +229,27 @@ export const registerBillingRoutes = (
       }
     }
   );
+  const subscriptionStatusHandler = async (req, res, next) => {
+    try {
+      res.json(
+        await billingService.getSubscriptionStatus(assertUserOwnership(req))
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
+
   app.get(
     '/api/billing/subscription-status',
     requireBackendAuth,
     rateLimiter,
-    async (req, res, next) => {
-      try {
-        res.json(
-          await billingService.getSubscriptionStatus(assertUserOwnership(req))
-        );
-      } catch (error) {
-        next(error);
-      }
-    }
+    subscriptionStatusHandler
+  );
+  app.get(
+    '/subscription-status',
+    requireBackendAuth,
+    rateLimiter,
+    subscriptionStatusHandler
   );
   app.post('/api/webhooks/stripe', async (req, res, next) => {
     try {
