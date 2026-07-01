@@ -32,6 +32,41 @@ const getErrorMessage = (error: unknown, fallback: string): string => {
   return fallback;
 };
 
+const AUTH_COPY = {
+  en: {
+    loginTab: 'Login',
+    createAccountTab: 'Create Account',
+    emailLabel: 'Email Address',
+    passwordLabel: 'Password',
+    loginButton: 'Login',
+    createAccountButton: 'Create Account',
+    enterButton: 'Enter EngineerOS',
+    alreadyHaveAccount: 'Already have an account?',
+    newHere: 'New here?',
+    switchToLogin: 'Login',
+    switchToCreate: 'Create account',
+    heroTitle: 'Master the English you actually use on site.',
+    demoMessage: 'Demo mode: local-only, not a secure account.',
+    interfaceLanguage: 'Interface language',
+  },
+  tr: {
+    loginTab: 'Giriş Yap',
+    createAccountTab: 'Hesap Oluştur',
+    emailLabel: 'E-posta Adresi',
+    passwordLabel: 'Şifre',
+    loginButton: 'Giriş Yap',
+    createAccountButton: 'Hesap Oluştur',
+    enterButton: 'EngineerOS’a Gir',
+    alreadyHaveAccount: 'Zaten hesabın var mı?',
+    newHere: 'Yeni misin?',
+    switchToLogin: 'Giriş yap',
+    switchToCreate: 'Hesap oluştur',
+    heroTitle: 'Şantiyede gerçekten kullandığın İngilizcede ustalaş.',
+    demoMessage: 'Demo modu: yalnızca yerel kullanım, güvenli bir hesap değildir.',
+    interfaceLanguage: 'Arayüz dili',
+  },
+} as const;
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -46,8 +81,10 @@ const LoginPage = () => {
   const [error, setError] = useState<string | null>(null);
   const isSupabaseMode = providerMode === 'supabase';
   const isLocalAuthBlocked = !isSupabaseMode && !AUTH_CONFIG.localAuthAllowed;
+  const isLocalDemoMode = !isSupabaseMode && !isLocalAuthBlocked;
   const language = useLocalizationStore((state) => state.language);
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
+  const copy = AUTH_COPY[language] ?? AUTH_COPY.en;
 
   useEffect(() => {
     void initialize();
@@ -136,19 +173,19 @@ const LoginPage = () => {
         <div className="space-y-6 rounded-[20px] border border-slate-200 bg-white/88 p-8 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl">
           <div className="space-y-1">
             <h2 className="text-lg font-bold text-slate-950">
-              Master the English you actually use on site.
+              {copy.heroTitle}
             </h2>
             <p className="text-xs font-medium text-slate-500">
-              {isSupabaseMode
-                ? 'Supabase provider active. Email/password auth is enabled from env.'
-                : isLocalAuthBlocked
-                  ? 'Secure authentication is not configured. Supabase auth is required for production.'
-                  : 'Demo mode: local-only, not a secure account.'}
+              {isLocalAuthBlocked
+                ? 'Secure authentication is not configured. Supabase auth is required for production.'
+                : isLocalDemoMode
+                  ? copy.demoMessage
+                  : null}
             </p>
           </div>
 
           <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500">
-            Interface language
+            {copy.interfaceLanguage}
             <select
               value={language}
               onChange={(event) =>
@@ -171,13 +208,49 @@ const LoginPage = () => {
             </div>
           )}
 
+          <div className="grid grid-cols-2 rounded-full border border-slate-200 bg-slate-50 p-1">
+            <button
+              type="button"
+              onClick={() => setIsSignUpMode(false)}
+              className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+                !isSignUpMode
+                  ? 'bg-slate-950 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {copy.loginTab}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsSignUpMode(true)}
+              className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+                isSignUpMode
+                  ? 'bg-slate-950 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              {copy.createAccountTab}
+            </button>
+          </div>
+
+          <p className="text-sm text-slate-500">
+            {isSignUpMode ? copy.alreadyHaveAccount : copy.newHere}{' '}
+            <button
+              type="button"
+              onClick={() => setIsSignUpMode((current) => !current)}
+              className="font-semibold text-blue-700 hover:text-blue-900"
+            >
+              {isSignUpMode ? copy.switchToLogin : copy.switchToCreate}
+            </button>
+          </p>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label
                 htmlFor="email"
                 className="text-[10px] font-black tracking-widest text-slate-500 uppercase block"
               >
-                Email Address
+                {copy.emailLabel}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
@@ -198,7 +271,7 @@ const LoginPage = () => {
                   htmlFor="password"
                   className="text-[10px] font-black tracking-widest text-slate-500 uppercase block"
                 >
-                  Password
+                  {copy.passwordLabel}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
@@ -211,15 +284,6 @@ const LoginPage = () => {
                     placeholder="Supabase password"
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setIsSignUpMode((current) => !current)}
-                  className="text-[10px] font-mono text-blue-700 hover:text-blue-900 transition-colors uppercase tracking-widest"
-                >
-                  {isSignUpMode
-                    ? 'Use existing Supabase account'
-                    : 'Create Supabase account instead'}
-                </button>
               </div>
             )}
 
@@ -232,14 +296,14 @@ const LoginPage = () => {
               <span>
                 {isLoading
                   ? 'Verifying Credentials...'
-                  : isSupabaseMode && isSignUpMode
-                    ? 'Create Supabase Account'
-                    : 'Enter EngineerOS'}
+                  : isSignUpMode
+                    ? copy.createAccountButton
+                    : copy.enterButton}
               </span>
             </Button>
           </form>
 
-          {!isSupabaseMode && !isLocalAuthBlocked && (
+          {isLocalDemoMode && (
             <>
               <div className="relative flex py-1 items-center">
                 <div className="flex-grow border-t border-slate-200"></div>
