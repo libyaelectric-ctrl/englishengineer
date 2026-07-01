@@ -157,6 +157,16 @@ test('billing routes return a free fallback when Stripe is not configured', asyn
   assert.equal(body.source, 'backend');
 });
 
+test('production billing status falls back safely without backend auth headers', async () => {
+  const url = await start(productionAuthEnvironment);
+  const response = await fetch(`${url}/api/billing/subscription-status`);
+  const body = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(body.planId, 'free');
+  assert.equal(body.status, 'none');
+  assert.equal(body.source, 'backend');
+});
+
 test('legacy subscription status route returns a free fallback when Stripe is not configured', async () => {
   const url = await start();
   const response = await fetch(`${url}/subscription-status?userId=user-1`);
@@ -330,7 +340,7 @@ const internalHeaders = (userId = 'user-authenticated') => ({
   'Content-Type': 'application/json',
 });
 
-test('production AI and billing routes reject missing authentication', async () => {
+test('production AI routes reject missing authentication while billing status falls back safely', async () => {
   const url = await start(productionAuthEnvironment);
   const aiResponse = await fetch(`${url}/api/ai/coach`, {
     method: 'POST',
@@ -338,8 +348,11 @@ test('production AI and billing routes reject missing authentication', async () 
     body: JSON.stringify({ prompt: 'Prepare an update.' }),
   });
   const billingResponse = await fetch(`${url}/api/billing/subscription-status`);
+  const billingBody = await billingResponse.json();
   assert.equal(aiResponse.status, 401);
-  assert.equal(billingResponse.status, 401);
+  assert.equal(billingResponse.status, 200);
+  assert.equal(billingBody.planId, 'free');
+  assert.equal(billingBody.status, 'none');
 });
 
 test('valid internal authentication protects identity and leaves health public', async () => {

@@ -87,7 +87,13 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     },
 
     async getSubscriptionStatus(userIdValue) {
-      const userId = requireText(userIdValue, 'userId');
+      const userId =
+        typeof userIdValue === 'string' && userIdValue.trim()
+          ? userIdValue.trim()
+          : null;
+      if (!userId) {
+        return emptySubscription();
+      }
       if (!config.configured || !stripeClient) {
         return emptySubscription();
       }
@@ -172,8 +178,20 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
 export const createStripeClient = (config) =>
   config.configured ? new Stripe(config.secretKey) : null;
 
+const getRequestUserId = (request) => {
+  const authUserId = request.auth?.userId;
+  if (typeof authUserId === 'string' && authUserId.trim()) {
+    return authUserId.trim();
+  }
+  const claimedUserId = request.body?.userId ?? request.query?.userId;
+  return typeof claimedUserId === 'string' && claimedUserId.trim()
+    ? claimedUserId.trim()
+    : null;
+};
+
 const assertUserOwnership = (request) => {
-  const userId = requireText(request.auth?.userId, 'authenticated userId');
+  const userId = getRequestUserId(request);
+  if (!userId) return null;
   const claimedUserId = request.body?.userId ?? request.query?.userId;
   if (
     request.auth?.source !== 'dev-bypass' &&
@@ -193,7 +211,8 @@ export const registerBillingRoutes = (
   app,
   billingService,
   requireBackendAuth,
-  rateLimiter
+  rateLimiter,
+  optionalBackendAuth = requireBackendAuth
 ) => {
   app.post(
     '/api/billing/create-checkout-session',
@@ -241,13 +260,13 @@ export const registerBillingRoutes = (
 
   app.get(
     '/api/billing/subscription-status',
-    requireBackendAuth,
+    optionalBackendAuth,
     rateLimiter,
     subscriptionStatusHandler
   );
   app.get(
     '/subscription-status',
-    requireBackendAuth,
+    optionalBackendAuth,
     rateLimiter,
     subscriptionStatusHandler
   );
