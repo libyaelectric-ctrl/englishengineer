@@ -258,15 +258,24 @@ export const registerBillingRoutes = (
     }
   };
 
+  const publicSubscriptionStatusAuth = async (req, res, next) => {
+    try {
+      await optionalBackendAuth(req, res, next);
+    } catch {
+      req.auth = null;
+      next();
+    }
+  };
+
   app.get(
     '/api/billing/subscription-status',
-    optionalBackendAuth,
+    publicSubscriptionStatusAuth,
     rateLimiter,
     subscriptionStatusHandler
   );
   app.get(
     '/subscription-status',
-    optionalBackendAuth,
+    publicSubscriptionStatusAuth,
     rateLimiter,
     subscriptionStatusHandler
   );

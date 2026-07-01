@@ -168,7 +168,7 @@ test('production billing status falls back safely without backend auth headers',
 });
 
 test('legacy subscription status route returns a free fallback when Stripe is not configured', async () => {
-  const url = await start();
+  const url = await start(productionAuthEnvironment);
   const response = await fetch(`${url}/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
