@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/learning",
+      "destination": "/learning-plan",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",
