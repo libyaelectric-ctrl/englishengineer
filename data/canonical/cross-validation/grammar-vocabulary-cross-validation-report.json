@@ -1,0 +1,29 @@
+{
+  "generatedAt": "2026-06-28T12:47:31.958Z",
+  "grammarRecordCount": 360,
+  "vocabularyRecordCount": 5000,
+  "structuralIntegrity": {
+    "invalidCefrCount": 0,
+    "grammarIdsUnique": true,
+    "vocabularyIdsUnique": true
+  },
+  "relationships": {
+    "grammarFitLinks": 23173,
+    "matchedGrammarFitLinks": 20145,
+    "unmatchedGrammarFitLinks": 3028,
+    "vocabularyTagLinks": 1583,
+    "matchedVocabularyTagLinks": 641,
+    "unmatchedVocabularyTagLinks": 942,
+    "grammarDomainAliasMatches": 3521,
+    "grammarDomainAliasWarnings": 1479
+  },
+  "compatibility": {
+    "a1SpeakingGrammarCount": 42,
+    "a1SpeakingVocabularyCount": 130,
+    "a1SpeakingAdvancedItemCount": 0,
+    "lifeWideVocabularyCount": 1479,
+    "engineeringFirstVocabularyCount": 2703
+  },
+  "warningsAreNonBlocking": true,
+  "passed": true
+}

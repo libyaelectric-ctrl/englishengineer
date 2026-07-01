@@ -1,0 +1,64 @@
+name: EngineerOS CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install frontend
+        run: npm ci
+
+      - name: Validate professional content
+        run: npm run content:validate
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+      - name: Install backend
+        run: npm run backend:install
+
+      - name: Backend tests
+        run: npm run backend:test
+
+      - name: Static RLS verification
+        run: npm run verify:rls
+
+      - name: Kademe 8 safe environment check
+        run: npm run kademe8:check
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineeros-dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 7

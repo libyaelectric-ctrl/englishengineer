@@ -1,0 +1,88 @@
+import type { SpeakingMission } from './speaking.types';
+
+export const STARTER_SPEAKING_MISSIONS: SpeakingMission[] = [
+  {
+    id: 'speaking_a1_site_introduction',
+    title: 'Site Introduction',
+    description: 'Introduce yourself and your basic site responsibility.',
+    scenarioType: 'site_meeting',
+    discipline: 'General Engineering',
+    cefrLevel: 'A1',
+    difficulty: 'Beginner',
+    estimatedMinutes: 5,
+    promptText:
+      'I am an electrical engineer. I check the electrical rooms and report site issues.',
+    expectedKeywords: ['name', 'electrical engineer', 'check', 'report'],
+    grammarTargets: ['My name is', 'I am', 'I check'],
+    confidenceMarkers: ['I am', 'I check', 'I report'],
+    syllabicTargets: [
+      { word: 'Electrical', IPA: '/ɪˈlek.trɪ.kəl/', score: 80 },
+      { word: 'Engineer', IPA: '/ˌen.dʒɪˈnɪr/', score: 80 },
+      { word: 'Report', IPA: '/rɪˈpɔːrt/', score: 82 },
+    ],
+    targetWpm: 80,
+    xpReward: 25,
+    coinReward: 8,
+    eloReward: 4,
+  },
+  {
+    id: 'speaking_a2_progress_update',
+    title: 'Short Progress Update',
+    description: 'Give a short update with completed work and one issue.',
+    scenarioType: 'progress_meeting',
+    discipline: 'Construction Site',
+    cefrLevel: 'A2',
+    difficulty: 'Beginner',
+    estimatedMinutes: 7,
+    promptText:
+      'Today we installed ten metres of cable tray in Corridor Two. One support is missing near Grid B4. The supervisor will check it tomorrow morning.',
+    expectedKeywords: ['installed', 'cable tray', 'support', 'supervisor'],
+    grammarTargets: ['Today we installed', 'is missing', 'will check'],
+    confidenceMarkers: ['completed', 'missing', 'will check'],
+    syllabicTargets: [
+      { word: 'Installed', IPA: '/ɪnˈstɔːld/', score: 82 },
+      { word: 'Corridor', IPA: '/ˈkɔːr.ɪ.dɔːr/', score: 82 },
+      { word: 'Supervisor', IPA: '/ˈsuː.pər.vaɪ.zər/', score: 84 },
+    ],
+    targetWpm: 100,
+    xpReward: 35,
+    coinReward: 10,
+    eloReward: 6,
+  },
+  {
+    id: 'speaking_b1_inspection_status',
+    title: 'Inspection Status Brief',
+    description:
+      'Report completed inspection work, one open issue, and the agreed next action.',
+    scenarioType: 'site_meeting',
+    discipline: 'Electrical Engineering',
+    cefrLevel: 'B1',
+    difficulty: 'Intermediate',
+    estimatedMinutes: 8,
+    promptText:
+      'We completed the panel inspection this morning. Two feeder labels are still missing, so the contractor will update them before the consultant arrives. I will send photos after the work is complete.',
+    expectedKeywords: [
+      'panel inspection',
+      'feeder labels',
+      'contractor',
+      'consultant',
+      'photos',
+    ],
+    grammarTargets: [
+      'We completed',
+      'are still missing',
+      'will update',
+      'after the work is complete',
+    ],
+    confidenceMarkers: ['completed', 'will update', 'I will send'],
+    syllabicTargets: [
+      { word: 'Inspection', IPA: '/in-SPEK-shun/', score: 84 },
+      { word: 'Feeder', IPA: '/FEE-der/', score: 84 },
+      { word: 'Consultant', IPA: '/kun-SUL-tunt/', score: 82 },
+    ],
+    targetWpm: 115,
+    xpReward: 45,
+    coinReward: 12,
+    eloReward: 8,
+  },
+];

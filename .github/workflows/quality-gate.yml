@@ -1,0 +1,61 @@
+name: EngineerOS Quality Gate
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Format Check
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Validate Professional Content
+        run: npm run content:validate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit Tests
+        run: npm test
+
+      - name: Install Backend
+        run: npm --prefix backend ci
+
+      - name: Backend Contract Tests
+        run: npm --prefix backend test
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E Smoke Tests
+        run: npm run e2e
+
+      - name: Install Browser Runtime
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser E2E Tests
+        run: npm run e2e:browser
+
+      - name: Full Quality Gate
+        run: npm run quality:gate

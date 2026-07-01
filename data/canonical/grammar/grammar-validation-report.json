@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-06-28T12:47:24.789Z",
+  "source": "data/import/EngineerOS_Grammar_Database_Final.xlsx",
+  "recordCount": 360,
+  "duplicateIds": [],
+  "missingRequiredCount": 0,
+  "cefrDistribution": {
+    "A1": 42,
+    "A2": 46,
+    "B1": 69,
+    "B2": 94,
+    "C1": 62,
+    "C2": 47
+  },
+  "statusDistribution": { "approved": 360 },
+  "passed": true
+}

@@ -1,0 +1,68 @@
+{
+  "cefrLevels": ["A1", "A2", "B1", "B2", "C1", "C2"],
+  "categories": [
+    "adjectives-adverbs",
+    "articles",
+    "conditionals",
+    "conjunctions",
+    "contractual-language",
+    "dispute-language",
+    "executive-summary",
+    "formal-email",
+    "hedging",
+    "modal-verbs",
+    "negatives",
+    "nominalization",
+    "passive-voice",
+    "prepositions",
+    "pronouns",
+    "questions",
+    "relative-clauses",
+    "reported-speech",
+    "risk-language",
+    "sentence-patterns",
+    "sentence-structure",
+    "site-communication-patterns",
+    "technical-reporting",
+    "tense"
+  ],
+  "ruleTypes": [
+    "contractual_phrase",
+    "discourse_marker",
+    "lexical_contrast",
+    "pure_grammar",
+    "sentence_pattern",
+    "technical_phraseology"
+  ],
+  "importTiers": [
+    "contractual_language",
+    "core_grammar",
+    "lexical_usage",
+    "professional_pattern"
+  ],
+  "skills": ["listening", "reading", "speaking", "vocabulary", "writing"],
+  "taskTypes": [
+    "email-writing",
+    "listening-recognition",
+    "meeting-response",
+    "reading-comprehension",
+    "report-writing",
+    "roleplay",
+    "speaking-production",
+    "vocabulary-context",
+    "writing-correction",
+    "writing-production"
+  ],
+  "domains": [
+    "architecture",
+    "civil",
+    "commissioning",
+    "electrical",
+    "general-site",
+    "hse",
+    "mechanical",
+    "procurement",
+    "project-management",
+    "qa-qc"
+  ]
+}

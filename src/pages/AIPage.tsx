@@ -1,0 +1,676 @@
+import { FormEvent, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  AlertCircle,
+  Brain,
+  CheckCircle2,
+  Clipboard,
+  Cpu,
+  Download,
+  RefreshCw,
+  Send,
+  ShieldAlert,
+  Sparkles,
+  Target,
+  Terminal,
+  Zap,
+} from 'lucide-react';
+import { PageHeader } from '@/shared/components/PageHeader';
+import { MetricCard } from '@/shared/components/MetricCard';
+import { SectionCard } from '@/shared/components/SectionCard';
+import { Button } from '@/shared/components/Button';
+import { ProgressBar } from '@/shared/components/ProgressBar';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+import { useAuthStore } from '@/features/auth';
+import { useLearningStore } from '@/core/learning';
+import {
+  buildCoachContext,
+  buildAIUsageSummary,
+  formatCoachResult,
+  getCoachModeById,
+  getTemplatesForMode,
+  useAIStore,
+} from '@/features/ai';
+import { AssessmentService } from '@/features/assessment';
+import { canUseAICoach, useBillingStore } from '@/features/billing';
+import { AI_ACCESS_POLICY } from '@/config/product.config';
+
+interface AIPageProps {
+  embedded?: boolean;
+}
+
+export const AIPage = ({ embedded = false }: AIPageProps) => {
+  const navigate = useNavigate();
+  const learningState = useLearningStore();
+  const { currentUser } = useAuthStore();
+  const subscription = useBillingStore((state) => state.subscription);
+  const {
+    modes,
+    selectedModeId,
+    input,
+    sessions,
+    providerStatus,
+    isLoading,
+    error,
+    lastResult,
+    isLimitedResponse,
+    setMode,
+    setInput,
+    submitCoachRequest,
+    resetCoach,
+    clearSessionHistory,
+    regenerateLast,
+  } = useAIStore();
+
+  const selectedMode = getCoachModeById(selectedModeId);
+  const promptTemplates = getTemplatesForMode(selectedModeId);
+  const coachContext = buildCoachContext(currentUser, learningState);
+  const assessmentProfile = AssessmentService.getProfile(learningState);
+  const usage = useMemo(() => buildAIUsageSummary(sessions), [sessions]);
+  const todaysCoachSessions = sessions.filter(
+    (session) =>
+      new Date(session.timestamp).toDateString() === new Date().toDateString()
+  ).length;
+  const aiEntitlement = canUseAICoach(subscription, todaysCoachSessions);
+  const providerTone =
+    providerStatus.state === 'backend-configured'
+      ? 'success'
+      : providerStatus.state === 'backend-error'
+        ? 'danger'
+        : 'warning';
+  const connectionValue =
+    providerStatus.state === 'backend-configured'
+      ? 'Backend'
+      : providerStatus.state === 'backend-error'
+        ? 'Unavailable'
+        : 'Mock';
+  const connectionTrend =
+    providerStatus.state === 'backend-configured'
+      ? 'Protected backend proxy configured'
+      : providerStatus.state === 'backend-error'
+        ? 'Backend request failed safely'
+        : 'Local deterministic fallback';
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!aiEntitlement.allowed) {
+      return;
+    }
+    await submitCoachRequest(currentUser, learningState);
+  };
+
+  const handleCopyResult = async () => {
+    if (!lastResult) return;
+    await navigator.clipboard.writeText(formatCoachResult(lastResult));
+  };
+
+  const handleExportResult = () => {
+    if (!lastResult) return;
+    const blob = new Blob([formatCoachResult(lastResult)], {
+      type: 'text/plain;charset=utf-8',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `engineeros-ai-copilot-${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500 font-sans">
+      {!embedded && (
+        <PageHeader
+          title="Engineering Copilot"
+          description="Practical engineering communication assistant for reports, replies, NCRs, meetings, vocabulary, grammar, and career planning."
+          badgeText={
+            providerStatus.state === 'backend-configured'
+              ? 'PROTECTED AI CONNECTION'
+              : providerStatus.state === 'backend-error'
+                ? 'AI SERVICE UNAVAILABLE'
+                : 'MOCK AI ACTIVE'
+          }
+          badgeColor={
+            providerStatus.state === 'backend-configured'
+              ? 'emerald'
+              : providerStatus.state === 'backend-error'
+                ? 'rose'
+                : 'amber'
+          }
+        />
+      )}
+
+      <div className="premium-panel flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm font-black text-slate-900">
+            {providerStatus.label}
+          </p>
+          <p className="text-xs text-slate-400 mt-1">
+            {providerStatus.state === 'mock-fallback'
+              ? 'Mock AI is active for this demo. Secure AI feedback is not connected.'
+              : providerStatus.detail}{' '}
+            Provider credentials are never requested or stored in this
+            workspace.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <StatusBadge label={AI_ACCESS_POLICY.freeAccess} tone="info" />
+          <StatusBadge
+            label={
+              providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
+            }
+            tone={providerTone}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <MetricCard
+          label="Coach Sessions"
+          value={`${usage.totalSessions}`}
+          icon={Sparkles}
+          trend={usage.mostUsedMode}
+          statusColor="primary"
+        />
+        <MetricCard
+          label="Suggested Focus"
+          value={usage.suggestedFocusArea}
+          icon={Target}
+          trend={`${coachContext.averageScore}% average score`}
+          statusColor="amber"
+        />
+        <MetricCard
+          label="AI Connection"
+          value={connectionValue}
+          icon={ShieldAlert}
+          trend={connectionTrend}
+          trendDirection="neutral"
+          statusColor="cyan"
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-8">
+          <SectionCard
+            title="Coach Mode"
+            subtitle="Choose a practical engineering communication mode"
+            icon={Brain}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {modes.map((mode) => {
+                const isActive = mode.id === selectedModeId;
+                return (
+                  <button
+                    key={mode.id}
+                    onClick={() => setMode(mode.id)}
+                    className={`text-left p-4 rounded-[12px] border transition-all duration-200 ease-out ${
+                      isActive
+                        ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
+                        : 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-sky-200 hover:bg-sky-50/60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`h-2 w-2 rounded-full ${isActive ? 'bg-primary' : 'bg-slate-700'}`}
+                      />
+                      <h4 className="text-sm font-black text-slate-900">
+                        {mode.name}
+                      </h4>
+                    </div>
+                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                      {mode.description}
+                    </p>
+                    <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-slate-600">
+                      {mode.operation}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
+          </SectionCard>
+
+          {promptTemplates.length > 0 && (
+            <SectionCard
+              title="Prompt Templates"
+              subtitle="Professional engineering starting points for this Copilot mode"
+              icon={Sparkles}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {promptTemplates.map((template) => (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => setInput(template.prompt)}
+                    className="rounded-[12px] border border-slate-200 bg-white p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-200 hover:bg-sky-50/60"
+                  >
+                    <p className="text-sm font-bold text-slate-900">
+                      {template.title}
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                      {template.description}
+                    </p>
+                  </button>
+                ))}
+              </div>
+            </SectionCard>
+          )}
+
+          <SectionCard
+            title={`${selectedMode.name} Input`}
+            subtitle="Paste notes, transcripts, messages, or study reflections"
+            icon={Terminal}
+            headerActions={
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  onClick={() => regenerateLast(currentUser, learningState)}
+                  variant="outline"
+                  className="h-8 border-slate-200 text-xs"
+                  disabled={sessions.length === 0 || isLoading}
+                >
+                  Regenerate
+                </Button>
+                <Button
+                  onClick={clearSessionHistory}
+                  variant="outline"
+                  className="h-8 border-slate-200 text-xs"
+                  disabled={sessions.length === 0}
+                >
+                  Clear Session
+                </Button>
+                <Button
+                  onClick={resetCoach}
+                  variant="outline"
+                  className="h-8 border-slate-200 text-xs"
+                >
+                  Reset Coach
+                </Button>
+              </div>
+            }
+          >
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!aiEntitlement.allowed && (
+                <div className="rounded-[12px] border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-xs text-amber-200">
+                  {aiEntitlement.reason}
+                  <Button
+                    type="button"
+                    onClick={() => navigate('/profile')}
+                    className="mt-3 h-9 bg-primary text-white font-bold"
+                  >
+                    Upgrade to Pro
+                  </Button>
+                </div>
+              )}
+              <textarea
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                disabled={!aiEntitlement.allowed}
+                rows={8}
+                className="premium-input w-full resize-none p-4 font-mono text-sm text-slate-900"
+                placeholder={selectedMode.placeholder}
+              />
+              {error && (
+                <div className="flex items-center gap-2 rounded-[12px] border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-xs text-rose-300">
+                  <AlertCircle className="h-4 w-4" />
+                  {error}
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                  Mode: {selectedMode.name}
+                </p>
+                <Button
+                  type="submit"
+                  className="h-11 bg-primary text-white font-bold flex items-center justify-center gap-2"
+                  disabled={
+                    isLoading ||
+                    input.trim().length === 0 ||
+                    !aiEntitlement.allowed
+                  }
+                >
+                  {isLoading ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                  {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
+                </Button>
+              </div>
+            </form>
+          </SectionCard>
+
+          {lastResult && (
+            <SectionCard
+              title="Structured Coach Result"
+              subtitle={
+                providerStatus.state === 'backend-configured'
+                  ? 'Secure AI response using the current learning profile'
+                  : 'Mock AI demo response using local learning context only'
+              }
+              icon={Cpu}
+              headerActions={
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge
+                    label={
+                      providerStatus.state === 'backend-configured'
+                        ? 'Secure AI response'
+                        : 'Mock AI demo response'
+                    }
+                    tone={
+                      providerStatus.state === 'backend-configured'
+                        ? 'success'
+                        : 'warning'
+                    }
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleCopyResult}
+                    className="h-8 px-3 text-xs"
+                  >
+                    <Clipboard className="h-3.5 w-3.5" />
+                    Copy
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleExportResult}
+                    className="h-8 px-3 text-xs"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Export
+                  </Button>
+                </div>
+              }
+            >
+              <div className="space-y-6">
+                {isLimitedResponse && providerStatus.mode === 'backend' && (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                    <p className="font-bold">Limited AI response</p>
+                    <p className="mt-1">
+                      A complete structured result was unavailable. The readable
+                      response is shown below.
+                    </p>
+                  </div>
+                )}
+                <div className="rounded-[16px] border border-primary/20 bg-primary/5 p-5">
+                  <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-black">
+                    Summary
+                  </p>
+                  <p className="text-sm text-slate-200 mt-2 leading-relaxed">
+                    {lastResult.summary}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-[16px] border border-cyan-400/20 bg-cyan-400/5 p-5">
+                    <p className="text-[10px] font-mono text-cyan-300 uppercase tracking-widest font-black">
+                      Professional Version
+                    </p>
+                    <p className="text-sm text-slate-100 mt-2 leading-relaxed">
+                      {lastResult.professionalVersion ||
+                        lastResult.nativeRewrite}
+                    </p>
+                  </div>
+                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                      Simplified Version
+                    </p>
+                    <p className="text-sm text-slate-200 mt-2 leading-relaxed">
+                      {lastResult.simplifiedVersion || lastResult.summary}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <ResultList
+                    title="Strengths"
+                    items={lastResult.strengths}
+                    tone="emerald"
+                  />
+                  <ResultList
+                    title="Weaknesses"
+                    items={lastResult.weaknesses}
+                    tone="rose"
+                  />
+                </div>
+
+                <ResultList
+                  title="Corrections"
+                  items={lastResult.corrections}
+                  tone="amber"
+                />
+
+                <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
+                  <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                    Native Rewrite
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-900">
+                    {lastResult.nativeRewrite}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                      Technical Vocabulary
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {lastResult.technicalVocabulary.map((term) => (
+                        <span
+                          key={term}
+                          className="text-[10px] font-mono bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded"
+                        >
+                          {term}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                      Tone & Next Task
+                    </p>
+                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                      {lastResult.toneFeedback ||
+                        'Tone feedback unavailable in this response.'}
+                    </p>
+                    <p className="mt-2 text-sm text-slate-900">
+                      {lastResult.recommendedNextTask}
+                    </p>
+                    <p className="text-xs text-engineer-cyan mt-3">
+                      {lastResult.cefrEstimate ||
+                        lastResult.estimatedCefrImpact}
+                    </p>
+                    <p className="text-xs text-emerald-300 mt-1">
+                      {lastResult.engineerEloImpactEstimate ||
+                        'Skill progress impact not estimated.'}
+                    </p>
+                  </div>
+                </div>
+
+                {(lastResult.grammarNotes || []).length > 0 && (
+                  <ResultList
+                    title="Grammar Notes"
+                    items={lastResult.grammarNotes || []}
+                    tone="amber"
+                  />
+                )}
+              </div>
+            </SectionCard>
+          )}
+        </div>
+
+        <div className="space-y-8">
+          <SectionCard
+            title="User Context"
+            subtitle="Live local learning profile"
+            icon={Zap}
+          >
+            <div className="space-y-4 text-sm">
+              {[
+                ['Learner', coachContext.userName],
+                ['Role', coachContext.role],
+                ['Discipline', coachContext.discipline],
+                ['Target', coachContext.targetLevel],
+                [
+                  'Progress',
+                  `${coachContext.completedMissions}/${coachContext.totalMissions} missions`,
+                ],
+                [
+                  'Vocabulary',
+                  `${coachContext.wordsLearned} words, ${coachContext.vocabularyRetention}% retention`,
+                ],
+                ['Assessment', assessmentProfile.trustLabel],
+                ['Engineer CEFR', assessmentProfile.engineerCefr || 'Pending'],
+                ['Internal progress index', `${assessmentProfile.engineerElo}`],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="flex items-center justify-between border-b border-slate-200 pb-2"
+                >
+                  <span className="text-slate-500 font-mono text-xs uppercase">
+                    {label}
+                  </span>
+                  <span className="text-right font-bold text-slate-900">
+                    {value}
+                  </span>
+                </div>
+              ))}
+              <div>
+                <div className="flex justify-between text-xs font-mono text-slate-400 mb-2">
+                  <span>Average Score</span>
+                  <span>{coachContext.averageScore}%</span>
+                </div>
+                <ProgressBar
+                  value={coachContext.averageScore}
+                  color="primary"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                <StatusBadge
+                  label={
+                    assessmentProfile.hasEnoughData
+                      ? 'Assessment profile active'
+                      : 'Assessment data limited'
+                  }
+                  tone={assessmentProfile.hasEnoughData ? 'success' : 'warning'}
+                />
+                {coachContext.weakSkills.map((skill) => (
+                  <span
+                    key={skill}
+                    className="text-[10px] font-mono bg-rose-500/10 text-rose-300 border border-rose-500/20 px-2 py-1 rounded"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </SectionCard>
+
+          {lastResult && (
+            <SectionCard
+              title="Suggested Actions"
+              subtitle="Short loop for the next practice session"
+              icon={CheckCircle2}
+            >
+              <div className="space-y-3">
+                {lastResult.suggestedActions.map((action) => (
+                  <div
+                    key={action}
+                    className="flex gap-3 rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700"
+                  >
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span>{action}</span>
+                  </div>
+                ))}
+                <Button
+                  onClick={() => navigate('/dashboard')}
+                  className="w-full h-10 bg-emerald-500 text-slate-950 font-black"
+                >
+                  Open Dashboard
+                </Button>
+              </div>
+            </SectionCard>
+          )}
+
+          <SectionCard
+            title="Recent Coach Sessions"
+            subtitle="Stored locally through the existing storage layer"
+            icon={Sparkles}
+          >
+            <div className="space-y-3 max-h-[360px] overflow-y-auto custom-scrollbar pr-1">
+              {sessions.slice(0, 5).map((session) => (
+                <div
+                  key={session.id}
+                  className="rounded-[12px] border border-slate-200 bg-slate-50 p-4"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-black text-slate-900">
+                      {session.modeName}
+                    </p>
+                    <span className="text-[9px] font-mono text-slate-500">
+                      {new Date(session.timestamp).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                    {session.input}
+                  </p>
+                  <p className="text-[10px] font-mono text-primary mt-2 uppercase">
+                    {session.result.focusArea}
+                  </p>
+                </div>
+              ))}
+              {sessions.length === 0 && (
+                <p className="text-xs text-slate-500">No coach sessions yet.</p>
+              )}
+            </div>
+          </SectionCard>
+
+          <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-6">
+            <p className="text-[10px] font-mono text-engineer-cyan uppercase tracking-widest font-black">
+              Integration Notice
+            </p>
+            <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+              Set VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL to connect the
+              server-side AI proxy. This frontend never receives vendor secrets.
+            </p>
+          </div>
+
+          <pre className="hidden">
+            {lastResult ? formatCoachResult(lastResult) : ''}
+          </pre>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface ResultListProps {
+  title: string;
+  items: string[];
+  tone: 'emerald' | 'rose' | 'amber';
+}
+
+const ResultList = ({ title, items, tone }: ResultListProps) => {
+  const toneClass = {
+    emerald: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-300',
+    rose: 'border-rose-500/20 bg-rose-500/5 text-rose-300',
+    amber: 'border-amber-500/20 bg-amber-500/5 text-amber-300',
+  }[tone];
+
+  return (
+    <div className={`rounded-lg border p-5 ${toneClass}`}>
+      <p className="text-[10px] font-mono uppercase tracking-widest font-black">
+        {title}
+      </p>
+      <ul className="mt-3 space-y-2">
+        {items.map((item) => (
+          <li key={item} className="text-sm text-slate-200 leading-relaxed">
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default AIPage;

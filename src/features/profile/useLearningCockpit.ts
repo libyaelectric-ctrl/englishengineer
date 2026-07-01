@@ -1,0 +1,57 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useLearningStore } from '@/core/learning';
+import { LearningProfileEngine } from './profile.engine';
+import { LearningProfileRepository } from './profile.repository';
+import type {
+  DailyMission,
+  UserLearningProfile,
+  VocabularyMemorySummary,
+} from './profile.types';
+
+const EMPTY_MEMORY: VocabularyMemorySummary = {
+  total: 0,
+  new: 0,
+  learning: 0,
+  mastered: 0,
+  forgotten: 0,
+  dueToday: 0,
+  weakWords: 0,
+};
+
+export const useLearningCockpit = (userId?: string | null) => {
+  const learningState = useLearningStore();
+  const storedProfile = useMemo(
+    () => LearningProfileRepository.getProfile(userId || 'local-user'),
+    [userId]
+  );
+  const profile = useMemo<UserLearningProfile>(
+    () =>
+      LearningProfileEngine.buildProfileSnapshot(storedProfile, learningState),
+    [learningState, storedProfile]
+  );
+  const [memory, setMemory] = useState(EMPTY_MEMORY);
+  const [missions, setMissions] = useState<DailyMission[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    const load = async () => {
+      const nextMemory =
+        await LearningProfileEngine.getVocabularyMemorySummary();
+      const nextMissions = await LearningProfileEngine.generateDailyMissions(
+        profile,
+        nextMemory
+      );
+      if (!active) return;
+      setMemory(nextMemory);
+      setMissions(nextMissions);
+      setIsLoading(false);
+    };
+    void load();
+    return () => {
+      active = false;
+    };
+  }, [profile]);
+
+  return { profile, memory, missions, isLoading, learningState };
+};

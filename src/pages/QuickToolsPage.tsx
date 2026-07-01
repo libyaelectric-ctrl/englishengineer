@@ -1,0 +1,317 @@
+import { useMemo, useState } from 'react';
+import {
+  Bot,
+  Check,
+  Clipboard,
+  Heart,
+  Search,
+  Send,
+  WifiOff,
+} from 'lucide-react';
+import { AIService, AIProviderStatus } from '@/features/ai';
+import { BetaService } from '@/features/beta';
+import {
+  MEETING_PHRASES,
+  QUICK_AI_ACTIONS,
+  SITE_DICTIONARY,
+  WorkToolsService,
+  useWorkToolsStore,
+} from '@/features/work-tools';
+import { Button } from '@/shared/components/Button';
+import { Card } from '@/shared/components/Card';
+import { PageHeader } from '@/shared/components/PageHeader';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+
+type QuickTab = 'ai' | 'meeting' | 'dictionary';
+
+const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
+  const {
+    quickAIDraft,
+    favoritePhraseIds,
+    toggleFavorite,
+    remember,
+    rememberSearch,
+  } = useWorkToolsStore();
+  const [tab, setTab] = useState<QuickTab>('ai');
+  const [input, setInput] = useState(quickAIDraft?.text ?? '');
+  const [query, setQuery] = useState('');
+  const [result, setResult] = useState('');
+  const [status, setStatus] = useState<AIProviderStatus>(() =>
+    AIService.getStatus([])
+  );
+  const [isRunning, setIsRunning] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const filteredTerms = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    return SITE_DICTIONARY.filter((item) =>
+      `${item.term} ${item.turkishMeaning} ${item.category}`
+        .toLowerCase()
+        .includes(normalized)
+    );
+  }, [query]);
+
+  const runAction = async (label: string, instruction: string) => {
+    if (!input.trim()) return;
+    setIsRunning(true);
+    try {
+      const response = await AIService.run([], 'rewriteText', {
+        modeId: 'quick_ai',
+        modeName: label,
+        prompt: `${instruction}\n\nInput:\n${input.trim()}`,
+      });
+      setResult(response.text);
+      setStatus(response.providerStatus);
+      BetaService.trackEvent('quick_ai_action_used', '/quick-tools');
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
+  const copy = async (id: string, text: string) => {
+    if (await WorkToolsService.copy(text)) {
+      remember(id);
+      setCopied(id);
+      window.setTimeout(() => setCopied(null), 1200);
+    }
+  };
+
+  return (
+    <div className="space-y-7 animate-in fade-in duration-300">
+      {!embedded && (
+        <PageHeader
+          title="Quick Tools"
+          description="Fast meeting language, site terminology and provider-controlled AI rewriting."
+          badgeText={status.label}
+          badgeColor={status.isConnected ? 'emerald' : 'amber'}
+        />
+      )}
+
+      <div
+        className="flex flex-wrap gap-2 rounded-[16px] border border-slate-200 bg-white p-3 shadow-sm"
+        role="tablist"
+      >
+        {(
+          [
+            ['ai', 'Quick AI'],
+            ['meeting', 'Meeting Phrasebook'],
+            ['dictionary', 'Site Dictionary'],
+          ] as const
+        ).map(([id, label]) => (
+          <Button
+            key={id}
+            role="tab"
+            aria-selected={tab === id}
+            variant={tab === id ? 'primary' : 'ghost'}
+            onClick={() => setTab(id)}
+          >
+            {label}
+          </Button>
+        ))}
+      </div>
+
+      {tab === 'ai' && (
+        <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
+          <Card className="space-y-5" hoverEffect={false}>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-slate-950">
+                  Quick AI Editor
+                </h2>
+                <p className="mt-1 text-sm text-slate-600">
+                  AI requires an internet-connected backend. No vendor API key
+                  is stored in this browser.
+                </p>
+              </div>
+              <StatusBadge
+                label={status.label}
+                tone={status.isConnected ? 'success' : 'warning'}
+              />
+            </div>
+            {!status.isConnected && (
+              <div className="space-y-2 rounded-[12px] border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+                <div className="flex flex-wrap gap-2">
+                  <StatusBadge label="Backend required" tone="warning" />
+                  <StatusBadge label="Mock preview" tone="neutral" />
+                </div>
+                <div className="flex gap-3">
+                  <WifiOff className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>
+                    {status.detail} Connect AI backend for real rewriting.
+                  </span>
+                </div>
+              </div>
+            )}
+            <textarea
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              placeholder="Paste a site message, report note or email draft"
+              className="min-h-44 w-full rounded-[12px] border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-900 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
+            />
+            <div className="flex flex-wrap gap-2">
+              {QUICK_AI_ACTIONS.map((action) => (
+                <Button
+                  key={action.id}
+                  variant="secondary"
+                  disabled={isRunning || !input.trim()}
+                  onClick={() =>
+                    runAction(action.label, action.systemInstruction)
+                  }
+                  title={action.expectedOutputStyle}
+                >
+                  <Bot className="h-4 w-4" /> {action.label}
+                </Button>
+              ))}
+            </div>
+          </Card>
+          <Card className="space-y-4" hoverEffect={false}>
+            <h2 className="text-xl font-bold text-slate-950">Result</h2>
+            {isRunning ? (
+              <div className="space-y-3" aria-live="polite">
+                <div className="h-4 animate-pulse rounded bg-slate-200" />
+                <div className="h-4 animate-pulse rounded bg-slate-200" />
+                <div className="h-24 animate-pulse rounded bg-slate-100" />
+              </div>
+            ) : result ? (
+              <>
+                <p className="whitespace-pre-line rounded-[12px] border border-blue-100 bg-blue-50/50 p-4 text-sm leading-6 text-slate-800">
+                  {result}
+                </p>
+                <Button
+                  variant="secondary"
+                  onClick={() => copy('quick-ai-result', result)}
+                >
+                  {copied === 'quick-ai-result' ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <Clipboard className="h-4 w-4" />
+                  )}{' '}
+                  Copy result
+                </Button>
+              </>
+            ) : (
+              <div className="rounded-[12px] border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-500">
+                <Send className="mx-auto mb-3 h-6 w-6" />
+                Choose an action to create a result.
+              </div>
+            )}
+          </Card>
+        </div>
+      )}
+
+      {tab === 'meeting' && (
+        <div className="grid gap-4 lg:grid-cols-2">
+          {MEETING_PHRASES.map((item) => {
+            const favorite = favoritePhraseIds.includes(item.id);
+            return (
+              <Card key={item.id} className="space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                      {item.category}
+                    </p>
+                    <h2 className="mt-1 text-lg font-bold text-slate-950">
+                      {item.phrase}
+                    </h2>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="px-3"
+                    onClick={() => toggleFavorite(item.id)}
+                    aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
+                  >
+                    <Heart
+                      className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
+                    />
+                  </Button>
+                </div>
+                <p className="text-sm text-slate-700">
+                  <strong>Turkce:</strong> {item.turkishMeaning}
+                </p>
+                <p className="text-sm text-slate-600">
+                  <strong>Use:</strong> {item.whenToUse}
+                </p>
+                <p className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm italic text-slate-700">
+                  {item.example}
+                </p>
+                <Button
+                  variant="secondary"
+                  onClick={() => copy(item.id, item.phrase)}
+                >
+                  <Clipboard className="h-4 w-4" /> Copy
+                </Button>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {tab === 'dictionary' && (
+        <div className="space-y-5">
+          <label className="flex min-h-11 items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-4 shadow-sm focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100">
+            <Search className="h-4 w-4 text-slate-400" />
+            <span className="sr-only">Search site dictionary</span>
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onBlur={() => rememberSearch(query)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') rememberSearch(query);
+              }}
+              placeholder="Search English, Turkish or category"
+              className="w-full bg-transparent text-sm outline-none"
+            />
+          </label>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {filteredTerms.map((item) => {
+              const favorite = favoritePhraseIds.includes(item.id);
+              return (
+                <Card key={item.id} className="space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                        {item.category}
+                      </p>
+                      <h2 className="mt-1 text-xl font-bold text-slate-950">
+                        {item.term}
+                      </h2>
+                      <p className="text-sm font-semibold text-slate-600">
+                        {item.turkishMeaning}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      className="px-3"
+                      onClick={() => toggleFavorite(item.id)}
+                      aria-label={
+                        favorite ? 'Remove favorite' : 'Save favorite'
+                      }
+                    >
+                      <Heart
+                        className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
+                      />
+                    </Button>
+                  </div>
+                  <p className="text-sm leading-6 text-slate-700">
+                    {item.technicalExplanation}
+                  </p>
+                  <p className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+                    <strong>Site:</strong> {item.siteExample}
+                  </p>
+                  <p className="text-sm text-rose-700">
+                    <strong>Common mistake:</strong> {item.commonWrongUsage}
+                  </p>
+                  <p className="text-xs font-semibold text-slate-500">
+                    Related: {item.relatedTerms.join(', ')}
+                  </p>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default QuickToolsPage;
