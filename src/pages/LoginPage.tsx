@@ -13,7 +13,6 @@ import {
   Terminal,
   ShieldAlert,
   Sparkles,
-  UserCheck,
   Mail,
   LogIn,
   Lock,
@@ -39,7 +38,6 @@ const LoginPage = () => {
   const { login, signUp, demoLogin, initialize, isLoading, providerMode } =
     useAuthStore();
 
-  const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignUpMode, setIsSignUpMode] = useState(
@@ -73,10 +71,12 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!displayName.trim() || !email.trim()) {
+    if (!email.trim()) {
       setError('Please fill in all required fields.');
       return;
     }
+
+    const derivedDisplayName = email.trim().split('@')[0] || 'EngineerOS User';
 
     // Quick simple regex check
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -97,13 +97,13 @@ const LoginPage = () => {
         ProductAnalyticsService.track('signup_started', '/login', {
           metadata: { source: 'user' },
         });
-        await signUp(displayName.trim(), email.trim(), password);
+        await signUp(derivedDisplayName, email.trim(), password);
         ProductAnalyticsService.track('signup_completed', '/login', {
           metadata: { source: 'system' },
         });
       } else {
         await login(
-          displayName.trim(),
+          derivedDisplayName,
           email.trim(),
           isSupabaseMode ? password : undefined
         );
@@ -172,26 +172,6 @@ const LoginPage = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="displayName"
-                className="text-[10px] font-black tracking-widest text-slate-500 uppercase block"
-              >
-                Display Name
-              </label>
-              <div className="relative">
-                <UserCheck className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                <input
-                  id="displayName"
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full rounded-md border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 transition-all focus:border-slate-400 focus:bg-white focus:outline-none"
-                  placeholder="e.g. Demo Engineer"
-                />
-              </div>
-            </div>
-
             <div className="space-y-2">
               <label
                 htmlFor="email"
