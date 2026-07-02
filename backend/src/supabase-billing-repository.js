@@ -52,9 +52,23 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
       },
     });
     if (!response.ok) {
-      throw new Error(
+      let errorBody = 'N/A';
+      try {
+        errorBody = await response.text();
+      } catch {}
+      const dbError = new Error(
         `Supabase billing repository request failed with status ${response.status}.`
       );
+      dbError.status = response.status;
+      try {
+        const parsed = JSON.parse(errorBody);
+        dbError.code = parsed.code || 'N/A';
+        dbError.details = parsed.details || parsed.message || errorBody;
+      } catch {
+        dbError.code = 'N/A';
+        dbError.details = errorBody;
+      }
+      throw dbError;
     }
     return response;
   };

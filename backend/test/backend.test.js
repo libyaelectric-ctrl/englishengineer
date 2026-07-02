@@ -864,3 +864,68 @@ test('checkout route rejects request with invalid Supabase token', async () => {
   const body = await response.json();
   assert.equal(body.error.code, 'authentication_required');
 });
+
+test('webhook logging on repository failure log error details but not secrets', async () => {
+  const repository = {
+    async hasStripeEventBeenProcessed() {
+      const err = new Error('Database connection failed');
+      err.code = 'XX000';
+      err.details = 'Connection timeout';
+      throw err;
+    },
+  };
+
+  const logs = [];
+  const originalError = console.error;
+  const originalLog = console.log;
+  console.error = (...args) => { logs.push(args.join(' ')); };
+  console.log = (...args) => { logs.push(args.join(' ')); };
+
+  try {
+    const url = await start(
+      {
+        SUPABASE_URL: 'https://example.supabase.co',
+        SUPABASE_ANON_KEY: 'anon-key',
+        STRIPE_SECRET_KEY: 'sk_test_value',
+        STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+        STRIPE_WEBHOOK_SECRET: 'whsec_test',
+      },
+      {
+        stripeClient: {
+          webhooks: {
+            constructEvent: () => ({ id: 'evt_123', type: 'checkout.session.completed', data: { object: {} } }),
+          },
+        },
+        billingRepository: repository,
+      }
+    );
+
+    const response = await fetch(`${url}/api/webhooks/stripe`, {
+      method: 'POST',
+      headers: {
+        'Stripe-Signature': 't=123,v1=abc',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: 'evt_123', type: 'checkout.session.completed' }),
+    });
+
+    assert.equal(response.status, 500);
+
+    const receivedLog = logs.find(l => l.includes('[stripe-webhook-received]'));
+    assert.ok(receivedLog, 'Start log is recorded');
+    assert.match(receivedLog, /eventId=evt_123/);
+    assert.match(receivedLog, /type=checkout\.session\.completed/);
+
+    const errorLog = logs.find(l => l.includes('[stripe-webhook-error]'));
+    assert.ok(errorLog, 'Error log is recorded');
+    assert.match(errorLog, /step=duplicate_check/);
+    assert.match(errorLog, /supabaseCode=XX000/);
+    assert.match(errorLog, /supabaseDetails=Connection timeout/);
+
+    const allLogs = logs.join('\n');
+    assert.doesNotMatch(allLogs, /whsec_test|sk_test_value|anon-key/);
+  } finally {
+    console.error = originalError;
+    console.log = originalLog;
+  }
+});

@@ -124,7 +124,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       return subscription;
     },
 
-    async processWebhook(rawBody, signature) {
+    async processWebhook(rawBody, signature, onEventDetected) {
       ensureConfigured();
       if (!config.webhookSecret) {
         throw new ApiError(
@@ -133,6 +133,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           'Stripe webhook verification is not configured.'
         );
       }
+      let step = 'signature_verification';
       let event;
       try {
         event = stripeClient.webhooks.constructEvent(
@@ -140,59 +141,89 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           requireText(signature, 'Stripe-Signature'),
           config.webhookSecret
         );
-      } catch {
+      } catch (err) {
+        console.error(
+          `[stripe-webhook-error] eventId=unknown type=unknown step=${step} ` +
+          `errorName=${err.name} errorMessage="Stripe webhook signature verification failed." ` +
+          `stackTrace=${err.stack} supabaseCode=N/A supabaseDetails=N/A`
+        );
         throw new ApiError(
           400,
           'invalid_webhook_signature',
           'Stripe webhook signature verification failed.'
         );
       }
-      if (await repository.hasStripeEventBeenProcessed(event.id)) {
-        return { received: true, duplicate: true, eventId: event.id };
+
+      const eventId = event.id;
+      const eventType = event.type;
+
+      if (typeof onEventDetected === 'function') {
+        onEventDetected(step, eventId, eventType);
       }
 
-      const object = event.data?.object ?? {};
-      const userId = object.metadata?.userId || object.client_reference_id;
-      if (userId) {
-        if (event.type === 'checkout.session.completed') {
-          await repository.upsertSubscriptionStatus(userId, {
-            planId: object.metadata?.planId === 'team' ? 'enterprise' : 'pro',
-            status: 'active',
-            currentPeriodEnd: null,
-            cancelAtPeriodEnd: false,
-            stripeCustomerId: object.customer || null,
-            stripeSubscriptionId: object.subscription || null,
-            updatedAt: new Date().toISOString(),
-            source: 'stripe_webhook',
-          });
-        } else if (event.type === 'invoice.payment_failed') {
-          const current =
-            (await repository.getSubscriptionStatus(userId)) ??
-            emptySubscription();
-          await repository.upsertSubscriptionStatus(userId, {
-            ...current,
-            status: 'past_due',
-            updatedAt: new Date().toISOString(),
-            source: 'stripe_webhook',
-          });
-        } else if (event.type === 'customer.subscription.deleted') {
-          const current =
-            (await repository.getSubscriptionStatus(userId)) ??
-            emptySubscription();
-          await repository.upsertSubscriptionStatus(userId, {
-            ...current,
-            status: 'canceled',
-            cancelAtPeriodEnd: false,
-            updatedAt: new Date().toISOString(),
-            source: 'stripe_webhook',
-          });
+      try {
+        step = 'duplicate_check';
+        if (await repository.hasStripeEventBeenProcessed(eventId)) {
+          return { received: true, duplicate: true, eventId };
         }
+
+        const object = event.data?.object ?? {};
+        const userId = object.metadata?.userId || object.client_reference_id;
+        if (userId) {
+          if (eventType === 'checkout.session.completed') {
+            step = 'process_checkout_completed';
+            await repository.upsertSubscriptionStatus(userId, {
+              planId: object.metadata?.planId === 'team' ? 'enterprise' : 'pro',
+              status: 'active',
+              currentPeriodEnd: null,
+              cancelAtPeriodEnd: false,
+              stripeCustomerId: object.customer || null,
+              stripeSubscriptionId: object.subscription || null,
+              updatedAt: new Date().toISOString(),
+              source: 'stripe_webhook',
+            });
+          } else if (eventType === 'invoice.payment_failed') {
+            step = 'process_payment_failed';
+            const current =
+              (await repository.getSubscriptionStatus(userId)) ??
+              emptySubscription();
+            await repository.upsertSubscriptionStatus(userId, {
+              ...current,
+              status: 'past_due',
+              updatedAt: new Date().toISOString(),
+              source: 'stripe_webhook',
+            });
+          } else if (eventType === 'customer.subscription.deleted') {
+            step = 'process_subscription_deleted';
+            const current =
+              (await repository.getSubscriptionStatus(userId)) ??
+              emptySubscription();
+            await repository.upsertSubscriptionStatus(userId, {
+              ...current,
+              status: 'canceled',
+              cancelAtPeriodEnd: false,
+              updatedAt: new Date().toISOString(),
+              source: 'stripe_webhook',
+            });
+          }
+        }
+
+        step = 'mark_processed';
+        await repository.markStripeEventProcessed(eventId, {
+          type: eventType,
+          processedAt: new Date().toISOString(),
+        });
+        return { received: true, duplicate: false, eventId };
+      } catch (err) {
+        const supabaseCode = err.code || 'N/A';
+        const supabaseDetails = err.details || 'N/A';
+        console.error(
+          `[stripe-webhook-error] eventId=${eventId} type=${eventType} step=${step} ` +
+          `errorName=${err.name} errorMessage="${err.message || 'Unknown error'}" ` +
+          `stackTrace=${err.stack} supabaseCode=${supabaseCode} supabaseDetails=${supabaseDetails}`
+        );
+        throw err;
       }
-      await repository.markStripeEventProcessed(event.id, {
-        type: event.type,
-        processedAt: new Date().toISOString(),
-      });
-      return { received: true, duplicate: false, eventId: event.id };
     },
   };
 };
@@ -302,11 +333,29 @@ export const registerBillingRoutes = (
     subscriptionStatusHandler
   );
   app.post('/api/webhooks/stripe', async (req, res, next) => {
+    let eventId = 'unknown';
+    let eventType = 'unknown';
+    try {
+      if (req.body) {
+        const parsedBody = JSON.parse(req.body.toString('utf8'));
+        if (parsedBody && typeof parsedBody === 'object') {
+          eventId = parsedBody.id || 'unknown';
+          eventType = parsedBody.type || 'unknown';
+        }
+      }
+    } catch {}
+
+    console.log(`[stripe-webhook-received] eventId=${eventId} type=${eventType}`);
+
     try {
       res.json(
         await billingService.processWebhook(
           req.body,
-          req.headers['stripe-signature']
+          req.headers['stripe-signature'],
+          (step, evId, evType) => {
+            if (evId) eventId = evId;
+            if (evType) eventType = evType;
+          }
         )
       );
     } catch (error) {
