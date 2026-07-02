@@ -929,3 +929,106 @@ test('webhook logging on repository failure log error details but not secrets', 
     console.log = originalLog;
   }
 });
+
+test('full webhook flow: completes checkout, marks event, handles duplicate, and updates subscription status', async () => {
+  const db = {
+    subscription: null,
+    processedEvents: new Set(),
+  };
+
+  const repository = {
+    async getSubscriptionStatus(userId) {
+      if (userId === 'owner-user') {
+        return db.subscription;
+      }
+      return null;
+    },
+    async upsertSubscriptionStatus(userId, snapshot) {
+      if (userId === 'owner-user') {
+        db.subscription = snapshot;
+      }
+    },
+    async hasStripeEventBeenProcessed(eventId) {
+      return db.processedEvents.has(eventId);
+    },
+    async markStripeEventProcessed(eventId) {
+      db.processedEvents.add(eventId);
+    },
+  };
+
+  const url = await start(
+    {
+      NODE_ENV: 'staging',
+      ALLOW_INSECURE_DEV_AUTH: 'true',
+      SUPABASE_URL: 'https://example.supabase.co',
+      SUPABASE_ANON_KEY: 'anon-key',
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+      STRIPE_WEBHOOK_SECRET: 'whsec_test',
+    },
+    {
+      stripeClient: {
+        webhooks: {
+          constructEvent: (body, sig, secret) => {
+            const parsed = JSON.parse(body.toString('utf8'));
+            return {
+              id: parsed.id,
+              type: parsed.type,
+              data: {
+                object: {
+                  customer: 'cus_12345',
+                  subscription: 'sub_56789',
+                  client_reference_id: 'owner-user',
+                  metadata: {
+                    userId: 'owner-user',
+                    planId: 'pro',
+                  },
+                },
+              },
+            };
+          },
+        },
+      },
+      billingRepository: repository,
+    }
+  );
+
+  const webhookBody = { id: 'evt_1Tooe1LYQum3RaPO1NTqL56V', type: 'checkout.session.completed' };
+  const response = await fetch(`${url}/api/webhooks/stripe`, {
+    method: 'POST',
+    headers: {
+      'Stripe-Signature': 't=123,v1=abc',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(webhookBody),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.received, true);
+  assert.equal(body.duplicate, false);
+  assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
+
+  const statusResponse = await fetch(`${url}/api/billing/subscription-status?userId=owner-user`, {
+    headers: internalHeaders('owner-user'),
+  });
+  assert.equal(statusResponse.status, 200);
+  const statusBody = await statusResponse.json();
+  assert.equal(statusBody.planId, 'pro');
+  assert.equal(statusBody.status, 'active');
+  assert.equal(statusBody.stripeCustomerId, 'cus_12345');
+  assert.equal(statusBody.stripeSubscriptionId, 'sub_56789');
+
+  const duplicateResponse = await fetch(`${url}/api/webhooks/stripe`, {
+    method: 'POST',
+    headers: {
+      'Stripe-Signature': 't=123,v1=abc',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(webhookBody),
+  });
+  assert.equal(duplicateResponse.status, 200);
+  const duplicateBody = await duplicateResponse.json();
+  assert.equal(duplicateBody.received, true);
+  assert.equal(duplicateBody.duplicate, true);
+  assert.equal(duplicateBody.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
+});
