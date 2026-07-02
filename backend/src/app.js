@@ -62,6 +62,10 @@ export const createApp = ({
     response.json(toPublicHealth(config));
   });
 
+  app.get('/api/debug/last-error', (_request, response) => {
+    response.json(app.locals.lastError || { message: 'No error recorded.' });
+  });
+
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const aiRateLimiter = createRateLimiter({
@@ -112,6 +116,14 @@ export const createApp = ({
     next(new Error('Route not found.'));
   });
   app.use((error, _request, response, _next) => {
+    console.error('[unhandled-api-error]', error);
+    app.locals.lastError = {
+      message: error.message,
+      stack: error.stack,
+      code: error.code,
+      status: error.status,
+      timestamp: new Date().toISOString(),
+    };
     const mapped = toErrorResponse(error);
     response.status(mapped.status).json(mapped.body);
   });
