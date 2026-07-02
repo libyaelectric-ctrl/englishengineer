@@ -182,6 +182,33 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
               updatedAt: new Date().toISOString(),
               source: 'stripe_webhook',
             });
+          } else if (
+            eventType === 'customer.subscription.created' ||
+            eventType === 'customer.subscription.updated'
+          ) {
+            step = 'process_subscription_created_or_updated';
+            const current =
+              (await repository.getSubscriptionStatus(userId)) ??
+              emptySubscription();
+            const periodEndSec = object.current_period_end;
+            const currentPeriodEnd =
+              typeof periodEndSec === 'number' && periodEndSec > 0
+                ? new Date(periodEndSec * 1000).toISOString()
+                : null;
+
+            await repository.upsertSubscriptionStatus(userId, {
+              ...current,
+              planId: object.metadata?.planId === 'team' ? 'enterprise' : (object.metadata?.planId || current.planId || 'pro'),
+              status: object.status || 'active',
+              currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
+              cancelAtPeriodEnd: typeof object.cancel_at_period_end === 'boolean'
+                ? object.cancel_at_period_end
+                : current.cancelAtPeriodEnd,
+              stripeCustomerId: object.customer || current.stripeCustomerId,
+              stripeSubscriptionId: object.id || current.stripeSubscriptionId,
+              updatedAt: new Date().toISOString(),
+              source: 'stripe_webhook',
+            });
           } else if (eventType === 'invoice.payment_failed') {
             step = 'process_payment_failed';
             const current =

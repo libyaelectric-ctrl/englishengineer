@@ -35,16 +35,14 @@ const StartPage = () => {
   }, [initialize]);
 
   useEffect(() => {
-    if (isLoading || liteAvailable || !accountAvailable) {
+    if (isLoading) {
       return;
     }
 
     navigate(isAuthenticated ? '/dashboard' : '/signup', { replace: true });
   }, [
-    accountAvailable,
     isAuthenticated,
     isLoading,
-    liteAvailable,
     navigate,
   ]);
 

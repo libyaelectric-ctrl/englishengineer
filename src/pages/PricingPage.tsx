@@ -17,7 +17,7 @@ const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useAuthStore();
-  const { isLoading: isCheckoutLoading, startCheckout } = useBillingStore();
+  const { isLoading: isCheckoutLoading, startCheckout, subscription } = useBillingStore();
   const [billingReadiness, setBillingReadiness] = useState<
     'loading' | 'ready' | 'unavailable'
   >('loading');
@@ -42,7 +42,7 @@ const PricingPage = () => {
     const checkBillingHealth = async () => {
       try {
         const healthUrl = new URL('/api/health', billingApiUrl).toString();
-        const response = await fetch(healthUrl, { credentials: 'include' });
+        const response = await fetch(healthUrl);
         if (!response.ok) {
           throw new Error('Billing health check failed.');
         }
@@ -116,20 +116,34 @@ const PricingPage = () => {
       );
     }
 
-    if (plan.id === 'pro' && billingEnabled) {
-      const isProCheckoutLoading =
-        isCheckoutLoading && checkoutPlanId === 'pro';
+    if (plan.id === 'pro') {
+      if (subscription?.planId === 'pro') {
+        return (
+          <button
+            type="button"
+            disabled
+            className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-[12px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800"
+          >
+            Current Plan
+          </button>
+        );
+      }
 
-      return (
-        <button
-          type="button"
-          onClick={() => void handleProCheckout()}
-          disabled={isProCheckoutLoading || isBillingHealthLoading}
-          className="mt-6 public-primary-action disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {isProCheckoutLoading ? 'Starting checkout...' : 'Upgrade to Pro'}
-        </button>
-      );
+      if (billingEnabled) {
+        const isProCheckoutLoading =
+          isCheckoutLoading && checkoutPlanId === 'pro';
+
+        return (
+          <button
+            type="button"
+            onClick={() => void handleProCheckout()}
+            disabled={isProCheckoutLoading || isBillingHealthLoading}
+            className="mt-6 public-primary-action disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isProCheckoutLoading ? 'Starting checkout...' : 'Upgrade to Pro'}
+          </button>
+        );
+      }
     }
 
     if (plan.actionLabel === 'Billing unavailable') {
@@ -188,10 +202,12 @@ const PricingPage = () => {
             </div>
           ))}
         </div>
-        <div className="mx-auto mt-6 flex w-fit max-w-full items-start gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-left text-xs leading-5 text-amber-900">
-          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>{billingBanner}</span>
-        </div>
+        {billingReadiness !== 'ready' && subscription?.planId !== 'pro' && (
+          <div className="mx-auto mt-6 flex w-fit max-w-full items-start gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-left text-xs leading-5 text-amber-900">
+            <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>{billingBanner}</span>
+          </div>
+        )}
         {checkoutError && (
           <p
             className="mx-auto mt-3 max-w-2xl rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-3 text-left text-xs leading-5 text-rose-800"
