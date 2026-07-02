@@ -43,6 +43,20 @@ test('health returns public configuration status', async () => {
   });
 });
 
+test('unmatched route returns 404 with route_not_found error', async () => {
+  const url = await start();
+  const response = await fetch(`${url}/api/invalid-route-path-xyz`);
+  assert.equal(response.status, 404);
+  const body = await response.json();
+  assert.deepEqual(body, {
+    ok: false,
+    error: {
+      code: 'route_not_found',
+      message: 'Route not found.',
+    },
+  });
+});
+
 test('health never exposes secret values', async () => {
   const url = await start({
     AI_PROVIDER: 'openai',

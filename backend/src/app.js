@@ -8,7 +8,7 @@ import {
   registerBillingRoutes,
 } from './billing.js';
 import { toPublicHealth } from './config.js';
-import { toErrorResponse } from './errors.js';
+import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
@@ -111,7 +111,7 @@ export const createApp = ({
   );
 
   app.use((_request, _response, next) => {
-    next(new Error('Route not found.'));
+    next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
   app.use((error, _request, response, _next) => {
     console.error('[unhandled-api-error]', error);
