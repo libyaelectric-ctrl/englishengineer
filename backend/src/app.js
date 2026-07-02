@@ -62,40 +62,7 @@ export const createApp = ({
     response.json(toPublicHealth(config));
   });
 
-  app.get('/api/debug/last-error', (_request, response) => {
-    response.json(app.locals.lastError || { message: 'No error recorded.' });
-  });
 
-  app.get('/api/debug/db-check', async (_request, response, next) => {
-    try {
-      const supabaseUrl = config.stripe.supabaseUrl;
-      const serviceRoleKey = config.stripe.supabaseServiceRoleKey;
-      if (!supabaseUrl || !serviceRoleKey) {
-        return response.json({ error: 'Supabase configuration is missing in config.stripe' });
-      }
-      const restUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1`;
-
-      const eventsRes = await fetchImpl(`${restUrl}/stripe_processed_events?select=*&limit=5`, {
-        headers: {
-          apikey: serviceRoleKey,
-          Authorization: `Bearer ${serviceRoleKey}`,
-        }
-      });
-      const events = await eventsRes.json();
-
-      const subsRes = await fetchImpl(`${restUrl}/subscription_status?select=*&limit=5`, {
-        headers: {
-          apikey: serviceRoleKey,
-          Authorization: `Bearer ${serviceRoleKey}`,
-        }
-      });
-      const subs = await subsRes.json();
-
-      response.json({ events, subs });
-    } catch (err) {
-      next(err);
-    }
-  });
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
@@ -149,12 +116,6 @@ export const createApp = ({
   app.use((error, _request, response, _next) => {
     console.error('[unhandled-api-error]', error);
     const mapped = toErrorResponse(error);
-    app.locals.lastError = {
-      code: mapped.body?.error?.code || 'internal_error',
-      message: mapped.body?.error?.message || 'The backend could not complete the request.',
-      ...(error.step ? { step: error.step } : {}),
-      timestamp: new Date().toISOString(),
-    };
     response.status(mapped.status).json(mapped.body);
   });
 
