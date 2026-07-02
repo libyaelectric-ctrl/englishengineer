@@ -27,10 +27,10 @@ export const createBackendConfig = (environment = process.env) => {
     environment.SUPABASE_URL,
     environment.SUPABASE_SERVICE_ROLE_KEY,
   ].every(hasText);
-  const supabaseAuthConfigured = [
-    environment.SUPABASE_URL,
-    environment.SUPABASE_ANON_KEY,
-  ].every(hasText);
+  const supabaseAuthConfigured =
+    hasText(environment.SUPABASE_URL) &&
+    (hasText(environment.SUPABASE_ANON_KEY) ||
+      hasText(environment.SUPABASE_SERVICE_ROLE_KEY));
 
   const runtimeEnvironment = [
     'development',
@@ -121,7 +121,7 @@ export const createBackendConfig = (environment = process.env) => {
         ? environment.SUPABASE_URL.trim()
         : null,
       supabaseAnonKey: supabaseAuthConfigured
-        ? environment.SUPABASE_ANON_KEY.trim()
+        ? (environment.SUPABASE_ANON_KEY || environment.SUPABASE_SERVICE_ROLE_KEY).trim()
         : null,
     },
     stripe: {

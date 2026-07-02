@@ -747,3 +747,120 @@ test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured',
   const body = await response.json();
   assert.equal(body.error.code, 'STRIPE_NOT_CONFIGURED');
 });
+
+test('checkout route permits request with valid Supabase token', async () => {
+  const fetchImpl = async (requestUrl, options) => {
+    if (requestUrl.endsWith('/auth/v1/user')) {
+      const authorization = options?.headers?.Authorization;
+      if (authorization === 'Bearer valid-supabase-token') {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ id: 'owner-user', email: 'engineer@example.com' }),
+        };
+      }
+      return { ok: false, status: 401 };
+    }
+    return { ok: false, status: 404 };
+  };
+
+  const stripeClient = {
+    checkout: {
+      sessions: {
+        create: async () => ({ url: 'https://checkout.stripe.test/session' }),
+      },
+    },
+  };
+
+  const url = await start(
+    {
+      NODE_ENV: 'staging',
+      SUPABASE_URL: 'https://example.supabase.co',
+      SUPABASE_ANON_KEY: 'anon-key',
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { fetchImpl, stripeClient }
+  );
+
+  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer valid-supabase-token',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId: 'owner-user',
+      email: 'engineer@example.com',
+      successUrl: 'https://example.com/success',
+      cancelUrl: 'https://example.com/cancel',
+      planId: 'pro',
+    }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.url, 'https://checkout.stripe.test/session');
+});
+
+test('checkout route rejects request with missing authorization header', async () => {
+  const fetchImpl = async () => ({ ok: false, status: 401 });
+  const url = await start(
+    {
+      NODE_ENV: 'staging',
+      SUPABASE_URL: 'https://example.supabase.co',
+      SUPABASE_ANON_KEY: 'anon-key',
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { fetchImpl }
+  );
+
+  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId: 'owner-user',
+      email: 'engineer@example.com',
+      successUrl: 'https://example.com/success',
+      cancelUrl: 'https://example.com/cancel',
+      planId: 'pro',
+    }),
+  });
+  assert.equal(response.status, 401);
+  const body = await response.json();
+  assert.equal(body.error.code, 'authentication_required');
+});
+
+test('checkout route rejects request with invalid Supabase token', async () => {
+  const fetchImpl = async () => ({ ok: false, status: 401 });
+  const url = await start(
+    {
+      NODE_ENV: 'staging',
+      SUPABASE_URL: 'https://example.supabase.co',
+      SUPABASE_ANON_KEY: 'anon-key',
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { fetchImpl }
+  );
+
+  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer invalid-token',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId: 'owner-user',
+      email: 'engineer@example.com',
+      successUrl: 'https://example.com/success',
+      cancelUrl: 'https://example.com/cancel',
+      planId: 'pro',
+    }),
+  });
+  assert.equal(response.status, 401);
+  const body = await response.json();
+  assert.equal(body.error.code, 'authentication_required');
+});
