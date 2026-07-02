@@ -1,10 +1,67 @@
 import { Check, LockKeyhole, MinusCircle, ShieldAlert } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { COMMERCIAL_PLAN_CATALOG } from '@/features/billing';
+import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
-const PricingPage = () => (
-  <main className="bg-slate-50">
+const PricingPage = () => {
+  const [billingReadiness, setBillingReadiness] = useState<'loading' | 'ready' | 'unavailable'>('loading');
+  const [billingBanner, setBillingBanner] = useState(
+    'Checking Stripe billing readiness...'
+  );
+  const billingApiUrl = getBillingApiUrl();
+
+  useEffect(() => {
+    if (!billingApiUrl) {
+      setBillingReadiness('unavailable');
+      setBillingBanner(
+        'Billing is unavailable. Configure VITE_BILLING_API_URL to enable Stripe billing.'
+      );
+      return;
+    }
+
+    let mounted = true;
+
+    const checkBillingHealth = async () => {
+      try {
+        const healthUrl = new URL('/api/health', billingApiUrl).toString();
+        const response = await fetch(healthUrl, { credentials: 'include' });
+        if (!response.ok) {
+          throw new Error('Billing health check failed.');
+        }
+        const health = await response.json();
+        if (!mounted) return;
+
+        if (health?.stripeConfigured === true) {
+          setBillingReadiness('ready');
+          setBillingBanner('Secure Stripe test checkout is available.');
+        } else {
+          setBillingReadiness('unavailable');
+          setBillingBanner(
+            'Billing is unavailable. Stripe backend is not verified.'
+          );
+        }
+      } catch {
+        if (!mounted) return;
+        setBillingReadiness('unavailable');
+        setBillingBanner(
+          'Billing is unavailable. Stripe backend health check failed.'
+        );
+      }
+    };
+
+    void checkBillingHealth();
+    return () => {
+      mounted = false;
+    };
+  }, [billingApiUrl]);
+
+  const billingEnabled = billingReadiness === 'ready';
+  const isBillingLoading = billingReadiness === 'loading';
+
+  return (
+    <main className="bg-slate-50">
     <PageMetadata
       title="Pricing"
       description="Preview EngineerOS plans for individual engineers and engineering teams."
@@ -37,11 +94,7 @@ const PricingPage = () => (
         </div>
         <div className="mx-auto mt-6 flex w-fit max-w-full items-start gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-left text-xs leading-5 text-amber-900">
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          <span>
-            <strong>Billing is not live-verified.</strong> Free local access is
-            available. Paid activation remains disabled until the staging Stripe
-            flow passes Kademe 8.
-          </span>
+          <span>{billingBanner}</span>
         </div>
       </div>
     </section>
@@ -97,15 +150,24 @@ const PricingPage = () => (
               <span>{plan.notIncluded}</span>
             </div>
             {plan.actionLabel === 'Billing unavailable' ? (
-              <button
-                type="button"
-                disabled
-                title="Paid checkout becomes available after the verified Stripe release gate."
-                className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-[12px] border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500"
-              >
-                <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-                {plan.actionLabel}
-              </button>
+              plan.id === 'pro' && billingEnabled ? (
+                <Link
+                  to="/profile"
+                  className="mt-6 public-secondary-action"
+                >
+                  Upgrade to Pro
+                </Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  title="Paid checkout becomes available after the verified Stripe release gate."
+                  className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-[12px] border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500"
+                >
+                  <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+                  {isBillingLoading ? 'Checking billing...' : plan.actionLabel}
+                </button>
+              )
             ) : (
               <Link
                 to={plan.actionHref}
@@ -207,6 +269,7 @@ const PricingPage = () => (
       </div>
     </section>
   </main>
-);
+  );
+};
 
 export default PricingPage;
