@@ -578,6 +578,7 @@ const ProfilePage = () => {
             subscription={subscription}
             providerStatus={providerStatus}
             isLoading={isBillingLoading}
+            error={billingError}
             onUpgrade={handleUpgrade}
             onOpenPortal={handleManageSubscription}
           />

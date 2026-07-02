@@ -646,3 +646,104 @@ test('production accepts Upstash rate limiting without exposing its token', () =
   assert.equal(config.rateLimit.upstashUrl, 'https://rate-limit.example.test');
   assert.equal(toPublicHealth(config).upstashToken, undefined);
 });
+
+test('billing status returns 200 Free/Lite when no subscription record exists', async () => {
+  const repository = {
+    async getSubscriptionStatus() {
+      return null;
+    },
+  };
+  const url = await start(
+    {
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { stripeClient: {}, billingRepository: repository }
+  );
+  const response = await fetch(`${url}/api/billing/subscription-status`, {
+    headers: internalHeaders('owner-user'),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.planId, 'free');
+  assert.equal(body.status, 'none');
+});
+
+test('billing status returns 200 Pro when active Pro subscription exists in repository', async () => {
+  const repository = {
+    async getSubscriptionStatus() {
+      return {
+        planId: 'pro',
+        status: 'active',
+        currentPeriodEnd: '2026-07-26T00:00:00.000Z',
+        cancelAtPeriodEnd: false,
+        stripeCustomerId: 'cus_123',
+        stripeSubscriptionId: 'sub_123',
+        updatedAt: new Date().toISOString(),
+        source: 'stripe_webhook',
+      };
+    },
+  };
+  const url = await start(
+    {
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { stripeClient: {}, billingRepository: repository }
+  );
+  const response = await fetch(`${url}/api/billing/subscription-status`, {
+    headers: internalHeaders('owner-user'),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.planId, 'pro');
+  assert.equal(body.status, 'active');
+  assert.equal(body.stripeCustomerId, 'cus_123');
+});
+
+test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infrastructure error', async () => {
+  const repository = {
+    async getSubscriptionStatus() {
+      throw new Error('Database connection failed');
+    },
+  };
+  const url = await start(
+    {
+      STRIPE_SECRET_KEY: 'sk_test_value',
+      STRIPE_PRICE_PRO_MONTHLY: 'price_test',
+    },
+    { stripeClient: {}, billingRepository: repository }
+  );
+  const response = await fetch(`${url}/api/billing/subscription-status`, {
+    headers: internalHeaders('owner-user'),
+  });
+  assert.equal(response.status, 503);
+  const body = await response.json();
+  assert.equal(body.error.code, 'BILLING_STATUS_UNAVAILABLE');
+  assert.doesNotMatch(body.error.message, /Database connection failed/);
+});
+
+test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured', async () => {
+  const url = await start(
+    {
+      STRIPE_SECRET_KEY: '',
+      STRIPE_PRICE_PRO_MONTHLY: '',
+    }
+  );
+  const response = await fetch(`${url}/api/billing/create-checkout-session`, {
+    method: 'POST',
+    headers: {
+      ...internalHeaders('owner-user'),
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: 'engineer@example.com',
+      successUrl: 'https://example.com/success',
+      cancelUrl: 'https://example.com/cancel',
+      planId: 'pro',
+    }),
+  });
+  assert.equal(response.status, 503);
+  const body = await response.json();
+  assert.equal(body.error.code, 'STRIPE_NOT_CONFIGURED');
+});

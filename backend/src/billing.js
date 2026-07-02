@@ -25,7 +25,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     if (!config.configured || !stripeClient) {
       throw new ApiError(
         503,
-        'stripe_not_configured',
+        'STRIPE_NOT_CONFIGURED',
         'Billing backend is unavailable because Stripe is not configured.'
       );
     }
@@ -44,7 +44,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       if (!price) {
         throw new ApiError(
           503,
-          'stripe_price_not_configured',
+          'STRIPE_NOT_CONFIGURED',
           `Stripe price for ${planId} is not configured.`
         );
       }
@@ -94,12 +94,34 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       if (!userId) {
         return emptySubscription();
       }
+
+      let subscription;
+      try {
+        subscription = await repository.getSubscriptionStatus(userId);
+      } catch (error) {
+        throw new ApiError(
+          503,
+          'BILLING_STATUS_UNAVAILABLE',
+          'Billing status is temporarily unavailable.'
+        );
+      }
+
       if (!config.configured || !stripeClient) {
+        if (
+          subscription &&
+          subscription.planId !== 'free' &&
+          subscription.status !== 'none'
+        ) {
+          return subscription;
+        }
         return emptySubscription();
       }
-      return (
-        (await repository.getSubscriptionStatus(userId)) ?? emptySubscription()
-      );
+
+      if (!subscription || !subscription.stripeCustomerId) {
+        return emptySubscription();
+      }
+
+      return subscription;
     },
 
     async processWebhook(rawBody, signature) {

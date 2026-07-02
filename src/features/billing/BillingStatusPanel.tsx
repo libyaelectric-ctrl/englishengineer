@@ -22,6 +22,7 @@ interface BillingStatusPanelProps {
   isLoading: boolean;
   onUpgrade: () => void;
   onOpenPortal: () => void;
+  error?: string | null;
 }
 
 export const BillingStatusPanel = ({
@@ -30,6 +31,7 @@ export const BillingStatusPanel = ({
   isLoading,
   onUpgrade,
   onOpenPortal,
+  error,
 }: BillingStatusPanelProps) => {
   const presentation = getBillingStatusPresentation(
     subscription,
@@ -43,6 +45,11 @@ export const BillingStatusPanel = ({
 
   return (
     <div className="space-y-4" data-testid="billing-status-panel">
+      {error && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900" role="alert">
+          Billing status is temporarily unavailable. Access entitlements are based on the last known verified state.
+        </div>
+      )}
       <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-xs font-bold uppercase text-slate-500">
