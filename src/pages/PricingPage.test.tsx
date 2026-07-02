@@ -19,7 +19,7 @@ describe('PricingPage', () => {
     unavailableControls.forEach((control) => expect(control).toBeDisabled());
     expect(screen.getByRole('link', { name: 'Start free' })).toHaveAttribute(
       'href',
-      '/start'
+      '/signup'
     );
     expect(screen.getByRole('link', { name: 'Explore Team' })).toHaveAttribute(
       'href',

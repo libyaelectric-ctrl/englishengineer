@@ -49,7 +49,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     ads: 'controlled-sponsor-ready',
     status: 'available-local',
     actionLabel: 'Start free',
-    actionHref: '/start',
+    actionHref: '/signup',
   },
   {
     id: 'starter',

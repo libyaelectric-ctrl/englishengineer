@@ -1,15 +1,31 @@
 import { Check, LockKeyhole, MinusCircle, ShieldAlert } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { COMMERCIAL_PLAN_CATALOG } from '@/features/billing';
+import {
+  COMMERCIAL_PLAN_CATALOG,
+  CommercialPlanPreview,
+  useBillingStore,
+} from '@/features/billing';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
+import { useAuthStore } from '@/features/auth';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
+const getErrorMessage = (error: unknown, fallback: string): string =>
+  error instanceof Error ? error.message : fallback;
+
 const PricingPage = () => {
-  const [billingReadiness, setBillingReadiness] = useState<'loading' | 'ready' | 'unavailable'>('loading');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { currentUser } = useAuthStore();
+  const { isLoading: isCheckoutLoading, startCheckout } = useBillingStore();
+  const [billingReadiness, setBillingReadiness] = useState<
+    'loading' | 'ready' | 'unavailable'
+  >('loading');
   const [billingBanner, setBillingBanner] = useState(
     'Checking Stripe billing readiness...'
   );
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [checkoutPlanId, setCheckoutPlanId] = useState<'pro' | null>(null);
   const billingApiUrl = getBillingApiUrl();
 
   useEffect(() => {
@@ -58,7 +74,87 @@ const PricingPage = () => {
   }, [billingApiUrl]);
 
   const billingEnabled = billingReadiness === 'ready';
-  const isBillingLoading = billingReadiness === 'loading';
+  const isBillingHealthLoading = billingReadiness === 'loading';
+
+  const handleProCheckout = async () => {
+    setCheckoutError(null);
+
+    if (!currentUser) {
+      navigate('/login', { state: { from: location } });
+      return;
+    }
+
+    try {
+      setCheckoutPlanId('pro');
+      await startCheckout(currentUser.id, currentUser.email, 'pro');
+    } catch (error: unknown) {
+      setCheckoutError(
+        getErrorMessage(error, 'Checkout session could not be created.')
+      );
+    } finally {
+      setCheckoutPlanId(null);
+    }
+  };
+
+  const renderPlanAction = (plan: CommercialPlanPreview) => {
+    if (plan.id === 'free') {
+      const href = currentUser ? '/dashboard' : '/signup';
+      const label = currentUser ? 'Go to dashboard' : plan.actionLabel;
+
+      return (
+        <Link to={href} className="mt-6 public-primary-action">
+          {label}
+        </Link>
+      );
+    }
+
+    if (plan.id === 'team') {
+      return (
+        <Link to={plan.actionHref} className="mt-6 public-secondary-action">
+          {plan.actionLabel}
+        </Link>
+      );
+    }
+
+    if (plan.id === 'pro' && billingEnabled) {
+      const isProCheckoutLoading =
+        isCheckoutLoading && checkoutPlanId === 'pro';
+
+      return (
+        <button
+          type="button"
+          onClick={() => void handleProCheckout()}
+          disabled={isProCheckoutLoading || isBillingHealthLoading}
+          className="mt-6 public-primary-action disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isProCheckoutLoading ? 'Starting checkout...' : 'Upgrade to Pro'}
+        </button>
+      );
+    }
+
+    if (plan.actionLabel === 'Billing unavailable') {
+      return (
+        <button
+          type="button"
+          disabled
+          title="Paid checkout becomes available after the verified Stripe release gate."
+          className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-[12px] border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500"
+        >
+          <LockKeyhole className="h-4 w-4" aria-hidden="true" />
+          {isBillingHealthLoading ? 'Checking billing...' : plan.actionLabel}
+        </button>
+      );
+    }
+
+    return (
+      <Link
+        to={plan.actionHref}
+        className={`mt-6 ${plan.status === 'available-local' ? 'public-primary-action' : 'public-secondary-action'}`}
+      >
+        {plan.actionLabel}
+      </Link>
+    );
+  };
 
   return (
     <main className="bg-slate-50">
@@ -96,6 +192,14 @@ const PricingPage = () => {
           <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{billingBanner}</span>
         </div>
+        {checkoutError && (
+          <p
+            className="mx-auto mt-3 max-w-2xl rounded-[12px] border border-rose-200 bg-rose-50 px-4 py-3 text-left text-xs leading-5 text-rose-800"
+            role="alert"
+          >
+            {checkoutError}
+          </p>
+        )}
       </div>
     </section>
 
@@ -149,33 +253,7 @@ const PricingPage = () => {
               <MinusCircle className="mt-0.5 h-4 w-4 shrink-0" />
               <span>{plan.notIncluded}</span>
             </div>
-            {plan.actionLabel === 'Billing unavailable' ? (
-              plan.id === 'pro' && billingEnabled ? (
-                <Link
-                  to="/profile"
-                  className="mt-6 public-secondary-action"
-                >
-                  Upgrade to Pro
-                </Link>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  title="Paid checkout becomes available after the verified Stripe release gate."
-                  className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-[12px] border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-500"
-                >
-                  <LockKeyhole className="h-4 w-4" aria-hidden="true" />
-                  {isBillingLoading ? 'Checking billing...' : plan.actionLabel}
-                </button>
-              )
-            ) : (
-              <Link
-                to={plan.actionHref}
-                className={`mt-6 ${plan.status === 'available-local' ? 'public-primary-action' : 'public-secondary-action'}`}
-              >
-                {plan.actionLabel}
-              </Link>
-            )}
+            {renderPlanAction(plan)}
           </article>
         ))}
       </div>

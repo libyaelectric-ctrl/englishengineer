@@ -18,7 +18,13 @@ import {
 
 const StartPage = () => {
   const navigate = useNavigate();
-  const { demoLogin, initialize, isLoading, providerMode } = useAuthStore();
+  const {
+    demoLogin,
+    initialize,
+    isLoading,
+    isAuthenticated,
+    providerMode,
+  } = useAuthStore();
   const accountAvailable = providerMode === 'supabase';
   const liteAvailable = AUTH_CONFIG.localAuthAllowed;
   const language = useLocalizationStore((state) => state.language);
@@ -27,6 +33,20 @@ const StartPage = () => {
   useEffect(() => {
     void initialize();
   }, [initialize]);
+
+  useEffect(() => {
+    if (isLoading || liteAvailable || !accountAvailable) {
+      return;
+    }
+
+    navigate(isAuthenticated ? '/dashboard' : '/signup', { replace: true });
+  }, [
+    accountAvailable,
+    isAuthenticated,
+    isLoading,
+    liteAvailable,
+    navigate,
+  ]);
 
   const startLite = async () => {
     useLearningStore.getState().resetAll();

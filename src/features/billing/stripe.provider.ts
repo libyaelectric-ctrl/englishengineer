@@ -62,6 +62,9 @@ const parseErrorMessage = async (response: Response): Promise<string> => {
   }
 };
 
+const buildBillingEndpoint = (billingApiUrl: string, route: string) =>
+  `${billingApiUrl.replace(/\/$/, '')}/api/billing/${route}`;
+
 const postJson = async <TResponse, TBody extends object>(
   endpoint: string,
   body: TBody,
@@ -104,26 +107,40 @@ export class StripeBillingProvider {
 
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot> {
     return getJson<SubscriptionSnapshot>(
-      `${this.billingApiUrl}/subscription-status`,
+      buildBillingEndpoint(this.billingApiUrl, 'subscription-status'),
       userId
     );
   }
 
-  createCheckoutSession(
+  async createCheckoutSession(
     request: BillingSessionRequest
   ): Promise<BillingRedirectResponse> {
+    const authHeaders = await getBackendAuthHeaders(request.userId);
+    if (!authHeaders.Authorization) {
+      throw new Error(
+        'Please sign in with your account before upgrading to Pro.'
+      );
+    }
+
     return postJson<BillingRedirectResponse, BillingSessionRequest>(
-      `${this.billingApiUrl}/create-checkout-session`,
+      buildBillingEndpoint(this.billingApiUrl, 'create-checkout-session'),
       request,
       request.userId
     );
   }
 
-  createCustomerPortalSession(
+  async createCustomerPortalSession(
     request: BillingPortalRequest
   ): Promise<BillingRedirectResponse> {
+    const authHeaders = await getBackendAuthHeaders(request.userId);
+    if (!authHeaders.Authorization) {
+      throw new Error(
+        'Please sign in with your account before opening the customer portal.'
+      );
+    }
+
     return postJson<BillingRedirectResponse, BillingPortalRequest>(
-      `${this.billingApiUrl}/create-customer-portal-session`,
+      buildBillingEndpoint(this.billingApiUrl, 'create-customer-portal-session'),
       request,
       request.userId
     );
