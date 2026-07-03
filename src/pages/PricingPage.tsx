@@ -118,6 +118,7 @@ const PricingPage = () => {
   };
 
   const renderPlanAction = (plan: CommercialPlanPreview) => {
+    // Free plan – direct link
     if (plan.id === 'free') {
       const href = currentUser ? '/dashboard' : '/signup';
       const label = currentUser ? 'Go to dashboard' : 'Start free';
@@ -132,6 +133,21 @@ const PricingPage = () => {
       );
     }
 
+    // Higher tiers not yet available – show disabled Coming Soon button
+    if (plan.id === 'max' || plan.id === 'exec' || plan.id === 'private') {
+      return (
+        <button
+          type="button"
+          disabled
+          className="mt-6 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-border-soft bg-surface-hover/20 px-4 py-2 text-sm font-semibold text-muted-copy cursor-not-allowed opacity-60"
+          aria-label={`${plan.name} plan coming soon`}
+        >
+          Plan Coming Soon
+        </button>
+      );
+    }
+
+    // Current active subscription indicator
     if (subscription?.planId === plan.id) {
       return (
         <button

@@ -31,6 +31,111 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     }
   };
 
+  // Plan metadata used for Stripe auto-provisioning
+  const PLAN_META = {
+    pro: {
+      unitAmount: 1900,
+      nickname: 'Pro Monthly',
+      productName: 'EngineerOS Pro',
+    },
+    project: {
+      unitAmount: 3900,
+      nickname: 'Project Monthly',
+      productName: 'EngineerOS Project',
+    },
+    max: {
+      unitAmount: 5900,
+      nickname: 'Max Monthly',
+      productName: 'EngineerOS Max',
+    },
+    exec: {
+      unitAmount: 9900,
+      nickname: 'Exec Monthly',
+      productName: 'EngineerOS Exec',
+    },
+    private: {
+      unitAmount: 99900,
+      nickname: 'Private Monthly',
+      productName: 'EngineerOS Private',
+    },
+    team: {
+      unitAmount: 1900,
+      nickname: 'Team Monthly',
+      productName: 'EngineerOS Team',
+    },
+  };
+
+  const PLAN_PRICE_CONFIG = {
+    pro: 'priceProMonthly',
+    project: 'priceProjectMonthly',
+    max: 'priceMaxMonthly',
+    exec: 'priceExecMonthly',
+    private: 'pricePrivateMonthly',
+    team: 'priceTeamMonthly',
+  };
+
+  /**
+   * Resolve Stripe price ID for a given plan:
+   * 1. Use env-configured price ID if present.
+   * 2. Otherwise search active prices in Stripe by nickname.
+   * 3. If not found, create the product + price automatically.
+   */
+  const resolveOrProvisionPriceId = async (planId) => {
+    const configKey = PLAN_PRICE_CONFIG[planId];
+    if (configKey && config[configKey]) {
+      return config[configKey];
+    }
+
+    const meta = PLAN_META[planId];
+    if (!meta) {
+      throw new ApiError(400, 'INVALID_PLAN', `Unknown plan: "${planId}".`);
+    }
+
+    // Search for an existing active monthly recurring price with this nickname
+    const existingPrices = await stripeClient.prices.list({
+      active: true,
+      type: 'recurring',
+      limit: 100,
+    });
+
+    const found = existingPrices.data.find(
+      (p) =>
+        p.nickname === meta.nickname &&
+        p.recurring?.interval === 'month' &&
+        p.unit_amount === meta.unitAmount &&
+        p.currency === 'usd'
+    );
+
+    if (found) {
+      return found.id;
+    }
+
+    // Auto-create the product and price in the user's Stripe account
+    let product;
+    const existingProducts = await stripeClient.products.list({
+      active: true,
+      limit: 100,
+    });
+    product = existingProducts.data.find((p) => p.name === meta.productName);
+    if (!product) {
+      product = await stripeClient.products.create({
+        name: meta.productName,
+        metadata: { engineeros_plan: planId },
+      });
+    }
+
+    const newPrice = await stripeClient.prices.create({
+      unit_amount: meta.unitAmount,
+      currency: 'usd',
+      recurring: { interval: 'month' },
+      product: product.id,
+      nickname: meta.nickname,
+      metadata: { engineeros_plan: planId },
+    });
+
+    return newPrice.id;
+  };
+
   return {
     async createCheckoutSession(userId, body) {
       ensureConfigured();
@@ -46,30 +151,9 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
       const planId = body?.planId || 'pro';
-      let price = null;
-      if (planId === 'pro') {
-        price = config.priceProMonthly;
-      } else if (planId === 'project') {
-        price = config.priceProjectMonthly || config.priceProMonthly;
-      } else if (planId === 'max') {
-        price = config.priceMaxMonthly || config.priceProMonthly;
-      } else if (planId === 'exec') {
-        price = config.priceExecMonthly || config.priceProMonthly;
-      } else if (planId === 'private') {
-        price = config.pricePrivateMonthly || config.priceProMonthly;
-      } else if (planId === 'team' || planId === 'enterprise') {
-        price = config.priceTeamMonthly || config.priceProMonthly;
-      } else {
-        price = config.priceProMonthly;
-      }
 
-      if (!price) {
-        throw new ApiError(
-          503,
-          'STRIPE_NOT_CONFIGURED',
-          `Stripe price for plan "${planId}" is not configured.`
-        );
-      }
+      const price = await resolveOrProvisionPriceId(planId);
+
       const session = await stripeClient.checkout.sessions.create({
         mode: 'subscription',
         customer_email: email,

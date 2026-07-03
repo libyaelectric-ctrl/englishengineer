@@ -33,6 +33,7 @@ const SYNCABLE_KEYS: SyncableStateKey[] = [
   'aiCoach',
   'gamification',
   'userPreferences',
+  'workspaces',
 ];
 
 const STATIC_STORAGE_KEYS: Record<
@@ -50,6 +51,7 @@ const STATIC_STORAGE_KEYS: Record<
   aiCoach: 'ai_coach_pro_state',
   gamification: 'gamification_pro_state',
   userPreferences: 'auth_user',
+  workspaces: 'engineeros_workspaces',
 };
 
 const getStorageKeys = (

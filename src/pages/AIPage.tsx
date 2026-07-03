@@ -33,6 +33,8 @@ import {
 } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
 import { canUseAICoach, useBillingStore } from '@/features/billing';
+import { useWorkspaceStore } from '@/features/billing/workspace.store';
+import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 import { AI_ACCESS_POLICY } from '@/config/product.config';
 
 interface AIPageProps {
@@ -61,6 +63,16 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     clearSessionHistory,
     regenerateLast,
   } = useAIStore();
+
+  const { workspaces, activeWorkspaceId } = useWorkspaceStore();
+  const activeWorkspace =
+    workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
+  const workspaceMemoryContext = activeWorkspace?.memory
+    ? Object.entries(activeWorkspace.memory)
+        .filter(([, v]) => v)
+        .map(([k, v]) => `${k}: ${v}`)
+        .join('\n')
+    : '';
 
   const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
     const val = localStorage.getItem('uploaded_docs_count');
@@ -100,6 +112,10 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     reader.onload = (e) => {
       const text = e.target?.result as string;
       if (text) {
+        // Save document to active workspace store
+        useWorkspaceStore
+          .getState()
+          .addDocumentToWorkspace(activeWorkspaceId, file.name, text);
         setInput(`[Uploaded File: ${file.name}]\n\n${text}`);
         const newCount = uploadedDocsCount + 1;
         setUploadedDocsCount(newCount);
@@ -158,6 +174,19 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     if (!aiEntitlement.allowed) {
       return;
     }
+    // Prepend workspace memory context to input if the user has project+ plan
+    if (
+      workspaceMemoryContext &&
+      input.trim() &&
+      !input.startsWith('[WorkspaceMemory]')
+    ) {
+      setInput(
+        `[WorkspaceMemory]\n${workspaceMemoryContext}\n\n[UserInput]\n${input}`
+      );
+      // Allow state to flush, then submit on next tick
+      setTimeout(() => void submitCoachRequest(currentUser, learningState), 0);
+      return;
+    }
     await submitCoachRequest(currentUser, learningState);
   };
 
@@ -200,6 +229,26 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 : 'amber'
           }
         />
+      )}
+
+      {/* Workspace selector bar – only visible to project+ subscribers */}
+      {(subscription.planId === 'project' ||
+        subscription.planId === 'max' ||
+        subscription.planId === 'exec' ||
+        subscription.planId === 'private') && (
+        <div className="premium-panel flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <WorkspaceSelector planId={subscription.planId} />
+            {workspaceMemoryContext && (
+              <span className="hidden sm:inline text-[10px] text-muted-copy border border-border-soft rounded-full px-2 py-0.5">
+                Memory active
+              </span>
+            )}
+          </div>
+          <p className="text-[10px] text-muted-copy">
+            Sessions and documents are isolated per workspace.
+          </p>
+        </div>
       )}
 
       <div className="premium-panel flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">

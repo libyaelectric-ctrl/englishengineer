@@ -33,6 +33,7 @@ const createSnapshot = (
     aiCoach: null,
     gamification: null,
     userPreferences: null,
+    workspaces: null,
     ...data,
   },
 });

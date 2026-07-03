@@ -7,3 +7,5 @@ export * from './billing.service';
 export * from './billing.store';
 export * from './stripe.provider';
 export * from './BillingStatusPanel';
+export * from './workspace.store';
+export * from './WorkspaceSelector';

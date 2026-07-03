@@ -60,6 +60,7 @@ interface AIStoreState {
     learningState: LearningState
   ) => Promise<void>;
   getUsageSummary: () => AIUsageSummary;
+  setSessions: (sessions: AICoachSession[]) => void;
 }
 
 const STORAGE_KEY = 'ai_coach_pro_state';
@@ -317,6 +318,16 @@ export const useAIStore = create<AIStoreState>((set, get) => ({
 
   getUsageSummary: () => {
     return buildAIUsageSummary(get().sessions);
+  },
+
+  setSessions: (sessions) => {
+    set({ sessions, lastResult: sessions[0]?.result || null });
+    saveState({
+      selectedModeId: get().selectedModeId,
+      input: get().input,
+      sessions,
+      sessionLogs: get().sessionLogs,
+    });
   },
 }));
 

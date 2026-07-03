@@ -28,7 +28,8 @@ export type SyncableStateKey =
   | 'learningProfile'
   | 'aiCoach'
   | 'gamification'
-  | 'userPreferences';
+  | 'userPreferences'
+  | 'workspaces';
 
 export interface CloudProgressSnapshot {
   schemaVersion: 1;
