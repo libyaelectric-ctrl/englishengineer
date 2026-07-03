@@ -14,10 +14,10 @@ interface NavigationProps {
 
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'group relative flex min-h-11 items-center gap-3 rounded-[12px] px-3 py-2.5 text-sm font-semibold transition-all duration-200',
+    'group relative flex min-h-10 items-center gap-3 rounded-[8px] px-3 py-2 text-xs font-semibold transition-all duration-150',
     isActive
-      ? 'bg-sky-50 text-sky-900 shadow-[0_6px_18px_rgba(59,113,143,0.08)] ring-1 ring-sky-200'
-      : 'text-slate-600 hover:bg-sky-50/60 hover:text-sky-900'
+      ? 'bg-surface-hover text-foreground border border-border-soft shadow-sm'
+      : 'text-muted-copy hover:bg-surface-hover/30 hover:text-foreground border border-transparent'
   );
 
 export const Navigation = ({ onItemClick }: NavigationProps) => {
@@ -34,7 +34,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
   const translate = (label: string) => translations[label] ?? label;
 
   return (
-    <nav className="space-y-1.5 p-3" aria-label="Main navigation">
+    <nav className="space-y-1 p-3" aria-label="Main navigation">
       {NAV_ITEMS.map((item) => {
         const Icon = item.icon;
         if (item.href) {
@@ -45,31 +45,31 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
               onClick={onItemClick}
               className={linkClasses}
             >
-              <Icon className="h-4 w-4 shrink-0 text-slate-400 transition-colors group-hover:text-sky-700" />
+              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-foreground transition-colors" />
               <span>{translate(item.label)}</span>
             </NavLink>
           );
         }
 
         return (
-          <div key={item.label}>
+          <div key={item.label} className="space-y-1">
             <button
               type="button"
               onClick={() => setSkillsOpen((open) => !open)}
-              className="group flex min-h-11 w-full items-center gap-3 rounded-[12px] px-3 py-2.5 text-sm font-semibold text-slate-600 transition-colors hover:bg-sky-50/60 hover:text-sky-900"
+              className="group flex min-h-10 w-full items-center gap-3 rounded-[8px] px-3 py-2 text-xs font-semibold text-muted-copy transition-all hover:bg-surface-hover/30 hover:text-foreground border border-transparent"
               aria-expanded={skillsOpen}
             >
-              <Icon className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-sky-700" />
+              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-foreground" />
               <span className="flex-1 text-left">{translate(item.label)}</span>
               <ChevronDown
                 className={cn(
-                  'h-4 w-4 transition-transform',
+                  'h-3.5 w-3.5 transition-transform text-muted-copy',
                   skillsOpen && 'rotate-180'
                 )}
               />
             </button>
             {skillsOpen && 'children' in item && (
-              <div className="ml-5 mt-1 space-y-1 border-l border-slate-200 pl-2">
+              <div className="ml-5 space-y-1 border-l border-border-soft pl-2">
                 {item.children.map((skill) => (
                   <NavLink
                     key={skill.label}
@@ -77,7 +77,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
                     onClick={onItemClick}
                     className={linkClasses}
                   >
-                    <skill.icon className="h-4 w-4 shrink-0 text-slate-400" />
+                    <skill.icon className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
                     <span>{translate(skill.label)}</span>
                   </NavLink>
                 ))}

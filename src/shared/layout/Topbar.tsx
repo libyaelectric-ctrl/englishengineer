@@ -47,24 +47,24 @@ export const Topbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-18 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/78 px-5 backdrop-blur-xl sm:px-8">
+    <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 px-4 backdrop-blur-md sm:px-6">
       <button
         onClick={toggleSidebar}
-        className="cursor-pointer rounded-[12px] p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-950"
+        className="cursor-pointer rounded-[8px] p-1.5 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
         aria-label="Toggle navigation sidebar"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="h-4 w-4" />
       </button>
 
       <div className="flex-1" />
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         {currentUser && (
-          <div className="hidden sm:flex flex-col items-end text-right mr-2 font-sans">
-            <span className="text-xs font-black text-slate-950">
+          <div className="hidden sm:flex flex-col items-end text-right mr-1 font-sans">
+            <span className="text-xs font-bold text-foreground">
               {currentUser.displayName}
             </span>
-            <span className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
+            <span className="text-[9px] font-mono text-muted-copy uppercase tracking-wider">
               {currentUser.role}
             </span>
           </div>
@@ -73,32 +73,32 @@ export const Topbar: React.FC = () => {
         <div className="relative" ref={notificationsRef}>
           <button
             type="button"
-            className="relative cursor-pointer rounded-[12px] p-2 text-slate-500 transition-all hover:bg-sky-50 hover:text-sky-800"
+            className="relative cursor-pointer rounded-[8px] p-1.5 text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground"
             aria-label="View system notifications"
             aria-expanded={notificationsOpen}
             aria-controls="system-notifications-panel"
             onClick={() => setNotificationsOpen((open) => !open)}
           >
-            <Bell className="h-5 w-5" />
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-white bg-emerald-500" />
+            <Bell className="h-4 w-4" />
+            <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-emerald-500" />
           </button>
 
           {notificationsOpen && (
             <div
               id="system-notifications-panel"
               role="status"
-              className="absolute right-0 top-12 z-50 w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-[0_22px_60px_rgba(15,23,42,0.16)]"
+              className="absolute right-0 top-10 z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-[12px] border border-border-soft bg-surface shadow-lg"
             >
-              <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+              <div className="flex items-center justify-between border-b border-border-soft px-4 py-2.5 bg-surface-hover/20">
                 <div>
-                  <p className="text-sm font-black text-slate-950">
+                  <p className="text-xs font-bold text-foreground">
                     Workspace status
                   </p>
-                  <p className="mt-0.5 text-xs text-slate-500">
+                  <p className="mt-0.5 text-[10px] text-muted-copy">
                     No unread system alerts
                   </p>
                 </div>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-[10px] font-bold text-emerald-700">
+                <span className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2 py-0.5 text-[9px] font-bold text-emerald-400">
                   Ready
                 </span>
               </div>
@@ -109,20 +109,20 @@ export const Topbar: React.FC = () => {
                   setNotificationsOpen(false);
                   navigate('/curriculum');
                 }}
-                className="group flex w-full items-start gap-3 border-b border-slate-100 px-4 py-3 text-left transition-colors hover:bg-sky-50/70"
+                className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover/50"
               >
-                <span className="rounded-[10px] border border-sky-200 bg-sky-50 p-2 text-sky-700">
-                  <BookOpenCheck className="h-4 w-4" />
+                <span className="rounded-[8px] border border-primary/20 bg-primary/10 p-1.5 text-primary">
+                  <BookOpenCheck className="h-3.5 w-3.5" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-bold text-slate-900">
+                  <span className="block text-xs font-bold text-foreground">
                     Learning queue is ready
                   </span>
-                  <span className="mt-1 block text-xs leading-5 text-slate-500">
+                  <span className="mt-0.5 block text-[10px] leading-4 text-muted-copy">
                     Continue from your current independent skill levels.
                   </span>
                 </span>
-                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5" />
+                <ChevronRight className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
               </button>
 
               <button
@@ -131,20 +131,20 @@ export const Topbar: React.FC = () => {
                   setNotificationsOpen(false);
                   navigate('/profile');
                 }}
-                className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-sky-50/70"
+                className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover/50"
               >
-                <span className="rounded-[10px] border border-amber-200 bg-amber-50 p-2 text-amber-700">
-                  <HardDrive className="h-4 w-4" />
+                <span className="rounded-[8px] border border-warning/20 bg-warning/10 p-1.5 text-warning">
+                  <HardDrive className="h-3.5 w-3.5" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-bold text-slate-900">
+                  <span className="block text-xs font-bold text-foreground">
                     Local progress protection
                   </span>
-                  <span className="mt-1 block text-xs leading-5 text-slate-500">
+                  <span className="mt-0.5 block text-[10px] leading-4 text-muted-copy">
                     Check cloud-sync and account status before changing devices.
                   </span>
                 </span>
-                <ChevronRight className="mt-2 h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5" />
+                <ChevronRight className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
               </button>
             </div>
           )}
@@ -152,19 +152,19 @@ export const Topbar: React.FC = () => {
 
         <Link
           to="/profile"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-[12px] border border-blue-200 bg-blue-50 font-mono text-xs font-bold uppercase text-blue-800 shadow-sm transition-all hover:-translate-y-px hover:border-blue-300 hover:bg-blue-100"
+          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-[8px] border border-primary/25 bg-primary/10 font-mono text-[10px] font-bold uppercase text-primary shadow-sm transition-all hover:-translate-y-px hover:border-primary/45 hover:bg-primary/20"
           aria-label="View professional profile"
         >
-          {currentUser?.avatarInitials || <User className="h-5 w-5" />}
+          {currentUser?.avatarInitials || <User className="h-4 w-4" />}
         </Link>
 
         <button
           onClick={handleLogout}
-          className="cursor-pointer rounded-[12px] p-2 text-slate-500 transition-all hover:bg-rose-50 hover:text-rose-600"
+          className="cursor-pointer rounded-[8px] p-1.5 text-muted-copy transition-all hover:bg-red-500/10 hover:text-red-400"
           aria-label="Logout"
           title="Sign out of EngineerOS"
         >
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-4 w-4" />
         </button>
       </div>
     </header>
