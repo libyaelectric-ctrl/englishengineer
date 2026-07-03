@@ -353,7 +353,7 @@ const ProfilePage = () => {
       {/* Sticky Sub-navigation */}
       <nav
         aria-label="Profile section directory"
-        className="sticky top-14 z-20 flex overflow-x-auto gap-1.5 border-b border-border-soft bg-background/95 backdrop-blur-md py-3 hide-scrollbar select-none"
+        className="flex overflow-x-auto gap-1.5 border-b border-border-soft py-3 hide-scrollbar select-none"
       >
         {[
           { id: 'overview', label: 'Overview' },
