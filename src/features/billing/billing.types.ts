@@ -2,7 +2,6 @@ export type BillingPlanId =
   | 'free'
   | 'pro'
   | 'project'
-  | 'expert'
   | 'max'
   | 'exec'
   | 'private';

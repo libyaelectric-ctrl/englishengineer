@@ -2,7 +2,6 @@ export type CommercialPlanId =
   | 'free'
   | 'pro'
   | 'project'
-  | 'expert'
   | 'max'
   | 'exec'
   | 'private';
@@ -116,43 +115,17 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     actionHref: '/checkout?plan=project',
   },
   {
-    id: 'expert',
-    name: 'Expert',
-    price: '$49',
-    cadence: 'per month',
-    audience: 'For high-level engineering specialists and lead consultants.',
-    bestFor: 'Principal engineers & leads',
-    priceReason:
-      'Unlocks unlimited document uploads and maximum analysis scopes.',
-    benefits: [
-      'Unlimited Project Workspaces',
-      'Unlimited document uploads and analyses',
-      'All Project tier features included',
-      'Priority backend slot allocations',
-    ],
-    notIncluded: 'No real-time voice modules',
-    comparison: {
-      learning: 'All individual learning modules',
-      ai: 'Unlimited document assistant',
-      analytics: 'Project-based advanced analytics',
-      team: 'Unlimited workspaces',
-      limits: 'Unlimited uploads and reviews',
-    },
-    ads: 'none',
-    status: 'available-local',
-    actionLabel: 'Upgrade to Expert',
-    actionHref: '/checkout?plan=expert',
-  },
-  {
     id: 'max',
     name: 'Max',
     price: '$59',
     cadence: 'per month',
-    audience: 'For engineers needing voice meeting and speech simulation.',
-    bestFor: 'International meeting presenters',
+    audience:
+      'For engineers needing voice meetings, speech simulation, and unlimited workspaces.',
+    bestFor: 'International meeting presenters & leads',
     priceReason:
-      'Unlocks real voice speaking, pronunciation analysis and voice meeting simulator.',
+      'Unlocks real voice speaking, pronunciation analysis, voice simulator, and unlimited uploads.',
     benefits: [
+      'Unlimited Project Workspaces & uploads',
       'Real Voice Speaking (mobile mic supported)',
       'Speech Pronunciation Analysis',
       'Voice Meeting Simulator',
@@ -161,7 +134,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     notIncluded: 'No dedicated executive mentoring',
     comparison: {
       learning: 'All voice and listening modules',
-      ai: 'Speech and audio AI evaluations',
+      ai: 'Speech and audio AI evaluations + custom helper',
       analytics: 'Voice metrics and flow analytics',
       team: 'Unlimited workspaces',
       limits: 'Unlimited uploads, custom voice minutes',
