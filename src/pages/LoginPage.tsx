@@ -56,7 +56,7 @@ const AUTH_COPY = {
     passwordLabel: 'Şifre',
     loginButton: 'Giriş Yap',
     createAccountButton: 'Hesap Oluştur',
-    enterButton: 'EngineerOS’a Gir',
+    enterButton: 'Enter EngineerOS',
     alreadyHaveAccount: 'Zaten hesabın var mı?',
     newHere: 'Yeni misin?',
     switchToLogin: 'Giriş yap',
@@ -152,30 +152,30 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#f7f8fb] p-6 font-sans text-slate-950">
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(15,23,42,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,23,42,0.035)_1px,transparent_1px)] bg-[size:72px_72px] opacity-70" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-6 font-sans text-foreground">
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px] opacity-70" />
 
-      <div className="w-full max-w-md space-y-8 z-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="w-full max-w-md space-y-6 z-10 animate-in fade-in slide-in-from-bottom-4 duration-550">
         <div className="flex flex-col items-center text-center space-y-4">
-          <div className="h-14 w-14 bg-gradient-to-tr from-primary to-engineer-cyan rounded-lg flex items-center justify-center shadow-lg shadow-primary/20">
-            <Terminal className="h-7 w-7 text-white" />
+          <div className="h-12 w-12 bg-primary rounded-[8px] flex items-center justify-center shadow-md">
+            <Terminal className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h1 className="text-4xl font-black tracking-tight text-slate-950">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
               EngineerOS
             </h1>
-            <p className="mt-1 text-xs font-mono uppercase tracking-[0.2em] text-slate-500">
+            <p className="mt-1 text-[9px] font-mono uppercase tracking-wider text-muted-copy">
               Engineering Communication Operating System
             </p>
           </div>
         </div>
 
-        <div className="space-y-6 rounded-[20px] border border-slate-200 bg-white/88 p-8 shadow-[0_24px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+        <div className="space-y-5 rounded-card border border-border-soft bg-surface p-6 sm:p-8 shadow-lg">
           <div className="space-y-1">
-            <h2 className="text-lg font-bold text-slate-950">
+            <h2 className="text-sm font-bold text-foreground">
               {copy.heroTitle}
             </h2>
-            <p className="text-xs font-medium text-slate-500">
+            <p className="text-[11px] font-medium text-muted-copy">
               {isLocalAuthBlocked
                 ? 'Secure authentication is not configured. Supabase auth is required for production.'
                 : isLocalDemoMode
@@ -184,14 +184,14 @@ const LoginPage = () => {
             </p>
           </div>
 
-          <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500">
+          <label className="block text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {copy.interfaceLanguage}
             <select
               value={language}
               onChange={(event) =>
                 setLanguage(event.target.value as 'en' | 'tr')
               }
-              className="mt-2 min-h-10 w-full rounded-[12px] border border-slate-200 bg-slate-50 px-3 text-sm font-semibold normal-case tracking-normal text-slate-800"
+              className="mt-2 min-h-10 w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
             >
               {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -202,20 +202,20 @@ const LoginPage = () => {
           </label>
 
           {error && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-md text-xs flex items-start gap-2.5 leading-relaxed">
+            <div className="p-3 bg-error/5 border border-error/20 text-error rounded-[8px] text-xs flex items-start gap-2.5 leading-relaxed">
               <ShieldAlert className="h-4 w-4 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
-          <div className="grid grid-cols-2 rounded-full border border-slate-200 bg-slate-50 p-1">
+          <div className="grid grid-cols-2 rounded-card border border-border-soft bg-surface-hover/50 p-1">
             <button
               type="button"
               onClick={() => setIsSignUpMode(false)}
-              className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+              className={`rounded-card px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
                 !isSignUpMode
-                  ? 'bg-slate-950 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground'
               }`}
             >
               {copy.loginTab}
@@ -223,64 +223,64 @@ const LoginPage = () => {
             <button
               type="button"
               onClick={() => setIsSignUpMode(true)}
-              className={`rounded-full px-3 py-2 text-sm font-semibold transition-colors ${
+              className={`rounded-card px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${
                 isSignUpMode
-                  ? 'bg-slate-950 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground'
               }`}
             >
               {copy.createAccountTab}
             </button>
           </div>
 
-          <p className="text-sm text-slate-500">
+          <p className="text-xs text-muted-copy">
             {isSignUpMode ? copy.alreadyHaveAccount : copy.newHere}{' '}
             <button
               type="button"
               onClick={() => setIsSignUpMode((current) => !current)}
-              className="font-semibold text-blue-700 hover:text-blue-900"
+              className="font-bold text-primary hover:text-primary-hover cursor-pointer"
             >
               {isSignUpMode ? copy.switchToLogin : copy.switchToCreate}
             </button>
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <label
                 htmlFor="email"
-                className="text-[10px] font-black tracking-widest text-slate-500 uppercase block"
+                className="text-[10px] font-bold tracking-wider text-muted-copy uppercase block"
               >
                 {copy.emailLabel}
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-copy" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full rounded-md border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 transition-all focus:border-slate-400 focus:bg-white focus:outline-none"
+                  className="w-full rounded-input border border-border-soft bg-surface py-2 pl-10 pr-4 text-xs font-medium text-foreground placeholder:text-muted-copy/50 transition-all focus:border-border-hover focus:outline-none"
                   placeholder="sara.haddad@engineeros.dev"
                 />
               </div>
             </div>
 
             {isSupabaseMode && (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label
                   htmlFor="password"
-                  className="text-[10px] font-black tracking-widest text-slate-500 uppercase block"
+                  className="text-[10px] font-bold tracking-wider text-muted-copy uppercase block"
                 >
                   {copy.passwordLabel}
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+                  <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-copy" />
                   <input
                     id="password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-md border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm font-medium text-slate-900 placeholder:text-slate-400 transition-all focus:border-slate-400 focus:bg-white focus:outline-none"
+                    className="w-full rounded-input border border-border-soft bg-surface py-2 pl-10 pr-4 text-xs font-medium text-foreground placeholder:text-muted-copy/50 transition-all focus:border-border-hover focus:outline-none"
                     placeholder="Supabase password"
                   />
                 </div>
@@ -290,7 +290,7 @@ const LoginPage = () => {
             <Button
               type="submit"
               disabled={isLoading || isLocalAuthBlocked}
-              className="mt-2 flex h-11 w-full cursor-pointer items-center justify-center gap-2 font-bold"
+              className="mt-2 flex h-10 w-full cursor-pointer items-center justify-center gap-2 font-bold text-xs"
             >
               <LogIn className="h-4 w-4" />
               <span>
@@ -306,11 +306,11 @@ const LoginPage = () => {
           {isLocalDemoMode && (
             <>
               <div className="relative flex py-1 items-center">
-                <div className="flex-grow border-t border-slate-200"></div>
-                <span className="mx-4 flex-shrink text-[9px] font-mono uppercase tracking-widest text-slate-400">
+                <div className="flex-grow border-t border-border-soft/40"></div>
+                <span className="mx-4 flex-shrink text-[9px] font-mono uppercase tracking-widest text-muted-copy">
                   or bypass
                 </span>
-                <div className="flex-grow border-t border-slate-200"></div>
+                <div className="flex-grow border-t border-border-soft/40"></div>
               </div>
 
               <Button
@@ -318,16 +318,16 @@ const LoginPage = () => {
                 variant="outline"
                 onClick={handleDemoSubmit}
                 disabled={isLoading}
-                className="flex h-11 w-full cursor-pointer items-center justify-center gap-2 border-slate-300 text-slate-700 hover:bg-slate-50 hover:text-slate-950"
+                className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 text-xs"
               >
-                <Sparkles className="h-4 w-4 text-engineer-cyan" />
+                <Sparkles className="h-4 w-4 text-primary" />
                 <span>Use Demo Engineer</span>
               </Button>
             </>
           )}
         </div>
 
-        <p className="text-[10px] font-mono text-slate-600 text-center uppercase tracking-widest leading-relaxed">
+        <p className="text-[9px] font-mono text-muted-copy text-center uppercase tracking-wider leading-relaxed">
           EngineerOS v4.0.1 — Engineering Communication Operating System
           <br />
           LOCAL MODE STORES PROGRESS ON THIS DEVICE
