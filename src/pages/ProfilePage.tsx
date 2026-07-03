@@ -1291,13 +1291,15 @@ const ProfilePage = () => {
                       Direct Stripe billing portal access
                     </li>
                   </ul>
-                  {subscription.planId === 'free' && (
-                    <Button
-                      onClick={handleUpgrade}
-                      className="w-full mt-2 h-9 bg-primary text-white font-bold"
+                  {subscription.planId !== 'private' && (
+                    <Link
+                      to="/pricing"
+                      className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-[8px] bg-primary text-sm font-bold text-white shadow hover:bg-primary/95 transition-colors text-center"
                     >
-                      Upgrade to Pro for $19/mo
-                    </Button>
+                      {subscription.planId === 'free'
+                        ? 'Upgrade Plan'
+                        : 'Change / Upgrade Plan'}
+                    </Link>
                   )}
                 </div>
               </div>
