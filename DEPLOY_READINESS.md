@@ -8,17 +8,17 @@ Deployment Status: **FAIL / BLOCKED**
 
 ## 🚦 PASS / FAIL Verification
 
-| Scope | Status | Notes |
-| :--- | :---: | :--- |
-| **Railway backend entrypoint** | **PASS** | `server.js` points to `src/app.js` and starts Express. |
-| **Railway health endpoint** | **PASS** | `GET /api/health` returns status metadata successfully. |
-| **Railway start command** | **PASS** | Command `node server.js` runs via npm scripts. |
-| **Vercel build command** | **PASS** | `npm run build` runs `vite build` to generate compiled static assets. |
-| **Vercel output directory** | **PASS** | Outputs static bundles to `/dist` correctly. |
-| **Vercel SPA routing** | **PASS** | `vercel.json` redirects and rewrites all route traffic to `index.html`. |
-| **Stripe parameters** | **PASS** | Webhook handles raw buffer; checkout/portal endpoints support dynamic origins. |
+| Scope                            |  Status  | Notes                                                                                       |
+| :------------------------------- | :------: | :------------------------------------------------------------------------------------------ |
+| **Railway backend entrypoint**   | **PASS** | `server.js` points to `src/app.js` and starts Express.                                      |
+| **Railway health endpoint**      | **PASS** | `GET /api/health` returns status metadata successfully.                                     |
+| **Railway start command**        | **PASS** | Command `node server.js` runs via npm scripts.                                              |
+| **Vercel build command**         | **PASS** | `npm run build` runs `vite build` to generate compiled static assets.                       |
+| **Vercel output directory**      | **PASS** | Outputs static bundles to `/dist` correctly.                                                |
+| **Vercel SPA routing**           | **PASS** | `vercel.json` redirects and rewrites all route traffic to `index.html`.                     |
+| **Stripe parameters**            | **PASS** | Webhook handles raw buffer; checkout/portal endpoints support dynamic origins.              |
 | **Supabase security boundaries** | **PASS** | Service role client is locked to backend database repository. RLS migration files verified. |
-| **Upstash limit adapters** | **PASS** | Production mode requires Upstash configuration for rate limit persistence. |
+| **Upstash limit adapters**       | **PASS** | Production mode requires Upstash configuration for rate limit persistence.                  |
 
 ---
 
@@ -34,6 +34,7 @@ Deployment Status: **FAIL / BLOCKED**
 ## 📋 Recommended Environment Variables
 
 ### Backend Staging / Production (`Railway`)
+
 ```ini
 PORT=8080
 NODE_ENV=production
@@ -55,6 +56,7 @@ ENGINEEROS_INTERNAL_API_SECRET=super-secret-token
 ```
 
 ### Frontend Staging / Production (`Vercel`)
+
 ```ini
 VITE_AUTH_PROVIDER=supabase
 VITE_SUPABASE_URL=https://...supabase.co
@@ -88,8 +90,8 @@ graph TD
 
 ## ⏱️ Estimated Deployment Time
 
-*   **Initial Setup & Provisioning:** 15 minutes.
-*   **Staging Database Migrations:** 5 minutes.
-*   **Railway & Vercel builds:** 10 minutes.
-*   **Integration Checkouts Verification:** 10 minutes.
-*   **Total Time:** **approx. 40 minutes** from zero configuration to fully running staging suite.
+- **Initial Setup & Provisioning:** 15 minutes.
+- **Staging Database Migrations:** 5 minutes.
+- **Railway & Vercel builds:** 10 minutes.
+- **Integration Checkouts Verification:** 10 minutes.
+- **Total Time:** **approx. 40 minutes** from zero configuration to fully running staging suite.
