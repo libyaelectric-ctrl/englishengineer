@@ -14,12 +14,12 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   <div className="min-h-[60vh] w-full animate-aurora-fade-in px-4 py-10">
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="premium-panel flex items-center gap-4 p-5">
-        <div className="rounded-[12px] border border-blue-100 bg-blue-50 p-3 text-blue-700">
-          <Cpu className="h-5 w-5" />
+        <div className="rounded-[8px] border border-border-soft bg-surface-hover p-2.5 text-primary">
+          <Cpu className="h-4 w-4" />
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-bold text-slate-900">{title}</p>
-          <p className="mt-1 text-xs text-slate-500">{description}</p>
+          <p className="text-sm font-bold text-foreground">{title}</p>
+          <p className="mt-1 text-xs text-muted-copy">{description}</p>
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-3">

@@ -21,30 +21,30 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
   const colors = {
-    primary: 'bg-blue-600',
-    cyan: 'bg-cyan-600',
-    emerald: 'bg-emerald-600',
-    rose: 'bg-rose-600',
-    amber: 'bg-amber-500',
+    primary: 'bg-primary',
+    cyan: 'bg-cyan-500',
+    emerald: 'bg-success',
+    rose: 'bg-error',
+    amber: 'bg-warning',
   };
 
   return (
     <div className={cn('w-full space-y-1.5', className)} {...props}>
       {showValue && (
-        <div className="flex justify-between text-[11px] font-mono uppercase tracking-widest text-slate-500">
+        <div className="flex justify-between text-[10px] font-mono uppercase tracking-wider text-muted-copy">
           <span>PROGRESS</span>
-          <span className="font-bold text-slate-700">
+          <span className="font-bold text-foreground">
             {percentage.toFixed(1)}%
           </span>
         </div>
       )}
-      <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
         <div
           className={cn(
             'h-full rounded-full transition-all duration-700 ease-out',
             colors[color],
             animated &&
-              'relative after:absolute after:inset-y-0 after:right-0 after:w-6 after:bg-white/25 after:blur-sm'
+              'relative after:absolute after:inset-y-0 after:right-0 after:w-6 after:bg-white/10 after:blur-sm'
           )}
           style={{ width: `${percentage}%` }}
         />

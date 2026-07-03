@@ -11,17 +11,17 @@ type ButtonVariant =
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'border border-primary bg-primary text-white shadow-[0_8px_20px_rgba(59,113,143,0.14)] hover:border-primary-hover hover:bg-primary-hover hover:shadow-[0_10px_24px_rgba(59,113,143,0.18)]',
+    'border border-primary bg-primary text-white hover:bg-primary-hover hover:border-primary-hover active:bg-primary-hover/90 shadow-sm',
   secondary:
-    'border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-blue-200 hover:bg-blue-50/70 hover:text-blue-800',
+    'border border-border-soft bg-surface text-foreground hover:bg-surface-hover hover:border-border-hover active:bg-surface-hover shadow-sm',
   outline:
-    'border border-slate-300 bg-transparent text-slate-700 hover:border-blue-300 hover:bg-blue-50/60 hover:text-blue-800',
+    'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover hover:border-border-hover',
   ghost:
-    'border border-transparent bg-transparent text-slate-600 hover:border-blue-100 hover:bg-blue-50/70 hover:text-blue-800',
+    'border border-transparent bg-transparent text-muted-copy hover:bg-surface-hover hover:text-foreground',
   danger:
-    'border border-rose-200 bg-rose-50 text-rose-700 hover:border-rose-300 hover:bg-rose-100',
+    'border border-red-500/20 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/30',
   success:
-    'border border-emerald-200 bg-emerald-50 text-emerald-700 hover:border-emerald-300 hover:bg-emerald-100',
+    'border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/30',
 };
 
 export const Button = React.forwardRef<
@@ -31,7 +31,7 @@ export const Button = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      'inline-flex min-h-10 min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-[12px] px-4 py-2 text-center text-sm font-semibold leading-tight transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out hover:-translate-y-px active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-45 cursor-pointer focus-visible:ring-2 focus-visible:ring-sky-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white',
+      'inline-flex min-h-10 min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-[8px] px-4 py-2 text-center text-sm font-semibold leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-45 cursor-pointer focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background',
       variantClasses[variant],
       className
     )}

@@ -23,16 +23,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div
       className={cn(
-        'premium-surface flex min-h-[300px] flex-col items-center justify-center rounded-[16px] border-dashed p-12 text-center',
+        'premium-surface flex min-h-[300px] flex-col items-center justify-center rounded-card border-dashed p-12 text-center',
         className
       )}
       {...props}
     >
-      <div className="mb-4 rounded-[12px] border border-blue-100 bg-blue-50 p-4 text-blue-700">
-        <Icon className="h-8 w-8" />
+      <div className="mb-4 rounded-[8px] border border-border-soft bg-surface-hover/50 p-3.5 text-primary">
+        <Icon className="h-6 w-6" />
       </div>
-      <h3 className="text-xl font-bold text-slate-900">{title}</h3>
-      <p className="text-sm text-slate-500 mt-2 max-w-sm leading-relaxed">
+      <h3 className="text-base font-bold text-foreground">{title}</h3>
+      <p className="text-xs text-muted-copy mt-2 max-w-sm leading-relaxed">
         {description}
       </p>
       {actionText && onAction && (

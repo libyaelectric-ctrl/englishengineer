@@ -1,58 +1,120 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import 'tailwindcss';
 
+:root {
+  /* Default theme: Dark-first Premium Command Center */
+  --background: #080d1a;
+  --foreground: #f8fafc;
+
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-foreground: #ffffff;
+
+  --color-surface: #0f172a;
+  --color-surface-hover: #1e293b;
+  --color-soft: #172554;
+  --color-border-soft: #1e293b;
+  --color-border-hover: #334155;
+  --color-muted-copy: #94a3b8;
+  --color-focus: #3b82f6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+
+  --color-engineer-950: #020617;
+  --color-engineer-900: #0f172a;
+  --color-engineer-800: #1e293b;
+  --color-engineer-700: #334155;
+  --color-engineer-cyan: #06b6d4;
+
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-dialog: 16px;
+}
+
+.light {
+  /* Light theme overrides */
+  --background: #f4f6fa;
+  --foreground: #0f172a;
+
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-foreground: #ffffff;
+
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-soft: #eff6ff;
+  --color-border-soft: #cbd5e1;
+  --color-border-hover: #94a3b8;
+  --color-muted-copy: #64748b;
+  --color-focus: #2563eb;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  --color-engineer-950: #ffffff;
+  --color-engineer-900: #f8fafc;
+  --color-engineer-800: #e2e8f0;
+  --color-engineer-700: #cbd5e1;
+  --color-engineer-cyan: #0891b2;
+}
+
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
-  --color-background: #f4f6fa;
-  --color-foreground: #182033;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-  --color-primary: #3b6fd8;
-  --color-primary-hover: #315fc0;
-  --color-primary-foreground: #ffffff;
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-foreground: var(--color-primary-foreground);
 
-  --color-surface: #ffffff;
-  --color-surface-hover: #f4f7fd;
-  --color-soft: #edf3ff;
-  --color-border-soft: #dfe5ee;
-  --color-border-hover: #aebfe4;
-  --color-muted-copy: #64748b;
-  --color-focus: #4f86ef;
-  --color-success: #15803d;
-  --color-warning: #b45309;
-  --color-error: #be123c;
+  --color-surface: var(--color-surface);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-soft: var(--color-soft);
+  --color-border-soft: var(--color-border-soft);
+  --color-border-hover: var(--color-border-hover);
+  --color-muted-copy: var(--color-muted-copy);
+  --color-focus: var(--color-focus);
+  --color-success: var(--color-success);
+  --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
 
-  --color-engineer-950: #020617;
-  --color-engineer-900: #0a101c;
-  --color-engineer-800: #1f2937;
-  --color-engineer-700: #334155;
-  --color-engineer-cyan: #06b6d4;
+  --color-engineer-950: var(--color-engineer-950);
+  --color-engineer-900: var(--color-engineer-900);
+  --color-engineer-800: var(--color-engineer-800);
+  --color-engineer-700: var(--color-engineer-700);
+  --color-engineer-cyan: var(--color-engineer-cyan);
 
-  --radius-button: 12px;
-  --radius-input: 12px;
-  --radius-card: 16px;
-  --radius-dialog: 20px;
+  --radius-button: var(--radius-button);
+  --radius-input: var(--radius-input);
+  --radius-card: var(--radius-card);
+  --radius-dialog: var(--radius-dialog);
 }
 
 @layer base {
   :root {
+    color-scheme: dark;
+  }
+
+  .light {
     color-scheme: light;
   }
 
   * {
-    @apply border-engineer-800;
+    @apply border-border-soft;
     letter-spacing: 0 !important;
   }
 
   html {
-    @apply bg-slate-50;
+    @apply bg-background text-foreground;
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-slate-50 text-slate-950 antialiased font-sans;
-    background: #f4f6fa;
+    @apply bg-background text-foreground antialiased font-sans;
     min-height: 100vh;
   }
 
@@ -68,7 +130,7 @@
   }
 
   ::selection {
-    @apply bg-blue-100 text-blue-950;
+    @apply bg-blue-900/30 text-white;
   }
 
   button,
@@ -85,7 +147,7 @@
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply ring-2 ring-sky-400/45 ring-offset-2 ring-offset-white;
+    @apply ring-2 ring-focus ring-offset-2 ring-offset-background;
   }
 
   input,
@@ -105,62 +167,62 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
+  height: 6px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 rounded-full;
+  @apply bg-border-hover/30 rounded-full hover:bg-border-hover/50;
 }
 
 @layer components {
   .premium-panel {
-    @apply border border-slate-200 bg-white shadow-[0_10px_30px_rgba(37,65,93,0.055)];
+    @apply border border-border-soft bg-surface shadow-sm;
     border-radius: var(--radius-card) !important;
   }
 
   .premium-surface {
-    @apply border border-slate-200 bg-slate-50/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)];
+    @apply border border-border-soft bg-surface/50 shadow-inner;
     border-radius: var(--radius-card) !important;
   }
 
   .premium-input {
-    @apply border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 transition-colors focus:border-slate-400;
+    @apply border border-border-soft bg-surface text-foreground placeholder:text-muted-copy transition-colors focus:border-border-hover focus:ring-1 focus:ring-focus;
     border-radius: var(--radius-input);
   }
 
   .status-pill {
-    @apply border px-2.5 py-1 text-[10px] font-bold uppercase;
-    border-radius: 999px;
+    @apply border border-border-soft px-2.5 py-1 text-[10px] font-bold uppercase rounded-full;
   }
 
   .aurora-divider {
-    @apply border-slate-200;
+    @apply border-border-soft;
   }
 
   .aurora-hover {
-    @apply transition-all duration-200 ease-out hover:-translate-y-px hover:border-sky-200 hover:bg-sky-50/45 hover:shadow-[0_12px_28px_rgba(59,113,143,0.08)];
+    @apply transition-all duration-200 ease-out hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/20 hover:shadow-md;
   }
 
   .public-primary-action {
-    @apply inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-[12px] border border-primary bg-primary px-5 py-3 text-center text-sm font-semibold leading-tight text-white shadow-[0_8px_20px_rgba(59,113,143,0.14)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover hover:shadow-[0_10px_24px_rgba(59,113,143,0.18)] active:translate-y-0;
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border border-primary bg-primary px-4 py-2 text-center text-sm font-semibold leading-tight text-white transition-all hover:bg-primary-hover active:translate-y-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .public-secondary-action {
-    @apply inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-[12px] border border-slate-300 bg-white px-5 py-3 text-center text-sm font-semibold leading-tight text-slate-800 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-px hover:border-sky-300 hover:bg-sky-50 hover:text-sky-800 active:translate-y-0;
+    @apply inline-flex min-h-10 items-center justify-center gap-2 rounded-[8px] border border-border-soft bg-surface px-4 py-2 text-center text-sm font-semibold leading-tight text-foreground transition-all hover:bg-surface-hover active:translate-y-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .public-text-link {
-    @apply inline-flex min-h-10 items-center gap-2 rounded-[10px] text-sm font-bold text-sky-700 transition-colors hover:text-sky-800;
+    @apply inline-flex min-h-10 items-center gap-2 rounded-[8px] text-sm font-semibold text-primary transition-colors hover:text-primary-hover;
   }
 
   .public-card {
-    @apply rounded-[16px] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(37,65,93,0.05)] transition-[background-color,border-color,box-shadow,transform] duration-200 ease-out hover:-translate-y-px hover:border-sky-200 hover:bg-sky-50/35 hover:shadow-[0_16px_38px_rgba(37,65,93,0.08)];
+    @apply rounded-[12px] border border-border-soft bg-surface p-6 shadow-sm transition-all hover:border-border-hover;
   }
 
   .public-eyebrow {
-    @apply text-xs font-bold uppercase text-sky-700;
+    @apply text-xs font-bold uppercase text-primary tracking-wider;
   }
 
   .aurora-skeleton {
@@ -176,7 +238,7 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(148, 163, 184, 0.12),
+      rgba(255, 255, 255, 0.08),
       transparent
     );
     animation: aurora-shimmer 1.8s ease-in-out infinite;
@@ -192,7 +254,7 @@
 @keyframes aurora-fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -201,5 +263,5 @@
 }
 
 .animate-aurora-fade-in {
-  animation: aurora-fade-in 220ms ease-out both;
+  animation: aurora-fade-in 180ms ease-out both;
 }
