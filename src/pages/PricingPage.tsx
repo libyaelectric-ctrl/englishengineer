@@ -13,6 +13,23 @@ import { PageMetadata } from '@/shared/components/PageMetadata';
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
+// The active purchasable plans
+const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter(
+  (plan) => plan.id === 'free' || plan.id === 'pro'
+);
+
+// Future roadmap plans with allowed badges: Coming Soon, Request Access, Apply
+const ROADMAP_PLANS = [
+  { name: 'Core', status: 'Coming Soon', audience: 'A fuller daily loop for independent learners.' },
+  { name: 'Team', status: 'Coming Soon', audience: 'For small engineering teams and corporate programs.' },
+  { name: 'Pro Plus', status: 'Request Access', audience: 'Expanded memory, advanced agents, and custom project context.' },
+  { name: 'Project', status: 'Request Access', audience: 'Tailored RFI, NCR, and daily engineering email templates.' },
+  { name: 'Expert', status: 'Apply', audience: 'Dedicated technical mentor review and verified credential verification.' },
+  { name: 'Max', status: 'Coming Soon', audience: 'Unlimited workspace memory and high-frequency communication training.' },
+  { name: 'Executive', status: 'Apply', audience: 'Private executive communications support and dedicated coaching.' },
+  { name: 'Private EngineerOS', status: 'Request Access', audience: 'Self-hosted, single-tenant deployment for security.' }
+];
+
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -32,7 +49,9 @@ const PricingPage = () => {
     if (!billingApiUrl) {
       setBillingReadiness('unavailable');
       setBillingBanner(
-        'Billing is unavailable. Configure VITE_BILLING_API_URL to enable Stripe billing.'
+        (import.meta as any).env?.DEV
+          ? 'Stripe billing is running in local developer mode.'
+          : 'Billing service is temporarily unavailable.'
       );
       return;
     }
@@ -51,18 +70,22 @@ const PricingPage = () => {
 
         if (health?.stripeConfigured === true) {
           setBillingReadiness('ready');
-          setBillingBanner('Secure Stripe test checkout is available.');
+          setBillingBanner('Secure Stripe checkout is available.');
         } else {
           setBillingReadiness('unavailable');
           setBillingBanner(
-            'Billing is unavailable. Stripe backend is not verified.'
+            (import.meta as any).env?.DEV
+              ? 'Billing service is running in local developer mode (Stripe backend is not verified).'
+              : 'Billing service is temporarily unavailable.'
           );
         }
       } catch {
         if (!mounted) return;
         setBillingReadiness('unavailable');
         setBillingBanner(
-          'Billing is unavailable. Stripe backend health check failed.'
+          (import.meta as any).env?.DEV
+            ? 'Billing service is running in local developer mode (Stripe backend health check failed).'
+            : 'Billing service is temporarily unavailable.'
         );
       }
     };
@@ -81,6 +104,11 @@ const PricingPage = () => {
 
     if (!currentUser) {
       navigate('/login', { state: { from: location } });
+      return;
+    }
+
+    if (currentUser.id.startsWith('demo_engineer_')) {
+      setCheckoutError('Demo profiles do not have billing privileges.');
       return;
     }
 
@@ -135,40 +163,30 @@ const PricingPage = () => {
       );
     }
 
-    // Default for starter (Lite), core, and team plans: disabled, Coming Soon
-    return (
-      <button
-        type="button"
-        disabled
-        className="mt-6 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-border-soft bg-surface/50 px-4 py-2 text-sm font-semibold text-muted-copy cursor-not-allowed"
-      >
-        Coming Soon
-      </button>
-    );
+    return null;
   };
 
   return (
     <main className="bg-background text-foreground min-h-screen">
       <PageMetadata
-        title="Pricing"
-        description="Preview EngineerOS plans for individual engineers and engineering teams."
+        title="Access"
+        description="Choose the EngineerOS access level that fits your work."
       />
       <section className="border-b border-border-soft bg-surface py-12 text-center">
         <div className="mx-auto max-w-3xl px-4">
           <p className="public-eyebrow">International engineering learning</p>
-          <h1 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-            Clear plans for independent engineers and teams.
+          <h1 className="mt-3 text-3xl font-bold text-slate-950 sm:text-4xl">
+            Choose the EngineerOS access level that fits your work.
           </h1>
           <p className="mt-3 text-xs leading-5 text-muted-copy max-w-xl mx-auto">
             AI-powered communication training for engineers on international
-            projects. Prices are a commercial preview, not evidence of active
-            billing.
+            projects. Pro features are fully active, while future plans show upcoming roadmaps.
           </p>
           <div className="mx-auto mt-6 grid max-w-2xl gap-3 text-left sm:grid-cols-3">
             {[
               ['Start', 'Free to understand the learning flow'],
-              ['Grow', 'Individual plans match study intensity'],
-              ['Scale', 'Team is priced for manager visibility'],
+              ['Grow', 'Pro plan matches professional workspace goals'],
+              ['Scale', 'Custom organizational options on request'],
             ].map(([title, copy]) => (
               <div
                 key={title}
@@ -196,12 +214,13 @@ const PricingPage = () => {
         </div>
       </section>
 
+      {/* Main active plans grid */}
       <section className="py-12">
-        <div className="mx-auto grid max-w-7xl gap-5 px-4 sm:px-6 md:grid-cols-2 xl:grid-cols-3 lg:px-8">
-          {COMMERCIAL_PLAN_CATALOG.map((plan) => (
+        <div className="mx-auto grid max-w-4xl gap-6 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
+          {ACTIVE_PLANS.map((plan) => (
             <article
               key={plan.id}
-              className={`public-card relative flex min-w-0 flex-col p-5 rounded-card border ${plan.id === 'pro' ? 'border-primary/30 bg-primary/5 shadow-md shadow-primary/5' : 'border-border-soft'}`}
+              className={`public-card relative flex min-w-0 flex-col p-6 rounded-card border ${plan.id === 'pro' ? 'border-primary/30 bg-primary/5 shadow-md shadow-primary/5' : 'border-border-soft'}`}
             >
               <div className="flex min-h-10 items-start justify-between gap-2">
                 <p className="text-sm font-bold text-foreground">{plan.name}</p>
@@ -211,11 +230,11 @@ const PricingPage = () => {
                   {plan.id === 'free' || (plan.id === 'pro' && billingEnabled) ? 'Available' : 'Coming Soon'}
                 </span>
               </div>
-              <p className="mt-4 text-2xl font-bold text-foreground">
+              <p className="mt-4 text-3xl font-bold text-foreground">
                 {plan.price}
               </p>
               <p className="mt-0.5 text-[10px] text-muted-copy">{plan.cadence}</p>
-              <p className="mt-4 min-h-[4.5rem] text-xs leading-5 text-muted-copy">
+              <p className="mt-4 min-h-[4rem] text-xs leading-5 text-muted-copy">
                 {plan.audience}
               </p>
               <div className="mt-4 rounded-card border border-border-soft bg-surface-hover/20 p-3.5">
@@ -252,6 +271,45 @@ const PricingPage = () => {
         </div>
       </section>
 
+      {/* Future Roadmap Section */}
+      <section className="border-t border-border-soft bg-surface/30 py-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="public-eyebrow">Future commercial roadmap</p>
+          <h2 className="mt-2 text-xl font-bold text-foreground">
+            Planned packages and capabilities.
+          </h2>
+          <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-copy">
+            Future packages are under active evaluation. Request access below to express interest.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {ROADMAP_PLANS.map((plan) => (
+              <div key={plan.name} className="rounded-card border border-border-soft bg-surface p-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-xs font-bold text-foreground">{plan.name}</p>
+                    <span className="rounded-full border border-border-soft bg-background px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-muted-copy">
+                      {plan.status}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[11px] leading-4 text-muted-copy">
+                    {plan.audience}
+                  </p>
+                </div>
+                <div className="mt-4">
+                  <button
+                    type="button"
+                    disabled
+                    className="w-full text-center text-[10px] font-bold py-1.5 rounded-[6px] border border-border-soft bg-surface-hover/30 text-muted-copy cursor-not-allowed"
+                  >
+                    {plan.status}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="border-t border-border-soft bg-surface py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="public-eyebrow">Plan comparison</p>
@@ -264,13 +322,13 @@ const PricingPage = () => {
             verified.
           </p>
           <div className="mt-6 overflow-x-auto rounded-card border border-border-soft">
-            <table className="min-w-[900px] w-full border-collapse bg-surface text-left text-xs">
+            <table className="min-w-[700px] w-full border-collapse bg-surface text-left text-xs">
               <thead className="bg-surface-hover/20">
                 <tr>
                   <th className="border-b border-border-soft p-3 font-bold text-foreground">
                     Capability
                   </th>
-                  {COMMERCIAL_PLAN_CATALOG.map((plan) => (
+                  {ACTIVE_PLANS.map((plan) => (
                     <th
                       key={plan.id}
                       className="border-b border-border-soft p-3 font-bold text-foreground"
@@ -295,7 +353,7 @@ const PricingPage = () => {
                     className="border-b border-border-soft/40 last:border-0 hover:bg-surface-hover/10"
                   >
                     <th className="p-3 font-bold text-foreground">{label}</th>
-                    {COMMERCIAL_PLAN_CATALOG.map((plan) => (
+                    {ACTIVE_PLANS.map((plan) => (
                       <td key={plan.id} className="p-3 leading-5 text-muted-copy">
                         {plan.comparison[key]}
                       </td>
@@ -304,38 +362,6 @@ const PricingPage = () => {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-t border-border-soft bg-surface py-10">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-xl font-bold text-foreground">
-            Honest commercial readiness
-          </h2>
-          <div className="mt-5 grid gap-4 md:grid-cols-3">
-            {[
-              [
-                'Free',
-                'Local-first access is available without payment. Controlled sponsor readiness is disabled by default.',
-              ],
-              [
-                'Paid plans',
-                'All paid plans are ad-free. Checkout remains unavailable until the backend and webhook are verified.',
-              ],
-              [
-                'Team',
-                'Manager summaries and roles are code-ready; live organization billing is not claimed.',
-              ],
-            ].map(([title, copy]) => (
-              <div
-                key={title}
-                className="rounded-card border border-border-soft bg-background p-4"
-              >
-                <h3 className="font-bold text-foreground text-sm">{title}</h3>
-                <p className="mt-2 text-xs leading-5 text-muted-copy">{copy}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>

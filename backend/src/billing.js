@@ -35,6 +35,13 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     async createCheckoutSession(userId, body) {
       ensureConfigured();
       requireText(userId, 'authenticated userId');
+      if (userId.startsWith('demo_engineer_')) {
+        throw new ApiError(
+          403,
+          'FORBIDDEN_DEMO_ACTION',
+          'Demo profiles do not have billing privileges.'
+        );
+      }
       const email = requireText(body?.email, 'email');
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
@@ -70,6 +77,13 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     async createPortalSession(userId, body) {
       ensureConfigured();
       requireText(userId, 'authenticated userId');
+      if (userId.startsWith('demo_engineer_')) {
+        throw new ApiError(
+          403,
+          'FORBIDDEN_DEMO_ACTION',
+          'Demo profiles do not have billing privileges.'
+        );
+      }
       const returnUrl = requireText(body?.returnUrl, 'returnUrl');
       const subscription = await repository.getSubscriptionStatus(userId);
       if (!subscription?.stripeCustomerId) {
@@ -92,6 +106,9 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           ? userIdValue.trim()
           : null;
       if (!userId) {
+        return emptySubscription();
+      }
+      if (userId.startsWith('demo_engineer_')) {
         return emptySubscription();
       }
 

@@ -1,4 +1,4 @@
-import { BookMarked, BookOpen, Home, Map, User } from 'lucide-react';
+import { BriefcaseBusiness, Home, Layers3, Map, User } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '@/shared/utils/cn';
 import {
@@ -9,8 +9,8 @@ import {
 const ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Learning Hub', href: '/curriculum', icon: Map },
-  { label: 'Reading', href: '/reading', icon: BookOpen },
-  { label: 'Vocabulary', href: '/vocabulary', icon: BookMarked },
+  { label: 'Skills', href: '/reading', icon: Layers3 },
+  { label: 'Tools', href: '/tools', icon: BriefcaseBusiness },
   { label: 'Profile', href: '/profile', icon: User },
 ] as const;
 

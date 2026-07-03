@@ -5,8 +5,8 @@ import { cn } from '@/shared/utils/cn';
 
 const links = [
   { label: 'Product', href: '/#product' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'For teams', href: '/business' },
+  { label: 'Access', href: '/pricing' },
+  { label: 'For Teams', href: '/business' },
 ];
 
 export const PublicLayout = () => {
@@ -141,7 +141,7 @@ export const PublicLayout = () => {
               className="block text-slate-600 hover:text-sky-700"
               to="/pricing"
             >
-              Pricing
+              Access
             </Link>
             <Link
               className="block text-slate-600 hover:text-sky-700"

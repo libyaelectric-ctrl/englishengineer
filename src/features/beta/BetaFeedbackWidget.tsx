@@ -52,7 +52,7 @@ export const BetaFeedbackWidget = () => {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-end bg-slate-700/20 p-3 pb-[calc(5.5rem+env(safe-area-inset-bottom))] backdrop-blur-[2px] sm:p-5 lg:pb-5"
+          className="fixed inset-0 z-50 flex items-start lg:items-end justify-end bg-slate-700/20 p-3 pt-16 lg:pt-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-5 backdrop-blur-[2px] sm:p-5"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) close();
           }}
@@ -145,7 +145,7 @@ export const BetaFeedbackWidget = () => {
         <button
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] right-3 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-white shadow-[0_10px_24px_rgba(59,113,143,0.14)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover lg:bottom-5 lg:right-5"
+          className="fixed top-16 lg:top-auto bottom-auto lg:bottom-5 right-3 lg:right-5 z-40 flex h-10 w-10 items-center justify-center rounded-[12px] border border-primary bg-primary text-white shadow-[0_10px_24px_rgba(59,113,143,0.14)] transition-all hover:-translate-y-px hover:border-primary-hover hover:bg-primary-hover"
           aria-label="Open closed beta feedback"
           title={LocalizationService.translate('feedback.open', language)}
         >

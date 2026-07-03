@@ -111,7 +111,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     id: 'pro',
     name: 'Pro',
     price: '$19',
-    cadence: 'per month · planned',
+    cadence: 'per month',
     audience: 'For serious professional engineering communication practice.',
     bestFor: 'Career-focused engineers',
     priceReason:
