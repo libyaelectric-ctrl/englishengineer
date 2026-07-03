@@ -15,6 +15,10 @@
       }
     },
     {
+      "source": "/((?!api|assets|favicon.ico|index.html).*)",
+      "destination": "/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": {
         "type": "service",
