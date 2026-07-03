@@ -1,9 +1,11 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const loginDemo = async (page: Page) => {
-  await page.goto('/start');
-  await page.getByRole('button', { name: 'Try Lite' }).click();
-  await page.getByRole('button', { name: 'Explore now at A1' }).click();
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'Use Demo Engineer' }).click();
+  await expect(
+    page.getByRole('heading', { name: /command center/i })
+  ).toBeVisible();
 };
 
 const expectNoHorizontalOverflow = async (page: Page) => {
@@ -60,7 +62,7 @@ test.describe('mobile-first learning shell', () => {
     await loginDemo(page);
     await page.goto('/dashboard');
     await expect(
-      page.getByRole('heading', { name: /Mission Control/i })
+      page.getByRole('heading', { name: /command center/i })
     ).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });

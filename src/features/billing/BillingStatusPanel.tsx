@@ -46,8 +46,12 @@ export const BillingStatusPanel = ({
   return (
     <div className="space-y-4" data-testid="billing-status-panel">
       {error && (
-        <div className="rounded-card border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning" role="alert">
-          Billing status is temporarily unavailable. Access entitlements are based on the last known verified state.
+        <div
+          className="rounded-card border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning"
+          role="alert"
+        >
+          Billing status is temporarily unavailable. Access entitlements are
+          based on the last known verified state.
         </div>
       )}
       <div className="flex flex-col gap-3 rounded-card border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between">

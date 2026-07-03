@@ -10,10 +10,8 @@ type ButtonVariant =
   | 'success';
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    'public-primary-action',
-  secondary:
-    'public-secondary-action',
+  primary: 'public-primary-action',
+  secondary: 'public-secondary-action',
   outline:
     'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover hover:border-border-hover',
   ghost:

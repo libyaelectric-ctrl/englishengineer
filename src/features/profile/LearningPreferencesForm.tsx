@@ -61,7 +61,9 @@ export const LearningPreferencesForm = ({
         <legend className="text-xs font-bold text-foreground">
           Learning goals
         </legend>
-        <p className="mt-0.5 text-[10px] text-muted-copy">Select one or more.</p>
+        <p className="mt-0.5 text-[10px] text-muted-copy">
+          Select one or more.
+        </p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {LEARNING_GOALS.map((goal) => (
             <label
@@ -151,9 +153,7 @@ export const LearningPreferencesForm = ({
       </div>
 
       <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
-        {saved && (
-          <span className="text-xs font-bold text-success">Saved</span>
-        )}
+        {saved && <span className="text-xs font-bold text-success">Saved</span>}
         <Button type="submit" className="text-xs min-h-9">
           <Save className="h-3.5 w-3.5" /> {submitLabel}
         </Button>

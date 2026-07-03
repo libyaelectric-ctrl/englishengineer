@@ -140,7 +140,10 @@ export class StripeBillingProvider {
     }
 
     return postJson<BillingRedirectResponse, BillingPortalRequest>(
-      buildBillingEndpoint(this.billingApiUrl, 'create-customer-portal-session'),
+      buildBillingEndpoint(
+        this.billingApiUrl,
+        'create-customer-portal-session'
+      ),
       request,
       request.userId
     );

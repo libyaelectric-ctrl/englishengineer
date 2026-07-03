@@ -169,7 +169,9 @@ const DashboardPage = () => {
               data-testid="dashboard-summary-score"
               className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
             >
-              <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">AVG SCORE</p>
+              <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                AVG SCORE
+              </p>
               <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
                 {summary.averageScore}%
               </p>
@@ -189,7 +191,9 @@ const DashboardPage = () => {
               data-testid="dashboard-summary-done"
               className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
             >
-              <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">COMPLETED</p>
+              <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                COMPLETED
+              </p>
               <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
                 {summary.completionPercentage}%
               </p>
@@ -275,7 +279,9 @@ const DashboardPage = () => {
         className="premium-panel h-fit p-5 xl:sticky xl:top-20"
       >
         <div>
-          <p className="text-[10px] font-bold text-primary uppercase tracking-wider">LEARNING MEMORY</p>
+          <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
+            LEARNING MEMORY
+          </p>
           <h2 className="mt-1.5 text-base font-bold text-foreground">
             Everything stays connected.
           </h2>

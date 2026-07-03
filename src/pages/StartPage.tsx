@@ -18,13 +18,8 @@ import {
 
 const StartPage = () => {
   const navigate = useNavigate();
-  const {
-    demoLogin,
-    initialize,
-    isLoading,
-    isAuthenticated,
-    providerMode,
-  } = useAuthStore();
+  const { demoLogin, initialize, isLoading, isAuthenticated, providerMode } =
+    useAuthStore();
   const accountAvailable = providerMode === 'supabase';
   const liteAvailable = AUTH_CONFIG.localAuthAllowed;
   const language = useLocalizationStore((state) => state.language);
@@ -40,11 +35,7 @@ const StartPage = () => {
     }
 
     navigate(isAuthenticated ? '/dashboard' : '/signup', { replace: true });
-  }, [
-    isAuthenticated,
-    isLoading,
-    navigate,
-  ]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   const startLite = async () => {
     useLearningStore.getState().resetAll();
@@ -87,7 +78,9 @@ const StartPage = () => {
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <section className="flex flex-col rounded-card border border-border-soft bg-surface p-6 shadow-sm">
             <Sparkles className="h-6 w-6 text-primary" />
-            <h2 className="mt-5 text-base font-bold text-foreground">Try Lite</h2>
+            <h2 className="mt-5 text-base font-bold text-foreground">
+              Try Lite
+            </h2>
             <p className="mt-2 flex-1 text-xs leading-5 text-muted-copy">
               No account required. Progress stays on this device and can be
               cleared by the browser.
@@ -121,7 +114,10 @@ const StartPage = () => {
               authentication backend is active.
             </p>
             {accountAvailable ? (
-              <Link to="/signup" className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2">
+              <Link
+                to="/signup"
+                className="public-primary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
+              >
                 Create account <ArrowRight className="h-4 w-4" />
               </Link>
             ) : (
@@ -147,7 +143,10 @@ const StartPage = () => {
               Continue with an existing verified account. Local Lite users can
               return through Try Lite.
             </p>
-            <Link to="/login" className="public-secondary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2">
+            <Link
+              to="/login"
+              className="public-secondary-action mt-5 w-full text-center py-2 text-xs min-h-10 flex items-center justify-center gap-2"
+            >
               Log in <LogIn className="h-4 w-4" />
             </Link>
           </section>

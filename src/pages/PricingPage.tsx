@@ -20,21 +20,60 @@ const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter(
 
 // Future roadmap plans with allowed badges: Coming Soon, Request Access, Apply
 const ROADMAP_PLANS = [
-  { name: 'Core', status: 'Coming Soon', audience: 'A fuller daily loop for independent learners.' },
-  { name: 'Team', status: 'Coming Soon', audience: 'For small engineering teams and corporate programs.' },
-  { name: 'Pro Plus', status: 'Request Access', audience: 'Expanded memory, advanced agents, and custom project context.' },
-  { name: 'Project', status: 'Request Access', audience: 'Tailored RFI, NCR, and daily engineering email templates.' },
-  { name: 'Expert', status: 'Apply', audience: 'Dedicated technical mentor review and verified credential verification.' },
-  { name: 'Max', status: 'Coming Soon', audience: 'Unlimited workspace memory and high-frequency communication training.' },
-  { name: 'Executive', status: 'Apply', audience: 'Private executive communications support and dedicated coaching.' },
-  { name: 'Private EngineerOS', status: 'Request Access', audience: 'Self-hosted, single-tenant deployment for security.' }
+  {
+    name: 'Core',
+    status: 'Coming Soon',
+    audience: 'A fuller daily loop for independent learners.',
+  },
+  {
+    name: 'Team',
+    status: 'Coming Soon',
+    audience: 'For small engineering teams and corporate programs.',
+  },
+  {
+    name: 'Pro Plus',
+    status: 'Request Access',
+    audience: 'Expanded memory, advanced agents, and custom project context.',
+  },
+  {
+    name: 'Project',
+    status: 'Request Access',
+    audience: 'Tailored RFI, NCR, and daily engineering email templates.',
+  },
+  {
+    name: 'Expert',
+    status: 'Apply',
+    audience:
+      'Dedicated technical mentor review and verified credential verification.',
+  },
+  {
+    name: 'Max',
+    status: 'Coming Soon',
+    audience:
+      'Unlimited workspace memory and high-frequency communication training.',
+  },
+  {
+    name: 'Executive',
+    status: 'Apply',
+    audience:
+      'Private executive communications support and dedicated coaching.',
+  },
+  {
+    name: 'Private EngineerOS',
+    status: 'Request Access',
+    audience: 'Self-hosted, single-tenant deployment for security.',
+  },
 ];
 
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser } = useAuthStore();
-  const { isLoading: isCheckoutLoading, startCheckout, subscription } = useBillingStore();
+  const {
+    isLoading: isCheckoutLoading,
+    startCheckout,
+    subscription,
+  } = useBillingStore();
   const [billingReadiness, setBillingReadiness] = useState<
     'loading' | 'ready' | 'unavailable'
   >('loading');
@@ -130,7 +169,10 @@ const PricingPage = () => {
       const label = currentUser ? 'Go to dashboard' : 'Start free';
 
       return (
-        <Link to={href} className="mt-6 public-primary-action w-full text-center">
+        <Link
+          to={href}
+          className="mt-6 public-primary-action w-full text-center"
+        >
           {label}
         </Link>
       );
@@ -149,13 +191,16 @@ const PricingPage = () => {
         );
       }
 
-      const isProCheckoutLoading = isCheckoutLoading && checkoutPlanId === 'pro';
+      const isProCheckoutLoading =
+        isCheckoutLoading && checkoutPlanId === 'pro';
 
       return (
         <button
           type="button"
           onClick={() => void handleProCheckout()}
-          disabled={!billingEnabled || isProCheckoutLoading || isBillingHealthLoading}
+          disabled={
+            !billingEnabled || isProCheckoutLoading || isBillingHealthLoading
+          }
           className="mt-6 public-primary-action w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isProCheckoutLoading ? 'Starting checkout...' : 'Upgrade to Pro'}
@@ -180,7 +225,8 @@ const PricingPage = () => {
           </h1>
           <p className="mt-3 text-xs leading-5 text-muted-copy max-w-xl mx-auto">
             AI-powered communication training for engineers on international
-            projects. Pro features are fully active, while future plans show upcoming roadmaps.
+            projects. Pro features are fully active, while future plans show
+            upcoming roadmaps.
           </p>
           <div className="mx-auto mt-6 grid max-w-2xl gap-3 text-left sm:grid-cols-3">
             {[
@@ -193,13 +239,18 @@ const PricingPage = () => {
                 className="rounded-card border border-border-soft bg-background p-4"
               >
                 <p className="text-xs font-bold text-primary">{title}</p>
-                <p className="mt-1 text-[11px] leading-4 text-muted-copy">{copy}</p>
+                <p className="mt-1 text-[11px] leading-4 text-muted-copy">
+                  {copy}
+                </p>
               </div>
             ))}
           </div>
           {billingReadiness !== 'ready' && subscription?.planId !== 'pro' && (
             <div className="mx-auto mt-6 flex w-fit max-w-full items-start gap-2 rounded-[8px] border border-warning/20 bg-warning/5 px-4 py-2.5 text-left text-[11px] leading-4 text-warning">
-              <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <ShieldAlert
+                className="mt-0.5 h-3.5 w-3.5 shrink-0"
+                aria-hidden="true"
+              />
               <span>{billingBanner}</span>
             </div>
           )}
@@ -227,18 +278,24 @@ const PricingPage = () => {
                 <span
                   className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${plan.id === 'free' || (plan.id === 'pro' && billingEnabled) ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400' : 'border-border-soft bg-surface text-muted-copy'}`}
                 >
-                  {plan.id === 'free' || (plan.id === 'pro' && billingEnabled) ? 'Available' : 'Coming Soon'}
+                  {plan.id === 'free' || (plan.id === 'pro' && billingEnabled)
+                    ? 'Available'
+                    : 'Coming Soon'}
                 </span>
               </div>
               <p className="mt-4 text-3xl font-bold text-foreground">
                 {plan.price}
               </p>
-              <p className="mt-0.5 text-[10px] text-muted-copy">{plan.cadence}</p>
+              <p className="mt-0.5 text-[10px] text-muted-copy">
+                {plan.cadence}
+              </p>
               <p className="mt-4 min-h-[4rem] text-xs leading-5 text-muted-copy">
                 {plan.audience}
               </p>
               <div className="mt-4 rounded-card border border-border-soft bg-surface-hover/20 p-3.5">
-                <p className="text-[9px] font-bold text-primary uppercase tracking-wider">BEST FOR</p>
+                <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                  BEST FOR
+                </p>
                 <p className="mt-0.5 text-xs font-bold text-foreground">
                   {plan.bestFor}
                 </p>
@@ -246,7 +303,9 @@ const PricingPage = () => {
                   {plan.priceReason}
                 </p>
               </div>
-              <p className="mt-5 text-[10px] font-bold text-muted-copy uppercase tracking-wider">INCLUDED</p>
+              <p className="mt-5 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
+                INCLUDED
+              </p>
               <ul className="mt-3 flex-1 space-y-2.5">
                 {plan.benefits.map((benefit) => (
                   <li
@@ -279,14 +338,20 @@ const PricingPage = () => {
             Planned packages and capabilities.
           </h2>
           <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-copy">
-            Future packages are under active evaluation. Request access below to express interest.
+            Future packages are under active evaluation. Request access below to
+            express interest.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {ROADMAP_PLANS.map((plan) => (
-              <div key={plan.name} className="rounded-card border border-border-soft bg-surface p-4 flex flex-col justify-between">
+              <div
+                key={plan.name}
+                className="rounded-card border border-border-soft bg-surface p-4 flex flex-col justify-between"
+              >
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                    <p className="text-xs font-bold text-foreground">{plan.name}</p>
+                    <p className="text-xs font-bold text-foreground">
+                      {plan.name}
+                    </p>
                     <span className="rounded-full border border-border-soft bg-background px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-muted-copy">
                       {plan.status}
                     </span>
@@ -354,7 +419,10 @@ const PricingPage = () => {
                   >
                     <th className="p-3 font-bold text-foreground">{label}</th>
                     {ACTIVE_PLANS.map((plan) => (
-                      <td key={plan.id} className="p-3 leading-5 text-muted-copy">
+                      <td
+                        key={plan.id}
+                        className="p-3 leading-5 text-muted-copy"
+                      >
                         {plan.comparison[key]}
                       </td>
                     ))}

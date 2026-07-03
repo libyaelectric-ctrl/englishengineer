@@ -738,12 +738,10 @@ test('billing status returns 503 BILLING_STATUS_UNAVAILABLE on repository infras
 });
 
 test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured', async () => {
-  const url = await start(
-    {
-      STRIPE_SECRET_KEY: '',
-      STRIPE_PRICE_PRO_MONTHLY: '',
-    }
-  );
+  const url = await start({
+    STRIPE_SECRET_KEY: '',
+    STRIPE_PRICE_PRO_MONTHLY: '',
+  });
   const response = await fetch(`${url}/api/billing/create-checkout-session`, {
     method: 'POST',
     headers: {
@@ -770,7 +768,10 @@ test('checkout route permits request with valid Supabase token', async () => {
         return {
           ok: true,
           status: 200,
-          json: async () => ({ id: 'owner-user', email: 'engineer@example.com' }),
+          json: async () => ({
+            id: 'owner-user',
+            email: 'engineer@example.com',
+          }),
         };
       }
       return { ok: false, status: 401 };
@@ -892,8 +893,12 @@ test('webhook logging on repository failure log error details but not secrets', 
   const logs = [];
   const originalError = console.error;
   const originalLog = console.log;
-  console.error = (...args) => { logs.push(args.join(' ')); };
-  console.log = (...args) => { logs.push(args.join(' ')); };
+  console.error = (...args) => {
+    logs.push(args.join(' '));
+  };
+  console.log = (...args) => {
+    logs.push(args.join(' '));
+  };
 
   try {
     const url = await start(
@@ -907,7 +912,11 @@ test('webhook logging on repository failure log error details but not secrets', 
       {
         stripeClient: {
           webhooks: {
-            constructEvent: () => ({ id: 'evt_123', type: 'checkout.session.completed', data: { object: {} } }),
+            constructEvent: () => ({
+              id: 'evt_123',
+              type: 'checkout.session.completed',
+              data: { object: {} },
+            }),
           },
         },
         billingRepository: repository,
@@ -920,17 +929,22 @@ test('webhook logging on repository failure log error details but not secrets', 
         'Stripe-Signature': 't=123,v1=abc',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: 'evt_123', type: 'checkout.session.completed' }),
+      body: JSON.stringify({
+        id: 'evt_123',
+        type: 'checkout.session.completed',
+      }),
     });
 
     assert.equal(response.status, 500);
 
-    const receivedLog = logs.find(l => l.includes('[stripe-webhook-received]'));
+    const receivedLog = logs.find((l) =>
+      l.includes('[stripe-webhook-received]')
+    );
     assert.ok(receivedLog, 'Start log is recorded');
     assert.match(receivedLog, /eventId=evt_123/);
     assert.match(receivedLog, /type=checkout\.session\.completed/);
 
-    const errorLog = logs.find(l => l.includes('[stripe-webhook-error]'));
+    const errorLog = logs.find((l) => l.includes('[stripe-webhook-error]'));
     assert.ok(errorLog, 'Error log is recorded');
     assert.match(errorLog, /step=duplicate_check/);
     assert.match(errorLog, /supabaseCode=XX000/);
@@ -1007,7 +1021,10 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
     }
   );
 
-  const webhookBody = { id: 'evt_1Tooe1LYQum3RaPO1NTqL56V', type: 'checkout.session.completed' };
+  const webhookBody = {
+    id: 'evt_1Tooe1LYQum3RaPO1NTqL56V',
+    type: 'checkout.session.completed',
+  };
   const response = await fetch(`${url}/api/webhooks/stripe`, {
     method: 'POST',
     headers: {
@@ -1022,9 +1039,12 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   assert.equal(body.duplicate, false);
   assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
 
-  const statusResponse = await fetch(`${url}/api/billing/subscription-status?userId=owner-user`, {
-    headers: internalHeaders('owner-user'),
-  });
+  const statusResponse = await fetch(
+    `${url}/api/billing/subscription-status?userId=owner-user`,
+    {
+      headers: internalHeaders('owner-user'),
+    }
+  );
   assert.equal(statusResponse.status, 200);
   const statusBody = await statusResponse.json();
   assert.equal(statusBody.planId, 'pro');

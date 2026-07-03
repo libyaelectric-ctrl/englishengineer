@@ -85,7 +85,9 @@ export const Sidebar: React.FC = () => {
 
               <div className="space-y-1 rounded-[8px] border border-border-soft bg-surface p-2.5 font-mono text-[9px] text-muted-copy shadow-sm">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="shrink-0 text-muted-copy/70">DISCIPLINE:</span>
+                  <span className="shrink-0 text-muted-copy/70">
+                    DISCIPLINE:
+                  </span>
                   <span
                     className="max-w-[120px] break-words text-right font-semibold leading-4 text-foreground"
                     title={currentUser.engineeringDiscipline}

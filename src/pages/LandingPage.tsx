@@ -24,13 +24,18 @@ const LandingPage = () => (
             Work-ready English for international engineering projects.
           </h1>
           <p className="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-            Practice the emails, reports, meetings and site communication engineers use every day.
+            Practice the emails, reports, meetings and site communication
+            engineers use every day.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link to="/start" className="public-primary-action min-h-11">
-              Start Free <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              Start Free{' '}
+              <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
             </Link>
-            <a href="#how-it-works" className="public-secondary-action min-h-11">
+            <a
+              href="#how-it-works"
+              className="public-secondary-action min-h-11"
+            >
               See How It Works
             </a>
           </div>
@@ -46,8 +51,12 @@ const LandingPage = () => (
                   E
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-900 leading-none">EngineerOS</p>
-                  <p className="text-[8px] text-muted-copy leading-none">Command Center</p>
+                  <p className="text-[10px] font-bold text-slate-900 leading-none">
+                    EngineerOS
+                  </p>
+                  <p className="text-[8px] text-muted-copy leading-none">
+                    Command Center
+                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -72,10 +81,13 @@ const LandingPage = () => (
                 Lesson 1: Cable Tray Delivery Delay
               </h3>
               <p className="text-[9px] text-muted-copy leading-relaxed">
-                Draft a formal email update requesting timeline relief from the project owner.
+                Draft a formal email update requesting timeline relief from the
+                project owner.
               </p>
               <div className="flex justify-between items-center pt-1">
-                <span className="text-[8px] text-primary font-bold">Skills: Writing, Vocabulary</span>
+                <span className="text-[8px] text-primary font-bold">
+                  Skills: Writing, Vocabulary
+                </span>
                 <span className="rounded-[4px] bg-primary px-2.5 py-1 text-[8px] font-bold text-white shadow-sm flex items-center gap-1">
                   Start Lesson <ArrowRight className="h-2 w-2" />
                 </span>
@@ -101,7 +113,10 @@ const LandingPage = () => (
                         <span className="text-primary">{skill.badge}</span>
                       </div>
                       <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-                        <div className="h-full bg-primary" style={{ width: `${skill.value}%` }}></div>
+                        <div
+                          className="h-full bg-primary"
+                          style={{ width: `${skill.value}%` }}
+                        ></div>
                       </div>
                     </div>
                   ))}
@@ -132,7 +147,9 @@ const LandingPage = () => (
 
             {/* Professional Tools Bar */}
             <div className="rounded-[8px] border border-border-soft bg-surface/40 p-2 flex items-center justify-between text-[9px]">
-              <span className="font-semibold text-slate-800">Professional Tools:</span>
+              <span className="font-semibold text-slate-800">
+                Professional Tools:
+              </span>
               <div className="flex gap-2 text-primary font-bold">
                 <span>Writing Assist</span>
                 <span>•</span>
@@ -147,7 +164,10 @@ const LandingPage = () => (
     </section>
 
     {/* Section 2: How It Works */}
-    <section id="how-it-works" className="border-b border-border-soft bg-background py-12 md:py-16">
+    <section
+      id="how-it-works"
+      className="border-b border-border-soft bg-background py-12 md:py-16"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="public-eyebrow">Simple learning flow</p>
@@ -181,8 +201,12 @@ const LandingPage = () => (
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
                 {item.step}
               </span>
-              <h3 className="mt-4 text-base font-bold text-slate-900">{item.title}</h3>
-              <p className="mt-2 text-xs leading-5 text-slate-600">{item.text}</p>
+              <h3 className="mt-4 text-base font-bold text-slate-900">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-xs leading-5 text-slate-600">
+                {item.text}
+              </p>
             </div>
           ))}
         </div>
@@ -229,8 +253,12 @@ const LandingPage = () => (
               <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-primary/10 text-primary">
                 <item.icon className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="mt-4 text-base font-bold text-slate-900">{item.title}</h3>
-              <p className="mt-2 text-xs leading-5 text-slate-600">{item.desc}</p>
+              <h3 className="mt-4 text-base font-bold text-slate-900">
+                {item.title}
+              </h3>
+              <p className="mt-2 text-xs leading-5 text-slate-600">
+                {item.desc}
+              </p>
             </article>
           ))}
         </div>
@@ -244,13 +272,17 @@ const LandingPage = () => (
           Communicate engineering work with clarity.
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-xs sm:text-sm text-slate-600 leading-6">
-          Start your local learning flow today. Explore tailored project templates and check your access level options anytime.
+          Start your local learning flow today. Explore tailored project
+          templates and check your access level options anytime.
         </p>
         <div className="mt-8 flex justify-center gap-3">
           <Link to="/start" className="public-primary-action min-h-11">
             Start Free
           </Link>
-          <Link to="/pricing" className="public-secondary-action min-h-11 border-slate-300 hover:bg-white/50">
+          <Link
+            to="/pricing"
+            className="public-secondary-action min-h-11 border-slate-300 hover:bg-white/50"
+          >
             Explore Access
           </Link>
         </div>

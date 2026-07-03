@@ -25,7 +25,7 @@ vi.mock('./billing.helpers', async (importOriginal) => {
 describe('Billing Checkout Flow', () => {
   it('verifies that PricingPage and BillingStatusPanel upgrade buttons trigger the same checkout action', async () => {
     const startCheckoutMock = vi.fn();
-    
+
     // Mock stores
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
@@ -55,13 +55,21 @@ describe('Billing Checkout Flow', () => {
 
     // Wait for the health check to run and UI to update
     await vi.waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).toBeEnabled();
+      expect(
+        screen.getByRole('button', { name: 'Upgrade to Pro' })
+      ).toBeEnabled();
     });
 
-    const pricingButton = screen.getByRole('button', { name: 'Upgrade to Pro' });
+    const pricingButton = screen.getByRole('button', {
+      name: 'Upgrade to Pro',
+    });
     fireEvent.click(pricingButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
+    expect(startCheckoutMock).toHaveBeenCalledWith(
+      'user-123',
+      'engineer@example.com',
+      'pro'
+    );
     startCheckoutMock.mockClear();
     unmount();
 
@@ -72,17 +80,36 @@ describe('Billing Checkout Flow', () => {
 
     render(
       <BillingStatusPanel
-        subscription={{ planId: 'free', status: 'none', currentPeriodEnd: null, cancelAtPeriodEnd: false, stripeCustomerId: null, stripeSubscriptionId: null, updatedAt: '' }}
-        providerStatus={{ isConfigured: true, mode: 'backend', label: '', detail: '' }}
+        subscription={{
+          planId: 'free',
+          status: 'none',
+          currentPeriodEnd: null,
+          cancelAtPeriodEnd: false,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          updatedAt: '',
+        }}
+        providerStatus={{
+          isConfigured: true,
+          mode: 'backend',
+          label: '',
+          detail: '',
+        }}
         isLoading={false}
         onUpgrade={handleUpgradeMock}
         onOpenPortal={vi.fn()}
       />
     );
 
-    const profileButton = screen.getByRole('button', { name: 'Upgrade to Pro' });
+    const profileButton = screen.getByRole('button', {
+      name: 'Upgrade to Pro',
+    });
     fireEvent.click(profileButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
+    expect(startCheckoutMock).toHaveBeenCalledWith(
+      'user-123',
+      'engineer@example.com',
+      'pro'
+    );
   });
 });

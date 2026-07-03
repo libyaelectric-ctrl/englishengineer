@@ -62,8 +62,6 @@ export const createApp = ({
     response.json(toPublicHealth(config));
   });
 
-
-
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const aiRateLimiter = createRateLimiter({

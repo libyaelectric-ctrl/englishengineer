@@ -78,7 +78,7 @@ const ProfilePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [clearConfirmation, setClearConfirmation] = useState('');
-  
+
   // Cockpit learning context
   const { profile, memory, learningState } = useLearningCockpit(
     currentUser?.id
@@ -168,21 +168,24 @@ const ProfilePage = () => {
     try {
       setIsSaving(true);
       setError(null);
-      
+
       // Update display name
       await updateProfile({ displayName: `${first} ${last}` });
-      
+
       // Update profile attributes
-      LearningProfileRepository.updatePreferences(currentUser?.id ?? 'local-user', {
-        professionId: (editProfession as any) || null,
-        professionalTrack: editTrack as any,
-        electricalSubdomain: editSubdomain as any,
-        industryId: (editIndustry as any) || null,
-        country: editCountry,
-        timezone: editTimezone,
-        interfaceLanguage: editLang,
-        communicationGoals: editGoals,
-      });
+      LearningProfileRepository.updatePreferences(
+        currentUser?.id ?? 'local-user',
+        {
+          professionId: (editProfession as any) || null,
+          professionalTrack: editTrack as any,
+          electricalSubdomain: editSubdomain as any,
+          industryId: (editIndustry as any) || null,
+          country: editCountry,
+          timezone: editTimezone,
+          interfaceLanguage: editLang,
+          communicationGoals: editGoals,
+        }
+      );
 
       if (editLang !== language) {
         setLanguage(editLang);
@@ -191,7 +194,9 @@ const ProfilePage = () => {
       setMessage('Profile overview updated successfully.');
       setIsEditMode(false);
     } catch (saveError: unknown) {
-      setError(getErrorMessage(saveError, 'Failed to update profile overview.'));
+      setError(
+        getErrorMessage(saveError, 'Failed to update profile overview.')
+      );
     } finally {
       setIsSaving(false);
     }
@@ -201,13 +206,16 @@ const ProfilePage = () => {
     event.preventDefault();
     setPreferencesSaved(false);
     try {
-      LearningProfileRepository.updatePreferences(currentUser?.id ?? 'local-user', {
-        goals: prefGoals,
-        dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
-        weeklyTolerance: { allowedMissedDays: prefMissedDays },
-        experienceLevel: prefExpLevel as any,
-        careerGoal: prefCareerGoal,
-      });
+      LearningProfileRepository.updatePreferences(
+        currentUser?.id ?? 'local-user',
+        {
+          goals: prefGoals,
+          dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
+          weeklyTolerance: { allowedMissedDays: prefMissedDays },
+          experienceLevel: prefExpLevel as any,
+          careerGoal: prefCareerGoal,
+        }
+      );
       setPreferencesSaved(true);
       setMessage('Learning preferences saved successfully.');
       setError(null);
@@ -281,7 +289,13 @@ const ProfilePage = () => {
 
   // Scroll listener to update sticky sub-navigation highlight
   useEffect(() => {
-    const sections = ['overview', 'skills', 'preferences', 'billing', 'security'];
+    const sections = [
+      'overview',
+      'skills',
+      'preferences',
+      'billing',
+      'security',
+    ];
     const handleScroll = () => {
       const scrollPos = window.scrollY + 150;
       for (const section of sections) {
@@ -320,7 +334,8 @@ const ProfilePage = () => {
     if (profile?.industryId) completed += 20;
     if (profile?.country) completed += 15;
     if (profile?.timezone) completed += 15;
-    if (profile?.communicationGoals && profile.communicationGoals.length > 0) completed += 10;
+    if (profile?.communicationGoals && profile.communicationGoals.length > 0)
+      completed += 10;
     return completed;
   };
 
@@ -339,7 +354,6 @@ const ProfilePage = () => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300">
-      
       {/* Redesigned Header: Profile overview metadata and status */}
       <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -348,7 +362,8 @@ const ProfilePage = () => {
               {currentUser?.displayName || 'Demo Engineer'}
             </h1>
             <p className="mt-1 text-xs font-semibold text-muted-copy">
-              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Engineering Professional'}
+              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
+                'Engineering Professional'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -361,7 +376,8 @@ const ProfilePage = () => {
           </div>
         </div>
         <p className="text-xs leading-5 text-slate-600 max-w-2xl">
-          Manage your professional profile, learning preferences and EngineerOS access.
+          Manage your professional profile, learning preferences and EngineerOS
+          access.
         </p>
       </header>
 
@@ -418,47 +434,73 @@ const ProfilePage = () => {
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Full Name</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Full Name
+                  </span>
                   <p className="mt-1 text-sm font-bold text-foreground">
                     {currentUser?.displayName || 'Not Provided'}
                   </p>
                 </div>
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Profession / Role</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Profession / Role
+                  </span>
                   <p className="mt-1 text-sm font-bold text-foreground">
-                    {PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Not Selected'}
+                    {PROFESSIONS.find((p) => p.id === profile.professionId)
+                      ?.label || 'Not Selected'}
                   </p>
                 </div>
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Engineering Discipline</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Engineering Discipline
+                  </span>
                   <p className="mt-1 text-sm font-bold text-foreground">
-                    {PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label || 'Electrical Engineering'}
+                    {PROFESSIONAL_TRACKS.find(
+                      (t) => t.id === profile.professionalTrack
+                    )?.label || 'Electrical Engineering'}
                   </p>
                 </div>
                 {profile.professionalTrack === 'electrical' && (
                   <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Electrical Subdomain</span>
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Electrical Subdomain
+                    </span>
                     <p className="mt-1 text-sm font-bold text-foreground">
-                      {ELECTRICAL_SUBDOMAINS.find((s) => s.id === profile.electricalSubdomain)?.label || 'Not Selected'}
+                      {ELECTRICAL_SUBDOMAINS.find(
+                        (s) => s.id === profile.electricalSubdomain
+                      )?.label || 'Not Selected'}
                     </p>
                   </div>
                 )}
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Industry Sectors</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Industry Sectors
+                  </span>
                   <p className="mt-1 text-sm font-bold text-foreground">
-                    {INDUSTRIES.find((i) => i.id === profile.industryId)?.label || 'Not Selected'}
+                    {INDUSTRIES.find((i) => i.id === profile.industryId)
+                      ?.label || 'Not Selected'}
                   </p>
                 </div>
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Country / Region</span>
-                  <p className="mt-1 text-sm font-bold text-foreground">{profile.country || 'Not Selected'}</p>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Country / Region
+                  </span>
+                  <p className="mt-1 text-sm font-bold text-foreground">
+                    {profile.country || 'Not Selected'}
+                  </p>
                 </div>
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Timezone</span>
-                  <p className="mt-1 text-sm font-mono text-foreground">{profile.timezone || 'Not Selected'}</p>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Timezone
+                  </span>
+                  <p className="mt-1 text-sm font-mono text-foreground">
+                    {profile.timezone || 'Not Selected'}
+                  </p>
                 </div>
                 <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Interface Language</span>
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Interface Language
+                  </span>
                   <p className="mt-1 text-sm font-bold text-foreground">
                     {profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English'}
                   </p>
@@ -466,25 +508,35 @@ const ProfilePage = () => {
               </div>
 
               <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Communication Goals</span>
-                {profile.communicationGoals && profile.communicationGoals.length > 0 ? (
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  Communication Goals
+                </span>
+                {profile.communicationGoals &&
+                profile.communicationGoals.length > 0 ? (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {profile.communicationGoals.map((gId) => (
                       <span
                         key={gId}
                         className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-semibold text-primary"
                       >
-                        {COMMUNICATION_GOALS.find((goal) => goal.id === gId)?.label || gId}
+                        {COMMUNICATION_GOALS.find((goal) => goal.id === gId)
+                          ?.label || gId}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-1 text-xs text-muted-copy">No goals selected.</p>
+                  <p className="mt-1 text-xs text-muted-copy">
+                    No goals selected.
+                  </p>
                 )}
               </div>
 
               <div className="flex justify-end border-t border-border-soft pt-4">
-                <Button type="button" onClick={enterEditMode} className="text-xs min-h-9">
+                <Button
+                  type="button"
+                  onClick={enterEditMode}
+                  className="text-xs min-h-9"
+                >
                   <Edit3 className="h-3.5 w-3.5 mr-1" /> Edit Profile
                 </Button>
               </div>
@@ -493,7 +545,12 @@ const ProfilePage = () => {
             <form onSubmit={handleSaveProfile} className="space-y-5">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
-                  <label htmlFor="edit-first-name" className="text-xs font-bold text-foreground">First Name</label>
+                  <label
+                    htmlFor="edit-first-name"
+                    className="text-xs font-bold text-foreground"
+                  >
+                    First Name
+                  </label>
                   <input
                     id="edit-first-name"
                     value={editFirstName}
@@ -502,7 +559,12 @@ const ProfilePage = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label htmlFor="edit-last-name" className="text-xs font-bold text-foreground">Last Name</label>
+                  <label
+                    htmlFor="edit-last-name"
+                    className="text-xs font-bold text-foreground"
+                  >
+                    Last Name
+                  </label>
                   <input
                     id="edit-last-name"
                     value={editLastName}
@@ -522,7 +584,9 @@ const ProfilePage = () => {
                   >
                     <option value="">Select profession</option>
                     {PROFESSIONS.map((p) => (
-                      <option key={p.id} value={p.id}>{p.label}</option>
+                      <option key={p.id} value={p.id}>
+                        {p.label}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -535,7 +599,9 @@ const ProfilePage = () => {
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
                     {PROFESSIONAL_TRACKS.map((t) => (
-                      <option key={t.id} value={t.id}>{t.label}</option>
+                      <option key={t.id} value={t.id}>
+                        {t.label}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -549,7 +615,9 @@ const ProfilePage = () => {
                       className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                     >
                       {ELECTRICAL_SUBDOMAINS.map((s) => (
-                        <option key={s.id} value={s.id}>{s.label}</option>
+                        <option key={s.id} value={s.id}>
+                          {s.label}
+                        </option>
                       ))}
                     </select>
                   </label>
@@ -564,7 +632,9 @@ const ProfilePage = () => {
                   >
                     <option value="">Select industry</option>
                     {INDUSTRIES.map((i) => (
-                      <option key={i.id} value={i.id}>{i.label}</option>
+                      <option key={i.id} value={i.id}>
+                        {i.label}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -577,7 +647,9 @@ const ProfilePage = () => {
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
                     {COUNTRIES.map((country) => (
-                      <option key={country} value={country}>{country}</option>
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -590,7 +662,9 @@ const ProfilePage = () => {
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
                   >
                     {TIMEZONES.map((tz) => (
-                      <option key={tz} value={tz}>{tz}</option>
+                      <option key={tz} value={tz}>
+                        {tz}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -599,18 +673,24 @@ const ProfilePage = () => {
                   Interface Language
                   <select
                     value={editLang}
-                    onChange={(event) => setEditLang(event.target.value as 'en' | 'tr')}
+                    onChange={(event) =>
+                      setEditLang(event.target.value as 'en' | 'tr')
+                    }
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
                     {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
-                      <option key={item.id} value={item.id}>{item.label}</option>
+                      <option key={item.id} value={item.id}>
+                        {item.label}
+                      </option>
                     ))}
                   </select>
                 </label>
               </div>
 
               <div>
-                <span className="block text-xs font-bold text-foreground">Communication Goals</span>
+                <span className="block text-xs font-bold text-foreground">
+                  Communication Goals
+                </span>
                 <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
                   {COMMUNICATION_GOALS.map((goal) => {
                     const isChecked = editGoals.includes(goal.id);
@@ -732,36 +812,57 @@ const ProfilePage = () => {
 
           {/* Vocabulary Progress */}
           <div className="mt-6 rounded-card border border-border-soft bg-surface/20 p-4">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Vocabulary Mastery</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              Vocabulary Mastery
+            </span>
             <div className="mt-2 flex items-center justify-between gap-3 text-xs font-bold">
-              <span>{memory.mastered} of {memory.total} terms mastered</span>
-              <span className="text-primary">{memory.dueToday} terms due today</span>
+              <span>
+                {memory.mastered} of {memory.total} terms mastered
+              </span>
+              <span className="text-primary">
+                {memory.dueToday} terms due today
+              </span>
             </div>
-            <ProgressBar value={vocabularyMastery} color="emerald" className="mt-3" />
+            <ProgressBar
+              value={vocabularyMastery}
+              color="emerald"
+              className="mt-3"
+            />
           </div>
 
           {/* Unlocked Badges */}
           <div className="mt-6">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Achievements & Badges</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              Achievements & Badges
+            </span>
             <div className="mt-2 grid gap-3 sm:grid-cols-2">
-              {badges.filter((b) => b.unlocked).slice(0, 4).map((badge) => (
-                <div
-                  key={badge.id}
-                  className="flex items-start gap-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3.5"
-                >
-                  <Award className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-bold text-foreground">{badge.label}</p>
-                    <p className="mt-0.5 text-[10px] text-slate-600 leading-4">{badge.description}</p>
+              {badges
+                .filter((b) => b.unlocked)
+                .slice(0, 4)
+                .map((badge) => (
+                  <div
+                    key={badge.id}
+                    className="flex items-start gap-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3.5"
+                  >
+                    <Award className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-xs font-bold text-foreground">
+                        {badge.label}
+                      </p>
+                      <p className="mt-0.5 text-[10px] text-slate-600 leading-4">
+                        {badge.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 
           {/* Recent Mistakes summary */}
           <div className="mt-6">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Mistake Log Summary</span>
+            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              Mistake Log Summary
+            </span>
             {mistakeLog.length === 0 ? (
               <p className="mt-2 rounded-card border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
                 No mistakes recorded yet.
@@ -769,15 +870,26 @@ const ProfilePage = () => {
             ) : (
               <div className="mt-2 space-y-2">
                 {mistakeLog.slice(0, 2).map((m) => (
-                  <div key={m.id} className="rounded-card border border-border-soft bg-surface p-3 text-xs">
+                  <div
+                    key={m.id}
+                    className="rounded-card border border-border-soft bg-surface p-3 text-xs"
+                  >
                     <div className="flex justify-between items-center">
-                      <span className="font-mono text-[9px] text-muted-copy uppercase">{m.category}</span>
+                      <span className="font-mono text-[9px] text-muted-copy uppercase">
+                        {m.category}
+                      </span>
                       <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
-                        {(m.repetitionCount ?? 1) >= 3 ? 'Critical' : `${m.repetitionCount ?? 1}x`}
+                        {(m.repetitionCount ?? 1) >= 3
+                          ? 'Critical'
+                          : `${m.repetitionCount ?? 1}x`}
                       </span>
                     </div>
-                    <p className="mt-1 font-bold text-slate-800">"{m.originalText}"</p>
-                    <p className="mt-0.5 text-muted-copy">Correction: {m.correction}</p>
+                    <p className="mt-1 font-bold text-slate-800">
+                      "{m.originalText}"
+                    </p>
+                    <p className="mt-0.5 text-muted-copy">
+                      Correction: {m.correction}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -786,7 +898,10 @@ const ProfilePage = () => {
 
           {/* Detailed Analytics CTA */}
           <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
-            <Link to="/analytics" className="inline-flex min-h-9 items-center gap-1.5 rounded-[12px] px-4 text-xs font-bold text-primary hover:bg-primary/5 transition-colors">
+            <Link
+              to="/analytics"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-[12px] px-4 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+            >
               View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -802,8 +917,12 @@ const ProfilePage = () => {
         >
           <form onSubmit={handleSavePreferences} className="space-y-6">
             <fieldset>
-              <legend className="text-xs font-bold text-foreground">Learning Goals</legend>
-              <p className="mt-0.5 text-[10px] text-muted-copy">Select one or more goals.</p>
+              <legend className="text-xs font-bold text-foreground">
+                Learning Goals
+              </legend>
+              <p className="mt-0.5 text-[10px] text-muted-copy">
+                Select one or more goals.
+              </p>
               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                 {LEARNING_GOALS.map((goal) => {
                   const isChecked = prefGoals.includes(goal.id);
@@ -840,11 +959,15 @@ const ProfilePage = () => {
                 Daily Study Target (Minutes)
                 <select
                   value={prefMinutes}
-                  onChange={(event) => setPrefMinutes(Number(event.target.value))}
+                  onChange={(event) =>
+                    setPrefMinutes(Number(event.target.value))
+                  }
                   className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                 >
                   {DAILY_DURATION_OPTIONS.map((val) => (
-                    <option key={val} value={val}>{val} minutes</option>
+                    <option key={val} value={val}>
+                      {val} minutes
+                    </option>
                   ))}
                 </select>
               </label>
@@ -857,7 +980,9 @@ const ProfilePage = () => {
                   className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                 >
                   {DAILY_TASK_COUNT_OPTIONS.map((val) => (
-                    <option key={val} value={val}>{val} tasks</option>
+                    <option key={val} value={val}>
+                      {val} tasks
+                    </option>
                   ))}
                 </select>
               </label>
@@ -869,17 +994,21 @@ const ProfilePage = () => {
                 <span>Advanced learning preferences</span>
                 <ChevronDown className="h-4 w-4 text-slate-500 transition-transform group-open:rotate-180" />
               </summary>
-              
+
               <div className="mt-4 space-y-4 pt-3 border-t border-border-soft">
                 <label className="block space-y-1.5 text-xs font-bold text-foreground">
                   Weekly Streak Tolerance (Allowed Missed Days)
                   <select
                     value={prefMissedDays}
-                    onChange={(event) => setPrefMissedDays(Number(event.target.value))}
+                    onChange={(event) =>
+                      setPrefMissedDays(Number(event.target.value))
+                    }
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
                     {[0, 1, 2, 3].map((val) => (
-                      <option key={val} value={val}>{val} missed {val === 1 ? 'day' : 'days'}</option>
+                      <option key={val} value={val}>
+                        {val} missed {val === 1 ? 'day' : 'days'}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -893,13 +1022,20 @@ const ProfilePage = () => {
                   >
                     <option value="">Select level</option>
                     {EXPERIENCE_LEVELS.map((el) => (
-                      <option key={el.id} value={el.id}>{el.label}</option>
+                      <option key={el.id} value={el.id}>
+                        {el.label}
+                      </option>
                     ))}
                   </select>
                 </label>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="pref-career-goal" className="text-xs font-bold text-foreground">Target Career Goal</label>
+                  <label
+                    htmlFor="pref-career-goal"
+                    className="text-xs font-bold text-foreground"
+                  >
+                    Target Career Goal
+                  </label>
                   <input
                     id="pref-career-goal"
                     value={prefCareerGoal}
@@ -913,7 +1049,9 @@ const ProfilePage = () => {
 
             <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
               {preferencesSaved && (
-                <span className="text-xs font-bold text-emerald-500">Saved</span>
+                <span className="text-xs font-bold text-emerald-500">
+                  Saved
+                </span>
               )}
               <Button type="submit" className="text-xs min-h-9">
                 <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences
@@ -942,25 +1080,39 @@ const ProfilePage = () => {
 
             {/* Quota and Usage Summary */}
             <div className="rounded-card border border-border-soft bg-surface/30 p-4 space-y-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Usage and Quota limits</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                Usage and Quota limits
+              </span>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
                   <div className="flex justify-between text-xs font-semibold">
                     <span>AI Writing corrections</span>
                     <span>
-                      {subscription.planId === 'pro' ? 'Unlimited' : '5 / month'}
+                      {subscription.planId === 'pro'
+                        ? 'Unlimited'
+                        : '5 / month'}
                     </span>
                   </div>
-                  <ProgressBar value={subscription.planId === 'pro' ? 100 : 40} color="cyan" className="mt-2" />
+                  <ProgressBar
+                    value={subscription.planId === 'pro' ? 100 : 40}
+                    color="cyan"
+                    className="mt-2"
+                  />
                 </div>
                 <div>
                   <div className="flex justify-between text-xs font-semibold">
                     <span>Active Scenario memory</span>
                     <span>
-                      {subscription.planId === 'pro' ? 'Unlimited' : '100 items'}
+                      {subscription.planId === 'pro'
+                        ? 'Unlimited'
+                        : '100 items'}
                     </span>
                   </div>
-                  <ProgressBar value={subscription.planId === 'pro' ? 100 : 25} color="emerald" className="mt-2" />
+                  <ProgressBar
+                    value={subscription.planId === 'pro' ? 100 : 25}
+                    color="emerald"
+                    className="mt-2"
+                  />
                 </div>
               </div>
             </div>
@@ -978,26 +1130,40 @@ const ProfilePage = () => {
           <div className="space-y-6">
             {/* Cloud Sync section */}
             <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-2">Cloud Synced Records</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-2">
+                Cloud Synced Records
+              </span>
               <CloudSyncStatusPanel providerMode={providerMode} />
             </div>
 
             {/* Local Data backup controls */}
             <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-1">Local Backups</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-1">
+                Local Backups
+              </span>
               <p className="text-xs text-slate-600 leading-5 mb-4">
-                Export all stored local progress, CEFR stats, and memory logs into a portable JSON backup file.
+                Export all stored local progress, CEFR stats, and memory logs
+                into a portable JSON backup file.
               </p>
-              <Button type="button" variant="outline" onClick={exportLocalData} className="text-xs min-h-9">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={exportLocalData}
+                className="text-xs min-h-9"
+              >
                 <Download className="h-3.5 w-3.5 mr-1" /> Export local data
               </Button>
             </div>
 
             {/* Destructive Controls at the very bottom */}
             <div className="rounded-card border border-error/20 bg-error/5 p-4 border-dashed">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-error block mb-1">Destructive actions</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-error block mb-1">
+                Destructive actions
+              </span>
               <p className="text-xs text-error/80 leading-5 mb-4">
-                Completely erase all study sessions, mistake history, and vocabulary data from this local device. This action is irreversible.
+                Completely erase all study sessions, mistake history, and
+                vocabulary data from this local device. This action is
+                irreversible.
               </p>
 
               {providerMode === 'local' ? (
@@ -1018,7 +1184,9 @@ const ProfilePage = () => {
                         <input
                           value={clearConfirmation}
                           onChange={(event) =>
-                            setClearConfirmation(event.target.value.toUpperCase())
+                            setClearConfirmation(
+                              event.target.value.toUpperCase()
+                            )
                           }
                           className="mt-2 min-h-10 w-full rounded-input border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
                         />
@@ -1037,7 +1205,8 @@ const ProfilePage = () => {
                 </>
               ) : (
                 <p className="text-xs text-muted-copy">
-                  Cloud account administration is managed via Supabase. Local data clearing is only available in Guest/Local profile modes.
+                  Cloud account administration is managed via Supabase. Local
+                  data clearing is only available in Guest/Local profile modes.
                 </p>
               )}
             </div>

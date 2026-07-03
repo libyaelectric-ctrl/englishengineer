@@ -161,8 +161,8 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       } catch (err) {
         console.error(
           `[stripe-webhook-error] eventId=unknown type=unknown step=${step} ` +
-          `errorName=${err.name} errorMessage="Stripe webhook signature verification failed." ` +
-          `stackTrace=${err.stack} supabaseCode=N/A supabaseDetails=N/A`
+            `errorName=${err.name} errorMessage="Stripe webhook signature verification failed." ` +
+            `stackTrace=${err.stack} supabaseCode=N/A supabaseDetails=N/A`
         );
         throw new ApiError(
           400,
@@ -215,12 +215,16 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
 
             await repository.upsertSubscriptionStatus(userId, {
               ...current,
-              planId: object.metadata?.planId === 'team' ? 'enterprise' : (object.metadata?.planId || current.planId || 'pro'),
+              planId:
+                object.metadata?.planId === 'team'
+                  ? 'enterprise'
+                  : object.metadata?.planId || current.planId || 'pro',
               status: object.status || 'active',
               currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
-              cancelAtPeriodEnd: typeof object.cancel_at_period_end === 'boolean'
-                ? object.cancel_at_period_end
-                : current.cancelAtPeriodEnd,
+              cancelAtPeriodEnd:
+                typeof object.cancel_at_period_end === 'boolean'
+                  ? object.cancel_at_period_end
+                  : current.cancelAtPeriodEnd,
               stripeCustomerId: object.customer || current.stripeCustomerId,
               stripeSubscriptionId: object.id || current.stripeSubscriptionId,
               updatedAt: new Date().toISOString(),
@@ -263,8 +267,8 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         const supabaseDetails = err.details || 'N/A';
         console.error(
           `[stripe-webhook-error] eventId=${eventId} type=${eventType} step=${step} ` +
-          `errorName=${err.name} errorMessage="${err.message || 'Unknown error'}" ` +
-          `stackTrace=${err.stack} supabaseCode=${supabaseCode} supabaseDetails=${supabaseDetails}`
+            `errorName=${err.name} errorMessage="${err.message || 'Unknown error'}" ` +
+            `stackTrace=${err.stack} supabaseCode=${supabaseCode} supabaseDetails=${supabaseDetails}`
         );
         throw err;
       }
@@ -389,7 +393,9 @@ export const registerBillingRoutes = (
       }
     } catch {}
 
-    console.log(`[stripe-webhook-received] eventId=${eventId} type=${eventType}`);
+    console.log(
+      `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
+    );
 
     try {
       res.json(

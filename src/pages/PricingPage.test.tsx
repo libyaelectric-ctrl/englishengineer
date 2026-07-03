@@ -70,10 +70,9 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('link', { name: 'Go to dashboard' })).toHaveAttribute(
-      'href',
-      '/dashboard'
-    );
+    expect(
+      screen.getByRole('link', { name: 'Go to dashboard' })
+    ).toHaveAttribute('href', '/dashboard');
   });
 
   it('successful billing health check clears the unavailable warning', async () => {
@@ -100,7 +99,9 @@ describe('PricingPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByText(/Stripe backend health check failed/i)).toBeNull();
+      expect(
+        screen.queryByText(/Stripe backend health check failed/i)
+      ).toBeNull();
       expect(screen.queryByText(/Stripe backend is not verified/i)).toBeNull();
     });
 
@@ -119,7 +120,9 @@ describe('PricingPage', () => {
     } as any);
 
     // Mock global fetch to return failure
-    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+    const fetchSpy = vi
+      .spyOn(global, 'fetch')
+      .mockRejectedValue(new Error('Network error'));
 
     render(
       <MemoryRouter>
@@ -128,7 +131,9 @@ describe('PricingPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Stripe backend health check failed/i)).toBeVisible();
+      expect(
+        screen.getByText(/Stripe backend health check failed/i)
+      ).toBeVisible();
     });
 
     fetchSpy.mockRestore();
@@ -146,7 +151,9 @@ describe('PricingPage', () => {
     } as any);
 
     // Mock global fetch to return failure
-    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
+    const fetchSpy = vi
+      .spyOn(global, 'fetch')
+      .mockRejectedValue(new Error('Network error'));
 
     render(
       <MemoryRouter>
@@ -156,7 +163,9 @@ describe('PricingPage', () => {
 
     // The unavailable warning should be hidden because planId is 'pro'
     await waitFor(() => {
-      expect(screen.queryByText(/Stripe backend health check failed/i)).toBeNull();
+      expect(
+        screen.queryByText(/Stripe backend health check failed/i)
+      ).toBeNull();
     });
 
     // Pro user sees the Current Plan disabled button

@@ -62,7 +62,8 @@ const AUTH_COPY = {
     switchToLogin: 'Giriş yap',
     switchToCreate: 'Hesap oluştur',
     heroTitle: 'Şantiyede gerçekten kullandığın İngilizcede ustalaş.',
-    demoMessage: 'Demo modu: yalnızca yerel kullanım, güvenli bir hesap değildir.',
+    demoMessage:
+      'Demo modu: yalnızca yerel kullanım, güvenli bir hesap değildir.',
     interfaceLanguage: 'Arayüz dili',
   },
 } as const;
@@ -100,6 +101,14 @@ const LoginPage = () => {
       setError(null);
       useLearningStore.getState().resetAll();
       await demoLogin();
+      const loggedUser = useAuthStore.getState().currentUser;
+      if (loggedUser) {
+        const { LearningProfileRepository } =
+          await import('@/features/profile/profile.repository');
+        LearningProfileRepository.updatePreferences(loggedUser.id, {
+          onboardingCompleted: true,
+        });
+      }
       navigate(from, { replace: true });
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Failed to initialize demo engineer'));

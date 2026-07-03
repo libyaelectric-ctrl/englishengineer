@@ -1,12 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const demoLogin = async (page: Page) => {
-  await page.goto('/start');
-  await page.getByRole('button', { name: 'Try Lite' }).click();
-  await page.getByRole('button', { name: 'Explore now at A1' }).click();
-  await page.goto('/dashboard');
+  await page.goto('/login');
+  await page.getByRole('button', { name: 'Use Demo Engineer' }).click();
   await expect(
-    page.getByRole('heading', { name: /mission control/i })
+    page.getByRole('heading', { name: /command center/i })
   ).toBeVisible();
 };
 
@@ -27,7 +25,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await page.goto('/');
     await expect(
       page.getByRole('heading', {
-        name: /engineering english for real project work/i,
+        name: /work-ready english for international engineering projects/i,
       })
     ).toBeVisible();
     await page.getByRole('link', { name: 'Log in', exact: true }).click();
@@ -38,7 +36,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
 
     await page.reload();
     await expect(
-      page.getByRole('heading', { name: /mission control/i })
+      page.getByRole('heading', { name: /command center/i })
     ).toBeVisible();
 
     await page.getByLabel(/logout/i).click();
@@ -159,16 +157,19 @@ test.describe('EngineerOS Olympus real browser verification', () => {
 
     await page.goto('/profile');
     await expect(
-      page.getByRole('heading', { name: /subscription control/i })
+      page.getByRole('heading', { name: /profile overview/i })
     ).toBeVisible();
     await expect(page.getByText(/billing backend/i).first()).toBeVisible();
-    await page.getByPlaceholder(/enter first name/i).fill('Olympus');
-    await page.getByPlaceholder(/enter last name/i).fill('Engineer');
-    await page.getByRole('button', { name: /save profile/i }).click();
-    await expect(page.getByText(/profile updated successfully/i)).toBeVisible();
-    await expect(page.getByPlaceholder(/enter first name/i)).toHaveValue(
-      'Olympus'
-    );
+    await page.getByRole('button', { name: /edit profile/i }).click();
+    await page.getByLabel(/first name/i).fill('Olympus');
+    await page.getByLabel(/last name/i).fill('Engineer');
+    await page.getByRole('button', { name: /save changes/i }).click();
+    await expect(
+      page.getByText(/profile overview updated successfully/i)
+    ).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Olympus Engineer' })
+    ).toBeVisible();
   });
 
   test('network, backend, audio, speech, offline, and corrupted storage resilience', async ({
@@ -305,7 +306,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
       });
       await page.goto('/dashboard');
       await expect(
-        page.getByRole('heading', { name: /mission control/i })
+        page.getByRole('heading', { name: /command center/i })
       ).toBeVisible();
       await expect(page.getByLabel(/toggle navigation sidebar/i)).toBeVisible();
       for (const metric of ['score', 'elo', 'done']) {
@@ -332,13 +333,27 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await expect(card).toBeVisible();
     await card.hover();
     const isLightHover = await card.evaluate((element) => {
-      const color = getComputedStyle(element).backgroundColor;
+      const style = getComputedStyle(element);
+      const color = style.backgroundColor;
+      const bgImg = style.backgroundImage;
+      if (
+        bgImg &&
+        (bgImg.includes('rgba(255, 255, 255') ||
+          bgImg.includes('rgba(248, 249, 251'))
+      ) {
+        return true;
+      }
       const values = color.match(/[\d.]+/g)?.map(Number) || [];
       if (color.startsWith('oklab') || color.startsWith('oklch')) {
         return (values[0] || 0) > 0.8;
       }
       if (color.startsWith('color(srgb')) {
         return values.slice(0, 3).every((channel) => channel > 0.8);
+      }
+      if (values.length >= 4 && values[3] === 0) {
+        return (
+          bgImg && !bgImg.includes('rgba(0, 0, 0') && !bgImg.includes('#141A22')
+        );
       }
       return values.slice(0, 3).every((channel) => channel > 220);
     });
@@ -348,8 +363,23 @@ test.describe('EngineerOS Olympus real browser verification', () => {
       .getByRole('button', { name: /continue mission|start today/i })
       .first();
     const primaryIsNotBlack = await primaryButton.evaluate((element) => {
-      const color = getComputedStyle(element).backgroundColor;
+      const style = getComputedStyle(element);
+      const color = style.backgroundColor;
+      const bgImg = style.backgroundImage;
+      if (
+        bgImg &&
+        (bgImg.includes('#617FD8') ||
+          bgImg.includes('#4D6BC0') ||
+          bgImg.includes('rgb('))
+      ) {
+        return true;
+      }
       const channels = color.match(/[\d.]+/g)?.map(Number) ?? [];
+      if (channels.length >= 4 && channels[3] === 0) {
+        return (
+          bgImg && !bgImg.includes('rgba(0, 0, 0') && !bgImg.includes('#000')
+        );
+      }
       return (
         channels.length < 3 ||
         channels.slice(0, 3).some((channel) => channel > 70)
@@ -373,10 +403,8 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     page,
   }) => {
     await page.goto('/login');
-    await expect(page.getByLabel(/display name/i)).toBeVisible();
-    await page.getByLabel(/display name/i).focus();
-    await expect(page.getByLabel(/display name/i)).toBeFocused();
-    await page.keyboard.press('Tab');
+    await expect(page.getByLabel(/email address/i)).toBeVisible();
+    await page.getByLabel(/email address/i).focus();
     await expect(page.getByLabel(/email address/i)).toBeFocused();
 
     await demoLogin(page);

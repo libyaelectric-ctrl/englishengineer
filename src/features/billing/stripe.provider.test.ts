@@ -24,7 +24,9 @@ describe('StripeBillingProvider', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    const provider = new StripeBillingProvider('https://billing.engineeros.test');
+    const provider = new StripeBillingProvider(
+      'https://billing.engineeros.test'
+    );
     const response = await provider.createCheckoutSession({
       userId: 'user_123',
       email: 'engineer@example.com',
@@ -58,7 +60,9 @@ describe('StripeBillingProvider', () => {
       'X-EngineerOS-User-Id': 'user_123',
     });
 
-    const provider = new StripeBillingProvider('https://billing.engineeros.test');
+    const provider = new StripeBillingProvider(
+      'https://billing.engineeros.test'
+    );
 
     await expect(
       provider.createCheckoutSession({

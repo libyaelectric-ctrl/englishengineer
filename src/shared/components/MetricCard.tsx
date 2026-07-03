@@ -57,7 +57,9 @@ export const MetricCard: React.FC<MetricCardProps> = ({
                 trendTextColors[trendDirection]
               )}
             >
-              {trendDirection === 'up' && <ArrowUpRight className="h-3.5 w-3.5" />}
+              {trendDirection === 'up' && (
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              )}
               {trendDirection === 'down' && (
                 <ArrowDownRight className="h-3.5 w-3.5" />
               )}

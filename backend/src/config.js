@@ -121,7 +121,10 @@ export const createBackendConfig = (environment = process.env) => {
         ? environment.SUPABASE_URL.trim()
         : null,
       supabaseAnonKey: supabaseAuthConfigured
-        ? (environment.SUPABASE_ANON_KEY || environment.SUPABASE_SERVICE_ROLE_KEY).trim()
+        ? (
+            environment.SUPABASE_ANON_KEY ||
+            environment.SUPABASE_SERVICE_ROLE_KEY
+          ).trim()
         : null,
     },
     stripe: {

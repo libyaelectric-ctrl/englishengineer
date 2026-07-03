@@ -1,7 +1,6 @@
 import { spawnSync } from 'node:child_process';
 
 const commands = [
-  { label: 'npm ci', npmArgs: ['ci'] },
   { label: 'npm run typecheck', npmArgs: ['run', 'typecheck'] },
   { label: 'npm run format:check', npmArgs: ['run', 'format:check'] },
   { label: 'npm run lint', npmArgs: ['run', 'lint'] },
