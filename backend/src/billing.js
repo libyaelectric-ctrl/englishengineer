@@ -45,14 +45,29 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const email = requireText(body?.email, 'email');
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
-      const planId = body?.planId === 'enterprise' ? 'team' : 'pro';
-      const price =
-        planId === 'team' ? config.priceTeamMonthly : config.priceProMonthly;
+      const planId = body?.planId || 'pro';
+      let price = null;
+      if (planId === 'pro') {
+        price = config.priceProMonthly;
+      } else if (planId === 'project') {
+        price = config.priceProjectMonthly || config.priceProMonthly;
+      } else if (planId === 'max') {
+        price = config.priceMaxMonthly || config.priceProMonthly;
+      } else if (planId === 'exec') {
+        price = config.priceExecMonthly || config.priceProMonthly;
+      } else if (planId === 'private') {
+        price = config.pricePrivateMonthly || config.priceProMonthly;
+      } else if (planId === 'team' || planId === 'enterprise') {
+        price = config.priceTeamMonthly || config.priceProMonthly;
+      } else {
+        price = config.priceProMonthly;
+      }
+
       if (!price) {
         throw new ApiError(
           503,
           'STRIPE_NOT_CONFIGURED',
-          `Stripe price for ${planId} is not configured.`
+          `Stripe price for plan "${planId}" is not configured.`
         );
       }
       const session = await stripeClient.checkout.sessions.create({
@@ -190,7 +205,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           if (eventType === 'checkout.session.completed') {
             step = 'process_checkout_completed';
             await repository.upsertSubscriptionStatus(userId, {
-              planId: object.metadata?.planId === 'team' ? 'enterprise' : 'pro',
+              planId: object.metadata?.planId || 'pro',
               status: 'active',
               currentPeriodEnd: null,
               cancelAtPeriodEnd: false,
@@ -215,10 +230,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
 
             await repository.upsertSubscriptionStatus(userId, {
               ...current,
-              planId:
-                object.metadata?.planId === 'team'
-                  ? 'enterprise'
-                  : object.metadata?.planId || current.planId || 'pro',
+              planId: object.metadata?.planId || current.planId || 'pro',
               status: object.status || 'active',
               currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
               cancelAtPeriodEnd:

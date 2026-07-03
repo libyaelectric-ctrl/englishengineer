@@ -136,6 +136,18 @@ export const createBackendConfig = (environment = process.env) => {
       priceProMonthly: stripeConfigured
         ? environment.STRIPE_PRICE_PRO_MONTHLY.trim()
         : null,
+      priceProjectMonthly: hasText(environment.STRIPE_PRICE_PROJECT_MONTHLY)
+        ? environment.STRIPE_PRICE_PROJECT_MONTHLY.trim()
+        : null,
+      priceMaxMonthly: hasText(environment.STRIPE_PRICE_MAX_MONTHLY)
+        ? environment.STRIPE_PRICE_MAX_MONTHLY.trim()
+        : null,
+      priceExecMonthly: hasText(environment.STRIPE_PRICE_EXEC_MONTHLY)
+        ? environment.STRIPE_PRICE_EXEC_MONTHLY.trim()
+        : null,
+      pricePrivateMonthly: hasText(environment.STRIPE_PRICE_PRIVATE_MONTHLY)
+        ? environment.STRIPE_PRICE_PRIVATE_MONTHLY.trim()
+        : null,
       priceTeamMonthly: hasText(environment.STRIPE_PRICE_TEAM_MONTHLY)
         ? environment.STRIPE_PRICE_TEAM_MONTHLY.trim()
         : null,
