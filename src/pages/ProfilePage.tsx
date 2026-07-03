@@ -287,44 +287,13 @@ const ProfilePage = () => {
     window.location.assign('/start');
   };
 
-  // Scroll listener to update sticky sub-navigation highlight
-  useEffect(() => {
-    const sections = [
-      'overview',
-      'skills',
-      'preferences',
-      'billing',
-      'security',
-    ];
-    const handleScroll = () => {
-      const scrollPos = window.scrollY + 150;
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPos >= top && scrollPos < top + height) {
-            setActiveSection(section);
-            break;
-          }
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Smooth scroll helper
+  // Tab change helper
   const scrollTo = (id: string) => {
     setActiveSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = element.offsetTop - 130;
-      window.scrollTo({
-        top: offset,
-        behavior: 'smooth',
-      });
-    }
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   const calculateCompletionPercent = () => {
@@ -424,276 +393,529 @@ const ProfilePage = () => {
       )}
 
       {/* SECTION 1: Profile Overview */}
-      <section id="overview" className="scroll-mt-36">
-        <SectionCard
-          title="Profile Overview"
-          subtitle="Your professional and regional classification metadata"
-          icon={UserRound}
+      {activeSection === 'overview' && (
+        <section
+          id="overview"
+          className="scroll-mt-36 animate-in fade-in duration-200"
         >
-          {!isEditMode ? (
-            <div className="space-y-6">
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Full Name
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {currentUser?.displayName || 'Not Provided'}
-                  </p>
-                </div>
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Profession / Role
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {PROFESSIONS.find((p) => p.id === profile.professionId)
-                      ?.label || 'Not Selected'}
-                  </p>
-                </div>
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Engineering Discipline
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {PROFESSIONAL_TRACKS.find(
-                      (t) => t.id === profile.professionalTrack
-                    )?.label || 'Electrical Engineering'}
-                  </p>
-                </div>
-                {profile.professionalTrack === 'electrical' && (
+          <SectionCard
+            title="Profile Overview"
+            subtitle="Your professional and regional classification metadata"
+            icon={UserRound}
+          >
+            {!isEditMode ? (
+              <div className="space-y-6">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   <div className="rounded-card border border-border-soft bg-surface/30 p-4">
                     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                      Electrical Subdomain
+                      Full Name
                     </span>
                     <p className="mt-1 text-sm font-bold text-foreground">
-                      {ELECTRICAL_SUBDOMAINS.find(
-                        (s) => s.id === profile.electricalSubdomain
-                      )?.label || 'Not Selected'}
+                      {currentUser?.displayName || 'Not Provided'}
                     </p>
                   </div>
-                )}
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Industry Sectors
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {INDUSTRIES.find((i) => i.id === profile.industryId)
-                      ?.label || 'Not Selected'}
-                  </p>
-                </div>
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Country / Region
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {profile.country || 'Not Selected'}
-                  </p>
-                </div>
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Timezone
-                  </span>
-                  <p className="mt-1 text-sm font-mono text-foreground">
-                    {profile.timezone || 'Not Selected'}
-                  </p>
-                </div>
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    Interface Language
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English'}
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                  Communication Goals
-                </span>
-                {profile.communicationGoals &&
-                profile.communicationGoals.length > 0 ? (
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {profile.communicationGoals.map((gId) => (
-                      <span
-                        key={gId}
-                        className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-semibold text-primary"
-                      >
-                        {COMMUNICATION_GOALS.find((goal) => goal.id === gId)
-                          ?.label || gId}
-                      </span>
-                    ))}
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Profession / Role
+                    </span>
+                    <p className="mt-1 text-sm font-bold text-foreground">
+                      {PROFESSIONS.find((p) => p.id === profile.professionId)
+                        ?.label || 'Not Selected'}
+                    </p>
                   </div>
-                ) : (
-                  <p className="mt-1 text-xs text-muted-copy">
-                    No goals selected.
-                  </p>
-                )}
-              </div>
-
-              <div className="flex justify-end border-t border-border-soft pt-4">
-                <Button
-                  type="button"
-                  onClick={enterEditMode}
-                  className="text-xs min-h-9"
-                >
-                  <Edit3 className="h-3.5 w-3.5 mr-1" /> Edit Profile
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <form onSubmit={handleSaveProfile} className="space-y-5">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="edit-first-name"
-                    className="text-xs font-bold text-foreground"
-                  >
-                    First Name
-                  </label>
-                  <input
-                    id="edit-first-name"
-                    value={editFirstName}
-                    onChange={(event) => setEditFirstName(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
-                  />
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Engineering Discipline
+                    </span>
+                    <p className="mt-1 text-sm font-bold text-foreground">
+                      {PROFESSIONAL_TRACKS.find(
+                        (t) => t.id === profile.professionalTrack
+                      )?.label || 'Electrical Engineering'}
+                    </p>
+                  </div>
+                  {profile.professionalTrack === 'electrical' && (
+                    <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                        Electrical Subdomain
+                      </span>
+                      <p className="mt-1 text-sm font-bold text-foreground">
+                        {ELECTRICAL_SUBDOMAINS.find(
+                          (s) => s.id === profile.electricalSubdomain
+                        )?.label || 'Not Selected'}
+                      </p>
+                    </div>
+                  )}
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Industry Sectors
+                    </span>
+                    <p className="mt-1 text-sm font-bold text-foreground">
+                      {INDUSTRIES.find((i) => i.id === profile.industryId)
+                        ?.label || 'Not Selected'}
+                    </p>
+                  </div>
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Country / Region
+                    </span>
+                    <p className="mt-1 text-sm font-bold text-foreground">
+                      {profile.country || 'Not Selected'}
+                    </p>
+                  </div>
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Timezone
+                    </span>
+                    <p className="mt-1 text-sm font-mono text-foreground">
+                      {profile.timezone || 'Not Selected'}
+                    </p>
+                  </div>
+                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Interface Language
+                    </span>
+                    <p className="mt-1 text-sm font-bold text-foreground">
+                      {profile.interfaceLanguage === 'tr'
+                        ? 'Türkçe'
+                        : 'English'}
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="edit-last-name"
-                    className="text-xs font-bold text-foreground"
+
+                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    Communication Goals
+                  </span>
+                  {profile.communicationGoals &&
+                  profile.communicationGoals.length > 0 ? (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {profile.communicationGoals.map((gId) => (
+                        <span
+                          key={gId}
+                          className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-semibold text-primary"
+                        >
+                          {COMMUNICATION_GOALS.find((goal) => goal.id === gId)
+                            ?.label || gId}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-1 text-xs text-muted-copy">
+                      No goals selected.
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex justify-end border-t border-border-soft pt-4">
+                  <Button
+                    type="button"
+                    onClick={enterEditMode}
+                    className="text-xs min-h-9"
                   >
-                    Last Name
-                  </label>
-                  <input
-                    id="edit-last-name"
-                    value={editLastName}
-                    onChange={(event) => setEditLastName(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
-                  />
+                    <Edit3 className="h-3.5 w-3.5 mr-1" /> Edit Profile
+                  </Button>
                 </div>
               </div>
+            ) : (
+              <form onSubmit={handleSaveProfile} className="space-y-5">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="edit-first-name"
+                      className="text-xs font-bold text-foreground"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      id="edit-first-name"
+                      value={editFirstName}
+                      onChange={(event) => setEditFirstName(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="edit-last-name"
+                      className="text-xs font-bold text-foreground"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      id="edit-last-name"
+                      value={editLastName}
+                      onChange={(event) => setEditLastName(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
+                    />
+                  </div>
+                </div>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Profession / Role
-                  <select
-                    value={editProfession}
-                    onChange={(event) => setEditProfession(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
-                  >
-                    <option value="">Select profession</option>
-                    {PROFESSIONS.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Engineering Track
-                  <select
-                    value={editTrack}
-                    onChange={(event) => setEditTrack(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
-                  >
-                    {PROFESSIONAL_TRACKS.map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                {editTrack === 'electrical' && (
+                <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                    Electrical Subdomain
+                    Profession / Role
                     <select
-                      value={editSubdomain}
-                      onChange={(event) => setEditSubdomain(event.target.value)}
+                      value={editProfession}
+                      onChange={(event) =>
+                        setEditProfession(event.target.value)
+                      }
                       className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                     >
-                      {ELECTRICAL_SUBDOMAINS.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.label}
+                      <option value="">Select profession</option>
+                      {PROFESSIONS.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.label}
                         </option>
                       ))}
                     </select>
                   </label>
-                )}
 
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Industry Sector
-                  <select
-                    value={editIndustry}
-                    onChange={(event) => setEditIndustry(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Engineering Track
+                    <select
+                      value={editTrack}
+                      onChange={(event) => setEditTrack(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      {PROFESSIONAL_TRACKS.map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  {editTrack === 'electrical' && (
+                    <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                      Electrical Subdomain
+                      <select
+                        value={editSubdomain}
+                        onChange={(event) =>
+                          setEditSubdomain(event.target.value)
+                        }
+                        className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      >
+                        {ELECTRICAL_SUBDOMAINS.map((s) => (
+                          <option key={s.id} value={s.id}>
+                            {s.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Industry Sector
+                    <select
+                      value={editIndustry}
+                      onChange={(event) => setEditIndustry(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      <option value="">Select industry</option>
+                      {INDUSTRIES.map((i) => (
+                        <option key={i.id} value={i.id}>
+                          {i.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Country / Region
+                    <select
+                      value={editCountry}
+                      onChange={(event) => setEditCountry(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      {COUNTRIES.map((country) => (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Timezone
+                    <select
+                      value={editTimezone}
+                      onChange={(event) => setEditTimezone(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
+                    >
+                      {TIMEZONES.map((tz) => (
+                        <option key={tz} value={tz}>
+                          {tz}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Interface Language
+                    <select
+                      value={editLang}
+                      onChange={(event) =>
+                        setEditLang(event.target.value as 'en' | 'tr')
+                      }
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+
+                <div>
+                  <span className="block text-xs font-bold text-foreground">
+                    Communication Goals
+                  </span>
+                  <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
+                    {COMMUNICATION_GOALS.map((goal) => {
+                      const isChecked = editGoals.includes(goal.id);
+                      return (
+                        <label
+                          key={goal.id}
+                          className={`flex cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-xs font-semibold transition-all ${
+                            isChecked
+                              ? 'border-primary/40 bg-primary/10 text-foreground'
+                              : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
+                          }`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => {
+                              setEditGoals((curr) =>
+                                curr.includes(goal.id)
+                                  ? curr.filter((id) => id !== goal.id)
+                                  : [...curr, goal.id]
+                              );
+                            }}
+                            className="h-3.5 w-3.5 accent-primary"
+                          />
+                          {goal.label}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="flex justify-end gap-2 border-t border-border-soft pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isSaving}
+                    onClick={() => setIsEditMode(false)}
+                    className="text-xs"
                   >
-                    <option value="">Select industry</option>
-                    {INDUSTRIES.map((i) => (
-                      <option key={i.id} value={i.id}>
-                        {i.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                    <XCircle className="h-3.5 w-3.5 mr-1" /> Cancel
+                  </Button>
+                  <Button type="submit" disabled={isSaving} className="text-xs">
+                    <Save className="h-3.5 w-3.5 mr-1" />
+                    {isSaving ? 'Saving...' : 'Save Changes'}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </SectionCard>
+        </section>
+      )}
 
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Country / Region
-                  <select
-                    value={editCountry}
-                    onChange={(event) => setEditCountry(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+      {/* SECTION 2: Skills and Progress */}
+      {activeSection === 'skills' && (
+        <section
+          id="skills"
+          className="scroll-mt-36 animate-in fade-in duration-200"
+        >
+          <SectionCard
+            title="Skills & Progress"
+            subtitle="Your estimated CEFR levels and study progress breakdown"
+            icon={Gauge}
+          >
+            {/* Unified Progress Cockpit */}
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {SKILL_NAMES.map((skill) => {
+                const skillProfile = profile.skills[skill];
+                const isSimulated =
+                  skill === 'listening' || skill === 'speaking';
+                return (
+                  <article
+                    key={skill}
+                    className="rounded-card border border-border-soft bg-surface p-4 relative"
                   >
-                    {COUNTRIES.map((country) => (
-                      <option key={country} value={country}>
-                        {country}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                    <div className="flex justify-between items-start">
+                      <p className="text-xs font-bold uppercase tracking-wider text-slate-900 capitalize">
+                        {skill}
+                      </p>
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+                        {skillProfile.cefrBand} ({skillProfile.elo} ELO)
+                      </span>
+                    </div>
 
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Timezone
-                  <select
-                    value={editTimezone}
-                    onChange={(event) => setEditTimezone(event.target.value)}
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
-                  >
-                    {TIMEZONES.map((tz) => (
-                      <option key={tz} value={tz}>
-                        {tz}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                    <p className="mt-2 text-[10px] text-muted-copy leading-4">
+                      {isSimulated
+                        ? skill === 'listening'
+                          ? 'Simulated listening talks. Available for practice.'
+                          : 'Simulated site meeting discussions. Available for practice.'
+                        : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
+                    </p>
 
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Interface Language
-                  <select
-                    value={editLang}
-                    onChange={(event) =>
-                      setEditLang(event.target.value as 'en' | 'tr')
-                    }
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
-                  >
-                    {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
-                      <option key={item.id} value={item.id}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
+                    <ProgressBar
+                      value={skillProfile.progressToNextBand}
+                      showValue={false}
+                      color="cyan"
+                      className="mt-4"
+                    />
+                  </article>
+                );
+              })}
+            </div>
 
-              <div>
-                <span className="block text-xs font-bold text-foreground">
-                  Communication Goals
+            {/* Quick Metrics */}
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+              {[
+                ['Streak', `${learningState.streak} days`],
+                ['Missions', completedTasks],
+                ['Weekly Goal', `${weeklyCompleted}/${profile.weeklyGoal}`],
+                ['Mastered words', memory.mastered],
+                ['Weak words', memory.weakWords],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="rounded-card border border-border-soft bg-surface/30 p-3"
+                >
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    {label}
+                  </p>
+                  <p className="mt-1 text-base font-bold text-foreground">
+                    {value}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            {/* Vocabulary Progress */}
+            <div className="mt-6 rounded-card border border-border-soft bg-surface/20 p-4">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                Vocabulary Mastery
+              </span>
+              <div className="mt-2 flex items-center justify-between gap-3 text-xs font-bold">
+                <span>
+                  {memory.mastered} of {memory.total} terms mastered
                 </span>
-                <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
-                  {COMMUNICATION_GOALS.map((goal) => {
-                    const isChecked = editGoals.includes(goal.id);
+                <span className="text-primary">
+                  {memory.dueToday} terms due today
+                </span>
+              </div>
+              <ProgressBar
+                value={vocabularyMastery}
+                color="emerald"
+                className="mt-3"
+              />
+            </div>
+
+            {/* Unlocked Badges */}
+            <div className="mt-6">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                Achievements & Badges
+              </span>
+              <div className="mt-2 grid gap-3 sm:grid-cols-2">
+                {badges
+                  .filter((b) => b.unlocked)
+                  .slice(0, 4)
+                  .map((badge) => (
+                    <div
+                      key={badge.id}
+                      className="flex items-start gap-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3.5"
+                    >
+                      <Award className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-bold text-foreground">
+                          {badge.label}
+                        </p>
+                        <p className="mt-0.5 text-[10px] text-slate-600 leading-4">
+                          {badge.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Recent Mistakes summary */}
+            <div className="mt-6">
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                Mistake Log Summary
+              </span>
+              {mistakeLog.length === 0 ? (
+                <p className="mt-2 rounded-card border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
+                  No mistakes recorded yet.
+                </p>
+              ) : (
+                <div className="mt-2 space-y-2">
+                  {mistakeLog.slice(0, 2).map((m) => (
+                    <div
+                      key={m.id}
+                      className="rounded-card border border-border-soft bg-surface p-3 text-xs"
+                    >
+                      <div className="flex justify-between items-center">
+                        <span className="font-mono text-[9px] text-muted-copy uppercase">
+                          {m.category}
+                        </span>
+                        <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
+                          {(m.repetitionCount ?? 1) >= 3
+                            ? 'Critical'
+                            : `${m.repetitionCount ?? 1}x`}
+                        </span>
+                      </div>
+                      <p className="mt-1 font-bold text-slate-800">
+                        "{m.originalText}"
+                      </p>
+                      <p className="mt-0.5 text-muted-copy">
+                        Correction: {m.correction}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Detailed Analytics CTA */}
+            <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
+              <Link
+                to="/analytics"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-[12px] px-4 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+              >
+                View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
+          </SectionCard>
+        </section>
+      )}
+
+      {/* SECTION 3: Learning Preferences */}
+      {activeSection === 'preferences' && (
+        <section
+          id="preferences"
+          className="scroll-mt-36 animate-in fade-in duration-200"
+        >
+          <SectionCard
+            title="Learning Preferences"
+            subtitle="Manage your learning goals, target pace, and training rhythm"
+            icon={Target}
+          >
+            <form onSubmit={handleSavePreferences} className="space-y-6">
+              <fieldset>
+                <legend className="text-xs font-bold text-foreground">
+                  Learning Goals
+                </legend>
+                <p className="mt-0.5 text-[10px] text-muted-copy">
+                  Select one or more goals.
+                </p>
+                <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                  {LEARNING_GOALS.map((goal) => {
+                    const isChecked = prefGoals.includes(goal.id);
                     return (
                       <label
                         key={goal.id}
@@ -707,7 +929,7 @@ const ProfilePage = () => {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => {
-                            setEditGoals((curr) =>
+                            setPrefGoals((curr) =>
                               curr.includes(goal.id)
                                 ? curr.filter((id) => id !== goal.id)
                                 : [...curr, goal.id]
@@ -720,499 +942,283 @@ const ProfilePage = () => {
                     );
                   })}
                 </div>
-              </div>
+              </fieldset>
 
-              <div className="flex justify-end gap-2 border-t border-border-soft pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isSaving}
-                  onClick={() => setIsEditMode(false)}
-                  className="text-xs"
-                >
-                  <XCircle className="h-3.5 w-3.5 mr-1" /> Cancel
-                </Button>
-                <Button type="submit" disabled={isSaving} className="text-xs">
-                  <Save className="h-3.5 w-3.5 mr-1" />
-                  {isSaving ? 'Saving...' : 'Save Changes'}
-                </Button>
-              </div>
-            </form>
-          )}
-        </SectionCard>
-      </section>
-
-      {/* SECTION 2: Skills and Progress */}
-      <section id="skills" className="scroll-mt-36">
-        <SectionCard
-          title="Skills & Progress"
-          subtitle="Your estimated CEFR levels and study progress breakdown"
-          icon={Gauge}
-        >
-          {/* Unified Progress Cockpit */}
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {SKILL_NAMES.map((skill) => {
-              const skillProfile = profile.skills[skill];
-              const isSimulated = skill === 'listening' || skill === 'speaking';
-              return (
-                <article
-                  key={skill}
-                  className="rounded-card border border-border-soft bg-surface p-4 relative"
-                >
-                  <div className="flex justify-between items-start">
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-900 capitalize">
-                      {skill}
-                    </p>
-                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
-                      {skillProfile.cefrBand} ({skillProfile.elo} ELO)
-                    </span>
-                  </div>
-
-                  <p className="mt-2 text-[10px] text-muted-copy leading-4">
-                    {isSimulated
-                      ? skill === 'listening'
-                        ? 'Simulated listening talks. Available for practice.'
-                        : 'Simulated site meeting discussions. Available for practice.'
-                      : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
-                  </p>
-
-                  <ProgressBar
-                    value={skillProfile.progressToNextBand}
-                    showValue={false}
-                    color="cyan"
-                    className="mt-4"
-                  />
-                </article>
-              );
-            })}
-          </div>
-
-          {/* Quick Metrics */}
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {[
-              ['Streak', `${learningState.streak} days`],
-              ['Missions', completedTasks],
-              ['Weekly Goal', `${weeklyCompleted}/${profile.weeklyGoal}`],
-              ['Mastered words', memory.mastered],
-              ['Weak words', memory.weakWords],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                className="rounded-card border border-border-soft bg-surface/30 p-3"
-              >
-                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                  {label}
-                </p>
-                <p className="mt-1 text-base font-bold text-foreground">
-                  {value}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Vocabulary Progress */}
-          <div className="mt-6 rounded-card border border-border-soft bg-surface/20 p-4">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-              Vocabulary Mastery
-            </span>
-            <div className="mt-2 flex items-center justify-between gap-3 text-xs font-bold">
-              <span>
-                {memory.mastered} of {memory.total} terms mastered
-              </span>
-              <span className="text-primary">
-                {memory.dueToday} terms due today
-              </span>
-            </div>
-            <ProgressBar
-              value={vocabularyMastery}
-              color="emerald"
-              className="mt-3"
-            />
-          </div>
-
-          {/* Unlocked Badges */}
-          <div className="mt-6">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-              Achievements & Badges
-            </span>
-            <div className="mt-2 grid gap-3 sm:grid-cols-2">
-              {badges
-                .filter((b) => b.unlocked)
-                .slice(0, 4)
-                .map((badge) => (
-                  <div
-                    key={badge.id}
-                    className="flex items-start gap-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3.5"
-                  >
-                    <Award className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs font-bold text-foreground">
-                        {badge.label}
-                      </p>
-                      <p className="mt-0.5 text-[10px] text-slate-600 leading-4">
-                        {badge.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Recent Mistakes summary */}
-          <div className="mt-6">
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-              Mistake Log Summary
-            </span>
-            {mistakeLog.length === 0 ? (
-              <p className="mt-2 rounded-card border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
-                No mistakes recorded yet.
-              </p>
-            ) : (
-              <div className="mt-2 space-y-2">
-                {mistakeLog.slice(0, 2).map((m) => (
-                  <div
-                    key={m.id}
-                    className="rounded-card border border-border-soft bg-surface p-3 text-xs"
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className="font-mono text-[9px] text-muted-copy uppercase">
-                        {m.category}
-                      </span>
-                      <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
-                        {(m.repetitionCount ?? 1) >= 3
-                          ? 'Critical'
-                          : `${m.repetitionCount ?? 1}x`}
-                      </span>
-                    </div>
-                    <p className="mt-1 font-bold text-slate-800">
-                      "{m.originalText}"
-                    </p>
-                    <p className="mt-0.5 text-muted-copy">
-                      Correction: {m.correction}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Detailed Analytics CTA */}
-          <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
-            <Link
-              to="/analytics"
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-[12px] px-4 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
-            >
-              View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </SectionCard>
-      </section>
-
-      {/* SECTION 3: Learning Preferences */}
-      <section id="preferences" className="scroll-mt-36">
-        <SectionCard
-          title="Learning Preferences"
-          subtitle="Manage your learning goals, target pace, and training rhythm"
-          icon={Target}
-        >
-          <form onSubmit={handleSavePreferences} className="space-y-6">
-            <fieldset>
-              <legend className="text-xs font-bold text-foreground">
-                Learning Goals
-              </legend>
-              <p className="mt-0.5 text-[10px] text-muted-copy">
-                Select one or more goals.
-              </p>
-              <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                {LEARNING_GOALS.map((goal) => {
-                  const isChecked = prefGoals.includes(goal.id);
-                  return (
-                    <label
-                      key={goal.id}
-                      className={`flex cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-xs font-semibold transition-all ${
-                        isChecked
-                          ? 'border-primary/40 bg-primary/10 text-foreground'
-                          : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => {
-                          setPrefGoals((curr) =>
-                            curr.includes(goal.id)
-                              ? curr.filter((id) => id !== goal.id)
-                              : [...curr, goal.id]
-                          );
-                        }}
-                        className="h-3.5 w-3.5 accent-primary"
-                      />
-                      {goal.label}
-                    </label>
-                  );
-                })}
-              </div>
-            </fieldset>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                Daily Study Target (Minutes)
-                <select
-                  value={prefMinutes}
-                  onChange={(event) =>
-                    setPrefMinutes(Number(event.target.value))
-                  }
-                  className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
-                >
-                  {DAILY_DURATION_OPTIONS.map((val) => (
-                    <option key={val} value={val}>
-                      {val} minutes
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                Daily Task Limit
-                <select
-                  value={prefTasks}
-                  onChange={(event) => setPrefTasks(Number(event.target.value))}
-                  className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
-                >
-                  {DAILY_TASK_COUNT_OPTIONS.map((val) => (
-                    <option key={val} value={val}>
-                      {val} tasks
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-
-            {/* Collapsible Advanced Preferences */}
-            <details className="group border border-border-soft rounded-card bg-surface/10 p-4">
-              <summary className="flex cursor-pointer items-center justify-between font-bold text-xs text-slate-800 list-none select-none">
-                <span>Advanced learning preferences</span>
-                <ChevronDown className="h-4 w-4 text-slate-500 transition-transform group-open:rotate-180" />
-              </summary>
-
-              <div className="mt-4 space-y-4 pt-3 border-t border-border-soft">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Weekly Streak Tolerance (Allowed Missed Days)
+                  Daily Study Target (Minutes)
                   <select
-                    value={prefMissedDays}
+                    value={prefMinutes}
                     onChange={(event) =>
-                      setPrefMissedDays(Number(event.target.value))
+                      setPrefMinutes(Number(event.target.value))
                     }
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
-                    {[0, 1, 2, 3].map((val) => (
+                    {DAILY_DURATION_OPTIONS.map((val) => (
                       <option key={val} value={val}>
-                        {val} missed {val === 1 ? 'day' : 'days'}
+                        {val} minutes
                       </option>
                     ))}
                   </select>
                 </label>
 
                 <label className="block space-y-1.5 text-xs font-bold text-foreground">
-                  Experience Level
+                  Daily Task Limit
                   <select
-                    value={prefExpLevel}
-                    onChange={(event) => setPrefExpLevel(event.target.value)}
+                    value={prefTasks}
+                    onChange={(event) =>
+                      setPrefTasks(Number(event.target.value))
+                    }
                     className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
                   >
-                    <option value="">Select level</option>
-                    {EXPERIENCE_LEVELS.map((el) => (
-                      <option key={el.id} value={el.id}>
-                        {el.label}
+                    {DAILY_TASK_COUNT_OPTIONS.map((val) => (
+                      <option key={val} value={val}>
+                        {val} tasks
                       </option>
                     ))}
                   </select>
                 </label>
-
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="pref-career-goal"
-                    className="text-xs font-bold text-foreground"
-                  >
-                    Target Career Goal
-                  </label>
-                  <input
-                    id="pref-career-goal"
-                    value={prefCareerGoal}
-                    onChange={(event) => setPrefCareerGoal(event.target.value)}
-                    placeholder="e.g. Lead site meetings with confidence"
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
-                  />
-                </div>
               </div>
-            </details>
 
-            <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
-              {preferencesSaved && (
-                <span className="text-xs font-bold text-emerald-500">
-                  Saved
-                </span>
-              )}
-              <Button type="submit" className="text-xs min-h-9">
-                <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences
-              </Button>
-            </div>
-          </form>
-        </SectionCard>
-      </section>
+              {/* Collapsible Advanced Preferences */}
+              <details className="group border border-border-soft rounded-card bg-surface/10 p-4">
+                <summary className="flex cursor-pointer items-center justify-between font-bold text-xs text-slate-800 list-none select-none">
+                  <span>Advanced learning preferences</span>
+                  <ChevronDown className="h-4 w-4 text-slate-500 transition-transform group-open:rotate-180" />
+                </summary>
+
+                <div className="mt-4 space-y-4 pt-3 border-t border-border-soft">
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Weekly Streak Tolerance (Allowed Missed Days)
+                    <select
+                      value={prefMissedDays}
+                      onChange={(event) =>
+                        setPrefMissedDays(Number(event.target.value))
+                      }
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      {[0, 1, 2, 3].map((val) => (
+                        <option key={val} value={val}>
+                          {val} missed {val === 1 ? 'day' : 'days'}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    Experience Level
+                    <select
+                      value={prefExpLevel}
+                      onChange={(event) => setPrefExpLevel(event.target.value)}
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    >
+                      <option value="">Select level</option>
+                      {EXPERIENCE_LEVELS.map((el) => (
+                        <option key={el.id} value={el.id}>
+                          {el.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="pref-career-goal"
+                      className="text-xs font-bold text-foreground"
+                    >
+                      Target Career Goal
+                    </label>
+                    <input
+                      id="pref-career-goal"
+                      value={prefCareerGoal}
+                      onChange={(event) =>
+                        setPrefCareerGoal(event.target.value)
+                      }
+                      placeholder="e.g. Lead site meetings with confidence"
+                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
+                    />
+                  </div>
+                </div>
+              </details>
+
+              <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
+                {preferencesSaved && (
+                  <span className="text-xs font-bold text-emerald-500">
+                    Saved
+                  </span>
+                )}
+                <Button type="submit" className="text-xs min-h-9">
+                  <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences
+                </Button>
+              </div>
+            </form>
+          </SectionCard>
+        </section>
+      )}
 
       {/* SECTION 4: Account and Billing */}
-      <section id="billing" className="scroll-mt-36">
-        <SectionCard
-          title="Account & Billing"
-          subtitle="Your subscription details, Stripe billing records, and cloud entitlements"
-          icon={CreditCard}
+      {activeSection === 'billing' && (
+        <section
+          id="billing"
+          className="scroll-mt-36 animate-in fade-in duration-200"
         >
-          <div className="space-y-6">
-            <BillingStatusPanel
-              subscription={subscription}
-              providerStatus={providerStatus}
-              isLoading={isBillingLoading}
-              error={billingError}
-              onUpgrade={handleUpgrade}
-              onOpenPortal={handleManageSubscription}
-            />
+          <SectionCard
+            title="Account & Billing"
+            subtitle="Your subscription details, Stripe billing records, and cloud entitlements"
+            icon={CreditCard}
+          >
+            <div className="space-y-6">
+              <BillingStatusPanel
+                subscription={subscription}
+                providerStatus={providerStatus}
+                isLoading={isBillingLoading}
+                error={billingError}
+                onUpgrade={handleUpgrade}
+                onOpenPortal={handleManageSubscription}
+              />
 
-            {/* Quota and Usage Summary */}
-            <div className="rounded-card border border-border-soft bg-surface/30 p-4 space-y-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                Usage and Quota limits
-              </span>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span>AI Writing corrections</span>
-                    <span>
-                      {subscription.planId === 'pro'
-                        ? 'Unlimited'
-                        : '5 / month'}
-                    </span>
+              {/* Quota and Usage Summary */}
+              <div className="rounded-card border border-border-soft bg-surface/30 p-4 space-y-4">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  Usage and Quota limits
+                </span>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold">
+                      <span>AI Writing corrections</span>
+                      <span>
+                        {subscription.planId === 'pro'
+                          ? 'Unlimited'
+                          : '5 / month'}
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={subscription.planId === 'pro' ? 100 : 40}
+                      color="cyan"
+                      className="mt-2"
+                    />
                   </div>
-                  <ProgressBar
-                    value={subscription.planId === 'pro' ? 100 : 40}
-                    color="cyan"
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <div className="flex justify-between text-xs font-semibold">
-                    <span>Active Scenario memory</span>
-                    <span>
-                      {subscription.planId === 'pro'
-                        ? 'Unlimited'
-                        : '100 items'}
-                    </span>
+                  <div>
+                    <div className="flex justify-between text-xs font-semibold">
+                      <span>Active Scenario memory</span>
+                      <span>
+                        {subscription.planId === 'pro'
+                          ? 'Unlimited'
+                          : '100 items'}
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={subscription.planId === 'pro' ? 100 : 25}
+                      color="emerald"
+                      className="mt-2"
+                    />
                   </div>
-                  <ProgressBar
-                    value={subscription.planId === 'pro' ? 100 : 25}
-                    color="emerald"
-                    className="mt-2"
-                  />
                 </div>
               </div>
             </div>
-          </div>
-        </SectionCard>
-      </section>
+          </SectionCard>
+        </section>
+      )}
 
       {/* SECTION 5: Security, Privacy and Data */}
-      <section id="security" className="scroll-mt-36">
-        <SectionCard
-          title="Security, Privacy & Data"
-          subtitle="Local storage data administration, privacy controls, and backup operations"
-          icon={ShieldCheck}
+      {activeSection === 'security' && (
+        <section
+          id="security"
+          className="scroll-mt-36 animate-in fade-in duration-200"
         >
-          <div className="space-y-6">
-            {/* Cloud Sync section */}
-            <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-2">
-                Cloud Synced Records
-              </span>
-              <CloudSyncStatusPanel providerMode={providerMode} />
-            </div>
+          <SectionCard
+            title="Security, Privacy & Data"
+            subtitle="Local storage data administration, privacy controls, and backup operations"
+            icon={ShieldCheck}
+          >
+            <div className="space-y-6">
+              {/* Cloud Sync section */}
+              <div className="rounded-card border border-border-soft bg-surface/20 p-4">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-2">
+                  Cloud Synced Records
+                </span>
+                <CloudSyncStatusPanel providerMode={providerMode} />
+              </div>
 
-            {/* Local Data backup controls */}
-            <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-1">
-                Local Backups
-              </span>
-              <p className="text-xs text-slate-600 leading-5 mb-4">
-                Export all stored local progress, CEFR stats, and memory logs
-                into a portable JSON backup file.
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={exportLocalData}
-                className="text-xs min-h-9"
-              >
-                <Download className="h-3.5 w-3.5 mr-1" /> Export local data
-              </Button>
-            </div>
-
-            {/* Destructive Controls at the very bottom */}
-            <div className="rounded-card border border-error/20 bg-error/5 p-4 border-dashed">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-error block mb-1">
-                Destructive actions
-              </span>
-              <p className="text-xs text-error/80 leading-5 mb-4">
-                Completely erase all study sessions, mistake history, and
-                vocabulary data from this local device. This action is
-                irreversible.
-              </p>
-
-              {providerMode === 'local' ? (
-                <>
-                  <Button
-                    type="button"
-                    variant="danger"
-                    onClick={() => setShowClearConfirmation((val) => !val)}
-                    className="text-xs min-h-9"
-                  >
-                    <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear this device
-                  </Button>
-
-                  {showClearConfirmation && (
-                    <div className="mt-4 rounded-card border border-error/25 bg-surface p-4">
-                      <label className="text-xs font-bold text-error">
-                        Type CLEAR to remove local progress from this browser.
-                        <input
-                          value={clearConfirmation}
-                          onChange={(event) =>
-                            setClearConfirmation(
-                              event.target.value.toUpperCase()
-                            )
-                          }
-                          className="mt-2 min-h-10 w-full rounded-input border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
-                        />
-                      </label>
-                      <Button
-                        type="button"
-                        variant="danger"
-                        className="mt-3 text-xs"
-                        disabled={clearConfirmation !== 'CLEAR'}
-                        onClick={() => void clearLocalData()}
-                      >
-                        Confirm local data removal
-                      </Button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <p className="text-xs text-muted-copy">
-                  Cloud account administration is managed via Supabase. Local
-                  data clearing is only available in Guest/Local profile modes.
+              {/* Local Data backup controls */}
+              <div className="rounded-card border border-border-soft bg-surface/20 p-4">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-1">
+                  Local Backups
+                </span>
+                <p className="text-xs text-slate-600 leading-5 mb-4">
+                  Export all stored local progress, CEFR stats, and memory logs
+                  into a portable JSON backup file.
                 </p>
-              )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={exportLocalData}
+                  className="text-xs min-h-9"
+                >
+                  <Download className="h-3.5 w-3.5 mr-1" /> Export local data
+                </Button>
+              </div>
+
+              {/* Destructive Controls at the very bottom */}
+              <div className="rounded-card border border-error/20 bg-error/5 p-4 border-dashed">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-error block mb-1">
+                  Destructive actions
+                </span>
+                <p className="text-xs text-error/80 leading-5 mb-4">
+                  Completely erase all study sessions, mistake history, and
+                  vocabulary data from this local device. This action is
+                  irreversible.
+                </p>
+
+                {providerMode === 'local' ? (
+                  <>
+                    <Button
+                      type="button"
+                      variant="danger"
+                      onClick={() => setShowClearConfirmation((val) => !val)}
+                      className="text-xs min-h-9"
+                    >
+                      <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear this device
+                    </Button>
+
+                    {showClearConfirmation && (
+                      <div className="mt-4 rounded-card border border-error/25 bg-surface p-4">
+                        <label className="text-xs font-bold text-error">
+                          Type CLEAR to remove local progress from this browser.
+                          <input
+                            value={clearConfirmation}
+                            onChange={(event) =>
+                              setClearConfirmation(
+                                event.target.value.toUpperCase()
+                              )
+                            }
+                            className="mt-2 min-h-10 w-full rounded-input border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
+                          />
+                        </label>
+                        <Button
+                          type="button"
+                          variant="danger"
+                          className="mt-3 text-xs"
+                          disabled={clearConfirmation !== 'CLEAR'}
+                          onClick={() => void clearLocalData()}
+                        >
+                          Confirm local data removal
+                        </Button>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-copy">
+                    Cloud account administration is managed via Supabase. Local
+                    data clearing is only available in Guest/Local profile
+                    modes.
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-        </SectionCard>
-      </section>
+          </SectionCard>
+        </section>
+      )}
     </div>
   );
 };

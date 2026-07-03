@@ -159,7 +159,13 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await expect(
       page.getByRole('heading', { name: /profile overview/i })
     ).toBeVisible();
+
+    // Switch to billing tab to check billing state
+    await page.getByRole('button', { name: 'Billing', exact: true }).click();
     await expect(page.getByText(/billing backend/i).first()).toBeVisible();
+
+    // Switch back to overview tab to edit profile
+    await page.getByRole('button', { name: 'Overview', exact: true }).click();
     await page.getByRole('button', { name: /edit profile/i }).click();
     await page.getByLabel(/first name/i).fill('Olympus');
     await page.getByLabel(/last name/i).fill('Engineer');
