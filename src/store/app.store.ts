@@ -10,7 +10,7 @@ interface AppState {
 
 export const useAppStore = create<AppState>((set) => ({
   isSidebarOpen: false,
-  theme: storage.get<'dark' | 'light'>('theme') || 'dark',
+  theme: storage.get<'dark' | 'light'>('theme') || 'light',
   toggleSidebar: () => set((s) => ({ isSidebarOpen: !s.isSidebarOpen })),
   setTheme: (theme: 'dark' | 'light') => {
     storage.set('theme', theme);

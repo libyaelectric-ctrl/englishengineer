@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
     <>
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-30 bg-black/20 dark:bg-black/50 backdrop-blur-[2px] lg:hidden"
           onClick={toggleSidebar}
         />
       )}
@@ -28,11 +28,11 @@ export const Sidebar: React.FC = () => {
       <aside
         data-testid="app-sidebar"
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-soft bg-surface transition-transform lg:static lg:flex lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-soft bg-[#F1F3F6] dark:bg-surface transition-transform lg:static lg:flex lg:translate-x-0',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex h-screen flex-col overflow-hidden bg-surface">
+        <div className="flex h-screen flex-col overflow-hidden bg-[#F1F3F6] dark:bg-surface">
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-soft px-5">
             <div className="flex items-center gap-3">
               <div className="rounded-[8px] border border-primary/20 bg-primary/10 p-2 text-primary shadow-sm">
@@ -65,9 +65,9 @@ export const Sidebar: React.FC = () => {
           </div>
 
           {currentUser && (
-            <div className="shrink-0 space-y-4 border-t border-border-soft bg-surface-hover/10 p-4 font-sans">
+            <div className="shrink-0 space-y-4 border-t border-border-soft bg-surface-hover/30 dark:bg-surface-hover/10 p-4 font-sans">
               <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border border-primary/20 bg-primary/10 font-mono text-xs font-bold uppercase text-primary">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] border border-primary/25 bg-primary/10 font-mono text-xs font-bold uppercase text-primary">
                   {currentUser.avatarInitials}
                 </div>
                 <div className="min-w-0">
@@ -83,7 +83,7 @@ export const Sidebar: React.FC = () => {
                 </div>
               </div>
 
-              <div className="space-y-1 rounded-[8px] border border-border-soft bg-surface p-2.5 font-mono text-[9px] text-muted-copy">
+              <div className="space-y-1 rounded-[8px] border border-border-soft bg-surface p-2.5 font-mono text-[9px] text-muted-copy shadow-sm">
                 <div className="flex items-start justify-between gap-3">
                   <span className="shrink-0 text-muted-copy/70">DISCIPLINE:</span>
                   <span
@@ -103,7 +103,7 @@ export const Sidebar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="flex h-8 w-full cursor-pointer items-center justify-center gap-2 rounded-[8px] border border-red-500/20 bg-red-500/10 text-xs font-bold text-red-400 transition-all hover:bg-red-500/20"
+                className="flex h-8 w-full cursor-pointer items-center justify-center gap-2 rounded-[8px] border border-red-500/20 bg-red-500/10 dark:bg-red-500/15 text-xs font-bold text-red-500 dark:text-red-400 transition-all hover:bg-red-500/20"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Sign Out</span>

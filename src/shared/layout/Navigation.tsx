@@ -16,8 +16,8 @@ const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
     'group relative flex min-h-10 items-center gap-3 rounded-[8px] px-3 py-2 text-xs font-semibold transition-all duration-150',
     isActive
-      ? 'bg-surface-hover text-foreground border border-border-soft shadow-sm'
-      : 'text-muted-copy hover:bg-surface-hover/30 hover:text-foreground border border-transparent'
+      ? 'bg-primary/10 text-primary border border-primary/20 shadow-sm'
+      : 'text-muted-copy hover:bg-surface-hover/50 hover:text-foreground border border-transparent'
   );
 
 export const Navigation = ({ onItemClick }: NavigationProps) => {
@@ -45,7 +45,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
               onClick={onItemClick}
               className={linkClasses}
             >
-              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-foreground transition-colors" />
+              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-primary transition-colors" />
               <span>{translate(item.label)}</span>
             </NavLink>
           );
@@ -56,10 +56,10 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
             <button
               type="button"
               onClick={() => setSkillsOpen((open) => !open)}
-              className="group flex min-h-10 w-full items-center gap-3 rounded-[8px] px-3 py-2 text-xs font-semibold text-muted-copy transition-all hover:bg-surface-hover/30 hover:text-foreground border border-transparent"
+              className="group flex min-h-10 w-full items-center gap-3 rounded-[8px] px-3 py-2 text-xs font-semibold text-muted-copy transition-all hover:bg-surface-hover/50 hover:text-foreground border border-transparent"
               aria-expanded={skillsOpen}
             >
-              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-foreground" />
+              <Icon className="h-4 w-4 shrink-0 text-muted-copy group-hover:text-primary" />
               <span className="flex-1 text-left">{translate(item.label)}</span>
               <ChevronDown
                 className={cn(

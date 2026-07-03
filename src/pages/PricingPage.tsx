@@ -201,7 +201,7 @@ const PricingPage = () => {
           {COMMERCIAL_PLAN_CATALOG.map((plan) => (
             <article
               key={plan.id}
-              className={`public-card relative flex min-w-0 flex-col p-5 rounded-card border ${plan.id === 'pro' ? 'border-primary/50 shadow-md shadow-primary/5' : 'border-border-soft'}`}
+              className={`public-card relative flex min-w-0 flex-col p-5 rounded-card border ${plan.id === 'pro' ? 'border-primary/30 bg-primary/5 shadow-md shadow-primary/5' : 'border-border-soft'}`}
             >
               <div className="flex min-h-10 items-start justify-between gap-2">
                 <p className="text-sm font-bold text-foreground">{plan.name}</p>
