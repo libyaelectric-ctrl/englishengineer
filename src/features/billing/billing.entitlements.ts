@@ -14,9 +14,15 @@ const PREMIUM_FEATURES: Partial<Record<BillingFeature, BillingPlanId>> = {
   unlimitedAIFeedback: 'pro',
   cloudSync: 'pro',
   advancedTasks: 'pro',
-  teamDashboard: 'enterprise',
-  managerExports: 'enterprise',
-  teamInvites: 'enterprise',
+  projectWorkspace: 'project',
+  persistentProjectMemory: 'project',
+  customScenarioGeneration: 'project',
+  linkedinOptimization: 'project',
+  persistentAIAgent: 'project',
+  realVoiceSpeaking: 'max',
+  pronunciationAnalysis: 'max',
+  voiceMeetingSimulator: 'max',
+  voiceMinuteWallet: 'max',
 };
 
 export const isSubscriptionActive = (
@@ -85,9 +91,31 @@ export const canViewAdvancedAnalytics = (
   subscription: SubscriptionSnapshot
 ): EntitlementResult => canAccessFeature(subscription, 'advancedAnalytics');
 
-export const canAccessTeamWorkspace = (
+export const canAccessProjectWorkspace = (
   subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'teamDashboard');
+): EntitlementResult => canAccessFeature(subscription, 'projectWorkspace');
+
+export const canAccessPersistentMemory = (
+  subscription: SubscriptionSnapshot
+): EntitlementResult =>
+  canAccessFeature(subscription, 'persistentProjectMemory');
+
+export const canAccessCustomScenario = (
+  subscription: SubscriptionSnapshot
+): EntitlementResult =>
+  canAccessFeature(subscription, 'customScenarioGeneration');
+
+export const canAccessLinkedInOptimization = (
+  subscription: SubscriptionSnapshot
+): EntitlementResult => canAccessFeature(subscription, 'linkedinOptimization');
+
+export const canAccessPersistentAIAgent = (
+  subscription: SubscriptionSnapshot
+): EntitlementResult => canAccessFeature(subscription, 'persistentAIAgent');
+
+export const canAccessRealVoiceSpeaking = (
+  subscription: SubscriptionSnapshot
+): EntitlementResult => canAccessFeature(subscription, 'realVoiceSpeaking');
 
 export const getPlanLimitLabel = (
   subscription: SubscriptionSnapshot,

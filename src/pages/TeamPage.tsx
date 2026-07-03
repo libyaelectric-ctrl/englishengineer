@@ -56,9 +56,9 @@ const TeamPage = () => {
         </button>
       </header>
       <EntitlementGate
-        feature="teamDashboard"
-        title="Team workspace requires the Team plan"
-        description="Manager summaries, invitations and exports require backend-verified Team entitlement."
+        feature="projectWorkspace"
+        title="Team workspace requires the Project plan"
+        description="Manager summaries, invitations and exports require backend-verified Project entitlement."
       >
         <div className="space-y-6">
           {team.source === 'demo' && (

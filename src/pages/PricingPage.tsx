@@ -5,6 +5,7 @@ import {
   COMMERCIAL_PLAN_CATALOG,
   CommercialPlanPreview,
   useBillingStore,
+  BillingPlanId,
 } from '@/features/billing';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { useAuthStore } from '@/features/auth';
@@ -14,56 +15,7 @@ const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
 // The active purchasable plans
-const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter(
-  (plan) => plan.id === 'free' || plan.id === 'pro'
-);
-
-// Future roadmap plans with allowed badges: Coming Soon, Request Access, Apply
-const ROADMAP_PLANS = [
-  {
-    name: 'Core',
-    status: 'Coming Soon',
-    audience: 'A fuller daily loop for independent learners.',
-  },
-  {
-    name: 'Team',
-    status: 'Coming Soon',
-    audience: 'For small engineering teams and corporate programs.',
-  },
-  {
-    name: 'Pro Plus',
-    status: 'Request Access',
-    audience: 'Expanded memory, advanced agents, and custom project context.',
-  },
-  {
-    name: 'Project',
-    status: 'Request Access',
-    audience: 'Tailored RFI, NCR, and daily engineering email templates.',
-  },
-  {
-    name: 'Expert',
-    status: 'Apply',
-    audience:
-      'Dedicated technical mentor review and verified credential verification.',
-  },
-  {
-    name: 'Max',
-    status: 'Coming Soon',
-    audience:
-      'Unlimited workspace memory and high-frequency communication training.',
-  },
-  {
-    name: 'Executive',
-    status: 'Apply',
-    audience:
-      'Private executive communications support and dedicated coaching.',
-  },
-  {
-    name: 'Private EngineerOS',
-    status: 'Request Access',
-    audience: 'Self-hosted, single-tenant deployment for security.',
-  },
-];
+const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG;
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -81,7 +33,9 @@ const PricingPage = () => {
     'Checking Stripe billing readiness...'
   );
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [checkoutPlanId, setCheckoutPlanId] = useState<'pro' | null>(null);
+  const [checkoutPlanId, setCheckoutPlanId] = useState<BillingPlanId | null>(
+    null
+  );
   const billingApiUrl = getBillingApiUrl();
 
   useEffect(() => {
@@ -138,7 +92,7 @@ const PricingPage = () => {
   const billingEnabled = billingReadiness === 'ready';
   const isBillingHealthLoading = billingReadiness === 'loading';
 
-  const handleProCheckout = async () => {
+  const handleCheckout = async (planId: BillingPlanId) => {
     setCheckoutError(null);
 
     if (!currentUser) {
@@ -152,8 +106,8 @@ const PricingPage = () => {
     }
 
     try {
-      setCheckoutPlanId('pro');
-      await startCheckout(currentUser.id, currentUser.email, 'pro');
+      setCheckoutPlanId(planId);
+      await startCheckout(currentUser.id, currentUser.email, planId);
     } catch (error: unknown) {
       setCheckoutError(
         getErrorMessage(error, 'Checkout session could not be created.')
@@ -178,37 +132,35 @@ const PricingPage = () => {
       );
     }
 
-    if (plan.id === 'pro') {
-      if (subscription?.planId === 'pro') {
-        return (
-          <button
-            type="button"
-            disabled
-            className="mt-6 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 cursor-not-allowed"
-          >
-            Current Plan
-          </button>
-        );
-      }
-
-      const isProCheckoutLoading =
-        isCheckoutLoading && checkoutPlanId === 'pro';
-
+    if (subscription?.planId === plan.id) {
       return (
         <button
           type="button"
-          onClick={() => void handleProCheckout()}
-          disabled={
-            !billingEnabled || isProCheckoutLoading || isBillingHealthLoading
-          }
-          className="mt-6 public-primary-action w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled
+          className="mt-6 inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-[8px] border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400 cursor-not-allowed"
         >
-          {isProCheckoutLoading ? 'Starting checkout...' : 'Upgrade to Pro'}
+          Current Plan
         </button>
       );
     }
 
-    return null;
+    const isCheckoutInProgress =
+      isCheckoutLoading && checkoutPlanId === plan.id;
+
+    return (
+      <button
+        type="button"
+        onClick={() => void handleCheckout(plan.id)}
+        disabled={
+          !billingEnabled || isCheckoutInProgress || isBillingHealthLoading
+        }
+        className="mt-6 public-primary-action w-full disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {isCheckoutInProgress
+          ? 'Starting checkout...'
+          : `Upgrade to ${plan.name}`}
+      </button>
+    );
   };
 
   return (
@@ -267,18 +219,18 @@ const PricingPage = () => {
 
       {/* Main active plans grid */}
       <section className="py-12">
-        <div className="mx-auto grid max-w-4xl gap-6 px-4 sm:px-6 md:grid-cols-2 lg:px-8">
+        <div className="mx-auto grid max-w-6xl gap-6 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
           {ACTIVE_PLANS.map((plan) => (
             <article
               key={plan.id}
-              className={`public-card relative flex min-w-0 flex-col p-6 rounded-card border ${plan.id === 'pro' ? 'border-primary/30 bg-primary/5 shadow-md shadow-primary/5' : 'border-border-soft'}`}
+              className={`public-card relative flex min-w-0 flex-col p-6 rounded-card border ${plan.id === 'pro' || plan.id === 'project' ? 'border-primary/30 bg-primary/5 shadow-md shadow-primary/5' : 'border-border-soft'}`}
             >
               <div className="flex min-h-10 items-start justify-between gap-2">
                 <p className="text-sm font-bold text-foreground">{plan.name}</p>
                 <span
-                  className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${plan.id === 'free' || (plan.id === 'pro' && billingEnabled) ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400' : 'border-border-soft bg-surface text-muted-copy'}`}
+                  className={`rounded-full border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${plan.id === 'free' || billingEnabled ? 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400' : 'border-border-soft bg-surface text-muted-copy'}`}
                 >
-                  {plan.id === 'free' || (plan.id === 'pro' && billingEnabled)
+                  {plan.id === 'free' || billingEnabled
                     ? 'Available'
                     : 'Coming Soon'}
                 </span>
@@ -327,51 +279,6 @@ const PricingPage = () => {
               {renderPlanAction(plan)}
             </article>
           ))}
-        </div>
-      </section>
-
-      {/* Future Roadmap Section */}
-      <section className="border-t border-border-soft bg-surface/30 py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="public-eyebrow">Future commercial roadmap</p>
-          <h2 className="mt-2 text-xl font-bold text-foreground">
-            Planned packages and capabilities.
-          </h2>
-          <p className="mt-1 max-w-3xl text-xs leading-5 text-muted-copy">
-            Future packages are under active evaluation. Request access below to
-            express interest.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {ROADMAP_PLANS.map((plan) => (
-              <div
-                key={plan.name}
-                className="rounded-card border border-border-soft bg-surface p-4 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-xs font-bold text-foreground">
-                      {plan.name}
-                    </p>
-                    <span className="rounded-full border border-border-soft bg-background px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-muted-copy">
-                      {plan.status}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-[11px] leading-4 text-muted-copy">
-                    {plan.audience}
-                  </p>
-                </div>
-                <div className="mt-4">
-                  <button
-                    type="button"
-                    disabled
-                    className="w-full text-center text-[10px] font-bold py-1.5 rounded-[6px] border border-border-soft bg-surface-hover/30 text-muted-copy cursor-not-allowed"
-                  >
-                    {plan.status}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

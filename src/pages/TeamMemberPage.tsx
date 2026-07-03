@@ -20,8 +20,8 @@ const TeamMemberPage = () => {
         Team workspace
       </Link>
       <EntitlementGate
-        feature="teamDashboard"
-        title="Team member summaries require Team access"
+        feature="projectWorkspace"
+        title="Team member summaries require Project access"
       >
         {!member || !summary ? (
           <div className="rounded-[16px] border border-slate-200 bg-white p-8 text-center">

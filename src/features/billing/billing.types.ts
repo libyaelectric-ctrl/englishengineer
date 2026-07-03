@@ -1,4 +1,11 @@
-export type BillingPlanId = 'free' | 'pro' | 'enterprise';
+export type BillingPlanId =
+  | 'free'
+  | 'pro'
+  | 'project'
+  | 'expert'
+  | 'max'
+  | 'exec'
+  | 'private';
 
 export type SubscriptionStatus =
   | 'none'
@@ -25,9 +32,16 @@ export type BillingFeature =
   | 'unlimitedAIFeedback'
   | 'cloudSync'
   | 'advancedTasks'
-  | 'teamDashboard'
-  | 'managerExports'
-  | 'teamInvites';
+  | 'projectWorkspace'
+  | 'persistentProjectMemory'
+  | 'customScenarioGeneration'
+  | 'linkedinOptimization'
+  | 'persistentAIAgent'
+  | 'realVoiceSpeaking'
+  | 'pronunciationAnalysis'
+  | 'voiceMeetingSimulator'
+  | 'voiceMinuteWallet'
+  | 'aiCreditAddon';
 
 export interface BillingLimits {
   dailyAICoachRequests: number | 'unlimited';

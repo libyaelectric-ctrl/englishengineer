@@ -4,7 +4,7 @@ import {
   canAccessFeature,
   canCreateMission,
   canUseAICoach,
-  canAccessTeamWorkspace,
+  canAccessProjectWorkspace,
   canViewAdvancedAnalytics,
   getPlanLimitLabel,
   isSubscriptionActive,
@@ -72,13 +72,13 @@ describe('billing entitlements', () => {
     );
   });
 
-  it('keeps team workspace behind the Enterprise entitlement', () => {
-    expect(canAccessTeamWorkspace(createFreeSubscription())).toMatchObject({
+  it('keeps project workspace behind the Project entitlement', () => {
+    expect(canAccessProjectWorkspace(createFreeSubscription())).toMatchObject({
       allowed: false,
-      requiredPlan: 'enterprise',
+      requiredPlan: 'project',
     });
     expect(
-      canAccessTeamWorkspace({ ...proSubscription, planId: 'enterprise' })
+      canAccessProjectWorkspace({ ...proSubscription, planId: 'project' })
         .allowed
     ).toBe(true);
   });
