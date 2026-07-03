@@ -227,35 +227,35 @@ const ProfilePage = () => {
 
       <nav
         aria-label="Profile sections"
-        className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-white p-2 shadow-sm"
+        className="flex flex-wrap gap-1.5 rounded-card border border-border-soft bg-surface p-1.5 shadow-sm"
       >
         <a
           href="#overview"
-          className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-bold text-white"
+          className="rounded-[8px] bg-primary px-3 py-1.5 text-xs font-semibold text-white"
         >
           Overview
         </a>
         <Link
           to="/analytics"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-[8px] px-3 py-1.5 text-xs font-semibold text-muted-copy hover:bg-surface-hover/50 hover:text-foreground"
         >
           Analytics
         </Link>
         <Link
           to="/gamification"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-[8px] px-3 py-1.5 text-xs font-semibold text-muted-copy hover:bg-surface-hover/50 hover:text-foreground"
         >
           Gamification
         </Link>
         <a
           href="#mistake-log"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-[8px] px-3 py-1.5 text-xs font-semibold text-muted-copy hover:bg-surface-hover/50 hover:text-foreground"
         >
           Mistake Log
         </a>
         <a
           href="#settings"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-[8px] px-3 py-1.5 text-xs font-semibold text-muted-copy hover:bg-surface-hover/50 hover:text-foreground"
         >
           Settings
         </a>
@@ -263,10 +263,10 @@ const ProfilePage = () => {
 
       {(message || error || billingError) && (
         <div
-          className={`rounded-xl border p-4 text-sm ${
+          className={`rounded-card border p-4 text-xs leading-5 ${
             error || billingError
-              ? 'border-rose-200 bg-rose-50 text-rose-700'
-              : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+              ? 'border-error/20 bg-error/5 text-error'
+              : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400'
           }`}
         >
           {error || billingError || message}
@@ -283,7 +283,7 @@ const ProfilePage = () => {
           icon={Gauge}
         >
           <SkillRadar profile={profile} />
-          <p className="mt-4 text-sm leading-6 text-slate-600">
+          <p className="mt-4 text-xs leading-5 text-muted-copy">
             Your EngineerOS level is skill-based. Reading, Writing, Listening,
             Speaking, Vocabulary and Grammar progress independently.
           </p>
@@ -305,12 +305,12 @@ const ProfilePage = () => {
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-[12px] border border-slate-200 bg-slate-50 p-3"
+                className="rounded-card border border-border-soft bg-surface/30 p-3"
               >
-                <p className="text-[10px] font-black uppercase text-slate-500">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                   {label}
                 </p>
-                <p className="mt-1 text-xl font-black text-slate-950">
+                <p className="mt-1 text-lg font-bold text-foreground">
                   {value}
                 </p>
               </div>
@@ -346,10 +346,10 @@ const ProfilePage = () => {
         >
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="text-3xl font-black text-slate-950">
+              <p className="text-2xl font-bold text-foreground">
                 {memory.mastered}
               </p>
-              <p className="mt-1 text-sm font-medium text-slate-500">
+              <p className="mt-0.5 text-xs font-semibold text-muted-copy">
                 of {memory.total || '...'} terms mastered
               </p>
             </div>
@@ -372,12 +372,12 @@ const ProfilePage = () => {
             ].map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"
+                className="rounded-card border border-border-soft bg-surface/30 p-3"
               >
-                <p className="text-[10px] font-bold uppercase text-slate-500">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                   {label}
                 </p>
-                <p className="mt-1 text-lg font-black text-slate-950">
+                <p className="mt-1 text-base font-bold text-foreground">
                   {value}
                 </p>
               </div>
@@ -394,26 +394,26 @@ const ProfilePage = () => {
             {badges.map((badge) => (
               <div
                 key={badge.id}
-                className={`rounded-[12px] border p-4 ${
+                className={`rounded-card border p-4 ${
                   badge.unlocked
-                    ? 'border-emerald-200 bg-emerald-50'
-                    : 'border-slate-200 bg-slate-50'
+                    ? 'border-emerald-500/25 bg-emerald-500/5'
+                    : 'border-border-soft bg-surface/30'
                 }`}
               >
                 <div className="flex items-center gap-2">
                   <Award
                     className={`h-4 w-4 ${
-                      badge.unlocked ? 'text-emerald-700' : 'text-slate-400'
+                      badge.unlocked ? 'text-emerald-400' : 'text-muted-copy'
                     }`}
                   />
-                  <p className="text-sm font-black text-slate-900">
+                  <p className="text-xs font-bold text-foreground">
                     {badge.label}
                   </p>
                 </div>
-                <p className="mt-2 text-xs leading-5 text-slate-500">
+                <p className="mt-2 text-[11px] leading-4 text-muted-copy">
                   {badge.description}
                 </p>
-                <p className="mt-2 text-[10px] font-black uppercase text-slate-500">
+                <p className="mt-2 text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                   {badge.unlocked ? 'Unlocked' : 'Locked'}
                 </p>
               </div>
@@ -429,7 +429,7 @@ const ProfilePage = () => {
         icon={ClipboardList}
       >
         {mistakeLog.length === 0 ? (
-          <p className="rounded-[12px] border border-dashed border-slate-300 bg-slate-50 p-6 text-center text-sm text-slate-500">
+          <p className="rounded-card border border-dashed border-border-soft bg-surface p-6 text-center text-xs text-muted-copy">
             No mistakes logged yet. Task errors will appear here without
             cluttering the main navigation.
           </p>
@@ -438,10 +438,10 @@ const ProfilePage = () => {
             {mistakeLog.slice(0, 6).map((mistake) => (
               <div
                 key={mistake.id}
-                className="rounded-[12px] border border-slate-200 bg-slate-50 p-4"
+                className="rounded-card border border-border-soft bg-surface p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <p className="text-xs font-black uppercase text-slate-600">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                     {mistake.category}
                   </p>
                   <StatusBadge
@@ -455,10 +455,10 @@ const ProfilePage = () => {
                     }
                   />
                 </div>
-                <p className="mt-3 text-sm font-semibold text-slate-900">
+                <p className="mt-3 text-xs font-bold text-foreground">
                   {mistake.originalText}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-slate-500">
+                <p className="mt-1 text-[11px] leading-4 text-muted-copy">
                   {mistake.correction}
                 </p>
               </div>
@@ -490,7 +490,7 @@ const ProfilePage = () => {
               <div className="space-y-2">
                 <label
                   htmlFor="profile-first-name"
-                  className="text-xs font-bold text-slate-700"
+                  className="text-xs font-bold text-foreground"
                 >
                   {LocalizationService.translate('profile.firstName', language)}
                 </label>
@@ -503,14 +503,14 @@ const ProfilePage = () => {
                       firstName: event.target.value,
                     }))
                   }
-                  className="w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                  className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover focus:ring-1 focus:ring-focus"
                   placeholder="Enter first name"
                 />
               </div>
               <div className="space-y-2">
                 <label
                   htmlFor="profile-last-name"
-                  className="text-xs font-bold text-slate-700"
+                  className="text-xs font-bold text-foreground"
                 >
                   {LocalizationService.translate('profile.lastName', language)}
                 </label>
@@ -523,30 +523,31 @@ const ProfilePage = () => {
                       lastName: event.target.value,
                     }))
                   }
-                  className="w-full rounded-[10px] border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                  className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover focus:ring-1 focus:ring-focus"
                   placeholder="Enter last name"
                 />
               </div>
             </div>
 
-            <div className="flex flex-wrap justify-end gap-2 border-t border-slate-200 pt-4">
+            <div className="flex flex-wrap justify-end gap-2 border-t border-border-soft pt-4">
               <Button
                 type="button"
                 variant="outline"
                 onClick={resetName}
                 disabled={isSaving}
+                className="text-xs"
               >
-                <RotateCcw className="h-4 w-4" /> Reset
+                <RotateCcw className="h-3.5 w-3.5" /> Reset
               </Button>
-              <Button type="submit" disabled={isSaving}>
-                <Save className="h-4 w-4" />
+              <Button type="submit" disabled={isSaving} className="text-xs">
+                <Save className="h-3.5 w-3.5" />
                 {isSaving
                   ? 'Saving...'
                   : LocalizationService.translate('profile.save', language)}
               </Button>
             </div>
           </form>
-          <label className="mt-5 block border-t border-slate-200 pt-5 text-xs font-bold text-slate-700">
+          <label className="mt-5 block border-t border-border-soft pt-5 text-xs font-bold text-foreground">
             Interface language
             <select
               value={language}
@@ -558,7 +559,7 @@ const ProfilePage = () => {
                   { interfaceLanguage: next }
                 );
               }}
-              className="mt-2 min-h-11 w-full rounded-[12px] border border-slate-200 bg-white px-3 text-sm font-normal text-slate-900"
+              className="mt-2 min-h-10 w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
             >
               {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -590,40 +591,41 @@ const ProfilePage = () => {
           icon={Download}
         >
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button type="button" variant="outline" onClick={exportLocalData}>
-              <Download className="h-4 w-4" /> Export local data
+            <Button type="button" variant="outline" onClick={exportLocalData} className="text-xs">
+              <Download className="h-3.5 w-3.5" /> Export local data
             </Button>
             {providerMode === 'local' && (
               <Button
                 type="button"
                 variant="danger"
                 onClick={() => setShowClearConfirmation((value) => !value)}
+                className="text-xs"
               >
-                <Trash2 className="h-4 w-4" /> Clear this device
+                <Trash2 className="h-3.5 w-3.5" /> Clear this device
               </Button>
             )}
           </div>
-          <p className="mt-3 text-xs leading-5 text-slate-500">
+          <p className="mt-3 text-[10px] leading-4 text-muted-copy">
             This does not claim to delete a Supabase cloud account. Verified
             cloud account deletion remains unavailable until the production
             backend flow is connected.
           </p>
           {showClearConfirmation && providerMode === 'local' && (
-            <div className="mt-4 rounded-[12px] border border-rose-200 bg-rose-50 p-4">
-              <label className="text-xs font-bold text-rose-900">
+            <div className="mt-4 rounded-card border border-error/25 bg-error/5 p-4">
+              <label className="text-xs font-bold text-error">
                 Type CLEAR to remove local progress from this browser.
                 <input
                   value={clearConfirmation}
                   onChange={(event) =>
                     setClearConfirmation(event.target.value.toUpperCase())
                   }
-                  className="mt-2 min-h-11 w-full rounded-[12px] border border-rose-200 bg-white px-3 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-rose-200"
+                  className="mt-2 min-h-10 w-full rounded-input border border-error/25 bg-surface px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
                 />
               </label>
               <Button
                 type="button"
                 variant="danger"
-                className="mt-3"
+                className="mt-3 text-xs"
                 disabled={clearConfirmation !== 'CLEAR'}
                 onClick={() => void clearLocalData()}
               >

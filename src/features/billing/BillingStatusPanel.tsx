@@ -9,11 +9,11 @@ import type {
 } from './billing.types';
 
 const messageStyles: Record<BillingStatusTone, string> = {
-  neutral: 'border-slate-200 bg-slate-50 text-slate-700',
-  info: 'border-sky-200 bg-sky-50 text-sky-800',
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-800',
-  warning: 'border-amber-200 bg-amber-50 text-amber-900',
-  danger: 'border-rose-200 bg-rose-50 text-rose-800',
+  neutral: 'border-border-soft bg-surface text-muted-copy',
+  info: 'border-blue-500/20 bg-blue-500/10 text-blue-400',
+  success: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400',
+  warning: 'border-warning/20 bg-warning/5 text-warning',
+  danger: 'border-red-500/20 bg-red-500/10 text-red-400',
 };
 
 interface BillingStatusPanelProps {
@@ -46,16 +46,16 @@ export const BillingStatusPanel = ({
   return (
     <div className="space-y-4" data-testid="billing-status-panel">
       {error && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900" role="alert">
+        <div className="rounded-card border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning" role="alert">
           Billing status is temporarily unavailable. Access entitlements are based on the last known verified state.
         </div>
       )}
-      <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-card border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase text-slate-500">
+          <p className="text-[10px] font-bold uppercase text-muted-copy">
             Current plan
           </p>
-          <p className="mt-1 text-lg font-black text-slate-900">
+          <p className="mt-1 text-base font-bold text-foreground">
             {presentation.planLabel}
           </p>
         </div>
@@ -66,21 +66,21 @@ export const BillingStatusPanel = ({
       </div>
 
       <div
-        className={`rounded-xl border p-4 text-sm leading-6 ${messageStyles[presentation.statusTone]}`}
+        className={`rounded-card border p-4 text-xs leading-5 ${messageStyles[presentation.statusTone]}`}
         role={presentation.statusTone === 'danger' ? 'alert' : 'status'}
       >
         {presentation.message}
       </div>
 
-      <dl className="space-y-3 text-sm">
-        <div className="flex flex-col gap-1 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <dt className="text-slate-500">Subscription status</dt>
-          <dd className="font-semibold text-slate-800">
+      <dl className="space-y-3 text-xs">
+        <div className="flex flex-col gap-1 border-b border-border-soft/40 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <dt className="text-muted-copy">Subscription status</dt>
+          <dd className="font-semibold text-foreground">
             {presentation.statusLabel}
           </dd>
         </div>
-        <div className="flex flex-col gap-1 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <dt className="text-slate-500">Entitlement status</dt>
+        <div className="flex flex-col gap-1 border-b border-border-soft/40 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <dt className="text-muted-copy">Entitlement status</dt>
           <dd>
             <StatusBadge
               label={presentation.entitlementLabel}
@@ -88,14 +88,14 @@ export const BillingStatusPanel = ({
             />
           </dd>
         </div>
-        <div className="flex flex-col gap-1 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <dt className="text-slate-500">{presentation.periodLabel}</dt>
-          <dd className="font-semibold text-slate-800">
+        <div className="flex flex-col gap-1 border-b border-border-soft/40 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+          <dt className="text-muted-copy">{presentation.periodLabel}</dt>
+          <dd className="font-semibold text-foreground">
             {presentation.periodValue}
           </dd>
         </div>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
-          <dt className="text-slate-500">Billing verification</dt>
+          <dt className="text-muted-copy">Billing verification</dt>
           <dd>
             <StatusBadge
               label={
@@ -116,8 +116,9 @@ export const BillingStatusPanel = ({
           disabled={
             isLoading || !providerStatus.isConfigured || paidAccessIsActive
           }
+          className="text-xs"
         >
-          <Crown className="h-4 w-4" />
+          <Crown className="h-3.5 w-3.5" />
           {paidAccessIsActive ? 'Pro Active' : 'Upgrade to Pro'}
         </Button>
         <Button
@@ -125,12 +126,13 @@ export const BillingStatusPanel = ({
           variant="outline"
           onClick={onOpenPortal}
           disabled={isLoading || !canOpenPortal}
+          className="text-xs"
         >
-          <ExternalLink className="h-4 w-4" /> Manage Subscription
+          <ExternalLink className="h-3.5 w-3.5" /> Manage Subscription
         </Button>
       </div>
 
-      <p className="text-xs leading-5 text-slate-500">
+      <p className="text-[10px] leading-4 text-muted-copy">
         {providerStatus.detail} Payments and paid entitlements are verified by
         the billing backend, never by this page.
       </p>

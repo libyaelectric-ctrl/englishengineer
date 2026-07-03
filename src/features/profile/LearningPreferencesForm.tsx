@@ -58,25 +58,25 @@ export const LearningPreferencesForm = ({
       }}
     >
       <fieldset>
-        <legend className="text-sm font-black text-slate-900">
+        <legend className="text-xs font-bold text-foreground">
           Learning goals
         </legend>
-        <p className="mt-1 text-xs text-slate-500">Select one or more.</p>
+        <p className="mt-0.5 text-[10px] text-muted-copy">Select one or more.</p>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           {LEARNING_GOALS.map((goal) => (
             <label
               key={goal.id}
-              className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-3 text-sm font-bold ${
+              className={`flex cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-xs font-semibold transition-all ${
                 goals.includes(goal.id)
-                  ? 'border-sky-400 bg-sky-50 text-sky-800'
-                  : 'border-slate-200 bg-white text-slate-700'
+                  ? 'border-primary/40 bg-primary/10 text-foreground'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
               }`}
             >
               <input
                 type="checkbox"
                 checked={goals.includes(goal.id)}
                 onChange={() => toggleGoal(goal.id)}
-                className="h-4 w-4 accent-sky-600"
+                className="h-3.5 w-3.5 accent-primary"
               />
               {goal.label}
             </label>
@@ -84,7 +84,7 @@ export const LearningPreferencesForm = ({
         </div>
       </fieldset>
 
-      <label className="block space-y-2 text-sm font-bold text-slate-800">
+      <label className="block space-y-1.5 text-xs font-bold text-foreground">
         Profession / role
         <select
           value={professionId}
@@ -92,7 +92,7 @@ export const LearningPreferencesForm = ({
             setSaved(false);
             setProfessionId(event.target.value as ProfessionId | '');
           }}
-          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold outline-none focus:border-sky-400"
+          className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
         >
           <option value="">Select a role</option>
           {PROFESSIONS.map((profession) => (
@@ -104,12 +104,12 @@ export const LearningPreferencesForm = ({
       </label>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <label className="space-y-2 text-sm font-bold text-slate-800">
+        <label className="space-y-1.5 text-xs font-bold text-foreground">
           Daily minutes
           <select
             value={minutes}
             onChange={(event) => setMinutes(Number(event.target.value))}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3"
+            className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
           >
             {DAILY_DURATION_OPTIONS.map((value) => (
               <option key={value} value={value}>
@@ -118,12 +118,12 @@ export const LearningPreferencesForm = ({
             ))}
           </select>
         </label>
-        <label className="space-y-2 text-sm font-bold text-slate-800">
+        <label className="space-y-1.5 text-xs font-bold text-foreground">
           Daily tasks
           <select
             value={taskCount}
             onChange={(event) => setTaskCount(Number(event.target.value))}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3"
+            className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
           >
             {DAILY_TASK_COUNT_OPTIONS.map((value) => (
               <option key={value} value={value}>
@@ -132,14 +132,14 @@ export const LearningPreferencesForm = ({
             ))}
           </select>
         </label>
-        <label className="space-y-2 text-sm font-bold text-slate-800">
+        <label className="space-y-1.5 text-xs font-bold text-foreground">
           Weekly tolerance
           <select
             value={allowedMissedDays}
             onChange={(event) =>
               setAllowedMissedDays(Number(event.target.value))
             }
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3"
+            className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
           >
             {[0, 1, 2].map((value) => (
               <option key={value} value={value}>
@@ -150,12 +150,12 @@ export const LearningPreferencesForm = ({
         </label>
       </div>
 
-      <div className="flex items-center justify-end gap-3 border-t border-slate-200 pt-4">
+      <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
         {saved && (
-          <span className="text-sm font-bold text-emerald-700">Saved</span>
+          <span className="text-xs font-bold text-success">Saved</span>
         )}
-        <Button type="submit">
-          <Save className="h-4 w-4" /> {submitLabel}
+        <Button type="submit" className="text-xs min-h-9">
+          <Save className="h-3.5 w-3.5" /> {submitLabel}
         </Button>
       </div>
     </form>
