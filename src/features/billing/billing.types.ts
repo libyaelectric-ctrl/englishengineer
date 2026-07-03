@@ -33,6 +33,7 @@ export interface BillingLimits {
   dailyAICoachRequests: number | 'unlimited';
   moduleAttemptsPerDay: number | 'unlimited';
   vocabularyReviewsPerDay: number | 'unlimited';
+  documentUploadsPerMonth: number | 'unlimited';
 }
 
 export interface BillingPlan {

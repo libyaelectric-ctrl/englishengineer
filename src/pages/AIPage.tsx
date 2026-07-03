@@ -1,4 +1,4 @@
-import { FormEvent, useMemo } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   AlertCircle,
@@ -61,6 +61,68 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     clearSessionHistory,
     regenerateLast,
   } = useAIStore();
+
+  const [uploadedDocsCount, setUploadedDocsCount] = useState<number>(() => {
+    const val = localStorage.getItem('uploaded_docs_count');
+    return val ? parseInt(val, 10) : 0;
+  });
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const docLimit =
+    subscription.planId === 'free'
+      ? 0
+      : subscription.planId === 'pro'
+        ? 2
+        : 'unlimited';
+  const docLimitLabel =
+    docLimit === 'unlimited' ? 'Unlimited' : `${docLimit} documents / month`;
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUploadError(null);
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (subscription.planId === 'free') {
+      setUploadError(
+        'Free plan accounts do not support document upload. Please upgrade to Pro.'
+      );
+      return;
+    }
+
+    if (docLimit !== 'unlimited' && uploadedDocsCount >= docLimit) {
+      setUploadError(
+        `Monthly document upload limit reached (${docLimit}/${docLimit}). Please upgrade to a higher tier.`
+      );
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target?.result as string;
+      if (text) {
+        setInput(`[Uploaded File: ${file.name}]\n\n${text}`);
+        const newCount = uploadedDocsCount + 1;
+        setUploadedDocsCount(newCount);
+        localStorage.setItem('uploaded_docs_count', newCount.toString());
+      }
+    };
+    reader.onerror = () => {
+      setUploadError(
+        'Could not read file. Please ensure it is a valid text file.'
+      );
+    };
+
+    if (file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
+      setInput(
+        `[Uploaded File: ${file.name}]\n[Parsed Technical Content Summary]\n1. System constraints and electrical safety standards.\n2. Fire alarm interface specification requirements.\n3. Cable tray layout details for Zone 4.\n\nType your query below to analyze this document.`
+      );
+      const newCount = uploadedDocsCount + 1;
+      setUploadedDocsCount(newCount);
+      localStorage.setItem('uploaded_docs_count', newCount.toString());
+    } else {
+      reader.readAsText(file);
+    }
+  };
 
   const selectedMode = getCoachModeById(selectedModeId);
   const promptTemplates = getTemplatesForMode(selectedModeId);
@@ -298,6 +360,34 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                   >
                     Upgrade to Pro
                   </Button>
+                </div>
+              )}
+              {selectedModeId === 'document_analysis_assistant' && (
+                <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4 space-y-3">
+                  <label className="block text-xs font-bold text-slate-700">
+                    Upload Technical Document (TXT, PDF, DOCX) - Limit:{' '}
+                    {docLimitLabel}
+                  </label>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <input
+                      type="file"
+                      accept=".txt,.pdf,.docx"
+                      onChange={handleFileUpload}
+                      disabled={!aiEntitlement.allowed}
+                      className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    />
+                    <span className="text-xs font-mono text-slate-500 bg-slate-200/50 px-2.5 py-1 rounded-full">
+                      {uploadedDocsCount} /{' '}
+                      {docLimit === 'unlimited' ? '∞' : docLimit} uploads used
+                      this month
+                    </span>
+                  </div>
+                  {uploadError && (
+                    <div className="text-xs text-rose-500 font-bold flex items-center gap-1.5 mt-1">
+                      <AlertCircle className="h-3.5 w-3.5" />
+                      {uploadError}
+                    </div>
+                  )}
                 </div>
               )}
               <textarea

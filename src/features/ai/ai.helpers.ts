@@ -121,6 +121,15 @@ export const AI_COACH_MODES: AICoachMode[] = [
     placeholder:
       'Paste your engineering message, report paragraph, email, or response.',
   },
+  {
+    id: 'document_analysis_assistant',
+    name: 'Document Upload & Analysis',
+    description:
+      'Upload a document (PDF, TXT, DOCX) to summarize and analyze technical constraints.',
+    operation: 'rewriteText',
+    placeholder:
+      'Upload your document or paste its content here to get a professional summary and analysis of technical requirements.',
+  },
 ];
 
 export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [

@@ -24,7 +24,8 @@ export type AICoachModeId =
   | 'roleplay_simulator'
   | 'daily_learning_planner'
   | 'career_mentor'
-  | 'writing_reviewer';
+  | 'writing_reviewer'
+  | 'document_analysis_assistant';
 
 export interface AIProviderStatus {
   mode: AIProviderMode;

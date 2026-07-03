@@ -36,6 +36,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       dailyAICoachRequests: 3,
       moduleAttemptsPerDay: 5,
       vocabularyReviewsPerDay: 25,
+      documentUploadsPerMonth: 0,
     },
   },
   pro: {
@@ -65,6 +66,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       dailyAICoachRequests: 'unlimited',
       moduleAttemptsPerDay: 'unlimited',
       vocabularyReviewsPerDay: 'unlimited',
+      documentUploadsPerMonth: 2,
     },
   },
   enterprise: {
@@ -97,6 +99,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       dailyAICoachRequests: 'unlimited',
       moduleAttemptsPerDay: 'unlimited',
       vocabularyReviewsPerDay: 'unlimited',
+      documentUploadsPerMonth: 'unlimited',
     },
   },
 };

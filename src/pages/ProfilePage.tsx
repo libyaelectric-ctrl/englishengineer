@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   Award,
   CreditCard,
+  Crown,
   Download,
   Gauge,
   Save,
@@ -19,6 +20,8 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import { CloudSyncStatusPanel, useAuthStore } from '@/features/auth';
 import { BillingStatusPanel, useBillingStore } from '@/features/billing';
+import { useAIStore } from '@/features/ai';
+import { useVocabularyStore } from '@/features/vocabulary';
 import {
   LearningProfileEngine,
   LearningProfileRepository,
@@ -85,6 +88,27 @@ const ProfilePage = () => {
   );
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const language = useLocalizationStore((state) => state.language);
+
+  const { sessions } = useAIStore();
+  const todaysCoachSessions = sessions.filter(
+    (session) =>
+      new Date(session.timestamp).toDateString() === new Date().toDateString()
+  ).length;
+
+  const todaysAttempts = learningState.studySessions.filter(
+    (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
+  ).length;
+
+  const todaysReviews = useVocabularyStore
+    .getState()
+    .history.filter(
+      (h) => new Date(h.timestamp).toDateString() === new Date().toDateString()
+    ).length;
+
+  const [uploadedDocsCount] = useState<number>(() => {
+    const val = localStorage.getItem('uploaded_docs_count');
+    return val ? parseInt(val, 10) : 0;
+  });
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
 
   // Edit Mode state for Overview Section
@@ -1078,41 +1102,203 @@ const ProfilePage = () => {
               />
 
               {/* Quota and Usage Summary */}
-              <div className="rounded-card border border-border-soft bg-surface/30 p-4 space-y-4">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                  Usage and Quota limits
-                </span>
-                <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-card border border-border-soft bg-surface/30 p-5 space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border-soft pb-3">
                   <div>
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span>AI Writing corrections</span>
-                      <span>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                      Usage and Quota limits
+                    </span>
+                    <h4 className="text-sm font-black text-slate-900 mt-0.5">
+                      Current Plan Entitlements
+                    </h4>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full uppercase">
+                    {subscription.planId === 'pro'
+                      ? 'Pro Plan Access'
+                      : 'Free Plan Access'}
+                  </span>
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  {/* Limit 1: AI Coach Sessions */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-semibold text-slate-700">
+                        Daily AI Coach Requests
+                      </span>
+                      <span className="font-bold text-slate-900">
                         {subscription.planId === 'pro'
                           ? 'Unlimited'
-                          : '5 / month'}
+                          : `${todaysCoachSessions} / 3 daily requests`}
                       </span>
                     </div>
                     <ProgressBar
-                      value={subscription.planId === 'pro' ? 100 : 40}
-                      color="cyan"
-                      className="mt-2"
+                      value={
+                        subscription.planId === 'pro'
+                          ? 100
+                          : Math.min(100, (todaysCoachSessions / 3) * 100)
+                      }
+                      color={
+                        subscription.planId === 'pro'
+                          ? 'cyan'
+                          : todaysCoachSessions >= 3
+                            ? 'rose'
+                            : 'cyan'
+                      }
                     />
+                    <p className="text-[10px] text-slate-400">
+                      {subscription.planId === 'pro'
+                        ? '✓ You have unlimited access to the AI Coach.'
+                        : 'Upgrade to Pro to unlock unlimited daily AI coaching feedback.'}
+                    </p>
                   </div>
-                  <div>
-                    <div className="flex justify-between text-xs font-semibold">
-                      <span>Active Scenario memory</span>
-                      <span>
+
+                  {/* Limit 2: Module Attempts */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-semibold text-slate-700">
+                        Daily Module Attempts
+                      </span>
+                      <span className="font-bold text-slate-900">
                         {subscription.planId === 'pro'
                           ? 'Unlimited'
-                          : '100 items'}
+                          : `${todaysAttempts} / 5 daily attempts`}
                       </span>
                     </div>
                     <ProgressBar
-                      value={subscription.planId === 'pro' ? 100 : 25}
-                      color="emerald"
-                      className="mt-2"
+                      value={
+                        subscription.planId === 'pro'
+                          ? 100
+                          : Math.min(100, (todaysAttempts / 5) * 100)
+                      }
+                      color={
+                        subscription.planId === 'pro'
+                          ? 'emerald'
+                          : todaysAttempts >= 5
+                            ? 'rose'
+                            : 'emerald'
+                      }
                     />
+                    <p className="text-[10px] text-slate-400">
+                      {subscription.planId === 'pro'
+                        ? '✓ You have unlimited module attempts.'
+                        : 'Upgrade to Pro to unlock unlimited daily technical attempts.'}
+                    </p>
                   </div>
+
+                  {/* Limit 3: Vocabulary Reviews */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-semibold text-slate-700">
+                        Daily Vocabulary Reviews
+                      </span>
+                      <span className="font-bold text-slate-900">
+                        {subscription.planId === 'pro'
+                          ? 'Unlimited'
+                          : `${todaysReviews} / 25 reviews`}
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={
+                        subscription.planId === 'pro'
+                          ? 100
+                          : Math.min(100, (todaysReviews / 25) * 100)
+                      }
+                      color={
+                        subscription.planId === 'pro'
+                          ? 'cyan'
+                          : todaysReviews >= 25
+                            ? 'rose'
+                            : 'cyan'
+                      }
+                    />
+                    <p className="text-[10px] text-slate-400">
+                      {subscription.planId === 'pro'
+                        ? '✓ You have unlimited vocabulary reviews.'
+                        : 'Upgrade to Pro to review more than 25 terms per day.'}
+                    </p>
+                  </div>
+
+                  {/* Limit 4: Document Uploads */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-semibold text-slate-700">
+                        Monthly Document Uploads
+                      </span>
+                      <span className="font-bold text-slate-900">
+                        {subscription.planId === 'free'
+                          ? 'Blocked'
+                          : subscription.planId === 'pro'
+                            ? `${uploadedDocsCount} / 2 uploads`
+                            : `${uploadedDocsCount} / Unlimited`}
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={
+                        subscription.planId === 'free'
+                          ? 0
+                          : subscription.planId === 'pro'
+                            ? Math.min(100, (uploadedDocsCount / 2) * 100)
+                            : 100
+                      }
+                      color={
+                        subscription.planId === 'free'
+                          ? 'rose'
+                          : uploadedDocsCount >= 2
+                            ? 'amber'
+                            : 'primary'
+                      }
+                    />
+                    <p className="text-[10px] text-slate-400">
+                      {subscription.planId === 'free'
+                        ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
+                        : subscription.planId === 'pro'
+                          ? '✓ Upload documents inside the AI Copilot tab.'
+                          : '✓ Unlimited document uploads enabled.'}
+                    </p>
+                  </div>
+                </div>
+
+                {/* What paying customers get block */}
+                <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+                  <h5 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                    <Crown className="h-4 w-4 text-amber-500 fill-amber-500/20" />
+                    Pro subscription benefits
+                  </h5>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600">
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      Spaced repetition full repeats
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      Writing tasks + secure AI feedback
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      Advanced Mistake Log analytics
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      Client / consultant roleplay scenarios
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      12-month progress history storage
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      Direct Stripe billing portal access
+                    </li>
+                  </ul>
+                  {subscription.planId === 'free' && (
+                    <Button
+                      onClick={handleUpgrade}
+                      className="w-full mt-2 h-9 bg-primary text-white font-bold"
+                    >
+                      Upgrade to Pro for $19/mo
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

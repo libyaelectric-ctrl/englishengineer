@@ -6,16 +6,16 @@ This document outlines the DevOps audit and staging deployment preparation for t
 
 ## 🚦 Verified Deployment Parameters
 
-| Metric | Status | Details |
-| :--- | :---: | :--- |
-| **Backend Entrypoint** | **PASS** | Entrypoint is `server.js` at the backend root, importing app startup from `src/app.js`. |
-| **Start Script** | **PASS** | `package.json` contains `"start": "node server.js"`. |
-| **Health Check Endpoint** | **PASS** | Endpoint `GET /api/health` returns public configuration availability status with HTTP 200. |
-| **CORS Origins** | **PASS** | CORS settings allow origin matching dynamically through the `APP_ORIGIN` environment variable. |
-| **NODE_ENV Handling** | **PASS** | Restricts local memory fallbacks and mandates Upstash/Supabase configuration when `NODE_ENV=production`. |
-| **Graceful Startup** | **PASS** | Exposes version info and port logging in stdout. |
-| **Graceful Shutdown** | **PASS** | Captured `SIGTERM` and `SIGINT` triggers to execute `server.close()` and cleanly flush open sockets with a 10s maximum timeout limit. |
-| **Structured Logging** | **PASS** | Implemented standard structured logging for request IDs, unhandled API errors, and Stripe webhook payloads. |
+| Metric                    |  Status  | Details                                                                                                                               |
+| :------------------------ | :------: | :------------------------------------------------------------------------------------------------------------------------------------ |
+| **Backend Entrypoint**    | **PASS** | Entrypoint is `server.js` at the backend root, importing app startup from `src/app.js`.                                               |
+| **Start Script**          | **PASS** | `package.json` contains `"start": "node server.js"`.                                                                                  |
+| **Health Check Endpoint** | **PASS** | Endpoint `GET /api/health` returns public configuration availability status with HTTP 200.                                            |
+| **CORS Origins**          | **PASS** | CORS settings allow origin matching dynamically through the `APP_ORIGIN` environment variable.                                        |
+| **NODE_ENV Handling**     | **PASS** | Restricts local memory fallbacks and mandates Upstash/Supabase configuration when `NODE_ENV=production`.                              |
+| **Graceful Startup**      | **PASS** | Exposes version info and port logging in stdout.                                                                                      |
+| **Graceful Shutdown**     | **PASS** | Captured `SIGTERM` and `SIGINT` triggers to execute `server.close()` and cleanly flush open sockets with a 10s maximum timeout limit. |
+| **Structured Logging**    | **PASS** | Implemented standard structured logging for request IDs, unhandled API errors, and Stripe webhook payloads.                           |
 
 ---
 
@@ -73,4 +73,5 @@ const shutdown = (signal) => {
 process.on('SIGTERM', () => shutdown('SIGTERM'));
 process.on('SIGINT', () => shutdown('SIGINT'));
 ```
+
 This is fully compatible with Railway's container orchestration cycle.
