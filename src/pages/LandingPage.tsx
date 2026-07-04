@@ -82,36 +82,36 @@ const LandingPage = () => (
     {/* ══════════════════════════════════════════════
         SECTION 1: HERO
     ══════════════════════════════════════════════ */}
-    <section className="relative overflow-hidden border-b border-border-soft bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 py-16 md:py-24">
-      {/* Background glow */}
+    <section className="relative overflow-hidden border-b border-slate-200 bg-white py-16 md:py-24">
+      {/* subtle background tint */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-sky-500/10 blur-3xl" />
-        <div className="absolute bottom-0 right-0 h-64 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute -top-32 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-blue-50 blur-3xl opacity-60" />
+        <div className="absolute bottom-0 right-0 h-64 w-96 rounded-full bg-blue-50 blur-3xl opacity-40" />
       </div>
 
       <div className="relative mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_42%] lg:items-center lg:px-8">
         {/* Left: copy */}
         <div className="max-w-2xl">
-          <p className="inline-flex items-center gap-2 rounded-full border border-sky-500/30 bg-sky-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-sky-400">
+          <p className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-blue-600">
             <Zap className="h-3 w-3" /> Built for international project engineers
           </p>
 
-          <h1 className="mt-5 text-4xl font-black leading-[1.08] text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-5 text-4xl font-black leading-[1.08] text-slate-900 sm:text-5xl lg:text-6xl">
             Engineering English<br />
-            <span className="text-sky-400">that works on site.</span>
+            <span className="text-blue-600">that works on site.</span>
           </h1>
 
-          <p className="mt-5 text-base leading-7 text-slate-300 sm:text-lg">
+          <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
             Practice the exact emails, RFIs, site meetings, and commissioning
             reports you write every day — in your discipline, at your CEFR
             level, with AI feedback on every attempt.
           </p>
 
           {/* Trust indicators row */}
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-400">
+          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-slate-500">
             {['Free plan included', 'No credit card required', 'Cancel anytime'].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
-                <CheckCircle className="h-3.5 w-3.5 text-sky-400" />
+                <CheckCircle className="h-3.5 w-3.5 text-blue-500" />
                 {t}
               </span>
             ))}
@@ -120,28 +120,28 @@ const LandingPage = () => (
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               to="/start"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] bg-sky-500 px-6 text-sm font-black text-white shadow-lg shadow-sky-500/25 transition-all hover:bg-sky-400 hover:shadow-sky-400/30"
+              className="public-primary-action"
             >
               Start Free <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href="#features"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[10px] border border-white/20 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/15"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-[8px] border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors"
             >
               See Features
             </a>
           </div>
 
           {/* Social proof numbers */}
-          <div className="mt-10 flex flex-wrap gap-8 border-t border-white/10 pt-8">
+          <div className="mt-10 flex flex-wrap gap-8 border-t border-slate-200 pt-8">
             {[
               { value: '6', label: 'CEFR levels (A1→C2)' },
               { value: '100+', label: 'Engineering scenarios' },
               { value: '4', label: 'Disciplines covered' },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-2xl font-black text-white">{s.value}</p>
-                <p className="text-[11px] text-slate-400">{s.label}</p>
+                <p className="text-2xl font-black text-slate-900">{s.value}</p>
+                <p className="text-[11px] text-slate-500">{s.label}</p>
               </div>
             ))}
           </div>
@@ -149,59 +149,59 @@ const LandingPage = () => (
 
         {/* Right: app preview mock */}
         <div className="w-full">
-          <div className="relative rounded-[20px] border border-white/10 bg-slate-900/80 p-1 shadow-2xl shadow-black/40 backdrop-blur-md ring-1 ring-white/5">
+          <div className="relative rounded-[16px] border border-slate-200 bg-white p-1 shadow-xl ring-1 ring-slate-100">
             {/* Window chrome */}
-            <div className="flex items-center gap-1.5 px-3 py-2.5 border-b border-white/10">
-              <span className="h-2.5 w-2.5 rounded-full bg-rose-500/80" />
-              <span className="h-2.5 w-2.5 rounded-full bg-amber-500/80" />
-              <span className="h-2.5 w-2.5 rounded-full bg-emerald-500/80" />
-              <span className="mx-auto text-[10px] font-mono text-slate-500">englishengineer.vercel.app/dashboard</span>
+            <div className="flex items-center gap-1.5 px-3 py-2.5 border-b border-slate-100">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-amber-400/80" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-400/80" />
+              <span className="mx-auto text-[10px] font-mono text-slate-400">englishengineer.vercel.app/dashboard</span>
             </div>
 
             <div className="p-4 space-y-3 font-sans text-xs">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-[6px] bg-sky-500 flex items-center justify-center text-[10px] font-black text-white">EO</div>
+                  <div className="h-6 w-6 rounded-[6px] bg-blue-600 flex items-center justify-center text-[10px] font-black text-white">EO</div>
                   <div>
-                    <p className="text-[10px] font-bold text-white leading-none">EngineerOS</p>
+                    <p className="text-[10px] font-bold text-slate-900 leading-none">EngineerOS</p>
                     <p className="text-[8px] text-slate-400 leading-none">Command Center</p>
                   </div>
                 </div>
-                <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-[9px] font-bold text-sky-400">B1 · Electrical Eng.</span>
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-200">B1 · Electrical Eng.</span>
               </div>
 
               {/* Today's focus */}
-              <div className="rounded-[10px] border border-sky-500/25 bg-sky-500/10 p-3 space-y-1.5">
+              <div className="rounded-[10px] border border-blue-200 bg-blue-50 p-3 space-y-1.5">
                 <div className="flex justify-between items-center">
-                  <span className="text-[8px] font-bold uppercase tracking-wider text-sky-400">Today's Focus</span>
+                  <span className="text-[8px] font-bold uppercase tracking-wider text-blue-600">Today's Focus</span>
                   <span className="text-[8px] text-slate-400">~14 min</span>
                 </div>
-                <p className="text-[11px] font-bold text-white leading-snug">Cable Tray Delivery — Client Email</p>
-                <p className="text-[9px] text-slate-400 leading-relaxed">Draft a formal delay notification to the project owner with timeline relief request.</p>
+                <p className="text-[11px] font-bold text-slate-900 leading-snug">Cable Tray Delivery — Client Email</p>
+                <p className="text-[9px] text-slate-500 leading-relaxed">Draft a formal delay notification to the project owner with timeline relief request.</p>
                 <div className="flex justify-between items-center pt-1">
                   <div className="flex gap-1.5">
                     {['Writing', 'Vocabulary'].map((tag) => (
-                      <span key={tag} className="rounded-[4px] bg-white/10 px-1.5 py-0.5 text-[8px] font-semibold text-slate-300">{tag}</span>
+                      <span key={tag} className="rounded-[4px] bg-white px-1.5 py-0.5 text-[8px] font-semibold text-slate-600 border border-slate-200">{tag}</span>
                     ))}
                   </div>
-                  <span className="rounded-[6px] bg-sky-500 px-2.5 py-1 text-[8px] font-bold text-white">Start →</span>
+                  <span className="rounded-[6px] bg-blue-600 px-2.5 py-1 text-[8px] font-bold text-white">Start →</span>
                 </div>
               </div>
 
               {/* Skill grid */}
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { name: 'Writing', pct: 78, level: 'B1', color: '#3b82f6' },
-                  { name: 'Speaking', pct: 52, level: 'A2', color: '#06b6d4' },
-                  { name: 'Reading', pct: 91, level: 'B2', color: '#10b981' },
+                  { name: 'Writing', pct: 78, level: 'B1', color: '#2563eb' },
+                  { name: 'Speaking', pct: 52, level: 'A2', color: '#0891b2' },
+                  { name: 'Reading', pct: 91, level: 'B2', color: '#059669' },
                 ].map((sk) => (
-                  <div key={sk.name} className="rounded-[8px] bg-white/5 p-2 space-y-1.5 border border-white/10">
+                  <div key={sk.name} className="rounded-[8px] bg-slate-50 p-2 space-y-1.5 border border-slate-200">
                     <div className="flex justify-between items-center">
-                      <span className="text-[8px] font-semibold text-slate-300">{sk.name}</span>
-                      <span className="text-[8px] font-bold text-white">{sk.level}</span>
+                      <span className="text-[8px] font-semibold text-slate-600">{sk.name}</span>
+                      <span className="text-[8px] font-bold text-slate-900">{sk.level}</span>
                     </div>
-                    <div className="h-1 w-full rounded-full bg-white/10 overflow-hidden">
+                    <div className="h-1 w-full rounded-full bg-slate-200 overflow-hidden">
                       <div className="h-full rounded-full" style={{ width: `${sk.pct}%`, backgroundColor: sk.color }} />
                     </div>
                   </div>
@@ -210,19 +210,21 @@ const LandingPage = () => (
 
               {/* Alerts */}
               <div className="flex gap-2">
-                <div className="flex-1 rounded-[8px] bg-amber-500/10 border border-amber-500/20 px-2 py-1.5">
-                  <p className="text-[8px] font-bold text-amber-400">4 vocabulary terms due</p>
+                <div className="flex-1 rounded-[8px] bg-amber-50 border border-amber-200 px-2 py-1.5">
+                  <p className="text-[8px] font-bold text-amber-700">4 vocabulary terms due</p>
                 </div>
-                <div className="flex-1 rounded-[8px] bg-rose-500/10 border border-rose-500/20 px-2 py-1.5">
-                  <p className="text-[8px] font-bold text-rose-400">2 repeated mistakes</p>
+                <div className="flex-1 rounded-[8px] bg-red-50 border border-red-200 px-2 py-1.5">
+                  <p className="text-[8px] font-bold text-red-600">2 repeated mistakes</p>
                 </div>
               </div>
 
               {/* Tools strip */}
-              <div className="flex items-center justify-between rounded-[8px] bg-white/5 border border-white/10 px-2.5 py-2">
+              <div className="flex items-center justify-between rounded-[8px] bg-slate-50 border border-slate-200 px-2.5 py-2">
                 <span className="text-[8px] font-bold text-slate-400">Tools:</span>
                 {['AI Coach', 'Mistake Log', 'Voice Practice', 'LinkedIn'].map((t, i) => (
-                  <span key={t} className={`text-[8px] font-bold ${i === 0 ? 'text-sky-400' : 'text-slate-400'}`}>{t}</span>
+                  <span key={t} className={`text-[8px] font-bold ${i === 0 ? 'text-blue-600' : 'text-slate-400'}`}>
+                    {t}
+                  </span>
                 ))}
               </div>
             </div>
@@ -234,7 +236,7 @@ const LandingPage = () => (
     {/* ══════════════════════════════════════════════
         SECTION 2: PROBLEM / PAIN POINT
     ══════════════════════════════════════════════ */}
-    <section className="border-b border-border-soft bg-slate-50 py-14 md:py-20">
+    <section className="border-b border-slate-200 bg-slate-50 py-14 md:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-[11px] font-bold uppercase tracking-widest text-primary">The problem</p>
@@ -646,33 +648,30 @@ const LandingPage = () => (
     {/* ══════════════════════════════════════════════
         SECTION 8: FINAL CTA
     ══════════════════════════════════════════════ */}
-    <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-sky-950 py-20 text-white">
+    <section className="relative overflow-hidden border-t border-slate-100 bg-slate-50 py-20">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-16 left-1/2 h-64 w-[600px] -translate-x-1/2 rounded-full bg-sky-500/10 blur-3xl" />
+        <div className="absolute -top-16 left-1/2 h-64 w-[600px] -translate-x-1/2 rounded-full bg-blue-100 blur-3xl opacity-50" />
       </div>
       <div className="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-sky-400">Get started today</p>
-        <h2 className="mt-4 text-3xl font-black sm:text-4xl">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-blue-600">Get started today</p>
+        <h2 className="mt-4 text-3xl font-black text-slate-900 sm:text-4xl">
           Start communicating with<br />project-level confidence.
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-300">
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-600">
           Join engineers on international projects who are actively building the communication skills their careers demand.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to="/start"
-            className="inline-flex min-h-12 items-center gap-2 rounded-[10px] bg-sky-500 px-8 text-sm font-black text-white shadow-lg shadow-sky-500/25 transition-all hover:bg-sky-400"
+            className="inline-flex min-h-12 items-center gap-2 rounded-[8px] bg-blue-600 px-8 text-sm font-black text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-700"
           >
             Start Free — No Credit Card <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link
-            to="/pricing"
-            className="inline-flex min-h-12 items-center gap-2 rounded-[10px] border border-white/20 bg-white/10 px-6 text-sm font-bold text-white backdrop-blur-sm transition-all hover:bg-white/15"
-          >
+          <Link to="/pricing" className="inline-flex min-h-12 items-center gap-2 rounded-[10px] border border-slate-200 bg-white px-6 text-sm font-bold text-slate-900 shadow-sm transition-all hover:bg-slate-50">
             View Pricing
           </Link>
         </div>
-        <p className="mt-5 text-[11px] text-slate-400">
+        <p className="mt-5 text-[11px] text-slate-500">
           Free plan included · Cancel Pro anytime · Data stays on your device
         </p>
       </div>
@@ -681,7 +680,7 @@ const LandingPage = () => (
     {/* ══════════════════════════════════════════════
         FOOTER
     ══════════════════════════════════════════════ */}
-    <footer className="border-t border-border-soft bg-slate-950 py-12 text-slate-400">
+    <footer className="border-t border-slate-200 bg-white py-12 text-slate-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
@@ -689,7 +688,7 @@ const LandingPage = () => (
             <div className="flex items-center gap-2">
               <div className="h-7 w-7 rounded-[7px] bg-sky-500 flex items-center justify-center text-[11px] font-black text-white">EO</div>
               <div>
-                <p className="text-sm font-black text-white leading-none">EngineerOS</p>
+                <p className="text-sm font-black text-foreground leading-none">EngineerOS</p>
                 <p className="text-[9px] text-slate-500 leading-none">Engineering Communication OS</p>
               </div>
             </div>
@@ -709,7 +708,7 @@ const LandingPage = () => (
                 { label: 'For Teams', to: '/business' },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link to={link.to} className="hover:text-white transition-colors">{link.label}</Link>
+                  <Link to={link.to} className="text-slate-600 hover:text-slate-900 transition-colors">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -725,7 +724,7 @@ const LandingPage = () => (
                 { label: 'Cookie Policy', to: '/legal/cookies' },
               ].map((link) => (
                 <li key={link.label}>
-                  <Link to={link.to} className="hover:text-white transition-colors">{link.label}</Link>
+                  <Link to={link.to} className="text-slate-600 hover:text-slate-900 transition-colors">{link.label}</Link>
                 </li>
               ))}
             </ul>
@@ -736,7 +735,7 @@ const LandingPage = () => (
             <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-500">Get Started</p>
             <Link
               to="/start"
-              className="inline-flex min-h-10 items-center gap-2 rounded-[10px] bg-sky-500 px-5 text-xs font-black text-white transition-all hover:bg-sky-400"
+              className="inline-flex min-h-10 items-center gap-2 rounded-[8px] bg-blue-600 px-5 text-xs font-black text-white transition-all hover:bg-blue-700"
             >
               Start Free <ArrowRight className="h-3.5 w-3.5" />
             </Link>
@@ -744,9 +743,9 @@ const LandingPage = () => (
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/5 pt-8 sm:flex-row">
-          <p className="text-[11px] text-slate-600">© {new Date().getFullYear()} EngineerOS. All rights reserved.</p>
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-600">
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-slate-200 pt-8 sm:flex-row">
+          <p className="text-[11px] text-slate-500">© {new Date().getFullYear()} EngineerOS. All rights reserved.</p>
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-500">
             <Shield className="h-3 w-3" /> Payments secured by Stripe
           </div>
         </div>

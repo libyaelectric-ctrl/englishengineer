@@ -2,35 +2,35 @@
 @import 'tailwindcss';
 
 :root {
-  /* Default theme: Light Velvet-Soft Visual Language */
-  --background: #f7f8fa;
-  --foreground: #1e252d;
+  /* Clean White + Blue theme — matches screenshot palette */
+  --background: #ffffff;
+  --foreground: #0f172a;
 
-  --color-primary: #617fd8;
-  --color-primary-hover: #526fc8;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
   --color-primary-foreground: #ffffff;
 
   --color-surface: #ffffff;
-  --color-surface-hover: #e9edf2;
-  --color-soft: rgba(97, 127, 216, 0.1);
-  --color-border-soft: rgba(31, 41, 55, 0.07);
-  --color-border-hover: rgba(31, 41, 55, 0.16);
-  --color-muted-copy: #59636f;
-  --color-focus: rgba(97, 127, 216, 0.24);
-  --color-success: #3f9b0b;
-  --color-warning: #c4a200;
-  --color-error: #d9363e;
+  --color-surface-hover: #f1f5f9;
+  --color-soft: rgba(37, 99, 235, 0.08);
+  --color-border-soft: #e2e8f0;
+  --color-border-hover: #cbd5e1;
+  --color-muted-copy: #64748b;
+  --color-focus: rgba(37, 99, 235, 0.2);
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
 
-  --color-engineer-950: #f4f5f7; /* page canvas */
-  --color-engineer-900: #f7f8fa; /* app background */
+  --color-engineer-950: #f8fafc; /* page canvas */
+  --color-engineer-900: #ffffff; /* app background */
   --color-engineer-800: #ffffff; /* primary surface */
-  --color-engineer-700: #fafbfc; /* elevated surface */
-  --color-engineer-cyan: #617fd8; /* primary accent */
+  --color-engineer-700: #f8fafc; /* elevated surface */
+  --color-engineer-cyan: #2563eb; /* primary accent */
 
-  --radius-button: 10px;
-  --radius-input: 10px;
-  --radius-card: 14px;
-  --radius-dialog: 16px;
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-dialog: 14px;
 }
 
 .dark {
@@ -268,41 +268,33 @@
 
   .public-primary-action {
     @apply inline-flex min-h-10 items-center justify-center gap-2 px-4 py-2 text-center text-xs font-bold leading-tight transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
-    background: linear-gradient(180deg, #617fd8, #4d6bc0);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.2) inset,
-      0 4px 12px rgba(97, 127, 216, 0.15);
+    background: #1e3a5f;
+    border: 1px solid #1e3a5f;
+    box-shadow: 0 1px 3px rgba(30, 58, 95, 0.3);
     color: #ffffff;
     border-radius: var(--radius-button);
   }
   .public-primary-action:hover:not(:disabled) {
-    background: linear-gradient(180deg, #718fe8, #617fd8);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.25) inset,
-      0 6px 16px rgba(97, 127, 216, 0.22);
+    background: #1a3254;
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.35);
   }
   .public-primary-action:active:not(:disabled) {
-    background: #4d6bc0;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1) inset;
+    background: #162b47;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15) inset;
   }
 
   .dark .public-primary-action {
-    background: linear-gradient(180deg, #6f8fef, #5c7cd9);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.18) inset,
-      0 4px 12px rgba(111, 143, 239, 0.14);
-    color: #0b0f14;
+    background: #2563eb;
+    border: 1px solid #2563eb;
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3);
+    color: #ffffff;
   }
   .dark .public-primary-action:hover:not(:disabled) {
-    background: linear-gradient(180deg, #819cf2, #6f8fef);
-    box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.22) inset,
-      0 6px 16px rgba(111, 143, 239, 0.2);
+    background: #1d4ed8;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   }
   .dark .public-primary-action:active:not(:disabled) {
-    background: #5c7cd9;
+    background: #1e40af;
     box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1) inset;
   }
 
