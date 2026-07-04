@@ -38,7 +38,7 @@ export const BillingStatusPanel = ({
     providerStatus
   );
   const paidAccessIsActive =
-    presentation.planId === 'pro' &&
+    presentation.planId !== 'free' &&
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal =
     providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
@@ -114,17 +114,29 @@ export const BillingStatusPanel = ({
       </dl>
 
       <div className="flex flex-col gap-2 sm:flex-row">
-        <Button
-          type="button"
-          onClick={onUpgrade}
-          disabled={
-            isLoading || !providerStatus.isConfigured || paidAccessIsActive
-          }
-          className="text-xs"
-        >
-          <Crown className="h-3.5 w-3.5" />
-          {paidAccessIsActive ? 'Pro Active' : 'Upgrade to Pro'}
-        </Button>
+        {!paidAccessIsActive ? (
+          <Button
+            type="button"
+            onClick={() => {
+              onUpgrade();
+              window.location.href = '/pricing';
+            }}
+            disabled={isLoading}
+            className="text-xs"
+          >
+            <Crown className="h-3.5 w-3.5" />
+            Upgrade Plan
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            disabled
+            className="text-xs border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 cursor-not-allowed flex items-center gap-1.5"
+          >
+            <Crown className="h-3.5 w-3.5 text-emerald-500" />
+            {presentation.planLabel} Active
+          </Button>
+        )}
         <Button
           type="button"
           variant="outline"

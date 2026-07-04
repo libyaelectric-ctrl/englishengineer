@@ -134,7 +134,7 @@ const PricingPage = () => {
     }
 
     // Higher tiers not yet available – show disabled Coming Soon button
-    if (plan.id === 'max' || plan.id === 'exec' || plan.id === 'private') {
+    if (plan.id === 'exec' || plan.id === 'private') {
       return (
         <button
           type="button"
