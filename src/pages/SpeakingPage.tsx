@@ -64,6 +64,33 @@ const SpeakingPage = () => {
   const subscription = useBillingStore((state) => state.subscription);
   const hasMaxAccess = canAccessFeature(subscription, 'realVoiceSpeaking').allowed;
 
+  // Voice minute wallet — computed from this month's speaking history
+  const voiceMinutesUsedThisMonth = (() => {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const totalSeconds = history
+      .filter((entry) => new Date(entry.timestamp) >= monthStart)
+      .reduce(
+        (sum, entry) =>
+          sum +
+          (entry.evaluation?.wordsPerMinute
+            ? Math.round(
+                (entry.evaluation.wordCount /
+                  Math.max(entry.evaluation.wordsPerMinute, 1)) *
+                  60
+              )
+            : 0),
+        0
+      );
+    return Math.round(totalSeconds / 60);
+  })();
+  const maxVoiceMinutes = 120;
+  const walletPercent = Math.min(
+    100,
+    (voiceMinutesUsedThisMonth / maxVoiceMinutes) * 100
+  );
+
+
   const [responseMode, setResponseMode] = useState<'written' | 'voice'>('written');
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
@@ -167,6 +194,37 @@ const SpeakingPage = () => {
       />
 
       <SkillEntryBrief skill="speaking" />
+
+      {/* Voice Minute Wallet — Max plan only */}
+      {hasMaxAccess && subscription.planId === 'max' && (
+        <div className="flex items-center gap-4 rounded-[12px] border border-sky-200 bg-sky-50/60 px-4 py-3">
+          <Mic className="h-4 w-4 shrink-0 text-sky-600" />
+          <div className="flex-1 min-w-0">
+            <div className="flex justify-between text-xs mb-1">
+              <span className="font-bold text-sky-900">Monthly Voice Minutes</span>
+              <span className={`font-mono font-bold ${
+                voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'text-rose-600' :
+                voiceMinutesUsedThisMonth >= 96 ? 'text-amber-600' : 'text-sky-700'
+              }`}>
+                {voiceMinutesUsedThisMonth} / {maxVoiceMinutes} min
+              </span>
+            </div>
+            <ProgressBar
+              value={walletPercent}
+              color={
+                voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'rose' :
+                voiceMinutesUsedThisMonth >= 96 ? 'amber' : 'cyan'
+              }
+            />
+            <p className="mt-1 text-[10px] text-sky-600">
+              {voiceMinutesUsedThisMonth >= maxVoiceMinutes
+                ? '⚠️ Monthly voice quota reached. Upgrade to Exec for unlimited minutes.'
+                : `✓ ${maxVoiceMinutes - voiceMinutesUsedThisMonth} min remaining this month`}
+            </p>
+          </div>
+        </div>
+      )}
+
       <LevelContentFilter
         value={levelFilter}
         currentLevel={currentLevel}

@@ -21,6 +21,7 @@ import { Button } from '@/shared/components/Button';
 import { CloudSyncStatusPanel, useAuthStore } from '@/features/auth';
 import { BillingStatusPanel, useBillingStore } from '@/features/billing';
 import { useAIStore } from '@/features/ai';
+import { useSpeakingStore } from '@/features/speaking';
 import { useVocabularyStore } from '@/features/vocabulary';
 import {
   LearningProfileEngine,
@@ -109,6 +110,21 @@ const ProfilePage = () => {
     const val = localStorage.getItem('uploaded_docs_count');
     return val ? parseInt(val, 10) : 0;
   });
+
+  const speakingHistory = useSpeakingStore((state) => state.history);
+  const voiceMinutesUsed = (() => {
+    const now = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const totalSeconds = speakingHistory
+      .filter((entry) => new Date(entry.timestamp) >= monthStart)
+      .reduce(
+        (sum, entry) => sum + (entry.evaluation?.wordsPerMinute ? Math.round((entry.evaluation.wordCount / Math.max(entry.evaluation.wordsPerMinute, 1)) * 60) : 0),
+        0
+      );
+    return Math.round(totalSeconds / 60);
+  })();
+
+
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
 
   // Edit Mode state for Overview Section
@@ -136,9 +152,13 @@ const ProfilePage = () => {
   // Active section for sub-navigation
   const [activeSection, setActiveSection] = useState('overview');
 
+  const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
+
   useEffect(() => {
     initializeBilling(currentUser?.id || null);
-  }, [currentUser?.id, initializeBilling]);
+    initializeSpeaking();
+  }, [currentUser?.id, initializeBilling, initializeSpeaking]);
+
 
   useEffect(() => {
     const billingStatus = new URLSearchParams(location.search).get('billing');
@@ -1258,6 +1278,47 @@ const ProfilePage = () => {
                     </p>
                   </div>
                 </div>
+
+                  {/* Limit 5: Voice Minute Wallet (Max+) */}
+                  {(subscription.planId === 'max' ||
+                    subscription.planId === 'exec' ||
+                    subscription.planId === 'private') && (
+                    <div className="col-span-full space-y-1.5 mt-1">
+                      <div className="flex justify-between text-xs">
+                        <span className="font-semibold text-slate-700 flex items-center gap-1.5">
+                          🎙️ Monthly Voice Minutes
+                        </span>
+                        <span className="font-bold text-slate-900">
+                          {subscription.planId === 'max'
+                            ? `${voiceMinutesUsed} / 120 min`
+                            : 'Unlimited'}
+                        </span>
+                      </div>
+                      <ProgressBar
+                        value={
+                          subscription.planId === 'max'
+                            ? Math.min(100, (voiceMinutesUsed / 120) * 100)
+                            : 100
+                        }
+                        color={
+                          subscription.planId !== 'max'
+                            ? 'cyan'
+                            : voiceMinutesUsed >= 108
+                              ? 'rose'
+                              : voiceMinutesUsed >= 84
+                                ? 'amber'
+                                : 'cyan'
+                        }
+                      />
+                      <p className="text-[10px] text-slate-400">
+                        {subscription.planId === 'max'
+                          ? voiceMinutesUsed >= 120
+                            ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
+                            : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
+                          : '✓ Unlimited voice minutes included in your plan.'}
+                      </p>
+                    </div>
+                  )}
 
                 {/* What paying customers get block */}
                 <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
