@@ -3,7 +3,7 @@ import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 const ARTIFACT_DIR =
-  'C:/Users/User/.gemini/antigravity/brain/dbeed071-e0dd-4c42-9917-c027e2309a86';
+  'C:/Users/User/.gemini/antigravity/brain/58f9ae45-6953-45d0-b8dd-9969a5e2bf6a';
 const SCREENSHOT_DIR = join(ARTIFACT_DIR, 'screenshots');
 if (!existsSync(SCREENSHOT_DIR)) {
   mkdirSync(SCREENSHOT_DIR, { recursive: true });

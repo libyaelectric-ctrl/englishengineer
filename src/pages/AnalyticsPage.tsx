@@ -28,7 +28,9 @@ import {
   useAnalyticsStore,
 } from '@/features/analytics';
 import { AssessmentProfile } from '@/features/assessment';
-import { canViewAdvancedAnalytics, useBillingStore } from '@/features/billing';
+import { canViewAdvancedAnalytics, useBillingStore, canAccessFeature } from '@/features/billing';
+import { useWorkspaceStore } from '@/features/billing/workspace.store';
+import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 
 const chartTabs: Array<{
   id: ReturnType<typeof useAnalyticsStore.getState>['activeChart'];
@@ -50,6 +52,11 @@ const AnalyticsPage = () => {
   const setActiveChart = useAnalyticsStore((state) => state.setActiveChart);
   const analytics = AnalyticsService.getSummary(learningState);
   const advancedAnalyticsEntitlement = canViewAdvancedAnalytics(subscription);
+
+  const { workspaces, activeWorkspaceId } = useWorkspaceStore();
+  const activeWorkspace =
+    workspaces.find((w) => w.id === activeWorkspaceId) ?? workspaces[0];
+  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -83,6 +90,61 @@ const AnalyticsPage = () => {
         </div>
         <StatusBadge label="Based on local activity" tone="warning" />
       </div>
+
+      {hasProjectAccess && (
+        <div className="rounded-[16px] border border-blue-500/20 bg-blue-500/5 p-5 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                <BarChart3 className="h-4 w-4 text-primary" />
+                Project-Based Advanced Analytics
+              </h3>
+              <p className="text-xs text-slate-500">
+                Analyze document counts, AI coach context, and persistent memory metrics scoped per workspace.
+              </p>
+            </div>
+            <WorkspaceSelector planId={subscription.planId} />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div className="rounded-[12px] bg-white border border-slate-200 p-4 space-y-2">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Workspace Documents
+              </p>
+              <p className="text-2xl font-black text-slate-900">
+                {activeWorkspace?.documents?.length || 0}
+              </p>
+              <p className="text-xs text-slate-500 leading-normal">
+                Files uploaded and analyzed for this project scope.
+              </p>
+            </div>
+            
+            <div className="rounded-[12px] bg-white border border-slate-200 p-4 space-y-2">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Active Memory Keys
+              </p>
+              <p className="text-2xl font-black text-slate-900">
+                {Object.keys(activeWorkspace?.memory || {}).length}
+              </p>
+              <p className="text-xs text-slate-500 leading-normal">
+                Persistent context keys injected into your AI prompts.
+              </p>
+            </div>
+
+            <div className="rounded-[12px] bg-white border border-slate-200 p-4 space-y-2">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Isolated AI Sessions
+              </p>
+              <p className="text-2xl font-black text-slate-900">
+                {activeWorkspace?.sessions?.length || 0}
+              </p>
+              <p className="text-xs text-slate-500 leading-normal">
+                AI Coach transcripts kept separate within this workspace.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <MetricCard

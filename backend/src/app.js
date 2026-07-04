@@ -87,7 +87,11 @@ export const createApp = ({
     app,
     createAIService(config.ai, fetchImpl),
     requireBackendAuth,
-    aiRateLimiter
+    aiRateLimiter,
+    billingRepository ??
+      createSubscriptionRepository(config.stripe, fetchImpl),
+    config,
+    fetchImpl
   );
   registerVocabularyRoutes(
     app,

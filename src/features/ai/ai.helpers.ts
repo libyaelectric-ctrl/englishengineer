@@ -130,6 +130,42 @@ export const AI_COACH_MODES: AICoachMode[] = [
     placeholder:
       'Upload your document or paste its content here to get a professional summary and analysis of technical requirements.',
   },
+  {
+    id: 'linkedin_optimizer',
+    name: 'LinkedIn Profile Optimizer',
+    description:
+      'Optimize your professional bio, experience descriptions, and headlines for international engineering roles.',
+    operation: 'rewriteText',
+    placeholder:
+      'Paste your current LinkedIn headline, about summary, and job descriptions.',
+  },
+  {
+    id: 'custom_scenario_generator',
+    name: 'Custom Scenario Generator',
+    description:
+      'Generate custom technical English reading or writing exercises from your uploaded documents.',
+    operation: 'generatePractice',
+    placeholder:
+      'Describe the scenario you want to practice based on your documents (e.g., NCR negotiation, safety briefing).',
+  },
+  {
+    id: 'project_copilot_agent',
+    name: 'Project Copilot Agent',
+    description:
+      'Dynamic project copilot assistant using your active workspace memory and custom rules.',
+    operation: 'rewriteText',
+    placeholder:
+      'Ask the Copilot Agent anything about the project scope, standards, or guidelines in your active workspace.',
+  },
+  {
+    id: 'cv_optimizer',
+    name: 'CV / Resume Optimizer',
+    description:
+      'Optimize your professional engineering CV/Resume experience bullet points and profiles for global jobs.',
+    operation: 'rewriteText',
+    placeholder:
+      'Paste your current CV introduction, target job description, or skills list to optimize.',
+  },
 ];
 
 export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
@@ -212,6 +248,38 @@ export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
     modeId: 'ncr_response_assistant',
     prompt:
       'Draft an NCR response. Non-conformance: cable tray installed without approved support spacing. Root cause: outdated shop drawing used by subcontractor. Correction: add intermediate supports and submit photo evidence. Prevention: drawing control briefing and latest revision stamp check before installation.',
+  },
+  {
+    id: 'cv_optimization_sample',
+    title: 'CV Bullet Point Optimizer',
+    description: 'Enhance resume bullet points to highlight impact and metrics.',
+    modeId: 'cv_optimizer',
+    prompt:
+      'Optimize these CV bullet points for a Senior Electrical Engineer. Rough points: "Responsible for electrical design. Led a team of 4. Did cable sizing and calculations. Attended site meetings and coordinated with other teams."',
+  },
+  {
+    id: 'linkedin_headline_bio',
+    title: 'LinkedIn Headline & Bio',
+    description: 'Draft a compelling global-ready LinkedIn bio and headline.',
+    modeId: 'linkedin_optimizer',
+    prompt:
+      'Draft an optimized LinkedIn headline and professional summary. Context: I am a Civil Project Engineer with 6 years experience in tunnel construction. I want to highlight my knowledge of NATM tunneling method, international project coordination, and PM skills.',
+  },
+  {
+    id: 'custom_ncr_roleplay',
+    title: 'Custom Roleplay Scenario',
+    description: 'Generate a roleplay script based on technical scope.',
+    modeId: 'custom_scenario_generator',
+    prompt:
+      'Generate a custom engineering communication scenario. Scenario focus: A dispute over concrete compressive strength results at 28 days (found to be 32 MPa instead of the specified 40 MPa). Provide a roleplay script practicing negotiation with a client representative.',
+  },
+  {
+    id: 'workspace_copilot_scope',
+    title: 'Workspace Memory Inquiry',
+    description: 'Query project guidelines and rules from memory.',
+    modeId: 'project_copilot_agent',
+    prompt:
+      'Analyze the active project guidelines in my workspace. Based on these rules, what are the key communication protocols and documentation standards we need to enforce for subcontractor submittals?',
   },
 ];
 

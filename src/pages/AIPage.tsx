@@ -14,6 +14,7 @@ import {
   Target,
   Terminal,
   Zap,
+  Lock,
 } from 'lucide-react';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { MetricCard } from '@/shared/components/MetricCard';
@@ -32,7 +33,7 @@ import {
   useAIStore,
 } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
-import { canUseAICoach, useBillingStore } from '@/features/billing';
+import { canUseAICoach, useBillingStore, canAccessFeature } from '@/features/billing';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
 import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 import { WorkspaceMemoryPanel } from '@/features/billing/WorkspaceMemoryPanel';
@@ -89,6 +90,19 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         : 'unlimited';
   const docLimitLabel =
     docLimit === 'unlimited' ? 'Unlimited' : `${docLimit} documents / month`;
+
+  const MODE_REQUIRED_FEATURES: Record<string, string> = {
+    linkedin_optimizer: 'linkedinOptimization',
+    custom_scenario_generator: 'customScenarioGeneration',
+    project_copilot_agent: 'persistentAIAgent',
+    cv_optimizer: 'unlimitedAIFeedback',
+  };
+
+  const modeToCheck = modes.find((m) => m.id === selectedModeId);
+  const requiredFeature = modeToCheck ? MODE_REQUIRED_FEATURES[modeToCheck.id] : null;
+  const isModeLocked = requiredFeature
+    ? !canAccessFeature(subscription, requiredFeature as any).allowed
+    : false;
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUploadError(null);
@@ -328,8 +342,13 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                       <span
                         className={`h-2 w-2 rounded-full ${isActive ? 'bg-primary' : 'bg-slate-700'}`}
                       />
-                      <h4 className="text-sm font-black text-slate-900">
+                      <h4 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
                         {mode.name}
+                        {(() => {
+                          const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
+                          const isLocked = reqFeat ? !canAccessFeature(subscription, reqFeat as any).allowed : false;
+                          return isLocked ? <Lock className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden="true" /> : null;
+                        })()}
                       </h4>
                     </div>
                     <p className="text-xs text-slate-400 mt-2 leading-relaxed">
@@ -371,7 +390,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           )}
 
           <SectionCard
-            title={`${selectedMode.name} Input`}
+            title={`${selectedMode?.name ?? ''} Input`}
             subtitle="Paste notes, transcripts, messages, or study reflections"
             icon={Terminal}
             headerActions={
@@ -403,81 +422,113 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             }
           >
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!aiEntitlement.allowed && (
-                <div className="rounded-[12px] border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-xs text-amber-200">
-                  {aiEntitlement.reason}
-                  <Button
-                    type="button"
-                    onClick={() => navigate('/profile')}
-                    className="mt-3 h-9 bg-primary text-white font-bold"
-                  >
-                    Upgrade to Pro
-                  </Button>
-                </div>
-              )}
-              {selectedModeId === 'document_analysis_assistant' && (
-                <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4 space-y-3">
-                  <label className="block text-xs font-bold text-slate-700">
-                    Upload Technical Document (TXT, PDF, DOCX) - Limit:{' '}
-                    {docLimitLabel}
-                  </label>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <input
-                      type="file"
-                      accept=".txt,.pdf,.docx"
-                      onChange={handleFileUpload}
-                      disabled={!aiEntitlement.allowed}
-                      className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                    />
-                    <span className="text-xs font-mono text-slate-500 bg-slate-200/50 px-2.5 py-1 rounded-full">
-                      {uploadedDocsCount} /{' '}
-                      {docLimit === 'unlimited' ? '∞' : docLimit} uploads used
-                      this month
-                    </span>
-                  </div>
-                  {uploadError && (
-                    <div className="text-xs text-rose-500 font-bold flex items-center gap-1.5 mt-1">
-                      <AlertCircle className="h-3.5 w-3.5" />
-                      {uploadError}
+              {isModeLocked ? (
+                (() => {
+                  const isProLocked = requiredFeature === 'unlimitedAIFeedback';
+                  return (
+                    <div className="rounded-[16px] border border-blue-500/20 bg-blue-500/5 p-6 text-center space-y-4 animate-in fade-in duration-300">
+                      <div className="mx-auto h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
+                        <Lock className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-bold text-slate-900">
+                          {selectedMode?.name} is a {isProLocked ? 'Pro' : 'Project'} Plan Feature
+                        </h4>
+                        <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                          {isProLocked
+                            ? 'Upgrade to the Pro Plan ($19/mo) to unlock professional engineering CV optimization, unlimited daily AI requests, and 12-month study history.'
+                            : 'Upgrade to the Project Plan ($39/mo) to unlock workspace memory integration, custom scenario generation from documents, LinkedIn profile optimization, and persistent AI agents.'}
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={() => navigate('/pricing')}
+                        className="bg-primary text-white font-bold px-6 py-2 rounded-card shadow-md hover:bg-primary-hover transition-all"
+                      >
+                        Upgrade to {isProLocked ? 'Pro' : 'Project'} Plan
+                      </Button>
+                    </div>
+                  );
+                })()
+              ) : (
+                <>
+                  {!aiEntitlement.allowed && (
+                    <div className="rounded-[12px] border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-xs text-amber-200">
+                      {aiEntitlement.reason}
+                      <Button
+                        type="button"
+                        onClick={() => navigate('/profile')}
+                        className="mt-3 h-9 bg-primary text-white font-bold"
+                      >
+                        Upgrade to Pro
+                      </Button>
                     </div>
                   )}
-                </div>
-              )}
-              <textarea
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                disabled={!aiEntitlement.allowed}
-                rows={8}
-                className="premium-input w-full resize-none p-4 font-mono text-sm text-slate-900"
-                placeholder={selectedMode.placeholder}
-              />
-              {error && (
-                <div className="flex items-center gap-2 rounded-[12px] border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-xs text-rose-300">
-                  <AlertCircle className="h-4 w-4" />
-                  {error}
-                </div>
-              )}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
-                  Mode: {selectedMode.name}
-                </p>
-                <Button
-                  type="submit"
-                  className="h-11 bg-primary text-white font-bold flex items-center justify-center gap-2"
-                  disabled={
-                    isLoading ||
-                    input.trim().length === 0 ||
-                    !aiEntitlement.allowed
-                  }
-                >
-                  {isLoading ? (
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Send className="h-4 w-4" />
+                  {selectedModeId === 'document_analysis_assistant' && (
+                    <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4 space-y-3">
+                      <label className="block text-xs font-bold text-slate-700">
+                        Upload Technical Document (TXT, PDF, DOCX) - Limit:{' '}
+                        {docLimitLabel}
+                      </label>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <input
+                          type="file"
+                          accept=".txt,.pdf,.docx"
+                          onChange={handleFileUpload}
+                          disabled={!aiEntitlement.allowed}
+                          className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-xs font-mono text-slate-500 bg-slate-200/50 px-2.5 py-1 rounded-full">
+                          {uploadedDocsCount} /{' '}
+                          {docLimit === 'unlimited' ? '∞' : docLimit} uploads used
+                          this month
+                        </span>
+                      </div>
+                      {uploadError && (
+                        <div className="text-xs text-rose-500 font-bold flex items-center gap-1.5 mt-1">
+                          <AlertCircle className="h-3.5 w-3.5" />
+                          {uploadError}
+                        </div>
+                      )}
+                    </div>
                   )}
-                  {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
-                </Button>
-              </div>
+                  <textarea
+                    value={input}
+                    onChange={(event) => setInput(event.target.value)}
+                    disabled={!aiEntitlement.allowed}
+                    rows={8}
+                    className="premium-input w-full resize-none p-4 font-mono text-sm text-slate-900"
+                    placeholder={selectedMode?.placeholder ?? ''}
+                  />
+                  {error && (
+                    <div className="flex items-center gap-2 rounded-[12px] border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-xs text-rose-300">
+                      <AlertCircle className="h-4 w-4" />
+                      {error}
+                    </div>
+                  )}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                      Mode: {selectedMode?.name ?? ''}
+                    </p>
+                    <Button
+                      type="submit"
+                      className="h-11 bg-primary text-white font-bold flex items-center justify-center gap-2"
+                      disabled={
+                        isLoading ||
+                        input.trim().length === 0 ||
+                        !aiEntitlement.allowed
+                      }
+                    >
+                      {isLoading ? (
+                        <RefreshCw className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                      {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
+                    </Button>
+                  </div>
+                </>
+              )}
             </form>
           </SectionCard>
 

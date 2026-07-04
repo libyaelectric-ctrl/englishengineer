@@ -25,7 +25,11 @@ export type AICoachModeId =
   | 'daily_learning_planner'
   | 'career_mentor'
   | 'writing_reviewer'
-  | 'document_analysis_assistant';
+  | 'document_analysis_assistant'
+  | 'linkedin_optimizer'
+  | 'custom_scenario_generator'
+  | 'project_copilot_agent'
+  | 'cv_optimizer';
 
 export interface AIProviderStatus {
   mode: AIProviderMode;

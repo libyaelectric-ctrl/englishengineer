@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Brain, Plus, Trash2, Edit2, Check, X } from 'lucide-react';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
+import { useBillingStore, canAccessFeature } from '@/features/billing';
 
 interface WorkspaceMemoryPanelProps {
   workspaceId: string;
@@ -13,6 +14,9 @@ export const WorkspaceMemoryPanel = ({
   const workspace = workspaces.find((ws) => ws.id === workspaceId);
   const memory = workspace?.memory ?? {};
   const entries = Object.entries(memory).filter(([, v]) => v !== '');
+
+  const subscription = useBillingStore((state) => state.subscription);
+  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -72,7 +76,7 @@ export const WorkspaceMemoryPanel = ({
             </span>
           )}
         </div>
-        {!addingNew && (
+        {!addingNew && hasProjectAccess && (
           <button
             type="button"
             id="workspace-memory-add-btn"
@@ -152,24 +156,26 @@ export const WorkspaceMemoryPanel = ({
                       {value}
                     </p>
                   </div>
-                  <div className="flex shrink-0 gap-1">
-                    <button
-                      type="button"
-                      onClick={() => handleStartEdit(key, value)}
-                      aria-label={`Edit ${key}`}
-                      className="rounded p-1 text-muted-copy hover:text-primary hover:bg-primary/5 transition-colors"
-                    >
-                      <Edit2 className="h-3 w-3" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(key)}
-                      aria-label={`Delete ${key}`}
-                      className="rounded p-1 text-muted-copy hover:text-error hover:bg-error/10 transition-colors"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  </div>
+                  {hasProjectAccess && (
+                    <div className="flex shrink-0 gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleStartEdit(key, value)}
+                        aria-label={`Edit ${key}`}
+                        className="rounded p-1 text-muted-copy hover:text-primary hover:bg-primary/5 transition-colors"
+                      >
+                        <Edit2 className="h-3 w-3" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(key)}
+                        aria-label={`Delete ${key}`}
+                        className="rounded p-1 text-muted-copy hover:text-error hover:bg-error/10 transition-colors"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
             </li>
@@ -227,6 +233,14 @@ export const WorkspaceMemoryPanel = ({
               Cancel
             </button>
           </div>
+        </div>
+      )}
+
+      {!hasProjectAccess && entries.length > 0 && (
+        <div className="mt-3 rounded-[8px] bg-slate-50 border border-slate-200 p-2.5 text-center">
+          <p className="text-[10px] text-slate-500 leading-normal">
+            Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to edit details.
+          </p>
         </div>
       )}
     </div>
