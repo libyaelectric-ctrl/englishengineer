@@ -9,3 +9,4 @@ export * from './stripe.provider';
 export * from './BillingStatusPanel';
 export * from './workspace.store';
 export * from './WorkspaceSelector';
+export * from './WorkspaceMemoryPanel';
