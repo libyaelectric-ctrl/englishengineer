@@ -20,7 +20,11 @@ const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG;
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser } = useAuthStore();
+  const { currentUser, initialize: initializeAuth } = useAuthStore();
+
+  useEffect(() => {
+    void initializeAuth();
+  }, [initializeAuth]);
   const {
     isLoading: isCheckoutLoading,
     startCheckout,
