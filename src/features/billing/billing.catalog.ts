@@ -99,8 +99,8 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
       'Persistent Workspace Memory (inject context into every AI session)',
       '20 document uploads per month, scoped per workspace',
       'Unlimited AI Coach sessions',
-      'Custom scenario generation — coming soon',
-      'LinkedIn optimization tools — coming soon',
+      'Custom scenario generation',
+      'LinkedIn optimization tools',
     ],
     notIncluded: 'No voice integration modules',
     comparison: {
