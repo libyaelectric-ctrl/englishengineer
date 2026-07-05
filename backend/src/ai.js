@@ -125,6 +125,39 @@ const callAnthropic = async (config, prompt, signal, fetchImpl) => {
   return text.trim();
 };
 
+const callGemini = async (config, prompt, signal, fetchImpl) => {
+  const model = config.model || 'gemini-2.0-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.apiKey}`;
+  const response = await fetchImpl(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 1600 },
+    }),
+    signal,
+  });
+  if (!response.ok) {
+    throw new ApiError(
+      response.status === 429 ? 429 : 502,
+      response.status === 429 ? 'ai_rate_limited' : 'ai_provider_error',
+      response.status === 429
+        ? 'The AI provider rate limit was reached.'
+        : 'The AI provider is currently unavailable.'
+    );
+  }
+  const payload = await response.json();
+  const text = payload?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (typeof text !== 'string' || !text.trim()) {
+    throw new ApiError(
+      502,
+      'malformed_ai_response',
+      'The AI provider returned an invalid response.'
+    );
+  }
+  return text.trim();
+};
+
 export const createAIService = (config, fetchImpl = fetch) => ({
   async complete(operation, body) {
     const prompt = readPrompt(body);
@@ -148,10 +181,14 @@ export const createAIService = (config, fetchImpl = fetch) => ({
     }
 
     const text = await withTimeout(
-      (signal) =>
-        config.provider === 'anthropic'
-          ? callAnthropic(config, prompt, signal, fetchImpl)
-          : callOpenAI(config, prompt, signal, fetchImpl),
+      (signal) => {
+        if (config.provider === 'anthropic') {
+          return callAnthropic(config, prompt, signal, fetchImpl);
+        } else if (config.provider === 'gemini') {
+          return callGemini(config, prompt, signal, fetchImpl);
+        }
+        return callOpenAI(config, prompt, signal, fetchImpl);
+      },
       config.timeoutMs
     );
 
