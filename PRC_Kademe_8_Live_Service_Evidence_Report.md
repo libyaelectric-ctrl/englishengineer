@@ -1,108 +1,88 @@
 # PRC Kademe 8 Live Service Evidence Report
 
-## Overall Verdict
+## Evidence Decision
 
 **BLOCKED**
 
-Deployment credentials required. Local product, build, backend and browser
-quality gates pass, but the ordered live-service sequence cannot begin until a
-Railway staging backend exists. No live evidence was fabricated and no secret
-value was printed.
+Deployment credentials required. Live service verification was not run and no evidence was fabricated.
 
-## Service Evidence
+## Locally Verified Evidence
 
-| Service           | Status  | Evidence                                                                    |
-| ----------------- | ------- | --------------------------------------------------------------------------- |
-| Railway backend   | BLOCKED | CLI unavailable; URL not assigned; health not tested live                   |
-| Vercel frontend   | BLOCKED | CLI authenticated; no project exists; deployment not created before Railway |
-| Stripe TEST       | BLOCKED | CLI unavailable; checkout, portal, webhook and sync not tested live         |
-| Supabase staging  | BLOCKED | CLI unavailable; migrations and multi-user RLS not tested live              |
-| AI backend proxy  | BLOCKED | No Railway URL; real provider request not sent                              |
-| Upstash           | BLOCKED | No Railway deployment; shared live 429 proof not run                        |
-| Legal and support | HOLD    | Template pages exist; legal approval and public contacts are pending        |
+- The verifier loads supported environment files and process variables without printing values.
+- Required modes and Stripe test-mode configuration are validated before any live request.
+- Secret-pattern scan: **FAIL (1 finding(s))**.
+- Environment ignore coverage: **PASS**.
+- Static Supabase RLS and local service behavior remain covered by the project quality scripts.
 
-Timestamp: **2026-07-01, Africa/Tripoli**.
+## Browser Verified Evidence
+
+- Browser quality gate: **NOT RUN IN THIS VERIFICATION**.
+
+## Staging Verified Evidence
+
+- Live verification: **NOT RUN**
+
+The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
+
+## Not Yet Verified Evidence
+
+- Supabase staging signup/login/session/logout and two-user RLS isolation.
+- Cloud snapshot save/load against staging.
+- Cloud-to-local restore against a real staging account.
+- Live offline/failure recovery against staging.
+- Stripe test-mode Checkout, Customer Portal, webhook and entitlement update.
+- Real AI request through the deployed backend proxy.
+- Upstash REST availability and shared counter behavior.
 
 ## Redacted Environment Availability
 
-| Variable                    | Scope    | Availability       |
-| --------------------------- | -------- | ------------------ |
-| `VITE_AUTH_PROVIDER`        | frontend | OK                 |
-| `VITE_SUPABASE_URL`         | frontend | OK                 |
-| `VITE_SUPABASE_ANON_KEY`    | frontend | OK                 |
-| `VITE_BILLING_API_URL`      | frontend | PLACEHOLDER        |
-| `VITE_AI_PROVIDER`          | frontend | OK                 |
-| `VITE_AI_PROXY_URL`         | frontend | PLACEHOLDER        |
-| `SUPABASE_URL`              | backend  | OK                 |
-| `SUPABASE_ANON_KEY`         | backend  | OK                 |
-| `SUPABASE_SERVICE_ROLE_KEY` | backend  | OK                 |
-| `BILLING_REPOSITORY`        | backend  | OK                 |
-| `STRIPE_SECRET_KEY`         | backend  | OK                 |
-| `STRIPE_WEBHOOK_SECRET`     | backend  | OK                 |
-| `STRIPE_PRICE_PRO_MONTHLY`  | backend  | OK                 |
-| `AI_PROVIDER`               | backend  | OK                 |
-| `OPENAI_API_KEY`            | backend  | OK                 |
-| `ANTHROPIC_API_KEY`         | backend  | MISSING (optional) |
-| `RATE_LIMIT_STORE`          | backend  | OK                 |
-| `UPSTASH_REDIS_REST_URL`    | backend  | OK                 |
-| `UPSTASH_REDIS_REST_TOKEN`  | backend  | OK                 |
+| Variable                    | Scope    | Requirement | Availability |
+| --------------------------- | -------- | ----------- | ------------ |
+| `VITE_AUTH_PROVIDER`        | frontend | required    | OK           |
+| `VITE_SUPABASE_URL`         | frontend | required    | OK           |
+| `VITE_SUPABASE_ANON_KEY`    | frontend | required    | OK           |
+| `VITE_BILLING_API_URL`      | frontend | required    | OK           |
+| `VITE_AI_PROVIDER`          | frontend | required    | OK           |
+| `VITE_AI_PROXY_URL`         | frontend | required    | OK           |
+| `SUPABASE_URL`              | backend  | required    | OK           |
+| `SUPABASE_ANON_KEY`         | backend  | required    | OK           |
+| `SUPABASE_SERVICE_ROLE_KEY` | backend  | required    | OK           |
+| `BILLING_REPOSITORY`        | backend  | required    | OK           |
+| `STRIPE_SECRET_KEY`         | backend  | required    | OK           |
+| `STRIPE_WEBHOOK_SECRET`     | backend  | required    | OK           |
+| `STRIPE_PRICE_PRO_MONTHLY`  | backend  | required    | OK           |
+| `AI_PROVIDER`               | backend  | required    | OK           |
+| `OPENAI_API_KEY`            | backend  | optional    | MISSING      |
+| `ANTHROPIC_API_KEY`         | backend  | required    | OK           |
+| `RATE_LIMIT_STORE`          | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_URL`    | backend  | required    | OK           |
+| `UPSTASH_REDIS_REST_TOKEN`  | backend  | required    | OK           |
 
-Only availability is shown. Values, tokens, keys and secrets are omitted.
+Only availability is shown. No value, token, key or secret is written to this report.
 
-## Quality Evidence
+## Commands Run
 
-| Command                        | Exit code | Result                  |
-| ------------------------------ | --------: | ----------------------- |
-| `npm run format:check`         |         0 | PASS                    |
-| `npm run typecheck`            |         0 | PASS                    |
-| `npm test`                     |         0 | PASS, 237 tests         |
-| `npm run build`                |         0 | PASS                    |
-| `npm run quality:gate`         |         0 | PASS                    |
-| `npm run quality:gate:browser` |         0 | PASS, 11 Chromium tests |
-| `npm run verify:release`       |         0 | PASS                    |
-| `npm run verify:rls`           |         0 | PASS, static only       |
-| `npm run kademe8:check`        |         0 | BLOCKED_ENV_CHECK       |
-| `npm run kademe8:verify`       |         2 | BLOCKED                 |
-| `npm run test:coverage`        |         0 | PASS, 257 scenarios     |
+| Command                                                 | Exit code | Result            |
+| ------------------------------------------------------- | --------: | ----------------- |
+| `node scripts/prc-kademe-8-live-verify.mjs --env-check` |         0 | BLOCKED_ENV_CHECK |
 
-The first browser run identified two UI contract mismatches. They were fixed,
-and the complete quality plus browser chain was rerun successfully.
+The external invocation required for this report is `npm run kademe8:verify`.
 
-## Build and Coverage
+## Security Check
 
-- Main application JavaScript: **420.45 kB minified / 128.60 kB gzip**.
-- Statements: **51.72%**.
-- Branches: **40.09%**.
-- Functions: **46.61%**.
-- Lines: **52.88%**.
-- Large vocabulary and grammar datasets remain dynamically split by CEFR
-  level; some data chunks exceed 500 kB minified.
-
-## Security
-
-- Secret-pattern scan: **PASS, 0 high-confidence findings**.
-- Environment ignore coverage: **PASS**.
-- Live checks accept Stripe TEST mode only.
-- No AI, Stripe, Supabase service-role or Upstash secret is placed in frontend
-  configuration.
-
-## Release Decision
-
-- Kademe 8: **BLOCKED**
-- Closed beta: **GO**
-- Public SaaS: **HOLD**
-- Production launch: **NO**
-- Stripe TEST billing: **BLOCKED**
-- Live billing: **NO**
+- `.env`, `.env.local`, `.env.production` and `.env.*.local` are ignored by repository rules.
+- 1 high-confidence secret-pattern finding(s) require manual review. Values are intentionally omitted.
+- Secret values were not printed to terminal output or markdown.
+- Live checks accept only Stripe test-mode credentials.
 
 ## Remaining Blockers
 
-1. Deploy `backend/` to Railway staging and verify `/api/health`.
-2. Replace the two frontend placeholder URLs with the Railway endpoints.
-3. Complete Stripe TEST checkout, portal, signed webhook and entitlement sync.
-4. Apply Supabase staging migrations and prove two-learner plus manager RLS.
-5. Verify one real backend-only AI request and shared Upstash rate limiting.
-6. Obtain legal review and publish verified support and sales contacts.
+- None.
 
-The next exact action is step 1 in
-`PRC_Kademe_8_Live_Operator_Checklist.md`.
+## Next Decision
+
+**Kademe 9 live release: FORBIDDEN until Kademe 8 has real passing staging evidence.**
+
+- Production launch: **NOT ALLOWED.**
+- Live billing: **NOT ALLOWED.**
+- Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**

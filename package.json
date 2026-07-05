@@ -35,7 +35,8 @@
     "e2e:browser:install": "playwright install chromium",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "gen-audio": "ts-node src/tools/generate-missing-audio.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -49,7 +50,8 @@
     "react-error-boundary": "^6.1.2",
     "react-router-dom": "^7.18.0",
     "tailwind-merge": "^3.6.0",
-    "zustand": "^5.0.14"
+    "zustand": "^5.0.14",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
@@ -71,6 +73,15 @@
     "typescript": "~5.8.2",
     "typescript-eslint": "^8.0.0",
     "vite": "^6.2.3",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.9",
+    "google-tts-api": "^2.0.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "@types/fluent-ffmpeg": "^2.1.28",
+    "ffmpeg-static": "^5.1.0",
+    "ts-node": "^10.9.1"
+  },
+  "allowScripts": {
+    "esbuild@0.25.12": true,
+    "ffmpeg-static@5.3.0": true
   }
 }
