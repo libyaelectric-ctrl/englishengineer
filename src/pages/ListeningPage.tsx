@@ -7,6 +7,7 @@ import {
   ListChecks,
 } from 'lucide-react';
 import { useListeningStore } from '@/features/listening';
+import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import {
   type ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
@@ -75,9 +76,9 @@ const ListeningPage = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       <PageHeader
-        title="Listening Transcript Practice"
-        description="Practice engineering comprehension with level-matched transcripts while recorded audio remains outside this workspace."
-        badgeText={`${currentLevel} · TRANSCRIPT PRACTICE`}
+        title="Listening Practice"
+        description="Practice engineering comprehension with audio playback and level-matched transcripts."
+        badgeText={`${currentLevel} · LISTENING PRACTICE`}
         badgeColor="primary"
       />
       <SkillEntryBrief skill="listening" />
@@ -86,11 +87,6 @@ const ListeningPage = () => {
         currentLevel={currentLevel}
         onChange={setLevelFilter}
       />
-
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-primary">
-        <strong>Transcript practice is active.</strong> Recorded audio is not
-        included in this workspace yet, and no microphone access is required.
-      </div>
 
       {!workspaceOpen ? (
         <SectionCard
@@ -149,6 +145,8 @@ const ListeningPage = () => {
               {currentMission.cefrLevel} · {currentMission.missionType}
             </span>
           </div>
+
+          <AudioPlayer mission={currentMission} />
 
           <SectionCard
             title={currentMission.title}
