@@ -229,36 +229,54 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* DOWNLOAD APP */}
       <section className="py-16 md:py-20">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="text-2xl font-bold sm:text-3xl">Ready to start?</h2>
-          <p className="mt-3 text-sm text-muted-copy">Join engineers building communication skills for international projects.</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link to="/start" className="inline-flex items-center gap-2 rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity">
-              Start Free <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/pricing" className="inline-flex items-center gap-2 rounded-lg border border-border-soft px-6 py-3 text-sm font-medium hover:bg-surface-hover transition-colors">
-              View Pricing
-            </Link>
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+          <p className="text-xs font-medium text-muted-copy">Mobile App</p>
+          <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Learn on the go.</h2>
+          <p className="mt-3 text-sm text-muted-copy max-w-xl mx-auto">
+            Download EngineerOS on your phone and continue learning from anywhere — site office, commute, or break time.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+            {/* Google Play Store */}
+            <a
+              href="https://play.google.com/store/apps/details?id=com.englishengineer.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-border-soft bg-surface px-5 transition-colors hover:border-border-hover hover:bg-surface-hover"
+            >
+              <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none">
+                <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92z" fill="#00C853"/>
+                <path d="M16.818 8.182L5.26.44a1 1 0 00-.92.003L14.58 12 4.34 23.557a1 1 0 00.92.003l11.558-7.742-2.5-2.5L16.818 8.182z" fill="#FFEA00"/>
+                <path d="M20.396 10.818l-3.578-2.636-2.5 2.5 2.5 2.5 3.578-2.636a1 1 0 000-1.636l-.636-.364h-.378z" fill="#FF3D00"/>
+                <path d="M4.34.443L16.818 8.18l-2.238 3.82L3.61 1.814a1 1 0 00-.92-.003L4.34.443z" fill="#00E676"/>
+              </svg>
+              <div className="text-left">
+                <p className="text-[10px] text-muted-copy leading-none">GET IT ON</p>
+                <p className="text-sm font-semibold text-foreground">Google Play</p>
+              </div>
+            </a>
+
+            {/* Apple App Store */}
+            <a
+              href="https://apps.apple.com/app/englishengineer/id6499694889"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-border-soft bg-surface px-5 transition-colors hover:border-border-hover hover:bg-surface-hover"
+            >
+              <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.33-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.88 3.29.88.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.04-3.11z"/>
+              </svg>
+              <div className="text-left">
+                <p className="text-[10px] text-muted-copy leading-none">Download on the</p>
+                <p className="text-sm font-semibold text-foreground">App Store</p>
+              </div>
+            </a>
           </div>
+          <p className="mt-4 text-[10px] text-muted-copy">Coming soon for iOS and Android</p>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-border-soft py-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6">
-          <div className="flex items-center gap-2">
-            <div className="flex h-6 w-6 items-center justify-center rounded bg-foreground text-background text-[10px] font-bold">EO</div>
-            <span className="text-xs text-muted-copy">© {new Date().getFullYear()} EngineerOS</span>
-          </div>
-          <div className="flex items-center gap-4 text-xs text-muted-copy">
-            <Link to="/legal/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-            <Link to="/legal/terms" className="hover:text-foreground transition-colors">Terms</Link>
-            <Link to="/pricing" className="hover:text-foreground transition-colors">Pricing</Link>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 };

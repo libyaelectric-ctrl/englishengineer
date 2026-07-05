@@ -131,22 +131,6 @@ const PricingPage = () => {
     <main className="bg-background text-foreground min-h-screen">
       <PageMetadata title="Pricing" description="Choose the EngineerOS plan that fits your work." />
 
-      {/* Header */}
-      <nav className="sticky top-0 z-50 border-b border-border-soft bg-background/90 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
-              <span className="text-xs font-bold">EO</span>
-            </div>
-            <span className="text-sm font-semibold">EngineerOS</span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-muted-copy hover:text-foreground transition-colors">Log in</Link>
-            <Link to="/start" className="rounded-lg bg-foreground px-4 py-2 text-sm font-medium text-background hover:opacity-90">Get started</Link>
-          </div>
-        </div>
-      </nav>
-
       <section className="py-16 text-center">
         <div className="mx-auto max-w-3xl px-4">
           <p className="text-xs font-medium text-muted-copy">Pricing</p>

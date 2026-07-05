@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
     <>
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black/10 dark:bg-black/40 backdrop-blur-[1px] lg:hidden"
+          className="fixed inset-0 z-30 bg-foreground/10 backdrop-blur-[1px] lg:hidden"
           onClick={toggleSidebar}
         />
       )}
@@ -28,11 +28,11 @@ export const Sidebar: React.FC = () => {
       <aside
         data-testid="app-sidebar"
         className={cn(
-          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-soft bg-[#f7f7f8] dark:bg-[#0a0a0a] transition-transform lg:static lg:flex lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-border-soft bg-surface transition-transform lg:static lg:flex lg:translate-x-0',
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="flex h-screen flex-col overflow-hidden bg-[#f7f7f8] dark:bg-[#0a0a0a]">
+        <div className="flex h-screen flex-col overflow-hidden bg-surface">
           {/* Logo */}
           <div className="flex h-14 shrink-0 items-center justify-between border-b border-border-soft px-4">
             <div className="flex items-center gap-2.5">
