@@ -12,14 +12,14 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 }) => {
   const variantClass = {
     line: 'h-3 rounded-full',
-    card: 'h-28 rounded-card',
+    card: 'h-28 rounded-xl',
     circle: 'h-10 w-10 rounded-full',
   }[variant];
 
   return (
     <div
       className={cn(
-        'aurora-skeleton border border-border-soft bg-surface-hover/30',
+        'animate-pulse rounded-lg bg-surface-hover',
         variantClass,
         className
       )}

@@ -28,13 +28,16 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks: {
-            react: ['react', 'react-dom', 'react-router-dom'],
+            react: ['react', 'react-dom'],
+            router: ['react-router-dom'],
             supabase: ['@supabase/supabase-js'],
-            ui: ['lucide-react', 'motion'],
+            icons: ['lucide-react'],
+            animation: ['motion'],
             state: ['zustand'],
           },
         },
       },
+      chunkSizeWarningLimit: 500,
     },
   };
 });

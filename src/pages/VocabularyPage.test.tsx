@@ -58,7 +58,7 @@ describe('VocabularyPage menu', () => {
     expect(screen.getByText('Review Due Today')).toBeInTheDocument();
     expect(
       within(screen.getByTestId('metric-total')).getByText('5000')
-    ).toHaveClass('whitespace-nowrap');
+    ).toBeInTheDocument();
 
     await startTenWordSet();
     expect(

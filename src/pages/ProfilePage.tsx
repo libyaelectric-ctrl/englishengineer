@@ -371,24 +371,24 @@ const ProfilePage = () => {
       <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-black text-slate-950 sm:text-3xl">
+            <h1 className="text-2xl font-medium text-foreground sm:text-3xl">
               {currentUser?.displayName || 'Demo Engineer'}
             </h1>
-            <p className="mt-1 text-xs font-semibold text-muted-copy">
+            <p className="mt-1 text-xs font-medium text-muted-copy">
               {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
                 'Engineering Professional'}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
+            <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-primary">
               {subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial'}
             </span>
-            <span className="rounded-full border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold text-muted-copy">
+            <span className="rounded-full border border-border-soft bg-surface px-3 py-1 text-[10px] font-medium text-muted-copy">
               Profile Completion: {completionPercent}%
             </span>
           </div>
         </div>
-        <p className="text-xs leading-5 text-slate-600 max-w-2xl">
+        <p className="text-xs leading-5 text-muted-copy max-w-2xl">
           Manage your professional profile, learning preferences and EngineerOS
           access.
         </p>
@@ -411,9 +411,9 @@ const ProfilePage = () => {
             type="button"
             onClick={() => scrollTo(item.id)}
             className={cn(
-              'rounded-[8px] px-3.5 py-1.5 text-xs font-semibold transition-all shrink-0',
+              'rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all shrink-0',
               activeSection === item.id
-                ? 'bg-primary text-white shadow-sm'
+                ? 'bg-primary text-white'
                 : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
             )}
           >
@@ -426,10 +426,10 @@ const ProfilePage = () => {
       {(message || error || billingError) && (
         <div
           role="status"
-          className={`rounded-card border p-4 text-xs leading-5 ${
+          className={`rounded-xl border p-4 text-xs leading-5 ${
             error || billingError
               ? 'border-error/20 bg-error/5 text-error'
-              : 'border-emerald-500/25 bg-emerald-500/10 text-emerald-400'
+              : 'border-success/25 bg-success/10 text-success'
           }`}
         >
           {error || billingError || message}
@@ -450,75 +450,75 @@ const ProfilePage = () => {
             {!isEditMode ? (
               <div className="space-y-6">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Full Name
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {currentUser?.displayName || 'Not Provided'}
                     </p>
                   </div>
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Profession / Role
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {PROFESSIONS.find((p) => p.id === profile.professionId)
                         ?.label || 'Not Selected'}
                     </p>
                   </div>
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Engineering Discipline
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {PROFESSIONAL_TRACKS.find(
                         (t) => t.id === profile.professionalTrack
                       )?.label || 'Electrical Engineering'}
                     </p>
                   </div>
                   {profile.professionalTrack === 'electrical' && (
-                    <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    <div className="rounded-xl border border-border-soft bg-surface p-4">
+                      <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                         Electrical Subdomain
                       </span>
-                      <p className="mt-1 text-sm font-bold text-foreground">
+                      <p className="mt-1 text-sm font-medium text-foreground">
                         {ELECTRICAL_SUBDOMAINS.find(
                           (s) => s.id === profile.electricalSubdomain
                         )?.label || 'Not Selected'}
                       </p>
                     </div>
                   )}
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Industry Sectors
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {INDUSTRIES.find((i) => i.id === profile.industryId)
                         ?.label || 'Not Selected'}
                     </p>
                   </div>
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Country / Region
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {profile.country || 'Not Selected'}
                     </p>
                   </div>
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Timezone
                     </span>
                     <p className="mt-1 text-sm font-mono text-foreground">
                       {profile.timezone || 'Not Selected'}
                     </p>
                   </div>
-                  <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                       Interface Language
                     </span>
-                    <p className="mt-1 text-sm font-bold text-foreground">
+                    <p className="mt-1 text-sm font-medium text-foreground">
                       {profile.interfaceLanguage === 'tr'
                         ? 'Türkçe'
                         : 'English'}
@@ -526,8 +526,8 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                <div className="rounded-card border border-border-soft bg-surface/30 p-4">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                <div className="rounded-xl border border-border-soft bg-surface p-4">
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                     Communication Goals
                   </span>
                   {profile.communicationGoals &&
@@ -536,7 +536,7 @@ const ProfilePage = () => {
                       {profile.communicationGoals.map((gId) => (
                         <span
                           key={gId}
-                          className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-semibold text-primary"
+                          className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-medium text-primary"
                         >
                           {COMMUNICATION_GOALS.find((goal) => goal.id === gId)
                             ?.label || gId}
@@ -566,7 +566,7 @@ const ProfilePage = () => {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="edit-first-name"
-                      className="text-xs font-bold text-foreground"
+                      className="text-xs font-medium text-foreground"
                     >
                       First Name
                     </label>
@@ -574,13 +574,13 @@ const ProfilePage = () => {
                       id="edit-first-name"
                       value={editFirstName}
                       onChange={(event) => setEditFirstName(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
                     />
                   </div>
                   <div className="space-y-1.5">
                     <label
                       htmlFor="edit-last-name"
-                      className="text-xs font-bold text-foreground"
+                      className="text-xs font-medium text-foreground"
                     >
                       Last Name
                     </label>
@@ -588,20 +588,20 @@ const ProfilePage = () => {
                       id="edit-last-name"
                       value={editLastName}
                       onChange={(event) => setEditLastName(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
                     />
                   </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Profession / Role
                     <select
                       value={editProfession}
                       onChange={(event) =>
                         setEditProfession(event.target.value)
                       }
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       <option value="">Select profession</option>
                       {PROFESSIONS.map((p) => (
@@ -612,12 +612,12 @@ const ProfilePage = () => {
                     </select>
                   </label>
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Engineering Track
                     <select
                       value={editTrack}
                       onChange={(event) => setEditTrack(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       {PROFESSIONAL_TRACKS.map((t) => (
                         <option key={t.id} value={t.id}>
@@ -628,14 +628,14 @@ const ProfilePage = () => {
                   </label>
 
                   {editTrack === 'electrical' && (
-                    <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                    <label className="block space-y-1.5 text-xs font-medium text-foreground">
                       Electrical Subdomain
                       <select
                         value={editSubdomain}
                         onChange={(event) =>
                           setEditSubdomain(event.target.value)
                         }
-                        className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                        className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                       >
                         {ELECTRICAL_SUBDOMAINS.map((s) => (
                           <option key={s.id} value={s.id}>
@@ -646,12 +646,12 @@ const ProfilePage = () => {
                     </label>
                   )}
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Industry Sector
                     <select
                       value={editIndustry}
                       onChange={(event) => setEditIndustry(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       <option value="">Select industry</option>
                       {INDUSTRIES.map((i) => (
@@ -662,12 +662,12 @@ const ProfilePage = () => {
                     </select>
                   </label>
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Country / Region
                     <select
                       value={editCountry}
                       onChange={(event) => setEditCountry(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       {COUNTRIES.map((country) => (
                         <option key={country} value={country}>
@@ -677,12 +677,12 @@ const ProfilePage = () => {
                     </select>
                   </label>
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Timezone
                     <select
                       value={editTimezone}
                       onChange={(event) => setEditTimezone(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
                     >
                       {TIMEZONES.map((tz) => (
                         <option key={tz} value={tz}>
@@ -692,14 +692,14 @@ const ProfilePage = () => {
                     </select>
                   </label>
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Interface Language
                     <select
                       value={editLang}
                       onChange={(event) =>
                         setEditLang(event.target.value as 'en' | 'tr')
                       }
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
                         <option key={item.id} value={item.id}>
@@ -711,7 +711,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div>
-                  <span className="block text-xs font-bold text-foreground">
+                  <span className="block text-xs font-medium text-foreground">
                     Communication Goals
                   </span>
                   <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
@@ -720,7 +720,7 @@ const ProfilePage = () => {
                       return (
                         <label
                           key={goal.id}
-                          className={`flex cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-xs font-semibold transition-all ${
+                          className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all ${
                             isChecked
                               ? 'border-primary/40 bg-primary/10 text-foreground'
                               : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
@@ -786,13 +786,13 @@ const ProfilePage = () => {
                 return (
                   <article
                     key={skill}
-                    className="rounded-card border border-border-soft bg-surface p-4 relative"
+                    className="rounded-xl border border-border-soft bg-surface p-4 relative"
                   >
                     <div className="flex justify-between items-start">
-                      <p className="text-xs font-bold uppercase tracking-wider text-slate-900 capitalize">
+                      <p className="text-xs font-medium uppercase tracking-wider text-foreground capitalize">
                         {skill}
                       </p>
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-medium text-primary">
                         {skillProfile.cefrBand} ({skillProfile.elo} ELO)
                       </span>
                     </div>
@@ -827,12 +827,12 @@ const ProfilePage = () => {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-card border border-border-soft bg-surface/30 p-3"
+                  className="rounded-xl border border-border-soft bg-surface p-3"
                 >
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  <p className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                     {label}
                   </p>
-                  <p className="mt-1 text-base font-bold text-foreground">
+                  <p className="mt-1 text-base font-medium text-foreground">
                     {value}
                   </p>
                 </div>
@@ -840,11 +840,11 @@ const ProfilePage = () => {
             </div>
 
             {/* Vocabulary Progress */}
-            <div className="mt-6 rounded-card border border-border-soft bg-surface/20 p-4">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+            <div className="mt-6 rounded-xl border border-border-soft bg-surface p-4">
+              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                 Vocabulary Mastery
               </span>
-              <div className="mt-2 flex items-center justify-between gap-3 text-xs font-bold">
+              <div className="mt-2 flex items-center justify-between gap-3 text-xs font-medium">
                 <span>
                   {memory.mastered} of {memory.total} terms mastered
                 </span>
@@ -861,7 +861,7 @@ const ProfilePage = () => {
 
             {/* Unlocked Badges */}
             <div className="mt-6">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                 Achievements & Badges
               </span>
               <div className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -871,14 +871,14 @@ const ProfilePage = () => {
                   .map((badge) => (
                     <div
                       key={badge.id}
-                      className="flex items-start gap-3 rounded-card border border-emerald-500/20 bg-emerald-500/5 p-3.5"
+                      className="flex items-start gap-3 rounded-xl border border-success/20 bg-success/5 p-3.5"
                     >
-                      <Award className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <Award className="h-4 w-4 text-success shrink-0 mt-0.5" />
                       <div>
-                        <p className="text-xs font-bold text-foreground">
+                        <p className="text-xs font-medium text-foreground">
                           {badge.label}
                         </p>
-                        <p className="mt-0.5 text-[10px] text-slate-600 leading-4">
+                        <p className="mt-0.5 text-[10px] text-muted-copy leading-4">
                           {badge.description}
                         </p>
                       </div>
@@ -889,11 +889,11 @@ const ProfilePage = () => {
 
             {/* Recent Mistakes summary */}
             <div className="mt-6">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
                 Mistake Log Summary
               </span>
               {mistakeLog.length === 0 ? (
-                <p className="mt-2 rounded-card border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
+                <p className="mt-2 rounded-xl border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
                   No mistakes recorded yet.
                 </p>
               ) : (
@@ -901,19 +901,19 @@ const ProfilePage = () => {
                   {mistakeLog.slice(0, 2).map((m) => (
                     <div
                       key={m.id}
-                      className="rounded-card border border-border-soft bg-surface p-3 text-xs"
+                      className="rounded-xl border border-border-soft bg-surface p-3 text-xs"
                     >
                       <div className="flex justify-between items-center">
                         <span className="font-mono text-[9px] text-muted-copy uppercase">
                           {m.category}
                         </span>
-                        <span className="text-[9px] font-bold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
+                        <span className="text-[9px] font-medium text-error bg-error/10 px-1.5 py-0.5 rounded">
                           {(m.repetitionCount ?? 1) >= 3
                             ? 'Critical'
                             : `${m.repetitionCount ?? 1}x`}
                         </span>
                       </div>
-                      <p className="mt-1 font-bold text-slate-800">
+                      <p className="mt-1 font-medium text-foreground">
                         "{m.originalText}"
                       </p>
                       <p className="mt-0.5 text-muted-copy">
@@ -929,7 +929,7 @@ const ProfilePage = () => {
             <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
               <Link
                 to="/analytics"
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-[12px] px-4 text-xs font-bold text-primary hover:bg-primary/5 transition-colors"
+                className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
               >
                 View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
               </Link>
@@ -951,7 +951,7 @@ const ProfilePage = () => {
           >
             <form onSubmit={handleSavePreferences} className="space-y-6">
               <fieldset>
-                <legend className="text-xs font-bold text-foreground">
+                <legend className="text-xs font-medium text-foreground">
                   Learning Goals
                 </legend>
                 <p className="mt-0.5 text-[10px] text-muted-copy">
@@ -963,7 +963,7 @@ const ProfilePage = () => {
                     return (
                       <label
                         key={goal.id}
-                        className={`flex cursor-pointer items-center gap-2 rounded-card border px-3 py-2 text-xs font-semibold transition-all ${
+                        className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all ${
                           isChecked
                             ? 'border-primary/40 bg-primary/10 text-foreground'
                             : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
@@ -989,14 +989,14 @@ const ProfilePage = () => {
               </fieldset>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                <label className="block space-y-1.5 text-xs font-medium text-foreground">
                   Daily Study Target (Minutes)
                   <select
                     value={prefMinutes}
                     onChange={(event) =>
                       setPrefMinutes(Number(event.target.value))
                     }
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                   >
                     {DAILY_DURATION_OPTIONS.map((val) => (
                       <option key={val} value={val}>
@@ -1006,14 +1006,14 @@ const ProfilePage = () => {
                   </select>
                 </label>
 
-                <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                <label className="block space-y-1.5 text-xs font-medium text-foreground">
                   Daily Task Limit
                   <select
                     value={prefTasks}
                     onChange={(event) =>
                       setPrefTasks(Number(event.target.value))
                     }
-                    className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                    className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                   >
                     {DAILY_TASK_COUNT_OPTIONS.map((val) => (
                       <option key={val} value={val}>
@@ -1025,21 +1025,21 @@ const ProfilePage = () => {
               </div>
 
               {/* Collapsible Advanced Preferences */}
-              <details className="group border border-border-soft rounded-card bg-surface/10 p-4">
-                <summary className="flex cursor-pointer items-center justify-between font-bold text-xs text-slate-800 list-none select-none">
+              <details className="group border border-border-soft rounded-xl bg-surface p-4">
+                <summary className="flex cursor-pointer items-center justify-between font-medium text-xs text-foreground list-none select-none">
                   <span>Advanced learning preferences</span>
-                  <ChevronDown className="h-4 w-4 text-slate-500 transition-transform group-open:rotate-180" />
+                  <ChevronDown className="h-4 w-4 text-muted-copy transition-transform group-open:rotate-180" />
                 </summary>
 
                 <div className="mt-4 space-y-4 pt-3 border-t border-border-soft">
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Weekly Streak Tolerance (Allowed Missed Days)
                     <select
                       value={prefMissedDays}
                       onChange={(event) =>
                         setPrefMissedDays(Number(event.target.value))
                       }
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       {[0, 1, 2, 3].map((val) => (
                         <option key={val} value={val}>
@@ -1049,12 +1049,12 @@ const ProfilePage = () => {
                     </select>
                   </label>
 
-                  <label className="block space-y-1.5 text-xs font-bold text-foreground">
+                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Experience Level
                     <select
                       value={prefExpLevel}
                       onChange={(event) => setPrefExpLevel(event.target.value)}
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
                     >
                       <option value="">Select level</option>
                       {EXPERIENCE_LEVELS.map((el) => (
@@ -1068,7 +1068,7 @@ const ProfilePage = () => {
                   <div className="space-y-1.5">
                     <label
                       htmlFor="pref-career-goal"
-                      className="text-xs font-bold text-foreground"
+                      className="text-xs font-medium text-foreground"
                     >
                       Target Career Goal
                     </label>
@@ -1079,7 +1079,7 @@ const ProfilePage = () => {
                         setPrefCareerGoal(event.target.value)
                       }
                       placeholder="e.g. Lead site meetings with confidence"
-                      className="w-full rounded-input border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
                     />
                   </div>
                 </div>
@@ -1087,7 +1087,7 @@ const ProfilePage = () => {
 
               <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
                 {preferencesSaved && (
-                  <span className="text-xs font-bold text-emerald-500">
+                  <span className="text-xs font-medium text-success">
                     Saved
                   </span>
                 )}
@@ -1122,17 +1122,17 @@ const ProfilePage = () => {
               />
 
               {/* Quota and Usage Summary */}
-              <div className="rounded-card border border-border-soft bg-surface/30 p-5 space-y-6">
+              <div className="rounded-xl border border-border-soft bg-surface p-5 space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border-soft pb-3">
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-muted-copy">
                       Usage and Quota limits
                     </span>
-                    <h4 className="text-sm font-black text-slate-900 mt-0.5">
+                    <h4 className="text-sm font-medium text-foreground mt-0.5">
                       Current Plan Entitlements
                     </h4>
                   </div>
-                  <span className="text-[10px] font-mono font-bold bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full uppercase">
+                  <span className="text-[10px] font-mono font-medium bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full uppercase">
                     {subscription.planId === 'pro'
                       ? 'Pro Plan Access'
                       : 'Free Plan Access'}
@@ -1143,10 +1143,10 @@ const ProfilePage = () => {
                   {/* Limit 1: AI Coach Sessions */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="font-semibold text-slate-700">
+                      <span className="font-medium text-foreground">
                         Daily AI Coach Requests
                       </span>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-medium text-foreground">
                         {subscription.planId === 'pro'
                           ? 'Unlimited'
                           : `${todaysCoachSessions} / 3 daily requests`}
@@ -1166,7 +1166,7 @@ const ProfilePage = () => {
                             : 'cyan'
                       }
                     />
-                    <p className="text-[10px] text-slate-400">
+                    <p className="text-[10px] text-muted-copy">
                       {subscription.planId === 'pro'
                         ? '✓ You have unlimited access to the AI Coach.'
                         : 'Upgrade to Pro to unlock unlimited daily AI coaching feedback.'}
@@ -1176,10 +1176,10 @@ const ProfilePage = () => {
                   {/* Limit 2: Module Attempts */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="font-semibold text-slate-700">
+                      <span className="font-medium text-foreground">
                         Daily Module Attempts
                       </span>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-medium text-foreground">
                         {subscription.planId === 'pro'
                           ? 'Unlimited'
                           : `${todaysAttempts} / 5 daily attempts`}
@@ -1199,7 +1199,7 @@ const ProfilePage = () => {
                             : 'emerald'
                       }
                     />
-                    <p className="text-[10px] text-slate-400">
+                    <p className="text-[10px] text-muted-copy">
                       {subscription.planId === 'pro'
                         ? '✓ You have unlimited module attempts.'
                         : 'Upgrade to Pro to unlock unlimited daily technical attempts.'}
@@ -1209,10 +1209,10 @@ const ProfilePage = () => {
                   {/* Limit 3: Vocabulary Reviews */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="font-semibold text-slate-700">
+                      <span className="font-medium text-foreground">
                         Daily Vocabulary Reviews
                       </span>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-medium text-foreground">
                         {subscription.planId === 'pro'
                           ? 'Unlimited'
                           : `${todaysReviews} / 25 reviews`}
@@ -1232,7 +1232,7 @@ const ProfilePage = () => {
                             : 'cyan'
                       }
                     />
-                    <p className="text-[10px] text-slate-400">
+                    <p className="text-[10px] text-muted-copy">
                       {subscription.planId === 'pro'
                         ? '✓ You have unlimited vocabulary reviews.'
                         : 'Upgrade to Pro to review more than 25 terms per day.'}
@@ -1242,10 +1242,10 @@ const ProfilePage = () => {
                   {/* Limit 4: Document Uploads */}
                   <div className="space-y-1.5">
                     <div className="flex justify-between text-xs">
-                      <span className="font-semibold text-slate-700">
+                      <span className="font-medium text-foreground">
                         Monthly Document Uploads
                       </span>
-                      <span className="font-bold text-slate-900">
+                      <span className="font-medium text-foreground">
                         {subscription.planId === 'free'
                           ? 'Blocked'
                           : subscription.planId === 'pro'
@@ -1269,7 +1269,7 @@ const ProfilePage = () => {
                             : 'primary'
                       }
                     />
-                    <p className="text-[10px] text-slate-400">
+                    <p className="text-[10px] text-muted-copy">
                       {subscription.planId === 'free'
                         ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
                         : subscription.planId === 'pro'
@@ -1285,10 +1285,10 @@ const ProfilePage = () => {
                     subscription.planId === 'private') && (
                     <div className="col-span-full space-y-1.5 mt-1">
                       <div className="flex justify-between text-xs">
-                        <span className="font-semibold text-slate-700 flex items-center gap-1.5">
+                        <span className="font-medium text-foreground flex items-center gap-1.5">
                           🎙️ Monthly Voice Minutes
                         </span>
-                        <span className="font-bold text-slate-900">
+                        <span className="font-medium text-foreground">
                           {subscription.planId === 'max'
                             ? `${voiceMinutesUsed} / 120 min`
                             : 'Unlimited'}
@@ -1310,7 +1310,7 @@ const ProfilePage = () => {
                                 : 'cyan'
                         }
                       />
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-muted-copy">
                         {subscription.planId === 'max'
                           ? voiceMinutesUsed >= 120
                             ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
@@ -1322,40 +1322,40 @@ const ProfilePage = () => {
 
                 {/* What paying customers get block */}
                 <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-                  <h5 className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                    <Crown className="h-4 w-4 text-amber-500 fill-amber-500/20" />
+                  <h5 className="text-xs font-medium text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    <Crown className="h-4 w-4 text-warning fill-warning/20" />
                     Pro subscription benefits
                   </h5>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600">
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-copy">
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       Spaced repetition full repeats
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       Writing tasks + secure AI feedback
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       Advanced Mistake Log analytics
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       Client / consultant roleplay scenarios
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       12-month progress history storage
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-emerald-500 font-bold">✓</span>{' '}
+                      <span className="text-success font-medium">✓</span>{' '}
                       Direct Stripe billing portal access
                     </li>
                   </ul>
                   {subscription.planId !== 'private' && (
                     <Link
                       to="/pricing"
-                      className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-[8px] bg-primary text-sm font-bold text-white shadow hover:bg-primary/95 transition-colors text-center"
+                      className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-lg bg-primary text-sm font-medium text-white hover:bg-primary/95 transition-colors text-center"
                     >
                       {subscription.planId === 'free'
                         ? 'Upgrade Plan'
@@ -1382,19 +1382,19 @@ const ProfilePage = () => {
           >
             <div className="space-y-6">
               {/* Cloud Sync section */}
-              <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-2">
+              <div className="rounded-xl border border-border-soft bg-surface p-4">
+                <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy block mb-2">
                   Cloud Synced Records
                 </span>
                 <CloudSyncStatusPanel providerMode={providerMode} />
               </div>
 
               {/* Local Data backup controls */}
-              <div className="rounded-card border border-border-soft bg-surface/20 p-4">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-1">
+              <div className="rounded-xl border border-border-soft bg-surface p-4">
+                <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy block mb-1">
                   Local Backups
                 </span>
-                <p className="text-xs text-slate-600 leading-5 mb-4">
+                <p className="text-xs text-muted-copy leading-5 mb-4">
                   Export all stored local progress, CEFR stats, and memory logs
                   into a portable JSON backup file.
                 </p>
@@ -1409,8 +1409,8 @@ const ProfilePage = () => {
               </div>
 
               {/* Destructive Controls at the very bottom */}
-              <div className="rounded-card border border-error/20 bg-error/5 p-4 border-dashed">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-error block mb-1">
+              <div className="rounded-xl border border-error/20 bg-error/5 p-4 border-dashed">
+                <span className="text-[9px] font-medium uppercase tracking-wider text-error block mb-1">
                   Destructive actions
                 </span>
                 <p className="text-xs text-error/80 leading-5 mb-4">
@@ -1431,8 +1431,8 @@ const ProfilePage = () => {
                     </Button>
 
                     {showClearConfirmation && (
-                      <div className="mt-4 rounded-card border border-error/25 bg-surface p-4">
-                        <label className="text-xs font-bold text-error">
+                      <div className="mt-4 rounded-xl border border-error/25 bg-surface p-4">
+                        <label className="text-xs font-medium text-error">
                           Type CLEAR to remove local progress from this browser.
                           <input
                             value={clearConfirmation}
@@ -1441,7 +1441,7 @@ const ProfilePage = () => {
                                 event.target.value.toUpperCase()
                               )
                             }
-                            className="mt-2 min-h-10 w-full rounded-input border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
+                            className="mt-2 min-h-10 w-full rounded-lg border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
                           />
                         </label>
                         <Button

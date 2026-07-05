@@ -1,16 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { ApiError } from './errors.js';
+import { createAiLedger } from './ai-ledger.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
-
-const memoryLedger = [];
-const pruneMemoryLedger = (now) => {
-  const thirtyDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
-  const index = memoryLedger.findIndex(item => item.timestamp >= thirtyDaysAgo);
-  if (index > 0) {
-    memoryLedger.splice(0, index);
-  }
-};
 
 export const AI_ROUTES = {
   '/api/ai/coach': 'analyzeProgress',
@@ -185,6 +177,8 @@ export const registerAIRoutes = (
   config,
   fetchImpl = fetch
 ) => {
+  const ledger = createAiLedger(config, fetchImpl);
+
   Object.entries(AI_ROUTES).forEach(([path, defaultOperation]) => {
     app.post(
       path,
@@ -214,43 +208,11 @@ export const registerAIRoutes = (
           const planId = subscription?.planId || 'free';
 
           // Ledger check
-          const now = Date.now();
           let count = 0;
           const isBypassUser = userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
 
           if (!isBypassUser) {
-            if (config?.stripe?.repositoryMode === 'supabase' && config.stripe.supabaseUrl && config.stripe.supabaseServiceRoleKey) {
-              // Count rows in Supabase
-              const supabaseUrl = config.stripe.supabaseUrl.replace(/\/$/, '');
-              // For free plan: past 24 hours. For pro/project: past 30 days.
-              const limitPeriodMs = planId === 'free' ? 24 * 60 * 60 * 1000 : 30 * 24 * 60 * 60 * 1000;
-              const startDateIso = new Date(now - limitPeriodMs).toISOString();
-
-              const countUrl = `${supabaseUrl}/rest/v1/ai_sessions?user_id=eq.${encodeURIComponent(userId)}&created_at=gte.${encodeURIComponent(startDateIso)}&select=id`;
-              try {
-                const countResponse = await fetchImpl(countUrl, {
-                  method: 'GET',
-                  headers: {
-                    apikey: config.stripe.supabaseServiceRoleKey,
-                    Authorization: `Bearer ${config.stripe.supabaseServiceRoleKey}`
-                  }
-                });
-                if (countResponse.ok) {
-                  const rows = await countResponse.json();
-                  count = Array.isArray(rows) ? rows.length : 0;
-                }
-              } catch (err) {
-                console.error('[ai-session-count-error]', err);
-              }
-            } else {
-              // In-memory ledger fallback
-              pruneMemoryLedger(now);
-              const limitPeriodMs = planId === 'free' ? 24 * 60 * 60 * 1000 : 30 * 24 * 60 * 60 * 1000;
-              const startTime = now - limitPeriodMs;
-              count = memoryLedger.filter(
-                item => item.userId === userId && item.timestamp >= startTime
-              ).length;
-            }
+            count = await ledger.countRecentRequests(userId, planId);
 
             // Validation checks
             if (planId === 'free') {
@@ -262,7 +224,6 @@ export const registerAIRoutes = (
                 );
               }
             } else {
-              // Pro or Project plan: 300 requests per month
               if (count >= 300) {
                 throw new ApiError(
                   429,
@@ -278,30 +239,13 @@ export const registerAIRoutes = (
 
           // Ledger insert on success
           if (result && !result.error && !isBypassUser) {
-            if (config?.stripe?.repositoryMode === 'supabase' && config.stripe.supabaseUrl && config.stripe.supabaseServiceRoleKey) {
-              const supabaseUrl = config.stripe.supabaseUrl.replace(/\/$/, '');
-              fetchImpl(`${supabaseUrl}/rest/v1/ai_sessions`, {
-                method: 'POST',
-                headers: {
-                  apikey: config.stripe.supabaseServiceRoleKey,
-                  Authorization: `Bearer ${config.stripe.supabaseServiceRoleKey}`,
-                  'Content-Type': 'application/json',
-                  Prefer: 'return=minimal'
-                },
-                body: JSON.stringify({
-                  user_id: userId,
-                  mode_id: request.body?.modeId || 'unknown',
-                  provider: result.provider || 'mock',
-                  operation: defaultOperation,
-                  success: true,
-                  duration_ms: result.durationMs || 0,
-                  result_summary: result.text ? result.text.slice(0, 100) : '',
-                  metadata: {}
-                })
-              }).catch(err => console.error('[ai-session-log-error]', err));
-            } else {
-              memoryLedger.push({ userId, timestamp: now });
-            }
+            ledger.logSession(userId, {
+              modeId: request.body?.modeId || 'unknown',
+              provider: result.provider || 'mock',
+              operation: defaultOperation,
+              durationMs: result.durationMs || 0,
+              resultSummary: result.text ? result.text.slice(0, 100) : '',
+            });
           }
 
           response.json(result);

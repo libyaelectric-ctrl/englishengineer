@@ -87,7 +87,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-[16px] border border-slate-200 bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
@@ -112,14 +112,14 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </Button>
           ))}
         </div>
-        <label className="flex min-h-11 items-center gap-2 rounded-[12px] border border-slate-200 bg-slate-50 px-3 focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100 md:w-72">
-          <Search className="h-4 w-4 text-slate-400" />
+        <label className="flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-surface-hover px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 md:w-72">
+          <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search work tools</span>
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search tools"
-            className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-copy"
           />
         </label>
       </div>
@@ -129,32 +129,32 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           {templates.map((item) => (
             <Card key={item.id} className="space-y-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                <p className="text-xs font-medium uppercase tracking-widest text-primary">
                   Engineering workflow
                 </p>
-                <h2 className="mt-1 text-xl font-bold text-slate-950">
+                <h2 className="mt-1 text-xl font-medium text-foreground">
                   {item.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <p className="mt-2 text-sm leading-6 text-muted-copy">
                   {item.context}
                 </p>
               </div>
-              <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-bold text-slate-500">Sample input</p>
-                <p className="mt-2 text-sm text-slate-700">
+              <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
+                <p className="text-xs font-medium text-muted-copy">Sample input</p>
+                <p className="mt-2 text-sm text-foreground">
                   {item.sampleInput}
                 </p>
               </div>
-              <div className="rounded-[12px] border border-blue-100 bg-blue-50/50 p-4">
-                <p className="text-xs font-bold text-blue-800">
+              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                <p className="text-xs font-medium text-primary">
                   Professional output
                 </p>
-                <p className="mt-2 text-sm leading-6 text-slate-800">
+                <p className="mt-2 text-sm leading-6 text-foreground">
                   {item.professionalOutput}
                 </p>
               </div>
-              <p className="text-sm text-slate-600">
-                <strong className="text-slate-800">Turkce:</strong>{' '}
+              <p className="text-sm text-muted-copy">
+                <strong className="text-foreground">Turkce:</strong>{' '}
                 {item.turkishExplanation}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -192,7 +192,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         <div className="grid gap-5 xl:grid-cols-2">
           {emails.map((item) => (
             <Card key={item.id} className="space-y-4">
-              <h2 className="text-xl font-bold text-slate-950">{item.title}</h2>
+              <h2 className="text-xl font-medium text-foreground">{item.title}</h2>
               {(
                 [
                   ['Short', item.shortVersion],
@@ -203,13 +203,13 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               ).map(([label, text]) => (
                 <details
                   key={label}
-                  className="rounded-[12px] border border-slate-200 bg-slate-50 open:bg-white"
+                  className="rounded-lg border border-border-soft bg-surface-hover open:bg-white"
                 >
-                  <summary className="cursor-pointer px-4 py-3 text-sm font-bold text-slate-800">
+                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-foreground">
                     {label} version
                   </summary>
-                  <div className="space-y-3 border-t border-slate-200 p-4">
-                    <p className="whitespace-pre-line text-sm leading-6 text-slate-700">
+                  <div className="space-y-3 border-t border-border-soft p-4">
+                    <p className="whitespace-pre-line text-sm leading-6 text-foreground">
                       {text}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -236,8 +236,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   </div>
                 </details>
               ))}
-              <p className="text-sm text-slate-600">
-                <strong className="text-slate-800">Turkce:</strong>{' '}
+              <p className="text-sm text-muted-copy">
+                <strong className="text-foreground">Turkce:</strong>{' '}
                 {item.turkishExplanation}
               </p>
             </Card>
@@ -253,10 +253,10 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               <Card key={item.id} className="space-y-3" hoverEffect>
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                    <p className="text-xs font-medium uppercase tracking-widest text-primary">
                       {item.category}
                     </p>
-                    <h2 className="mt-1 text-lg font-bold leading-7 text-slate-950">
+                    <h2 className="mt-1 text-lg font-medium leading-7 text-foreground">
                       {item.phrase}
                     </h2>
                   </div>
@@ -271,14 +271,14 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     />
                   </Button>
                 </div>
-                <p className="text-sm text-slate-700">
+                <p className="text-sm text-foreground">
                   <strong>Turkce:</strong> {item.turkishMeaning}
                 </p>
-                <p className="text-sm text-slate-600">
-                  <strong className="text-slate-800">Use:</strong>{' '}
+                <p className="text-sm text-muted-copy">
+                  <strong className="text-foreground">Use:</strong>{' '}
                   {item.usageContext}
                 </p>
-                <p className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm italic text-slate-700">
+                <p className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm italic text-foreground">
                   {item.example}
                 </p>
                 <Button
@@ -297,8 +297,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         (tab === 'emails' && emails.length === 0) ||
         (tab === 'phrases' && phrases.length === 0)) && (
         <Card className="py-12 text-center" hoverEffect={false}>
-          <Search className="mx-auto h-7 w-7 text-slate-400" />
-          <p className="mt-3 font-semibold text-slate-700">
+          <Search className="mx-auto h-7 w-7 text-muted-copy" />
+          <p className="mt-3 font-medium text-foreground">
             No matching work tool found.
           </p>
         </Card>

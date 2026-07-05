@@ -127,7 +127,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     reader.onload = (e) => {
       const text = e.target?.result as string;
       if (text) {
-        // Save document to active workspace store
         useWorkspaceStore
           .getState()
           .addDocumentToWorkspace(activeWorkspaceId, file.name, text);
@@ -189,7 +188,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     if (!aiEntitlement.allowed) {
       return;
     }
-    // Prepend workspace memory context to input if the user has project+ plan
     if (
       workspaceMemoryContext &&
       input.trim() &&
@@ -198,7 +196,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
       setInput(
         `[WorkspaceMemory]\n${workspaceMemoryContext}\n\n[UserInput]\n${input}`
       );
-      // Allow state to flush, then submit on next tick
       setTimeout(() => void submitCoachRequest(currentUser, learningState), 0);
       return;
     }
@@ -246,7 +243,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         />
       )}
 
-      {/* Workspace selector bar + memory panel – only visible to project+ subscribers */}
       {(subscription.planId === 'project' ||
         subscription.planId === 'max' ||
         subscription.planId === 'exec' ||
@@ -271,10 +267,10 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
 
       <div className="premium-panel flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-black text-slate-900">
+          <p className="text-sm font-medium text-foreground">
             {providerStatus.label}
           </p>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-muted-copy mt-1">
             {providerStatus.state === 'mock-fallback'
               ? 'Mock AI is active for this demo. Secure AI feedback is not connected.'
               : providerStatus.detail}{' '}
@@ -306,7 +302,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           value={usage.suggestedFocusArea}
           icon={Target}
           trend={`${coachContext.averageScore}% average score`}
-          statusColor="amber"
+          statusColor="warning"
         />
         <MetricCard
           label="AI Connection"
@@ -332,29 +328,29 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                   <button
                     key={mode.id}
                     onClick={() => setMode(mode.id)}
-                    className={`text-left p-4 rounded-[12px] border transition-all duration-200 ease-out ${
+                    className={`text-left p-4 rounded-xl border transition-all duration-200 ease-out ${
                       isActive
                         ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
-                        : 'border-slate-200 bg-white hover:-translate-y-0.5 hover:border-sky-200 hover:bg-sky-50/60'
+                        : 'border-border-soft bg-surface hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-hover'
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       <span
-                        className={`h-2 w-2 rounded-full ${isActive ? 'bg-primary' : 'bg-slate-700'}`}
+                        className={`h-2 w-2 rounded-full ${isActive ? 'bg-primary' : 'bg-foreground'}`}
                       />
-                      <h4 className="text-sm font-black text-slate-900 flex items-center gap-1.5">
+                      <h4 className="text-sm font-medium text-foreground flex items-center gap-1.5">
                         {mode.name}
                         {(() => {
                           const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
                           const isLocked = reqFeat ? !canAccessFeature(subscription, reqFeat as any).allowed : false;
-                          return isLocked ? <Lock className="h-3.5 w-3.5 text-slate-400 shrink-0" aria-hidden="true" /> : null;
+                          return isLocked ? <Lock className="h-3.5 w-3.5 text-muted-copy shrink-0" aria-hidden="true" /> : null;
                         })()}
                       </h4>
                     </div>
-                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                    <p className="text-xs text-muted-copy mt-2 leading-relaxed">
                       {mode.description}
                     </p>
-                    <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-slate-600">
+                    <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-muted-copy">
                       {mode.operation}
                     </p>
                   </button>
@@ -375,12 +371,12 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                     key={template.id}
                     type="button"
                     onClick={() => setInput(template.prompt)}
-                    className="rounded-[12px] border border-slate-200 bg-white p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-sky-200 hover:bg-sky-50/60"
+                    className="rounded-xl border border-border-soft bg-surface p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-hover"
                   >
-                    <p className="text-sm font-bold text-slate-900">
+                    <p className="text-sm font-medium text-foreground">
                       {template.title}
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                    <p className="mt-1 text-xs leading-relaxed text-muted-copy">
                       {template.description}
                     </p>
                   </button>
@@ -398,7 +394,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 <Button
                   onClick={() => regenerateLast(currentUser, learningState)}
                   variant="outline"
-                  className="h-8 border-slate-200 text-xs"
+                  className="h-8 border-border-soft text-xs"
                   disabled={sessions.length === 0 || isLoading}
                 >
                   Regenerate
@@ -406,7 +402,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 <Button
                   onClick={clearSessionHistory}
                   variant="outline"
-                  className="h-8 border-slate-200 text-xs"
+                  className="h-8 border-border-soft text-xs"
                   disabled={sessions.length === 0}
                 >
                   Clear Session
@@ -414,7 +410,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 <Button
                   onClick={resetCoach}
                   variant="outline"
-                  className="h-8 border-slate-200 text-xs"
+                  className="h-8 border-border-soft text-xs"
                 >
                   Reset Coach
                 </Button>
@@ -426,15 +422,15 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 (() => {
                   const isProLocked = requiredFeature === 'unlimitedAIFeedback';
                   return (
-                    <div className="rounded-[16px] border border-blue-500/20 bg-blue-500/5 p-6 text-center space-y-4 animate-in fade-in duration-300">
-                      <div className="mx-auto h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500">
+                    <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center space-y-4 animate-in fade-in duration-300">
+                      <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                         <Lock className="h-5 w-5" />
                       </div>
                       <div className="space-y-2">
-                        <h4 className="text-sm font-bold text-slate-900">
+                        <h4 className="text-sm font-medium text-foreground">
                           {selectedMode?.name} is a {isProLocked ? 'Pro' : 'Project'} Plan Feature
                         </h4>
-                        <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                        <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
                           {isProLocked
                             ? 'Upgrade to the Pro Plan ($19/mo) to unlock professional engineering CV optimization, unlimited daily AI requests, and 12-month study history.'
                             : 'Upgrade to the Project Plan ($39/mo) to unlock workspace memory integration, custom scenario generation from documents, LinkedIn profile optimization, and persistent AI agents.'}
@@ -443,7 +439,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                       <Button
                         type="button"
                         onClick={() => navigate('/pricing')}
-                        className="bg-primary text-white font-bold px-6 py-2 rounded-card shadow-md hover:bg-primary-hover transition-all"
+                        className="bg-primary text-white font-medium px-6 py-2 rounded-card hover:bg-primary-hover transition-all"
                       >
                         Upgrade to {isProLocked ? 'Pro' : 'Project'} Plan
                       </Button>
@@ -453,20 +449,20 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
               ) : (
                 <>
                   {!aiEntitlement.allowed && (
-                    <div className="rounded-[12px] border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-xs text-amber-200">
+                    <div className="rounded-xl border border-warning/20 bg-warning/5 px-4 py-3 text-xs text-warning">
                       {aiEntitlement.reason}
                       <Button
                         type="button"
                         onClick={() => navigate('/profile')}
-                        className="mt-3 h-9 bg-primary text-white font-bold"
+                        className="mt-3 h-9 bg-primary text-white font-medium"
                       >
                         Upgrade to Pro
                       </Button>
                     </div>
                   )}
                   {selectedModeId === 'document_analysis_assistant' && (
-                    <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4 space-y-3">
-                      <label className="block text-xs font-bold text-slate-700">
+                    <div className="rounded-xl border border-border-soft bg-surface-hover p-4 space-y-3">
+                      <label className="block text-xs font-medium text-foreground">
                         Upload Technical Document (TXT, PDF, DOCX) - Limit:{' '}
                         {docLimitLabel}
                       </label>
@@ -476,16 +472,16 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                           accept=".txt,.pdf,.docx"
                           onChange={handleFileUpload}
                           disabled={!aiEntitlement.allowed}
-                          className="text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="text-xs text-muted-copy file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         />
-                        <span className="text-xs font-mono text-slate-500 bg-slate-200/50 px-2.5 py-1 rounded-full">
+                        <span className="text-xs font-mono text-muted-copy bg-border-soft/50 px-2.5 py-1 rounded-full">
                           {uploadedDocsCount} /{' '}
                           {docLimit === 'unlimited' ? '∞' : docLimit} uploads used
                           this month
                         </span>
                       </div>
                       {uploadError && (
-                        <div className="text-xs text-rose-500 font-bold flex items-center gap-1.5 mt-1">
+                        <div className="text-xs text-danger font-medium flex items-center gap-1.5 mt-1">
                           <AlertCircle className="h-3.5 w-3.5" />
                           {uploadError}
                         </div>
@@ -497,22 +493,22 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                     onChange={(event) => setInput(event.target.value)}
                     disabled={!aiEntitlement.allowed}
                     rows={8}
-                    className="premium-input w-full resize-none p-4 font-mono text-sm text-slate-900"
+                    className="premium-input w-full resize-none p-4 font-mono text-sm text-foreground"
                     placeholder={selectedMode?.placeholder ?? ''}
                   />
                   {error && (
-                    <div className="flex items-center gap-2 rounded-[12px] border border-rose-500/20 bg-rose-500/5 px-4 py-3 text-xs text-rose-300">
+                    <div className="flex items-center gap-2 rounded-xl border border-danger/20 bg-danger/5 px-4 py-3 text-xs text-danger">
                       <AlertCircle className="h-4 w-4" />
                       {error}
                     </div>
                   )}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest">
                       Mode: {selectedMode?.name ?? ''}
                     </p>
                     <Button
                       type="submit"
-                      className="h-11 bg-primary text-white font-bold flex items-center justify-center gap-2"
+                      className="h-11 bg-primary text-white font-medium flex items-center justify-center gap-2"
                       disabled={
                         isLoading ||
                         input.trim().length === 0 ||
@@ -578,38 +574,38 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             >
               <div className="space-y-6">
                 {isLimitedResponse && providerStatus.mode === 'backend' && (
-                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                    <p className="font-bold">Limited AI response</p>
+                  <div className="rounded-xl border border-warning/20 bg-warning/5 p-4 text-sm text-warning">
+                    <p className="font-medium">Limited AI response</p>
                     <p className="mt-1">
                       A complete structured result was unavailable. The readable
                       response is shown below.
                     </p>
                   </div>
                 )}
-                <div className="rounded-[16px] border border-primary/20 bg-primary/5 p-5">
-                  <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-black">
+                <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                  <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-medium">
                     Summary
                   </p>
-                  <p className="text-sm text-slate-200 mt-2 leading-relaxed">
+                  <p className="text-sm text-muted-copy mt-2 leading-relaxed">
                     {lastResult.summary}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="rounded-[16px] border border-cyan-400/20 bg-cyan-400/5 p-5">
-                    <p className="text-[10px] font-mono text-cyan-300 uppercase tracking-widest font-black">
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                    <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-medium">
                       Professional Version
                     </p>
-                    <p className="text-sm text-slate-100 mt-2 leading-relaxed">
+                    <p className="text-sm text-muted-copy mt-2 leading-relaxed">
                       {lastResult.professionalVersion ||
                         lastResult.nativeRewrite}
                     </p>
                   </div>
-                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                  <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
+                    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
                       Simplified Version
                     </p>
-                    <p className="text-sm text-slate-200 mt-2 leading-relaxed">
+                    <p className="text-sm text-muted-copy mt-2 leading-relaxed">
                       {lastResult.simplifiedVersion || lastResult.summary}
                     </p>
                   </div>
@@ -619,62 +615,62 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                   <ResultList
                     title="Strengths"
                     items={lastResult.strengths}
-                    tone="emerald"
+                    tone="success"
                   />
                   <ResultList
                     title="Weaknesses"
                     items={lastResult.weaknesses}
-                    tone="rose"
+                    tone="danger"
                   />
                 </div>
 
                 <ResultList
                   title="Corrections"
                   items={lastResult.corrections}
-                  tone="amber"
+                  tone="warning"
                 />
 
-                <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-                  <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
+                  <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
                     Native Rewrite
                   </p>
-                  <p className="mt-2 text-sm leading-relaxed text-slate-900">
+                  <p className="mt-2 text-sm leading-relaxed text-foreground">
                     {lastResult.nativeRewrite}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                  <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
+                    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
                       Technical Vocabulary
                     </p>
                     <div className="flex flex-wrap gap-2 mt-3">
                       {lastResult.technicalVocabulary.map((term) => (
                         <span
                           key={term}
-                          className="text-[10px] font-mono bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded"
+                          className="text-[10px] font-mono bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded-lg"
                         >
                           {term}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-black">
+                  <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
+                    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
                       Tone & Next Task
                     </p>
-                    <p className="text-xs text-slate-400 mt-2 leading-relaxed">
+                    <p className="text-xs text-muted-copy mt-2 leading-relaxed">
                       {lastResult.toneFeedback ||
                         'Tone feedback unavailable in this response.'}
                     </p>
-                    <p className="mt-2 text-sm text-slate-900">
+                    <p className="mt-2 text-sm text-foreground">
                       {lastResult.recommendedNextTask}
                     </p>
                     <p className="text-xs text-engineer-cyan mt-3">
                       {lastResult.cefrEstimate ||
                         lastResult.estimatedCefrImpact}
                     </p>
-                    <p className="text-xs text-emerald-300 mt-1">
+                    <p className="text-xs text-success mt-1">
                       {lastResult.engineerEloImpactEstimate ||
                         'Skill progress impact not estimated.'}
                     </p>
@@ -685,7 +681,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                   <ResultList
                     title="Grammar Notes"
                     items={lastResult.grammarNotes || []}
-                    tone="amber"
+                    tone="warning"
                   />
                 )}
               </div>
@@ -719,18 +715,18 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex items-center justify-between border-b border-slate-200 pb-2"
+                  className="flex items-center justify-between border-b border-border-soft pb-2"
                 >
-                  <span className="text-slate-500 font-mono text-xs uppercase">
+                  <span className="text-muted-copy font-mono text-xs uppercase">
                     {label}
                   </span>
-                  <span className="text-right font-bold text-slate-900">
+                  <span className="text-right font-medium text-foreground">
                     {value}
                   </span>
                 </div>
               ))}
               <div>
-                <div className="flex justify-between text-xs font-mono text-slate-400 mb-2">
+                <div className="flex justify-between text-xs font-mono text-muted-copy mb-2">
                   <span>Average Score</span>
                   <span>{coachContext.averageScore}%</span>
                 </div>
@@ -751,7 +747,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 {coachContext.weakSkills.map((skill) => (
                   <span
                     key={skill}
-                    className="text-[10px] font-mono bg-rose-500/10 text-rose-300 border border-rose-500/20 px-2 py-1 rounded"
+                    className="text-[10px] font-mono bg-danger/10 text-danger border border-danger/20 px-2 py-1 rounded-lg"
                   >
                     {skill}
                   </span>
@@ -770,15 +766,15 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 {lastResult.suggestedActions.map((action) => (
                   <div
                     key={action}
-                    className="flex gap-3 rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700"
+                    className="flex gap-3 rounded-xl border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
                     <span>{action}</span>
                   </div>
                 ))}
                 <Button
                   onClick={() => navigate('/dashboard')}
-                  className="w-full h-10 bg-emerald-500 text-slate-950 font-black"
+                  className="w-full h-10 bg-success text-foreground font-medium"
                 >
                   Open Dashboard
                 </Button>
@@ -795,17 +791,17 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
               {sessions.slice(0, 5).map((session) => (
                 <div
                   key={session.id}
-                  className="rounded-[12px] border border-slate-200 bg-slate-50 p-4"
+                  className="rounded-xl border border-border-soft bg-surface-hover p-4"
                 >
                   <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-black text-slate-900">
+                    <p className="text-xs font-medium text-foreground">
                       {session.modeName}
                     </p>
-                    <span className="text-[9px] font-mono text-slate-500">
+                    <span className="text-[9px] font-mono text-muted-copy">
                       {new Date(session.timestamp).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-400 mt-2 line-clamp-2">
+                  <p className="text-xs text-muted-copy mt-2 line-clamp-2">
                     {session.input}
                   </p>
                   <p className="text-[10px] font-mono text-primary mt-2 uppercase">
@@ -814,16 +810,16 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 </div>
               ))}
               {sessions.length === 0 && (
-                <p className="text-xs text-slate-500">No coach sessions yet.</p>
+                <p className="text-xs text-muted-copy">No coach sessions yet.</p>
               )}
             </div>
           </SectionCard>
 
-          <div className="rounded-[16px] border border-slate-200 bg-slate-50 p-6">
-            <p className="text-[10px] font-mono text-engineer-cyan uppercase tracking-widest font-black">
+          <div className="rounded-xl border border-border-soft bg-surface-hover p-6">
+            <p className="text-[10px] font-mono text-engineer-cyan uppercase tracking-widest font-medium">
               Integration Notice
             </p>
-            <p className="text-xs text-slate-400 mt-3 leading-relaxed">
+            <p className="text-xs text-muted-copy mt-3 leading-relaxed">
               Set VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL to connect the
               server-side AI proxy. This frontend never receives vendor secrets.
             </p>
@@ -841,24 +837,24 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
 interface ResultListProps {
   title: string;
   items: string[];
-  tone: 'emerald' | 'rose' | 'amber';
+  tone: 'success' | 'danger' | 'warning';
 }
 
 const ResultList = ({ title, items, tone }: ResultListProps) => {
   const toneClass = {
-    emerald: 'border-emerald-500/20 bg-emerald-500/5 text-emerald-300',
-    rose: 'border-rose-500/20 bg-rose-500/5 text-rose-300',
-    amber: 'border-amber-500/20 bg-amber-500/5 text-amber-300',
+    success: 'border-success/20 bg-success/5 text-success',
+    danger: 'border-danger/20 bg-danger/5 text-danger',
+    warning: 'border-warning/20 bg-warning/5 text-warning',
   }[tone];
 
   return (
-    <div className={`rounded-lg border p-5 ${toneClass}`}>
-      <p className="text-[10px] font-mono uppercase tracking-widest font-black">
+    <div className={`rounded-xl border p-5 ${toneClass}`}>
+      <p className="text-[10px] font-mono uppercase tracking-widest font-medium">
         {title}
       </p>
       <ul className="mt-3 space-y-2">
         {items.map((item) => (
-          <li key={item} className="text-sm text-slate-200 leading-relaxed">
+          <li key={item} className="text-sm text-muted-copy leading-relaxed">
             {item}
           </li>
         ))}

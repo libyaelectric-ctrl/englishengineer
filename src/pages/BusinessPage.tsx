@@ -69,14 +69,14 @@ const BusinessPage = () => (
       title="EngineerOS for Teams"
       description="Role-based engineering communication training and manager summaries for contractors, consultants and project teams."
     />
-    <section className="border-b border-slate-200 bg-slate-50 py-16">
+    <section className="border-b border-border-soft bg-surface-hover py-16">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div>
           <p className="public-eyebrow">EngineerOS Team</p>
-          <h1 className="mt-3 text-4xl font-black leading-tight">
+          <h1 className="mt-3 text-4xl font-medium leading-tight">
             Communication readiness for engineering organizations.
           </h1>
-          <p className="mt-5 text-lg leading-8 text-slate-600">
+          <p className="mt-5 text-lg leading-8 text-muted-copy">
             Give electrical, MEP, commissioning, QA/QC and project teams a
             role-specific learning system with manager-level summaries.
           </p>
@@ -97,7 +97,7 @@ const BusinessPage = () => (
           </div>
           <div
             id="sales-status"
-            className="mt-5 flex max-w-xl items-start gap-2 rounded-[12px] border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-5 text-amber-900"
+            className="mt-5 flex max-w-xl items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-xs leading-5 text-warning"
           >
             <ShieldCheck
               className="mt-0.5 h-4 w-4 shrink-0"
@@ -111,14 +111,14 @@ const BusinessPage = () => (
         </div>
 
         <div className="public-card p-6">
-          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+          <div className="flex items-center justify-between border-b border-border-soft pb-4">
             <div>
-              <p className="text-sm font-bold">Team overview</p>
-              <p className="text-xs text-slate-500">
+              <p className="text-sm font-medium">Team overview</p>
+              <p className="text-xs text-muted-copy">
                 Illustrative product preview
               </p>
             </div>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-[10px] font-bold text-amber-800">
+            <span className="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-[10px] font-medium text-warning">
               DEMO DATA
             </span>
           </div>
@@ -126,10 +126,10 @@ const BusinessPage = () => (
             {previewMetrics.map(([label, value]) => (
               <div
                 key={label}
-                className="rounded-[12px] border border-slate-200 bg-slate-50 p-3"
+                className="rounded-xl border border-border-soft bg-surface-hover p-3"
               >
-                <p className="text-[10px] text-slate-500">{label}</p>
-                <p className="mt-1 text-xl font-black">{value}</p>
+                <p className="text-[10px] text-muted-copy">{label}</p>
+                <p className="mt-1 text-xl font-medium">{value}</p>
               </div>
             ))}
           </div>
@@ -140,9 +140,9 @@ const BusinessPage = () => (
                   <span>{label}</span>
                   <strong>{value}%</strong>
                 </div>
-                <div className="mt-1 h-2 rounded-full bg-slate-100">
+                <div className="mt-1 h-2 rounded-full bg-surface-hover">
                   <div
-                    className="h-full rounded-full bg-sky-500"
+                    className="h-full rounded-full bg-primary"
                     style={{ width: `${value}%` }}
                   />
                 </div>
@@ -153,39 +153,39 @@ const BusinessPage = () => (
       </div>
     </section>
 
-    <section className="border-b border-slate-200 py-16">
+    <section className="border-b border-border-soft py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="public-eyebrow">Project communication use cases</p>
-        <h2 className="mt-3 max-w-2xl text-3xl font-black">
+        <h2 className="mt-3 max-w-2xl text-3xl font-medium">
           Training connected to project communication.
         </h2>
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {cases.map(([title, text]) => (
             <article key={title} className="public-card p-5">
               <ClipboardCheck
-                className="h-5 w-5 text-sky-700"
+                className="h-5 w-5 text-primary"
                 aria-hidden="true"
               />
-              <h3 className="mt-4 font-bold">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+              <h3 className="mt-4 font-medium">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-copy">{text}</p>
             </article>
           ))}
         </div>
       </div>
     </section>
 
-    <section className="bg-slate-50 py-16">
+    <section className="bg-surface-hover py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <p className="public-eyebrow">Trust and management boundaries</p>
-        <h2 className="mt-3 max-w-2xl text-3xl font-black">
+        <h2 className="mt-3 max-w-2xl text-3xl font-medium">
           Useful team visibility without exposing private practice.
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {benefits.map(({ icon: Icon, title, text }) => (
             <article key={title} className="public-card p-6">
-              <Icon className="h-5 w-5 text-sky-700" aria-hidden="true" />
-              <h3 className="mt-4 font-bold">{title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+              <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+              <h3 className="mt-4 font-medium">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-copy">{text}</p>
             </article>
           ))}
         </div>

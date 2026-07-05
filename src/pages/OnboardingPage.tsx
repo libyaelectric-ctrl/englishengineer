@@ -151,15 +151,15 @@ const OnboardingPage = () => {
 
   return (
     <main className="mx-auto max-w-5xl py-3 sm:py-6">
-      <section className="overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-sm">
-        <header className="border-b border-slate-200 bg-slate-50 px-5 py-5 sm:px-7">
+      <section className="overflow-hidden rounded-xl border border-border-soft bg-surface">
+        <header className="border-b border-border-soft bg-surface-hover px-5 py-5 sm:px-7">
           <div className="flex items-start gap-3 sm:items-center">
-            <Compass className="h-5 w-5 text-sky-700" />
+            <Compass className="h-5 w-5 text-primary" />
             <div>
-              <p className="text-xs font-bold uppercase text-sky-700">
+              <p className="text-xs font-medium uppercase text-primary">
                 Personal setup
               </p>
-              <h1 className="text-xl font-black text-slate-950 sm:text-2xl">
+              <h1 className="text-xl font-medium text-foreground sm:text-2xl">
                 {LocalizationService.translate(
                   'onboarding.title',
                   interfaceLanguage
@@ -179,15 +179,15 @@ const OnboardingPage = () => {
                 aria-label={`Step ${itemIndex + 1}: ${labels[item]}${itemIndex < index ? ', completed' : item === step ? ', current' : ''}`}
               >
                 <div
-                  className={`h-1.5 rounded-full ${itemIndex <= index ? 'bg-sky-600' : 'bg-slate-200'}`}
+                  className={`h-1.5 rounded-full ${itemIndex <= index ? 'bg-primary' : 'bg-border-soft'}`}
                 />
-                <span className="mt-2 hidden truncate text-[10px] font-semibold text-slate-500 sm:block">
+                <span className="mt-2 hidden truncate text-[10px] font-medium text-muted-copy sm:block">
                   {labels[item]}
                 </span>
               </li>
             ))}
           </ol>
-          <p className="mt-3 text-xs font-semibold text-slate-600 sm:hidden">
+          <p className="mt-3 text-xs font-medium text-muted-copy sm:hidden">
             Step {index + 1} of {STEPS.length}: {labels[step]}
           </p>
         </header>
@@ -195,20 +195,20 @@ const OnboardingPage = () => {
         <div className="min-h-[410px] p-5 sm:p-7">
           {step === 'profile' && (
             <section>
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-medium">
                 Set a realistic daily rhythm
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-muted-copy">
                 You can change this later. Each skill still progresses
                 independently.
               </p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <label className="text-sm font-semibold text-slate-800">
+                <label className="text-sm font-medium text-foreground">
                   Daily minutes
                   <select
                     value={minutes}
                     onChange={(event) => setMinutes(Number(event.target.value))}
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {DAILY_DURATION_OPTIONS.map((value) => (
                       <option key={value} value={value}>
@@ -217,14 +217,14 @@ const OnboardingPage = () => {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm font-semibold text-slate-800">
+                <label className="text-sm font-medium text-foreground">
                   Daily tasks
                   <select
                     value={taskCount}
                     onChange={(event) =>
                       setTaskCount(Number(event.target.value))
                     }
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {DAILY_TASK_COUNT_OPTIONS.map((value) => (
                       <option key={value} value={value}>
@@ -233,12 +233,12 @@ const OnboardingPage = () => {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm font-semibold text-slate-800">
+                <label className="text-sm font-medium text-foreground">
                   Country
                   <select
                     value={country}
                     onChange={(event) => setCountry(event.target.value)}
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     <option value="">Select country</option>
                     {COUNTRIES.map((value) => (
@@ -248,7 +248,7 @@ const OnboardingPage = () => {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm font-semibold text-slate-800">
+                <label className="text-sm font-medium text-foreground">
                   Timezone
                   <select
                     value={
@@ -257,7 +257,7 @@ const OnboardingPage = () => {
                         : 'UTC'
                     }
                     onChange={(event) => setTimezone(event.target.value)}
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {TIMEZONES.map((value) => (
                       <option key={value} value={value}>
@@ -265,11 +265,11 @@ const OnboardingPage = () => {
                       </option>
                     ))}
                   </select>
-                  <span className="mt-1 block text-xs font-normal text-slate-500">
+                  <span className="mt-1 block text-xs text-muted-copy">
                     Detected: {initial.timezone}. You can correct it here.
                   </span>
                 </label>
-                <label className="text-sm font-semibold text-slate-800 sm:col-span-2">
+                <label className="text-sm font-medium text-foreground sm:col-span-2">
                   Interface language
                   <select
                     value={interfaceLanguage}
@@ -278,7 +278,7 @@ const OnboardingPage = () => {
                       setInterfaceLanguage(language);
                       setGlobalLanguage(language);
                     }}
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {AVAILABLE_INTERFACE_LANGUAGES.map((language) => (
                       <option key={language.id} value={language.id}>
@@ -286,7 +286,7 @@ const OnboardingPage = () => {
                       </option>
                     ))}
                   </select>
-                  <span className="mt-1 block text-xs font-normal text-slate-500">
+                  <span className="mt-1 block text-xs text-muted-copy">
                     Arabic, Spanish, French and Portuguese are prepared for
                     future language packs.
                   </span>
@@ -297,15 +297,15 @@ const OnboardingPage = () => {
 
           {step === 'role' && (
             <section>
-              <h2 className="text-xl font-bold">Tell us where you work</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <h2 className="text-xl font-medium">Tell us where you work</h2>
+              <p className="mt-2 text-sm text-muted-copy">
                 {LocalizationService.translate(
                   'onboarding.roleContext',
                   interfaceLanguage
                 )}
               </p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <label className="text-sm font-semibold sm:col-span-2">
+                <label className="text-sm font-medium sm:col-span-2">
                   {LocalizationService.translate(
                     'onboarding.professionalTrack',
                     interfaceLanguage
@@ -317,7 +317,7 @@ const OnboardingPage = () => {
                         event.target.value as ProfessionalTrack
                       )
                     }
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {PROFESSIONAL_TRACKS.map((item) => (
                       <option
@@ -331,7 +331,7 @@ const OnboardingPage = () => {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm font-semibold">
+                <label className="text-sm font-medium">
                   {LocalizationService.translate(
                     'onboarding.electricalFocus',
                     interfaceLanguage
@@ -343,7 +343,7 @@ const OnboardingPage = () => {
                         event.target.value as ElectricalSubdomain
                       )
                     }
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     {ELECTRICAL_SUBDOMAINS.map((item) => (
                       <option key={item.id} value={item.id}>
@@ -352,7 +352,7 @@ const OnboardingPage = () => {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm font-semibold">
+                <label className="text-sm font-medium">
                   {LocalizationService.translate(
                     'onboarding.industry',
                     interfaceLanguage
@@ -362,7 +362,7 @@ const OnboardingPage = () => {
                     onChange={(event) =>
                       setIndustryId(event.target.value as IndustryId)
                     }
-                    className="premium-input mt-2 w-full px-3 py-3"
+                    className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                   >
                     <option value="">Select industry</option>
                     {INDUSTRIES.map((item) => (
@@ -378,11 +378,11 @@ const OnboardingPage = () => {
 
           {step === 'goals' && (
             <section>
-              <h2 className="text-xl font-bold">Choose communication goals</h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <h2 className="text-xl font-medium">Choose communication goals</h2>
+              <p className="mt-2 text-sm text-muted-copy">
                 Select the situations and skills that matter most now.
               </p>
-              <h3 className="mt-6 text-sm font-bold">Work situations</h3>
+              <h3 className="mt-6 text-sm font-medium">Work situations</h3>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {COMMUNICATION_GOALS.map((item) => (
                   <button
@@ -391,7 +391,7 @@ const OnboardingPage = () => {
                     onClick={() =>
                       toggle(item.id, communicationGoals, setCommunicationGoals)
                     }
-                    className={`flex min-h-11 items-center justify-between rounded-[12px] border px-4 py-3 text-left text-sm font-semibold transition-colors ${communicationGoals.includes(item.id) ? 'border-sky-300 bg-sky-50 text-sky-800' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50/50'}`}
+                    className={`flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${communicationGoals.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
                   >
                     {item.label}
                     {communicationGoals.includes(item.id) && (
@@ -400,7 +400,7 @@ const OnboardingPage = () => {
                   </button>
                 ))}
               </div>
-              <h3 className="mt-6 text-sm font-bold">Learning focus</h3>
+              <h3 className="mt-6 text-sm font-medium">Learning focus</h3>
               <div className="mt-3 flex flex-wrap gap-2">
                 {focusOptions.map((item) => (
                   <button
@@ -409,18 +409,18 @@ const OnboardingPage = () => {
                     onClick={() =>
                       toggle(item.id, learningFocus, setLearningFocus)
                     }
-                    className={`rounded-[12px] border px-4 py-2 text-sm font-semibold transition-colors ${learningFocus.includes(item.id) ? 'border-sky-300 bg-sky-50 text-sky-800' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50/50'}`}
+                    className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${learningFocus.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
                   >
                     {item.label}
                   </button>
                 ))}
               </div>
-              <label className="mt-6 block text-sm font-bold text-slate-800">
+              <label className="mt-6 block text-sm font-medium text-foreground">
                 Career outcome
                 <select
                   value={careerGoal}
                   onChange={(event) => setCareerGoal(event.target.value)}
-                  className="premium-input mt-2 w-full px-3 py-3"
+                  className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
                 >
                   <option value="">Select an outcome</option>
                   {CAREER_GOALS.map((goal) => (
@@ -435,10 +435,10 @@ const OnboardingPage = () => {
 
           {step === 'level' && (
             <section>
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-medium">
                 What is your current English level?
               </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-600">
+              <p className="mt-2 text-sm leading-6 text-muted-copy">
                 This is a self-reported starting reference, not a certificate or
                 placement result. Reading, Writing, Listening and Speaking still
                 begin and progress independently.
@@ -458,7 +458,7 @@ const OnboardingPage = () => {
                     type="button"
                     key={level}
                     onClick={() => setSelfReportedCefr(level)}
-                    className={`min-h-14 rounded-[12px] border text-sm font-bold transition-colors ${selfReportedCefr === level ? 'border-sky-300 bg-sky-50 text-sky-800' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50/50'}`}
+                    className={`min-h-14 rounded-lg border text-sm font-medium transition-colors ${selfReportedCefr === level ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
                   >
                     {level === 'unknown' ? 'I am not sure' : level}
                   </button>
@@ -469,10 +469,10 @@ const OnboardingPage = () => {
 
           {step === 'plan' && (
             <section>
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-medium">
                 Choose your starting workspace
               </h2>
-              <p className="mt-2 text-sm text-slate-600">
+              <p className="mt-2 text-sm text-muted-copy">
                 Plan selection does not activate billing. Local mode remains
                 Free until the backend verifies a subscription.
               </p>
@@ -500,12 +500,12 @@ const OnboardingPage = () => {
                     type="button"
                     key={plan.id}
                     onClick={() => setSelectedPlan(plan.id)}
-                    className={`rounded-[16px] border p-5 text-left transition-colors ${selectedPlan === plan.id ? 'border-sky-300 bg-sky-50' : 'border-slate-200 bg-white hover:border-sky-200 hover:bg-sky-50/50'}`}
+                    className={`rounded-xl border p-5 text-left transition-colors ${selectedPlan === plan.id ? 'border-primary/30 bg-primary/10' : 'border-border-soft bg-surface hover:border-primary/20 hover:bg-surface-hover'}`}
                   >
-                    <span className="font-bold text-slate-900">
+                    <span className="font-medium text-foreground">
                       {plan.label}
                     </span>
-                    <span className="mt-2 block text-xs leading-5 text-slate-600">
+                    <span className="mt-2 block text-xs leading-5 text-muted-copy">
                       {plan.text}
                     </span>
                   </button>
@@ -515,12 +515,12 @@ const OnboardingPage = () => {
           )}
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 px-4 py-4 sm:px-7">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-surface-hover px-4 py-4 sm:px-7">
           {index > 0 ? (
             <Link
               to={`/onboarding/${STEPS[index - 1]}`}
               onClick={() => save()}
-              className="inline-flex min-h-11 items-center gap-2 rounded-[12px] px-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
             >
               <ArrowLeft className="h-4 w-4" />
               Back
@@ -533,7 +533,7 @@ const OnboardingPage = () => {
               <button
                 type="button"
                 onClick={exploreLiteAtA1}
-                className="min-h-11 rounded-[12px] px-3 text-sm font-semibold text-slate-600 hover:bg-white"
+                className="min-h-11 rounded-lg px-3 text-sm font-medium text-muted-copy hover:bg-surface"
               >
                 Explore now at A1
               </button>
@@ -541,7 +541,7 @@ const OnboardingPage = () => {
             <button
               type="button"
               onClick={continueFlow}
-              className="public-primary-action min-w-0 px-4 sm:px-5"
+              className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium"
             >
               {index === STEPS.length - 1
                 ? 'Continue to placement'

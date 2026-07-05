@@ -28,6 +28,7 @@ import {
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { WatchDashboardWidget } from '@/features/watch';
 
 const SKILL_META: Record<
   SkillName,
@@ -297,6 +298,9 @@ const DashboardPage = () => {
             repeatedMistakes={repeatedMistakes}
             badges={badges}
           />
+        </div>
+        <div className="mt-4">
+          <WatchDashboardWidget />
         </div>
         <Button
           type="button"

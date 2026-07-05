@@ -9,7 +9,7 @@ interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
   icon: LucideIcon;
   trend?: string;
   trendDirection?: 'up' | 'down' | 'neutral';
-  statusColor?: 'primary' | 'emerald' | 'cyan' | 'amber' | 'rose';
+  statusColor?: 'primary' | 'emerald' | 'cyan' | 'amber' | 'rose' | 'success' | 'warning' | 'danger';
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -23,11 +23,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   ...props
 }) => {
   const iconColors = {
-    primary: 'text-primary bg-primary/10 border-primary/20',
-    emerald: 'text-success bg-success/10 border-success/20',
-    cyan: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
-    amber: 'text-warning bg-warning/10 border-warning/20',
-    rose: 'text-error bg-error/10 border-error/20',
+    primary: 'text-foreground bg-surface-hover',
+    emerald: 'text-success bg-success/10',
+    cyan: 'text-primary bg-primary/10',
+    amber: 'text-warning bg-warning/10',
+    rose: 'text-error bg-error/10',
+    success: 'text-success bg-success/10',
+    warning: 'text-warning bg-warning/10',
+    danger: 'text-error bg-error/10',
   };
 
   const trendTextColors = {
@@ -37,43 +40,25 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   return (
-    <Card
-      className={cn('group relative overflow-hidden', className)}
-      {...props}
-    >
+    <Card className={cn('group relative overflow-hidden p-5', className)} {...props}>
       <div className="flex min-w-0 items-start justify-between gap-3">
-        <div className="min-w-0 flex-1 space-y-3">
-          <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+        <div className="min-w-0 flex-1 space-y-2">
+          <p className="text-xs text-muted-copy">
             {label}
           </p>
-          <h3 className="max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-xl font-bold leading-tight tabular-nums text-foreground sm:text-2xl">
+          <h3 className="text-2xl font-bold text-foreground tabular-nums">
             {value}
           </h3>
-
           {trend && (
-            <p
-              className={cn(
-                'flex min-w-0 items-start gap-1 break-words text-xs font-semibold',
-                trendTextColors[trendDirection]
-              )}
-            >
-              {trendDirection === 'up' && (
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              )}
-              {trendDirection === 'down' && (
-                <ArrowDownRight className="h-3.5 w-3.5" />
-              )}
+            <p className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}>
+              {trendDirection === 'up' && <ArrowUpRight className="h-3 w-3" />}
+              {trendDirection === 'down' && <ArrowDownRight className="h-3 w-3" />}
               {trend}
             </p>
           )}
         </div>
-        <div
-          className={cn(
-            'shrink-0 rounded-[8px] border p-2 transition-all duration-300 group-hover:scale-[1.03]',
-            iconColors[statusColor]
-          )}
-        >
-          <Icon className="h-4 w-4" />
+        <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg', iconColors[statusColor])}>
+          <Icon className="h-5 w-5" />
         </div>
       </div>
     </Card>

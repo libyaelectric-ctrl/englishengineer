@@ -10,6 +10,7 @@ import {
   Mic2,
   PenTool,
   User,
+  Watch,
 } from 'lucide-react';
 
 export const SKILL_NAV_ITEMS = [
@@ -26,6 +27,7 @@ export const NAV_ITEMS = [
   { label: 'Learning Hub', href: '/curriculum', icon: Map },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
   { label: 'Tools', href: '/tools', icon: BriefcaseBusiness },
+  { label: 'Watch', href: '/watch', icon: Watch },
   { label: 'Profile', href: '/profile', icon: User },
 ] as const;
 

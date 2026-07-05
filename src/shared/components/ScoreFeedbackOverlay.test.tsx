@@ -20,11 +20,11 @@ describe('ScoreFeedbackOverlay light result UI', () => {
       />
     );
     const panel = screen.getByTestId('speaking-result-panel');
-    expect(panel.className).toContain('bg-white');
+    expect(panel.className).toContain('bg-surface');
     expect(panel.className).not.toMatch(/bg-(black|slate-9)/);
     expect(screen.getByText('82')).toBeVisible();
     fireEvent.click(
-      screen.getByRole('button', { name: /dismiss diagnostics/i })
+      screen.getByRole('button', { name: /dismiss/i })
     );
     expect(close).toHaveBeenCalledOnce();
   });
