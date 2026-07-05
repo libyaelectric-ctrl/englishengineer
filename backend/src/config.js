@@ -1,4 +1,4 @@
-const SUPPORTED_AI_PROVIDERS = new Set(['mock', 'openai', 'anthropic']);
+const SUPPORTED_AI_PROVIDERS = new Set(['mock', 'openai', 'anthropic', 'gemini']);
 
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
@@ -17,7 +17,9 @@ export const createBackendConfig = (environment = process.env) => {
       ? environment.OPENAI_API_KEY
       : aiProvider === 'anthropic'
         ? environment.ANTHROPIC_API_KEY
-        : null;
+        : aiProvider === 'gemini'
+          ? environment.GEMINI_API_KEY
+          : null;
   const aiConfigured = aiProvider !== 'mock' && hasText(providerKey);
   const stripeConfigured = [
     environment.STRIPE_SECRET_KEY,
@@ -102,7 +104,7 @@ export const createBackendConfig = (environment = process.env) => {
       provider: aiProvider,
       model:
         environment.AI_MODEL?.trim() ||
-        (aiProvider === 'openai' ? 'gpt-4.1-mini' : 'mock'),
+        (aiProvider === 'gemini' ? 'gemini-2.0-flash' : 'mock'),
       timeoutMs: toPositiveInteger(environment.AI_TIMEOUT_MS, 20_000),
       configured: aiConfigured,
       apiKey: aiConfigured ? providerKey.trim() : null,
