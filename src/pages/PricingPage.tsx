@@ -15,7 +15,9 @@ import { WATCH_SUBSCRIPTION_TIERS } from '@/features/watch';
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
-const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG;
+const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
+  ['free', 'pro', 'project', 'max'].includes(plan.id)
+);
 
 const PricingPage = () => {
   const navigate = useNavigate();
