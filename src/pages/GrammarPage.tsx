@@ -136,13 +136,13 @@ const GrammarPage = () => {
       >
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div>
-            <p className="text-xs font-bold text-blue-700">
+            <p className="text-xs font-medium text-primary">
               {level} PATH · {rules.length} NAMED TOPICS
             </p>
-            <h2 className="mt-2 text-2xl font-black text-slate-950">
+            <h2 className="mt-2 text-2xl font-medium text-foreground">
               {selectedRule?.title ?? 'Choose your first grammar topic'}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-muted-copy">
               {selectedRule
                 ? `Lesson ${selectedRuleIndex + 1} of ${rules.length} · ${selectedRule.grammarCategory}`
                 : 'Your current-level grammar path is loading.'}
@@ -169,9 +169,9 @@ const GrammarPage = () => {
             </Button>
           </div>
         </div>
-        <div className="mt-5 h-2 overflow-hidden rounded-full bg-slate-100">
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-surface-hover">
           <div
-            className="h-full rounded-full bg-blue-600 transition-[width] duration-300"
+            className="h-full rounded-full bg-primary transition-[width] duration-300"
             style={{
               width: `${rules.length > 0 ? ((selectedRuleIndex + 1) / rules.length) * 100 : 0}%`,
             }}
@@ -196,7 +196,7 @@ const GrammarPage = () => {
           label="Strong"
           value={summary.strong}
           icon={CheckCircle2}
-          statusColor="emerald"
+          statusColor="success"
         />
       </div>
 
@@ -210,14 +210,14 @@ const GrammarPage = () => {
           onChange={(event) => setQuery(event.target.value)}
           aria-label="Search grammar"
           placeholder="Search a topic name or engineering use"
-          className="min-h-11 w-full rounded-[12px] border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+          className="min-h-11 w-full rounded-lg border border-border-soft bg-white px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
       </SectionCard>
 
       <div
         role="tablist"
         aria-label="Grammar progress"
-        className="grid grid-cols-2 gap-2 rounded-[16px] border border-slate-200 bg-white p-2 sm:grid-cols-4"
+        className="grid grid-cols-2 gap-2 rounded-xl border border-border-soft bg-white p-2 sm:grid-cols-4"
       >
         {TABS.map((item) => (
           <button
@@ -226,7 +226,7 @@ const GrammarPage = () => {
             role="tab"
             aria-selected={tab === item}
             onClick={() => setTab(item)}
-            className={`min-h-11 rounded-[10px] px-3 text-sm font-bold transition-colors ${tab === item ? 'bg-sky-600 text-white' : 'text-slate-600 hover:bg-sky-50'}`}
+            className={`min-h-11 rounded-lg px-3 text-sm font-medium transition-colors ${tab === item ? 'bg-primary text-white' : 'text-muted-copy hover:bg-primary/5'}`}
           >
             {item}
           </button>
@@ -234,11 +234,11 @@ const GrammarPage = () => {
       </div>
 
       {visibleRules.length === 0 ? (
-        <div className="rounded-[16px] border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
-          <p className="font-bold text-slate-800">
+        <div className="rounded-xl border border-dashed border-hover bg-surface-hover p-8 text-center">
+          <p className="font-medium text-foreground">
             No {tab.toLowerCase()} rules in this view.
           </p>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-muted-copy">
             Choose New to begin, or clear the search.
           </p>
           <Button className="mt-4" onClick={() => setTab('New')}>
@@ -247,7 +247,7 @@ const GrammarPage = () => {
         </div>
       ) : (
         <div className="grid gap-5 lg:grid-cols-[minmax(240px,0.38fr)_minmax(0,0.62fr)]">
-          <aside className="max-h-[70vh] space-y-2 overflow-y-auto rounded-[16px] border border-slate-200 bg-white p-3">
+          <aside className="max-h-[70vh] space-y-2 overflow-y-auto rounded-xl border border-border-soft bg-white p-3">
             {visibleRules.map((rule) => {
               const lessonNumber = rules.findIndex(
                 (item) => item.id === rule.id
@@ -257,14 +257,14 @@ const GrammarPage = () => {
                   key={rule.id}
                   type="button"
                   onClick={() => setSelectedId(rule.id)}
-                  className={`w-full rounded-[12px] border p-3 text-left transition-colors ${selectedRule?.id === rule.id ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/40'}`}
+                  className={`w-full rounded-lg border p-3 text-left transition-colors ${selectedRule?.id === rule.id ? 'border-primary bg-primary/5' : 'border-border-soft bg-white hover:border-primary/30 hover:bg-primary/5'}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold text-blue-700">
+                      <p className="text-[10px] font-medium text-primary">
                         LESSON {lessonNumber + 1}
                       </p>
-                      <p className="mt-1 text-sm font-black text-slate-900">
+                      <p className="mt-1 text-sm font-medium text-foreground">
                         {rule.title}
                       </p>
                     </div>
@@ -273,7 +273,7 @@ const GrammarPage = () => {
                       tone="neutral"
                     />
                   </div>
-                  <p className="mt-2 text-xs text-slate-500">
+                  <p className="mt-2 text-xs text-muted-copy">
                     {rule.grammarCategory}
                   </p>
                 </button>
@@ -289,60 +289,60 @@ const GrammarPage = () => {
             >
               <div className="space-y-5">
                 {selectedProgress && (
-                  <div className="rounded-[12px] border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-                    <span className="font-black">Why this topic now: </span>
+                  <div className="rounded-lg border border-warning/30 bg-warning/5 p-4 text-sm leading-6 text-foreground">
+                    <span className="font-medium">Why this topic now: </span>
                     {getGrammarReviewReason(selectedProgress)}
                   </div>
                 )}
-                <div className="rounded-[12px] border border-slate-200 bg-white p-4">
-                  <p className="text-xs font-black uppercase text-slate-500">
+                <div className="rounded-lg border border-border-soft bg-white p-4">
+                  <p className="text-xs font-medium uppercase text-muted-copy">
                     {LocalizationService.translate(
                       'grammar.meaningFunction',
                       language
                     )}
                   </p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-slate-800">
+                  <p className="mt-2 text-sm font-medium leading-6 text-foreground">
                     {selectedRule.definition}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                  <p className="mt-2 text-sm leading-6 text-muted-copy">
                     {selectedRule.languageFunction}
                   </p>
                 </div>
-                <div className="rounded-[12px] border border-sky-200 bg-sky-50 p-4">
-                  <p className="text-xs font-black uppercase text-sky-700">
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <p className="text-xs font-medium uppercase text-primary">
                     {LocalizationService.translate('grammar.form', language)}
                   </p>
-                  <p className="mt-2 font-mono text-sm font-bold text-slate-900">
+                  <p className="mt-2 font-mono text-sm font-medium text-foreground">
                     {selectedRule.structure}
                   </p>
                 </div>
                 <div
                   className={`grid gap-4 ${language === 'tr' ? 'md:grid-cols-2' : ''}`}
                 >
-                  <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-                    <p className="text-xs font-black uppercase text-slate-500">
+                  <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
+                    <p className="text-xs font-medium uppercase text-muted-copy">
                       English explanation
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-slate-700">
+                    <p className="mt-2 text-sm leading-6 text-foreground">
                       {selectedRule.explanation}
                     </p>
                   </div>
                   {language === 'tr' && (
-                    <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-                      <p className="text-xs font-black uppercase text-slate-500">
+                    <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
+                      <p className="text-xs font-medium uppercase text-muted-copy">
                         Türkçe destek
                       </p>
-                      <p className="mt-2 text-sm leading-6 text-slate-700">
+                      <p className="mt-2 text-sm leading-6 text-foreground">
                         {selectedRule.turkishExplanation}
                       </p>
                     </div>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-black text-slate-900">
+                  <p className="text-sm font-medium text-foreground">
                     Engineering use
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                  <p className="mt-2 text-sm leading-6 text-muted-copy">
                     {selectedRule.engineeringUseCase}
                   </p>
                 </div>
@@ -350,19 +350,19 @@ const GrammarPage = () => {
                   {selectedRule.examples.slice(0, 3).map((example) => (
                     <div
                       key={example.english}
-                      className="rounded-[10px] border border-slate-200 bg-white p-3"
+                      className="rounded-lg border border-border-soft bg-white p-3"
                     >
-                      <p className="text-sm font-semibold text-slate-900">
+                      <p className="text-sm font-medium text-foreground">
                         {example.english}
                       </p>
-                      <p className="mt-1 text-xs text-slate-500">
+                      <p className="mt-1 text-xs text-muted-copy">
                         {example.turkish}
                       </p>
                     </div>
                   ))}
                 </div>
-                <div className="rounded-[12px] border border-rose-200 bg-rose-50 p-4">
-                  <p className="text-xs font-black uppercase text-rose-700">
+                <div className="rounded-lg border border-rose-200 bg-rose-50 p-4">
+                  <p className="text-xs font-medium uppercase text-rose-700">
                     Common mistake
                   </p>
                   <p className="mt-2 text-sm text-rose-900">
@@ -374,35 +374,35 @@ const GrammarPage = () => {
                       : selectedRule.commonMistakes}
                   </p>
                 </div>
-                <div className="rounded-[12px] border border-emerald-200 bg-emerald-50 p-4">
-                  <p className="text-xs font-black uppercase text-emerald-700">
+                <div className="rounded-lg border border-success/30 bg-success/5 p-4">
+                  <p className="text-xs font-medium uppercase text-success">
                     Correct
                   </p>
-                  <p className="mt-2 text-sm font-semibold text-emerald-950">
+                  <p className="mt-2 text-sm font-medium text-foreground">
                     {selectedRule.correctedExampleEnglish}
                   </p>
                 </div>
-                <div className="rounded-[12px] border border-amber-200 bg-amber-50 p-4">
-                  <p className="text-xs font-black uppercase text-amber-800">
+                <div className="rounded-lg border border-warning/30 bg-warning/5 p-4">
+                  <p className="text-xs font-medium uppercase text-warning">
                     {LocalizationService.translate(
                       'grammar.practice',
                       language
                     )}
                   </p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-amber-950">
+                  <p className="mt-2 text-sm font-medium leading-6 text-foreground">
                     {selectedRule.taskPromptTemplate}
                   </p>
-                  <p className="mt-2 text-xs leading-5 text-amber-800">
+                  <p className="mt-2 text-xs leading-5 text-muted-copy">
                     Target output: {selectedRule.minimumUserOutput}
                   </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-                  <span className="mr-auto text-xs font-bold text-slate-600">
+                <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border-soft bg-surface-hover p-4">
+                  <span className="mr-auto text-xs font-medium text-muted-copy">
                     Use this rule in a connected skill task.
                   </span>
                   {selectedRule.skillUse.includes('reading') && (
                     <Link
-                      className="inline-flex min-h-10 items-center rounded-[12px] border border-slate-300 bg-white px-3 text-sm font-bold text-slate-700 transition-colors hover:border-sky-300 hover:bg-sky-50"
+                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-white px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
                       to="/reading"
                     >
                       Reading
@@ -410,7 +410,7 @@ const GrammarPage = () => {
                   )}
                   {selectedRule.skillUse.includes('writing') && (
                     <Link
-                      className="inline-flex min-h-10 items-center rounded-[12px] border border-slate-300 bg-white px-3 text-sm font-bold text-slate-700 transition-colors hover:border-sky-300 hover:bg-sky-50"
+                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-white px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
                       to="/writing"
                     >
                       Writing
@@ -429,7 +429,7 @@ const GrammarPage = () => {
                     <TriangleAlert className="h-4 w-4" /> Needs review
                   </Button>
                 </div>
-                <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+                <div className="flex items-center justify-between gap-3 border-t border-border-soft pt-4">
                   <Button
                     type="button"
                     variant="ghost"

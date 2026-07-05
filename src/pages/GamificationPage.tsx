@@ -54,7 +54,7 @@ const GamificationPage = () => {
         actions={
           <Button
             onClick={claimDailyLoginReward}
-            className="gap-2 bg-primary text-white font-bold"
+            className="gap-2 bg-primary text-white font-medium rounded-lg"
           >
             <Gift className="h-4 w-4" /> Claim Daily Reward
           </Button>
@@ -98,13 +98,13 @@ const GamificationPage = () => {
           subtitle="Upgrade to unlock mission chains, full rewards, bonuses, and long-term challenge progression."
           icon={Trophy}
         >
-          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-5">
-            <p className="text-sm text-amber-200">
+          <div className="rounded-xl border border-warning/20 bg-warning/5 p-5">
+            <p className="text-sm text-warning">
               {fullGamificationEntitlement.reason}
             </p>
             <Button
               onClick={() => navigate('/profile')}
-              className="mt-4 h-10 bg-primary text-white font-bold"
+              className="mt-4 h-10 bg-primary text-white font-medium rounded-lg"
             >
               Upgrade to Pro
             </Button>
@@ -121,7 +121,7 @@ const GamificationPage = () => {
           >
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
               <div className="lg:col-span-2 space-y-3">
-                <div className="flex justify-between text-xs font-mono text-slate-400">
+                <div className="flex justify-between text-xs font-mono text-muted-copy">
                   <span>{gamification.levelInfo.levelStartXp} XP</span>
                   <span>{gamification.levelInfo.currentXp} XP</span>
                   <span>{gamification.levelInfo.nextLevelXp} XP</span>
@@ -131,14 +131,14 @@ const GamificationPage = () => {
                   color="primary"
                 />
               </div>
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-5">
-                <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-black">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-medium">
                   Next Reward
                 </p>
-                <h3 className="mt-2 text-lg font-black text-slate-900">
+                <h3 className="mt-2 text-lg font-medium text-foreground">
                   {gamification.nextReward.title}
                 </h3>
-                <p className="text-xs text-slate-400 mt-2">
+                <p className="text-xs text-muted-copy mt-2">
                   {gamification.nextReward.description}
                 </p>
               </div>
@@ -178,7 +178,7 @@ const GamificationPage = () => {
                 subtitle="Derived bonuses from streaks, combos, and quality"
                 icon={Zap}
               >
-                <div className="space-y-4 text-sm text-slate-400">
+                <div className="space-y-4 text-sm text-muted-copy">
                   <DetailRow
                     label="XP Multiplier"
                     value={`${gamification.bonusSummary.xpMultiplier}x`}
@@ -236,7 +236,7 @@ const GamificationPage = () => {
                   {gamification.titles.map((title) => (
                     <span
                       key={title}
-                      className="text-[10px] font-mono uppercase bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded"
+                      className="text-[10px] font-mono uppercase bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded-lg"
                     >
                       {title}
                     </span>
@@ -286,25 +286,25 @@ const MissionList = ({
       return (
         <div
           key={mission.template.id}
-          className="rounded-[16px] border border-slate-200 bg-slate-50 p-5"
+          className="rounded-xl border border-border-soft bg-surface-hover p-5"
         >
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div>
-              <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-black">
+              <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-medium">
                 {mission.template.category}
               </p>
-              <h4 className="mt-1 text-base font-black text-slate-900">
+              <h4 className="mt-1 text-base font-medium text-foreground">
                 {mission.template.title}
               </h4>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted-copy mt-1">
                 {mission.template.description}
               </p>
             </div>
             <span
-              className={`text-[10px] font-mono uppercase border px-2 py-1 rounded self-start ${
+              className={`text-[10px] font-mono uppercase border px-2 py-1 rounded-lg self-start ${
                 mission.isCompleted
-                  ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
-                  : 'border-slate-200 bg-white text-slate-600'
+                  ? 'bg-success/10 text-success border-success/20'
+                  : 'border-border-soft bg-white text-muted-copy'
               }`}
             >
               {mission.isCompleted
@@ -317,7 +317,7 @@ const MissionList = ({
               value={value}
               color={mission.isCompleted ? 'emerald' : 'primary'}
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500">
+            <div className="flex justify-between text-[10px] font-mono text-muted-copy">
               <span>+{mission.template.xpReward} XP</span>
               <span>+{mission.template.coinReward} coins</span>
             </div>
@@ -329,16 +329,16 @@ const MissionList = ({
 );
 
 const DetailRow = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex items-center justify-between border-b border-slate-200 pb-2 last:border-b-0 last:pb-0">
+  <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase">{label}</span>
-    <span className="font-bold text-slate-900">{value}</span>
+    <span className="font-medium text-foreground">{value}</span>
   </div>
 );
 
 const MiniStat = ({ label, value }: { label: string; value: string }) => (
-  <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-    <p className="text-[10px] font-mono text-slate-500 uppercase">{label}</p>
-    <p className="mt-1 text-2xl font-black text-slate-900">{value}</p>
+  <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+    <p className="text-[10px] font-mono text-muted-copy uppercase">{label}</p>
+    <p className="mt-1 text-2xl font-medium text-foreground">{value}</p>
   </div>
 );
 
@@ -358,17 +358,17 @@ const FeedList = ({
     {items.map((item) => (
       <div
         key={item.id}
-        className="rounded-[12px] border border-slate-200 bg-slate-50 p-4"
+        className="rounded-xl border border-border-soft bg-surface-hover p-4"
       >
-        <p className="text-sm font-bold text-slate-900">{item.title}</p>
-        <p className="text-xs text-slate-400 mt-1">{item.description}</p>
+        <p className="text-sm font-medium text-foreground">{item.title}</p>
+        <p className="text-xs text-muted-copy mt-1">{item.description}</p>
         <p className="text-[10px] font-mono text-primary mt-2">
           {new Date(item.timestamp).toLocaleDateString()}
         </p>
       </div>
     ))}
     {items.length === 0 && (
-      <p className="text-xs text-slate-500">{emptyLabel}</p>
+      <p className="text-xs text-muted-copy">{emptyLabel}</p>
     )}
   </div>
 );

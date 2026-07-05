@@ -23,19 +23,19 @@ export const SectionCard: React.FC<SectionCardProps> = ({
 }) => {
   return (
     <Card className={cn('flex h-full flex-col', className)} {...props}>
-      <div className="mb-5 flex items-start justify-between gap-4 border-b border-border-soft pb-5">
+      <div className="mb-4 flex items-start justify-between gap-4 border-b border-border-soft pb-4">
         <div className="flex items-center gap-3">
           {Icon && (
-            <div className="rounded-[8px] border border-border-soft bg-surface-hover/50 p-2 text-primary">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-hover text-foreground">
               <Icon className="h-4 w-4" />
             </div>
           )}
           <div>
-            <h4 className="text-sm font-bold text-foreground leading-tight">
+            <h4 className="text-sm font-semibold text-foreground">
               {title}
             </h4>
             {subtitle && (
-              <p className="text-xs text-muted-copy mt-0.5 font-medium">
+              <p className="mt-0.5 text-xs text-muted-copy">
                 {subtitle}
               </p>
             )}
@@ -49,7 +49,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
       <div className="flex-1">{children}</div>
 
       {footer && (
-        <div className="mt-6 flex items-center justify-between border-t border-border-soft pt-6">
+        <div className="mt-4 flex items-center justify-between border-t border-border-soft pt-4">
           {footer}
         </div>
       )}

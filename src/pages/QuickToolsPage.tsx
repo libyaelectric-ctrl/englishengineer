@@ -148,7 +148,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div
-        className="flex flex-wrap gap-2 rounded-[16px] border border-slate-200 bg-white p-3 shadow-sm"
+        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-3"
         role="tablist"
       >
         {(
@@ -175,10 +175,10 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           <Card className="space-y-5" hoverEffect={false}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-950">
+                <h2 className="text-xl font-medium text-foreground">
                   Quick AI Editor
                 </h2>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-muted-copy">
                   AI requires an internet-connected backend. No vendor API key
                   is stored in this browser.
                 </p>
@@ -189,7 +189,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               />
             </div>
             {!status.isConnected && (
-              <div className="space-y-2 rounded-[12px] border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              <div className="space-y-2 rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm text-foreground">
                 <div className="flex flex-wrap gap-2">
                   <StatusBadge label="Backend required" tone="warning" />
                   <StatusBadge label="Mock preview" tone="neutral" />
@@ -206,7 +206,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               value={input}
               onChange={(event) => setInput(event.target.value)}
               placeholder="Paste a site message, report note or email draft"
-              className="min-h-44 w-full rounded-[12px] border border-slate-200 bg-slate-50 p-4 text-sm leading-6 text-slate-900 outline-none transition focus:border-blue-300 focus:bg-white focus:ring-2 focus:ring-blue-100"
+              className="min-h-44 w-full rounded-lg border border-border-soft bg-surface-hover p-4 text-sm leading-6 text-foreground outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10"
             />
             <div className="flex flex-wrap gap-2">
               {QUICK_AI_ACTIONS.map((action) => (
@@ -225,16 +225,16 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </div>
           </Card>
           <Card className="space-y-4" hoverEffect={false}>
-            <h2 className="text-xl font-bold text-slate-950">Result</h2>
+            <h2 className="text-xl font-medium text-foreground">Result</h2>
             {isRunning ? (
               <div className="space-y-3" aria-live="polite">
-                <div className="h-4 animate-pulse rounded bg-slate-200" />
-                <div className="h-4 animate-pulse rounded bg-slate-200" />
-                <div className="h-24 animate-pulse rounded bg-slate-100" />
+                <div className="h-4 animate-pulse rounded-lg bg-surface-hover" />
+                <div className="h-4 animate-pulse rounded-lg bg-surface-hover" />
+                <div className="h-24 animate-pulse rounded-lg bg-surface-hover" />
               </div>
             ) : result ? (
               <>
-                <p className="whitespace-pre-line rounded-[12px] border border-blue-100 bg-blue-50/50 p-4 text-sm leading-6 text-slate-800">
+                <p className="whitespace-pre-line rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
                   {result}
                 </p>
                 <Button
@@ -250,7 +250,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 </Button>
               </>
             ) : (
-              <div className="rounded-[12px] border border-dashed border-slate-300 bg-slate-50 p-10 text-center text-sm text-slate-500">
+              <div className="rounded-xl border border-dashed border-border-hover bg-surface-hover p-10 text-center text-sm text-muted-copy">
                 <Send className="mx-auto mb-3 h-6 w-6" />
                 Choose an action to create a result.
               </div>
@@ -267,10 +267,10 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               <Card key={item.id} className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                    <p className="text-xs font-medium uppercase tracking-widest text-primary">
                       {item.category}
                     </p>
-                    <h2 className="mt-1 text-lg font-bold text-slate-950">
+                    <h2 className="mt-1 text-lg font-medium text-foreground">
                       {item.phrase}
                     </h2>
                   </div>
@@ -285,13 +285,13 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     />
                   </Button>
                 </div>
-                <p className="text-sm text-slate-700">
+                <p className="text-sm text-foreground">
                   <strong>Turkce:</strong> {item.turkishMeaning}
                 </p>
-                <p className="text-sm text-slate-600">
+                <p className="text-sm text-muted-copy">
                   <strong>Use:</strong> {item.whenToUse}
                 </p>
-                <p className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm italic text-slate-700">
+                <p className="rounded-xl border border-border-soft bg-surface-hover p-3 text-sm italic text-foreground">
                   {item.example}
                 </p>
                 <Button
@@ -309,8 +309,8 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {tab === 'dictionary' && (
         <div className="space-y-5">
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-4 shadow-sm focus-within:border-blue-300 focus-within:ring-2 focus-within:ring-blue-100">
-              <Search className="h-4 w-4 text-slate-400" />
+            <label className="flex-1 flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-white px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+              <Search className="h-4 w-4 text-muted-copy" />
               <span className="sr-only">Search site dictionary</span>
               <input
                 value={query}
@@ -332,7 +332,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 }
                 setIsAddingTerm(true);
               }}
-              className="gap-1.5 h-11 bg-primary text-white font-bold"
+              className="gap-1.5 h-11 bg-primary text-white font-medium"
             >
               <Plus className="h-4 w-4" />
               {!hasProjectAccess && <Lock className="h-3 w-3 text-white/85 shrink-0" />}
@@ -341,10 +341,10 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           </div>
 
           {isAddingTerm && (
-            <div className="rounded-[16px] border border-blue-500/20 bg-blue-500/5 p-5 space-y-4 animate-in fade-in duration-300">
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-4 animate-in fade-in duration-300">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-900">Add Custom Terminology</h3>
-                <button type="button" onClick={() => setIsAddingTerm(false)} className="text-slate-400 hover:text-slate-600">
+                <h3 className="text-sm font-medium text-foreground">Add Custom Terminology</h3>
+                <button type="button" onClick={() => setIsAddingTerm(false)} className="text-muted-copy hover:text-foreground">
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -355,21 +355,21 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   placeholder="Term (e.g. Grounding grid)"
                   value={newTerm}
                   onChange={(e) => setNewTerm(e.target.value)}
-                  className="rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Turkish Meaning (e.g. Topraklama ağı)"
                   value={newMeaning}
                   onChange={(e) => setNewMeaning(e.target.value)}
-                  className="rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Category (e.g. electrical, civil)"
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
               </div>
 
@@ -379,14 +379,14 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   value={newExplanation}
                   onChange={(e) => setNewExplanation(e.target.value)}
                   rows={2}
-                  className="w-full rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                  className="w-full rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
                   value={newExample}
                   onChange={(e) => setNewExample(e.target.value)}
-                  className="w-full rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                  className="w-full rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <input
@@ -394,25 +394,25 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     placeholder="Common Wrong Usage (e.g. ground grid)"
                     value={newWrongUsage}
                     onChange={(e) => setNewWrongUsage(e.target.value)}
-                    className="rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                    className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                   />
                   <input
                     type="text"
                     placeholder="Related Terms (comma-separated)"
                     value={newRelated}
                     onChange={(e) => setNewRelated(e.target.value)}
-                    className="rounded-[8px] border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-300"
+                    className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
 
               {termError && (
-                <p className="text-xs font-bold text-rose-500">{termError}</p>
+                <p className="text-xs font-medium text-error">{termError}</p>
               )}
 
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsAddingTerm(false)}>Cancel</Button>
-                <Button type="button" onClick={handleAddTerm} className="bg-primary text-white font-bold">Add to Scope</Button>
+                <Button type="button" onClick={handleAddTerm} className="bg-primary text-white font-medium">Add to Scope</Button>
               </div>
             </div>
           )}
@@ -424,13 +424,13 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 <Card key={item.id} className="space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-blue-700">
+                      <p className="text-xs font-medium uppercase tracking-widest text-primary">
                         {item.category}
                       </p>
-                      <h2 className="mt-1 text-xl font-bold text-slate-950">
+                      <h2 className="mt-1 text-xl font-medium text-foreground">
                         {item.term}
                       </h2>
-                      <p className="text-sm font-semibold text-slate-600">
+                      <p className="text-sm font-medium text-foreground">
                         {item.turkishMeaning}
                       </p>
                     </div>
@@ -438,7 +438,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                       {item.isCustom && (
                         <Button
                           variant="ghost"
-                          className="px-2.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50/50"
+                          className="px-2.5 text-error hover:bg-error/10"
                           onClick={() => handleDeleteTerm(item.id)}
                           aria-label="Delete custom term"
                         >
@@ -459,16 +459,16 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                       </Button>
                     </div>
                   </div>
-                  <p className="text-sm leading-6 text-slate-700">
+                  <p className="text-sm leading-6 text-muted-copy">
                     {item.technicalExplanation}
                   </p>
-                  <p className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+                  <p className="rounded-xl border border-border-soft bg-surface-hover p-3 text-sm text-foreground">
                     <strong>Site:</strong> {item.siteExample}
                   </p>
-                  <p className="text-sm text-rose-700">
+                  <p className="text-sm text-warning">
                     <strong>Common mistake:</strong> {item.commonWrongUsage}
                   </p>
-                  <p className="text-xs font-semibold text-slate-500">
+                  <p className="text-xs font-medium text-muted-copy">
                     Related: {item.relatedTerms.join(', ')}
                   </p>
                 </Card>

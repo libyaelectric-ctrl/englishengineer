@@ -195,6 +195,15 @@ export const createBackendConfig = (environment = process.env) => {
         60
       ),
     },
+    workspace: {
+      configured: supabaseConfigured,
+      supabaseUrl: supabaseConfigured
+        ? environment.SUPABASE_URL.trim()
+        : null,
+      supabaseServiceRoleKey: supabaseConfigured
+        ? environment.SUPABASE_SERVICE_ROLE_KEY.trim()
+        : null,
+    },
     rateLimit: {
       windowMs: toPositiveInteger(environment.RATE_LIMIT_WINDOW_MS, 900_000),
       max: toPositiveInteger(environment.RATE_LIMIT_MAX, 100),

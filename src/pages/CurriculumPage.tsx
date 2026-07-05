@@ -175,23 +175,23 @@ const CurriculumPage = () => {
 
       <nav
         aria-label="Learning Hub sections"
-        className="flex flex-wrap gap-2 rounded-xl border border-slate-200 bg-white p-2 shadow-sm"
+        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-2"
       >
         <a
           href="#today"
-          className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-bold text-white"
+          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white"
         >
           Today
         </a>
         <a
           href="#curriculum"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-lg px-4 py-2 text-sm font-medium text-muted-copy hover:bg-surface-hover"
         >
           Curriculum
         </a>
         <a
           href="#review"
-          className="rounded-lg px-4 py-2 text-sm font-bold text-slate-600 hover:bg-sky-50"
+          className="rounded-lg px-4 py-2 text-sm font-medium text-muted-copy hover:bg-surface-hover"
         >
           Learning Memory
         </a>
@@ -236,19 +236,19 @@ const CurriculumPage = () => {
             key={item.label}
             type="button"
             onClick={item.action}
-            className={`min-h-32 rounded-[16px] border p-4 text-left transition-all hover:-translate-y-px hover:border-sky-200 hover:bg-sky-50/50 hover:shadow-sm ${
+            className={`min-h-32 rounded-xl border p-4 text-left transition-all hover:-translate-y-px hover:border-primary hover:bg-surface-hover ${
               index === 0
-                ? 'border-sky-200 bg-sky-50'
-                : 'border-slate-200 bg-white'
+                ? 'border-primary bg-surface-hover'
+                : 'border-border-soft bg-white'
             }`}
           >
-            <span className="text-[10px] font-black uppercase text-slate-500">
+            <span className="text-[10px] font-medium uppercase text-muted-copy">
               {item.label}
             </span>
-            <span className="mt-2 block line-clamp-2 text-sm font-black text-slate-950">
+            <span className="mt-2 block line-clamp-2 text-sm font-medium text-foreground">
               {item.value}
             </span>
-            <span className="mt-2 block text-xs text-slate-500">
+            <span className="mt-2 block text-xs text-muted-copy">
               {item.detail}
             </span>
           </button>
@@ -266,27 +266,27 @@ const CurriculumPage = () => {
             ? [0, 1, 2].map((item) => (
                 <div
                   key={item}
-                  className="h-44 animate-pulse rounded-xl border border-slate-200 bg-slate-50"
+                  className="h-44 animate-pulse rounded-xl border border-border-soft bg-surface-hover"
                 />
               ))
             : missions.map((mission, index) => (
                 <article
                   key={mission.id}
-                  className="flex min-h-44 flex-col rounded-xl border border-slate-200 bg-white p-5"
+                  className="flex min-h-44 flex-col rounded-xl border border-border-soft bg-white p-5"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <StatusBadge
                       label={index === 0 ? 'Recommended' : mission.difficulty}
                       tone={index === 0 ? 'info' : 'neutral'}
                     />
-                    <span className="text-sm font-black text-slate-900">
+                    <span className="text-sm font-medium text-foreground">
                       {mission.cefrBand}
                     </span>
                   </div>
-                  <h3 className="mt-4 font-black text-slate-950">
+                  <h3 className="mt-4 font-medium text-foreground">
                     {mission.title}
                   </h3>
-                  <p className="mt-2 flex-1 text-sm leading-6 text-slate-600">
+                  <p className="mt-2 flex-1 text-sm leading-6 text-muted-copy">
                     {mission.reason}
                   </p>
                   <Button
@@ -317,16 +317,16 @@ const CurriculumPage = () => {
           <div>
             <div className="mb-3 flex items-center justify-between gap-3">
               <div>
-                <p className="text-xs font-bold text-blue-700">
+                <p className="text-xs font-medium text-primary">
                   Unified Review Queue
                 </p>
-                <p className="mt-1 text-sm text-slate-600">
+                <p className="mt-1 text-sm text-muted-copy">
                   Focus on the most useful improvement first.
                 </p>
               </div>
               <Link
                 to="/learning-plan"
-                className="text-sm font-bold text-blue-700 hover:text-blue-800"
+                className="text-sm font-medium text-primary hover:text-primary"
               >
                 View plan
               </Link>
@@ -340,7 +340,7 @@ const CurriculumPage = () => {
                 .map((item, index) => (
                   <div
                     key={item.id}
-                    className="rounded-[14px] border border-slate-200 bg-slate-50 p-4"
+                    className="rounded-xl border border-border-soft bg-surface-hover p-4"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <StatusBadge
@@ -349,14 +349,14 @@ const CurriculumPage = () => {
                         }
                         tone={index === 0 ? 'warning' : 'neutral'}
                       />
-                      <span className="text-xs font-black text-slate-500">
+                      <span className="text-xs font-medium text-muted-copy">
                         {item.priority}
                       </span>
                     </div>
-                    <p className="mt-3 text-sm font-black text-slate-900">
+                    <p className="mt-3 text-sm font-medium text-foreground">
                       {item.label}
                     </p>
-                    <p className="mt-2 text-xs leading-5 text-slate-500">
+                    <p className="mt-2 text-xs leading-5 text-muted-copy">
                       {item.reason}
                     </p>
                     {'route' in item && (
@@ -398,25 +398,25 @@ const CurriculumPage = () => {
                 }}
                 className={`rounded-xl border p-4 text-left transition-colors ${
                   selectedSkill === skill
-                    ? 'border-sky-300 bg-sky-50'
-                    : 'border-slate-200 bg-white hover:border-sky-200'
+                    ? 'border-primary bg-surface-hover'
+                    : 'border-border-soft bg-white hover:border-primary'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <Icon className="h-5 w-5 text-sky-700" />
+                  <Icon className="h-5 w-5 text-primary" />
                   {skill === weakestSkill && (
-                    <span className="text-[9px] font-black uppercase text-amber-700">
+                    <span className="text-[9px] font-medium uppercase text-warning">
                       Focus
                     </span>
                   )}
                 </div>
-                <p className="mt-3 text-sm font-black text-slate-950">
+                <p className="mt-3 text-sm font-medium text-foreground">
                   {meta.label}
                 </p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted-copy">
                   {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
                 </p>
-                <p className="mt-1 text-xs font-bold text-sky-700">
+                <p className="mt-1 text-xs font-medium text-primary">
                   Lesson{' '}
                   {
                     LessonPathEngine.getSkillProgress(profile, skill).lesson
@@ -439,54 +439,54 @@ const CurriculumPage = () => {
           icon={selectedMeta.icon}
         >
           {recommendationLoading || !recommendation ? (
-            <div className="h-72 animate-pulse rounded-xl bg-slate-50" />
+            <div className="h-72 animate-pulse rounded-xl bg-surface-hover" />
           ) : (
             <div className="space-y-6">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-black uppercase text-slate-500">
+                  <p className="text-[10px] font-medium uppercase text-muted-copy">
                     Target CEFR
                   </p>
-                  <p className="mt-1 text-xl font-black text-slate-950">
+                  <p className="mt-1 text-xl font-medium text-foreground">
                     {recommendation.targetCefr}
                   </p>
                 </Card>
                 <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-black uppercase text-slate-500">
+                  <p className="text-[10px] font-medium uppercase text-muted-copy">
                     Safe / Stretch
                   </p>
-                  <p className="mt-1 text-xl font-black text-slate-950">
+                  <p className="mt-1 text-xl font-medium text-foreground">
                     75% / 25%
                   </p>
                 </Card>
                 <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-black uppercase text-slate-500">
+                  <p className="text-[10px] font-medium uppercase text-muted-copy">
                     Effort
                   </p>
-                  <p className="mt-1 text-xl font-black text-slate-950">
+                  <p className="mt-1 text-xl font-medium text-foreground">
                     {recommendation.estimatedMinutes} min
                   </p>
                 </Card>
                 <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-black uppercase text-slate-500">
+                  <p className="text-[10px] font-medium uppercase text-muted-copy">
                     AI required
                   </p>
-                  <p className="mt-1 text-xl font-black text-emerald-700">No</p>
+                  <p className="mt-1 text-xl font-medium text-success">No</p>
                 </Card>
               </div>
 
-              <div className="rounded-xl border border-sky-200 bg-sky-50 p-4">
-                <p className="text-xs font-black uppercase text-sky-700">
+              <div className="rounded-xl border border-primary bg-surface-hover p-4">
+                <p className="text-xs font-medium uppercase text-primary">
                   Why recommended
                 </p>
-                <p className="mt-2 text-sm leading-6 text-sky-950">
+                <p className="mt-2 text-sm leading-6 text-foreground">
                   {recommendation.whyRecommended}
                 </p>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-4">
+              <div className="rounded-xl border border-border-soft bg-white p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-xs font-black uppercase text-slate-500">
+                  <p className="text-xs font-medium uppercase text-muted-copy">
                     Lesson {recommendation.lessonNumber}
                   </p>
                   <StatusBadge
@@ -498,7 +498,7 @@ const CurriculumPage = () => {
                   {Object.values(recommendation.explanation).map((line) => (
                     <p
                       key={line}
-                      className="rounded-[10px] bg-slate-50 p-3 text-xs leading-5 text-slate-600"
+                      className="rounded-lg bg-surface-hover p-3 text-xs leading-5 text-muted-copy"
                     >
                       {line}
                     </p>
@@ -508,7 +508,7 @@ const CurriculumPage = () => {
 
               <div className="grid gap-5 lg:grid-cols-2">
                 <div>
-                  <h3 className="font-black text-slate-950">
+                  <h3 className="font-medium text-foreground">
                     Vocabulary focus
                   </h3>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -516,13 +516,13 @@ const CurriculumPage = () => {
                       recommendation.vocabularyFocus.map(({ term, bucket }) => (
                         <span
                           key={term.id}
-                          className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700"
+                          className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
                         >
                           {term.term} · {bucket}
                         </span>
                       ))
                     ) : (
-                      <span className="text-sm text-slate-500">
+                      <span className="text-sm text-muted-copy">
                         No matching vocabulary for this manual domain. Choose
                         All to use the current-level database set.
                       </span>
@@ -530,25 +530,25 @@ const CurriculumPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-black text-slate-950">Grammar focus</h3>
+                  <h3 className="font-medium text-foreground">Grammar focus</h3>
                   <div className="mt-3 space-y-2">
                     {recommendation.grammarFocus.length > 0 ? (
                       recommendation.grammarFocus.map((rule) => (
                         <p
                           key={rule.id}
-                          className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700"
+                          className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
                         >
                           {rule.title} · {rule.cefrLevel}
                         </p>
                       ))
                     ) : (
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-muted-copy">
                         No matching grammar rule for this manual domain.
                       </p>
                     )}
                   </div>
                   {recommendation.grammarFocus.length > 0 && (
-                    <p className="mt-2 text-xs font-bold text-slate-500">
+                    <p className="mt-2 text-xs font-medium text-muted-copy">
                       Review state:{' '}
                       {
                         GrammarProgressService.get(
@@ -567,17 +567,17 @@ const CurriculumPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <p className="text-xs font-black uppercase text-slate-500">
+              <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+                <p className="text-xs font-medium uppercase text-muted-copy">
                   Expected answer
                 </p>
-                <p className="mt-2 text-sm font-semibold text-slate-800">
+                <p className="mt-2 text-sm font-medium text-foreground">
                   {recommendation.expectedAnswerType}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-slate-500">
+                <p className="mt-2 text-xs leading-5 text-muted-copy">
                   {recommendation.context}
                 </p>
-                <p className="mt-2 text-xs font-black uppercase text-sky-700">
+                <p className="mt-2 text-xs font-medium uppercase text-primary">
                   Weakest-area priority: {recommendation.focusPriority}
                 </p>
               </div>
@@ -588,7 +588,7 @@ const CurriculumPage = () => {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               ) : (
-                <p className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+                <p className="rounded-xl border border-warning bg-surface-hover p-4 text-sm text-foreground">
                   Grammar selection is active in this hub. A dedicated Grammar
                   task runner is not connected in this sprint.
                 </p>
@@ -603,19 +603,19 @@ const CurriculumPage = () => {
             subtitle="Recommendations never remove user control"
             icon={Target}
           >
-            <label className="text-sm font-bold text-slate-700">
+            <label className="text-sm font-medium text-foreground">
               Vocabulary/domain focus
               <select
                 value={domain}
                 onChange={(event) => setDomain(event.target.value)}
-                className="mt-2 min-h-11 w-full rounded-[10px] border border-slate-200 bg-white px-3 font-normal"
+                className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 font-normal"
               >
                 {DOMAINS.map((item) => (
                   <option key={item}>{item}</option>
                 ))}
               </select>
             </label>
-            <p className="mt-4 text-xs leading-5 text-slate-500">
+            <p className="mt-4 text-xs leading-5 text-muted-copy">
               Difficulty remains bounded to the selected skill: three safe
               allocations and one controlled stretch allocation.
             </p>
@@ -626,14 +626,14 @@ const CurriculumPage = () => {
             subtitle={profile.placementCompleted ? 'Completed' : 'Available'}
             icon={Clock3}
           >
-            <p className="text-sm leading-6 text-slate-600">
+            <p className="text-sm leading-6 text-muted-copy">
               {profile.placementCompleted
                 ? `Local placement recommends ${profile.placementBand ?? 'A1'} with ${profile.placementConfidence} confidence.`
                 : 'Take the short Reading, Vocabulary and Grammar placement, or continue at A1.'}
             </p>
             <Link
               to="/placement"
-              className="mt-4 inline-flex text-sm font-bold text-sky-700"
+              className="mt-4 inline-flex text-sm font-medium text-primary"
             >
               {profile.placementCompleted
                 ? 'Retake placement'

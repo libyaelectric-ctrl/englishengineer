@@ -33,6 +33,7 @@ describe('PricingPage', () => {
   it('Start Free guest goes to signup', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -49,13 +50,14 @@ describe('PricingPage', () => {
 
     expect(screen.getByRole('link', { name: 'Start free' })).toHaveAttribute(
       'href',
-      '/signup'
+      '/start'
     );
   });
 
   it('authenticated user goes to dashboard', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -78,6 +80,7 @@ describe('PricingPage', () => {
   it('successful billing health check clears the unavailable warning', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -100,9 +103,9 @@ describe('PricingPage', () => {
 
     await waitFor(() => {
       expect(
-        screen.queryByText(/Stripe backend health check failed/i)
+        screen.queryByText(/Billing service is unavailable/i)
       ).toBeNull();
-      expect(screen.queryByText(/Stripe backend is not verified/i)).toBeNull();
+      expect(screen.queryByText(/Billing service is not verified/i)).toBeNull();
     });
 
     fetchSpy.mockRestore();
@@ -111,6 +114,7 @@ describe('PricingPage', () => {
   it('failed health check shows the warning', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -132,7 +136,7 @@ describe('PricingPage', () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Stripe backend health check failed/i)
+        screen.getByText(/Billing service is unavailable/i)
       ).toBeVisible();
     });
 
@@ -142,6 +146,7 @@ describe('PricingPage', () => {
   it('Pro user does not see a false billing failure', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -168,8 +173,8 @@ describe('PricingPage', () => {
       ).toBeNull();
     });
 
-    // Pro user sees the Current Plan disabled button
-    expect(screen.getByRole('button', { name: 'Current Plan' })).toBeDisabled();
+    // Pro user sees the Current plan disabled button
+    expect(screen.getByRole('button', { name: 'Current plan' })).toBeDisabled();
 
     fetchSpy.mockRestore();
   });

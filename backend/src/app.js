@@ -16,12 +16,17 @@ import {
   createVocabularyLookupService,
   registerVocabularyRoutes,
 } from './vocabulary.js';
+import {
+  createWorkspaceRepository,
+  registerWorkspaceRoutes,
+} from './workspace.js';
 
 export const createApp = ({
   config,
   fetchImpl = fetch,
   stripeClient = createStripeClient(config.stripe),
   billingRepository,
+  workspaceRepository,
   rateLimitStore = createRateLimitStore(config.rateLimit, fetchImpl),
 } = {}) => {
   if (!config) throw new Error('Backend config is required.');
@@ -37,7 +42,7 @@ export const createApp = ({
   app.use(
     cors({
       origin: config.appOrigin,
-      methods: ['GET', 'POST'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: [
         'Authorization',
         'Content-Type',
@@ -82,6 +87,12 @@ export const createApp = ({
     scope: 'vocabulary',
     store: rateLimitStore,
   });
+  const workspaceRateLimiter = createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'workspace',
+    store: rateLimitStore,
+  });
 
   registerAIRoutes(
     app,
@@ -111,6 +122,15 @@ export const createApp = ({
     billingRateLimiter,
     optionalBackendAuth
   );
+  let resolvedWorkspaceRepository = workspaceRepository ?? null;
+  if (!resolvedWorkspaceRepository && config.workspace?.configured) {
+    try {
+      resolvedWorkspaceRepository = createWorkspaceRepository(config, fetchImpl);
+    } catch {}
+  }
+  registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {
+    repository: resolvedWorkspaceRepository,
+  });
 
   app.use((_request, _response, next) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));

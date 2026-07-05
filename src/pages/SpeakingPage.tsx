@@ -197,14 +197,14 @@ const SpeakingPage = () => {
 
       {/* Voice Minute Wallet — Max plan only */}
       {hasMaxAccess && subscription.planId === 'max' && (
-        <div className="flex items-center gap-4 rounded-[12px] border border-sky-200 bg-sky-50/60 px-4 py-3">
-          <Mic className="h-4 w-4 shrink-0 text-sky-600" />
+        <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+          <Mic className="h-4 w-4 shrink-0 text-primary" />
           <div className="flex-1 min-w-0">
             <div className="flex justify-between text-xs mb-1">
-              <span className="font-bold text-sky-900">Monthly Voice Minutes</span>
-              <span className={`font-mono font-bold ${
+              <span className="font-medium text-foreground">Monthly Voice Minutes</span>
+              <span className={`font-mono font-medium ${
                 voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'text-rose-600' :
-                voiceMinutesUsedThisMonth >= 96 ? 'text-amber-600' : 'text-sky-700'
+                voiceMinutesUsedThisMonth >= 96 ? 'text-warning' : 'text-primary'
               }`}>
                 {voiceMinutesUsedThisMonth} / {maxVoiceMinutes} min
               </span>
@@ -213,13 +213,13 @@ const SpeakingPage = () => {
               value={walletPercent}
               color={
                 voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'rose' :
-                voiceMinutesUsedThisMonth >= 96 ? 'amber' : 'cyan'
+                voiceMinutesUsedThisMonth >= 96 ? 'warning' : 'primary'
               }
             />
-            <p className="mt-1 text-[10px] text-sky-600">
+            <p className="mt-1 text-[10px] text-muted-copy">
               {voiceMinutesUsedThisMonth >= maxVoiceMinutes
-                ? '⚠️ Monthly voice quota reached. Upgrade to Exec for unlimited minutes.'
-                : `✓ ${maxVoiceMinutes - voiceMinutesUsedThisMonth} min remaining this month`}
+                ? 'Monthly voice quota reached. Upgrade to Exec for unlimited minutes.'
+                : `${maxVoiceMinutes - voiceMinutesUsedThisMonth} min remaining this month`}
             </p>
           </div>
         </div>
@@ -248,10 +248,10 @@ const SpeakingPage = () => {
               role="tab"
               aria-selected={roleplayFilter === category}
               onClick={() => setRoleplayFilter(category)}
-              className={`min-h-11 rounded-[12px] border px-4 text-sm font-bold transition-colors ${
+              className={`min-h-11 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 roleplayFilter === category
-                  ? 'border-sky-300 bg-sky-50 text-sky-900'
-                  : 'border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:bg-sky-50/60'
+                  ? 'border-primary bg-primary/10 text-foreground'
+                  : 'border-border-soft bg-white text-muted-copy hover:border-primary/30 hover:bg-surface-hover'
               }`}
             >
               {category}
@@ -260,7 +260,7 @@ const SpeakingPage = () => {
         </div>
       </SectionCard>
 
-      <div className="flex flex-wrap gap-2 rounded-[12px] border border-slate-200 bg-white p-2.5 shadow-sm">
+      <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-2.5">
         {roleplayMissions.map((mission) => (
           <button
             key={mission.id}
@@ -284,10 +284,10 @@ const SpeakingPage = () => {
                 { skill: 'speaking', source: 'user' }
               );
             }}
-            className={`flex min-h-11 items-center gap-2 rounded-[10px] border px-4 py-2 text-xs font-bold transition-colors ${
+            className={`flex min-h-11 items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium transition-colors ${
               selectedMissionId === mission.id
-                ? 'border-sky-200 bg-sky-50 text-sky-900'
-                : 'border-transparent text-slate-600 hover:border-sky-200 hover:bg-sky-50/60'
+                ? 'border-primary bg-primary/10 text-foreground'
+                : 'border-transparent text-muted-copy hover:border-primary/30 hover:bg-surface-hover'
             }`}
           >
             <span>{mission.title}</span>
@@ -295,12 +295,12 @@ const SpeakingPage = () => {
               label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
             />
             {typeof completedMissions[mission.id] === 'number' && (
-              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              <CheckCircle2 className="h-3.5 w-3.5 text-success" />
             )}
           </button>
         ))}
         {roleplayMissions.length === 0 && (
-          <p className="px-3 py-3 text-sm text-slate-600">
+          <p className="px-3 py-3 text-sm text-muted-copy">
             No current-level content yet. No Speaking roleplay is available for
             this category and level filter.
           </p>
@@ -319,7 +319,7 @@ const SpeakingPage = () => {
               }
               icon={MessageSquareText}
               trend="Written response evidence"
-              statusColor="cyan"
+              statusColor="primary"
             />
             <MetricCard
               label="Vocabulary Targets"
@@ -333,7 +333,7 @@ const SpeakingPage = () => {
               value={activeMission.cefrLevel}
               icon={Layers}
               trend={getSpeakingRoleplayCategory(activeMission)}
-              statusColor="emerald"
+              statusColor="success"
             />
           </div>
 
@@ -349,24 +349,24 @@ const SpeakingPage = () => {
                 />
               }
             >
-              <div className="rounded-[12px] border border-sky-200 bg-sky-50 p-5">
-                <p className="text-xs font-black uppercase text-sky-700">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                <p className="text-xs font-medium uppercase text-primary">
                   Roleplay prompt
                 </p>
-                <p className="mt-2 text-base leading-7 text-slate-900">
+                <p className="mt-2 text-base leading-7 text-foreground">
                   {activeMission.promptText}
                 </p>
               </div>
 
               {/* Practice Mode Selector */}
-              <div className="mt-5 flex gap-3 border-b border-slate-100 pb-2">
+              <div className="mt-5 flex gap-3 border-b border-border-soft pb-2">
                 <button
                   type="button"
                   onClick={() => setResponseMode('written')}
-                  className={`pb-2 px-1 text-xs font-bold transition-all relative ${
+                  className={`pb-2 px-1 text-xs font-medium transition-all relative ${
                     responseMode === 'written'
-                      ? 'text-sky-600 font-extrabold border-b-2 border-sky-600'
-                      : 'text-slate-400 hover:text-slate-600'
+                      ? 'text-primary font-semibold border-b-2 border-primary'
+                      : 'text-muted-copy hover:text-foreground'
                   }`}
                 >
                   Written Response
@@ -374,16 +374,16 @@ const SpeakingPage = () => {
                 <button
                   type="button"
                   onClick={() => setResponseMode('voice')}
-                  className={`pb-2 px-1 text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  className={`pb-2 px-1 text-xs font-medium transition-all flex items-center gap-1.5 ${
                     responseMode === 'voice'
-                      ? 'text-sky-600 font-extrabold border-b-2 border-sky-600'
-                      : 'text-slate-400 hover:text-slate-600'
+                      ? 'text-primary font-semibold border-b-2 border-primary'
+                      : 'text-muted-copy hover:text-foreground'
                   }`}
                 >
                   <Mic className="h-3.5 w-3.5" />
                   Voice & Microphone Response
                   {!hasMaxAccess && (
-                    <span className="rounded bg-amber-100 px-1 text-[8px] font-extrabold text-amber-800 uppercase">
+                    <span className="rounded bg-warning/10 px-1 text-[8px] font-semibold text-warning uppercase">
                       Max
                     </span>
                   )}
@@ -393,12 +393,12 @@ const SpeakingPage = () => {
               {responseMode === 'written' ? (
                 <>
                   <label
-                    className="mt-5 block text-sm font-black text-slate-800"
+                    className="mt-5 block text-sm font-medium text-foreground"
                     htmlFor="written-roleplay-response"
                   >
                     Written Roleplay response
                   </label>
-                  <p className="mt-1 text-xs leading-5 text-slate-500">
+                  <p className="mt-1 text-xs leading-5 text-muted-copy">
                     This is text-based communication practice, not real speech or
                     pronunciation scoring.
                   </p>
@@ -406,7 +406,7 @@ const SpeakingPage = () => {
                     id="written-roleplay-response"
                     value={typedTranscript}
                     onChange={(event) => setTypedTranscript(event.target.value)}
-                    className="mt-3 min-h-48 w-full resize-y rounded-[12px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-6 text-slate-900 outline-none focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100"
+                    className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10"
                     placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
@@ -426,7 +426,7 @@ const SpeakingPage = () => {
                       <RotateCcw className="h-4 w-4" /> Reset response
                     </Button>
                   </div>
-                  <p className="mt-4 text-xs font-semibold text-slate-500">
+                  <p className="mt-4 text-xs font-medium text-muted-copy">
                     Microphone required: No · AI required: No
                   </p>
                 </>
@@ -434,19 +434,19 @@ const SpeakingPage = () => {
                 /* Voice Practice Panel */
                 <div className="mt-4 space-y-4">
                   {!hasMaxAccess ? (
-                    <div className="rounded-[12px] border border-amber-500/20 bg-amber-500/5 p-6 text-center space-y-4">
-                      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-800">
+                    <div className="rounded-xl border border-warning/20 bg-warning/5 p-6 text-center space-y-4">
+                      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-warning/10 text-warning">
                         <Lock className="h-5 w-5" />
                       </div>
                       <div className="space-y-2">
-                        <p className="text-sm font-bold text-slate-900">Voice Practice & Pronunciation Rating is Locked</p>
-                        <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                        <p className="text-sm font-medium text-foreground">Voice Practice & Pronunciation Rating is Locked</p>
+                        <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
                           Real Voice Speaking, pronunciation analysis, and voice simulator workflows are exclusive features of the Max Plan ($59/mo). Upgrade today to practice speech dynamically.
                         </p>
                       </div>
                       <Button
                         onClick={() => (window.location.href = '/checkout?plan=max')}
-                        className="bg-amber-600 hover:bg-amber-700 text-white font-bold"
+                        className="bg-warning hover:bg-warning/90 text-white font-medium"
                       >
                         Upgrade to Max Plan
                       </Button>
@@ -454,7 +454,7 @@ const SpeakingPage = () => {
                   ) : (
                     <div className="space-y-4">
                       {/* Active Voice Workspace for Max Subscribers */}
-                      <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-5 flex flex-col items-center justify-center min-h-48 relative overflow-hidden">
+                      <div className="rounded-xl border border-border-soft bg-surface-hover p-5 flex flex-col items-center justify-center min-h-48 relative overflow-hidden">
                         {isRecording ? (
                           <div className="flex flex-col items-center gap-3">
                             <div className="flex items-center gap-1.5 h-8">
@@ -463,21 +463,21 @@ const SpeakingPage = () => {
                               <span className="w-1.5 h-7 bg-rose-500 rounded-full animate-bounce delay-150"></span>
                               <span className="w-1.5 h-5 bg-rose-500 rounded-full animate-bounce delay-300"></span>
                             </div>
-                            <p className="text-xs font-bold text-rose-600 uppercase tracking-widest animate-pulse">
+                            <p className="text-xs font-medium text-rose-600 uppercase tracking-widest animate-pulse">
                               Recording... Speak now.
                             </p>
                           </div>
                         ) : recordedAudio ? (
                           <div className="flex flex-col items-center gap-2">
                             <Volume2 className="h-8 w-8 text-primary animate-pulse" />
-                            <p className="text-xs font-bold text-foreground">Audio recording captured successfully</p>
+                            <p className="text-xs font-medium text-foreground">Audio recording captured successfully</p>
                             <span className="text-[10px] text-muted-copy">Click Reset response to re-record</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center gap-2 text-center">
-                            <Mic className="h-8 w-8 text-slate-400" />
-                            <p className="text-xs font-bold text-slate-700">Microphone is configured and ready</p>
-                            <p className="text-[10px] text-slate-400">Click Start Speaking to record your roleplay response</p>
+                            <Mic className="h-8 w-8 text-muted-copy" />
+                            <p className="text-xs font-medium text-foreground">Microphone is configured and ready</p>
+                            <p className="text-[10px] text-muted-copy">Click Start Speaking to record your roleplay response</p>
                           </div>
                         )}
                       </div>
@@ -487,7 +487,7 @@ const SpeakingPage = () => {
                           <button
                             type="button"
                             onClick={startRecording}
-                            className="flex-1 rounded-[12px] bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary/95 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-xs font-medium text-white hover:bg-primary/95 transition-colors flex items-center justify-center gap-2"
                           >
                             <Mic className="h-3.5 w-3.5" />
                             Start Speaking
@@ -497,7 +497,7 @@ const SpeakingPage = () => {
                           <button
                             type="button"
                             disabled
-                            className="flex-1 rounded-[12px] bg-rose-500 px-4 py-2.5 text-xs font-bold text-white opacity-80 flex items-center justify-center gap-2 cursor-not-allowed"
+                            className="flex-1 rounded-lg bg-rose-500 px-4 py-2.5 text-xs font-medium text-white opacity-80 flex items-center justify-center gap-2 cursor-not-allowed"
                           >
                             <MicOff className="h-3.5 w-3.5 animate-spin" />
                             Speaking (4s limit)...
@@ -507,7 +507,7 @@ const SpeakingPage = () => {
                           <button
                             type="button"
                             onClick={submitRoleplay}
-                            className="flex-1 rounded-[12px] bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2"
+                            className="flex-1 rounded-lg bg-success px-4 py-2.5 text-xs font-medium text-white hover:bg-success/90 transition-colors flex items-center justify-center gap-2"
                           >
                             Submit Spoken Response
                           </button>
@@ -528,30 +528,30 @@ const SpeakingPage = () => {
 
                       {/* Spoken loopback transcript */}
                       {recordedAudio && typedTranscript && (
-                        <div className="rounded-[8px] bg-white border border-slate-200 p-3 space-y-1">
-                          <p className="text-[10px] font-black text-slate-700 uppercase tracking-wider">Spoken Loopback Transcript</p>
-                          <p className="text-xs text-slate-800 italic leading-relaxed">"{typedTranscript}"</p>
+                        <div className="rounded-lg bg-white border border-border-soft p-3 space-y-1">
+                          <p className="text-[10px] font-medium text-foreground uppercase tracking-wider">Spoken Loopback Transcript</p>
+                          <p className="text-xs text-foreground italic leading-relaxed">"{typedTranscript}"</p>
                         </div>
                       )}
 
                       {/* Pronunciation Dashboard */}
                       {pronunciationScore && (
-                        <div className="rounded-[12px] border border-emerald-500/20 bg-emerald-50/50 p-4 space-y-3">
+                        <div className="rounded-xl border border-success/20 bg-success/5 p-4 space-y-3">
                           <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-slate-900">Pronunciation Performance</p>
-                            <span className="rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-0.5">
+                            <p className="text-xs font-medium text-foreground">Pronunciation Performance</p>
+                            <span className="rounded-full bg-success/10 text-success text-[10px] font-medium px-2 py-0.5">
                               Score: {pronunciationScore}/100
                             </span>
                           </div>
                           
                           <div className="space-y-1.5">
-                            <p className="text-[10px] font-bold text-slate-500">Phoneme Analysis:</p>
+                            <p className="text-[10px] font-medium text-muted-copy">Phoneme Analysis:</p>
                             <div className="flex flex-wrap gap-2">
                               {phonemeFeedback.map((item, idx) => (
-                                <div key={idx} className="rounded bg-white border border-slate-100 p-2 text-center min-w-16">
-                                  <p className="text-xs font-bold text-slate-800">{item.word}</p>
-                                  <p className="text-[10px] font-mono text-slate-500">{item.phonemes}</p>
-                                  <span className={`text-[9px] font-bold ${item.score >= 90 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                <div key={idx} className="rounded bg-white border border-border-soft p-2 text-center min-w-16">
+                                  <p className="text-xs font-medium text-foreground">{item.word}</p>
+                                  <p className="text-[10px] font-mono text-muted-copy">{item.phonemes}</p>
+                                  <span className={`text-[9px] font-medium ${item.score >= 90 ? 'text-success' : 'text-warning'}`}>
                                     {item.score}%
                                   </span>
                                 </div>
@@ -576,7 +576,7 @@ const SpeakingPage = () => {
                   {activeMission.expectedKeywords.map((term) => (
                     <span
                       key={term}
-                      className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-700"
+                      className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
                     >
                       {term}
                     </span>
@@ -586,7 +586,7 @@ const SpeakingPage = () => {
                   {activeMission.grammarTargets.map((target) => (
                     <p
                       key={target}
-                      className="rounded-[10px] border border-slate-200 bg-white p-3 text-xs text-slate-600"
+                      className="rounded-lg border border-border-soft bg-white p-3 text-xs text-muted-copy"
                     >
                       {target}
                     </p>
@@ -612,7 +612,7 @@ const SpeakingPage = () => {
                       ['Confidence', evaluationResult.confidenceScore],
                     ].map(([label, value]) => (
                       <div key={String(label)}>
-                        <div className="mb-1 flex justify-between text-xs font-bold text-slate-600">
+                        <div className="mb-1 flex justify-between text-xs font-medium text-muted-copy">
                           <span>{label}</span>
                           <span>{value}%</span>
                         </div>
@@ -629,7 +629,7 @@ const SpeakingPage = () => {
                 icon={History}
               >
                 {history.length === 0 ? (
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted-copy">
                     No written roleplay attempt yet.
                   </p>
                 ) : (
@@ -637,20 +637,20 @@ const SpeakingPage = () => {
                     {history.slice(0, 3).map((entry) => (
                       <div
                         key={`${entry.missionId}-${entry.timestamp}`}
-                        className="rounded-[10px] border border-slate-200 bg-slate-50 p-3"
+                        className="rounded-lg border border-border-soft bg-surface-hover p-3"
                       >
                         <div className="flex items-center justify-between gap-3">
-                          <span className="text-xs font-black text-slate-900">
+                          <span className="text-xs font-medium text-foreground">
                             {entry.roleplayMode ?? SPEAKING_MVP_MODE}
                           </span>
-                          <span className="text-xs font-black text-sky-700">
+                          <span className="text-xs font-medium text-primary">
                             {entry.score}%
                           </span>
                         </div>
-                        <p className="mt-2 text-xs text-slate-600">
+                        <p className="mt-2 text-xs text-muted-copy">
                           Error type: {entry.errorType ?? 'No critical issue'}
                         </p>
-                        <p className="mt-1 text-xs leading-5 text-slate-500">
+                        <p className="mt-1 text-xs leading-5 text-muted-copy">
                           {entry.progressNote ??
                             'Progress note will appear after the next attempt.'}
                         </p>

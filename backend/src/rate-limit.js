@@ -10,8 +10,11 @@ return {count, ttl}
 `.trim();
 
 const setRateLimitHeaders = (response, max, count) => {
+  const remaining = String(Math.max(0, max - count));
   response.setHeader('RateLimit-Limit', String(max));
-  response.setHeader('RateLimit-Remaining', String(Math.max(0, max - count)));
+  response.setHeader('RateLimit-Remaining', remaining);
+  response.setHeader('X-RateLimit-Limit', String(max));
+  response.setHeader('X-RateLimit-Remaining', remaining);
 };
 
 export const createUpstashRateLimitStore = ({
@@ -87,10 +90,9 @@ export const createRateLimiter = ({
       try {
         const result = await store.consume(key, windowMs);
         setRateLimitHeaders(response, max, result.count);
-        response.setHeader(
-          'RateLimit-Reset',
-          String(Math.ceil(result.resetAfterMs / 1_000))
-        );
+        const resetSeconds = String(Math.ceil(result.resetAfterMs / 1_000));
+        response.setHeader('RateLimit-Reset', resetSeconds);
+        response.setHeader('X-RateLimit-Reset', resetSeconds);
         if (result.count > max) {
           return next(
             new ApiError(

@@ -38,33 +38,33 @@ const PlacementPage = () => {
   if (result) {
     return (
       <main className="mx-auto max-w-3xl py-4 sm:py-8">
-        <section className="rounded-[16px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-          <CheckCircle2 className="h-8 w-8 text-emerald-600" />
-          <p className="mt-5 text-xs font-black uppercase text-emerald-700">
+        <section className="rounded-xl border border-border-soft bg-white p-6 sm:p-8">
+          <CheckCircle2 className="h-8 w-8 text-success" />
+          <p className="mt-5 text-xs font-medium uppercase text-success">
             Placement complete
           </p>
-          <h1 className="mt-2 text-3xl font-black text-slate-950">
+          <h1 className="mt-2 text-3xl font-medium text-foreground">
             Recommended start: {result.recommendedBand}
           </h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">
+          <p className="mt-3 text-sm leading-6 text-muted-copy">
             Confidence: {result.confidence}. Reading, Vocabulary and Grammar use
             this local estimate. Writing, Listening and Speaking remain at A1
             until their own activity provides evidence.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-bold text-slate-500">Score</p>
-              <p className="mt-1 text-2xl font-black">{result.score}%</p>
+            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+              <p className="text-xs font-medium text-muted-copy">Score</p>
+              <p className="mt-1 text-2xl font-medium">{result.score}%</p>
             </div>
-            <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-bold text-slate-500">Priority</p>
-              <p className="mt-1 font-black capitalize">
+            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+              <p className="text-xs font-medium text-muted-copy">Priority</p>
+              <p className="mt-1 font-medium capitalize">
                 {result.priorityAreas[0] ?? 'Consolidation'}
               </p>
             </div>
-            <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-bold text-slate-500">Evidence</p>
-              <p className="mt-1 font-black">Local rules</p>
+            <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+              <p className="text-xs font-medium text-muted-copy">Evidence</p>
+              <p className="mt-1 font-medium">Local rules</p>
             </div>
           </div>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -82,15 +82,15 @@ const PlacementPage = () => {
 
   return (
     <main className="mx-auto max-w-3xl py-4 sm:py-8">
-      <section className="overflow-hidden rounded-[16px] border border-slate-200 bg-white shadow-sm">
-        <header className="border-b border-slate-200 bg-slate-50 p-5 sm:p-7">
+      <section className="overflow-hidden rounded-xl border border-border-soft bg-white">
+        <header className="border-b border-border-soft bg-surface-hover p-5 sm:p-7">
           <div className="flex items-center gap-3">
-            <ClipboardCheck className="h-5 w-5 text-sky-700" />
+            <ClipboardCheck className="h-5 w-5 text-primary" />
             <div>
-              <p className="text-xs font-black uppercase text-sky-700">
+              <p className="text-xs font-medium uppercase text-primary">
                 Placement MVP
               </p>
-              <h1 className="text-xl font-black text-slate-950">
+              <h1 className="text-xl font-medium text-foreground">
                 Find a practical starting point
               </h1>
             </div>
@@ -99,16 +99,16 @@ const PlacementPage = () => {
             value={((currentIndex + 1) / PLACEMENT_QUESTIONS.length) * 100}
             className="mt-5"
           />
-          <p className="mt-2 text-xs font-semibold text-slate-500">
+          <p className="mt-2 text-xs font-medium text-muted-copy">
             Question {currentIndex + 1} of {PLACEMENT_QUESTIONS.length}
           </p>
         </header>
 
         <div className="p-5 sm:p-7">
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase text-slate-600">
+          <span className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium uppercase text-muted-copy">
             {question.domain} · {question.band}
           </span>
-          <h2 className="mt-5 text-lg font-black leading-7 text-slate-950">
+          <h2 className="mt-5 text-lg font-medium leading-7 text-foreground">
             {question.prompt}
           </h2>
           <div className="mt-5 grid gap-3">
@@ -117,7 +117,7 @@ const PlacementPage = () => {
                 key={choice}
                 type="button"
                 onClick={() => answer(question.id, choiceIndex)}
-                className={`min-h-12 rounded-[12px] border px-4 py-3 text-left text-sm font-semibold transition-colors ${answers[question.id] === choiceIndex ? 'border-sky-300 bg-sky-50 text-sky-900' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50/60'}`}
+                className={`min-h-12 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${answers[question.id] === choiceIndex ? 'border-primary bg-primary/10 text-primary' : 'border-border-soft bg-white text-foreground hover:border-primary/50 hover:bg-primary/5'}`}
               >
                 {choice}
               </button>
@@ -125,7 +125,7 @@ const PlacementPage = () => {
           </div>
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50 p-4 sm:px-7">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-surface-hover p-4 sm:px-7">
           <Button
             variant="ghost"
             onClick={currentIndex === 0 ? continueAtA1 : previous}
@@ -142,7 +142,7 @@ const PlacementPage = () => {
           </Button>
         </footer>
       </section>
-      <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+      <p className="mt-4 text-center text-xs leading-5 text-muted-copy">
         This is an internal Engineering Communication estimate, not an official
         CEFR certificate.
       </p>

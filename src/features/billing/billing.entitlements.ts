@@ -117,6 +117,97 @@ export const canAccessRealVoiceSpeaking = (
   subscription: SubscriptionSnapshot
 ): EntitlementResult => canAccessFeature(subscription, 'realVoiceSpeaking');
 
+const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'pro', 'project', 'max', 'exec', 'private'];
+
+const getPlanLevel = (planId: BillingPlanId): number =>
+  PLAN_HIERARCHY.indexOf(planId);
+
+export const isDowngrade = (from: BillingPlanId, to: BillingPlanId): boolean =>
+  getPlanLevel(to) < getPlanLevel(from);
+
+export interface DowngradeImpact {
+  isDowngrade: boolean;
+  lostFeatures: BillingFeature[];
+  restrictedLimits: { field: string; from: number | 'unlimited'; to: number | 'unlimited' }[];
+  workspaceCount: number;
+  requiresDataCleanup: boolean;
+  warningMessage: string;
+}
+
+export const getDowngradeImpact = (
+  currentPlanId: BillingPlanId,
+  targetPlanId: BillingPlanId,
+  currentWorkspaceCount = 0
+): DowngradeImpact => {
+  if (!isDowngrade(currentPlanId, targetPlanId)) {
+    return {
+      isDowngrade: false,
+      lostFeatures: [],
+      restrictedLimits: [],
+      workspaceCount: currentWorkspaceCount,
+      requiresDataCleanup: false,
+      warningMessage: '',
+    };
+  }
+
+  const currentPlan = BILLING_PLANS[currentPlanId];
+  const targetPlan = BILLING_PLANS[targetPlanId];
+
+  const lostFeatures = currentPlan.features.filter(
+    (f) => !targetPlan.features.includes(f)
+  );
+
+  const restrictedLimits: DowngradeImpact['restrictedLimits'] = [];
+  const limitFields = [
+    'dailyAICoachRequests',
+    'moduleAttemptsPerDay',
+    'vocabularyReviewsPerDay',
+    'documentUploadsPerMonth',
+  ] as const;
+
+  for (const field of limitFields) {
+    const fromVal = currentPlan.limits[field];
+    const toVal = targetPlan.limits[field];
+    if (fromVal !== toVal) {
+      restrictedLimits.push({ field, from: fromVal, to: toVal });
+    }
+  }
+
+  const targetWorkspaceLimit =
+    targetPlanId === 'free' || targetPlanId === 'pro'
+      ? 1
+      : targetPlanId === 'project'
+        ? 3
+        : Infinity;
+  const requiresDataCleanup = currentWorkspaceCount > targetWorkspaceLimit;
+
+  const messages: string[] = [];
+  if (lostFeatures.length > 0) {
+    messages.push(
+      `You will lose access to: ${lostFeatures.join(', ')}.`
+    );
+  }
+  if (restrictedLimits.length > 0) {
+    messages.push(
+      `Some limits will be reduced. Your data will be preserved but access may be restricted.`
+    );
+  }
+  if (requiresDataCleanup) {
+    messages.push(
+      `You have ${currentWorkspaceCount} workspaces but ${targetPlanId} plan allows ${targetWorkspaceLimit}. Please remove extra workspaces before downgrading.`
+    );
+  }
+
+  return {
+    isDowngrade: true,
+    lostFeatures,
+    restrictedLimits,
+    workspaceCount: currentWorkspaceCount,
+    requiresDataCleanup,
+    warningMessage: messages.join(' '),
+  };
+};
+
 export const getPlanLimitLabel = (
   subscription: SubscriptionSnapshot,
   limit:

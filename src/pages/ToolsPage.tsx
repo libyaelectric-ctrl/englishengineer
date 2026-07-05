@@ -43,7 +43,7 @@ const ToolsPage = () => {
       <div
         role="tablist"
         aria-label="Tools sections"
-        className="grid gap-3 rounded-[16px] border border-slate-200 bg-white p-3 shadow-sm md:grid-cols-3"
+        className="grid gap-3 rounded-xl border border-border-soft bg-white p-3 md:grid-cols-3"
       >
         {(
           [
@@ -82,18 +82,18 @@ const ToolsPage = () => {
               aria-label={item.label}
               aria-selected={active}
               onClick={() => chooseTab(item.id)}
-              className={`min-w-0 rounded-[14px] border p-4 text-left transition-colors ${active ? 'border-blue-300 bg-blue-50' : 'border-slate-200 bg-white hover:border-blue-200 hover:bg-blue-50/40'}`}
+              className={`min-w-0 rounded-lg border p-4 text-left transition-colors ${active ? 'border-primary bg-primary/5' : 'border-border-soft bg-white hover:border-primary/30 hover:bg-surface-hover'}`}
             >
               <div className="flex items-start justify-between gap-3">
-                <span className="rounded-[11px] border border-blue-100 bg-white p-2 text-blue-700">
+                <span className="rounded-lg border border-primary/20 bg-white p-2 text-primary">
                   <Icon className="h-4 w-4" />
                 </span>
-                {active && <CheckCircle2 className="h-4 w-4 text-blue-700" />}
+                {active && <CheckCircle2 className="h-4 w-4 text-primary" />}
               </div>
-              <p className="mt-3 text-sm font-black text-slate-950">
+              <p className="mt-3 text-sm font-medium text-foreground">
                 {item.title}
               </p>
-              <p className="mt-1 text-xs leading-5 text-slate-500">
+              <p className="mt-1 text-xs leading-5 text-muted-copy">
                 {item.description}
               </p>
             </button>
@@ -108,7 +108,7 @@ const ToolsPage = () => {
       ) : (
         <Suspense
           fallback={
-            <div className="h-64 animate-pulse rounded-[16px] border border-slate-200 bg-slate-50" />
+            <div className="h-64 animate-pulse rounded-xl border border-border-soft bg-surface-hover" />
           }
         >
           <AIPage embedded />

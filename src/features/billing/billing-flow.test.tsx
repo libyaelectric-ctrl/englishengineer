@@ -30,6 +30,7 @@ describe('Billing Checkout Flow', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
       providerMode: 'supabase',
+      initialize: vi.fn(),
     } as any);
 
     vi.mocked(useBillingStore).mockReturnValue({
@@ -102,7 +103,7 @@ describe('Billing Checkout Flow', () => {
     );
 
     const profileButton = screen.getByRole('button', {
-      name: 'Upgrade to Pro',
+      name: 'Upgrade Plan',
     });
     fireEvent.click(profileButton);
 

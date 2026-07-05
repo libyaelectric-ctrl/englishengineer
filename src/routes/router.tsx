@@ -36,6 +36,7 @@ const Team = lazy(() => import('@/pages/TeamPage'));
 const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
+const Watch = lazy(() => import('@/features/watch/WatchPage'));
 
 export const router = createBrowserRouter([
   {
@@ -271,6 +272,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <TeamMember />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'watch',
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Watch />
           </Suspense>
         ),
       },

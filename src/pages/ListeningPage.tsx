@@ -87,7 +87,7 @@ const ListeningPage = () => {
         onChange={setLevelFilter}
       />
 
-      <div className="rounded-xl border border-sky-200 bg-sky-50 p-4 text-sm leading-6 text-sky-900">
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-primary">
         <strong>Transcript practice is active.</strong> Recorded audio is not
         included in this workspace yet, and no microphone access is required.
       </div>
@@ -102,11 +102,11 @@ const ListeningPage = () => {
             {visibleMissions.map((mission) => (
               <article
                 key={mission.id}
-                className="rounded-xl border border-slate-200 bg-white p-5"
+                className="rounded-xl border border-border-soft bg-background p-5"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-sky-50 px-2 py-1 text-xs font-black text-sky-700">
+                    <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                       {mission.cefrLevel}
                     </span>
                     <LevelAccessBadge
@@ -116,14 +116,14 @@ const ListeningPage = () => {
                       )}
                     />
                   </div>
-                  <span className="text-xs text-slate-500">
+                  <span className="text-xs text-muted-copy">
                     {mission.estimatedMinutes} min
                   </span>
                 </div>
-                <h2 className="mt-3 font-black text-slate-950">
+                <h2 className="mt-3 font-medium text-foreground">
                   {mission.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
+                <p className="mt-2 text-sm leading-6 text-muted-copy">
                   {mission.description}
                 </p>
                 <Button
@@ -145,7 +145,7 @@ const ListeningPage = () => {
             <Button variant="outline" onClick={() => setWorkspaceOpen(false)}>
               Back to tasks
             </Button>
-            <span className="text-sm font-bold text-slate-600">
+            <span className="text-sm font-medium text-muted-copy">
               {currentMission.cefrLevel} · {currentMission.missionType}
             </span>
           </div>
@@ -155,7 +155,7 @@ const ListeningPage = () => {
             subtitle="Read the transcript, then complete all three response modes"
             icon={FileText}
           >
-            <div className="whitespace-pre-line rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm leading-7 text-slate-800">
+            <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
               {currentMission.transcript}
             </div>
           </SectionCard>
@@ -170,9 +170,9 @@ const ListeningPage = () => {
                 {currentMission.questions.map((question, index) => (
                   <fieldset
                     key={question.id}
-                    className="rounded-xl border border-slate-200 p-4"
+                    className="rounded-xl border border-border-soft p-4"
                   >
-                    <legend className="px-2 text-sm font-black text-slate-900">
+                    <legend className="px-2 text-sm font-medium text-foreground">
                       {index + 1}. {question.questionText}
                     </legend>
                     {question.type === 'multiple_choice' ? (
@@ -182,7 +182,7 @@ const ListeningPage = () => {
                           return (
                             <label
                               key={choice}
-                              className="flex cursor-pointer gap-2 rounded-lg border border-slate-200 p-3 text-sm text-slate-700"
+                              className="flex cursor-pointer gap-2 rounded-lg border border-border-soft p-3 text-sm text-foreground"
                             >
                               <input
                                 type="radio"
@@ -202,7 +202,7 @@ const ListeningPage = () => {
                         onChange={(event) =>
                           setAnswer(question.id, event.target.value)
                         }
-                        className="mt-3 w-full rounded-lg border border-slate-200 p-3 text-sm"
+                        className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
                       >
                         <option value="">Select true or false</option>
                         <option value="true">True</option>
@@ -215,13 +215,13 @@ const ListeningPage = () => {
                           setAnswer(question.id, event.target.value)
                         }
                         placeholder="Complete the missing technical phrase"
-                        className="mt-3 w-full rounded-lg border border-slate-200 p-3 text-sm"
+                        className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
                       />
                     )}
                   </fieldset>
                 ))}
 
-                <label className="block text-sm font-black text-slate-900">
+                <label className="block text-sm font-medium text-foreground">
                   <span className="flex items-center gap-2">
                     <KeyRound className="h-4 w-4" /> Key words you identified
                   </span>
@@ -229,15 +229,15 @@ const ListeningPage = () => {
                     value={userKeywords}
                     onChange={(event) => setUserKeywords(event.target.value)}
                     placeholder="Separate key words with commas"
-                    className="mt-2 w-full rounded-lg border border-slate-200 p-3 font-normal"
+                    className="mt-2 w-full rounded-lg border border-border-soft p-3 font-normal"
                   />
                 </label>
-                <label className="block text-sm font-black text-slate-900">
+                <label className="block text-sm font-medium text-foreground">
                   Short transcript summary
                   <textarea
                     value={summary}
                     onChange={(event) => setSummary(event.target.value)}
-                    className="mt-2 min-h-28 w-full rounded-lg border border-slate-200 p-3 font-normal"
+                    className="mt-2 min-h-28 w-full rounded-lg border border-border-soft p-3 font-normal"
                   />
                 </label>
                 <Button
@@ -255,30 +255,30 @@ const ListeningPage = () => {
               icon={CheckCircle2}
             >
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs font-bold text-slate-500">
+                <div className="rounded-xl bg-surface-hover p-4">
+                  <p className="text-xs font-medium text-muted-copy">
                     Final score
                   </p>
-                  <p className="text-2xl font-black">
+                  <p className="text-2xl font-medium">
                     {evaluationResult.finalScore}%
                   </p>
                 </div>
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs font-bold text-slate-500">
+                <div className="rounded-xl bg-surface-hover p-4">
+                  <p className="text-xs font-medium text-muted-copy">
                     Comprehension
                   </p>
-                  <p className="text-2xl font-black">
+                  <p className="text-2xl font-medium">
                     {evaluationResult.comprehensionScore}%
                   </p>
                 </div>
-                <div className="rounded-xl bg-slate-50 p-4">
-                  <p className="text-xs font-bold text-slate-500">Key words</p>
-                  <p className="text-2xl font-black">
+                <div className="rounded-xl bg-surface-hover p-4">
+                  <p className="text-xs font-medium text-muted-copy">Key words</p>
+                  <p className="text-2xl font-medium">
                     {evaluationResult.keywordScore}%
                   </p>
                 </div>
               </div>
-              <p className="mt-4 text-sm leading-6 text-slate-700">
+              <p className="mt-4 text-sm leading-6 text-foreground">
                 {evaluationResult.feedback}
               </p>
               <Button className="mt-4" onClick={resetCurrentMission}>

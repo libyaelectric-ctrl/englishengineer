@@ -10,16 +10,18 @@ type ButtonVariant =
   | 'success';
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: 'public-primary-action',
-  secondary: 'public-secondary-action',
+  primary:
+    'bg-foreground text-background hover:opacity-90 border border-foreground',
+  secondary:
+    'bg-surface text-foreground border border-border-soft hover:bg-surface-hover hover:border-border-hover',
   outline:
-    'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover hover:border-border-hover',
+    'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover',
   ghost:
     'border border-transparent bg-transparent text-muted-copy hover:bg-surface-hover hover:text-foreground',
   danger:
-    'border border-red-500/10 bg-red-500/5 text-red-400 hover:bg-red-500/10 hover:border-red-500/20',
+    'border border-error/20 bg-error/5 text-error hover:bg-error/10',
   success:
-    'border border-emerald-500/10 bg-emerald-500/5 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/20',
+    'border border-success/20 bg-success/5 text-success hover:bg-success/10',
 };
 
 export const Button = React.forwardRef<
@@ -29,7 +31,7 @@ export const Button = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      'inline-flex min-h-10 min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words px-4 py-2 text-center text-xs font-bold leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-45 cursor-pointer focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+      'inline-flex min-h-10 min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-lg px-4 py-2 text-center text-sm font-medium leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
       variantClasses[variant],
       className
     )}

@@ -86,16 +86,16 @@ const documents: Record<
 const LegalPage = ({ document }: { document: LegalDocument }) => {
   const content = documents[document];
   return (
-    <main className="bg-slate-50 py-14">
+    <main className="bg-surface py-14">
       <PageMetadata title={content.title} description={content.summary} />
       <article className="mx-auto max-w-3xl px-4 sm:px-6">
         <p className="public-eyebrow">Product template</p>
-        <h1 className="mt-3 text-4xl font-black text-slate-950">
+        <h1 className="mt-3 text-4xl font-medium text-foreground">
           {content.title}
         </h1>
-        <p className="mt-4 leading-7 text-slate-600">{content.summary}</p>
+        <p className="mt-4 leading-7 text-muted-copy">{content.summary}</p>
         <div
-          className="mt-8 flex items-start gap-3 rounded-[16px] border border-amber-200 bg-amber-50 p-4 text-sm font-semibold leading-6 text-amber-900"
+          className="mt-8 flex items-start gap-3 rounded-xl border border-warning/20 bg-warning/5 p-4 text-sm font-medium leading-6 text-foreground"
           role="note"
           aria-label="Legal review required"
         >
@@ -107,9 +107,9 @@ const LegalPage = ({ document }: { document: LegalDocument }) => {
         </div>
         <div className="mt-8 space-y-8">
           {content.sections.map(([title, text]) => (
-            <section key={title} className="border-t border-slate-200 pt-6">
-              <h2 className="text-xl font-bold text-slate-900">{title}</h2>
-              <p className="mt-3 leading-7 text-slate-600">{text}</p>
+            <section key={title} className="border-t border-border-soft pt-6">
+              <h2 className="text-xl font-medium text-foreground">{title}</h2>
+              <p className="mt-3 leading-7 text-muted-copy">{text}</p>
             </section>
           ))}
         </div>
