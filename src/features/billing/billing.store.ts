@@ -33,12 +33,10 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
-    } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Billing initialization failed.';
-      set({ isLoading: false, error: message });
+    } catch {
+      // Fallback to local subscription on any error
+      const localSubscription = BillingService.getLocalSubscription();
+      set({ subscription: localSubscription, isLoading: false });
     }
   },
 
@@ -51,10 +49,10 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Billing refresh failed.';
-      set({ isLoading: false, error: message });
+    } catch {
+      // Fallback to local subscription on any error
+      const localSubscription = BillingService.getLocalSubscription();
+      set({ subscription: localSubscription, isLoading: false });
     }
   },
 

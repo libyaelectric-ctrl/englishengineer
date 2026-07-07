@@ -64,7 +64,7 @@ SUPABASE_SERVICE_ROLE_KEY=<Supabase dashboard → Settings → API>
 BILLING_REPOSITORY=supabase
 
 STRIPE_SECRET_KEY=<Stripe dashboard → API keys>
-STRIPE_WEBHOOK_SECRET=whsec_c8eesV8fALLdATYti6ZXCgyHKmxn8IWa
+STRIPE_WEBHOOK_SECRET=<Stripe Webhook Secret>
 STRIPE_PRICE_PRO_MONTHLY=<Stripe → Products → Pro plan price_xxx>
 STRIPE_PRICE_TEAM_MONTHLY=<Stripe → Products → Team plan price_xxx>
 

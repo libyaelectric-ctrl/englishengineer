@@ -40,7 +40,7 @@ describe('environment validation', () => {
 
   it('accepts local development and real HTTPS service URLs', () => {
     expect(isConfiguredPublicUrl('http://127.0.0.1:3001')).toBe(true);
-    expect(isConfiguredPublicUrl('https://api.engineeros.app')).toBe(true);
+    expect(isConfiguredPublicUrl('https://api.EngVox.app')).toBe(true);
     expect(isConfiguredPublicUrl('not-a-url')).toBe(false);
   });
 });

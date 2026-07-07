@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AUTH_CONFIG } from './auth.config';
-import { EngineerOSDatabase } from './supabase.types';
+import { EngVoxDatabase } from './supabase.types';
 
 let cachedClient: SupabaseClient | null = null;
 
@@ -16,7 +16,7 @@ export const getSupabaseClient = (): SupabaseClient | null => {
   }
 
   if (!cachedClient) {
-    cachedClient = createClient<EngineerOSDatabase>(
+    cachedClient = createClient<EngVoxDatabase>(
       AUTH_CONFIG.supabase.url,
       AUTH_CONFIG.supabase.anonKey,
       {

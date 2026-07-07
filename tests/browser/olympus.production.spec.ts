@@ -25,7 +25,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await page.goto('/');
     await expect(
       page.getByRole('heading', {
-        name: /work-ready english for international engineering projects/i,
+        name: /master the emails.*rfis.*site meetings/i,
       })
     ).toBeVisible();
     await page.getByRole('link', { name: 'Log in', exact: true }).click();

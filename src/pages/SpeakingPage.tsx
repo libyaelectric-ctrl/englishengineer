@@ -251,7 +251,7 @@ const SpeakingPage = () => {
               className={`min-h-11 rounded-lg border px-4 text-sm font-medium transition-colors ${
                 roleplayFilter === category
                   ? 'border-primary bg-primary/10 text-foreground'
-                  : 'border-border-soft bg-white text-muted-copy hover:border-primary/30 hover:bg-surface-hover'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:bg-surface-hover'
               }`}
             >
               {category}
@@ -260,7 +260,7 @@ const SpeakingPage = () => {
         </div>
       </SectionCard>
 
-      <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-2.5">
+      <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-2.5">
         {roleplayMissions.map((mission) => (
           <button
             key={mission.id}
@@ -406,7 +406,7 @@ const SpeakingPage = () => {
                     id="written-roleplay-response"
                     value={typedTranscript}
                     onChange={(event) => setTypedTranscript(event.target.value)}
-                    className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10"
+                    className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
                     placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
@@ -528,7 +528,7 @@ const SpeakingPage = () => {
 
                       {/* Spoken loopback transcript */}
                       {recordedAudio && typedTranscript && (
-                        <div className="rounded-lg bg-white border border-border-soft p-3 space-y-1">
+                        <div className="rounded-lg bg-surface border border-border-soft p-3 space-y-1">
                           <p className="text-[10px] font-medium text-foreground uppercase tracking-wider">Spoken Loopback Transcript</p>
                           <p className="text-xs text-foreground italic leading-relaxed">"{typedTranscript}"</p>
                         </div>
@@ -548,7 +548,7 @@ const SpeakingPage = () => {
                             <p className="text-[10px] font-medium text-muted-copy">Phoneme Analysis:</p>
                             <div className="flex flex-wrap gap-2">
                               {phonemeFeedback.map((item, idx) => (
-                                <div key={idx} className="rounded bg-white border border-border-soft p-2 text-center min-w-16">
+                                <div key={idx} className="rounded bg-surface border border-border-soft p-2 text-center min-w-16">
                                   <p className="text-xs font-medium text-foreground">{item.word}</p>
                                   <p className="text-[10px] font-mono text-muted-copy">{item.phonemes}</p>
                                   <span className={`text-[9px] font-medium ${item.score >= 90 ? 'text-success' : 'text-warning'}`}>
@@ -586,7 +586,7 @@ const SpeakingPage = () => {
                   {activeMission.grammarTargets.map((target) => (
                     <p
                       key={target}
-                      className="rounded-lg border border-border-soft bg-white p-3 text-xs text-muted-copy"
+                      className="rounded-lg border border-border-soft bg-surface p-3 text-xs text-muted-copy"
                     >
                       {target}
                     </p>

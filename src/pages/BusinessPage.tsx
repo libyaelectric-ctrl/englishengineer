@@ -64,15 +64,15 @@ const benefits = [
 ] as const;
 
 const BusinessPage = () => (
-  <main className="bg-white">
+  <main className="bg-transparent">
     <PageMetadata
-      title="EngineerOS for Teams"
+      title="EngVox for Teams"
       description="Role-based engineering communication training and manager summaries for contractors, consultants and project teams."
     />
-    <section className="border-b border-border-soft bg-surface-hover py-16">
+    <section className="border-b border-border-soft bg-surface-hover py-10">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div>
-          <p className="public-eyebrow">EngineerOS Team</p>
+          <p className="public-eyebrow">EngVox Team</p>
           <h1 className="mt-3 text-4xl font-medium leading-tight">
             Communication readiness for engineering organizations.
           </h1>

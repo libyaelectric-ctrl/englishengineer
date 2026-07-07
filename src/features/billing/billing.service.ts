@@ -57,9 +57,13 @@ export const BillingService = {
       return this.getLocalSubscription();
     }
 
-    const subscription = await provider.getSubscriptionStatus(userId);
-    saveSubscription(subscription);
-    return subscription;
+    try {
+      const subscription = await provider.getSubscriptionStatus(userId);
+      saveSubscription(subscription);
+      return subscription;
+    } catch {
+      return this.getLocalSubscription();
+    }
   },
 
   async startCheckout(
@@ -74,15 +78,21 @@ export const BillingService = {
       );
     }
 
-    const response = await provider.createCheckoutSession({
-      userId,
-      email,
-      planId,
-      successUrl: getReturnUrl('/profile?billing=success'),
-      cancelUrl: getReturnUrl('/profile?billing=cancelled'),
-    });
+    try {
+      const response = await provider.createCheckoutSession({
+        userId,
+        email,
+        planId,
+        successUrl: getReturnUrl('/profile?billing=success'),
+        cancelUrl: getReturnUrl('/profile?billing=cancelled'),
+      });
 
-    window.location.assign(response.url);
+      window.location.assign(response.url);
+    } catch {
+      throw new Error(
+        'Billing backend is unavailable. Please try again later or use demo mode.'
+      );
+    }
   },
 
   async openCustomerPortal(userId: string): Promise<void> {
@@ -93,11 +103,17 @@ export const BillingService = {
       );
     }
 
-    const response = await provider.createCustomerPortalSession({
-      userId,
-      returnUrl: getReturnUrl('/profile'),
-    });
+    try {
+      const response = await provider.createCustomerPortalSession({
+        userId,
+        returnUrl: getReturnUrl('/profile'),
+      });
 
-    window.location.assign(response.url);
+      window.location.assign(response.url);
+    } catch {
+      throw new Error(
+        'Billing backend is unavailable. Please try again later.'
+      );
+    }
   },
 };

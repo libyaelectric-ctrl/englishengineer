@@ -62,7 +62,7 @@ const AnalyticsPage = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <PageHeader
         title="Analytics Pro"
-        description="Local analytics derived from completed EngineerOS activity. Estimates improve as real learning sessions accumulate."
+        description="Local analytics derived from completed EngVox activity. Estimates improve as real learning sessions accumulate."
         badgeText={
           analytics.recentSessions.length > 0
             ? `CEFR ESTIMATE: ${analytics.estimatedCefr}`

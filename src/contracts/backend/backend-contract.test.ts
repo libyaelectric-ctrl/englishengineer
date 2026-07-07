@@ -88,8 +88,8 @@ describe('backend SaaS contract', () => {
       userId: 'user_1',
       email: 'engineer@example.com',
       planId: 'pro',
-      successUrl: 'https://app.engineeros.com/profile?billing=success',
-      cancelUrl: 'https://app.engineeros.com/profile?billing=cancel',
+      successUrl: 'https://app.EngVox.com/profile?billing=success',
+      cancelUrl: 'https://app.EngVox.com/profile?billing=cancel',
     });
 
     expect(result.valid).toBe(true);

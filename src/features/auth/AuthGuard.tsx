@@ -18,7 +18,7 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   if (isLoading) {
     return (
       <LoadingState
-        title="Opening EngineerOS"
+        title="Opening EngVox"
         description="Restoring your professional learning workspace."
       />
     );

@@ -9,11 +9,11 @@ const documents: Record<
 > = {
   terms: {
     title: 'Terms of Service',
-    summary: 'Template terms for using the EngineerOS learning platform.',
+    summary: 'Template terms for using the EngVox learning platform.',
     sections: [
       [
         'Service scope',
-        'EngineerOS provides engineering communication learning tools, local demo workflows and optional backend integrations.',
+        'EngVox provides engineering communication learning tools, local demo workflows and optional backend integrations.',
       ],
       [
         'Accounts and access',
@@ -51,7 +51,7 @@ const documents: Record<
     sections: [
       [
         'Essential storage',
-        'EngineerOS uses browser storage for authentication state, learning progress and interface preferences.',
+        'EngVox uses browser storage for authentication state, learning progress and interface preferences.',
       ],
       [
         'Optional analytics',
@@ -65,7 +65,7 @@ const documents: Record<
   },
   refund: {
     title: 'Refund Policy',
-    summary: 'Template refund guidance for future paid EngineerOS plans.',
+    summary: 'Template refund guidance for future paid EngVox plans.',
     sections: [
       [
         'Current status',
@@ -86,7 +86,7 @@ const documents: Record<
 const LegalPage = ({ document }: { document: LegalDocument }) => {
   const content = documents[document];
   return (
-    <main className="bg-surface py-14">
+    <main className="bg-transparent py-10">
       <PageMetadata title={content.title} description={content.summary} />
       <article className="mx-auto max-w-3xl px-4 sm:px-6">
         <p className="public-eyebrow">Product template</p>

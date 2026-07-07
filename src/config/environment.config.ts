@@ -1,6 +1,6 @@
 import { logger } from '@/shared/logger';
 
-export interface EngineerOSEnv {
+export interface EngVoxEnv {
   VITE_APP_VERSION?: string;
   VITE_ENVIRONMENT_MODE?: string;
   VITE_AI_PROVIDER?: string;
@@ -16,8 +16,8 @@ export interface EngineerOSEnv {
   VITE_ERROR_MONITORING_SAMPLE_RATE?: string;
 }
 
-interface ImportMetaWithEngineerOSEnv {
-  env?: EngineerOSEnv;
+interface ImportMetaWithEngVoxEnv {
+  env?: EngVoxEnv;
 }
 
 export interface EnvironmentValidationResult {
@@ -38,7 +38,7 @@ export interface EnvironmentValidationResult {
   };
 }
 
-const env = (import.meta as unknown as ImportMetaWithEngineerOSEnv).env;
+const env = (import.meta as unknown as ImportMetaWithEngVoxEnv).env;
 
 export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
   const normalized = value?.trim();
@@ -74,14 +74,14 @@ const normalizeEnvironmentMode = (
 };
 
 const getUnsafeFrontendEnvKeys = (
-  source: EngineerOSEnv | undefined
+  source: EngVoxEnv | undefined
 ): string[] =>
   Object.keys(source || {}).filter((key) =>
     /SECRET|PRIVATE|SERVICE_ROLE|STRIPE_SECRET|WEBHOOK_SECRET/i.test(key)
   );
 
 export const validateEnvironment = (
-  source: EngineerOSEnv | undefined = env
+  source: EngVoxEnv | undefined = env
 ): EnvironmentValidationResult => {
   const errors: string[] = [];
   const warnings: string[] = [];

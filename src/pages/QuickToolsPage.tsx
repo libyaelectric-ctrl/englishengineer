@@ -148,7 +148,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div
-        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-3"
+        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-3"
         role="tablist"
       >
         {(
@@ -206,7 +206,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               value={input}
               onChange={(event) => setInput(event.target.value)}
               placeholder="Paste a site message, report note or email draft"
-              className="min-h-44 w-full rounded-lg border border-border-soft bg-surface-hover p-4 text-sm leading-6 text-foreground outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10"
+              className="min-h-44 w-full rounded-lg border border-border-soft bg-surface-hover p-4 text-sm leading-6 text-foreground outline-none transition focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
             />
             <div className="flex flex-wrap gap-2">
               {QUICK_AI_ACTIONS.map((action) => (
@@ -309,7 +309,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {tab === 'dictionary' && (
         <div className="space-y-5">
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-            <label className="flex-1 flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-white px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+            <label className="flex-1 flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-surface px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
               <Search className="h-4 w-4 text-muted-copy" />
               <span className="sr-only">Search site dictionary</span>
               <input
@@ -355,21 +355,21 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   placeholder="Term (e.g. Grounding grid)"
                   value={newTerm}
                   onChange={(e) => setNewTerm(e.target.value)}
-                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Turkish Meaning (e.g. Topraklama ağı)"
                   value={newMeaning}
                   onChange={(e) => setNewMeaning(e.target.value)}
-                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Category (e.g. electrical, civil)"
                   value={newCategory}
                   onChange={(e) => setNewCategory(e.target.value)}
-                  className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
               </div>
 
@@ -379,14 +379,14 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   value={newExplanation}
                   onChange={(e) => setNewExplanation(e.target.value)}
                   rows={2}
-                  className="w-full rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <input
                   type="text"
                   placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
                   value={newExample}
                   onChange={(e) => setNewExample(e.target.value)}
-                  className="w-full rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                  className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <input
@@ -394,14 +394,14 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     placeholder="Common Wrong Usage (e.g. ground grid)"
                     value={newWrongUsage}
                     onChange={(e) => setNewWrongUsage(e.target.value)}
-                    className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                    className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                   />
                   <input
                     type="text"
                     placeholder="Related Terms (comma-separated)"
                     value={newRelated}
                     onChange={(e) => setNewRelated(e.target.value)}
-                    className="rounded-lg border border-border-soft bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                    className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>

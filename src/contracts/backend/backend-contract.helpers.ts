@@ -346,8 +346,8 @@ export const validateBackendAIRequest = (
   } else {
     if (!hasString(metadata, 'requestId'))
       errors.push('metadata.requestId is required');
-    if (metadata.client !== 'engineeros-web') {
-      errors.push('metadata.client must be engineeros-web');
+    if (metadata.client !== 'EngVox-web') {
+      errors.push('metadata.client must be EngVox-web');
     }
     if (!hasString(metadata, 'sentAt'))
       errors.push('metadata.sentAt is required');

@@ -2,7 +2,9 @@
  * Secure, generic, and type-safe wrapper around localStorage
  * with fallback mechanisms for safe environments.
  */
-export const STORAGE_CHANGE_EVENT = 'engineeros:storage-change';
+import { logger } from '@/shared/logger';
+
+export const STORAGE_CHANGE_EVENT = 'EngVox:storage-change';
 export type StorageNamespaceSnapshot = Record<string, unknown>;
 
 const notifyStorageChange = (key: string): void => {
@@ -44,7 +46,7 @@ export const storage = {
       notifyStorageChange(k);
       return true;
     } catch (e) {
-      console.warn(
+      logger.w(
         `[STORAGE] Failed to write key "eos_${k}" to localStorage:`,
         e
       );
@@ -66,7 +68,7 @@ export const storage = {
       }
       return JSON.parse(item) as T;
     } catch (e) {
-      console.warn(
+      logger.w(
         `[STORAGE] Failed to read/parse key "eos_${k}" from localStorage:`,
         e
       );
@@ -86,7 +88,7 @@ export const storage = {
       notifyStorageChange(k);
       return true;
     } catch (e) {
-      console.warn(
+      logger.w(
         `[STORAGE] Failed to remove key "eos_${k}" from localStorage:`,
         e
       );
@@ -116,7 +118,7 @@ export const storage = {
         }
       });
     } catch (e) {
-      console.warn('[STORAGE] Failed to export localized namespace:', e);
+      logger.w('[STORAGE] Failed to export localized namespace:', e);
     }
     return snapshot;
   },
@@ -139,7 +141,7 @@ export const storage = {
       keysToRemove.forEach((key) => localStorage.removeItem(key));
       notifyStorageChange('*');
     } catch (e) {
-      console.warn('[STORAGE] Failed to clear localized namespace keys:', e);
+      logger.w('[STORAGE] Failed to clear localized namespace keys:', e);
     }
   },
 };

@@ -87,7 +87,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
@@ -203,7 +203,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               ).map(([label, text]) => (
                 <details
                   key={label}
-                  className="rounded-lg border border-border-soft bg-surface-hover open:bg-white"
+                  className="rounded-lg border border-border-soft bg-surface-hover open:bg-surface"
                 >
                   <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-foreground">
                     {label} version

@@ -2,23 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/brand/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="EngVox" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://englishengineer-production.up.railway.app https://generativelanguage.googleapis.com; frame-src 'none'; object-src 'none'" />
     <meta
       name="description"
       content="Engineering communication practice for site meetings, inspections, RFIs, commissioning, QA/QC and technical reporting."
     />
     <meta
       property="og:title"
-      content="EngineerOS | Engineering Communication Operating System"
+      content="EngVox | Engineering Communication Platform"
     />
     <meta
       property="og:description"
       content="Engineering communication practice for international construction projects."
     />
     <meta property="og:type" content="website" />
-    <title>EngineerOS | Engineering Communication Operating System</title>
+    <meta property="og:image" content="https://englishengineer.vercel.app/brand/logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://englishengineer.vercel.app/brand/logo.png" />
+    <title>EngVox | Your Engineering Voice</title>
   </head>
-  <body class="bg-slate-50 text-slate-950 antialiased selection:bg-primary/20">
+  <body class="text-slate-950 antialiased selection:bg-primary/20">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

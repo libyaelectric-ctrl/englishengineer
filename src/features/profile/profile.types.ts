@@ -1,10 +1,10 @@
 export const SKILL_NAMES = [
+  'vocabulary',
+  'grammar',
   'reading',
   'writing',
   'listening',
   'speaking',
-  'vocabulary',
-  'grammar',
 ] as const;
 
 export type SkillName = (typeof SKILL_NAMES)[number];

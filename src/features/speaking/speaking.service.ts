@@ -13,7 +13,7 @@ import { VocabularyService } from '@/features/vocabulary';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
 import { getSpeakingHistoryDetails } from './speaking-mvp';
 
-const STORAGE_KEY = 'engineeros_speaking_state';
+const STORAGE_KEY = 'EngVox_speaking_state';
 
 const DEFAULT_STATE: SpeakingState = {
   completedMissions: {},

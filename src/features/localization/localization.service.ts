@@ -5,7 +5,7 @@ import type {
   TranslationKey,
 } from './localization.types';
 
-const STORAGE_KEY = 'engineeros_interface_language';
+const STORAGE_KEY = 'EngVox_interface_language';
 
 export const LocalizationService = {
   getLanguage(): SupportedInterfaceLanguage {

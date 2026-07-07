@@ -12,7 +12,7 @@ import { ListeningEvaluator } from './listening.evaluator';
 import { useLearningStore } from '@/core/learning';
 import { VocabularyService } from '@/features/vocabulary';
 
-const STORAGE_KEY = 'engineeros_listening_state';
+const STORAGE_KEY = 'EngVox_listening_state';
 
 const DEFAULT_STATE: ListeningState = {
   completedMissions: {},
@@ -214,7 +214,7 @@ export const ListeningService = {
     }
 
     try {
-      const cache = await caches.open('engineeros-listening-audio-v1');
+      const cache = await caches.open('EngVox-listening-audio-v1');
       const response = await fetch(mission.audioUrl, { cache: 'reload' });
       if (!response.ok) {
         return {

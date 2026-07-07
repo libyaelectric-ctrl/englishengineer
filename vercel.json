@@ -8,32 +8,9 @@
   ],
   "rewrites": [
     {
-      "source": "/api(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/((?!api|assets|favicon.ico|index.html).*)",
+      "source": "/((?!api|assets|brand|_next|favicon.ico|robots.txt).*)",
       "destination": "/index.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
     }
   ],
-  "services": {
-    "frontend": {
-      "root": ".",
-      "framework": "vite"
-    },
-    "backend": {
-      "root": "backend",
-      "entrypoint": "src/app.js"
-    }
-  }
+  "framework": "vite"
 }

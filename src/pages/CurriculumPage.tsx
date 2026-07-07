@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
@@ -65,6 +65,8 @@ const DOMAINS = [
 
 const CurriculumPage = () => {
   const navigate = useNavigate();
+  const { section } = useParams<{ section: string }>();
+  const activeSection = section || 'today';
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile, memory, missions, isLoading } = useLearningCockpit(
     currentUser?.id
@@ -173,30 +175,6 @@ const CurriculumPage = () => {
         badgeColor="primary"
       />
 
-      <nav
-        aria-label="Learning Hub sections"
-        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-white p-2"
-      >
-        <a
-          href="#today"
-          className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white"
-        >
-          Today
-        </a>
-        <a
-          href="#curriculum"
-          className="rounded-lg px-4 py-2 text-sm font-medium text-muted-copy hover:bg-surface-hover"
-        >
-          Curriculum
-        </a>
-        <a
-          href="#review"
-          className="rounded-lg px-4 py-2 text-sm font-medium text-muted-copy hover:bg-surface-hover"
-        >
-          Learning Memory
-        </a>
-      </nav>
-
       <section
         className="grid gap-3 md:grid-cols-3"
         aria-label="Learning actions"
@@ -239,7 +217,7 @@ const CurriculumPage = () => {
             className={`min-h-32 rounded-xl border p-4 text-left transition-all hover:-translate-y-px hover:border-primary hover:bg-surface-hover ${
               index === 0
                 ? 'border-primary bg-surface-hover'
-                : 'border-border-soft bg-white'
+                : 'border-border-soft bg-surface'
             }`}
           >
             <span className="text-[10px] font-medium uppercase text-muted-copy">
@@ -255,6 +233,7 @@ const CurriculumPage = () => {
         ))}
       </section>
 
+      {activeSection === 'today' && (
       <SectionCard
         id="today"
         title="Recommended Today"
@@ -272,7 +251,7 @@ const CurriculumPage = () => {
             : missions.map((mission, index) => (
                 <article
                   key={mission.id}
-                  className="flex min-h-44 flex-col rounded-xl border border-border-soft bg-white p-5"
+                  className="flex min-h-44 flex-col rounded-xl border border-border-soft bg-surface p-5"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <StatusBadge
@@ -300,7 +279,9 @@ const CurriculumPage = () => {
               ))}
         </div>
       </SectionCard>
+      )}
 
+      {activeSection === 'memory' && (
       <SectionCard
         id="review"
         title="Learning Memory"
@@ -376,7 +357,10 @@ const CurriculumPage = () => {
           </div>
         </div>
       </SectionCard>
+      )}
 
+      {activeSection === 'full' && (
+      <>
       <SectionCard
         id="curriculum"
         title="Choose a skill"
@@ -399,7 +383,7 @@ const CurriculumPage = () => {
                 className={`rounded-xl border p-4 text-left transition-colors ${
                   selectedSkill === skill
                     ? 'border-primary bg-surface-hover'
-                    : 'border-border-soft bg-white hover:border-primary'
+                    : 'border-border-soft bg-surface hover:border-primary'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2">
@@ -484,7 +468,7 @@ const CurriculumPage = () => {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-border-soft bg-white p-4">
+              <div className="rounded-xl border border-border-soft bg-surface p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-xs font-medium uppercase text-muted-copy">
                     Lesson {recommendation.lessonNumber}
@@ -608,7 +592,7 @@ const CurriculumPage = () => {
               <select
                 value={domain}
                 onChange={(event) => setDomain(event.target.value)}
-                className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 font-normal"
+                className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
               >
                 {DOMAINS.map((item) => (
                   <option key={item}>{item}</option>
@@ -642,6 +626,8 @@ const CurriculumPage = () => {
           </SectionCard>
         </aside>
       </div>
+      </>
+      )}
     </div>
   );
 };

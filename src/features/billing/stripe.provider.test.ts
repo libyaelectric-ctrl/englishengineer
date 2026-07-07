@@ -25,19 +25,19 @@ describe('StripeBillingProvider', () => {
     vi.stubGlobal('fetch', fetchMock);
 
     const provider = new StripeBillingProvider(
-      'https://billing.engineeros.test'
+      'https://billing.EngVox.test'
     );
     const response = await provider.createCheckoutSession({
       userId: 'user_123',
       email: 'engineer@example.com',
       planId: 'pro',
-      successUrl: 'https://app.engineeros.test/profile?billing=success',
-      cancelUrl: 'https://app.engineeros.test/profile?billing=cancelled',
+      successUrl: 'https://app.EngVox.test/profile?billing=success',
+      cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
     });
 
     expect(response.url).toBe('https://checkout.stripe.test/session');
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://billing.engineeros.test/api/billing/create-checkout-session',
+      'https://billing.EngVox.test/api/billing/create-checkout-session',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
@@ -48,8 +48,8 @@ describe('StripeBillingProvider', () => {
           userId: 'user_123',
           email: 'engineer@example.com',
           planId: 'pro',
-          successUrl: 'https://app.engineeros.test/profile?billing=success',
-          cancelUrl: 'https://app.engineeros.test/profile?billing=cancelled',
+          successUrl: 'https://app.EngVox.test/profile?billing=success',
+          cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
         }),
       })
     );
@@ -57,11 +57,11 @@ describe('StripeBillingProvider', () => {
 
   it('requires a Supabase access token before checkout', async () => {
     getBackendAuthHeaders.mockResolvedValue({
-      'X-EngineerOS-User-Id': 'user_123',
+      'X-EngVox-User-Id': 'user_123',
     });
 
     const provider = new StripeBillingProvider(
-      'https://billing.engineeros.test'
+      'https://billing.EngVox.test'
     );
 
     await expect(
@@ -69,8 +69,8 @@ describe('StripeBillingProvider', () => {
         userId: 'user_123',
         email: 'engineer@example.com',
         planId: 'pro',
-        successUrl: 'https://app.engineeros.test/profile?billing=success',
-        cancelUrl: 'https://app.engineeros.test/profile?billing=cancelled',
+        successUrl: 'https://app.EngVox.test/profile?billing=success',
+        cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
       })
     ).rejects.toThrow(/sign in with your account before upgrading to pro/i);
   });

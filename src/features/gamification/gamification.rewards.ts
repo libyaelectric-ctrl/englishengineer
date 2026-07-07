@@ -38,7 +38,7 @@ export const LEVEL_REWARDS: GamificationReward[] = [
 export const DAILY_LOGIN_REWARD: GamificationReward = {
   id: 'reward_daily_login',
   title: 'Daily Login Reward',
-  description: 'Claimed for returning to EngineerOS today.',
+  description: 'Claimed for returning to EngVox today.',
   xp: 10,
   coins: 5,
 };

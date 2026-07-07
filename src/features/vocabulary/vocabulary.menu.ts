@@ -61,7 +61,7 @@ export interface VocabularySearchFilters {
   status?: string;
 }
 
-const STORAGE_KEY = 'engineeros_vocabulary_menu';
+const STORAGE_KEY = 'EngVox_vocabulary_menu';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const emptyState = (): VocabularyMenuState => ({

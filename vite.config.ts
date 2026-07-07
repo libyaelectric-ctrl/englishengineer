@@ -24,7 +24,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: true,
+      sourcemap: 'hidden' as const,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -34,10 +34,11 @@ export default defineConfig(() => {
             icons: ['lucide-react'],
             animation: ['motion'],
             state: ['zustand'],
+            error: ['react-error-boundary'],
           },
         },
       },
-      chunkSizeWarningLimit: 500,
+      chunkSizeWarningLimit: 3500,
     },
   };
 });

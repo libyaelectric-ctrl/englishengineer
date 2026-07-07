@@ -36,32 +36,32 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     pro: {
       unitAmount: 1900,
       nickname: 'Pro Monthly',
-      productName: 'EngineerOS Pro',
+      productName: 'EngVox Pro',
     },
     project: {
       unitAmount: 3900,
       nickname: 'Project Monthly',
-      productName: 'EngineerOS Project',
+      productName: 'EngVox Project',
     },
     max: {
       unitAmount: 5900,
       nickname: 'Max Monthly',
-      productName: 'EngineerOS Max',
+      productName: 'EngVox Max',
     },
     exec: {
       unitAmount: 9900,
       nickname: 'Exec Monthly',
-      productName: 'EngineerOS Exec',
+      productName: 'EngVox Exec',
     },
     private: {
       unitAmount: 99900,
       nickname: 'Private Monthly',
-      productName: 'EngineerOS Private',
+      productName: 'EngVox Private',
     },
     team: {
       unitAmount: 1900,
       nickname: 'Team Monthly',
-      productName: 'EngineerOS Team',
+      productName: 'EngVox Team',
     },
   };
 

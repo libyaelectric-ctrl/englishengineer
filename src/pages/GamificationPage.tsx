@@ -304,7 +304,7 @@ const MissionList = ({
               className={`text-[10px] font-mono uppercase border px-2 py-1 rounded-lg self-start ${
                 mission.isCompleted
                   ? 'bg-success/10 text-success border-success/20'
-                  : 'border-border-soft bg-white text-muted-copy'
+                  : 'border-border-soft bg-surface text-muted-copy'
               }`}
             >
               {mission.isCompleted

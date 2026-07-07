@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import {
   AppEvent,
   AppEventHandler,
@@ -23,7 +24,7 @@ class EventBus {
         try {
           handler(event);
         } catch (error) {
-          console.error(
+          logger.e(
             `[EventBus] Error executing subscriber for event type "${event.type}":`,
             error
           );
@@ -36,7 +37,7 @@ class EventBus {
       try {
         handler(event);
       } catch (error) {
-        console.error(
+        logger.e(
           `[EventBus] Error executing wildcard subscriber for event type "${event.type}":`,
           error
         );

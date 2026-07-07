@@ -1,1 +1,0 @@
-QA Audit Document: 1. Substation grounding layout spacing check. 2. Safety checklist is complete.

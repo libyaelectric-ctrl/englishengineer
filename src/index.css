@@ -15,7 +15,7 @@
   --color-soft: rgba(0, 0, 0, 0.04);
   --color-border-soft: #e8e8e8;
   --color-border-hover: #d4d4d4;
-  --color-muted-copy: #8a8a8a;
+  --color-muted-copy: #767676;
   --color-focus: rgba(0, 0, 0, 0.12);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
@@ -47,7 +47,7 @@
   --color-soft: rgba(255, 255, 255, 0.06);
   --color-border-soft: #262626;
   --color-border-hover: #404040;
-  --color-muted-copy: #737373;
+  --color-muted-copy: #a3a3a3;
   --color-focus: rgba(255, 255, 255, 0.15);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
@@ -109,13 +109,31 @@
   }
 
   html {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     scroll-behavior: smooth;
+    background: transparent;
+  }
+
+  html::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/brand/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: -1;
   }
 
   body {
-    @apply bg-background text-foreground antialiased font-sans;
+    @apply text-foreground antialiased font-sans;
     min-height: 100vh;
+    background: transparent;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -305,14 +323,18 @@
   }
 
   .public-card {
-    background: #ffffff;
-    border: 1px solid #e8e8e8;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(232, 232, 232, 0.6);
     border-radius: var(--radius-card);
   }
 
   .dark .public-card {
-    background: #141414;
-    border: 1px solid #262626;
+    background: rgba(20, 20, 20, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(38, 38, 38, 0.6);
   }
 
   .public-eyebrow {

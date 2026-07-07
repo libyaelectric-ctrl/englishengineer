@@ -11,5 +11,5 @@ export const getBackendAuthHeaders = async (
     }
   }
 
-  return localUserId ? { 'X-EngineerOS-User-Id': localUserId } : {};
+  return localUserId ? { 'X-EngVox-User-Id': localUserId } : {};
 };

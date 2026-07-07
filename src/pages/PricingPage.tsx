@@ -1,4 +1,4 @@
-import { Check, MinusCircle, ShieldAlert, Watch, Crown } from 'lucide-react';
+import { Check, MinusCircle, ShieldAlert } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -10,13 +10,13 @@ import {
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { useAuthStore } from '@/features/auth';
 import { PageMetadata } from '@/shared/components/PageMetadata';
-import { WATCH_SUBSCRIPTION_TIERS } from '@/features/watch';
+import { ProductAnalyticsService } from '@/features/analytics';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
 const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
-  ['free', 'pro', 'project', 'max'].includes(plan.id)
+  ['free', 'pro', 'project', 'max', 'exec', 'private'].includes(plan.id)
 );
 
 const PricingPage = () => {
@@ -26,6 +26,8 @@ const PricingPage = () => {
 
   useEffect(() => {
     void initializeAuth();
+    ProductAnalyticsService.track('screen_viewed', 'pricing');
+    ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing');
   }, [initializeAuth]);
 
   const {
@@ -130,11 +132,14 @@ const PricingPage = () => {
   };
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
-      <PageMetadata title="Pricing" description="Choose the EngineerOS plan that fits your work." />
+    <main className="bg-transparent text-foreground min-h-screen">
+      <PageMetadata title="Pricing" description="Choose the EngVox plan that fits your work." />
 
-      <section className="py-16 text-center">
+      <section className="py-10 text-center">
         <div className="mx-auto max-w-3xl px-4">
+          <div className="flex justify-center mb-4">
+            <img src="/brand/mascot.png" alt="EngVox" className="h-20 w-auto" />
+          </div>
           <p className="text-xs font-medium text-muted-copy">Pricing</p>
           <h1 className="mt-2 text-3xl font-bold sm:text-4xl">Choose your access level.</h1>
           <p className="mt-3 text-sm text-muted-copy max-w-xl mx-auto">
@@ -210,54 +215,44 @@ const PricingPage = () => {
               <thead className="bg-surface-hover/30">
                 <tr>
                   <th className="border-b border-border-soft p-3 font-medium">Feature</th>
-                  {ACTIVE_PLANS.map((p) => (
-                    <th key={p.id} className="border-b border-border-soft p-3 font-medium">{p.name}</th>
+                  {ACTIVE_PLANS.filter(p => ['free', 'pro', 'project', 'max'].includes(p.id)).map((p) => (
+                    <th key={p.id} className="border-b border-border-soft p-3 font-medium text-center">{p.name}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {(['learning', 'ai', 'analytics', 'team', 'limits'] as const).map((key) => (
                   <tr key={key} className="border-b border-border-soft/50 last:border-0 hover:bg-surface-hover/20">
-                    <td className="p-3 font-medium capitalize">{key}</td>
-                    {ACTIVE_PLANS.map((p) => (
-                      <td key={p.id} className="p-3 text-muted-copy">{p.comparison[key]}</td>
+                    <td className="p-3 font-medium capitalize">{key === 'ai' ? 'AI Coach' : key}</td>
+                    {ACTIVE_PLANS.filter(p => ['free', 'pro', 'project', 'max'].includes(p.id)).map((p) => (
+                      <td key={p.id} className="p-3 text-center text-muted-copy">{p.comparison[key]}</td>
                     ))}
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
 
-      {/* Watch section */}
-      <section className="border-t border-border-soft py-12">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="flex items-center gap-3">
-            <Watch className="h-6 w-6 text-muted-copy" />
-            <h2 className="text-lg font-semibold">EngineerOS Watch</h2>
-          </div>
-          <p className="mt-2 max-w-2xl text-xs text-muted-copy leading-relaxed">
-            Track progress, receive reminders, and maintain your streak from your wrist.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {Object.values(WATCH_SUBSCRIPTION_TIERS).map((tier) => (
-              <article key={tier.tier} className="rounded-xl border border-border-soft p-4">
-                <div className="flex items-center gap-2">
-                  <Crown className={`h-4 w-4 ${tier.tier === 'free' ? 'text-muted-copy' : 'text-foreground'}`} />
-                  <p className="text-sm font-medium capitalize">{tier.tier}</p>
-                </div>
-                <p className="mt-2 text-2xl font-bold">${tier.monthlyPrice}<span className="text-xs font-normal text-muted-copy">/mo</span></p>
-                <p className="text-[10px] text-muted-copy">{tier.watchModel}</p>
-                <div className="mt-3 space-y-1">
-                  <div className="flex justify-between text-xs"><span className="text-muted-copy">AI Requests</span><span className="font-medium">{tier.aiRequestsPerDay === -1 ? 'Unlimited' : tier.aiRequestsPerDay}</span></div>
-                  <div className="flex justify-between text-xs"><span className="text-muted-copy">Storage</span><span className="font-medium">{tier.storageLimit === -1 ? 'Unlimited' : `${tier.storageLimit}MB`}</span></div>
-                </div>
-                <Link to="/watch" className="mt-3 flex h-8 w-full items-center justify-center rounded-lg border border-border-soft text-xs font-medium hover:bg-surface-hover transition-colors">
-                  Details
-                </Link>
-              </article>
-            ))}
+          {/* Enterprise section */}
+          <div className="mt-8 rounded-xl border border-border-soft bg-background p-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground text-background text-sm font-bold">EP</div>
+              <div>
+                <h3 className="text-sm font-semibold">Enterprise & Private</h3>
+                <p className="text-xs text-muted-copy">For large teams and government contractors</p>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-lg border border-border-soft p-4">
+                <p className="text-sm font-medium">Exec · $99/mo</p>
+                <p className="mt-1 text-xs text-muted-copy">VIP coaching, priority support, offline audio</p>
+              </div>
+              <div className="rounded-lg border border-border-soft p-4">
+                <p className="text-sm font-medium">Private · $999/mo</p>
+                <p className="mt-1 text-xs text-muted-copy">Dedicated server, zero-data retention, custom security</p>
+              </div>
+            </div>
+            <p className="mt-4 text-xs text-muted-copy">Contact us for enterprise deployment and custom requirements.</p>
           </div>
         </div>
       </section>

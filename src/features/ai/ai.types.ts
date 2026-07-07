@@ -119,7 +119,7 @@ export interface AIRequestMetadata {
   contractVersion: AIContractVersion;
   requestId: string;
   sentAt: string;
-  client: 'engineeros-web';
+  client: 'EngVox-web';
 }
 
 export interface AIResponseMetadata {

@@ -210,14 +210,14 @@ const GrammarPage = () => {
           onChange={(event) => setQuery(event.target.value)}
           aria-label="Search grammar"
           placeholder="Search a topic name or engineering use"
-          className="min-h-11 w-full rounded-lg border border-border-soft bg-white px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+          className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-4 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
       </SectionCard>
 
       <div
         role="tablist"
         aria-label="Grammar progress"
-        className="grid grid-cols-2 gap-2 rounded-xl border border-border-soft bg-white p-2 sm:grid-cols-4"
+        className="grid grid-cols-2 gap-2 rounded-xl border border-border-soft bg-surface p-2 sm:grid-cols-4"
       >
         {TABS.map((item) => (
           <button
@@ -247,7 +247,7 @@ const GrammarPage = () => {
         </div>
       ) : (
         <div className="grid gap-5 lg:grid-cols-[minmax(240px,0.38fr)_minmax(0,0.62fr)]">
-          <aside className="max-h-[70vh] space-y-2 overflow-y-auto rounded-xl border border-border-soft bg-white p-3">
+          <aside className="max-h-[70vh] space-y-2 overflow-y-auto rounded-xl border border-border-soft bg-surface p-3">
             {visibleRules.map((rule) => {
               const lessonNumber = rules.findIndex(
                 (item) => item.id === rule.id
@@ -257,7 +257,7 @@ const GrammarPage = () => {
                   key={rule.id}
                   type="button"
                   onClick={() => setSelectedId(rule.id)}
-                  className={`w-full rounded-lg border p-3 text-left transition-colors ${selectedRule?.id === rule.id ? 'border-primary bg-primary/5' : 'border-border-soft bg-white hover:border-primary/30 hover:bg-primary/5'}`}
+                  className={`w-full rounded-lg border p-3 text-left transition-colors ${selectedRule?.id === rule.id ? 'border-primary bg-primary/5' : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
@@ -294,7 +294,7 @@ const GrammarPage = () => {
                     {getGrammarReviewReason(selectedProgress)}
                   </div>
                 )}
-                <div className="rounded-lg border border-border-soft bg-white p-4">
+                <div className="rounded-lg border border-border-soft bg-surface p-4">
                   <p className="text-xs font-medium uppercase text-muted-copy">
                     {LocalizationService.translate(
                       'grammar.meaningFunction',
@@ -350,7 +350,7 @@ const GrammarPage = () => {
                   {selectedRule.examples.slice(0, 3).map((example) => (
                     <div
                       key={example.english}
-                      className="rounded-lg border border-border-soft bg-white p-3"
+                      className="rounded-lg border border-border-soft bg-surface p-3"
                     >
                       <p className="text-sm font-medium text-foreground">
                         {example.english}
@@ -402,7 +402,7 @@ const GrammarPage = () => {
                   </span>
                   {selectedRule.skillUse.includes('reading') && (
                     <Link
-                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-white px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
+                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
                       to="/reading"
                     >
                       Reading
@@ -410,7 +410,7 @@ const GrammarPage = () => {
                   )}
                   {selectedRule.skillUse.includes('writing') && (
                     <Link
-                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-white px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
+                      className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-3 text-sm font-medium text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
                       to="/writing"
                     >
                       Writing

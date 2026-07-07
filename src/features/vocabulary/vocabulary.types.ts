@@ -41,7 +41,7 @@ export type VocabularyWordStatus =
   | 'Mastered';
 
 export type VocabularyWordSource =
-  | 'EngineerOS Dictionary'
+  | 'EngVox Dictionary'
   | 'Free Dictionary API'
   | 'Wiktionary-powered lookup'
   | 'LibreTranslate'

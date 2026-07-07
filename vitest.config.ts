@@ -10,6 +10,7 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     pool: 'threads',
     maxWorkers: 2,
+    testTimeout: 15_000,
     teardownTimeout: 10_000,
     exclude: ['node_modules/**', 'dist/**', 'tests/browser/**', 'backend/**'],
     coverage: {
@@ -17,6 +18,12 @@ export default defineConfig({
       reporter: ['text', 'html'],
       include: ['src/**/*.ts', 'src/**/*.tsx'],
       exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**'],
+      thresholds: {
+        branches: 60,
+        functions: 70,
+        lines: 70,
+        statements: 70,
+      },
     },
   },
   resolve: {

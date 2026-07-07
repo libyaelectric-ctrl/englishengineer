@@ -5,7 +5,7 @@ import type {
   VocabularyEntry,
 } from './vocabulary.types';
 
-const CACHE_KEY = 'engineeros_vocabulary_lookup_cache';
+const CACHE_KEY = 'EngVox_vocabulary_lookup_cache';
 
 interface ImportMetaWithVocabularyEnv {
   env: {

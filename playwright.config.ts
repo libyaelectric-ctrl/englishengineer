@@ -29,5 +29,11 @@ export default defineConfig({
         viewport: { width: 1440, height: 1000 },
       },
     },
+    {
+      name: 'mobile-safari',
+      use: {
+        ...devices['iPhone 14'],
+      },
+    },
   ],
 });

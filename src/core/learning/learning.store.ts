@@ -471,7 +471,7 @@ const DEFAULT_ACHIEVEMENTS: Achievement[] = [
   {
     id: 'ach_1',
     title: 'First Mission',
-    description: 'Complete any training mission on EngineerOS',
+    description: 'Complete any training mission on EngVox',
     criteriaType: 'first_mission',
     criteriaValue: 1,
     unlocked: false,
@@ -500,7 +500,7 @@ const DEFAULT_ACHIEVEMENTS: Achievement[] = [
   {
     id: 'ach_4',
     title: '7 Day Streak',
-    description: 'Maintain a 7-day learning streak in EngineerOS',
+    description: 'Maintain a 7-day learning streak in EngVox',
     criteriaType: 'streak',
     criteriaValue: 7,
     unlocked: false,

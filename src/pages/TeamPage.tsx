@@ -28,7 +28,7 @@ const TeamPage = () => {
 
   return (
     <main className="space-y-6">
-      <header className="flex flex-col gap-4 border-b border-soft pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <header className="flex flex-col gap-4 border-b border-border-soft pb-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl font-medium text-foreground">
@@ -49,7 +49,7 @@ const TeamPage = () => {
           type="button"
           disabled
           title="Export requires a verified Team backend"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-soft bg-surface-hover px-4 text-sm font-medium text-muted-copy disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface-hover px-4 text-sm font-medium text-muted-copy disabled:cursor-not-allowed disabled:opacity-70"
         >
           <Download className="h-4 w-4" />
           Export requires backend
@@ -79,7 +79,7 @@ const TeamPage = () => {
             ].map(([label, value]) => (
               <div
                 key={label}
-                className={`rounded-xl border bg-white p-5 ${label === 'Inactive / risk' && Number(value) > 0 ? 'border-warning bg-warning/60' : 'border-soft'}`}
+                className={`rounded-xl border bg-surface p-5 ${label === 'Inactive / risk' && Number(value) > 0 ? 'border-warning bg-warning/60' : 'border-border-soft'}`}
               >
                 <p className="text-xs font-medium text-muted-copy">{label}</p>
                 <p className="mt-2 text-2xl font-medium text-foreground">
@@ -88,8 +88,8 @@ const TeamPage = () => {
               </div>
             ))}
           </section>
-          <section className="rounded-xl border border-soft bg-white">
-            <div className="border-b border-soft p-5">
+          <section className="rounded-xl border border-border-soft bg-surface">
+            <div className="border-b border-border-soft p-5">
               <div className="flex items-center gap-2">
                 <LockKeyhole
                   className="h-4 w-4 text-primary"
@@ -102,7 +102,7 @@ const TeamPage = () => {
                 not shown here.
               </p>
             </div>
-            <div className="hidden grid-cols-[1fr_0.6fr_0.5fr_auto] gap-2 border-b border-soft bg-surface-hover px-5 py-3 text-[10px] font-medium uppercase text-muted-copy sm:grid">
+            <div className="hidden grid-cols-[1fr_0.6fr_0.5fr_auto] gap-2 border-b border-border-soft bg-surface-hover px-5 py-3 text-[10px] font-medium uppercase text-muted-copy sm:grid">
               <span>Learner</span>
               <span>Level estimate</span>
               <span>Progress</span>
@@ -149,7 +149,7 @@ const TeamPage = () => {
           </section>
           <section className="grid gap-5 lg:grid-cols-2">
             <form
-              className="rounded-xl border border-soft bg-white p-5"
+              className="rounded-xl border border-border-soft bg-surface p-5"
               onSubmit={(event) => {
                 event.preventDefault();
                 if (!email.trim()) return;
@@ -193,7 +193,7 @@ const TeamPage = () => {
                 Create pending invite
               </button>
             </form>
-            <div className="rounded-xl border border-soft bg-white p-5">
+            <div className="rounded-xl border border-border-soft bg-surface p-5">
               <div className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
                 <h2 className="font-medium">Pending invites</h2>
@@ -217,7 +217,7 @@ const TeamPage = () => {
                   {team.invitations.map((invite) => (
                     <div
                       key={invite.id}
-                      className="rounded-lg border border-soft bg-surface-hover p-3"
+                      className="rounded-lg border border-border-soft bg-surface-hover p-3"
                     >
                       <p className="text-sm font-medium">{invite.email}</p>
                       <p className="mt-1 text-xs text-warning">
@@ -227,7 +227,7 @@ const TeamPage = () => {
                         <button
                           type="button"
                           onClick={() => team.resendInvitation(invite.id)}
-                          className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-soft bg-white px-3 py-2 text-xs font-medium transition-colors hover:border-primary/30 hover:bg-primary/5"
+                          className="inline-flex min-h-10 items-center gap-1 rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium transition-colors hover:border-primary/30 hover:bg-primary/5"
                         >
                           <RefreshCw className="h-3.5 w-3.5" />
                           Resend record

@@ -141,7 +141,7 @@ const WritingPage = () => {
         <EmptyLevelState skill="Writing" />
         <Link
           to="/curriculum"
-          className="inline-flex text-sm font-bold text-sky-700"
+          className="inline-flex text-sm font-bold text-primary"
         >
           Back to Learning Hub
         </Link>
@@ -303,10 +303,10 @@ const WritingPage = () => {
           />
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-xl font-black text-slate-950 tracking-tight">
+              <h3 className="text-xl font-black text-foreground tracking-tight">
                 Technical Mission Library
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5 font-medium">
+              <p className="text-xs text-muted-copy mt-0.5 font-medium">
                 Select a professional drafting scenario to begin technical
                 revision assessment
               </p>
@@ -334,8 +334,8 @@ const WritingPage = () => {
                 <div
                   key={m.id}
                   id={`writing-card-${m.id}`}
-                  className={`group relative rounded-[16px] border bg-white p-5 transition-all duration-200 hover:-translate-y-px hover:border-sky-200 hover:bg-sky-50/30 hover:shadow-sm ${
-                    isCompleted ? 'border-emerald-500/20' : 'border-slate-200'
+                  className={`group relative rounded-xl border bg-surface p-5 transition-all duration-200 hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/30 hover:shadow-sm ${
+                    isCompleted ? 'border-emerald-500/20' : 'border-border-soft'
                   }`}
                 >
                   <div className="flex flex-col h-full justify-between space-y-4">
@@ -364,26 +364,26 @@ const WritingPage = () => {
                         >
                           {m.difficulty}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 ml-auto flex items-center gap-1">
+                        <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {m.estimatedMinutes}m
                         </span>
                       </div>
 
                       {/* Title & Desc */}
                       <div>
-                        <h4 className="text-base font-bold text-slate-950 group-hover:text-sky-800 transition-colors">
+                        <h4 className="text-base font-bold text-foreground group-hover:text-foreground transition-colors">
                           {m.title}
                         </h4>
-                        <p className="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed">
                           {m.description}
                         </p>
                       </div>
                     </div>
 
                     {/* Footer Row */}
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-200">
+                    <div className="flex items-center justify-between pt-4 border-t border-border-soft">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold font-mono bg-slate-50 border border-slate-200 text-slate-600 px-2 py-1 rounded">
+                        <span className="text-[10px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded">
                           {m.discipline}
                         </span>
                       </div>
@@ -395,7 +395,7 @@ const WritingPage = () => {
                             <span>Score: {bestScore}%</span>
                           </div>
                         ) : (
-                          <span className="text-[10px] font-bold font-mono text-slate-500 uppercase">
+                          <span className="text-[10px] font-bold font-mono text-muted-copy uppercase">
                             Available
                           </span>
                         )}
@@ -404,8 +404,8 @@ const WritingPage = () => {
                           onClick={() => handleLaunchMission(m.id)}
                           className={`h-8 px-3 rounded-md font-bold text-xs flex items-center gap-1 ${
                             isCompleted
-                              ? 'border border-slate-200 bg-white text-slate-700 hover:bg-sky-50'
-                              : 'bg-sky-600 hover:bg-sky-700 text-white font-black'
+                              ? 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'
+                              : 'bg-primary hover:bg-primary-hover text-white font-black'
                           }`}
                         >
                           {isCompleted ? (
@@ -422,7 +422,7 @@ const WritingPage = () => {
               );
             })}
             {visibleMissions.length === 0 && (
-              <div className="col-span-full rounded-xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-600">
+              <div className="col-span-full rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-muted-copy">
                 No current-level content yet. No Writing missions are available
                 for this filter.
               </div>
@@ -435,10 +435,10 @@ const WritingPage = () => {
       {activeTab === 'workspace' && (
         <div className="space-y-6">
           {/* Header Bar */}
-          <div className="flex flex-col gap-4 rounded-[16px] border border-slate-200 bg-white p-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between">
             <button
               onClick={handleBackToMissions}
-              className="flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-sky-800 transition-colors"
+              className="flex items-center gap-2 text-xs font-bold text-muted-copy hover:text-foreground transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>Back to Writing list</span>
@@ -450,7 +450,7 @@ const WritingPage = () => {
               >
                 Level: {currentMission.cefrLevel}
               </span>
-              <span className="text-xs font-mono text-slate-600 bg-slate-50 px-3 py-1 rounded border border-slate-200 flex items-center gap-1.5">
+              <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>
                   Elapsed: {WritingHelpers.formatTime(timeSpentSeconds)}
@@ -465,7 +465,7 @@ const WritingPage = () => {
               >
                 <ChevronLeft className="h-4 w-4" /> Previous
               </Button>
-              <span className="min-w-14 text-center text-xs font-black text-slate-600">
+              <span className="min-w-14 text-center text-xs font-black text-muted-copy">
                 {currentMissionIndex + 1}/{visibleMissions.length}
               </span>
               <Button
@@ -477,7 +477,7 @@ const WritingPage = () => {
               </Button>
               <Link
                 to="/curriculum"
-                className="hidden text-xs font-bold text-sky-700 sm:inline-flex"
+                className="hidden text-xs font-bold text-primary sm:inline-flex"
               >
                 Hub
               </Link>
@@ -494,26 +494,26 @@ const WritingPage = () => {
                   subtitle={currentMission.description}
                   icon={PenTool}
                   headerActions={
-                    <span className="rounded-[10px] border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-[10px] text-slate-600">
+                    <span className="rounded-lg border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[10px] text-muted-copy">
                       {currentMission.discipline}
                     </span>
                   }
                 >
                   <div className="space-y-4">
-                    <div className="rounded-[12px] border border-sky-200 bg-sky-50 p-4 text-sm text-slate-700">
-                      <p className="text-xs font-black uppercase text-sky-800">
+                    <div className="rounded-xl border border-border-soft bg-surface-hover p-4 text-sm text-foreground">
+                      <p className="text-xs font-black uppercase text-foreground">
                         Scenario
                       </p>
                       <p className="mt-2 leading-6">
                         {currentMission.scenario ?? currentMission.description}
                       </p>
                       {currentMission.task && (
-                        <p className="mt-3 font-semibold text-slate-900">
+                        <p className="mt-3 font-semibold text-foreground">
                           Goal: {currentMission.task}
                         </p>
                       )}
                       {currentMission.expectedStructure && (
-                        <p className="mt-2 text-xs leading-5 text-slate-600">
+                        <p className="mt-2 text-xs leading-5 text-muted-copy">
                           Required points:{' '}
                           {currentMission.expectedStructure.join(' · ')}
                         </p>
@@ -522,11 +522,11 @@ const WritingPage = () => {
                     <textarea
                       value={draft}
                       onChange={(e) => setDraft(e.target.value)}
-                      className="h-64 w-full resize-none rounded-[12px] border border-slate-200 bg-white p-5 text-sm font-medium leading-relaxed text-slate-900 outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-100"
+                      className="h-64 w-full resize-none rounded-xl border border-border-soft bg-surface p-5 text-sm font-medium leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                       placeholder="Start writing or polishing your technical draft..."
                     />
 
-                    <div className="flex items-center justify-between text-xs font-mono text-slate-500 pt-1">
+                    <div className="flex items-center justify-between text-xs font-mono text-muted-copy pt-1">
                       <span>CHARACTER COUNT: {draft.length}</span>
                       <span>READABILITY LEVEL: {getReadabilityScore()}%</span>
                     </div>
@@ -541,8 +541,8 @@ const WritingPage = () => {
                 </SectionCard>
 
                 {/* Style Guideline Insights */}
-                <div className="space-y-3 rounded-[16px] border border-slate-200 bg-slate-50 p-5">
-                  <h5 className="text-xs font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
+                <div className="space-y-3 rounded-xl border border-border-soft bg-surface-hover p-5">
+                  <h5 className="text-xs font-black uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
                     <Info className="h-4 w-4 text-engineer-cyan" />
                     <span>
                       Linguistic Guideline Insights (
@@ -557,11 +557,11 @@ const WritingPage = () => {
                       <h6 className="font-mono text-sm text-primary font-bold uppercase tracking-wide">
                         {selectedRule.type} Correction Guide
                       </h6>
-                      <p className="text-xs text-slate-400 mt-2 leading-relaxed font-medium">
-                        <strong className="text-slate-900">Guideline:</strong>{' '}
+                      <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
+                        <strong className="text-foreground">Guideline:</strong>{' '}
                         {selectedRule.text}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-mono">
+                      <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-mono">
                         <span className="text-rose-400 font-bold">
                           "{selectedRule.original}"
                         </span>{' '}
@@ -573,7 +573,7 @@ const WritingPage = () => {
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <p className="text-xs text-slate-500 italic py-1 font-medium">
+                      <p className="text-xs text-muted-copy italic py-1 font-medium">
                         Click on any linguistic flag in the right column
                         checkpoint, or review the brief outline of required
                         revisions below:
@@ -590,7 +590,7 @@ const WritingPage = () => {
                               className={`text-[10px] font-mono px-2.5 py-1 rounded border transition-all cursor-pointer ${
                                 isFixed
                                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                                  : 'border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:bg-sky-50 hover:text-sky-800'
+                                  : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover hover:bg-surface-hover hover:text-foreground'
                               }`}
                             >
                               {c.type.toUpperCase()}: {c.original}
@@ -626,10 +626,10 @@ const WritingPage = () => {
                       <div className="flex flex-col items-center justify-center text-center p-6 bg-emerald-500/5 rounded-lg border border-emerald-500/20 space-y-4 animate-in zoom-in-95 duration-300">
                         <Check className="h-10 w-10 text-emerald-400 bg-emerald-500/10 p-2 rounded-full" />
                         <div>
-                          <p className="text-sm font-bold text-slate-900">
+                          <p className="text-sm font-bold text-foreground">
                             No Issues Detected
                           </p>
-                          <p className="text-xs text-slate-400 mt-1.5 leading-relaxed font-medium">
+                          <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
                             Linguistic clarity, professional tone, and technical
                             jargon conform completely to standard protocols.
                           </p>
@@ -641,18 +641,18 @@ const WritingPage = () => {
                           <div
                             key={alert.id}
                             onClick={() => setSelectedRule(alert)}
-                            className="group relative cursor-pointer space-y-3 rounded-[12px] border border-slate-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-px hover:border-sky-200 hover:bg-sky-50/60"
+                            className="group relative cursor-pointer space-y-3 rounded-xl border border-border-soft bg-surface p-4 shadow-sm transition-all hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/60"
                           >
                             <div className="flex items-start gap-2.5 text-xs">
                               <AlertTriangle
                                 className={`h-4.5 w-4.5 shrink-0 mt-0.5 ${alert.type === 'grammar' ? 'text-rose-500' : 'text-amber-500'}`}
                               />
-                              <p className="text-slate-300 leading-relaxed font-semibold">
+                              <p className="text-muted-copy leading-relaxed font-semibold">
                                 {alert.text}
                               </p>
                             </div>
-                            <div className="flex items-center justify-between gap-2 border-t border-slate-200 pt-2.5">
-                              <span className="text-[10px] font-mono text-slate-500">
+                            <div className="flex items-center justify-between gap-2 border-t border-border-soft pt-2.5">
+                              <span className="text-[10px] font-mono text-muted-copy">
                                 "{alert.original}" →{' '}
                                 <span className="text-emerald-400 font-bold">
                                   "{alert.fix}"
@@ -674,18 +674,18 @@ const WritingPage = () => {
                     )}
 
                     {/* Submit Bar */}
-                    <div className="flex items-center justify-between border-t border-slate-200 pt-4">
+                    <div className="flex items-center justify-between border-t border-border-soft pt-4">
                       <Button
                         variant="outline"
                         onClick={resetCurrentMission}
-                        className="h-10 border-slate-200 text-xs text-slate-600 hover:text-sky-800"
+                        className="h-10 border-border-soft text-xs text-muted-copy hover:text-foreground"
                       >
                         Reset Sandbox
                       </Button>
 
                       <Button
                         onClick={handleSubmit}
-                        className="bg-primary hover:bg-primary-dark text-slate-950 font-black px-5 h-10"
+                        className="bg-primary hover:bg-primary-hover text-foreground font-black px-5 h-10"
                       >
                         Submit Draft
                       </Button>
@@ -701,7 +701,7 @@ const WritingPage = () => {
                 >
                   <div className="space-y-4">
                     <div className="space-y-1">
-                      <div className="flex justify-between text-xs font-mono text-slate-400 font-bold">
+                      <div className="flex justify-between text-xs font-mono text-muted-copy font-bold">
                         <span>CLARITY SCORE</span>
                         <span>{getReadabilityScore()}%</span>
                       </div>
@@ -711,7 +711,7 @@ const WritingPage = () => {
                       />
                     </div>
                     <div className="space-y-1">
-                      <div className="flex justify-between text-xs font-mono text-slate-400 font-bold">
+                      <div className="flex justify-between text-xs font-mono text-muted-copy font-bold">
                         <span>TECHNICAL DENSITY</span>
                         <span>
                           {selectedMissionId === 'writing_cache_draft'
@@ -743,37 +743,37 @@ const WritingPage = () => {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Score Summary Side Panel */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="flex flex-col items-center space-y-6 rounded-[16px] border border-slate-200 bg-white p-6 text-center shadow-sm">
+                  <div className="flex flex-col items-center space-y-6 rounded-xl border border-border-soft bg-surface p-6 text-center shadow-sm">
                     <div>
-                      <h4 className="text-sm font-black text-slate-400 uppercase tracking-widest font-mono">
+                      <h4 className="text-sm font-black text-muted-copy uppercase tracking-widest font-mono">
                         Composition Outcome
                       </h4>
-                      <p className="text-[10px] text-slate-500 mt-0.5 uppercase">
+                      <p className="text-[10px] text-muted-copy mt-0.5 uppercase">
                         Linguistic Standard Verification
                       </p>
                     </div>
 
                     {/* Circular Score Badge */}
-                    <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-sky-200 bg-sky-50 shadow-sm">
-                      <div className="absolute inset-2 rounded-full border border-dashed border-sky-300" />
+                    <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-border-soft bg-surface-hover shadow-sm">
+                      <div className="absolute inset-2 rounded-full border border-dashed border-border-soft" />
                       <div className="flex flex-col items-center">
-                        <span className="text-4xl font-black leading-none text-slate-950">
+                        <span className="text-4xl font-black leading-none text-foreground">
                           {evaluationResult.finalScore}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 uppercase mt-1">
+                        <span className="text-[10px] font-mono text-muted-copy uppercase mt-1">
                           score %
                         </span>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 italic px-2 font-medium leading-relaxed">
+                    <p className="text-xs text-muted-copy italic px-2 font-medium leading-relaxed">
                       "{evaluationResult.feedback}"
                     </p>
 
                     {/* Skill metrics bar */}
-                    <div className="w-full space-y-4 border-t border-slate-200 pt-4">
+                    <div className="w-full space-y-4 border-t border-border-soft pt-4">
                       <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-300">
+                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                           <span>Linguistic Clarity</span>
                           <span>
                             {evaluationResult.linguisticClarityScore}%
@@ -786,7 +786,7 @@ const WritingPage = () => {
                       </div>
 
                       <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-300">
+                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                           <span>Jargon / Vocabulary</span>
                           <span>{evaluationResult.jargonDensityScore}%</span>
                         </div>
@@ -797,7 +797,7 @@ const WritingPage = () => {
                       </div>
 
                       <div className="space-y-1.5">
-                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-slate-300">
+                        <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                           <span>Professional Tone</span>
                           <span>{evaluationResult.professionalToneScore}%</span>
                         </div>
@@ -817,25 +817,25 @@ const WritingPage = () => {
                     </h5>
 
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-center">
-                        <span className="text-[9px] font-mono text-slate-500 uppercase block">
+                      <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
+                        <span className="text-[9px] font-mono text-muted-copy uppercase block">
                           XP gained
                         </span>
-                        <span className="mt-0.5 block text-sm font-bold text-slate-900">
+                        <span className="mt-0.5 block text-sm font-bold text-foreground">
                           +{evaluationResult.xpEarned}
                         </span>
                       </div>
-                      <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-center">
-                        <span className="text-[9px] font-mono text-slate-500 uppercase block flex items-center justify-center gap-0.5">
+                      <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
+                        <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                           <Coins className="h-2.5 w-2.5 text-amber-500 shrink-0" />{' '}
                           COINS
                         </span>
-                        <span className="mt-0.5 block text-sm font-bold text-slate-900">
+                        <span className="mt-0.5 block text-sm font-bold text-foreground">
                           +{evaluationResult.coinsEarned}
                         </span>
                       </div>
-                      <div className="rounded-[12px] border border-slate-200 bg-slate-50 p-3 text-center">
-                        <span className="text-[9px] font-mono text-slate-500 uppercase block flex items-center justify-center gap-0.5">
+                      <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
+                        <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                           <TrendingUp className="h-2.5 w-2.5 text-cyan-500 shrink-0" />{' '}
                           LEVEL PROGRESS
                         </span>
@@ -858,7 +858,7 @@ const WritingPage = () => {
                 {/* Narrative Assessment and Detailed Revision Review */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Strengths & Weaknesses card */}
-                  <div className="grid grid-cols-1 gap-4 rounded-[16px] border border-slate-200 bg-slate-50 p-5 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 rounded-xl border border-border-soft bg-surface-hover p-5 md:grid-cols-2">
                     <div className="space-y-3">
                       <h5 className="text-xs font-black text-emerald-400 uppercase tracking-widest font-mono flex items-center gap-1.5">
                         <CheckCircle2 className="h-4 w-4 shrink-0" />
@@ -868,7 +868,7 @@ const WritingPage = () => {
                         {evaluationResult.strengths.map((s) => (
                           <li
                             key={s}
-                            className="text-xs text-slate-300 font-medium flex items-start gap-1.5"
+                            className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
                           >
                             <span className="text-emerald-400 font-bold shrink-0 mt-0.5">
                               •
@@ -879,7 +879,7 @@ const WritingPage = () => {
                       </ul>
                     </div>
 
-                    <div className="space-y-3 border-t border-slate-200 pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+                    <div className="space-y-3 border-t border-border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
                       <h5 className="text-xs font-black text-amber-400 uppercase tracking-widest font-mono flex items-center gap-1.5">
                         <AlertTriangle className="h-4 w-4 shrink-0" />
                         <span>Development Gaps</span>
@@ -888,7 +888,7 @@ const WritingPage = () => {
                         {evaluationResult.weaknesses.map((w) => (
                           <li
                             key={w}
-                            className="text-xs text-slate-300 font-medium flex items-start gap-1.5"
+                            className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
                           >
                             <span className="text-amber-400 font-bold shrink-0 mt-0.5">
                               •
@@ -906,7 +906,7 @@ const WritingPage = () => {
                     subtitle="Final submitted text after review"
                     icon={FileText}
                   >
-                    <div className="whitespace-pre-wrap rounded-[12px] border border-slate-200 bg-slate-50 p-5 text-sm font-medium leading-relaxed text-slate-700">
+                    <div className="whitespace-pre-wrap rounded-xl border border-border-soft bg-surface-hover p-5 text-sm font-medium leading-relaxed text-foreground">
                       {evaluationResult.finalDraft}
                     </div>
                   </SectionCard>
@@ -930,10 +930,10 @@ const WritingPage = () => {
                           {/* Correction Header */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex gap-2.5">
-                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-slate-200 bg-white font-mono text-xs font-black text-slate-600">
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-black text-muted-copy">
                                 {idx + 1}
                               </span>
-                              <h6 className="mt-0.5 text-xs font-bold leading-tight text-slate-900 md:text-sm">
+                              <h6 className="mt-0.5 text-xs font-bold leading-tight text-foreground md:text-sm">
                                 {item.text}
                               </h6>
                             </div>
@@ -957,9 +957,9 @@ const WritingPage = () => {
                           </div>
 
                           {/* Original and Target values */}
-                          <div className="grid grid-cols-1 gap-3 rounded-[12px] border border-slate-200 bg-white p-3 md:grid-cols-2">
+                          <div className="grid grid-cols-1 gap-3 rounded-xl border border-border-soft bg-surface p-3 md:grid-cols-2">
                             <div>
-                              <span className="text-[9px] font-mono text-slate-500 uppercase block">
+                              <span className="text-[9px] font-mono text-muted-copy uppercase block">
                                 Casual/Error Term
                               </span>
                               <span className="text-xs font-bold text-rose-400 block mt-0.5">
@@ -967,7 +967,7 @@ const WritingPage = () => {
                               </span>
                             </div>
                             <div>
-                              <span className="text-[9px] font-mono text-slate-500 uppercase block">
+                              <span className="text-[9px] font-mono text-muted-copy uppercase block">
                                 Professional Revision
                               </span>
                               <span className="text-xs font-bold text-emerald-400 block mt-0.5">
@@ -990,7 +990,7 @@ const WritingPage = () => {
                   <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
                     <Link
                       to="/curriculum"
-                      className="inline-flex min-h-10 items-center rounded-[12px] px-3 text-xs font-bold text-sky-700 hover:bg-sky-50"
+                      className="inline-flex min-h-10 items-center rounded-xl px-3 text-xs font-bold text-primary hover:bg-surface-hover"
                     >
                       Learning Hub
                     </Link>
@@ -1000,13 +1000,13 @@ const WritingPage = () => {
                         resetCurrentMission();
                         setSelectedRule(null);
                       }}
-                      className="h-10 border-slate-200 text-xs text-slate-600 hover:text-sky-800"
+                      className="h-10 border-border-soft text-xs text-muted-copy hover:text-foreground"
                     >
                       Retry Sandbox
                     </Button>
                     <Button
                       onClick={handleBackToMissions}
-                      className="bg-primary hover:bg-primary-dark text-slate-950 font-black px-6 h-10"
+                      className="bg-primary hover:bg-primary-hover text-foreground font-black px-6 h-10"
                     >
                       Back to Writing list
                     </Button>

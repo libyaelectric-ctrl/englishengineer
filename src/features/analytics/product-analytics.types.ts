@@ -74,4 +74,5 @@ export type ProductAnalyticsProviderMode =
   | 'disabled'
   | 'local'
   | 'console'
+  | 'posthog'
   | 'custom';

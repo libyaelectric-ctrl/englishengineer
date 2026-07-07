@@ -28,7 +28,6 @@ import {
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
-import { WatchDashboardWidget } from '@/features/watch';
 
 const SKILL_META: Record<
   SkillName,
@@ -114,7 +113,7 @@ const DashboardPage = () => {
                 />
               </div>
               <h1 className="mt-5 text-xs font-bold text-primary uppercase tracking-wider">
-                EngineerOS Command Center
+                EngVox Command Center
               </h1>
               <p className="mt-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
                 Your next step is clear.
@@ -298,9 +297,6 @@ const DashboardPage = () => {
             repeatedMistakes={repeatedMistakes}
             badges={badges}
           />
-        </div>
-        <div className="mt-4">
-          <WatchDashboardWidget />
         </div>
         <Button
           type="button"
