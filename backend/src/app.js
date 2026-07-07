@@ -9,7 +9,6 @@ import {
 } from './billing.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
-import { setupSwagger } from './swagger.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
@@ -68,8 +67,6 @@ export const createApp = ({
   app.get('/api/health', (_request, response) => {
     response.json(toPublicHealth(config));
   });
-
-  setupSwagger(app);
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
