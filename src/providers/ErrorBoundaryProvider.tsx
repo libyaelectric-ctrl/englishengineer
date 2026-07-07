@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { AlertTriangle, Home, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 
 interface ErrorBoundaryProviderProps {
   children: React.ReactNode;
@@ -13,6 +13,14 @@ const ErrorFallback: React.FC<FallbackProps> = ({
   error,
   resetErrorBoundary,
 }) => {
+  const errorDetails = error instanceof Error ? error.message : String(error);
+
+  const handleReport = () => {
+    const subject = encodeURIComponent('EngVox Error Report');
+    const body = encodeURIComponent(`Error: ${errorDetails}\nURL: ${window.location.href}\nTime: ${new Date().toISOString()}`);
+    window.open(`mailto:support@engvox.com?subject=${subject}&body=${body}`);
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6 text-slate-900">
       <div className="premium-panel w-full max-w-xl space-y-6 p-8">
@@ -23,34 +31,38 @@ const ErrorFallback: React.FC<FallbackProps> = ({
           </h2>
         </div>
         <p className="text-sm text-slate-600 leading-relaxed">
-          EngineerOS hit an unexpected interface error. Your local progress
-          remains stored; review the diagnostic message below and reload the
-          workspace.
+          EngVox hit an unexpected error. Your progress is saved locally.
+          Try reloading or contact support if the issue persists.
         </p>
         <div className="custom-scrollbar max-h-48 overflow-x-auto rounded-[12px] border border-rose-200 bg-rose-50 p-4 font-mono text-xs text-rose-700">
-          {(error instanceof Error ? error.message : String(error)) ||
-            'Unknown Exception'}
+          {errorDetails || 'Unknown error'}
         </div>
         {isDevelopment && (
           <p className="rounded-[10px] border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-            Development hint: inspect the browser console and the component
-            stack before retrying.
+            Dev: check browser console for stack trace.
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3 pt-2">
           <a
-            href="/dashboard"
+            href="/"
             className="flex items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50"
           >
             <Home className="h-4 w-4" />
-            <span>Return Home</span>
+            <span>Home</span>
           </a>
+          <button
+            onClick={handleReport}
+            className="flex cursor-pointer items-center gap-2 rounded-[12px] border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50"
+          >
+            <Mail className="h-4 w-4" />
+            <span>Report</span>
+          </button>
           <button
             onClick={resetErrorBoundary}
             className="flex cursor-pointer items-center gap-2 rounded-[12px] border border-rose-200 bg-rose-50 px-5 py-2.5 text-sm font-bold text-rose-700 transition-all hover:border-rose-300 hover:bg-rose-100"
           >
             <RefreshCw className="h-4 w-4" />
-            <span>Reload Workspace</span>
+            <span>Retry</span>
           </button>
         </div>
       </div>
@@ -61,9 +73,9 @@ const ErrorFallback: React.FC<FallbackProps> = ({
 export const ErrorBoundaryProvider: React.FC<ErrorBoundaryProviderProps> = ({
   children,
 }) => {
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     window.location.reload();
-  };
+  }, []);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>

@@ -38,7 +38,7 @@ const PlacementPage = () => {
   if (result) {
     return (
       <main className="mx-auto max-w-3xl py-4 sm:py-8">
-        <section className="rounded-xl border border-border-soft bg-white p-6 sm:p-8">
+        <section className="rounded-xl border border-border-soft bg-surface p-6 sm:p-8">
           <CheckCircle2 className="h-8 w-8 text-success" />
           <p className="mt-5 text-xs font-medium uppercase text-success">
             Placement complete
@@ -82,7 +82,7 @@ const PlacementPage = () => {
 
   return (
     <main className="mx-auto max-w-3xl py-4 sm:py-8">
-      <section className="overflow-hidden rounded-xl border border-border-soft bg-white">
+      <section className="overflow-hidden rounded-xl border border-border-soft bg-surface">
         <header className="border-b border-border-soft bg-surface-hover p-5 sm:p-7">
           <div className="flex items-center gap-3">
             <ClipboardCheck className="h-5 w-5 text-primary" />
@@ -117,7 +117,7 @@ const PlacementPage = () => {
                 key={choice}
                 type="button"
                 onClick={() => answer(question.id, choiceIndex)}
-                className={`min-h-12 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${answers[question.id] === choiceIndex ? 'border-primary bg-primary/10 text-primary' : 'border-border-soft bg-white text-foreground hover:border-primary/50 hover:bg-primary/5'}`}
+                className={`min-h-12 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${answers[question.id] === choiceIndex ? 'border-primary bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/50 hover:bg-primary/5'}`}
               >
                 {choice}
               </button>

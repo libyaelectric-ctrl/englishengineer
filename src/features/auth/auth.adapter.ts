@@ -79,7 +79,7 @@ export class LocalAuthAdapter implements AuthAdapter {
     const demoUser: UserProfile = {
       id: `demo_engineer_${generateId().slice(-8)}`,
       displayName: 'Demo Engineer',
-      email: 'demo.engineer@local.engineeros',
+      email: 'demo.engineer@local.EngVox',
       role: 'Electrical Engineer',
       engineeringDiscipline: 'Electrical Engineering',
       targetLevel: 'Project communication confidence',
@@ -284,12 +284,12 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     email: string
   ): UserProfile {
     const resolvedName =
-      displayName || email.split('@')[0] || 'EngineerOS User';
+      displayName || email.split('@')[0] || 'EngVox User';
     return {
       id,
       displayName: resolvedName,
       email,
-      role: 'EngineerOS Member',
+      role: 'EngVox Member',
       engineeringDiscipline: 'General Engineering',
       targetLevel: 'Senior Engineer',
       location: 'Remote',

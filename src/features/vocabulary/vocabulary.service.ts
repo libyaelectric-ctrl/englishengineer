@@ -23,7 +23,7 @@ import {
 import { VocabularyMemoryService } from './vocabulary.memory';
 import { VocabularyMenuService } from './vocabulary.menu';
 
-const STORAGE_KEY = 'engineeros_vocabulary_state';
+const STORAGE_KEY = 'EngVox_vocabulary_state';
 
 const DEFAULT_STATE: VocabularyState = {
   completedWords: {},

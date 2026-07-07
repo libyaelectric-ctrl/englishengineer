@@ -44,13 +44,13 @@ const StartPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background px-4 py-10 sm:px-6 text-foreground">
+    <main className="min-h-screen bg-transparent px-4 py-10 sm:px-6 text-foreground">
       <div className="mx-auto max-w-5xl">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-2xl">
             <p className="public-eyebrow">Choose how to begin</p>
             <h1 className="mt-3 text-3xl font-bold text-foreground sm:text-4xl">
-              Start EngineerOS on your terms.
+              Start EngVox on your terms.
             </h1>
             <p className="mt-3 text-xs leading-5 text-muted-copy">
               Try the local Lite workspace immediately, or use a verified

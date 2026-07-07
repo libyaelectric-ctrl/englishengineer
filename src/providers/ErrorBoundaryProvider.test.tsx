@@ -21,12 +21,12 @@ describe('ErrorBoundaryProvider', () => {
     expect(
       screen.getByText('Route module failed to render')
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Return Home/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Home/i })).toHaveAttribute(
       'href',
-      '/dashboard'
+      '/'
     );
     expect(
-      screen.getByRole('button', { name: /Reload Workspace/i })
+      screen.getByRole('button', { name: /Retry/i })
     ).toBeInTheDocument();
   });
 });

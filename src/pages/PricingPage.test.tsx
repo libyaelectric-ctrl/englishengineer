@@ -21,7 +21,7 @@ vi.mock('@/features/billing/billing.helpers', async (importOriginal) => {
   const actual = (await importOriginal()) as any;
   return {
     ...actual,
-    getBillingApiUrl: () => 'https://billing.engineeros.test',
+    getBillingApiUrl: () => 'https://billing.EngVox.test',
   };
 });
 

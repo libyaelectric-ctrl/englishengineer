@@ -11,7 +11,7 @@ import { ReadingEvaluator } from './reading.evaluator';
 import { useLearningStore } from '@/core/learning';
 import { VocabularyService } from '@/features/vocabulary';
 
-const STORAGE_KEY = 'engineeros_reading_state';
+const STORAGE_KEY = 'EngVox_reading_state';
 export const READING_CONTENT_SCHEMA_VERSION = 1;
 export const READING_LESSON_CAPACITY = 200;
 
@@ -20,7 +20,7 @@ const getReadingCatalog = (): ReadingMission[] =>
     ...mission,
     sequenceNumber: index + 1,
     sourceMetadata: {
-      origin: 'EngineerOS original',
+      origin: 'EngVox original',
       author: 'Özcan ERENSAYIN',
       schemaVersion: READING_CONTENT_SCHEMA_VERSION,
     },

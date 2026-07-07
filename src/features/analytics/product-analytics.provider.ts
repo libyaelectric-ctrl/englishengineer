@@ -32,3 +32,26 @@ export class ConsoleProductAnalyticsProvider implements ProductAnalyticsProvider
     });
   }
 }
+
+declare global {
+  interface Window {
+    posthog?: {
+      capture: (event: string, props?: Record<string, unknown>) => void;
+      identify: (id: string, props?: Record<string, unknown>) => void;
+    };
+  }
+}
+
+export class PostHogProductAnalyticsProvider implements ProductAnalyticsProvider {
+  readonly name = 'posthog';
+
+  track(event: ProductAnalyticsEvent): void {
+    if (typeof window !== 'undefined' && window.posthog) {
+      window.posthog.capture(event.name, {
+        screen: event.screen,
+        duration_seconds: event.durationSeconds,
+        ...event.metadata,
+      });
+    }
+  }
+}

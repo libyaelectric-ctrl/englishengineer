@@ -41,17 +41,17 @@ const STATIC_STORAGE_KEYS: Record<
   string
 > = {
   learning: 'learning_state',
-  readingHistory: 'engineeros_reading_state',
-  writingHistory: 'engineeros_writing_state',
-  listeningHistory: 'engineeros_listening_state',
-  speakingHistory: 'engineeros_speaking_state',
-  grammarReview: 'engineeros_grammar_progress',
+  readingHistory: 'EngVox_reading_state',
+  writingHistory: 'EngVox_writing_state',
+  listeningHistory: 'EngVox_listening_state',
+  speakingHistory: 'EngVox_speaking_state',
+  grammarReview: 'EngVox_grammar_progress',
   mistakeLog: 'learning_intelligence',
   reviewQueue: 'task_evaluation_records',
   aiCoach: 'ai_coach_pro_state',
   gamification: 'gamification_pro_state',
   userPreferences: 'auth_user',
-  workspaces: 'engineeros_workspaces',
+  workspaces: 'EngVox_workspaces',
 };
 
 const getStorageKeys = (
@@ -63,9 +63,9 @@ const getStorageKeys = (
   }
   if (key === 'vocabularyReview') {
     return [
-      'engineeros_vocabulary_state',
-      'engineeros_vocabulary_memory',
-      'engineeros_vocabulary_menu',
+      'EngVox_vocabulary_state',
+      'EngVox_vocabulary_memory',
+      'EngVox_vocabulary_menu',
     ];
   }
   return [STATIC_STORAGE_KEYS[key]];

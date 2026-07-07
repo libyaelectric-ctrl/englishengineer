@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { useAuthStore } from '@/features/auth';
 import { getBillingApiUrl } from './billing.helpers';
 
@@ -13,17 +14,23 @@ export interface WorkspaceDocument {
   uploaded_at: string;
 }
 
+export interface WorkspaceSession {
+  id: string;
+  started_at: string;
+  message_count: number;
+}
+
 export interface Workspace {
   id: string;
   user_id: string;
   name: string;
   memory: Record<string, string>;
   documents: WorkspaceDocument[];
-  sessions: any[];
+  sessions: WorkspaceSession[];
   created_at: string;
 }
 
-export interface WorkspaceApiResponse<T = any> {
+export interface WorkspaceApiResponse<T = Workspace | Workspace[] | null> {
   success: boolean;
   data?: T;
   error?: string;
@@ -54,7 +61,7 @@ export async function fetchWorkspaces(): Promise<WorkspaceApiResponse<Workspace[
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching workspaces:', error);
+    logger.e('Error fetching workspaces:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch workspaces' };
   }
 }
@@ -84,7 +91,7 @@ export async function fetchWorkspace(workspaceId: string): Promise<WorkspaceApiR
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching workspace:', error);
+    logger.e('Error fetching workspace:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch workspace' };
   }
 }
@@ -116,7 +123,7 @@ export async function createWorkspace(name: string, planId: string): Promise<Wor
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error creating workspace:', error);
+    logger.e('Error creating workspace:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to create workspace' };
   }
 }
@@ -152,7 +159,7 @@ export async function updateWorkspaceMemory(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error updating workspace memory:', error);
+    logger.e('Error updating workspace memory:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to update workspace memory' };
   }
 }
@@ -183,7 +190,7 @@ export async function deleteWorkspace(workspaceId: string): Promise<WorkspaceApi
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error deleting workspace:', error);
+    logger.e('Error deleting workspace:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to delete workspace' };
   }
 }
@@ -219,7 +226,7 @@ export async function addDocumentToWorkspace(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error adding document to workspace:', error);
+    logger.e('Error adding document to workspace:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to add document' };
   }
 }
@@ -253,7 +260,7 @@ export async function deleteDocumentFromWorkspace(
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error deleting document from workspace:', error);
+    logger.e('Error deleting document from workspace:', error);
     return { success: false, error: error instanceof Error ? error.message : 'Failed to delete document' };
   }
 }

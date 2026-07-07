@@ -18,7 +18,7 @@ vi.mock('./billing.helpers', async (importOriginal) => {
   const original = await importOriginal<typeof import('./billing.helpers')>();
   return {
     ...original,
-    getBillingApiUrl: () => 'https://billing.engineeros.test',
+    getBillingApiUrl: () => 'https://billing.EngVox.test',
   };
 });
 

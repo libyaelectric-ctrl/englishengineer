@@ -40,7 +40,7 @@ export interface ReadingMission {
   eloReward: number;
   sequenceNumber?: number;
   sourceMetadata?: {
-    origin: 'EngineerOS original';
+    origin: 'EngVox original';
     author: string;
     schemaVersion: number;
   };

@@ -97,7 +97,7 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {
     id: 'engineer_elo',
     label: 'Engineer ELO',
-    description: 'Existing EngineerOS learning ELO signal.',
+    description: 'Existing EngVox learning ELO signal.',
   },
 ];
 

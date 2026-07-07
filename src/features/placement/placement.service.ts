@@ -4,7 +4,7 @@ import { PLACEMENT_QUESTIONS } from './placement.data';
 import { evaluatePlacement } from './placement.helpers';
 import type { PlacementAnswers, PlacementResult } from './placement.types';
 
-const STORAGE_KEY = 'engineeros_placement_result';
+const STORAGE_KEY = 'EngVox_placement_result';
 
 export const PlacementService = {
   getResult(userId: string): PlacementResult | null {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import {
   Award,
   CreditCard,
@@ -39,8 +39,6 @@ import {
   PROFESSIONAL_TRACKS,
   ELECTRICAL_SUBDOMAINS,
   EXPERIENCE_LEVELS,
-  COUNTRIES,
-  TIMEZONES,
 } from '@/features/profile/profile.preferences';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
@@ -50,7 +48,6 @@ import {
   useLocalizationStore,
 } from '@/features/localization';
 import { storage } from '@/shared/storage';
-import { cn } from '@/shared/utils/cn';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
@@ -65,6 +62,8 @@ const splitDisplayName = (displayName = '') => {
 
 const ProfilePage = () => {
   const location = useLocation();
+  const { section } = useParams<{ section: string }>();
+  const activeSection = section || 'overview';
   const { currentUser, providerMode, updateProfile, logout } = useAuthStore();
   const {
     subscription,
@@ -135,8 +134,6 @@ const ProfilePage = () => {
   const [editTrack, setEditTrack] = useState('');
   const [editSubdomain, setEditSubdomain] = useState('');
   const [editIndustry, setEditIndustry] = useState('');
-  const [editCountry, setEditCountry] = useState('');
-  const [editTimezone, setEditTimezone] = useState('');
   const [editLang, setEditLang] = useState<'en' | 'tr'>('en');
   const [editGoals, setEditGoals] = useState<any[]>([]);
 
@@ -149,8 +146,7 @@ const ProfilePage = () => {
   const [prefCareerGoal, setPrefCareerGoal] = useState('');
   const [preferencesSaved, setPreferencesSaved] = useState(false);
 
-  // Active section for sub-navigation
-  const [activeSection, setActiveSection] = useState('overview');
+
 
   const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
 
@@ -191,8 +187,6 @@ const ProfilePage = () => {
     setEditTrack(profile.professionalTrack || 'electrical');
     setEditSubdomain(profile.electricalSubdomain || 'low-voltage');
     setEditIndustry(profile.industryId || '');
-    setEditCountry(profile.country || 'Türkiye');
-    setEditTimezone(profile.timezone || 'Europe/Istanbul');
     setEditLang(profile.interfaceLanguage || 'en');
     setEditGoals(profile.communicationGoals || []);
     setIsEditMode(true);
@@ -224,8 +218,6 @@ const ProfilePage = () => {
           professionalTrack: editTrack as any,
           electricalSubdomain: editSubdomain as any,
           industryId: (editIndustry as any) || null,
-          country: editCountry,
-          timezone: editTimezone,
           interfaceLanguage: editLang,
           communicationGoals: editGoals,
         }
@@ -271,7 +263,7 @@ const ProfilePage = () => {
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo profiles do not have billing privileges.');
+      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
       return;
     }
     try {
@@ -282,7 +274,7 @@ const ProfilePage = () => {
       await startCheckout(currentUser.id, currentUser.email, 'pro');
     } catch (checkoutError: unknown) {
       setError(
-        getErrorMessage(checkoutError, 'Checkout session could not be created.')
+        getErrorMessage(checkoutError, 'Billing is not available in demo mode. Connect Supabase + Stripe to enable payments.')
       );
     }
   };
@@ -290,7 +282,7 @@ const ProfilePage = () => {
   const handleManageSubscription = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo profiles do not have billing privileges.');
+      setError('Demo mode: Subscription management available after connecting Supabase + Stripe.');
       return;
     }
     try {
@@ -298,17 +290,17 @@ const ProfilePage = () => {
       await openCustomerPortal(currentUser.id);
     } catch (portalError: unknown) {
       setError(
-        getErrorMessage(portalError, 'Customer portal could not be opened.')
+        getErrorMessage(portalError, 'Billing portal is not available in demo mode.')
       );
     }
   };
 
   const exportLocalData = () => {
     const payload = {
-      product: 'EngineerOS',
+      product: 'EngVox',
       version: '4.0.1',
       exportedAt: new Date().toISOString(),
-      scope: 'Local EngineerOS data stored on this device',
+      scope: 'Local EngVox data stored on this device',
       data: storage.exportAll(),
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], {
@@ -317,10 +309,10 @@ const ProfilePage = () => {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = `engineeros-local-data-${new Date().toISOString().slice(0, 10)}.json`;
+    anchor.download = `EngVox-local-data-${new Date().toISOString().slice(0, 10)}.json`;
     anchor.click();
     URL.revokeObjectURL(url);
-    setMessage('Local EngineerOS data export created.');
+    setMessage('Local EngVox data export created.');
     setError(null);
   };
 
@@ -331,22 +323,11 @@ const ProfilePage = () => {
     window.location.assign('/start');
   };
 
-  // Tab change helper
-  const scrollTo = (id: string) => {
-    setActiveSection(id);
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
-
   const calculateCompletionPercent = () => {
     let completed = 0;
     if (currentUser?.displayName) completed += 20;
     if (profile?.professionId) completed += 20;
     if (profile?.industryId) completed += 20;
-    if (profile?.country) completed += 15;
-    if (profile?.timezone) completed += 15;
     if (profile?.communicationGoals && profile.communicationGoals.length > 0)
       completed += 10;
     return completed;
@@ -389,38 +370,12 @@ const ProfilePage = () => {
           </div>
         </div>
         <p className="text-xs leading-5 text-muted-copy max-w-2xl">
-          Manage your professional profile, learning preferences and EngineerOS
+          Manage your professional profile, learning preferences and EngVox
           access.
         </p>
       </header>
 
-      {/* Sticky Sub-navigation */}
-      <nav
-        aria-label="Profile section directory"
-        className="flex overflow-x-auto gap-1.5 border-b border-border-soft py-3 hide-scrollbar select-none"
-      >
-        {[
-          { id: 'overview', label: 'Overview' },
-          { id: 'skills', label: 'Skills & Progress' },
-          { id: 'preferences', label: 'Preferences' },
-          { id: 'billing', label: 'Billing' },
-          { id: 'security', label: 'Security & Data' },
-        ].map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => scrollTo(item.id)}
-            className={cn(
-              'rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all shrink-0',
-              activeSection === item.id
-                ? 'bg-primary text-white'
-                : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
-            )}
-          >
-            {item.label}
-          </button>
-        ))}
-      </nav>
+      {/* Sub-navigation removed — accessible via sidebar dropdown */}
 
       {/* Alert Messages Banner */}
       {(message || error || billingError) && (
@@ -440,7 +395,7 @@ const ProfilePage = () => {
       {activeSection === 'overview' && (
         <section
           id="overview"
-          className="scroll-mt-36 animate-in fade-in duration-200"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
         >
           <SectionCard
             title="Profile Overview"
@@ -496,22 +451,6 @@ const ProfilePage = () => {
                     <p className="mt-1 text-sm font-medium text-foreground">
                       {INDUSTRIES.find((i) => i.id === profile.industryId)
                         ?.label || 'Not Selected'}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Country / Region
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {profile.country || 'Not Selected'}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Timezone
-                    </span>
-                    <p className="mt-1 text-sm font-mono text-foreground">
-                      {profile.timezone || 'Not Selected'}
                     </p>
                   </div>
                   <div className="rounded-xl border border-border-soft bg-surface p-4">
@@ -663,36 +602,6 @@ const ProfilePage = () => {
                   </label>
 
                   <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Country / Region
-                    <select
-                      value={editCountry}
-                      onChange={(event) => setEditCountry(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      {COUNTRIES.map((country) => (
-                        <option key={country} value={country}>
-                          {country}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Timezone
-                    <select
-                      value={editTimezone}
-                      onChange={(event) => setEditTimezone(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-mono text-foreground outline-none"
-                    >
-                      {TIMEZONES.map((tz) => (
-                        <option key={tz} value={tz}>
-                          {tz}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Interface Language
                     <select
                       value={editLang}
@@ -770,7 +679,7 @@ const ProfilePage = () => {
       {activeSection === 'skills' && (
         <section
           id="skills"
-          className="scroll-mt-36 animate-in fade-in duration-200"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
         >
           <SectionCard
             title="Skills & Progress"
@@ -942,7 +851,7 @@ const ProfilePage = () => {
       {activeSection === 'preferences' && (
         <section
           id="preferences"
-          className="scroll-mt-36 animate-in fade-in duration-200"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
         >
           <SectionCard
             title="Learning Preferences"
@@ -1104,7 +1013,7 @@ const ProfilePage = () => {
       {activeSection === 'billing' && (
         <section
           id="billing"
-          className="scroll-mt-36 animate-in fade-in duration-200"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
         >
           <SectionCard
             title="Account & Billing"
@@ -1373,7 +1282,7 @@ const ProfilePage = () => {
       {activeSection === 'security' && (
         <section
           id="security"
-          className="scroll-mt-36 animate-in fade-in duration-200"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
         >
           <SectionCard
             title="Security, Privacy & Data"

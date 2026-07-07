@@ -49,7 +49,7 @@ export const getGrammarReviewReason = (
     : 'This rule needs more correct uses before it can become Strong.';
 };
 
-const STORAGE_KEY = 'engineeros_grammar_progress';
+const STORAGE_KEY = 'EngVox_grammar_progress';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const initialProgress = (ruleId: string): GrammarRuleProgress => ({
   ruleId,

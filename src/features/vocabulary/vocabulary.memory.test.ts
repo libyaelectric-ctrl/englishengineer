@@ -37,7 +37,7 @@ describe('My Vocabulary memory and review queue', () => {
     const now = new Date('2026-06-27T10:00:00.000Z');
     const saved = VocabularyMemoryService.addEntry(
       VOCABULARY_ENTRIES[0],
-      'EngineerOS Dictionary',
+      'EngVox Dictionary',
       now
     );
     VocabularyMemoryService.updateStatus(saved.id, 'Mastered', now);
@@ -58,7 +58,7 @@ describe('My Vocabulary memory and review queue', () => {
     const now = new Date('2026-06-27T10:00:00.000Z');
     const saved = VocabularyMemoryService.addEntry(
       VOCABULARY_ENTRIES[0],
-      'EngineerOS Dictionary',
+      'EngVox Dictionary',
       now
     );
     VocabularyMemoryService.updateStatus(saved.id, 'Review Today', now);

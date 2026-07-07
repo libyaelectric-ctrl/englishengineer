@@ -12,7 +12,7 @@ import { useLearningStore } from '@/core/learning';
 import { VocabularyService } from '@/features/vocabulary';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
 
-const STORAGE_KEY = 'engineeros_writing_state';
+const STORAGE_KEY = 'EngVox_writing_state';
 
 const DEFAULT_STATE: WritingState = {
   completedMissions: {},

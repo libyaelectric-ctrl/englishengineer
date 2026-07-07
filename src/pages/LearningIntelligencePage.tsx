@@ -110,7 +110,7 @@ const LearningIntelligencePage = () => {
               event.target.value as typeof intelligence.careerRole
             )
           }
-          className="mt-4 min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:max-w-md"
+          className="mt-4 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:max-w-md"
         >
           {CAREER_ROLES.map((role) => (
             <option key={role}>{role}</option>
@@ -154,7 +154,7 @@ const LearningIntelligencePage = () => {
                         );
                       }
                     }}
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition ${completed ? 'border-success bg-success/10 text-success' : 'border-border-soft bg-white text-muted-copy hover:border-primary hover:bg-primary/10'}`}
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition ${completed ? 'border-success bg-success/10 text-success' : 'border-border-soft bg-surface text-muted-copy hover:border-primary hover:bg-primary/10'}`}
                     aria-label={
                       completed ? 'Mark task incomplete' : 'Mark task complete'
                     }
@@ -201,7 +201,7 @@ const LearningIntelligencePage = () => {
               onChange={(event) =>
                 setCategory(event.target.value as MistakeCategory)
               }
-              className="min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             >
               {MISTAKE_CATEGORIES.map((item) => (
                 <option key={item}>{item}</option>
@@ -214,13 +214,13 @@ const LearningIntelligencePage = () => {
               value={originalText}
               onChange={(event) => setOriginalText(event.target.value)}
               placeholder="Original sentence or repeated mistake"
-              className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
+              className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
             />
             <textarea
               value={correction}
               onChange={(event) => setCorrection(event.target.value)}
               placeholder="Correction and why it is better"
-              className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
+              className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
             />
             <Button
               type="submit"
@@ -238,7 +238,7 @@ const LearningIntelligencePage = () => {
               intelligence.mistakeLog.map((entry) => (
                 <div
                   key={entry.id}
-                  className="rounded-xl border border-border-soft bg-white p-4"
+                  className="rounded-xl border border-border-soft bg-surface p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>

@@ -6,7 +6,7 @@ import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 
-logger.i('EngineerOS Kernel Booting...');
+logger.i('EngVox Kernel Booting...');
 
 // Publish app.started event to Core Event Bus
 try {
@@ -32,3 +32,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
+
+// Register service worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Service worker registration failed silently
+    });
+  });
+}

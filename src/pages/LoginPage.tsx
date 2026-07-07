@@ -184,7 +184,7 @@ const LoginPage = () => {
       return;
     }
 
-    const derivedDisplayName = email.trim().split('@')[0] || 'EngineerOS User';
+    const derivedDisplayName = email.trim().split('@')[0] || 'EngVox User';
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('Please enter a valid email address.');
@@ -220,14 +220,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background">
+    <div className="flex min-h-screen flex-col bg-transparent">
       {/* Top nav */}
       <nav className="flex items-center justify-between border-b border-border-soft px-4 py-3 sm:px-6">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-foreground text-background">
-            <span className="text-xs font-bold">EO</span>
-          </div>
-          <span className="text-sm font-semibold">EngineerOS</span>
+          <img src="/brand/logo.png" alt="EngVox" className="h-8 w-8 rounded-lg" />
+          <span className="text-sm font-semibold">EngVox</span>
         </Link>
         <div className="flex items-center gap-3">
           <select

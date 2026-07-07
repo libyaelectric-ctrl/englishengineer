@@ -97,7 +97,7 @@ export interface BackendAIRequest {
   metadata: {
     requestId: string;
     userId?: string;
-    client: 'engineeros-web';
+    client: 'EngVox-web';
     sentAt: string;
   };
 }

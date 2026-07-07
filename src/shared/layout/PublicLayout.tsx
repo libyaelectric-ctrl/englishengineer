@@ -4,37 +4,35 @@ import { useState } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 const links = [
-  { label: 'Product', href: '/#product' },
-  { label: 'Access', href: '/pricing' },
-  { label: 'For Teams', href: '/business' },
+  { label: 'Features', href: '/#features' },
+  { label: 'Pricing', href: '/pricing' },
+  { label: 'Teams', href: '/business' },
 ];
 
 export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   return (
-    <div className="public-shell min-h-screen bg-white text-slate-950">
+    <div className="public-shell min-h-screen bg-transparent text-slate-950">
       <a
         href="#public-content"
         className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-[10px] bg-slate-950 px-4 py-2 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
       >
         Skip to content
       </a>
-      <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-slate-200 bg-background/95 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link
             to="/"
             className="flex items-center gap-3 rounded-[10px] py-1 pr-2 transition-colors hover:bg-slate-50"
-            aria-label="EngineerOS home"
+            aria-label="EngVox home"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-slate-900 text-sm font-black text-white">
-              EO
-            </span>
+            <img src="/brand/logo.png" alt="EngVox" className="h-9 w-9 rounded-lg" />
             <span>
               <strong className="block text-sm text-slate-950">
-                EngineerOS
+                EngVox
               </strong>
               <span className="hidden text-[10px] font-semibold uppercase text-slate-500 sm:block">
-                Engineering Communication OS
+                Your Engineering Voice
               </span>
             </span>
           </Link>
@@ -83,7 +81,7 @@ export const PublicLayout = () => {
           </div>
           <button
             type="button"
-            className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-slate-200 bg-white text-slate-700 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 md:hidden"
+            className="flex h-11 w-11 items-center justify-center rounded-[12px] border border-border-soft bg-surface text-foreground transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 md:hidden"
             onClick={() => setMobileOpen((value) => !value)}
             aria-expanded={mobileOpen}
             aria-label="Toggle navigation"
@@ -97,7 +95,7 @@ export const PublicLayout = () => {
         </div>
         {mobileOpen && (
           <nav
-            className="border-t border-slate-200 bg-white px-4 py-4 md:hidden"
+            className="border-t border-slate-200 bg-background px-4 py-4 md:hidden"
             aria-label="Mobile public navigation"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-2">
@@ -126,56 +124,18 @@ export const PublicLayout = () => {
       <div id="public-content" tabIndex={-1}>
         <Outlet />
       </div>
-      <footer className="border-t border-slate-200 bg-slate-50">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto_auto] lg:px-8">
-          <div>
-            <p className="font-bold text-slate-900">EngineerOS</p>
-            <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-              Engineering communication practice for international construction
-              projects.
-            </p>
-          </div>
-          <div className="space-y-2 text-sm">
-            <p className="font-bold text-slate-900">Product</p>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/pricing"
-            >
-              Access
-            </Link>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/business"
-            >
-              For teams
-            </Link>
-          </div>
-          <div className="space-y-2 text-sm">
-            <p className="font-bold text-slate-900">Legal</p>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/legal/privacy"
-            >
-              Privacy
-            </Link>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/legal/terms"
-            >
-              Terms
-            </Link>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/legal/cookies"
-            >
-              Cookies
-            </Link>
-            <Link
-              className="block text-slate-600 hover:text-sky-700"
-              to="/legal/refund"
-            >
-              Refunds
-            </Link>
+      <footer className="border-t border-border-soft bg-surface/80">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-xs text-slate-500">&copy; 2026 EngVox</p>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
+              <Link className="hover:text-slate-700" to="/pricing">Pricing</Link>
+              <Link className="hover:text-slate-700" to="/business">Teams</Link>
+              <Link className="hover:text-slate-700" to="/legal/privacy">Privacy</Link>
+              <Link className="hover:text-slate-700" to="/legal/terms">Terms</Link>
+              <Link className="hover:text-slate-700" to="/legal/cookies">Cookies</Link>
+              <Link className="hover:text-slate-700" to="/legal/refund">Refunds</Link>
+            </div>
           </div>
         </div>
       </footer>

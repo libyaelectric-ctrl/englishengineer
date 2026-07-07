@@ -222,7 +222,7 @@ const buildFeedback = (
       professionalFeedback:
         'Not enough assessment data yet. Complete at least two learning activities to produce a reliable engineering communication profile.',
       simplifiedFeedback:
-        'Complete more missions first. Then EngineerOS can assess your professional communication more accurately.',
+        'Complete more missions first. Then EngVox can assess your professional communication more accurately.',
       technicalVocabularyFeedback:
         'Technical vocabulary feedback is unavailable until more vocabulary, reading, listening, or writing evidence exists.',
       nextRecommendedPractice:

@@ -84,7 +84,7 @@ const BetaProgramPage = () => {
               </div>
             ))}
           </div>
-          <div className="rounded-xl border border-border-soft bg-white p-4">
+          <div className="rounded-xl border border-border-soft bg-surface p-4">
             <p className="text-sm font-medium text-foreground">
               Retention indicators
             </p>

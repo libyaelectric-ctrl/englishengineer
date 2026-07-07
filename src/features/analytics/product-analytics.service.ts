@@ -3,6 +3,7 @@ import { storage } from '@/shared/storage';
 import {
   ConsoleProductAnalyticsProvider,
   LocalProductAnalyticsProvider,
+  PostHogProductAnalyticsProvider,
   PRODUCT_ANALYTICS_STORAGE_KEY,
 } from './product-analytics.provider';
 import type {
@@ -54,10 +55,10 @@ const getConfig = (): {
   const requested = String(
     env?.VITE_PRODUCT_ANALYTICS_PROVIDER ?? 'local'
   ).toLowerCase();
-  const mode: ProductAnalyticsProviderMode = ['local', 'console'].includes(
+  const mode: ProductAnalyticsProviderMode = ['local', 'console', 'posthog'].includes(
     requested
   )
-    ? (requested as 'local' | 'console')
+    ? (requested as 'local' | 'console' | 'posthog')
     : 'local';
   return { enabled, mode: enabled ? mode : 'disabled' };
 };
@@ -104,9 +105,14 @@ const resolveProvider = (): ProductAnalyticsProvider | null => {
   const config = getConfig();
   if (!config.enabled) return null;
   if (customProvider) return customProvider;
-  return config.mode === 'console'
-    ? new ConsoleProductAnalyticsProvider()
-    : new LocalProductAnalyticsProvider();
+  switch (config.mode) {
+    case 'console':
+      return new ConsoleProductAnalyticsProvider();
+    case 'posthog':
+      return new PostHogProductAnalyticsProvider();
+    default:
+      return new LocalProductAnalyticsProvider();
+  }
 };
 
 export const ProductAnalyticsService = {

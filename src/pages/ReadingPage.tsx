@@ -331,8 +331,8 @@ const ReadingPage = () => {
                 <div
                   key={m.id}
                   id={`reading-card-${m.id}`}
-                  className={`group relative rounded-xl border bg-white p-5 transition-all duration-200 hover:-translate-y-px hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm ${
-                    isCompleted ? 'border-success/20' : 'border-soft'
+                  className={`group relative rounded-xl border bg-surface p-5 transition-all duration-200 hover:-translate-y-px hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm ${
+                    isCompleted ? 'border-success/20' : 'border-border-soft'
                   }`}
                 >
                   <div className="flex flex-col h-full justify-between space-y-4">
@@ -378,9 +378,9 @@ const ReadingPage = () => {
                     </div>
 
                     {/* Footer Row */}
-                    <div className="flex items-center justify-between pt-4 border-t border-soft">
+                    <div className="flex items-center justify-between pt-4 border-t border-border-soft">
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-medium font-mono bg-surface-hover border border-soft text-muted-copy px-2 py-1 rounded">
+                        <span className="text-[10px] font-medium font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded">
                           {m.discipline}
                         </span>
                       </div>
@@ -401,7 +401,7 @@ const ReadingPage = () => {
                           onClick={() => handleLaunchMission(m.id)}
                           className={`h-8 px-3 rounded-lg font-medium text-xs flex items-center gap-1 ${
                             isCompleted
-                              ? 'border border-soft bg-white text-foreground hover:bg-primary/5'
+                              ? 'border border-border-soft bg-surface text-foreground hover:bg-primary/5'
                               : 'bg-primary hover:bg-primary/90 text-white font-medium'
                           }`}
                         >
@@ -419,7 +419,7 @@ const ReadingPage = () => {
               );
             })}
             {visibleMissions.length === 0 && (
-              <div className="col-span-full rounded-xl border border-soft bg-surface-hover p-6 text-sm text-muted-copy">
+              <div className="col-span-full rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-muted-copy">
                 No current-level content yet. No Reading missions are available
                 for this filter.
               </div>
@@ -432,7 +432,7 @@ const ReadingPage = () => {
       {activeTab === 'workspace' && (
         <div className="space-y-6">
           {/* Header Bar */}
-          <div className="flex flex-col gap-4 rounded-xl border border-soft bg-white p-4 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between">
             <button
               onClick={handleBackToMissions}
               className="flex items-center gap-2 text-xs font-medium text-muted-copy hover:text-primary transition-colors"
@@ -447,7 +447,7 @@ const ReadingPage = () => {
               >
                 Level: {currentMission.cefrLevel}
               </span>
-              <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-soft flex items-center gap-1.5">
+              <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5">
                 <Clock className="h-3.5 w-3.5 text-primary" />
                 <span>
                   Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}
@@ -491,12 +491,12 @@ const ReadingPage = () => {
                   subtitle="Active Document Reading - Click underlined technical terms to expand system glossary"
                   icon={BookOpen}
                   headerActions={
-                    <span className="rounded-lg border border-soft bg-surface-hover px-2.5 py-1 font-mono text-[10px] text-muted-copy">
+                    <span className="rounded-lg border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[10px] text-muted-copy">
                       {currentMission.discipline}
                     </span>
                   }
                 >
-                  <div className="rounded-lg border border-soft bg-surface-hover p-5 text-sm font-normal leading-7 text-foreground md:text-base whitespace-pre-line">
+                  <div className="rounded-lg border border-border-soft bg-surface-hover p-5 text-sm font-normal leading-7 text-foreground md:text-base whitespace-pre-line">
                     {renderPassage(
                       currentMission.passageText,
                       currentMission.vocabulary
@@ -505,7 +505,7 @@ const ReadingPage = () => {
                 </SectionCard>
 
                 {/* Glossary card */}
-                <div className="space-y-3 rounded-xl border border-soft bg-surface-hover p-5">
+                <div className="space-y-3 rounded-xl border border-border-soft bg-surface-hover p-5">
                   <h5 className="text-xs font-medium uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
                     <Info className="h-4 w-4 text-primary" />
                     <span>
@@ -557,10 +557,10 @@ const ReadingPage = () => {
                     {currentMission.questions.map((q, idx) => (
                       <div
                         key={q.id}
-                        className="space-y-3 rounded-lg border border-soft bg-surface-hover p-4"
+                        className="space-y-3 rounded-lg border border-border-soft bg-surface-hover p-4"
                       >
                         <div className="flex gap-2.5">
-                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-soft bg-white font-mono text-xs font-medium text-muted-copy">
+                          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-medium text-muted-copy">
                             {idx + 1}
                           </span>
                           <h5 className="text-sm font-medium leading-tight text-foreground">
@@ -585,7 +585,7 @@ const ReadingPage = () => {
                                   className={`w-full text-left p-3 rounded-lg border transition-all text-xs font-medium flex items-center justify-between cursor-pointer ${
                                     isSelected
                                       ? 'border-primary bg-primary/10 text-foreground'
-                                      : 'border-soft bg-white text-muted-copy hover:border-primary/20 hover:bg-primary/5 hover:text-foreground'
+                                      : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5 hover:text-foreground'
                                   }`}
                                 >
                                   <span>{choice}</span>
@@ -612,7 +612,7 @@ const ReadingPage = () => {
                                       ? option === 'true'
                                         ? 'border-success bg-success/5 text-success'
                                         : 'border-rose-500 bg-rose-500/5 text-rose-400'
-                                      : 'border-soft bg-white text-muted-copy hover:border-primary/20 hover:bg-primary/5 hover:text-foreground'
+                                      : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5 hover:text-foreground'
                                   }`}
                                 >
                                   {option}
@@ -634,7 +634,7 @@ const ReadingPage = () => {
                                   ? 'Enter precise number or code standard...'
                                   : 'Draft technical explanation...'
                               }
-                              className="w-full rounded-lg border border-soft bg-white p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                              className="w-full rounded-lg border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                             />
                             {q.type === 'short_answer' && (
                               <p className="text-[10px] text-muted-copy mt-1.5 leading-relaxed font-mono">
@@ -656,11 +656,11 @@ const ReadingPage = () => {
                     ))}
 
                     {/* Submit Bar */}
-                    <div className="flex items-center justify-between border-t border-soft pt-4">
+                    <div className="flex items-center justify-between border-t border-border-soft pt-4">
                       <Button
                         variant="outline"
                         onClick={resetCurrentMission}
-                        className="h-10 border-soft text-xs text-muted-copy hover:text-primary"
+                        className="h-10 border-border-soft text-xs text-muted-copy hover:text-primary"
                       >
                         Reset Form
                       </Button>
@@ -682,7 +682,7 @@ const ReadingPage = () => {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Score Summary Side Panel */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="flex flex-col items-center space-y-6 rounded-xl border border-soft bg-white p-6 text-center">
+                  <div className="flex flex-col items-center space-y-6 rounded-xl border border-border-soft bg-surface p-6 text-center">
                     <div>
                       <h4 className="text-sm font-medium text-muted-copy uppercase tracking-widest font-mono">
                         Verification Outcome
@@ -710,7 +710,7 @@ const ReadingPage = () => {
                     </p>
 
                     {/* Skill metrics bar */}
-                    <div className="w-full space-y-4 border-t border-soft pt-4">
+                    <div className="w-full space-y-4 border-t border-border-soft pt-4">
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
                           <span>Comprehension Rate</span>
@@ -756,7 +756,7 @@ const ReadingPage = () => {
                     </h5>
 
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="rounded-lg border border-soft bg-surface-hover p-3 text-center">
+                      <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
                         <span className="text-[9px] font-mono text-muted-copy uppercase block">
                           XP gained
                         </span>
@@ -764,7 +764,7 @@ const ReadingPage = () => {
                           +{evaluationResult.xpEarned}
                         </span>
                       </div>
-                      <div className="rounded-lg border border-soft bg-surface-hover p-3 text-center">
+                      <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
                         <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                           <Coins className="h-2.5 w-2.5 text-warning shrink-0" />{' '}
                           COINS
@@ -773,7 +773,7 @@ const ReadingPage = () => {
                           +{evaluationResult.coinsEarned}
                         </span>
                       </div>
-                      <div className="rounded-lg border border-soft bg-surface-hover p-3 text-center">
+                      <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
                         <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                           <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" />{' '}
                           LEVEL PROGRESS
@@ -797,7 +797,7 @@ const ReadingPage = () => {
                 {/* Narrative Assessment and Detailed QA Review */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Strengths & Weaknesses card */}
-                  <div className="grid grid-cols-1 gap-4 rounded-xl border border-soft bg-surface-hover p-5 md:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-4 rounded-xl border border-border-soft bg-surface-hover p-5 md:grid-cols-2">
                     <div className="space-y-3">
                       <h5 className="text-xs font-medium text-success uppercase tracking-widest font-mono flex items-center gap-1.5">
                         <CheckCircle2 className="h-4 w-4 shrink-0" />
@@ -818,7 +818,7 @@ const ReadingPage = () => {
                       </ul>
                     </div>
 
-                    <div className="space-y-3 border-t border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+                    <div className="space-y-3 border-t border-border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
                       <h5 className="text-xs font-medium text-warning uppercase tracking-widest font-mono flex items-center gap-1.5">
                         <AlertTriangle className="h-4 w-4 shrink-0" />
                         <span>Development Gaps</span>
@@ -858,7 +858,7 @@ const ReadingPage = () => {
                           {/* Q Header */}
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex gap-2.5">
-                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-soft bg-white font-mono text-xs font-medium text-muted-copy">
+                              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-medium text-muted-copy">
                                 {idx + 1}
                               </span>
                               <h6 className="mt-0.5 text-xs font-medium leading-tight text-foreground md:text-sm">
@@ -885,7 +885,7 @@ const ReadingPage = () => {
                           </div>
 
                           {/* Response Row */}
-                          <div className="grid grid-cols-1 gap-3 rounded-lg border border-soft bg-white p-3 md:grid-cols-2">
+                          <div className="grid grid-cols-1 gap-3 rounded-lg border border-border-soft bg-surface p-3 md:grid-cols-2">
                             <div>
                               <span className="text-[9px] font-mono text-muted-copy uppercase block">
                                 Your Answer
@@ -905,7 +905,7 @@ const ReadingPage = () => {
                           </div>
 
                           {/* Explanation Card */}
-                          <div className="space-y-1 rounded-lg border border-soft bg-surface-hover p-3">
+                          <div className="space-y-1 rounded-lg border border-border-soft bg-surface-hover p-3">
                             <span className="text-[9px] font-medium uppercase text-muted-copy tracking-wider font-mono">
                               Technical Justification
                             </span>
@@ -932,7 +932,7 @@ const ReadingPage = () => {
                         resetCurrentMission();
                         setSelectedWord(null);
                       }}
-                      className="h-10 border-soft text-xs text-muted-copy hover:text-primary"
+                      className="h-10 border-border-soft text-xs text-muted-copy hover:text-primary"
                     >
                       Retry Assessment
                     </Button>

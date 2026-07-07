@@ -45,6 +45,7 @@ const ENV_REQUIREMENTS = [
   ['AI_PROVIDER', 'backend', true],
   ['OPENAI_API_KEY', 'backend', false],
   ['ANTHROPIC_API_KEY', 'backend', false],
+  ['GEMINI_API_KEY', 'backend', false],
   ['RATE_LIMIT_STORE', 'backend', true],
   ['UPSTASH_REDIS_REST_URL', 'backend', true],
   ['UPSTASH_REDIS_REST_TOKEN', 'backend', true],
@@ -134,7 +135,9 @@ const getEnvironmentRows = (environment) => {
         ? aiProvider === 'openai'
         : name === 'ANTHROPIC_API_KEY'
           ? aiProvider === 'anthropic'
-          : alwaysRequired;
+          : name === 'GEMINI_API_KEY'
+            ? aiProvider === 'gemini'
+            : alwaysRequired;
     return {
       name,
       scope,
@@ -162,11 +165,11 @@ const validateSafeValues = (environment) => {
   }
   if (
     hasValue(environment, 'AI_PROVIDER') &&
-    !['openai', 'anthropic'].includes(
+    !['openai', 'anthropic', 'gemini'].includes(
       environment.AI_PROVIDER.trim().toLowerCase()
     )
   ) {
-    invalid.push('AI_PROVIDER must equal openai or anthropic');
+    invalid.push('AI_PROVIDER must equal openai, anthropic or gemini');
   }
   if (
     hasValue(environment, 'STRIPE_SECRET_KEY') &&
@@ -452,7 +455,10 @@ const serviceRoleRestRequest = async (
   );
 
 const verifyStripe = async (environment, authContext, evidence) => {
-  const billingBase = environment.VITE_BILLING_API_URL.replace(/\/$/, '');
+  let billingBase = environment.VITE_BILLING_API_URL.replace(/\/$/, '');
+  if (!billingBase.endsWith('/api/billing')) {
+    billingBase = `${billingBase}/api/billing`;
+  }
   const backendRoot = deriveBackendRoot(billingBase);
   const health = await jsonRequest(`${backendRoot}/api/health`);
   if (health.payload?.stripeConfigured !== true) {

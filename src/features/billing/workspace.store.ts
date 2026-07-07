@@ -42,7 +42,7 @@ interface WorkspaceStoreState {
   resetWorkspaces: () => void;
 }
 
-const STORAGE_KEY = 'engineeros_workspaces';
+const STORAGE_KEY = 'EngVox_workspaces';
 
 const createDefaultWorkspace = (): Workspace => ({
   id: 'default-workspace',

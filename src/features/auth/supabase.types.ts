@@ -27,7 +27,7 @@ export interface SupabaseProgressSnapshotRow {
   updated_at: string;
 }
 
-export interface EngineerOSDatabase {
+export interface EngVoxDatabase {
   public: {
     Tables: {
       profiles: {

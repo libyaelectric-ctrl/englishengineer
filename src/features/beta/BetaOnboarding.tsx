@@ -108,7 +108,7 @@ export const BetaOnboarding = () => {
               Closed Beta Setup
             </p>
             <h2 className="mt-2 text-3xl font-black text-slate-950">
-              Calibrate EngineerOS for your work.
+              Calibrate EngVox for your work.
             </h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">
               Only essential beta fields are collected locally. You can use the
@@ -202,7 +202,7 @@ export const BetaOnboarding = () => {
         </div>
 
         <p className="mt-4 text-xs leading-5 text-slate-500">
-          Your level starts at A1 in demo mode. EngineerOS updates the estimate
+          Your level starts at A1 in demo mode. EngVox updates the estimate
           after enough completed tasks. Scores are internal Engineering
           Communication estimates, not official CEFR certificates.
         </p>

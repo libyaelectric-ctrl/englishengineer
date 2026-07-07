@@ -99,8 +99,8 @@ describe('cloud sync merge helpers', () => {
       learning: { xp: 240 },
       grammarReview: { rule_a: { repetitions: 2 } },
       vocabularyReview: {
-        engineeros_vocabulary_memory: { records: { term_a: { streak: 3 } } },
-        engineeros_vocabulary_menu: { activeTab: 'Learning' },
+        EngVox_vocabulary_memory: { records: { term_a: { streak: 3 } } },
+        EngVox_vocabulary_menu: { activeTab: 'Learning' },
       },
       speakingHistory: { history: [{ missionId: 'speak_1' }] },
       writingHistory: { history: [{ missionId: 'write_1' }] },
@@ -112,13 +112,13 @@ describe('cloud sync merge helpers', () => {
     applyCloudSnapshotLocally(snapshot, 'user_2');
 
     expect(storage.get('learning_state')).toEqual({ xp: 240 });
-    expect(storage.get('engineeros_grammar_progress')).toEqual({
+    expect(storage.get('EngVox_grammar_progress')).toEqual({
       rule_a: { repetitions: 2 },
     });
-    expect(storage.get('engineeros_vocabulary_menu')).toEqual({
+    expect(storage.get('EngVox_vocabulary_menu')).toEqual({
       activeTab: 'Learning',
     });
-    expect(storage.get('engineeros_speaking_state')).toEqual({
+    expect(storage.get('EngVox_speaking_state')).toEqual({
       history: [{ missionId: 'speak_1' }],
     });
     expect(storage.get('learning_profile_user_2')).toEqual({

@@ -106,10 +106,7 @@ export const COMMUNICATION_GOALS = [
   { id: 'interview-career', label: 'Interview and career' },
 ] as const;
 
-export const DAILY_DURATION_OPTIONS = Array.from(
-  { length: 12 },
-  (_, index) => (index + 1) * 15
-);
+export const DAILY_DURATION_OPTIONS = [15, 30, 60, 90, 120, 150, 180];
 export const DAILY_TASK_COUNT_OPTIONS = [1, 2, 3, 4, 5, 6, 8, 10];
 
 export const PROFESSIONAL_TRACKS = [

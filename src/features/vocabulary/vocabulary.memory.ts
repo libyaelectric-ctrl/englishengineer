@@ -11,7 +11,7 @@ import type {
 } from './vocabulary.types';
 import type { CefrLevel } from '@/features/level-system';
 
-const STORAGE_KEY = 'engineeros_vocabulary_memory';
+const STORAGE_KEY = 'EngVox_vocabulary_memory';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const addDays = (date: Date, days: number): string =>
@@ -61,7 +61,7 @@ export const VocabularyMemoryService = {
 
   addEntry(
     entry: VocabularyEntry,
-    source: VocabularyWordSource = 'EngineerOS Dictionary',
+    source: VocabularyWordSource = 'EngVox Dictionary',
     now = new Date()
   ): SavedVocabularyWord {
     const state = this.getState();

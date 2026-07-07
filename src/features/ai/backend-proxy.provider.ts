@@ -275,7 +275,7 @@ export const createBackendProxyProvider = (
       contractVersion: CONTRACT_VERSION,
       requestId,
       sentAt: new Date().toISOString(),
-      client: 'engineeros-web',
+      client: 'EngVox-web',
     };
 
     const payload: BackendProxyPayload = {
@@ -306,8 +306,8 @@ export const createBackendProxyProvider = (
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'X-EngineerOS-AI-Contract': CONTRACT_VERSION,
-              'X-EngineerOS-Request-Id': requestId,
+              'X-EngVox-AI-Contract': CONTRACT_VERSION,
+              'X-EngVox-Request-Id': requestId,
               ...authHeaders,
             },
             body: JSON.stringify(payload),

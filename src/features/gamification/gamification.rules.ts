@@ -68,7 +68,7 @@ export const GAMIFICATION_MISSION_TEMPLATES: GamificationMissionTemplate[] = [
   {
     id: 'monthly_engineer_elite',
     title: 'Engineer Elite Month',
-    description: 'Complete twenty sessions across EngineerOS this month.',
+    description: 'Complete twenty sessions across EngVox this month.',
     cadence: 'monthly',
     category: 'Mixed',
     target: 20,

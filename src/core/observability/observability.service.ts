@@ -1,5 +1,5 @@
 import {
-  type EngineerOSEnv,
+  type EngVoxEnv,
   validateEnvironment,
 } from '@/config/environment.config';
 import {
@@ -51,7 +51,7 @@ export const ObservabilityService = {
     };
   },
 
-  getHealthCheck(environmentOverride?: EngineerOSEnv): HealthCheckContract {
+  getHealthCheck(environmentOverride?: EngVoxEnv): HealthCheckContract {
     const environment = validateEnvironment(environmentOverride);
     const monitoring = this.getErrorMonitoringConfig();
     const notes = [

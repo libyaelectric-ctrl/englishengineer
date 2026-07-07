@@ -6,13 +6,12 @@ import {
 } from './navigation.config';
 
 describe('main navigation configuration', () => {
-  it('uses only the six locked main navigation entries', () => {
+  it('uses only the five locked main navigation entries', () => {
     expect(MAIN_NAVIGATION_LABELS).toEqual([
       'Home',
       'Learning Hub',
       'Skills',
       'Tools',
-      'Watch',
       'Profile',
     ]);
   });

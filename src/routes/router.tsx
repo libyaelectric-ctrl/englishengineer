@@ -36,7 +36,6 @@ const Team = lazy(() => import('@/pages/TeamPage'));
 const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
-const Watch = lazy(() => import('@/features/watch/WatchPage'));
 
 export const router = createBrowserRouter([
   {
@@ -125,6 +124,10 @@ export const router = createBrowserRouter([
       ),
       {
         path: 'profile',
+        element: <Navigate to="/profile/overview" replace />,
+      },
+      {
+        path: 'profile/:section',
         element: (
           <Suspense fallback={<LoadingState />}>
             <Profile />
@@ -213,6 +216,10 @@ export const router = createBrowserRouter([
       },
       {
         path: 'curriculum',
+        element: <Navigate to="/curriculum/today" replace />,
+      },
+      {
+        path: 'curriculum/:section',
         element: (
           <Suspense fallback={<LoadingState />}>
             <Curriculum />
@@ -221,19 +228,15 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tools',
+        element: <Navigate to="/tools/work" replace />,
+      },
+      {
+        path: 'tools/:section',
         element: (
           <Suspense fallback={<LoadingState />}>
             <Tools />
           </Suspense>
         ),
-      },
-      {
-        path: 'work-tools',
-        element: <Navigate to="/tools" replace />,
-      },
-      {
-        path: 'quick-tools',
-        element: <Navigate to="/tools?tab=quick" replace />,
       },
       {
         path: 'learning-plan',
@@ -272,14 +275,6 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <TeamMember />
-          </Suspense>
-        ),
-      },
-      {
-        path: 'watch',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Watch />
           </Suspense>
         ),
       },
