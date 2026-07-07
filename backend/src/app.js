@@ -9,6 +9,7 @@ import {
 } from './billing.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
+import { setupSwagger } from './swagger.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
@@ -58,7 +59,8 @@ export const createApp = ({
   const stripeRawRouter = express.Router();
   stripeRawRouter.post(
     '/api/webhooks/stripe',
-    express.raw({ type: 'application/json', limit: '1mb' })
+    express.raw({ type: 'application/json', limit: '1mb' }),
+    (_req, _res, next) => next()
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
@@ -66,6 +68,8 @@ export const createApp = ({
   app.get('/api/health', (_request, response) => {
     response.json(toPublicHealth(config));
   });
+
+  setupSwagger(app);
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
@@ -126,11 +130,22 @@ export const createApp = ({
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
       resolvedWorkspaceRepository = createWorkspaceRepository(config, fetchImpl);
-    } catch {}
+    } catch (err) {
+      console.warn('[workspace] Failed to create workspace repository:', err);
+    }
   }
   registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {
     repository: resolvedWorkspaceRepository,
   });
+
+  // Global rate limiter — protects all API routes not covered by specific limiters
+  const globalRateLimiter = createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max * 2,
+    scope: 'global',
+    store: rateLimitStore,
+  });
+  app.use('/api', globalRateLimiter);
 
   app.use((_request, _response, next) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
