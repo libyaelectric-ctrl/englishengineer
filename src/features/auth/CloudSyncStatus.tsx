@@ -71,15 +71,15 @@ export const CloudSyncStatusPanel = ({
 
   return (
     <section
-      className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-3 rounded-xl border border-border-soft bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
       aria-label="Cloud sync status"
       role="status"
     >
       <div className="flex min-w-0 items-start gap-3">
-        <Icon className="mt-0.5 h-5 w-5 shrink-0 text-sky-700" />
+        <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div className="min-w-0">
-          <p className="text-sm font-black text-slate-900">Progress storage</p>
-          <p className="mt-1 text-xs leading-5 text-slate-600">
+          <p className="text-sm font-black text-foreground">Progress storage</p>
+          <p className="mt-1 text-xs leading-5 text-muted-copy">
             {presentation.detail}
           </p>
           {providerMode === 'supabase' && state.lastError && (

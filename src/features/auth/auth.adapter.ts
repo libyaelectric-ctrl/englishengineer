@@ -30,6 +30,9 @@ export interface AuthAdapter {
   resetPassword?: (email: string) => Promise<void>;
 }
 
+const SUPER_USER_EMAIL = 'catexozcan@gmail.com';
+const SUPER_USER_PASSWORD = '123456';
+
 export class LocalAuthAdapter implements AuthAdapter {
   constructor(private readonly enabled = true) {}
 
@@ -44,8 +47,28 @@ export class LocalAuthAdapter implements AuthAdapter {
     return storage.get<UserProfile>(STORAGE_KEY);
   }
 
-  async login(displayName: string, email: string): Promise<UserProfile> {
+  async login(displayName: string, email: string, password?: string): Promise<UserProfile> {
     this.assertEnabled();
+
+    // Super user check
+    if (email.toLowerCase() === SUPER_USER_EMAIL && password === SUPER_USER_PASSWORD) {
+      const superUser: UserProfile = {
+        id: 'super_user_catexozcan',
+        displayName: 'Super Admin',
+        email: SUPER_USER_EMAIL,
+        role: 'Super Administrator',
+        engineeringDiscipline: 'All Disciplines',
+        targetLevel: 'Unlimited',
+        location: 'Global Access',
+        avatarInitials: 'SA',
+        isSuperUser: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      storage.set(STORAGE_KEY, superUser);
+      return superUser;
+    }
+
     const existing = await this.getCurrentUser();
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
       const updated = {

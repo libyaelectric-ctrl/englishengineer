@@ -1,19 +1,6 @@
 import { Link } from 'react-router-dom';
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  Mic,
-  BookOpen,
-  Brain,
-  PenLine,
-  Headphones,
-  BarChart3,
-  Globe,
-  Shield,
-  Zap,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { ArrowRight, Check, ChevronDown, Mic, BookOpen, Brain, PenLine, Headphones, BarChart3 } from 'lucide-react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
 
@@ -23,78 +10,27 @@ const STRUCTURED_DATA = {
   name: 'EngVox',
   applicationCategory: 'EducationalApplication',
   operatingSystem: 'Web',
-  description: 'AI-powered English training platform for engineers working on international projects. Practice writing, speaking, listening, and reading with discipline-specific content.',
+  description: 'AI-powered English training for engineers.',
   url: 'https://englishengineer.vercel.app',
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-    description: 'Free plan available',
-  },
-  author: {
-    '@type': 'Organization',
-    name: 'EngVox',
-  },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 
-const FAQ_ITEMS = [
-  {
-    q: 'What is EngVox?',
-    a: 'EngVox is an AI-powered English training platform built specifically for engineers working on international projects. It covers writing (RFIs, NCRs, emails), speaking (site meetings, presentations), listening (technical briefings), and reading (specs, contracts) — all with discipline-specific content.',
-  },
-  {
-    q: 'Is there a free plan?',
-    a: 'Yes. The Free plan is permanent with no credit card required. You get core learning modules, vocabulary practice, grammar exercises, and 3 AI coach requests per day.',
-  },
-  {
-    q: 'Which engineering disciplines are supported?',
-    a: 'Electrical, civil, mechanical, MEP, commissioning, QA/QC, and multi-discipline project environments. The system adapts content to your discipline during onboarding.',
-  },
-  {
-    q: 'How does the AI coach work?',
-    a: 'After each writing or speaking exercise, the AI analyzes your response for technical accuracy, grammar, professional tone, and vocabulary usage. It provides specific corrections and suggestions based on real engineering communication standards.',
-  },
-  {
-    q: 'Can I cancel anytime?',
-    a: 'Yes. Cancel from your Profile page. Your plan stays active until the end of the current billing period. No questions asked.',
-  },
-  {
-    q: 'Is my data secure?',
-    a: 'Yes. We use Supabase for authentication and data storage. Local-first progress means your data stays on your device by default. Cloud sync only happens when you enable it.',
-  },
+const FAQ = [
+  { q: 'What is EngVox?', a: 'AI-powered English training for engineers — writing, speaking, listening, reading with discipline-specific content.' },
+  { q: 'Is there a free plan?', a: 'Yes. Permanent free plan with no credit card. Core modules, vocabulary, grammar, and 3 AI requests/day.' },
+  { q: 'Which disciplines?', a: 'Electrical, civil, mechanical, MEP, commissioning, and more.' },
+  { q: 'How does AI work?', a: 'Real-time feedback on writing, pronunciation scoring, adaptive learning paths.' },
+  { q: 'Can I cancel anytime?', a: 'Yes. No contracts, no hidden fees.' },
+  { q: 'Is my data secure?', a: 'Yes. Local-first storage, encrypted in transit.' },
 ];
 
 const FEATURES = [
-  {
-    icon: PenLine,
-    title: 'Writing',
-    desc: 'Draft RFIs, NCRs, submittals, and client emails. AI reviews technical accuracy, grammar, and professional tone.',
-  },
-  {
-    icon: Mic,
-    title: 'Speaking',
-    desc: 'Practice site meetings, toolbox talks, and progress updates. Get feedback on clarity and engineering terminology.',
-  },
-  {
-    icon: Headphones,
-    title: 'Listening',
-    desc: 'Comprehend technical briefings, commissioning reports, and safety protocols. Train your ear for engineering English.',
-  },
-  {
-    icon: BookOpen,
-    title: 'Reading',
-    desc: 'Analyze specifications, contracts, and technical reports. Build vocabulary through real engineering documents.',
-  },
-  {
-    icon: Brain,
-    title: 'AI Coach',
-    desc: 'Personalized feedback on every attempt. Tracks your mistakes and adapts to your learning style.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Analytics',
-    desc: 'Track progress across all skills. Identify weak areas and measure improvement over time.',
-  },
+  { icon: PenLine, title: 'Writing', desc: 'RFIs, NCRs, emails, submittals. AI reviews technical accuracy, grammar, and tone.' },
+  { icon: Mic, title: 'Speaking', desc: 'Site meetings, toolbox talks, progress updates. Pronunciation scoring in real-time.' },
+  { icon: Headphones, title: 'Listening', desc: 'Technical briefings, commissioning reports, safety protocols.' },
+  { icon: BookOpen, title: 'Reading', desc: 'Specifications, contracts, technical reports. Vocabulary through real documents.' },
+  { icon: Brain, title: 'AI Coach', desc: 'Personalized feedback on every attempt. Adapts to your learning style.' },
+  { icon: BarChart3, title: 'Analytics', desc: 'Track progress across all skills. Identify weak areas and measure improvement.' },
 ];
 
 const STATS = [
@@ -104,400 +40,273 @@ const STATS = [
   { value: '24/7', label: 'AI availability' },
 ];
 
-const LandingPage = () => {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
+// Scroll-triggered animation hook (Agentic style)
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    ProductAnalyticsService.track('screen_viewed', 'landing');
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, isVisible };
+}
+
+// Reusable animated section
+function AnimatedSection({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const { ref, isVisible } = useScrollReveal();
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
+        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// Reusable animated card with mouse tracking
+function AnimatedCard({ children, className = '', delay = 0, dark = false }: { children: React.ReactNode; className?: string; delay?: number; dark?: boolean }) {
+  const { ref, isVisible } = useScrollReveal();
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    el.style.setProperty('--mouse-x', `${x}%`);
+    el.style.setProperty('--mouse-y', `${y}%`);
   }, []);
 
   return (
-    <main className="bg-transparent text-foreground min-h-screen">
-      <PageMetadata
-        title="EngVox — Engineering English Training Platform"
-        description="AI-powered English training for engineers on international projects. Practice RFIs, site meetings, emails and reports with discipline-specific content."
-        canonical="https://englishengineer.vercel.app"
-        jsonLd={STRUCTURED_DATA}
-      />
+    <div
+      ref={(node) => {
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        (cardRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      }}
+      onMouseMove={handleMouseMove}
+      className={`group relative rounded-2xl overflow-hidden transition-all duration-700 hover:border-black/[0.15] ${dark ? '' : 'hover:bg-[#fafaf8]'} ${className}`}
+      style={{
+        border: dark ? '1px solid #111' : '1px solid rgba(0,0,0,0.07)',
+        background: dark ? '#111' : '#fff',
+        color: dark ? '#fff' : undefined,
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
+        transition: `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, border-color 0.3s ease, background-color 0.3s ease`,
+      }}
+    >
+      {/* Mouse-tracking radial gradient */}
+      <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0,0,0,0.03), transparent 60%)' }}></div>
+      {children}
+    </div>
+  );
+}
 
-      {/* Skip to main content - accessibility */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-foreground focus:px-4 focus:py-2 focus:text-sm focus:text-background"
-      >
-        Skip to main content
-      </a>
+const LandingPage = () => {
+  const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [heroVisible, setHeroVisible] = useState(false);
 
-      {/* HERO */}
-      <section className="relative border-b border-border-soft py-16 md:py-24 overflow-hidden">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-[0.08]"
-          style={{ backgroundImage: "url('/brand/back2.png')" }}
-        ></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/80 to-white/95"></div>
-        <div className="relative mx-auto max-w-5xl px-4 text-center sm:px-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface px-3 py-1 text-xs text-muted-copy">
-            <Globe className="h-3 w-3" />
-            Built for engineers on international projects
+  useEffect(() => {
+    ProductAnalyticsService.track('screen_viewed', 'landing');
+    // Hero animation triggers on mount
+    const timer = setTimeout(() => setHeroVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <main className="min-h-screen antialiased" style={{ background: '#F5F4F0', color: '#111', fontFamily: '"IBM Plex Sans", system-ui, sans-serif' }}>
+      <PageMetadata title="EngVox — Engineering English Training" description="AI-powered English training for engineers." canonical="https://englishengineer.vercel.app" jsonLd={STRUCTURED_DATA} />
+
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:text-white">Skip to content</a>
+
+      {/* NAV - Glass morphism */}
+      <nav className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+        <div className="pointer-events-auto w-full max-w-3xl flex items-center justify-between px-5 py-3 rounded-2xl" style={{ border: '1px solid rgba(0,0,0,0.06)', backdropFilter: 'blur(16px)', background: 'rgba(245,244,240,0.80)', boxShadow: '0 8px 32px rgba(0,0,0,0.08)' }}>
+          <span className="text-xs font-bold tracking-[0.25em]" style={{ color: 'rgba(0,0,0,0.7)' }}>ENGVOX</span>
+          <div className="hidden md:flex items-center gap-6 text-[11px]" style={{ color: 'rgba(0,0,0,0.6)' }}>
+            <a href="#features" className="hover:text-black transition-colors">Features</a>
+            <a href="#how-it-works" className="hover:text-black transition-colors">How It Works</a>
+            <a href="#pricing" className="hover:text-black transition-colors">Pricing</a>
+            <a href="#faq" className="hover:text-black transition-colors">FAQ</a>
           </div>
-          <h1 className="mt-6 text-4xl font-bold leading-tight sm:text-5xl lg:text-6xl">
-            Master the emails, RFIs,<br />and site meetings that shape<br />your engineering career.
+          <Link to="/login" className="text-[11px] px-4 py-2 rounded-xl hover:bg-black/5 transition-all" style={{ border: '1px solid rgba(0,0,0,0.1)', color: 'rgba(0,0,0,0.6)' }}>START FREE</Link>
+        </div>
+      </nav>
+
+      {/* HERO - Agentic blur-to-clear animation */}
+      <section ref={heroRef} className="relative min-h-screen flex items-end overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/brand/back2.png')", opacity: 0.05 }}></div>
+        <div className="absolute inset-x-0 bottom-0 z-10 pointer-events-none" style={{ height: '65%', background: 'linear-gradient(to top, #F5F4F0 0%, #F5F4F0 18%, rgba(245,244,240,0.85) 35%, rgba(245,244,240,0.5) 55%, rgba(245,244,240,0.15) 75%, transparent 100%)' }}></div>
+        <div className="relative z-30 flex flex-col px-6 md:px-12 pb-16 max-w-3xl">
+          {/* Title - blur to clear */}
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light leading-[1.0] tracking-tight mb-8" style={{ fontFamily: '"IBM Plex Sans", sans-serif', opacity: heroVisible ? 1 : 0, filter: heroVisible ? 'blur(0px)' : 'blur(24px)', transform: heroVisible ? 'translateY(0)' : 'translateY(32px)', transition: 'opacity 1s cubic-bezier(0.16,1,0.3,1), filter 1s cubic-bezier(0.16,1,0.3,1), transform 1s cubic-bezier(0.16,1,0.3,1)' }}>
+            Master the<br />engineering<br />English.
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-base text-muted-copy leading-relaxed">
-            The only platform built specifically for engineering communication —
-            with AI feedback on every attempt.
+          {/* Subtitle - delayed */}
+          <p className="text-base leading-relaxed max-w-md mb-10" style={{ color: 'rgba(0,0,0,0.45)', fontFamily: '"IBM Plex Sans", sans-serif', opacity: heroVisible ? 1 : 0, filter: heroVisible ? 'blur(0px)' : 'blur(16px)', transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.8s cubic-bezier(0.16,1,0.3,1) 120ms, filter 0.8s cubic-bezier(0.16,1,0.3,1) 120ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 120ms' }}>
+            The only platform built specifically for engineering communication — with AI feedback on every attempt.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/start"
-              className="inline-flex items-center gap-2 rounded-lg bg-foreground px-6 py-3 text-sm font-medium text-background hover:opacity-90 transition-opacity"
-            >
-              Start Free <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a
-              href="#features"
-              className="inline-flex items-center gap-2 rounded-lg border border-border-soft px-6 py-3 text-sm font-medium hover:bg-surface-hover transition-colors"
-            >
-              See Features
-            </a>
-          </div>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-copy">
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-success" /> Free plan included
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-success" /> No credit card
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Check className="h-3.5 w-3.5 text-success" /> Cancel anytime
-            </span>
-          </div>
-          <div className="mt-8 flex justify-center">
-            <img src="/brand/mascot.png" alt="EngVox Mascot" className="h-32 w-auto md:h-40" />
-          </div>
-        </div>
-      </section>
-
-      {/* VIDEO DEMO */}
-      <section className="border-b border-border-soft py-10 md:py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">See It In Action</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
-              Real engineering English practice
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-copy">
-              Watch how EngVox helps engineers master site meetings, RFIs, and technical reporting with AI-powered feedback.
-            </p>
-          </div>
-          <div className="mt-8 overflow-hidden rounded-2xl border border-border-soft bg-surface shadow-sm">
-            <div className="relative aspect-video">
-              <img
-                src="/brand/background.webp"
-                alt="EngVox demo preview"
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-foreground/20">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-lg transition-transform hover:scale-105">
-                  <svg className="ml-1 h-6 w-6 text-foreground" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </div>
+          {/* Stats - delayed more */}
+          <div className="flex gap-8 sm:gap-12 mb-10" style={{ opacity: heroVisible ? 1 : 0, filter: heroVisible ? 'blur(0px)' : 'blur(16px)', transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.8s cubic-bezier(0.16,1,0.3,1) 200ms, filter 0.8s cubic-bezier(0.16,1,0.3,1) 200ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 200ms' }}>
+            {STATS.map((stat, i) => (
+              <div key={i}>
+                <div className="text-2xl sm:text-3xl font-light tracking-tight">{stat.value}</div>
+                <div className="text-[10px] tracking-widest uppercase mt-1" style={{ color: 'rgba(0,0,0,0.4)' }}>{stat.label}</div>
               </div>
-            </div>
+            ))}
           </div>
-          <p className="mt-4 text-center text-xs text-muted-copy">
-            2-minute overview of all learning modules and AI coaching
-          </p>
-        </div>
-      </section>
-
-      {/* STATS */}
-      <section className="border-b border-border-soft bg-surface py-8">
-        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 px-4 sm:grid-cols-4 sm:px-6">
-          {STATS.map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="mt-1 text-xs text-muted-copy">{stat.label}</p>
-            </div>
-          ))}
+          {/* Buttons - delayed more */}
+          <div className="flex gap-4" style={{ opacity: heroVisible ? 1 : 0, filter: heroVisible ? 'blur(0px)' : 'blur(16px)', transform: heroVisible ? 'translateY(0)' : 'translateY(20px)', transition: 'opacity 0.8s cubic-bezier(0.16,1,0.3,1) 280ms, filter 0.8s cubic-bezier(0.16,1,0.3,1) 280ms, transform 0.8s cubic-bezier(0.16,1,0.3,1) 280ms' }}>
+            <Link to="/start" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-colors" style={{ background: '#111', color: '#fff' }}>Start Free <ArrowRight className="h-4 w-4" /></Link>
+            <a href="#features" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all" style={{ border: '1px solid rgba(0,0,0,0.1)', color: 'rgba(0,0,0,0.6)' }}>See Features</a>
+          </div>
         </div>
       </section>
 
       {/* FEATURES */}
-      <section id="features" className="border-b border-border-soft py-10 md:py-14">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">Features</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
-              Everything your engineering communication needs.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-copy">
-              Six specialized modules designed for real-world engineering scenarios.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f) => (
-              <div
-                key={f.title}
-                className="rounded-xl border border-border-soft p-5 hover:border-border-hover transition-colors"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-hover text-foreground">
-                  <f.icon className="h-5 w-5" />
+      <section id="features" className="py-20 px-6 md:px-12 lg:px-20">
+        <div className="max-w-6xl mx-auto">
+          <AnimatedSection className="mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest" style={{ color: 'rgba(0,0,0,0.4)', background: 'rgba(0,0,0,0.04)' }}>FEATURES</span>
+            <h2 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.05]">Everything you need<br />to master engineering English.</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {FEATURES.map((f, i) => (
+              <AnimatedCard key={i} delay={i * 80} className="p-7 min-h-[180px]">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 relative z-10" style={{ border: '1px solid rgba(0,0,0,0.1)' }}>
+                  <f.icon className="h-5 w-5" style={{ color: 'rgba(0,0,0,0.6)' }} />
                 </div>
-                <h3 className="mt-3 text-sm font-semibold">{f.title}</h3>
-                <p className="mt-1 text-xs text-muted-copy leading-relaxed">
-                  {f.desc}
-                </p>
-              </div>
+                <h3 className="text-lg font-light mb-2 relative z-10">{f.title}</h3>
+                <p className="text-sm leading-relaxed relative z-10" style={{ color: 'rgba(0,0,0,0.45)' }}>{f.desc}</p>
+              </AnimatedCard>
             ))}
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="border-b border-border-soft bg-surface py-10 md:py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">How it works</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
-              Three steps to project confidence.
-            </h2>
-          </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
+      <section id="how-it-works" className="py-20 px-6 md:px-12 lg:px-20" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="max-w-6xl mx-auto">
+          <AnimatedSection className="mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest" style={{ color: 'rgba(0,0,0,0.4)', background: 'rgba(0,0,0,0.04)' }}>HOW IT WORKS</span>
+            <h2 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.05]">Three steps to<br />project confidence.</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {[
-              {
-                step: '1',
-                title: 'Set your profile',
-                desc: 'Choose your discipline, current level, and career goals. The system builds a personalized curriculum.',
-              },
-              {
-                step: '2',
-                title: 'Practice real scenarios',
-                desc: 'Work through authentic engineering communication tasks — from daily reports to client presentations.',
-              },
-              {
-                step: '3',
-                title: 'Track and improve',
-                desc: 'AI-powered analytics identify weak areas. Spaced repetition ensures you retain what you learn.',
-              },
-            ].map((s) => (
-              <div key={s.step} className="text-center">
-                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-foreground text-background text-sm font-bold">
-                  {s.step}
-                </div>
-                <h3 className="mt-3 text-sm font-semibold">{s.title}</h3>
-                <p className="mt-1 text-xs text-muted-copy leading-relaxed">
-                  {s.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* WHY ENGVOX */}
-      <section className="border-b border-border-soft py-10 md:py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">Why EngVox</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
-              Built by engineers, for engineers.
-            </h2>
-          </div>
-          <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                icon: Zap,
-                title: 'Discipline-specific',
-                desc: 'Content adapts to your field — electrical, civil, mechanical, or multi-discipline.',
-              },
-              {
-                icon: Shield,
-                title: 'Industry standards',
-                desc: 'Scenarios based on real RFIs, NCRs, FAT reports, and commissioning protocols.',
-              },
-              {
-                icon: Globe,
-                title: 'International teams',
-                desc: 'Designed for engineers working across borders with diverse technical backgrounds.',
-              },
-            ].map((item) => (
-              <div key={item.title} className="text-center">
-                <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-lg bg-surface-hover text-foreground">
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <h3 className="mt-3 text-sm font-semibold">{item.title}</h3>
-                <p className="mt-1 text-xs text-muted-copy leading-relaxed">
-                  {item.desc}
-                </p>
-              </div>
+              { num: '01', title: 'Set your profile', desc: 'Choose your discipline, current level, and career goals.' },
+              { num: '02', title: 'Practice real scenarios', desc: 'Work through authentic engineering communication tasks.' },
+              { num: '03', title: 'Track and improve', desc: 'AI-powered analytics identify weak areas.' },
+            ].map((step, i) => (
+              <AnimatedCard key={i} delay={i * 80} className="p-7 min-h-[200px]">
+                <span className="text-[11px] tracking-widest font-mono relative z-10" style={{ color: 'rgba(0,0,0,0.2)' }}>{step.num}</span>
+                <h3 className="text-xl font-light mt-4 mb-3 relative z-10">{step.title}</h3>
+                <p className="text-sm leading-relaxed relative z-10" style={{ color: 'rgba(0,0,0,0.45)' }}>{step.desc}</p>
+              </AnimatedCard>
             ))}
           </div>
         </div>
       </section>
 
       {/* PRICING */}
-      <section className="border-b border-border-soft py-10 md:py-14">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">Pricing</p>
-            <h2 className="mt-2 text-2xl font-bold sm:text-3xl">
-              Start free. Upgrade when ready.
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-copy">
-              No hidden fees. Cancel anytime.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
+      <section id="pricing" className="py-20 px-6 md:px-12 lg:px-20" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="max-w-6xl mx-auto">
+          <AnimatedSection className="mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest" style={{ color: 'rgba(0,0,0,0.4)', background: 'rgba(0,0,0,0.04)' }}>PRICING</span>
+            <h2 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-light tracking-tight leading-[1.05]">Start free.<br />Upgrade when ready.</h2>
+          </AnimatedSection>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {[
-              {
-                name: 'Free',
-                price: '$0',
-                period: 'forever',
-                cta: 'Start Free',
-                href: '/start',
-                features: [
-                  'Core learning modules',
-                  'Vocabulary + grammar',
-                  '3 AI requests/day',
-                  'Progress tracking',
-                ],
-              },
-              {
-                name: 'Pro',
-                price: '$19',
-                period: '/month',
-                cta: 'Upgrade to Pro',
-                href: '/pricing',
-                features: [
-                  'Unlimited AI feedback',
-                  'Full A1–C2 access',
-                  'Mistake Log',
-                  '2 doc uploads/month',
-                ],
-                popular: true,
-              },
-              {
-                name: 'Project',
-                price: '$39',
-                period: '/month',
-                cta: 'Upgrade to Project',
-                href: '/pricing',
-                features: [
-                  '3 project workspaces',
-                  'Workspace memory',
-                  '20 docs/month',
-                  'LinkedIn optimizer',
-                ],
-              },
-            ].map((p) => (
-              <div
-                key={p.name}
-                className={`rounded-xl border p-6 transition-colors ${
-                  p.popular
-                    ? 'border-foreground bg-surface shadow-sm'
-                    : 'border-border-soft hover:border-border-hover'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-xs font-medium text-muted-copy">
-                    {p.name}
-                  </p>
-                  {p.popular && (
-                    <span className="rounded-full bg-foreground px-2 py-0.5 text-[10px] font-medium text-background">
-                      Popular
-                    </span>
-                  )}
+              { name: 'Free', price: '$0', period: 'forever', features: ['Core learning modules', 'Vocabulary + grammar', '3 AI requests/day', 'Progress tracking'], cta: 'Start Free', primary: false },
+              { name: 'Pro', price: '$19', period: '/month', features: ['Unlimited AI feedback', 'Full A1–C2 access', 'Mistake Log', '2 doc uploads/month'], cta: 'Upgrade to Pro', primary: true },
+              { name: 'Project', price: '$39', period: '/month', features: ['3 project workspaces', 'Workspace memory', '20 docs/month', 'LinkedIn optimizer'], cta: 'Upgrade to Project', primary: false },
+            ].map((plan, i) => (
+              <AnimatedCard key={i} delay={i * 80} dark={plan.primary} className={`p-7 flex flex-col ${plan.primary ? 'text-white' : ''}`}>
+                <div className="flex items-center justify-between mb-6 relative z-10">
+                  <span className="text-sm font-medium">{plan.name}</span>
+                  {plan.primary && <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.8)' }}>Popular</span>}
                 </div>
-                <div className="mt-2 flex items-baseline gap-1">
-                  <span className="text-3xl font-bold">{p.price}</span>
-                  <span className="text-xs text-muted-copy">{p.period}</span>
+                <div className="mb-6 relative z-10">
+                  <span className="text-3xl font-light">{plan.price}</span>
+                  <span className="text-sm ml-1" style={{ color: plan.primary ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.4)' }}>{plan.period}</span>
                 </div>
-                <ul className="mt-5 space-y-2">
-                  {p.features.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-start gap-2 text-xs text-muted-copy"
-                    >
-                      <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
-                      {f}
+                <ul className="space-y-3 mb-8 relative z-10">
+                  {plan.features.map((f, j) => (
+                    <li key={j} className="flex items-center gap-2 text-sm">
+                      <Check className="h-4 w-4" style={{ color: plan.primary ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.3)' }} />
+                      <span style={{ color: plan.primary ? 'rgba(255,255,255,0.8)' : 'rgba(0,0,0,0.6)' }}>{f}</span>
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to={p.href}
-                  className={`mt-5 flex h-10 w-full items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                    p.popular
-                      ? 'bg-foreground text-background hover:opacity-90'
-                      : 'border border-border-soft hover:bg-surface-hover'
-                  }`}
-                >
-                  {p.cta}
-                </Link>
-              </div>
+                <Link to="/start" className="block w-full text-center rounded-xl py-3 text-sm font-medium transition-colors mt-auto relative z-10" style={plan.primary ? { background: '#fff', color: '#111' } : { border: '1px solid rgba(0,0,0,0.1)', color: 'rgba(0,0,0,0.6)' }}>{plan.cta}</Link>
+              </AnimatedCard>
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-muted-copy">
-            Need more?{' '}
-            <Link to="/pricing" className="underline hover:text-foreground">
-              See all plans
-            </Link>{' '}
-            including Max, Exec, and Private.
-          </p>
         </div>
       </section>
 
       {/* FAQ */}
-      <section className="border-b border-border-soft bg-surface py-10 md:py-14">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6">
-          <div className="text-center">
-            <p className="text-xs font-medium text-muted-copy">FAQ</p>
-            <h2 className="mt-2 text-2xl font-bold">Common questions</h2>
-          </div>
-          <div className="mt-8 space-y-0">
-            {FAQ_ITEMS.map((item, i) => (
-              <div
-                key={i}
-                className="border-b border-border-soft last:border-0"
-              >
-                <button
-                  type="button"
-                  onClick={() => setFaqOpen(faqOpen === i ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 py-4 text-left"
-                >
-                  <span className="text-sm font-medium">{item.q}</span>
-                  <ChevronDown
-                    className={`h-4 w-4 shrink-0 text-muted-copy transition-transform ${
-                      faqOpen === i ? 'rotate-180' : ''
-                    }`}
-                  />
+      <section id="faq" className="py-20 px-6 md:px-12 lg:px-20" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="max-w-3xl mx-auto">
+          <AnimatedSection className="mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] tracking-widest" style={{ color: 'rgba(0,0,0,0.4)', background: 'rgba(0,0,0,0.04)' }}>FAQ</span>
+            <h2 className="mt-5 text-3xl md:text-4xl font-light tracking-tight">Common questions</h2>
+          </AnimatedSection>
+          <div className="space-y-2">
+            {FAQ.map((item, i) => (
+              <AnimatedCard key={i} delay={i * 50} className="overflow-hidden">
+                <button onClick={() => setFaqOpen(faqOpen === i ? null : i)} className="w-full flex items-center justify-between px-6 py-5 text-left relative z-10">
+                  <span className="text-sm font-light">{item.q}</span>
+                  <ChevronDown className="h-4 w-4 transition-transform duration-300" style={{ color: 'rgba(0,0,0,0.3)', transform: faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)' }} />
                 </button>
-                {faqOpen === i && (
-                  <p className="pb-4 text-sm text-muted-copy leading-relaxed">
-                    {item.a}
-                  </p>
-                )}
-              </div>
+                {faqOpen === i && <div className="px-6 pb-5 relative z-10"><p className="text-sm leading-relaxed" style={{ color: 'rgba(0,0,0,0.45)' }}>{item.a}</p></div>}
+              </AnimatedCard>
             ))}
           </div>
         </div>
       </section>
 
-      {/* TESTIMONIAL */}
-      <section className="border-t border-border-soft py-10">
-        <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
-          <div className="rounded-xl border border-border-soft bg-surface p-6">
-            <p className="text-sm leading-relaxed text-muted-copy italic">
-              "EngVox helped me prepare for my first international site meeting in Dubai.
-              The RFI templates and commissioning report practice saved me hours of preparation."
-            </p>
-            <p className="mt-3 text-xs font-medium text-foreground">
-              Electrical Engineer, 3 years experience
-            </p>
+      {/* CTA */}
+      <section className="py-20 px-6 md:px-12 lg:px-20 text-center" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <AnimatedSection className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-light tracking-tight mb-4">Ready to level up your<br />engineering English?</h2>
+          <p className="text-sm mb-8" style={{ color: 'rgba(0,0,0,0.45)' }}>Join engineers worldwide who are mastering technical communication.</p>
+          <Link to="/start" className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-sm font-medium transition-colors" style={{ background: '#111', color: '#fff' }}>Start Free <ArrowRight className="h-4 w-4" /></Link>
+        </AnimatedSection>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="py-8 px-6 md:px-12" style={{ borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-xs" style={{ color: 'rgba(0,0,0,0.3)' }}>© 2026 EngVox. All rights reserved.</span>
+          <div className="flex gap-6 text-xs" style={{ color: 'rgba(0,0,0,0.4)' }}>
+            <Link to="/legal/privacy" className="hover:text-black transition-colors">Privacy</Link>
+            <Link to="/legal/terms" className="hover:text-black transition-colors">Terms</Link>
+            <Link to="/legal/cookies" className="hover:text-black transition-colors">Cookies</Link>
           </div>
         </div>
-      </section>
+      </footer>
     </main>
   );
 };

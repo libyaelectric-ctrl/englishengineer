@@ -7,10 +7,8 @@ describe('Learning profile preferences', () => {
     localStorage.clear();
     LearningProfileRepository.reset('preference-test');
   });
-  it('offers every 15-minute duration from 15 through 180', () => {
-    expect(DAILY_DURATION_OPTIONS).toEqual(
-      Array.from({ length: 12 }, (_, index) => (index + 1) * 15)
-    );
+  it('offers the specified duration options', () => {
+    expect(DAILY_DURATION_OPTIONS).toEqual([15, 30, 60, 90, 120, 150, 180]);
   });
   it('stores multiple goals, role, minutes, and task count', () => {
     const profile = LearningProfileRepository.updatePreferences(

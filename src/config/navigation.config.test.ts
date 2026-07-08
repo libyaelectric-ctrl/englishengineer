@@ -9,21 +9,21 @@ describe('main navigation configuration', () => {
   it('uses only the five locked main navigation entries', () => {
     expect(MAIN_NAVIGATION_LABELS).toEqual([
       'Home',
-      'Learning Hub',
       'Skills',
       'Tools',
+      'Learning Hub',
       'Profile',
     ]);
   });
 
   it('keeps all learning skills inside Skills', () => {
     expect(SKILL_NAV_ITEMS.map((item) => item.label)).toEqual([
+      'Vocabulary',
+      'Grammar',
       'Reading',
       'Writing',
       'Listening',
       'Speaking',
-      'Vocabulary',
-      'Grammar',
     ]);
   });
 

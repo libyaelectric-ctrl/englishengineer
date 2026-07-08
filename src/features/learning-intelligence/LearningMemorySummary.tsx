@@ -33,7 +33,7 @@ export const LearningMemorySummary = ({
           : 'Review queue is clear',
       href: '/vocabulary',
       icon: BookMarked,
-      tone: 'border-sky-200 bg-sky-50 text-sky-700',
+      tone: 'border-primary/20 bg-primary/5 text-primary',
     },
     {
       label: 'Grammar path',
@@ -75,23 +75,23 @@ export const LearningMemorySummary = ({
           <Link
             key={item.label}
             to={item.href}
-            className="group flex min-w-0 items-center gap-3 rounded-[14px] border border-slate-200 bg-white p-3.5 transition-colors hover:border-blue-200 hover:bg-blue-50/50"
+            className="group flex min-w-0 items-center gap-3 rounded-[14px] border border-border-soft bg-white p-3.5 transition-colors hover:border-blue-200 hover:bg-blue-50/50"
           >
             <span className={`shrink-0 rounded-[11px] border p-2 ${item.tone}`}>
               <Icon className="h-4 w-4" aria-hidden="true" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-xs font-bold text-slate-500">
+              <span className="block text-xs font-bold text-foreground0">
                 {item.label}
               </span>
-              <span className="mt-0.5 block text-sm font-black text-slate-950">
+              <span className="mt-0.5 block text-sm font-black text-foreground">
                 {item.value}
               </span>
-              <span className="mt-0.5 block text-xs leading-5 text-slate-500">
+              <span className="mt-0.5 block text-xs leading-5 text-foreground0">
                 {item.detail}
               </span>
             </span>
-            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5" />
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
           </Link>
         );
       })}

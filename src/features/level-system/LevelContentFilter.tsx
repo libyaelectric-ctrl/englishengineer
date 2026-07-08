@@ -12,10 +12,10 @@ const FILTERS: Array<{ value: ContentLevelFilter; label: string }> = [
 ];
 
 const accessStyles: Record<ContentAccessLabel, string> = {
-  Current: 'border-sky-200 bg-sky-50 text-sky-700',
+  Current: 'border-primary/20 bg-primary/5 text-primary',
   Review: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   Preview: 'border-amber-200 bg-amber-50 text-amber-700',
-  Locked: 'border-slate-200 bg-slate-100 text-slate-500',
+  Locked: 'border-border-soft bg-surface-hover text-foreground0',
 };
 
 interface LevelContentFilterProps {
@@ -30,13 +30,13 @@ export const LevelContentFilter = ({
   onChange,
 }: LevelContentFilterProps) => (
   <div className="space-y-2">
-    <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
+    <div className="rounded-xl border border-border-soft bg-white p-3 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase text-slate-500">
+          <p className="text-xs font-bold uppercase text-foreground0">
             Content level
           </p>
-          <p className="mt-1 text-sm font-semibold text-slate-900">
+          <p className="mt-1 text-sm font-semibold text-foreground">
             Current skill level: {currentLevel}
           </p>
         </div>
@@ -52,8 +52,8 @@ export const LevelContentFilter = ({
               aria-pressed={value === filter.value}
               className={`min-h-10 rounded-[10px] border px-3 py-2 text-xs font-semibold transition-colors ${
                 value === filter.value
-                  ? 'border-sky-300 bg-sky-50 text-sky-800'
-                  : 'border-slate-200 bg-white text-slate-600 hover:border-sky-200 hover:bg-sky-50/60'
+                  ? 'border-sky-300 bg-primary/5 text-primary'
+                  : 'border-border-soft bg-white text-muted-copy hover:border-primary/20 hover:bg-primary/5/60'
               }`}
             >
               {filter.label}
@@ -87,8 +87,8 @@ export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
 );
 
 export const EmptyLevelState = ({ skill }: { skill: string }) => (
-  <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 text-sm text-slate-700">
-    <p className="font-semibold text-slate-900">No current-level content yet</p>
+  <div className="rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-foreground">
+    <p className="font-semibold text-foreground">No current-level content yet</p>
     <p className="mt-1">
       No {skill} content is available for this filter. Choose Review Previous,
       Preview Next, or All Levels intentionally.

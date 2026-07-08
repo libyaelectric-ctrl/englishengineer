@@ -20,7 +20,7 @@ export const ReadingTranslation = ({
       <p
         data-testid="reading-translation"
         aria-hidden={!revealed}
-        className={`${revealed ? 'block' : 'hidden'} mt-2 rounded-lg border border-sky-500/20 bg-sky-500/5 p-3 text-xs leading-5 text-slate-300 sm:group-hover:block`}
+        className={`${revealed ? 'block' : 'hidden'} mt-2 rounded-lg border border-sky-500/20 bg-primary/50/5 p-3 text-xs leading-5 text-muted-copy sm:group-hover:block`}
       >
         {translation}
       </p>
