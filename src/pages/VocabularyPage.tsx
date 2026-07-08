@@ -120,24 +120,24 @@ const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className="flex h-full flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+      className="flex h-full flex-col rounded-xl border border-border-soft bg-white p-5 shadow-sm"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-xl font-black text-slate-950">
+          <h3 className="text-xl font-black text-foreground">
             {repairVocabularyText(term.term)}
           </h3>
           {showAnswer && (
-            <p className="mt-1 font-semibold text-sky-800">
+            <p className="mt-1 font-semibold text-primary">
               {repairVocabularyText(term.turkishMeaning)}
             </p>
           )}
         </div>
         <div className="flex flex-wrap justify-end gap-1.5">
-          <span className="rounded-full border border-sky-200 bg-sky-50 px-2 py-1 text-[10px] font-bold text-sky-700">
+          <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-1 text-[10px] font-bold text-primary">
             {term.cefrLevel}
           </span>
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-[10px] font-bold text-slate-600">
+          <span className="rounded-full border border-border-soft bg-surface-hover px-2 py-1 text-[10px] font-bold text-muted-copy">
             {status}
           </span>
           {progress?.isWeak && (
@@ -154,15 +154,15 @@ const WordCard = ({
       </div>
 
       {showAnswer && (
-        <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-slate-600">
+        <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
           <p>{repairVocabularyText(term.exampleSentence)}</p>
-          <p className="text-slate-500">
+          <p className="text-foreground0">
             {repairVocabularyText(term.turkishExample)}
           </p>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-xs text-slate-500">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
         <span className="font-semibold capitalize">
           Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
         </span>
@@ -176,12 +176,12 @@ const WordCard = ({
         </div>
       )}
 
-      <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
+      <div className="mt-3 rounded-lg border border-border-soft bg-surface-hover p-3 text-xs text-muted-copy">
         <button
           type="button"
           onClick={() => setShowDetails((value) => !value)}
           aria-expanded={showDetails}
-          className="flex w-full items-center justify-between font-bold text-slate-800"
+          className="flex w-full items-center justify-between font-bold text-foreground"
         >
           Word details
           <ChevronDown
@@ -248,17 +248,17 @@ const WordCard = ({
             I Know This — Take Mini Quiz
           </Button>
           {knowThisCheck && (
-            <p className="text-xs font-semibold text-sky-700">
+            <p className="text-xs font-semibold text-primary">
               Use the mini quiz if you want to check recall before saving.
             </p>
           )}
-          <label className="text-xs font-bold text-slate-700">
+          <label className="text-xs font-bold text-foreground">
             Turkish meaning
             <input
               value={answer}
               disabled={quizResult !== null}
               onChange={(event) => setAnswer(event.target.value)}
-              className="mt-1 min-h-10 w-full rounded-lg border border-slate-200 px-3 font-normal"
+              className="mt-1 min-h-10 w-full rounded-lg border border-border-soft px-3 font-normal"
             />
           </label>
           <Button type="submit" className="w-full" disabled={!answer.trim()}>
@@ -312,16 +312,16 @@ const MyVocabularyCard = ({
   word: MyVocabularyWord;
   onArchive: (id: string) => void;
 }) => (
-  <article className="rounded-xl border border-violet-200 bg-violet-50/40 p-5">
+  <article className="rounded-xl border border-primary/20 bg-primary/5/40 p-5">
     <div className="flex items-start justify-between gap-3">
       <div>
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-lg font-black text-slate-950">{word.term}</h3>
-          <span className="rounded-full border border-violet-200 bg-white px-2 py-0.5 text-[10px] font-bold text-violet-700">
+          <h3 className="text-lg font-black text-foreground">{word.term}</h3>
+          <span className="rounded-full border border-primary/20 bg-white px-2 py-0.5 text-[10px] font-bold text-primary">
             {word.cefrLevel}
           </span>
         </div>
-        <p className="mt-1 text-sm font-semibold text-violet-800">
+        <p className="mt-1 text-sm font-semibold text-primary">
           {word.turkishMeaning}
         </p>
       </div>
@@ -334,8 +334,8 @@ const MyVocabularyCard = ({
         <Archive className="h-4 w-4" />
       </Button>
     </div>
-    <p className="mt-3 text-sm text-slate-600">{word.exampleSentence}</p>
-    <p className="mt-3 text-xs font-semibold capitalize text-slate-500">
+    <p className="mt-3 text-sm text-muted-copy">{word.exampleSentence}</p>
+    <p className="mt-3 text-xs font-semibold capitalize text-foreground0">
       Domain: {word.domain}
     </p>
   </article>
@@ -648,7 +648,7 @@ const VocabularyPage = () => {
             <input
               value={searchInput}
               onChange={(event) => setSearchInput(event.target.value)}
-              className="min-h-11 flex-1 rounded-[10px] border border-slate-200 bg-white px-4 text-sm"
+              className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-white px-4 text-sm"
               placeholder="Search vocabulary..."
               aria-label="Search vocabulary"
             />
@@ -660,7 +660,7 @@ const VocabularyPage = () => {
             </Button>
           </div>
           {showFilters && (
-            <div className="grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 rounded-xl border border-border-soft bg-surface-hover p-4 sm:grid-cols-2 lg:grid-cols-4">
               {(
                 [
                   ['cefr', 'CEFR'],
@@ -672,7 +672,7 @@ const VocabularyPage = () => {
                   ['status', 'Status'],
                 ] as Array<[keyof VocabularySearchFilters, string]>
               ).map(([field, label]) => (
-                <label key={field} className="text-xs font-bold text-slate-700">
+                <label key={field} className="text-xs font-bold text-foreground">
                   {label}
                   <select
                     aria-label={`Filter by ${label}`}
@@ -683,7 +683,7 @@ const VocabularyPage = () => {
                         [field]: event.target.value,
                       }))
                     }
-                    className="mt-1 min-h-10 w-full rounded-lg border border-slate-200 bg-white px-2 font-normal"
+                    className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-white px-2 font-normal"
                   >
                     {(field === 'status'
                       ? [
@@ -707,13 +707,13 @@ const VocabularyPage = () => {
           {searchError && (
             <p className="text-sm font-semibold text-rose-700">{searchError}</p>
           )}
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-foreground0">
             {allLevelsLoaded
               ? 'All 5,000 canonical terms are available for this search.'
               : `${vocabularyLevel} learning terms are loaded. Full search loads the remaining levels only when requested.`}
           </p>
           {isSearchLoading && (
-            <p role="status" className="text-xs font-bold text-sky-700">
+            <p role="status" className="text-xs font-bold text-primary">
               Checking all 5,000 canonical terms before enabling a custom word…
             </p>
           )}
@@ -778,7 +778,7 @@ const VocabularyPage = () => {
                       term: event.target.value,
                     }))
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 font-normal"
+                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -792,7 +792,7 @@ const VocabularyPage = () => {
                       turkishMeaning: event.target.value,
                     }))
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 font-normal"
+                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                 />
               </label>
               <label className="text-sm font-semibold">
@@ -806,7 +806,7 @@ const VocabularyPage = () => {
                       exampleSentence: event.target.value,
                     }))
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 font-normal"
+                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                 />
               </label>
               <div className="grid grid-cols-2 gap-3">
@@ -820,7 +820,7 @@ const VocabularyPage = () => {
                         cefrLevel: event.target.value as CefrLevel,
                       }))
                     }
-                    className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 bg-white px-3 font-normal"
+                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 font-normal"
                   >
                     {CEFR_LEVELS.map((level) => (
                       <option key={level}>{level}</option>
@@ -838,7 +838,7 @@ const VocabularyPage = () => {
                         domain: event.target.value,
                       }))
                     }
-                    className="mt-1 min-h-11 w-full rounded-lg border border-slate-200 px-3 font-normal"
+                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                   />
                 </label>
               </div>
@@ -846,7 +846,7 @@ const VocabularyPage = () => {
                 <Button type="submit">
                   <Plus className="h-4 w-4" /> Save to My Vocabulary
                 </Button>
-                <span className="text-xs font-bold text-slate-500">
+                <span className="text-xs font-bold text-foreground0">
                   AI Assist Coming Soon
                 </span>
               </div>
@@ -858,7 +858,7 @@ const VocabularyPage = () => {
       <div
         role="tablist"
         aria-label="Vocabulary status"
-        className="grid grid-cols-3 gap-2 rounded-xl border border-slate-200 bg-white p-2"
+        className="grid grid-cols-3 gap-2 rounded-xl border border-border-soft bg-white p-2"
       >
         {TABS.map((tab) => (
           <button
@@ -867,7 +867,7 @@ const VocabularyPage = () => {
             type="button"
             aria-selected={activeTab === tab}
             onClick={() => chooseTab(tab)}
-            className={`min-h-11 rounded-[10px] px-4 py-2 text-sm font-bold ${activeTab === tab ? 'bg-sky-600 text-white' : 'text-slate-600 hover:bg-sky-50'}`}
+            className={`min-h-11 rounded-[10px] px-4 py-2 text-sm font-bold ${activeTab === tab ? 'bg-sky-600 text-white' : 'text-muted-copy hover:bg-primary/5'}`}
           >
             {TAB_LABELS[tab]}
           </button>
@@ -889,7 +889,7 @@ const VocabularyPage = () => {
                 setBatchOffset(0);
                 setWordSetIds(selectSet(activeTab, menuState, nextDomain));
               }}
-              className="min-h-8 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700"
+              className="min-h-8 rounded-lg border border-border-soft bg-white px-2 text-xs font-semibold text-foreground"
             >
               {filterOptions('domain').map((item) => (
                 <option key={item}>{item}</option>
@@ -904,10 +904,10 @@ const VocabularyPage = () => {
           </p>
         )}
         {!loadError && terms.length === 0 && (
-          <p className="text-sm text-slate-500">Loading canonical words...</p>
+          <p className="text-sm text-foreground0">Loading canonical words...</p>
         )}
         {terms.length > 0 && wordSet.length === 0 && (
-          <p className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-sm text-slate-600">
+          <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
             No words currently have {activeTab.toLowerCase()} status. Select New
             to begin a ten-word set.
           </p>
@@ -926,7 +926,7 @@ const VocabularyPage = () => {
                 />
               ))}
             </div>
-            <div className="flex justify-end border-t border-slate-200 pt-4">
+            <div className="flex justify-end border-t border-border-soft pt-4">
               <Button variant="outline" onClick={loadNextBatch}>
                 Next 10-word batch
               </Button>
@@ -946,10 +946,10 @@ const VocabularyPage = () => {
         }
         icon={Clock3}
       >
-        <div className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-slate-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface-hover p-5 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="font-black text-slate-950">{primaryActionLabel}</p>
-            <p className="mt-1 text-sm text-slate-600">
+            <p className="font-black text-foreground">{primaryActionLabel}</p>
+            <p className="mt-1 text-sm text-muted-copy">
               Recommended sessions combine up to eight new words with two due
               review words. Search never changes learning state.
             </p>
@@ -1060,12 +1060,12 @@ const VocabularyPage = () => {
         subtitle={`5,000 canonical + ${menuState.myVocabulary.filter((word) => !word.archivedAt).length} active custom word(s)`}
         icon={BookMarked}
       >
-        <p className="mb-4 text-xs font-bold text-slate-500">
+        <p className="mb-4 text-xs font-bold text-foreground0">
           Manual add only · AI Assist Coming Soon
         </p>
         {menuState.myVocabulary.filter((word) => !word.archivedAt).length ===
         0 ? (
-          <p className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center text-sm text-slate-600">
+          <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
             Search for a missing term to add it manually. AI Assist is coming
             soon.
           </p>

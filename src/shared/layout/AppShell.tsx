@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
+import { RightSidebar } from './RightSidebar';
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { useAppStore } from '@/store/app.store';
@@ -11,10 +12,12 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-background text-foreground">
+      {/* Nav1 - Left sidebar */}
       <Sidebar />
+
+      {/* Main content */}
       <div className="relative z-10 flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
         <BetaAnalyticsTracker />
-        {/* Mobile hamburger - only visible on small screens */}
         <button
           onClick={toggleSidebar}
           className="fixed left-2 top-2 z-50 cursor-pointer rounded-lg p-2 text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground lg:hidden"
@@ -28,6 +31,9 @@ export const AppShell: React.FC = () => {
         <BetaFeedbackWidget />
         <MobileBottomNavigation />
       </div>
+
+      {/* Nav2 - Right sidebar */}
+      <RightSidebar />
     </div>
   );
 };

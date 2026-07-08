@@ -27,17 +27,17 @@ export const EntitlementGate = ({
 
   return (
     <section
-      className="rounded-[16px] border border-sky-200 bg-sky-50 p-6 text-center shadow-sm"
+      className="rounded-[16px] border border-primary/20 bg-primary/5 p-6 text-center shadow-sm"
       aria-labelledby={titleId}
     >
       <StatusBadge label="Locked" tone="info" />
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[12px] border border-sky-200 bg-white text-sky-700">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[12px] border border-primary/20 bg-white text-primary">
         <LockKeyhole className="h-5 w-5" aria-hidden="true" />
       </span>
-      <h2 id={titleId} className="mt-4 text-lg font-bold text-slate-900">
+      <h2 id={titleId} className="mt-4 text-lg font-bold text-foreground">
         {title}
       </h2>
-      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-slate-600">
+      <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-muted-copy">
         {description ?? entitlement.reason}
       </p>
       <Link to="/pricing" className="public-primary-action mt-5">

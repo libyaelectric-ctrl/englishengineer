@@ -37,22 +37,22 @@ export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
   }, [profile, skill]);
 
   if (!recommendation) {
-    return <div className="h-24 animate-pulse rounded-xl bg-slate-50" />;
+    return <div className="h-24 animate-pulse rounded-xl bg-surface-hover" />;
   }
 
   return (
-    <section className="rounded-xl border border-sky-200 bg-sky-50/60 p-4">
+    <section className="rounded-xl border border-primary/20 bg-primary/5/60 p-4">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Target className="h-4 w-4 text-sky-700" />
-            <p className="text-xs font-black uppercase text-sky-800">
+            <Target className="h-4 w-4 text-primary" />
+            <p className="text-xs font-black uppercase text-primary">
               System recommendation
             </p>
-            <span className="rounded-full border border-sky-200 bg-white px-2 py-0.5 text-xs font-bold text-sky-800">
+            <span className="rounded-full border border-primary/20 bg-white px-2 py-0.5 text-xs font-bold text-primary">
               {recommendation.targetCefr}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-sky-200 bg-white px-2 py-0.5 text-xs font-bold text-sky-800">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-white px-2 py-0.5 text-xs font-bold text-primary">
               <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
               {recommendation.lessonNumber}
             </span>
@@ -60,10 +60,10 @@ export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
           <p className="mt-2 text-xs font-black text-sky-900">
             {recommendation.sharedLessonTitle}
           </p>
-          <p className="mt-2 text-sm font-semibold text-slate-900">
+          <p className="mt-2 text-sm font-semibold text-foreground">
             {recommendation.whyRecommended}
           </p>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-copy">
             <span>
               Vocabulary:{' '}
               {recommendation.vocabularyFocus
@@ -81,8 +81,8 @@ export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
               {recommendation.estimatedMinutes} min
             </span>
           </div>
-          <details className="mt-3 text-xs text-slate-600">
-            <summary className="cursor-pointer font-bold text-sky-800">
+          <details className="mt-3 text-xs text-muted-copy">
+            <summary className="cursor-pointer font-bold text-primary">
               Why this lesson and how ELO moves
             </summary>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -99,7 +99,7 @@ export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
         </div>
         <a
           href="/curriculum"
-          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[12px] border border-slate-200 bg-white px-4 text-sm font-bold text-slate-700 transition-colors hover:border-sky-200 hover:bg-sky-50"
+          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[12px] border border-border-soft bg-white px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/20 hover:bg-primary/5"
         >
           Manual change <ArrowRight className="h-4 w-4" />
         </a>
