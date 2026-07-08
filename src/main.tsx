@@ -8,6 +8,48 @@ import { IdService } from '@/core/ids/id.service';
 
 logger.i('EngVox Kernel Booting...');
 
+// Scroll-triggered animations via IntersectionObserver
+if (typeof window !== 'undefined') {
+  const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  // Re-observe when DOM changes (for lazy-loaded content)
+  const domObserver = new MutationObserver(() => {
+    document.querySelectorAll('.animate-on-scroll:not(.animate-visible)').forEach((el) => {
+      observer.observe(el);
+    });
+  });
+
+  window.addEventListener('load', () => {
+    // Initial observe
+    document.querySelectorAll('.animate-on-scroll').forEach((el) => {
+      observer.observe(el);
+    });
+  // Watch for new elements
+  domObserver.observe(document.body, { childList: true, subtree: true });
+
+  // Mouse tracking for card hover effects
+  document.addEventListener('mousemove', (e) => {
+    document.querySelectorAll('.card-interactive').forEach((card) => {
+      const el = card as HTMLElement;
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      el.style.setProperty('--mouse-x', `${x}%`);
+      el.style.setProperty('--mouse-y', `${y}%`);
+    });
+  });
+});
+}
+
 // Publish app.started event to Core Event Bus
 try {
   const metaEnv = (import.meta as unknown as { env?: { MODE?: string } }).env;

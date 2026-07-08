@@ -52,7 +52,7 @@ export const BetaFeedbackWidget = () => {
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-start lg:items-end justify-end bg-slate-700/20 p-3 pt-16 lg:pt-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-5 backdrop-blur-[2px] sm:p-5"
+          className="fixed inset-0 z-50 flex items-start lg:items-end justify-end bg-foreground/20 p-3 pt-16 lg:pt-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-5 backdrop-blur-[2px] sm:p-5"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) close();
           }}
@@ -61,19 +61,19 @@ export const BetaFeedbackWidget = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="feedback-title"
-            className="w-[min(92vw,400px)] rounded-[20px] border border-slate-200 bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]"
+            className="w-[min(92vw,400px)] rounded-[20px] border border-border-soft bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]"
           >
             <div className="flex items-center justify-between gap-3">
               <p
                 id="feedback-title"
-                className="text-xs font-black uppercase tracking-[0.16em] text-slate-500"
+                className="text-xs font-black uppercase tracking-[0.16em] text-foreground0"
               >
                 {LocalizationService.translate('feedback.title', language)}
               </p>
               <button
                 type="button"
                 onClick={close}
-                className="rounded-[10px] p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                className="rounded-[10px] p-2 text-foreground0 transition hover:bg-surface-hover hover:text-foreground"
                 aria-label="Close feedback form"
               >
                 <X className="h-4 w-4" />
@@ -89,7 +89,7 @@ export const BetaFeedbackWidget = () => {
                 onChange={(event) =>
                   setType(event.target.value as BetaFeedbackType)
                 }
-                className="w-full rounded-[10px] border border-slate-200 px-3 py-2 text-sm font-semibold"
+                className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm font-semibold"
               >
                 <option value="bug_report">Bug Report</option>
                 <option value="content_issue">Content issue</option>
@@ -106,7 +106,7 @@ export const BetaFeedbackWidget = () => {
                 onChange={(event) => setMessage(event.target.value)}
                 rows={4}
                 placeholder="Tell us what happened, what felt hard, or what would improve the beta."
-                className="w-full rounded-[10px] border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm"
               />
               <label className="sr-only" htmlFor="feedback-context">
                 {LocalizationService.translate('feedback.context', language)}
@@ -119,9 +119,9 @@ export const BetaFeedbackWidget = () => {
                   'feedback.context',
                   language
                 )}
-                className="w-full rounded-[10px] border border-slate-200 px-3 py-2 text-sm"
+                className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm"
               />
-              <p className="text-xs leading-5 text-slate-500">
+              <p className="text-xs leading-5 text-foreground0">
                 Screenshot upload is not enabled yet. Add relevant visual
                 details to the message.
               </p>

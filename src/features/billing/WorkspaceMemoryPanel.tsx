@@ -237,8 +237,8 @@ export const WorkspaceMemoryPanel = ({
       )}
 
       {!hasProjectAccess && entries.length > 0 && (
-        <div className="mt-3 rounded-[8px] bg-slate-50 border border-slate-200 p-2.5 text-center">
-          <p className="text-[10px] text-slate-500 leading-normal">
+        <div className="mt-3 rounded-[8px] bg-surface-hover border border-border-soft p-2.5 text-center">
+          <p className="text-[10px] text-foreground0 leading-normal">
             Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to edit details.
           </p>
         </div>

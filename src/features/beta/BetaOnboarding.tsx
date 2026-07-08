@@ -79,13 +79,13 @@ export const BetaOnboarding = () => {
     options: string[]
   ) => (
     <label className="space-y-2">
-      <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+      <span className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
         {label}
       </span>
       <select
         value={form[key]}
         onChange={(event) => updateField(key, event.target.value)}
-        className="w-full rounded-[12px] border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900"
+        className="w-full rounded-[12px] border border-border-soft bg-white px-3 py-2 text-sm font-semibold text-foreground"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -97,20 +97,20 @@ export const BetaOnboarding = () => {
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-slate-950/35 p-3 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-slate-200 bg-white p-4 shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-foreground/35 p-3 backdrop-blur-sm sm:items-center sm:p-4">
+      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-border-soft bg-white p-4 shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
         <div className="flex items-start gap-4">
           <div className="rounded-[14px] border border-blue-200 bg-blue-50 p-3 text-blue-700">
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-500">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-foreground0">
               Closed Beta Setup
             </p>
-            <h2 className="mt-2 text-3xl font-black text-slate-950">
+            <h2 className="mt-2 text-3xl font-black text-foreground">
               Calibrate EngVox for your work.
             </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
+            <p className="mt-2 text-sm leading-6 text-muted-copy">
               Only essential beta fields are collected locally. You can use the
               product without connecting a production backend.
             </p>
@@ -154,19 +154,19 @@ export const BetaOnboarding = () => {
             BETA_ONBOARDING_OPTIONS.careerGoals
           )}
           <label className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+            <span className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
               Timezone
             </span>
             <input
               value={form.timezone}
               onChange={(event) => updateField('timezone', event.target.value)}
-              className="w-full rounded-[12px] border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-900"
+              className="w-full rounded-[12px] border border-border-soft bg-white px-3 py-2 text-sm font-semibold text-foreground"
             />
           </label>
         </div>
 
-        <div className="mt-5 rounded-[12px] border border-slate-200 bg-slate-50 p-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">
+        <div className="mt-5 rounded-[12px] border border-border-soft bg-surface-hover p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
             Choose your starting path
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -186,13 +186,13 @@ export const BetaOnboarding = () => {
                     learningPathChoice: value,
                   }))
                 }
-                className={`rounded-[10px] border px-3 py-3 text-sm font-semibold transition ${form.learningPathChoice === value ? 'border-sky-300 bg-sky-50 text-sky-900' : 'border-slate-200 bg-white text-slate-700 hover:border-sky-200 hover:bg-sky-50/50'}`}
+                className={`rounded-[10px] border px-3 py-3 text-sm font-semibold transition ${form.learningPathChoice === value ? 'border-sky-300 bg-primary/5 text-sky-900' : 'border-border-soft bg-white text-foreground hover:border-primary/20 hover:bg-primary/5/50'}`}
               >
                 {label}
               </button>
             ))}
           </div>
-          <p className="mt-3 text-xs leading-5 text-slate-600">
+          <p className="mt-3 text-xs leading-5 text-muted-copy">
             {form.learningPathChoice === 'placement_check'
               ? 'Placement check is coming soon. Your level remains A1 until task evidence creates an estimate.'
               : form.learningPathChoice === 'explore_demo'
@@ -201,7 +201,7 @@ export const BetaOnboarding = () => {
           </p>
         </div>
 
-        <p className="mt-4 text-xs leading-5 text-slate-500">
+        <p className="mt-4 text-xs leading-5 text-foreground0">
           Your level starts at A1 in demo mode. EngVox updates the estimate
           after enough completed tasks. Scores are internal Engineering
           Communication estimates, not official CEFR certificates.

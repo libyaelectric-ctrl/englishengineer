@@ -101,7 +101,7 @@ const DashboardPage = () => {
   return (
     <div className="mx-auto grid max-w-7xl animate-aurora-fade-in gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
       <div className="min-w-0 space-y-6">
-        <header className="premium-panel overflow-hidden p-6 sm:p-8">
+        <header className="premium-panel overflow-hidden p-6 sm:p-8 animate-on-scroll">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
               <div className="flex flex-wrap gap-2">
@@ -125,7 +125,7 @@ const DashboardPage = () => {
             </div>
             <Button
               type="button"
-              className="min-h-10 px-5 text-xs"
+              className="min-h-10 px-5 text-xs btn-press"
               onClick={() => navigate(primaryMission?.route ?? focusMeta.route)}
             >
               Start today&apos;s lesson <ArrowRight className="h-3.5 w-3.5" />
@@ -205,6 +205,7 @@ const DashboardPage = () => {
           title="Your skills"
           subtitle="Each skill starts at A1 and advances at its own pace"
           icon={Target}
+          className="animate-on-scroll"
         >
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {SKILL_NAMES.map((skill) => {
@@ -218,7 +219,7 @@ const DashboardPage = () => {
                   key={skill}
                   type="button"
                   onClick={() => navigate(meta.route)}
-                  className="group min-w-0 rounded-card border border-border-soft bg-surface p-4 text-left transition-all hover:border-border-hover hover:bg-surface-hover/20"
+                  className="group min-w-0 rounded-card border border-border-soft bg-surface p-4 text-left transition-all hover:border-border-hover hover:bg-surface-hover/20 card-interactive"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <span className="rounded-[8px] border border-border-soft bg-surface-hover p-1.5 text-primary">

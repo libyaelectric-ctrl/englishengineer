@@ -9,6 +9,7 @@ export interface UserProfile {
   avatarInitials: string;
   createdAt: string;
   updatedAt: string;
+  isSuperUser?: boolean;
 }
 
 export interface AuthState {
