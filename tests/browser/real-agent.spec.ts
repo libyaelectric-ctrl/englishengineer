@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test } from '@playwright/test';
 
 const SITE = 'https://englishengineer.vercel.app';
 const results: string[] = [];
@@ -225,7 +225,7 @@ test.describe('Real User Agent', () => {
     log(`🔧 Backend: v${data?.version} | AI: ${data?.aiConfigured} | Stripe: ${data?.stripeConfigured}`);
   });
 
-  test('Generate final report', async ({ page }) => {
+  test('Generate final report', async () => {
     log('');
     log('========================================');
     log('FINAL REPORT');

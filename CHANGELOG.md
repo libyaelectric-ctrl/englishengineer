@@ -35,7 +35,7 @@ All notable changes to EngVox will be documented in this file.
 - Test coverage expansion
 
 ### Changed
-- Rebranded from EngineerOS to EngVox
+- Rebranded from EngVox to EngVox
 - Landing page redesigned with 3-plan pricing
 
 ## [4.0.0] - 2026-07-04
