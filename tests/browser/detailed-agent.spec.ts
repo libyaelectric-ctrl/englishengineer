@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
 const SITE = 'https://englishengineer.vercel.app';
 
@@ -28,8 +28,6 @@ async function runTest(name: string, fn: () => Promise<string>): Promise<TestRes
 test.describe('Detailed Agent Report', () => {
 
   test('Full system audit', async ({ page }) => {
-    const allResults: TestResult[] = [];
-
     // 1. Login
     await runTest('Login Flow', async () => {
       await page.goto(SITE + '/login');
