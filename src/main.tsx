@@ -6,6 +6,14 @@ import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 
+// Initialize dark mode from localStorage
+if (typeof window !== 'undefined') {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+}
+
 logger.i('EngVox Kernel Booting...');
 
 // Scroll-triggered animations via IntersectionObserver
