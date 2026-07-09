@@ -6,6 +6,15 @@ if (typeof document !== 'undefined') {
   cleanupDom = (await import('@testing-library/react')).cleanup;
 }
 
+// Mock IntersectionObserver for jsdom
+if (typeof globalThis.IntersectionObserver === 'undefined') {
+  globalThis.IntersectionObserver = class MockIntersectionObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  } as any;
+}
+
 afterEach(() => {
   cleanupDom?.();
   vi.clearAllMocks();

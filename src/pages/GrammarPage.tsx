@@ -18,7 +18,7 @@ import {
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
 import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
-import { PageHeader } from '@/shared/components/PageHeader';
+
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
@@ -120,12 +120,7 @@ const GrammarPage = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <PageHeader
-        title="Grammar Workspace"
-        description="Practice the embedded 360-rule grammar database at your independent Grammar level."
-        badgeText={`${profile.skills.grammar.cefrBand} · CURRENT LEVEL`}
-        badgeColor="primary"
-      />
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Grammar</h1></div></div>
 
       <SkillEntryBrief skill="grammar" />
 

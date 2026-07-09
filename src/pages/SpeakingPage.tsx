@@ -11,7 +11,7 @@ import {
   Volume2,
   Lock,
 } from 'lucide-react';
-import { PageHeader } from '@/shared/components/PageHeader';
+
 import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -186,12 +186,7 @@ const SpeakingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      <PageHeader
-        title="Speaking Workspace"
-        description="Written Roleplay is the current Speaking preview. Typed responses are evaluated locally; microphone, pronunciation and AI speaking evaluation are not active."
-        badgeText="WRITTEN ROLEPLAY"
-        badgeColor="cyan"
-      />
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Speaking</h1></div></div>
 
       <SkillEntryBrief skill="speaking" />
 
