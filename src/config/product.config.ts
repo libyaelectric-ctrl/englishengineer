@@ -1,5 +1,5 @@
 export const PRODUCT_POSITIONING =
-  'EngVox — AI-powered English communication platform for engineers on international projects';
+  'EngVox - AI-powered English communication platform for engineers on international projects';
 
 export const AI_ACCESS_POLICY = {
   freeAccess: 'Limited free AI demo',
