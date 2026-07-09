@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EngVox API Documentation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:#0a0a0a;color:#ededed;min-height:100vh}
+.header{background:linear-gradient(135deg,#0f0f0f,#1a1a1a);border-bottom:1px solid #262626;padding:24px 32px}
+.header h1{font-size:20px;font-weight:700}
+.header p{color:#a3a3a3;font-size:13px;margin-top:4px}
+.content{max-width:900px;margin:0 auto;padding:32px 24px}
+.endpoint{background:#141414;border:1px solid #262626;border-radius:12px;padding:20px;margin-bottom:16px;transition:border-color 0.2s}
+.endpoint:hover{border-color:#404040}
+.endpoint-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.method{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;font-family:monospace}
+.method.get{background:rgba(34,197,94,0.15);color:#22c55e}
+.method.post{background:rgba(59,130,246,0.15);color:#3b82f6}
+.path{font-family:monospace;font-size:14px;color:#ededed}
+.desc{color:#a3a3a3;font-size:13px;line-height:1.6}
+.params{margin-top:12px;background:#0a0a0a;border-radius:8px;padding:12px;font-family:monospace;font-size:12px;color:#737373}
+.params .key{color:#3b82f6}
+.params .val{color:#22c55e}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.badge.auth{background:rgba(239,68,68,0.15);color:#ef4444}
+.badge.public{background:rgba(34,197,94,0.15);color:#22c55e}
+h2{font-size:16px;font-weight:600;margin:24px 0 12px;color:#ededed}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>EngVox API Documentation</h1>
+<p>Backend API v4.0.1 — englishengineer-production.up.railway.app</p>
+</div>
+<div class="content">
+
+<h2>Health</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<span class="path">/api/health</span>
+<span class="badge public">Public</span>
+</div>
+<div class="desc">Returns system health status including AI and Stripe configuration.</div>
+<div class="params">
+<span class="key">Response:</span> <span class="val">{ ok: true, version: "4.0.1", aiConfigured: true, stripeConfigured: true }</span>
+</div>
+</div>
+
+<h2>AI Routes</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/ai/coach</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">AI coaching endpoint for writing feedback and language improvement.</div>
+<div class="params">
+<span class="key">Body:</span> { <span class="key">prompt</span>: <span class="val">string</span>, <span class="key">mode</span>: <span class="val">"writing"|"speaking"</span> }
+</div>
+</div>
+
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/ai/writing-review</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">AI-powered writing review for engineering documents.</div>
+<div class="params">
+<span class="key">Body:</span> { <span class="key">text</span>: <span class="val">string</span>, <span class="key">type</span>: <span class="val">"rfi"|"ncr"|"email"|"report"</span> }
+</div>
+</div>
+
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/ai/assessment-feedback</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Assessment feedback for reading/listening tasks.</div>
+</div>
+
+<h2>Billing</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/billing/checkout</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Create Stripe checkout session for plan upgrade.</div>
+<div class="params">
+<span class="key">Body:</span> { <span class="key">priceId</span>: <span class="val">string</span>, <span class="key">successUrl</span>: <span class="val">string</span>, <span class="key">cancelUrl</span>: <span class="val">string</span> }
+</div>
+</div>
+
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<span class="path">/api/billing/subscription</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Get current subscription status.</div>
+</div>
+
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/billing/portal</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Create Stripe customer portal session.</div>
+</div>
+
+<h2>Vocabulary</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<span class="path">/api/vocabulary/lookup</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Look up vocabulary terms by level and domain.</div>
+<div class="params">
+<span class="key">Query:</span> <span class="key">level</span>=<span class="val">A1|A2|B1|B2|C1|C2</span> & <span class="key">domain</span>=<span class="val">string</span>
+</div>
+</div>
+
+<h2>Workspace</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method get">GET</span>
+<span class="path">/api/workspace</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">List user workspaces.</div>
+</div>
+
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/workspace</span>
+<span class="badge auth">Auth Required</span>
+</div>
+<div class="desc">Create new workspace.</div>
+<div class="params">
+<span class="key">Body:</span> { <span class="key">name</span>: <span class="val">string</span> }
+</div>
+</div>
+
+<h2>Webhooks</h2>
+<div class="endpoint">
+<div class="endpoint-header">
+<span class="method post">POST</span>
+<span class="path">/api/webhooks/stripe</span>
+<span class="badge public">Stripe</span>
+</div>
+<div class="desc">Stripe webhook endpoint for billing events.</div>
+</div>
+
+</div>
+</body>
+</html>
