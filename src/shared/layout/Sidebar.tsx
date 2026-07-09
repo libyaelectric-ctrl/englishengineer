@@ -157,6 +157,19 @@ export const Sidebar: React.FC = () => {
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Sign Out</span>
               </button>
+
+              {/* Dark Mode Toggle */}
+              <button
+                onClick={() => {
+                  document.documentElement.classList.toggle('dark');
+                  const isDark = document.documentElement.classList.contains('dark');
+                  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                }}
+                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
+              >
+                <span>🌙</span>
+                <span>Dark Mode</span>
+              </button>
             </div>
           )}
         </div>
