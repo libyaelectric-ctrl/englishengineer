@@ -31,7 +31,7 @@ describe('decisions 85-90 product boundaries', () => {
 
   it('locks the engineering communication positioning and defers admin', () => {
     expect(PRODUCT_POSITIONING).toBe(
-      'Engineering Communication Operating System for international construction projects'
+      'EngVox - AI-powered English communication platform for engineers on international projects'
     );
     expect(ADMIN_PANEL_ENABLED).toBe(false);
   });

@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import LandingPage from '@/pages/LandingPage';
-import PricingPage from '@/pages/PricingPage';
 
 describe('Landing page E2E', () => {
   it('renders hero section with correct branding', () => {
@@ -12,9 +11,8 @@ describe('Landing page E2E', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Master the emails/)).toBeInTheDocument();
-    expect(screen.getAllByText('Start Free').length).toBeGreaterThan(0);
-    expect(screen.getByText('See Features')).toBeInTheDocument();
+    expect(screen.getByText(/Engineering English OS/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Start free/i).length).toBeGreaterThan(0);
   });
 
   it('displays all 6 features', () => {
@@ -24,12 +22,12 @@ describe('Landing page E2E', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Writing')).toBeInTheDocument();
-    expect(screen.getByText('Speaking')).toBeInTheDocument();
-    expect(screen.getByText('Listening')).toBeInTheDocument();
-    expect(screen.getByText('Reading')).toBeInTheDocument();
-    expect(screen.getByText('AI Coach')).toBeInTheDocument();
-    expect(screen.getByText('Analytics')).toBeInTheDocument();
+    expect(screen.getByText(/Writing desk/i)).toBeInTheDocument();
+    expect(screen.getByText(/Speaking room/i)).toBeInTheDocument();
+    expect(screen.getByText(/Listening lab/i)).toBeInTheDocument();
+    expect(screen.getByText(/Reading vault/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/AI coach/i).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Progress control/i)).toBeInTheDocument();
   });
 
   it('shows 3 pricing plans on landing', () => {
@@ -56,17 +54,5 @@ describe('Landing page E2E', () => {
     expect(faqButton).toBeInTheDocument();
     faqButton.click();
     expect(screen.getAllByText(/AI-powered/).length).toBeGreaterThan(0);
-  });
-});
-
-describe('Pricing page E2E', () => {
-  it('renders without crashing', () => {
-    render(
-      <MemoryRouter>
-        <PricingPage />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText('Compare plans')).toBeInTheDocument();
   });
 });

@@ -47,7 +47,7 @@ import {
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import { MetricCard } from '@/shared/components/MetricCard';
-import { PageHeader } from '@/shared/components/PageHeader';
+
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import {
@@ -618,12 +618,7 @@ const VocabularyPage = () => {
 
   return (
     <div className="space-y-7 animate-in fade-in duration-300">
-      <PageHeader
-        title="Vocabulary"
-        description="Learn all 5,000 canonical terms through controlled ten-word sets."
-        badgeText={`${vocabularyProfile.cefrBand} · CURRENT LEVEL`}
-        badgeColor="primary"
-      />
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Vocabulary</h1></div></div>
 
       <SkillEntryBrief skill="vocabulary" />
 

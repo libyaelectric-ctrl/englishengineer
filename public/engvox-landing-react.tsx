@@ -436,16 +436,7 @@ const LandingPage = () => {
             }}
           >
             <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="aspect-[16/10] w-full object-cover"
-                poster="/agentic/arc.png"
-              >
-                <source src="/agentic-hero.mp4" type="video/mp4" />
-              </video>
+              <img src="/agentic/arc.png" alt="EngVox AI learning system map" className="aspect-[16/10] w-full object-cover opacity-95" />
             </div>
             <div className="grid grid-cols-2 gap-2 pt-4 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               {STATS.map((stat) => (
