@@ -6,49 +6,14 @@ import {
   callAnthropic,
   callGemini,
 } from './providers.js';
+import {
+  getJsonStructureInstruction,
+  getCustomPracticePrompt,
+} from '../prompts/prompt-loader.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
-const JSON_STRUCTURE_INSTRUCTION = `
-CRITICAL RESPONSE REQUIREMENT: You must respond ONLY with a single valid JSON object containing structural analysis of the user's input.
-Do NOT write any conversational text before or after the JSON.
-Do NOT wrap the response in markdown backticks (like \`\`\`json ... \`\`\`).
-The JSON object must match this schema exactly:
-{
-  "summary": "Concise overview of the overall quality of the user's technical English input.",
-  "strengths": ["At least 2 specific strengths in terminology, syntax, or clarity."],
-  "weaknesses": ["At least 2 specific weaknesses or errors found in the text."],
-  "corrections": ["Specific phrase corrections (e.g. 'Use X instead of Y' or line adjustments)."],
-  "professionalVersion": "A highly polished, formal engineering translation/rewrite of the input.",
-  "simplifiedVersion": "A plain English version using short, clear sentences.",
-  "nativeRewrite": "A natural, native-sounding rewrite of the input.",
-  "technicalVocabulary": ["List of key technical or engineering terms present or suggested (e.g. alignment, clearance, commissioning)."],
-  "grammarNotes": ["Detailed grammar insights explaining the corrections."],
-  "toneFeedback": "Specific feedback on tone appropriateness (e.g. too casual, blame-based, or ideal).",
-  "recommendedNextTask": "A specific practice task tailored to their weak areas.",
-  "cefrEstimate": "Estimated CEFR level (A1, A2, B1, B2, C1, or C2) of the input.",
-  "engineerEloImpactEstimate": "A simulated learning ELO impact estimate (e.g. +12 ELO, +15 ELO, etc.)"
-}
-`;
-
-const readPrompt = (body) => {
-  const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : '';
-  if (!prompt) {
-    throw new ApiError(
-      400,
-      'invalid_prompt',
-      'A non-empty prompt is required.'
-    );
-  }
-  if (prompt.length > 20_000) {
-    throw new ApiError(
-      413,
-      'prompt_too_large',
-      'Prompt must be 20,000 characters or fewer.'
-    );
-  }
-  return prompt;
-};
+const readPrompt = (body) => body?.prompt ?? '';
 
 const withTimeout = async (work, timeoutMs) => {
   const controller = new AbortController();
@@ -100,7 +65,7 @@ export const createAIService = (config, fetchImpl = fetch) => ({
 
     let finalPrompt = prompt;
     if (isEvaluation) {
-      finalPrompt = `${prompt}\n\n${JSON_STRUCTURE_INSTRUCTION}`;
+      finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
     }
 
     const isCustomPracticeRequest = prompt.toLowerCase().includes('sana özel') || 
@@ -111,25 +76,7 @@ export const createAIService = (config, fetchImpl = fetch) => ({
                                     prompt.toLowerCase().includes('specialized words');
 
     if (isCustomPracticeRequest && body?.context) {
-      const mistakes = body.context.recentMistakes || [];
-      const weakVocab = body.context.weakVocabulary || [];
-      let memoryContextPrompt = '\n\n=== USER LEARNING MEMORIES (RAG RETRIEVED) ===\n';
-      if (mistakes.length > 0) {
-        memoryContextPrompt += `The user has made the following grammatical/vocabulary mistakes recently. Use these exact mistakes to generate customized practice exercises (e.g. rewrite correction tasks, fill-in-the-blanks, or multiple-choice options targeting these issues):\n`;
-        mistakes.forEach((m, idx) => {
-          memoryContextPrompt += `- Mistake ${idx + 1} [Category: ${m.category}]: Original text: "${m.originalText}" -> Corrected to: "${m.correction}"\n`;
-        });
-      }
-      if (weakVocab.length > 0) {
-        memoryContextPrompt += `The user also has the following weak vocabulary terms that require reinforcement. Integrate these terms directly into the practice exercises:\n`;
-        weakVocab.forEach((w) => {
-          memoryContextPrompt += `- ${w}\n`;
-        });
-      }
-      if (mistakes.length === 0 && weakVocab.length === 0) {
-        memoryContextPrompt += `The user has no recorded mistakes or weak vocabulary. Provide a general high-yield engineering vocabulary practice lesson based on their discipline: ${body.context.discipline || 'General Engineering'}.\n`;
-      }
-      memoryContextPrompt += `==============================================\n\n`;
+      const memoryContextPrompt = getCustomPracticePrompt(body.context);
       finalPrompt = `${finalPrompt}\n${memoryContextPrompt}\nINSTRUCTION: You must construct custom practice questions, tests, or explanations based on the retrieved user learning memories listed above. Help them review their mistakes and weak terms.`;
     }
 
