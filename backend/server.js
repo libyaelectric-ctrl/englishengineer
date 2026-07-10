@@ -1,6 +1,15 @@
 import { createApp } from './src/app.js';
 import { createBackendConfig } from './src/config.js';
 
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[unhandled-rejection]', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('[uncaught-exception]', error);
+  process.exit(1);
+});
+
 const config = createBackendConfig();
 const app = createApp({ config });
 
