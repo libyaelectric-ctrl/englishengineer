@@ -252,7 +252,8 @@ export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
   {
     id: 'cv_optimization_sample',
     title: 'CV Bullet Point Optimizer',
-    description: 'Enhance resume bullet points to highlight impact and metrics.',
+    description:
+      'Enhance resume bullet points to highlight impact and metrics.',
     modeId: 'cv_optimizer',
     prompt:
       'Optimize these CV bullet points for a Senior Electrical Engineer. Rough points: "Responsible for electrical design. Led a team of 4. Did cable sizing and calculations. Attended site meetings and coordinated with other teams."',

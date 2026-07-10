@@ -9,7 +9,15 @@ interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
   icon: LucideIcon;
   trend?: string;
   trendDirection?: 'up' | 'down' | 'neutral';
-  statusColor?: 'primary' | 'emerald' | 'cyan' | 'amber' | 'rose' | 'success' | 'warning' | 'danger';
+  statusColor?:
+    | 'primary'
+    | 'emerald'
+    | 'cyan'
+    | 'amber'
+    | 'rose'
+    | 'success'
+    | 'warning'
+    | 'danger';
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -40,24 +48,37 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   return (
-    <Card className={cn('group relative overflow-hidden p-5', className)} {...props}>
+    <Card
+      className={cn('group relative overflow-hidden p-5', className)}
+      {...props}
+    >
       <div className="flex min-w-0 items-start justify-between gap-3">
         <div className="min-w-0 flex-1 space-y-2">
-          <p className="text-xs text-muted-copy">
-            {label}
-          </p>
+          <p className="text-xs text-muted-copy">{label}</p>
           <h3 className="text-2xl font-bold text-foreground tabular-nums">
             {value}
           </h3>
           {trend && (
-            <p className={cn('flex items-center gap-1 text-xs', trendTextColors[trendDirection])}>
+            <p
+              className={cn(
+                'flex items-center gap-1 text-xs',
+                trendTextColors[trendDirection]
+              )}
+            >
               {trendDirection === 'up' && <ArrowUpRight className="h-3 w-3" />}
-              {trendDirection === 'down' && <ArrowDownRight className="h-3 w-3" />}
+              {trendDirection === 'down' && (
+                <ArrowDownRight className="h-3 w-3" />
+              )}
               {trend}
             </p>
           )}
         </div>
-        <div className={cn('flex h-10 w-10 items-center justify-center rounded-lg', iconColors[statusColor])}>
+        <div
+          className={cn(
+            'flex h-10 w-10 items-center justify-center rounded-lg',
+            iconColors[statusColor]
+          )}
+        >
           <Icon className="h-5 w-5" />
         </div>
       </div>

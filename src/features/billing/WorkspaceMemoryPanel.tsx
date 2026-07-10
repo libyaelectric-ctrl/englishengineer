@@ -16,7 +16,10 @@ export const WorkspaceMemoryPanel = ({
   const entries = Object.entries(memory).filter(([, v]) => v !== '');
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
+  const hasProjectAccess = canAccessFeature(
+    subscription,
+    'projectWorkspace'
+  ).allowed;
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -239,7 +242,8 @@ export const WorkspaceMemoryPanel = ({
       {!hasProjectAccess && entries.length > 0 && (
         <div className="mt-3 rounded-[8px] bg-surface-hover border border-border-soft p-2.5 text-center">
           <p className="text-[10px] text-foreground0 leading-normal">
-            Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to edit details.
+            Workspace memory is read-only. Upgrade to the Project Plan ($39/mo)
+            to edit details.
           </p>
         </div>
       )}

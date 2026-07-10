@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import PricingPage from '@/pages/PricingPage';
@@ -31,14 +31,14 @@ describe('Billing Checkout Flow', () => {
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
       providerMode: 'supabase',
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: startCheckoutMock,
       subscription: { planId: 'free', status: 'none' },
       providerStatus: { isConfigured: true, mode: 'backend' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock fetch for getBillingApiUrl / health check
     const fetchMock = vi.fn().mockResolvedValue({
@@ -55,7 +55,7 @@ describe('Billing Checkout Flow', () => {
     );
 
     // Wait for the health check to run and UI to update
-    await vi.waitFor(() => {
+    await waitFor(() => {
       expect(
         screen.getByRole('button', { name: 'Upgrade to Pro' })
       ).toBeEnabled();

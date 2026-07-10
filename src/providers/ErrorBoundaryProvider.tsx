@@ -17,7 +17,9 @@ const ErrorFallback: React.FC<FallbackProps> = ({
 
   const handleReport = () => {
     const subject = encodeURIComponent('EngVox Error Report');
-    const body = encodeURIComponent(`Error: ${errorDetails}\nURL: ${window.location.href}\nTime: ${new Date().toISOString()}`);
+    const body = encodeURIComponent(
+      `Error: ${errorDetails}\nURL: ${window.location.href}\nTime: ${new Date().toISOString()}`
+    );
     window.open(`mailto:support@engvox.com?subject=${subject}&body=${body}`);
   };
 
@@ -31,8 +33,8 @@ const ErrorFallback: React.FC<FallbackProps> = ({
           </h2>
         </div>
         <p className="text-sm text-muted-copy leading-relaxed">
-          EngVox hit an unexpected error. Your progress is saved locally.
-          Try reloading or contact support if the issue persists.
+          EngVox hit an unexpected error. Your progress is saved locally. Try
+          reloading or contact support if the issue persists.
         </p>
         <div className="custom-scrollbar max-h-48 overflow-x-auto rounded-[12px] border border-rose-200 bg-rose-50 p-4 font-mono text-xs text-rose-700">
           {errorDetails || 'Unknown error'}

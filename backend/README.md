@@ -13,22 +13,22 @@ npm start              # runs on port 3001
 
 ## Endpoints
 
-| Method | Path | Auth | Description |
-|--------|------|------|-------------|
-| GET | `/api/health` | No | Health check |
-| POST | `/api/ai/coach` | JWT | AI coaching |
-| POST | `/api/ai/writing-review` | JWT | Writing review |
-| POST | `/api/ai/assessment-feedback` | JWT | Assessment feedback |
-| POST | `/api/ai/roleplay` | JWT | Roleplay scenario |
-| GET | `/api/billing/status` | JWT | Subscription status |
-| POST | `/api/billing/checkout` | JWT | Create Stripe checkout |
-| POST | `/api/billing/portal` | JWT | Stripe customer portal |
-| POST | `/api/webhooks/stripe` | Signature | Stripe webhook |
-| GET | `/api/vocabulary/lookup` | JWT | Vocabulary lookup |
-| POST | `/api/workspace/create` | JWT | Create workspace |
-| GET | `/api/workspace/list` | JWT | List workspaces |
-| PUT | `/api/workspace/:id` | JWT | Update workspace |
-| DELETE | `/api/workspace/:id` | JWT | Delete workspace |
+| Method | Path                          | Auth      | Description            |
+| ------ | ----------------------------- | --------- | ---------------------- |
+| GET    | `/api/health`                 | No        | Health check           |
+| POST   | `/api/ai/coach`               | JWT       | AI coaching            |
+| POST   | `/api/ai/writing-review`      | JWT       | Writing review         |
+| POST   | `/api/ai/assessment-feedback` | JWT       | Assessment feedback    |
+| POST   | `/api/ai/roleplay`            | JWT       | Roleplay scenario      |
+| GET    | `/api/billing/status`         | JWT       | Subscription status    |
+| POST   | `/api/billing/checkout`       | JWT       | Create Stripe checkout |
+| POST   | `/api/billing/portal`         | JWT       | Stripe customer portal |
+| POST   | `/api/webhooks/stripe`        | Signature | Stripe webhook         |
+| GET    | `/api/vocabulary/lookup`      | JWT       | Vocabulary lookup      |
+| POST   | `/api/workspace/create`       | JWT       | Create workspace       |
+| GET    | `/api/workspace/list`         | JWT       | List workspaces        |
+| PUT    | `/api/workspace/:id`          | JWT       | Update workspace       |
+| DELETE | `/api/workspace/:id`          | JWT       | Delete workspace       |
 
 ### Example: Health Check
 
@@ -37,6 +37,7 @@ curl https://englishengineer-production.up.railway.app/api/health
 ```
 
 Response:
+
 ```json
 {
   "ok": true,
@@ -60,15 +61,15 @@ curl -X POST https://englishengineer-production.up.railway.app/api/ai/coach \
 
 ## Environment Variables
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `STRIPE_SECRET_KEY` | Yes | Stripe secret key |
-| `STRIPE_WEBHOOK_SECRET` | Yes | Stripe webhook signing secret |
-| `SUPABASE_URL` | Yes | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Supabase service role key |
-| `AI_PROVIDER` | No | `mock`, `openai`, `anthropic`, `gemini` |
-| `UPSTASH_REDIS_REST_URL` | Prod | Upstash Redis URL for rate limiting |
-| `UPSTASH_REDIS_REST_TOKEN` | Prod | Upstash Redis token |
+| Variable                    | Required | Description                             |
+| --------------------------- | -------- | --------------------------------------- |
+| `STRIPE_SECRET_KEY`         | Yes      | Stripe secret key                       |
+| `STRIPE_WEBHOOK_SECRET`     | Yes      | Stripe webhook signing secret           |
+| `SUPABASE_URL`              | Yes      | Supabase project URL                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes      | Supabase service role key               |
+| `AI_PROVIDER`               | No       | `mock`, `openai`, `anthropic`, `gemini` |
+| `UPSTASH_REDIS_REST_URL`    | Prod     | Upstash Redis URL for rate limiting     |
+| `UPSTASH_REDIS_REST_TOKEN`  | Prod     | Upstash Redis token                     |
 
 ## Testing
 

@@ -120,7 +120,11 @@ const GrammarPage = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Grammar</h1></div></div>
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Grammar</h1>
+        </div>
+      </div>
 
       <SkillEntryBrief skill="grammar" />
 

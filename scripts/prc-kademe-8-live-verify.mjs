@@ -206,7 +206,9 @@ const jsonRequest = async (url, init = {}, acceptedStatuses = [200, 201]) => {
     }
   }
   if (!acceptedStatuses.includes(response.status)) {
-    throw new Error(`Request returned HTTP ${response.status}.`);
+    throw new Error(
+      `Request to ${url} returned HTTP ${response.status}. Payload: ${text}`
+    );
   }
   return { response, payload };
 };
@@ -753,7 +755,7 @@ const runQualityCommands = () => {
     const result = spawnSync(npmExecutable, npmArgs ?? ['run', scriptName], {
       cwd: ROOT,
       stdio: 'inherit',
-      shell: false,
+      shell: process.platform === 'win32',
     });
     const exitCode = result.status ?? 1;
     results.push({

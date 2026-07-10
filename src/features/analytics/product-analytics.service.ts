@@ -55,9 +55,11 @@ const getConfig = (): {
   const requested = String(
     env?.VITE_PRODUCT_ANALYTICS_PROVIDER ?? 'local'
   ).toLowerCase();
-  const mode: ProductAnalyticsProviderMode = ['local', 'console', 'posthog'].includes(
-    requested
-  )
+  const mode: ProductAnalyticsProviderMode = [
+    'local',
+    'console',
+    'posthog',
+  ].includes(requested)
     ? (requested as 'local' | 'console' | 'posthog')
     : 'local';
   return { enabled, mode: enabled ? mode : 'disabled' };

@@ -117,7 +117,14 @@ export const canAccessRealVoiceSpeaking = (
   subscription: SubscriptionSnapshot
 ): EntitlementResult => canAccessFeature(subscription, 'realVoiceSpeaking');
 
-const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'pro', 'project', 'max', 'exec', 'private'];
+const PLAN_HIERARCHY: BillingPlanId[] = [
+  'free',
+  'pro',
+  'project',
+  'max',
+  'exec',
+  'private',
+];
 
 const getPlanLevel = (planId: BillingPlanId): number =>
   PLAN_HIERARCHY.indexOf(planId);
@@ -128,7 +135,11 @@ export const isDowngrade = (from: BillingPlanId, to: BillingPlanId): boolean =>
 export interface DowngradeImpact {
   isDowngrade: boolean;
   lostFeatures: BillingFeature[];
-  restrictedLimits: { field: string; from: number | 'unlimited'; to: number | 'unlimited' }[];
+  restrictedLimits: {
+    field: string;
+    from: number | 'unlimited';
+    to: number | 'unlimited';
+  }[];
   workspaceCount: number;
   requiresDataCleanup: boolean;
   warningMessage: string;
@@ -183,9 +194,7 @@ export const getDowngradeImpact = (
 
   const messages: string[] = [];
   if (lostFeatures.length > 0) {
-    messages.push(
-      `You will lose access to: ${lostFeatures.join(', ')}.`
-    );
+    messages.push(`You will lose access to: ${lostFeatures.join(', ')}.`);
   }
   if (restrictedLimits.length > 0) {
     messages.push(

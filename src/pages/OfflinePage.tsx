@@ -44,7 +44,9 @@ const OfflinePage = () => {
           <p className="mt-4 text-3xl font-medium text-foreground">
             {summary.available}
           </p>
-          <p className="mt-1 text-sm text-muted-copy">Offline-available areas</p>
+          <p className="mt-1 text-sm text-muted-copy">
+            Offline-available areas
+          </p>
         </Card>
         <Card hoverEffect={false}>
           <History className="h-5 w-5 text-warning" />

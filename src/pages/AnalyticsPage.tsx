@@ -28,7 +28,11 @@ import {
   useAnalyticsStore,
 } from '@/features/analytics';
 import { AssessmentProfile } from '@/features/assessment';
-import { canViewAdvancedAnalytics, useBillingStore, canAccessFeature } from '@/features/billing';
+import {
+  canViewAdvancedAnalytics,
+  useBillingStore,
+  canAccessFeature,
+} from '@/features/billing';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
 import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 
@@ -56,7 +60,10 @@ const AnalyticsPage = () => {
   const { workspaces, activeWorkspaceId } = useWorkspaceStore();
   const activeWorkspace =
     workspaces.find((w) => w.id === activeWorkspaceId) ?? workspaces[0];
-  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
+  const hasProjectAccess = canAccessFeature(
+    subscription,
+    'projectWorkspace'
+  ).allowed;
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -82,7 +89,9 @@ const AnalyticsPage = () => {
 
       <div className="premium-panel flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-foreground">Analytics Reality</p>
+          <p className="text-sm font-medium text-foreground">
+            Analytics Reality
+          </p>
           <p className="mt-1 text-xs text-muted-copy">
             Metrics are calculated from local learning state. No external
             calibration or production data warehouse is connected.
@@ -100,12 +109,13 @@ const AnalyticsPage = () => {
                 Project-Based Advanced Analytics
               </h3>
               <p className="text-xs text-muted-copy">
-                Analyze document counts, AI coach context, and persistent memory metrics scoped per workspace.
+                Analyze document counts, AI coach context, and persistent memory
+                metrics scoped per workspace.
               </p>
             </div>
             <WorkspaceSelector planId={subscription.planId} />
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             <div className="rounded-xl bg-surface-hover border border-border-soft p-4 space-y-2">
               <p className="text-[10px] font-medium text-muted-copy uppercase tracking-wider">
@@ -118,7 +128,7 @@ const AnalyticsPage = () => {
                 Files uploaded and analyzed for this project scope.
               </p>
             </div>
-            
+
             <div className="rounded-xl bg-surface-hover border border-border-soft p-4 space-y-2">
               <p className="text-[10px] font-medium text-muted-copy uppercase tracking-wider">
                 Active Memory Keys
@@ -862,7 +872,9 @@ const TimelinePanel = ({
             className="flex items-center justify-between rounded-xl border border-border-soft bg-surface-hover p-3"
           >
             <div>
-              <p className="text-xs font-medium text-foreground">{point.label}</p>
+              <p className="text-xs font-medium text-foreground">
+                {point.label}
+              </p>
               <p className="text-[9px] font-mono text-muted-copy">
                 {point.date}
               </p>

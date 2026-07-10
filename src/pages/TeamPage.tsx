@@ -189,7 +189,10 @@ const TeamPage = () => {
                   <option value="manager">Manager</option>
                 </select>
               </label>
-              <button type="submit" className="public-primary-action mt-4 rounded-lg">
+              <button
+                type="submit"
+                className="public-primary-action mt-4 rounded-lg"
+              >
                 Create pending invite
               </button>
             </form>

@@ -4,10 +4,7 @@ const config = {
   coverageAnalysis: 'perTest',
   mutator: {
     plugins: ['typescript', 'javascript'],
-    excludedMutations: [
-      'BooleanLiteral',
-      'StringLiteral',
-    ],
+    excludedMutations: ['BooleanLiteral', 'StringLiteral'],
   },
   reporters: ['clear-text', 'html'],
   htmlReporter: {
@@ -18,10 +15,7 @@ const config = {
     low: 60,
     break: null,
   },
-  mutate: [
-    'src/shared/utils/cn.ts',
-    'src/config/navigation.config.ts',
-  ],
+  mutate: ['src/shared/utils/cn.ts', 'src/config/navigation.config.ts'],
   ignorePatterns: [
     '**/*.test.ts',
     '**/*.test.tsx',

@@ -6,7 +6,15 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
   max?: number;
   showValue?: boolean;
   animated?: boolean;
-  color?: 'primary' | 'cyan' | 'emerald' | 'rose' | 'amber' | 'success' | 'warning' | 'danger';
+  color?:
+    | 'primary'
+    | 'cyan'
+    | 'emerald'
+    | 'rose'
+    | 'amber'
+    | 'success'
+    | 'warning'
+    | 'danger';
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({

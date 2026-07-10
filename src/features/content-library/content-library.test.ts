@@ -67,7 +67,7 @@ describe('professional content library', () => {
   });
 
   it('returns empty arrays for levels with no content', () => {
-    const empty = ProfessionalContentLibrary.getForLevel('A1' as any);
+    const empty = ProfessionalContentLibrary.getForLevel('A1');
     expect(Array.isArray(empty.listening)).toBe(true);
     expect(Array.isArray(empty.roleplay)).toBe(true);
     expect(Array.isArray(empty.writing)).toBe(true);

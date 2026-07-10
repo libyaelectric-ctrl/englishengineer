@@ -3,7 +3,6 @@ import { test, expect } from '@playwright/test';
 const SITE = 'https://englishengineer.vercel.app';
 
 test.describe('Comprehensive E2E', () => {
-
   test('Landing page loads correctly', async ({ page }) => {
     await page.goto(SITE);
     await page.waitForTimeout(2000);
@@ -23,7 +22,14 @@ test.describe('Comprehensive E2E', () => {
     await page.getByRole('button', { name: /try demo mode/i }).click();
     await page.waitForURL(/\/dashboard/, { timeout: 15000 });
 
-    const pages = ['/vocabulary', '/grammar', '/reading', '/writing', '/listening', '/speaking'];
+    const pages = [
+      '/vocabulary',
+      '/grammar',
+      '/reading',
+      '/writing',
+      '/listening',
+      '/speaking',
+    ];
     for (const p of pages) {
       await page.goto(SITE + p);
       await page.waitForTimeout(1000);
@@ -43,15 +49,21 @@ test.describe('Comprehensive E2E', () => {
 
   test('Super user login works', async ({ page }) => {
     await page.goto(SITE + '/login');
-    await page.getByPlaceholder(/you@example.com/i).fill('catexozcan@gmail.com');
+    await page
+      .getByPlaceholder(/you@example.com/i)
+      .fill('catexozcan@gmail.com');
     await page.getByPlaceholder(/•/).fill('123456');
     await page.getByRole('button', { name: /sign in/i }).click();
-    await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, { timeout: 15000 });
+    await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
+      timeout: 15000,
+    });
     expect(page.url()).not.toContain('/login');
   });
 
   test('Backend health endpoint works', async ({ page }) => {
-    const response = await page.goto('https://englishengineer-production.up.railway.app/api/health');
+    const response = await page.goto(
+      'https://englishengineer-production.up.railway.app/api/health'
+    );
     const data = await response?.json();
     expect(data?.ok).toBe(true);
     expect(data?.version).toBe('4.0.1');
