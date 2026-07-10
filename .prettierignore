@@ -1,0 +1,10 @@
+node_modules
+dist
+.vite
+.npm-cache
+sample
+sample2
+public/~$*
+public/engvox-landing.html
+public/~$gvox-landing.html
+public/sample-preview.html

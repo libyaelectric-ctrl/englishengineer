@@ -234,399 +234,408 @@ const CurriculumPage = () => {
       </section>
 
       {activeSection === 'today' && (
-      <SectionCard
-        id="today"
-        title="Recommended Today"
-        subtitle="Chosen from independent skill progress, vocabulary memory, current-level databases, and weaknesses"
-        icon={Sparkles}
-      >
-        <div className="grid gap-4 lg:grid-cols-3">
-          {isLoading
-            ? [0, 1, 2].map((item) => (
-                <div
-                  key={item}
-                  className="h-44 animate-pulse rounded-xl border border-border-soft bg-surface-hover"
-                />
-              ))
-            : missions.map((mission, index) => (
-                <article
-                  key={mission.id}
-                  className="flex min-h-44 flex-col rounded-xl border border-border-soft bg-surface p-5"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <StatusBadge
-                      label={index === 0 ? 'Recommended' : mission.difficulty}
-                      tone={index === 0 ? 'info' : 'neutral'}
-                    />
-                    <span className="text-sm font-medium text-foreground">
-                      {mission.cefrBand}
-                    </span>
-                  </div>
-                  <h3 className="mt-4 font-medium text-foreground">
-                    {mission.title}
-                  </h3>
-                  <p className="mt-2 flex-1 text-sm leading-6 text-muted-copy">
-                    {mission.reason}
-                  </p>
-                  <Button
-                    variant="ghost"
-                    className="mt-3 justify-start px-0"
-                    onClick={() => navigate(mission.route)}
-                  >
-                    Review recommendation <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </article>
-              ))}
-        </div>
-      </SectionCard>
-      )}
-
-      {activeSection === 'memory' && (
-      <SectionCard
-        id="review"
-        title="Learning Memory"
-        subtitle="Everything you learn shapes what comes next"
-        icon={BookOpen}
-      >
-        <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
-          <LearningMemorySummary
-            vocabulary={memory}
-            grammar={grammarSummary}
-            repeatedMistakes={repeatedMistakes}
-            badges={badges}
-          />
-          <div>
-            <div className="mb-3 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-medium text-primary">
-                  Unified Review Queue
-                </p>
-                <p className="mt-1 text-sm text-muted-copy">
-                  Focus on the most useful improvement first.
-                </p>
-              </div>
-              <Link
-                to="/learning-plan"
-                className="text-sm font-medium text-primary hover:text-primary"
-              >
-                View plan
-              </Link>
-            </div>
-            <div className="grid gap-3 md:grid-cols-2">
-              {(unifiedReviewQueue.length > 0
-                ? unifiedReviewQueue
-                : reviewPriorities
-              )
-                .slice(0, 4)
-                .map((item, index) => (
+        <SectionCard
+          id="today"
+          title="Recommended Today"
+          subtitle="Chosen from independent skill progress, vocabulary memory, current-level databases, and weaknesses"
+          icon={Sparkles}
+        >
+          <div className="grid gap-4 lg:grid-cols-3">
+            {isLoading
+              ? [0, 1, 2].map((item) => (
                   <div
-                    key={item.id}
-                    className="rounded-xl border border-border-soft bg-surface-hover p-4"
+                    key={item}
+                    className="h-44 animate-pulse rounded-xl border border-border-soft bg-surface-hover"
+                  />
+                ))
+              : missions.map((mission, index) => (
+                  <article
+                    key={mission.id}
+                    className="flex min-h-44 flex-col rounded-xl border border-border-soft bg-surface p-5"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <StatusBadge
-                        label={
-                          index === 0 ? 'Start here' : `Priority ${index + 1}`
-                        }
-                        tone={index === 0 ? 'warning' : 'neutral'}
+                        label={index === 0 ? 'Recommended' : mission.difficulty}
+                        tone={index === 0 ? 'info' : 'neutral'}
                       />
-                      <span className="text-xs font-medium text-muted-copy">
-                        {item.priority}
+                      <span className="text-sm font-medium text-foreground">
+                        {mission.cefrBand}
                       </span>
                     </div>
-                    <p className="mt-3 text-sm font-medium text-foreground">
-                      {item.label}
+                    <h3 className="mt-4 font-medium text-foreground">
+                      {mission.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-6 text-muted-copy">
+                      {mission.reason}
                     </p>
-                    <p className="mt-2 text-xs leading-5 text-muted-copy">
-                      {item.reason}
-                    </p>
-                    {'route' in item && (
-                      <Button
-                        variant="ghost"
-                        className="mt-3 px-0"
-                        onClick={() =>
-                          navigate((item as UnifiedReviewItem).route)
-                        }
-                      >
-                        Practice now <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
+                    <Button
+                      variant="ghost"
+                      className="mt-3 justify-start px-0"
+                      onClick={() => navigate(mission.route)}
+                    >
+                      Review recommendation <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </article>
                 ))}
+          </div>
+        </SectionCard>
+      )}
+
+      {activeSection === 'memory' && (
+        <SectionCard
+          id="review"
+          title="Learning Memory"
+          subtitle="Everything you learn shapes what comes next"
+          icon={BookOpen}
+        >
+          <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
+            <LearningMemorySummary
+              vocabulary={memory}
+              grammar={grammarSummary}
+              repeatedMistakes={repeatedMistakes}
+              badges={badges}
+            />
+            <div>
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs font-medium text-primary">
+                    Unified Review Queue
+                  </p>
+                  <p className="mt-1 text-sm text-muted-copy">
+                    Focus on the most useful improvement first.
+                  </p>
+                </div>
+                <Link
+                  to="/learning-plan"
+                  className="text-sm font-medium text-primary hover:text-primary"
+                >
+                  View plan
+                </Link>
+              </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                {(unifiedReviewQueue.length > 0
+                  ? unifiedReviewQueue
+                  : reviewPriorities
+                )
+                  .slice(0, 4)
+                  .map((item, index) => (
+                    <div
+                      key={item.id}
+                      className="rounded-xl border border-border-soft bg-surface-hover p-4"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <StatusBadge
+                          label={
+                            index === 0 ? 'Start here' : `Priority ${index + 1}`
+                          }
+                          tone={index === 0 ? 'warning' : 'neutral'}
+                        />
+                        <span className="text-xs font-medium text-muted-copy">
+                          {item.priority}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm font-medium text-foreground">
+                        {item.label}
+                      </p>
+                      <p className="mt-2 text-xs leading-5 text-muted-copy">
+                        {item.reason}
+                      </p>
+                      {'route' in item && (
+                        <Button
+                          variant="ghost"
+                          className="mt-3 px-0"
+                          onClick={() =>
+                            navigate((item as UnifiedReviewItem).route)
+                          }
+                        >
+                          Practice now <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
-      </SectionCard>
+        </SectionCard>
       )}
 
       {activeSection === 'full' && (
-      <>
-      <SectionCard
-        id="curriculum"
-        title="Choose a skill"
-        subtitle="Continue any skill independently without losing the shared lesson topic"
-        icon={Target}
-      >
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-          {SKILL_NAMES.map((skill) => {
-            const meta = SKILL_META[skill];
-            const Icon = meta.icon;
-            const skillProfile = profile.skills[skill];
-            return (
-              <button
-                key={skill}
-                type="button"
-                onClick={() => {
-                  setSelectedSkill(skill);
-                  setDomain('All');
-                }}
-                className={`rounded-xl border p-4 text-left transition-colors ${
-                  selectedSkill === skill
-                    ? 'border-primary bg-surface-hover'
-                    : 'border-border-soft bg-surface hover:border-primary'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <Icon className="h-5 w-5 text-primary" />
-                  {skill === weakestSkill && (
-                    <span className="text-[9px] font-medium uppercase text-warning">
-                      Focus
-                    </span>
-                  )}
-                </div>
-                <p className="mt-3 text-sm font-medium text-foreground">
-                  {meta.label}
-                </p>
-                <p className="mt-1 text-xs text-muted-copy">
-                  {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
-                </p>
-                <p className="mt-1 text-xs font-medium text-primary">
-                  Lesson{' '}
-                  {
-                    LessonPathEngine.getSkillProgress(profile, skill).lesson
-                      .number
-                  }
-                </p>
-              </button>
-            );
-          })}
-        </div>
-      </SectionCard>
-
-      <div
-        id="gate-progress"
-        className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]"
-      >
-        <SectionCard
-          title={`${selectedMeta.label} Entry Brief`}
-          subtitle="Review the recommendation before starting; manual changes are optional"
-          icon={selectedMeta.icon}
-        >
-          {recommendationLoading || !recommendation ? (
-            <div className="h-72 animate-pulse rounded-xl bg-surface-hover" />
-          ) : (
-            <div className="space-y-6">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-medium uppercase text-muted-copy">
-                    Target CEFR
-                  </p>
-                  <p className="mt-1 text-xl font-medium text-foreground">
-                    {recommendation.targetCefr}
-                  </p>
-                </Card>
-                <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-medium uppercase text-muted-copy">
-                    Safe / Stretch
-                  </p>
-                  <p className="mt-1 text-xl font-medium text-foreground">
-                    75% / 25%
-                  </p>
-                </Card>
-                <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-medium uppercase text-muted-copy">
-                    Effort
-                  </p>
-                  <p className="mt-1 text-xl font-medium text-foreground">
-                    {recommendation.estimatedMinutes} min
-                  </p>
-                </Card>
-                <Card hoverEffect={false} className="p-4">
-                  <p className="text-[10px] font-medium uppercase text-muted-copy">
-                    AI required
-                  </p>
-                  <p className="mt-1 text-xl font-medium text-success">No</p>
-                </Card>
-              </div>
-
-              <div className="rounded-xl border border-primary bg-surface-hover p-4">
-                <p className="text-xs font-medium uppercase text-primary">
-                  Why recommended
-                </p>
-                <p className="mt-2 text-sm leading-6 text-foreground">
-                  {recommendation.whyRecommended}
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-border-soft bg-surface p-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-xs font-medium uppercase text-muted-copy">
-                    Lesson {recommendation.lessonNumber}
-                  </p>
-                  <StatusBadge
-                    label={recommendation.sharedLessonTitle}
-                    tone="info"
-                  />
-                </div>
-                <div className="mt-3 grid gap-2 md:grid-cols-2">
-                  {Object.values(recommendation.explanation).map((line) => (
-                    <p
-                      key={line}
-                      className="rounded-lg bg-surface-hover p-3 text-xs leading-5 text-muted-copy"
-                    >
-                      {line}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              <div className="grid gap-5 lg:grid-cols-2">
-                <div>
-                  <h3 className="font-medium text-foreground">
-                    Vocabulary focus
-                  </h3>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {recommendation.vocabularyFocus.length > 0 ? (
-                      recommendation.vocabularyFocus.map(({ term, bucket }) => (
-                        <span
-                          key={term.id}
-                          className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
-                        >
-                          {term.term} · {bucket}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-sm text-muted-copy">
-                        No matching vocabulary for this manual domain. Choose
-                        All to use the current-level database set.
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-medium text-foreground">Grammar focus</h3>
-                  <div className="mt-3 space-y-2">
-                    {recommendation.grammarFocus.length > 0 ? (
-                      recommendation.grammarFocus.map((rule) => (
-                        <p
-                          key={rule.id}
-                          className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
-                        >
-                          {rule.title} · {rule.cefrLevel}
-                        </p>
-                      ))
-                    ) : (
-                      <p className="text-sm text-muted-copy">
-                        No matching grammar rule for this manual domain.
-                      </p>
-                    )}
-                  </div>
-                  {recommendation.grammarFocus.length > 0 && (
-                    <p className="mt-2 text-xs font-medium text-muted-copy">
-                      Review state:{' '}
-                      {
-                        GrammarProgressService.get(
-                          recommendation.grammarFocus[0].id
-                        ).reviewStatus
-                      }{' '}
-                      ·{' '}
-                      {
-                        GrammarProgressService.get(
-                          recommendation.grammarFocus[0].id
-                        ).strength
-                      }
-                      % strength
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
-                <p className="text-xs font-medium uppercase text-muted-copy">
-                  Expected answer
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">
-                  {recommendation.expectedAnswerType}
-                </p>
-                <p className="mt-2 text-xs leading-5 text-muted-copy">
-                  {recommendation.context}
-                </p>
-                <p className="mt-2 text-xs font-medium uppercase text-primary">
-                  Weakest-area priority: {recommendation.focusPriority}
-                </p>
-              </div>
-
-              {selectedMeta.route ? (
-                <Button onClick={() => navigate(selectedMeta.route!)}>
-                  Open {selectedMeta.label} workspace
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              ) : (
-                <p className="rounded-xl border border-warning bg-surface-hover p-4 text-sm text-foreground">
-                  Grammar selection is active in this hub. A dedicated Grammar
-                  task runner is not connected in this sprint.
-                </p>
-              )}
-            </div>
-          )}
-        </SectionCard>
-
-        <aside className="space-y-5">
+        <>
           <SectionCard
-            title="Manual Change"
-            subtitle="Recommendations never remove user control"
+            id="curriculum"
+            title="Choose a skill"
+            subtitle="Continue any skill independently without losing the shared lesson topic"
             icon={Target}
           >
-            <label className="text-sm font-medium text-foreground">
-              Vocabulary/domain focus
-              <select
-                value={domain}
-                onChange={(event) => setDomain(event.target.value)}
-                className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
-              >
-                {DOMAINS.map((item) => (
-                  <option key={item}>{item}</option>
-                ))}
-              </select>
-            </label>
-            <p className="mt-4 text-xs leading-5 text-muted-copy">
-              Difficulty remains bounded to the selected skill: three safe
-              allocations and one controlled stretch allocation.
-            </p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+              {SKILL_NAMES.map((skill) => {
+                const meta = SKILL_META[skill];
+                const Icon = meta.icon;
+                const skillProfile = profile.skills[skill];
+                return (
+                  <button
+                    key={skill}
+                    type="button"
+                    onClick={() => {
+                      setSelectedSkill(skill);
+                      setDomain('All');
+                    }}
+                    className={`rounded-xl border p-4 text-left transition-colors ${
+                      selectedSkill === skill
+                        ? 'border-primary bg-surface-hover'
+                        : 'border-border-soft bg-surface hover:border-primary'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <Icon className="h-5 w-5 text-primary" />
+                      {skill === weakestSkill && (
+                        <span className="text-[9px] font-medium uppercase text-warning">
+                          Focus
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-3 text-sm font-medium text-foreground">
+                      {meta.label}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-copy">
+                      {skillProfile.cefrBand} ·{' '}
+                      {skillProfile.progressToNextBand}%
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-primary">
+                      Lesson{' '}
+                      {
+                        LessonPathEngine.getSkillProgress(profile, skill).lesson
+                          .number
+                      }
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </SectionCard>
 
-          <SectionCard
-            title="Placement Test"
-            subtitle={profile.placementCompleted ? 'Completed' : 'Available'}
-            icon={Clock3}
+          <div
+            id="gate-progress"
+            className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]"
           >
-            <p className="text-sm leading-6 text-muted-copy">
-              {profile.placementCompleted
-                ? `Local placement recommends ${profile.placementBand ?? 'A1'} with ${profile.placementConfidence} confidence.`
-                : 'Take the short Reading, Vocabulary and Grammar placement, or continue at A1.'}
-            </p>
-            <Link
-              to="/placement"
-              className="mt-4 inline-flex text-sm font-medium text-primary"
+            <SectionCard
+              title={`${selectedMeta.label} Entry Brief`}
+              subtitle="Review the recommendation before starting; manual changes are optional"
+              icon={selectedMeta.icon}
             >
-              {profile.placementCompleted
-                ? 'Retake placement'
-                : 'Start placement'}
-            </Link>
-          </SectionCard>
-        </aside>
-      </div>
-      </>
+              {recommendationLoading || !recommendation ? (
+                <div className="h-72 animate-pulse rounded-xl bg-surface-hover" />
+              ) : (
+                <div className="space-y-6">
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                    <Card hoverEffect={false} className="p-4">
+                      <p className="text-[10px] font-medium uppercase text-muted-copy">
+                        Target CEFR
+                      </p>
+                      <p className="mt-1 text-xl font-medium text-foreground">
+                        {recommendation.targetCefr}
+                      </p>
+                    </Card>
+                    <Card hoverEffect={false} className="p-4">
+                      <p className="text-[10px] font-medium uppercase text-muted-copy">
+                        Safe / Stretch
+                      </p>
+                      <p className="mt-1 text-xl font-medium text-foreground">
+                        75% / 25%
+                      </p>
+                    </Card>
+                    <Card hoverEffect={false} className="p-4">
+                      <p className="text-[10px] font-medium uppercase text-muted-copy">
+                        Effort
+                      </p>
+                      <p className="mt-1 text-xl font-medium text-foreground">
+                        {recommendation.estimatedMinutes} min
+                      </p>
+                    </Card>
+                    <Card hoverEffect={false} className="p-4">
+                      <p className="text-[10px] font-medium uppercase text-muted-copy">
+                        AI required
+                      </p>
+                      <p className="mt-1 text-xl font-medium text-success">
+                        No
+                      </p>
+                    </Card>
+                  </div>
+
+                  <div className="rounded-xl border border-primary bg-surface-hover p-4">
+                    <p className="text-xs font-medium uppercase text-primary">
+                      Why recommended
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-foreground">
+                      {recommendation.whyRecommended}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-border-soft bg-surface p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <p className="text-xs font-medium uppercase text-muted-copy">
+                        Lesson {recommendation.lessonNumber}
+                      </p>
+                      <StatusBadge
+                        label={recommendation.sharedLessonTitle}
+                        tone="info"
+                      />
+                    </div>
+                    <div className="mt-3 grid gap-2 md:grid-cols-2">
+                      {Object.values(recommendation.explanation).map((line) => (
+                        <p
+                          key={line}
+                          className="rounded-lg bg-surface-hover p-3 text-xs leading-5 text-muted-copy"
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="grid gap-5 lg:grid-cols-2">
+                    <div>
+                      <h3 className="font-medium text-foreground">
+                        Vocabulary focus
+                      </h3>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {recommendation.vocabularyFocus.length > 0 ? (
+                          recommendation.vocabularyFocus.map(
+                            ({ term, bucket }) => (
+                              <span
+                                key={term.id}
+                                className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
+                              >
+                                {term.term} · {bucket}
+                              </span>
+                            )
+                          )
+                        ) : (
+                          <span className="text-sm text-muted-copy">
+                            No matching vocabulary for this manual domain.
+                            Choose All to use the current-level database set.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="font-medium text-foreground">
+                        Grammar focus
+                      </h3>
+                      <div className="mt-3 space-y-2">
+                        {recommendation.grammarFocus.length > 0 ? (
+                          recommendation.grammarFocus.map((rule) => (
+                            <p
+                              key={rule.id}
+                              className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
+                            >
+                              {rule.title} · {rule.cefrLevel}
+                            </p>
+                          ))
+                        ) : (
+                          <p className="text-sm text-muted-copy">
+                            No matching grammar rule for this manual domain.
+                          </p>
+                        )}
+                      </div>
+                      {recommendation.grammarFocus.length > 0 && (
+                        <p className="mt-2 text-xs font-medium text-muted-copy">
+                          Review state:{' '}
+                          {
+                            GrammarProgressService.get(
+                              recommendation.grammarFocus[0].id
+                            ).reviewStatus
+                          }{' '}
+                          ·{' '}
+                          {
+                            GrammarProgressService.get(
+                              recommendation.grammarFocus[0].id
+                            ).strength
+                          }
+                          % strength
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+                    <p className="text-xs font-medium uppercase text-muted-copy">
+                      Expected answer
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-foreground">
+                      {recommendation.expectedAnswerType}
+                    </p>
+                    <p className="mt-2 text-xs leading-5 text-muted-copy">
+                      {recommendation.context}
+                    </p>
+                    <p className="mt-2 text-xs font-medium uppercase text-primary">
+                      Weakest-area priority: {recommendation.focusPriority}
+                    </p>
+                  </div>
+
+                  {selectedMeta.route ? (
+                    <Button onClick={() => navigate(selectedMeta.route!)}>
+                      Open {selectedMeta.label} workspace
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <p className="rounded-xl border border-warning bg-surface-hover p-4 text-sm text-foreground">
+                      Grammar selection is active in this hub. A dedicated
+                      Grammar task runner is not connected in this sprint.
+                    </p>
+                  )}
+                </div>
+              )}
+            </SectionCard>
+
+            <aside className="space-y-5">
+              <SectionCard
+                title="Manual Change"
+                subtitle="Recommendations never remove user control"
+                icon={Target}
+              >
+                <label className="text-sm font-medium text-foreground">
+                  Vocabulary/domain focus
+                  <select
+                    value={domain}
+                    onChange={(event) => setDomain(event.target.value)}
+                    className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
+                  >
+                    {DOMAINS.map((item) => (
+                      <option key={item}>{item}</option>
+                    ))}
+                  </select>
+                </label>
+                <p className="mt-4 text-xs leading-5 text-muted-copy">
+                  Difficulty remains bounded to the selected skill: three safe
+                  allocations and one controlled stretch allocation.
+                </p>
+              </SectionCard>
+
+              <SectionCard
+                title="Placement Test"
+                subtitle={
+                  profile.placementCompleted ? 'Completed' : 'Available'
+                }
+                icon={Clock3}
+              >
+                <p className="text-sm leading-6 text-muted-copy">
+                  {profile.placementCompleted
+                    ? `Local placement recommends ${profile.placementBand ?? 'A1'} with ${profile.placementConfidence} confidence.`
+                    : 'Take the short Reading, Vocabulary and Grammar placement, or continue at A1.'}
+                </p>
+                <Link
+                  to="/placement"
+                  className="mt-4 inline-flex text-sm font-medium text-primary"
+                >
+                  {profile.placementCompleted
+                    ? 'Retake placement'
+                    : 'Start placement'}
+                </Link>
+              </SectionCard>
+            </aside>
+          </div>
+        </>
       )}
     </div>
   );

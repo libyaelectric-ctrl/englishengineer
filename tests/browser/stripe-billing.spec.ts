@@ -18,9 +18,7 @@ test.describe('Stripe billing integration', () => {
     page,
   }) => {
     await page.goto('/pricing');
-    await expect(
-      page.getByRole('heading', { name: /pricing/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /pricing/i })).toBeVisible();
 
     // Free plan
     await expect(page.getByText('$0').first()).toBeVisible();

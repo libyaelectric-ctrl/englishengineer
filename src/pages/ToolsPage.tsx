@@ -18,7 +18,13 @@ const ToolsPage = () => {
       <PageHeader
         title="Tools"
         description="Templates, quick phrases, and AI copilot — all in one place."
-        badgeText={activeTab === 'work' ? 'WORK TOOLS' : activeTab === 'quick' ? 'QUICK TOOLS' : 'AI COPILOT'}
+        badgeText={
+          activeTab === 'work'
+            ? 'WORK TOOLS'
+            : activeTab === 'quick'
+              ? 'QUICK TOOLS'
+              : 'AI COPILOT'
+        }
         badgeColor="cyan"
       />
 

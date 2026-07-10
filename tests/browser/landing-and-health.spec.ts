@@ -31,9 +31,7 @@ test.describe('Landing page & public routes', () => {
 
   test('pricing page loads with all plan tiers', async ({ page }) => {
     await page.goto('/pricing');
-    await expect(
-      page.getByRole('heading', { name: /pricing/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /pricing/i })).toBeVisible();
     await expect(page.getByText('Free')).toBeVisible();
     await expect(page.getByText('Pro')).toBeVisible();
     await expect(page.getByText('Project')).toBeVisible();
@@ -43,14 +41,12 @@ test.describe('Landing page & public routes', () => {
   test('login page loads with social login buttons', async ({ page }) => {
     await page.goto('/login');
     await expect(
-      page.getByRole('heading', { name: /sign in/i }).or(
-        page.getByText(/log in/i)
-      )
+      page
+        .getByRole('heading', { name: /sign in/i })
+        .or(page.getByText(/log in/i))
     ).toBeVisible();
     // Demo button should be present
-    await expect(
-      page.getByRole('button', { name: /demo/i })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /demo/i })).toBeVisible();
   });
 
   test('health endpoint returns OK', async ({ request }) => {

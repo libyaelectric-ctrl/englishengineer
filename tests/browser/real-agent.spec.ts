@@ -11,7 +11,6 @@ function log(msg: string) {
 
 // Real agent tests - simulates a real user
 test.describe('Real User Agent', () => {
-
   test('1. Login as real user', async ({ page }) => {
     log('🚀 Starting login...');
     await page.goto(SITE + '/login');
@@ -45,7 +44,10 @@ test.describe('Real User Agent', () => {
     log(`📊 Nav2 visible: ${nav2Visible}`);
 
     // Try clicking a skill
-    const firstSkill = page.locator('button').filter({ hasText: /Vocabulary/i }).first();
+    const firstSkill = page
+      .locator('button')
+      .filter({ hasText: /Vocabulary/i })
+      .first();
     if (await firstSkill.isVisible()) {
       await firstSkill.click();
       await page.waitForTimeout(1000);
@@ -63,11 +65,15 @@ test.describe('Real User Agent', () => {
     await page.waitForTimeout(2000);
 
     // Check word cards
-    const wordCards = await page.locator('[data-testid="vocabulary-word-card"]').count();
+    const wordCards = await page
+      .locator('[data-testid="vocabulary-word-card"]')
+      .count();
     log(`📚 Found ${wordCards} word cards`);
 
     // Try "Learn this word"
-    const learnBtn = page.getByRole('button', { name: /learn this word/i }).first();
+    const learnBtn = page
+      .getByRole('button', { name: /learn this word/i })
+      .first();
     if (await learnBtn.isVisible()) {
       await learnBtn.click();
       await page.waitForTimeout(1000);
@@ -114,7 +120,10 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/grammar');
     await page.waitForTimeout(2000);
 
-    const rules = await page.locator('button').filter({ hasText: /lesson/i }).count();
+    const rules = await page
+      .locator('button')
+      .filter({ hasText: /lesson/i })
+      .count();
     log(`📝 Found ${rules} grammar lessons`);
 
     // Check tabs
@@ -138,7 +147,10 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/reading');
     await page.waitForTimeout(2000);
 
-    const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
+    const missions = await page
+      .locator('button')
+      .filter({ hasText: /begin/i })
+      .count();
     log(`📖 Found ${missions} reading missions`);
 
     if (missions > 0) {
@@ -158,7 +170,10 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/writing');
     await page.waitForTimeout(2000);
 
-    const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
+    const missions = await page
+      .locator('button')
+      .filter({ hasText: /begin/i })
+      .count();
     log(`✍️ Found ${missions} writing missions`);
   });
 
@@ -171,7 +186,10 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/listening');
     await page.waitForTimeout(2000);
 
-    const tasks = await page.locator('button').filter({ hasText: /open transcript/i }).count();
+    const tasks = await page
+      .locator('button')
+      .filter({ hasText: /open transcript/i })
+      .count();
     log(`🎧 Found ${tasks} listening tasks`);
   });
 
@@ -184,7 +202,10 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/speaking');
     await page.waitForTimeout(2000);
 
-    const scenarios = await page.locator('button').filter({ hasText: /roleplay/i }).count();
+    const scenarios = await page
+      .locator('button')
+      .filter({ hasText: /roleplay/i })
+      .count();
     log(`🗣️ Found ${scenarios} speaking scenarios`);
   });
 
@@ -205,14 +226,23 @@ test.describe('Real User Agent', () => {
     log('🔑 Testing Super User...');
     await page.goto(SITE + '/login');
 
-    await page.getByPlaceholder(/you@example.com/i).fill('catexozcan@gmail.com');
+    await page
+      .getByPlaceholder(/you@example.com/i)
+      .fill('catexozcan@gmail.com');
     await page.getByPlaceholder(/•/).fill('123456');
     await page.getByRole('button', { name: /sign in/i }).click();
 
     try {
-      await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, { timeout: 15000 });
-      const superAdmin = await page.getByText(/super admin/i).first().isVisible();
-      log(`🔑 Super user login: ${superAdmin ? 'SUCCESS' : 'PARTIAL (onboarding)'}`);
+      await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
+        timeout: 15000,
+      });
+      const superAdmin = await page
+        .getByText(/super admin/i)
+        .first()
+        .isVisible();
+      log(
+        `🔑 Super user login: ${superAdmin ? 'SUCCESS' : 'PARTIAL (onboarding)'}`
+      );
     } catch {
       log('🔑 Super user: redirected to onboarding (expected)');
     }
@@ -220,9 +250,13 @@ test.describe('Real User Agent', () => {
 
   test('11. Backend health check', async ({ page }) => {
     log('🔧 Testing Backend...');
-    const response = await page.goto('https://englishengineer-production.up.railway.app/api/health');
+    const response = await page.goto(
+      'https://englishengineer-production.up.railway.app/api/health'
+    );
     const data = await response?.json();
-    log(`🔧 Backend: v${data?.version} | AI: ${data?.aiConfigured} | Stripe: ${data?.stripeConfigured}`);
+    log(
+      `🔧 Backend: v${data?.version} | AI: ${data?.aiConfigured} | Stripe: ${data?.stripeConfigured}`
+    );
   });
 
   test('Generate final report', async () => {
@@ -230,7 +264,7 @@ test.describe('Real User Agent', () => {
     log('========================================');
     log('FINAL REPORT');
     log('========================================');
-    results.forEach(r => log(r));
+    results.forEach((r) => log(r));
     log('========================================');
     log('Total tests: 12');
     log('Status: ALL PASSED');

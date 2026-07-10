@@ -100,8 +100,7 @@ export const createApp = ({
     createAIService(config.ai, fetchImpl),
     requireBackendAuth,
     aiRateLimiter,
-    billingRepository ??
-      createSubscriptionRepository(config.stripe, fetchImpl),
+    billingRepository ?? createSubscriptionRepository(config.stripe, fetchImpl),
     config,
     fetchImpl
   );
@@ -126,7 +125,10 @@ export const createApp = ({
   let resolvedWorkspaceRepository = workspaceRepository ?? null;
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
-      resolvedWorkspaceRepository = createWorkspaceRepository(config, fetchImpl);
+      resolvedWorkspaceRepository = createWorkspaceRepository(
+        config,
+        fetchImpl
+      );
     } catch (err) {
       console.warn('[workspace] Failed to create workspace repository:', err);
     }

@@ -46,10 +46,7 @@ export const storage = {
       notifyStorageChange(k);
       return true;
     } catch (e) {
-      logger.w(
-        `[STORAGE] Failed to write key "eos_${k}" to localStorage:`,
-        e
-      );
+      logger.w(`[STORAGE] Failed to write key "eos_${k}" to localStorage:`, e);
       return false;
     }
   },

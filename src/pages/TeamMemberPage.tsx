@@ -34,7 +34,9 @@ const TeamMemberPage = () => {
           <div className="space-y-5">
             <header>
               <StatusBadge label="Demo summary" tone="warning" />
-              <h1 className="mt-2 text-2xl font-medium">{member.displayName}</h1>
+              <h1 className="mt-2 text-2xl font-medium">
+                {member.displayName}
+              </h1>
               <p className="mt-1 text-sm text-muted-copy">
                 {member.discipline} · Internal CEFR estimate{' '}
                 {summary.cefrEstimate}
@@ -66,7 +68,9 @@ const TeamMemberPage = () => {
                 {Object.entries(summary.skillScores).map(([skill, score]) => (
                   <div key={skill}>
                     <div className="flex justify-between text-xs">
-                      <span className="capitalize text-muted-copy">{skill}</span>
+                      <span className="capitalize text-muted-copy">
+                        {skill}
+                      </span>
                       <strong>{score}%</strong>
                     </div>
                     <div className="mt-1 h-2 rounded-full bg-surface-hover">

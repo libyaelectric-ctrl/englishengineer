@@ -16,7 +16,13 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
 
@@ -124,7 +130,12 @@ const PLANS = [
     name: 'Free',
     price: '$0',
     period: 'forever',
-    features: ['Core skill modules', 'Vocabulary and grammar', '3 AI requests per day', 'Progress tracking'],
+    features: [
+      'Core skill modules',
+      'Vocabulary and grammar',
+      '3 AI requests per day',
+      'Progress tracking',
+    ],
     cta: 'Start free',
     primary: false,
   },
@@ -132,7 +143,12 @@ const PLANS = [
     name: 'Pro',
     price: '$19',
     period: '/month',
-    features: ['Unlimited AI feedback', 'Full A1-C2 access', 'Mistake log', '2 document uploads per month'],
+    features: [
+      'Unlimited AI feedback',
+      'Full A1-C2 access',
+      'Mistake log',
+      '2 document uploads per month',
+    ],
     cta: 'Upgrade to Pro',
     primary: true,
   },
@@ -140,7 +156,12 @@ const PLANS = [
     name: 'Project',
     price: '$39',
     period: '/month',
-    features: ['3 project workspaces', 'Workspace memory', '20 documents per month', 'LinkedIn optimizer'],
+    features: [
+      '3 project workspaces',
+      'Workspace memory',
+      '20 documents per month',
+      'LinkedIn optimizer',
+    ],
     cta: 'Upgrade to Project',
     primary: false,
   },
@@ -184,7 +205,7 @@ function useScrollReveal<T extends HTMLElement>() {
           observer.unobserve(element);
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -56px 0px' },
+      { threshold: 0.12, rootMargin: '0px 0px -56px 0px' }
     );
 
     observer.observe(element);
@@ -194,7 +215,15 @@ function useScrollReveal<T extends HTMLElement>() {
   return { ref, isVisible };
 }
 
-function AnimatedSection({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+function AnimatedSection({
+  children,
+  className = '',
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
 
   return (
@@ -231,16 +260,25 @@ function AnimatedCard({
       ref.current = node;
       cardRef.current = node;
     },
-    [ref],
+    [ref]
   );
 
-  const handleMouseMove = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
-    const element = cardRef.current;
-    if (!element) return;
-    const rect = element.getBoundingClientRect();
-    element.style.setProperty('--mouse-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
-    element.style.setProperty('--mouse-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
-  }, []);
+  const handleMouseMove = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const element = cardRef.current;
+      if (!element) return;
+      const rect = element.getBoundingClientRect();
+      element.style.setProperty(
+        '--mouse-x',
+        `${((event.clientX - rect.left) / rect.width) * 100}%`
+      );
+      element.style.setProperty(
+        '--mouse-y',
+        `${((event.clientY - rect.top) / rect.height) * 100}%`
+      );
+    },
+    []
+  );
 
   return (
     <div
@@ -281,12 +319,22 @@ function SectionIntro({
   align?: 'left' | 'center';
 }) {
   return (
-    <AnimatedSection className={align === 'center' ? 'mx-auto mb-12 max-w-3xl text-center' : 'mb-12 max-w-3xl'}>
+    <AnimatedSection
+      className={
+        align === 'center'
+          ? 'mx-auto mb-12 max-w-3xl text-center'
+          : 'mb-12 max-w-3xl'
+      }
+    >
       <span className="inline-flex rounded-full bg-black/[0.05] px-3 py-1 text-[11px] font-medium uppercase text-black/45">
         {eyebrow}
       </span>
-      <h2 className="mt-5 text-3xl font-light leading-[1.05] text-[#111] md:text-5xl">{title}</h2>
-      {desc ? <p className="mt-4 max-w-xl text-sm leading-6 text-black/50">{desc}</p> : null}
+      <h2 className="mt-5 text-3xl font-light leading-[1.05] text-[#111] md:text-5xl">
+        {title}
+      </h2>
+      {desc ? (
+        <p className="mt-4 max-w-xl text-sm leading-6 text-black/50">{desc}</p>
+      ) : null}
     </AnimatedSection>
   );
 }
@@ -306,7 +354,9 @@ const LandingPage = () => {
     let frame = 0;
     const handleScroll = () => {
       window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => setScrollShift(Math.min(window.scrollY * 0.08, 72)));
+      frame = window.requestAnimationFrame(() =>
+        setScrollShift(Math.min(window.scrollY * 0.08, 72))
+      );
     };
 
     handleScroll();
@@ -361,7 +411,10 @@ const LandingPage = () => {
         </div>
       </nav>
 
-      <section id="main-content" className="relative flex min-h-[100svh] items-end overflow-hidden px-6 pb-12 pt-32 md:px-12 md:pb-16">
+      <section
+        id="main-content"
+        className="relative flex min-h-[100svh] items-end overflow-hidden px-6 pb-12 pt-32 md:px-12 md:pb-16"
+      >
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -381,7 +434,8 @@ const LandingPage = () => {
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(12px)',
                 transform: heroVisible ? 'translateY(0)' : 'translateY(18px)',
-                transition: 'opacity 760ms cubic-bezier(0.16,1,0.3,1), filter 760ms cubic-bezier(0.16,1,0.3,1), transform 760ms cubic-bezier(0.16,1,0.3,1)',
+                transition:
+                  'opacity 760ms cubic-bezier(0.16,1,0.3,1), filter 760ms cubic-bezier(0.16,1,0.3,1), transform 760ms cubic-bezier(0.16,1,0.3,1)',
               }}
             >
               <Sparkles className="h-3.5 w-3.5 text-[#5b6f11]" />
@@ -393,7 +447,8 @@ const LandingPage = () => {
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(24px)',
                 transform: heroVisible ? 'translateY(0)' : 'translateY(36px)',
-                transition: 'opacity 1000ms cubic-bezier(0.16,1,0.3,1) 80ms, filter 1000ms cubic-bezier(0.16,1,0.3,1) 80ms, transform 1000ms cubic-bezier(0.16,1,0.3,1) 80ms',
+                transition:
+                  'opacity 1000ms cubic-bezier(0.16,1,0.3,1) 80ms, filter 1000ms cubic-bezier(0.16,1,0.3,1) 80ms, transform 1000ms cubic-bezier(0.16,1,0.3,1) 80ms',
               }}
             >
               Engineering English OS for project teams.
@@ -404,10 +459,12 @@ const LandingPage = () => {
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
                 transform: heroVisible ? 'translateY(0)' : 'translateY(24px)',
-                transition: 'opacity 820ms cubic-bezier(0.16,1,0.3,1) 220ms, filter 820ms cubic-bezier(0.16,1,0.3,1) 220ms, transform 820ms cubic-bezier(0.16,1,0.3,1) 220ms',
+                transition:
+                  'opacity 820ms cubic-bezier(0.16,1,0.3,1) 220ms, filter 820ms cubic-bezier(0.16,1,0.3,1) 220ms, transform 820ms cubic-bezier(0.16,1,0.3,1) 220ms',
               }}
             >
-              EngVox turns writing, speaking, listening and reading into an orchestrated practice system for real engineering work.
+              EngVox turns writing, speaking, listening and reading into an
+              orchestrated practice system for real engineering work.
             </p>
             <div
               className="mt-9 flex flex-col gap-3 sm:flex-row"
@@ -415,13 +472,20 @@ const LandingPage = () => {
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
                 transform: heroVisible ? 'translateY(0)' : 'translateY(24px)',
-                transition: 'opacity 820ms cubic-bezier(0.16,1,0.3,1) 340ms, filter 820ms cubic-bezier(0.16,1,0.3,1) 340ms, transform 820ms cubic-bezier(0.16,1,0.3,1) 340ms',
+                transition:
+                  'opacity 820ms cubic-bezier(0.16,1,0.3,1) 340ms, filter 820ms cubic-bezier(0.16,1,0.3,1) 340ms, transform 820ms cubic-bezier(0.16,1,0.3,1) 340ms',
               }}
             >
-              <Link to="/start" className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]">
+              <Link
+                to="/start"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]"
+              >
                 Start free <ArrowRight className="h-4 w-4" />
               </Link>
-              <a href="#system" className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/45 px-6 py-3 text-sm font-semibold text-black/65 transition hover:bg-white/70 hover:text-black">
+              <a
+                href="#system"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/45 px-6 py-3 text-sm font-semibold text-black/65 transition hover:bg-white/70 hover:text-black"
+              >
                 Explore system
               </a>
             </div>
@@ -431,8 +495,11 @@ const LandingPage = () => {
             className="rounded-2xl border border-black/10 bg-white/62 p-4 shadow-[0_24px_80px_rgba(17,17,17,0.13)] backdrop-blur-xl"
             style={{
               opacity: heroVisible ? 1 : 0,
-              transform: heroVisible ? 'translateY(0) scale(1)' : 'translateY(28px) scale(0.98)',
-              transition: 'opacity 900ms cubic-bezier(0.16,1,0.3,1) 420ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 420ms',
+              transform: heroVisible
+                ? 'translateY(0) scale(1)'
+                : 'translateY(28px) scale(0.98)',
+              transition:
+                'opacity 900ms cubic-bezier(0.16,1,0.3,1) 420ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 420ms',
             }}
           >
             <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
@@ -449,9 +516,16 @@ const LandingPage = () => {
             </div>
             <div className="grid grid-cols-2 gap-2 pt-4 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               {STATS.map((stat) => (
-                <div key={stat.label} className="rounded-xl border border-black/[0.06] bg-white/68 p-3">
-                  <div className="text-2xl font-light text-[#111]">{stat.value}</div>
-                  <div className="mt-1 text-[10px] font-medium uppercase text-black/40">{stat.label}</div>
+                <div
+                  key={stat.label}
+                  className="rounded-xl border border-black/[0.06] bg-white/68 p-3"
+                >
+                  <div className="text-2xl font-light text-[#111]">
+                    {stat.value}
+                  </div>
+                  <div className="mt-1 text-[10px] font-medium uppercase text-black/40">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -463,48 +537,61 @@ const LandingPage = () => {
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="System"
-            title={
-              <>
-                A learning interface shaped like an agentic workflow.
-              </>
-            }
+            title={<>A learning interface shaped like an agentic workflow.</>}
             desc="Sample2's full-bleed imagery, blur entrances, hover light and staged workflow are adapted here to EngVox's engineering English product."
           />
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
             {FEATURES.map((feature, index) => (
-              <AnimatedCard key={feature.title} delay={index * 70} className="min-h-[205px] p-7">
+              <AnimatedCard
+                key={feature.title}
+                delay={index * 70}
+                className="min-h-[205px] p-7"
+              >
                 <div className="relative z-10 mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-black/10 bg-white">
                   <feature.icon className="h-5 w-5 text-black/60" />
                 </div>
-                <h3 className="relative z-10 text-xl font-light">{feature.title}</h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">{feature.desc}</p>
+                <h3 className="relative z-10 text-xl font-light">
+                  {feature.title}
+                </h3>
+                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">
+                  {feature.desc}
+                </p>
               </AnimatedCard>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="workflow" className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28">
+      <section
+        id="workflow"
+        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
+      >
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="Workflow"
-            title={
-              <>
-                Define, compose and improve through one guided loop.
-              </>
-            }
+            title={<>Define, compose and improve through one guided loop.</>}
             desc="The sample2 process panels are preserved as a visual rhythm, then rewritten for engineering communication practice."
           />
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             {WORKFLOW.map((item, index) => (
               <AnimatedCard key={item.title} delay={index * 90} className="p-3">
                 <div className="relative z-10 overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
-                  <img src={item.image} alt="" className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.025]" />
+                  <img
+                    src={item.image}
+                    alt=""
+                    className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.025]"
+                  />
                 </div>
                 <div className="relative z-10 p-4">
-                  <div className="text-[11px] font-medium uppercase text-black/38">{item.kicker}</div>
-                  <h3 className="mt-3 text-2xl font-light leading-tight">{item.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-black/50">{item.desc}</p>
+                  <div className="text-[11px] font-medium uppercase text-black/38">
+                    {item.kicker}
+                  </div>
+                  <h3 className="mt-3 text-2xl font-light leading-tight">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-black/50">
+                    {item.desc}
+                  </p>
                 </div>
               </AnimatedCard>
             ))}
@@ -516,16 +603,16 @@ const LandingPage = () => {
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
           <SectionIntro
             eyebrow="Orchestration"
-            title={
-              <>
-                Multiple coaching roles, one clean learning path.
-              </>
-            }
+            title={<>Multiple coaching roles, one clean learning path.</>}
             desc="The agent-card structure from sample2 becomes EngVox's coaching model: diagnose, contextualize, correct and move forward."
           />
           <AnimatedSection>
             <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#111] shadow-[0_28px_90px_rgba(17,17,17,0.16)]">
-              <img src="/agentic/org-arc.png" alt="EngVox coaching orchestration" className="aspect-[16/9] w-full object-cover opacity-95" />
+              <img
+                src="/agentic/org-arc.png"
+                alt="EngVox coaching orchestration"
+                className="aspect-[16/9] w-full object-cover opacity-95"
+              />
             </div>
           </AnimatedSection>
         </div>
@@ -534,12 +621,20 @@ const LandingPage = () => {
           {AGENTS.map((agent, index) => (
             <AnimatedCard key={agent.role} delay={index * 70} className="p-3">
               <div className="relative z-10 overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
-                <img src={agent.image} alt="" className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+                <img
+                  src={agent.image}
+                  alt=""
+                  className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+                />
               </div>
               <div className="relative z-10 p-4">
-                <div className="text-[11px] font-medium uppercase text-black/38">{agent.role}</div>
+                <div className="text-[11px] font-medium uppercase text-black/38">
+                  {agent.role}
+                </div>
                 <h3 className="mt-3 text-xl font-light">{agent.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-black/50">{agent.desc}</p>
+                <p className="mt-3 text-sm leading-6 text-black/50">
+                  {agent.desc}
+                </p>
               </div>
             </AnimatedCard>
           ))}
@@ -550,60 +645,105 @@ const LandingPage = () => {
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="Project readiness"
-            title={
-              <>
-                Built for repeated practice, not a one-time lesson.
-              </>
-            }
+            title={<>Built for repeated practice, not a one-time lesson.</>}
             align="center"
           />
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {[
-              { icon: Cpu, title: 'Adaptive engine', desc: 'Tasks adjust around level, weak skills and the communication mode the engineer needs next.' },
-              { icon: Route, title: 'Scenario routing', desc: 'A learner can move from document reading to writing response to spoken project update.' },
-              { icon: ShieldCheck, title: 'Local-first feel', desc: 'The app keeps the workspace calm, focused and repeatable for daily engineering practice.' },
+              {
+                icon: Cpu,
+                title: 'Adaptive engine',
+                desc: 'Tasks adjust around level, weak skills and the communication mode the engineer needs next.',
+              },
+              {
+                icon: Route,
+                title: 'Scenario routing',
+                desc: 'A learner can move from document reading to writing response to spoken project update.',
+              },
+              {
+                icon: ShieldCheck,
+                title: 'Local-first feel',
+                desc: 'The app keeps the workspace calm, focused and repeatable for daily engineering practice.',
+              },
             ].map((item, index) => (
-              <AnimatedCard key={item.title} delay={index * 80} className="min-h-[220px] p-7">
+              <AnimatedCard
+                key={item.title}
+                delay={index * 80}
+                className="min-h-[220px] p-7"
+              >
                 <div className="relative z-10 mb-8 flex items-center gap-3">
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-black/10 bg-white">
                     <item.icon className="h-5 w-5 text-black/60" />
                   </div>
                   <Layers3 className="h-4 w-4 text-[#64770f]" />
                 </div>
-                <h3 className="relative z-10 text-2xl font-light">{item.title}</h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">{item.desc}</p>
+                <h3 className="relative z-10 text-2xl font-light">
+                  {item.title}
+                </h3>
+                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">
+                  {item.desc}
+                </p>
               </AnimatedCard>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="pricing" className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28">
+      <section
+        id="pricing"
+        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
+      >
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="Pricing"
-            title={
-              <>
-                Start free. Upgrade when the workflow is ready.
-              </>
-            }
+            title={<>Start free. Upgrade when the workflow is ready.</>}
             align="center"
           />
           <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
             {PLANS.map((plan, index) => (
-              <AnimatedCard key={plan.name} delay={index * 80} dark={plan.primary} className="flex min-h-[430px] flex-col p-7">
+              <AnimatedCard
+                key={plan.name}
+                delay={index * 80}
+                dark={plan.primary}
+                className="flex min-h-[430px] flex-col p-7"
+              >
                 <div className="relative z-10 flex items-center justify-between">
                   <h3 className="text-lg font-medium">{plan.name}</h3>
-                  {plan.primary ? <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-medium text-white/75">Popular</span> : null}
+                  {plan.primary ? (
+                    <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-medium text-white/75">
+                      Popular
+                    </span>
+                  ) : null}
                 </div>
                 <div className="relative z-10 mt-8">
                   <span className="text-5xl font-light">{plan.price}</span>
-                  <span className={plan.primary ? 'ml-2 text-sm text-white/45' : 'ml-2 text-sm text-black/42'}>{plan.period}</span>
+                  <span
+                    className={
+                      plan.primary
+                        ? 'ml-2 text-sm text-white/45'
+                        : 'ml-2 text-sm text-black/42'
+                    }
+                  >
+                    {plan.period}
+                  </span>
                 </div>
                 <ul className="relative z-10 mt-8 space-y-3">
                   {plan.features.map((feature) => (
-                    <li key={feature} className={plan.primary ? 'flex items-center gap-3 text-sm text-white/76' : 'flex items-center gap-3 text-sm text-black/60'}>
-                      <Check className={plan.primary ? 'h-4 w-4 text-white/60' : 'h-4 w-4 text-black/32'} />
+                    <li
+                      key={feature}
+                      className={
+                        plan.primary
+                          ? 'flex items-center gap-3 text-sm text-white/76'
+                          : 'flex items-center gap-3 text-sm text-black/60'
+                      }
+                    >
+                      <Check
+                        className={
+                          plan.primary
+                            ? 'h-4 w-4 text-white/60'
+                            : 'h-4 w-4 text-black/32'
+                        }
+                      />
                       {feature}
                     </li>
                   ))}
@@ -624,7 +764,10 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section id="faq" className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28">
+      <section
+        id="faq"
+        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
+      >
         <div className="mx-auto max-w-3xl">
           <SectionIntro eyebrow="FAQ" title="Common questions" />
           <div className="space-y-2">
@@ -635,9 +778,19 @@ const LandingPage = () => {
                   className="relative z-10 flex w-full items-center justify-between px-6 py-5 text-left text-sm font-medium text-black/75"
                 >
                   {item.q}
-                  <ChevronDown className="h-4 w-4 text-black/35 transition-transform duration-300" style={{ transform: faqOpen === index ? 'rotate(180deg)' : 'rotate(0deg)' }} />
+                  <ChevronDown
+                    className="h-4 w-4 text-black/35 transition-transform duration-300"
+                    style={{
+                      transform:
+                        faqOpen === index ? 'rotate(180deg)' : 'rotate(0deg)',
+                    }}
+                  />
                 </button>
-                {faqOpen === index ? <p className="relative z-10 px-6 pb-6 text-sm leading-6 text-black/50">{item.a}</p> : null}
+                {faqOpen === index ? (
+                  <p className="relative z-10 px-6 pb-6 text-sm leading-6 text-black/50">
+                    {item.a}
+                  </p>
+                ) : null}
               </AnimatedCard>
             ))}
           </div>
@@ -647,11 +800,17 @@ const LandingPage = () => {
       <section className="relative border-t border-black/[0.06] px-6 py-20 text-center md:px-12 lg:py-28">
         <div className="absolute inset-0 bg-[linear-gradient(180deg,#f6f4ee_0%,#ece9df_100%)]" />
         <AnimatedSection className="relative z-10 mx-auto max-w-4xl">
-          <h2 className="text-4xl font-light leading-[1.04] md:text-6xl">Ready to make engineering English feel operational?</h2>
+          <h2 className="text-4xl font-light leading-[1.04] md:text-6xl">
+            Ready to make engineering English feel operational?
+          </h2>
           <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-black/50">
-            Start with the free plan, build daily momentum and let the AI coach shape the next practice loop.
+            Start with the free plan, build daily momentum and let the AI coach
+            shape the next practice loop.
           </p>
-          <Link to="/start" className="mt-9 inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]">
+          <Link
+            to="/start"
+            className="mt-9 inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]"
+          >
             Start free <ArrowRight className="h-4 w-4" />
           </Link>
         </AnimatedSection>

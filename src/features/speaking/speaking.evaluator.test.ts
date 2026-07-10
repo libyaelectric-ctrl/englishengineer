@@ -11,7 +11,8 @@ const mockMission: SpeakingMission = {
   cefrLevel: 'B2',
   difficulty: 'Intermediate',
   estimatedMinutes: 10,
-  promptText: 'The cable tray installation is blocked by scaffolding so we need to resequence containment works',
+  promptText:
+    'The cable tray installation is blocked by scaffolding so we need to resequence containment works',
   expectedKeywords: ['cable tray', 'scaffolding', 'resequence', 'containment'],
   grammarTargets: ['blocked by', 'we need to'],
   confidenceMarkers: ['confirm', 'coordinate', 'resolve'],
@@ -27,7 +28,8 @@ const mockMission: SpeakingMission = {
 
 const mockSubmission: SpeakingSubmission = {
   missionId: 'speaking_site_meeting',
-  transcript: 'The cable tray installation is blocked by scaffolding so we need to resequence containment works and confirm access.',
+  transcript:
+    'The cable tray installation is blocked by scaffolding so we need to resequence containment works and confirm access.',
   typedTranscript: '',
   timeSpentMinutes: 5,
   recordingSeconds: 45,
@@ -75,15 +77,23 @@ describe('SpeakingEvaluator', () => {
   it('penalizes filler words', () => {
     const cleanSubmission: SpeakingSubmission = {
       ...mockSubmission,
-      transcript: 'The cable tray installation is blocked by scaffolding so we need to resequence containment',
+      transcript:
+        'The cable tray installation is blocked by scaffolding so we need to resequence containment',
     };
     const fillerSubmission: SpeakingSubmission = {
       ...mockSubmission,
-      transcript: 'The cable tray um installation is basically blocked by scaffolding so we need to like resequence',
+      transcript:
+        'The cable tray um installation is basically blocked by scaffolding so we need to like resequence',
     };
 
-    const cleanResult = SpeakingEvaluator.evaluate(mockMission, cleanSubmission);
-    const fillerResult = SpeakingEvaluator.evaluate(mockMission, fillerSubmission);
+    const cleanResult = SpeakingEvaluator.evaluate(
+      mockMission,
+      cleanSubmission
+    );
+    const fillerResult = SpeakingEvaluator.evaluate(
+      mockMission,
+      fillerSubmission
+    );
 
     expect(cleanResult.fillerWordCount).toBe(0);
     expect(fillerResult.fillerWordCount).toBeGreaterThan(0);
@@ -92,7 +102,8 @@ describe('SpeakingEvaluator', () => {
   it('adds strengths for high scores', () => {
     const goodSubmission: SpeakingSubmission = {
       ...mockSubmission,
-      transcript: 'The cable tray installation is blocked by scaffolding so we need to resequence containment works and confirm access with coordinate resolve.',
+      transcript:
+        'The cable tray installation is blocked by scaffolding so we need to resequence containment works and confirm access with coordinate resolve.',
       recordingSeconds: 40,
     };
     const result = SpeakingEvaluator.evaluate(mockMission, goodSubmission);

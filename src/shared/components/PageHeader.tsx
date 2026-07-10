@@ -5,7 +5,15 @@ interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string;
   description?: string;
   badgeText?: string;
-  badgeColor?: 'emerald' | 'cyan' | 'amber' | 'rose' | 'primary' | 'success' | 'warning' | 'danger';
+  badgeColor?:
+    | 'emerald'
+    | 'cyan'
+    | 'amber'
+    | 'rose'
+    | 'primary'
+    | 'success'
+    | 'warning'
+    | 'danger';
   actions?: React.ReactNode;
 }
 

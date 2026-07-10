@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import LandingPage from '@/pages/LandingPage';
@@ -43,16 +43,20 @@ describe('Landing page E2E', () => {
     expect(screen.getByText('$39')).toBeInTheDocument();
   });
 
-  it('FAQ items are clickable', () => {
+  it('FAQ items are clickable', async () => {
     render(
       <MemoryRouter>
         <LandingPage />
       </MemoryRouter>
     );
 
-    const faqButton = screen.getByText('What is EngVox?');
+    const faqButton = screen.getByText('Is there a free plan?');
     expect(faqButton).toBeInTheDocument();
-    faqButton.click();
-    expect(screen.getAllByText(/AI-powered/).length).toBeGreaterThan(0);
+    fireEvent.click(faqButton);
+    await waitFor(() => {
+      expect(
+        screen.getByText(/includes the core modules/i)
+      ).toBeInTheDocument();
+    });
   });
 });

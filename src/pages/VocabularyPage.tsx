@@ -618,7 +618,11 @@ const VocabularyPage = () => {
 
   return (
     <div className="space-y-7 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Vocabulary</h1></div></div>
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Vocabulary</h1>
+        </div>
+      </div>
 
       <SkillEntryBrief skill="vocabulary" />
 
@@ -667,7 +671,10 @@ const VocabularyPage = () => {
                   ['status', 'Status'],
                 ] as Array<[keyof VocabularySearchFilters, string]>
               ).map(([field, label]) => (
-                <label key={field} className="text-xs font-bold text-foreground">
+                <label
+                  key={field}
+                  className="text-xs font-bold text-foreground"
+                >
                   {label}
                   <select
                     aria-label={`Filter by ${label}`}

@@ -18,8 +18,7 @@ const variantClasses: Record<ButtonVariant, string> = {
     'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover',
   ghost:
     'border border-transparent bg-transparent text-muted-copy hover:bg-surface-hover hover:text-foreground',
-  danger:
-    'border border-error/20 bg-error/5 text-error hover:bg-error/10',
+  danger: 'border border-error/20 bg-error/5 text-error hover:bg-error/10',
   success:
     'border border-success/20 bg-success/5 text-success hover:bg-success/10',
 };

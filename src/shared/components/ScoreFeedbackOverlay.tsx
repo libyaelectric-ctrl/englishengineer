@@ -62,8 +62,12 @@ export const ScoreFeedbackOverlay = ({
           <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
             <TrendingUp className="h-4 w-4 text-foreground mx-auto" />
             <p className="mt-1 text-[10px] text-muted-copy">ELO</p>
-            <p className={`text-sm font-bold ${result.eloChange >= 0 ? 'text-success' : 'text-error'}`}>
-              {result.eloChange >= 0 ? `+${result.eloChange}` : result.eloChange}
+            <p
+              className={`text-sm font-bold ${result.eloChange >= 0 ? 'text-success' : 'text-error'}`}
+            >
+              {result.eloChange >= 0
+                ? `+${result.eloChange}`
+                : result.eloChange}
             </p>
           </div>
         </div>
@@ -82,7 +86,9 @@ export const ScoreFeedbackOverlay = ({
               <p className="text-xs font-medium text-success">Strengths</p>
               <ul className="mt-1 space-y-1 text-xs text-muted-copy">
                 {result.strengths.map((str, idx) => (
-                  <li key={idx} className="truncate">{str}</li>
+                  <li key={idx} className="truncate">
+                    {str}
+                  </li>
                 ))}
               </ul>
             </div>
@@ -90,7 +96,9 @@ export const ScoreFeedbackOverlay = ({
               <p className="text-xs font-medium text-error">Weaknesses</p>
               <ul className="mt-1 space-y-1 text-xs text-muted-copy">
                 {result.weaknesses.map((wk, idx) => (
-                  <li key={idx} className="truncate">{wk}</li>
+                  <li key={idx} className="truncate">
+                    {wk}
+                  </li>
                 ))}
               </ul>
             </div>

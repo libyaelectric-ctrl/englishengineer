@@ -1,4 +1,9 @@
-const SUPPORTED_AI_PROVIDERS = new Set(['mock', 'openai', 'anthropic', 'gemini']);
+const SUPPORTED_AI_PROVIDERS = new Set([
+  'mock',
+  'openai',
+  'anthropic',
+  'gemini',
+]);
 
 const hasText = (value) => typeof value === 'string' && value.trim().length > 0;
 
@@ -104,7 +109,11 @@ export const createBackendConfig = (environment = process.env) => {
       provider: aiProvider,
       model:
         environment.AI_MODEL?.trim() ||
-        (aiProvider === 'gemini' ? 'gemini-2.0-flash' : 'mock'),
+        (aiProvider === 'gemini'
+          ? 'gemini-2.0-flash'
+          : aiProvider === 'openai'
+            ? 'gpt-4.1-mini'
+            : 'mock'),
       timeoutMs: toPositiveInteger(environment.AI_TIMEOUT_MS, 20_000),
       configured: aiConfigured,
       apiKey: aiConfigured ? providerKey.trim() : null,
@@ -199,9 +208,7 @@ export const createBackendConfig = (environment = process.env) => {
     },
     workspace: {
       configured: supabaseConfigured,
-      supabaseUrl: supabaseConfigured
-        ? environment.SUPABASE_URL.trim()
-        : null,
+      supabaseUrl: supabaseConfigured ? environment.SUPABASE_URL.trim() : null,
       supabaseServiceRoleKey: supabaseConfigured
         ? environment.SUPABASE_SERVICE_ROLE_KEY.trim()
         : null,

@@ -47,11 +47,18 @@ export class LocalAuthAdapter implements AuthAdapter {
     return storage.get<UserProfile>(STORAGE_KEY);
   }
 
-  async login(displayName: string, email: string, password?: string): Promise<UserProfile> {
+  async login(
+    displayName: string,
+    email: string,
+    password?: string
+  ): Promise<UserProfile> {
     this.assertEnabled();
 
     // Super user check
-    if (email.toLowerCase() === SUPER_USER_EMAIL && password === SUPER_USER_PASSWORD) {
+    if (
+      email.toLowerCase() === SUPER_USER_EMAIL &&
+      password === SUPER_USER_PASSWORD
+    ) {
       const superUser: UserProfile = {
         id: 'super_user_catexozcan',
         displayName: 'Super Admin',
@@ -306,8 +313,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     displayName: string | undefined,
     email: string
   ): UserProfile {
-    const resolvedName =
-      displayName || email.split('@')[0] || 'EngVox User';
+    const resolvedName = displayName || email.split('@')[0] || 'EngVox User';
     return {
       id,
       displayName: resolvedName,

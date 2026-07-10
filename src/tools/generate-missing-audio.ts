@@ -8,7 +8,10 @@ import ffmpegPath from 'ffmpeg-static';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataFile = path.resolve(__dirname, '../../src/features/listening/listening.data.ts');
+const dataFile = path.resolve(
+  __dirname,
+  '../../src/features/listening/listening.data.ts'
+);
 const audioDir = path.resolve(__dirname, '../../public/audio');
 
 async function ensureDir(dir: string) {
@@ -30,9 +33,13 @@ async function generateMissingAudio() {
       console.log(`Exists: ${filename}`);
       continue;
     }
-    const placeholder = 'This is a placeholder audio for missing listening mission.';
+    const placeholder =
+      'This is a placeholder audio for missing listening mission.';
     try {
-      const ttsUrl = await getAudioUrl(placeholder, { lang: 'en', slow: false });
+      const ttsUrl = await getAudioUrl(placeholder, {
+        lang: 'en',
+        slow: false,
+      });
       const response = await fetch(ttsUrl);
       const buffer = Buffer.from(await response.arrayBuffer());
       const tempMp3 = path.join(audioDir, `${filename}.mp3`);

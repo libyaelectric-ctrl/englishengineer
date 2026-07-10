@@ -62,7 +62,10 @@ const SpeakingPage = () => {
     resetCurrentMission,
   } = useSpeakingStore();
   const subscription = useBillingStore((state) => state.subscription);
-  const hasMaxAccess = canAccessFeature(subscription, 'realVoiceSpeaking').allowed;
+  const hasMaxAccess = canAccessFeature(
+    subscription,
+    'realVoiceSpeaking'
+  ).allowed;
 
   // Voice minute wallet — computed from this month's speaking history
   const voiceMinutesUsedThisMonth = (() => {
@@ -90,12 +93,17 @@ const SpeakingPage = () => {
     (voiceMinutesUsedThisMonth / maxVoiceMinutes) * 100
   );
 
-
-  const [responseMode, setResponseMode] = useState<'written' | 'voice'>('written');
+  const [responseMode, setResponseMode] = useState<'written' | 'voice'>(
+    'written'
+  );
   const [isRecording, setIsRecording] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
-  const [pronunciationScore, setPronunciationScore] = useState<number | null>(null);
-  const [phonemeFeedback, setPhonemeFeedback] = useState<Array<{ word: string; score: number; phonemes: string }>>([]);
+  const [pronunciationScore, setPronunciationScore] = useState<number | null>(
+    null
+  );
+  const [phonemeFeedback, setPhonemeFeedback] = useState<
+    Array<{ word: string; score: number; phonemes: string }>
+  >([]);
 
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
@@ -136,25 +144,30 @@ const SpeakingPage = () => {
     setRecordedAudio(null);
     setPronunciationScore(null);
     setPhonemeFeedback([]);
-    
+
     // Simulate recording duration
     setTimeout(() => {
       setIsRecording(false);
       setRecordedAudio('simulated_blob_url');
-      
+
       // Auto transcribe based on mission guidelines
       if (activeMission) {
         const textResponse = `We need to check the ${activeMission.expectedKeywords[0] || 'commissioning schedule'} and verify the compliance parameters.`;
         setTypedTranscript(textResponse);
-        
+
         // Generate simulated pronunciation metrics
         setPronunciationScore(92);
         setPhonemeFeedback(
-          (activeMission.expectedKeywords.length > 0 ? activeMission.expectedKeywords : ['compliance', 'schedule', 'system']).slice(0, 3).map((kw) => ({
-            word: kw,
-            score: Math.floor(Math.random() * 15) + 85,
-            phonemes: `/${kw.toLowerCase().replace(/a/g, 'æ').replace(/e/g, 'ɛ')}/`
-          }))
+          (activeMission.expectedKeywords.length > 0
+            ? activeMission.expectedKeywords
+            : ['compliance', 'schedule', 'system']
+          )
+            .slice(0, 3)
+            .map((kw) => ({
+              word: kw,
+              score: Math.floor(Math.random() * 15) + 85,
+              phonemes: `/${kw.toLowerCase().replace(/a/g, 'æ').replace(/e/g, 'ɛ')}/`,
+            }))
         );
       }
     }, 4000);
@@ -186,7 +199,11 @@ const SpeakingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Speaking</h1></div></div>
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Speaking</h1>
+        </div>
+      </div>
 
       <SkillEntryBrief skill="speaking" />
 
@@ -196,19 +213,29 @@ const SpeakingPage = () => {
           <Mic className="h-4 w-4 shrink-0 text-primary" />
           <div className="flex-1 min-w-0">
             <div className="flex justify-between text-xs mb-1">
-              <span className="font-medium text-foreground">Monthly Voice Minutes</span>
-              <span className={`font-mono font-medium ${
-                voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'text-rose-600' :
-                voiceMinutesUsedThisMonth >= 96 ? 'text-warning' : 'text-primary'
-              }`}>
+              <span className="font-medium text-foreground">
+                Monthly Voice Minutes
+              </span>
+              <span
+                className={`font-mono font-medium ${
+                  voiceMinutesUsedThisMonth >= maxVoiceMinutes
+                    ? 'text-rose-600'
+                    : voiceMinutesUsedThisMonth >= 96
+                      ? 'text-warning'
+                      : 'text-primary'
+                }`}
+              >
                 {voiceMinutesUsedThisMonth} / {maxVoiceMinutes} min
               </span>
             </div>
             <ProgressBar
               value={walletPercent}
               color={
-                voiceMinutesUsedThisMonth >= maxVoiceMinutes ? 'rose' :
-                voiceMinutesUsedThisMonth >= 96 ? 'warning' : 'primary'
+                voiceMinutesUsedThisMonth >= maxVoiceMinutes
+                  ? 'rose'
+                  : voiceMinutesUsedThisMonth >= 96
+                    ? 'warning'
+                    : 'primary'
               }
             />
             <p className="mt-1 text-[10px] text-muted-copy">
@@ -394,8 +421,8 @@ const SpeakingPage = () => {
                     Written Roleplay response
                   </label>
                   <p className="mt-1 text-xs leading-5 text-muted-copy">
-                    This is text-based communication practice, not real speech or
-                    pronunciation scoring.
+                    This is text-based communication practice, not real speech
+                    or pronunciation scoring.
                   </p>
                   <textarea
                     id="written-roleplay-response"
@@ -434,13 +461,20 @@ const SpeakingPage = () => {
                         <Lock className="h-5 w-5" />
                       </div>
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-foreground">Voice Practice & Pronunciation Rating is Locked</p>
+                        <p className="text-sm font-medium text-foreground">
+                          Voice Practice & Pronunciation Rating is Locked
+                        </p>
                         <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
-                          Real Voice Speaking, pronunciation analysis, and voice simulator workflows are exclusive features of the Max Plan ($59/mo). Upgrade today to practice speech dynamically.
+                          Real Voice Speaking, pronunciation analysis, and voice
+                          simulator workflows are exclusive features of the Max
+                          Plan ($59/mo). Upgrade today to practice speech
+                          dynamically.
                         </p>
                       </div>
                       <Button
-                        onClick={() => (window.location.href = '/checkout?plan=max')}
+                        onClick={() =>
+                          (window.location.href = '/checkout?plan=max')
+                        }
                         className="bg-warning hover:bg-warning/90 text-white font-medium"
                       >
                         Upgrade to Max Plan
@@ -465,14 +499,23 @@ const SpeakingPage = () => {
                         ) : recordedAudio ? (
                           <div className="flex flex-col items-center gap-2">
                             <Volume2 className="h-8 w-8 text-primary animate-pulse" />
-                            <p className="text-xs font-medium text-foreground">Audio recording captured successfully</p>
-                            <span className="text-[10px] text-muted-copy">Click Reset response to re-record</span>
+                            <p className="text-xs font-medium text-foreground">
+                              Audio recording captured successfully
+                            </p>
+                            <span className="text-[10px] text-muted-copy">
+                              Click Reset response to re-record
+                            </span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center gap-2 text-center">
                             <Mic className="h-8 w-8 text-muted-copy" />
-                            <p className="text-xs font-medium text-foreground">Microphone is configured and ready</p>
-                            <p className="text-[10px] text-muted-copy">Click Start Speaking to record your roleplay response</p>
+                            <p className="text-xs font-medium text-foreground">
+                              Microphone is configured and ready
+                            </p>
+                            <p className="text-[10px] text-muted-copy">
+                              Click Start Speaking to record your roleplay
+                              response
+                            </p>
                           </div>
                         )}
                       </div>
@@ -524,8 +567,12 @@ const SpeakingPage = () => {
                       {/* Spoken loopback transcript */}
                       {recordedAudio && typedTranscript && (
                         <div className="rounded-lg bg-surface border border-border-soft p-3 space-y-1">
-                          <p className="text-[10px] font-medium text-foreground uppercase tracking-wider">Spoken Loopback Transcript</p>
-                          <p className="text-xs text-foreground italic leading-relaxed">"{typedTranscript}"</p>
+                          <p className="text-[10px] font-medium text-foreground uppercase tracking-wider">
+                            Spoken Loopback Transcript
+                          </p>
+                          <p className="text-xs text-foreground italic leading-relaxed">
+                            "{typedTranscript}"
+                          </p>
                         </div>
                       )}
 
@@ -533,20 +580,33 @@ const SpeakingPage = () => {
                       {pronunciationScore && (
                         <div className="rounded-xl border border-success/20 bg-success/5 p-4 space-y-3">
                           <div className="flex items-center justify-between">
-                            <p className="text-xs font-medium text-foreground">Pronunciation Performance</p>
+                            <p className="text-xs font-medium text-foreground">
+                              Pronunciation Performance
+                            </p>
                             <span className="rounded-full bg-success/10 text-success text-[10px] font-medium px-2 py-0.5">
                               Score: {pronunciationScore}/100
                             </span>
                           </div>
-                          
+
                           <div className="space-y-1.5">
-                            <p className="text-[10px] font-medium text-muted-copy">Phoneme Analysis:</p>
+                            <p className="text-[10px] font-medium text-muted-copy">
+                              Phoneme Analysis:
+                            </p>
                             <div className="flex flex-wrap gap-2">
                               {phonemeFeedback.map((item, idx) => (
-                                <div key={idx} className="rounded bg-surface border border-border-soft p-2 text-center min-w-16">
-                                  <p className="text-xs font-medium text-foreground">{item.word}</p>
-                                  <p className="text-[10px] font-mono text-muted-copy">{item.phonemes}</p>
-                                  <span className={`text-[9px] font-medium ${item.score >= 90 ? 'text-success' : 'text-warning'}`}>
+                                <div
+                                  key={idx}
+                                  className="rounded bg-surface border border-border-soft p-2 text-center min-w-16"
+                                >
+                                  <p className="text-xs font-medium text-foreground">
+                                    {item.word}
+                                  </p>
+                                  <p className="text-[10px] font-mono text-muted-copy">
+                                    {item.phonemes}
+                                  </p>
+                                  <span
+                                    className={`text-[9px] font-medium ${item.score >= 90 ? 'text-success' : 'text-warning'}`}
+                                  >
                                     {item.score}%
                                   </span>
                                 </div>

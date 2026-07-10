@@ -21,13 +21,25 @@ describe('workspace repository', () => {
   });
 
   it('has getWorkspaces method', () => {
-    const config = { workspace: { configured: true, supabaseUrl: 'https://test.supabase.co', supabaseServiceRoleKey: 'test-key' } };
+    const config = {
+      workspace: {
+        configured: true,
+        supabaseUrl: 'https://test.supabase.co',
+        supabaseServiceRoleKey: 'test-key',
+      },
+    };
     const repo = createWorkspaceRepository(config);
     assert.equal(typeof repo.getWorkspaces, 'function');
   });
 
   it('has createWorkspace method', () => {
-    const config = { workspace: { configured: true, supabaseUrl: 'https://test.supabase.co', supabaseServiceRoleKey: 'test-key' } };
+    const config = {
+      workspace: {
+        configured: true,
+        supabaseUrl: 'https://test.supabase.co',
+        supabaseServiceRoleKey: 'test-key',
+      },
+    };
     const repo = createWorkspaceRepository(config);
     assert.equal(typeof repo.createWorkspace, 'function');
   });

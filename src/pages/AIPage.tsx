@@ -33,7 +33,12 @@ import {
   useAIStore,
 } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
-import { canUseAICoach, useBillingStore, canAccessFeature } from '@/features/billing';
+import {
+  canUseAICoach,
+  useBillingStore,
+  canAccessFeature,
+  BillingFeature,
+} from '@/features/billing';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
 import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 import { WorkspaceMemoryPanel } from '@/features/billing/WorkspaceMemoryPanel';
@@ -99,9 +104,11 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   };
 
   const modeToCheck = modes.find((m) => m.id === selectedModeId);
-  const requiredFeature = modeToCheck ? MODE_REQUIRED_FEATURES[modeToCheck.id] : null;
+  const requiredFeature = modeToCheck
+    ? MODE_REQUIRED_FEATURES[modeToCheck.id]
+    : null;
   const isModeLocked = requiredFeature
-    ? !canAccessFeature(subscription, requiredFeature as any).allowed
+    ? !canAccessFeature(subscription, requiredFeature as BillingFeature).allowed
     : false;
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -342,8 +349,18 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                         {mode.name}
                         {(() => {
                           const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
-                          const isLocked = reqFeat ? !canAccessFeature(subscription, reqFeat as any).allowed : false;
-                          return isLocked ? <Lock className="h-3.5 w-3.5 text-muted-copy shrink-0" aria-hidden="true" /> : null;
+                          const isLocked = reqFeat
+                            ? !canAccessFeature(
+                                subscription,
+                                reqFeat as BillingFeature
+                              ).allowed
+                            : false;
+                          return isLocked ? (
+                            <Lock
+                              className="h-3.5 w-3.5 text-muted-copy shrink-0"
+                              aria-hidden="true"
+                            />
+                          ) : null;
                         })()}
                       </h4>
                     </div>
@@ -428,7 +445,8 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                       </div>
                       <div className="space-y-2">
                         <h4 className="text-sm font-medium text-foreground">
-                          {selectedMode?.name} is a {isProLocked ? 'Pro' : 'Project'} Plan Feature
+                          {selectedMode?.name} is a{' '}
+                          {isProLocked ? 'Pro' : 'Project'} Plan Feature
                         </h4>
                         <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
                           {isProLocked
@@ -476,8 +494,8 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                         />
                         <span className="text-xs font-mono text-muted-copy bg-border-soft/50 px-2.5 py-1 rounded-full">
                           {uploadedDocsCount} /{' '}
-                          {docLimit === 'unlimited' ? '∞' : docLimit} uploads used
-                          this month
+                          {docLimit === 'unlimited' ? '∞' : docLimit} uploads
+                          used this month
                         </span>
                       </div>
                       {uploadError && (
@@ -810,7 +828,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 </div>
               ))}
               {sessions.length === 0 && (
-                <p className="text-xs text-muted-copy">No coach sessions yet.</p>
+                <p className="text-xs text-muted-copy">
+                  No coach sessions yet.
+                </p>
               )}
             </div>
           </SectionCard>

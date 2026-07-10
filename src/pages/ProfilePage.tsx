@@ -28,6 +28,8 @@ import {
   LearningProfileRepository,
   SKILL_NAMES,
   useLearningCockpit,
+  ProfessionId,
+  UserLearningProfile,
 } from '@/features/profile';
 import {
   LEARNING_GOALS,
@@ -117,12 +119,19 @@ const ProfilePage = () => {
     const totalSeconds = speakingHistory
       .filter((entry) => new Date(entry.timestamp) >= monthStart)
       .reduce(
-        (sum, entry) => sum + (entry.evaluation?.wordsPerMinute ? Math.round((entry.evaluation.wordCount / Math.max(entry.evaluation.wordsPerMinute, 1)) * 60) : 0),
+        (sum, entry) =>
+          sum +
+          (entry.evaluation?.wordsPerMinute
+            ? Math.round(
+                (entry.evaluation.wordCount /
+                  Math.max(entry.evaluation.wordsPerMinute, 1)) *
+                  60
+              )
+            : 0),
         0
       );
     return Math.round(totalSeconds / 60);
   })();
-
 
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
 
@@ -135,10 +144,10 @@ const ProfilePage = () => {
   const [editSubdomain, setEditSubdomain] = useState('');
   const [editIndustry, setEditIndustry] = useState('');
   const [editLang, setEditLang] = useState<'en' | 'tr'>('en');
-  const [editGoals, setEditGoals] = useState<any[]>([]);
+  const [editGoals, setEditGoals] = useState<string[]>([]);
 
   // Learning preferences states
-  const [prefGoals, setPrefGoals] = useState<any[]>([]);
+  const [prefGoals, setPrefGoals] = useState<string[]>([]);
   const [prefMinutes, setPrefMinutes] = useState(15);
   const [prefTasks, setPrefTasks] = useState(2);
   const [prefMissedDays, setPrefMissedDays] = useState(0);
@@ -146,15 +155,12 @@ const ProfilePage = () => {
   const [prefCareerGoal, setPrefCareerGoal] = useState('');
   const [preferencesSaved, setPreferencesSaved] = useState(false);
 
-
-
   const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
 
   useEffect(() => {
     initializeBilling(currentUser?.id || null);
     initializeSpeaking();
   }, [currentUser?.id, initializeBilling, initializeSpeaking]);
-
 
   useEffect(() => {
     const billingStatus = new URLSearchParams(location.search).get('billing');
@@ -214,12 +220,18 @@ const ProfilePage = () => {
       LearningProfileRepository.updatePreferences(
         currentUser?.id ?? 'local-user',
         {
-          professionId: (editProfession as any) || null,
-          professionalTrack: editTrack as any,
-          electricalSubdomain: editSubdomain as any,
-          industryId: (editIndustry as any) || null,
+          professionId: (editProfession as ProfessionId) || null,
+          professionalTrack:
+            (editTrack as UserLearningProfile['professionalTrack']) ||
+            undefined,
+          electricalSubdomain:
+            (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
+            undefined,
+          industryId:
+            (editIndustry as UserLearningProfile['industryId']) || null,
           interfaceLanguage: editLang,
-          communicationGoals: editGoals,
+          communicationGoals:
+            editGoals as UserLearningProfile['communicationGoals'],
         }
       );
 
@@ -245,10 +257,12 @@ const ProfilePage = () => {
       LearningProfileRepository.updatePreferences(
         currentUser?.id ?? 'local-user',
         {
-          goals: prefGoals,
+          goals: prefGoals as unknown as UserLearningProfile['goals'],
           dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
           weeklyTolerance: { allowedMissedDays: prefMissedDays },
-          experienceLevel: prefExpLevel as any,
+          experienceLevel:
+            (prefExpLevel as UserLearningProfile['experienceLevel']) ||
+            undefined,
           careerGoal: prefCareerGoal,
         }
       );
@@ -263,7 +277,9 @@ const ProfilePage = () => {
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
+      setError(
+        'Demo mode: Billing is available after connecting Supabase and Stripe.'
+      );
       return;
     }
     try {
@@ -274,7 +290,10 @@ const ProfilePage = () => {
       await startCheckout(currentUser.id, currentUser.email, 'pro');
     } catch (checkoutError: unknown) {
       setError(
-        getErrorMessage(checkoutError, 'Billing is not available in demo mode. Connect Supabase + Stripe to enable payments.')
+        getErrorMessage(
+          checkoutError,
+          'Billing is not available in demo mode. Connect Supabase + Stripe to enable payments.'
+        )
       );
     }
   };
@@ -282,7 +301,9 @@ const ProfilePage = () => {
   const handleManageSubscription = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo mode: Subscription management available after connecting Supabase + Stripe.');
+      setError(
+        'Demo mode: Subscription management available after connecting Supabase + Stripe.'
+      );
       return;
     }
     try {
@@ -290,7 +311,10 @@ const ProfilePage = () => {
       await openCustomerPortal(currentUser.id);
     } catch (portalError: unknown) {
       setError(
-        getErrorMessage(portalError, 'Billing portal is not available in demo mode.')
+        getErrorMessage(
+          portalError,
+          'Billing portal is not available in demo mode.'
+        )
       );
     }
   };
@@ -1188,46 +1212,46 @@ const ProfilePage = () => {
                   </div>
                 </div>
 
-                  {/* Limit 5: Voice Minute Wallet (Max+) */}
-                  {(subscription.planId === 'max' ||
-                    subscription.planId === 'exec' ||
-                    subscription.planId === 'private') && (
-                    <div className="col-span-full space-y-1.5 mt-1">
-                      <div className="flex justify-between text-xs">
-                        <span className="font-medium text-foreground flex items-center gap-1.5">
-                          🎙️ Monthly Voice Minutes
-                        </span>
-                        <span className="font-medium text-foreground">
-                          {subscription.planId === 'max'
-                            ? `${voiceMinutesUsed} / 120 min`
-                            : 'Unlimited'}
-                        </span>
-                      </div>
-                      <ProgressBar
-                        value={
-                          subscription.planId === 'max'
-                            ? Math.min(100, (voiceMinutesUsed / 120) * 100)
-                            : 100
-                        }
-                        color={
-                          subscription.planId !== 'max'
-                            ? 'cyan'
-                            : voiceMinutesUsed >= 108
-                              ? 'rose'
-                              : voiceMinutesUsed >= 84
-                                ? 'amber'
-                                : 'cyan'
-                        }
-                      />
-                      <p className="text-[10px] text-muted-copy">
+                {/* Limit 5: Voice Minute Wallet (Max+) */}
+                {(subscription.planId === 'max' ||
+                  subscription.planId === 'exec' ||
+                  subscription.planId === 'private') && (
+                  <div className="col-span-full space-y-1.5 mt-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="font-medium text-foreground flex items-center gap-1.5">
+                        🎙️ Monthly Voice Minutes
+                      </span>
+                      <span className="font-medium text-foreground">
                         {subscription.planId === 'max'
-                          ? voiceMinutesUsed >= 120
-                            ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
-                            : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
-                          : '✓ Unlimited voice minutes included in your plan.'}
-                      </p>
+                          ? `${voiceMinutesUsed} / 120 min`
+                          : 'Unlimited'}
+                      </span>
                     </div>
-                  )}
+                    <ProgressBar
+                      value={
+                        subscription.planId === 'max'
+                          ? Math.min(100, (voiceMinutesUsed / 120) * 100)
+                          : 100
+                      }
+                      color={
+                        subscription.planId !== 'max'
+                          ? 'cyan'
+                          : voiceMinutesUsed >= 108
+                            ? 'rose'
+                            : voiceMinutesUsed >= 84
+                              ? 'amber'
+                              : 'cyan'
+                      }
+                    />
+                    <p className="text-[10px] text-muted-copy">
+                      {subscription.planId === 'max'
+                        ? voiceMinutesUsed >= 120
+                          ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
+                          : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
+                        : '✓ Unlimited voice minutes included in your plan.'}
+                    </p>
+                  </div>
+                )}
 
                 {/* What paying customers get block */}
                 <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
@@ -1237,8 +1261,8 @@ const ProfilePage = () => {
                   </h5>
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-copy">
                     <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      Spaced repetition full repeats
+                      <span className="text-success font-medium">✓</span> Spaced
+                      repetition full repeats
                     </li>
                     <li className="flex items-center gap-1.5">
                       <span className="text-success font-medium">✓</span>{' '}
@@ -1249,16 +1273,16 @@ const ProfilePage = () => {
                       Advanced Mistake Log analytics
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      Client / consultant roleplay scenarios
+                      <span className="text-success font-medium">✓</span> Client
+                      / consultant roleplay scenarios
                     </li>
                     <li className="flex items-center gap-1.5">
                       <span className="text-success font-medium">✓</span>{' '}
                       12-month progress history storage
                     </li>
                     <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      Direct Stripe billing portal access
+                      <span className="text-success font-medium">✓</span> Direct
+                      Stripe billing portal access
                     </li>
                   </ul>
                   {subscription.planId !== 'private' && (

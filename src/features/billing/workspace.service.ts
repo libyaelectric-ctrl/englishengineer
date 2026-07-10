@@ -39,7 +39,9 @@ export interface WorkspaceApiResponse<T = Workspace | Workspace[] | null> {
 /**
  * Get all workspaces for the current user
  */
-export async function fetchWorkspaces(): Promise<WorkspaceApiResponse<Workspace[]>> {
+export async function fetchWorkspaces(): Promise<
+  WorkspaceApiResponse<Workspace[]>
+> {
   const apiBase = API_BASE();
   if (!apiBase) {
     return { success: false, error: 'Backend not configured' };
@@ -53,7 +55,7 @@ export async function fetchWorkspaces(): Promise<WorkspaceApiResponse<Workspace[
   try {
     const response = await fetch(`${apiBase}/api/workspaces`, {
       headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
+        Authorization: `Bearer ${currentUser.id}`,
         'Content-Type': 'application/json',
       },
     });
@@ -62,14 +64,20 @@ export async function fetchWorkspaces(): Promise<WorkspaceApiResponse<Workspace[
     return data;
   } catch (error) {
     logger.e('Error fetching workspaces:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch workspaces' };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to fetch workspaces',
+    };
   }
 }
 
 /**
  * Get a single workspace by ID
  */
-export async function fetchWorkspace(workspaceId: string): Promise<WorkspaceApiResponse<Workspace>> {
+export async function fetchWorkspace(
+  workspaceId: string
+): Promise<WorkspaceApiResponse<Workspace>> {
   const apiBase = API_BASE();
   if (!apiBase) {
     return { success: false, error: 'Backend not configured' };
@@ -83,7 +91,7 @@ export async function fetchWorkspace(workspaceId: string): Promise<WorkspaceApiR
   try {
     const response = await fetch(`${apiBase}/api/workspaces/${workspaceId}`, {
       headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
+        Authorization: `Bearer ${currentUser.id}`,
         'Content-Type': 'application/json',
       },
     });
@@ -92,14 +100,21 @@ export async function fetchWorkspace(workspaceId: string): Promise<WorkspaceApiR
     return data;
   } catch (error) {
     logger.e('Error fetching workspace:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to fetch workspace' };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to fetch workspace',
+    };
   }
 }
 
 /**
  * Create a new workspace
  */
-export async function createWorkspace(name: string, planId: string): Promise<WorkspaceApiResponse<Workspace>> {
+export async function createWorkspace(
+  name: string,
+  planId: string
+): Promise<WorkspaceApiResponse<Workspace>> {
   const apiBase = API_BASE();
   if (!apiBase) {
     return { success: false, error: 'Backend not configured' };
@@ -114,7 +129,7 @@ export async function createWorkspace(name: string, planId: string): Promise<Wor
     const response = await fetch(`${apiBase}/api/workspaces`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
+        Authorization: `Bearer ${currentUser.id}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ name, planId }),
@@ -124,7 +139,11 @@ export async function createWorkspace(name: string, planId: string): Promise<Wor
     return data;
   } catch (error) {
     logger.e('Error creating workspace:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to create workspace' };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to create workspace',
+    };
   }
 }
 
@@ -147,27 +166,38 @@ export async function updateWorkspaceMemory(
   }
 
   try {
-    const response = await fetch(`${apiBase}/api/workspaces/${workspaceId}/memory`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ key, value }),
-    });
+    const response = await fetch(
+      `${apiBase}/api/workspaces/${workspaceId}/memory`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${currentUser.id}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ key, value }),
+      }
+    );
 
     const data = await response.json();
     return data;
   } catch (error) {
     logger.e('Error updating workspace memory:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to update workspace memory' };
+    return {
+      success: false,
+      error:
+        error instanceof Error
+          ? error.message
+          : 'Failed to update workspace memory',
+    };
   }
 }
 
 /**
  * Delete a workspace
  */
-export async function deleteWorkspace(workspaceId: string): Promise<WorkspaceApiResponse> {
+export async function deleteWorkspace(
+  workspaceId: string
+): Promise<WorkspaceApiResponse> {
   const apiBase = API_BASE();
   if (!apiBase) {
     return { success: false, error: 'Backend not configured' };
@@ -182,7 +212,7 @@ export async function deleteWorkspace(workspaceId: string): Promise<WorkspaceApi
     const response = await fetch(`${apiBase}/api/workspaces/${workspaceId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
+        Authorization: `Bearer ${currentUser.id}`,
         'Content-Type': 'application/json',
       },
     });
@@ -191,7 +221,11 @@ export async function deleteWorkspace(workspaceId: string): Promise<WorkspaceApi
     return data;
   } catch (error) {
     logger.e('Error deleting workspace:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to delete workspace' };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to delete workspace',
+    };
   }
 }
 
@@ -214,20 +248,26 @@ export async function addDocumentToWorkspace(
   }
 
   try {
-    const response = await fetch(`${apiBase}/api/workspaces/${workspaceId}/documents`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ docName, docContent }),
-    });
+    const response = await fetch(
+      `${apiBase}/api/workspaces/${workspaceId}/documents`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${currentUser.id}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ docName, docContent }),
+      }
+    );
 
     const data = await response.json();
     return data;
   } catch (error) {
     logger.e('Error adding document to workspace:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to add document' };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to add document',
+    };
   }
 }
 
@@ -249,18 +289,25 @@ export async function deleteDocumentFromWorkspace(
   }
 
   try {
-    const response = await fetch(`${apiBase}/api/workspaces/${workspaceId}/documents/${docId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${currentUser.id}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      `${apiBase}/api/workspaces/${workspaceId}/documents/${docId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${currentUser.id}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     const data = await response.json();
     return data;
   } catch (error) {
     logger.e('Error deleting document from workspace:', error);
-    return { success: false, error: error instanceof Error ? error.message : 'Failed to delete document' };
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : 'Failed to delete document',
+    };
   }
 }

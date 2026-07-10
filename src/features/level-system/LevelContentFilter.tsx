@@ -88,7 +88,9 @@ export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
 
 export const EmptyLevelState = ({ skill }: { skill: string }) => (
   <div className="rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-foreground">
-    <p className="font-semibold text-foreground">No current-level content yet</p>
+    <p className="font-semibold text-foreground">
+      No current-level content yet
+    </p>
     <p className="mt-1">
       No {skill} content is available for this filter. Choose Review Previous,
       Preview Next, or All Levels intentionally.

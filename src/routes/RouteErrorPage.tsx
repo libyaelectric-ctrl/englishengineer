@@ -2,7 +2,7 @@ import { isRouteErrorResponse, Link, useRouteError } from 'react-router-dom';
 
 export const RouteErrorPage = () => {
   const error = useRouteError();
-  
+
   const message = isRouteErrorResponse(error)
     ? `${error.status} ${error.statusText}`
     : error instanceof Error

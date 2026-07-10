@@ -10,7 +10,7 @@ vi.mock('@/features/auth', () => ({
 }));
 
 vi.mock('@/features/billing', async (importOriginal) => {
-  const original = (await importOriginal()) as any;
+  const original = (await importOriginal()) as Record<string, unknown>;
   return {
     ...original,
     useBillingStore: vi.fn(),
@@ -18,7 +18,7 @@ vi.mock('@/features/billing', async (importOriginal) => {
 });
 
 vi.mock('@/features/billing/billing.helpers', async (importOriginal) => {
-  const actual = (await importOriginal()) as any;
+  const actual = (await importOriginal()) as Record<string, unknown>;
   return {
     ...actual,
     getBillingApiUrl: () => 'https://billing.EngVox.test',
@@ -34,13 +34,13 @@ describe('PricingPage', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
       subscription: { planId: 'free', status: 'none' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     render(
       <MemoryRouter>
@@ -58,13 +58,13 @@ describe('PricingPage', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
       subscription: { planId: 'free', status: 'none' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     render(
       <MemoryRouter>
@@ -81,19 +81,19 @@ describe('PricingPage', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
       subscription: { planId: 'free', status: 'none' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return success health check
     const fetchSpy = vi.spyOn(global, 'fetch').mockResolvedValue({
       ok: true,
       json: () => Promise.resolve({ stripeConfigured: true }),
-    } as any);
+    } as unknown as Response);
 
     render(
       <MemoryRouter>
@@ -102,9 +102,7 @@ describe('PricingPage', () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.queryByText(/Billing service is unavailable/i)
-      ).toBeNull();
+      expect(screen.queryByText(/Billing service is unavailable/i)).toBeNull();
       expect(screen.queryByText(/Billing service is not verified/i)).toBeNull();
     });
 
@@ -115,13 +113,13 @@ describe('PricingPage', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
       subscription: { planId: 'free', status: 'none' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
     const fetchSpy = vi
@@ -135,9 +133,7 @@ describe('PricingPage', () => {
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Billing service is unavailable/i)
-      ).toBeVisible();
+      expect(screen.getByText(/Billing service is unavailable/i)).toBeVisible();
     });
 
     fetchSpy.mockRestore();
@@ -147,13 +143,13 @@ describe('PricingPage', () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: { id: 'user-123', email: 'engineer@example.com' },
       initialize: vi.fn(),
-    } as any);
+    } as unknown as ReturnType<typeof useAuthStore>);
 
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
       subscription: { planId: 'pro', status: 'active' },
-    } as any);
+    } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
     const fetchSpy = vi

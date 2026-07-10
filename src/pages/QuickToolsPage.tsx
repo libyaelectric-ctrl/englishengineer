@@ -16,6 +16,7 @@ import {
   SITE_DICTIONARY,
   WorkToolsService,
   useWorkToolsStore,
+  SiteDictionaryTerm,
 } from '@/features/work-tools';
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
@@ -26,6 +27,11 @@ import { Plus, Trash2, Lock, X } from 'lucide-react';
 import { storage } from '@/shared/storage';
 
 type QuickTab = 'ai' | 'meeting' | 'dictionary';
+
+type CustomDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'> & {
+  isCustom?: boolean;
+  tags?: string[];
+};
 
 const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const {
@@ -46,10 +52,13 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const [copied, setCopied] = useState<string | null>(null);
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
+  const hasProjectAccess = canAccessFeature(
+    subscription,
+    'projectWorkspace'
+  ).allowed;
 
-  const [customTerms, setCustomTerms] = useState<any[]>(() => {
-    return storage.get<any[]>('custom_dictionary') ?? [];
+  const [customTerms, setCustomTerms] = useState<CustomDictionaryTerm[]>(() => {
+    return storage.get<CustomDictionaryTerm[]>('custom_dictionary') ?? [];
   });
 
   const [isAddingTerm, setIsAddingTerm] = useState(false);
@@ -64,7 +73,10 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
 
   const filteredTerms = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const allTerms = [...customTerms, ...SITE_DICTIONARY];
+    const allTerms: CustomDictionaryTerm[] = [
+      ...customTerms,
+      ...SITE_DICTIONARY,
+    ];
     return allTerms.filter((item) =>
       `${item.term} ${item.turkishMeaning} ${item.category}`
         .toLowerCase()
@@ -84,10 +96,15 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       term: newTerm.trim(),
       turkishMeaning: newMeaning.trim(),
       category: newCategory.trim(),
-      technicalExplanation: newExplanation.trim() || 'Custom terminology added to project scope.',
+      technicalExplanation:
+        newExplanation.trim() || 'Custom terminology added to project scope.',
       siteExample: newExample.trim() || 'No example provided.',
       commonWrongUsage: newWrongUsage.trim() || 'None reported.',
-      relatedTerms: newRelated.split(',').map((s) => s.trim()).filter((s) => s) || [],
+      relatedTerms:
+        newRelated
+          .split(',')
+          .map((s) => s.trim())
+          .filter((s) => s) || [],
       isCustom: true,
     };
     const updated = [newEntry, ...customTerms];
@@ -327,7 +344,9 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               type="button"
               onClick={() => {
                 if (!hasProjectAccess) {
-                  alert("Custom terminology customization requires the Project Plan ($39/mo) or higher. Please upgrade to customize project vocabulary!");
+                  alert(
+                    'Custom terminology customization requires the Project Plan ($39/mo) or higher. Please upgrade to customize project vocabulary!'
+                  );
                   return;
                 }
                 setIsAddingTerm(true);
@@ -335,7 +354,9 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               className="gap-1.5 h-11 bg-primary text-white font-medium"
             >
               <Plus className="h-4 w-4" />
-              {!hasProjectAccess && <Lock className="h-3 w-3 text-white/85 shrink-0" />}
+              {!hasProjectAccess && (
+                <Lock className="h-3 w-3 text-white/85 shrink-0" />
+              )}
               Add Term
             </Button>
           </div>
@@ -343,12 +364,18 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           {isAddingTerm && (
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-4 animate-in fade-in duration-300">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-foreground">Add Custom Terminology</h3>
-                <button type="button" onClick={() => setIsAddingTerm(false)} className="text-muted-copy hover:text-foreground">
+                <h3 className="text-sm font-medium text-foreground">
+                  Add Custom Terminology
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsAddingTerm(false)}
+                  className="text-muted-copy hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <input
                   type="text"
@@ -411,8 +438,20 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               )}
 
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setIsAddingTerm(false)}>Cancel</Button>
-                <Button type="button" onClick={handleAddTerm} className="bg-primary text-white font-medium">Add to Scope</Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsAddingTerm(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleAddTerm}
+                  className="bg-primary text-white font-medium"
+                >
+                  Add to Scope
+                </Button>
               </div>
             </div>
           )}

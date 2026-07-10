@@ -11,16 +11,16 @@ description: >
 
 ## Proje Kimliği
 
-| Parametre | Değer |
-|---|---|
-| Proje adı | `englishengineer` |
-| Vercel org | `engineer-os` |
-| Vercel project ID | `prj_U2EwRKAY51wr59EHtQnzkCm69ahN` |
-| Frontend URL | https://englishengineer.vercel.app |
-| Backend URL | https://englishengineer-production.up.railway.app |
-| Supabase URL | https://wxabrwzitwsjtpmlvvqe.supabase.co |
-| Upstash URL | https://maximum-raven-40360.upstash.io |
-| Repo kök | `c:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0` |
+| Parametre         | Değer                                               |
+| ----------------- | --------------------------------------------------- |
+| Proje adı         | `englishengineer`                                   |
+| Vercel org        | `engineer-os`                                       |
+| Vercel project ID | `prj_U2EwRKAY51wr59EHtQnzkCm69ahN`                  |
+| Frontend URL      | https://englishengineer.vercel.app                  |
+| Backend URL       | https://englishengineer-production.up.railway.app   |
+| Supabase URL      | https://wxabrwzitwsjtpmlvvqe.supabase.co            |
+| Upstash URL       | https://maximum-raven-40360.upstash.io              |
+| Repo kök          | `c:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0` |
 
 ## Stack
 
@@ -34,16 +34,16 @@ description: >
 
 ## Kritik Dosyalar
 
-| Dosya | Amaç |
-|---|---|
-| `backend/.env` | Backend production secrets |
-| `.env .vercel` | Vercel env önizleme |
-| `.env.vercel.production` | Vercel production env tam liste |
-| `vercel.json` | Vercel SPA routing + backend rewrites |
-| `PRC_Kademe_8_Live_Operator_Checklist.md` | Deploy adımları tam kılavuzu |
-| `DEPLOY_READINESS.md` | Deploy hazırlık raporu |
-| `scripts/prc-kademe-8-live-verify.mjs` | Otomatik doğrulama scripti |
-| `src/tools/generate-missing-audio.ts` | Eksik audio üretim scripti |
+| Dosya                                     | Amaç                                  |
+| ----------------------------------------- | ------------------------------------- |
+| `backend/.env`                            | Backend production secrets            |
+| `.env .vercel`                            | Vercel env önizleme                   |
+| `.env.vercel.production`                  | Vercel production env tam liste       |
+| `vercel.json`                             | Vercel SPA routing + backend rewrites |
+| `PRC_Kademe_8_Live_Operator_Checklist.md` | Deploy adımları tam kılavuzu          |
+| `DEPLOY_READINESS.md`                     | Deploy hazırlık raporu                |
+| `scripts/prc-kademe-8-live-verify.mjs`    | Otomatik doğrulama scripti            |
+| `src/tools/generate-missing-audio.ts`     | Eksik audio üretim scripti            |
 
 ## Backend ENV Değişkenleri (Railway'de Ayarlanacak)
 
@@ -128,18 +128,18 @@ Invoke-WebRequest -Uri "https://wxabrwzitwsjtpmlvvqe.supabase.co/auth/v1/health"
 
 ## Mevcut Puan Durumu (2026-07-05)
 
-| Alan | Puan |
-|---|---|
-| Mimari & Kod | 88/100 |
-| UI/UX | 82/100 |
-| İçerik Kalitesi | 78/100 |
-| Listening Engine | 75/100 ✅ düzeltildi |
-| Auth/Supabase | 70/100 ✅ canlı |
-| Test Coverage | 60/100 |
-| Billing/Stripe | 40/100 ⚠️ key eksik |
-| AI Copilot | 35/100 ⚠️ bakiye yükle |
-| Deployment | 70/100 ✅ Vercel canlı |
-| **TOPLAM** | **~72/100** |
+| Alan             | Puan                   |
+| ---------------- | ---------------------- |
+| Mimari & Kod     | 88/100                 |
+| UI/UX            | 82/100                 |
+| İçerik Kalitesi  | 78/100                 |
+| Listening Engine | 75/100 ✅ düzeltildi   |
+| Auth/Supabase    | 70/100 ✅ canlı        |
+| Test Coverage    | 60/100                 |
+| Billing/Stripe   | 40/100 ⚠️ key eksik    |
+| AI Copilot       | 35/100 ⚠️ bakiye yükle |
+| Deployment       | 70/100 ✅ Vercel canlı |
+| **TOPLAM**       | **~72/100**            |
 
 ## Kalan Görevler
 

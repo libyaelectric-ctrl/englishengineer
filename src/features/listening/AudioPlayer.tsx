@@ -164,7 +164,15 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
         recordReplay(mission.id);
       }
     }
-  }, [isPlaying, currentTimeSeconds, isCompleted, pausePlaying, startPlaying, recordReplay, mission.id]);
+  }, [
+    isPlaying,
+    currentTimeSeconds,
+    isCompleted,
+    pausePlaying,
+    startPlaying,
+    recordReplay,
+    mission.id,
+  ]);
 
   const handleReplay = useCallback(() => {
     const audio = audioRef.current;

@@ -19,8 +19,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   free: {
     id: 'free',
     name: 'Free',
-    description:
-      'Limited EngVox access for evaluation and learning warm-up.',
+    description: 'Limited EngVox access for evaluation and learning warm-up.',
     isFutureReady: false,
     features: [
       'reading',

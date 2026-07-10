@@ -17,7 +17,14 @@ describe('learning-data helpers', () => {
     });
 
     it('returns all levels when given C2', () => {
-      expect(getLevelsThrough('C2')).toEqual(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
+      expect(getLevelsThrough('C2')).toEqual([
+        'A1',
+        'A2',
+        'B1',
+        'B2',
+        'C1',
+        'C2',
+      ]);
     });
   });
 
@@ -37,7 +44,9 @@ describe('learning-data helpers', () => {
 
   describe('includesNormalized', () => {
     it('finds case-insensitive match', () => {
-      expect(includesNormalized(['Cable', 'TRAY', 'Installation'], 'cable')).toBe(true);
+      expect(
+        includesNormalized(['Cable', 'TRAY', 'Installation'], 'cable')
+      ).toBe(true);
     });
 
     it('returns false when no match', () => {

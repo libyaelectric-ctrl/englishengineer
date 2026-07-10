@@ -180,17 +180,14 @@ export const createAIService = (config, fetchImpl = fetch) => ({
       };
     }
 
-    const text = await withTimeout(
-      (signal) => {
-        if (config.provider === 'anthropic') {
-          return callAnthropic(config, prompt, signal, fetchImpl);
-        } else if (config.provider === 'gemini') {
-          return callGemini(config, prompt, signal, fetchImpl);
-        }
-        return callOpenAI(config, prompt, signal, fetchImpl);
-      },
-      config.timeoutMs
-    );
+    const text = await withTimeout((signal) => {
+      if (config.provider === 'anthropic') {
+        return callAnthropic(config, prompt, signal, fetchImpl);
+      } else if (config.provider === 'gemini') {
+        return callGemini(config, prompt, signal, fetchImpl);
+      }
+      return callOpenAI(config, prompt, signal, fetchImpl);
+    }, config.timeoutMs);
 
     return {
       contractVersion: AI_CONTRACT_VERSION,
@@ -239,14 +236,17 @@ export const registerAIRoutes = (
           // Get user subscription details
           let subscription = null;
           if (billingRepository) {
-            subscription = await billingRepository.getSubscriptionStatus(userId);
+            subscription =
+              await billingRepository.getSubscriptionStatus(userId);
           }
 
           const planId = subscription?.planId || 'free';
 
           // Ledger check
           let count = 0;
-          const isBypassUser = userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
+          const isBypassUser =
+            userId === 'engineeros-dev-user' ||
+            userId.startsWith('demo_engineer_');
 
           if (!isBypassUser) {
             count = await ledger.countRecentRequests(userId, planId);
@@ -272,7 +272,10 @@ export const registerAIRoutes = (
           }
 
           // Complete AI request
-          const result = await aiService.complete(defaultOperation, request.body);
+          const result = await aiService.complete(
+            defaultOperation,
+            request.body
+          );
 
           // Ledger insert on success
           if (result && !result.error && !isBypassUser) {

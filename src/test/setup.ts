@@ -12,7 +12,7 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
     observe() {}
     unobserve() {}
     disconnect() {}
-  } as any;
+  } as unknown as typeof globalThis.IntersectionObserver;
 }
 
 afterEach(() => {
