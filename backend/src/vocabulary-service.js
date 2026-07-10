@@ -56,6 +56,15 @@ const translateWithMyMemory = async (config, fetchImpl, text, targetLang) => {
   return typeof payload?.responseData?.translatedText === 'string' ? { text: payload.responseData.translatedText, source: 'MyMemory fallback' } : null;
 };
 
+/**
+ * Creates an Upstash Redis-backed cache for vocabulary lookups.
+ * @param {Object} opts - Cache configuration
+ * @param {string} opts.url - Upstash Redis REST URL
+ * @param {string} opts.token - Upstash Redis auth token
+ * @param {number} [opts.timeoutMs=3000] - Request timeout in milliseconds
+ * @param {Function} [opts.fetchImpl=fetch] - Fetch implementation for testing
+ * @returns {{ get: Function, set: Function }} Cache interface with get/set methods
+ */
 export const createUpstashVocabularyCache = ({ url, token, timeoutMs = 3000, fetchImpl = fetch }) => ({
   async get(key) {
     if (!url || !token) return null;
@@ -80,6 +89,18 @@ export const createUpstashVocabularyCache = ({ url, token, timeoutMs = 3000, fet
   },
 });
 
+/**
+ * Creates a vocabulary lookup service that fetches definitions from Free Dictionary API
+ * and translates them using LibreTranslate or MyMemory fallback.
+ * @param {Object} config - Service configuration
+ * @param {number} config.timeoutMs - Request timeout in milliseconds
+ * @param {string} [config.libreTranslateUrl] - LibreTranslate API URL
+ * @param {string} [config.libreTranslateApiKey] - LibreTranslate API key
+ * @param {boolean} [config.myMemoryEnabled] - Enable MyMemory fallback translation
+ * @param {Function} [fetchImpl=fetch] - Fetch implementation for testing
+ * @param {Object} [cache=new Map()] - Cache instance (Map or Upstash cache)
+ * @returns {{ lookup: Function }} Service with lookup method
+ */
 export const createVocabularyLookupService = (config, fetchImpl = fetch, cache = new Map()) => ({
   async lookup(query) {
     const { word, targetLang } = query;
