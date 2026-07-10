@@ -124,7 +124,11 @@ const ReadingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3"><div className="flex items-center justify-between"><h1 className="text-lg font-semibold text-foreground">Reading</h1></div></div>
+        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-foreground">Reading</h1>
+          </div>
+        </div>
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -250,9 +254,13 @@ const ReadingPage = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-semibold text-foreground">Reading</h1>
-            <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">A1</span>
+            <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+              A1
+            </span>
           </div>
-          <div className="hidden text-xs text-muted-copy lg:block">{finishedCount}/{missions.length} completed</div>
+          <div className="hidden text-xs text-muted-copy lg:block">
+            {finishedCount}/{missions.length} completed
+          </div>
         </div>
       </div>
 

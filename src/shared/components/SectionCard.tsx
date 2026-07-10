@@ -31,13 +31,9 @@ export const SectionCard: React.FC<SectionCardProps> = ({
             </div>
           )}
           <div>
-            <h4 className="text-sm font-semibold text-foreground">
-              {title}
-            </h4>
+            <h4 className="text-sm font-semibold text-foreground">{title}</h4>
             {subtitle && (
-              <p className="mt-0.5 text-xs text-muted-copy">
-                {subtitle}
-              </p>
+              <p className="mt-0.5 text-xs text-muted-copy">{subtitle}</p>
             )}
           </div>
         </div>

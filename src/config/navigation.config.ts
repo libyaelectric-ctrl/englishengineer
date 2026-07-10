@@ -52,8 +52,18 @@ export const PROFILE_NAV_ITEMS = [
 export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
-  { label: 'Tools', href: null, icon: BriefcaseBusiness, children: TOOLS_NAV_ITEMS },
-  { label: 'Learning Hub', href: null, icon: Map, children: LEARNING_HUB_NAV_ITEMS },
+  {
+    label: 'Tools',
+    href: null,
+    icon: BriefcaseBusiness,
+    children: TOOLS_NAV_ITEMS,
+  },
+  {
+    label: 'Learning Hub',
+    href: null,
+    icon: Map,
+    children: LEARNING_HUB_NAV_ITEMS,
+  },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;
 

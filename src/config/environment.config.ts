@@ -73,9 +73,7 @@ const normalizeEnvironmentMode = (
   return 'local';
 };
 
-const getUnsafeFrontendEnvKeys = (
-  source: EngVoxEnv | undefined
-): string[] =>
+const getUnsafeFrontendEnvKeys = (source: EngVoxEnv | undefined): string[] =>
   Object.keys(source || {}).filter((key) =>
     /SECRET|PRIVATE|SERVICE_ROLE|STRIPE_SECRET|WEBHOOK_SECRET/i.test(key)
   );

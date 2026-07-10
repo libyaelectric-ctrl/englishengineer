@@ -378,7 +378,9 @@ const OnboardingPage = () => {
 
           {step === 'goals' && (
             <section>
-              <h2 className="text-xl font-medium">Choose communication goals</h2>
+              <h2 className="text-xl font-medium">
+                Choose communication goals
+              </h2>
               <p className="mt-2 text-sm text-muted-copy">
                 Select the situations and skills that matter most now.
               </p>

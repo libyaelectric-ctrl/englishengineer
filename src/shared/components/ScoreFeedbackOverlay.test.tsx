@@ -23,9 +23,7 @@ describe('ScoreFeedbackOverlay light result UI', () => {
     expect(panel.className).toContain('bg-surface');
     expect(panel.className).not.toMatch(/bg-(black|slate-9)/);
     expect(screen.getByText('82')).toBeVisible();
-    fireEvent.click(
-      screen.getByRole('button', { name: /dismiss/i })
-    );
+    fireEvent.click(screen.getByRole('button', { name: /dismiss/i }));
     expect(close).toHaveBeenCalledOnce();
   });
 });

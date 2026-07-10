@@ -18,7 +18,12 @@ const upsertMeta = (selector: string, attributes: Record<string, string>) => {
   );
 };
 
-export const PageMetadata = ({ title, description, canonical, jsonLd }: PageMetadataProps) => {
+export const PageMetadata = ({
+  title,
+  description,
+  canonical,
+  jsonLd,
+}: PageMetadataProps) => {
   useEffect(() => {
     document.title = `${title} | EngVox`;
     upsertMeta('meta[name="description"]', {
@@ -55,7 +60,9 @@ export const PageMetadata = ({ title, description, canonical, jsonLd }: PageMeta
     });
 
     if (canonical) {
-      let linkEl = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+      let linkEl = document.head.querySelector<HTMLLinkElement>(
+        'link[rel="canonical"]'
+      );
       if (!linkEl) {
         linkEl = document.createElement('link');
         linkEl.setAttribute('rel', 'canonical');
@@ -65,7 +72,9 @@ export const PageMetadata = ({ title, description, canonical, jsonLd }: PageMeta
     }
 
     if (jsonLd) {
-      let scriptEl = document.head.querySelector<HTMLScriptElement>('script[type="application/ld+json"]');
+      let scriptEl = document.head.querySelector<HTMLScriptElement>(
+        'script[type="application/ld+json"]'
+      );
       if (!scriptEl) {
         scriptEl = document.createElement('script');
         scriptEl.setAttribute('type', 'application/ld+json');

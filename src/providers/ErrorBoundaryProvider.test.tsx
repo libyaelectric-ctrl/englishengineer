@@ -25,8 +25,6 @@ describe('ErrorBoundaryProvider', () => {
       'href',
       '/'
     );
-    expect(
-      screen.getByRole('button', { name: /Retry/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
   });
 });

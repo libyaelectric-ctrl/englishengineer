@@ -6,10 +6,7 @@ const createHeaders = (serviceRoleKey) => ({
   'Content-Type': 'application/json',
 });
 
-export const createWorkspaceRepository = (
-  config,
-  fetchImpl = fetch
-) => {
+export const createWorkspaceRepository = (config, fetchImpl = fetch) => {
   if (!config.workspace?.configured) {
     throw new ApiError(
       503,
@@ -52,7 +49,7 @@ export const createWorkspaceRepository = (
         `workspaces?id=eq.${encodeURIComponent(workspaceId)}&user_id=eq.${encodeURIComponent(userId)}&select=*&limit=1`
       );
       const rows = await response.json();
-      return Array.isArray(rows) ? rows[0] ?? null : null;
+      return Array.isArray(rows) ? (rows[0] ?? null) : null;
     },
 
     async createWorkspace(userId, name, memory) {
@@ -166,7 +163,11 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
         const data = await repository.getWorkspaces(userId);
         res.json({ success: true, data });
@@ -184,11 +185,19 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
         const data = await repository.getWorkspace(req.params.id, userId);
         if (!data) {
-          throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
+          throw new ApiError(
+            404,
+            'workspace_not_found',
+            'Workspace not found.'
+          );
         }
         res.json({ success: true, data });
       } catch (error) {
@@ -205,7 +214,11 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
         const { name, planId } = req.body ?? {};
 
@@ -220,7 +233,11 @@ export const registerWorkspaceRoutes = (
         }
 
         const workspaceName = name || `Workspace ${existingCount + 1}`;
-        const data = await repository.createWorkspace(userId, workspaceName, {});
+        const data = await repository.createWorkspace(
+          userId,
+          workspaceName,
+          {}
+        );
         res.json({ success: true, data });
       } catch (error) {
         next(error);
@@ -236,7 +253,11 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
         const { key, value } = req.body ?? {};
         if (!key) {
@@ -245,7 +266,11 @@ export const registerWorkspaceRoutes = (
 
         const existing = await repository.getWorkspace(req.params.id, userId);
         if (!existing) {
-          throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
+          throw new ApiError(
+            404,
+            'workspace_not_found',
+            'Workspace not found.'
+          );
         }
 
         const updatedMemory = { ...(existing.memory || {}), [key]: value };
@@ -269,12 +294,20 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
 
         const existing = await repository.getWorkspace(req.params.id, userId);
         if (!existing) {
-          throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
+          throw new ApiError(
+            404,
+            'workspace_not_found',
+            'Workspace not found.'
+          );
         }
 
         const count = await repository.countWorkspaces(userId);
@@ -302,11 +335,19 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
         const { docName, docContent } = req.body ?? {};
         if (!docName) {
-          throw new ApiError(400, 'invalid_request', 'Document name is required.');
+          throw new ApiError(
+            400,
+            'invalid_request',
+            'Document name is required.'
+          );
         }
 
         const doc = {
@@ -318,7 +359,11 @@ export const registerWorkspaceRoutes = (
 
         const data = await repository.addDocument(req.params.id, userId, doc);
         if (!data) {
-          throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
+          throw new ApiError(
+            404,
+            'workspace_not_found',
+            'Workspace not found.'
+          );
         }
         res.json({ success: true, data });
       } catch (error) {
@@ -335,7 +380,11 @@ export const registerWorkspaceRoutes = (
       try {
         const userId = getUserId(req);
         if (!userId) {
-          throw new ApiError(401, 'authentication_required', 'User ID is required.');
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'User ID is required.'
+          );
         }
 
         const data = await repository.deleteDocument(
@@ -344,7 +393,11 @@ export const registerWorkspaceRoutes = (
           req.params.docId
         );
         if (!data) {
-          throw new ApiError(404, 'workspace_not_found', 'Workspace not found.');
+          throw new ApiError(
+            404,
+            'workspace_not_found',
+            'Workspace not found.'
+          );
         }
         res.json({ success: true, data });
       } catch (error) {

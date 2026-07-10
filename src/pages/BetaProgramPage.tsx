@@ -34,7 +34,9 @@ const BetaProgramPage = () => {
       <div className="grid gap-4 md:grid-cols-3">
         <Card hoverEffect={false}>
           <Users className="h-5 w-5 text-primary" />
-          <p className="mt-4 text-2xl font-medium text-foreground">Closed beta</p>
+          <p className="mt-4 text-2xl font-medium text-foreground">
+            Closed beta
+          </p>
           <p className="mt-1 text-sm text-muted-copy">
             Electrical, MEP, commissioning, QA/QC and project teams.
           </p>
@@ -136,7 +138,9 @@ const BetaProgramPage = () => {
         </Card>
       </div>
       <Card hoverEffect={false}>
-        <h2 className="text-xl font-medium text-foreground">Onboarding status</h2>
+        <h2 className="text-xl font-medium text-foreground">
+          Onboarding status
+        </h2>
         <p className="mt-2 text-sm text-muted-copy">
           {onboardingProfile
             ? `${onboardingProfile.engineeringDiscipline} · ${onboardingProfile.currentEnglishLevel} to ${onboardingProfile.targetEnglishLevel} · ${onboardingProfile.dailyStudyGoal}`

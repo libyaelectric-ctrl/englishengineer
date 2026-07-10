@@ -1,6 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, X, Bell, ChevronRight, BookOpenCheck, HardDrive } from 'lucide-react';
+import {
+  LogOut,
+  X,
+  Bell,
+  ChevronRight,
+  BookOpenCheck,
+  HardDrive,
+} from 'lucide-react';
 import { useAppStore } from '@/store/app.store';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
@@ -20,7 +27,11 @@ export const Sidebar: React.FC = () => {
     if (!notificationsOpen) return undefined;
     const closePanel = (event: MouseEvent | KeyboardEvent) => {
       if (event instanceof KeyboardEvent && event.key !== 'Escape') return;
-      if (event instanceof MouseEvent && notificationsRef.current?.contains(event.target as Node)) return;
+      if (
+        event instanceof MouseEvent &&
+        notificationsRef.current?.contains(event.target as Node)
+      )
+        return;
       setNotificationsOpen(false);
     };
     document.addEventListener('mousedown', closePanel);
@@ -58,7 +69,11 @@ export const Sidebar: React.FC = () => {
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-soft px-4">
             <div className="flex items-center gap-2.5">
-              <img src="/brand/logo.png" alt="EngVox" className="h-9 w-9 rounded-lg" />
+              <img
+                src="/brand/logo.png"
+                alt="EngVox"
+                className="h-9 w-9 rounded-lg"
+              />
               <div className="flex flex-col">
                 <span className="text-lg font-bold leading-tight text-foreground">
                   EngVox
@@ -81,7 +96,11 @@ export const Sidebar: React.FC = () => {
           <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">
             {/* Mascot */}
             <div className="mb-4 flex justify-center">
-              <img src="/brand/mascot.png" alt="EngVox Mascot" className="h-28 w-auto" />
+              <img
+                src="/brand/mascot.png"
+                alt="EngVox Mascot"
+                className="h-28 w-auto"
+              />
             </div>
             <Navigation
               onItemClick={() => {
@@ -104,8 +123,12 @@ export const Sidebar: React.FC = () => {
                 >
                   <Bell className="h-5 w-5 shrink-0 text-muted-copy" />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium text-foreground truncate">{currentUser.displayName}</span>
-                    <span className="block text-[10px] text-muted-copy capitalize">{planName} plan</span>
+                    <span className="block text-sm font-medium text-foreground truncate">
+                      {currentUser.displayName}
+                    </span>
+                    <span className="block text-[10px] text-muted-copy capitalize">
+                      {planName} plan
+                    </span>
                   </span>
                   <span className="absolute right-3 top-3 h-1.5 w-1.5 rounded-full bg-success" />
                 </button>
@@ -117,32 +140,57 @@ export const Sidebar: React.FC = () => {
                   >
                     <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
                       <div>
-                        <p className="text-sm font-medium text-foreground">Workspace status</p>
-                        <p className="mt-0.5 text-xs text-muted-copy">No unread system alerts</p>
+                        <p className="text-sm font-medium text-foreground">
+                          Workspace status
+                        </p>
+                        <p className="mt-0.5 text-xs text-muted-copy">
+                          No unread system alerts
+                        </p>
                       </div>
-                      <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">Ready</span>
+                      <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
+                        Ready
+                      </span>
                     </div>
                     <button
                       type="button"
-                      onClick={() => { setNotificationsOpen(false); navigate('/curriculum'); }}
+                      onClick={() => {
+                        setNotificationsOpen(false);
+                        navigate('/curriculum');
+                      }}
                       className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >
-                      <span className="rounded-lg bg-foreground/5 p-2 text-foreground"><BookOpenCheck className="h-4 w-4" /></span>
+                      <span className="rounded-lg bg-foreground/5 p-2 text-foreground">
+                        <BookOpenCheck className="h-4 w-4" />
+                      </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium text-foreground">Learning queue is ready</span>
-                        <span className="mt-0.5 block text-xs text-muted-copy">Continue from your current independent skill levels.</span>
+                        <span className="block text-sm font-medium text-foreground">
+                          Learning queue is ready
+                        </span>
+                        <span className="mt-0.5 block text-xs text-muted-copy">
+                          Continue from your current independent skill levels.
+                        </span>
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
                     </button>
                     <button
                       type="button"
-                      onClick={() => { setNotificationsOpen(false); navigate('/profile'); }}
+                      onClick={() => {
+                        setNotificationsOpen(false);
+                        navigate('/profile');
+                      }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >
-                      <span className="rounded-lg bg-warning/10 p-2 text-warning"><HardDrive className="h-4 w-4" /></span>
+                      <span className="rounded-lg bg-warning/10 p-2 text-warning">
+                        <HardDrive className="h-4 w-4" />
+                      </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium text-foreground">Local progress protection</span>
-                        <span className="mt-0.5 block text-xs text-muted-copy">Check cloud-sync and account status before changing devices.</span>
+                        <span className="block text-sm font-medium text-foreground">
+                          Local progress protection
+                        </span>
+                        <span className="mt-0.5 block text-xs text-muted-copy">
+                          Check cloud-sync and account status before changing
+                          devices.
+                        </span>
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />
                     </button>
@@ -162,7 +210,8 @@ export const Sidebar: React.FC = () => {
               <button
                 onClick={() => {
                   document.documentElement.classList.toggle('dark');
-                  const isDark = document.documentElement.classList.contains('dark');
+                  const isDark =
+                    document.documentElement.classList.contains('dark');
                   localStorage.setItem('theme', isDark ? 'dark' : 'light');
                 }}
                 className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"

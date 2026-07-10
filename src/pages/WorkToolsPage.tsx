@@ -140,7 +140,9 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 </p>
               </div>
               <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
-                <p className="text-xs font-medium text-muted-copy">Sample input</p>
+                <p className="text-xs font-medium text-muted-copy">
+                  Sample input
+                </p>
                 <p className="mt-2 text-sm text-foreground">
                   {item.sampleInput}
                 </p>
@@ -192,7 +194,9 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         <div className="grid gap-5 xl:grid-cols-2">
           {emails.map((item) => (
             <Card key={item.id} className="space-y-4">
-              <h2 className="text-xl font-medium text-foreground">{item.title}</h2>
+              <h2 className="text-xl font-medium text-foreground">
+                {item.title}
+              </h2>
               {(
                 [
                   ['Short', item.shortVersion],
