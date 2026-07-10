@@ -20,6 +20,7 @@
       "@config/*": ["./src/config/*"]
     },
     "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "noEmit": true
   }
 }
