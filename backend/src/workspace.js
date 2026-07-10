@@ -1,4 +1,10 @@
 import { ApiError } from './errors.js';
+import {
+  validateBody,
+  WorkspaceCreateBodySchema,
+  WorkspaceMemoryBodySchema,
+  WorkspaceDocumentBodySchema,
+} from './validation.js';
 
 const createHeaders = (serviceRoleKey) => ({
   apikey: serviceRoleKey,
@@ -210,6 +216,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces',
     requireBackendAuth,
     rateLimiter,
+    validateBody(WorkspaceCreateBodySchema),
     async (req, res, next) => {
       try {
         const userId = getUserId(req);
@@ -220,7 +227,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { name, planId } = req.body ?? {};
+        const { name, planId } = req.validatedBody;
 
         const existingCount = await repository.countWorkspaces(userId);
         const limit = getWorkspaceLimit(planId || 'free');
@@ -249,6 +256,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces/:id/memory',
     requireBackendAuth,
     rateLimiter,
+    validateBody(WorkspaceMemoryBodySchema),
     async (req, res, next) => {
       try {
         const userId = getUserId(req);
@@ -259,7 +267,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { key, value } = req.body ?? {};
+        const { key, value } = req.validatedBody;
         if (!key) {
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
@@ -331,6 +339,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces/:id/documents',
     requireBackendAuth,
     rateLimiter,
+    validateBody(WorkspaceDocumentBodySchema),
     async (req, res, next) => {
       try {
         const userId = getUserId(req);
@@ -341,7 +350,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { docName, docContent } = req.body ?? {};
+        const { docName, docContent } = req.validatedBody;
         if (!docName) {
           throw new ApiError(
             400,

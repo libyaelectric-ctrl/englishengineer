@@ -14,6 +14,7 @@ import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import {
   createVocabularyLookupService,
+  createUpstashVocabularyCache,
   registerVocabularyRoutes,
 } from './vocabulary.js';
 import {
@@ -104,9 +105,19 @@ export const createApp = ({
     config,
     fetchImpl
   );
+  const vocabCache =
+    config.rateLimit.storeMode === 'upstash'
+      ? createUpstashVocabularyCache({
+          url: config.rateLimit.upstashUrl,
+          token: config.rateLimit.upstashToken,
+          timeoutMs: config.rateLimit.storeTimeoutMs,
+          fetchImpl,
+        })
+      : new Map();
+
   registerVocabularyRoutes(
     app,
-    createVocabularyLookupService(config.vocabulary, fetchImpl),
+    createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache),
     vocabularyRateLimiter
   );
   registerBillingRoutes(

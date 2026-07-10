@@ -1,9 +1,4 @@
-const createHeaders = (serviceRoleKey, prefer) => ({
-  apikey: serviceRoleKey,
-  Authorization: `Bearer ${serviceRoleKey}`,
-  'Content-Type': 'application/json',
-  ...(prefer ? { Prefer: prefer } : {}),
-});
+import { createClient } from '@supabase/supabase-js';
 
 const assertConfigured = (config) => {
   if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
@@ -39,70 +34,101 @@ const mapSubscriptionSnapshot = (userId, snapshot) => ({
   source: snapshot.source,
 });
 
+const handleDbError = (error) => {
+  const message = error.message || 'Supabase billing repository request failed.';
+  const dbError = new Error(message);
+  dbError.status = error.status || 500;
+  dbError.code = error.code || 'N/A';
+  dbError.details = error.details || error.message || 'N/A';
+  return dbError;
+};
+
 export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
   assertConfigured(config);
-  const restUrl = `${config.supabaseUrl.replace(/\/$/, '')}/rest/v1`;
-  const request = async (path, init = {}) => {
-    const { prefer, ...requestInit } = init;
-    const response = await fetchImpl(`${restUrl}/${path}`, {
-      ...requestInit,
-      headers: {
-        ...createHeaders(config.supabaseServiceRoleKey, prefer),
-        ...init.headers,
-      },
-    });
-    if (!response.ok) {
-      let errorBody = 'N/A';
-      try {
-        errorBody = await response.text();
-      } catch {}
-      const dbError = new Error(
-        `Supabase billing repository request failed with status ${response.status}.`
-      );
-      dbError.status = response.status;
-      try {
-        const parsed = JSON.parse(errorBody);
-        dbError.code = parsed.code || 'N/A';
-        dbError.details = parsed.details || parsed.message || errorBody;
-      } catch {
-        dbError.code = 'N/A';
-        dbError.details = errorBody;
+
+  const wrappedFetch = async (url, init) => {
+    let headersObj = {};
+    if (init?.headers) {
+      if (typeof init.headers.forEach === 'function') {
+        init.headers.forEach((value, key) => {
+          headersObj[key] = value;
+          if (key.toLowerCase() === 'authorization') {
+            headersObj['Authorization'] = value;
+          }
+          if (key.toLowerCase() === 'apikey') {
+            headersObj['apikey'] = value;
+          }
+        });
+      } else {
+        headersObj = { ...init.headers };
       }
-      throw dbError;
+    }
+    const newInit = {
+      ...init,
+      headers: headersObj,
+    };
+    const response = await fetchImpl(url, newInit);
+    if (!response.ok) {
+      let bodyText = '';
+      try {
+        bodyText = await response.text();
+      } catch {}
+      const err = new Error(`Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`);
+      err.status = response.status;
+      throw err;
     }
     return response;
   };
 
+  const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+    auth: {
+      persistSession: false,
+    },
+    global: {
+      fetch: wrappedFetch,
+    },
+  });
+
   return {
     mode: 'supabase',
     async getSubscriptionStatus(userId) {
-      const response = await request(
-        `subscription_status?user_id=eq.${encodeURIComponent(userId)}&select=*&limit=1`,
-        { method: 'GET' }
-      );
-      const rows = await response.json();
-      return mapSubscriptionRow(Array.isArray(rows) ? rows[0] : null);
+      const { data, error } = await supabase
+        .from('subscription_status')
+        .select('*')
+        .eq('user_id', userId)
+        .limit(1)
+        .maybeSingle();
+      if (error) {
+        throw handleDbError(error);
+      }
+      return mapSubscriptionRow(data);
     },
     async upsertSubscriptionStatus(userId, snapshot) {
-      await request('subscription_status?on_conflict=user_id', {
-        method: 'POST',
-        prefer: 'resolution=merge-duplicates,return=minimal',
-        body: JSON.stringify(mapSubscriptionSnapshot(userId, snapshot)),
-      });
+      const { error } = await supabase
+        .from('subscription_status')
+        .upsert(mapSubscriptionSnapshot(userId, snapshot), {
+          onConflict: 'user_id',
+        });
+      if (error) {
+        throw handleDbError(error);
+      }
     },
     async hasStripeEventBeenProcessed(eventId) {
-      const response = await request(
-        `stripe_processed_events?stripe_event_id=eq.${encodeURIComponent(eventId)}&select=stripe_event_id&limit=1`,
-        { method: 'GET' }
-      );
-      const rows = await response.json();
-      return Array.isArray(rows) && rows.length > 0;
+      const { data, error } = await supabase
+        .from('stripe_processed_events')
+        .select('stripe_event_id')
+        .eq('stripe_event_id', eventId)
+        .limit(1)
+        .maybeSingle();
+      if (error) {
+        throw handleDbError(error);
+      }
+      return !!data;
     },
     async markStripeEventProcessed(eventId, metadata = {}) {
-      await request('stripe_processed_events?on_conflict=stripe_event_id', {
-        method: 'POST',
-        prefer: 'resolution=merge-duplicates,return=minimal',
-        body: JSON.stringify({
+      const { error } = await supabase
+        .from('stripe_processed_events')
+        .upsert({
           stripe_event_id: eventId,
           event_type:
             typeof metadata.type === 'string' ? metadata.type : 'unknown',
@@ -111,8 +137,12 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
               ? metadata.processedAt
               : new Date().toISOString(),
           metadata,
-        }),
-      });
+        }, {
+          onConflict: 'stripe_event_id',
+        });
+      if (error) {
+        throw handleDbError(error);
+      }
     },
   };
 };
