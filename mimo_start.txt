@@ -1,13 +1,13 @@
 Merhaba Mimo,
 
-Şu anda "EngineerOS" (englishengineer) projesinin kök dizinindeyiz. Projenin mimari lideri olan Antigravity ile birlikte 35 maddelik bir Master Yol Haritası çıkardık. Bu yol haritası kapsamında senin bağımsız olarak gerçekleştireceğin 14 adet kritik geliştirme, test ve izleme görevi belirlendi.
+Şu anda "EngineerOS" (englishengineer) projesinin kök dizinindeyiz. Projenin mimari lideri olan Antigravity ile birlikte 35 maddelik Master Yol Haritası kapsamında senin bağımsız olarak gerçekleştireceğin 2 adet kritik geliştirme görevi belirlendi.
 
-Senin için kök dizinde özel bir görev listesi oluşturduk. Lütfen hemen şu adımları takip etmeye başla:
+Lütfen hemen şu adımları takip etmeye başla:
 
-1. İlk iş olarak projenin kök dizinindeki "mimo_tasks.md" dosyasını baştan sona oku.
-2. Dosyadaki 14 görevi kesinlikle SIRASIYLA (kademeli olarak) yapmaya başla. Bir görev tamamen bitip test edilmeden diğerine geçme.
-3. Her görevin sonunda mutlaka "npx tsc --noEmit" çalıştırarak TypeScript derlemesini bozmadığından emin ol.
-4. Dosyadaki en kritik kural: Tamamladığın HER 3 GÖREVDE BİR, kullanıcıya sormadan otomatik olarak şu deploy zincirini çalıştır:
-   git add . ; git commit -m "feat(mimo): completed tasks X, Y, Z" ; git push ; npx vercel --prod
+1. İlk iş olarak projenin kök dizinindeki "mimotask.md" dosyasını baştan sona oku.
+2. Dosyadaki 2 görevi kesinlikle SIRASIYLA (kademeli olarak) yapmaya başla. Bir görev tamamen bitip test edilmeden diğerine geçme.
+3. Her görevin sonunda mutlaka "npx tsc --noEmit" ve "npm run test" çalıştırarak TypeScript derlemesini bozmadığından ve tüm birim testlerinin yeşil olduğundan emin ol.
+4. Tamamladığın her görevin sonunda, kullanıcıya sormadan otomatik olarak şu deploy zincirini çalıştır:
+   git add . ; git commit -m "feat(mimo): completed task X" ; git push ; npx vercel --prod
 
-Hazırsan, "mimo_tasks.md" dosyasını okuyarak 1. Göreve (Zod API Request Validation) başla. Yolun açık olsun!
+Hazırsan, "mimotask.md" dosyasını okuyarak 1. Göreve (Offline Sync & Queue) başla. Yolun açık olsun!
