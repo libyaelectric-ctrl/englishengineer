@@ -41,7 +41,7 @@ import {
   LevelContentFilter,
   useSkillLevel,
 } from '@/features/level-system';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+
 
 const ReadingPage = () => {
   // Read state and actions from the reading store
@@ -263,8 +263,6 @@ const ReadingPage = () => {
           </div>
         </div>
       </div>
-
-      <SkillEntryBrief skill="reading" />
 
       {/* Top statistics panel */}
       {activeTab === 'missions' && (

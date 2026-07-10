@@ -18,7 +18,7 @@ import {
   LevelContentFilter,
   useSkillLevel,
 } from '@/features/level-system';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+
 import { Button } from '@/shared/components/Button';
 
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -79,7 +79,6 @@ const ListeningPage = () => {
           <h1 className="text-lg font-semibold text-foreground">Listening</h1>
         </div>
       </div>
-      <SkillEntryBrief skill="listening" />
       <LevelContentFilter
         value={levelFilter}
         currentLevel={currentLevel}

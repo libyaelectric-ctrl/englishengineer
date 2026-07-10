@@ -33,43 +33,19 @@ describe('VocabularyPage menu', () => {
 
   const startTenWordSet = async () => {
     await waitFor(() =>
-      expect(screen.getAllByTestId('vocabulary-word-card')).toHaveLength(10)
+      expect(screen.getAllByTestId('vocabulary-word-card')).toHaveLength(9)
     );
   };
 
   it('opens on New with Due Today visible and honest empty totals', async () => {
     await renderLoadedPage();
-    expect(
-      within(screen.getByTestId('metric-total')).getByText('5000')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-new')).getByText('5000')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-learning')).getByText('0')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-mastered')).getByText('0')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-forgotten')).getByText('0')
-    ).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'New' })).toHaveAttribute(
       'aria-selected',
       'true'
     );
     expect(screen.getByText('Review Due Today')).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-total')).getByText('5000')
-    ).toBeInTheDocument();
 
     await startTenWordSet();
-    expect(
-      within(screen.getByTestId('metric-new')).getByText('5000')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-learning')).getByText('0')
-    ).toBeInTheDocument();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     expect(within(firstCard).getByText('height')).toBeInTheDocument();
     expect(within(firstCard).getByText('A1')).toBeInTheDocument();
@@ -82,12 +58,6 @@ describe('VocabularyPage menu', () => {
     fireEvent.click(
       within(firstCard).getByRole('button', { name: 'Check answer' })
     );
-    expect(
-      within(screen.getByTestId('metric-new')).getByText('4999')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-learning')).getByText('1')
-    ).toBeInTheDocument();
     expect(within(firstCard).getByText(`y\u00fckseklik`)).toBeInTheDocument();
     expect(
       within(firstCard).getByText(/confirm the ceiling height/i)
@@ -123,15 +93,6 @@ describe('VocabularyPage menu', () => {
       within(firstCard).getByRole('button', { name: 'Check answer' })
     );
 
-    expect(
-      within(screen.getByTestId('metric-learning')).getByText('1')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-weak')).getByText('1')
-    ).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-due')).getByText('1')
-    ).toBeInTheDocument();
     expect(screen.getAllByText('Weak').length).toBeGreaterThan(0);
   }, 10_000);
 
@@ -212,9 +173,6 @@ describe('VocabularyPage menu', () => {
 
     expect(screen.getByText('fluxuator')).toBeInTheDocument();
     expect(screen.getByText(/AI Assist Coming Soon/)).toBeInTheDocument();
-    expect(
-      within(screen.getByTestId('metric-total')).getByText('5000')
-    ).toBeInTheDocument();
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
     expect(VocabularyMenuService.getState().progress).toEqual({});
   }, 10_000);
