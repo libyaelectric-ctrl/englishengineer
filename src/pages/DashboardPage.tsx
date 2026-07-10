@@ -94,6 +94,33 @@ const DashboardPage = () => {
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
       <div className="space-y-6">
+        {/* Executive Summary Widget */}
+        <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
+          <div className="flex items-center gap-4 w-full">
+            <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border-2 border-primary/20 text-primary font-black text-xl shadow-inner">
+              85
+            </div>
+            <div className="flex-1">
+              <div className="flex justify-between items-end mb-1.5">
+                <div>
+                  <h3 className="text-sm font-bold text-foreground">Engineering Readiness Score</h3>
+                  <p className="text-[10px] font-medium text-muted-copy">Based on communication, technical vocabulary, and scenario performance.</p>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] font-bold text-green-500 flex items-center gap-1">
+                    <Target className="w-3 h-3"/> High Competency
+                  </span>
+                </div>
+              </div>
+              <div className="h-2 rounded-full bg-surface-hover overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-1000 relative" style={{ width: '85%' }}>
+                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <header className="premium-panel overflow-hidden p-6 sm:p-8 animate-on-scroll">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
@@ -163,7 +190,7 @@ const DashboardPage = () => {
               className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
             >
               <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-                AVG SCORE
+                COMPETENCY INDEX
               </p>
               <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
                 {summary.averageScore}%
@@ -174,7 +201,7 @@ const DashboardPage = () => {
               className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
             >
               <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-                FOCUS LEVEL
+                TARGET LEVEL
               </p>
               <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
                 {focusSkill.cefrBand}
@@ -185,7 +212,7 @@ const DashboardPage = () => {
               className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
             >
               <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-                COMPLETED
+                COMPLETION RATE
               </p>
               <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
                 {summary.completionPercentage}%

@@ -165,6 +165,97 @@ Geçerli type'lar: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`, 
 - Commitlint her commit mesajını doğrular
 - Karışık commit (kod + veri dosyaları) tespit edilirse uyarı verilir
 
+## Branching Strategy
+
+- `main` — Production-ready code. All deployments originate from here.
+- `develop` — Integration branch for ongoing work. PRs merge here first.
+- `feat/<name>` — Feature branches. Branch from `develop`, merge back via PR.
+- `fix/<name>` — Bug fix branches. Branch from `develop` or `main` (hotfix).
+- `refactor/<name>` — Refactoring branches. Branch from `develop`.
+
+### Branch Naming Convention
+
+```
+feat/vocabulary-spaced-repetition
+fix/auth-jwt-refresh-race
+refactor/billing-modularization
+docs/api-reference-update
+test/backend-validation-schemas
+```
+
+## Testing Standards
+
+### Frontend Tests (Vitest)
+
+- Unit tests: `src/**/*.test.ts(x)` — Test individual functions and components
+- E2E tests: `src/e2e/**/*.test.tsx` — Test critical user flows
+- Store tests: Test state transitions, actions, and derived state
+- Run: `npx vitest run`
+
+### Backend Tests (Node.js test runner)
+
+- Unit tests: `backend/test/*.test.js` — Test services, validation, auth
+- Run: `node --test backend/test/*.test.js`
+
+### Test Quality Requirements
+
+- Every new feature must include tests
+- Tests must be deterministic (no random data, no timing dependencies)
+- Mock external services (Supabase, Stripe, dictionary APIs)
+- Test both happy path and error cases
+- Edge cases: empty inputs, boundary values, concurrent operations
+
+## Architecture Overview
+
+### Frontend (React/Vite)
+
+```
+src/
+├── config/          # App configuration
+├── contracts/       # API contract definitions
+├── core/            # Domain-agnostic modules (learning, events, repos)
+├── data/            # Seed data (grammar, vocabulary by CEFR level)
+├── features/        # Feature modules (23 modules, each with store/service/types)
+├── pages/           # Route-level page components
+├── providers/       # React context providers
+├── routes/          # Router configuration
+├── shared/          # Reusable UI components and utilities
+└── store/           # Global app store
+```
+
+### Backend (Express/Node.js)
+
+```
+backend/src/
+├── ai.js            # AI route registration
+├── ai-core/         # AI service and provider integrations
+├── ai-ledger.js     # AI request counting/ledger
+├── app.js           # Express app factory and middleware
+├── auth.js          # Authentication middleware
+├── billing-helpers.js   # Billing utility functions
+├── billing-routes.js    # Billing route definitions
+├── billing-service.js   # Billing business logic
+├── config.js        # Configuration factory
+├── errors.js        # Error classes and formatting
+├── i18n.js          # Internationalization middleware
+├── rate-limit.js    # Rate limiting
+├── subscription-repository.js  # Subscription data access
+├── supabase-billing-repository.js  # Supabase billing adapter
+├── supabase-audit-log-repository.js  # Supabase audit adapter
+├── validation.js    # Zod schemas and middleware
+├── vocabulary-routes.js   # Vocabulary route definitions
+├── vocabulary-service.js  # Vocabulary lookup service
+├── workspace-repository.js  # Supabase workspace adapter
+└── workspace.js     # Workspace route definitions
+```
+
+### Database (Supabase/PostgreSQL)
+
+- 18 tables with RLS enabled
+- Migrations in `supabase/migrations/`
+- Security-definer functions for admin checks
+- Service role for backend operations, anon key for frontend
+
 ## Reporting Issues
 
 - Use GitHub Issues for bug reports

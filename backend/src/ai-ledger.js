@@ -1,8 +1,4 @@
-const createHeaders = (serviceRoleKey) => ({
-  apikey: serviceRoleKey,
-  Authorization: `Bearer ${serviceRoleKey}`,
-  'Content-Type': 'application/json',
-});
+import { createClient } from '@supabase/supabase-js';
 
 const FREE_DAILY_LIMIT = 3;
 const PAID_MONTHLY_LIMIT = 300;
@@ -15,25 +11,33 @@ const getLimitForPlan = (planId) => ({
   windowMs: planId === 'free' ? FREE_PERIOD_MS : PAID_PERIOD_MS,
 });
 
-export const createSupabaseAiLedger = (config, fetchImpl = fetch) => {
+export const createSupabaseAiLedger = (config) => {
   if (!config.workspace?.configured) {
-    throw new Error(
-      'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
-    );
+    throw new Error('AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
-  const restUrl = `${config.workspace.supabaseUrl.replace(/\/$/, '')}/rest/v1`;
-  const headers = createHeaders(config.workspace.supabaseServiceRoleKey);
+
+  const supabase = createClient(
+    config.workspace.supabaseUrl,
+    config.workspace.supabaseServiceRoleKey,
+    { auth: { persistSession: false } }
+  );
 
   return {
     async countRecentRequests(userId, planId) {
       const { windowMs } = getLimitForPlan(planId);
       const startDateIso = new Date(Date.now() - windowMs).toISOString();
-      const url = `${restUrl}/ai_sessions?user_id=eq.${encodeURIComponent(userId)}&created_at=gte.${encodeURIComponent(startDateIso)}&select=id`;
       try {
-        const response = await fetchImpl(url, { method: 'GET', headers });
-        if (!response.ok) return 0;
-        const rows = await response.json();
-        return Array.isArray(rows) ? rows.length : 0;
+        const { count, error } = await supabase
+          .from('ai_sessions')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', userId)
+          .gte('created_at', startDateIso);
+
+        if (error) {
+          console.error('[ai-ledger-count-error]', error.message);
+          return 0;
+        }
+        return count ?? 0;
       } catch (err) {
         console.error('[ai-ledger-count-error]', err.message);
         return 0;
@@ -41,22 +45,21 @@ export const createSupabaseAiLedger = (config, fetchImpl = fetch) => {
     },
 
     async logSession(userId, session) {
-      const url = `${restUrl}/ai_sessions`;
       try {
-        await fetchImpl(url, {
-          method: 'POST',
-          headers: { ...headers, Prefer: 'return=minimal' },
-          body: JSON.stringify({
-            user_id: userId,
-            mode_id: session.modeId || 'unknown',
-            provider: session.provider || 'mock',
-            operation: session.operation,
-            success: true,
-            duration_ms: session.durationMs || 0,
-            result_summary: session.resultSummary || '',
-            metadata: {},
-          }),
+        const { error } = await supabase.from('ai_sessions').insert({
+          user_id: userId,
+          mode_id: session.modeId || 'unknown',
+          provider: session.provider || 'mock',
+          operation: session.operation,
+          success: true,
+          duration_ms: session.durationMs || 0,
+          result_summary: session.resultSummary || '',
+          metadata: {},
         });
+
+        if (error) {
+          console.error('[ai-ledger-log-error]', error.message);
+        }
       } catch (err) {
         console.error('[ai-ledger-log-error]', err.message);
       }
@@ -90,9 +93,9 @@ export const createMemoryAiLedger = () => {
   };
 };
 
-export const createAiLedger = (config, fetchImpl = fetch) => {
+export const createAiLedger = (config) => {
   if (config.workspace?.configured) {
-    return createSupabaseAiLedger(config, fetchImpl);
+    return createSupabaseAiLedger(config);
   }
   return createMemoryAiLedger();
 };

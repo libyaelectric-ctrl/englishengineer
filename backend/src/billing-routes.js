@@ -105,7 +105,7 @@ export const registerBillingRoutes = (
           eventType = parsedBody.type || 'unknown';
         }
       }
-    } catch {}
+    } catch (err) { console.warn('[stripe-webhook-log-parse]', err?.message); }
 
     auditLog({
       action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,

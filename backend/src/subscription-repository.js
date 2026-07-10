@@ -12,10 +12,19 @@ const pruneEvents = (events, now, ttlMs, maxEntries) => {
 export const createMemorySubscriptionRepository = ({
   eventTtlMs = 86_400_000,
   eventCacheMax = 5_000,
+  subscriptionCacheMax = 10_000,
   now = () => Date.now(),
 } = {}) => {
   const subscriptions = new Map();
   const events = new Map();
+
+  const pruneSubscriptions = () => {
+    while (subscriptions.size > subscriptionCacheMax) {
+      const oldest = subscriptions.keys().next().value;
+      if (oldest === undefined) break;
+      subscriptions.delete(oldest);
+    }
+  };
 
   return {
     mode: 'memory',
@@ -24,6 +33,7 @@ export const createMemorySubscriptionRepository = ({
     },
     async upsertSubscriptionStatus(userId, snapshot) {
       subscriptions.set(userId, snapshot);
+      pruneSubscriptions();
     },
     async hasStripeEventBeenProcessed(eventId) {
       pruneEvents(events, now(), eventTtlMs, eventCacheMax);

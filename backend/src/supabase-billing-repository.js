@@ -75,7 +75,7 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
       let bodyText = '';
       try {
         bodyText = await response.text();
-      } catch {}
+      } catch (readErr) { console.warn('[billing-repo-error-body]', readErr?.message); }
       const err = new Error(
         `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`
       );
