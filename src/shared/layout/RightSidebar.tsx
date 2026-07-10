@@ -9,8 +9,8 @@ import { useWritingStore } from '@/features/writing';
 import { useListeningStore } from '@/features/listening';
 import { useSpeakingStore } from '@/features/speaking';
 
-const log = (page: string, action: string, details: string) =>
-  console.log(`[Nav2] ${page} → ${action}: ${details}`);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const log = (_page: string, _action: string, _details: string) => {};
 
 function Section({
   title,
