@@ -1,3 +1,7 @@
+// DISPLAY ONLY — not used for actual charges.
+// Stripe handles real payment currencies natively via StripePrice currency field.
+// Exchange rates are approximate, updated manually. Do NOT use for billing calculations.
+
 export type Currency = 'USD' | 'EUR' | 'TRY' | 'GBP';
 
 export interface CurrencyConfig {
@@ -5,6 +9,7 @@ export interface CurrencyConfig {
   symbol: string;
   name: string;
   locale: string;
+  /** Approximate rate from USD. Used only for UI display, never for actual charges. */
   exchangeRate: number;
 }
 
@@ -80,7 +85,11 @@ export const formatPrice = (
 
 export const detectCurrencyFromTimezone = (): Currency => {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (tz.includes('Istanbul') || tz.includes('Ankara') || tz.includes('Izmir')) {
+  if (
+    tz.includes('Istanbul') ||
+    tz.includes('Ankara') ||
+    tz.includes('Izmir')
+  ) {
     return 'TRY';
   }
   if (tz.includes('London')) return 'GBP';

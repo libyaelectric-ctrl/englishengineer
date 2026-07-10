@@ -1,6 +1,23 @@
 const MAX_LOG_SIZE = 10_000;
 
 const logs = [];
+let supabaseRepository = null;
+
+export const initAuditLog = async (config) => {
+  try {
+    if (
+      config?.workspace?.configured &&
+      config?.workspace?.supabaseUrl &&
+      config?.workspace?.supabaseServiceRoleKey
+    ) {
+      const { createSupabaseAuditLogRepository } =
+        await import('./supabase-audit-log-repository.js');
+      supabaseRepository = createSupabaseAuditLogRepository(config.workspace);
+    }
+  } catch {
+    supabaseRepository = null;
+  }
+};
 
 export const auditLog = (entry) => {
   const record = {
@@ -15,6 +32,10 @@ export const auditLog = (entry) => {
     logs.splice(0, logs.length - MAX_LOG_SIZE);
   }
 
+  if (supabaseRepository) {
+    supabaseRepository.insert(record);
+  }
+
   if (entry.severity === 'critical' || entry.severity === 'error') {
     console.warn(`[AUDIT-${entry.severity?.toUpperCase()}]`, record);
   }
@@ -22,7 +43,12 @@ export const auditLog = (entry) => {
   return record;
 };
 
-export const getAuditLogs = (filters = {}) => {
+export const getAuditLogs = async (filters = {}) => {
+  if (supabaseRepository) {
+    const remoteLogs = await supabaseRepository.query(filters);
+    if (remoteLogs.length > 0) return remoteLogs;
+  }
+
   let filtered = [...logs];
 
   if (filters.userId) {
