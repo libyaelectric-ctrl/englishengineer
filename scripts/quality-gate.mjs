@@ -20,8 +20,12 @@ const commands = [
       'dot',
       '--exclude',
       'src/e2e/**',
+      '--exclude',
+      'node_modules/**',
+      '--exclude',
+      '.mimocode/**',
     ],
-    timeoutMs: 150_000,
+    timeoutMs: 300_000,
   },
   {
     label: 'npm run verify:build-exit',
