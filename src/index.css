@@ -2,8 +2,8 @@
 @import 'tailwindcss';
 
 :root {
-  /* TRAE-inspired Clean White theme */
-  --background: #ffffff;
+  /* Soft off-white theme — reduced eye strain */
+  --background: #f8f9fa;
   --foreground: #1a1a1a;
 
   --color-primary: #1a1a1a;
@@ -11,20 +11,20 @@
   --color-primary-foreground: #ffffff;
 
   --color-surface: #ffffff;
-  --color-surface-hover: #f7f7f8;
+  --color-surface-hover: #f1f3f5;
   --color-soft: rgba(0, 0, 0, 0.04);
-  --color-border-soft: #e8e8e8;
-  --color-border-hover: #d4d4d4;
-  --color-muted-copy: #767676;
+  --color-border-soft: #e5e7eb;
+  --color-border-hover: #d1d5db;
+  --color-muted-copy: #6b7280;
   --color-focus: rgba(0, 0, 0, 0.12);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 
-  --color-engineer-950: #fafafa;
-  --color-engineer-900: #ffffff;
-  --color-engineer-800: #ffffff;
-  --color-engineer-700: #f5f5f5;
+  --color-engineer-950: #f3f4f6;
+  --color-engineer-900: #e5e7eb;
+  --color-engineer-800: #d1d5db;
+  --color-engineer-700: #9ca3af;
   --color-engineer-cyan: #1a1a1a;
 
   --radius-button: 8px;
