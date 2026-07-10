@@ -1,4 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
+import {
+  uiReducer,
+  editReducer,
+  prefsReducer,
+  type ProfileUIState,
+  type ProfileEditState,
+  type ProfilePrefsState,
+} from './ProfilePage/ProfilePageReducer';
 import { useLocation, useParams } from 'react-router-dom';
 import { UserRound } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -58,25 +66,22 @@ const ProfilePage = () => {
     openCustomerPortal,
   } = useBillingStore();
 
-  // Grouped UI state
-  const [ui, setUi] = useState({
+  // UI state via useReducer
+  const [ui, dispatchUI] = useReducer(uiReducer, {
     isSaving: false,
     message: null as string | null,
     error: null as string | null,
     showClearConfirmation: false,
     clearConfirmation: '',
-  });
+  } satisfies ProfileUIState);
   const { isSaving, message, error, showClearConfirmation, clearConfirmation } = ui;
-  const setIsSaving = (v: boolean) => setUi((p) => ({ ...p, isSaving: v }));
-  const setMessage = (v: string | null) => setUi((p) => ({ ...p, message: v }));
-  const setError = (v: string | null) => setUi((p) => ({ ...p, error: v }));
-  const setShowClearConfirmation = (v: React.SetStateAction<boolean>) =>
-    setUi((p) => ({
-      ...p,
-      showClearConfirmation: typeof v === 'function' ? v(p.showClearConfirmation) : v,
-    }));
+  const setIsSaving = (v: boolean) => dispatchUI({ type: 'SET_SAVING', value: v });
+  const setMessage = (v: string | null) => dispatchUI({ type: 'SET_MESSAGE', value: v });
+  const setError = (v: string | null) => dispatchUI({ type: 'SET_ERROR', value: v });
+  const setShowClearConfirmation = (_v: React.SetStateAction<boolean>) =>
+    dispatchUI({ type: 'TOGGLE_CLEAR_CONFIRMATION' });
   const setClearConfirmation = (v: string) =>
-    setUi((p) => ({ ...p, clearConfirmation: v }));
+    dispatchUI({ type: 'SET_CLEAR_CONFIRMATION', value: v });
 
   const { profile, memory, learningState } = useLearningCockpit(
     currentUser?.id
@@ -126,8 +131,8 @@ const ProfilePage = () => {
     return Math.round(totalSeconds / 60);
   })();
 
-  // Grouped edit mode state
-  const [edit, setEdit] = useState({
+  // Edit state via useReducer
+  const [edit, dispatchEdit] = useReducer(editReducer, {
     isEditMode: false,
     firstName: '',
     lastName: '',
@@ -137,7 +142,7 @@ const ProfilePage = () => {
     industry: '',
     lang: 'en' as 'en' | 'tr',
     goals: [] as string[],
-  });
+  } satisfies ProfileEditState);
   const {
     isEditMode,
     firstName: editFirstName,
@@ -149,18 +154,18 @@ const ProfilePage = () => {
     lang: editLang,
     goals: editGoals,
   } = edit;
-  const setIsEditMode = (v: boolean) => setEdit((p) => ({ ...p, isEditMode: v }));
-  const setEditFirstName = (v: string) => setEdit((p) => ({ ...p, firstName: v }));
-  const setEditLastName = (v: string) => setEdit((p) => ({ ...p, lastName: v }));
-  const setEditProfession = (v: string) => setEdit((p) => ({ ...p, profession: v }));
-  const setEditTrack = (v: string) => setEdit((p) => ({ ...p, track: v }));
-  const setEditSubdomain = (v: string) => setEdit((p) => ({ ...p, subdomain: v }));
-  const setEditIndustry = (v: string) => setEdit((p) => ({ ...p, industry: v }));
-  const setEditLang = (v: 'en' | 'tr') => setEdit((p) => ({ ...p, lang: v }));
-  const setEditGoals = (v: string[]) => setEdit((p) => ({ ...p, goals: v }));
+  const setIsEditMode = (v: boolean) => dispatchEdit({ type: 'SET_EDIT_MODE', value: v });
+  const setEditFirstName = (v: string) => dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
+  const setEditLastName = (v: string) => dispatchEdit({ type: 'SET_LAST_NAME', value: v });
+  const setEditProfession = (v: string) => dispatchEdit({ type: 'SET_PROFESSION', value: v });
+  const setEditTrack = (v: string) => dispatchEdit({ type: 'SET_TRACK', value: v });
+  const setEditSubdomain = (v: string) => dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
+  const setEditIndustry = (v: string) => dispatchEdit({ type: 'SET_INDUSTRY', value: v });
+  const setEditLang = (v: 'en' | 'tr') => dispatchEdit({ type: 'SET_LANG', value: v });
+  const setEditGoals = (v: string[]) => dispatchEdit({ type: 'SET_GOALS', value: v });
 
-  // Grouped preferences state
-  const [prefs, setPrefs] = useState({
+  // Prefs state via useReducer
+  const [prefs, dispatchPrefs] = useReducer(prefsReducer, {
     goals: [] as string[],
     minutes: 15,
     tasks: 2,
@@ -168,7 +173,7 @@ const ProfilePage = () => {
     expLevel: '',
     careerGoal: '',
     saved: false,
-  });
+  } satisfies ProfilePrefsState);
   const {
     goals: prefGoals,
     minutes: prefMinutes,
@@ -179,19 +184,19 @@ const ProfilePage = () => {
     saved: preferencesSaved,
   } = prefs;
   const setPrefGoals = (v: React.SetStateAction<string[]>) =>
-    setPrefs((p) => ({ ...p, goals: typeof v === 'function' ? v(p.goals) : v }));
+    dispatchPrefs({ type: 'SET_GOALS', value: typeof v === 'function' ? v(prefs.goals) : v });
   const setPrefMinutes = (v: React.SetStateAction<number>) =>
-    setPrefs((p) => ({ ...p, minutes: typeof v === 'function' ? v(p.minutes) : v }));
+    dispatchPrefs({ type: 'SET_MINUTES', value: typeof v === 'function' ? v(prefs.minutes) : v });
   const setPrefTasks = (v: React.SetStateAction<number>) =>
-    setPrefs((p) => ({ ...p, tasks: typeof v === 'function' ? v(p.tasks) : v }));
+    dispatchPrefs({ type: 'SET_TASKS', value: typeof v === 'function' ? v(prefs.tasks) : v });
   const setPrefMissedDays = (v: React.SetStateAction<number>) =>
-    setPrefs((p) => ({ ...p, missedDays: typeof v === 'function' ? v(p.missedDays) : v }));
+    dispatchPrefs({ type: 'SET_MISSED_DAYS', value: typeof v === 'function' ? v(prefs.missedDays) : v });
   const setPrefExpLevel = (v: React.SetStateAction<string>) =>
-    setPrefs((p) => ({ ...p, expLevel: typeof v === 'function' ? v(p.expLevel) : v }));
+    dispatchPrefs({ type: 'SET_EXP_LEVEL', value: typeof v === 'function' ? v(prefs.expLevel) : v });
   const setPrefCareerGoal = (v: React.SetStateAction<string>) =>
-    setPrefs((p) => ({ ...p, careerGoal: typeof v === 'function' ? v(p.careerGoal) : v }));
+    dispatchPrefs({ type: 'SET_CAREER_GOAL', value: typeof v === 'function' ? v(prefs.careerGoal) : v });
   const setPreferencesSaved = (v: React.SetStateAction<boolean>) =>
-    setPrefs((p) => ({ ...p, saved: typeof v === 'function' ? v(p.saved) : v }));
+    dispatchPrefs({ type: 'SET_SAVED', value: typeof v === 'function' ? v(prefs.saved) : v });
 
   const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
 
@@ -212,12 +217,15 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (profile) {
-      setPrefGoals(profile.goals || []);
-      setPrefMinutes(profile.dailyTarget?.minutes || 15);
-      setPrefTasks(profile.dailyTarget?.taskCount || 2);
-      setPrefMissedDays(profile.weeklyTolerance?.allowedMissedDays || 0);
-      setPrefExpLevel(profile.experienceLevel || '');
-      setPrefCareerGoal(profile.careerGoal || '');
+      dispatchPrefs({
+        type: 'LOAD_PROFILE',
+        goals: profile.goals || [],
+        minutes: profile.dailyTarget?.minutes || 15,
+        tasks: profile.dailyTarget?.taskCount || 2,
+        missedDays: profile.weeklyTolerance?.allowedMissedDays || 0,
+        expLevel: profile.experienceLevel || '',
+        careerGoal: profile.careerGoal || '',
+      });
     }
   }, [profile]);
 
