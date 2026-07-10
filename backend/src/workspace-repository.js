@@ -1,6 +1,15 @@
 import { createClient } from '@supabase/supabase-js';
 import { ApiError } from './errors.js';
 
+/**
+ * Creates a Supabase-backed workspace repository for CRUD operations on user workspaces.
+ * Uses @supabase/supabase-js client with service role key for backend operations.
+ * @param {Object} config - Workspace configuration
+ * @param {boolean} config.configured - Whether Supabase is configured
+ * @param {string} config.supabaseUrl - Supabase project URL
+ * @param {string} config.supabaseServiceRoleKey - Supabase service role key
+ * @returns {{ getWorkspaces, getWorkspace, createWorkspace, updateWorkspaceMemory, deleteWorkspace, countWorkspaces, addDocument, deleteDocument }} Repository methods
+ */
 export const createSupabaseWorkspaceRepository = (config) => {
   if (!config?.configured) {
     throw new ApiError(

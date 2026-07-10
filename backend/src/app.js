@@ -19,6 +19,7 @@ import {
 } from './workspace.js';
 import { createI18nMiddleware } from './i18n.js';
 import { initAuditLog, getAuditLogs } from './audit-log.js';
+import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 
 export const createApp = ({
   config,
@@ -153,6 +154,7 @@ export const createApp = ({
   app.get(
     '/api/admin/audit-logs',
     requireBackendAuth,
+    validateQuery(AdminAuditLogsQuerySchema),
     async (req, res, next) => {
       try {
         const userId = req.auth?.userId;
@@ -170,10 +172,10 @@ export const createApp = ({
           throw new ApiError(403, 'admin_required', 'Admin access required.');
         }
         const filters = {
-          userId: req.query.userId || undefined,
-          action: req.query.action || undefined,
-          since: req.query.since || undefined,
-          limit: req.query.limit ? parseInt(req.query.limit, 10) : 100,
+          userId: req.validatedQuery.userId || undefined,
+          action: req.validatedQuery.action || undefined,
+          since: req.validatedQuery.since || undefined,
+          limit: req.validatedQuery.limit,
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });

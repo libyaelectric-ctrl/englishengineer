@@ -59,6 +59,41 @@ export const WorkspaceDocumentBodySchema = z.object({
   docContent: z.string().max(1_000_000).optional(),
 });
 
+// --- Billing Schemas ---
+
+export const BillingCheckoutBodySchema = z.object({
+  email: z.string().trim().min(1, 'Email is required.').email('Invalid email format.'),
+  successUrl: z.string().trim().min(1, 'Success URL is required.').url('Invalid URL.'),
+  cancelUrl: z.string().trim().min(1, 'Cancel URL is required.').url('Invalid URL.'),
+  planId: z.string().max(50).optional(),
+});
+
+export const BillingTopupBodySchema = z.object({
+  email: z.string().trim().min(1, 'Email is required.').email('Invalid email format.'),
+  successUrl: z.string().trim().min(1, 'Success URL is required.').url('Invalid URL.'),
+  cancelUrl: z.string().trim().min(1, 'Cancel URL is required.').url('Invalid URL.'),
+});
+
+export const BillingPortalBodySchema = z.object({
+  returnUrl: z.string().trim().min(1, 'Return URL is required.').url('Invalid URL.'),
+});
+
+// --- Admin Schemas ---
+
+export const AdminAuditLogsQuerySchema = z.object({
+  userId: z.string().max(200).optional(),
+  action: z.string().max(100).optional(),
+  since: z.string().max(50).optional(),
+  limit: z
+    .string()
+    .transform((val) => {
+      const num = parseInt(val, 10);
+      return Number.isFinite(num) && num > 0 ? Math.min(num, 1000) : 100;
+    })
+    .optional()
+    .default('100'),
+});
+
 // --- Middleware Factory ---
 
 const formatZodError = (error) => {

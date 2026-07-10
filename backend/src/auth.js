@@ -93,6 +93,18 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
 
 export const extractAuthenticatedUser = (request) => request.auth ?? null;
 
+/**
+ * Creates backend authentication middleware supporting internal API secrets,
+ * Supabase JWT verification, and development bypass modes.
+ * @param {Object} config - Auth configuration
+ * @param {string} [config.internalApiSecret] - Internal API secret for server-to-server auth
+ * @param {string} [config.supabaseJwtSecret] - Supabase JWT secret for local token verification
+ * @param {Object} [config.supabaseUrl] - Supabase URL for remote token validation
+ * @param {Object} [config.supabaseAnonKey] - Supabase anon key for remote validation
+ * @param {boolean} [config.allowInsecureDevAuth] - Allow dev bypass (non-production only)
+ * @param {Function} [fetchImpl=fetch] - Fetch implementation for testing
+ * @returns {{ requireBackendAuth, optionalBackendAuth }} Express middleware functions
+ */
 export const createBackendAuth = (config, fetchImpl = fetch) => {
   const authenticate = async (request) => {
     const token = readBearerToken(request);

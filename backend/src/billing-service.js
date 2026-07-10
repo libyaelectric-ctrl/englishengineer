@@ -137,6 +137,14 @@ const resolveOrProvisionTopupPriceId = async (stripeClient) => {
   return newPrice.id;
 };
 
+/**
+ * Creates a billing service for managing Stripe subscriptions, checkout sessions, and webhooks.
+ * @param {Object} opts - Service dependencies
+ * @param {Object} opts.config - Stripe configuration (secretKey, webhookSecret, price IDs)
+ * @param {Object} opts.stripeClient - Stripe SDK client instance
+ * @param {Object} opts.repository - Subscription data repository
+ * @returns {{ createCheckoutSession, createTopupCheckoutSession, createPortalSession, getSubscriptionStatus, processWebhook }} Billing service methods
+ */
 export const createBillingService = ({ config, stripeClient, repository }) => {
   if (!repository) throw new Error('Billing repository is required.');
   const ensureConfigured = () => {
