@@ -9,6 +9,7 @@ import {
   AICoachModeId,
   AICoachResult,
   AIPromptTemplate,
+  MistakeLogEntry,
 } from './ai.types';
 
 export const AI_COACH_MODES: AICoachMode[] = [
@@ -323,7 +324,7 @@ export const getRecommendedFocus = (learningState: LearningState): string => {
 export const buildCoachContext = (
   user: UserProfile | null,
   learningState: LearningState,
-  mistakeLog?: any[]
+  mistakeLog?: MistakeLogEntry[]
 ): AICoachContext => {
   const progress = ProgressService.getSummary(learningState);
   const skills = ProgressService.getSkillAnalysis(learningState);

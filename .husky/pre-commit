@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Check for mixed code + content changes
+STAGED_FILES=$(git diff --cached --name-only)
+
+CODE_FILES=$(echo "$STAGED_FILES" | grep -E '^src/|^backend/' | grep -E '\.(ts|tsx|js|jsx)$' | wc -l)
+CONTENT_FILES=$(echo "$STAGED_FILES" | grep -E '\.data\.(json|ts)$' | wc -l)
+
+if [ "$CODE_FILES" -gt 0 ] && [ "$CONTENT_FILES" -gt 0 ]; then
+  echo ""
+  echo "⚠️  WARNING: Mixed commit detected!"
+  echo "   Code files: $CODE_FILES"
+  echo "   Content/data files: $CONTENT_FILES"
+  echo ""
+  echo "   Consider splitting into separate commits:"
+  echo "   - Code changes (refactor, feat, fix)"
+  echo "   - Content/data changes (chore: update data)"
+  echo ""
+  echo "   This is a warning, not a blocker."
+  echo ""
+fi
