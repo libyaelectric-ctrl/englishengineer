@@ -18,6 +18,7 @@ const emptySubscription = () => ({
   stripeSubscriptionId: null,
   updatedAt: new Date().toISOString(),
   source: 'backend',
+  topupCredits: 0,
 });
 
 export const createBillingService = ({ config, stripeClient, repository }) => {
@@ -137,6 +138,45 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     return newPrice.id;
   };
 
+  const resolveOrProvisionTopupPriceId = async () => {
+    const nickname = 'AI Coach Top-up 50 Credits';
+    const existingPrices = await stripeClient.prices.list({
+      active: true,
+      type: 'one_time',
+      limit: 100,
+    });
+    const found = existingPrices.data.find(
+      (p) =>
+        p.nickname === nickname &&
+        p.unit_amount === 500 &&
+        p.currency === 'usd'
+    );
+    if (found) {
+      return found.id;
+    }
+
+    const existingProducts = await stripeClient.products.list({
+      active: true,
+      limit: 100,
+    });
+    let product = existingProducts.data.find((p) => p.name === 'AI Coach Top-up');
+    if (!product) {
+      product = await stripeClient.products.create({
+        name: 'AI Coach Top-up',
+        metadata: { type: 'topup' },
+      });
+    }
+
+    const newPrice = await stripeClient.prices.create({
+      unit_amount: 500,
+      currency: 'usd',
+      product: product.id,
+      nickname: nickname,
+      metadata: { type: 'topup' },
+    });
+    return newPrice.id;
+  };
+
   return {
     async createCheckoutSession(userId, body) {
       ensureConfigured();
@@ -163,6 +203,41 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         cancel_url: cancelUrl,
         client_reference_id: userId,
         metadata: { userId, planId },
+      });
+      if (!session.url) {
+        throw new ApiError(
+          502,
+          'stripe_invalid_response',
+          'Stripe did not return a checkout URL.'
+        );
+      }
+      return { url: session.url };
+    },
+
+    async createTopupCheckoutSession(userId, body) {
+      ensureConfigured();
+      requireText(userId, 'authenticated userId');
+      if (userId.startsWith('demo_engineer_')) {
+        throw new ApiError(
+          403,
+          'FORBIDDEN_DEMO_ACTION',
+          'Demo profiles do not have billing privileges.'
+        );
+      }
+      const email = requireText(body?.email, 'email');
+      const successUrl = requireText(body?.successUrl, 'successUrl');
+      const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
+
+      const price = await resolveOrProvisionTopupPriceId();
+
+      const session = await stripeClient.checkout.sessions.create({
+        mode: 'payment',
+        customer_email: email,
+        line_items: [{ price, quantity: 1 }],
+        success_url: successUrl,
+        cancel_url: cancelUrl,
+        client_reference_id: userId,
+        metadata: { userId, type: 'topup', credits: '50' },
       });
       if (!session.url) {
         throw new ApiError(
@@ -289,16 +364,33 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         if (userId) {
           if (eventType === 'checkout.session.completed') {
             step = 'process_checkout_completed';
-            await repository.upsertSubscriptionStatus(userId, {
-              planId: object.metadata?.planId || 'pro',
-              status: 'active',
-              currentPeriodEnd: null,
-              cancelAtPeriodEnd: false,
-              stripeCustomerId: object.customer || null,
-              stripeSubscriptionId: object.subscription || null,
-              updatedAt: new Date().toISOString(),
-              source: 'stripe_webhook',
-            });
+            if (object.metadata?.type === 'topup') {
+              const credits = parseInt(object.metadata?.credits || '50', 10);
+              const current =
+                (await repository.getSubscriptionStatus(userId)) ??
+                emptySubscription();
+              await repository.upsertSubscriptionStatus(userId, {
+                ...current,
+                topupCredits: (current.topupCredits || 0) + credits,
+                updatedAt: new Date().toISOString(),
+                source: 'stripe_webhook',
+              });
+            } else {
+              const current =
+                (await repository.getSubscriptionStatus(userId)) ??
+                emptySubscription();
+              await repository.upsertSubscriptionStatus(userId, {
+                planId: object.metadata?.planId || 'pro',
+                status: 'active',
+                currentPeriodEnd: null,
+                cancelAtPeriodEnd: false,
+                stripeCustomerId: object.customer || null,
+                stripeSubscriptionId: object.subscription || null,
+                updatedAt: new Date().toISOString(),
+                source: 'stripe_webhook',
+                topupCredits: current.topupCredits || 0,
+              });
+            }
           } else if (
             eventType === 'customer.subscription.created' ||
             eventType === 'customer.subscription.updated'
@@ -424,9 +516,25 @@ export const registerBillingRoutes = (
           userId,
           details: { planId: req.body?.planId },
         });
-        res.json(
-          await billingService.createCheckoutSession(userId, req.body)
-        );
+        res.json(await billingService.createCheckoutSession(userId, req.body));
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+  app.post(
+    '/api/billing/create-topup-session',
+    requireBackendAuth,
+    rateLimiter,
+    async (req, res, next) => {
+      try {
+        const userId = assertUserOwnership(req);
+        auditLog({
+          action: AUDIT_ACTIONS.CHECKOUT_CREATED,
+          userId,
+          details: { type: 'topup', credits: 50 },
+        });
+        res.json(await billingService.createTopupCheckoutSession(userId, req.body));
       } catch (error) {
         next(error);
       }

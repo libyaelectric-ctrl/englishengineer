@@ -148,4 +148,21 @@ export class StripeBillingProvider {
       request.userId
     );
   }
+
+  async createTopupCheckoutSession(
+    request: Omit<BillingSessionRequest, 'planId'>
+  ): Promise<BillingRedirectResponse> {
+    const authHeaders = await getBackendAuthHeaders(request.userId);
+    if (!authHeaders.Authorization) {
+      throw new Error(
+        'Please sign in with your account before purchasing credits.'
+      );
+    }
+
+    return postJson<BillingRedirectResponse, Omit<BillingSessionRequest, 'planId'>>(
+      buildBillingEndpoint(this.billingApiUrl, 'create-topup-session'),
+      request,
+      request.userId
+    );
+  }
 }

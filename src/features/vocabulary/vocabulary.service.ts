@@ -166,12 +166,14 @@ export const VocabularyService = {
   addDiscoveredTerms(terms: string[]): void {
     const state = this.getState();
     const normalizedTerms = terms.map((term) => term.toLowerCase());
-    const matchingIds = (getVocabularyEntries() ?? []).filter((entry) =>
-      normalizedTerms.some(
-        (term) =>
-          entry.word.toLowerCase().includes(term) || entry.tags.includes(term)
+    const matchingIds = (getVocabularyEntries() ?? [])
+      .filter((entry) =>
+        normalizedTerms.some(
+          (term) =>
+            entry.word.toLowerCase().includes(term) || entry.tags.includes(term)
+        )
       )
-    ).map((entry) => entry.id);
+      .map((entry) => entry.id);
 
     state.discoveredWords = Array.from(
       new Set([...state.discoveredWords, ...matchingIds])

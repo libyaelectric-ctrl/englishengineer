@@ -128,18 +128,18 @@ Invoke-WebRequest -Uri "https://wxabrwzitwsjtpmlvvqe.supabase.co/auth/v1/health"
 
 ## Mevcut Puan Durumu (2026-07-10)
 
-| Alan             | Puan                   |
-| ---------------- | ---------------------- |
-| Mimari & Kod     | 100/100 ✅ mükemmel     |
+| Alan             | Puan                                  |
+| ---------------- | ------------------------------------- |
+| Mimari & Kod     | 100/100 ✅ mükemmel                   |
 | UI/UX            | 100/100 ✅ harika (Day/Night toggled) |
-| İçerik Kalitesi  | 100/100 ✅ QC tam/temiz |
-| Listening Engine | 100/100 ✅ test edildi  |
-| Auth/Supabase    | 100/100 ✅ canlı & RLS  |
-| Test Coverage    | 100/100 ✅ (380+ test geçiyor) |
-| Billing/Stripe   | 100/100 ✅ key tamam    |
-| AI Copilot       | 100/100 ✅ Gemini aktif |
-| Deployment       | 100/100 ✅ Vercel/Rail  |
-| **TOPLAM**       | **100/100**            |
+| İçerik Kalitesi  | 100/100 ✅ QC tam/temiz               |
+| Listening Engine | 100/100 ✅ test edildi                |
+| Auth/Supabase    | 100/100 ✅ canlı & RLS                |
+| Test Coverage    | 100/100 ✅ (380+ test geçiyor)        |
+| Billing/Stripe   | 100/100 ✅ key tamam                  |
+| AI Copilot       | 100/100 ✅ Gemini aktif               |
+| Deployment       | 100/100 ✅ Vercel/Rail                |
+| **TOPLAM**       | **100/100**                           |
 
 ## Kalan Görevler
 

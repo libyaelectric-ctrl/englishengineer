@@ -101,11 +101,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
         );
       })}
       {ADMIN_PANEL_ENABLED && (
-        <NavLink
-          to="/admin"
-          onClick={onItemClick}
-          className={linkClasses}
-        >
+        <NavLink to="/admin" onClick={onItemClick} className={linkClasses}>
           <Shield className="h-4 w-4 shrink-0 text-red-500" />
           <span>{translate('Admin Panel')}</span>
         </NavLink>

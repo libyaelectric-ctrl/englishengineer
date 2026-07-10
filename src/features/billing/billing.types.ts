@@ -66,6 +66,7 @@ export interface SubscriptionSnapshot {
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
   updatedAt: string;
+  topupCredits?: number;
 }
 
 export interface BillingSessionRequest {

@@ -19,6 +19,7 @@ const mapSubscriptionRow = (row) =>
         stripeSubscriptionId: row.stripe_subscription_id,
         updatedAt: row.updated_at,
         source: row.source,
+        topupCredits: row.topup_credits || 0,
       }
     : null;
 
@@ -32,10 +33,12 @@ const mapSubscriptionSnapshot = (userId, snapshot) => ({
   stripe_subscription_id: snapshot.stripeSubscriptionId,
   updated_at: snapshot.updatedAt,
   source: snapshot.source,
+  topup_credits: snapshot.topupCredits || 0,
 });
 
 const handleDbError = (error) => {
-  const message = error.message || 'Supabase billing repository request failed.';
+  const message =
+    error.message || 'Supabase billing repository request failed.';
   const dbError = new Error(message);
   dbError.status = error.status || 500;
   dbError.code = error.code || 'N/A';
@@ -73,21 +76,27 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
       try {
         bodyText = await response.text();
       } catch {}
-      const err = new Error(`Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`);
+      const err = new Error(
+        `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`
+      );
       err.status = response.status;
       throw err;
     }
     return response;
   };
 
-  const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
-    auth: {
-      persistSession: false,
-    },
-    global: {
-      fetch: wrappedFetch,
-    },
-  });
+  const supabase = createClient(
+    config.supabaseUrl,
+    config.supabaseServiceRoleKey,
+    {
+      auth: {
+        persistSession: false,
+      },
+      global: {
+        fetch: wrappedFetch,
+      },
+    }
+  );
 
   return {
     mode: 'supabase',
@@ -126,9 +135,8 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
       return !!data;
     },
     async markStripeEventProcessed(eventId, metadata = {}) {
-      const { error } = await supabase
-        .from('stripe_processed_events')
-        .upsert({
+      const { error } = await supabase.from('stripe_processed_events').upsert(
+        {
           stripe_event_id: eventId,
           event_type:
             typeof metadata.type === 'string' ? metadata.type : 'unknown',
@@ -137,9 +145,11 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
               ? metadata.processedAt
               : new Date().toISOString(),
           metadata,
-        }, {
+        },
+        {
           onConflict: 'stripe_event_id',
-        });
+        }
+      );
       if (error) {
         throw handleDbError(error);
       }

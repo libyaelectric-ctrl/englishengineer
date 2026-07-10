@@ -1,9 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import {
-  FEATURE_FLAGS,
-  getDefaultFlags,
-} from '@/config/feature-flags.config';
+import { FEATURE_FLAGS, getDefaultFlags } from '@/config/feature-flags.config';
 import { useBillingStore } from '@/features/billing';
 import { useAuthStore } from '@/features/auth';
 

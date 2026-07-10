@@ -76,9 +76,20 @@ export const canUseAICoach = (
     return baseAccess;
   }
 
+  if (
+    typeof subscription.topupCredits === 'number' &&
+    subscription.topupCredits > 0
+  ) {
+    return {
+      allowed: true,
+      reason: `Using top-up credits (${subscription.topupCredits} left).`,
+      requiredPlan: null,
+    };
+  }
+
   return {
     allowed: false,
-    reason: `Free AI Coach limit reached for today. Upgrade to Pro for unlimited coaching.`,
+    reason: `Free AI Coach limit reached for today. Upgrade to Pro or purchase top-up credits.`,
     requiredPlan: 'pro',
   };
 };

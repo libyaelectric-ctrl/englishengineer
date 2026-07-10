@@ -42,7 +42,6 @@ import {
   useSkillLevel,
 } from '@/features/level-system';
 
-
 const ReadingPage = () => {
   // Read state and actions from the reading store
   const {

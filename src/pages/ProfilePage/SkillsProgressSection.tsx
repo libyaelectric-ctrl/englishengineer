@@ -2,13 +2,21 @@ import { Link } from 'react-router-dom';
 import { Award, Gauge, ArrowRight } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
-import { SKILL_NAMES, UserLearningProfile, LearningProfileEngine, VocabularyMemorySummary } from '@/features/profile';
+import {
+  SKILL_NAMES,
+  UserLearningProfile,
+  LearningProfileEngine,
+  VocabularyMemorySummary,
+} from '@/features/profile';
 import { MistakeLogEntry } from '@/features/learning-intelligence';
 
 interface SkillsProgressSectionProps {
   profile: UserLearningProfile;
   memory: VocabularyMemorySummary;
-  learningState: { streak: number; studySessions: Array<{ timestamp: string }> };
+  learningState: {
+    streak: number;
+    studySessions: Array<{ timestamp: string }>;
+  };
   mistakeLog: MistakeLogEntry[];
 }
 
@@ -44,8 +52,7 @@ export const SkillsProgressSection = ({
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {SKILL_NAMES.map((skill) => {
             const skillProfile = profile.skills[skill];
-            const isSimulated =
-              skill === 'listening' || skill === 'speaking';
+            const isSimulated = skill === 'listening' || skill === 'speaking';
             return (
               <article
                 key={skill}

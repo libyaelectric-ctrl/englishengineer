@@ -116,4 +116,31 @@ export const BillingService = {
       );
     }
   },
+
+  async startTopupCheckout(
+    userId: string,
+    email: string
+  ): Promise<void> {
+    const provider = getProvider();
+    if (!provider) {
+      throw new Error(
+        'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable top-up purchase.'
+      );
+    }
+
+    try {
+      const response = await provider.createTopupCheckoutSession({
+        userId,
+        email,
+        successUrl: getReturnUrl('/profile?topup=success'),
+        cancelUrl: getReturnUrl('/profile?topup=cancelled'),
+      });
+
+      window.location.assign(response.url);
+    } catch {
+      throw new Error(
+        'Billing backend is unavailable. Please try again later or use demo mode.'
+      );
+    }
+  },
 };

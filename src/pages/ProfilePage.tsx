@@ -64,7 +64,9 @@ const ProfilePage = () => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [clearConfirmation, setClearConfirmation] = useState('');
 
-  const { profile, memory, learningState } = useLearningCockpit(currentUser?.id);
+  const { profile, memory, learningState } = useLearningCockpit(
+    currentUser?.id
+  );
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const language = useLocalizationStore((state) => state.language);
   const setLanguage = useLocalizationStore((state) => state.setLanguage);
@@ -190,19 +192,25 @@ const ProfilePage = () => {
         {
           professionId: (editProfession as ProfessionId) || null,
           professionalTrack:
-            (editTrack as UserLearningProfile['professionalTrack']) || undefined,
+            (editTrack as UserLearningProfile['professionalTrack']) ||
+            undefined,
           electricalSubdomain:
-            (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
-          industryId: (editIndustry as UserLearningProfile['industryId']) || null,
+            (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
+            undefined,
+          industryId:
+            (editIndustry as UserLearningProfile['industryId']) || null,
           interfaceLanguage: editLang,
-          communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
+          communicationGoals:
+            editGoals as UserLearningProfile['communicationGoals'],
         }
       );
       if (editLang !== language) setLanguage(editLang);
       setMessage('Profile overview updated successfully.');
       setIsEditMode(false);
     } catch (saveError: unknown) {
-      setError(getErrorMessage(saveError, 'Failed to update profile overview.'));
+      setError(
+        getErrorMessage(saveError, 'Failed to update profile overview.')
+      );
     } finally {
       setIsSaving(false);
     }
@@ -218,7 +226,9 @@ const ProfilePage = () => {
           goals: prefGoals as unknown as UserLearningProfile['goals'],
           dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
           weeklyTolerance: { allowedMissedDays: prefMissedDays },
-          experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
+          experienceLevel:
+            (prefExpLevel as UserLearningProfile['experienceLevel']) ||
+            undefined,
           careerGoal: prefCareerGoal,
         }
       );
@@ -233,7 +243,9 @@ const ProfilePage = () => {
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
+      setError(
+        'Demo mode: Billing is available after connecting Supabase and Stripe.'
+      );
       return;
     }
     try {
@@ -243,21 +255,30 @@ const ProfilePage = () => {
       });
       await startCheckout(currentUser.id, currentUser.email, 'pro');
     } catch (checkoutError: unknown) {
-      setError(getErrorMessage(checkoutError, 'Billing is not available in demo mode.'));
+      setError(
+        getErrorMessage(checkoutError, 'Billing is not available in demo mode.')
+      );
     }
   };
 
   const handleManageSubscription = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError('Demo mode: Subscription management available after connecting Supabase + Stripe.');
+      setError(
+        'Demo mode: Subscription management available after connecting Supabase + Stripe.'
+      );
       return;
     }
     try {
       setError(null);
       await openCustomerPortal(currentUser.id);
     } catch (portalError: unknown) {
-      setError(getErrorMessage(portalError, 'Billing portal is not available in demo mode.'));
+      setError(
+        getErrorMessage(
+          portalError,
+          'Billing portal is not available in demo mode.'
+        )
+      );
     }
   };
 
@@ -269,7 +290,9 @@ const ProfilePage = () => {
       scope: 'Local EngVox data stored on this device',
       data: storage.exportAll(),
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: 'application/json',
+    });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
@@ -292,7 +315,8 @@ const ProfilePage = () => {
     if (currentUser?.displayName) completed += 20;
     if (profile?.professionId) completed += 20;
     if (profile?.industryId) completed += 20;
-    if (profile?.communicationGoals && profile.communicationGoals.length > 0) completed += 10;
+    if (profile?.communicationGoals && profile.communicationGoals.length > 0)
+      completed += 10;
     return completed;
   })();
 
@@ -306,7 +330,8 @@ const ProfilePage = () => {
               {currentUser?.displayName || 'Demo Engineer'}
             </h1>
             <p className="mt-1 text-xs font-medium text-muted-copy">
-              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Engineering Professional'}
+              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
+                'Engineering Professional'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -319,7 +344,8 @@ const ProfilePage = () => {
           </div>
         </div>
         <p className="text-xs leading-5 text-muted-copy max-w-2xl">
-          Manage your professional profile, learning preferences and EngVox access.
+          Manage your professional profile, learning preferences and EngVox
+          access.
         </p>
       </header>
 
@@ -339,7 +365,10 @@ const ProfilePage = () => {
 
       {/* Overview Section */}
       {activeSection === 'overview' && (
-        <section id="overview" className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto">
+        <section
+          id="overview"
+          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
+        >
           <SectionCard
             title="Profile Overview"
             subtitle="Your professional and regional classification metadata"
@@ -350,36 +379,78 @@ const ProfilePage = () => {
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {[
                     ['Full Name', currentUser?.displayName || 'Not Provided'],
-                    ['Profession / Role', PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Not Selected'],
-                    ['Engineering Discipline', PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label || 'Electrical Engineering'],
+                    [
+                      'Profession / Role',
+                      PROFESSIONS.find((p) => p.id === profile.professionId)
+                        ?.label || 'Not Selected',
+                    ],
+                    [
+                      'Engineering Discipline',
+                      PROFESSIONAL_TRACKS.find(
+                        (t) => t.id === profile.professionalTrack
+                      )?.label || 'Electrical Engineering',
+                    ],
                     ...(profile.professionalTrack === 'electrical'
-                      ? [['Electrical Subdomain', ELECTRICAL_SUBDOMAINS.find((s) => s.id === profile.electricalSubdomain)?.label || 'Not Selected']]
+                      ? [
+                          [
+                            'Electrical Subdomain',
+                            ELECTRICAL_SUBDOMAINS.find(
+                              (s) => s.id === profile.electricalSubdomain
+                            )?.label || 'Not Selected',
+                          ],
+                        ]
                       : []),
-                    ['Industry Sectors', INDUSTRIES.find((i) => i.id === profile.industryId)?.label || 'Not Selected'],
-                    ['Interface Language', profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English'],
+                    [
+                      'Industry Sectors',
+                      INDUSTRIES.find((i) => i.id === profile.industryId)
+                        ?.label || 'Not Selected',
+                    ],
+                    [
+                      'Interface Language',
+                      profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English',
+                    ],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-xl border border-border-soft bg-surface p-4">
-                      <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">{label}</span>
-                      <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
+                    <div
+                      key={label}
+                      className="rounded-xl border border-border-soft bg-surface p-4"
+                    >
+                      <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+                        {label}
+                      </span>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {value}
+                      </p>
                     </div>
                   ))}
                 </div>
                 <div className="rounded-xl border border-border-soft bg-surface p-4">
-                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">Communication Goals</span>
-                  {profile.communicationGoals && profile.communicationGoals.length > 0 ? (
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+                    Communication Goals
+                  </span>
+                  {profile.communicationGoals &&
+                  profile.communicationGoals.length > 0 ? (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {profile.communicationGoals.map((gId) => (
-                        <span key={gId} className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary">
-                          {COMMUNICATION_GOALS.find((g) => g.id === gId)?.label || gId}
+                        <span
+                          key={gId}
+                          className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary"
+                        >
+                          {COMMUNICATION_GOALS.find((g) => g.id === gId)
+                            ?.label || gId}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-2 text-xs text-muted-copy">No goals set yet.</p>
+                    <p className="mt-2 text-xs text-muted-copy">
+                      No goals set yet.
+                    </p>
                   )}
                 </div>
                 <div className="flex justify-end">
-                  <button onClick={enterEditMode} className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-4 py-2 text-xs font-medium text-foreground hover:bg-background transition-colors">
+                  <button
+                    onClick={enterEditMode}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-4 py-2 text-xs font-medium text-foreground hover:bg-background transition-colors"
+                  >
                     Edit Profile
                   </button>
                 </div>
@@ -390,16 +461,34 @@ const ProfilePage = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     First Name
-                    <input value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none" />
+                    <input
+                      value={editFirstName}
+                      onChange={(e) => setEditFirstName(e.target.value)}
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
+                    />
                   </label>
                   <label className="block space-y-1.5 text-xs font-medium text-foreground">
                     Last Name
-                    <input value={editLastName} onChange={(e) => setEditLastName(e.target.value)} className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none" />
+                    <input
+                      value={editLastName}
+                      onChange={(e) => setEditLastName(e.target.value)}
+                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
+                    />
                   </label>
                 </div>
                 <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
-                  <button type="button" onClick={() => setIsEditMode(false)} className="text-xs font-medium text-muted-copy hover:text-foreground">Cancel</button>
-                  <button type="submit" disabled={isSaving} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-white hover:bg-primary/95 transition-colors disabled:opacity-50">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditMode(false)}
+                    className="text-xs font-medium text-muted-copy hover:text-foreground"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSaving}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-white hover:bg-primary/95 transition-colors disabled:opacity-50"
+                  >
                     {isSaving ? 'Saving...' : 'Save Profile'}
                   </button>
                 </div>

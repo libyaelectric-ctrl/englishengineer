@@ -41,8 +41,9 @@ const SKILL_META: Record<
 const DashboardPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { profile, memory, missions, learningState } =
-    useLearningCockpit(currentUser?.id);
+  const { profile, memory, missions, learningState } = useLearningCockpit(
+    currentUser?.id
+  );
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const summary = ProgressService.getSummary(learningState);
   const focusSkill = [...SKILL_NAMES]

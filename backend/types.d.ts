@@ -3,7 +3,11 @@
 
 // --- Environment & Configuration ---
 
-export type RuntimeEnvironment = 'development' | 'test' | 'staging' | 'production';
+export type RuntimeEnvironment =
+  | 'development'
+  | 'test'
+  | 'staging'
+  | 'production';
 
 export type AiProvider = 'mock' | 'openai' | 'anthropic' | 'gemini';
 
@@ -189,7 +193,15 @@ export interface WorkspaceDocumentBody {
 
 // --- Billing & Subscriptions ---
 
-export type PlanId = 'free' | 'lite' | 'pro' | 'project' | 'max' | 'exec' | 'private' | 'team';
+export type PlanId =
+  | 'free'
+  | 'lite'
+  | 'pro'
+  | 'project'
+  | 'max'
+  | 'exec'
+  | 'private'
+  | 'team';
 
 export type SubscriptionStatus =
   | 'none'

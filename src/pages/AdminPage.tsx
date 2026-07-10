@@ -66,12 +66,34 @@ const INITIAL_USERS: UserRecord[] = [
 
 export const AdminPage: React.FC = () => {
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
-  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
+    'users'
+  );
   const [systemLogs] = useState([
-    { id: 1, time: '10:04:12', type: 'info', msg: 'Stripe webhook checkout.session.completed received' },
-    { id: 2, time: '09:48:02', type: 'info', msg: 'User catexozcan@gmail.com logged in successfully' },
-    { id: 3, time: '09:12:44', type: 'warning', msg: 'AI rate limit warning triggered for user usr_002' },
-    { id: 4, time: '08:05:04', type: 'info', msg: 'Production database health-check OK' },
+    {
+      id: 1,
+      time: '10:04:12',
+      type: 'info',
+      msg: 'Stripe webhook checkout.session.completed received',
+    },
+    {
+      id: 2,
+      time: '09:48:02',
+      type: 'info',
+      msg: 'User catexozcan@gmail.com logged in successfully',
+    },
+    {
+      id: 3,
+      time: '09:12:44',
+      type: 'warning',
+      msg: 'AI rate limit warning triggered for user usr_002',
+    },
+    {
+      id: 4,
+      time: '08:05:04',
+      type: 'info',
+      msg: 'Production database health-check OK',
+    },
   ]);
 
   const handlePromote = (id: string) => {
@@ -97,7 +119,8 @@ export const AdminPage: React.FC = () => {
               EngineerOS Command Console
             </h1>
             <p className="mt-1.5 text-xs text-muted-copy">
-              Monitor active student metrics, manage subscriptions, check integrations, and manage configuration parameters.
+              Monitor active student metrics, manage subscriptions, check
+              integrations, and manage configuration parameters.
             </p>
           </div>
           <div className="flex gap-2">
@@ -126,19 +149,29 @@ export const AdminPage: React.FC = () => {
       {/* Grid Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-[10px] font-bold text-muted-copy uppercase">Total Students</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">{users.length}</p>
+          <p className="text-[10px] font-bold text-muted-copy uppercase">
+            Total Students
+          </p>
+          <p className="mt-1 text-2xl font-bold text-foreground">
+            {users.length}
+          </p>
         </div>
         <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-[10px] font-bold text-muted-copy uppercase">Active Today</p>
+          <p className="text-[10px] font-bold text-muted-copy uppercase">
+            Active Today
+          </p>
           <p className="mt-1 text-2xl font-bold text-emerald-600">2</p>
         </div>
         <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-[10px] font-bold text-muted-copy uppercase">Pro Members</p>
+          <p className="text-[10px] font-bold text-muted-copy uppercase">
+            Pro Members
+          </p>
           <p className="mt-1 text-2xl font-bold text-blue-600">3</p>
         </div>
         <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-[10px] font-bold text-muted-copy uppercase">AI Request Count</p>
+          <p className="text-[10px] font-bold text-muted-copy uppercase">
+            AI Request Count
+          </p>
           <p className="mt-1 text-2xl font-bold text-purple-600">1,842</p>
         </div>
       </div>
@@ -159,18 +192,25 @@ export const AdminPage: React.FC = () => {
               </thead>
               <tbody>
                 {users.map((u) => (
-                  <tr key={u.id} className="border-b border-border-soft hover:bg-surface-hover/30 text-xs">
+                  <tr
+                    key={u.id}
+                    className="border-b border-border-soft hover:bg-surface-hover/30 text-xs"
+                  >
                     <td className="py-3.5 px-4">
                       <p className="font-semibold text-foreground">{u.name}</p>
                       <p className="text-[10px] text-muted-copy">{u.email}</p>
                     </td>
-                    <td className="py-3.5 px-4 text-muted-copy">{u.discipline}</td>
+                    <td className="py-3.5 px-4 text-muted-copy">
+                      {u.discipline}
+                    </td>
                     <td className="py-3.5 px-4">
                       <span className="rounded bg-primary/10 px-1.5 py-0.5 font-bold text-primary">
                         {u.level}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 font-semibold text-foreground">{u.elo}</td>
+                    <td className="py-3.5 px-4 font-semibold text-foreground">
+                      {u.elo}
+                    </td>
                     <td className="py-3.5 px-4">
                       <span
                         className={`rounded px-1.5 py-0.5 font-semibold text-[10px] ${
@@ -205,19 +245,28 @@ export const AdminPage: React.FC = () => {
         <SectionCard title="Stripe Billing Integrations" icon={Wallet}>
           <div className="space-y-4">
             <div className="rounded-xl bg-surface-hover/50 p-4 border border-border-soft">
-              <h3 className="text-sm font-semibold text-foreground">Stripe Connection Health</h3>
+              <h3 className="text-sm font-semibold text-foreground">
+                Stripe Connection Health
+              </h3>
               <div className="mt-2.5 flex items-center gap-2 text-xs text-emerald-700">
-                <CheckCircle className="h-4 w-4" /> Live Keys Configured Successfully
+                <CheckCircle className="h-4 w-4" /> Live Keys Configured
+                Successfully
               </div>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-border-soft p-4 bg-surface">
-                <p className="text-[10px] font-bold text-muted-copy uppercase">Monthly Recurring Revenue</p>
+                <p className="text-[10px] font-bold text-muted-copy uppercase">
+                  Monthly Recurring Revenue
+                </p>
                 <p className="mt-1 text-xl font-bold text-foreground">$57.00</p>
               </div>
               <div className="rounded-xl border border-border-soft p-4 bg-surface">
-                <p className="text-[10px] font-bold text-muted-copy uppercase">Stripe Webhooks (Idempotent)</p>
-                <p className="mt-1 text-xl font-bold text-emerald-600">Active (100% OK)</p>
+                <p className="text-[10px] font-bold text-muted-copy uppercase">
+                  Stripe Webhooks (Idempotent)
+                </p>
+                <p className="mt-1 text-xl font-bold text-emerald-600">
+                  Active (100% OK)
+                </p>
               </div>
             </div>
           </div>
@@ -228,34 +277,50 @@ export const AdminPage: React.FC = () => {
         <SectionCard title="System Diagnostics" icon={Activity}>
           <div className="space-y-4">
             <div className="rounded-xl bg-surface-hover/50 p-4 border border-border-soft">
-              <h3 className="text-sm font-semibold text-foreground">Active Configuration State</h3>
+              <h3 className="text-sm font-semibold text-foreground">
+                Active Configuration State
+              </h3>
               <div className="mt-3 grid gap-3 text-xs sm:grid-cols-2">
                 <div className="flex justify-between border-b border-border-soft pb-1">
                   <span className="text-muted-copy">Dev Auth Bypass:</span>
-                  <span className="font-bold text-rose-600">Blocked (Secure)</span>
+                  <span className="font-bold text-rose-600">
+                    Blocked (Secure)
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-border-soft pb-1">
                   <span className="text-muted-copy">Supabase RLS Rules:</span>
-                  <span className="font-bold text-emerald-600">Active (Secure)</span>
+                  <span className="font-bold text-emerald-600">
+                    Active (Secure)
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-border-soft pb-1">
                   <span className="text-muted-copy">AI LLM Model:</span>
-                  <span className="font-bold text-foreground">claude-haiku-4-5</span>
+                  <span className="font-bold text-foreground">
+                    claude-haiku-4-5
+                  </span>
                 </div>
                 <div className="flex justify-between border-b border-border-soft pb-1">
-                  <span className="text-muted-copy">Rate-Limiter (Upstash):</span>
+                  <span className="text-muted-copy">
+                    Rate-Limiter (Upstash):
+                  </span>
                   <span className="font-bold text-emerald-600">Connected</span>
                 </div>
               </div>
             </div>
 
             <div>
-              <h3 className="text-xs font-bold text-muted-copy uppercase tracking-wider mb-2">Live System Log Output</h3>
+              <h3 className="text-xs font-bold text-muted-copy uppercase tracking-wider mb-2">
+                Live System Log Output
+              </h3>
               <div className="rounded-xl bg-primary/5 p-4 font-mono text-[10px] text-primary space-y-1 max-h-48 overflow-y-auto">
                 {systemLogs.map((log) => (
                   <p key={log.id}>
                     <span className="opacity-50">[{log.time}]</span>{' '}
-                    <span className={log.type === 'warning' ? 'text-amber-600 font-bold' : ''}>
+                    <span
+                      className={
+                        log.type === 'warning' ? 'text-amber-600 font-bold' : ''
+                      }
+                    >
                       {log.msg}
                     </span>
                   </p>

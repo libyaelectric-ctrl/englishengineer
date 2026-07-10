@@ -3,7 +3,13 @@ import { ApiError } from '../errors.js';
 export const mockText = (operation) =>
   `[Mock AI] ${operation} is running in local fallback mode. Configure a supported backend provider for real AI output.`;
 
-export const callOpenAI = async (config, prompt, signal, fetchImpl, jsonMode = false) => {
+export const callOpenAI = async (
+  config,
+  prompt,
+  signal,
+  fetchImpl,
+  jsonMode = false
+) => {
   const response = await fetchImpl(
     'https://api.openai.com/v1/chat/completions',
     {
@@ -77,7 +83,13 @@ export const callAnthropic = async (config, prompt, signal, fetchImpl) => {
   return text.trim();
 };
 
-export const callGemini = async (config, prompt, signal, fetchImpl, jsonMode = false) => {
+export const callGemini = async (
+  config,
+  prompt,
+  signal,
+  fetchImpl,
+  jsonMode = false
+) => {
   const model = config.model || 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.apiKey}`;
   const response = await fetchImpl(url, {

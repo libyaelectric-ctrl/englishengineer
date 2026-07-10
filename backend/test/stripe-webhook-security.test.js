@@ -127,7 +127,11 @@ test('same webhook event idempotent - duplicate delivery returns duplicate=true'
   // First delivery
   const response1 = await fetch(`${url}/api/webhooks/stripe`, options);
   const body1 = await response1.json();
-  assert.equal(body1.duplicate, false, 'First delivery should not be duplicate');
+  assert.equal(
+    body1.duplicate,
+    false,
+    'First delivery should not be duplicate'
+  );
 
   // Second delivery (replay)
   const response2 = await fetch(`${url}/api/webhooks/stripe`, options);

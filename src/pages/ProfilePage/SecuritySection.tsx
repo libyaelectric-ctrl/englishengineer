@@ -6,7 +6,9 @@ import { Button } from '@/shared/components/Button';
 interface SecuritySectionProps {
   providerMode: 'local' | 'supabase';
   showClearConfirmation: boolean;
-  setShowClearConfirmation: (show: boolean | ((prev: boolean) => boolean)) => void;
+  setShowClearConfirmation: (
+    show: boolean | ((prev: boolean) => boolean)
+  ) => void;
   clearConfirmation: string;
   setClearConfirmation: (val: string) => void;
   exportLocalData: () => void;
@@ -46,8 +48,8 @@ export const SecuritySection = ({
             Local Backups
           </span>
           <p className="text-xs text-muted-copy leading-5 mb-4">
-            Export all stored local progress, CEFR stats, and memory logs
-            into a portable JSON backup file.
+            Export all stored local progress, CEFR stats, and memory logs into a
+            portable JSON backup file.
           </p>
           <Button
             type="button"
@@ -65,9 +67,8 @@ export const SecuritySection = ({
             Destructive actions
           </span>
           <p className="text-xs text-error/80 leading-5 mb-4">
-            Completely erase all study sessions, mistake history, and
-            vocabulary data from this local device. This action is
-            irreversible.
+            Completely erase all study sessions, mistake history, and vocabulary
+            data from this local device. This action is irreversible.
           </p>
 
           {providerMode === 'local' ? (
@@ -88,9 +89,7 @@ export const SecuritySection = ({
                     <input
                       value={clearConfirmation}
                       onChange={(event) =>
-                        setClearConfirmation(
-                          event.target.value.toUpperCase()
-                        )
+                        setClearConfirmation(event.target.value.toUpperCase())
                       }
                       className="mt-2 min-h-10 w-full rounded-lg border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
                     />
@@ -109,9 +108,8 @@ export const SecuritySection = ({
             </>
           ) : (
             <p className="text-xs text-muted-copy">
-              Cloud account administration is managed via Supabase. Local
-              data clearing is only available in Guest/Local profile
-              modes.
+              Cloud account administration is managed via Supabase. Local data
+              clearing is only available in Guest/Local profile modes.
             </p>
           )}
         </div>

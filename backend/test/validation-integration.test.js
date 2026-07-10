@@ -120,7 +120,9 @@ describe('Vocabulary endpoint validation integration', () => {
   });
 
   it('rejects GET with empty word', async () => {
-    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?word=&targetLang=tr`);
+    const res = await fetch(
+      `${baseUrl}/api/vocabulary/lookup?word=&targetLang=tr`
+    );
     assert.equal(res.status, 400);
   });
 

@@ -21,7 +21,8 @@ export const MyVocabularySection = ({
     >
       {activeWords.length === 0 ? (
         <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-xs text-muted-copy">
-          Your custom vocabulary list is empty. Any custom terms you save will appear here.
+          Your custom vocabulary list is empty. Any custom terms you save will
+          appear here.
         </p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
@@ -32,9 +33,13 @@ export const MyVocabularySection = ({
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{word.term}</p>
+                  <p className="text-sm font-medium text-foreground">
+                    {word.term}
+                  </p>
                   {word.turkishMeaning && (
-                    <p className="mt-1 text-xs text-muted-copy">{word.turkishMeaning}</p>
+                    <p className="mt-1 text-xs text-muted-copy">
+                      {word.turkishMeaning}
+                    </p>
                   )}
                 </div>
                 <button
@@ -45,8 +50,18 @@ export const MyVocabularySection = ({
                   className="text-muted-copy hover:text-error transition-colors"
                   aria-label="Archive word"
                 >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                  <svg
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                    />
                   </svg>
                 </button>
               </div>
