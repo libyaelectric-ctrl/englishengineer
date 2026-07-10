@@ -48,8 +48,19 @@ export const createBackendConfig = (environment = process.env) => {
     ? environment.NODE_ENV
     : 'development';
   const allowInsecureDevAuth =
-    runtimeEnvironment === 'test' ||
-    String(environment.ALLOW_INSECURE_DEV_AUTH).toLowerCase() === 'true';
+    runtimeEnvironment === 'production'
+      ? false
+      : runtimeEnvironment === 'test' ||
+        String(environment.ALLOW_INSECURE_DEV_AUTH).toLowerCase() === 'true';
+
+  if (
+    runtimeEnvironment === 'production' &&
+    String(environment.ALLOW_INSECURE_DEV_AUTH).toLowerCase() === 'true'
+  ) {
+    throw new Error(
+      'FATAL: allowInsecureDevAuth cannot be true in production. Remove ALLOW_INSECURE_DEV_AUTH from your environment.'
+    );
+  }
   const requestedBillingRepository = (
     environment.BILLING_REPOSITORY ||
     (runtimeEnvironment === 'production' && supabaseConfigured
