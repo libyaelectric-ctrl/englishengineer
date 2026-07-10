@@ -546,7 +546,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "connection at the end of a cable",
+    "meaning": "kablo ucu bağlantısı",
     "definition": "Termination is the prepared connection of a cable core to equipment, terminals, or accessories.",
     "example": "QA asked for photos of each cable termination before closing the panel covers.",
     "synonyms": [
@@ -642,7 +642,7 @@
     "partOfSpeech": "verb",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "supply power to equipment",
+    "meaning": "gerilim verme",
     "definition": "To energize equipment is to connect it to a live electrical supply.",
     "example": "The client allowed the team to energize the panel after all pre-commissioning checks were signed.",
     "synonyms": [
@@ -690,7 +690,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "simplified electrical network drawing",
+    "meaning": "tek hat şeması",
     "definition": "A single-line diagram represents a power system using one line for each circuit path.",
     "example": "The consultant marked the single-line diagram to show the revised generator connection.",
     "synonyms": [
@@ -738,7 +738,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "machine that moves fluid",
+    "meaning": "pompa",
     "definition": "A pump moves water or another fluid through pipes by creating pressure and flow.",
     "example": "The maintenance team aligned the pump before connecting it to the chilled water line.",
     "synonyms": [
@@ -786,7 +786,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "device that moves a valve or damper",
+    "meaning": "aktüatör",
     "definition": "An actuator converts a control signal into mechanical movement.",
     "example": "The BMS contractor replaced the actuator because the damper was not responding.",
     "synonyms": [
@@ -834,7 +834,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "network of air ducts",
+    "meaning": "kanal sistemi",
     "definition": "Ductwork carries supply, return, or exhaust air through a building.",
     "example": "The ductwork route was revised to clear the cable tray above the corridor.",
     "synonyms": [
@@ -882,7 +882,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "amount of fluid moving per time",
+    "meaning": "debim",
     "definition": "Flow rate is the volume of fluid passing through a point during a specific time period.",
     "example": "The consultant rejected the test because the chilled water flow rate was below design.",
     "synonyms": [
@@ -906,7 +906,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Mechanical Engineering",
-    "meaning": "loss of pressure across a component",
+    "meaning": "basınç kaybı",
     "definition": "Pressure drop is the reduction in pressure as fluid or air passes through equipment, pipework, or filters.",
     "example": "The engineer calculated the pressure drop across the heat exchanger before selecting the pump.",
     "synonyms": [
@@ -1146,7 +1146,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Mechanical Engineering",
-    "meaning": "size change due to temperature",
+    "meaning": "ısıl genleşme",
     "definition": "Thermal expansion is the increase in length or volume of a material as temperature rises.",
     "example": "The pipe supports were revised to allow thermal expansion during operation.",
     "synonyms": [
@@ -1170,7 +1170,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "planned maintenance before failure",
+    "meaning": "önleyici bakım",
     "definition": "Preventive maintenance is scheduled work carried out to reduce the chance of equipment failure.",
     "example": "The facilities team added the pumps to the preventive maintenance plan.",
     "synonyms": [
@@ -1434,7 +1434,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "granular material in concrete",
+    "meaning": "agrega",
     "definition": "Aggregate is sand, gravel, or crushed stone used in concrete or road construction.",
     "example": "The concrete mix was rejected because the aggregate grading did not match the approved design.",
     "synonyms": [
@@ -1482,7 +1482,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "wall holding back soil",
+    "meaning": "istinat duvarı",
     "definition": "A retaining wall supports soil at different levels and prevents collapse or movement.",
     "example": "The retaining wall drainage detail was revised after the design review.",
     "synonyms": [
@@ -1554,7 +1554,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "formal request for inspection",
+    "meaning": "kontrol talebi",
     "definition": "An inspection request asks the consultant or client to inspect completed work.",
     "example": "The QA engineer raised an inspection request for the cable tray installation.",
     "synonyms": [
@@ -1602,7 +1602,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "drawing showing final installed condition",
+    "meaning": "yapıldığı gibi çizim",
     "definition": "An as-built drawing records the actual installed arrangement after construction changes.",
     "example": "The handover dossier included updated as-built drawings for all containment routes.",
     "synonyms": [
@@ -1650,7 +1650,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "available area for work activity",
+    "meaning": "çalışma sahası",
     "definition": "A workfront is an area or scope where a crew can start or continue work.",
     "example": "The planner reported that the electrical team had no clear workfront on level three.",
     "synonyms": [
@@ -1698,7 +1698,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Architecture",
-    "meaning": "external face of a building",
+    "meaning": "cephe",
     "definition": "A facade is the visible external face or envelope of a building.",
     "example": "The facade contractor coordinated bracket locations with the structural engineer.",
     "synonyms": [
@@ -1746,7 +1746,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Architecture",
-    "meaning": "non-structural dividing wall",
+    "meaning": "bölme duvarı",
     "definition": "A partition divides interior spaces without usually carrying structural loads.",
     "example": "The electrical sockets were relocated after the partition layout changed.",
     "synonyms": [
@@ -1770,7 +1770,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Architecture",
-    "meaning": "safe exit path from a building",
+    "meaning": "çıkış yolu",
     "definition": "Egress is the route people use to leave a building safely during normal use or an emergency.",
     "example": "Has the emergency egress been inspected during the safety walkdown?",
     "synonyms": [
@@ -1794,7 +1794,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Architecture",
-    "meaning": "outer shell separating inside and outside",
+    "meaning": "yapı kabuğu",
     "definition": "The building envelope includes walls, roof, glazing, and insulation that protect interior spaces.",
     "example": "The design review focused on air leakage through the building envelope.",
     "synonyms": [
@@ -1818,7 +1818,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "slatted opening for air movement",
+    "meaning": "jalousie",
     "definition": "A louver is a set of angled slats that allows airflow while limiting rain, views, or debris.",
     "example": "The generator room louver size was increased to meet ventilation requirements.",
     "synonyms": [
@@ -1842,7 +1842,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "space above a suspended ceiling",
+    "meaning": "tavan boşluğu",
     "definition": "A ceiling void is the concealed space above ceiling panels where services often run.",
     "example": "The ceiling void was too shallow for the duct and cable tray crossing.",
     "synonyms": [
@@ -1866,7 +1866,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "document listing finishes by area",
+    "meaning": "bitiş programı",
     "definition": "A finish schedule lists floor, wall, ceiling, and other surface finishes for each space.",
     "example": "Procurement used the finish schedule to confirm tile quantities.",
     "synonyms": [
@@ -1890,7 +1890,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "approved schedule used for comparison",
+    "meaning": "başlangıç programı",
     "definition": "A baseline programme is the approved project schedule used to measure progress and delays.",
     "example": "The planner compared actual progress against the baseline programme in the weekly report.",
     "synonyms": [
@@ -1962,7 +1962,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Project Management",
-    "meaning": "time an activity can slip without delaying project completion",
+    "meaning": "serbest zaman",
     "definition": "Float is available time before an activity delay affects a milestone or completion date.",
     "example": "The planner warned that the cable pulling activity had no remaining float.",
     "synonyms": [
@@ -1986,7 +1986,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "list of project risks and actions",
+    "meaning": "risk defteri",
     "definition": "A risk register records risks, owners, probability, impact, and mitigation actions.",
     "example": "The project manager added late authority approval to the risk register.",
     "synonyms": [
@@ -2034,7 +2034,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "plan for purchasing and delivery",
+    "meaning": "satın alma programı",
     "definition": "A procurement schedule tracks submittals, approvals, manufacturing, delivery, and site need dates.",
     "example": "The procurement schedule showed that the pumps would arrive after the planned installation date.",
     "synonyms": [
@@ -2226,7 +2226,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Health & Safety",
-    "meaning": "personal protective equipment",
+    "meaning": "kişisel koruyucu donanım",
     "definition": "PPE is equipment worn to reduce exposure to workplace hazards.",
     "example": "Visitors were not allowed on site without the required PPE.",
     "synonyms": [
@@ -2322,7 +2322,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "test proving multiple systems work together",
+    "meaning": "entegre sistem testi",
     "definition": "An integrated systems test verifies interfaces between systems during a realistic scenario.",
     "example": "The integrated systems test checked fire alarm, lifts, smoke fans, and access control together.",
     "synonyms": [
@@ -2394,7 +2394,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "final record package for client handover",
+    "meaning": "teslim dosyası",
     "definition": "A handover dossier contains approved records, test results, manuals, certificates, and as-built information.",
     "example": "The client would not accept the plantroom without a complete handover dossier.",
     "synonyms": [
@@ -2418,7 +2418,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Commissioning",
-    "meaning": "operation and maintenance manual",
+    "meaning": "işletme ve bakım kılavuzu",
     "definition": "An O&M manual explains how to operate, maintain, and troubleshoot installed equipment or systems.",
     "example": "Facilities asked for the O&M manual before taking over the booster pump set.",
     "synonyms": [
@@ -2442,7 +2442,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "testing systems in different weather seasons",
+    "meaning": "mevsimsel devreye alma",
     "definition": "Seasonal commissioning verifies system performance under conditions not available at initial handover.",
     "example": "The cooling system required seasonal commissioning during peak summer load.",
     "synonyms": [
@@ -2538,7 +2538,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Testing",
-    "meaning": "test applying artificial electrical load",
+    "meaning": "yapay yük testi",
     "definition": "A load bank test applies controlled load to a generator or UPS to verify performance.",
     "example": "The generator completed a four-hour load bank test at eighty percent load.",
     "synonyms": [
@@ -2634,7 +2634,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Testing",
-    "meaning": "requirements used to judge pass or fail",
+    "meaning": "kabul kriterleri",
     "definition": "Acceptance criteria define the conditions that must be met for a test or deliverable to be accepted.",
     "example": "The team agreed acceptance criteria before starting the integrated systems test.",
     "synonyms": [
@@ -2658,7 +2658,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Data Centers",
-    "meaning": "frame holding IT equipment",
+    "meaning": "dolap",
     "definition": "A rack is a cabinet or frame used to mount servers, switches, and patch panels.",
     "example": "The network team reserved two racks for the new storage equipment.",
     "synonyms": [
@@ -2682,7 +2682,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "aisle receiving hot exhaust air",
+    "meaning": "sıcak koridor",
     "definition": "A hot aisle is the row space where server racks discharge warm exhaust air.",
     "example": "Containment panels were added above the hot aisle to improve cooling efficiency.",
     "synonyms": [
@@ -2706,7 +2706,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "aisle supplying cold intake air",
+    "meaning": "soğuk koridor",
     "definition": "A cold aisle is the row space where servers receive chilled supply air.",
     "example": "The operator found blocked floor grilles in the cold aisle during inspection.",
     "synonyms": [
@@ -2730,7 +2730,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Data Centers",
-    "meaning": "data center energy efficiency metric",
+    "meaning": "enerji verimliliği metriği",
     "definition": "PUE measures total facility energy divided by IT equipment energy.",
     "example": "The client asked for a lower PUE target during the sustainability review.",
     "synonyms": [
@@ -2754,7 +2754,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Data Centers",
-    "meaning": "extra capacity for resilience",
+    "meaning": "yedek kapasite",
     "definition": "Redundancy provides backup equipment or paths so service continues after a failure.",
     "example": "The design provides N+1 redundancy for the cooling plant.",
     "synonyms": [
@@ -2802,7 +2802,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Data Centers",
-    "meaning": "computer room air conditioning unit",
+    "meaning": "bilgisayar odası klima ünitesi",
     "definition": "A CRAC unit controls temperature and airflow in data center spaces.",
     "example": "The CRAC unit filter alarm appeared during the weekly facilities check.",
     "synonyms": [
@@ -2826,7 +2826,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "organized telecommunications cabling system",
+    "meaning": "yapılandırılmış kablaj",
     "definition": "Structured cabling is a standardized cabling system for data, voice, and network services.",
     "example": "The installer tested every structured cabling link before handover.",
     "synonyms": [
@@ -2874,7 +2874,7 @@
     "partOfSpeech": "verb",
     "CEFR": "B1",
     "discipline": "General Professional English",
-    "meaning": "state that something is correct or agreed",
+    "meaning": "onaylamak",
     "definition": "To confirm means to verify or formally state that information is correct.",
     "example": "Please confirm whether the inspection can proceed tomorrow morning.",
     "synonyms": [
@@ -2898,7 +2898,7 @@
     "partOfSpeech": "verb",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "reduce the effect of a problem",
+    "meaning": "azaltmak",
     "definition": "To mitigate means to reduce risk, delay, damage, or negative impact.",
     "example": "The team proposed night shifts to mitigate the schedule delay.",
     "synonyms": [
@@ -2922,7 +2922,7 @@
     "partOfSpeech": "verb",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "raise an issue to a higher level",
+    "meaning": "yukarı bildirim",
     "definition": "To escalate means to bring an issue to senior people because it cannot be solved at the current level.",
     "example": "The site manager escalated the access issue to the client representative.",
     "synonyms": [
@@ -2994,7 +2994,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "agreed output to be submitted",
+    "meaning": "teslim edilebilir",
     "definition": "A deliverable is a document, drawing, system, or result that must be provided under a project agreement.",
     "example": "The commissioning plan was listed as a key deliverable for this month.",
     "synonyms": [
@@ -3018,7 +3018,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Meetings",
-    "meaning": "person responsible for completing an action",
+    "meaning": "sorumlu kişi",
     "definition": "An action owner is the person assigned to complete a task after a meeting or review.",
     "example": "The minutes named the electrical lead as the action owner for the cable schedule.",
     "synonyms": [
@@ -3042,7 +3042,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Meetings",
-    "meaning": "written record of meeting discussion and actions",
+    "meaning": "toplantı tutanağı",
     "definition": "Minutes of meeting record decisions, actions, owners, and important discussion points.",
     "example": "The project manager circulated the minutes of meeting within twenty-four hours.",
     "synonyms": [
@@ -3066,7 +3066,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Meetings",
-    "meaning": "list of meeting topics",
+    "meaning": "gündem",
     "definition": "An agenda is a planned list of topics to be discussed in a meeting.",
     "example": "The chair added commissioning access to the agenda for the coordination meeting.",
     "synonyms": [
@@ -3090,7 +3090,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Meetings",
-    "meaning": "general agreement among participants",
+    "meaning": "fikir birliği",
     "definition": "Consensus is a shared agreement reached by most or all stakeholders after discussion.",
     "example": "The design team reached consensus on the revised plantroom layout.",
     "synonyms": [
@@ -3138,7 +3138,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "allowance for loads not running together",
+    "meaning": "çeşitlilik katsayısı",
     "definition": "A diversity factor accounts for the fact that not all connected loads operate at full demand at the same time.",
     "example": "The consultant challenged the diversity factor used for the residential distribution board.",
     "synonyms": [
@@ -3186,7 +3186,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "dangerous electrical discharge through air",
+    "meaning": "ark çarpması",
     "definition": "An arc flash is a high-energy electrical explosion caused by current passing through air.",
     "example": "The safety briefing explained arc flash boundaries before panel testing.",
     "synonyms": [
@@ -3210,7 +3210,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "device detecting leakage current",
+    "meaning": "artık akım cihazı",
     "definition": "A residual current device trips when leakage current suggests a shock or earth fault risk.",
     "example": "The RCD was tested at the temporary site distribution board.",
     "synonyms": [
@@ -3306,7 +3306,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "panel controlling multiple motors",
+    "meaning": "motor kontrol merkezi",
     "definition": "A motor control center contains starters, protection, and controls for several motors.",
     "example": "If the motor control center fails the test, corrective action is required.",
     "synonyms": [
@@ -3354,7 +3354,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "equipment conditioning and moving air",
+    "meaning": "hava işleme ünitesi",
     "definition": "An air handling unit filters, heats, cools, or moves air through an HVAC system.",
     "example": "The AHU access door was blocked by temporary materials during inspection.",
     "synonyms": [
@@ -3426,7 +3426,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "device catching debris in fluid",
+    "meaning": "süzgeç",
     "definition": "A strainer removes debris from water or fluid before it reaches sensitive equipment.",
     "example": "The commissioning team cleaned the strainer after flushing the chilled water loop.",
     "synonyms": [
@@ -3450,7 +3450,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "cleaning pipes by circulating fluid",
+    "meaning": "temizleme",
     "definition": "Flushing removes debris, scale, and contaminants from pipework before operation.",
     "example": "The consultant requested flushing records before approving pump start-up.",
     "synonyms": [
@@ -3498,7 +3498,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "pipe removing condensed water",
+    "meaning": "yoğuşma gideri",
     "definition": "A condensate drain carries water produced by cooling coils or air conditioning equipment.",
     "example": "The ceiling leak came from a blocked condensate drain above the meeting room.",
     "synonyms": [
@@ -3522,7 +3522,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "amount of heat a system must remove or add",
+    "meaning": "ısı yükü",
     "definition": "Heat load is the thermal demand used to size cooling or heating equipment.",
     "example": "Review the heat load before final approval.",
     "synonyms": [
@@ -3546,7 +3546,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "amount of outside air supplied",
+    "meaning": "taze hava debisi",
     "definition": "Fresh air rate is the quantity of outdoor air provided for ventilation and indoor air quality.",
     "example": "The inspector checked the fresh air rate against the occupancy schedule.",
     "synonyms": [
@@ -3594,7 +3594,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Civil Engineering",
-    "meaning": "deep foundation transferring load to deeper soil",
+    "meaning": "kazık temel",
     "definition": "A pile foundation uses long structural elements to transfer loads to deeper, stronger ground.",
     "example": "The structural design changed to a pile foundation after weak soil was found.",
     "synonyms": [
@@ -3714,7 +3714,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Civil Engineering",
-    "meaning": "intentional upward curve in a beam or slab",
+    "meaning": "kamburluk",
     "definition": "Camber is a slight upward curve built into a member to offset expected deflection.",
     "example": "The steel beam was fabricated with camber as shown on the shop drawing.",
     "synonyms": [
@@ -3738,7 +3738,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Construction",
-    "meaning": "level layer applied over a floor base",
+    "meaning": "şap",
     "definition": "A screed is a floor layer used to create a smooth, level surface before finishes.",
     "example": "The tiling could not start because the screed had not cured.",
     "synonyms": [
@@ -3762,7 +3762,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Construction",
-    "meaning": "walls built from concrete or masonry blocks",
+    "meaning": "blok duvar",
     "definition": "Blockwork is wall construction using concrete, masonry, or lightweight blocks.",
     "example": "The electrical boxes were installed before the blockwork was plastered.",
     "synonyms": [
@@ -3786,7 +3786,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Construction",
-    "meaning": "applying plaster to walls or ceilings",
+    "meaning": "sıvacılık",
     "definition": "Plastering creates a smooth surface on walls or ceilings before painting or finishing.",
     "example": "The plastering crew repaired the wall after the conduit change.",
     "synonyms": [
@@ -3834,7 +3834,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "preparing resources to start work",
+    "meaning": "seferberlik",
     "definition": "Mobilization is the process of bringing labor, equipment, materials, and facilities to site.",
     "example": "The contractor planned mobilization immediately after receiving the letter of award.",
     "synonyms": [
@@ -3858,7 +3858,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "removing resources after work",
+    "meaning": "taahhüt sonlandırma",
     "definition": "Demobilization is the removal of temporary facilities, equipment, and teams after completion.",
     "example": "Demobilization was delayed because several punch list items remained open.",
     "synonyms": [
@@ -3906,7 +3906,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "sample installation for review",
+    "meaning": "örnek uygulama",
     "definition": "A mock-up is a sample of work built to confirm appearance, quality, and coordination before full installation.",
     "example": "The client approved the hotel room mock-up after reviewing finishes and lighting.",
     "synonyms": [
@@ -3930,7 +3930,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "required distance from boundary or edge",
+    "meaning": "geri çekme",
     "definition": "A setback is the required distance between a building element and a property line, road, or other limit.",
     "example": "The balcony design was revised to comply with the setback requirement.",
     "synonyms": [
@@ -3954,7 +3954,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Architecture",
-    "meaning": "ratio of building floor area to plot area",
+    "meaning": "emsal",
     "definition": "Floor area ratio measures total building floor area compared with the site area.",
     "example": "The developer reduced one floor to comply with the permitted floor area ratio.",
     "synonyms": [
@@ -3978,7 +3978,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Architecture",
-    "meaning": "design suitability for people with different abilities",
+    "meaning": "erişilebilirlik",
     "definition": "Accessibility means buildings can be used safely and comfortably by people with different mobility or sensory needs.",
     "example": "The ramp gradient was changed to improve accessibility at the main entrance.",
     "synonyms": [
@@ -4050,7 +4050,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Project Management",
-    "meaning": "missing responsibility between work packages",
+    "meaning": "kapsam eksikliği",
     "definition": "A scope gap occurs when required work is not clearly included in any party’s scope.",
     "example": "The interface meeting identified a scope gap between the facade and steel contractors.",
     "synonyms": [
@@ -4098,7 +4098,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "short-term schedule for upcoming work",
+    "meaning": "ileriye dönük program",
     "definition": "A lookahead schedule shows planned activities for the next few weeks in practical site detail.",
     "example": "The foreman used the three-week lookahead schedule to request materials.",
     "synonyms": [
@@ -4122,7 +4122,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Project Management",
-    "meaning": "measure of work performed against plan and budget",
+    "meaning": "kazanılan değer",
     "definition": "Earned value compares planned work, actual cost, and completed work to assess project performance.",
     "example": "The controls report used earned value to show schedule slippage.",
     "synonyms": [
@@ -4146,7 +4146,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Project Management",
-    "meaning": "prediction of incoming and outgoing money",
+    "meaning": "nakit akışı tahmini",
     "definition": "A cash flow forecast estimates project payments and expenditures over time.",
     "example": "Finance requested a revised cash flow forecast after the procurement delay.",
     "synonyms": [
@@ -4170,7 +4170,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Health & Safety",
-    "meaning": "injury causing absence from work",
+    "meaning": "iş kaybı yaralanması",
     "definition": "A lost time injury is a work-related injury that prevents a person from returning to work for a defined period.",
     "example": "The monthly safety report recorded zero lost time injuries.",
     "synonyms": [
@@ -4194,7 +4194,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Health & Safety",
-    "meaning": "planned procedure for rescuing a worker",
+    "meaning": "kurtarma yöntemi",
     "definition": "A method of rescue explains how workers will be safely recovered if an emergency occurs.",
     "example": "When the method of rescue is checked, the inspector should document the findings.",
     "synonyms": [
@@ -4218,7 +4218,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Health & Safety",
-    "meaning": "area where unauthorized entry is prohibited",
+    "meaning": "yasak bölge",
     "definition": "An exclusion zone keeps people away from hazards such as lifting, demolition, or energized work.",
     "example": "The lifting supervisor set up an exclusion zone around the crane radius.",
     "synonyms": [
@@ -4266,7 +4266,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Health & Safety",
-    "meaning": "label showing scaffold inspection status",
+    "meaning": "iskele etiketi",
     "definition": "A scaffold tag indicates whether a scaffold is safe to use after inspection.",
     "example": "Workers were told not to access the platform because the scaffold tag was missing.",
     "synonyms": [
@@ -4290,7 +4290,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Health & Safety",
-    "meaning": "work creating heat, sparks, or flame",
+    "meaning": "sıcak çalışma",
     "definition": "Hot work includes welding, grinding, cutting, or other activities that can start a fire.",
     "example": "The permit required a fire watch for hot work near stored insulation.",
     "synonyms": [
@@ -4314,7 +4314,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "planned sequence for a commissioning test",
+    "meaning": "devreye alma senaryosu",
     "definition": "A commissioning script sets out steps, expected responses, roles, and acceptance criteria for a test.",
     "example": "Does the commissioning script meet the acceptance criteria?",
     "synonyms": [
@@ -4338,7 +4338,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Commissioning",
-    "meaning": "condition of being prepared for testing or operation",
+    "meaning": "sistem hazırlığı",
     "definition": "System readiness means equipment, documentation, access, and prerequisites are complete enough for commissioning.",
     "example": "The meeting focused on system readiness for the fire alarm cause-and-effect test.",
     "synonyms": [
@@ -4362,7 +4362,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "table linking inputs to required outputs",
+    "meaning": "neden-sonuç matrisi",
     "definition": "A cause and effect matrix defines how systems should respond to alarms, signals, or events.",
     "example": "The fire alarm cause and effect matrix showed that smoke fans should start on detector activation.",
     "synonyms": [
@@ -4458,7 +4458,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Testing",
-    "meaning": "test proving something is complete and not damaged",
+    "meaning": "bütünlük testi",
     "definition": "An integrity test verifies that a system, seal, cable, or enclosure remains intact.",
     "example": "The containment integrity test confirmed there were no leaks in the clean agent pipework.",
     "synonyms": [
@@ -4482,7 +4482,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "test checking a control loop from field device to controller",
+    "meaning": "çevrim testi",
     "definition": "A loop test verifies wiring, signal transmission, and response between an instrument and control system.",
     "example": "The BMS contractor completed a loop test for each temperature sensor.",
     "synonyms": [
@@ -4530,7 +4530,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "verification of tightened fasteners",
+    "meaning": "tork testi",
     "definition": "A torque test checks whether bolts or terminals are tightened to the specified value.",
     "example": "The QA checklist required a torque test on all busbar bolts.",
     "synonyms": [
@@ -4554,7 +4554,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Data Centers",
-    "meaning": "automatic switch to backup system",
+    "meaning": "yedekleme",
     "definition": "Failover is the automatic transfer to backup equipment or paths when the primary system fails.",
     "example": "The data center performed a failover test from utility power to generator supply.",
     "synonyms": [
@@ -4578,7 +4578,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "delay in data transmission or response",
+    "meaning": "gecikme",
     "definition": "Latency is the time delay between a request and a response in a digital system.",
     "example": "The operations team investigated high latency between the application and storage network.",
     "synonyms": [
@@ -4602,7 +4602,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Data Centers",
-    "meaning": "panel for organizing network cable connections",
+    "meaning": "parsel paneli",
     "definition": "A patch panel provides ports where network cables are terminated and cross-connected.",
     "example": "The technician traced the server connection back to the patch panel.",
     "synonyms": [
@@ -4650,7 +4650,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Data Centers",
-    "meaning": "connection between network circuits or panels",
+    "meaning": "çapraz bağlantı",
     "definition": "A cross-connect links circuits, equipment, or patching fields in a controlled cabling environment.",
     "example": "The carrier requested a cross-connect from the meet-me room to the client rack.",
     "synonyms": [
@@ -4674,7 +4674,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "data hall area holding IT equipment",
+    "meaning": "beyaz alan",
     "definition": "White space is the controlled data center area where racks, servers, and network equipment are installed.",
     "example": "The cooling assessment covered all white space zones in the new data hall.",
     "synonyms": [
@@ -4722,7 +4722,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Data Centers",
-    "meaning": "time a system remains operational",
+    "meaning": "çalışma süresi",
     "definition": "Uptime is the period when a system or facility is available and functioning.",
     "example": "The service agreement required very high uptime for the data center cooling system.",
     "synonyms": [
@@ -4770,7 +4770,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "formal report of work not meeting requirements",
+    "meaning": "uygunsuzluk raporu",
     "definition": "A nonconformance report records work, material, or process that does not meet approved requirements.",
     "example": "QA issued a nonconformance report for the incorrect cable gland material.",
     "synonyms": [
@@ -4842,7 +4842,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "knowledge captured from experience",
+    "meaning": "alınan dersler",
     "definition": "Lessons learned are practical insights recorded to improve future projects or activities.",
     "example": "The project team documented lessons learned after the commissioning delay.",
     "synonyms": [
@@ -4938,7 +4938,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Meetings",
-    "meaning": "task that must be handled first",
+    "meaning": "öncelikli eylem",
     "definition": "A priority action is an agreed task that needs urgent or early attention.",
     "example": "The meeting chair marked the generator fuel issue as a priority action.",
     "synonyms": [
@@ -4962,7 +4962,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Meetings",
-    "meaning": "issue not yet closed",
+    "meaning": "açık madde",
     "definition": "An open item is a task, comment, defect, or question that remains unresolved.",
     "example": "The consultant asked for an update on all open items before the progress meeting.",
     "synonyms": [
@@ -4986,7 +4986,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Meetings",
-    "meaning": "record of project decisions",
+    "meaning": "karar kaydı",
     "definition": "A decision log records decisions, dates, owners, and the reasons behind them.",
     "example": "The design manager updated the decision log after the client approved the facade color.",
     "synonyms": [
@@ -5010,7 +5010,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Meetings",
-    "meaning": "tool for monitoring assigned actions",
+    "meaning": "eylem takipçisi",
     "definition": "An action tracker records tasks, owners, deadlines, and closure status.",
     "example": "The weekly action tracker showed that three submittals were overdue.",
     "synonyms": [
