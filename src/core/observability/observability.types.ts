@@ -20,3 +20,11 @@ export interface ErrorMonitoringConfig {
   dsnConfigured: boolean;
   sampleRate: number;
 }
+
+export interface ErrorReport {
+  code: string;
+  message: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  context?: Record<string, unknown>;
+  timestamp?: string;
+}
