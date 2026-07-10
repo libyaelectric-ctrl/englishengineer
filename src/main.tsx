@@ -5,6 +5,7 @@ import './index.css';
 import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
+import { loadVocabularyEntries } from '@/features/vocabulary';
 
 // Initialize dark mode from localStorage
 if (typeof window !== 'undefined') {
@@ -84,6 +85,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>
 );
+
+// Preload vocabulary data in background (non-blocking)
+loadVocabularyEntries().catch(() => {});
 
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {

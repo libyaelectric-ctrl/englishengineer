@@ -35,6 +35,10 @@ export default defineConfig(() => {
             animation: ['motion'],
             state: ['zustand'],
             error: ['react-error-boundary'],
+            vocabularyData: [
+              './src/features/vocabulary/vocabulary.data.ts',
+              './src/features/vocabulary/vocabulary.data.json',
+            ],
           },
         },
       },

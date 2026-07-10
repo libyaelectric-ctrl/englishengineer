@@ -1,6 +1,5 @@
 import { MissionDifficulty } from '@/core/learning';
 import { VocabularyDiscipline, VocabularyEntry } from './vocabulary.types';
-import rawData from './vocabulary.data.json';
 
 type PartOfSpeech = VocabularyEntry['partOfSpeech'];
 
@@ -43,14 +42,6 @@ const row = (
   difficulty,
   tags,
 });
-
-const allRows = rawData as VocabularyContentRow[];
-const BEGINNER_CONTENT_ROWS: VocabularyContentRow[] = allRows.filter(
-  (r) => r.difficulty === 'Beginner'
-);
-const CONTENT_ROWS: VocabularyContentRow[] = allRows.filter(
-  (r) => r.difficulty !== 'Beginner'
-);
 
 type ExpansionCategory = {
   discipline: VocabularyDiscipline;
@@ -694,8 +685,8 @@ const expansionCategories: ExpansionCategory[] = [
   },
 ];
 
-const buildExpansionRows = (): VocabularyContentRow[] =>
-  expansionCategories.flatMap((category) =>
+function buildExpansionRows(): VocabularyContentRow[] {
+  return expansionCategories.flatMap((category) =>
     category.terms.map((term) =>
       row(
         term,
@@ -712,10 +703,11 @@ const buildExpansionRows = (): VocabularyContentRow[] =>
       )
     )
   );
+}
 
-const dedupeRowsByWord = (
+function dedupeRowsByWord(
   contentRows: VocabularyContentRow[]
-): VocabularyContentRow[] => {
+): VocabularyContentRow[] {
   const seen = new Set<string>();
   return contentRows.filter((item) => {
     const key = item.word.trim().toLowerCase();
@@ -723,22 +715,44 @@ const dedupeRowsByWord = (
     seen.add(key);
     return true;
   });
-};
+}
 
-const beginnerRowsByWord = new Map(
-  BEGINNER_CONTENT_ROWS.map((item) => [item.word.toLowerCase(), item])
-);
-const leveledExistingRows = [...CONTENT_ROWS, ...buildExpansionRows()].map(
-  (item) => beginnerRowsByWord.get(item.word.toLowerCase()) ?? item
-);
-const EXPANDED_CONTENT_ROWS = dedupeRowsByWord([
-  ...leveledExistingRows,
-  ...BEGINNER_CONTENT_ROWS,
-]);
+function buildEntries(rawData: VocabularyContentRow[]): VocabularyEntry[] {
+  const beginnerRows = rawData.filter((r) => r.difficulty === 'Beginner');
+  const contentRows = rawData.filter((r) => r.difficulty !== 'Beginner');
 
-export const VOCABULARY_ENTRIES: VocabularyEntry[] = EXPANDED_CONTENT_ROWS.map(
-  (item, index) => ({
+  const beginnerRowsByWord = new Map(
+    beginnerRows.map((item) => [item.word.toLowerCase(), item])
+  );
+  const leveledExistingRows = [...contentRows, ...buildExpansionRows()].map(
+    (item) => beginnerRowsByWord.get(item.word.toLowerCase()) ?? item
+  );
+  const expanded = dedupeRowsByWord([...leveledExistingRows, ...beginnerRows]);
+
+  return expanded.map((item, index) => ({
     id: `vocab_pro_${(index + 1).toString().padStart(3, '0')}`,
     ...item,
-  })
-);
+  }));
+}
+
+let _entriesPromise: Promise<VocabularyEntry[]> | null = null;
+let _entriesSync: VocabularyEntry[] | null = null;
+
+export function loadVocabularyEntries(): Promise<VocabularyEntry[]> {
+  if (_entriesSync) return Promise.resolve(_entriesSync);
+  if (!_entriesPromise) {
+    _entriesPromise = import('./vocabulary.data.json').then((mod) => {
+      _entriesSync = buildEntries(mod.default as VocabularyContentRow[]);
+      return _entriesSync;
+    });
+  }
+  return _entriesPromise;
+}
+
+export function getVocabularyEntries(): VocabularyEntry[] | null {
+  return _entriesSync;
+}
+
+export function getVocabularyEntriesOrWait(): Promise<VocabularyEntry[]> {
+  return loadVocabularyEntries();
+}

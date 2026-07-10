@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeAll } from 'vitest';
 import { LearningState } from '@/core/learning';
 import {
   buildLevelProfile,
@@ -12,7 +12,14 @@ import { READING_MISSIONS } from '@/features/reading';
 import { WRITING_MISSIONS } from '@/features/writing';
 import { LISTENING_MISSIONS } from '@/features/listening';
 import { SPEAKING_MISSIONS } from '@/features/speaking';
-import { VOCABULARY_ENTRIES } from '@/features/vocabulary';
+import { loadVocabularyEntries } from '@/features/vocabulary';
+import { VocabularyEntry } from '@/features/vocabulary';
+
+let vocabularyEntries: VocabularyEntry[] = [];
+
+beforeAll(async () => {
+  vocabularyEntries = await loadVocabularyEntries();
+});
 
 const learning = (
   readingSessions = 0,
@@ -93,8 +100,8 @@ describe('real skill-based content gating', () => {
       expect(missions.some((mission) => mission.cefrLevel === 'A1')).toBe(true);
       expect(missions.some((mission) => mission.cefrLevel === 'A2')).toBe(true);
     });
-    expect(VOCABULARY_ENTRIES.some((entry) => entry.CEFR === 'A1')).toBe(true);
-    expect(VOCABULARY_ENTRIES.some((entry) => entry.CEFR === 'A2')).toBe(true);
+    expect(vocabularyEntries.some((entry) => entry.CEFR === 'A1')).toBe(true);
+    expect(vocabularyEntries.some((entry) => entry.CEFR === 'A2')).toBe(true);
   });
 
   it('includes the required B1 Listening and Speaking starter content', () => {

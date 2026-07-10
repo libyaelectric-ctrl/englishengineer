@@ -2,7 +2,11 @@ export * from './vocabulary.types';
 export * from './vocabulary.schema';
 export * from './vocabulary.repository';
 export * from './vocabulary.engine';
-export * from './vocabulary.data';
+export {
+  loadVocabularyEntries,
+  getVocabularyEntries,
+  getVocabularyEntriesOrWait,
+} from './vocabulary.data';
 export * from './vocabulary.helpers';
 export * from './vocabulary.evaluator';
 export * from './vocabulary.service';
