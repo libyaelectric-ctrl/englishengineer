@@ -10,7 +10,6 @@ import { useListeningStore } from '@/features/listening';
 import { useSpeakingStore } from '@/features/speaking';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const log = (_page: string, _action: string, _details: string) => {};
 
 function Section({

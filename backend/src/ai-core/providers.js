@@ -3,7 +3,7 @@ import { ApiError } from '../errors.js';
 export const mockText = (operation) =>
   `[Mock AI] ${operation} is running in local fallback mode. Configure a supported backend provider for real AI output.`;
 
-export const callOpenAI = async (config, prompt, signal, fetchImpl) => {
+export const callOpenAI = async (config, prompt, signal, fetchImpl, jsonMode = false) => {
   const response = await fetchImpl(
     'https://api.openai.com/v1/chat/completions',
     {
@@ -15,6 +15,7 @@ export const callOpenAI = async (config, prompt, signal, fetchImpl) => {
       body: JSON.stringify({
         model: config.model,
         messages: [{ role: 'user', content: prompt }],
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
       }),
       signal,
     }
@@ -50,7 +51,7 @@ export const callAnthropic = async (config, prompt, signal, fetchImpl) => {
     },
     body: JSON.stringify({
       model: config.model,
-      max_tokens: 1024,
+      max_tokens: 1600,
       messages: [{ role: 'user', content: prompt }],
     }),
     signal,
@@ -76,7 +77,7 @@ export const callAnthropic = async (config, prompt, signal, fetchImpl) => {
   return text.trim();
 };
 
-export const callGemini = async (config, prompt, signal, fetchImpl) => {
+export const callGemini = async (config, prompt, signal, fetchImpl, jsonMode = false) => {
   const model = config.model || 'gemini-2.0-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${config.apiKey}`;
   const response = await fetchImpl(url, {
@@ -84,7 +85,10 @@ export const callGemini = async (config, prompt, signal, fetchImpl) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { maxOutputTokens: 1600 },
+      generationConfig: {
+        maxOutputTokens: 1600,
+        ...(jsonMode ? { responseMimeType: 'application/json' } : {}),
+      },
     }),
     signal,
   });
