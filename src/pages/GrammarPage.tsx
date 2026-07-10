@@ -21,7 +21,7 @@ import { MetricCard } from '@/shared/components/MetricCard';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import {
   LocalizationService,
@@ -125,8 +125,6 @@ const GrammarPage = () => {
           <h1 className="text-lg font-semibold text-foreground">Grammar</h1>
         </div>
       </div>
-
-      <SkillEntryBrief skill="grammar" />
 
       <SectionCard
         title="Your grammar path"

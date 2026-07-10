@@ -21,6 +21,11 @@
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 
+  /* Sidebar-specific colors for 3-column distinction */
+  --color-sidebar-bg: #ffffff;
+  --color-sidebar-border: #d1d5db;
+  --color-sidebar-inner-border: #e5e7eb;
+
   --color-engineer-950: #f3f4f6;
   --color-engineer-900: #e5e7eb;
   --color-engineer-800: #d1d5db;

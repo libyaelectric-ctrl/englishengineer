@@ -35,7 +35,7 @@ import {
   LevelContentFilter,
   useSkillLevel,
 } from '@/features/level-system';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 
 type RoleplayFilter = 'All' | SpeakingRoleplayCategory;
@@ -204,8 +204,6 @@ const SpeakingPage = () => {
           <h1 className="text-lg font-semibold text-foreground">Speaking</h1>
         </div>
       </div>
-
-      <SkillEntryBrief skill="speaking" />
 
       {/* Voice Minute Wallet — Max plan only */}
       {hasMaxAccess && subscription.planId === 'max' && (

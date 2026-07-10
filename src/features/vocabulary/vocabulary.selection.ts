@@ -59,5 +59,5 @@ export const selectVocabularyLearningSet = (
     ...remaining,
   ].filter((term, index, list) => list.indexOf(term) === index);
   const offset = Math.max(0, options.offset ?? 0);
-  return ordered.slice(offset, offset + 10);
+  return ordered.slice(offset, offset + 9);
 };
