@@ -19,4 +19,4 @@ export const FUTURE_MONETIZATION_OPTIONS = [
   'Extra AI credit packs',
 ] as const;
 
-export const ADMIN_PANEL_ENABLED = false;
+export const ADMIN_PANEL_ENABLED = true;

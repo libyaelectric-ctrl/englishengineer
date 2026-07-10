@@ -10,10 +10,8 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProgressService } from '@/core/learning';
-import { GrammarProgressService } from '@/features/grammar';
 import { useAuthStore } from '@/features/auth';
 import {
-  LearningProfileEngine,
   SKILL_NAMES,
   type SkillName,
   useLearningCockpit,
@@ -24,7 +22,6 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import {
   buildReviewPriorities,
-  LearningMemorySummary,
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
@@ -44,15 +41,10 @@ const SKILL_META: Record<
 const DashboardPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { profile, memory, missions, isLoading, learningState } =
+  const { profile, memory, missions, learningState } =
     useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const summary = ProgressService.getSummary(learningState);
-  const grammarSummary = GrammarProgressService.getSummary(360);
-  const badges = LearningProfileEngine.getBadges(profile, memory);
-  const repeatedMistakes = mistakeLog.filter(
-    (item) => (item.repetitionCount ?? 1) >= 3
-  ).length;
   const focusSkill = [...SKILL_NAMES]
     .map((skill) => profile.skills[skill])
     .sort(
@@ -99,8 +91,8 @@ const DashboardPage = () => {
   ]).slice(0, 3);
 
   return (
-    <div className="mx-auto grid max-w-7xl animate-aurora-fade-in gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
-      <div className="min-w-0 space-y-6">
+    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
+      <div className="space-y-6">
         <header className="premium-panel overflow-hidden p-6 sm:p-8 animate-on-scroll">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-2xl">
@@ -274,41 +266,6 @@ const DashboardPage = () => {
           </div>
         </SectionCard>
       </div>
-
-      <aside
-        data-testid="dashboard-right-panel"
-        className="premium-panel h-fit p-5 xl:sticky xl:top-20"
-      >
-        <div>
-          <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
-            LEARNING MEMORY
-          </p>
-          <h2 className="mt-1.5 text-base font-bold text-foreground">
-            Everything stays connected.
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-muted-copy">
-            Vocabulary, grammar, repeated mistakes and achievements feed your
-            next recommendations.
-          </p>
-        </div>
-        <div data-testid="dashboard-vocabulary-progress" className="mt-4">
-          <LearningMemorySummary
-            vocabulary={memory}
-            grammar={grammarSummary}
-            repeatedMistakes={repeatedMistakes}
-            badges={badges}
-          />
-        </div>
-        <Button
-          type="button"
-          variant="outline"
-          className="mt-4 w-full text-xs min-h-10"
-          onClick={() => navigate('/curriculum')}
-          disabled={isLoading}
-        >
-          Open Learning Hub <ArrowRight className="h-3.5 w-3.5" />
-        </Button>
-      </aside>
     </div>
   );
 };

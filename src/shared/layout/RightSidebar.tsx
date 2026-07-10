@@ -307,7 +307,9 @@ function Vocab() {
   const [level, setLevel] = useState('A1');
   return (
     <>
-      <SkillEntryBrief skill="vocabulary" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="vocabulary" compact={true} />
+      </div>
       <Section title="Level">
         <div className="space-y-0.5">
           {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l) => (
@@ -387,7 +389,9 @@ function Grammar() {
   const [tab, setTab] = useState('New');
   return (
     <>
-      <SkillEntryBrief skill="grammar" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="grammar" compact={true} />
+      </div>
       <Section title="Status">
         <div className="space-y-0.5">
           {(['New', 'Learning', 'Due', 'Strong'] as const).map((t) => (
@@ -456,7 +460,9 @@ function Reading() {
   const done = Object.keys(completedMissions).length;
   return (
     <>
-      <SkillEntryBrief skill="reading" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="reading" compact={true} />
+      </div>
       <Section title="Missions">
         <div className="space-y-0.5 max-h-48 overflow-y-auto">
           {missions.slice(0, 10).map((m) => (
@@ -498,7 +504,9 @@ function Writing() {
   const done = Object.keys(completedMissions).length;
   return (
     <>
-      <SkillEntryBrief skill="writing" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="writing" compact={true} />
+      </div>
       <Section title="Templates">
         <div className="space-y-0.5">
           {[
@@ -548,7 +556,9 @@ function Listening() {
   const { missions } = useListeningStore();
   return (
     <>
-      <SkillEntryBrief skill="listening" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="listening" compact={true} />
+      </div>
       <Section title="Tasks">
         <div className="space-y-0.5">
           {missions.slice(0, 5).map((m) => (
@@ -586,7 +596,9 @@ function Speaking() {
   const { missions } = useSpeakingStore();
   return (
     <>
-      <SkillEntryBrief skill="speaking" />
+      <div className="px-4 pt-4">
+        <SkillEntryBrief skill="speaking" compact={true} />
+      </div>
       <Section title="Scenarios">
         <div className="space-y-0.5">
           {missions.slice(0, 6).map((m) => (

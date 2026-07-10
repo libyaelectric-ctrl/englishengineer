@@ -17,6 +17,7 @@ const Writing = lazy(() => import('@/pages/WritingPage'));
 const Listening = lazy(() => import('@/pages/ListeningPage'));
 const AI = lazy(() => import('@/pages/AIPage'));
 const Analytics = lazy(() => import('@/pages/AnalyticsPage'));
+const Admin = lazy(() => import('@/pages/AdminPage'));
 const Gamification = lazy(() => import('@/pages/GamificationPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
@@ -94,6 +95,14 @@ export const router = createBrowserRouter([
       </AuthGuard>
     ),
     children: [
+      {
+        path: 'admin',
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Admin />
+          </Suspense>
+        ),
+      },
       {
         path: 'dashboard',
         element: (

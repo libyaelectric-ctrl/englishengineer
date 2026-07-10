@@ -176,5 +176,6 @@ export const NAVIGATION_TRANSLATIONS: Record<
     Grammar: 'Dil Bilgisi',
     Tools: 'İş Araçları',
     Profile: 'Profil',
+    'Admin Panel': 'Yönetim Paneli',
   },
 };

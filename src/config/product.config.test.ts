@@ -33,6 +33,6 @@ describe('decisions 85-90 product boundaries', () => {
     expect(PRODUCT_POSITIONING).toBe(
       'EngineerOS - AI-powered English communication platform for engineers on international projects'
     );
-    expect(ADMIN_PANEL_ENABLED).toBe(false);
+    expect(ADMIN_PANEL_ENABLED).toBe(true);
   });
 });

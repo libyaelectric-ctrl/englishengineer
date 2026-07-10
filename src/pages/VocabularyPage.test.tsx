@@ -172,7 +172,6 @@ describe('VocabularyPage menu', () => {
     );
 
     expect(screen.getByText('fluxuator')).toBeInTheDocument();
-    expect(screen.getByText(/AI Assist Coming Soon/)).toBeInTheDocument();
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
     expect(VocabularyMenuService.getState().progress).toEqual({});
   }, 10_000);

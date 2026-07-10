@@ -10,7 +10,13 @@ import {
 import type { LearningTaskRecommendation } from './learning-orchestrator.types';
 import { LearningTaskEngine } from './learning-task.engine';
 
-export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
+export const SkillEntryBrief = ({
+  skill,
+  compact = false,
+}: {
+  skill: SkillName;
+  compact?: boolean;
+}) => {
   const learning = useLearningStore();
   const userId = useAuthStore((state) => state.currentUser?.id);
   const profile = useMemo(
@@ -38,6 +44,30 @@ export const SkillEntryBrief = ({ skill }: { skill: SkillName }) => {
 
   if (!recommendation) {
     return <div className="h-24 animate-pulse rounded-xl bg-surface-hover" />;
+  }
+
+  if (compact) {
+    return (
+      <div className="rounded-xl border border-border-soft bg-surface-hover/30 p-3.5 mb-2 text-left">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+            {recommendation.targetCefr}
+          </span>
+          <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+            Lesson {recommendation.lessonNumber}
+          </span>
+          <span className="rounded-full border border-border-soft bg-white px-2 py-0.5 text-[9px] font-semibold text-muted-copy">
+            {recommendation.estimatedMinutes}m
+          </span>
+        </div>
+        <p className="mt-2 text-xs font-bold text-foreground leading-snug">
+          {recommendation.sharedLessonTitle}
+        </p>
+        <p className="mt-1 text-[10px] leading-relaxed text-muted-copy">
+          {recommendation.whyRecommended}
+        </p>
+      </div>
+    );
   }
 
   return (

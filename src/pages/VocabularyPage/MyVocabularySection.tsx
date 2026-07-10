@@ -16,16 +16,12 @@ export const MyVocabularySection = ({
   return (
     <SectionCard
       title="My Vocabulary"
-      subtitle={`5,000 canonical + ${activeWords.length} active custom word(s)`}
+      subtitle="Custom terms saved by you"
       icon={BookMarked}
     >
-      <p className="mb-4 text-xs font-bold text-foreground0">
-        Manual add only · AI Assist Coming Soon
-      </p>
       {activeWords.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
-          Search for a missing term to add it manually. AI Assist is coming
-          soon.
+        <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-xs text-muted-copy">
+          Your custom vocabulary list is empty. Any custom terms you save will appear here.
         </p>
       ) : (
         <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
