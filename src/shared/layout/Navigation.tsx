@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Shield } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '@/config/navigation.config';
 import { cn } from '@/shared/utils/cn';
@@ -7,6 +7,7 @@ import {
   NAVIGATION_TRANSLATIONS,
   useLocalizationStore,
 } from '@/features/localization';
+import { ADMIN_PANEL_ENABLED } from '@/config/product.config';
 
 interface NavigationProps {
   onItemClick?: () => void;
@@ -96,6 +97,16 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
           </div>
         );
       })}
+      {ADMIN_PANEL_ENABLED && (
+        <NavLink
+          to="/admin"
+          onClick={onItemClick}
+          className={linkClasses}
+        >
+          <Shield className="h-4 w-4 shrink-0 text-red-500" />
+          <span>{translate('Admin Panel')}</span>
+        </NavLink>
+      )}
     </nav>
   );
 };
