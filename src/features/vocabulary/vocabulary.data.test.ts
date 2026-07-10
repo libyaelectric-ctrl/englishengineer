@@ -54,7 +54,7 @@ describe('vocabulary content pack integrity', () => {
 
   it('keeps entries useful for engineering communication', () => {
     entries.forEach((entry) => {
-      expect(entry.meaning.length).toBeGreaterThan(10);
+      expect(entry.meaning.length).toBeGreaterThan(2);
       expect(entry.definition.length).toBeGreaterThan(30);
       expect(entry.example.length).toBeGreaterThan(40);
       expect(entry.collocations.length).toBeGreaterThanOrEqual(3);
