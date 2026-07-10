@@ -13,6 +13,7 @@ import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { cn } from '@/shared/utils/cn';
 import { Navigation } from './Navigation';
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useAppStore();
@@ -83,13 +84,16 @@ export const Sidebar: React.FC = () => {
                 </span>
               </div>
             </div>
-            <button
-              onClick={toggleSidebar}
-              className="cursor-pointer rounded-lg p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
-              aria-label="Close navigation"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center gap-1.5">
+              <ThemeToggle />
+              <button
+                onClick={toggleSidebar}
+                className="cursor-pointer rounded-lg p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
+                aria-label="Close navigation"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Mascot + Navigation */}
@@ -200,24 +204,10 @@ export const Sidebar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
+                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Sign Out</span>
-              </button>
-
-              {/* Dark Mode Toggle */}
-              <button
-                onClick={() => {
-                  document.documentElement.classList.toggle('dark');
-                  const isDark =
-                    document.documentElement.classList.contains('dark');
-                  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-                }}
-                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
-              >
-                <span>🌙</span>
-                <span>Dark Mode</span>
               </button>
             </div>
           )}
