@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import { CreditCard, Crown } from 'lucide-react';
-import { BillingStatusPanel, SubscriptionSnapshot, BillingProviderStatus } from '@/features/billing';
+import {
+  BillingStatusPanel,
+  SubscriptionSnapshot,
+  BillingProviderStatus,
+} from '@/features/billing';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
@@ -261,20 +265,20 @@ export const BillingSection = ({
                 repetition full repeats
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="text-success font-medium">✓</span>{' '}
-                Writing tasks + secure AI feedback
+                <span className="text-success font-medium">✓</span> Writing
+                tasks + secure AI feedback
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="text-success font-medium">✓</span>{' '}
-                Advanced Mistake Log analytics
+                <span className="text-success font-medium">✓</span> Advanced
+                Mistake Log analytics
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="text-success font-medium">✓</span> Client
-                / consultant roleplay scenarios
+                <span className="text-success font-medium">✓</span> Client /
+                consultant roleplay scenarios
               </li>
               <li className="flex items-center gap-1.5">
-                <span className="text-success font-medium">✓</span>{' '}
-                12-month progress history storage
+                <span className="text-success font-medium">✓</span> 12-month
+                progress history storage
               </li>
               <li className="flex items-center gap-1.5">
                 <span className="text-success font-medium">✓</span> Direct

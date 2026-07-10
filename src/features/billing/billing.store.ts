@@ -15,6 +15,7 @@ interface BillingActions {
     planId: BillingPlanId
   ) => Promise<void>;
   openCustomerPortal: (userId: string) => Promise<void>;
+  startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
 }
 
@@ -77,6 +78,18 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
         error instanceof Error
           ? error.message
           : 'Customer portal session failed.';
+      set({ isLoading: false, error: message });
+      throw error;
+    }
+  },
+
+  startTopupCheckout: async (userId, email) => {
+    set({ isLoading: true, error: null });
+    try {
+      await BillingService.startTopupCheckout(userId, email);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Top-up checkout failed.';
       set({ isLoading: false, error: message });
       throw error;
     }

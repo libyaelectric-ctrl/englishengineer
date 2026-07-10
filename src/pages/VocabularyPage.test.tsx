@@ -17,7 +17,9 @@ describe('VocabularyPage menu', () => {
   beforeAll(async () => {
     VocabularyRepository.clearCache();
     await Promise.all(
-      CEFR_LEVELS.map((level) => VocabularyRepository.getVocabularyByLevel(level))
+      CEFR_LEVELS.map((level) =>
+        VocabularyRepository.getVocabularyByLevel(level)
+      )
     );
   });
 

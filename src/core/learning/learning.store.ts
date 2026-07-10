@@ -184,7 +184,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       ];
       const updatedXpHistory = [
         ...get().xpHistory,
-        { date: todayDateStr, amount: result.xp, reason: `Completed ${mission.title}` },
+        {
+          date: todayDateStr,
+          amount: result.xp,
+          reason: `Completed ${mission.title}`,
+        },
       ];
       const updatedEloHistory = [
         ...get().eloHistory,
@@ -272,7 +276,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       ];
       const updatedXpHistory = [
         ...get().xpHistory,
-        { date: todayDateStr, amount: result.xp, reason: `Practiced ${module}` },
+        {
+          date: todayDateStr,
+          amount: result.xp,
+          reason: `Practiced ${module}`,
+        },
       ];
       const updatedEloHistory = [
         ...get().eloHistory,

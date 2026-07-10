@@ -337,13 +337,11 @@ export const buildCoachContext = (
         `${session.module}: ${session.score}% (${session.durationMinutes} min)`
     );
 
-  const mappedMistakes = (mistakeLog || [])
-    .slice(0, 15)
-    .map((entry) => ({
-      originalText: entry.originalText || '',
-      correction: entry.correction || '',
-      category: entry.category || 'general',
-    }));
+  const mappedMistakes = (mistakeLog || []).slice(0, 15).map((entry) => ({
+    originalText: entry.originalText || '',
+    correction: entry.correction || '',
+    category: entry.category || 'general',
+  }));
 
   return {
     userName: user?.displayName || 'Engineer',

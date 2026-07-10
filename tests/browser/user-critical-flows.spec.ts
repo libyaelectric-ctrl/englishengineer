@@ -38,17 +38,13 @@ test.describe('Critical User Flows', () => {
       await page.goto('/dashboard');
       await page.waitForTimeout(2000);
       const url = page.url();
-      expect(
-        url.includes('login') || url.includes('dashboard')
-      ).toBeTruthy();
+      expect(url.includes('login') || url.includes('dashboard')).toBeTruthy();
     });
   });
 
   test.describe('Health Check', () => {
     test('health endpoint returns valid response', async ({ page }) => {
-      const response = await page.goto(
-        'http://127.0.0.1:8787/api/health'
-      );
+      const response = await page.goto('http://127.0.0.1:8787/api/health');
       expect(response?.status()).toBe(200);
       const body = await response?.json();
       expect(body.ok).toBe(true);

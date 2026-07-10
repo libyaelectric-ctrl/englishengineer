@@ -71,7 +71,7 @@ describe('backend auth', () => {
     };
 
     const auth = createBackendAuth(config, dummyFetch);
-    
+
     // We execute requireBackendAuth to trigger authenticate pipeline
     let reqAuth = null;
     const middleware = auth.requireBackendAuth;
@@ -111,14 +111,17 @@ describe('backend auth', () => {
     let fetchCalled = false;
     const mockFetch = async () => {
       fetchCalled = true;
-      return new Response(JSON.stringify({ id: 'user-uuid-1234', email: 'test@engineeros.com' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return new Response(
+        JSON.stringify({ id: 'user-uuid-1234', email: 'test@engineeros.com' }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
     };
 
     const auth = createBackendAuth(config, mockFetch);
-    
+
     let reqAuth = null;
     const middleware = auth.requireBackendAuth;
     await middleware(mockRequest, {}, (err) => {

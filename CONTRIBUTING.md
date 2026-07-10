@@ -27,6 +27,7 @@ npm run quality:gate
 ```
 
 This runs (in order):
+
 1. `typecheck` — TypeScript compilation check
 2. `format:check` — Prettier formatting verification
 3. `lint` — ESLint static analysis
@@ -70,6 +71,7 @@ npm run build
 ### On Every Push to `main` or `develop`
 
 The CI pipeline (`.github/workflows/ci.yml`) automatically runs:
+
 - Content validation
 - Type checking
 - Format checking
@@ -94,29 +96,34 @@ Same as above, plus the PR must be approved by a maintainer.
 ## Code Standards
 
 ### TypeScript
+
 - Strict mode enabled (`strict: true` in tsconfig)
 - No `any` types allowed
 - All props must be typed
 - Use `interface` for object shapes, `type` for unions/aliases
 
 ### React
+
 - Functional components only (no class components)
 - Use hooks for state management
 - Keep components small and focused
 - Extract reusable logic into custom hooks
 
 ### State Management
+
 - Zustand for global state
 - Keep stores focused on a single domain
 - Use selectors to minimize re-renders
 
 ### Testing
+
 - Write tests for new features
 - Tests should be deterministic (no flaky tests)
 - Use `beforeAll` for expensive setup (e.g., data loading)
 - Mock external services (APIs, storage)
 
 ### File Structure
+
 - Components: `src/shared/components/`
 - Feature modules: `src/features/<feature>/`
 - Pages: `src/pages/`
@@ -124,13 +131,13 @@ Same as above, plus the PR must be approved by a maintainer.
 
 ## Quality Thresholds
 
-| Check | Threshold |
-|-------|-----------|
-| TypeScript | 0 errors |
-| ESLint | 0 errors |
-| Unit tests | 100% pass |
+| Check            | Threshold    |
+| ---------------- | ------------ |
+| TypeScript       | 0 errors     |
+| ESLint           | 0 errors     |
+| Unit tests       | 100% pass    |
 | Production build | Must succeed |
-| Backend tests | 100% pass |
+| Backend tests    | 100% pass    |
 
 ## Commit Discipline
 
@@ -147,6 +154,7 @@ Bu proje [Conventional Commits](https://www.conventionalcommits.org/) formatın�
 Geçerli type'lar: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`, `perf`, `ci`, `build`, `revert`
 
 Örnekler:
+
 - `feat(vocabulary): add spaced repetition algorithm`
 - `fix(auth): resolve JWT token refresh race condition`
 - `refactor(ai): extract prompt templates to separate files`

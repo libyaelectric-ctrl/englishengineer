@@ -55,11 +55,7 @@ export const WorkspaceMemoryBodySchema = z.object({
 });
 
 export const WorkspaceDocumentBodySchema = z.object({
-  docName: z
-    .string()
-    .trim()
-    .min(1, 'Document name is required.')
-    .max(500),
+  docName: z.string().trim().min(1, 'Document name is required.').max(500),
   docContent: z.string().max(1_000_000).optional(),
 });
 

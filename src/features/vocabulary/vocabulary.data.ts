@@ -785,7 +785,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         'as-built survey': 'yapıldığı gibi ölçüm',
         'site benchmark': 'saha referans noktası',
       },
-      'Architecture': {
+      Architecture: {
         'finish schedule': 'bitiş programı',
         'ceiling void': 'tavan boşluğu',
         'access hatch': 'erişim kapağı',
@@ -817,7 +817,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         'snag item': 'kusur maddesi',
         'visual inspection': 'görsel muayene',
       },
-      'Construction': {
+      Construction: {
         'work front': 'çalışma cepheleri',
         'site access': 'saha girişi',
         'material delivery': 'malzeme teslimatı',
@@ -835,7 +835,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         'access scaffold': 'erişim iskelesi',
         'lifting area': 'vinç alanı',
         'storage area': 'depolama alanı',
-        'housekeeping': 'saha düzeni',
+        housekeeping: 'saha düzeni',
         'temporary lighting': 'geçici aydınlatma',
         'site clearance': 'saha temizliği',
         'work permit': 'çalışma izni',
@@ -849,7 +849,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         'shift handover': 'vardiya devir teslimi',
         'closeout action': 'kapanış eylemi',
       },
-      'Commissioning': {
+      Commissioning: {
         'pre-commissioning': 'devreye alma öncesi',
         'functional test': 'fonksiyonel test',
         'integrated systems test': 'entegre sistem testi',
@@ -913,7 +913,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         'test certificate': 'test sertifikası',
         'inspection release': 'kontrol serbest bırakma',
       },
-      'HSE': {
+      HSE: {
         'risk assessment': 'risk değerlendirmesi',
         'method statement briefing': 'iş metodu brifingi',
         'job safety analysis': 'iş güvenliği analizi',
@@ -982,19 +982,26 @@ function buildExpansionRows(): VocabularyContentRow[] {
   };
 
   // Generate definition based on discipline
-  const getDefinition = (term: string, discipline: string, context: string): string => {
+  const getDefinition = (
+    term: string,
+    discipline: string,
+    context: string
+  ): string => {
     const definitions: Record<string, string> = {
       'Electrical Engineering': `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında yaygın olarak kullanılır.`,
       'Mechanical Engineering': `${term}, mekanik sistem tasarımında ve işletmesinde temel bir unsurdur. Sistem verimliliği ve güvenilirliği üzerinde doğrudan etkisi vardır.`,
       'Civil Engineering': `${term}, yapısal bütünlük ve inşaat kalitesi açısından temel bir kavramdır. İnşaat mühendisliğinde yapısal uyumluluk için kritiktir.`,
-      'Architecture': `${term}, yapılmış mekanların işlevsel ve estetik kalitesine katkıda bulunur. Mimari koordinasyon ve tasarım niyeti için gereklidir.`,
-      'Construction': `${term}, inşaat sahalarında günlük olarak kullanılan pratik bir kavramdır. İnşaat kalitesi, güvenliği ve programı üzerinde etkisi vardır.`,
-      'Commissioning': `${term}, sistem hazırlığını doğrulamak için devreye alma sırasında test edilir ve belgelenir. Teslim öncesi doğrulanmalıdır.`,
+      Architecture: `${term}, yapılmış mekanların işlevsel ve estetik kalitesine katkıda bulunur. Mimari koordinasyon ve tasarım niyeti için gereklidir.`,
+      Construction: `${term}, inşaat sahalarında günlük olarak kullanılan pratik bir kavramdır. İnşaat kalitesi, güvenliği ve programı üzerinde etkisi vardır.`,
+      Commissioning: `${term}, sistem hazırlığını doğrulamak için devreye alma sırasında test edilir ve belgelenir. Teslim öncesi doğrulanmalıdır.`,
       'QA/QC': `${term}, muayene ve doğrulama sırasında kullanılan bir kalite kontrol kavramdır. Proje şartnamelerine ve standartlarına uygunluğu sağlamaya yardımcı olur.`,
-      'HSE': `${term}, saha güvenliği için kritik olan bir sağlık, güvenlik ve çevre kavramdır. Kazaları önlemeye ve düzenleyici uyuma yardımcı olur.`,
+      HSE: `${term}, saha güvenliği için kritik olan bir sağlık, güvenlik ve çevre kavramdır. Kazaları önlemeye ve düzenleyici uyuma yardımcı olur.`,
       'Project Management': `${term}, planlama ve takip için kullanılan bir proje kontrol kavramıdır. Proje programı, maliyeti ve paydaş iletişimi üzerinde etkisi vardır.`,
     };
-    return definitions[discipline] || `${term}, ${context} alanında profesyonel bir mühendislik kavramıdır.`;
+    return (
+      definitions[discipline] ||
+      `${term}, ${context} alanında profesyonel bir mühendislik kavramıdır.`
+    );
   };
 
   // Generate example based on discipline
@@ -1018,19 +1025,19 @@ function buildExpansionRows(): VocabularyContentRow[] {
         `${term} saha muayenesi sırasında müteahhit firması tarafından doğrulandı.`,
         `${term} kalite kontrol kaydına tarih ve imza ile birlikte işlendi.`,
       ],
-      'Architecture': [
+      Architecture: [
         `${term} tasarım koordinasyon toplantısında tüm paydaşlar tarafından gözden geçirildi.`,
         `${term} mimari niyet, fonksiyonellik ve şartnamelerle tam uyumlu olmalıdır.`,
         `${term} mimar proje gereksinimlerini karşıladığını resmi olarak onayladı.`,
         `${term} bitiş programında ilgili aşama ile birlikte yer alıyor.`,
       ],
-      'Construction': [
+      Construction: [
         `${term} bir sonraki iş cephesine geçmeden önce saha şefi tarafından kontrol edildi.`,
         `${term} saha şefi tarafından günlük yürüyüş sırasında doğrulandı ve kaydedildi.`,
         `${term} kontrol talebi gönderilmeden önce tamamlanmış ve hazır olmalıdır.`,
         `${term} iş sırası ve programına göre planlanarak uygulandı.`,
       ],
-      'Commissioning': [
+      Commissioning: [
         `${term} devreye alma kontrol listesi sırasında adım adım test edildi.`,
         `${term} sistem enerjilmesi öncesi bağımsız olarak doğrulanmalıdır.`,
         `${term} test sonuçları commissioning ekibi tarafından resmi olarak belgelendi.`,
@@ -1042,7 +1049,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         `${term} kalite kontrol mühendisi tarafından şartnameye göre doğrulandı.`,
         `${term} uygunluk matrisinde ilgili madde ile birlikte yer alıyor.`,
       ],
-      'HSE': [
+      HSE: [
         `${term} güvenlik brifingi sırasında tüm ekip tarafından gözden geçirildi.`,
         `${term} çalışma başlamadan önce sahada yerinde hazır olmalıdır.`,
         `${term} saha denetimi sırasında güvenlik memuru tarafından kontrol edildi.`,
@@ -1055,7 +1062,9 @@ function buildExpansionRows(): VocabularyContentRow[] {
         `${term} risk defterine öncelik seviyesi ile birlikte kaydedildi.`,
       ],
     };
-    const pool = examples[discipline] || [`The ${term} was verified during the quality review.`];
+    const pool = examples[discipline] || [
+      `The ${term} was verified during the quality review.`,
+    ];
     // Hash term+discipline for deterministic but varied selection
     let hash = 0;
     const str = term + discipline;
@@ -1069,15 +1078,39 @@ function buildExpansionRows(): VocabularyContentRow[] {
   const getCollocations = (term: string, discipline: string): string[] => {
     const base = [`review ${term}`, `${term} status`, `${term} requirement`];
     const extras: Record<string, string[]> = {
-      'Electrical Engineering': [`${term} test`, `${term} setting`, `${term} report`],
-      'Mechanical Engineering': [`${term} inspection`, `${term} alignment`, `${term} performance`],
-      'Civil Engineering': [`${term} specification`, `${term} tolerance`, `${term} compliance`],
-      'Architecture': [`${term} design`, `${term} approval`, `${term} detail`],
-      'Construction': [`${term} schedule`, `${term} completion`, `${term} sign-off`],
-      'Commissioning': [`${term} checklist`, `${term} verification`, `${term} certificate`],
+      'Electrical Engineering': [
+        `${term} test`,
+        `${term} setting`,
+        `${term} report`,
+      ],
+      'Mechanical Engineering': [
+        `${term} inspection`,
+        `${term} alignment`,
+        `${term} performance`,
+      ],
+      'Civil Engineering': [
+        `${term} specification`,
+        `${term} tolerance`,
+        `${term} compliance`,
+      ],
+      Architecture: [`${term} design`, `${term} approval`, `${term} detail`],
+      Construction: [
+        `${term} schedule`,
+        `${term} completion`,
+        `${term} sign-off`,
+      ],
+      Commissioning: [
+        `${term} checklist`,
+        `${term} verification`,
+        `${term} certificate`,
+      ],
       'QA/QC': [`${term} record`, `${term} audit`, `${term} certification`],
-      'HSE': [`${term} briefing`, `${term} compliance`, `${term} procedure`],
-      'Project Management': [`${term} tracking`, `${term} forecast`, `${term} review`],
+      HSE: [`${term} briefing`, `${term} compliance`, `${term} procedure`],
+      'Project Management': [
+        `${term} tracking`,
+        `${term} forecast`,
+        `${term} review`,
+      ],
     };
     return [...base, ...(extras[discipline] || [])];
   };
@@ -1095,7 +1128,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
         [],
         getCollocations(term, category.discipline),
         category.difficulty,
-        category.tags,
+        category.tags
       )
     )
   );
