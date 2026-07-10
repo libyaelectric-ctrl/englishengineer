@@ -21,6 +21,7 @@ import {
   registerWorkspaceRoutes,
 } from './workspace.js';
 import { createI18nMiddleware } from './i18n.js';
+import { initAuditLog, getAuditLogs } from './audit-log.js';
 
 export const createApp = ({
   config,
@@ -31,6 +32,8 @@ export const createApp = ({
   rateLimitStore = createRateLimitStore(config.rateLimit, fetchImpl),
 } = {}) => {
   if (!config) throw new Error('Backend config is required.');
+
+  initAuditLog(config);
 
   const app = express();
   app.disable('x-powered-by');
@@ -148,6 +151,40 @@ export const createApp = ({
   registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {
     repository: resolvedWorkspaceRepository,
   });
+
+  // Admin audit logs endpoint
+  app.get(
+    '/api/admin/audit-logs',
+    requireBackendAuth,
+    async (req, res, next) => {
+      try {
+        const userId = req.auth?.userId;
+        if (!userId) {
+          throw new ApiError(
+            401,
+            'authentication_required',
+            'Authentication required.'
+          );
+        }
+        if (
+          userId !== 'engineeros-dev-user' &&
+          !config.auth.internalApiSecret
+        ) {
+          throw new ApiError(403, 'admin_required', 'Admin access required.');
+        }
+        const filters = {
+          userId: req.query.userId || undefined,
+          action: req.query.action || undefined,
+          since: req.query.since || undefined,
+          limit: req.query.limit ? parseInt(req.query.limit, 10) : 100,
+        };
+        const logs = await getAuditLogs(filters);
+        res.json({ success: true, data: logs });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
   // Global rate limiter — protects all API routes not covered by specific limiters
   const globalRateLimiter = createRateLimiter({

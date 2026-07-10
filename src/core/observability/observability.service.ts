@@ -58,8 +58,8 @@ export const ObservabilityService = {
     const notes = [
       ...environment.errors,
       ...environment.warnings,
-      monitoring.configured
-        ? 'Error monitoring is configured.'
+      monitoring.dsnConfigured
+        ? 'Sentry DSN is configured — but Sentry SDK is not installed. Errors are logged locally only.'
         : 'Error monitoring is not configured. Runtime errors remain local-only.',
     ];
 
@@ -80,21 +80,17 @@ export const ObservabilityService = {
     };
   },
 
-  reportError(error: ErrorReport): void {
-    const monitoring = this.getErrorMonitoringConfig();
-    if (!monitoring.configured) {
-      console.error('[Observability] Unreported error:', error);
-      return;
-    }
-
+  /** Log error locally to console. Not connected to any external service. */
+  logErrorLocally(error: ErrorReport): void {
     console.error(
-      `[Observability] Error reported: ${error.code}`,
+      `[Observability] Local error log: ${error.code}`,
       error.message,
       error.context
     );
   },
 
-  reportPerformance(metric: {
+  /** Log performance metric locally to console. Not connected to any external service. */
+  logPerformanceLocally(metric: {
     name: string;
     durationMs: number;
     success: boolean;
