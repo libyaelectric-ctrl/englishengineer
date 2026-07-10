@@ -322,7 +322,8 @@ export const getRecommendedFocus = (learningState: LearningState): string => {
 
 export const buildCoachContext = (
   user: UserProfile | null,
-  learningState: LearningState
+  learningState: LearningState,
+  mistakeLog?: any[]
 ): AICoachContext => {
   const progress = ProgressService.getSummary(learningState);
   const skills = ProgressService.getSkillAnalysis(learningState);
@@ -334,6 +335,14 @@ export const buildCoachContext = (
       (session) =>
         `${session.module}: ${session.score}% (${session.durationMinutes} min)`
     );
+
+  const mappedMistakes = (mistakeLog || [])
+    .slice(0, 15)
+    .map((entry) => ({
+      originalText: entry.originalText || '',
+      correction: entry.correction || '',
+      category: entry.category || 'general',
+    }));
 
   return {
     userName: user?.displayName || 'Engineer',
@@ -356,6 +365,7 @@ export const buildCoachContext = (
     wordsLearned: vocabulary.wordsLearned,
     vocabularyRetention: vocabulary.retentionPercentage,
     recommendedFocus: getRecommendedFocus(learningState),
+    recentMistakes: mappedMistakes,
   };
 };
 
