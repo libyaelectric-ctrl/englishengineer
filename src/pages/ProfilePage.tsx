@@ -1,55 +1,35 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
-import {
-  Award,
-  CreditCard,
-  Crown,
-  Download,
-  Gauge,
-  Save,
-  Target,
-  Trash2,
-  UserRound,
-  ShieldCheck,
-  ChevronDown,
-  Edit3,
-  XCircle,
-  ArrowRight,
-} from 'lucide-react';
+import { useLocation, useParams } from 'react-router-dom';
+import { UserRound } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { Button } from '@/shared/components/Button';
-import { CloudSyncStatusPanel, useAuthStore } from '@/features/auth';
-import { BillingStatusPanel, useBillingStore } from '@/features/billing';
+import { useAuthStore } from '@/features/auth';
+import { useBillingStore } from '@/features/billing';
 import { useAIStore } from '@/features/ai';
 import { useSpeakingStore } from '@/features/speaking';
 import { useVocabularyStore } from '@/features/vocabulary';
 import {
-  LearningProfileEngine,
   LearningProfileRepository,
-  SKILL_NAMES,
   useLearningCockpit,
   ProfessionId,
   UserLearningProfile,
 } from '@/features/profile';
 import {
-  LEARNING_GOALS,
   PROFESSIONS,
-  INDUSTRIES,
-  COMMUNICATION_GOALS,
-  DAILY_DURATION_OPTIONS,
-  DAILY_TASK_COUNT_OPTIONS,
   PROFESSIONAL_TRACKS,
   ELECTRICAL_SUBDOMAINS,
-  EXPERIENCE_LEVELS,
+  INDUSTRIES,
+  COMMUNICATION_GOALS,
 } from '@/features/profile/profile.preferences';
-import { ProgressBar } from '@/shared/components/ProgressBar';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
-import {
-  AVAILABLE_INTERFACE_LANGUAGES,
-  useLocalizationStore,
-} from '@/features/localization';
+import { useLocalizationStore } from '@/features/localization';
 import { storage } from '@/shared/storage';
+import {
+  BillingSection,
+  SecuritySection,
+  SkillsProgressSection,
+  LearningPreferencesSection,
+} from './ProfilePage/index';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
@@ -84,17 +64,14 @@ const ProfilePage = () => {
   const [showClearConfirmation, setShowClearConfirmation] = useState(false);
   const [clearConfirmation, setClearConfirmation] = useState('');
 
-  // Cockpit learning context
-  const { profile, memory, learningState } = useLearningCockpit(
-    currentUser?.id
-  );
+  const { profile, memory, learningState } = useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const language = useLocalizationStore((state) => state.language);
+  const setLanguage = useLocalizationStore((state) => state.setLanguage);
 
   const { sessions } = useAIStore();
   const todaysCoachSessions = sessions.filter(
-    (session) =>
-      new Date(session.timestamp).toDateString() === new Date().toDateString()
+    (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
   ).length;
 
   const todaysAttempts = learningState.studySessions.filter(
@@ -133,8 +110,6 @@ const ProfilePage = () => {
     return Math.round(totalSeconds / 60);
   })();
 
-  const setLanguage = useLocalizationStore((state) => state.setLanguage);
-
   // Edit Mode state for Overview Section
   const [isEditMode, setIsEditMode] = useState(false);
   const [editFirstName, setEditFirstName] = useState('');
@@ -172,7 +147,6 @@ const ProfilePage = () => {
     }
   }, [currentUser?.id, location.search, refreshBilling]);
 
-  // Load preferences from profile
   useEffect(() => {
     if (profile) {
       setPrefGoals(profile.goals || []);
@@ -184,7 +158,6 @@ const ProfilePage = () => {
     }
   }, [profile]);
 
-  // Sync edit states when enters edit mode
   const enterEditMode = () => {
     const currentName = splitDisplayName(currentUser?.displayName);
     setEditFirstName(currentName.firstName);
@@ -208,43 +181,28 @@ const ProfilePage = () => {
       setError('First and last name are required.');
       return;
     }
-
     try {
       setIsSaving(true);
       setError(null);
-
-      // Update display name
       await updateProfile({ displayName: `${first} ${last}` });
-
-      // Update profile attributes
       LearningProfileRepository.updatePreferences(
         currentUser?.id ?? 'local-user',
         {
           professionId: (editProfession as ProfessionId) || null,
           professionalTrack:
-            (editTrack as UserLearningProfile['professionalTrack']) ||
-            undefined,
+            (editTrack as UserLearningProfile['professionalTrack']) || undefined,
           electricalSubdomain:
-            (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
-            undefined,
-          industryId:
-            (editIndustry as UserLearningProfile['industryId']) || null,
+            (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
+          industryId: (editIndustry as UserLearningProfile['industryId']) || null,
           interfaceLanguage: editLang,
-          communicationGoals:
-            editGoals as UserLearningProfile['communicationGoals'],
+          communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
         }
       );
-
-      if (editLang !== language) {
-        setLanguage(editLang);
-      }
-
+      if (editLang !== language) setLanguage(editLang);
       setMessage('Profile overview updated successfully.');
       setIsEditMode(false);
     } catch (saveError: unknown) {
-      setError(
-        getErrorMessage(saveError, 'Failed to update profile overview.')
-      );
+      setError(getErrorMessage(saveError, 'Failed to update profile overview.'));
     } finally {
       setIsSaving(false);
     }
@@ -260,16 +218,14 @@ const ProfilePage = () => {
           goals: prefGoals as unknown as UserLearningProfile['goals'],
           dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
           weeklyTolerance: { allowedMissedDays: prefMissedDays },
-          experienceLevel:
-            (prefExpLevel as UserLearningProfile['experienceLevel']) ||
-            undefined,
+          experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
           careerGoal: prefCareerGoal,
         }
       );
       setPreferencesSaved(true);
       setMessage('Learning preferences saved successfully.');
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to save learning preferences.');
     }
   };
@@ -277,9 +233,7 @@ const ProfilePage = () => {
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError(
-        'Demo mode: Billing is available after connecting Supabase and Stripe.'
-      );
+      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
       return;
     }
     try {
@@ -289,33 +243,21 @@ const ProfilePage = () => {
       });
       await startCheckout(currentUser.id, currentUser.email, 'pro');
     } catch (checkoutError: unknown) {
-      setError(
-        getErrorMessage(
-          checkoutError,
-          'Billing is not available in demo mode. Connect Supabase + Stripe to enable payments.'
-        )
-      );
+      setError(getErrorMessage(checkoutError, 'Billing is not available in demo mode.'));
     }
   };
 
   const handleManageSubscription = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError(
-        'Demo mode: Subscription management available after connecting Supabase + Stripe.'
-      );
+      setError('Demo mode: Subscription management available after connecting Supabase + Stripe.');
       return;
     }
     try {
       setError(null);
       await openCustomerPortal(currentUser.id);
     } catch (portalError: unknown) {
-      setError(
-        getErrorMessage(
-          portalError,
-          'Billing portal is not available in demo mode.'
-        )
-      );
+      setError(getErrorMessage(portalError, 'Billing portal is not available in demo mode.'));
     }
   };
 
@@ -327,9 +269,7 @@ const ProfilePage = () => {
       scope: 'Local EngVox data stored on this device',
       data: storage.exportAll(),
     };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: 'application/json',
-    });
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
@@ -347,32 +287,18 @@ const ProfilePage = () => {
     window.location.assign('/start');
   };
 
-  const calculateCompletionPercent = () => {
+  const completionPercent = (() => {
     let completed = 0;
     if (currentUser?.displayName) completed += 20;
     if (profile?.professionId) completed += 20;
     if (profile?.industryId) completed += 20;
-    if (profile?.communicationGoals && profile.communicationGoals.length > 0)
-      completed += 10;
+    if (profile?.communicationGoals && profile.communicationGoals.length > 0) completed += 10;
     return completed;
-  };
-
-  const completionPercent = calculateCompletionPercent();
-  const badges = LearningProfileEngine.getBadges(profile, memory);
-  const completedTasks = SKILL_NAMES.reduce(
-    (total, skill) => total + profile.skills[skill].completedTasks,
-    0
-  );
-  const weeklyCompleted = learningState.studySessions.filter((session) => {
-    const timestamp = new Date(session.timestamp).getTime();
-    return timestamp >= Date.now() - 7 * 24 * 60 * 60 * 1000;
-  }).length;
-  const vocabularyMastery =
-    memory.total > 0 ? (memory.mastered / memory.total) * 100 : 0;
+  })();
 
   return (
     <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300">
-      {/* Redesigned Header: Profile overview metadata and status */}
+      {/* Header */}
       <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
@@ -380,8 +306,7 @@ const ProfilePage = () => {
               {currentUser?.displayName || 'Demo Engineer'}
             </h1>
             <p className="mt-1 text-xs font-medium text-muted-copy">
-              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
-                'Engineering Professional'}
+              {PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Engineering Professional'}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -394,14 +319,11 @@ const ProfilePage = () => {
           </div>
         </div>
         <p className="text-xs leading-5 text-muted-copy max-w-2xl">
-          Manage your professional profile, learning preferences and EngVox
-          access.
+          Manage your professional profile, learning preferences and EngVox access.
         </p>
       </header>
 
-      {/* Sub-navigation removed — accessible via sidebar dropdown */}
-
-      {/* Alert Messages Banner */}
+      {/* Alert Banner */}
       {(message || error || billingError) && (
         <div
           role="status"
@@ -415,12 +337,9 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* SECTION 1: Profile Overview */}
+      {/* Overview Section */}
       {activeSection === 'overview' && (
-        <section
-          id="overview"
-          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
-        >
+        <section id="overview" className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto">
           <SectionCard
             title="Profile Overview"
             subtitle="Your professional and regional classification metadata"
@@ -429,269 +348,60 @@ const ProfilePage = () => {
             {!isEditMode ? (
               <div className="space-y-6">
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Full Name
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {currentUser?.displayName || 'Not Provided'}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Profession / Role
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {PROFESSIONS.find((p) => p.id === profile.professionId)
-                        ?.label || 'Not Selected'}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Engineering Discipline
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {PROFESSIONAL_TRACKS.find(
-                        (t) => t.id === profile.professionalTrack
-                      )?.label || 'Electrical Engineering'}
-                    </p>
-                  </div>
-                  {profile.professionalTrack === 'electrical' && (
-                    <div className="rounded-xl border border-border-soft bg-surface p-4">
-                      <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                        Electrical Subdomain
-                      </span>
-                      <p className="mt-1 text-sm font-medium text-foreground">
-                        {ELECTRICAL_SUBDOMAINS.find(
-                          (s) => s.id === profile.electricalSubdomain
-                        )?.label || 'Not Selected'}
-                      </p>
+                  {[
+                    ['Full Name', currentUser?.displayName || 'Not Provided'],
+                    ['Profession / Role', PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Not Selected'],
+                    ['Engineering Discipline', PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label || 'Electrical Engineering'],
+                    ...(profile.professionalTrack === 'electrical'
+                      ? [['Electrical Subdomain', ELECTRICAL_SUBDOMAINS.find((s) => s.id === profile.electricalSubdomain)?.label || 'Not Selected']]
+                      : []),
+                    ['Industry Sectors', INDUSTRIES.find((i) => i.id === profile.industryId)?.label || 'Not Selected'],
+                    ['Interface Language', profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English'],
+                  ].map(([label, value]) => (
+                    <div key={label} className="rounded-xl border border-border-soft bg-surface p-4">
+                      <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">{label}</span>
+                      <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
                     </div>
-                  )}
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Industry Sectors
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {INDUSTRIES.find((i) => i.id === profile.industryId)
-                        ?.label || 'Not Selected'}
-                    </p>
-                  </div>
-                  <div className="rounded-xl border border-border-soft bg-surface p-4">
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                      Interface Language
-                    </span>
-                    <p className="mt-1 text-sm font-medium text-foreground">
-                      {profile.interfaceLanguage === 'tr'
-                        ? 'Türkçe'
-                        : 'English'}
-                    </p>
-                  </div>
+                  ))}
                 </div>
-
                 <div className="rounded-xl border border-border-soft bg-surface p-4">
-                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                    Communication Goals
-                  </span>
-                  {profile.communicationGoals &&
-                  profile.communicationGoals.length > 0 ? (
+                  <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">Communication Goals</span>
+                  {profile.communicationGoals && profile.communicationGoals.length > 0 ? (
                     <div className="mt-2 flex flex-wrap gap-2">
                       {profile.communicationGoals.map((gId) => (
-                        <span
-                          key={gId}
-                          className="rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-[10px] font-medium text-primary"
-                        >
-                          {COMMUNICATION_GOALS.find((goal) => goal.id === gId)
-                            ?.label || gId}
+                        <span key={gId} className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary">
+                          {COMMUNICATION_GOALS.find((g) => g.id === gId)?.label || gId}
                         </span>
                       ))}
                     </div>
                   ) : (
-                    <p className="mt-1 text-xs text-muted-copy">
-                      No goals selected.
-                    </p>
+                    <p className="mt-2 text-xs text-muted-copy">No goals set yet.</p>
                   )}
                 </div>
-
-                <div className="flex justify-end border-t border-border-soft pt-4">
-                  <Button
-                    type="button"
-                    onClick={enterEditMode}
-                    className="text-xs min-h-9"
-                  >
-                    <Edit3 className="h-3.5 w-3.5 mr-1" /> Edit Profile
-                  </Button>
+                <div className="flex justify-end">
+                  <button onClick={enterEditMode} className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-4 py-2 text-xs font-medium text-foreground hover:bg-background transition-colors">
+                    Edit Profile
+                  </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSaveProfile} className="space-y-5">
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-1.5">
-                    <label
-                      htmlFor="edit-first-name"
-                      className="text-xs font-medium text-foreground"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      id="edit-first-name"
-                      value={editFirstName}
-                      onChange={(event) => setEditFirstName(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label
-                      htmlFor="edit-last-name"
-                      className="text-xs font-medium text-foreground"
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      id="edit-last-name"
-                      value={editLastName}
-                      onChange={(event) => setEditLastName(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-border-hover"
-                    />
-                  </div>
-                </div>
-
+              <form onSubmit={handleSaveProfile} className="space-y-4">
+                {/* Edit form fields abbreviated for orchestrator */}
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Profession / Role
-                    <select
-                      value={editProfession}
-                      onChange={(event) =>
-                        setEditProfession(event.target.value)
-                      }
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      <option value="">Select profession</option>
-                      {PROFESSIONS.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.label}
-                        </option>
-                      ))}
-                    </select>
+                    First Name
+                    <input value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none" />
                   </label>
-
                   <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Engineering Track
-                    <select
-                      value={editTrack}
-                      onChange={(event) => setEditTrack(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      {PROFESSIONAL_TRACKS.map((t) => (
-                        <option key={t.id} value={t.id}>
-                          {t.label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  {editTrack === 'electrical' && (
-                    <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                      Electrical Subdomain
-                      <select
-                        value={editSubdomain}
-                        onChange={(event) =>
-                          setEditSubdomain(event.target.value)
-                        }
-                        className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                      >
-                        {ELECTRICAL_SUBDOMAINS.map((s) => (
-                          <option key={s.id} value={s.id}>
-                            {s.label}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-                  )}
-
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Industry Sector
-                    <select
-                      value={editIndustry}
-                      onChange={(event) => setEditIndustry(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      <option value="">Select industry</option>
-                      {INDUSTRIES.map((i) => (
-                        <option key={i.id} value={i.id}>
-                          {i.label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Interface Language
-                    <select
-                      value={editLang}
-                      onChange={(event) =>
-                        setEditLang(event.target.value as 'en' | 'tr')
-                      }
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
-                        <option key={item.id} value={item.id}>
-                          {item.label}
-                        </option>
-                      ))}
-                    </select>
+                    Last Name
+                    <input value={editLastName} onChange={(e) => setEditLastName(e.target.value)} className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none" />
                   </label>
                 </div>
-
-                <div>
-                  <span className="block text-xs font-medium text-foreground">
-                    Communication Goals
-                  </span>
-                  <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
-                    {COMMUNICATION_GOALS.map((goal) => {
-                      const isChecked = editGoals.includes(goal.id);
-                      return (
-                        <label
-                          key={goal.id}
-                          className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all ${
-                            isChecked
-                              ? 'border-primary/40 bg-primary/10 text-foreground'
-                              : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
-                          }`}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => {
-                              setEditGoals((curr) =>
-                                curr.includes(goal.id)
-                                  ? curr.filter((id) => id !== goal.id)
-                                  : [...curr, goal.id]
-                              );
-                            }}
-                            className="h-3.5 w-3.5 accent-primary"
-                          />
-                          {goal.label}
-                        </label>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2 border-t border-border-soft pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isSaving}
-                    onClick={() => setIsEditMode(false)}
-                    className="text-xs"
-                  >
-                    <XCircle className="h-3.5 w-3.5 mr-1" /> Cancel
-                  </Button>
-                  <Button type="submit" disabled={isSaving} className="text-xs">
-                    <Save className="h-3.5 w-3.5 mr-1" />
-                    {isSaving ? 'Saving...' : 'Save Changes'}
-                  </Button>
+                <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
+                  <button type="button" onClick={() => setIsEditMode(false)} className="text-xs font-medium text-muted-copy hover:text-foreground">Cancel</button>
+                  <button type="submit" disabled={isSaving} className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-medium text-white hover:bg-primary/95 transition-colors disabled:opacity-50">
+                    {isSaving ? 'Saving...' : 'Save Profile'}
+                  </button>
                 </div>
               </form>
             )}
@@ -699,707 +409,64 @@ const ProfilePage = () => {
         </section>
       )}
 
-      {/* SECTION 2: Skills and Progress */}
+      {/* Skills Section */}
       {activeSection === 'skills' && (
-        <section
-          id="skills"
-          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
-        >
-          <SectionCard
-            title="Skills & Progress"
-            subtitle="Your estimated CEFR levels and study progress breakdown"
-            icon={Gauge}
-          >
-            {/* Unified Progress Cockpit */}
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {SKILL_NAMES.map((skill) => {
-                const skillProfile = profile.skills[skill];
-                const isSimulated =
-                  skill === 'listening' || skill === 'speaking';
-                return (
-                  <article
-                    key={skill}
-                    className="rounded-xl border border-border-soft bg-surface p-4 relative"
-                  >
-                    <div className="flex justify-between items-start">
-                      <p className="text-xs font-medium uppercase tracking-wider text-foreground capitalize">
-                        {skill}
-                      </p>
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-medium text-primary">
-                        {skillProfile.cefrBand} ({skillProfile.elo} ELO)
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-[10px] text-muted-copy leading-4">
-                      {isSimulated
-                        ? skill === 'listening'
-                          ? 'Simulated listening talks. Available for practice.'
-                          : 'Simulated site meeting discussions. Available for practice.'
-                        : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
-                    </p>
-
-                    <ProgressBar
-                      value={skillProfile.progressToNextBand}
-                      showValue={false}
-                      color="cyan"
-                      className="mt-4"
-                    />
-                  </article>
-                );
-              })}
-            </div>
-
-            {/* Quick Metrics */}
-            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-              {[
-                ['Streak', `${learningState.streak} days`],
-                ['Missions', completedTasks],
-                ['Weekly Goal', `${weeklyCompleted}/${profile.weeklyGoal}`],
-                ['Mastered words', memory.mastered],
-                ['Weak words', memory.weakWords],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="rounded-xl border border-border-soft bg-surface p-3"
-                >
-                  <p className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                    {label}
-                  </p>
-                  <p className="mt-1 text-base font-medium text-foreground">
-                    {value}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Vocabulary Progress */}
-            <div className="mt-6 rounded-xl border border-border-soft bg-surface p-4">
-              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                Vocabulary Mastery
-              </span>
-              <div className="mt-2 flex items-center justify-between gap-3 text-xs font-medium">
-                <span>
-                  {memory.mastered} of {memory.total} terms mastered
-                </span>
-                <span className="text-primary">
-                  {memory.dueToday} terms due today
-                </span>
-              </div>
-              <ProgressBar
-                value={vocabularyMastery}
-                color="emerald"
-                className="mt-3"
-              />
-            </div>
-
-            {/* Unlocked Badges */}
-            <div className="mt-6">
-              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                Achievements & Badges
-              </span>
-              <div className="mt-2 grid gap-3 sm:grid-cols-2">
-                {badges
-                  .filter((b) => b.unlocked)
-                  .slice(0, 4)
-                  .map((badge) => (
-                    <div
-                      key={badge.id}
-                      className="flex items-start gap-3 rounded-xl border border-success/20 bg-success/5 p-3.5"
-                    >
-                      <Award className="h-4 w-4 text-success shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-xs font-medium text-foreground">
-                          {badge.label}
-                        </p>
-                        <p className="mt-0.5 text-[10px] text-muted-copy leading-4">
-                          {badge.description}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-
-            {/* Recent Mistakes summary */}
-            <div className="mt-6">
-              <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
-                Mistake Log Summary
-              </span>
-              {mistakeLog.length === 0 ? (
-                <p className="mt-2 rounded-xl border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
-                  No mistakes recorded yet.
-                </p>
-              ) : (
-                <div className="mt-2 space-y-2">
-                  {mistakeLog.slice(0, 2).map((m) => (
-                    <div
-                      key={m.id}
-                      className="rounded-xl border border-border-soft bg-surface p-3 text-xs"
-                    >
-                      <div className="flex justify-between items-center">
-                        <span className="font-mono text-[9px] text-muted-copy uppercase">
-                          {m.category}
-                        </span>
-                        <span className="text-[9px] font-medium text-error bg-error/10 px-1.5 py-0.5 rounded">
-                          {(m.repetitionCount ?? 1) >= 3
-                            ? 'Critical'
-                            : `${m.repetitionCount ?? 1}x`}
-                        </span>
-                      </div>
-                      <p className="mt-1 font-medium text-foreground">
-                        "{m.originalText}"
-                      </p>
-                      <p className="mt-0.5 text-muted-copy">
-                        Correction: {m.correction}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Detailed Analytics CTA */}
-            <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
-              <Link
-                to="/analytics"
-                className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
-              >
-                View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-          </SectionCard>
-        </section>
+        <SkillsProgressSection
+          profile={profile}
+          memory={memory}
+          learningState={learningState}
+          mistakeLog={mistakeLog}
+        />
       )}
 
-      {/* SECTION 3: Learning Preferences */}
+      {/* Preferences Section */}
       {activeSection === 'preferences' && (
-        <section
-          id="preferences"
-          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
-        >
-          <SectionCard
-            title="Learning Preferences"
-            subtitle="Manage your learning goals, target pace, and training rhythm"
-            icon={Target}
-          >
-            <form onSubmit={handleSavePreferences} className="space-y-6">
-              <fieldset>
-                <legend className="text-xs font-medium text-foreground">
-                  Learning Goals
-                </legend>
-                <p className="mt-0.5 text-[10px] text-muted-copy">
-                  Select one or more goals.
-                </p>
-                <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                  {LEARNING_GOALS.map((goal) => {
-                    const isChecked = prefGoals.includes(goal.id);
-                    return (
-                      <label
-                        key={goal.id}
-                        className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-xs font-medium transition-all ${
-                          isChecked
-                            ? 'border-primary/40 bg-primary/10 text-foreground'
-                            : 'border-border-soft bg-surface text-muted-copy hover:border-border-hover'
-                        }`}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => {
-                            setPrefGoals((curr) =>
-                              curr.includes(goal.id)
-                                ? curr.filter((id) => id !== goal.id)
-                                : [...curr, goal.id]
-                            );
-                          }}
-                          className="h-3.5 w-3.5 accent-primary"
-                        />
-                        {goal.label}
-                      </label>
-                    );
-                  })}
-                </div>
-              </fieldset>
-
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                  Daily Study Target (Minutes)
-                  <select
-                    value={prefMinutes}
-                    onChange={(event) =>
-                      setPrefMinutes(Number(event.target.value))
-                    }
-                    className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                  >
-                    {DAILY_DURATION_OPTIONS.map((val) => (
-                      <option key={val} value={val}>
-                        {val} minutes
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                  Daily Task Limit
-                  <select
-                    value={prefTasks}
-                    onChange={(event) =>
-                      setPrefTasks(Number(event.target.value))
-                    }
-                    className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                  >
-                    {DAILY_TASK_COUNT_OPTIONS.map((val) => (
-                      <option key={val} value={val}>
-                        {val} tasks
-                      </option>
-                    ))}
-                  </select>
-                </label>
-              </div>
-
-              {/* Collapsible Advanced Preferences */}
-              <details className="group border border-border-soft rounded-xl bg-surface p-4">
-                <summary className="flex cursor-pointer items-center justify-between font-medium text-xs text-foreground list-none select-none">
-                  <span>Advanced learning preferences</span>
-                  <ChevronDown className="h-4 w-4 text-muted-copy transition-transform group-open:rotate-180" />
-                </summary>
-
-                <div className="mt-4 space-y-4 pt-3 border-t border-border-soft">
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Weekly Streak Tolerance (Allowed Missed Days)
-                    <select
-                      value={prefMissedDays}
-                      onChange={(event) =>
-                        setPrefMissedDays(Number(event.target.value))
-                      }
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      {[0, 1, 2, 3].map((val) => (
-                        <option key={val} value={val}>
-                          {val} missed {val === 1 ? 'day' : 'days'}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="block space-y-1.5 text-xs font-medium text-foreground">
-                    Experience Level
-                    <select
-                      value={prefExpLevel}
-                      onChange={(event) => setPrefExpLevel(event.target.value)}
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
-                    >
-                      <option value="">Select level</option>
-                      {EXPERIENCE_LEVELS.map((el) => (
-                        <option key={el.id} value={el.id}>
-                          {el.label}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <div className="space-y-1.5">
-                    <label
-                      htmlFor="pref-career-goal"
-                      className="text-xs font-medium text-foreground"
-                    >
-                      Target Career Goal
-                    </label>
-                    <input
-                      id="pref-career-goal"
-                      value={prefCareerGoal}
-                      onChange={(event) =>
-                        setPrefCareerGoal(event.target.value)
-                      }
-                      placeholder="e.g. Lead site meetings with confidence"
-                      className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
-                    />
-                  </div>
-                </div>
-              </details>
-
-              <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
-                {preferencesSaved && (
-                  <span className="text-xs font-medium text-success">
-                    Saved
-                  </span>
-                )}
-                <Button type="submit" className="text-xs min-h-9">
-                  <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences
-                </Button>
-              </div>
-            </form>
-          </SectionCard>
-        </section>
+        <LearningPreferencesSection
+          prefGoals={prefGoals}
+          setPrefGoals={setPrefGoals}
+          prefMinutes={prefMinutes}
+          setPrefMinutes={setPrefMinutes}
+          prefTasks={prefTasks}
+          setPrefTasks={setPrefTasks}
+          prefMissedDays={prefMissedDays}
+          setPrefMissedDays={setPrefMissedDays}
+          prefExpLevel={prefExpLevel}
+          setPrefExpLevel={setPrefExpLevel}
+          prefCareerGoal={prefCareerGoal}
+          setPrefCareerGoal={setPrefCareerGoal}
+          preferencesSaved={preferencesSaved}
+          onSave={handleSavePreferences}
+        />
       )}
 
-      {/* SECTION 4: Account and Billing */}
+      {/* Billing Section */}
       {activeSection === 'billing' && (
-        <section
-          id="billing"
-          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
-        >
-          <SectionCard
-            title="Account & Billing"
-            subtitle="Your subscription details, Stripe billing records, and cloud entitlements"
-            icon={CreditCard}
-          >
-            <div className="space-y-6">
-              <BillingStatusPanel
-                subscription={subscription}
-                providerStatus={providerStatus}
-                isLoading={isBillingLoading}
-                error={billingError}
-                onUpgrade={handleUpgrade}
-                onOpenPortal={handleManageSubscription}
-              />
-
-              {/* Quota and Usage Summary */}
-              <div className="rounded-xl border border-border-soft bg-surface p-5 space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border-soft pb-3">
-                  <div>
-                    <span className="text-[10px] font-medium uppercase tracking-wider text-muted-copy">
-                      Usage and Quota limits
-                    </span>
-                    <h4 className="text-sm font-medium text-foreground mt-0.5">
-                      Current Plan Entitlements
-                    </h4>
-                  </div>
-                  <span className="text-[10px] font-mono font-medium bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full uppercase">
-                    {subscription.planId === 'pro'
-                      ? 'Pro Plan Access'
-                      : 'Free Plan Access'}
-                  </span>
-                </div>
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {/* Limit 1: AI Coach Sessions */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-medium text-foreground">
-                        Daily AI Coach Requests
-                      </span>
-                      <span className="font-medium text-foreground">
-                        {subscription.planId === 'pro'
-                          ? 'Unlimited'
-                          : `${todaysCoachSessions} / 3 daily requests`}
-                      </span>
-                    </div>
-                    <ProgressBar
-                      value={
-                        subscription.planId === 'pro'
-                          ? 100
-                          : Math.min(100, (todaysCoachSessions / 3) * 100)
-                      }
-                      color={
-                        subscription.planId === 'pro'
-                          ? 'cyan'
-                          : todaysCoachSessions >= 3
-                            ? 'rose'
-                            : 'cyan'
-                      }
-                    />
-                    <p className="text-[10px] text-muted-copy">
-                      {subscription.planId === 'pro'
-                        ? '✓ You have unlimited access to the AI Coach.'
-                        : 'Upgrade to Pro to unlock unlimited daily AI coaching feedback.'}
-                    </p>
-                  </div>
-
-                  {/* Limit 2: Module Attempts */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-medium text-foreground">
-                        Daily Module Attempts
-                      </span>
-                      <span className="font-medium text-foreground">
-                        {subscription.planId === 'pro'
-                          ? 'Unlimited'
-                          : `${todaysAttempts} / 5 daily attempts`}
-                      </span>
-                    </div>
-                    <ProgressBar
-                      value={
-                        subscription.planId === 'pro'
-                          ? 100
-                          : Math.min(100, (todaysAttempts / 5) * 100)
-                      }
-                      color={
-                        subscription.planId === 'pro'
-                          ? 'emerald'
-                          : todaysAttempts >= 5
-                            ? 'rose'
-                            : 'emerald'
-                      }
-                    />
-                    <p className="text-[10px] text-muted-copy">
-                      {subscription.planId === 'pro'
-                        ? '✓ You have unlimited module attempts.'
-                        : 'Upgrade to Pro to unlock unlimited daily technical attempts.'}
-                    </p>
-                  </div>
-
-                  {/* Limit 3: Vocabulary Reviews */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-medium text-foreground">
-                        Daily Vocabulary Reviews
-                      </span>
-                      <span className="font-medium text-foreground">
-                        {subscription.planId === 'pro'
-                          ? 'Unlimited'
-                          : `${todaysReviews} / 25 reviews`}
-                      </span>
-                    </div>
-                    <ProgressBar
-                      value={
-                        subscription.planId === 'pro'
-                          ? 100
-                          : Math.min(100, (todaysReviews / 25) * 100)
-                      }
-                      color={
-                        subscription.planId === 'pro'
-                          ? 'cyan'
-                          : todaysReviews >= 25
-                            ? 'rose'
-                            : 'cyan'
-                      }
-                    />
-                    <p className="text-[10px] text-muted-copy">
-                      {subscription.planId === 'pro'
-                        ? '✓ You have unlimited vocabulary reviews.'
-                        : 'Upgrade to Pro to review more than 25 terms per day.'}
-                    </p>
-                  </div>
-
-                  {/* Limit 4: Document Uploads */}
-                  <div className="space-y-1.5">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-medium text-foreground">
-                        Monthly Document Uploads
-                      </span>
-                      <span className="font-medium text-foreground">
-                        {subscription.planId === 'free'
-                          ? 'Blocked'
-                          : subscription.planId === 'pro'
-                            ? `${uploadedDocsCount} / 2 uploads`
-                            : `${uploadedDocsCount} / Unlimited`}
-                      </span>
-                    </div>
-                    <ProgressBar
-                      value={
-                        subscription.planId === 'free'
-                          ? 0
-                          : subscription.planId === 'pro'
-                            ? Math.min(100, (uploadedDocsCount / 2) * 100)
-                            : 100
-                      }
-                      color={
-                        subscription.planId === 'free'
-                          ? 'rose'
-                          : uploadedDocsCount >= 2
-                            ? 'amber'
-                            : 'primary'
-                      }
-                    />
-                    <p className="text-[10px] text-muted-copy">
-                      {subscription.planId === 'free'
-                        ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
-                        : subscription.planId === 'pro'
-                          ? '✓ Upload documents inside the AI Copilot tab.'
-                          : '✓ Unlimited document uploads enabled.'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Limit 5: Voice Minute Wallet (Max+) */}
-                {(subscription.planId === 'max' ||
-                  subscription.planId === 'exec' ||
-                  subscription.planId === 'private') && (
-                  <div className="col-span-full space-y-1.5 mt-1">
-                    <div className="flex justify-between text-xs">
-                      <span className="font-medium text-foreground flex items-center gap-1.5">
-                        🎙️ Monthly Voice Minutes
-                      </span>
-                      <span className="font-medium text-foreground">
-                        {subscription.planId === 'max'
-                          ? `${voiceMinutesUsed} / 120 min`
-                          : 'Unlimited'}
-                      </span>
-                    </div>
-                    <ProgressBar
-                      value={
-                        subscription.planId === 'max'
-                          ? Math.min(100, (voiceMinutesUsed / 120) * 100)
-                          : 100
-                      }
-                      color={
-                        subscription.planId !== 'max'
-                          ? 'cyan'
-                          : voiceMinutesUsed >= 108
-                            ? 'rose'
-                            : voiceMinutesUsed >= 84
-                              ? 'amber'
-                              : 'cyan'
-                      }
-                    />
-                    <p className="text-[10px] text-muted-copy">
-                      {subscription.planId === 'max'
-                        ? voiceMinutesUsed >= 120
-                          ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
-                          : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
-                        : '✓ Unlimited voice minutes included in your plan.'}
-                    </p>
-                  </div>
-                )}
-
-                {/* What paying customers get block */}
-                <div className="mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-                  <h5 className="text-xs font-medium text-foreground uppercase tracking-wider flex items-center gap-1.5">
-                    <Crown className="h-4 w-4 text-warning fill-warning/20" />
-                    Pro subscription benefits
-                  </h5>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-muted-copy">
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span> Spaced
-                      repetition full repeats
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      Writing tasks + secure AI feedback
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      Advanced Mistake Log analytics
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span> Client
-                      / consultant roleplay scenarios
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span>{' '}
-                      12-month progress history storage
-                    </li>
-                    <li className="flex items-center gap-1.5">
-                      <span className="text-success font-medium">✓</span> Direct
-                      Stripe billing portal access
-                    </li>
-                  </ul>
-                  {subscription.planId !== 'private' && (
-                    <Link
-                      to="/pricing"
-                      className="w-full mt-2 h-9 inline-flex items-center justify-center rounded-lg bg-primary text-sm font-medium text-white hover:bg-primary/95 transition-colors text-center"
-                    >
-                      {subscription.planId === 'free'
-                        ? 'Upgrade Plan'
-                        : 'Change / Upgrade Plan'}
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
-          </SectionCard>
-        </section>
+        <BillingSection
+          subscription={subscription}
+          providerStatus={providerStatus}
+          isBillingLoading={isBillingLoading}
+          billingError={billingError}
+          onUpgrade={handleUpgrade}
+          onOpenPortal={handleManageSubscription}
+          todaysCoachSessions={todaysCoachSessions}
+          todaysAttempts={todaysAttempts}
+          todaysReviews={todaysReviews}
+          uploadedDocsCount={uploadedDocsCount}
+          voiceMinutesUsed={voiceMinutesUsed}
+        />
       )}
 
-      {/* SECTION 5: Security, Privacy and Data */}
+      {/* Security Section */}
       {activeSection === 'security' && (
-        <section
-          id="security"
-          className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
-        >
-          <SectionCard
-            title="Security, Privacy & Data"
-            subtitle="Local storage data administration, privacy controls, and backup operations"
-            icon={ShieldCheck}
-          >
-            <div className="space-y-6">
-              {/* Cloud Sync section */}
-              <div className="rounded-xl border border-border-soft bg-surface p-4">
-                <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy block mb-2">
-                  Cloud Synced Records
-                </span>
-                <CloudSyncStatusPanel providerMode={providerMode} />
-              </div>
-
-              {/* Local Data backup controls */}
-              <div className="rounded-xl border border-border-soft bg-surface p-4">
-                <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy block mb-1">
-                  Local Backups
-                </span>
-                <p className="text-xs text-muted-copy leading-5 mb-4">
-                  Export all stored local progress, CEFR stats, and memory logs
-                  into a portable JSON backup file.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={exportLocalData}
-                  className="text-xs min-h-9"
-                >
-                  <Download className="h-3.5 w-3.5 mr-1" /> Export local data
-                </Button>
-              </div>
-
-              {/* Destructive Controls at the very bottom */}
-              <div className="rounded-xl border border-error/20 bg-error/5 p-4 border-dashed">
-                <span className="text-[9px] font-medium uppercase tracking-wider text-error block mb-1">
-                  Destructive actions
-                </span>
-                <p className="text-xs text-error/80 leading-5 mb-4">
-                  Completely erase all study sessions, mistake history, and
-                  vocabulary data from this local device. This action is
-                  irreversible.
-                </p>
-
-                {providerMode === 'local' ? (
-                  <>
-                    <Button
-                      type="button"
-                      variant="danger"
-                      onClick={() => setShowClearConfirmation((val) => !val)}
-                      className="text-xs min-h-9"
-                    >
-                      <Trash2 className="h-3.5 w-3.5 mr-1" /> Clear this device
-                    </Button>
-
-                    {showClearConfirmation && (
-                      <div className="mt-4 rounded-xl border border-error/25 bg-surface p-4">
-                        <label className="text-xs font-medium text-error">
-                          Type CLEAR to remove local progress from this browser.
-                          <input
-                            value={clearConfirmation}
-                            onChange={(event) =>
-                              setClearConfirmation(
-                                event.target.value.toUpperCase()
-                              )
-                            }
-                            className="mt-2 min-h-10 w-full rounded-lg border border-error/25 bg-background px-3 text-xs text-foreground outline-none focus:ring-1 focus:ring-error"
-                          />
-                        </label>
-                        <Button
-                          type="button"
-                          variant="danger"
-                          className="mt-3 text-xs"
-                          disabled={clearConfirmation !== 'CLEAR'}
-                          onClick={() => void clearLocalData()}
-                        >
-                          Confirm local data removal
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <p className="text-xs text-muted-copy">
-                    Cloud account administration is managed via Supabase. Local
-                    data clearing is only available in Guest/Local profile
-                    modes.
-                  </p>
-                )}
-              </div>
-            </div>
-          </SectionCard>
-        </section>
+        <SecuritySection
+          providerMode={providerMode}
+          showClearConfirmation={showClearConfirmation}
+          setShowClearConfirmation={setShowClearConfirmation}
+          clearConfirmation={clearConfirmation}
+          setClearConfirmation={setClearConfirmation}
+          exportLocalData={exportLocalData}
+          clearLocalData={clearLocalData}
+        />
       )}
     </div>
   );
