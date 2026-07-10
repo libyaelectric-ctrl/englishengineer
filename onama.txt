@@ -1,0 +1,8 @@
+Görev: ON_TO_DO.txt dosyasındaki 10/10 Yol Haritasını uygulamaya başlıyoruz. Şu anda arayüz tarafında (Frontend UI/UX) "1 Milyon Dolarlık Premium SaaS" vizyonu başarıyla uygulandı ve RightSidebar.tsx, DashboardPage.tsx, CommandPalette.tsx, index.css gibi dosyalarda kusursuz bir tasarım var.
+
+Kritik Kurallar:
+
+Kesinlikle UI/UX Bozma: ON_TO_DO.txt dosyasının en altındaki nota harfiyen uy. Tailwind class'larına, HTML yapılarına ve UI bileşenlerine ASLA DOKUNMA.
+Adım Adım İlerle: Tüm kademeleri aynı anda yapmaya çalışma. Sadece Kademe 1 (Test Kapsamı) ile başla. Bitirdiğinde testleri çalıştır (npm run test / node --test) ve bana rapor ver. Ben onay vermeden Kademe 2'ye geçme.
+Frontend tarafında VocabularyPage.tsx ve ProfilePage.tsx içinde useReducer geçişi yaparken bileşenlerin (component) dönüş (return) ettiği JSX yapısını ve class'ları milimetrik olarak aynı bırak, sadece logic/state kısmını değiştir.
+Aksiyon: Şimdi ON_TO_DO.txt dosyasını analiz et ve Kademe 1: Test Kapsamı maddesindeki testleri yazarak işe koyul. Bittiğinde testlerin başarıyla geçtiğini gösteren logları bana sun. Hazır olduğunda başla!
