@@ -52,7 +52,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "anahtar, şalter",
     "definition": "A switch turns electrical equipment on or off.",
-    "example": "The main switch is off before the visual inspection starts.",
+    "example": "The main switch should be off before the visual inspection starts.",
     "synonyms": [
       "control"
     ],
@@ -234,7 +234,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Electrical Engineering",
-    "meaning": "electrical device that changes voltage",
+    "meaning": "transformatör",
     "definition": "A transformer transfers electrical energy between circuits and raises or lowers voltage for safe distribution.",
     "example": "The commissioning team checked the transformer oil temperature before energizing the feeder.",
     "synonyms": [
@@ -258,7 +258,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "equipment for switching and protecting circuits",
+    "meaning": "şalt cihazı",
     "definition": "Switchgear is a group of breakers, isolators, relays, and panels used to control electrical power safely.",
     "example": "The contractor submitted the switchgear test certificates before the client inspection.",
     "synonyms": [
@@ -282,7 +282,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "metal conductor inside a panel",
+    "meaning": "bara, buskolt",
     "definition": "A busbar is a rigid conductor that distributes high current within switchboards or distribution boards.",
     "example": "Thermal imaging showed a hotspot on the main busbar joint after load testing.",
     "synonyms": [
@@ -306,7 +306,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Electrical Engineering",
-    "meaning": "protective switching device",
+    "meaning": "devre kesici",
     "definition": "A circuit breaker automatically opens an electrical circuit when it detects overload or fault current.",
     "example": "The engineer reset the circuit breaker only after confirming there was no downstream fault.",
     "synonyms": [
@@ -330,7 +330,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "automatic protection or control device",
+    "meaning": "röle",
     "definition": "A relay detects abnormal electrical conditions and sends a signal to trip or control equipment.",
     "example": "The protection relay recorded an earth fault during the commissioning test.",
     "synonyms": [
@@ -354,9 +354,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "connection of equipment to ground",
+    "meaning": "topraklama",
     "definition": "Earthing provides a low-resistance path for fault current to protect people and equipment.",
-    "example": "The inspector rejected the installation because the earthing conductor was not bonded to the tray.",
+    "example": "Make sure the earthing meets the specification.",
     "synonyms": [
       "grounding",
       "bonding"
@@ -378,7 +378,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "measure of insulation quality",
+    "meaning": "yalıtım direnci",
     "definition": "Insulation resistance indicates how well cable or equipment insulation prevents leakage current.",
     "example": "The cable passed the insulation resistance test at one kilovolt.",
     "synonyms": [
@@ -402,7 +402,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "unintended low-resistance fault path",
+    "meaning": "kısa devre",
     "definition": "A short circuit occurs when current flows through an unintended path with very low resistance.",
     "example": "The report identified a short circuit between the control cores inside the junction box.",
     "synonyms": [
@@ -426,7 +426,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "analysis of power movement",
+    "meaning": "yük akışı analizi",
     "definition": "Load flow analysis calculates voltage, current, power, and losses in an electrical network.",
     "example": "The consultant requested a revised load flow study after the chiller load increased.",
     "synonyms": [
@@ -450,7 +450,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "coordinated protection behavior",
+    "meaning": "selektiflik",
     "definition": "Selectivity ensures the protective device nearest to a fault trips before upstream devices.",
     "example": "The protection engineer adjusted the breaker curves to improve selectivity.",
     "synonyms": [
@@ -474,7 +474,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "distorted electrical wave components",
+    "meaning": "harmonikler",
     "definition": "Harmonics are unwanted frequency components that distort voltage or current waveforms.",
     "example": "The data center added harmonic filters after the UPS caused distortion on the LV board.",
     "synonyms": [
@@ -498,7 +498,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "loss of voltage along a circuit",
+    "meaning": "gerilim düşümü",
     "definition": "Voltage drop is the reduction in voltage between the source and the load caused by conductor impedance.",
     "example": "The feeder size was increased because the calculated voltage drop exceeded the specification.",
     "synonyms": [
@@ -522,7 +522,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Electrical Engineering",
-    "meaning": "circuit supplying a load or board",
+    "meaning": "besleyici",
     "definition": "A feeder is a cable or circuit that supplies power from a source to equipment or a distribution board.",
     "example": "The site team labelled each feeder before terminating it inside the MCC.",
     "synonyms": [
@@ -570,7 +570,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Electrical Engineering",
-    "meaning": "support system for cables",
+    "meaning": "kablo tavası",
     "definition": "A cable tray is a metal or plastic support used to route and protect cables.",
     "example": "The electrical tray was lowered to avoid clashing with the chilled water pipe.",
     "synonyms": [
@@ -594,7 +594,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Electrical Engineering",
-    "meaning": "pipe protecting wires or cables",
+    "meaning": "boru, kanal",
     "definition": "A conduit protects electrical wiring and provides a defined route through walls or slabs.",
     "example": "The architect asked the team to conceal the conduit inside the partition.",
     "synonyms": [
@@ -618,7 +618,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "safe disconnection from energy",
+    "meaning": "ayırma, izolasyon",
     "definition": "Isolation means separating equipment from its energy source before inspection or maintenance.",
     "example": "The technician confirmed electrical isolation before opening the motor terminal box.",
     "synonyms": [
@@ -714,7 +714,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "machine that produces chilled water",
+    "meaning": "chiller, soğutma ünitesi",
     "definition": "A chiller removes heat from water so it can be circulated through an HVAC cooling system.",
     "example": "The commissioning engineer checked the chiller flow rate before starting the performance test.",
     "synonyms": [
@@ -762,7 +762,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "device controlling fluid flow",
+    "meaning": "vana",
     "definition": "A valve opens, closes, or regulates the flow of liquid, gas, or air in a system.",
     "example": "The supervisor asked for the valve tag number before approving the shutdown.",
     "synonyms": [
@@ -810,9 +810,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "airflow control device",
+    "meaning": "sönümleyici",
     "definition": "A damper regulates or stops airflow inside ductwork.",
-    "example": "The fire damper was tested during the life-safety commissioning sequence.",
+    "example": "If the damper fails the test, corrective action is required.",
     "synonyms": [
       "air damper",
       "blade damper"
@@ -930,9 +930,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "device transferring heat between fluids",
+    "meaning": "ısı değiştirici",
     "definition": "A heat exchanger transfers heat between two fluids without mixing them.",
-    "example": "The plate heat exchanger was isolated for cleaning after poor temperature performance.",
+    "example": "Always verify the heat exchanger before proceeding.",
     "synonyms": [
       "exchanger",
       "thermal exchanger"
@@ -954,7 +954,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "part supporting rotating shafts",
+    "meaning": "rulman",
     "definition": "A bearing supports a rotating shaft and reduces friction during operation.",
     "example": "The vibration report suggested damage to the fan bearing.",
     "synonyms": [
@@ -978,9 +978,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "oscillating movement in equipment",
+    "meaning": "titreşim",
     "definition": "Vibration is repeated movement that can indicate imbalance, misalignment, or mechanical wear.",
-    "example": "The pump was stopped because vibration exceeded the acceptable limit.",
+    "example": "Make sure the vibration meets the specification.",
     "synonyms": [
       "oscillation",
       "mechanical vibration"
@@ -1002,7 +1002,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "turning force",
+    "meaning": "tork, burulma",
     "definition": "Torque is a rotational force applied to tighten, drive, or rotate a component.",
     "example": "The technician used a calibrated wrench to apply the specified torque to the flange bolts.",
     "synonyms": [
@@ -1026,7 +1026,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Mechanical Engineering",
-    "meaning": "correct positioning of connected equipment",
+    "meaning": "hizalama",
     "definition": "Alignment ensures shafts, couplings, or components are positioned correctly to avoid stress and wear.",
     "example": "The pump alignment record was attached to the mechanical completion dossier.",
     "synonyms": [
@@ -1074,7 +1074,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "rim used to connect pipes or equipment",
+    "meaning": "flanş",
     "definition": "A flange is a flat rim that allows pipes, valves, and equipment to be bolted together.",
     "example": "The QA inspector found a damaged gasket between the two flanges.",
     "synonyms": [
@@ -1098,7 +1098,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Mechanical Engineering",
-    "meaning": "seal between two surfaces",
+    "meaning": "conta",
     "definition": "A gasket is a sealing material placed between flanges or joints to prevent leakage.",
     "example": "The pressure test failed because the gasket was not seated correctly.",
     "synonyms": [
@@ -1122,9 +1122,9 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Mechanical Engineering",
-    "meaning": "adjustment against a known standard",
+    "meaning": "kalibrasyon",
     "definition": "Calibration compares and adjusts instruments so their readings match an accepted reference.",
-    "example": "The pressure gauge calibration certificate was missing from the handover file.",
+    "example": "If the calibration fails the test, corrective action is required.",
     "synonyms": [
       "instrument adjustment",
       "standardization"
@@ -1194,7 +1194,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "steel bar reinforcing concrete",
+    "meaning": "inşaat demiri",
     "definition": "Rebar is steel reinforcement placed inside concrete to improve tensile strength.",
     "example": "The inspector checked the rebar spacing before allowing the concrete pour.",
     "synonyms": [
@@ -1218,7 +1218,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "temporary mould for concrete",
+    "meaning": "kalıp",
     "definition": "Formwork is a temporary structure that holds fresh concrete until it gains strength.",
     "example": "The formwork was inspected before the slab was poured.",
     "synonyms": [
@@ -1242,7 +1242,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "foundation element spreading load",
+    "meaning": "temel, radye",
     "definition": "A footing transfers building loads from columns or walls into the ground.",
     "example": "The footing depth was increased after the soil report identified weaker material.",
     "synonyms": [
@@ -1266,7 +1266,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "flat concrete structural element",
+    "meaning": "döşeme, plak",
     "definition": "A slab is a flat horizontal concrete element used for floors, roofs, or foundations.",
     "example": "The MEP team marked sleeve locations before casting the slab.",
     "synonyms": [
@@ -1290,7 +1290,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "vertical load-bearing member",
+    "meaning": "kolon, sütun",
     "definition": "A column carries loads from beams or slabs down to foundations.",
     "example": "The structural engineer asked for a survey check on the column position.",
     "synonyms": [
@@ -1314,7 +1314,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Civil Engineering",
-    "meaning": "horizontal load-bearing member",
+    "meaning": "kiriş",
     "definition": "A beam supports loads and transfers them to columns, walls, or other supports.",
     "example": "The contractor could not core through the beam without structural approval.",
     "synonyms": [
@@ -1338,7 +1338,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "wall resisting lateral forces",
+    "meaning": "kesme duvarı",
     "definition": "A shear wall is a structural wall designed to resist wind or seismic lateral loads.",
     "example": "The architect coordinated door openings around the shear wall locations.",
     "synonyms": [
@@ -1362,7 +1362,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Civil Engineering",
-    "meaning": "downward movement of ground or structure",
+    "meaning": "oturma",
     "definition": "Settlement is the downward movement of soil or a structure due to loading or ground changes.",
     "example": "The monitoring report showed minor settlement near the excavation boundary.",
     "synonyms": [
@@ -1386,9 +1386,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "densifying soil or fill",
+    "meaning": "sıkıştırma",
     "definition": "Compaction increases soil density to improve bearing capacity and reduce future settlement.",
-    "example": "The backfill failed because the compaction test result was below specification.",
+    "example": "When the compaction is checked, the inspector should document the findings.",
     "synonyms": [
       "densification",
       "soil compaction"
@@ -1410,7 +1410,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "controlled moisture and temperature for concrete",
+    "meaning": "kürleme",
     "definition": "Curing maintains moisture and temperature so concrete can develop strength properly.",
     "example": "The site team covered the slab for curing immediately after finishing.",
     "synonyms": [
@@ -1458,7 +1458,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Civil Engineering",
-    "meaning": "soil ability to support load",
+    "meaning": "taşıma kapasitesi",
     "definition": "Bearing capacity is the maximum pressure soil can safely support from a foundation.",
     "example": "The geotechnical report confirmed adequate bearing capacity for shallow footings.",
     "synonyms": [
@@ -1506,7 +1506,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "list of defects or incomplete work",
+    "meaning": "eksik listesi",
     "definition": "A punch list records remaining defects or incomplete items before handover.",
     "example": "The client refused handover until the punch list items were closed.",
     "synonyms": [
@@ -1530,7 +1530,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "document explaining how work will be done",
+    "meaning": "iş metodu",
     "definition": "A method statement describes the sequence, resources, risks, and controls for a construction activity.",
     "example": "The consultant approved the method statement before the lifting operation.",
     "synonyms": [
@@ -1578,7 +1578,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "detailed drawing for fabrication or installation",
+    "meaning": "imalat çizimi",
     "definition": "A shop drawing shows how approved design information will be fabricated, assembled, or installed.",
     "example": "The site team could not proceed because the shop drawing was still under review.",
     "synonyms": [
@@ -1626,7 +1626,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "formal instruction issued on site",
+    "meaning": "saha talimatı",
     "definition": "A site instruction directs a contractor to carry out, change, or correct work.",
     "example": "The contractor requested a cost assessment after receiving the site instruction.",
     "synonyms": [
@@ -1772,7 +1772,7 @@
     "discipline": "Architecture",
     "meaning": "safe exit path from a building",
     "definition": "Egress is the route people use to leave a building safely during normal use or an emergency.",
-    "example": "The fire consultant rejected the layout because the egress width was insufficient.",
+    "example": "Has the emergency egress been inspected during the safety walkdown?",
     "synonyms": [
       "exit route",
       "means of escape"
@@ -1914,7 +1914,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Project Management",
-    "meaning": "important project date or event",
+    "meaning": "kilometre taşı",
     "definition": "A milestone is a key date or deliverable used to track project progress.",
     "example": "Factory acceptance testing became a critical milestone for the switchgear package.",
     "synonyms": [
@@ -1938,7 +1938,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Project Management",
-    "meaning": "sequence controlling project finish date",
+    "meaning": "kritik yol",
     "definition": "The critical path is the longest sequence of dependent activities that determines the project completion date.",
     "example": "The delay to transformer delivery affected the critical path.",
     "synonyms": [
@@ -2010,7 +2010,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "approved change to contract scope or price",
+    "meaning": "değişiklik emri",
     "definition": "A variation order formally changes the contract scope, value, or time.",
     "example": "The contractor submitted a variation order for the additional cable route.",
     "synonyms": [
@@ -2058,7 +2058,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "person or group affected by project decisions",
+    "meaning": "paydaş",
     "definition": "A stakeholder is anyone with an interest in or influence over a project.",
     "example": "The project team mapped stakeholders before changing the road closure plan.",
     "synonyms": [
@@ -2082,7 +2082,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Health & Safety",
-    "meaning": "formal permission for controlled work",
+    "meaning": "çalışma izni",
     "definition": "A permit to work authorizes hazardous or controlled activities after risks and controls are reviewed.",
     "example": "The supervisor refused to start hot work without a valid permit to work.",
     "synonyms": [
@@ -2106,7 +2106,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Health & Safety",
-    "meaning": "short safety briefing before work",
+    "meaning": "sahne brifingi",
     "definition": "A toolbox talk is a short site briefing about hazards, controls, and safe work methods.",
     "example": "The safety officer gave a toolbox talk before the confined space entry.",
     "synonyms": [
@@ -2154,7 +2154,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Health & Safety",
-    "meaning": "source of possible harm",
+    "meaning": "tehlike",
     "definition": "A hazard is anything that can cause injury, illness, damage, or loss.",
     "example": "Loose materials near the stairwell were reported as a trip hazard.",
     "synonyms": [
@@ -2178,7 +2178,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Health & Safety",
-    "meaning": "process of evaluating hazards and controls",
+    "meaning": "risk değerlendirmesi",
     "definition": "A risk assessment identifies hazards, estimates risk, and defines control measures.",
     "example": "The lifting plan was rejected because the risk assessment did not cover wind conditions.",
     "synonyms": [
@@ -2202,7 +2202,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Health & Safety",
-    "meaning": "incident that could have caused harm",
+    "meaning": "yaralanmalı kaza",
     "definition": "A near miss is an unplanned event that did not cause injury but had the potential to do so.",
     "example": "The falling bolt was recorded as a near miss and discussed in the safety meeting.",
     "synonyms": [
@@ -2250,7 +2250,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Health & Safety",
-    "meaning": "enclosed area with special entry risks",
+    "meaning": "kapalı alan",
     "definition": "A confined space is an enclosed or partly enclosed area with limited access and potential atmospheric hazards.",
     "example": "The tank was treated as a confined space and required gas testing before entry.",
     "synonyms": [
@@ -2274,7 +2274,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Commissioning",
-    "meaning": "checks before formal commissioning",
+    "meaning": "devreye alma öncesi",
     "definition": "Pre-commissioning includes inspections and static checks completed before systems are operated.",
     "example": "The team completed pre-commissioning checks before starting the chilled water pumps.",
     "synonyms": [
@@ -2298,7 +2298,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Commissioning",
-    "meaning": "test proving operation against intent",
+    "meaning": "fonksiyonel test",
     "definition": "A functional test verifies that equipment or a system operates as designed.",
     "example": "The fire alarm functional test confirmed that the AHU shut down correctly.",
     "synonyms": [
@@ -2346,7 +2346,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Commissioning",
-    "meaning": "test observed by client or consultant",
+    "meaning": "tanık testi",
     "definition": "A witness test is performed while an authorized party observes and accepts the result.",
     "example": "The consultant attended the witness test for the generator load bank.",
     "synonyms": [
@@ -2370,12 +2370,12 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Commissioning",
-    "meaning": "recording minor defects before handover",
+    "meaning": "hata tespiti",
     "definition": "Snagging is the process of identifying incomplete or defective work before acceptance.",
     "example": "The commissioning manager scheduled snagging after the final room inspection.",
     "synonyms": [
       "defect listing",
-      "punching"
+      "punch list work"
     ],
     "collocations": [
       "snagging list",
@@ -2466,7 +2466,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "test at manufacturer before delivery",
+    "meaning": "fabrika kabul testi",
     "definition": "A factory acceptance test verifies equipment at the factory before shipment to site.",
     "example": "The client attended the factory acceptance test for the LV switchboard.",
     "synonyms": [
@@ -2490,7 +2490,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "test on site before acceptance",
+    "meaning": "saha kabul testi",
     "definition": "A site acceptance test verifies equipment after installation at the project site.",
     "example": "The UPS passed the site acceptance test after battery autonomy was confirmed.",
     "synonyms": [
@@ -2514,7 +2514,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Testing",
-    "meaning": "test checking leakage under pressure",
+    "meaning": "basınç testi",
     "definition": "A pressure test verifies that pipework or vessels can hold pressure without leakage.",
     "example": "The chilled water pipe failed the pressure test at the valve flange.",
     "synonyms": [
@@ -2562,7 +2562,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "test confirming an electrical path",
+    "meaning": "süreklilik testi",
     "definition": "A continuity test checks whether a conductor or circuit path is complete.",
     "example": "The technician performed a continuity test on each control cable core.",
     "synonyms": [
@@ -2586,9 +2586,9 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "instrument verified against a standard",
+    "meaning": "kalibre edilmiş alet",
     "definition": "A calibrated instrument has been checked against a standard and is suitable for reliable measurement.",
-    "example": "QA rejected the reading because the pressure gauge was not a calibrated instrument.",
+    "example": "QA rejected the reading because the pressure gauge calibration certificate had expired.",
     "synonyms": [
       "certified instrument",
       "verified meter"
@@ -2610,7 +2610,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B1",
     "discipline": "Testing",
-    "meaning": "document confirming test result",
+    "meaning": "test sertifikası",
     "definition": "A test certificate records that a test was completed and states the accepted result.",
     "example": "The handover file was missing the fire pump test certificate.",
     "synonyms": [
@@ -2946,7 +2946,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "difference from an approved requirement",
+    "meaning": "sapma",
     "definition": "A deviation is a departure from a specification, drawing, method, or approved requirement.",
     "example": "The QA report recorded a deviation from the approved cable tray route.",
     "synonyms": [
@@ -2970,7 +2970,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "limitation affecting work or decisions",
+    "meaning": "kısıt",
     "definition": "A constraint is a condition that limits what can be done, when, or how.",
     "example": "The low ceiling height became a major coordination constraint.",
     "synonyms": [
@@ -3162,9 +3162,9 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "current flowing during an electrical fault",
+    "meaning": "arıza akımı",
     "definition": "Fault current is the abnormal current that flows when a short circuit or earth fault occurs.",
-    "example": "The breaker rating was checked against the calculated fault current.",
+    "example": "Make sure the fault current meets the specification.",
     "synonyms": [
       "short-circuit current",
       "fault level"
@@ -3234,7 +3234,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Electrical Engineering",
-    "meaning": "protection against voltage spikes",
+    "meaning": "gerilim koruma",
     "definition": "Surge protection limits transient overvoltage caused by lightning or switching events.",
     "example": "The data rack panel included surge protection for sensitive network equipment.",
     "synonyms": [
@@ -3258,7 +3258,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "ratio of real power to apparent power",
+    "meaning": "güç faktörü",
     "definition": "Power factor indicates how effectively electrical power is converted into useful work.",
     "example": "The utility required power factor correction for the large motor loads.",
     "synonyms": [
@@ -3282,7 +3282,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Electrical Engineering",
-    "meaning": "equipment improving power factor",
+    "meaning": "kondansatör bankı",
     "definition": "A capacitor bank supplies reactive power to improve power factor and reduce electrical losses.",
     "example": "The capacitor bank was isolated after the protection relay alarm.",
     "synonyms": [
@@ -3308,7 +3308,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "panel controlling multiple motors",
     "definition": "A motor control center contains starters, protection, and controls for several motors.",
-    "example": "The MCC schedule was revised after the pump motor sizes changed.",
+    "example": "If the motor control center fails the test, corrective action is required.",
     "synonyms": [
       "MCC",
       "motor panel"
@@ -3524,7 +3524,7 @@
     "discipline": "Mechanical Engineering",
     "meaning": "amount of heat a system must remove or add",
     "definition": "Heat load is the thermal demand used to size cooling or heating equipment.",
-    "example": "The cooling heat load increased after the server room equipment was upgraded.",
+    "example": "Review the heat load before final approval.",
     "synonyms": [
       "thermal load",
       "cooling load"
@@ -3666,7 +3666,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Civil Engineering",
-    "meaning": "joint allowing movement",
+    "meaning": "genleşme derzi",
     "definition": "An expansion joint allows parts of a structure to move without cracking or damage.",
     "example": "The expansion joint cover was damaged near the entrance lobby.",
     "synonyms": [
@@ -3690,7 +3690,7 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Civil Engineering",
-    "meaning": "bending displacement under load",
+    "meaning": "sehim",
     "definition": "Deflection is the movement or bending of a structural element under load.",
     "example": "The beam deflection was within the allowable serviceability limit.",
     "synonyms": [
@@ -3810,7 +3810,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "filling gaps with grout",
+    "meaning": "enjeksiyon, hornlоş",
     "definition": "Grouting fills joints, voids, or spaces around tiles, bases, anchors, or equipment.",
     "example": "The pump base grouting was completed before final alignment.",
     "synonyms": [
@@ -3882,7 +3882,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Construction",
-    "meaning": "formal submission of proposed materials",
+    "meaning": "malzeme sunumu",
     "definition": "A material submittal provides product data, samples, and compliance information for approval.",
     "example": "The consultant rejected the material submittal because the cable tray coating was not specified.",
     "synonyms": [
@@ -4026,7 +4026,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Project Management",
-    "meaning": "document defining technical requirements",
+    "meaning": "teknik şartname",
     "definition": "A specification states required materials, workmanship, standards, and performance.",
     "example": "The contractor quoted an alternative pump that did not meet the specification.",
     "synonyms": [
@@ -4196,7 +4196,7 @@
     "discipline": "Health & Safety",
     "meaning": "planned procedure for rescuing a worker",
     "definition": "A method of rescue explains how workers will be safely recovered if an emergency occurs.",
-    "example": "The confined space permit was not approved until the method of rescue was defined.",
+    "example": "When the method of rescue is checked, the inspector should document the findings.",
     "synonyms": [
       "rescue plan",
       "emergency rescue method"
@@ -4316,7 +4316,7 @@
     "discipline": "Commissioning",
     "meaning": "planned sequence for a commissioning test",
     "definition": "A commissioning script sets out steps, expected responses, roles, and acceptance criteria for a test.",
-    "example": "The IST commissioning script was agreed before the witness test.",
+    "example": "Does the commissioning script meet the acceptance criteria?",
     "synonyms": [
       "test script",
       "commissioning procedure"
@@ -4386,8 +4386,8 @@
     "partOfSpeech": "noun",
     "CEFR": "C1",
     "discipline": "Commissioning",
-    "meaning": "period when contractor must fix defects after handover",
-    "definition": "The defect liability period is the contract period after completion when the contractor remains responsible for defects.",
+    "meaning": "kusur sorumluluk süresi",
+    "definition": "The defect liability period is the post-completion contract period during which the contractor must repair defects at their own cost.",
     "example": "The leaking valve was reported during the defect liability period.",
     "synonyms": [
       "DLP",
@@ -4434,7 +4434,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "test measuring whether equipment meets performance requirements",
+    "meaning": "performans testi",
     "definition": "A performance test checks capacity, efficiency, flow, pressure, or other required operating values.",
     "example": "The chiller performance test was repeated after sensor calibration.",
     "synonyms": [
@@ -4506,7 +4506,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "Testing",
-    "meaning": "insulation resistance test using a megohmmeter",
+    "meaning": "megger testi",
     "definition": "A megger test measures insulation resistance in cables or equipment.",
     "example": "The cable could not be terminated until the megger test passed.",
     "synonyms": [
@@ -4794,12 +4794,12 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "action that removes the cause of a problem",
+    "meaning": "düzeltici faaliyet",
     "definition": "Corrective action fixes the root cause of a nonconformance or recurring issue.",
     "example": "The corrective action required retraining the team on cable termination procedure.",
     "synonyms": [
       "remedial action",
-      "fixing action"
+      "corrective measure"
     ],
     "collocations": [
       "implement corrective action",
@@ -4818,7 +4818,7 @@
     "partOfSpeech": "noun",
     "CEFR": "B2",
     "discipline": "General Professional English",
-    "meaning": "underlying reason for a problem",
+    "meaning": "kök neden",
     "definition": "A root cause is the fundamental reason a failure, delay, or defect occurred.",
     "example": "The investigation found the root cause was an outdated drawing issued to site.",
     "synonyms": [

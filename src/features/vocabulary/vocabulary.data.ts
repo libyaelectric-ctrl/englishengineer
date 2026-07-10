@@ -686,6 +686,38 @@ const expansionCategories: ExpansionCategory[] = [
 ];
 
 function buildExpansionRows(): VocabularyContentRow[] {
+  // Generate definition based on discipline
+  const getDefinition = (term: string, discipline: string, context: string): string => {
+    const definitions: Record<string, string> = {
+      'Electrical Engineering': `${term} is an electrical component or concept essential for power distribution and safety.`,
+      'Mechanical Engineering': `${term} is a key element in mechanical system design and operation.`,
+      'Civil Engineering': `${term} is fundamental to structural integrity and construction quality.`,
+      'Architecture': `${term} contributes to the functional and aesthetic quality of built spaces.`,
+      'Construction': `${term} is a practical concept used daily on construction sites.`,
+      'Commissioning': `${term} is verified during commissioning to confirm system readiness.`,
+      'QA/QC': `${term} is a quality control concept used during inspection and verification.`,
+      'HSE': `${term} is a health, safety, and environmental concept critical for site safety.`,
+      'Project Management': `${term} is a project control concept used for planning and tracking.`,
+    };
+    return definitions[discipline] || `${term} is a professional engineering concept used in ${context}.`;
+  };
+
+  // Generate example based on discipline
+  const getExample = (term: string, discipline: string): string => {
+    const examples: Record<string, string> = {
+      'Electrical Engineering': `The ${term} was inspected during the electrical commissioning check.`,
+      'Mechanical Engineering': `The ${term} was checked during the mechanical completion review.`,
+      'Civil Engineering': `The ${term} was inspected before the next construction phase.`,
+      'Architecture': `The ${term} was reviewed during the design coordination meeting.`,
+      'Construction': `The ${term} was checked before proceeding to the next work front.`,
+      'Commissioning': `The ${term} was tested during the pre-commissioning checklist.`,
+      'QA/QC': `The ${term} was documented in the inspection record.`,
+      'HSE': `The ${term} was reviewed during the safety briefing.`,
+      'Project Management': `The ${term} was updated in the weekly progress report.`,
+    };
+    return examples[discipline] || `The ${term} was verified during the quality review.`;
+  };
+
   return expansionCategories.flatMap((category) =>
     category.terms.map((term) =>
       row(
@@ -694,8 +726,8 @@ function buildExpansionRows(): VocabularyContentRow[] {
         category.CEFR,
         category.discipline,
         `${term} related to ${category.context}`,
-        `${term} is a professional engineering term used when discussing ${category.context}.`,
-        `The engineer referenced ${term} during the review of ${category.context}.`,
+        getDefinition(term, category.discipline, category.context),
+        getExample(term, category.discipline),
         [`${term} item`, `${term} requirement`],
         [`review ${term}`, `${term} status`, `${term} requirement`],
         category.difficulty,
