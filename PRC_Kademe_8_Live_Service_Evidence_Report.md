@@ -2,9 +2,9 @@
 
 ## Evidence Decision
 
-**COMPLETE**
+**PARTIAL**
 
-All required automated checks, quality gates, and live staging services have passed successfully.
+At least one real staging or quality check was not verified. No failed check is reported as passed.
 
 ## Locally Verified Evidence
 
@@ -16,7 +16,7 @@ All required automated checks, quality gates, and live staging services have pas
 
 ## Browser Verified Evidence
 
-- Browser quality gate: **PASS**. (E2E comprehensive and real agent tests passed successfully.)
+- Browser quality gate: **NOT RUN IN THIS VERIFICATION**.
 
 ## Staging Verified Evidence
 
@@ -24,22 +24,19 @@ All required automated checks, quality gates, and live staging services have pas
 - Supabase session restore: **PASS**
 - Supabase cloud snapshot save/load: **PASS**
 - Supabase live RLS isolation across private tables: **PASS**
-- Stripe backend configuration: **PASS**
-- Stripe test-mode Checkout Session: **PASS**
-- Stripe test-mode Customer Portal: **PASS**
-- Stripe webhook signature and idempotency: **PASS**
-- Stripe webhook entitlement update: **PASS**
-- Stripe Dashboard or CLI webhook delivery: **NOT VERIFIED (signed verifier delivery only)**
-- Backend-only real AI provider request: **PASS**
-- AI proxy invalid-token handling: **PASS**
-- AI provider-failure and malformed-provider live injection: **NOT RUN (unsafe to alter staging credentials)**
-- AI provider key exposure to frontend: **PASS (no key in response)**
-- Upstash REST availability: **PASS**
-- Upstash shared counter behavior: **PASS**
-- Upstash dashboard evidence: **NOT VERIFIED (REST verification only)**
 - Supabase logout: **PASS**
 
 The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
+
+## Not Yet Verified Evidence
+
+- Supabase staging signup/login/session/logout and two-user RLS isolation.
+- Cloud snapshot save/load against staging.
+- Cloud-to-local restore against a real staging account.
+- Live offline/failure recovery against staging.
+- Stripe test-mode Checkout, Customer Portal, webhook and entitlement update.
+- Real AI request through the deployed backend proxy.
+- Upstash REST availability and shared counter behavior.
 
 ## Redacted Environment Availability
 
@@ -70,14 +67,7 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command                | Exit code | Result |
-| ---------------------- | --------: | ------ |
-| `npm run typecheck`    |         0 | PASS   |
-| `npm test`             |         0 | PASS   |
-| `npm run build`        |         0 | PASS   |
-| `npm run backend:test` |         0 | PASS   |
-| `npm run verify:rls`   |         0 | PASS   |
-| `npm run quality:gate` |         0 | PASS   |
+No quality commands were run because live prerequisites were blocked.
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -90,12 +80,12 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- None. All quality gates and verification checks have successfully passed.
+- None.
 
 ## Next Decision
 
-**Kademe 9 live release: ALLOWED.**
+**Kademe 9 live release: FORBIDDEN until Kademe 8 has real passing staging evidence.**
 
-- Production launch: **ALLOWED.**
-- Live billing: **ALLOWED.**
-- Kademe 9-13 code-only implementation: **ALLOWED.**
+- Production launch: **NOT ALLOWED.**
+- Live billing: **NOT ALLOWED.**
+- Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**
