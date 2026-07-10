@@ -5,6 +5,7 @@
   "author": "Özcan ERENSAYIN",
   "type": "module",
   "scripts": {
+    "prepare": "husky",
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "tsc --noEmit && vite build --configLoader runner",
     "clean": "node -e \"const fs=require('fs'); ['dist','.vite','.npm-cache'].forEach((p)=>fs.rmSync(p,{recursive:true,force:true}));\"",
@@ -40,7 +41,8 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "gen-audio": "ts-node src/tools/generate-missing-audio.ts"
+    "gen-audio": "ts-node src/tools/generate-missing-audio.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -56,6 +58,8 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.12.1",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
     "@eslint/js": "^9.0.0",
     "@playwright/test": "^1.61.1",
     "@storybook/addon-essentials": "^8.6.14",
@@ -80,6 +84,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "globals": "^15.0.0",
     "google-tts-api": "^2.0.2",
+    "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "node-fetch": "^3.3.2",
     "prettier": "^3.0.0",

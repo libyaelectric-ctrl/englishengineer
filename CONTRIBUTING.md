@@ -132,6 +132,31 @@ Same as above, plus the PR must be approved by a maintainer.
 | Production build | Must succeed |
 | Backend tests | 100% pass |
 
+## Commit Discipline
+
+Her commit tek bir mantıksal değişikliği temsil etmelidir. Commit mesajı, o commit'te GERÇEKTEN değişen her şeyi yansıtmalı — büyük bir refactor'un yanına küçük, alakasız bir düzeltme sığıştırılmamalı, ayrı commit'e konulmalıdır.
+
+### Commit Message Format
+
+Bu proje [Conventional Commits](https://www.conventionalcommits.org/) formatını kullanır:
+
+```
+<type>(<scope>): <description>
+```
+
+Geçerli type'lar: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`, `perf`, `ci`, `build`, `revert`
+
+Örnekler:
+- `feat(vocabulary): add spaced repetition algorithm`
+- `fix(auth): resolve JWT token refresh race condition`
+- `refactor(ai): extract prompt templates to separate files`
+- `docs(readme): update deployment instructions`
+
+### Pre-commit Checks
+
+- Commitlint her commit mesajını doğrular
+- Karışık commit (kod + veri dosyaları) tespit edilirse uyarı verilir
+
 ## Reporting Issues
 
 - Use GitHub Issues for bug reports
