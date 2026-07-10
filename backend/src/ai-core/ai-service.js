@@ -103,6 +103,36 @@ export const createAIService = (config, fetchImpl = fetch) => ({
       finalPrompt = `${prompt}\n\n${JSON_STRUCTURE_INSTRUCTION}`;
     }
 
+    const isCustomPracticeRequest = prompt.toLowerCase().includes('sana özel') || 
+                                    prompt.toLowerCase().includes('kendi hatalarım') || 
+                                    prompt.toLowerCase().includes('hatalarımdan') || 
+                                    prompt.toLowerCase().includes('my mistakes') || 
+                                    prompt.toLowerCase().includes('custom review') || 
+                                    prompt.toLowerCase().includes('specialized words');
+
+    if (isCustomPracticeRequest && body?.context) {
+      const mistakes = body.context.recentMistakes || [];
+      const weakVocab = body.context.weakVocabulary || [];
+      let memoryContextPrompt = '\n\n=== USER LEARNING MEMORIES (RAG RETRIEVED) ===\n';
+      if (mistakes.length > 0) {
+        memoryContextPrompt += `The user has made the following grammatical/vocabulary mistakes recently. Use these exact mistakes to generate customized practice exercises (e.g. rewrite correction tasks, fill-in-the-blanks, or multiple-choice options targeting these issues):\n`;
+        mistakes.forEach((m, idx) => {
+          memoryContextPrompt += `- Mistake ${idx + 1} [Category: ${m.category}]: Original text: "${m.originalText}" -> Corrected to: "${m.correction}"\n`;
+        });
+      }
+      if (weakVocab.length > 0) {
+        memoryContextPrompt += `The user also has the following weak vocabulary terms that require reinforcement. Integrate these terms directly into the practice exercises:\n`;
+        weakVocab.forEach((w) => {
+          memoryContextPrompt += `- ${w}\n`;
+        });
+      }
+      if (mistakes.length === 0 && weakVocab.length === 0) {
+        memoryContextPrompt += `The user has no recorded mistakes or weak vocabulary. Provide a general high-yield engineering vocabulary practice lesson based on their discipline: ${body.context.discipline || 'General Engineering'}.\n`;
+      }
+      memoryContextPrompt += `==============================================\n\n`;
+      finalPrompt = `${finalPrompt}\n${memoryContextPrompt}\nINSTRUCTION: You must construct custom practice questions, tests, or explanations based on the retrieved user learning memories listed above. Help them review their mistakes and weak terms.`;
+    }
+
     const text = await withTimeout((signal) => {
       if (config.provider === 'anthropic') {
         return callAnthropic(config, finalPrompt, signal, fetchImpl);

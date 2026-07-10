@@ -21,6 +21,7 @@ import {
   formatCoachResult,
   getCoachModeById,
 } from './ai.helpers';
+import { useLearningIntelligenceStore } from '@/features/learning-intelligence/learning-intelligence.store';
 
 interface PersistedAIState {
   selectedModeId: AICoachModeId;
@@ -142,7 +143,8 @@ export const useAIStore = create<AIStoreState>((set, get) => ({
     if (!prompt || get().isLoading) return;
 
     const mode = getCoachModeById(get().selectedModeId);
-    const context = buildCoachContext(user, learningState);
+    const mistakeLog = useLearningIntelligenceStore.getState().mistakeLog;
+    const context = buildCoachContext(user, learningState, mistakeLog);
 
     set({ isLoading: true, error: null });
     eventBus.publish({

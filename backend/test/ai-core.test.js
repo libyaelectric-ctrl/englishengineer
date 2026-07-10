@@ -103,4 +103,51 @@ describe('AI Core Service', () => {
     assert.equal(result.structuredResult, null);
     assert.equal(result.text, rawText);
   });
+
+  it('triggers RAG Memory injection when prompt asks for custom practice', async () => {
+    const config = {
+      configured: true,
+      provider: 'openai',
+      apiKey: 'test-key',
+      model: 'gpt-4o',
+      timeoutMs: 5000,
+    };
+
+    let capturedPrompt = '';
+    const mockFetch = async (url, options) => {
+      const body = JSON.parse(options.body);
+      capturedPrompt = body.messages[0].content;
+      return new Response(
+        JSON.stringify({
+          choices: [{ message: { content: 'Practice questions generated.' } }],
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    };
+
+    const service = createAIService(config, mockFetch);
+    const requestBody = {
+      prompt: 'Sana özel kelimelerle çalışalım lütfen.',
+      context: {
+        weakVocabulary: ['actuator', 'commissioning'],
+        recentMistakes: [
+          { originalText: 'we need check B2', correction: 'we need to inspect basement level B2', category: 'grammar' }
+        ],
+        discipline: 'Electrical Engineering'
+      }
+    };
+
+    const result = await service.complete('generatePractice', requestBody);
+
+    assert.ok(result);
+    assert.equal(result.text, 'Practice questions generated.');
+    
+    // Check if the prompt has the injected learning memories
+    assert.match(capturedPrompt, /USER LEARNING MEMORIES/);
+    assert.match(capturedPrompt, /actuator/);
+    assert.match(capturedPrompt, /we need check B2/);
+  });
 });
