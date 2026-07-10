@@ -1,4 +1,5 @@
 import { afterEach, vi } from 'vitest';
+import React from 'react';
 
 let cleanupDom: (() => void) | undefined;
 if (typeof document !== 'undefined') {
@@ -24,3 +25,20 @@ afterEach(() => {
   if (typeof localStorage !== 'undefined') localStorage.clear();
   if (typeof sessionStorage !== 'undefined') sessionStorage.clear();
 });
+
+// Mock react-virtuoso for testing
+vi.mock('react-virtuoso', () => ({
+  Virtuoso: ({
+    totalCount,
+    itemContent,
+  }: {
+    totalCount: number;
+    itemContent: (index: number) => React.ReactNode;
+  }) => {
+    const items = [];
+    for (let i = 0; i < totalCount; i++) {
+      items.push(itemContent(i));
+    }
+    return React.createElement('div', null, items);
+  },
+}));

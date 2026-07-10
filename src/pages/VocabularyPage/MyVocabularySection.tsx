@@ -82,7 +82,11 @@ export const MyVocabularySection = ({
             return (
               <div className="grid gap-4 pb-4 lg:grid-cols-2 xl:grid-cols-3">
                 {rowWords.map((word) => (
-                  <WordCard key={word.id} word={word} onArchive={handleArchive} />
+                  <WordCard
+                    key={word.id}
+                    word={word}
+                    onArchive={handleArchive}
+                  />
                 ))}
               </div>
             );

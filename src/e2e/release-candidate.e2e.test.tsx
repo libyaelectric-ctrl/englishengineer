@@ -1,12 +1,23 @@
 import { render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import { router } from '@/routes/router';
 import { AuthService } from '@/features/auth';
 import { ReadingService } from '@/features/reading';
 import { WritingService } from '@/features/writing';
 import { ListeningService } from '@/features/listening';
 import { SpeakingService } from '@/features/speaking';
-import { VocabularyService } from '@/features/vocabulary';
+import {
+  VocabularyService,
+  loadVocabularyEntries,
+} from '@/features/vocabulary';
 import { AssessmentService } from '@/features/assessment';
 import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';
 import { createMockAIProvider } from '@/features/ai/mock-ai.provider';
@@ -29,6 +40,10 @@ const getCorrectAnswerMap = (
   );
 
 describe('EngVox release candidate E2E smoke fallback', () => {
+  beforeAll(async () => {
+    await loadVocabularyEntries();
+  });
+
   beforeEach(() => {
     storage.clear();
   });
