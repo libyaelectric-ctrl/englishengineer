@@ -24,6 +24,7 @@ import { ProgressBar } from '@/shared/components/ProgressBar';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { useAuthStore } from '@/features/auth';
 import { useLearningStore } from '@/core/learning';
+import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import {
   buildCoachContext,
   buildAIUsageSummary,
@@ -163,7 +164,8 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
 
   const selectedMode = getCoachModeById(selectedModeId);
   const promptTemplates = getTemplatesForMode(selectedModeId);
-  const coachContext = buildCoachContext(currentUser, learningState);
+  const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
+  const coachContext = buildCoachContext(currentUser, learningState, mistakeLog);
   const assessmentProfile = AssessmentService.getProfile(learningState);
   const usage = useMemo(() => buildAIUsageSummary(sessions), [sessions]);
   const todaysCoachSessions = sessions.filter(
