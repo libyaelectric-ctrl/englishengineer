@@ -33,7 +33,10 @@ export const registerAIRoutes = (
         try {
           const body = request.validatedBody;
 
-          if (body.operation !== undefined && body.operation !== defaultOperation) {
+          if (
+            body.operation !== undefined &&
+            body.operation !== defaultOperation
+          ) {
             throw new ApiError(
               400,
               'invalid_operation',
@@ -51,6 +54,7 @@ export const registerAIRoutes = (
           }
 
           const planId = subscription?.planId || 'free';
+          const topupCredits = subscription?.topupCredits || 0;
 
           // Ledger check
           let count = 0;
@@ -58,34 +62,46 @@ export const registerAIRoutes = (
             userId === 'engineeros-dev-user' ||
             userId.startsWith('demo_engineer_');
 
+          let useTopup = false;
           if (!isBypassUser) {
             count = await ledger.countRecentRequests(userId, planId);
 
-            // Validation checks
-            if (planId === 'free') {
-              if (count >= 3) {
-                throw new ApiError(
-                  429,
-                  'free_ai_coach_limit_exceeded',
-                  'Free plan accounts are limited to 3 AI Coach requests per day. Please upgrade to Pro.'
-                );
-              }
-            } else {
-              if (count >= 300) {
-                throw new ApiError(
-                  429,
-                  'monthly_ai_credit_limit_exceeded',
-                  'Monthly AI credit limit reached (300/300). Please contact support or upgrade.'
-                );
+            const freeLimitReached = planId === 'free' && count >= 3;
+            const paidLimitReached = planId !== 'free' && count >= 300;
+
+            if (freeLimitReached || paidLimitReached) {
+              if (topupCredits > 0) {
+                useTopup = true;
+              } else {
+                if (planId === 'free') {
+                  throw new ApiError(
+                    429,
+                    'free_ai_coach_limit_exceeded',
+                    'Free plan accounts are limited to 3 AI Coach requests per day. Please upgrade to Pro.'
+                  );
+                } else {
+                  throw new ApiError(
+                    429,
+                    'monthly_ai_credit_limit_exceeded',
+                    'Monthly AI credit limit reached (300/300). Please contact support or upgrade.'
+                  );
+                }
               }
             }
           }
 
           // Complete AI request
-          const result = await aiService.complete(
-            defaultOperation,
-            body
-          );
+          const result = await aiService.complete(defaultOperation, body);
+
+          // If top-up credit was used, decrement it in the database
+          if (useTopup && billingRepository && !isBypassUser) {
+            await billingRepository.upsertSubscriptionStatus(userId, {
+              ...subscription,
+              topupCredits: topupCredits - 1,
+              updatedAt: new Date().toISOString(),
+              source: 'ai_billing_decrement',
+            });
+          }
 
           // Ledger insert on success
           if (result && !result.error && !isBypassUser) {

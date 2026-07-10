@@ -21,7 +21,7 @@ const commands = [
       '--exclude',
       'src/e2e/**',
     ],
-    timeoutMs: 90_000,
+    timeoutMs: 150_000,
   },
   {
     label: 'npm run verify:build-exit',

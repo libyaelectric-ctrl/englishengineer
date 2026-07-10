@@ -24,8 +24,7 @@ describe('vocabulary search and external lookup', () => {
       searchVocabularyEntries(entries, 'cable tray').length
     ).toBeGreaterThan(0);
     expect(
-      searchVocabularyEntries(entries, 'Electrical Engineering')
-        .length
+      searchVocabularyEntries(entries, 'Electrical Engineering').length
     ).toBeGreaterThan(0);
   });
 

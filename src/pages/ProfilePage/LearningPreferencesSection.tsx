@@ -95,9 +95,7 @@ export const LearningPreferencesSection = ({
             Daily Study Target (Minutes)
             <select
               value={prefMinutes}
-              onChange={(event) =>
-                setPrefMinutes(Number(event.target.value))
-              }
+              onChange={(event) => setPrefMinutes(Number(event.target.value))}
               className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
             >
               {DAILY_DURATION_OPTIONS.map((val) => (
@@ -112,9 +110,7 @@ export const LearningPreferencesSection = ({
             Daily Task Limit
             <select
               value={prefTasks}
-              onChange={(event) =>
-                setPrefTasks(Number(event.target.value))
-              }
+              onChange={(event) => setPrefTasks(Number(event.target.value))}
               className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-medium text-foreground outline-none"
             >
               {DAILY_TASK_COUNT_OPTIONS.map((val) => (
@@ -176,9 +172,7 @@ export const LearningPreferencesSection = ({
               <input
                 id="pref-career-goal"
                 value={prefCareerGoal}
-                onChange={(event) =>
-                  setPrefCareerGoal(event.target.value)
-                }
+                onChange={(event) => setPrefCareerGoal(event.target.value)}
                 placeholder="e.g. Lead site meetings with confidence"
                 className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none"
               />
@@ -188,9 +182,7 @@ export const LearningPreferencesSection = ({
 
         <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
           {preferencesSaved && (
-            <span className="text-xs font-medium text-success">
-              Saved
-            </span>
+            <span className="text-xs font-medium text-success">Saved</span>
           )}
           <Button type="submit" className="text-xs min-h-9">
             <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences

@@ -6,7 +6,9 @@ describe('AI Core Service', () => {
   it('returns mock response if AI is not configured', async () => {
     const config = { configured: false };
     const service = createAIService(config);
-    const result = await service.complete('evaluateEngineeringEnglish', { prompt: 'Hello world' });
+    const result = await service.complete('evaluateEngineeringEnglish', {
+      prompt: 'Hello world',
+    });
     assert.ok(result);
     assert.equal(result.provider, 'mock');
     assert.equal(result.mockMode, true);
@@ -45,7 +47,7 @@ describe('AI Core Service', () => {
       const body = JSON.parse(options.body);
       capturedPrompt = body.messages[0].content;
       capturedJsonMode = !!body.response_format;
-      
+
       return new Response(
         JSON.stringify({
           choices: [{ message: { content: mockResponseJson } }],
@@ -58,12 +60,15 @@ describe('AI Core Service', () => {
     };
 
     const service = createAIService(config, mockFetch);
-    const result = await service.complete('evaluateEngineeringEnglish', { prompt: 'Initial prompt text', context: {} });
+    const result = await service.complete('evaluateEngineeringEnglish', {
+      prompt: 'Initial prompt text',
+      context: {},
+    });
 
     assert.ok(result);
     assert.equal(result.provider, 'openai');
     assert.equal(result.mockMode, false);
-    
+
     assert.match(capturedPrompt, /CRITICAL RESPONSE REQUIREMENT/);
     assert.match(capturedPrompt, /Initial prompt text/);
     assert.equal(capturedJsonMode, true);
@@ -97,7 +102,10 @@ describe('AI Core Service', () => {
     };
 
     const service = createAIService(config, mockFetch);
-    const result = await service.complete('evaluateEngineeringEnglish', { prompt: 'Initial prompt text', context: {} });
+    const result = await service.complete('evaluateEngineeringEnglish', {
+      prompt: 'Initial prompt text',
+      context: {},
+    });
 
     assert.ok(result);
     assert.equal(result.structuredResult, null);
@@ -134,17 +142,21 @@ describe('AI Core Service', () => {
       context: {
         weakVocabulary: ['actuator', 'commissioning'],
         recentMistakes: [
-          { originalText: 'we need check B2', correction: 'we need to inspect basement level B2', category: 'grammar' }
+          {
+            originalText: 'we need check B2',
+            correction: 'we need to inspect basement level B2',
+            category: 'grammar',
+          },
         ],
-        discipline: 'Electrical Engineering'
-      }
+        discipline: 'Electrical Engineering',
+      },
     };
 
     const result = await service.complete('generatePractice', requestBody);
 
     assert.ok(result);
     assert.equal(result.text, 'Practice questions generated.');
-    
+
     // Check if the prompt has the injected learning memories
     assert.match(capturedPrompt, /USER LEARNING MEMORIES/);
     assert.match(capturedPrompt, /actuator/);

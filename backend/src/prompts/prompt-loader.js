@@ -27,13 +27,15 @@ export const getCustomPracticePrompt = (context = {}) => {
 
   let result = '\n\n=== USER LEARNING MEMORIES (RAG RETRIEVED) ===\n';
   if (mistakes.length > 0) {
-    result += 'The user has made the following grammatical/vocabulary mistakes recently. Use these exact mistakes to generate customized practice exercises (e.g. rewrite correction tasks, fill-in-the-blanks, or multiple-choice options targeting these issues):\n';
+    result +=
+      'The user has made the following grammatical/vocabulary mistakes recently. Use these exact mistakes to generate customized practice exercises (e.g. rewrite correction tasks, fill-in-the-blanks, or multiple-choice options targeting these issues):\n';
     mistakes.forEach((m, idx) => {
       result += `- Mistake ${idx + 1} [Category: ${m.category}]: Original text: "${m.originalText}" -> Corrected to: "${m.correction}"\n`;
     });
   }
   if (weakVocab.length > 0) {
-    result += 'The user also has the following weak vocabulary terms that require reinforcement. Integrate these terms directly into the practice exercises:\n';
+    result +=
+      'The user also has the following weak vocabulary terms that require reinforcement. Integrate these terms directly into the practice exercises:\n';
     weakVocab.forEach((w) => {
       result += `- ${w}\n`;
     });

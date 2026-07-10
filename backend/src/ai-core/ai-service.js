@@ -57,23 +57,23 @@ export const createAIService = (config, fetchImpl = fetch) => ({
     }
 
     // Only apply structured evaluation if requested by the frontend with a context object
-    const isEvaluation = [
-      'analyzeProgress',
-      'evaluateEngineeringEnglish',
-      'analyzeText',
-    ].includes(operation) && (body?.context !== undefined);
+    const isEvaluation =
+      ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'].includes(
+        operation
+      ) && body?.context !== undefined;
 
     let finalPrompt = prompt;
     if (isEvaluation) {
       finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
     }
 
-    const isCustomPracticeRequest = prompt.toLowerCase().includes('sana özel') || 
-                                    prompt.toLowerCase().includes('kendi hatalarım') || 
-                                    prompt.toLowerCase().includes('hatalarımdan') || 
-                                    prompt.toLowerCase().includes('my mistakes') || 
-                                    prompt.toLowerCase().includes('custom review') || 
-                                    prompt.toLowerCase().includes('specialized words');
+    const isCustomPracticeRequest =
+      prompt.toLowerCase().includes('sana özel') ||
+      prompt.toLowerCase().includes('kendi hatalarım') ||
+      prompt.toLowerCase().includes('hatalarımdan') ||
+      prompt.toLowerCase().includes('my mistakes') ||
+      prompt.toLowerCase().includes('custom review') ||
+      prompt.toLowerCase().includes('specialized words');
 
     if (isCustomPracticeRequest && body?.context) {
       const memoryContextPrompt = getCustomPracticePrompt(body.context);
@@ -109,7 +109,10 @@ export const createAIService = (config, fetchImpl = fetch) => ({
         structuredResult = parsed;
         responseText = parsed.professionalVersion || parsed.summary || text;
       } catch (err) {
-        console.error('Failed to parse AI evaluation structured response:', err);
+        console.error(
+          'Failed to parse AI evaluation structured response:',
+          err
+        );
       }
     }
 

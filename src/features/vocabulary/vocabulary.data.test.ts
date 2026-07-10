@@ -37,16 +37,12 @@ describe('vocabulary content pack integrity', () => {
   });
 
   it('does not contain duplicate vocabulary words', () => {
-    const normalized = entries.map((entry) =>
-      entry.word.trim().toLowerCase()
-    );
+    const normalized = entries.map((entry) => entry.word.trim().toLowerCase());
     expect(new Set(normalized).size).toBe(normalized.length);
   });
 
   it('covers all Sprint B required disciplines', () => {
-    const disciplines = new Set(
-      entries.map((entry) => entry.discipline)
-    );
+    const disciplines = new Set(entries.map((entry) => entry.discipline));
     requiredDisciplines.forEach((discipline) => {
       expect(disciplines.has(discipline)).toBe(true);
     });
@@ -63,9 +59,7 @@ describe('vocabulary content pack integrity', () => {
   });
 
   it('does not include software-centric vocabulary leftovers', () => {
-    const joined = entries.map((entry) =>
-      entry.word.toLowerCase()
-    ).join(' ');
+    const joined = entries.map((entry) => entry.word.toLowerCase()).join(' ');
     expect(joined).not.toContain('pull request');
     expect(joined).not.toContain('refactoring');
     expect(joined).not.toContain('distributed systems');

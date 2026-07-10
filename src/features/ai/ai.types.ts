@@ -64,7 +64,11 @@ export interface AICoachContext {
   wordsLearned: number;
   vocabularyRetention: number;
   recommendedFocus: string;
-  recentMistakes?: { originalText: string; correction: string; category: string }[];
+  recentMistakes?: {
+    originalText: string;
+    correction: string;
+    category: string;
+  }[];
 }
 
 export interface AICoachResult {
