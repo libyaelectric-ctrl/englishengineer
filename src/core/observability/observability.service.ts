@@ -6,6 +6,7 @@ import {
   ErrorMonitoringConfig,
   HealthCheckContract,
   HealthStatus,
+  ErrorReport,
 } from './observability.types';
 
 interface ObservabilityEnv {
@@ -77,5 +78,32 @@ export const ObservabilityService = {
       },
       notes,
     };
+  },
+
+  reportError(error: ErrorReport): void {
+    const monitoring = this.getErrorMonitoringConfig();
+    if (!monitoring.configured) {
+      console.error('[Observability] Unreported error:', error);
+      return;
+    }
+
+    console.error(
+      `[Observability] Error reported: ${error.code}`,
+      error.message,
+      error.context
+    );
+  },
+
+  reportPerformance(metric: {
+    name: string;
+    durationMs: number;
+    success: boolean;
+    context?: Record<string, unknown>;
+  }): void {
+    console.log(
+      `[Observability] Performance: ${metric.name} took ${metric.durationMs}ms`,
+      metric.success ? 'OK' : 'FAILED',
+      metric.context
+    );
   },
 };
