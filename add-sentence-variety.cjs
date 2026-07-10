@@ -38,7 +38,7 @@ const varietyFixes = {
 };
 
 let fixed = 0;
-varietyFixes.forEach((newExample, word) => {
+Object.entries(varietyFixes).forEach(([word, newExample]) => {
   const entry = data.find(e => e.word === word);
   if (entry) {
     entry.example = newExample;

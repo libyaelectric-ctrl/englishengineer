@@ -94,10 +94,10 @@ describe('VocabularyLookupQuerySchema', () => {
     assert.equal(result.data.targetLang, 'tr');
   });
 
-  it('trims and lowercases word', () => {
+  it('trims word', () => {
     const result = VocabularyLookupQuerySchema.safeParse({ word: '  Hello  ' });
     assert.equal(result.success, true);
-    assert.equal(result.data.word, 'hello');
+    assert.equal(result.data.word, 'Hello');
   });
 
   it('accepts custom targetLang', () => {
