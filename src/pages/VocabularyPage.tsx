@@ -7,18 +7,14 @@ import {
   useState,
 } from 'react';
 import {
-  AlertTriangle,
   BookMarked,
   CheckCircle2,
   ChevronDown,
   Clock3,
   Filter,
   GraduationCap,
-  Library,
   Plus,
-  RotateCcw,
   Search,
-  Archive,
   XCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
@@ -33,7 +29,6 @@ import {
   CANONICAL_VOCABULARY_TOTAL,
   getVocabularyReviewReason,
   isVocabularyProgressDue,
-  type MyVocabularyWord,
   repairVocabularyText,
   searchVocabularyMenu,
   selectVocabularyLearningSet,
@@ -46,7 +41,7 @@ import {
   type VocabularyTerm,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
-import { MetricCard } from '@/shared/components/MetricCard';
+import { ProgressMetrics, MyVocabularySection } from './VocabularyPage/index';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
@@ -304,42 +299,6 @@ const WordCard = ({
     </article>
   );
 };
-
-const MyVocabularyCard = ({
-  word,
-  onArchive,
-}: {
-  word: MyVocabularyWord;
-  onArchive: (id: string) => void;
-}) => (
-  <article className="rounded-xl border border-primary/20 bg-primary/5/40 p-5">
-    <div className="flex items-start justify-between gap-3">
-      <div>
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-lg font-black text-foreground">{word.term}</h3>
-          <span className="rounded-full border border-primary/20 bg-white px-2 py-0.5 text-[10px] font-bold text-primary">
-            {word.cefrLevel}
-          </span>
-        </div>
-        <p className="mt-1 text-sm font-semibold text-primary">
-          {word.turkishMeaning}
-        </p>
-      </div>
-      <Button
-        variant="ghost"
-        className="min-h-9 px-2 text-rose-700"
-        aria-label={`Archive ${word.term} from My Vocabulary`}
-        onClick={() => onArchive(word.id)}
-      >
-        <Archive className="h-4 w-4" />
-      </Button>
-    </div>
-    <p className="mt-3 text-sm text-muted-copy">{word.exampleSentence}</p>
-    <p className="mt-3 text-xs font-semibold capitalize text-foreground0">
-      Domain: {word.domain}
-    </p>
-  </article>
-);
 
 const VocabularyPage = () => {
   const userId = useAuthStore((state) => state.currentUser?.id);
@@ -984,110 +943,12 @@ const VocabularyPage = () => {
         )}
       </SectionCard>
 
-      <SectionCard
-        title="Vocabulary Progress"
-        subtitle="Supporting memory and review statistics"
-        icon={Library}
-      >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <MetricCard
-            data-testid="metric-total"
-            label="Total"
-            value={summary.total}
-            icon={Library}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="primary"
-          />
-          <MetricCard
-            data-testid="metric-new"
-            label="New"
-            value={summary.newWords}
-            icon={BookMarked}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="cyan"
-          />
-          <MetricCard
-            data-testid="metric-learning"
-            label="Learned"
-            value={summary.learning}
-            icon={GraduationCap}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="primary"
-          />
-          <MetricCard
-            data-testid="metric-mastered"
-            label="Mastered"
-            value={summary.mastered}
-            icon={CheckCircle2}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="emerald"
-          />
-          <MetricCard
-            data-testid="metric-weak"
-            label="Weak Words"
-            value={summary.weak}
-            icon={AlertTriangle}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="rose"
-          />
-          <MetricCard
-            data-testid="metric-forgotten"
-            label="Forgotten"
-            value={summary.forgotten}
-            icon={RotateCcw}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="amber"
-          />
-          <MetricCard
-            data-testid="metric-due"
-            label="Due Today"
-            value={summary.dueToday}
-            icon={Clock3}
-            className="min-w-0 p-4 sm:p-4"
-            statusColor="amber"
-          />
-        </div>
-        <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-          <p className="text-sm font-black text-emerald-950">
-            Mastered: {summary.mastered} / {summary.total}
-          </p>
-          <p className="mt-1 text-xs text-emerald-800">
-            Mastered words remain available as a passive reference library.
-          </p>
-        </div>
-      </SectionCard>
+      <ProgressMetrics summary={summary} />
 
-      <SectionCard
-        title="My Vocabulary"
-        subtitle={`5,000 canonical + ${menuState.myVocabulary.filter((word) => !word.archivedAt).length} active custom word(s)`}
-        icon={BookMarked}
-      >
-        <p className="mb-4 text-xs font-bold text-foreground0">
-          Manual add only · AI Assist Coming Soon
-        </p>
-        {menuState.myVocabulary.filter((word) => !word.archivedAt).length ===
-        0 ? (
-          <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
-            Search for a missing term to add it manually. AI Assist is coming
-            soon.
-          </p>
-        ) : (
-          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-            {menuState.myVocabulary
-              .filter((word) => !word.archivedAt)
-              .map((word) => (
-                <MyVocabularyCard
-                  key={word.id}
-                  word={word}
-                  onArchive={(id) => {
-                    VocabularyMenuService.archiveMyVocabulary(id);
-                    setMenuState(VocabularyMenuService.getState());
-                  }}
-                />
-              ))}
-          </div>
-        )}
-      </SectionCard>
+      <MyVocabularySection
+        myVocabulary={menuState.myVocabulary}
+        onUpdate={() => setMenuState(VocabularyMenuService.getState())}
+      />
     </div>
   );
 };
