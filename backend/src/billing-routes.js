@@ -1,5 +1,11 @@
 import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
 import { assertUserOwnership } from './billing-helpers.js';
+import {
+  validateBody,
+  BillingCheckoutBodySchema,
+  BillingTopupBodySchema,
+  BillingPortalBodySchema,
+} from './validation.js';
 
 export const registerBillingRoutes = (
   app,
@@ -12,6 +18,7 @@ export const registerBillingRoutes = (
     '/api/billing/create-checkout-session',
     requireBackendAuth,
     rateLimiter,
+    validateBody(BillingCheckoutBodySchema),
     async (req, res, next) => {
       try {
         const userId = assertUserOwnership(req);
@@ -30,6 +37,7 @@ export const registerBillingRoutes = (
     '/api/billing/create-topup-session',
     requireBackendAuth,
     rateLimiter,
+    validateBody(BillingTopupBodySchema),
     async (req, res, next) => {
       try {
         const userId = assertUserOwnership(req);
@@ -50,6 +58,7 @@ export const registerBillingRoutes = (
     '/api/billing/create-customer-portal-session',
     requireBackendAuth,
     rateLimiter,
+    validateBody(BillingPortalBodySchema),
     async (req, res, next) => {
       try {
         res.json(
