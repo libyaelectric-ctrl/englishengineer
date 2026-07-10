@@ -2,11 +2,8 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import { createAIService, registerAIRoutes } from './ai.js';
-import {
-  createBillingService,
-  createStripeClient,
-  registerBillingRoutes,
-} from './billing.js';
+import { createBillingService, createStripeClient } from './billing-service.js';
+import { registerBillingRoutes } from './billing-routes.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';

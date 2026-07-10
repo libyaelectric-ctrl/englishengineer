@@ -312,47 +312,86 @@ const VocabularyPage = () => {
     () => getPreferredDomains(learningProfile),
     [learningProfile]
   );
-  const [terms, setTerms] = useState<VocabularyTerm[]>([]);
-  const [allLevelsLoaded, setAllLevelsLoaded] = useState(false);
-  const [isSearchLoading, setIsSearchLoading] = useState(false);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [menuState, setMenuState] = useState(() =>
-    VocabularyMenuService.getState()
-  );
-  const [activeTab, setActiveTab] = useState<VocabularyMenuStatus>('New');
-  const [mode, setMode] = useState<VocabularySetMode>('Quiz');
-  const [batchOffset, setBatchOffset] = useState(0);
-  const [learningDomain, setLearningDomain] = useState('All');
-  const [wordSetIds, setWordSetIds] = useState<string[]>([]);
-  const initializedSet = useRef(false);
-  const [searchInput, setSearchInput] = useState('');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchError, setSearchError] = useState<string | null>(null);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [filters, setFilters] = useState<VocabularySearchFilters>(emptyFilters);
-  const [appliedFilters, setAppliedFilters] =
-    useState<VocabularySearchFilters>(emptyFilters);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [customDraft, setCustomDraft] = useState({
-    term: '',
-    turkishMeaning: '',
-    exampleSentence: '',
-    cefrLevel: 'A1' as CefrLevel,
-    domain: '',
+
+  // Grouped data state (was 5 separate useState)
+  const [data, setData] = useState({
+    terms: [] as VocabularyTerm[],
+    allLevelsLoaded: false,
+    loadError: null as string | null,
+    menuState: VocabularyMenuService.getState(),
+    wordSetIds: [] as string[],
   });
+
+  // Grouped UI state (was 7 separate useState)
+  const [ui, setUi] = useState({
+    activeTab: 'New' as VocabularyMenuStatus,
+    mode: 'Quiz' as VocabularySetMode,
+    batchOffset: 0,
+    learningDomain: 'All',
+    showFilters: false,
+    showAddForm: false,
+    customDraft: {
+      term: '',
+      turkishMeaning: '',
+      exampleSentence: '',
+      cefrLevel: 'A1' as CefrLevel,
+      domain: '',
+    },
+  });
+
+  // Grouped search state (was 7 separate useState)
+  const [search, setSearch] = useState({
+    isSearchLoading: false,
+    searchInput: '',
+    searchQuery: '',
+    searchError: null as string | null,
+    hasSearched: false,
+    filters: emptyFilters(),
+    appliedFilters: emptyFilters(),
+  });
+
+  const initializedSet = useRef(false);
+
+  // Convenience aliases for JSX compatibility
+  const {
+    terms,
+    allLevelsLoaded,
+    loadError,
+    menuState,
+    wordSetIds,
+  } = data;
+  const {
+    activeTab,
+    mode,
+    batchOffset,
+    learningDomain,
+    showFilters,
+    showAddForm,
+    customDraft,
+  } = ui;
+  const {
+    isSearchLoading,
+    searchInput,
+    searchQuery,
+    searchError,
+    hasSearched,
+    filters,
+    appliedFilters,
+  } = search;
 
   useEffect(() => {
     let cancelled = false;
     void VocabularyRepository.getVocabularyByLevel(vocabularyLevel)
       .then((levelTerms) => {
-        if (!cancelled) setTerms(levelTerms);
+        if (!cancelled) setData((p) => ({ ...p, terms: levelTerms }));
       })
       .catch(() => {
         if (!cancelled) {
-          setLoadError(
-            'The canonical vocabulary repository could not be loaded.'
-          );
+          setData((p) => ({
+            ...p,
+            loadError:
+              'The canonical vocabulary repository could not be loaded.',
+          }));
         }
       });
     return () => {
@@ -362,7 +401,7 @@ const VocabularyPage = () => {
 
   const loadAllLevels = useCallback(async (): Promise<VocabularyTerm[]> => {
     if (allLevelsLoaded) return terms;
-    setIsSearchLoading(true);
+    setSearch((p) => ({ ...p, isSearchLoading: true }));
     try {
       const levels = await Promise.all(
         CEFR_LEVELS.map((level) =>
@@ -370,11 +409,10 @@ const VocabularyPage = () => {
         )
       );
       const allTerms = levels.flat();
-      setTerms(allTerms);
-      setAllLevelsLoaded(true);
+      setData((p) => ({ ...p, terms: allTerms, allLevelsLoaded: true }));
       return allTerms;
     } finally {
-      setIsSearchLoading(false);
+      setSearch((p) => ({ ...p, isSearchLoading: false }));
     }
   }, [allLevelsLoaded, terms]);
 
@@ -399,7 +437,7 @@ const VocabularyPage = () => {
   useEffect(() => {
     if (initializedSet.current || terms.length === 0) return;
     initializedSet.current = true;
-    setWordSetIds(selectSet('New', menuState));
+    setData((p) => ({ ...p, wordSetIds: selectSet('New', p.menuState) }));
   }, [menuState, selectSet, terms.length]);
 
   const summary = useMemo(
@@ -447,10 +485,13 @@ const VocabularyPage = () => {
   };
 
   const chooseTab = (status: VocabularyMenuStatus) => {
-    setActiveTab(status);
-    setMode(status === 'New' ? 'Quiz' : 'View');
-    setBatchOffset(0);
-    setWordSetIds(selectSet(status, menuState));
+    setUi((p) => ({
+      ...p,
+      activeTab: status,
+      mode: status === 'New' ? 'Quiz' : 'View',
+      batchOffset: 0,
+    }));
+    setData((p) => ({ ...p, wordSetIds: selectSet(status, p.menuState) }));
   };
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
@@ -460,7 +501,7 @@ const VocabularyPage = () => {
       new Date(),
       repairVocabularyText(term.term)
     );
-    setMenuState(VocabularyMenuService.getState());
+    setData((p) => ({ ...p, menuState: VocabularyMenuService.getState() }));
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
       '/vocabulary',
@@ -480,7 +521,7 @@ const VocabularyPage = () => {
 
   const learnWord = (term: VocabularyTerm) => {
     VocabularyMenuService.startLearning(term.id, new Date());
-    setMenuState(VocabularyMenuService.getState());
+    setData((p) => ({ ...p, menuState: VocabularyMenuService.getState() }));
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
       '/vocabulary',
@@ -516,22 +557,25 @@ const VocabularyPage = () => {
     ]
       .filter((id, index, values) => values.indexOf(id) === index)
       .slice(0, 2);
-    setActiveTab('New');
-    setMode('Quiz');
-    setBatchOffset(0);
-    setWordSetIds([...newWordIds, ...reviewIds].slice(0, 10));
+    setUi((p) => ({ ...p, activeTab: 'New', mode: 'Quiz', batchOffset: 0 }));
+    setData((p) => ({
+      ...p,
+      wordSetIds: [...newWordIds, ...reviewIds].slice(0, 10),
+    }));
   };
 
   const loadNextBatch = () => {
     const nextOffset = batchOffset + 9;
     const nextIds = selectSet(activeTab, menuState, learningDomain, nextOffset);
     const resolvedOffset = nextIds.length > 0 ? nextOffset : 0;
-    setBatchOffset(resolvedOffset);
-    setWordSetIds(
-      nextIds.length > 0
-        ? nextIds
-        : selectSet(activeTab, menuState, learningDomain, 0)
-    );
+    setUi((p) => ({ ...p, batchOffset: resolvedOffset }));
+    setData((p) => ({
+      ...p,
+      wordSetIds:
+        nextIds.length > 0
+          ? nextIds
+          : selectSet(activeTab, p.menuState, learningDomain, 0),
+    }));
   };
 
   const runSearch = async (event: FormEvent) => {
@@ -541,20 +585,29 @@ const VocabularyPage = () => {
       (value) => value && value !== 'All'
     );
     if (!query && !hasFilter) {
-      setSearchError('Enter a search term or select an advanced filter.');
-      setHasSearched(false);
+      setSearch((p) => ({
+        ...p,
+        searchError: 'Enter a search term or select an advanced filter.',
+        hasSearched: false,
+      }));
       return;
     }
-    setSearchError(null);
-    setSearchQuery(query);
-    setAppliedFilters(filters);
-    setHasSearched(true);
-    setShowAddForm(false);
+    setSearch((p) => ({
+      ...p,
+      searchError: null,
+      searchQuery: query,
+      appliedFilters: p.filters,
+      hasSearched: true,
+    }));
+    setUi((p) => ({ ...p, showAddForm: false }));
     if (!allLevelsLoaded) {
       try {
         await loadAllLevels();
       } catch {
-        setSearchError('The full vocabulary index could not be loaded.');
+        setSearch((p) => ({
+          ...p,
+          searchError: 'The full vocabulary index could not be loaded.',
+        }));
       }
     }
   };
@@ -562,16 +615,20 @@ const VocabularyPage = () => {
   const addCustomWord = (event: FormEvent) => {
     event.preventDefault();
     VocabularyMenuService.addToMyVocabulary(customDraft);
-    setMenuState(VocabularyMenuService.getState());
-    setShowAddForm(false);
+    setData((p) => ({ ...p, menuState: VocabularyMenuService.getState() }));
+    setUi((p) => ({ ...p, showAddForm: false }));
   };
 
   const resetSearch = () => {
-    setSearchInput('');
-    setSearchQuery('');
-    setFilters(emptyFilters());
-    setAppliedFilters(emptyFilters());
-    setHasSearched(false);
+    setSearch({
+      isSearchLoading: false,
+      searchInput: '',
+      searchQuery: '',
+      searchError: null,
+      hasSearched: false,
+      filters: emptyFilters(),
+      appliedFilters: emptyFilters(),
+    });
   };
 
   return (
@@ -590,7 +647,7 @@ const VocabularyPage = () => {
           <Button
             variant="outline"
             onClick={() => {
-              setShowFilters((value) => !value);
+              setUi((p) => ({ ...p, showFilters: !p.showFilters }));
               if (!allLevelsLoaded) void loadAllLevels();
             }}
           >
@@ -602,7 +659,9 @@ const VocabularyPage = () => {
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
               value={searchInput}
-              onChange={(event) => setSearchInput(event.target.value)}
+              onChange={(event) =>
+                setSearch((p) => ({ ...p, searchInput: event.target.value }))
+              }
               className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-white px-4 text-sm"
               placeholder="Search vocabulary..."
               aria-label="Search vocabulary"
@@ -636,9 +695,9 @@ const VocabularyPage = () => {
                     aria-label={`Filter by ${label}`}
                     value={filters[field]}
                     onChange={(event) =>
-                      setFilters((current) => ({
-                        ...current,
-                        [field]: event.target.value,
+                      setSearch((p) => ({
+                        ...p,
+                        filters: { ...p.filters, [field]: event.target.value },
                       }))
                     }
                     className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-white px-2 font-normal"
@@ -712,8 +771,11 @@ const VocabularyPage = () => {
           {searchQuery && !showAddForm && (
             <Button
               onClick={() => {
-                setCustomDraft((draft) => ({ ...draft, term: searchQuery }));
-                setShowAddForm(true);
+                setUi((p) => ({
+                  ...p,
+                  customDraft: { ...p.customDraft, term: searchQuery },
+                  showAddForm: true,
+                }));
               }}
             >
               <Plus className="h-4 w-4" /> Add to My Vocabulary
@@ -731,9 +793,9 @@ const VocabularyPage = () => {
                   required
                   value={customDraft.term}
                   onChange={(event) =>
-                    setCustomDraft((draft) => ({
-                      ...draft,
-                      term: event.target.value,
+                    setUi((p) => ({
+                      ...p,
+                      customDraft: { ...p.customDraft, term: event.target.value },
                     }))
                   }
                   className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
@@ -745,9 +807,12 @@ const VocabularyPage = () => {
                   required
                   value={customDraft.turkishMeaning}
                   onChange={(event) =>
-                    setCustomDraft((draft) => ({
-                      ...draft,
-                      turkishMeaning: event.target.value,
+                    setUi((p) => ({
+                      ...p,
+                      customDraft: {
+                        ...p.customDraft,
+                        turkishMeaning: event.target.value,
+                      },
                     }))
                   }
                   className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
@@ -759,9 +824,12 @@ const VocabularyPage = () => {
                   required
                   value={customDraft.exampleSentence}
                   onChange={(event) =>
-                    setCustomDraft((draft) => ({
-                      ...draft,
-                      exampleSentence: event.target.value,
+                    setUi((p) => ({
+                      ...p,
+                      customDraft: {
+                        ...p.customDraft,
+                        exampleSentence: event.target.value,
+                      },
                     }))
                   }
                   className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
@@ -773,9 +841,12 @@ const VocabularyPage = () => {
                   <select
                     value={customDraft.cefrLevel}
                     onChange={(event) =>
-                      setCustomDraft((draft) => ({
-                        ...draft,
-                        cefrLevel: event.target.value as CefrLevel,
+                      setUi((p) => ({
+                        ...p,
+                        customDraft: {
+                          ...p.customDraft,
+                          cefrLevel: event.target.value as CefrLevel,
+                        },
                       }))
                     }
                     className="mt-1 min-h-11 w-full rounded-lg border border-border-soft bg-white px-3 font-normal"
@@ -791,10 +862,13 @@ const VocabularyPage = () => {
                     required
                     value={customDraft.domain}
                     onChange={(event) =>
-                      setCustomDraft((draft) => ({
-                        ...draft,
+                    setUi((p) => ({
+                      ...p,
+                      customDraft: {
+                        ...p.customDraft,
                         domain: event.target.value,
-                      }))
+                      },
+                    }))
                     }
                     className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                   />
@@ -843,9 +917,11 @@ const VocabularyPage = () => {
               value={learningDomain}
               onChange={(event) => {
                 const nextDomain = event.target.value;
-                setLearningDomain(nextDomain);
-                setBatchOffset(0);
-                setWordSetIds(selectSet(activeTab, menuState, nextDomain));
+                setUi((p) => ({ ...p, learningDomain: nextDomain, batchOffset: 0 }));
+                setData((p) => ({
+                  ...p,
+                  wordSetIds: selectSet(activeTab, p.menuState, nextDomain),
+                }));
               }}
               className="min-h-8 rounded-lg border border-border-soft bg-white px-2 text-xs font-semibold text-foreground"
             >
@@ -942,7 +1018,9 @@ const VocabularyPage = () => {
 
       <MyVocabularySection
         myVocabulary={menuState.myVocabulary}
-        onUpdate={() => setMenuState(VocabularyMenuService.getState())}
+        onUpdate={() =>
+          setData((p) => ({ ...p, menuState: VocabularyMenuService.getState() }))
+        }
       />
     </div>
   );

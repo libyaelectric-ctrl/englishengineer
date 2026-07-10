@@ -58,11 +58,25 @@ const ProfilePage = () => {
     openCustomerPortal,
   } = useBillingStore();
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [showClearConfirmation, setShowClearConfirmation] = useState(false);
-  const [clearConfirmation, setClearConfirmation] = useState('');
+  // Grouped UI state
+  const [ui, setUi] = useState({
+    isSaving: false,
+    message: null as string | null,
+    error: null as string | null,
+    showClearConfirmation: false,
+    clearConfirmation: '',
+  });
+  const { isSaving, message, error, showClearConfirmation, clearConfirmation } = ui;
+  const setIsSaving = (v: boolean) => setUi((p) => ({ ...p, isSaving: v }));
+  const setMessage = (v: string | null) => setUi((p) => ({ ...p, message: v }));
+  const setError = (v: string | null) => setUi((p) => ({ ...p, error: v }));
+  const setShowClearConfirmation = (v: React.SetStateAction<boolean>) =>
+    setUi((p) => ({
+      ...p,
+      showClearConfirmation: typeof v === 'function' ? v(p.showClearConfirmation) : v,
+    }));
+  const setClearConfirmation = (v: string) =>
+    setUi((p) => ({ ...p, clearConfirmation: v }));
 
   const { profile, memory, learningState } = useLearningCockpit(
     currentUser?.id
@@ -112,25 +126,72 @@ const ProfilePage = () => {
     return Math.round(totalSeconds / 60);
   })();
 
-  // Edit Mode state for Overview Section
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [editFirstName, setEditFirstName] = useState('');
-  const [editLastName, setEditLastName] = useState('');
-  const [editProfession, setEditProfession] = useState('');
-  const [editTrack, setEditTrack] = useState('');
-  const [editSubdomain, setEditSubdomain] = useState('');
-  const [editIndustry, setEditIndustry] = useState('');
-  const [editLang, setEditLang] = useState<'en' | 'tr'>('en');
-  const [editGoals, setEditGoals] = useState<string[]>([]);
+  // Grouped edit mode state
+  const [edit, setEdit] = useState({
+    isEditMode: false,
+    firstName: '',
+    lastName: '',
+    profession: '',
+    track: '',
+    subdomain: '',
+    industry: '',
+    lang: 'en' as 'en' | 'tr',
+    goals: [] as string[],
+  });
+  const {
+    isEditMode,
+    firstName: editFirstName,
+    lastName: editLastName,
+    profession: editProfession,
+    track: editTrack,
+    subdomain: editSubdomain,
+    industry: editIndustry,
+    lang: editLang,
+    goals: editGoals,
+  } = edit;
+  const setIsEditMode = (v: boolean) => setEdit((p) => ({ ...p, isEditMode: v }));
+  const setEditFirstName = (v: string) => setEdit((p) => ({ ...p, firstName: v }));
+  const setEditLastName = (v: string) => setEdit((p) => ({ ...p, lastName: v }));
+  const setEditProfession = (v: string) => setEdit((p) => ({ ...p, profession: v }));
+  const setEditTrack = (v: string) => setEdit((p) => ({ ...p, track: v }));
+  const setEditSubdomain = (v: string) => setEdit((p) => ({ ...p, subdomain: v }));
+  const setEditIndustry = (v: string) => setEdit((p) => ({ ...p, industry: v }));
+  const setEditLang = (v: 'en' | 'tr') => setEdit((p) => ({ ...p, lang: v }));
+  const setEditGoals = (v: string[]) => setEdit((p) => ({ ...p, goals: v }));
 
-  // Learning preferences states
-  const [prefGoals, setPrefGoals] = useState<string[]>([]);
-  const [prefMinutes, setPrefMinutes] = useState(15);
-  const [prefTasks, setPrefTasks] = useState(2);
-  const [prefMissedDays, setPrefMissedDays] = useState(0);
-  const [prefExpLevel, setPrefExpLevel] = useState('');
-  const [prefCareerGoal, setPrefCareerGoal] = useState('');
-  const [preferencesSaved, setPreferencesSaved] = useState(false);
+  // Grouped preferences state
+  const [prefs, setPrefs] = useState({
+    goals: [] as string[],
+    minutes: 15,
+    tasks: 2,
+    missedDays: 0,
+    expLevel: '',
+    careerGoal: '',
+    saved: false,
+  });
+  const {
+    goals: prefGoals,
+    minutes: prefMinutes,
+    tasks: prefTasks,
+    missedDays: prefMissedDays,
+    expLevel: prefExpLevel,
+    careerGoal: prefCareerGoal,
+    saved: preferencesSaved,
+  } = prefs;
+  const setPrefGoals = (v: React.SetStateAction<string[]>) =>
+    setPrefs((p) => ({ ...p, goals: typeof v === 'function' ? v(p.goals) : v }));
+  const setPrefMinutes = (v: React.SetStateAction<number>) =>
+    setPrefs((p) => ({ ...p, minutes: typeof v === 'function' ? v(p.minutes) : v }));
+  const setPrefTasks = (v: React.SetStateAction<number>) =>
+    setPrefs((p) => ({ ...p, tasks: typeof v === 'function' ? v(p.tasks) : v }));
+  const setPrefMissedDays = (v: React.SetStateAction<number>) =>
+    setPrefs((p) => ({ ...p, missedDays: typeof v === 'function' ? v(p.missedDays) : v }));
+  const setPrefExpLevel = (v: React.SetStateAction<string>) =>
+    setPrefs((p) => ({ ...p, expLevel: typeof v === 'function' ? v(p.expLevel) : v }));
+  const setPrefCareerGoal = (v: React.SetStateAction<string>) =>
+    setPrefs((p) => ({ ...p, careerGoal: typeof v === 'function' ? v(p.careerGoal) : v }));
+  const setPreferencesSaved = (v: React.SetStateAction<boolean>) =>
+    setPrefs((p) => ({ ...p, saved: typeof v === 'function' ? v(p.saved) : v }));
 
   const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
 
