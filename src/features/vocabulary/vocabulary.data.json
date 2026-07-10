@@ -1,0 +1,5032 @@
+[
+  {
+    "word": "helmet",
+    "partOfSpeech": "noun",
+    "CEFR": "A1",
+    "discipline": "Safety",
+    "meaning": "başlık, baret",
+    "definition": "A helmet protects a worker’s head on site.",
+    "example": "Wear your helmet before you enter the work area.",
+    "synonyms": [
+      "hard hat"
+    ],
+    "collocations": [
+      "safety helmet",
+      "wear a helmet",
+      "helmet required"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "ppe",
+      "site safety",
+      "protection"
+    ]
+  },
+  {
+    "word": "panel",
+    "partOfSpeech": "noun",
+    "CEFR": "A1",
+    "discipline": "Electrical Engineering",
+    "meaning": "elektrik panosu",
+    "definition": "A panel contains switches and electrical control equipment.",
+    "example": "The electrical panel is in Room A and is ready for inspection.",
+    "synonyms": [
+      "electrical board"
+    ],
+    "collocations": [
+      "electrical panel",
+      "panel door",
+      "check the panel"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "electrical",
+      "equipment",
+      "room"
+    ]
+  },
+  {
+    "word": "switch",
+    "partOfSpeech": "noun",
+    "CEFR": "A1",
+    "discipline": "Electrical Engineering",
+    "meaning": "anahtar, şalter",
+    "definition": "A switch turns electrical equipment on or off.",
+    "example": "The main switch is off before the visual inspection starts.",
+    "synonyms": [
+      "control"
+    ],
+    "collocations": [
+      "main switch",
+      "switch off",
+      "switch on"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "electrical",
+      "control",
+      "isolation"
+    ]
+  },
+  {
+    "word": "drawing",
+    "partOfSpeech": "noun",
+    "CEFR": "A1",
+    "discipline": "General Professional English",
+    "meaning": "teknik çizim",
+    "definition": "A drawing shows the size and position of engineering work.",
+    "example": "The engineer checks the drawing before work starts.",
+    "synonyms": [
+      "plan"
+    ],
+    "collocations": [
+      "approved drawing",
+      "check the drawing",
+      "drawing revision"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "document",
+      "design",
+      "review"
+    ]
+  },
+  {
+    "word": "inspect",
+    "partOfSpeech": "verb",
+    "CEFR": "A1",
+    "discipline": "QA/QC",
+    "meaning": "kontrol etmek",
+    "definition": "To inspect means to check work or equipment carefully.",
+    "example": "The supervisor will inspect the electrical panel this morning.",
+    "synonyms": [
+      "check"
+    ],
+    "collocations": [
+      "inspect the work",
+      "inspect the panel",
+      "inspect carefully"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "inspection",
+      "quality",
+      "check"
+    ]
+  },
+  {
+    "word": "cable tray",
+    "partOfSpeech": "noun",
+    "CEFR": "A2",
+    "discipline": "Electrical Engineering",
+    "meaning": "kablo tavası",
+    "definition": "A cable tray is a support system that carries electrical cables.",
+    "example": "The team installed ten metres of cable tray.",
+    "synonyms": [
+      "cable support"
+    ],
+    "collocations": [
+      "install cable tray",
+      "cable tray route",
+      "cable tray support"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "containment",
+      "installation",
+      "electrical"
+    ]
+  },
+  {
+    "word": "support",
+    "partOfSpeech": "noun",
+    "CEFR": "A2",
+    "discipline": "Construction",
+    "meaning": "destek, taşıyıcı",
+    "definition": "A support holds equipment or containment in the correct position.",
+    "example": "One cable tray support is missing near Grid B4.",
+    "synonyms": [
+      "bracket"
+    ],
+    "collocations": [
+      "missing support",
+      "install a support",
+      "support spacing"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "installation",
+      "containment",
+      "construction"
+    ]
+  },
+  {
+    "word": "complete",
+    "partOfSpeech": "adjective",
+    "CEFR": "A2",
+    "discipline": "General Professional English",
+    "meaning": "tamamlanmış",
+    "definition": "Complete means that all required work is finished.",
+    "example": "The cable tray work is complete and ready for inspection.",
+    "synonyms": [
+      "finished"
+    ],
+    "collocations": [
+      "work is complete",
+      "complete installation",
+      "complete the task"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "progress",
+      "status",
+      "completion"
+    ]
+  },
+  {
+    "word": "inspection request",
+    "partOfSpeech": "phrase",
+    "CEFR": "A2",
+    "discipline": "QA/QC",
+    "meaning": "kontrol talebi",
+    "definition": "An inspection request asks the responsible team to check completed work.",
+    "example": "Please submit the inspection request for Corridor Two.",
+    "synonyms": [
+      "request for inspection"
+    ],
+    "collocations": [
+      "submit an inspection request",
+      "inspection request status",
+      "approve an inspection request"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "inspection",
+      "quality",
+      "request"
+    ]
+  },
+  {
+    "word": "work area",
+    "partOfSpeech": "noun",
+    "CEFR": "A2",
+    "discipline": "Construction Site",
+    "meaning": "çalışma alanı",
+    "definition": "A work area is the defined place where a team performs an activity.",
+    "example": "Keep the electrical work area clean and safe during installation.",
+    "synonyms": [
+      "work zone"
+    ],
+    "collocations": [
+      "safe work area",
+      "clean the work area",
+      "enter the work area"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "site",
+      "safety",
+      "workplace"
+    ]
+  },
+  {
+    "word": "transformer",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Electrical Engineering",
+    "meaning": "electrical device that changes voltage",
+    "definition": "A transformer transfers electrical energy between circuits and raises or lowers voltage for safe distribution.",
+    "example": "The commissioning team checked the transformer oil temperature before energizing the feeder.",
+    "synonyms": [
+      "voltage transformer",
+      "power transformer"
+    ],
+    "collocations": [
+      "step-up transformer",
+      "transformer oil",
+      "transformer bay"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "power",
+      "substation",
+      "distribution"
+    ]
+  },
+  {
+    "word": "switchgear",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "equipment for switching and protecting circuits",
+    "definition": "Switchgear is a group of breakers, isolators, relays, and panels used to control electrical power safely.",
+    "example": "The contractor submitted the switchgear test certificates before the client inspection.",
+    "synonyms": [
+      "electrical panel",
+      "control gear"
+    ],
+    "collocations": [
+      "medium-voltage switchgear",
+      "switchgear room",
+      "switchgear lineup"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "power",
+      "protection",
+      "panels"
+    ]
+  },
+  {
+    "word": "busbar",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "metal conductor inside a panel",
+    "definition": "A busbar is a rigid conductor that distributes high current within switchboards or distribution boards.",
+    "example": "Thermal imaging showed a hotspot on the main busbar joint after load testing.",
+    "synonyms": [
+      "bus",
+      "conductor bar"
+    ],
+    "collocations": [
+      "copper busbar",
+      "busbar chamber",
+      "busbar rating"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "panels",
+      "current",
+      "inspection"
+    ]
+  },
+  {
+    "word": "circuit breaker",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Electrical Engineering",
+    "meaning": "protective switching device",
+    "definition": "A circuit breaker automatically opens an electrical circuit when it detects overload or fault current.",
+    "example": "The engineer reset the circuit breaker only after confirming there was no downstream fault.",
+    "synonyms": [
+      "breaker",
+      "protective breaker"
+    ],
+    "collocations": [
+      "trip a circuit breaker",
+      "breaker setting",
+      "main circuit breaker"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "protection",
+      "fault",
+      "safety"
+    ]
+  },
+  {
+    "word": "relay",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "automatic protection or control device",
+    "definition": "A relay detects abnormal electrical conditions and sends a signal to trip or control equipment.",
+    "example": "The protection relay recorded an earth fault during the commissioning test.",
+    "synonyms": [
+      "protection relay",
+      "control relay"
+    ],
+    "collocations": [
+      "relay setting",
+      "relay coordination",
+      "relay panel"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "protection",
+      "controls",
+      "testing"
+    ]
+  },
+  {
+    "word": "earthing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "connection of equipment to ground",
+    "definition": "Earthing provides a low-resistance path for fault current to protect people and equipment.",
+    "example": "The inspector rejected the installation because the earthing conductor was not bonded to the tray.",
+    "synonyms": [
+      "grounding",
+      "bonding"
+    ],
+    "collocations": [
+      "earthing system",
+      "earthing conductor",
+      "earthing resistance"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "safety",
+      "grounding",
+      "inspection"
+    ]
+  },
+  {
+    "word": "insulation resistance",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "measure of insulation quality",
+    "definition": "Insulation resistance indicates how well cable or equipment insulation prevents leakage current.",
+    "example": "The cable passed the insulation resistance test at one kilovolt.",
+    "synonyms": [
+      "megger reading",
+      "insulation value"
+    ],
+    "collocations": [
+      "measure insulation resistance",
+      "low insulation resistance",
+      "IR test"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "testing",
+      "cables",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "short circuit",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "unintended low-resistance fault path",
+    "definition": "A short circuit occurs when current flows through an unintended path with very low resistance.",
+    "example": "The report identified a short circuit between the control cores inside the junction box.",
+    "synonyms": [
+      "fault",
+      "electrical fault"
+    ],
+    "collocations": [
+      "short circuit current",
+      "short circuit study",
+      "short circuit protection"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "fault",
+      "protection",
+      "safety"
+    ]
+  },
+  {
+    "word": "load flow",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "analysis of power movement",
+    "definition": "Load flow analysis calculates voltage, current, power, and losses in an electrical network.",
+    "example": "The consultant requested a revised load flow study after the chiller load increased.",
+    "synonyms": [
+      "power flow",
+      "network study"
+    ],
+    "collocations": [
+      "load flow study",
+      "load flow result",
+      "load flow model"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "design",
+      "analysis",
+      "power"
+    ]
+  },
+  {
+    "word": "selectivity",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "coordinated protection behavior",
+    "definition": "Selectivity ensures the protective device nearest to a fault trips before upstream devices.",
+    "example": "The protection engineer adjusted the breaker curves to improve selectivity.",
+    "synonyms": [
+      "discrimination",
+      "coordination"
+    ],
+    "collocations": [
+      "protection selectivity",
+      "selectivity study",
+      "selective tripping"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "protection",
+      "coordination",
+      "design"
+    ]
+  },
+  {
+    "word": "harmonics",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "distorted electrical wave components",
+    "definition": "Harmonics are unwanted frequency components that distort voltage or current waveforms.",
+    "example": "The data center added harmonic filters after the UPS caused distortion on the LV board.",
+    "synonyms": [
+      "waveform distortion",
+      "electrical distortion"
+    ],
+    "collocations": [
+      "harmonic filter",
+      "harmonic analysis",
+      "total harmonic distortion"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "power-quality",
+      "ups",
+      "testing"
+    ]
+  },
+  {
+    "word": "voltage drop",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "loss of voltage along a circuit",
+    "definition": "Voltage drop is the reduction in voltage between the source and the load caused by conductor impedance.",
+    "example": "The feeder size was increased because the calculated voltage drop exceeded the specification.",
+    "synonyms": [
+      "voltage loss",
+      "line drop"
+    ],
+    "collocations": [
+      "voltage drop calculation",
+      "allowable voltage drop",
+      "excessive voltage drop"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "cables",
+      "design",
+      "calculation"
+    ]
+  },
+  {
+    "word": "feeder",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Electrical Engineering",
+    "meaning": "circuit supplying a load or board",
+    "definition": "A feeder is a cable or circuit that supplies power from a source to equipment or a distribution board.",
+    "example": "The site team labelled each feeder before terminating it inside the MCC.",
+    "synonyms": [
+      "supply circuit",
+      "outgoing circuit"
+    ],
+    "collocations": [
+      "main feeder",
+      "feeder cable",
+      "feeder protection"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "cables",
+      "distribution",
+      "installation"
+    ]
+  },
+  {
+    "word": "termination",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "connection at the end of a cable",
+    "definition": "Termination is the prepared connection of a cable core to equipment, terminals, or accessories.",
+    "example": "QA asked for photos of each cable termination before closing the panel covers.",
+    "synonyms": [
+      "connection",
+      "cable end"
+    ],
+    "collocations": [
+      "cable termination",
+      "gland termination",
+      "termination kit"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "cables",
+      "installation",
+      "qa"
+    ]
+  },
+  {
+    "word": "cable tray",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Electrical Engineering",
+    "meaning": "support system for cables",
+    "definition": "A cable tray is a metal or plastic support used to route and protect cables.",
+    "example": "The electrical tray was lowered to avoid clashing with the chilled water pipe.",
+    "synonyms": [
+      "tray",
+      "cable support"
+    ],
+    "collocations": [
+      "galvanized cable tray",
+      "cable tray route",
+      "tray support"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "containment",
+      "coordination",
+      "site"
+    ]
+  },
+  {
+    "word": "conduit",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Electrical Engineering",
+    "meaning": "pipe protecting wires or cables",
+    "definition": "A conduit protects electrical wiring and provides a defined route through walls or slabs.",
+    "example": "The architect asked the team to conceal the conduit inside the partition.",
+    "synonyms": [
+      "duct",
+      "pipe"
+    ],
+    "collocations": [
+      "metal conduit",
+      "flexible conduit",
+      "conduit route"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "containment",
+      "wiring",
+      "architecture"
+    ]
+  },
+  {
+    "word": "isolation",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "safe disconnection from energy",
+    "definition": "Isolation means separating equipment from its energy source before inspection or maintenance.",
+    "example": "The technician confirmed electrical isolation before opening the motor terminal box.",
+    "synonyms": [
+      "disconnection",
+      "separation"
+    ],
+    "collocations": [
+      "electrical isolation",
+      "isolation point",
+      "safe isolation"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "safety",
+      "maintenance",
+      "loto"
+    ]
+  },
+  {
+    "word": "energize",
+    "partOfSpeech": "verb",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "supply power to equipment",
+    "definition": "To energize equipment is to connect it to a live electrical supply.",
+    "example": "The client allowed the team to energize the panel after all pre-commissioning checks were signed.",
+    "synonyms": [
+      "power up",
+      "switch on"
+    ],
+    "collocations": [
+      "energize a panel",
+      "energize safely",
+      "energization permit"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "commissioning",
+      "power",
+      "safety"
+    ]
+  },
+  {
+    "word": "nameplate rating",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "manufacturer rated capacity",
+    "definition": "A nameplate rating is the official capacity or electrical value printed on equipment by the manufacturer.",
+    "example": "The inspector compared the installed motor with the nameplate rating in the approved submittal.",
+    "synonyms": [
+      "rated value",
+      "equipment rating"
+    ],
+    "collocations": [
+      "check nameplate rating",
+      "motor nameplate",
+      "rated current"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "inspection",
+      "equipment",
+      "qa"
+    ]
+  },
+  {
+    "word": "single-line diagram",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "simplified electrical network drawing",
+    "definition": "A single-line diagram represents a power system using one line for each circuit path.",
+    "example": "The consultant marked the single-line diagram to show the revised generator connection.",
+    "synonyms": [
+      "SLD",
+      "one-line diagram"
+    ],
+    "collocations": [
+      "review the single-line diagram",
+      "approved SLD",
+      "power distribution SLD"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "drawings",
+      "design",
+      "power"
+    ]
+  },
+  {
+    "word": "chiller",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "machine that produces chilled water",
+    "definition": "A chiller removes heat from water so it can be circulated through an HVAC cooling system.",
+    "example": "The commissioning engineer checked the chiller flow rate before starting the performance test.",
+    "synonyms": [
+      "cooling machine",
+      "water chiller"
+    ],
+    "collocations": [
+      "air-cooled chiller",
+      "chiller plant",
+      "chiller capacity"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "hvac",
+      "cooling",
+      "plant"
+    ]
+  },
+  {
+    "word": "pump",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "machine that moves fluid",
+    "definition": "A pump moves water or another fluid through pipes by creating pressure and flow.",
+    "example": "The maintenance team aligned the pump before connecting it to the chilled water line.",
+    "synonyms": [
+      "circulator",
+      "fluid pump"
+    ],
+    "collocations": [
+      "booster pump",
+      "pump curve",
+      "pump alignment"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "fluid",
+      "plant",
+      "installation"
+    ]
+  },
+  {
+    "word": "valve",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "device controlling fluid flow",
+    "definition": "A valve opens, closes, or regulates the flow of liquid, gas, or air in a system.",
+    "example": "The supervisor asked for the valve tag number before approving the shutdown.",
+    "synonyms": [
+      "control valve",
+      "shut-off valve"
+    ],
+    "collocations": [
+      "isolation valve",
+      "valve schedule",
+      "valve actuator"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "piping",
+      "controls",
+      "operation"
+    ]
+  },
+  {
+    "word": "actuator",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "device that moves a valve or damper",
+    "definition": "An actuator converts a control signal into mechanical movement.",
+    "example": "The BMS contractor replaced the actuator because the damper was not responding.",
+    "synonyms": [
+      "drive",
+      "motorized operator"
+    ],
+    "collocations": [
+      "valve actuator",
+      "damper actuator",
+      "electric actuator"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "controls",
+      "bms",
+      "hvac"
+    ]
+  },
+  {
+    "word": "damper",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "airflow control device",
+    "definition": "A damper regulates or stops airflow inside ductwork.",
+    "example": "The fire damper was tested during the life-safety commissioning sequence.",
+    "synonyms": [
+      "air damper",
+      "blade damper"
+    ],
+    "collocations": [
+      "fire damper",
+      "volume control damper",
+      "damper position"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "ductwork",
+      "fire-safety",
+      "hvac"
+    ]
+  },
+  {
+    "word": "ductwork",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "network of air ducts",
+    "definition": "Ductwork carries supply, return, or exhaust air through a building.",
+    "example": "The ductwork route was revised to clear the cable tray above the corridor.",
+    "synonyms": [
+      "air ducts",
+      "duct system"
+    ],
+    "collocations": [
+      "galvanized ductwork",
+      "ductwork layout",
+      "ductwork insulation"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "hvac",
+      "coordination",
+      "site"
+    ]
+  },
+  {
+    "word": "static pressure",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "pressure resisting airflow",
+    "definition": "Static pressure is the pressure in a duct system that the fan must overcome to move air.",
+    "example": "The TAB report showed high static pressure across the filter section.",
+    "synonyms": [
+      "system resistance",
+      "duct pressure"
+    ],
+    "collocations": [
+      "static pressure reading",
+      "external static pressure",
+      "static pressure test"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "hvac",
+      "testing",
+      "airflow"
+    ]
+  },
+  {
+    "word": "flow rate",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "amount of fluid moving per time",
+    "definition": "Flow rate is the volume of fluid passing through a point during a specific time period.",
+    "example": "The consultant rejected the test because the chilled water flow rate was below design.",
+    "synonyms": [
+      "discharge rate",
+      "volume flow"
+    ],
+    "collocations": [
+      "measure flow rate",
+      "design flow rate",
+      "actual flow rate"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "testing",
+      "piping",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "pressure drop",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "loss of pressure across a component",
+    "definition": "Pressure drop is the reduction in pressure as fluid or air passes through equipment, pipework, or filters.",
+    "example": "The engineer calculated the pressure drop across the heat exchanger before selecting the pump.",
+    "synonyms": [
+      "pressure loss",
+      "head loss"
+    ],
+    "collocations": [
+      "pressure drop calculation",
+      "allowable pressure drop",
+      "high pressure drop"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "calculation",
+      "piping",
+      "hvac"
+    ]
+  },
+  {
+    "word": "heat exchanger",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "device transferring heat between fluids",
+    "definition": "A heat exchanger transfers heat between two fluids without mixing them.",
+    "example": "The plate heat exchanger was isolated for cleaning after poor temperature performance.",
+    "synonyms": [
+      "exchanger",
+      "thermal exchanger"
+    ],
+    "collocations": [
+      "plate heat exchanger",
+      "heat exchanger fouling",
+      "heat exchanger capacity"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "thermal",
+      "plant",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "bearing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "part supporting rotating shafts",
+    "definition": "A bearing supports a rotating shaft and reduces friction during operation.",
+    "example": "The vibration report suggested damage to the fan bearing.",
+    "synonyms": [
+      "support bearing",
+      "journal bearing"
+    ],
+    "collocations": [
+      "bearing temperature",
+      "bearing failure",
+      "bearing lubrication"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "rotating-equipment",
+      "maintenance",
+      "vibration"
+    ]
+  },
+  {
+    "word": "vibration",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "oscillating movement in equipment",
+    "definition": "Vibration is repeated movement that can indicate imbalance, misalignment, or mechanical wear.",
+    "example": "The pump was stopped because vibration exceeded the acceptable limit.",
+    "synonyms": [
+      "oscillation",
+      "mechanical vibration"
+    ],
+    "collocations": [
+      "vibration analysis",
+      "high vibration",
+      "vibration sensor"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "maintenance",
+      "testing",
+      "rotating-equipment"
+    ]
+  },
+  {
+    "word": "torque",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "turning force",
+    "definition": "Torque is a rotational force applied to tighten, drive, or rotate a component.",
+    "example": "The technician used a calibrated wrench to apply the specified torque to the flange bolts.",
+    "synonyms": [
+      "turning force",
+      "twisting force"
+    ],
+    "collocations": [
+      "torque wrench",
+      "torque value",
+      "tightening torque"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "installation",
+      "mechanical",
+      "qa"
+    ]
+  },
+  {
+    "word": "alignment",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "correct positioning of connected equipment",
+    "definition": "Alignment ensures shafts, couplings, or components are positioned correctly to avoid stress and wear.",
+    "example": "The pump alignment record was attached to the mechanical completion dossier.",
+    "synonyms": [
+      "positioning",
+      "shaft alignment"
+    ],
+    "collocations": [
+      "laser alignment",
+      "pump alignment",
+      "alignment report"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "installation",
+      "qa",
+      "rotating-equipment"
+    ]
+  },
+  {
+    "word": "balancing",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "adjusting rotating parts or airflow",
+    "definition": "Balancing reduces uneven forces in rotating equipment or distributes air/water flow to design values.",
+    "example": "The fan required balancing after the vibration test failed.",
+    "synonyms": [
+      "adjustment",
+      "equalization"
+    ],
+    "collocations": [
+      "dynamic balancing",
+      "air balancing",
+      "hydronic balancing"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "testing",
+      "commissioning",
+      "hvac"
+    ]
+  },
+  {
+    "word": "flange",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "rim used to connect pipes or equipment",
+    "definition": "A flange is a flat rim that allows pipes, valves, and equipment to be bolted together.",
+    "example": "The QA inspector found a damaged gasket between the two flanges.",
+    "synonyms": [
+      "pipe flange",
+      "connection flange"
+    ],
+    "collocations": [
+      "flange gasket",
+      "flange bolts",
+      "flange connection"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "piping",
+      "installation",
+      "qa"
+    ]
+  },
+  {
+    "word": "gasket",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "seal between two surfaces",
+    "definition": "A gasket is a sealing material placed between flanges or joints to prevent leakage.",
+    "example": "The pressure test failed because the gasket was not seated correctly.",
+    "synonyms": [
+      "seal",
+      "joint seal"
+    ],
+    "collocations": [
+      "rubber gasket",
+      "replace a gasket",
+      "gasket leak"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "piping",
+      "leakage",
+      "testing"
+    ]
+  },
+  {
+    "word": "calibration",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "adjustment against a known standard",
+    "definition": "Calibration compares and adjusts instruments so their readings match an accepted reference.",
+    "example": "The pressure gauge calibration certificate was missing from the handover file.",
+    "synonyms": [
+      "instrument adjustment",
+      "standardization"
+    ],
+    "collocations": [
+      "calibration certificate",
+      "instrument calibration",
+      "calibration record"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "instrumentation",
+      "qa",
+      "handover"
+    ]
+  },
+  {
+    "word": "thermal expansion",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "size change due to temperature",
+    "definition": "Thermal expansion is the increase in length or volume of a material as temperature rises.",
+    "example": "The pipe supports were revised to allow thermal expansion during operation.",
+    "synonyms": [
+      "heat expansion",
+      "expansion movement"
+    ],
+    "collocations": [
+      "thermal expansion joint",
+      "allow for thermal expansion",
+      "expansion loop"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "piping",
+      "design",
+      "stress"
+    ]
+  },
+  {
+    "word": "preventive maintenance",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "planned maintenance before failure",
+    "definition": "Preventive maintenance is scheduled work carried out to reduce the chance of equipment failure.",
+    "example": "The facilities team added the pumps to the preventive maintenance plan.",
+    "synonyms": [
+      "planned maintenance",
+      "scheduled maintenance"
+    ],
+    "collocations": [
+      "preventive maintenance plan",
+      "PM schedule",
+      "maintenance checklist"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "maintenance",
+      "operation",
+      "planning"
+    ]
+  },
+  {
+    "word": "rebar",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "steel bar reinforcing concrete",
+    "definition": "Rebar is steel reinforcement placed inside concrete to improve tensile strength.",
+    "example": "The inspector checked the rebar spacing before allowing the concrete pour.",
+    "synonyms": [
+      "reinforcement bar",
+      "steel reinforcement"
+    ],
+    "collocations": [
+      "rebar spacing",
+      "rebar cage",
+      "rebar cover"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "concrete",
+      "structure",
+      "inspection"
+    ]
+  },
+  {
+    "word": "formwork",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "temporary mould for concrete",
+    "definition": "Formwork is a temporary structure that holds fresh concrete until it gains strength.",
+    "example": "The formwork was inspected before the slab was poured.",
+    "synonyms": [
+      "shuttering",
+      "mould"
+    ],
+    "collocations": [
+      "formwork system",
+      "remove formwork",
+      "formwork inspection"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "concrete",
+      "site",
+      "temporary-works"
+    ]
+  },
+  {
+    "word": "footing",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "foundation element spreading load",
+    "definition": "A footing transfers building loads from columns or walls into the ground.",
+    "example": "The footing depth was increased after the soil report identified weaker material.",
+    "synonyms": [
+      "foundation base",
+      "spread footing"
+    ],
+    "collocations": [
+      "isolated footing",
+      "footing excavation",
+      "footing reinforcement"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "foundation",
+      "structure",
+      "soil"
+    ]
+  },
+  {
+    "word": "slab",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "flat concrete structural element",
+    "definition": "A slab is a flat horizontal concrete element used for floors, roofs, or foundations.",
+    "example": "The MEP team marked sleeve locations before casting the slab.",
+    "synonyms": [
+      "floor slab",
+      "concrete slab"
+    ],
+    "collocations": [
+      "slab thickness",
+      "cast a slab",
+      "slab opening"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "concrete",
+      "structure",
+      "coordination"
+    ]
+  },
+  {
+    "word": "column",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "vertical load-bearing member",
+    "definition": "A column carries loads from beams or slabs down to foundations.",
+    "example": "The structural engineer asked for a survey check on the column position.",
+    "synonyms": [
+      "pillar",
+      "vertical member"
+    ],
+    "collocations": [
+      "concrete column",
+      "column reinforcement",
+      "column grid"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "structure",
+      "concrete",
+      "survey"
+    ]
+  },
+  {
+    "word": "beam",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Civil Engineering",
+    "meaning": "horizontal load-bearing member",
+    "definition": "A beam supports loads and transfers them to columns, walls, or other supports.",
+    "example": "The contractor could not core through the beam without structural approval.",
+    "synonyms": [
+      "girder",
+      "horizontal member"
+    ],
+    "collocations": [
+      "transfer beam",
+      "beam depth",
+      "beam reinforcement"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "structure",
+      "coordination",
+      "design"
+    ]
+  },
+  {
+    "word": "shear wall",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "wall resisting lateral forces",
+    "definition": "A shear wall is a structural wall designed to resist wind or seismic lateral loads.",
+    "example": "The architect coordinated door openings around the shear wall locations.",
+    "synonyms": [
+      "lateral wall",
+      "structural wall"
+    ],
+    "collocations": [
+      "shear wall opening",
+      "reinforced shear wall",
+      "shear wall layout"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "structure",
+      "seismic",
+      "architecture"
+    ]
+  },
+  {
+    "word": "settlement",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Civil Engineering",
+    "meaning": "downward movement of ground or structure",
+    "definition": "Settlement is the downward movement of soil or a structure due to loading or ground changes.",
+    "example": "The monitoring report showed minor settlement near the excavation boundary.",
+    "synonyms": [
+      "subsidence",
+      "ground movement"
+    ],
+    "collocations": [
+      "differential settlement",
+      "settlement monitoring",
+      "allowable settlement"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "geotechnical",
+      "monitoring",
+      "risk"
+    ]
+  },
+  {
+    "word": "compaction",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "densifying soil or fill",
+    "definition": "Compaction increases soil density to improve bearing capacity and reduce future settlement.",
+    "example": "The backfill failed because the compaction test result was below specification.",
+    "synonyms": [
+      "densification",
+      "soil compaction"
+    ],
+    "collocations": [
+      "compaction test",
+      "compaction layer",
+      "compaction requirement"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "earthworks",
+      "testing",
+      "qa"
+    ]
+  },
+  {
+    "word": "curing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "controlled moisture and temperature for concrete",
+    "definition": "Curing maintains moisture and temperature so concrete can develop strength properly.",
+    "example": "The site team covered the slab for curing immediately after finishing.",
+    "synonyms": [
+      "concrete curing",
+      "moisture curing"
+    ],
+    "collocations": [
+      "curing period",
+      "curing compound",
+      "proper curing"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "concrete",
+      "quality",
+      "site"
+    ]
+  },
+  {
+    "word": "aggregate",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "granular material in concrete",
+    "definition": "Aggregate is sand, gravel, or crushed stone used in concrete or road construction.",
+    "example": "The concrete mix was rejected because the aggregate grading did not match the approved design.",
+    "synonyms": [
+      "gravel",
+      "stone aggregate"
+    ],
+    "collocations": [
+      "coarse aggregate",
+      "aggregate grading",
+      "aggregate source"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "materials",
+      "concrete",
+      "qa"
+    ]
+  },
+  {
+    "word": "bearing capacity",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Civil Engineering",
+    "meaning": "soil ability to support load",
+    "definition": "Bearing capacity is the maximum pressure soil can safely support from a foundation.",
+    "example": "The geotechnical report confirmed adequate bearing capacity for shallow footings.",
+    "synonyms": [
+      "soil capacity",
+      "allowable bearing"
+    ],
+    "collocations": [
+      "allowable bearing capacity",
+      "bearing capacity test",
+      "soil bearing capacity"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "geotechnical",
+      "foundation",
+      "design"
+    ]
+  },
+  {
+    "word": "retaining wall",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "wall holding back soil",
+    "definition": "A retaining wall supports soil at different levels and prevents collapse or movement.",
+    "example": "The retaining wall drainage detail was revised after the design review.",
+    "synonyms": [
+      "earth-retaining wall",
+      "support wall"
+    ],
+    "collocations": [
+      "retaining wall design",
+      "retaining wall drainage",
+      "retaining wall backfill"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "structure",
+      "earthworks",
+      "drainage"
+    ]
+  },
+  {
+    "word": "punch list",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "list of defects or incomplete work",
+    "definition": "A punch list records remaining defects or incomplete items before handover.",
+    "example": "The client refused handover until the punch list items were closed.",
+    "synonyms": [
+      "snag list",
+      "defect list"
+    ],
+    "collocations": [
+      "close a punch list",
+      "punch list item",
+      "final punch list"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "handover",
+      "qa",
+      "site"
+    ]
+  },
+  {
+    "word": "method statement",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "document explaining how work will be done",
+    "definition": "A method statement describes the sequence, resources, risks, and controls for a construction activity.",
+    "example": "The consultant approved the method statement before the lifting operation.",
+    "synonyms": [
+      "work method",
+      "execution procedure"
+    ],
+    "collocations": [
+      "submit a method statement",
+      "approved method statement",
+      "method statement review"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "site",
+      "planning",
+      "safety"
+    ]
+  },
+  {
+    "word": "inspection request",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "formal request for inspection",
+    "definition": "An inspection request asks the consultant or client to inspect completed work.",
+    "example": "The QA engineer raised an inspection request for the cable tray installation.",
+    "synonyms": [
+      "IR",
+      "inspection notice"
+    ],
+    "collocations": [
+      "submit an inspection request",
+      "approved inspection request",
+      "IR status"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "inspection",
+      "site"
+    ]
+  },
+  {
+    "word": "shop drawing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "detailed drawing for fabrication or installation",
+    "definition": "A shop drawing shows how approved design information will be fabricated, assembled, or installed.",
+    "example": "The site team could not proceed because the shop drawing was still under review.",
+    "synonyms": [
+      "working drawing",
+      "fabrication drawing"
+    ],
+    "collocations": [
+      "approved shop drawing",
+      "shop drawing revision",
+      "submit shop drawings"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "drawings",
+      "coordination",
+      "approval"
+    ]
+  },
+  {
+    "word": "as-built drawing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "drawing showing final installed condition",
+    "definition": "An as-built drawing records the actual installed arrangement after construction changes.",
+    "example": "The handover dossier included updated as-built drawings for all containment routes.",
+    "synonyms": [
+      "record drawing",
+      "final drawing"
+    ],
+    "collocations": [
+      "as-built markup",
+      "as-built drawing submission",
+      "prepare as-builts"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "handover",
+      "drawings",
+      "records"
+    ]
+  },
+  {
+    "word": "site instruction",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "formal instruction issued on site",
+    "definition": "A site instruction directs a contractor to carry out, change, or correct work.",
+    "example": "The contractor requested a cost assessment after receiving the site instruction.",
+    "synonyms": [
+      "field instruction",
+      "written instruction"
+    ],
+    "collocations": [
+      "issue a site instruction",
+      "site instruction log",
+      "respond to a site instruction"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "contract",
+      "site",
+      "communication"
+    ]
+  },
+  {
+    "word": "workfront",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "available area for work activity",
+    "definition": "A workfront is an area or scope where a crew can start or continue work.",
+    "example": "The planner reported that the electrical team had no clear workfront on level three.",
+    "synonyms": [
+      "work area",
+      "available front"
+    ],
+    "collocations": [
+      "release a workfront",
+      "blocked workfront",
+      "workfront availability"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "planning",
+      "site",
+      "coordination"
+    ]
+  },
+  {
+    "word": "access constraint",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Construction",
+    "meaning": "restriction affecting entry or movement",
+    "definition": "An access constraint is a limitation that prevents people, materials, or equipment from reaching a work area.",
+    "example": "The crane delivery was delayed due to an access constraint at the service road.",
+    "synonyms": [
+      "access restriction",
+      "site constraint"
+    ],
+    "collocations": [
+      "resolve access constraints",
+      "access constraint log",
+      "temporary access constraint"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "logistics",
+      "planning",
+      "site"
+    ]
+  },
+  {
+    "word": "facade",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Architecture",
+    "meaning": "external face of a building",
+    "definition": "A facade is the visible external face or envelope of a building.",
+    "example": "The facade contractor coordinated bracket locations with the structural engineer.",
+    "synonyms": [
+      "building exterior",
+      "external elevation"
+    ],
+    "collocations": [
+      "facade system",
+      "facade panel",
+      "facade inspection"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "building-envelope",
+      "design",
+      "coordination"
+    ]
+  },
+  {
+    "word": "atrium",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "large open interior space",
+    "definition": "An atrium is a tall open space inside a building, often connecting several floors.",
+    "example": "The smoke control strategy was reviewed because the atrium connects five levels.",
+    "synonyms": [
+      "open hall",
+      "central void"
+    ],
+    "collocations": [
+      "atrium smoke control",
+      "atrium glazing",
+      "atrium design"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "life-safety",
+      "architecture",
+      "hvac"
+    ]
+  },
+  {
+    "word": "partition",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Architecture",
+    "meaning": "non-structural dividing wall",
+    "definition": "A partition divides interior spaces without usually carrying structural loads.",
+    "example": "The electrical sockets were relocated after the partition layout changed.",
+    "synonyms": [
+      "internal wall",
+      "divider"
+    ],
+    "collocations": [
+      "drywall partition",
+      "partition layout",
+      "partition thickness"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "interiors",
+      "coordination",
+      "fit-out"
+    ]
+  },
+  {
+    "word": "egress",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Architecture",
+    "meaning": "safe exit path from a building",
+    "definition": "Egress is the route people use to leave a building safely during normal use or an emergency.",
+    "example": "The fire consultant rejected the layout because the egress width was insufficient.",
+    "synonyms": [
+      "exit route",
+      "means of escape"
+    ],
+    "collocations": [
+      "egress route",
+      "egress width",
+      "emergency egress"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "life-safety",
+      "code",
+      "architecture"
+    ]
+  },
+  {
+    "word": "building envelope",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Architecture",
+    "meaning": "outer shell separating inside and outside",
+    "definition": "The building envelope includes walls, roof, glazing, and insulation that protect interior spaces.",
+    "example": "The design review focused on air leakage through the building envelope.",
+    "synonyms": [
+      "external shell",
+      "enclosure"
+    ],
+    "collocations": [
+      "building envelope performance",
+      "envelope detail",
+      "thermal envelope"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "facade",
+      "energy",
+      "design"
+    ]
+  },
+  {
+    "word": "louver",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "slatted opening for air movement",
+    "definition": "A louver is a set of angled slats that allows airflow while limiting rain, views, or debris.",
+    "example": "The generator room louver size was increased to meet ventilation requirements.",
+    "synonyms": [
+      "vent grille",
+      "slatted vent"
+    ],
+    "collocations": [
+      "intake louver",
+      "acoustic louver",
+      "louver schedule"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "ventilation",
+      "facade",
+      "coordination"
+    ]
+  },
+  {
+    "word": "ceiling void",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "space above a suspended ceiling",
+    "definition": "A ceiling void is the concealed space above ceiling panels where services often run.",
+    "example": "The ceiling void was too shallow for the duct and cable tray crossing.",
+    "synonyms": [
+      "ceiling space",
+      "plenum"
+    ],
+    "collocations": [
+      "ceiling void coordination",
+      "restricted ceiling void",
+      "services in the void"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "coordination",
+      "interiors",
+      "mep"
+    ]
+  },
+  {
+    "word": "finish schedule",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "document listing finishes by area",
+    "definition": "A finish schedule lists floor, wall, ceiling, and other surface finishes for each space.",
+    "example": "Procurement used the finish schedule to confirm tile quantities.",
+    "synonyms": [
+      "finishes schedule",
+      "material schedule"
+    ],
+    "collocations": [
+      "review the finish schedule",
+      "approved finish schedule",
+      "room finish schedule"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "interiors",
+      "procurement",
+      "design"
+    ]
+  },
+  {
+    "word": "baseline programme",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "approved schedule used for comparison",
+    "definition": "A baseline programme is the approved project schedule used to measure progress and delays.",
+    "example": "The planner compared actual progress against the baseline programme in the weekly report.",
+    "synonyms": [
+      "baseline schedule",
+      "approved programme"
+    ],
+    "collocations": [
+      "baseline programme update",
+      "recover the baseline",
+      "baseline comparison"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "planning",
+      "controls",
+      "schedule"
+    ]
+  },
+  {
+    "word": "milestone",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Project Management",
+    "meaning": "important project date or event",
+    "definition": "A milestone is a key date or deliverable used to track project progress.",
+    "example": "Factory acceptance testing became a critical milestone for the switchgear package.",
+    "synonyms": [
+      "key date",
+      "target date"
+    ],
+    "collocations": [
+      "project milestone",
+      "contract milestone",
+      "milestone delay"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "schedule",
+      "delivery",
+      "reporting"
+    ]
+  },
+  {
+    "word": "critical path",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "sequence controlling project finish date",
+    "definition": "The critical path is the longest sequence of dependent activities that determines the project completion date.",
+    "example": "The delay to transformer delivery affected the critical path.",
+    "synonyms": [
+      "longest path",
+      "controlling sequence"
+    ],
+    "collocations": [
+      "critical path activity",
+      "critical path delay",
+      "critical path analysis"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "planning",
+      "risk",
+      "schedule"
+    ]
+  },
+  {
+    "word": "float",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "time an activity can slip without delaying project completion",
+    "definition": "Float is available time before an activity delay affects a milestone or completion date.",
+    "example": "The planner warned that the cable pulling activity had no remaining float.",
+    "synonyms": [
+      "slack",
+      "schedule allowance"
+    ],
+    "collocations": [
+      "total float",
+      "free float",
+      "consume float"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "planning",
+      "schedule",
+      "controls"
+    ]
+  },
+  {
+    "word": "risk register",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "list of project risks and actions",
+    "definition": "A risk register records risks, owners, probability, impact, and mitigation actions.",
+    "example": "The project manager added late authority approval to the risk register.",
+    "synonyms": [
+      "risk log",
+      "risk tracker"
+    ],
+    "collocations": [
+      "update the risk register",
+      "risk register owner",
+      "risk mitigation plan"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "risk",
+      "management",
+      "reporting"
+    ]
+  },
+  {
+    "word": "variation order",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "approved change to contract scope or price",
+    "definition": "A variation order formally changes the contract scope, value, or time.",
+    "example": "The contractor submitted a variation order for the additional cable route.",
+    "synonyms": [
+      "change order",
+      "contract variation"
+    ],
+    "collocations": [
+      "approve a variation order",
+      "variation order claim",
+      "VO submission"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "contract",
+      "commercial",
+      "change"
+    ]
+  },
+  {
+    "word": "procurement schedule",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "plan for purchasing and delivery",
+    "definition": "A procurement schedule tracks submittals, approvals, manufacturing, delivery, and site need dates.",
+    "example": "The procurement schedule showed that the pumps would arrive after the planned installation date.",
+    "synonyms": [
+      "buying schedule",
+      "material schedule"
+    ],
+    "collocations": [
+      "update procurement schedule",
+      "procurement lead time",
+      "procurement tracker"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "procurement",
+      "planning",
+      "delivery"
+    ]
+  },
+  {
+    "word": "stakeholder",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "person or group affected by project decisions",
+    "definition": "A stakeholder is anyone with an interest in or influence over a project.",
+    "example": "The project team mapped stakeholders before changing the road closure plan.",
+    "synonyms": [
+      "interested party",
+      "project party"
+    ],
+    "collocations": [
+      "stakeholder meeting",
+      "stakeholder approval",
+      "stakeholder requirement"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "communication",
+      "management",
+      "coordination"
+    ]
+  },
+  {
+    "word": "permit to work",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Health & Safety",
+    "meaning": "formal permission for controlled work",
+    "definition": "A permit to work authorizes hazardous or controlled activities after risks and controls are reviewed.",
+    "example": "The supervisor refused to start hot work without a valid permit to work.",
+    "synonyms": [
+      "work permit",
+      "safety permit"
+    ],
+    "collocations": [
+      "issue a permit to work",
+      "permit validity",
+      "PTW system"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "safety",
+      "site",
+      "authorization"
+    ]
+  },
+  {
+    "word": "toolbox talk",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Health & Safety",
+    "meaning": "short safety briefing before work",
+    "definition": "A toolbox talk is a short site briefing about hazards, controls, and safe work methods.",
+    "example": "The safety officer gave a toolbox talk before the confined space entry.",
+    "synonyms": [
+      "safety briefing",
+      "pre-task briefing"
+    ],
+    "collocations": [
+      "daily toolbox talk",
+      "toolbox talk record",
+      "conduct a toolbox talk"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "safety",
+      "briefing",
+      "site"
+    ]
+  },
+  {
+    "word": "lockout-tagout",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Health & Safety",
+    "meaning": "procedure preventing unexpected energization",
+    "definition": "Lockout-tagout is a safety procedure that isolates energy and identifies who controls the lock.",
+    "example": "The technician applied lockout-tagout before servicing the pump starter.",
+    "synonyms": [
+      "LOTO",
+      "energy isolation"
+    ],
+    "collocations": [
+      "lockout-tagout procedure",
+      "LOTO lock",
+      "apply lockout-tagout"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "safety",
+      "electrical",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "hazard",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Health & Safety",
+    "meaning": "source of possible harm",
+    "definition": "A hazard is anything that can cause injury, illness, damage, or loss.",
+    "example": "Loose materials near the stairwell were reported as a trip hazard.",
+    "synonyms": [
+      "danger",
+      "risk source"
+    ],
+    "collocations": [
+      "identify a hazard",
+      "hazard report",
+      "site hazard"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "safety",
+      "risk",
+      "inspection"
+    ]
+  },
+  {
+    "word": "risk assessment",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Health & Safety",
+    "meaning": "process of evaluating hazards and controls",
+    "definition": "A risk assessment identifies hazards, estimates risk, and defines control measures.",
+    "example": "The lifting plan was rejected because the risk assessment did not cover wind conditions.",
+    "synonyms": [
+      "risk review",
+      "safety assessment"
+    ],
+    "collocations": [
+      "prepare a risk assessment",
+      "risk assessment matrix",
+      "review risk assessment"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "safety",
+      "planning",
+      "controls"
+    ]
+  },
+  {
+    "word": "near miss",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Health & Safety",
+    "meaning": "incident that could have caused harm",
+    "definition": "A near miss is an unplanned event that did not cause injury but had the potential to do so.",
+    "example": "The falling bolt was recorded as a near miss and discussed in the safety meeting.",
+    "synonyms": [
+      "close call",
+      "potential incident"
+    ],
+    "collocations": [
+      "report a near miss",
+      "near miss investigation",
+      "near miss record"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "incident",
+      "reporting",
+      "safety"
+    ]
+  },
+  {
+    "word": "PPE",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Health & Safety",
+    "meaning": "personal protective equipment",
+    "definition": "PPE is equipment worn to reduce exposure to workplace hazards.",
+    "example": "Visitors were not allowed on site without the required PPE.",
+    "synonyms": [
+      "protective gear",
+      "safety equipment"
+    ],
+    "collocations": [
+      "wear PPE",
+      "PPE requirement",
+      "PPE inspection"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "safety",
+      "site",
+      "compliance"
+    ]
+  },
+  {
+    "word": "confined space",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Health & Safety",
+    "meaning": "enclosed area with special entry risks",
+    "definition": "A confined space is an enclosed or partly enclosed area with limited access and potential atmospheric hazards.",
+    "example": "The tank was treated as a confined space and required gas testing before entry.",
+    "synonyms": [
+      "restricted space",
+      "enclosed space"
+    ],
+    "collocations": [
+      "confined space permit",
+      "confined space entry",
+      "confined space rescue"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "safety",
+      "permit",
+      "site"
+    ]
+  },
+  {
+    "word": "pre-commissioning",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "checks before formal commissioning",
+    "definition": "Pre-commissioning includes inspections and static checks completed before systems are operated.",
+    "example": "The team completed pre-commissioning checks before starting the chilled water pumps.",
+    "synonyms": [
+      "pre-start checks",
+      "static checks"
+    ],
+    "collocations": [
+      "pre-commissioning checklist",
+      "pre-commissioning activity",
+      "pre-commissioning dossier"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "commissioning",
+      "testing",
+      "handover"
+    ]
+  },
+  {
+    "word": "functional test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "test proving operation against intent",
+    "definition": "A functional test verifies that equipment or a system operates as designed.",
+    "example": "The fire alarm functional test confirmed that the AHU shut down correctly.",
+    "synonyms": [
+      "operation test",
+      "performance check"
+    ],
+    "collocations": [
+      "functional test script",
+      "functional test result",
+      "perform a functional test"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "commissioning",
+      "testing",
+      "operation"
+    ]
+  },
+  {
+    "word": "integrated systems test",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "test proving multiple systems work together",
+    "definition": "An integrated systems test verifies interfaces between systems during a realistic scenario.",
+    "example": "The integrated systems test checked fire alarm, lifts, smoke fans, and access control together.",
+    "synonyms": [
+      "IST",
+      "interface test"
+    ],
+    "collocations": [
+      "integrated systems test script",
+      "IST scenario",
+      "IST report"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "commissioning",
+      "interfaces",
+      "life-safety"
+    ]
+  },
+  {
+    "word": "witness test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "test observed by client or consultant",
+    "definition": "A witness test is performed while an authorized party observes and accepts the result.",
+    "example": "The consultant attended the witness test for the generator load bank.",
+    "synonyms": [
+      "observed test",
+      "client-witnessed test"
+    ],
+    "collocations": [
+      "witness test form",
+      "witness test date",
+      "witnessed by consultant"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "commissioning",
+      "qa",
+      "client"
+    ]
+  },
+  {
+    "word": "snagging",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Commissioning",
+    "meaning": "recording minor defects before handover",
+    "definition": "Snagging is the process of identifying incomplete or defective work before acceptance.",
+    "example": "The commissioning manager scheduled snagging after the final room inspection.",
+    "synonyms": [
+      "defect listing",
+      "punching"
+    ],
+    "collocations": [
+      "snagging list",
+      "snagging inspection",
+      "close snagging items"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "handover",
+      "defects",
+      "inspection"
+    ]
+  },
+  {
+    "word": "handover dossier",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "final record package for client handover",
+    "definition": "A handover dossier contains approved records, test results, manuals, certificates, and as-built information.",
+    "example": "The client would not accept the plantroom without a complete handover dossier.",
+    "synonyms": [
+      "turnover package",
+      "handover file"
+    ],
+    "collocations": [
+      "compile handover dossier",
+      "handover dossier review",
+      "final handover dossier"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "handover",
+      "records",
+      "qa"
+    ]
+  },
+  {
+    "word": "O&M manual",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "operation and maintenance manual",
+    "definition": "An O&M manual explains how to operate, maintain, and troubleshoot installed equipment or systems.",
+    "example": "Facilities asked for the O&M manual before taking over the booster pump set.",
+    "synonyms": [
+      "operation manual",
+      "maintenance manual"
+    ],
+    "collocations": [
+      "submit O&M manuals",
+      "O&M manual review",
+      "approved O&M manual"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "handover",
+      "maintenance",
+      "documentation"
+    ]
+  },
+  {
+    "word": "seasonal commissioning",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "testing systems in different weather seasons",
+    "definition": "Seasonal commissioning verifies system performance under conditions not available at initial handover.",
+    "example": "The cooling system required seasonal commissioning during peak summer load.",
+    "synonyms": [
+      "seasonal testing",
+      "deferred commissioning"
+    ],
+    "collocations": [
+      "seasonal commissioning plan",
+      "seasonal test",
+      "seasonal performance check"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "commissioning",
+      "performance",
+      "hvac"
+    ]
+  },
+  {
+    "word": "factory acceptance test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "test at manufacturer before delivery",
+    "definition": "A factory acceptance test verifies equipment at the factory before shipment to site.",
+    "example": "The client attended the factory acceptance test for the LV switchboard.",
+    "synonyms": [
+      "FAT",
+      "factory test"
+    ],
+    "collocations": [
+      "FAT procedure",
+      "FAT report",
+      "attend the FAT"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "testing",
+      "factory",
+      "procurement"
+    ]
+  },
+  {
+    "word": "site acceptance test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "test on site before acceptance",
+    "definition": "A site acceptance test verifies equipment after installation at the project site.",
+    "example": "The UPS passed the site acceptance test after battery autonomy was confirmed.",
+    "synonyms": [
+      "SAT",
+      "site test"
+    ],
+    "collocations": [
+      "SAT checklist",
+      "SAT report",
+      "perform SAT"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "testing",
+      "site",
+      "acceptance"
+    ]
+  },
+  {
+    "word": "pressure test",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Testing",
+    "meaning": "test checking leakage under pressure",
+    "definition": "A pressure test verifies that pipework or vessels can hold pressure without leakage.",
+    "example": "The chilled water pipe failed the pressure test at the valve flange.",
+    "synonyms": [
+      "leak test",
+      "hydrostatic test"
+    ],
+    "collocations": [
+      "conduct a pressure test",
+      "pressure test certificate",
+      "pressure test failure"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "piping",
+      "qa",
+      "testing"
+    ]
+  },
+  {
+    "word": "load bank test",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Testing",
+    "meaning": "test applying artificial electrical load",
+    "definition": "A load bank test applies controlled load to a generator or UPS to verify performance.",
+    "example": "The generator completed a four-hour load bank test at eighty percent load.",
+    "synonyms": [
+      "dummy load test",
+      "load test"
+    ],
+    "collocations": [
+      "load bank test report",
+      "perform load bank test",
+      "resistive load bank"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "generator",
+      "ups",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "continuity test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "test confirming an electrical path",
+    "definition": "A continuity test checks whether a conductor or circuit path is complete.",
+    "example": "The technician performed a continuity test on each control cable core.",
+    "synonyms": [
+      "circuit check",
+      "conductor test"
+    ],
+    "collocations": [
+      "continuity test result",
+      "perform continuity test",
+      "earth continuity test"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "electrical",
+      "testing",
+      "cables"
+    ]
+  },
+  {
+    "word": "calibrated instrument",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "instrument verified against a standard",
+    "definition": "A calibrated instrument has been checked against a standard and is suitable for reliable measurement.",
+    "example": "QA rejected the reading because the pressure gauge was not a calibrated instrument.",
+    "synonyms": [
+      "certified instrument",
+      "verified meter"
+    ],
+    "collocations": [
+      "use a calibrated instrument",
+      "calibrated test equipment",
+      "instrument certificate"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "testing",
+      "measurement"
+    ]
+  },
+  {
+    "word": "test certificate",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Testing",
+    "meaning": "document confirming test result",
+    "definition": "A test certificate records that a test was completed and states the accepted result.",
+    "example": "The handover file was missing the fire pump test certificate.",
+    "synonyms": [
+      "test record",
+      "certificate"
+    ],
+    "collocations": [
+      "submit test certificate",
+      "approved test certificate",
+      "manufacturer test certificate"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "documentation",
+      "qa",
+      "handover"
+    ]
+  },
+  {
+    "word": "acceptance criteria",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Testing",
+    "meaning": "requirements used to judge pass or fail",
+    "definition": "Acceptance criteria define the conditions that must be met for a test or deliverable to be accepted.",
+    "example": "The team agreed acceptance criteria before starting the integrated systems test.",
+    "synonyms": [
+      "pass criteria",
+      "approval criteria"
+    ],
+    "collocations": [
+      "define acceptance criteria",
+      "meet acceptance criteria",
+      "test acceptance criteria"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "testing",
+      "quality",
+      "client"
+    ]
+  },
+  {
+    "word": "rack",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Data Centers",
+    "meaning": "frame holding IT equipment",
+    "definition": "A rack is a cabinet or frame used to mount servers, switches, and patch panels.",
+    "example": "The network team reserved two racks for the new storage equipment.",
+    "synonyms": [
+      "cabinet",
+      "server rack"
+    ],
+    "collocations": [
+      "rack elevation",
+      "rack space",
+      "rack layout"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "it",
+      "white-space",
+      "equipment"
+    ]
+  },
+  {
+    "word": "hot aisle",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "aisle receiving hot exhaust air",
+    "definition": "A hot aisle is the row space where server racks discharge warm exhaust air.",
+    "example": "Containment panels were added above the hot aisle to improve cooling efficiency.",
+    "synonyms": [
+      "exhaust aisle",
+      "warm aisle"
+    ],
+    "collocations": [
+      "hot aisle containment",
+      "hot aisle temperature",
+      "hot aisle layout"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "cooling",
+      "white-space",
+      "design"
+    ]
+  },
+  {
+    "word": "cold aisle",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "aisle supplying cold intake air",
+    "definition": "A cold aisle is the row space where servers receive chilled supply air.",
+    "example": "The operator found blocked floor grilles in the cold aisle during inspection.",
+    "synonyms": [
+      "supply aisle",
+      "cool aisle"
+    ],
+    "collocations": [
+      "cold aisle containment",
+      "cold aisle pressure",
+      "cold aisle temperature"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "cooling",
+      "operation",
+      "inspection"
+    ]
+  },
+  {
+    "word": "PUE",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "data center energy efficiency metric",
+    "definition": "PUE measures total facility energy divided by IT equipment energy.",
+    "example": "The client asked for a lower PUE target during the sustainability review.",
+    "synonyms": [
+      "power usage effectiveness",
+      "energy ratio"
+    ],
+    "collocations": [
+      "calculate PUE",
+      "target PUE",
+      "annual PUE"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "energy",
+      "sustainability",
+      "operation"
+    ]
+  },
+  {
+    "word": "redundancy",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "extra capacity for resilience",
+    "definition": "Redundancy provides backup equipment or paths so service continues after a failure.",
+    "example": "The design provides N+1 redundancy for the cooling plant.",
+    "synonyms": [
+      "backup capacity",
+      "resilience"
+    ],
+    "collocations": [
+      "N+1 redundancy",
+      "power redundancy",
+      "redundant path"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "resilience",
+      "design",
+      "uptime"
+    ]
+  },
+  {
+    "word": "UPS",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "uninterruptible power supply",
+    "definition": "A UPS provides temporary power when the main electrical supply fails or fluctuates.",
+    "example": "The UPS alarm was investigated before the planned shutdown.",
+    "synonyms": [
+      "backup power unit",
+      "uninterruptible supply"
+    ],
+    "collocations": [
+      "UPS battery",
+      "UPS bypass",
+      "UPS autonomy"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "power",
+      "backup",
+      "operation"
+    ]
+  },
+  {
+    "word": "CRAC unit",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "computer room air conditioning unit",
+    "definition": "A CRAC unit controls temperature and airflow in data center spaces.",
+    "example": "The CRAC unit filter alarm appeared during the weekly facilities check.",
+    "synonyms": [
+      "computer room AC",
+      "precision cooling unit"
+    ],
+    "collocations": [
+      "CRAC unit maintenance",
+      "CRAC unit airflow",
+      "CRAC unit alarm"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "cooling",
+      "operation",
+      "facilities"
+    ]
+  },
+  {
+    "word": "structured cabling",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "organized telecommunications cabling system",
+    "definition": "Structured cabling is a standardized cabling system for data, voice, and network services.",
+    "example": "The installer tested every structured cabling link before handover.",
+    "synonyms": [
+      "network cabling",
+      "IT cabling"
+    ],
+    "collocations": [
+      "structured cabling system",
+      "structured cabling test",
+      "structured cabling rack"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "network",
+      "testing",
+      "it"
+    ]
+  },
+  {
+    "word": "clarify",
+    "partOfSpeech": "verb",
+    "CEFR": "B1",
+    "discipline": "General Professional English",
+    "meaning": "make information clearer",
+    "definition": "To clarify means to make a point, instruction, or requirement easier to understand.",
+    "example": "The engineer asked the consultant to clarify the comment before revising the drawing.",
+    "synonyms": [
+      "explain",
+      "make clear"
+    ],
+    "collocations": [
+      "clarify a requirement",
+      "clarify the scope",
+      "clarify a comment"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "meetings",
+      "email",
+      "communication"
+    ]
+  },
+  {
+    "word": "confirm",
+    "partOfSpeech": "verb",
+    "CEFR": "B1",
+    "discipline": "General Professional English",
+    "meaning": "state that something is correct or agreed",
+    "definition": "To confirm means to verify or formally state that information is correct.",
+    "example": "Please confirm whether the inspection can proceed tomorrow morning.",
+    "synonyms": [
+      "verify",
+      "validate"
+    ],
+    "collocations": [
+      "confirm attendance",
+      "confirm approval",
+      "confirm the date"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "email",
+      "meetings",
+      "coordination"
+    ]
+  },
+  {
+    "word": "mitigate",
+    "partOfSpeech": "verb",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "reduce the effect of a problem",
+    "definition": "To mitigate means to reduce risk, delay, damage, or negative impact.",
+    "example": "The team proposed night shifts to mitigate the schedule delay.",
+    "synonyms": [
+      "reduce",
+      "lessen"
+    ],
+    "collocations": [
+      "mitigate risk",
+      "mitigate delay",
+      "mitigation action"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "risk",
+      "management",
+      "reports"
+    ]
+  },
+  {
+    "word": "escalate",
+    "partOfSpeech": "verb",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "raise an issue to a higher level",
+    "definition": "To escalate means to bring an issue to senior people because it cannot be solved at the current level.",
+    "example": "The site manager escalated the access issue to the client representative.",
+    "synonyms": [
+      "raise",
+      "refer upward"
+    ],
+    "collocations": [
+      "escalate an issue",
+      "escalate to management",
+      "formal escalation"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "meetings",
+      "management",
+      "communication"
+    ]
+  },
+  {
+    "word": "deviation",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "difference from an approved requirement",
+    "definition": "A deviation is a departure from a specification, drawing, method, or approved requirement.",
+    "example": "The QA report recorded a deviation from the approved cable tray route.",
+    "synonyms": [
+      "nonconformance",
+      "departure"
+    ],
+    "collocations": [
+      "technical deviation",
+      "record a deviation",
+      "deviation request"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "reports",
+      "compliance"
+    ]
+  },
+  {
+    "word": "constraint",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "limitation affecting work or decisions",
+    "definition": "A constraint is a condition that limits what can be done, when, or how.",
+    "example": "The low ceiling height became a major coordination constraint.",
+    "synonyms": [
+      "limitation",
+      "restriction"
+    ],
+    "collocations": [
+      "site constraint",
+      "design constraint",
+      "access constraint"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "coordination",
+      "planning",
+      "risk"
+    ]
+  },
+  {
+    "word": "deliverable",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "agreed output to be submitted",
+    "definition": "A deliverable is a document, drawing, system, or result that must be provided under a project agreement.",
+    "example": "The commissioning plan was listed as a key deliverable for this month.",
+    "synonyms": [
+      "submission",
+      "output"
+    ],
+    "collocations": [
+      "project deliverable",
+      "submit a deliverable",
+      "deliverable tracker"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "project",
+      "documents",
+      "management"
+    ]
+  },
+  {
+    "word": "action owner",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Meetings",
+    "meaning": "person responsible for completing an action",
+    "definition": "An action owner is the person assigned to complete a task after a meeting or review.",
+    "example": "The minutes named the electrical lead as the action owner for the cable schedule.",
+    "synonyms": [
+      "responsible person",
+      "task owner"
+    ],
+    "collocations": [
+      "assign an action owner",
+      "action owner deadline",
+      "confirm action owner"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "meetings",
+      "coordination",
+      "minutes"
+    ]
+  },
+  {
+    "word": "minutes of meeting",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Meetings",
+    "meaning": "written record of meeting discussion and actions",
+    "definition": "Minutes of meeting record decisions, actions, owners, and important discussion points.",
+    "example": "The project manager circulated the minutes of meeting within twenty-four hours.",
+    "synonyms": [
+      "meeting minutes",
+      "MoM"
+    ],
+    "collocations": [
+      "issue minutes of meeting",
+      "approve meeting minutes",
+      "MoM action list"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "meetings",
+      "records",
+      "communication"
+    ]
+  },
+  {
+    "word": "agenda",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Meetings",
+    "meaning": "list of meeting topics",
+    "definition": "An agenda is a planned list of topics to be discussed in a meeting.",
+    "example": "The chair added commissioning access to the agenda for the coordination meeting.",
+    "synonyms": [
+      "meeting plan",
+      "topic list"
+    ],
+    "collocations": [
+      "prepare an agenda",
+      "agenda item",
+      "meeting agenda"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "meetings",
+      "planning",
+      "communication"
+    ]
+  },
+  {
+    "word": "consensus",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Meetings",
+    "meaning": "general agreement among participants",
+    "definition": "Consensus is a shared agreement reached by most or all stakeholders after discussion.",
+    "example": "The design team reached consensus on the revised plantroom layout.",
+    "synonyms": [
+      "agreement",
+      "common view"
+    ],
+    "collocations": [
+      "reach consensus",
+      "technical consensus",
+      "stakeholder consensus"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "meetings",
+      "decision",
+      "coordination"
+    ]
+  },
+  {
+    "word": "load schedule",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "table listing connected electrical loads",
+    "definition": "A load schedule lists equipment loads, demand factors, circuit references, and connected capacity.",
+    "example": "The electrical engineer updated the load schedule after the tenant added kitchen equipment.",
+    "synonyms": [
+      "load list",
+      "electrical schedule"
+    ],
+    "collocations": [
+      "prepare a load schedule",
+      "approved load schedule",
+      "connected load schedule"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "design",
+      "loads",
+      "documentation"
+    ]
+  },
+  {
+    "word": "diversity factor",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "allowance for loads not running together",
+    "definition": "A diversity factor accounts for the fact that not all connected loads operate at full demand at the same time.",
+    "example": "The consultant challenged the diversity factor used for the residential distribution board.",
+    "synonyms": [
+      "demand diversity",
+      "load diversity"
+    ],
+    "collocations": [
+      "apply diversity factor",
+      "diversity factor calculation",
+      "electrical diversity factor"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "design",
+      "calculation",
+      "loads"
+    ]
+  },
+  {
+    "word": "fault current",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "current flowing during an electrical fault",
+    "definition": "Fault current is the abnormal current that flows when a short circuit or earth fault occurs.",
+    "example": "The breaker rating was checked against the calculated fault current.",
+    "synonyms": [
+      "short-circuit current",
+      "fault level"
+    ],
+    "collocations": [
+      "fault current calculation",
+      "prospective fault current",
+      "fault current rating"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "protection",
+      "fault",
+      "design"
+    ]
+  },
+  {
+    "word": "arc flash",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "dangerous electrical discharge through air",
+    "definition": "An arc flash is a high-energy electrical explosion caused by current passing through air.",
+    "example": "The safety briefing explained arc flash boundaries before panel testing.",
+    "synonyms": [
+      "electrical arc",
+      "arc blast"
+    ],
+    "collocations": [
+      "arc flash study",
+      "arc flash label",
+      "arc flash hazard"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "safety",
+      "electrical",
+      "risk"
+    ]
+  },
+  {
+    "word": "residual current device",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "device detecting leakage current",
+    "definition": "A residual current device trips when leakage current suggests a shock or earth fault risk.",
+    "example": "The RCD was tested at the temporary site distribution board.",
+    "synonyms": [
+      "RCD",
+      "earth leakage breaker"
+    ],
+    "collocations": [
+      "RCD test",
+      "RCD protection",
+      "RCD trip time"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "protection",
+      "safety",
+      "testing"
+    ]
+  },
+  {
+    "word": "surge protection",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "protection against voltage spikes",
+    "definition": "Surge protection limits transient overvoltage caused by lightning or switching events.",
+    "example": "The data rack panel included surge protection for sensitive network equipment.",
+    "synonyms": [
+      "transient protection",
+      "SPD"
+    ],
+    "collocations": [
+      "surge protection device",
+      "install surge protection",
+      "surge protection rating"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "power-quality",
+      "protection",
+      "data-centers"
+    ]
+  },
+  {
+    "word": "power factor",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "ratio of real power to apparent power",
+    "definition": "Power factor indicates how effectively electrical power is converted into useful work.",
+    "example": "The utility required power factor correction for the large motor loads.",
+    "synonyms": [
+      "PF",
+      "power efficiency ratio"
+    ],
+    "collocations": [
+      "power factor correction",
+      "low power factor",
+      "power factor penalty"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "power-quality",
+      "calculation",
+      "utilities"
+    ]
+  },
+  {
+    "word": "capacitor bank",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "equipment improving power factor",
+    "definition": "A capacitor bank supplies reactive power to improve power factor and reduce electrical losses.",
+    "example": "The capacitor bank was isolated after the protection relay alarm.",
+    "synonyms": [
+      "PF correction bank",
+      "reactive power bank"
+    ],
+    "collocations": [
+      "capacitor bank step",
+      "capacitor bank panel",
+      "automatic capacitor bank"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "power-quality",
+      "equipment",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "motor control center",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Electrical Engineering",
+    "meaning": "panel controlling multiple motors",
+    "definition": "A motor control center contains starters, protection, and controls for several motors.",
+    "example": "The MCC schedule was revised after the pump motor sizes changed.",
+    "synonyms": [
+      "MCC",
+      "motor panel"
+    ],
+    "collocations": [
+      "MCC compartment",
+      "MCC lineup",
+      "MCC testing"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "motors",
+      "panels",
+      "controls"
+    ]
+  },
+  {
+    "word": "variable frequency drive",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Electrical Engineering",
+    "meaning": "drive controlling motor speed",
+    "definition": "A variable frequency drive controls motor speed by adjusting electrical frequency and voltage.",
+    "example": "The VFD parameters were adjusted to reduce pump start-up pressure surges.",
+    "synonyms": [
+      "VFD",
+      "speed drive"
+    ],
+    "collocations": [
+      "VFD setting",
+      "VFD panel",
+      "VFD commissioning"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "motors",
+      "controls",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "air handling unit",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "equipment conditioning and moving air",
+    "definition": "An air handling unit filters, heats, cools, or moves air through an HVAC system.",
+    "example": "The AHU access door was blocked by temporary materials during inspection.",
+    "synonyms": [
+      "AHU",
+      "air handler"
+    ],
+    "collocations": [
+      "AHU filter",
+      "AHU schedule",
+      "AHU commissioning"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "hvac",
+      "equipment",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "fan coil unit",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "terminal HVAC cooling or heating unit",
+    "definition": "A fan coil unit uses a fan and coil to condition air in a room or zone.",
+    "example": "The tenant complained that the fan coil unit above the office was noisy.",
+    "synonyms": [
+      "FCU",
+      "terminal unit"
+    ],
+    "collocations": [
+      "FCU drain",
+      "FCU valve package",
+      "fan coil maintenance"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "hvac",
+      "fit-out",
+      "operation"
+    ]
+  },
+  {
+    "word": "expansion vessel",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "tank absorbing water expansion",
+    "definition": "An expansion vessel absorbs pressure changes caused by thermal expansion in a closed water system.",
+    "example": "The pressure fluctuated because the expansion vessel had lost its charge.",
+    "synonyms": [
+      "expansion tank",
+      "pressure vessel"
+    ],
+    "collocations": [
+      "expansion vessel pre-charge",
+      "closed expansion vessel",
+      "expansion vessel sizing"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "piping",
+      "plant",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "strainer",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "device catching debris in fluid",
+    "definition": "A strainer removes debris from water or fluid before it reaches sensitive equipment.",
+    "example": "The commissioning team cleaned the strainer after flushing the chilled water loop.",
+    "synonyms": [
+      "filter basket",
+      "pipeline strainer"
+    ],
+    "collocations": [
+      "Y-strainer",
+      "clean the strainer",
+      "strainer basket"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "piping",
+      "maintenance",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "flushing",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "cleaning pipes by circulating fluid",
+    "definition": "Flushing removes debris, scale, and contaminants from pipework before operation.",
+    "example": "The consultant requested flushing records before approving pump start-up.",
+    "synonyms": [
+      "pipe cleaning",
+      "system flushing"
+    ],
+    "collocations": [
+      "chemical flushing",
+      "flushing velocity",
+      "flushing report"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "piping",
+      "commissioning",
+      "cleaning"
+    ]
+  },
+  {
+    "word": "differential pressure",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "difference between two pressure points",
+    "definition": "Differential pressure is the pressure difference measured across equipment, filters, or pipe sections.",
+    "example": "The dirty filter alarm was triggered by high differential pressure.",
+    "synonyms": [
+      "pressure difference",
+      "DP"
+    ],
+    "collocations": [
+      "differential pressure sensor",
+      "DP reading",
+      "differential pressure switch"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "hvac",
+      "instrumentation",
+      "testing"
+    ]
+  },
+  {
+    "word": "condensate drain",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Mechanical Engineering",
+    "meaning": "pipe removing condensed water",
+    "definition": "A condensate drain carries water produced by cooling coils or air conditioning equipment.",
+    "example": "The ceiling leak came from a blocked condensate drain above the meeting room.",
+    "synonyms": [
+      "drain line",
+      "condensate pipe"
+    ],
+    "collocations": [
+      "condensate drain pan",
+      "blocked condensate drain",
+      "condensate drain slope"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "hvac",
+      "maintenance",
+      "water"
+    ]
+  },
+  {
+    "word": "heat load",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "amount of heat a system must remove or add",
+    "definition": "Heat load is the thermal demand used to size cooling or heating equipment.",
+    "example": "The cooling heat load increased after the server room equipment was upgraded.",
+    "synonyms": [
+      "thermal load",
+      "cooling load"
+    ],
+    "collocations": [
+      "calculate heat load",
+      "peak heat load",
+      "heat load estimate"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "hvac",
+      "design",
+      "calculation"
+    ]
+  },
+  {
+    "word": "fresh air rate",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "amount of outside air supplied",
+    "definition": "Fresh air rate is the quantity of outdoor air provided for ventilation and indoor air quality.",
+    "example": "The inspector checked the fresh air rate against the occupancy schedule.",
+    "synonyms": [
+      "outside air rate",
+      "ventilation rate"
+    ],
+    "collocations": [
+      "minimum fresh air rate",
+      "fresh air calculation",
+      "fresh air damper"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "ventilation",
+      "code",
+      "testing"
+    ]
+  },
+  {
+    "word": "acoustic lining",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Mechanical Engineering",
+    "meaning": "sound-absorbing duct or room lining",
+    "definition": "Acoustic lining reduces noise transmission in ducts, plantrooms, or enclosures.",
+    "example": "The consultant requested acoustic lining near the generator exhaust path.",
+    "synonyms": [
+      "sound lining",
+      "noise insulation"
+    ],
+    "collocations": [
+      "duct acoustic lining",
+      "acoustic lining thickness",
+      "install acoustic lining"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "acoustics",
+      "hvac",
+      "design"
+    ]
+  },
+  {
+    "word": "pile foundation",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Civil Engineering",
+    "meaning": "deep foundation transferring load to deeper soil",
+    "definition": "A pile foundation uses long structural elements to transfer loads to deeper, stronger ground.",
+    "example": "The structural design changed to a pile foundation after weak soil was found.",
+    "synonyms": [
+      "deep foundation",
+      "piled foundation"
+    ],
+    "collocations": [
+      "pile foundation design",
+      "bored pile foundation",
+      "pile cap"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "foundation",
+      "geotechnical",
+      "structure"
+    ]
+  },
+  {
+    "word": "pile cap",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "concrete element tying piles together",
+    "definition": "A pile cap connects piles and distributes column or wall loads into them.",
+    "example": "The rebar congestion in the pile cap required a revised pouring sequence.",
+    "synonyms": [
+      "cap block",
+      "foundation cap"
+    ],
+    "collocations": [
+      "pile cap reinforcement",
+      "pile cap concrete",
+      "pile cap layout"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "foundation",
+      "concrete",
+      "structure"
+    ]
+  },
+  {
+    "word": "waterproofing membrane",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "layer preventing water penetration",
+    "definition": "A waterproofing membrane is a protective layer that stops water entering a structure.",
+    "example": "The basement waterproofing membrane was inspected before backfilling.",
+    "synonyms": [
+      "water barrier",
+      "damp-proof membrane"
+    ],
+    "collocations": [
+      "apply waterproofing membrane",
+      "membrane overlap",
+      "waterproofing inspection"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "basement",
+      "materials",
+      "inspection"
+    ]
+  },
+  {
+    "word": "expansion joint",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Civil Engineering",
+    "meaning": "joint allowing movement",
+    "definition": "An expansion joint allows parts of a structure to move without cracking or damage.",
+    "example": "The expansion joint cover was damaged near the entrance lobby.",
+    "synonyms": [
+      "movement joint",
+      "control joint"
+    ],
+    "collocations": [
+      "expansion joint detail",
+      "seal expansion joint",
+      "expansion joint cover"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "structure",
+      "movement",
+      "architecture"
+    ]
+  },
+  {
+    "word": "deflection",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Civil Engineering",
+    "meaning": "bending displacement under load",
+    "definition": "Deflection is the movement or bending of a structural element under load.",
+    "example": "The beam deflection was within the allowable serviceability limit.",
+    "synonyms": [
+      "bending movement",
+      "displacement"
+    ],
+    "collocations": [
+      "allowable deflection",
+      "deflection limit",
+      "measure deflection"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "structure",
+      "calculation",
+      "serviceability"
+    ]
+  },
+  {
+    "word": "camber",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Civil Engineering",
+    "meaning": "intentional upward curve in a beam or slab",
+    "definition": "Camber is a slight upward curve built into a member to offset expected deflection.",
+    "example": "The steel beam was fabricated with camber as shown on the shop drawing.",
+    "synonyms": [
+      "pre-curve",
+      "upward curvature"
+    ],
+    "collocations": [
+      "beam camber",
+      "specified camber",
+      "camber tolerance"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "steel",
+      "structure",
+      "fabrication"
+    ]
+  },
+  {
+    "word": "screed",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Construction",
+    "meaning": "level layer applied over a floor base",
+    "definition": "A screed is a floor layer used to create a smooth, level surface before finishes.",
+    "example": "The tiling could not start because the screed had not cured.",
+    "synonyms": [
+      "floor topping",
+      "leveling layer"
+    ],
+    "collocations": [
+      "cement screed",
+      "screed thickness",
+      "screed level"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "flooring",
+      "finishes",
+      "site"
+    ]
+  },
+  {
+    "word": "blockwork",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Construction",
+    "meaning": "walls built from concrete or masonry blocks",
+    "definition": "Blockwork is wall construction using concrete, masonry, or lightweight blocks.",
+    "example": "The electrical boxes were installed before the blockwork was plastered.",
+    "synonyms": [
+      "masonry wall",
+      "block wall"
+    ],
+    "collocations": [
+      "blockwork opening",
+      "blockwork alignment",
+      "blockwork course"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "masonry",
+      "architecture",
+      "site"
+    ]
+  },
+  {
+    "word": "plastering",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Construction",
+    "meaning": "applying plaster to walls or ceilings",
+    "definition": "Plastering creates a smooth surface on walls or ceilings before painting or finishing.",
+    "example": "The plastering crew repaired the wall after the conduit change.",
+    "synonyms": [
+      "rendering",
+      "wall finishing"
+    ],
+    "collocations": [
+      "plastering work",
+      "plastering defect",
+      "plastering thickness"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "finishes",
+      "site",
+      "interiors"
+    ]
+  },
+  {
+    "word": "grouting",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "filling gaps with grout",
+    "definition": "Grouting fills joints, voids, or spaces around tiles, bases, anchors, or equipment.",
+    "example": "The pump base grouting was completed before final alignment.",
+    "synonyms": [
+      "filling",
+      "joint grouting"
+    ],
+    "collocations": [
+      "tile grouting",
+      "baseplate grouting",
+      "non-shrink grout"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "finishes",
+      "mechanical",
+      "qa"
+    ]
+  },
+  {
+    "word": "mobilization",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "preparing resources to start work",
+    "definition": "Mobilization is the process of bringing labor, equipment, materials, and facilities to site.",
+    "example": "The contractor planned mobilization immediately after receiving the letter of award.",
+    "synonyms": [
+      "site setup",
+      "deployment"
+    ],
+    "collocations": [
+      "mobilization plan",
+      "mobilization period",
+      "contractor mobilization"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "planning",
+      "site",
+      "resources"
+    ]
+  },
+  {
+    "word": "demobilization",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "removing resources after work",
+    "definition": "Demobilization is the removal of temporary facilities, equipment, and teams after completion.",
+    "example": "Demobilization was delayed because several punch list items remained open.",
+    "synonyms": [
+      "site clearance",
+      "resource withdrawal"
+    ],
+    "collocations": [
+      "demobilization plan",
+      "demobilization cost",
+      "final demobilization"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "closeout",
+      "site",
+      "planning"
+    ]
+  },
+  {
+    "word": "material submittal",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Construction",
+    "meaning": "formal submission of proposed materials",
+    "definition": "A material submittal provides product data, samples, and compliance information for approval.",
+    "example": "The consultant rejected the material submittal because the cable tray coating was not specified.",
+    "synonyms": [
+      "product submittal",
+      "material approval"
+    ],
+    "collocations": [
+      "submit material submittal",
+      "approved material submittal",
+      "material submittal log"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "procurement",
+      "approval",
+      "qa"
+    ]
+  },
+  {
+    "word": "mock-up",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "sample installation for review",
+    "definition": "A mock-up is a sample of work built to confirm appearance, quality, and coordination before full installation.",
+    "example": "The client approved the hotel room mock-up after reviewing finishes and lighting.",
+    "synonyms": [
+      "sample room",
+      "prototype"
+    ],
+    "collocations": [
+      "facade mock-up",
+      "room mock-up",
+      "approve the mock-up"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "quality",
+      "architecture",
+      "client"
+    ]
+  },
+  {
+    "word": "setback",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "required distance from boundary or edge",
+    "definition": "A setback is the required distance between a building element and a property line, road, or other limit.",
+    "example": "The balcony design was revised to comply with the setback requirement.",
+    "synonyms": [
+      "offset",
+      "required clearance"
+    ],
+    "collocations": [
+      "building setback",
+      "setback line",
+      "setback requirement"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "planning",
+      "code",
+      "design"
+    ]
+  },
+  {
+    "word": "floor area ratio",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Architecture",
+    "meaning": "ratio of building floor area to plot area",
+    "definition": "Floor area ratio measures total building floor area compared with the site area.",
+    "example": "The developer reduced one floor to comply with the permitted floor area ratio.",
+    "synonyms": [
+      "FAR",
+      "plot ratio"
+    ],
+    "collocations": [
+      "calculate floor area ratio",
+      "maximum FAR",
+      "approved plot ratio"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "planning",
+      "urban-design",
+      "code"
+    ]
+  },
+  {
+    "word": "accessibility",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "design suitability for people with different abilities",
+    "definition": "Accessibility means buildings can be used safely and comfortably by people with different mobility or sensory needs.",
+    "example": "The ramp gradient was changed to improve accessibility at the main entrance.",
+    "synonyms": [
+      "universal access",
+      "barrier-free design"
+    ],
+    "collocations": [
+      "accessibility requirement",
+      "accessibility review",
+      "accessibility compliance"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "code",
+      "design",
+      "inclusion"
+    ]
+  },
+  {
+    "word": "wayfinding",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Architecture",
+    "meaning": "design helping people navigate spaces",
+    "definition": "Wayfinding uses signs, layouts, landmarks, and visual cues to help people find routes.",
+    "example": "The hospital lobby design improved wayfinding for visitors.",
+    "synonyms": [
+      "navigation design",
+      "directional guidance"
+    ],
+    "collocations": [
+      "wayfinding signage",
+      "wayfinding strategy",
+      "clear wayfinding"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "signage",
+      "public-buildings",
+      "design"
+    ]
+  },
+  {
+    "word": "specification",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "document defining technical requirements",
+    "definition": "A specification states required materials, workmanship, standards, and performance.",
+    "example": "The contractor quoted an alternative pump that did not meet the specification.",
+    "synonyms": [
+      "spec",
+      "technical requirement"
+    ],
+    "collocations": [
+      "project specification",
+      "comply with specification",
+      "specification clause"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "contract",
+      "technical",
+      "qa"
+    ]
+  },
+  {
+    "word": "scope gap",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "missing responsibility between work packages",
+    "definition": "A scope gap occurs when required work is not clearly included in any party’s scope.",
+    "example": "The interface meeting identified a scope gap between the facade and steel contractors.",
+    "synonyms": [
+      "scope omission",
+      "responsibility gap"
+    ],
+    "collocations": [
+      "close scope gap",
+      "scope gap analysis",
+      "identify scope gaps"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "contract",
+      "coordination",
+      "risk"
+    ]
+  },
+  {
+    "word": "interface matrix",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "table showing responsibilities between systems or parties",
+    "definition": "An interface matrix defines who is responsible for each connection, boundary, or dependency.",
+    "example": "The interface matrix clarified who would provide power to the BMS panels.",
+    "synonyms": [
+      "responsibility matrix",
+      "interface register"
+    ],
+    "collocations": [
+      "update interface matrix",
+      "interface matrix owner",
+      "system interface matrix"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "coordination",
+      "management",
+      "interfaces"
+    ]
+  },
+  {
+    "word": "lookahead schedule",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Project Management",
+    "meaning": "short-term schedule for upcoming work",
+    "definition": "A lookahead schedule shows planned activities for the next few weeks in practical site detail.",
+    "example": "The foreman used the three-week lookahead schedule to request materials.",
+    "synonyms": [
+      "short-term programme",
+      "lookahead plan"
+    ],
+    "collocations": [
+      "three-week lookahead",
+      "lookahead meeting",
+      "lookahead schedule update"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "planning",
+      "site",
+      "coordination"
+    ]
+  },
+  {
+    "word": "earned value",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "measure of work performed against plan and budget",
+    "definition": "Earned value compares planned work, actual cost, and completed work to assess project performance.",
+    "example": "The controls report used earned value to show schedule slippage.",
+    "synonyms": [
+      "EV",
+      "performance value"
+    ],
+    "collocations": [
+      "earned value analysis",
+      "earned value report",
+      "earned value management"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "controls",
+      "cost",
+      "schedule"
+    ]
+  },
+  {
+    "word": "cash flow forecast",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Project Management",
+    "meaning": "prediction of incoming and outgoing money",
+    "definition": "A cash flow forecast estimates project payments and expenditures over time.",
+    "example": "Finance requested a revised cash flow forecast after the procurement delay.",
+    "synonyms": [
+      "payment forecast",
+      "cash projection"
+    ],
+    "collocations": [
+      "monthly cash flow forecast",
+      "update cash flow forecast",
+      "cash flow curve"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "commercial",
+      "finance",
+      "planning"
+    ]
+  },
+  {
+    "word": "lost time injury",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Health & Safety",
+    "meaning": "injury causing absence from work",
+    "definition": "A lost time injury is a work-related injury that prevents a person from returning to work for a defined period.",
+    "example": "The monthly safety report recorded zero lost time injuries.",
+    "synonyms": [
+      "LTI",
+      "lost-time accident"
+    ],
+    "collocations": [
+      "lost time injury rate",
+      "report an LTI",
+      "LTI-free hours"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "safety",
+      "reporting",
+      "incident"
+    ]
+  },
+  {
+    "word": "method of rescue",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Health & Safety",
+    "meaning": "planned procedure for rescuing a worker",
+    "definition": "A method of rescue explains how workers will be safely recovered if an emergency occurs.",
+    "example": "The confined space permit was not approved until the method of rescue was defined.",
+    "synonyms": [
+      "rescue plan",
+      "emergency rescue method"
+    ],
+    "collocations": [
+      "prepare method of rescue",
+      "rescue procedure",
+      "rescue team readiness"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "emergency",
+      "permit",
+      "safety"
+    ]
+  },
+  {
+    "word": "exclusion zone",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Health & Safety",
+    "meaning": "area where unauthorized entry is prohibited",
+    "definition": "An exclusion zone keeps people away from hazards such as lifting, demolition, or energized work.",
+    "example": "The lifting supervisor set up an exclusion zone around the crane radius.",
+    "synonyms": [
+      "restricted zone",
+      "barriered area"
+    ],
+    "collocations": [
+      "establish exclusion zone",
+      "exclusion zone barrier",
+      "enter exclusion zone"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "site",
+      "lifting",
+      "risk"
+    ]
+  },
+  {
+    "word": "manual handling",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Health & Safety",
+    "meaning": "lifting or moving loads by hand",
+    "definition": "Manual handling involves carrying, lifting, pushing, or pulling loads using physical effort.",
+    "example": "The toolbox talk covered manual handling techniques for moving cable drums.",
+    "synonyms": [
+      "hand lifting",
+      "physical handling"
+    ],
+    "collocations": [
+      "manual handling risk",
+      "manual handling training",
+      "safe manual handling"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "safety",
+      "ergonomics",
+      "site"
+    ]
+  },
+  {
+    "word": "scaffold tag",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Health & Safety",
+    "meaning": "label showing scaffold inspection status",
+    "definition": "A scaffold tag indicates whether a scaffold is safe to use after inspection.",
+    "example": "Workers were told not to access the platform because the scaffold tag was missing.",
+    "synonyms": [
+      "scaffold label",
+      "access tag"
+    ],
+    "collocations": [
+      "green scaffold tag",
+      "scaffold tag system",
+      "check scaffold tag"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "scaffold",
+      "inspection",
+      "site"
+    ]
+  },
+  {
+    "word": "hot work",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Health & Safety",
+    "meaning": "work creating heat, sparks, or flame",
+    "definition": "Hot work includes welding, grinding, cutting, or other activities that can start a fire.",
+    "example": "The permit required a fire watch for hot work near stored insulation.",
+    "synonyms": [
+      "spark-producing work",
+      "welding work"
+    ],
+    "collocations": [
+      "hot work permit",
+      "hot work area",
+      "hot work control"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "fire-safety",
+      "permit",
+      "site"
+    ]
+  },
+  {
+    "word": "commissioning script",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "planned sequence for a commissioning test",
+    "definition": "A commissioning script sets out steps, expected responses, roles, and acceptance criteria for a test.",
+    "example": "The IST commissioning script was agreed before the witness test.",
+    "synonyms": [
+      "test script",
+      "commissioning procedure"
+    ],
+    "collocations": [
+      "approve commissioning script",
+      "run commissioning script",
+      "scripted test sequence"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "commissioning",
+      "testing",
+      "documentation"
+    ]
+  },
+  {
+    "word": "system readiness",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "condition of being prepared for testing or operation",
+    "definition": "System readiness means equipment, documentation, access, and prerequisites are complete enough for commissioning.",
+    "example": "The meeting focused on system readiness for the fire alarm cause-and-effect test.",
+    "synonyms": [
+      "test readiness",
+      "operational readiness"
+    ],
+    "collocations": [
+      "system readiness review",
+      "confirm system readiness",
+      "readiness checklist"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "commissioning",
+      "planning",
+      "handover"
+    ]
+  },
+  {
+    "word": "cause and effect matrix",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "table linking inputs to required outputs",
+    "definition": "A cause and effect matrix defines how systems should respond to alarms, signals, or events.",
+    "example": "The fire alarm cause and effect matrix showed that smoke fans should start on detector activation.",
+    "synonyms": [
+      "C&E matrix",
+      "control matrix"
+    ],
+    "collocations": [
+      "review cause and effect matrix",
+      "C&E test",
+      "cause and effect logic"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "life-safety",
+      "controls",
+      "testing"
+    ]
+  },
+  {
+    "word": "defect liability period",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Commissioning",
+    "meaning": "period when contractor must fix defects after handover",
+    "definition": "The defect liability period is the contract period after completion when the contractor remains responsible for defects.",
+    "example": "The leaking valve was reported during the defect liability period.",
+    "synonyms": [
+      "DLP",
+      "warranty period"
+    ],
+    "collocations": [
+      "defect liability period starts",
+      "DLP inspection",
+      "DLP obligation"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "handover",
+      "contract",
+      "maintenance"
+    ]
+  },
+  {
+    "word": "commissioning certificate",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Commissioning",
+    "meaning": "document confirming commissioning completion",
+    "definition": "A commissioning certificate records that a system or item has been tested and accepted.",
+    "example": "The consultant signed the commissioning certificate for the booster pump set.",
+    "synonyms": [
+      "test acceptance certificate",
+      "commissioning record"
+    ],
+    "collocations": [
+      "issue commissioning certificate",
+      "signed commissioning certificate",
+      "final commissioning certificate"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "handover",
+      "records",
+      "testing"
+    ]
+  },
+  {
+    "word": "performance test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "test measuring whether equipment meets performance requirements",
+    "definition": "A performance test checks capacity, efficiency, flow, pressure, or other required operating values.",
+    "example": "The chiller performance test was repeated after sensor calibration.",
+    "synonyms": [
+      "capacity test",
+      "operational performance test"
+    ],
+    "collocations": [
+      "performance test result",
+      "run performance test",
+      "performance test criteria"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "testing",
+      "commissioning",
+      "equipment"
+    ]
+  },
+  {
+    "word": "integrity test",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Testing",
+    "meaning": "test proving something is complete and not damaged",
+    "definition": "An integrity test verifies that a system, seal, cable, or enclosure remains intact.",
+    "example": "The containment integrity test confirmed there were no leaks in the clean agent pipework.",
+    "synonyms": [
+      "soundness test",
+      "integrity check"
+    ],
+    "collocations": [
+      "cable integrity test",
+      "pipe integrity test",
+      "integrity test report"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "testing",
+      "qa",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "loop test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "test checking a control loop from field device to controller",
+    "definition": "A loop test verifies wiring, signal transmission, and response between an instrument and control system.",
+    "example": "The BMS contractor completed a loop test for each temperature sensor.",
+    "synonyms": [
+      "signal test",
+      "control loop check"
+    ],
+    "collocations": [
+      "perform loop test",
+      "loop test sheet",
+      "instrument loop test"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "controls",
+      "bms",
+      "commissioning"
+    ]
+  },
+  {
+    "word": "megger test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "insulation resistance test using a megohmmeter",
+    "definition": "A megger test measures insulation resistance in cables or equipment.",
+    "example": "The cable could not be terminated until the megger test passed.",
+    "synonyms": [
+      "IR test",
+      "insulation test"
+    ],
+    "collocations": [
+      "perform megger test",
+      "megger test result",
+      "megger reading"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "electrical",
+      "cables",
+      "testing"
+    ]
+  },
+  {
+    "word": "torque test",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Testing",
+    "meaning": "verification of tightened fasteners",
+    "definition": "A torque test checks whether bolts or terminals are tightened to the specified value.",
+    "example": "The QA checklist required a torque test on all busbar bolts.",
+    "synonyms": [
+      "tightness test",
+      "torque check"
+    ],
+    "collocations": [
+      "torque test record",
+      "terminal torque test",
+      "bolt torque test"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "electrical",
+      "mechanical"
+    ]
+  },
+  {
+    "word": "failover",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "automatic switch to backup system",
+    "definition": "Failover is the automatic transfer to backup equipment or paths when the primary system fails.",
+    "example": "The data center performed a failover test from utility power to generator supply.",
+    "synonyms": [
+      "backup transfer",
+      "automatic switchover"
+    ],
+    "collocations": [
+      "failover test",
+      "network failover",
+      "power failover"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "resilience",
+      "testing",
+      "operations"
+    ]
+  },
+  {
+    "word": "latency",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "delay in data transmission or response",
+    "definition": "Latency is the time delay between a request and a response in a digital system.",
+    "example": "The operations team investigated high latency between the application and storage network.",
+    "synonyms": [
+      "delay",
+      "response time"
+    ],
+    "collocations": [
+      "network latency",
+      "low latency",
+      "latency issue"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "network",
+      "performance",
+      "operations"
+    ]
+  },
+  {
+    "word": "patch panel",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Data Centers",
+    "meaning": "panel for organizing network cable connections",
+    "definition": "A patch panel provides ports where network cables are terminated and cross-connected.",
+    "example": "The technician traced the server connection back to the patch panel.",
+    "synonyms": [
+      "termination panel",
+      "network panel"
+    ],
+    "collocations": [
+      "patch panel port",
+      "fiber patch panel",
+      "patch panel label"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "network",
+      "cabling",
+      "rack"
+    ]
+  },
+  {
+    "word": "fiber backbone",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "main fiber cabling path between areas",
+    "definition": "A fiber backbone is the primary fiber-optic cabling linking rooms, floors, or network zones.",
+    "example": "The fiber backbone was tested before connecting the new data hall.",
+    "synonyms": [
+      "backbone cabling",
+      "fiber trunk"
+    ],
+    "collocations": [
+      "fiber backbone route",
+      "test fiber backbone",
+      "backbone link"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "network",
+      "fiber",
+      "infrastructure"
+    ]
+  },
+  {
+    "word": "cross-connect",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "connection between network circuits or panels",
+    "definition": "A cross-connect links circuits, equipment, or patching fields in a controlled cabling environment.",
+    "example": "The carrier requested a cross-connect from the meet-me room to the client rack.",
+    "synonyms": [
+      "interconnect",
+      "patch connection"
+    ],
+    "collocations": [
+      "order cross-connect",
+      "fiber cross-connect",
+      "cross-connect panel"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "network",
+      "carrier",
+      "operations"
+    ]
+  },
+  {
+    "word": "white space",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "data hall area holding IT equipment",
+    "definition": "White space is the controlled data center area where racks, servers, and network equipment are installed.",
+    "example": "The cooling assessment covered all white space zones in the new data hall.",
+    "synonyms": [
+      "data hall",
+      "IT space"
+    ],
+    "collocations": [
+      "white space layout",
+      "white space cooling",
+      "white space power"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "data-center",
+      "operation",
+      "design"
+    ]
+  },
+  {
+    "word": "meet-me room",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "Data Centers",
+    "meaning": "room where carriers and customers interconnect",
+    "definition": "A meet-me room is a controlled space where telecom carriers and customers connect networks.",
+    "example": "The fiber provider handed over the circuit in the meet-me room.",
+    "synonyms": [
+      "MMR",
+      "carrier room"
+    ],
+    "collocations": [
+      "meet-me room access",
+      "MMR cross-connect",
+      "meet-me room rack"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "network",
+      "carrier",
+      "data-center"
+    ]
+  },
+  {
+    "word": "uptime",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Data Centers",
+    "meaning": "time a system remains operational",
+    "definition": "Uptime is the period when a system or facility is available and functioning.",
+    "example": "The service agreement required very high uptime for the data center cooling system.",
+    "synonyms": [
+      "availability",
+      "operational time"
+    ],
+    "collocations": [
+      "uptime target",
+      "system uptime",
+      "uptime requirement"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "operations",
+      "resilience",
+      "sla"
+    ]
+  },
+  {
+    "word": "service level agreement",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "General Professional English",
+    "meaning": "contracted performance commitment",
+    "definition": "A service level agreement defines expected service performance, response times, and responsibilities.",
+    "example": "The facilities team reviewed the service level agreement after repeated response delays.",
+    "synonyms": [
+      "SLA",
+      "service commitment"
+    ],
+    "collocations": [
+      "SLA requirement",
+      "meet the SLA",
+      "SLA breach"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "contract",
+      "operations",
+      "performance"
+    ]
+  },
+  {
+    "word": "nonconformance report",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "formal report of work not meeting requirements",
+    "definition": "A nonconformance report records work, material, or process that does not meet approved requirements.",
+    "example": "QA issued a nonconformance report for the incorrect cable gland material.",
+    "synonyms": [
+      "NCR",
+      "quality report"
+    ],
+    "collocations": [
+      "raise an NCR",
+      "close nonconformance report",
+      "NCR corrective action"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "compliance",
+      "site"
+    ]
+  },
+  {
+    "word": "corrective action",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "action that removes the cause of a problem",
+    "definition": "Corrective action fixes the root cause of a nonconformance or recurring issue.",
+    "example": "The corrective action required retraining the team on cable termination procedure.",
+    "synonyms": [
+      "remedial action",
+      "fixing action"
+    ],
+    "collocations": [
+      "implement corrective action",
+      "corrective action plan",
+      "corrective action owner"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "qa",
+      "management",
+      "improvement"
+    ]
+  },
+  {
+    "word": "root cause",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "underlying reason for a problem",
+    "definition": "A root cause is the fundamental reason a failure, delay, or defect occurred.",
+    "example": "The investigation found the root cause was an outdated drawing issued to site.",
+    "synonyms": [
+      "underlying cause",
+      "main cause"
+    ],
+    "collocations": [
+      "root cause analysis",
+      "identify root cause",
+      "root cause investigation"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "quality",
+      "incident",
+      "analysis"
+    ]
+  },
+  {
+    "word": "lessons learned",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "knowledge captured from experience",
+    "definition": "Lessons learned are practical insights recorded to improve future projects or activities.",
+    "example": "The project team documented lessons learned after the commissioning delay.",
+    "synonyms": [
+      "project learning",
+      "experience feedback"
+    ],
+    "collocations": [
+      "lessons learned workshop",
+      "capture lessons learned",
+      "lessons learned register"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "management",
+      "improvement",
+      "handover"
+    ]
+  },
+  {
+    "word": "commercial impact",
+    "partOfSpeech": "noun",
+    "CEFR": "C1",
+    "discipline": "General Professional English",
+    "meaning": "financial or contractual effect",
+    "definition": "Commercial impact is the cost, payment, claim, or contract effect of an event or decision.",
+    "example": "The delay notice explained the commercial impact of late design approval.",
+    "synonyms": [
+      "financial impact",
+      "contract impact"
+    ],
+    "collocations": [
+      "assess commercial impact",
+      "commercial impact statement",
+      "commercial impact of delay"
+    ],
+    "difficulty": "Advanced",
+    "tags": [
+      "contract",
+      "finance",
+      "claims"
+    ]
+  },
+  {
+    "word": "technical clarification",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "formal request or answer about technical detail",
+    "definition": "A technical clarification resolves uncertainty about drawings, specifications, scope, or design intent.",
+    "example": "The contractor raised a technical clarification about the fire alarm interface.",
+    "synonyms": [
+      "technical query",
+      "clarification request"
+    ],
+    "collocations": [
+      "issue technical clarification",
+      "technical clarification response",
+      "clarification log"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "communication",
+      "design",
+      "qa"
+    ]
+  },
+  {
+    "word": "coordination clash",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "General Professional English",
+    "meaning": "conflict between systems or trades",
+    "definition": "A coordination clash occurs when two elements need the same space or interfere with each other.",
+    "example": "The BIM review found a coordination clash between the duct and cable ladder.",
+    "synonyms": [
+      "interface clash",
+      "spatial conflict"
+    ],
+    "collocations": [
+      "resolve coordination clash",
+      "clash report",
+      "coordination clash review"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "bim",
+      "coordination",
+      "site"
+    ]
+  },
+  {
+    "word": "priority action",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Meetings",
+    "meaning": "task that must be handled first",
+    "definition": "A priority action is an agreed task that needs urgent or early attention.",
+    "example": "The meeting chair marked the generator fuel issue as a priority action.",
+    "synonyms": [
+      "urgent task",
+      "high-priority item"
+    ],
+    "collocations": [
+      "assign priority action",
+      "priority action list",
+      "close priority action"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "meetings",
+      "planning",
+      "follow-up"
+    ]
+  },
+  {
+    "word": "open item",
+    "partOfSpeech": "noun",
+    "CEFR": "B1",
+    "discipline": "Meetings",
+    "meaning": "issue not yet closed",
+    "definition": "An open item is a task, comment, defect, or question that remains unresolved.",
+    "example": "The consultant asked for an update on all open items before the progress meeting.",
+    "synonyms": [
+      "pending item",
+      "unclosed issue"
+    ],
+    "collocations": [
+      "open item list",
+      "close open item",
+      "track open items"
+    ],
+    "difficulty": "Beginner",
+    "tags": [
+      "meetings",
+      "tracking",
+      "coordination"
+    ]
+  },
+  {
+    "word": "decision log",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Meetings",
+    "meaning": "record of project decisions",
+    "definition": "A decision log records decisions, dates, owners, and the reasons behind them.",
+    "example": "The design manager updated the decision log after the client approved the facade color.",
+    "synonyms": [
+      "decision register",
+      "approval log"
+    ],
+    "collocations": [
+      "maintain decision log",
+      "decision log entry",
+      "review decision log"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "meetings",
+      "records",
+      "management"
+    ]
+  },
+  {
+    "word": "action tracker",
+    "partOfSpeech": "noun",
+    "CEFR": "B2",
+    "discipline": "Meetings",
+    "meaning": "tool for monitoring assigned actions",
+    "definition": "An action tracker records tasks, owners, deadlines, and closure status.",
+    "example": "The weekly action tracker showed that three submittals were overdue.",
+    "synonyms": [
+      "task tracker",
+      "action log"
+    ],
+    "collocations": [
+      "update action tracker",
+      "action tracker status",
+      "close action tracker item"
+    ],
+    "difficulty": "Intermediate",
+    "tags": [
+      "meetings",
+      "follow-up",
+      "management"
+    ]
+  }
+]
