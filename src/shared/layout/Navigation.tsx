@@ -8,6 +8,7 @@ import {
   useLocalizationStore,
 } from '@/features/localization';
 import { ADMIN_PANEL_ENABLED } from '@/config/product.config';
+import { prefetchRoute } from '@/shared/utils/prefetch';
 
 interface NavigationProps {
   onItemClick?: () => void;
@@ -52,6 +53,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
               key={item.label}
               to={item.href}
               onClick={onItemClick}
+              onMouseEnter={() => prefetchRoute(item.href)}
               className={linkClasses}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -86,6 +88,7 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
                     key={child.label}
                     to={child.href}
                     onClick={onItemClick}
+                    onMouseEnter={() => prefetchRoute(child.href)}
                     className={linkClasses}
                   >
                     <child.icon className="h-3.5 w-3.5 shrink-0" />
