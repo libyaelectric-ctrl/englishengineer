@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { ApiError } from './errors.js';
+import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
 
 const requireText = (value, field) => {
   if (typeof value !== 'string' || !value.trim()) {
@@ -417,11 +418,14 @@ export const registerBillingRoutes = (
     rateLimiter,
     async (req, res, next) => {
       try {
+        const userId = assertUserOwnership(req);
+        auditLog({
+          action: AUDIT_ACTIONS.CHECKOUT_CREATED,
+          userId,
+          details: { planId: req.body?.planId },
+        });
         res.json(
-          await billingService.createCheckoutSession(
-            assertUserOwnership(req),
-            req.body
-          )
+          await billingService.createCheckoutSession(userId, req.body)
         );
       } catch (error) {
         next(error);
@@ -488,6 +492,11 @@ export const registerBillingRoutes = (
         }
       }
     } catch {}
+
+    auditLog({
+      action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
+      details: { eventId, eventType },
+    });
 
     console.log(
       `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
