@@ -1,3 +1,12 @@
+/**
+ * LoginPage Component
+ *
+ * Provides multiple authentication flows for users:
+ * 1. Email & Password Sign-in/Sign-up (using Supabase Auth client).
+ * 2. Social OAuth Providers - Integration for Google, LinkedIn, and Apple.
+ * 3. Enterprise Single Sign-On (SSO) - SAML/Okta redirects using corporate email domains.
+ * 4. Local Demo Mode - Fast sandbox login for testing in local environment.
+ */
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuthStore } from '@/features/auth';
@@ -116,6 +125,9 @@ const LoginPage = () => {
   );
   const [error, setError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const [ssoDomain, setSsoDomain] = useState('');
+  const [showSsoForm, setShowSsoForm] = useState(false);
+  const [ssoLoading, setSsoLoading] = useState(false);
   const isSupabaseMode = providerMode === 'supabase';
   const isLocalAuthBlocked = !isSupabaseMode && !AUTH_CONFIG.localAuthAllowed;
   const isLocalDemoMode = !isSupabaseMode && !isLocalAuthBlocked;
@@ -192,6 +204,44 @@ const LoginPage = () => {
       navigate(from, { replace: true });
     } catch (err: unknown) {
       setError(getErrorMessage(err, 'Failed to initialize demo'));
+    }
+  };
+
+  const handleSsoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!ssoDomain.trim()) {
+      setError('Please enter your company domain or SSO Provider ID.');
+      return;
+    }
+
+    const client = getSupabaseClient();
+    if (!client) {
+      setError('SSO requires Supabase authentication to be configured.');
+      return;
+    }
+
+    try {
+      setSsoLoading(true);
+      setError(null);
+      const domainOrId = ssoDomain.trim();
+      const domain = domainOrId.includes('@')
+        ? domainOrId.split('@')[1]
+        : domainOrId;
+      const { data, error: authError } = await client.auth.signInWithSSO({
+        domain,
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+      if (authError) throw authError;
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        setError('No redirect URL returned from SSO provider.');
+      }
+    } catch (err: unknown) {
+      setSsoLoading(false);
+      setError(getErrorMessage(err, 'SSO authentication failed.'));
     }
   };
 
@@ -318,63 +368,123 @@ const LoginPage = () => {
             </div>
           </div>
 
-          {/* Email/Password form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="mb-1.5 block text-xs font-medium text-foreground">
-                {copy.emailLabel}
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
+          {/* Email/Password or SSO Form */}
+          {showSsoForm ? (
+            <form onSubmit={handleSsoSubmit} className="space-y-4">
+              <div>
                 <label className="mb-1.5 block text-xs font-medium text-foreground">
-                  {copy.passwordLabel}
+                  Company email domain
                 </label>
-                {!isSignUpMode && (
-                  <button
-                    type="button"
-                    className="text-xs text-muted-copy hover:text-foreground transition-colors"
-                  >
-                    {copy.forgotPassword}
-                  </button>
-                )}
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
+                  <input
+                    required
+                    type="text"
+                    value={ssoDomain}
+                    onChange={(e) => setSsoDomain(e.target.value)}
+                    className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
+                    placeholder="company.com"
+                  />
+                </div>
+                <p className="mt-1.5 text-[10px] leading-4 text-muted-copy">
+                  Enter your organization's email domain or provider ID to
+                  redirect to SAML SSO.
+                </p>
               </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
 
-            <Button
-              type="submit"
-              disabled={isLoading || isLocalAuthBlocked}
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground text-sm font-medium text-background hover:opacity-90 transition-opacity"
-            >
-              {isLoading
-                ? 'Loading...'
-                : isSignUpMode
-                  ? copy.signupButton
-                  : copy.loginButton}
-              {!isLoading && <ArrowRight className="h-4 w-4" />}
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                disabled={ssoLoading}
+                className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground text-sm font-medium text-background hover:opacity-90 transition-opacity"
+              >
+                {ssoLoading ? 'Connecting to SSO...' : 'Sign in with SSO'}
+                {!ssoLoading && <ArrowRight className="h-4 w-4" />}
+              </Button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSsoForm(false);
+                  setError(null);
+                }}
+                className="w-full text-center text-xs font-medium text-muted-copy hover:text-foreground transition-colors py-2"
+              >
+                ← Back to regular login
+              </button>
+            </form>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="mb-1.5 block text-xs font-medium text-foreground">
+                    {copy.emailLabel}
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between">
+                    <label className="mb-1.5 block text-xs font-medium text-foreground">
+                      {copy.passwordLabel}
+                    </label>
+                    {!isSignUpMode && (
+                      <button
+                        type="button"
+                        className="text-xs text-muted-copy hover:text-foreground transition-colors"
+                      >
+                        {copy.forgotPassword}
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isLoading || isLocalAuthBlocked}
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground text-sm font-medium text-background hover:opacity-90 transition-opacity"
+                >
+                  {isLoading
+                    ? 'Loading...'
+                    : isSignUpMode
+                      ? copy.signupButton
+                      : copy.loginButton}
+                  {!isLoading && <ArrowRight className="h-4 w-4" />}
+                </Button>
+              </form>
+
+              {isSupabaseMode && !isSignUpMode && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSsoForm(true);
+                    setError(null);
+                  }}
+                  className="w-full text-center text-xs font-medium text-muted-copy hover:text-foreground transition-colors pt-2"
+                >
+                  Sign in with Single Sign-On (SSO)
+                </button>
+              )}
+            </>
+          )}
 
           {/* Switch mode */}
           <p className="text-center text-sm text-muted-copy">
