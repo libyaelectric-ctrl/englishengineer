@@ -1,5 +1,51 @@
-import { timingSafeEqual } from 'node:crypto';
+import { timingSafeEqual, webcrypto } from 'node:crypto';
 import { ApiError } from './errors.js';
+
+const subtle = webcrypto.subtle;
+
+const base64urlDecode = (str) => {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) {
+    str += '=';
+  }
+  return Buffer.from(str, 'base64');
+};
+
+const verifyJwtLocally = async (token, jwtSecret) => {
+  if (!token || !jwtSecret) return null;
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const [headerB64, payloadB64, signatureB64] = parts;
+  try {
+    const secretKey = await subtle.importKey(
+      'raw',
+      new TextEncoder().encode(jwtSecret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+    const signatureBytes = base64urlDecode(signatureB64);
+    const dataBytes = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
+    const isValid = await subtle.verify(
+      'HMAC',
+      secretKey,
+      signatureBytes,
+      dataBytes
+    );
+    if (!isValid) return null;
+    const payloadJson = Buffer.from(payloadB64, 'base64').toString('utf8');
+    const payload = JSON.parse(payloadJson);
+    const now = Math.floor(Date.now() / 1000);
+    if (payload.exp && payload.exp < now) {
+      return null;
+    }
+    return typeof payload.sub === 'string' && payload.sub
+      ? { userId: payload.sub, email: payload.email, source: 'local-jwt' }
+      : null;
+  } catch {
+    return null;
+  }
+};
 
 const readBearerToken = (request) => {
   const authorization = request.headers.authorization;
@@ -67,6 +113,11 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
             : undefined,
         source: 'internal-secret',
       };
+    }
+
+    if (config.supabaseJwtSecret && token) {
+      const localUser = await verifyJwtLocally(token, config.supabaseJwtSecret);
+      if (localUser) return localUser;
     }
 
     const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);

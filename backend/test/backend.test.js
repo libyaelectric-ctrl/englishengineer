@@ -402,7 +402,8 @@ test('AI prompt size and rate limit are enforced', async () => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt: 'x'.repeat(20_001) }),
   });
-  assert.equal(oversized.status, 413);
+  assert.equal(oversized.status, 400);
+  assert.equal((await oversized.json()).error.code, 'validation_error');
 
   const limitedUrl = await start({ AI_RATE_LIMIT_MAX: '1' });
   const request = () =>

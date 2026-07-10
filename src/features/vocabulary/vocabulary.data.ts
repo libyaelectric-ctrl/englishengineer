@@ -984,7 +984,7 @@ function buildExpansionRows(): VocabularyContentRow[] {
   // Generate definition based on discipline
   const getDefinition = (term: string, discipline: string, context: string): string => {
     const definitions: Record<string, string> = {
-      'Electrical Engineering': `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında广泛kullanılır.`,
+      'Electrical Engineering': `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında yaygın olarak kullanılır.`,
       'Mechanical Engineering': `${term}, mekanik sistem tasarımında ve işletmesinde temel bir unsurdur. Sistem verimliliği ve güvenilirliği üzerinde doğrudan etkisi vardır.`,
       'Civil Engineering': `${term}, yapısal bütünlük ve inşaat kalitesi açısından temel bir kavramdır. İnşaat mühendisliğinde yapısal uyumluluk için kritiktir.`,
       'Architecture': `${term}, yapılmış mekanların işlevsel ve estetik kalitesine katkıda bulunur. Mimari koordinasyon ve tasarım niyeti için gereklidir.`,
@@ -1056,7 +1056,13 @@ function buildExpansionRows(): VocabularyContentRow[] {
       ],
     };
     const pool = examples[discipline] || [`The ${term} was verified during the quality review.`];
-    return pool[term.length % pool.length];
+    // Hash term+discipline for deterministic but varied selection
+    let hash = 0;
+    const str = term + discipline;
+    for (let i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
+    }
+    return pool[Math.abs(hash) % pool.length];
   };
 
   // Generate varied collocations
