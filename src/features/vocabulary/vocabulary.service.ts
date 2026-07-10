@@ -1,6 +1,6 @@
 import { storage } from '@/shared/storage';
 import { useLearningStore } from '@/core/learning';
-import { VOCABULARY_ENTRIES } from './vocabulary.data';
+import { getVocabularyEntries } from './vocabulary.data';
 import { VocabularyEvaluator } from './vocabulary.evaluator';
 import {
   getPreviousDateKey,
@@ -60,16 +60,16 @@ export const VocabularyService = {
   },
 
   getEntries(): VocabularyEntry[] {
-    return VOCABULARY_ENTRIES;
+    return getVocabularyEntries() ?? [];
   },
 
   getEntryById(id: string): VocabularyEntry | undefined {
-    return VOCABULARY_ENTRIES.find((entry) => entry.id === id);
+    return (getVocabularyEntries() ?? []).find((entry) => entry.id === id);
   },
 
   getDueEntries(
     limit = 12,
-    allowedEntries: VocabularyEntry[] = VOCABULARY_ENTRIES
+    allowedEntries: VocabularyEntry[] = getVocabularyEntries() ?? []
   ): VocabularyEntry[] {
     const state = this.getState();
     const now = new Date();
@@ -166,7 +166,7 @@ export const VocabularyService = {
   addDiscoveredTerms(terms: string[]): void {
     const state = this.getState();
     const normalizedTerms = terms.map((term) => term.toLowerCase());
-    const matchingIds = VOCABULARY_ENTRIES.filter((entry) =>
+    const matchingIds = (getVocabularyEntries() ?? []).filter((entry) =>
       normalizedTerms.some(
         (term) =>
           entry.word.toLowerCase().includes(term) || entry.tags.includes(term)

@@ -1,10 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { VOCABULARY_ENTRIES } from './vocabulary.data';
+import { beforeEach, describe, expect, it, vi, beforeAll } from 'vitest';
+import { loadVocabularyEntries } from './vocabulary.data';
 import {
   clearVocabularyLookupCache,
   lookupExternalVocabulary,
   searchVocabularyEntries,
 } from './vocabulary.search';
+import { VocabularyEntry } from './vocabulary.types';
+
+let entries: VocabularyEntry[] = [];
+
+beforeAll(async () => {
+  entries = await loadVocabularyEntries();
+});
 
 describe('vocabulary search and external lookup', () => {
   beforeEach(() => {
@@ -14,10 +21,10 @@ describe('vocabulary search and external lookup', () => {
 
   it('searches term, meaning, category, tags, related terms and examples', () => {
     expect(
-      searchVocabularyEntries(VOCABULARY_ENTRIES, 'cable tray').length
+      searchVocabularyEntries(entries, 'cable tray').length
     ).toBeGreaterThan(0);
     expect(
-      searchVocabularyEntries(VOCABULARY_ENTRIES, 'Electrical Engineering')
+      searchVocabularyEntries(entries, 'Electrical Engineering')
         .length
     ).toBeGreaterThan(0);
   });
