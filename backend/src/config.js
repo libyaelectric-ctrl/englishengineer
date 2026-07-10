@@ -148,6 +148,9 @@ export const createBackendConfig = (environment = process.env) => {
             environment.SUPABASE_SERVICE_ROLE_KEY
           ).trim()
         : null,
+      supabaseJwtSecret: hasText(environment.SUPABASE_JWT_SECRET)
+        ? environment.SUPABASE_JWT_SECRET.trim()
+        : null,
     },
     stripe: {
       configured: stripeConfigured,
