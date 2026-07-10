@@ -86,7 +86,7 @@ test('AI route rejects an empty prompt', async () => {
   });
   const body = await response.json();
   assert.equal(response.status, 400);
-  assert.equal(body.error.code, 'invalid_prompt');
+  assert.equal(body.error.code, 'validation_error');
 });
 
 test('AI route explicitly labels safe mock mode', async () => {
@@ -294,7 +294,7 @@ test('vocabulary lookup rejects a missing word', async () => {
   const response = await fetch(`${url}/api/vocabulary/lookup?targetLang=tr`);
   const body = await response.json();
   assert.equal(response.status, 400);
-  assert.equal(body.error.code, 'missing_word');
+  assert.equal(body.error.code, 'validation_error');
 });
 
 test('vocabulary lookup handles provider failure safely', async () => {
@@ -392,7 +392,7 @@ test('AI operation is controlled by the route', async () => {
     }),
   });
   assert.equal(response.status, 400);
-  assert.equal((await response.json()).error.code, 'invalid_operation');
+  assert.equal((await response.json()).error.code, 'validation_error');
 });
 
 test('AI prompt size and rate limit are enforced', async () => {

@@ -32,7 +32,7 @@ test('Supabase billing repository maps subscription rows', async () => {
 
   assert.equal(snapshot.planId, 'pro');
   assert.equal(snapshot.stripeCustomerId, 'cus_1');
-  assert.match(calls[0].url, /subscription_status\?user_id=eq.user-1/);
+  assert.match(calls[0].url, /subscription_status\?.*user_id=eq\.user-1/);
   assert.equal(calls[0].init.headers.apikey, 'service-role-test-key');
   assert.equal(
     calls[0].init.headers.Authorization,
@@ -75,7 +75,7 @@ test('Supabase billing repository upserts subscriptions and Stripe events', asyn
   assert.equal(subscriptionBody.plan_id, 'pro');
   assert.equal(eventBody.stripe_event_id, 'evt_1');
   assert.equal(eventBody.event_type, 'checkout.session.completed');
-  assert.match(calls[2].url, /stripe_processed_events\?on_conflict=/);
+  assert.match(calls[2].url, /stripe_processed_events\?.*on_conflict=/);
 });
 
 test('Supabase billing repository surfaces persistence failures', async () => {

@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { ApiError } from './errors.js';
 import { createAiLedger } from './ai-ledger.js';
+import { validateBody, AiRequestBodySchema } from './validation.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
@@ -11,24 +12,7 @@ export const AI_ROUTES = {
   '/api/ai/roleplay': 'generatePractice',
 };
 
-const readPrompt = (body) => {
-  const prompt = typeof body?.prompt === 'string' ? body.prompt.trim() : '';
-  if (!prompt) {
-    throw new ApiError(
-      400,
-      'invalid_prompt',
-      'A non-empty prompt is required.'
-    );
-  }
-  if (prompt.length > 20_000) {
-    throw new ApiError(
-      413,
-      'prompt_too_large',
-      'Prompt must be 20,000 characters or fewer.'
-    );
-  }
-  return prompt;
-};
+const readPrompt = (body) => body?.prompt ?? '';
 
 const mockText = (operation) =>
   `[Mock AI] ${operation} is running in local fallback mode. Configure a supported backend provider for real AI output.`;
@@ -218,12 +202,12 @@ export const registerAIRoutes = (
       path,
       requireBackendAuth,
       rateLimiter,
+      validateBody(AiRequestBodySchema),
       async (request, response, next) => {
         try {
-          if (
-            request.body?.operation !== undefined &&
-            request.body.operation !== defaultOperation
-          ) {
+          const body = request.validatedBody;
+
+          if (body.operation !== undefined && body.operation !== defaultOperation) {
             throw new ApiError(
               400,
               'invalid_operation',
@@ -274,13 +258,13 @@ export const registerAIRoutes = (
           // Complete AI request
           const result = await aiService.complete(
             defaultOperation,
-            request.body
+            body
           );
 
           // Ledger insert on success
           if (result && !result.error && !isBypassUser) {
             ledger.logSession(userId, {
-              modeId: request.body?.modeId || 'unknown',
+              modeId: body.modeId || 'unknown',
               provider: result.provider || 'mock',
               operation: defaultOperation,
               durationMs: result.durationMs || 0,

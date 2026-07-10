@@ -1,33 +1,8 @@
 import { ApiError } from './errors.js';
+import { validateQuery, VocabularyLookupQuerySchema } from './validation.js';
 
 const dictionaryEndpoint = (word) =>
   `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
-
-const readLookupQuery = (query) => {
-  const word = typeof query?.word === 'string' ? query.word.trim() : '';
-  if (!word) {
-    throw new ApiError(400, 'missing_word', 'A vocabulary word is required.');
-  }
-  if (word.length > 100) {
-    throw new ApiError(
-      400,
-      'invalid_word',
-      'Vocabulary words must be 100 characters or fewer.'
-    );
-  }
-  const targetLang =
-    typeof query?.targetLang === 'string' && query.targetLang.trim()
-      ? query.targetLang.trim().toLowerCase()
-      : 'tr';
-  if (!/^[a-z]{2,5}$/.test(targetLang)) {
-    throw new ApiError(
-      400,
-      'invalid_target_language',
-      'targetLang must be a short language code.'
-    );
-  }
-  return { word, targetLang };
-};
 
 const fetchWithTimeout = async (fetchImpl, url, init, timeoutMs) => {
   const controller = new AbortController();
@@ -125,15 +100,74 @@ const translateWithMyMemory = async (config, fetchImpl, text, targetLang) => {
     : null;
 };
 
+export const createUpstashVocabularyCache = ({
+  url,
+  token,
+  timeoutMs = 3000,
+  fetchImpl = fetch,
+}) => ({
+  async get(key) {
+    if (!url || !token) return null;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetchImpl(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(['GET', key]),
+        signal: controller.signal,
+      });
+      if (!response.ok) return null;
+      const payload = await response.json();
+      const value = payload?.result;
+      if (typeof value !== 'string') return null;
+      return JSON.parse(value);
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  },
+  async set(key, value) {
+    if (!url || !token) return;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      await fetchImpl(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify([
+          'SET',
+          key,
+          JSON.stringify(value),
+          'EX',
+          '604800', // 1 week TTL
+        ]),
+        signal: controller.signal,
+      });
+    } catch {
+      // Ignore cache write failures
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  },
+});
+
 export const createVocabularyLookupService = (
   config,
   fetchImpl = fetch,
   cache = new Map()
 ) => ({
   async lookup(query) {
-    const { word, targetLang } = readLookupQuery(query);
-    const cacheKey = `${word.toLowerCase()}|${targetLang}`;
-    const cached = cache.get(cacheKey);
+    const { word, targetLang } = query;
+    const cacheKey = `engineeros:cache:vocab:${word.toLowerCase()}:${targetLang}`;
+    const cached = await cache.get(cacheKey);
     if (cached) return { ...cached, cached: true };
 
     const response = await fetchWithTimeout(
@@ -181,7 +215,7 @@ export const createVocabularyLookupService = (
       translationSource: translation?.source ?? null,
       cached: false,
     };
-    cache.set(cacheKey, result);
+    await cache.set(cacheKey, result);
     return result;
   },
 });
@@ -190,9 +224,10 @@ export const registerVocabularyRoutes = (app, service, rateLimiter) => {
   app.get(
     '/api/vocabulary/lookup',
     rateLimiter,
+    validateQuery(VocabularyLookupQuerySchema),
     async (request, response, next) => {
       try {
-        response.json(await service.lookup(request.query));
+        response.json(await service.lookup(request.validatedQuery));
       } catch (error) {
         next(error);
       }
