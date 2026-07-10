@@ -41,10 +41,9 @@ import {
   type VocabularyTerm,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
-import { ProgressMetrics, MyVocabularySection } from './VocabularyPage/index';
+import { MyVocabularySection } from './VocabularyPage/index';
 
 import { SectionCard } from '@/shared/components/SectionCard';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import {
   LocalizationService,
   useLocalizationStore,
@@ -524,7 +523,7 @@ const VocabularyPage = () => {
   };
 
   const loadNextBatch = () => {
-    const nextOffset = batchOffset + 10;
+    const nextOffset = batchOffset + 9;
     const nextIds = selectSet(activeTab, menuState, learningDomain, nextOffset);
     const resolvedOffset = nextIds.length > 0 ? nextOffset : 0;
     setBatchOffset(resolvedOffset);
@@ -582,8 +581,6 @@ const VocabularyPage = () => {
           <h1 className="text-lg font-semibold text-foreground">Vocabulary</h1>
         </div>
       </div>
-
-      <SkillEntryBrief skill="vocabulary" />
 
       <SectionCard
         title={LocalizationService.translate('vocabulary.search', language)}
@@ -836,7 +833,7 @@ const VocabularyPage = () => {
       </div>
 
       <SectionCard
-        title={`${TAB_LABELS[activeTab]} 10-word set`}
+        title={`${TAB_LABELS[activeTab]} 9-word set`}
         subtitle={`Selected by ${vocabularyProfile.cefrBand}, vocabulary skill use, memory state, and canonical order`}
         icon={BookMarked}
         headerActions={
@@ -889,7 +886,7 @@ const VocabularyPage = () => {
             </div>
             <div className="flex justify-end border-t border-border-soft pt-4">
               <Button variant="outline" onClick={loadNextBatch}>
-                Next 10-word batch
+                Next 9-word batch
               </Button>
             </div>
           </div>
@@ -942,8 +939,6 @@ const VocabularyPage = () => {
           </div>
         )}
       </SectionCard>
-
-      <ProgressMetrics summary={summary} />
 
       <MyVocabularySection
         myVocabulary={menuState.myVocabulary}

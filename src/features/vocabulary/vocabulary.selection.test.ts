@@ -11,7 +11,7 @@ describe('Vocabulary learning set selection', () => {
     VocabularyRepository.clearCache();
   });
 
-  it('returns a deterministic ten-word set from the canonical repository', async () => {
+  it('returns a deterministic nine-word set from the canonical repository', async () => {
     const terms = await VocabularyRepository.getVocabularyByLevel('A1');
     const profile = getInitialUserLearningProfile();
     const selected = selectVocabularyLearningSet(
@@ -23,14 +23,14 @@ describe('Vocabulary learning set selection', () => {
         status: 'New',
       }
     );
-    expect(selected).toHaveLength(10);
+    expect(selected).toHaveLength(9);
     expect(selected.every((term) => term.cefrLevel === 'A1')).toBe(true);
     expect(selected.every((term) => term.skillUse.includes('vocabulary'))).toBe(
       true
     );
   });
 
-  it('returns the next deterministic ten-word batch without overlap', async () => {
+  it('returns the next deterministic nine-word batch without overlap', async () => {
     const terms = await VocabularyRepository.getVocabularyByLevel('A1');
     const state = VocabularyMenuService.getState();
     const options = {
@@ -41,9 +41,9 @@ describe('Vocabulary learning set selection', () => {
     const first = selectVocabularyLearningSet(terms, state, options);
     const second = selectVocabularyLearningSet(terms, state, {
       ...options,
-      offset: 10,
+      offset: 9,
     });
-    expect(second).toHaveLength(10);
+    expect(second).toHaveLength(9);
     expect(
       second.every((term) => !first.some((item) => item.id === term.id))
     ).toBe(true);

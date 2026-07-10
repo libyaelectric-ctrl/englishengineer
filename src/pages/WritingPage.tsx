@@ -42,7 +42,7 @@ import {
   LevelContentFilter,
   useSkillLevel,
 } from '@/features/level-system';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 
 const WritingPage = () => {
@@ -266,8 +266,6 @@ const WritingPage = () => {
           </div>
         </div>
       </div>
-
-      <SkillEntryBrief skill="writing" />
 
       {/* Top statistics panel */}
       {activeTab === 'missions' && (

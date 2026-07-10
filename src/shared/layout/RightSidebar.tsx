@@ -8,6 +8,7 @@ import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing';
 import { useListeningStore } from '@/features/listening';
 import { useSpeakingStore } from '@/features/speaking';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const log = (_page: string, _action: string, _details: string) => {};
@@ -181,7 +182,7 @@ export const RightSidebar: React.FC = () => {
   return (
     <aside
       className={cn(
-        'hidden h-screen w-64 shrink-0 flex-col border-l border-border-soft bg-surface overflow-y-auto custom-scrollbar',
+        'hidden h-screen w-64 shrink-0 flex-col border-l border-border-hover bg-surface overflow-y-auto custom-scrollbar',
         content ? 'lg:flex' : 'lg:hidden'
       )}
     >
@@ -306,6 +307,7 @@ function Vocab() {
   const [level, setLevel] = useState('A1');
   return (
     <>
+      <SkillEntryBrief skill="vocabulary" />
       <Section title="Level">
         <div className="space-y-0.5">
           {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l) => (
@@ -327,6 +329,7 @@ function Vocab() {
         <Stat label="Learning" value={v.learning} color="text-amber-500" />
         <Stat label="Mastered" value={v.mastered} color="text-green-500" />
         <Stat label="Weak" value={v.weak} color="text-red-500" />
+        <Stat label="Forgotten" value={v.forgotten} color="text-orange-500" />
         <Stat label="Due Today" value={v.dueToday} color="text-purple-500" />
       </Section>
       <Section title="Progress">
@@ -384,6 +387,7 @@ function Grammar() {
   const [tab, setTab] = useState('New');
   return (
     <>
+      <SkillEntryBrief skill="grammar" />
       <Section title="Status">
         <div className="space-y-0.5">
           {(['New', 'Learning', 'Due', 'Strong'] as const).map((t) => (
@@ -452,6 +456,7 @@ function Reading() {
   const done = Object.keys(completedMissions).length;
   return (
     <>
+      <SkillEntryBrief skill="reading" />
       <Section title="Missions">
         <div className="space-y-0.5 max-h-48 overflow-y-auto">
           {missions.slice(0, 10).map((m) => (
@@ -493,6 +498,7 @@ function Writing() {
   const done = Object.keys(completedMissions).length;
   return (
     <>
+      <SkillEntryBrief skill="writing" />
       <Section title="Templates">
         <div className="space-y-0.5">
           {[
@@ -542,6 +548,7 @@ function Listening() {
   const { missions } = useListeningStore();
   return (
     <>
+      <SkillEntryBrief skill="listening" />
       <Section title="Tasks">
         <div className="space-y-0.5">
           {missions.slice(0, 5).map((m) => (
@@ -579,6 +586,7 @@ function Speaking() {
   const { missions } = useSpeakingStore();
   return (
     <>
+      <SkillEntryBrief skill="speaking" />
       <Section title="Scenarios">
         <div className="space-y-0.5">
           {missions.slice(0, 6).map((m) => (
