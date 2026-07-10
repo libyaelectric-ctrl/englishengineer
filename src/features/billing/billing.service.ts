@@ -117,10 +117,7 @@ export const BillingService = {
     }
   },
 
-  async startTopupCheckout(
-    userId: string,
-    email: string
-  ): Promise<void> {
+  async startTopupCheckout(userId: string, email: string): Promise<void> {
     const provider = getProvider();
     if (!provider) {
       throw new Error(

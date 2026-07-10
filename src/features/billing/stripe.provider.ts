@@ -159,7 +159,10 @@ export class StripeBillingProvider {
       );
     }
 
-    return postJson<BillingRedirectResponse, Omit<BillingSessionRequest, 'planId'>>(
+    return postJson<
+      BillingRedirectResponse,
+      Omit<BillingSessionRequest, 'planId'>
+    >(
       buildBillingEndpoint(this.billingApiUrl, 'create-topup-session'),
       request,
       request.userId

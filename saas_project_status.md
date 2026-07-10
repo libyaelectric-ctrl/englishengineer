@@ -5,19 +5,23 @@ Bu dosya, projenin SaaS dönüşüm sürecindeki tüm görevlerin güncel durumu
 ---
 
 ## 📍 Güncel Durum ve Sonraki Adım
-*   **Aktif Görev:** `Yok (Kalan görevlerden biri seçilebilir)`
-*   **İlerleme:** `Beklemede...`
-*   **Genel Durum:** 25 Görev Tamamlandı | 10 Görev Kalan | %71.4 Tamamlanma Oranı 🚀
+
+- **Aktif Görev:** `Yok (Kalan görevlerden biri seçilebilir)`
+- **İlerleme:** `Beklemede...`
+- **Genel Durum:** 25 Görev Tamamlandı | 10 Görev Kalan | %71.4 Tamamlanma Oranı 🚀
 
 ---
 
 ## 🏁 Yarıda Kalma Durumunda Kurtarma Adımları (Resuming Handover)
+
 Ekranda veya backend loglarında bir problem yok, en son tamamlanan görev:
--   **Görev 27 (AI Kredi Paketleri Satışı / Top-up):** Tamamlandı. Supabase migration, backend checkout API'leri, webhook kancaları, AI limit koruyucu ve arayüz buton entegrasyonu tamamen test edildi ve tsc/vitest derleme kontrolleri başarılı oldu.
+
+- **Görev 27 (AI Kredi Paketleri Satışı / Top-up):** Tamamlandı. Supabase migration, backend checkout API'leri, webhook kancaları, AI limit koruyucu ve arayüz buton entegrasyonu tamamen test edildi ve tsc/vitest derleme kontrolleri başarılı oldu.
 
 ---
 
 ## 🟢 Tamamlanan Görevler (25/35)
+
 1.  `[x]` Görev 1: Backend JS -> TS Dönüşümü (Modeller ve tipler çıkarıldı)
 2.  `[x]` Görev 2: Zod ile API İstek Doğrulama (Express middleware entegrasyonu)
 3.  `[x]` Görev 4: "any" Tiplerinin Sıfırlanması (ESLint any kuralları kaldırıldı)
@@ -47,6 +51,7 @@ Ekranda veya backend loglarında bir problem yok, en son tamamlanan görev:
 ---
 
 ## 🟡 Kalan Görevler (10/35)
+
 1.  `[ ]` Görev 3: Katman Ayrımı (App-Domain - Sıkılaştırma)
 2.  `[ ]` Görev 7: Supabase RLS Sıkılaştırma (SQL düzeyinde izolasyon)
 3.  `[ ]` Görev 8: Repository Pattern ile Soyutlama

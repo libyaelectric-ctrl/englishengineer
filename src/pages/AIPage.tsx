@@ -87,7 +87,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     return val ? parseInt(val, 10) : 0;
   });
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const startTopupCheckout = useBillingStore((state) => state.startTopupCheckout);
+  const startTopupCheckout = useBillingStore(
+    (state) => state.startTopupCheckout
+  );
   const [isBuyingCredits, setIsBuyingCredits] = useState(false);
   const [buyError, setBuyError] = useState<string | null>(null);
 
@@ -98,7 +100,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     try {
       await startTopupCheckout(currentUser.id, currentUser.email);
     } catch (err) {
-      setBuyError(err instanceof Error ? err.message : 'Top-up purchase failed.');
+      setBuyError(
+        err instanceof Error ? err.message : 'Top-up purchase failed.'
+      );
       setIsBuyingCredits(false);
     }
   };
@@ -305,11 +309,13 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             Provider credentials are never requested or stored in this
             workspace.
           </p>
-          {typeof subscription.topupCredits === 'number' && subscription.topupCredits > 0 && (
-            <p className="text-xs text-emerald-500 font-medium mt-2 flex items-center gap-1">
-              ✓ Active Top-up Credits: {subscription.topupCredits} requests remaining
-            </p>
-          )}
+          {typeof subscription.topupCredits === 'number' &&
+            subscription.topupCredits > 0 && (
+              <p className="text-xs text-emerald-500 font-medium mt-2 flex items-center gap-1">
+                ✓ Active Top-up Credits: {subscription.topupCredits} requests
+                remaining
+              </p>
+            )}
           {buyError && (
             <p className="text-xs text-rose-500 font-medium mt-2">
               Error: {buyError}
@@ -321,7 +327,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             <StatusBadge label={AI_ACCESS_POLICY.freeAccess} tone="info" />
             <StatusBadge
               label={
-                providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
+                providerStatus.state === 'mock-fallback'
+                  ? 'Mock AI'
+                  : 'Secure AI'
               }
               tone={providerTone}
             />

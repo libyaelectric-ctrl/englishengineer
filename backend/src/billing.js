@@ -147,9 +147,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
     });
     const found = existingPrices.data.find(
       (p) =>
-        p.nickname === nickname &&
-        p.unit_amount === 500 &&
-        p.currency === 'usd'
+        p.nickname === nickname && p.unit_amount === 500 && p.currency === 'usd'
     );
     if (found) {
       return found.id;
@@ -159,7 +157,9 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       active: true,
       limit: 100,
     });
-    let product = existingProducts.data.find((p) => p.name === 'AI Coach Top-up');
+    let product = existingProducts.data.find(
+      (p) => p.name === 'AI Coach Top-up'
+    );
     if (!product) {
       product = await stripeClient.products.create({
         name: 'AI Coach Top-up',
@@ -534,7 +534,9 @@ export const registerBillingRoutes = (
           userId,
           details: { type: 'topup', credits: 50 },
         });
-        res.json(await billingService.createTopupCheckoutSession(userId, req.body));
+        res.json(
+          await billingService.createTopupCheckoutSession(userId, req.body)
+        );
       } catch (error) {
         next(error);
       }
