@@ -6,7 +6,7 @@
     "discipline": "Safety",
     "meaning": "başlık, baret",
     "definition": "A helmet protects a worker’s head on site.",
-    "example": "Wear your helmet before you enter the work area.",
+    "example": "Always wear your helmet before entering the work area.",
     "synonyms": [
       "hard hat"
     ],
@@ -29,7 +29,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "elektrik panosu",
     "definition": "A panel contains switches and electrical control equipment.",
-    "example": "The electrical panel is in Room A and is ready for inspection.",
+    "example": "Did you check the panel door before starting the inspection?",
     "synonyms": [
       "electrical board"
     ],
@@ -52,7 +52,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "anahtar, şalter",
     "definition": "A switch turns electrical equipment on or off.",
-    "example": "The main switch should be off before the visual inspection starts.",
+    "example": "Make sure the main switch is off before any maintenance work.",
     "synonyms": [
       "control"
     ],
@@ -75,7 +75,7 @@
     "discipline": "General Professional English",
     "meaning": "teknik çizim",
     "definition": "A drawing shows the size and position of engineering work.",
-    "example": "The engineer checks the drawing before work starts.",
+    "example": "If the drawing had been reviewed earlier, the error could have been prevented.",
     "synonyms": [
       "plan"
     ],
@@ -98,7 +98,7 @@
     "discipline": "QA/QC",
     "meaning": "kontrol etmek",
     "definition": "To inspect means to check work or equipment carefully.",
-    "example": "The supervisor will inspect the electrical panel this morning.",
+    "example": "Please inspect the electrical panel thoroughly this morning.",
     "synonyms": [
       "check"
     ],
@@ -121,7 +121,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "kablo tavası",
     "definition": "A cable tray is a metal or plastic support system used to route, support, and protect electrical cables along walls, ceilings, and floors.",
-    "example": "The team installed ten metres of cable tray along the corridor ceiling.",
+    "example": "Verify the cable tray installation before proceeding to the next phase.",
     "synonyms": [
       "cable support",
       "cable ladder"
@@ -147,7 +147,7 @@
     "discipline": "Construction",
     "meaning": "destek, taşıyıcı",
     "definition": "A support holds equipment or containment in the correct position.",
-    "example": "One cable tray support is missing near Grid B4.",
+    "example": "Always check that the support spacing meets the specification requirements.",
     "synonyms": [
       "bracket"
     ],
@@ -170,7 +170,7 @@
     "discipline": "General Professional English",
     "meaning": "tamamlanmış",
     "definition": "Complete means that all required work is finished.",
-    "example": "The cable tray work is complete and ready for inspection.",
+    "example": "Is the cable tray work complete and ready for inspection?",
     "synonyms": [
       "finished"
     ],
@@ -193,7 +193,7 @@
     "discipline": "QA/QC",
     "meaning": "kontrol talebi",
     "definition": "An inspection request is a formal request submitted to the responsible team or consultant to check and verify completed work before proceeding.",
-    "example": "Please submit the inspection request for Corridor Two before the next work front opens.",
+    "example": "Please submit the inspection request before the next work front opens.",
     "synonyms": [
       "request for inspection",
       "inspection submission"
@@ -219,7 +219,7 @@
     "discipline": "Construction Site",
     "meaning": "çalışma alanı",
     "definition": "A work area is the defined place where a team performs an activity.",
-    "example": "Keep the electrical work area clean and safe during installation.",
+    "example": "Keep the work area clean and safe during all installation activities.",
     "synonyms": [
       "work zone"
     ],
@@ -242,7 +242,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "transformatör",
     "definition": "A transformer transfers electrical energy between circuits and raises or lowers voltage for safe distribution.",
-    "example": "The commissioning team checked the transformer oil temperature before energizing the feeder.",
+    "example": "If the transformer oil temperature exceeds the limit, shutdown must be initiated immediately.",
     "synonyms": [
       "voltage transformer",
       "power transformer"
@@ -266,7 +266,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "şalt cihazı",
     "definition": "Switchgear is a group of breakers, isolators, relays, and panels used to control electrical power safely.",
-    "example": "The contractor submitted the switchgear test certificates before the client inspection.",
+    "example": "Did the contractor submit the switchgear test certificates on time?",
     "synonyms": [
       "electrical panel",
       "control gear"
@@ -290,7 +290,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "bara, buskolt",
     "definition": "A busbar is a rigid conductor that distributes high current within switchboards or distribution boards.",
-    "example": "Thermal imaging showed a hotspot on the main busbar joint after load testing.",
+    "example": "Make sure the busbar torque values are verified before energizing the panel.",
     "synonyms": [
       "bus",
       "conductor bar"
@@ -314,7 +314,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "devre kesici",
     "definition": "A circuit breaker automatically opens an electrical circuit when it detects overload or fault current.",
-    "example": "The engineer reset the circuit breaker only after confirming there was no downstream fault.",
+    "example": "Always confirm the circuit breaker is in the OFF position before commencing work.",
     "synonyms": [
       "breaker",
       "protective breaker"
@@ -338,7 +338,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "röle",
     "definition": "A relay detects abnormal electrical conditions and sends a signal to trip or control equipment.",
-    "example": "The protection relay recorded an earth fault during the commissioning test.",
+    "example": "If the protection relay trips, investigate the root cause before resetting.",
     "synonyms": [
       "protection relay",
       "control relay"
@@ -362,7 +362,7 @@
     "discipline": "Electrical Engineering",
     "meaning": "topraklama",
     "definition": "Earthing provides a low-resistance path for fault current to protect people and equipment.",
-    "example": "Make sure the earthing meets the specification.",
+    "example": "Verify the earthing conductor is properly bonded before the system goes live.",
     "synonyms": [
       "grounding",
       "bonding"
@@ -1514,7 +1514,7 @@
     "discipline": "Construction",
     "meaning": "iş metodu",
     "definition": "A method statement describes the sequence, resources, risks, and controls for a construction activity.",
-    "example": "The consultant approved the method statement before the lifting operation.",
+    "example": "Please review the method statement before commencing the activity.",
     "synonyms": [
       "work method",
       "execution procedure"
@@ -1562,7 +1562,7 @@
     "discipline": "Construction",
     "meaning": "yapıldığı gibi çizim",
     "definition": "An as-built drawing records the actual installed arrangement after construction changes.",
-    "example": "The handover dossier included updated as-built drawings for all containment routes.",
+    "example": "Please submit the as-built drawing after completing the installation work.",
     "synonyms": [
       "record drawing",
       "final drawing"
@@ -2138,7 +2138,7 @@
     "discipline": "Health & Safety",
     "meaning": "risk değerlendirmesi",
     "definition": "A risk assessment identifies hazards, estimates risk, and defines control measures.",
-    "example": "The lifting plan was rejected because the risk assessment did not cover wind conditions.",
+    "example": "Make sure the risk assessment is completed before starting any high-risk work.",
     "synonyms": [
       "risk review",
       "safety assessment"
@@ -2594,7 +2594,7 @@
     "discipline": "Testing",
     "meaning": "kabul kriterleri",
     "definition": "Acceptance criteria define the conditions that must be met for a test or deliverable to be accepted.",
-    "example": "The team agreed acceptance criteria before starting the integrated systems test.",
+    "example": "Make sure the acceptance criteria are clearly defined before testing begins.",
     "synonyms": [
       "pass criteria",
       "approval criteria"
@@ -4346,7 +4346,7 @@
     "discipline": "Commissioning",
     "meaning": "kusur sorumluluk süresi",
     "definition": "The defect liability period is the post-completion contract period during which the contractor must repair defects at their own cost.",
-    "example": "The leaking valve was reported during the defect liability period.",
+    "example": "Always document any defects found during the defect liability period.",
     "synonyms": [
       "DLP",
       "warranty period"
@@ -4730,7 +4730,7 @@
     "discipline": "General Professional English",
     "meaning": "uygunsuzluk raporu",
     "definition": "A nonconformance report records work, material, or process that does not meet approved requirements.",
-    "example": "QA issued a nonconformance report for the incorrect cable gland material.",
+    "example": "If the NCR is not closed within 30 days, escalate to the project manager.",
     "synonyms": [
       "NCR",
       "quality report"

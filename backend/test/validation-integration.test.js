@@ -167,7 +167,13 @@ describe('Workspace endpoint validation integration', () => {
     process.env.ALLOW_INSECURE_DEV_AUTH = 'true';
     process.env.AI_PROVIDER = 'mock';
     const config = createBackendConfig();
-    const app = createApp({ config });
+    const mockRepository = {
+      getWorkspaces: async () => [],
+      getWorkspace: async () => null,
+      createWorkspace: async () => ({ id: 'mock-id', name: 'Mock' }),
+      countWorkspaces: async () => 0,
+    };
+    const app = createApp({ config, workspaceRepository: mockRepository });
     server = app.listen(0);
     const { port } = server.address();
     baseUrl = `http://localhost:${port}`;
