@@ -10,12 +10,15 @@ import {
   VocabularyMenuService,
   VocabularyRepository,
 } from '@/features/vocabulary';
+import { CEFR_LEVELS } from '@/features/level-system';
 import VocabularyPage from './VocabularyPage';
 
 describe('VocabularyPage menu', () => {
   beforeAll(async () => {
     VocabularyRepository.clearCache();
-    await VocabularyRepository.getVocabularyByLevel('A1');
+    await Promise.all(
+      CEFR_LEVELS.map((level) => VocabularyRepository.getVocabularyByLevel(level))
+    );
   });
 
   beforeEach(() => {
