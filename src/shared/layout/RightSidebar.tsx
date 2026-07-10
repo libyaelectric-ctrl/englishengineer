@@ -206,95 +206,43 @@ function getContent(path: string): React.ReactNode {
 
 function Dashboard() {
   const navigate = useNavigate();
-  const v = VocabularyMenuService.getSummary();
-  const g = GrammarProgressService.getSummary(360);
   return (
     <>
+      <Section title="AI Usage (Team)">
+        <div>
+          <div className="flex justify-between text-[10px] text-muted-copy mb-1">
+            <span>Tokens Used</span>
+            <span className="font-bold text-amber-500">85% (850k/1M)</span>
+          </div>
+          <Progress value={85} max={100} color="#f59e0b" />
+          <button className="mt-3 w-full rounded-md bg-amber-500/10 py-1.5 text-[10px] font-bold text-amber-500 hover:bg-amber-500/20 transition-colors">
+            Upgrade Plan
+          </button>
+        </div>
+      </Section>
+      
+      <Section title="Active Members">
+        <div className="flex items-center gap-2 py-1">
+          <div className="relative">
+            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">ÖE</div>
+            <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface bg-green-500"></div>
+          </div>
+          <div className="relative -ml-3">
+            <div className="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">AI</div>
+            <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface bg-green-500 pulse-dot"></div>
+          </div>
+          <div className="ml-2 text-xs font-medium text-muted-copy">2 Online</div>
+        </div>
+      </Section>
+
       <Section title="Quick Actions">
         <div className="space-y-1.5">
-          <Action
-            icon="📚"
-            label="Start Vocabulary"
-            onClick={() => navigate('/vocabulary')}
-            variant="primary"
-          />
-          <Action
-            icon="✍️"
-            label="Practice Writing"
-            onClick={() => navigate('/writing')}
-          />
-          <Action
-            icon="📖"
-            label="Continue Reading"
-            onClick={() => navigate('/reading')}
-          />
-          <Action
-            icon="🎧"
-            label="Listening Task"
-            onClick={() => navigate('/listening')}
-          />
-          <Action
-            icon="🗣️"
-            label="Speaking Practice"
-            onClick={() => navigate('/speaking')}
-          />
-        </div>
-      </Section>
-      <Section title="Skills">
-        <div className="space-y-2">
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Vocabulary</span>
-              <span>
-                {v.mastered}/{v.total}
-              </span>
-            </div>
-            <Progress value={v.mastered} max={v.total} />
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Grammar</span>
-              <span>{g.strong}/360</span>
-            </div>
-            <Progress value={g.strong} max={360} color="#8b5cf6" />
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Reading</span>
-              <span>0/10</span>
-            </div>
-            <Progress value={0} max={10} color="#22c55e" />
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Writing</span>
-              <span>0/10</span>
-            </div>
-            <Progress value={0} max={10} color="#f59e0b" />
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Listening</span>
-              <span>0/5</span>
-            </div>
-            <Progress value={0} max={5} color="#ec4899" />
-          </div>
-          <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
-              <span>Speaking</span>
-              <span>0/5</span>
-            </div>
-            <Progress value={0} max={5} color="#ef4444" />
-          </div>
-        </div>
-      </Section>
-      <Section title="Streak">
-        <div className="flex items-center gap-2 p-2 rounded-lg bg-surface-hover">
-          <span className="text-lg">🔥</span>
-          <div>
-            <div className="text-sm font-semibold text-foreground">1 day</div>
-            <div className="text-[10px] text-muted-copy">Keep going!</div>
-          </div>
+          <Action icon="⚡" label="Command Palette (Cmd+K)" onClick={() => {
+            const e = new KeyboardEvent('keydown', { key: 'k', metaKey: true });
+            window.dispatchEvent(e);
+          }} variant="primary" />
+          <Action icon="🤖" label="New AI Tool" onClick={() => navigate('/tools')} />
+          <Action icon="👥" label="Invite Team" onClick={() => navigate('/team')} />
         </div>
       </Section>
     </>
@@ -631,9 +579,9 @@ function Curriculum() {
           <Item label="Review Queue" badge="0" />
         </div>
       </Section>
-      <Section title="Stats">
-        <Stat label="Streak" value="0 days" color="text-green-500" />
-        <Stat label="XP" value="0" />
+      <Section title="Analytics">
+        <Stat label="Weekly Goal" value="85%" color="text-green-500" />
+        <Stat label="Readiness" value="High" />
       </Section>
     </>
   );
@@ -655,16 +603,34 @@ function Profile() {
   const { currentUser } = useAuthStore();
   return (
     <>
+      <Section title="Competency Index">
+        <div className="text-center py-4">
+          <div className="text-xl font-black text-primary mb-1">Senior Engineer</div>
+          <div className="text-[10px] font-bold tracking-widest uppercase text-muted-copy mb-4">Role & Readiness</div>
+          <Progress value={85} max={100} color="#3b82f6" />
+          <div className="mt-2 text-[10px] font-medium text-muted-copy">Score: 85/100 (High Readiness)</div>
+        </div>
+      </Section>
+      <Section title="Security Logs">
+        <div className="space-y-3 pt-1">
+          <div className="flex justify-between items-center">
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-foreground">MacBook Pro - Istanbul</span>
+              <span className="text-[9px] text-green-500">Current Session</span>
+            </div>
+            <span className="text-[10px] text-muted-copy">Now</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex flex-col">
+              <span className="text-[11px] font-medium text-muted-copy">iPhone 14 - Ankara</span>
+            </div>
+            <span className="text-[10px] text-muted-copy">2h ago</span>
+          </div>
+        </div>
+      </Section>
       <Section title="Account">
         <Stat label="Name" value={currentUser?.displayName || 'User'} />
-        <Stat label="Plan" value="Free" color="text-amber-500" />
-      </Section>
-      <Section title="Links">
-        <div className="space-y-0.5">
-          {['Edit Profile', 'Preferences', 'Billing', 'Security'].map((s) => (
-            <Item key={s} label={s} />
-          ))}
-        </div>
+        <Stat label="Plan" value="Pro" color="text-amber-500" />
       </Section>
     </>
   );

@@ -5,6 +5,7 @@ import { RightSidebar } from './RightSidebar';
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { useAppStore } from '@/store/app.store';
+import { CommandPalette } from '@/shared/components/CommandPalette';
 import { Menu } from 'lucide-react';
 
 export const AppShell: React.FC = () => {
@@ -12,6 +13,7 @@ export const AppShell: React.FC = () => {
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-background text-foreground">
+      <CommandPalette />
       {/* Nav1 - Left sidebar */}
       <Sidebar />
 

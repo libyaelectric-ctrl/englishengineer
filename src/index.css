@@ -39,30 +39,30 @@
 }
 
 .dark {
-  /* Dark theme - clean and minimal */
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  /* Dark theme - Vercel/Slate elegant minimal */
+  --background: #0f172a; /* slate-900 */
+  --foreground: #e2e8f0; /* slate-200 */
 
-  --color-primary: #ededed;
+  --color-primary: #f8fafc; /* slate-50 */
   --color-primary-hover: #ffffff;
-  --color-primary-foreground: #0a0a0a;
+  --color-primary-foreground: #020617; /* slate-950 */
 
-  --color-surface: #141414;
-  --color-surface-hover: #1f1f1f;
-  --color-soft: rgba(255, 255, 255, 0.06);
-  --color-border-soft: #262626;
-  --color-border-hover: #404040;
-  --color-muted-copy: #a3a3a3;
+  --color-surface: #1e293b; /* slate-800 */
+  --color-surface-hover: #334155; /* slate-700 */
+  --color-soft: rgba(255, 255, 255, 0.05);
+  --color-border-soft: #334155; /* slate-700 */
+  --color-border-hover: #475569; /* slate-600 */
+  --color-muted-copy: #94a3b8; /* slate-400 */
   --color-focus: rgba(255, 255, 255, 0.15);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 
-  --color-engineer-950: #0a0a0a;
-  --color-engineer-900: #0a0a0a;
-  --color-engineer-800: #141414;
-  --color-engineer-700: #1a1a1a;
-  --color-engineer-cyan: #ededed;
+  --color-engineer-950: #020617;
+  --color-engineer-900: #0f172a;
+  --color-engineer-800: #1e293b;
+  --color-engineer-700: #334155;
+  --color-engineer-cyan: #38bdf8; /* sky-400 */
 }
 
 @theme {
@@ -227,8 +227,8 @@
   }
 
   .dark .premium-panel {
-    background: #141414;
-    border: 1px solid #262626;
+    background: #1e293b;
+    border: 1px solid #334155;
   }
 
   .premium-surface {
@@ -238,8 +238,8 @@
   }
 
   .dark .premium-surface {
-    background: #1a1a1a;
-    border: 1px solid #262626;
+    background: #0f172a;
+    border: 1px solid #334155;
   }
 
   .premium-input {
@@ -283,16 +283,16 @@
   }
 
   .dark .public-primary-action {
-    background: #ededed;
-    border: 1px solid #ededed;
-    color: #0a0a0a;
+    background: #f8fafc;
+    border: 1px solid #f8fafc;
+    color: #0f172a;
   }
   .dark .public-primary-action:hover:not(:disabled) {
     background: #ffffff;
     border-color: #ffffff;
   }
   .dark .public-primary-action:active:not(:disabled) {
-    background: #d4d4d4;
+    background: #e2e8f0;
   }
 
   .public-secondary-action {
@@ -311,16 +311,16 @@
   }
 
   .dark .public-secondary-action {
-    background: #141414;
-    border: 1px solid #262626;
-    color: #ededed;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
   }
   .dark .public-secondary-action:hover:not(:disabled) {
-    background: #1f1f1f;
-    border-color: #404040;
+    background: #334155;
+    border-color: #475569;
   }
   .dark .public-secondary-action:active:not(:disabled) {
-    background: #1a1a1a;
+    background: #0f172a;
   }
 
   .public-text-link {
@@ -336,10 +336,10 @@
   }
 
   .dark .public-card {
-    background: rgba(20, 20, 20, 0.8);
+    background: rgba(30, 41, 59, 0.8); /* slate-800 */
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(38, 38, 38, 0.6);
+    border: 1px solid rgba(51, 65, 85, 0.6); /* slate-700 */
   }
 
   .public-eyebrow {
