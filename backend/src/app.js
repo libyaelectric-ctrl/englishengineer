@@ -14,13 +14,13 @@ import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import {
   createVocabularyLookupService,
-  createUpstashVocabularyCache,
   registerVocabularyRoutes,
 } from './vocabulary.js';
 import {
   createWorkspaceRepository,
   registerWorkspaceRoutes,
 } from './workspace.js';
+import { createI18nMiddleware } from './i18n.js';
 
 export const createApp = ({
   config,
@@ -64,6 +64,7 @@ export const createApp = ({
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
+  app.use(createI18nMiddleware());
 
   app.get('/api/health', (_request, response) => {
     response.json(toPublicHealth(config));
@@ -160,9 +161,15 @@ export const createApp = ({
   app.use((_request, _response, next) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
-  app.use((error, _request, response, _next) => {
+  app.use((error, request, response, _next) => {
     console.error('[unhandled-api-error]', error);
     const mapped = toErrorResponse(error);
+    if (request.i18n && mapped.body?.error?.code) {
+      const translated = request.i18n.t(mapped.body.error.code);
+      if (translated !== mapped.body.error.code) {
+        mapped.body.error.message = translated;
+      }
+    }
     response.status(mapped.status).json(mapped.body);
   });
 
