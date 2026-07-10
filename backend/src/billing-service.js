@@ -1,25 +1,141 @@
 import Stripe from 'stripe';
 import { ApiError } from './errors.js';
-import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
+import { requireText, emptySubscription } from './billing-helpers.js';
 
-const requireText = (value, field) => {
-  if (typeof value !== 'string' || !value.trim()) {
-    throw new ApiError(400, 'invalid_request', `${field} is required.`);
-  }
-  return value.trim();
+const PLAN_META = {
+  pro: {
+    unitAmount: 1900,
+    nickname: 'Pro Monthly',
+    productName: 'EngineerOS Pro',
+  },
+  project: {
+    unitAmount: 3900,
+    nickname: 'Project Monthly',
+    productName: 'EngineerOS Project',
+  },
+  max: {
+    unitAmount: 5900,
+    nickname: 'Max Monthly',
+    productName: 'EngineerOS Max',
+  },
+  exec: {
+    unitAmount: 9900,
+    nickname: 'Exec Monthly',
+    productName: 'EngineerOS Exec',
+  },
+  private: {
+    unitAmount: 99900,
+    nickname: 'Private Monthly',
+    productName: 'EngineerOS Private',
+  },
+  team: {
+    unitAmount: 1900,
+    nickname: 'Team Monthly',
+    productName: 'EngineerOS Team',
+  },
 };
 
-const emptySubscription = () => ({
-  planId: 'free',
-  status: 'none',
-  currentPeriodEnd: null,
-  cancelAtPeriodEnd: false,
-  stripeCustomerId: null,
-  stripeSubscriptionId: null,
-  updatedAt: new Date().toISOString(),
-  source: 'backend',
-  topupCredits: 0,
-});
+const PLAN_PRICE_CONFIG = {
+  pro: 'priceProMonthly',
+  project: 'priceProjectMonthly',
+  max: 'priceMaxMonthly',
+  exec: 'priceExecMonthly',
+  private: 'pricePrivateMonthly',
+  team: 'priceTeamMonthly',
+};
+
+const resolveOrProvisionPriceId = async (config, stripeClient, planId) => {
+  const configKey = PLAN_PRICE_CONFIG[planId];
+  if (configKey && config[configKey]) {
+    return config[configKey];
+  }
+
+  const meta = PLAN_META[planId];
+  if (!meta) {
+    throw new ApiError(400, 'INVALID_PLAN', `Unknown plan: "${planId}".`);
+  }
+
+  const existingPrices = await stripeClient.prices.list({
+    active: true,
+    type: 'recurring',
+    limit: 100,
+  });
+
+  const found = existingPrices.data.find(
+    (p) =>
+      p.nickname === meta.nickname &&
+      p.recurring?.interval === 'month' &&
+      p.unit_amount === meta.unitAmount &&
+      p.currency === 'usd'
+  );
+
+  if (found) {
+    return found.id;
+  }
+
+  let product;
+  const existingProducts = await stripeClient.products.list({
+    active: true,
+    limit: 100,
+  });
+  product = existingProducts.data.find((p) => p.name === meta.productName);
+  if (!product) {
+    product = await stripeClient.products.create({
+      name: meta.productName,
+      metadata: { engineeros_plan: planId },
+    });
+  }
+
+  const newPrice = await stripeClient.prices.create({
+    unit_amount: meta.unitAmount,
+    currency: 'usd',
+    recurring: { interval: 'month' },
+    product: product.id,
+    nickname: meta.nickname,
+    metadata: { engineeros_plan: planId },
+  });
+
+  return newPrice.id;
+};
+
+const resolveOrProvisionTopupPriceId = async (stripeClient) => {
+  const nickname = 'AI Coach Top-up 50 Credits';
+  const existingPrices = await stripeClient.prices.list({
+    active: true,
+    type: 'one_time',
+    limit: 100,
+  });
+  const found = existingPrices.data.find(
+    (p) =>
+      p.nickname === nickname && p.unit_amount === 500 && p.currency === 'usd'
+  );
+  if (found) {
+    return found.id;
+  }
+
+  const existingProducts = await stripeClient.products.list({
+    active: true,
+    limit: 100,
+  });
+  let product = existingProducts.data.find(
+    (p) => p.name === 'AI Coach Top-up'
+  );
+  if (!product) {
+    product = await stripeClient.products.create({
+      name: 'AI Coach Top-up',
+      metadata: { type: 'topup' },
+    });
+  }
+
+  const newPrice = await stripeClient.prices.create({
+    unit_amount: 500,
+    currency: 'usd',
+    product: product.id,
+    nickname: nickname,
+    metadata: { type: 'topup' },
+  });
+  return newPrice.id;
+};
 
 export const createBillingService = ({ config, stripeClient, repository }) => {
   if (!repository) throw new Error('Billing repository is required.');
@@ -31,150 +147,6 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         'Billing backend is unavailable because Stripe is not configured.'
       );
     }
-  };
-
-  // Plan metadata used for Stripe auto-provisioning
-  const PLAN_META = {
-    pro: {
-      unitAmount: 1900,
-      nickname: 'Pro Monthly',
-      productName: 'EngineerOS Pro',
-    },
-    project: {
-      unitAmount: 3900,
-      nickname: 'Project Monthly',
-      productName: 'EngineerOS Project',
-    },
-    max: {
-      unitAmount: 5900,
-      nickname: 'Max Monthly',
-      productName: 'EngineerOS Max',
-    },
-    exec: {
-      unitAmount: 9900,
-      nickname: 'Exec Monthly',
-      productName: 'EngineerOS Exec',
-    },
-    private: {
-      unitAmount: 99900,
-      nickname: 'Private Monthly',
-      productName: 'EngineerOS Private',
-    },
-    team: {
-      unitAmount: 1900,
-      nickname: 'Team Monthly',
-      productName: 'EngineerOS Team',
-    },
-  };
-
-  const PLAN_PRICE_CONFIG = {
-    pro: 'priceProMonthly',
-    project: 'priceProjectMonthly',
-    max: 'priceMaxMonthly',
-    exec: 'priceExecMonthly',
-    private: 'pricePrivateMonthly',
-    team: 'priceTeamMonthly',
-  };
-
-  /**
-   * Resolve Stripe price ID for a given plan:
-   * 1. Use env-configured price ID if present.
-   * 2. Otherwise search active prices in Stripe by nickname.
-   * 3. If not found, create the product + price automatically.
-   */
-  const resolveOrProvisionPriceId = async (planId) => {
-    const configKey = PLAN_PRICE_CONFIG[planId];
-    if (configKey && config[configKey]) {
-      return config[configKey];
-    }
-
-    const meta = PLAN_META[planId];
-    if (!meta) {
-      throw new ApiError(400, 'INVALID_PLAN', `Unknown plan: "${planId}".`);
-    }
-
-    // Search for an existing active monthly recurring price with this nickname
-    const existingPrices = await stripeClient.prices.list({
-      active: true,
-      type: 'recurring',
-      limit: 100,
-    });
-
-    const found = existingPrices.data.find(
-      (p) =>
-        p.nickname === meta.nickname &&
-        p.recurring?.interval === 'month' &&
-        p.unit_amount === meta.unitAmount &&
-        p.currency === 'usd'
-    );
-
-    if (found) {
-      return found.id;
-    }
-
-    // Auto-create the product and price in the user's Stripe account
-    let product;
-    const existingProducts = await stripeClient.products.list({
-      active: true,
-      limit: 100,
-    });
-    product = existingProducts.data.find((p) => p.name === meta.productName);
-    if (!product) {
-      product = await stripeClient.products.create({
-        name: meta.productName,
-        metadata: { engineeros_plan: planId },
-      });
-    }
-
-    const newPrice = await stripeClient.prices.create({
-      unit_amount: meta.unitAmount,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-      product: product.id,
-      nickname: meta.nickname,
-      metadata: { engineeros_plan: planId },
-    });
-
-    return newPrice.id;
-  };
-
-  const resolveOrProvisionTopupPriceId = async () => {
-    const nickname = 'AI Coach Top-up 50 Credits';
-    const existingPrices = await stripeClient.prices.list({
-      active: true,
-      type: 'one_time',
-      limit: 100,
-    });
-    const found = existingPrices.data.find(
-      (p) =>
-        p.nickname === nickname && p.unit_amount === 500 && p.currency === 'usd'
-    );
-    if (found) {
-      return found.id;
-    }
-
-    const existingProducts = await stripeClient.products.list({
-      active: true,
-      limit: 100,
-    });
-    let product = existingProducts.data.find(
-      (p) => p.name === 'AI Coach Top-up'
-    );
-    if (!product) {
-      product = await stripeClient.products.create({
-        name: 'AI Coach Top-up',
-        metadata: { type: 'topup' },
-      });
-    }
-
-    const newPrice = await stripeClient.prices.create({
-      unit_amount: 500,
-      currency: 'usd',
-      product: product.id,
-      nickname: nickname,
-      metadata: { type: 'topup' },
-    });
-    return newPrice.id;
   };
 
   return {
@@ -193,7 +165,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
       const planId = body?.planId || 'pro';
 
-      const price = await resolveOrProvisionPriceId(planId);
+      const price = await resolveOrProvisionPriceId(config, stripeClient, planId);
 
       const session = await stripeClient.checkout.sessions.create({
         mode: 'subscription',
@@ -228,7 +200,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
 
-      const price = await resolveOrProvisionTopupPriceId();
+      const price = await resolveOrProvisionTopupPriceId(stripeClient);
 
       const session = await stripeClient.checkout.sessions.create({
         mode: 'payment',
@@ -467,164 +439,3 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
 
 export const createStripeClient = (config) =>
   config.configured ? new Stripe(config.secretKey) : null;
-
-const getRequestUserId = (request) => {
-  const authUserId = request.auth?.userId;
-  if (typeof authUserId === 'string' && authUserId.trim()) {
-    return authUserId.trim();
-  }
-  const claimedUserId = request.body?.userId ?? request.query?.userId;
-  return typeof claimedUserId === 'string' && claimedUserId.trim()
-    ? claimedUserId.trim()
-    : null;
-};
-
-const assertUserOwnership = (request) => {
-  const userId = getRequestUserId(request);
-  if (!userId) return null;
-  const claimedUserId = request.body?.userId ?? request.query?.userId;
-  if (
-    request.auth?.source !== 'dev-bypass' &&
-    typeof claimedUserId === 'string' &&
-    claimedUserId.trim() !== userId
-  ) {
-    throw new ApiError(
-      403,
-      'billing_user_mismatch',
-      'Billing requests cannot target another user.'
-    );
-  }
-  return userId;
-};
-
-export const registerBillingRoutes = (
-  app,
-  billingService,
-  requireBackendAuth,
-  rateLimiter,
-  optionalBackendAuth = requireBackendAuth
-) => {
-  app.post(
-    '/api/billing/create-checkout-session',
-    requireBackendAuth,
-    rateLimiter,
-    async (req, res, next) => {
-      try {
-        const userId = assertUserOwnership(req);
-        auditLog({
-          action: AUDIT_ACTIONS.CHECKOUT_CREATED,
-          userId,
-          details: { planId: req.body?.planId },
-        });
-        res.json(await billingService.createCheckoutSession(userId, req.body));
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-  app.post(
-    '/api/billing/create-topup-session',
-    requireBackendAuth,
-    rateLimiter,
-    async (req, res, next) => {
-      try {
-        const userId = assertUserOwnership(req);
-        auditLog({
-          action: AUDIT_ACTIONS.CHECKOUT_CREATED,
-          userId,
-          details: { type: 'topup', credits: 50 },
-        });
-        res.json(
-          await billingService.createTopupCheckoutSession(userId, req.body)
-        );
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-  app.post(
-    '/api/billing/create-customer-portal-session',
-    requireBackendAuth,
-    rateLimiter,
-    async (req, res, next) => {
-      try {
-        res.json(
-          await billingService.createPortalSession(
-            assertUserOwnership(req),
-            req.body
-          )
-        );
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-  const subscriptionStatusHandler = async (req, res, next) => {
-    try {
-      res.json(
-        await billingService.getSubscriptionStatus(assertUserOwnership(req))
-      );
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  const publicSubscriptionStatusAuth = async (req, res, next) => {
-    try {
-      await optionalBackendAuth(req, res, next);
-    } catch {
-      req.auth = null;
-      next();
-    }
-  };
-
-  app.get(
-    '/api/billing/subscription-status',
-    publicSubscriptionStatusAuth,
-    rateLimiter,
-    subscriptionStatusHandler
-  );
-  app.get(
-    '/subscription-status',
-    publicSubscriptionStatusAuth,
-    rateLimiter,
-    subscriptionStatusHandler
-  );
-  app.post('/api/webhooks/stripe', async (req, res, next) => {
-    let eventId = 'unknown';
-    let eventType = 'unknown';
-    try {
-      if (req.body) {
-        const parsedBody = JSON.parse(req.body.toString('utf8'));
-        if (parsedBody && typeof parsedBody === 'object') {
-          eventId = parsedBody.id || 'unknown';
-          eventType = parsedBody.type || 'unknown';
-        }
-      }
-    } catch {}
-
-    auditLog({
-      action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
-      details: { eventId, eventType },
-    });
-
-    console.log(
-      `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
-    );
-
-    try {
-      res.json(
-        await billingService.processWebhook(
-          req.body,
-          req.headers['stripe-signature'],
-          (step, evId, evType) => {
-            if (evId) eventId = evId;
-            if (evType) eventType = evType;
-          }
-        )
-      );
-    } catch (error) {
-      next(error);
-    }
-  });
-};

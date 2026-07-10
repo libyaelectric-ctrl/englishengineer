@@ -14,7 +14,8 @@ export const initAuditLog = async (config) => {
         await import('./supabase-audit-log-repository.js');
       supabaseRepository = createSupabaseAuditLogRepository(config.workspace);
     }
-  } catch {
+  } catch (error) {
+    console.warn('[audit-log] Failed to initialize remote audit repository:', error?.message || error);
     supabaseRepository = null;
   }
 };
