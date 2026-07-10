@@ -120,21 +120,24 @@
     "CEFR": "A2",
     "discipline": "Electrical Engineering",
     "meaning": "kablo tavası",
-    "definition": "A cable tray is a support system that carries electrical cables.",
-    "example": "The team installed ten metres of cable tray.",
+    "definition": "A cable tray is a metal or plastic support system used to route, support, and protect electrical cables along walls, ceilings, and floors.",
+    "example": "The team installed ten metres of cable tray along the corridor ceiling.",
     "synonyms": [
-      "cable support"
+      "cable support",
+      "cable ladder"
     ],
     "collocations": [
       "install cable tray",
       "cable tray route",
-      "cable tray support"
+      "cable tray support",
+      "cable tray installation"
     ],
     "difficulty": "Beginner",
     "tags": [
       "containment",
       "installation",
-      "electrical"
+      "electrical",
+      "cabling"
     ]
   },
   {
@@ -189,21 +192,24 @@
     "CEFR": "A2",
     "discipline": "QA/QC",
     "meaning": "kontrol talebi",
-    "definition": "An inspection request asks the responsible team to check completed work.",
-    "example": "Please submit the inspection request for Corridor Two.",
+    "definition": "An inspection request is a formal request submitted to the responsible team or consultant to check and verify completed work before proceeding.",
+    "example": "Please submit the inspection request for Corridor Two before the next work front opens.",
     "synonyms": [
-      "request for inspection"
+      "request for inspection",
+      "inspection submission"
     ],
     "collocations": [
       "submit an inspection request",
       "inspection request status",
-      "approve an inspection request"
+      "approve an inspection request",
+      "inspection request form"
     ],
     "difficulty": "Beginner",
     "tags": [
       "inspection",
       "quality",
-      "request"
+      "request",
+      "documentation"
     ]
   },
   {
@@ -563,30 +569,6 @@
       "cables",
       "installation",
       "qa"
-    ]
-  },
-  {
-    "word": "cable tray",
-    "partOfSpeech": "noun",
-    "CEFR": "B1",
-    "discipline": "Electrical Engineering",
-    "meaning": "kablo tavası",
-    "definition": "A cable tray is a metal or plastic support used to route and protect cables.",
-    "example": "The electrical tray was lowered to avoid clashing with the chilled water pipe.",
-    "synonyms": [
-      "tray",
-      "cable support"
-    ],
-    "collocations": [
-      "galvanized cable tray",
-      "cable tray route",
-      "tray support"
-    ],
-    "difficulty": "Beginner",
-    "tags": [
-      "containment",
-      "coordination",
-      "site"
     ]
   },
   {
@@ -1547,30 +1529,6 @@
       "site",
       "planning",
       "safety"
-    ]
-  },
-  {
-    "word": "inspection request",
-    "partOfSpeech": "noun",
-    "CEFR": "B2",
-    "discipline": "Construction",
-    "meaning": "kontrol talebi",
-    "definition": "An inspection request asks the consultant or client to inspect completed work.",
-    "example": "The QA engineer raised an inspection request for the cable tray installation.",
-    "synonyms": [
-      "IR",
-      "inspection notice"
-    ],
-    "collocations": [
-      "submit an inspection request",
-      "approved inspection request",
-      "IR status"
-    ],
-    "difficulty": "Intermediate",
-    "tags": [
-      "qa",
-      "inspection",
-      "site"
     ]
   },
   {
