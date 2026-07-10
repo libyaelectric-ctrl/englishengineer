@@ -8,7 +8,7 @@ import {
   Volume2,
   CheckCircle,
 } from 'lucide-react';
-import { useListeningStore } from './listening.store';
+import { useListeningPlaybackStore } from './listening-playback.store';
 import { ListeningHelpers } from './listening.helpers';
 import type { ListeningPlaybackSpeed } from './listening.types';
 import type { ListeningMission } from './listening.types';
@@ -24,27 +24,25 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const {
-    isPlaying,
-    currentTimeSeconds,
-    totalDurationSeconds,
-    playbackSpeed,
-    isAudioLoading,
-    audioError,
-    resumePositions,
-    replayCounts,
-    audioCompletedMissionIds,
-    startPlaying,
-    pausePlaying,
-    replayPlaying,
-    setPlaybackSpeed,
-    setAudioLoading,
-    setAudioError,
-    updateAudioProgress,
-    recordListeningSecond,
-    markAudioCompleted,
-    recordReplay,
-  } = useListeningStore();
+  const isPlaying = useListeningPlaybackStore((s) => s.isPlaying);
+  const currentTimeSeconds = useListeningPlaybackStore((s) => s.currentTimeSeconds);
+  const totalDurationSeconds = useListeningPlaybackStore((s) => s.totalDurationSeconds);
+  const playbackSpeed = useListeningPlaybackStore((s) => s.playbackSpeed);
+  const isAudioLoading = useListeningPlaybackStore((s) => s.isAudioLoading);
+  const audioError = useListeningPlaybackStore((s) => s.audioError);
+  const resumePositions = useListeningPlaybackStore((s) => s.resumePositions);
+  const replayCounts = useListeningPlaybackStore((s) => s.replayCounts);
+  const audioCompletedMissionIds = useListeningPlaybackStore((s) => s.audioCompletedMissionIds);
+  const startPlaying = useListeningPlaybackStore((s) => s.startPlaying);
+  const pausePlaying = useListeningPlaybackStore((s) => s.pausePlaying);
+  const replayPlaying = useListeningPlaybackStore((s) => s.replayPlaying);
+  const setPlaybackSpeed = useListeningPlaybackStore((s) => s.setPlaybackSpeed);
+  const setAudioLoading = useListeningPlaybackStore((s) => s.setAudioLoading);
+  const setAudioError = useListeningPlaybackStore((s) => s.setAudioError);
+  const updateAudioProgress = useListeningPlaybackStore((s) => s.updateAudioProgress);
+  const recordListeningSecond = useListeningPlaybackStore((s) => s.recordListeningSecond);
+  const markAudioCompleted = useListeningPlaybackStore((s) => s.markAudioCompleted);
+  const recordReplay = useListeningPlaybackStore((s) => s.recordReplay);
 
   const isCompleted = audioCompletedMissionIds.includes(mission.id);
   const replayCount = replayCounts[mission.id] || 0;
