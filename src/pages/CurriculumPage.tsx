@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -87,8 +87,12 @@ const CurriculumPage = () => {
     });
   }, []);
 
+  const prevWeakestRef = useRef(weakestSkill);
   useEffect(() => {
-    setSelectedSkill(weakestSkill);
+    if (prevWeakestRef.current !== weakestSkill) {
+      prevWeakestRef.current = weakestSkill;
+      setSelectedSkill(weakestSkill);
+    }
   }, [weakestSkill]);
 
   useEffect(() => {

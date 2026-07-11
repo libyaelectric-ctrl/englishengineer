@@ -166,10 +166,10 @@ export const createApp = ({
             'Authentication required.'
           );
         }
-        if (
-          userId !== 'engineeros-dev-user' &&
-          !config.auth.internalApiSecret
-        ) {
+        const isAdmin =
+          userId === 'engineeros-dev-user' ||
+          req.auth?.source === 'internal-secret';
+        if (!isAdmin) {
           throw new ApiError(403, 'admin_required', 'Admin access required.');
         }
         const filters = {

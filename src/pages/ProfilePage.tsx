@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
 import {
   uiReducer,
   editReducer,
@@ -215,18 +215,28 @@ const ProfilePage = () => {
     }
   }, [currentUser?.id, location.search, refreshBilling]);
 
+  const prevProfileRef = useRef<string>('');
   useEffect(() => {
-    if (profile) {
-      dispatchPrefs({
-        type: 'LOAD_PROFILE',
-        goals: profile.goals || [],
-        minutes: profile.dailyTarget?.minutes || 15,
-        tasks: profile.dailyTarget?.taskCount || 2,
-        missedDays: profile.weeklyTolerance?.allowedMissedDays || 0,
-        expLevel: profile.experienceLevel || '',
-        careerGoal: profile.careerGoal || '',
-      });
-    }
+    if (!profile) return;
+    const profileKey = JSON.stringify({
+      goals: profile.goals,
+      minutes: profile.dailyTarget?.minutes,
+      tasks: profile.dailyTarget?.taskCount,
+      missedDays: profile.weeklyTolerance?.allowedMissedDays,
+      expLevel: profile.experienceLevel,
+      careerGoal: profile.careerGoal,
+    });
+    if (prevProfileRef.current === profileKey) return;
+    prevProfileRef.current = profileKey;
+    dispatchPrefs({
+      type: 'LOAD_PROFILE',
+      goals: profile.goals || [],
+      minutes: profile.dailyTarget?.minutes || 15,
+      tasks: profile.dailyTarget?.taskCount || 2,
+      missedDays: profile.weeklyTolerance?.allowedMissedDays || 0,
+      expLevel: profile.experienceLevel || '',
+      careerGoal: profile.careerGoal || '',
+    });
   }, [profile]);
 
   const enterEditMode = () => {

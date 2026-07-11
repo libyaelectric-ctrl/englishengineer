@@ -53,8 +53,8 @@ const DashboardPage = () => {
       (a, b) =>
         a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
     )[0];
-  const focusMeta = SKILL_META[focusSkill.skill];
-  const primaryMission = missions[0];
+  const focusMeta = focusSkill ? SKILL_META[focusSkill.skill] : null;
+  const primaryMission = missions[0] ?? null;
   const reviewPriorities = buildReviewPriorities([
     ...(memory.weakWords > 0
       ? [
@@ -84,12 +84,12 @@ const DashboardPage = () => {
         source: 'repeated-mistake' as const,
         severity: item.repetitionCount,
       })),
-    {
+    ...(focusMeta && focusSkill ? [{
       id: `skill-${focusSkill.skill}`,
       label: `${focusMeta.label} needs the next practice`,
       source: 'skill-weakness' as const,
       severity: Math.round(focusSkill.weaknessScore / 10),
-    },
+    }] : []),
   ]).slice(0, 3);
 
   return (
@@ -151,7 +151,7 @@ const DashboardPage = () => {
             <Button
               type="button"
               className="min-h-10 px-5 text-xs btn-press"
-              onClick={() => navigate(primaryMission?.route ?? focusMeta.route)}
+              onClick={() => navigate(primaryMission?.route ?? focusMeta?.route ?? '/curriculum')}
             >
               Start today&apos;s lesson <ArrowRight className="h-3.5 w-3.5" />
             </Button>
@@ -164,11 +164,11 @@ const DashboardPage = () => {
                   TODAY&apos;S FOCUS
                 </p>
                 <h2 className="mt-1 text-lg font-bold text-foreground">
-                  {primaryMission?.title ?? `${focusMeta.label} · Lesson 1`}
+                  {primaryMission?.title ?? `${focusMeta?.label ?? 'Skill'} · Lesson 1`}
                 </h2>
                 <p className="mt-1 text-xs leading-5 text-muted-copy">
                   {primaryMission?.reason ??
-                    `Build your first reliable ${focusMeta.label} baseline.`}
+                    `Build your first reliable ${focusMeta?.label ?? 'skill'} baseline.`}
                 </p>
               </div>
               <div className="shrink-0 text-left sm:text-right">
