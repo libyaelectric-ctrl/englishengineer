@@ -72,39 +72,64 @@ export const SkillsProgressSection = ({
                       : 'Simulated site meeting discussions. Available for practice.'
                     : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
                 </p>
-                <div className="mt-4 space-y-1.5">
-                  <div className="flex justify-between items-end px-1">
-                    <div className="flex flex-col items-start">
-                      <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Min</span>
-                      <span className="text-[10px] font-medium text-muted-copy">
-                        {getEloBandRange(skillProfile.cefrBand).min}
-                      </span>
+                <div className="mt-4 space-y-3">
+                  {/* Current Band Progress */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-end px-1">
+                      <div className="flex flex-col items-start">
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Min</span>
+                        <span className="text-[10px] font-medium text-muted-copy">
+                          {getEloBandRange(skillProfile.cefrBand).min}
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[10px] font-bold text-foreground">
+                          {skillProfile.elo} ELO
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Max</span>
+                        <span className="text-[10px] font-medium text-muted-copy">
+                          {getEloBandRange(skillProfile.cefrBand).max}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center">
-                      <span className="text-[10px] font-bold text-foreground">
-                        {skillProfile.elo} ELO
+                    <ProgressBar
+                      value={skillProfile.progressToNextBand}
+                      showValue={false}
+                      color="cyan"
+                      className=""
+                    />
+                    <div className="flex justify-between items-center px-1 pt-0.5">
+                      <span className="text-[10px] font-bold text-primary">
+                        {skillProfile.cefrBand} Level
                       </span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Max</span>
-                      <span className="text-[10px] font-medium text-muted-copy">
-                        {getEloBandRange(skillProfile.cefrBand).max}
+                      <span className="text-[9px] font-medium text-muted-copy">
+                        {skillProfile.progressToNextBand}% to next level
                       </span>
                     </div>
                   </div>
-                  <ProgressBar
-                    value={skillProfile.progressToNextBand}
-                    showValue={false}
-                    color="cyan"
-                    className=""
-                  />
-                  <div className="flex justify-between items-center px-1 pt-0.5">
-                    <span className="text-[10px] font-bold text-primary">
-                      {skillProfile.cefrBand} Level
-                    </span>
-                    <span className="text-[9px] font-medium text-muted-copy">
-                      {skillProfile.progressToNextBand}% to next level
-                    </span>
+
+                  {/* Global Progress */}
+                  <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
+                    <div className="flex justify-between items-center px-1">
+                      <span className="text-[9px] font-medium text-muted-copy">
+                        Global Progress (A1 - C2+)
+                      </span>
+                      <span className="text-[9px] font-bold text-foreground">
+                        {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
+                      </span>
+                    </div>
+                    <ProgressBar
+                      value={((skillProfile.elo - 1000) / 4000) * 100}
+                      showValue={false}
+                      color="emerald"
+                      className="h-1.5"
+                    />
+                    <div className="flex justify-between items-center px-1">
+                      <span className="text-[8px] text-muted-copy/70">1000 ELO (A1)</span>
+                      <span className="text-[8px] text-muted-copy/70">5000 ELO (C2+)</span>
+                    </div>
                   </div>
                 </div>
               </article>
