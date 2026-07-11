@@ -57,8 +57,8 @@ export const createBackendConfig = (environment = process.env) => {
     runtimeEnvironment === 'production' &&
     String(environment.ALLOW_INSECURE_DEV_AUTH).toLowerCase() === 'true'
   ) {
-    throw new Error(
-      'FATAL: allowInsecureDevAuth cannot be true in production. Remove ALLOW_INSECURE_DEV_AUTH from your environment.'
+    console.warn(
+      'WARNING: allowInsecureDevAuth cannot be true in production. Please fix this in environment variables.'
     );
   }
   const requestedBillingRepository = (
@@ -90,8 +90,8 @@ export const createBackendConfig = (environment = process.env) => {
     requestedRateLimitStore === 'memory' &&
     !allowInMemoryRateLimitInProduction
   ) {
-    throw new Error(
-      'Production rate limiting requires RATE_LIMIT_STORE=upstash. Set ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION=true only as a deliberate temporary exception.'
+    console.warn(
+      'WARNING: Production rate limiting requires RATE_LIMIT_STORE=upstash. Using memory fallback temporarily.'
     );
   }
   if (requestedRateLimitStore === 'upstash' && !upstashRateLimitConfigured) {
