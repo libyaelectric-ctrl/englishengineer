@@ -41,7 +41,9 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "gen-audio": "ts-node src/tools/generate-missing-audio.ts"
+    "gen-audio": "ts-node src/tools/generate-missing-audio.ts",
+    "test:load": "k6 run scripts/performance/load-test.k6.js",
+    "test:lighthouse": "lighthouse https://englishengineer.vercel.app --output html --output-path ./docs/lighthouse-report.html"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
@@ -78,6 +80,7 @@
     "@vitest/coverage-v8": "^4.1.9",
     "dependency-cruiser": "^18.0.0",
     "eslint": "^9.0.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "fflate": "^0.8.3",
     "ffmpeg-static": "^5.1.0",
     "fluent-ffmpeg": "^2.1.2",
