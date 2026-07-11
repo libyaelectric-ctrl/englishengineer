@@ -6,3 +6,5 @@ export * from './writing.store';
 export * from './writing.helpers';
 export * from './WritingModelAnswer';
 export * from './writing.task-model';
+export * from './writing-realtime-analyzer';
+export * from './WritingRealtimeFeedback';
