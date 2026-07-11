@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/shared/utils/cn';
 import { useAuthStore } from '@/features/auth';
@@ -250,30 +250,79 @@ function Dashboard() {
   );
 }
 
+const VOCAB_LEVELS = [
+  { id: 'A1', max: 500 },
+  { id: 'A2', max: 1200 },
+  { id: 'B1', max: 2500 },
+  { id: 'B2', max: 4000 },
+  { id: 'C1', max: 6000 },
+  { id: 'C2', max: 8000 },
+];
+
 function Vocab() {
-  useLearningStore((state) => state.studySessions.length);
-  const v = VocabularyMenuService.getSummary();
-  const [level] = useState('A1');
+  const [v, setV] = useState(() => VocabularyMenuService.getSummary());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setV(VocabularyMenuService.getSummary());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  let currentLevel = 'A1';
+  for (const lvl of VOCAB_LEVELS) {
+    if (v.mastered <= lvl.max) {
+      currentLevel = lvl.id;
+      break;
+    }
+  }
+  if (v.mastered > 8000) currentLevel = 'C2';
+
   return (
     <>
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="vocabulary" compact={true} />
       </div>
-      <Section title="Level">
-        <div className="grid grid-cols-3 gap-1.5">
-          {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l) => {
-            const isActive = l === level;
+      <Section title="CEFR Levels (Vocabulary)">
+        <div className="grid grid-cols-3 gap-2">
+          {VOCAB_LEVELS.map((lvl, index) => {
+            const isActive = lvl.id === currentLevel;
+            const isCompleted = v.mastered >= lvl.max;
+            const prevMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
+            
+            const bracketTotal = lvl.max - prevMax;
+            const bracketProgress = Math.max(0, Math.min(bracketTotal, v.mastered - prevMax));
+            const percent = (bracketProgress / bracketTotal) * 100;
+            
             return (
               <div
-                key={l}
+                key={lvl.id}
                 className={cn(
-                  'flex items-center justify-center rounded-md py-1.5 text-xs transition-all',
-                  isActive
-                    ? 'bg-foreground text-background font-bold shadow-sm'
-                    : 'bg-surface-hover text-muted-copy font-medium'
+                  'flex flex-col p-2 rounded-lg border transition-all',
+                  isActive 
+                    ? 'border-primary bg-primary/5 shadow-sm' 
+                    : isCompleted
+                    ? 'border-success/30 bg-success/5'
+                    : 'border-border-soft bg-surface-hover/50'
                 )}
               >
-                {l}
+                <div className="flex items-center justify-between mb-2">
+                  <span className={cn("text-xs font-bold", isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground')}>
+                    {lvl.id}
+                  </span>
+                  <span className="text-[10px] text-muted-copy font-medium">
+                    {lvl.max}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full bg-border-soft rounded-full overflow-hidden relative">
+                  <div 
+                    className={cn(
+                      "absolute top-0 left-0 h-full rounded-full transition-all duration-500", 
+                      isActive ? "bg-primary" : isCompleted ? "bg-success" : "bg-foreground/30"
+                    )}
+                    style={{ width: `${percent}%` }}
+                  />
+                </div>
               </div>
             );
           })}
@@ -291,7 +340,7 @@ function Vocab() {
         <div className="space-y-2">
           <div>
             <div className="flex justify-between text-xs text-muted-copy mb-1">
-              <span>Mastery</span>
+              <span>Total Mastery</span>
               <span>
                 {v.mastered}/{v.total}
               </span>
