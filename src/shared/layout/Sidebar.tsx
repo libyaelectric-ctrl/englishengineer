@@ -80,7 +80,7 @@ export const Sidebar: React.FC = () => {
                   EngVox
                 </span>
                 <span className="text-[10px] font-medium text-muted-copy leading-tight">
-                  V.2.1.0
+                  V.4.0.1
                 </span>
               </div>
             </div>

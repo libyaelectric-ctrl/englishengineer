@@ -109,9 +109,9 @@ const WritingPage = () => {
   const nextMission = currentMissionIndex < visibleMissions.length - 1 ? visibleMissions[currentMissionIndex + 1] : null;
 
   const moveMission = (offset: number) => {
-    const nextMission = visibleMissions[currentMissionIndex + offset];
-    if (nextMission) {
-      selectMission(nextMission.id);
+    const target = visibleMissions[currentMissionIndex + offset];
+    if (target) {
+      selectMission(target.id);
       setSelectedRule(null);
       setUserErrors({});
     }
@@ -184,7 +184,7 @@ const WritingPage = () => {
     <div className="space-y-6 animate-in fade-in duration-300">
       <PageHeader 
         title="Writing"
-        badgeText="A1"
+        badgeText={currentLevel}
         badgeColor="border-primary/20 bg-primary/10 text-primary"
       >
         <LevelContentFilter

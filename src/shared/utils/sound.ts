@@ -36,7 +36,7 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.2);
     }
-  } catch (e) {
-    console.warn('Micro-sound playback failed:', e);
+  } catch {
+    // Silently ignore audio playback failures
   }
 };
