@@ -2,15 +2,15 @@
 
 ## Evidence Decision
 
-**PARTIAL**
+**BLOCKED**
 
-At least one real staging or quality check was not verified. No failed check is reported as passed.
+Deployment credentials required. Live service verification was not run and no evidence was fabricated.
 
 ## Locally Verified Evidence
 
 - The verifier loads supported environment files and process variables without printing values.
 - Required modes and Stripe test-mode configuration are validated before any live request.
-- Secret-pattern scan: **PASS (0 high-confidence findings)**.
+- Secret-pattern scan: **FAIL (1 finding(s))**.
 - Environment ignore coverage: **PASS**.
 - Static Supabase RLS and local service behavior remain covered by the project quality scripts.
 
@@ -20,11 +20,7 @@ At least one real staging or quality check was not verified. No failed check is 
 
 ## Staging Verified Evidence
 
-- Supabase two-user authentication: **PASS**
-- Supabase session restore: **PASS**
-- Supabase cloud snapshot save/load: **PASS**
-- Supabase live RLS isolation across private tables: **PASS**
-- Supabase logout: **PASS**
+- Live verification: **NOT RUN**
 
 The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
 
@@ -45,9 +41,9 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 | `VITE_AUTH_PROVIDER`        | frontend | required    | OK           |
 | `VITE_SUPABASE_URL`         | frontend | required    | OK           |
 | `VITE_SUPABASE_ANON_KEY`    | frontend | required    | OK           |
-| `VITE_BILLING_API_URL`      | frontend | required    | OK           |
+| `VITE_BILLING_API_URL`      | frontend | required    | PLACEHOLDER  |
 | `VITE_AI_PROVIDER`          | frontend | required    | OK           |
-| `VITE_AI_PROXY_URL`         | frontend | required    | OK           |
+| `VITE_AI_PROXY_URL`         | frontend | required    | PLACEHOLDER  |
 | `SUPABASE_URL`              | backend  | required    | OK           |
 | `SUPABASE_ANON_KEY`         | backend  | required    | OK           |
 | `SUPABASE_SERVICE_ROLE_KEY` | backend  | required    | OK           |
@@ -67,20 +63,23 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-No quality commands were run because live prerequisites were blocked.
+| Command                                                 | Exit code | Result            |
+| ------------------------------------------------------- | --------: | ----------------- |
+| `node scripts/prc-kademe-8-live-verify.mjs --env-check` |         0 | BLOCKED_ENV_CHECK |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Security Check
 
 - `.env`, `.env.local`, `.env.production` and `.env.*.local` are ignored by repository rules.
-- No high-confidence committed secret pattern was found.
+- 1 high-confidence secret-pattern finding(s) require manual review. Values are intentionally omitted.
 - Secret values were not printed to terminal output or markdown.
 - Live checks accept only Stripe test-mode credentials.
 
 ## Remaining Blockers
 
-- None.
+- Placeholder required variable: `VITE_BILLING_API_URL`
+- Placeholder required variable: `VITE_AI_PROXY_URL`
 
 ## Next Decision
 
