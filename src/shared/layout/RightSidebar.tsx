@@ -11,7 +11,9 @@ import { useSpeakingStore } from '@/features/speaking';
 import { useLearningStore } from '@/core/learning';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
-const log = (_page: string, _action: string, _details: string) => {};
+const log = (_page: string, _action: string, _details: string) => {
+  // Sidebar interaction tracking placeholder — connect to analytics when needed
+};
 
 function Section({
   title,

@@ -78,8 +78,12 @@ const ProfilePage = () => {
   const setIsSaving = (v: boolean) => dispatchUI({ type: 'SET_SAVING', value: v });
   const setMessage = (v: string | null) => dispatchUI({ type: 'SET_MESSAGE', value: v });
   const setError = (v: string | null) => dispatchUI({ type: 'SET_ERROR', value: v });
-  const setShowClearConfirmation = (_v: React.SetStateAction<boolean>) =>
-    dispatchUI({ type: 'TOGGLE_CLEAR_CONFIRMATION' });
+  const setShowClearConfirmation = (v: React.SetStateAction<boolean>) => {
+    const nextValue = typeof v === 'function' ? v(ui.showClearConfirmation) : v;
+    if (nextValue !== ui.showClearConfirmation) {
+      dispatchUI({ type: 'TOGGLE_CLEAR_CONFIRMATION' });
+    }
+  };
   const setClearConfirmation = (v: string) =>
     dispatchUI({ type: 'SET_CLEAR_CONFIRMATION', value: v });
 

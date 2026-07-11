@@ -173,14 +173,13 @@ const DashboardPage = () => {
               </div>
               <div className="shrink-0 text-left sm:text-right">
                 <p className="text-xl font-bold text-foreground">
-                  {focusSkill.cefrBand}
+                  {focusSkill?.cefrBand ?? ''}
                 </p>
                 <p className="text-[10px] font-semibold text-muted-copy">
                   Lesson{' '}
-                  {
-                    LessonPathEngine.getSkillProgress(profile, focusSkill.skill)
-                      .lesson.number
-                  }
+                  {focusSkill
+                    ? LessonPathEngine.getSkillProgress(profile, focusSkill.skill).lesson.number
+                    : 1}
                 </p>
               </div>
             </div>

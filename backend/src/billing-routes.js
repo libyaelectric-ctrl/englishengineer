@@ -121,9 +121,7 @@ export const registerBillingRoutes = (
       details: { eventId, eventType },
     });
 
-    console.log(
-      `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
-    );
+    console.log(`[stripe-webhook-received] eventId=${eventId} type=${eventType}`);
 
     try {
       res.json(

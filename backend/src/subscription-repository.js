@@ -1,3 +1,5 @@
+import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
+
 const pruneEvents = (events, now, ttlMs, maxEntries) => {
   for (const [eventId, timestamp] of events) {
     if (now - timestamp >= ttlMs) events.delete(eventId);
@@ -65,4 +67,3 @@ export const createSubscriptionRepository = (config, fetchImpl = fetch) => {
     eventCacheMax: config.eventCacheMax,
   });
 };
-import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
