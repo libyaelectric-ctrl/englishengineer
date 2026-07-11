@@ -16,6 +16,7 @@ import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { calculateStreak } from './learning.streak';
 
 const STORAGE_KEY = 'learning_state';
+const MAX_HISTORY_SIZE = 500;
 
 const getInitialState = (): LearningState => {
   const persisted = storage.get<LearningState>(STORAGE_KEY);
@@ -177,11 +178,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       };
 
       const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession];
+      const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
       const updatedScoreHistory = [
         ...get().scoreHistory,
         { date: todayDateStr, score: result.score, module: mission.module },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
       const updatedXpHistory = [
         ...get().xpHistory,
         {
@@ -189,11 +190,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
           amount: result.xp,
           reason: `Completed ${mission.title}`,
         },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
       const updatedEloHistory = [
         ...get().eloHistory,
         { date: todayDateStr, value: newElo },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
 
       const tempState: LearningState = {
         ...get(),
@@ -269,11 +270,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       };
 
       const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession];
+      const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
       const updatedScoreHistory = [
         ...get().scoreHistory,
         { date: todayDateStr, score: result.score, module },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
       const updatedXpHistory = [
         ...get().xpHistory,
         {
@@ -281,11 +282,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
           amount: result.xp,
           reason: `Practiced ${module}`,
         },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
       const updatedEloHistory = [
         ...get().eloHistory,
         { date: todayDateStr, value: newElo },
-      ];
+      ].slice(-MAX_HISTORY_SIZE);
 
       const tempState: LearningState = {
         ...get(),

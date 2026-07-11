@@ -598,7 +598,7 @@ const VocabularyPage = () => {
   }, []);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 relative pb-20">
+    <div className="flex h-full flex-col animate-in fade-in duration-300">
       {/* STICKY HEADER, SEARCH, AND TABS */}
       <PageHeader title="Vocabulary">
         <form onSubmit={runSearch} className="space-y-4">
@@ -709,7 +709,17 @@ const VocabularyPage = () => {
         </div>
       </PageHeader>
 
-      {hasSearched && searchResults.length > 0 && (
+      <main className="flex-1 min-h-0">
+        <div className="grid h-full lg:grid-cols-[380px_1fr] xl:grid-cols-[450px_1fr]">
+          <div className="flex flex-col border-r border-border-soft bg-surface/50">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-6 space-y-6">
+
+                  </div>
+          </div>
+
+          <div className="flex flex-col bg-surface">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-8 space-y-6">
+{hasSearched && searchResults.length > 0 && (
         <SectionCard
           title="Search Results"
           subtitle={`Showing ${searchResults.length} of ${allSearchResults.length} matches`}
@@ -888,6 +898,10 @@ const VocabularyPage = () => {
           </div>
         )}
       </SectionCard>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
