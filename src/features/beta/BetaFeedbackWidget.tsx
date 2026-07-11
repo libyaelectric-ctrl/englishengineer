@@ -66,14 +66,14 @@ export const BetaFeedbackWidget = () => {
             <div className="flex items-center justify-between gap-3">
               <p
                 id="feedback-title"
-                className="text-xs font-black uppercase tracking-[0.16em] text-foreground0"
+                className="text-xs font-black uppercase tracking-[0.16em] text-muted-copy"
               >
                 {LocalizationService.translate('feedback.title', language)}
               </p>
               <button
                 type="button"
                 onClick={close}
-                className="rounded-[10px] p-2 text-foreground0 transition hover:bg-surface-hover hover:text-foreground"
+                className="rounded-[10px] p-2 text-muted-copy transition hover:bg-surface-hover hover:text-foreground"
                 aria-label="Close feedback form"
               >
                 <X className="h-4 w-4" />
@@ -121,7 +121,7 @@ export const BetaFeedbackWidget = () => {
                 )}
                 className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm"
               />
-              <p className="text-xs leading-5 text-foreground0">
+              <p className="text-xs leading-5 text-muted-copy">
                 Screenshot upload is not enabled yet. Add relevant visual
                 details to the message.
               </p>

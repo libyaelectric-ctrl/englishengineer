@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { calculateProductAnalyticsSummary } from './beta.helpers';
 import { ProductAnalyticsEvent } from './beta.types';
@@ -39,4 +40,3 @@ describe('closed beta analytics', () => {
     ).toBe(1);
   });
 });
-// @vitest-environment node

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it, beforeAll } from 'vitest';
 import { loadVocabularyEntries } from './vocabulary.data';
 import { VocabularyDiscipline, VocabularyEntry } from './vocabulary.types';
@@ -65,4 +66,3 @@ describe('vocabulary content pack integrity', () => {
     expect(joined).not.toContain('distributed systems');
   });
 });
-// @vitest-environment node

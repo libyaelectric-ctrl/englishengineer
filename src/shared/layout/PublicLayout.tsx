@@ -41,7 +41,7 @@ export const PublicLayout = () => {
                 <strong className="block text-sm text-foreground">
                   EngVox
                 </strong>
-                <span className="hidden text-[10px] font-semibold uppercase text-foreground0 sm:block">
+                <span className="hidden text-[10px] font-semibold uppercase text-muted-copy sm:block">
                   Your Engineering Voice
                 </span>
               </span>
@@ -141,8 +141,8 @@ export const PublicLayout = () => {
         <footer className="border-t border-border-soft bg-surface/80">
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-              <p className="text-xs text-foreground0">&copy; 2026 EngVox</p>
-              <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-foreground0">
+              <p className="text-xs text-muted-copy">&copy; 2026 EngVox</p>
+              <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-copy">
                 <Link className="hover:text-foreground" to="/pricing">
                   Pricing
                 </Link>

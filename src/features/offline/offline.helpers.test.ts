@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { OFFLINE_CAPABILITIES } from './offline.data';
 import {
@@ -33,4 +34,3 @@ describe('offline capability rules', () => {
     });
   });
 });
-// @vitest-environment node

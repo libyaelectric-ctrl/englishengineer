@@ -39,7 +39,7 @@ const ToolsPage = () => {
                 ? 'AI COPILOT'
                 : 'DEVELOPER HUB'
         }
-        badgeColor="cyan"
+        badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
       />
 
       {activeTab === 'work' && <WorkToolsPage embedded />}

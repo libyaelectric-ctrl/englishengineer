@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   calculateEstimatedCefr,
@@ -167,4 +168,3 @@ describe('analytics calculations', () => {
     ).toBe(17);
   });
 });
-// @vitest-environment node

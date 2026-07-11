@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   isAICoachResult,
@@ -66,4 +67,3 @@ describe('backend proxy response parsing', () => {
     ).toThrow('structuredResult');
   });
 });
-// @vitest-environment node

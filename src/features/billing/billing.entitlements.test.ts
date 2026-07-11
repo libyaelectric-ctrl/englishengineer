@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { createFreeSubscription } from './billing.helpers';
 import {
@@ -83,4 +84,3 @@ describe('billing entitlements', () => {
     ).toBe(true);
   });
 });
-// @vitest-environment node
