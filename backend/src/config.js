@@ -146,17 +146,17 @@ export const createBackendConfig = (environment = process.env) => {
         ? (
             environment.SUPABASE_ANON_KEY ||
             environment.SUPABASE_SERVICE_ROLE_KEY
-          ).trim()
+          ).replace(/\s+/g, '')
         : null,
       supabaseJwtSecret: hasText(environment.SUPABASE_JWT_SECRET)
-        ? environment.SUPABASE_JWT_SECRET.trim()
+        ? environment.SUPABASE_JWT_SECRET.replace(/\s+/g, '')
         : null,
     },
     stripe: {
       configured: stripeConfigured,
-      secretKey: stripeConfigured ? environment.STRIPE_SECRET_KEY.trim() : null,
+      secretKey: stripeConfigured ? environment.STRIPE_SECRET_KEY.replace(/\s+/g, '') : null,
       webhookSecret: hasText(environment.STRIPE_WEBHOOK_SECRET)
-        ? environment.STRIPE_WEBHOOK_SECRET.trim()
+        ? environment.STRIPE_WEBHOOK_SECRET.replace(/\s+/g, '')
         : null,
       priceProMonthly: stripeConfigured
         ? environment.STRIPE_PRICE_PRO_MONTHLY.trim()
@@ -192,7 +192,7 @@ export const createBackendConfig = (environment = process.env) => {
       repositoryMode: requestedBillingRepository,
       supabaseUrl: supabaseConfigured ? environment.SUPABASE_URL.trim() : null,
       supabaseServiceRoleKey: supabaseConfigured
-        ? environment.SUPABASE_SERVICE_ROLE_KEY.trim()
+        ? environment.SUPABASE_SERVICE_ROLE_KEY.replace(/\s+/g, '')
         : null,
     },
     supabase: {
@@ -224,7 +224,7 @@ export const createBackendConfig = (environment = process.env) => {
       configured: supabaseConfigured,
       supabaseUrl: supabaseConfigured ? environment.SUPABASE_URL.trim() : null,
       supabaseServiceRoleKey: supabaseConfigured
-        ? environment.SUPABASE_SERVICE_ROLE_KEY.trim()
+        ? environment.SUPABASE_SERVICE_ROLE_KEY.replace(/\s+/g, '')
         : null,
     },
     rateLimit: {
@@ -236,7 +236,7 @@ export const createBackendConfig = (environment = process.env) => {
         ? environment.UPSTASH_REDIS_REST_URL.trim().replace(/\/$/, '')
         : null,
       upstashToken: upstashRateLimitConfigured
-        ? environment.UPSTASH_REDIS_REST_TOKEN.trim()
+        ? environment.UPSTASH_REDIS_REST_TOKEN.replace(/\s+/g, '')
         : null,
       storeTimeoutMs: toPositiveInteger(
         environment.RATE_LIMIT_STORE_TIMEOUT_MS,
