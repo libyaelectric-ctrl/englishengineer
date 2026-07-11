@@ -82,7 +82,8 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
     return typeof user?.id === 'string' && user.id
       ? { userId: user.id, email: user.email, source: 'supabase-jwt' }
       : null;
-  } catch {
+  } catch (error) {
+    console.error('[validateSupabaseToken] failed:', error);
     throw new ApiError(
       503,
       'auth_provider_unavailable',
