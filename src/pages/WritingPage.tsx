@@ -22,6 +22,7 @@ import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { Button } from '@/shared/components/Button';
+import { PageHeader } from '@/shared/components/PageHeader';
 import {
   useWritingStore,
   WritingHelpers,
@@ -123,11 +124,7 @@ const WritingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
-          </div>
-        </div>
+        <PageHeader title="Writing" />
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -249,19 +246,16 @@ const WritingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
-            <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-              A1
-            </span>
-          </div>
+      <PageHeader 
+        title="Writing"
+        badgeText="A1"
+        badgeColor="border-primary/20 bg-primary/10 text-primary"
+        actions={
           <div className="hidden text-xs text-muted-copy lg:block">
             {finishedCount}/{missions.length} completed
           </div>
-        </div>
-      </div>
+        }
+      />
 
       {/* Top statistics panel */}
       {activeTab === 'missions' && (

@@ -41,6 +41,7 @@ import {
   type VocabularyTerm,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
+import { PageHeader } from '@/shared/components/PageHeader';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
@@ -599,11 +600,7 @@ const VocabularyPage = () => {
   return (
     <div className="space-y-7 animate-in fade-in duration-300 relative pb-20">
       {/* STICKY HEADER, SEARCH, AND TABS */}
-      <div className="sticky top-0 z-30 bg-background pt-6 pb-4 border-b border-border-soft space-y-5">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Vocabulary</h1>
-        </div>
-
+      <PageHeader title="Vocabulary">
         <form onSubmit={runSearch} className="space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
@@ -710,7 +707,7 @@ const VocabularyPage = () => {
             </button>
           ))}
         </div>
-      </div>
+      </PageHeader>
 
       {hasSearched && searchResults.length > 0 && (
         <SectionCard
