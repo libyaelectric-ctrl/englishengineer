@@ -66,6 +66,19 @@ export const createApp = ({
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
+  
+  // Timing Middleware (Performance Measurement)
+  app.use((req, res, next) => {
+    const start = process.hrtime();
+    res.on('finish', () => {
+      const diff = process.hrtime(start);
+      const timeMs = (diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2);
+      console.log(`[Timing] ${req.method} ${req.originalUrl} - ${timeMs}ms`);
+      res.setHeader('X-Response-Time', `${timeMs}ms`);
+    });
+    next();
+  });
+  
   app.use(createI18nMiddleware());
 
   app.get('/api/health', (_request, response) => {
