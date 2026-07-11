@@ -15,5 +15,6 @@ export * from './vocabulary.memory';
 export * from './vocabulary.memory.store';
 export * from './vocabulary.search';
 export * from './vocabulary.spaced-repetition';
+export * from './vocabulary-due-today';
 export * from './vocabulary.menu';
 export * from './vocabulary.selection';

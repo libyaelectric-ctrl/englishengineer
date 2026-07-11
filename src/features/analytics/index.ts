@@ -6,3 +6,5 @@ export * from './analytics.store';
 export * from './product-analytics.types';
 export * from './product-analytics.provider';
 export * from './product-analytics.service';
+export * from './learning-report-generator';
+export * from './analytics-dashboard-v2';

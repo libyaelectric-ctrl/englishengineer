@@ -4,3 +4,4 @@ export * from './gamification.service';
 export * from './gamification.store';
 export * from './gamification.rules';
 export * from './gamification.rewards';
+export * from './gamification-shop';
