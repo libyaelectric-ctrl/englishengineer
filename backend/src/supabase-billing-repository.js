@@ -54,12 +54,12 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
     if (init?.headers) {
       if (typeof init.headers.forEach === 'function') {
         init.headers.forEach((value, key) => {
-          headersObj[key] = value;
           if (key.toLowerCase() === 'authorization') {
             headersObj['Authorization'] = value;
-          }
-          if (key.toLowerCase() === 'apikey') {
+          } else if (key.toLowerCase() === 'apikey') {
             headersObj['apikey'] = value;
+          } else {
+            headersObj[key] = value;
           }
         });
       } else {
