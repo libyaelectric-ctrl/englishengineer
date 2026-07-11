@@ -19,7 +19,7 @@ export const emptySubscription = () => ({
   topupCredits: 0,
 });
 
-export const getRequestUserId = (request) => {
+const getRequestUserId = (request) => {
   const authUserId = request.auth?.userId;
   if (typeof authUserId === 'string' && authUserId.trim()) {
     return authUserId.trim();

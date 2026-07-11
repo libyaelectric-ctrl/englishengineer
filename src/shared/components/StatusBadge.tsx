@@ -1,9 +1,9 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 type StatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
-interface StatusBadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+interface StatusBadgeProps extends HTMLAttributes<HTMLSpanElement> {
   label: string;
   tone?: StatusTone;
 }
@@ -16,7 +16,7 @@ const toneClasses: Record<StatusTone, string> = {
   danger: 'border-error/20 bg-error/10 text-error',
 };
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({
+export const StatusBadge: FC<StatusBadgeProps> = ({
   label,
   tone = 'neutral',
   className,

@@ -1,7 +1,7 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
-interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   value: number;
   max?: number;
   showValue?: boolean;
@@ -17,7 +17,7 @@ interface ProgressBarProps extends React.HTMLAttributes<HTMLDivElement> {
     | 'danger';
 }
 
-export const ProgressBar: React.FC<ProgressBarProps> = ({
+export const ProgressBar: FC<ProgressBarProps> = ({
   value,
   max = 100,
   showValue = false,

@@ -1,17 +1,17 @@
-import React from 'react';
+import { type FC, type HTMLAttributes, type ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
 
-interface SectionCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SectionCardProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   subtitle?: string;
   icon?: LucideIcon;
-  headerActions?: React.ReactNode;
-  footer?: React.ReactNode;
+  headerActions?: ReactNode;
+  footer?: ReactNode;
 }
 
-export const SectionCard: React.FC<SectionCardProps> = ({
+export const SectionCard: FC<SectionCardProps> = ({
   title,
   subtitle,
   icon: Icon,
