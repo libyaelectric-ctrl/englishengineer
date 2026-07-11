@@ -7,6 +7,7 @@ import {
   UserLearningProfile,
   LearningProfileEngine,
   VocabularyMemorySummary,
+  getEloBandRange,
 } from '@/features/profile';
 import { MistakeLogEntry } from '@/features/learning-intelligence';
 
@@ -62,9 +63,7 @@ export const SkillsProgressSection = ({
                   <p className="text-xs font-medium uppercase tracking-wider text-foreground capitalize">
                     {skill}
                   </p>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-medium text-primary">
-                    {skillProfile.cefrBand} ({skillProfile.elo} ELO)
-                  </span>
+                  {/* Replaced top badge with the new detailed progress bar below */}
                 </div>
                 <p className="mt-2 text-[10px] text-muted-copy leading-4">
                   {isSimulated
@@ -73,12 +72,41 @@ export const SkillsProgressSection = ({
                       : 'Simulated site meeting discussions. Available for practice.'
                     : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
                 </p>
-                <ProgressBar
-                  value={skillProfile.progressToNextBand}
-                  showValue={false}
-                  color="cyan"
-                  className="mt-4"
-                />
+                <div className="mt-4 space-y-1.5">
+                  <div className="flex justify-between items-end px-1">
+                    <div className="flex flex-col items-start">
+                      <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Min</span>
+                      <span className="text-[10px] font-medium text-muted-copy">
+                        {getEloBandRange(skillProfile.cefrBand).min}
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="text-[10px] font-bold text-foreground">
+                        {skillProfile.elo} ELO
+                      </span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Max</span>
+                      <span className="text-[10px] font-medium text-muted-copy">
+                        {getEloBandRange(skillProfile.cefrBand).max}
+                      </span>
+                    </div>
+                  </div>
+                  <ProgressBar
+                    value={skillProfile.progressToNextBand}
+                    showValue={false}
+                    color="cyan"
+                    className=""
+                  />
+                  <div className="flex justify-between items-center px-1 pt-0.5">
+                    <span className="text-[10px] font-bold text-primary">
+                      {skillProfile.cefrBand} Level
+                    </span>
+                    <span className="text-[9px] font-medium text-muted-copy">
+                      {skillProfile.progressToNextBand}% to next level
+                    </span>
+                  </div>
+                </div>
               </article>
             );
           })}
