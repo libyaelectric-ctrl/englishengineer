@@ -30,10 +30,10 @@ export const LevelContentFilter = ({
   onChange,
 }: LevelContentFilterProps) => (
   <div className="space-y-2">
-    <div className="rounded-xl border border-border-soft bg-white p-3 shadow-sm">
+    <div className="rounded-xl border border-border-soft bg-surface p-3 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase text-foreground0">
+          <p className="text-xs font-bold uppercase text-muted-copy">
             Content level
           </p>
           <p className="mt-1 text-sm font-semibold text-foreground">
@@ -53,7 +53,7 @@ export const LevelContentFilter = ({
               className={`min-h-10 rounded-[10px] border px-3 py-2 text-xs font-semibold transition-colors ${
                 value === filter.value
                   ? 'border-sky-300 bg-primary/5 text-primary'
-                  : 'border-border-soft bg-white text-muted-copy hover:border-primary/20 hover:bg-primary/5/60'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5/60'
               }`}
             >
               {filter.label}
