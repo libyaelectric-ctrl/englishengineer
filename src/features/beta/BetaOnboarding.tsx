@@ -79,7 +79,7 @@ export const BetaOnboarding = () => {
     options: string[]
   ) => (
     <label className="space-y-2">
-      <span className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
+      <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
         {label}
       </span>
       <select
@@ -104,7 +104,7 @@ export const BetaOnboarding = () => {
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-foreground0">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-muted-copy">
               Closed Beta Setup
             </p>
             <h2 className="mt-2 text-3xl font-black text-foreground">
@@ -154,7 +154,7 @@ export const BetaOnboarding = () => {
             BETA_ONBOARDING_OPTIONS.careerGoals
           )}
           <label className="space-y-2">
-            <span className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
+            <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
               Timezone
             </span>
             <input
@@ -166,7 +166,7 @@ export const BetaOnboarding = () => {
         </div>
 
         <div className="mt-5 rounded-[12px] border border-border-soft bg-surface-hover p-4">
-          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-foreground0">
+          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
             Choose your starting path
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -201,7 +201,7 @@ export const BetaOnboarding = () => {
           </p>
         </div>
 
-        <p className="mt-4 text-xs leading-5 text-foreground0">
+        <p className="mt-4 text-xs leading-5 text-muted-copy">
           Your level starts at A1 in demo mode. EngVox updates the estimate
           after enough completed tasks. Scores are internal Engineering
           Communication estimates, not official CEFR certificates.

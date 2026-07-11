@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   PRODUCT_ANALYTICS_EVENT_NAMES,
@@ -90,4 +91,3 @@ describe('product analytics privacy guard', () => {
   });
 });
 
-// @vitest-environment node

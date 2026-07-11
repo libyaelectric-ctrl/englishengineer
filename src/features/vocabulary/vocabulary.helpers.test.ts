@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { VocabularyEvaluator } from './vocabulary.evaluator';
 import {
@@ -126,4 +127,3 @@ describe('vocabulary helpers and evaluator', () => {
     expect(result.weakWords).toEqual(['b']);
   });
 });
-// @vitest-environment node

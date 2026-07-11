@@ -149,13 +149,13 @@ const WordCard = ({
       {showAnswer && (
         <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
           <p>{repairVocabularyText(term.exampleSentence)}</p>
-          <p className="text-foreground0">
+          <p className="text-muted-copy">
             {repairVocabularyText(term.turkishExample)}
           </p>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-muted-copy">
         <span className="font-semibold capitalize">
           Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
         </span>
@@ -820,7 +820,7 @@ const VocabularyPage = () => {
                 <Button type="submit">
                   <Plus className="h-4 w-4" /> Save to My Vocabulary
                 </Button>
-                <span className="text-xs font-bold text-foreground0">
+                <span className="text-xs font-bold text-muted-copy">
                   AI Assist Coming Soon
                 </span>
               </div>
@@ -858,7 +858,7 @@ const VocabularyPage = () => {
           </p>
         )}
         {!loadError && terms.length === 0 && (
-          <p className="text-sm text-foreground0">Loading canonical words...</p>
+          <p className="text-sm text-muted-copy">Loading canonical words...</p>
         )}
         {terms.length > 0 && wordSet.length === 0 && (
           <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">

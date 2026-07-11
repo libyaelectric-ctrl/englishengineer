@@ -216,7 +216,7 @@ export const AdminPage: React.FC = () => {
                         className={`rounded px-1.5 py-0.5 font-semibold text-[10px] ${
                           u.plan.includes('Pro')
                             ? 'bg-blue-100 text-blue-800'
-                            : 'bg-gray-100 text-gray-700'
+                            : 'bg-surface-hover text-muted-copy'
                         }`}
                       >
                         {u.plan}

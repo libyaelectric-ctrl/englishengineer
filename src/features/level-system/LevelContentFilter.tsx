@@ -15,7 +15,7 @@ const accessStyles: Record<ContentAccessLabel, string> = {
   Current: 'border-primary/20 bg-primary/5 text-primary',
   Review: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   Preview: 'border-amber-200 bg-amber-50 text-amber-700',
-  Locked: 'border-border-soft bg-surface-hover text-foreground0',
+  Locked: 'border-border-soft bg-surface-hover text-muted-copy',
 };
 
 interface LevelContentFilterProps {
