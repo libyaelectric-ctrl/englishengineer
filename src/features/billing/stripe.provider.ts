@@ -20,7 +20,7 @@ const mapRequestError = (error: unknown): Error => {
 
   if (error instanceof TypeError) {
     return new Error(
-      'Billing backend is unavailable or the network request failed.'
+      'Billing service is currently unreachable. Please check your connection or try again later.'
     );
   }
 

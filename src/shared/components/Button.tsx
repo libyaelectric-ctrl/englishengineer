@@ -25,12 +25,15 @@ const variantClasses: Record<ButtonVariant, string> = {
 
 export const Button = forwardRef<
   HTMLButtonElement,
-  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }
->(({ className, variant = 'primary', ...props }, ref) => (
+  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; size?: 'default' | 'sm' | 'icon' }
+>(({ className, variant = 'primary', size = 'default', ...props }, ref) => (
   <button
     ref={ref}
     className={cn(
-      'inline-flex min-h-10 min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-lg px-4 py-2 text-center text-sm font-medium leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
+      'btn-press inline-flex min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-lg text-center font-medium leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer',
+      size === 'default' && 'min-h-10 px-4 py-2 text-sm',
+      size === 'sm' && 'min-h-8 px-3 py-1.5 text-xs',
+      size === 'icon' && 'h-10 w-10 p-0',
       variantClasses[variant],
       className
     )}

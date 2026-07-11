@@ -88,10 +88,9 @@ export const BillingService = {
       });
 
       window.location.assign(response.url);
-    } catch {
-      throw new Error(
-        'Billing backend is unavailable. Please try again later or use demo mode.'
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) throw error;
+      throw new Error('Billing service is temporarily unavailable.');
     }
   },
 
@@ -110,10 +109,9 @@ export const BillingService = {
       });
 
       window.location.assign(response.url);
-    } catch {
-      throw new Error(
-        'Billing backend is unavailable. Please try again later.'
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) throw error;
+      throw new Error('Billing service is temporarily unavailable.');
     }
   },
 
@@ -134,10 +132,9 @@ export const BillingService = {
       });
 
       window.location.assign(response.url);
-    } catch {
-      throw new Error(
-        'Billing backend is unavailable. Please try again later or use demo mode.'
-      );
+    } catch (error: unknown) {
+      if (error instanceof Error) throw error;
+      throw new Error('Billing service is temporarily unavailable.');
     }
   },
 };

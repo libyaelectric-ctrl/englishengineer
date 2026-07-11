@@ -102,9 +102,9 @@ function Stat({
 }) {
   return (
     <div className="flex justify-between items-center py-1">
-      <span className="text-[11px] text-muted-copy">{label}</span>
+      <span className="text-xs text-muted-copy">{label}</span>
       <span
-        className={cn('text-[11px] font-semibold', color || 'text-foreground')}
+        className={cn('text-xs font-semibold', color || 'text-foreground')}
       >
         {value}
       </span>
@@ -260,19 +260,23 @@ function Vocab() {
         <SkillEntryBrief skill="vocabulary" compact={true} />
       </div>
       <Section title="Level">
-        <div className="space-y-0.5">
-          {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l) => (
-            <Item
-              key={l}
-              label={l}
-              active={l === level}
-              onClick={() => {
-                setLevel(l);
-                log('/vocabulary', 'level', l);
-              }}
-              badge={l === level ? '✓' : undefined}
-            />
-          ))}
+        <div className="grid grid-cols-3 gap-1.5">
+          {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((l) => {
+            const isActive = l === level;
+            return (
+              <div
+                key={l}
+                className={cn(
+                  'flex items-center justify-center rounded-md py-1.5 text-xs transition-all',
+                  isActive
+                    ? 'bg-foreground text-background font-bold shadow-sm'
+                    : 'bg-surface-hover text-muted-copy font-medium'
+                )}
+              >
+                {l}
+              </div>
+            );
+          })}
         </div>
       </Section>
       <Section title="Word Status">
@@ -286,7 +290,7 @@ function Vocab() {
       <Section title="Progress">
         <div className="space-y-2">
           <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
+            <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Mastery</span>
               <span>
                 {v.mastered}/{v.total}
@@ -295,7 +299,7 @@ function Vocab() {
             <Progress value={v.mastered} max={v.total} />
           </div>
           <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
+            <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Learning</span>
               <span>
                 {v.learning}/{v.total}
@@ -310,22 +314,22 @@ function Vocab() {
           <Action
             icon="⏰"
             label={`Review ${v.dueToday} due words`}
-            onClick={() => log('/vocabulary', 'review', `${v.dueToday} due`)}
+            onClick={() => {
+              log('/vocabulary', 'review', `${v.dueToday} due`);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
             variant="warning"
           />
           <Action
             icon="➕"
             label="Add custom word"
-            onClick={() =>
-              document
-                .querySelector('[aria-label="Search vocabulary"]')
-                ?.scrollIntoView({ behavior: 'smooth' })
-            }
-          />
-          <Action
-            icon="📤"
-            label="Export vocabulary"
-            onClick={() => alert('Export coming soon!')}
+            onClick={() => {
+              const input = document.querySelector('input');
+              if (input) {
+                input.scrollIntoView({ behavior: 'smooth' });
+                input.focus();
+              }
+            }}
           />
         </div>
       </Section>
@@ -369,14 +373,14 @@ function Grammar() {
       <Section title="Progress">
         <div className="space-y-2">
           <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
+            <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Strong</span>
               <span>{g.strong}/360</span>
             </div>
             <Progress value={g.strong} max={360} />
           </div>
           <div>
-            <div className="flex justify-between text-[10px] text-muted-copy mb-1">
+            <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Due</span>
               <span>{g.due}/360</span>
             </div>
