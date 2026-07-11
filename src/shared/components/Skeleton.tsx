@@ -1,11 +1,11 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
-interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'line' | 'card' | 'circle' | 'avatar' | 'button' | 'image';
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({
+export const Skeleton: FC<SkeletonProps> = ({
   variant = 'line',
   className,
   ...props

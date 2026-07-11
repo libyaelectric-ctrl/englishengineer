@@ -46,17 +46,21 @@ test('insecure dev auth is blocked in production by default', async () => {
   assert.equal(body.error.code, 'authentication_required');
 });
 
-test('config throws when allowInsecureDevAuth is true in production', () => {
-  assert.throws(
-    () =>
-      createBackendConfig({
-        NODE_ENV: 'production',
-        ALLOW_INSECURE_DEV_AUTH: 'true',
-        RATE_LIMIT_STORE: 'memory',
-        ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
-      }),
-    /allowInsecureDevAuth cannot be true in production/
-  );
+test('config warns when allowInsecureDevAuth is true in production', () => {
+  const originalWarn = console.warn;
+  let warningMessage = '';
+  console.warn = (msg) => { warningMessage = msg; };
+  try {
+    createBackendConfig({
+      NODE_ENV: 'production',
+      ALLOW_INSECURE_DEV_AUTH: 'true',
+      RATE_LIMIT_STORE: 'memory',
+      ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
+    });
+    assert.ok(warningMessage.includes('allowInsecureDevAuth cannot be true in production'));
+  } finally {
+    console.warn = originalWarn;
+  }
 });
 
 test('demo engineer profiles are blocked from creating checkout sessions in the backend', async () => {

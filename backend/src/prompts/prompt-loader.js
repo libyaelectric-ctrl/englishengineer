@@ -15,8 +15,6 @@ const loadPrompt = (filename) => {
   return content;
 };
 
-const clearCache = () => cache.clear();
-
 export const getJsonStructureInstruction = () =>
   loadPrompt('json-structure.md');
 
@@ -45,8 +43,3 @@ export const getCustomPracticePrompt = (context = {}) => {
   }
   return result;
 };
-
-export const getMockText = (operation) =>
-  `[Mock AI] ${operation} is running in local fallback mode. Configure a supported backend provider for real AI output.`;
-
-export { loadPrompt, clearCache };

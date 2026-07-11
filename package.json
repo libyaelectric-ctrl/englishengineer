@@ -76,7 +76,6 @@
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/coverage-v8": "^4.1.9",
-    "autoprefixer": "^10.4.21",
     "dependency-cruiser": "^18.0.0",
     "eslint": "^9.0.0",
     "fflate": "^0.8.3",

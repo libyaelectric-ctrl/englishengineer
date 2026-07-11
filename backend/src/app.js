@@ -11,6 +11,7 @@ import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import {
   createVocabularyLookupService,
+  createUpstashVocabularyCache,
   registerVocabularyRoutes,
 } from './vocabulary.js';
 import {

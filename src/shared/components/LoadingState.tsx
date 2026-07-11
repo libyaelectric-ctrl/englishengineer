@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import { Skeleton } from './Skeleton';
 
 interface LoadingStateProps {
@@ -6,7 +6,7 @@ interface LoadingStateProps {
   description?: string;
 }
 
-export const LoadingState: React.FC<LoadingStateProps> = ({
+export const LoadingState: FC<LoadingStateProps> = ({
   title,
   description,
 }) => (

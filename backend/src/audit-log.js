@@ -68,33 +68,6 @@ export const getAuditLogs = async (filters = {}) => {
 };
 
 export const AUDIT_ACTIONS = {
-  // Billing
   CHECKOUT_CREATED: 'checkout_created',
-  CHECKOUT_COMPLETED: 'checkout_completed',
-  SUBSCRIPTION_UPDATED: 'subscription_updated',
-  SUBSCRIPTION_CANCELED: 'subscription_canceled',
   WEBHOOK_RECEIVED: 'webhook_received',
-  WEBHOOK_FAILED: 'webhook_failed',
-
-  // Admin
-  ROLE_CHANGED: 'role_changed',
-  PLAN_CHANGED: 'plan_changed',
-  USER_SUSPENDED: 'user_suspended',
-
-  // Workspace
-  WORKSPACE_CREATED: 'workspace_created',
-  WORKSPACE_DELETED: 'workspace_deleted',
-  WORKSPACE_MEMORY_UPDATED: 'workspace_memory_updated',
-  DOCUMENT_ADDED: 'document_added',
-  DOCUMENT_DELETED: 'document_deleted',
-
-  // Auth
-  AUTH_SUCCESS: 'auth_success',
-  AUTH_FAILURE: 'auth_failure',
-  INSECURE_DEV_AUTH_USED: 'insecure_dev_auth_used',
-
-  // AI
-  AI_REQUEST: 'ai_request',
-  AI_RATE_LIMITED: 'ai_rate_limited',
-  AI_CREDIT_EXCEEDED: 'ai_credit_exceeded',
 };

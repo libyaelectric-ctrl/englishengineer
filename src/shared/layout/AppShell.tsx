@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { RightSidebar } from './RightSidebar';
@@ -8,7 +8,7 @@ import { useAppStore } from '@/store/app.store';
 import { CommandPalette } from '@/shared/components/CommandPalette';
 import { Menu } from 'lucide-react';
 
-export const AppShell: React.FC = () => {
+export const AppShell: FC = () => {
   const { toggleSidebar } = useAppStore();
 
   return (

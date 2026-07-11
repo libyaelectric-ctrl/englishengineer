@@ -1,7 +1,7 @@
-import React from 'react';
+import { type FC, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 
-interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+interface PageHeaderProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   description?: string;
   badgeText?: string;
@@ -14,10 +14,10 @@ interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
     | 'success'
     | 'warning'
     | 'danger';
-  actions?: React.ReactNode;
+  actions?: ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({
+export const PageHeader: FC<PageHeaderProps> = ({
   title,
   description,
   badgeText,
