@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
+    "bullmq": "^5.7.8",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "helmet": "^8.1.0",
