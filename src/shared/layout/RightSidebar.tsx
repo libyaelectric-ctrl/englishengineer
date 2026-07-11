@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/shared/utils/cn';
 import { useAuthStore } from '@/features/auth';
 import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
-import { GrammarProgressService } from '@/features/grammar';
+import { GrammarProgressService, useGrammarStore } from '@/features/grammar';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing';
 import { useListeningStore } from '@/features/listening';
@@ -389,12 +389,44 @@ function Vocab() {
 function Grammar() {
   useLearningStore((state) => state.studySessions.length);
   const g = GrammarProgressService.getSummary(360);
-  const [tab, setTab] = useState('New');
+  const { tab, setTab, rules, selectedId } = useGrammarStore();
+  
+  const selectedRule = rules.find((rule) => rule.id === selectedId) ?? rules[0];
+  const selectedRuleIndex = selectedRule ? rules.findIndex((rule) => rule.id === selectedRule.id) : -1;
+
   return (
     <>
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="grammar" compact={true} />
       </div>
+
+      <Section title="Your grammar path">
+        <div className="space-y-3">
+          <div>
+            <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
+              {selectedRule ? selectedRule.cefrLevel : 'Loading'} PATH · {rules.length} NAMED TOPICS
+            </p>
+            <p className="text-xs text-muted-copy leading-5">
+              Move through named topics in order; practice feeds Learning Memory
+            </p>
+          </div>
+          
+          {selectedRule && (
+            <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
+              <p className="text-[10px] font-bold text-primary mb-1">
+                LESSON {selectedRuleIndex + 1} OF {rules.length}
+              </p>
+              <p className="text-sm font-bold text-foreground">
+                {selectedRule.title}
+              </p>
+              <p className="text-[10px] text-muted-copy mt-1 truncate">
+                {selectedRule.grammarCategory}
+              </p>
+            </div>
+          )}
+        </div>
+      </Section>
+
       <Section title="Status">
         <div className="space-y-0.5">
           {(['New', 'Learning', 'Due', 'Strong'] as const).map((t) => (
