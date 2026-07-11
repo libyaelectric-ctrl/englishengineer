@@ -18,8 +18,8 @@ import {
   Search,
   XCircle,
 } from 'lucide-react';
-import { useAuthStore } from '@/features/auth';
 import { useLearningStore } from '@/core/learning';
+import { playSound } from '@/shared/utils/sound';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
@@ -493,6 +493,7 @@ const VocabularyPage = () => {
       new Date(),
       repairVocabularyText(term.term)
     );
+    if (isCorrect) playSound('ding');
     useLearningStore.getState().completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
     dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
     ProductAnalyticsService.track(
@@ -514,6 +515,7 @@ const VocabularyPage = () => {
 
   const learnWord = (term: VocabularyTerm) => {
     VocabularyMenuService.startLearning(term.id, new Date());
+    playSound('success');
     useLearningStore.getState().completeGenericPractice('Vocabulary', 100, 0.5);
     dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
     ProductAnalyticsService.track(

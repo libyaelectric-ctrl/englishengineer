@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Award, Gauge, ArrowRight } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { Heatmap } from '@/shared/components/Heatmap';
 import {
   SKILL_NAMES,
   UserLearningProfile,
@@ -246,14 +247,17 @@ export const SkillsProgressSection = ({
           )}
         </div>
 
-        {/* Analytics CTA */}
-        <div className="mt-6 flex justify-end border-t border-border-soft pt-4">
-          <Link
-            to="/analytics"
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
-          >
-            View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+        {/* Heatmap & Analytics CTA */}
+        <div className="mt-6 flex flex-col gap-4 border-t border-border-soft pt-4">
+          <Heatmap />
+          <div className="flex justify-end mt-2">
+            <Link
+              to="/analytics"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
+            >
+              View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </SectionCard>
     </section>

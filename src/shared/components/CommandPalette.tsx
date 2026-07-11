@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Moon, User, LayoutDashboard, Brain, CreditCard, ChevronRight } from 'lucide-react';
+import { Search, Moon, User, LayoutDashboard, Brain, CreditCard, ChevronRight, BookOpen, PenTool } from 'lucide-react';
 
 export const CommandPalette: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +40,9 @@ export const CommandPalette: React.FC = () => {
 
   const commands = [
     { id: 'dashboard', title: 'Dashboard\'a Git', icon: LayoutDashboard, action: () => navigate('/dashboard') },
+    { id: 'vocabulary', title: 'Kelime Çalış (Vocabulary)', icon: BookOpen, action: () => navigate('/vocabulary') },
+    { id: 'grammar', title: 'Gramer Kuralları (Grammar)', icon: PenTool, action: () => navigate('/grammar') },
+    { id: 'reading', title: 'Okuma Görevleri (Reading)', icon: BookOpen, action: () => navigate('/reading') },
     { id: 'ai', title: 'AI Asistan', icon: Brain, action: () => navigate('/ai') },
     { id: 'profile', title: 'Profil Ayarları', icon: User, action: () => navigate('/profile') },
     { id: 'billing', title: 'Faturalandırma & Takım', icon: CreditCard, action: () => navigate('/profile') },
