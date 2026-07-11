@@ -93,7 +93,7 @@ const DashboardPage = () => {
   ]).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
+    <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6">
       <PageHeader 
         title="Command Center" 
         description="Your next step is clear. Continue one lesson at a time."

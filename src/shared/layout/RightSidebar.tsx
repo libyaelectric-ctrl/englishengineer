@@ -204,7 +204,9 @@ function getContent(path: string): React.ReactNode {
   if (path.startsWith('/curriculum')) return <Curriculum />;
   if (path.startsWith('/tools')) return <Tools />;
   if (path.startsWith('/profile')) return <Profile />;
-  return null;
+  if (path.startsWith('/admin')) return <Dashboard />;
+  if (path.startsWith('/gamification')) return <Curriculum />;
+  return <Dashboard />;
 }
 
 function Dashboard() {

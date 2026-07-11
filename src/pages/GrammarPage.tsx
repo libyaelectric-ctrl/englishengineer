@@ -1,8 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  ArrowLeft,
-  ArrowRight,
   CheckCircle2,
   Languages,
   Search,
@@ -82,7 +80,6 @@ const GrammarPage = () => {
   const selectedRule = rules.find((rule) => rule.id === selectedId) ?? visibleRules[0];
   const visibleRuleIndex = selectedRule ? visibleRules.findIndex((rule) => rule.id === selectedRule.id) : -1;
   const nextRule = visibleRuleIndex >= 0 ? visibleRules[visibleRuleIndex + 1] : undefined;
-  const previousRule = visibleRuleIndex > 0 ? visibleRules[visibleRuleIndex - 1] : undefined;
   const selectedProgress = selectedRule ? GrammarProgressService.get(selectedRule.id) : null;
 
   const record = (correct: boolean) => {
@@ -105,7 +102,7 @@ const GrammarPage = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="flex h-full flex-col animate-in fade-in duration-300">
       <PageHeader title="Grammar">
         {/* Search Bar */}
         <div className="relative mb-4">
@@ -138,88 +135,55 @@ const GrammarPage = () => {
           ))}
         </div>
       </PageHeader>
-
-      {/* Horizontal Topic Bar */}
-      <div className="sticky top-[72px] z-10 -mx-4 px-4 py-3 bg-surface/95 backdrop-blur-sm border-b border-border-soft lg:-mx-8 lg:px-8 shadow-sm transition-all">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="shrink-0 rounded-full w-10 h-10 p-0"
-            disabled={!previousRule}
-            onClick={() => {
-              if (previousRule) {
-                setSelectedId(previousRule.id);
-                document.getElementById(`grammar-topic-${previousRule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-              }
-            }}
-            aria-label="Previous grammar topic"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          
-          <div className="flex-1 overflow-x-auto custom-scrollbar snap-x flex gap-3 pb-1 pt-1">
-            {visibleRules.length === 0 ? (
-              <div className="w-full text-center text-sm font-medium text-muted-copy py-3">
-                No rules found for the current search/tab.
-              </div>
-            ) : (
-              visibleRules.map((rule) => {
-                const lessonNumber = rules.findIndex((item) => item.id === rule.id) + 1;
-                const isSelected = selectedRule?.id === rule.id;
-                return (
-                  <button
-                    key={rule.id}
-                    id={`grammar-topic-${rule.id}`}
-                    type="button"
-                    onClick={() => {
-                      setSelectedId(rule.id);
-                      document.getElementById(`grammar-topic-${rule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-                    }}
-                    className={`shrink-0 snap-start w-[240px] flex flex-col justify-between rounded-xl border p-3 text-left transition-colors ${
-                      isSelected 
-                        ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' 
-                        : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'
-                    }`}
-                  >
-                    <div className="min-w-0 mb-2">
-                      <p className="text-[10px] font-bold tracking-wider text-primary">
-                        LESSON {lessonNumber}
+      <main className="flex-1 min-h-0">
+        <div className="grid h-full lg:grid-cols-[300px_1fr] xl:grid-cols-[350px_1fr]">
+          {/* LEFT PANEL: Topic List */}
+          <div className="flex flex-col border-r border-border-soft bg-surface/50">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+              {visibleRules.length === 0 ? (
+                <div className="w-full text-center text-sm font-medium text-muted-copy py-3">
+                  No rules found for the current search/tab.
+                </div>
+              ) : (
+                visibleRules.map((rule) => {
+                  const lessonNumber = rules.findIndex((item) => item.id === rule.id) + 1;
+                  const isSelected = selectedRule?.id === rule.id;
+                  return (
+                    <button
+                      key={rule.id}
+                      id={`grammar-topic-${rule.id}`}
+                      type="button"
+                      onClick={() => setSelectedId(rule.id)}
+                      className={`w-full flex flex-col rounded-xl border p-3 text-left transition-colors ${
+                        isSelected 
+                          ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' 
+                          : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'
+                      }`}
+                    >
+                      <div className="min-w-0 mb-1.5">
+                        <p className="text-[10px] font-bold tracking-wider text-primary">
+                          LESSON {lessonNumber}
+                        </p>
+                        <p className="mt-0.5 text-sm font-bold text-foreground truncate">
+                          {rule.title}
+                        </p>
+                      </div>
+                      <p className="text-[11px] font-medium text-muted-copy truncate">
+                        {rule.grammarCategory}
                       </p>
-                      <p className="mt-1 text-sm font-bold text-foreground truncate">
-                        {rule.title}
-                      </p>
-                    </div>
-                    <p className="text-[11px] font-medium text-muted-copy truncate">
-                      {rule.grammarCategory}
-                    </p>
-                  </button>
-                );
-              })
-            )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
           </div>
-          
-          <Button
-            type="button"
-            variant="outline"
-            className="shrink-0 rounded-full w-10 h-10 p-0"
-            disabled={!nextRule}
-            onClick={() => {
-              if (nextRule) {
-                setSelectedId(nextRule.id);
-                document.getElementById(`grammar-topic-${nextRule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-              }
-            }}
-            aria-label="Next grammar topic"
-          >
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
 
-      {/* Main Flowing Content */}
+          {/* RIGHT PANEL: Rule Detail */}
+          <div className="flex flex-col bg-surface">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-8">
+
       {selectedRule && (
-        <div className="max-w-5xl mx-auto space-y-6 mt-6 pb-20">
+        <div className="max-w-4xl mx-auto space-y-6 pb-20">
           <SectionCard
             title={selectedRule.ruleTitle || selectedRule.title}
             subtitle={`${selectedRule.cefrLevel} · ${selectedRule.grammarCategory}`}
@@ -395,6 +359,10 @@ const GrammarPage = () => {
           </SectionCard>
         </div>
       )}
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

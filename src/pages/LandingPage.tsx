@@ -326,14 +326,14 @@ function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-full bg-black/[0.05] px-3 py-1 text-[11px] font-medium uppercase text-black/45">
+      <span className="inline-flex rounded-full bg-black/[0.05] px-3 py-1 text-[11px] font-medium uppercase text-muted-copy">
         {eyebrow}
       </span>
       <h2 className="mt-5 text-3xl font-light leading-[1.05] text-[#111] md:text-5xl">
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-black/50">{desc}</p>
+        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">{desc}</p>
       ) : null}
     </AnimatedSection>
   );
@@ -388,7 +388,7 @@ const LandingPage = () => {
           <Link to="/" className="text-xs font-bold uppercase text-black/70">
             EngVox
           </Link>
-          <div className="hidden items-center gap-7 text-[11px] font-medium text-black/55 md:flex">
+          <div className="hidden items-center gap-7 text-[11px] font-medium text-muted-copy md:flex">
             <a href="#system" className="transition-colors hover:text-black">
               System
             </a>
@@ -429,7 +429,7 @@ const LandingPage = () => {
         <div className="relative z-10 grid w-full grid-cols-1 items-end gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.55fr)]">
           <div className="max-w-4xl">
             <span
-              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3 py-1 text-xs font-medium text-black/55 backdrop-blur"
+              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3 py-1 text-xs font-medium text-muted-copy backdrop-blur"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(12px)',
@@ -454,7 +454,7 @@ const LandingPage = () => {
               Engineering English OS for project teams.
             </h1>
             <p
-              className="mt-8 max-w-xl text-base leading-7 text-black/55"
+              className="mt-8 max-w-xl text-base leading-7 text-muted-copy"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -553,7 +553,7 @@ const LandingPage = () => {
                 <h3 className="relative z-10 text-xl font-light">
                   {feature.title}
                 </h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">
+                <p className="relative z-10 mt-3 text-sm leading-6 text-muted-copy">
                   {feature.desc}
                 </p>
               </AnimatedCard>
@@ -589,7 +589,7 @@ const LandingPage = () => {
                   <h3 className="mt-3 text-2xl font-light leading-tight">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-black/50">
+                  <p className="mt-3 text-sm leading-6 text-muted-copy">
                     {item.desc}
                   </p>
                 </div>
@@ -632,7 +632,7 @@ const LandingPage = () => {
                   {agent.role}
                 </div>
                 <h3 className="mt-3 text-xl font-light">{agent.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-black/50">
+                <p className="mt-3 text-sm leading-6 text-muted-copy">
                   {agent.desc}
                 </p>
               </div>
@@ -680,7 +680,7 @@ const LandingPage = () => {
                 <h3 className="relative z-10 text-2xl font-light">
                   {item.title}
                 </h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-black/50">
+                <p className="relative z-10 mt-3 text-sm leading-6 text-muted-copy">
                   {item.desc}
                 </p>
               </AnimatedCard>
@@ -787,7 +787,7 @@ const LandingPage = () => {
                   />
                 </button>
                 {faqOpen === index ? (
-                  <p className="relative z-10 px-6 pb-6 text-sm leading-6 text-black/50">
+                  <p className="relative z-10 px-6 pb-6 text-sm leading-6 text-muted-copy">
                     {item.a}
                   </p>
                 ) : null}
@@ -803,7 +803,7 @@ const LandingPage = () => {
           <h2 className="text-4xl font-light leading-[1.04] md:text-6xl">
             Ready to make engineering English feel operational?
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-black/50">
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-muted-copy">
             Start with the free plan, build daily momentum and let the AI coach
             shape the next practice loop.
           </p>
@@ -817,7 +817,7 @@ const LandingPage = () => {
       </section>
 
       <footer className="border-t border-black/[0.06] bg-[#ece9df] px-6 py-8 md:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-black/45 md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 text-xs text-muted-copy md:flex-row">
           <span>Copyright 2026 EngVox. All rights reserved.</span>
           <div className="flex gap-6">
             <Link to="/legal/privacy" className="transition hover:text-black">

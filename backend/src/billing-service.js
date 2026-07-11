@@ -1,6 +1,12 @@
 import Stripe from 'stripe';
 import { ApiError } from './errors.js';
 import { requireText, emptySubscription } from './billing-helpers.js';
+import {
+  handleCheckoutCompleted,
+  handleSubscriptionUpdated,
+  handlePaymentFailed,
+  handleSubscriptionDeleted,
+} from './billing-webhook-handlers.js';
 
 const PLAN_META = {
   pro: {
@@ -340,89 +346,21 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         }
 
         const object = event.data?.object ?? {};
-        const userId = object.metadata?.userId || object.client_reference_id;
-        if (userId) {
-          if (eventType === 'checkout.session.completed') {
-            step = 'process_checkout_completed';
-            if (object.metadata?.type === 'topup') {
-              const credits = parseInt(object.metadata?.credits || '50', 10);
-              const current =
-                (await repository.getSubscriptionStatus(userId)) ??
-                emptySubscription();
-              await repository.upsertSubscriptionStatus(userId, {
-                ...current,
-                topupCredits: (current.topupCredits || 0) + credits,
-                updatedAt: new Date().toISOString(),
-                source: 'stripe_webhook',
-              });
-            } else {
-              const current =
-                (await repository.getSubscriptionStatus(userId)) ??
-                emptySubscription();
-              await repository.upsertSubscriptionStatus(userId, {
-                planId: object.metadata?.planId || 'pro',
-                status: 'active',
-                currentPeriodEnd: null,
-                cancelAtPeriodEnd: false,
-                stripeCustomerId: object.customer || null,
-                stripeSubscriptionId: object.subscription || null,
-                updatedAt: new Date().toISOString(),
-                source: 'stripe_webhook',
-                topupCredits: current.topupCredits || 0,
-              });
-            }
-          } else if (
-            eventType === 'customer.subscription.created' ||
-            eventType === 'customer.subscription.updated'
-          ) {
-            step = 'process_subscription_created_or_updated';
-            const current =
-              (await repository.getSubscriptionStatus(userId)) ??
-              emptySubscription();
-            const periodEndSec = object.current_period_end;
-            const currentPeriodEnd =
-              typeof periodEndSec === 'number' && periodEndSec > 0
-                ? new Date(periodEndSec * 1000).toISOString()
-                : null;
-
-            await repository.upsertSubscriptionStatus(userId, {
-              ...current,
-              planId: object.metadata?.planId || current.planId || 'pro',
-              status: object.status || 'active',
-              currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
-              cancelAtPeriodEnd:
-                typeof object.cancel_at_period_end === 'boolean'
-                  ? object.cancel_at_period_end
-                  : current.cancelAtPeriodEnd,
-              stripeCustomerId: object.customer || current.stripeCustomerId,
-              stripeSubscriptionId: object.id || current.stripeSubscriptionId,
-              updatedAt: new Date().toISOString(),
-              source: 'stripe_webhook',
-            });
-          } else if (eventType === 'invoice.payment_failed') {
-            step = 'process_payment_failed';
-            const current =
-              (await repository.getSubscriptionStatus(userId)) ??
-              emptySubscription();
-            await repository.upsertSubscriptionStatus(userId, {
-              ...current,
-              status: 'past_due',
-              updatedAt: new Date().toISOString(),
-              source: 'stripe_webhook',
-            });
-          } else if (eventType === 'customer.subscription.deleted') {
-            step = 'process_subscription_deleted';
-            const current =
-              (await repository.getSubscriptionStatus(userId)) ??
-              emptySubscription();
-            await repository.upsertSubscriptionStatus(userId, {
-              ...current,
-              status: 'canceled',
-              cancelAtPeriodEnd: false,
-              updatedAt: new Date().toISOString(),
-              source: 'stripe_webhook',
-            });
-          }
+        if (eventType === 'checkout.session.completed') {
+          step = 'process_checkout_completed';
+          await handleCheckoutCompleted(repository, object);
+        } else if (
+          eventType === 'customer.subscription.created' ||
+          eventType === 'customer.subscription.updated'
+        ) {
+          step = 'process_subscription_created_or_updated';
+          await handleSubscriptionUpdated(repository, object);
+        } else if (eventType === 'invoice.payment_failed') {
+          step = 'process_payment_failed';
+          await handlePaymentFailed(repository, object);
+        } else if (eventType === 'customer.subscription.deleted') {
+          step = 'process_subscription_deleted';
+          await handleSubscriptionDeleted(repository, object);
         }
 
         step = 'mark_processed';

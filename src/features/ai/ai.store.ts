@@ -81,8 +81,12 @@ const getInitialState = (): PersistedAIState => {
   };
 };
 
+let saveTimeout: ReturnType<typeof setTimeout> | null = null;
 const saveState = (state: PersistedAIState): void => {
-  storage.set(STORAGE_KEY, state);
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => {
+    storage.set(STORAGE_KEY, state);
+  }, 500);
 };
 
 export const buildAIUsageSummary = (
