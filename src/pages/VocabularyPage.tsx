@@ -11,9 +11,7 @@ import {
   BookMarked,
   CheckCircle2,
   ChevronDown,
-  Clock3,
   Filter,
-  GraduationCap,
   Plus,
   Search,
   XCircle,
@@ -29,7 +27,6 @@ import {
   LearningProfileRepository,
 } from '@/features/profile';
 import {
-  CANONICAL_VOCABULARY_TOTAL,
   getVocabularyReviewReason,
   isVocabularyProgressDue,
   repairVocabularyText,
@@ -44,7 +41,6 @@ import {
   type VocabularyTerm,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
-import { MyVocabularySection } from './VocabularyPage/index';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
@@ -303,7 +299,6 @@ const WordCard = ({
 
 const VocabularyPage = () => {
   const userId = useAuthStore((state) => state.currentUser?.id);
-  const language = useLocalizationStore((state) => state.language);
   const learningProfile = useMemo(
     () => LearningProfileRepository.getProfile(userId || 'local-user'),
     [userId]
@@ -438,11 +433,6 @@ const VocabularyPage = () => {
     dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: selectSet('New', menuState) });
   }, [menuState, selectSet, terms.length]);
 
-  const summary = useMemo(
-    () =>
-      VocabularyMenuService.getSummary(menuState, CANONICAL_VOCABULARY_TOTAL),
-    [menuState]
-  );
   const termsById = useMemo(
     () => new Map(terms.map((term) => [term.id, term])),
     [terms]
@@ -532,13 +522,6 @@ const VocabularyPage = () => {
     );
   };
 
-  const primaryActionLabel =
-    summary.dueToday > 0
-      ? 'Review Due Words'
-      : summary.learning > 0
-        ? 'Continue Review'
-        : 'Start 10-Word Set';
-
   const startVocabularySession = () => {
     ProductAnalyticsService.track('vocabulary_review_started', '/vocabulary', {
       metadata: { skill: 'vocabulary', source: 'user' },
@@ -598,30 +581,29 @@ const VocabularyPage = () => {
     dispatchSearch({ type: 'RESET_SEARCH' });
   };
 
-  return (
-    <div className="space-y-7 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-foreground">Vocabulary</h1>
-        </div>
-      </div>
+  useEffect(() => {
+    const handleStartSession = () => startVocabularySession();
+    window.addEventListener('startVocabularySession', handleStartSession);
+    return () => window.removeEventListener('startVocabularySession', handleStartSession);
+  }, [startVocabularySession]);
 
-      <SectionCard
-        title={LocalizationService.translate('vocabulary.search', language)}
-        subtitle="English, Turkish, CEFR, domain, part of speech, status, or skill use"
-        icon={Search}
-        headerActions={
-          <Button
-            variant="outline"
-            onClick={() => {
-              dispatchUI({ type: 'TOGGLE_FILTERS' });
-              if (!allLevelsLoaded) void loadAllLevels();
-            }}
-          >
-            <Filter className="h-4 w-4" /> Filters
-          </Button>
-        }
-      >
+  useEffect(() => {
+    const handleAddCustomWord = () => {
+       dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: true });
+       window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    window.addEventListener('addCustomWord', handleAddCustomWord);
+    return () => window.removeEventListener('addCustomWord', handleAddCustomWord);
+  }, []);
+
+  return (
+    <div className="space-y-7 animate-in fade-in duration-300 relative pb-20">
+      {/* STICKY HEADER, SEARCH, AND TABS */}
+      <div className="sticky top-0 z-30 bg-background pt-6 pb-4 border-b border-border-soft space-y-5">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">Vocabulary</h1>
+        </div>
+
         <form onSubmit={runSearch} className="space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
@@ -629,12 +611,22 @@ const VocabularyPage = () => {
               onChange={(event) =>
                 dispatchSearch({ type: 'SET_SEARCH_INPUT', input: event.target.value })
               }
-              className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-surface px-4 text-sm"
-              placeholder="Search vocabulary..."
+              className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-surface px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+              placeholder="Search by English, Turkish, Domain..."
               aria-label="Search vocabulary"
             />
             <Button type="submit" disabled={isSearchLoading}>
               <Search className="h-4 w-4" /> Search
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                dispatchUI({ type: 'TOGGLE_FILTERS' });
+                if (!allLevelsLoaded) void loadAllLevels();
+              }}
+            >
+              <Filter className="h-4 w-4" /> Filters
             </Button>
             <Button type="button" variant="ghost" onClick={resetSearch}>
               Reset
@@ -664,7 +656,7 @@ const VocabularyPage = () => {
                     onChange={(event) =>
                       dispatchSearch({ type: 'COMMIT_FILTERS', filters: { ...filters, [field]: event.target.value } })
                     }
-                    className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-surface px-2 font-normal"
+                    className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-surface px-2 font-normal focus:border-primary outline-none"
                   >
                     {(field === 'status'
                       ? [
@@ -688,7 +680,7 @@ const VocabularyPage = () => {
           {searchError && (
             <p className="text-sm font-semibold text-rose-700">{searchError}</p>
           )}
-          <p className="text-xs text-foreground0">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy">
             {allLevelsLoaded
               ? 'All 5,000 canonical terms are available for this search.'
               : `${vocabularyLevel} learning terms are loaded. Full search loads the remaining levels only when requested.`}
@@ -699,7 +691,26 @@ const VocabularyPage = () => {
             </p>
           )}
         </form>
-      </SectionCard>
+
+        <div
+          role="tablist"
+          aria-label="Vocabulary status"
+          className="grid grid-cols-3 gap-2 rounded-xl border border-border-soft bg-surface p-2 shadow-sm"
+        >
+          {TABS.map((tab) => (
+            <button
+              key={tab}
+              role="tab"
+              type="button"
+              aria-selected={activeTab === tab}
+              onClick={() => chooseTab(tab)}
+              className={`min-h-10 rounded-[8px] px-4 py-2 text-sm font-bold transition-all ${activeTab === tab ? 'bg-foreground text-background shadow-md' : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'}`}
+            >
+              {TAB_LABELS[tab]}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {hasSearched && searchResults.length > 0 && (
         <SectionCard
@@ -821,25 +832,6 @@ const VocabularyPage = () => {
         </SectionCard>
       )}
 
-      <div
-        role="tablist"
-        aria-label="Vocabulary status"
-        className="grid grid-cols-3 gap-2 rounded-xl border border-border-soft bg-surface p-2"
-      >
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            role="tab"
-            type="button"
-            aria-selected={activeTab === tab}
-            onClick={() => chooseTab(tab)}
-            className={`min-h-11 rounded-[10px] px-4 py-2 text-sm font-bold ${activeTab === tab ? 'bg-sky-600 text-white' : 'text-muted-copy hover:bg-primary/5'}`}
-          >
-            {TAB_LABELS[tab]}
-          </button>
-        ))}
-      </div>
-
       <SectionCard
         title={`${TAB_LABELS[activeTab]} 9-word set`}
         subtitle={`Selected by ${vocabularyProfile.cefrBand}, vocabulary skill use, memory state, and canonical order`}
@@ -899,60 +891,6 @@ const VocabularyPage = () => {
           </div>
         )}
       </SectionCard>
-
-      <SectionCard
-        title="Review Due Today"
-        subtitle={
-          summary.dueToday > 0
-            ? `${summary.dueToday} words are ready for review`
-            : summary.learning > 0
-              ? `${summary.learning} words are currently Learned`
-              : 'No words are due yet'
-        }
-        icon={Clock3}
-      >
-        <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface-hover p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="font-black text-foreground">{primaryActionLabel}</p>
-            <p className="mt-1 text-sm text-muted-copy">
-              Recommended sessions combine up to eight new words with two due
-              review words. Search never changes learning state.
-            </p>
-          </div>
-          <Button
-            className="shrink-0"
-            onClick={startVocabularySession}
-            disabled={terms.length === 0}
-          >
-            {summary.dueToday > 0 ? (
-              <Clock3 className="h-4 w-4" />
-            ) : (
-              <GraduationCap className="h-4 w-4" />
-            )}
-            {primaryActionLabel}
-          </Button>
-        </div>
-        {dueTerms.length > 0 && (
-          <div className="mt-5 grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-            {dueTerms.map((term) => (
-              <WordCard
-                key={term.id}
-                term={term}
-                progress={menuState.progress[term.id]}
-                mode="Review"
-                onReview={reviewWord}
-              />
-            ))}
-          </div>
-        )}
-      </SectionCard>
-
-      <MyVocabularySection
-        myVocabulary={menuState.myVocabulary}
-        onUpdate={() =>
-          dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() })
-        }
-      />
     </div>
   );
 };
