@@ -8,6 +8,7 @@ import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing';
 import { useListeningStore } from '@/features/listening';
 import { useSpeakingStore } from '@/features/speaking';
+import { useLearningStore } from '@/core/learning';
 import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
 const log = (_page: string, _action: string, _details: string) => {};
@@ -250,6 +251,7 @@ function Dashboard() {
 }
 
 function Vocab() {
+  useLearningStore((state) => state.studySessions.length);
   const v = VocabularyMenuService.getSummary();
   const [level, setLevel] = useState('A1');
   return (
@@ -332,6 +334,7 @@ function Vocab() {
 }
 
 function Grammar() {
+  useLearningStore((state) => state.studySessions.length);
   const g = GrammarProgressService.getSummary(360);
   const [tab, setTab] = useState('New');
   return (
