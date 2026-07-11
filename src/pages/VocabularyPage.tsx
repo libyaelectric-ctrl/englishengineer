@@ -19,6 +19,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
+import { useLearningStore } from '@/core/learning';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
@@ -492,6 +493,7 @@ const VocabularyPage = () => {
       new Date(),
       repairVocabularyText(term.term)
     );
+    useLearningStore.getState().completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
     dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
@@ -512,6 +514,7 @@ const VocabularyPage = () => {
 
   const learnWord = (term: VocabularyTerm) => {
     VocabularyMenuService.startLearning(term.id, new Date());
+    useLearningStore.getState().completeGenericPractice('Vocabulary', 100, 0.5);
     dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
