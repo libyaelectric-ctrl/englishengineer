@@ -40,6 +40,9 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      - name: Coverage check
+        run: npm run test:coverage
+
       - name: Production build
         run: npm run build
 
@@ -54,6 +57,11 @@ jobs:
 
       - name: Kademe 8 safe environment check
         run: npm run kademe8:check
+
+      - name: Lighthouse CI Report
+        run: npx lhci autorun || true
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
