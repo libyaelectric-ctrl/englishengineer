@@ -41,6 +41,7 @@ import {
   type VocabularyTerm,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
+import { PageHeader } from '@/shared/components/PageHeader';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
@@ -148,13 +149,13 @@ const WordCard = ({
       {showAnswer && (
         <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
           <p>{repairVocabularyText(term.exampleSentence)}</p>
-          <p className="text-foreground0">
+          <p className="text-muted-copy">
             {repairVocabularyText(term.turkishExample)}
           </p>
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-muted-copy">
         <span className="font-semibold capitalize">
           Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
         </span>
@@ -597,13 +598,9 @@ const VocabularyPage = () => {
   }, []);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 relative pb-20">
+    <div className="flex h-full flex-col animate-in fade-in duration-300">
       {/* STICKY HEADER, SEARCH, AND TABS */}
-      <div className="sticky top-0 z-30 bg-background pt-6 pb-4 border-b border-border-soft space-y-5">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Vocabulary</h1>
-        </div>
-
+      <PageHeader title="Vocabulary">
         <form onSubmit={runSearch} className="space-y-4">
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
@@ -710,9 +707,19 @@ const VocabularyPage = () => {
             </button>
           ))}
         </div>
-      </div>
+      </PageHeader>
 
-      {hasSearched && searchResults.length > 0 && (
+      <main className="flex-1 min-h-0">
+        <div className="grid h-full lg:grid-cols-[380px_1fr] xl:grid-cols-[450px_1fr]">
+          <div className="flex flex-col border-r border-border-soft bg-surface/50">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-6 space-y-6">
+
+                  </div>
+          </div>
+
+          <div className="flex flex-col bg-surface">
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-8 space-y-6">
+{hasSearched && searchResults.length > 0 && (
         <SectionCard
           title="Search Results"
           subtitle={`Showing ${searchResults.length} of ${allSearchResults.length} matches`}
@@ -823,7 +830,7 @@ const VocabularyPage = () => {
                 <Button type="submit">
                   <Plus className="h-4 w-4" /> Save to My Vocabulary
                 </Button>
-                <span className="text-xs font-bold text-foreground0">
+                <span className="text-xs font-bold text-muted-copy">
                   AI Assist Coming Soon
                 </span>
               </div>
@@ -861,7 +868,7 @@ const VocabularyPage = () => {
           </p>
         )}
         {!loadError && terms.length === 0 && (
-          <p className="text-sm text-foreground0">Loading canonical words...</p>
+          <p className="text-sm text-muted-copy">Loading canonical words...</p>
         )}
         {terms.length > 0 && wordSet.length === 0 && (
           <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
@@ -891,6 +898,10 @@ const VocabularyPage = () => {
           </div>
         )}
       </SectionCard>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };
