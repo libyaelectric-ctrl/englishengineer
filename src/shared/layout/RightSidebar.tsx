@@ -491,26 +491,45 @@ function Grammar() {
 }
 
 function Reading() {
-  const { missions, completedMissions } = useReadingStore();
+  const { missions, completedMissions, selectedMissionId } = useReadingStore();
   const done = Object.keys(completedMissions).length;
+  
+  const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? missions[0];
+  const selectedMissionIndex = selectedMission ? missions.findIndex((m) => m.id === selectedMission.id) : -1;
+
   return (
     <>
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="reading" compact={true} />
       </div>
-      <Section title="Missions">
-        <div className="space-y-0.5 max-h-48 overflow-y-auto">
-          {missions.slice(0, 10).map((m) => (
-            <Item
-              key={m.id}
-              label={m.title}
-              active={m.id === missions[0]?.id}
-              badge={m.cefrLevel}
-              onClick={() => log('/reading', 'select', m.title)}
-            />
-          ))}
+      
+      <Section title="Your reading path">
+        <div className="space-y-3">
+          <div>
+            <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
+              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH · {missions.length} SCENARIOS
+            </p>
+            <p className="text-xs text-muted-copy leading-5">
+              Read professional documentation and answer comprehension questions.
+            </p>
+          </div>
+          
+          {selectedMission && (
+            <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
+              <p className="text-[10px] font-bold text-primary mb-1">
+                SCENARIO {selectedMissionIndex + 1} OF {missions.length}
+              </p>
+              <p className="text-sm font-bold text-foreground">
+                {selectedMission.title}
+              </p>
+              <p className="text-[10px] text-muted-copy mt-1 truncate">
+                {selectedMission.discipline}
+              </p>
+            </div>
+          )}
         </div>
       </Section>
+
       <Section title="Progress">
         <div>
           <div className="flex justify-between text-[10px] text-muted-copy mb-1">
@@ -522,56 +541,50 @@ function Reading() {
           <Progress value={done} max={missions.length} />
         </div>
       </Section>
-      <Section title="Actions">
-        <Action
-          icon="📖"
-          label="Start next mission"
-          onClick={() => log('/reading', 'start', 'next')}
-          variant="primary"
-        />
-      </Section>
     </>
   );
 }
 
 function Writing() {
-  const { missions, completedMissions } = useWritingStore();
+  const { missions, completedMissions, selectedMissionId } = useWritingStore();
   const done = Object.keys(completedMissions).length;
+  
+  const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? missions[0];
+  const selectedMissionIndex = selectedMission ? missions.findIndex((m) => m.id === selectedMission.id) : -1;
+
   return (
     <>
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="writing" compact={true} />
       </div>
-      <Section title="Templates">
-        <div className="space-y-0.5">
-          {[
-            'RFI Response',
-            'Email Draft',
-            'NCR Report',
-            'Site Update',
-            'Technical Memo',
-          ].map((t) => (
-            <Item
-              key={t}
-              label={t}
-              onClick={() => log('/writing', 'template', t)}
-            />
-          ))}
+
+      <Section title="Your writing path">
+        <div className="space-y-3">
+          <div>
+            <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
+              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH · {missions.length} SCENARIOS
+            </p>
+            <p className="text-xs text-muted-copy leading-5">
+              Draft professional responses and master technical writing.
+            </p>
+          </div>
+          
+          {selectedMission && (
+            <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
+              <p className="text-[10px] font-bold text-primary mb-1">
+                SCENARIO {selectedMissionIndex + 1} OF {missions.length}
+              </p>
+              <p className="text-sm font-bold text-foreground">
+                {selectedMission.title}
+              </p>
+              <p className="text-[10px] text-muted-copy mt-1 truncate">
+                {selectedMission.discipline}
+              </p>
+            </div>
+          )}
         </div>
       </Section>
-      <Section title="Missions">
-        <div className="space-y-0.5">
-          {missions.slice(0, 5).map((m) => (
-            <Item
-              key={m.id}
-              label={m.title}
-              active={m.id === missions[0]?.id}
-              badge={m.cefrLevel}
-              onClick={() => log('/writing', 'select', m.title)}
-            />
-          ))}
-        </div>
-      </Section>
+
       <Section title="Progress">
         <div>
           <div className="flex justify-between text-[10px] text-muted-copy mb-1">

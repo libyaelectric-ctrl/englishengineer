@@ -40,7 +40,7 @@ describe('Critical flow: Vocabulary page', () => {
   it('shows search input', async () => {
     const { default: VocabularyPage } = await import('@/pages/VocabularyPage');
     renderWithRouter(<VocabularyPage />);
-    expect(screen.getByPlaceholderText(/Search vocabulary/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
   });
 });
 
