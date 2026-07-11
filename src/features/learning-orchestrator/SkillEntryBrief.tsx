@@ -56,7 +56,7 @@ export const SkillEntryBrief = ({
           <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
             Lesson {recommendation.lessonNumber}
           </span>
-          <span className="rounded-full border border-border-soft bg-white px-2 py-0.5 text-[9px] font-semibold text-muted-copy">
+          <span className="rounded-full border border-border-soft bg-surface px-2 py-0.5 text-[9px] font-semibold text-muted-copy">
             {recommendation.estimatedMinutes}m
           </span>
         </div>
@@ -79,10 +79,10 @@ export const SkillEntryBrief = ({
             <p className="text-xs font-black uppercase text-primary">
               System recommendation
             </p>
-            <span className="rounded-full border border-primary/20 bg-white px-2 py-0.5 text-xs font-bold text-primary">
+            <span className="rounded-full border border-primary/20 bg-surface px-2 py-0.5 text-xs font-bold text-primary">
               {recommendation.targetCefr}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-white px-2 py-0.5 text-xs font-bold text-primary">
+            <span className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-surface px-2 py-0.5 text-xs font-bold text-primary">
               <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
               {recommendation.lessonNumber}
             </span>
@@ -129,7 +129,7 @@ export const SkillEntryBrief = ({
         </div>
         <a
           href="/curriculum"
-          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[12px] border border-border-soft bg-white px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/20 hover:bg-primary/5"
+          className="inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-[12px] border border-border-soft bg-surface px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/20 hover:bg-primary/5"
         >
           Manual change <ArrowRight className="h-4 w-4" />
         </a>

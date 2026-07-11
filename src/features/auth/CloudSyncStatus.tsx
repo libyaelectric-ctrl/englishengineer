@@ -71,7 +71,7 @@ export const CloudSyncStatusPanel = ({
 
   return (
     <section
-      className="flex flex-col gap-3 rounded-xl border border-border-soft bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+      className="flex flex-col gap-3 rounded-xl border border-border-soft bg-surface p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
       aria-label="Cloud sync status"
       role="status"
     >

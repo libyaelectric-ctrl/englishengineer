@@ -18,7 +18,7 @@ export const RouteErrorPage = () => {
     return null;
   }
   return (
-    <main className="mx-auto mt-16 max-w-xl rounded-2xl border border-rose-200 bg-white p-8 text-center shadow-sm">
+    <main className="mx-auto mt-16 max-w-xl rounded-2xl border border-rose-200 bg-surface p-8 text-center shadow-sm">
       <h1 className="text-2xl font-black text-foreground">Route unavailable</h1>
       <p className="mt-3 text-sm leading-6 text-muted-copy">{message}</p>
       <Link
