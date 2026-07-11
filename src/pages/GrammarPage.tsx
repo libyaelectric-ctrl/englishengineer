@@ -147,7 +147,12 @@ const GrammarPage = () => {
             variant="outline"
             className="shrink-0 rounded-full w-10 h-10 p-0"
             disabled={!previousRule}
-            onClick={() => previousRule && setSelectedId(previousRule.id)}
+            onClick={() => {
+              if (previousRule) {
+                setSelectedId(previousRule.id);
+                document.getElementById(`grammar-topic-${previousRule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+              }
+            }}
             aria-label="Previous grammar topic"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -165,27 +170,29 @@ const GrammarPage = () => {
                 return (
                   <button
                     key={rule.id}
+                    id={`grammar-topic-${rule.id}`}
                     type="button"
-                    onClick={() => setSelectedId(rule.id)}
-                    className={`shrink-0 snap-start w-[240px] rounded-xl border p-3 text-left transition-colors ${
+                    onClick={() => {
+                      setSelectedId(rule.id);
+                      document.getElementById(`grammar-topic-${rule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+                    }}
+                    className={`shrink-0 snap-start w-[240px] flex flex-col justify-between rounded-xl border p-3 text-left transition-colors ${
                       isSelected 
                         ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' 
                         : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'
                     }`}
                   >
-                    <div className="flex flex-col h-full justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-bold tracking-wider text-primary">
-                          LESSON {lessonNumber}
-                        </p>
-                        <p className="mt-1 text-sm font-bold text-foreground truncate">
-                          {rule.title}
-                        </p>
-                      </div>
-                      <p className="text-[11px] font-medium text-muted-copy truncate">
-                        {rule.grammarCategory}
+                    <div className="min-w-0 mb-2">
+                      <p className="text-[10px] font-bold tracking-wider text-primary">
+                        LESSON {lessonNumber}
+                      </p>
+                      <p className="mt-1 text-sm font-bold text-foreground truncate">
+                        {rule.title}
                       </p>
                     </div>
+                    <p className="text-[11px] font-medium text-muted-copy truncate">
+                      {rule.grammarCategory}
+                    </p>
                   </button>
                 );
               })
@@ -197,7 +204,12 @@ const GrammarPage = () => {
             variant="outline"
             className="shrink-0 rounded-full w-10 h-10 p-0"
             disabled={!nextRule}
-            onClick={() => nextRule && setSelectedId(nextRule.id)}
+            onClick={() => {
+              if (nextRule) {
+                setSelectedId(nextRule.id);
+                document.getElementById(`grammar-topic-${nextRule.id}`)?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+              }
+            }}
             aria-label="Next grammar topic"
           >
             <ArrowRight className="h-4 w-4" />
@@ -207,7 +219,7 @@ const GrammarPage = () => {
 
       {/* Main Flowing Content */}
       {selectedRule && (
-        <div className="max-w-4xl mx-auto space-y-6 mt-6 pb-20">
+        <div className="max-w-5xl mx-auto space-y-6 mt-6 pb-20">
           <SectionCard
             title={selectedRule.ruleTitle || selectedRule.title}
             subtitle={`${selectedRule.cefrLevel} · ${selectedRule.grammarCategory}`}
@@ -221,20 +233,20 @@ const GrammarPage = () => {
                 </div>
               )}
               
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+              <div className="grid gap-6 md:grid-cols-2 items-stretch">
+                <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-copy">
                     {LocalizationService.translate('grammar.meaningFunction', language)}
                   </p>
                   <p className="mt-3 text-base font-medium leading-7 text-foreground">
                     {selectedRule.definition}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-muted-copy">
+                  <p className="mt-auto pt-2 text-sm leading-6 text-muted-copy">
                     {selectedRule.languageFunction}
                   </p>
                 </div>
                 
-                <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
+                <div className="h-full flex flex-col rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
                   <p className="text-xs font-bold uppercase tracking-wider text-primary">
                     {LocalizationService.translate('grammar.form', language)}
                   </p>
@@ -244,8 +256,8 @@ const GrammarPage = () => {
                 </div>
               </div>
 
-              <div className={`grid gap-6 ${language === 'tr' ? 'md:grid-cols-2' : ''}`}>
-                <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+              <div className={`grid gap-6 md:grid-cols-2 items-stretch`}>
+                <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
                   <p className="text-xs font-bold uppercase tracking-wider text-muted-copy">
                     English explanation
                   </p>
@@ -253,8 +265,8 @@ const GrammarPage = () => {
                     {selectedRule.explanation}
                   </p>
                 </div>
-                {language === 'tr' && (
-                  <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+                {language === 'tr' ? (
+                  <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
                     <p className="text-xs font-bold uppercase tracking-wider text-muted-copy">
                       Türkçe destek
                     </p>
@@ -262,49 +274,64 @@ const GrammarPage = () => {
                       {selectedRule.turkishExplanation}
                     </p>
                   </div>
+                ) : (
+                  <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+                    <p className="text-xs font-bold uppercase tracking-wider text-muted-copy">
+                      Engineering use
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-foreground">
+                      {selectedRule.engineeringUseCase}
+                    </p>
+                  </div>
                 )}
               </div>
 
-              <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
-                <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  Engineering use
-                </p>
-                <p className="mt-3 text-sm leading-7 text-muted-copy">
-                  {selectedRule.engineeringUseCase}
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                {selectedRule.examples.map((example, index) => (
-                  <div
-                    key={index}
-                    className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm"
-                  >
-                    <p className="text-base font-bold text-foreground">
-                      {example.english}
+              <div className="grid gap-6 md:grid-cols-2 items-stretch">
+                {language === 'tr' && (
+                  <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+                    <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+                      Engineering use
                     </p>
-                    <p className="mt-1 text-sm font-medium text-muted-copy">
-                      {example.turkish}
+                    <p className="mt-3 text-sm leading-7 text-muted-copy">
+                      {selectedRule.engineeringUseCase}
                     </p>
                   </div>
-                ))}
+                )}
+                
+                <div className="h-full flex flex-col rounded-xl border border-warning/30 bg-warning/5 p-5 shadow-sm">
+                  <p className="text-xs font-bold uppercase tracking-wider text-warning">
+                    {LocalizationService.translate('grammar.practice', language)}
+                  </p>
+                  <p className="mt-3 text-base font-bold leading-7 text-foreground">
+                    {selectedRule.taskPromptTemplate}
+                  </p>
+                  <p className="mt-auto pt-2 text-sm leading-6 text-muted-copy">
+                    Target output: {selectedRule.minimumUserOutput}
+                  </p>
+                </div>
+                
+                {language !== 'tr' && (
+                  <div className="h-full flex flex-col rounded-xl border border-transparent bg-transparent p-5">
+                    {/* Empty block to maintain grid flow if TR is disabled */}
+                  </div>
+                )}
               </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="rounded-xl border border-rose-200 bg-rose-50 p-5 shadow-sm">
+              <div className="grid gap-6 md:grid-cols-2 items-stretch">
+                <div className="h-full flex flex-col rounded-xl border border-rose-200 bg-rose-50 p-5 shadow-sm">
                   <p className="text-xs font-bold uppercase tracking-wider text-rose-700">
                     Common mistake
                   </p>
-                  <p className="mt-3 text-base font-medium text-rose-900">
+                  <p className="mt-3 text-base font-bold text-rose-900">
                     {selectedRule.badExampleEnglish}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-rose-800">
+                  <p className="mt-auto pt-2 text-sm leading-6 text-rose-800">
                     {language === 'tr'
                       ? selectedRule.badExampleTurkishExplanation
                       : selectedRule.commonMistakes}
                   </p>
                 </div>
-                <div className="rounded-xl border border-success/30 bg-success/5 p-5 shadow-sm">
+                <div className="h-full flex flex-col rounded-xl border border-success/30 bg-success/5 p-5 shadow-sm">
                   <p className="text-xs font-bold uppercase tracking-wider text-success">
                     Correct
                   </p>
@@ -314,16 +341,20 @@ const GrammarPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-warning/30 bg-warning/5 p-5 shadow-sm">
-                <p className="text-xs font-bold uppercase tracking-wider text-warning">
-                  {LocalizationService.translate('grammar.practice', language)}
-                </p>
-                <p className="mt-3 text-base font-bold leading-7 text-foreground">
-                  {selectedRule.taskPromptTemplate}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-muted-copy">
-                  Target output: {selectedRule.minimumUserOutput}
-                </p>
+              <div className="grid gap-6 md:grid-cols-2 items-stretch">
+                {selectedRule.examples.map((example, index) => (
+                  <div
+                    key={index}
+                    className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm"
+                  >
+                    <p className="text-base font-bold text-foreground">
+                      {example.english}
+                    </p>
+                    <p className="mt-auto pt-1 text-sm font-medium text-muted-copy">
+                      {example.turkish}
+                    </p>
+                  </div>
+                ))}
               </div>
               
               <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border-soft bg-surface-hover p-4 shadow-sm">
