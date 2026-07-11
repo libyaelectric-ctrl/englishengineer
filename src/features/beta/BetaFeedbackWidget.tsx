@@ -61,7 +61,7 @@ export const BetaFeedbackWidget = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="feedback-title"
-            className="w-[min(92vw,400px)] rounded-[20px] border border-border-soft bg-white p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]"
+            className="w-[min(92vw,400px)] rounded-[20px] border border-border-soft bg-surface p-5 shadow-[0_24px_70px_rgba(15,23,42,0.18)]"
           >
             <div className="flex items-center justify-between gap-3">
               <p
