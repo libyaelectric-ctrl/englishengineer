@@ -253,7 +253,7 @@ function Dashboard() {
 function Vocab() {
   useLearningStore((state) => state.studySessions.length);
   const v = VocabularyMenuService.getSummary();
-  const [level, setLevel] = useState('A1');
+  const [level] = useState('A1');
   return (
     <>
       <div className="px-4 pt-4">

@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useLearningStore } from '@/core/learning';
 import { playSound } from '@/shared/utils/sound';
+import { useAuthStore } from '@/features/auth';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
