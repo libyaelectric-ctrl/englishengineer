@@ -74,7 +74,6 @@ export const createApp = ({
       const diff = process.hrtime(start);
       const timeMs = (diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2);
       console.log(`[Timing] ${req.method} ${req.originalUrl} - ${timeMs}ms`);
-      res.setHeader('X-Response-Time', `${timeMs}ms`);
     });
     next();
   });
