@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it, beforeAll } from 'vitest';
 import { LearningState } from '@/core/learning';
 import {
@@ -119,4 +120,3 @@ describe('real skill-based content gating', () => {
     expect(resolveActiveLevelContent(visible, 'a1')).toBeNull();
   });
 });
-// @vitest-environment node

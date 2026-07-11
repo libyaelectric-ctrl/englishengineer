@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { createLearningState } from '@/test/fixtures';
 import { ScoringService } from './scoring.service';
@@ -108,4 +109,3 @@ describe('learning scoring and achievements', () => {
     expect(result.updatedAchievements[0].unlockedAt).toBe(unlockedAt);
   });
 });
-// @vitest-environment node

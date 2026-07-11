@@ -15,6 +15,7 @@ playwright-report/
 .env
 .env.local
 .env.*.local
+.env.vercel.*
 !.env.example
 backend/.env
 backend/.env.local

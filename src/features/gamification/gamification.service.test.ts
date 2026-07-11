@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { createLearningState } from '@/test/fixtures';
 import { GamificationService } from './gamification.service';
@@ -44,4 +45,3 @@ describe('gamification service bonus calculations', () => {
     expect(summary.bonusSummary.perfectSessionBonus).toBeGreaterThan(0);
   });
 });
-// @vitest-environment node

@@ -172,7 +172,7 @@ const CurriculumPage = () => {
         title="Learning Hub"
         description="One clear next lesson, six independent skills, and one connected Learning Memory."
         badgeText="START AT A1"
-        badgeColor="primary"
+        badgeColor="border-primary/20 bg-primary/10 text-primary"
       />
 
       <section

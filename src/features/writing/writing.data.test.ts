@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { WRITING_MISSIONS } from './writing.data';
 
@@ -67,4 +68,3 @@ describe('writing mission content pack', () => {
     expect(joined).not.toContain('distributed systems');
   });
 });
-// @vitest-environment node

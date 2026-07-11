@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { ObservabilityService } from './observability.service';
 
@@ -23,4 +24,3 @@ describe('observability readiness', () => {
     expect(config.sampleRate).toBe(0);
   });
 });
-// @vitest-environment node

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { AnalyticsSummary } from '@/features/analytics';
 import { createLearningState } from '@/test/fixtures';
@@ -143,4 +144,3 @@ describe('gamification helpers', () => {
     });
   });
 });
-// @vitest-environment node

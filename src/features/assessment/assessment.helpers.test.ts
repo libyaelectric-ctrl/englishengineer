@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { LearningState } from '@/core/learning/learning.types';
 import {
@@ -178,4 +179,3 @@ describe('AssessmentService', () => {
     expect(wrapped.assessment.confidenceExplanation).toContain('limited');
   });
 });
-// @vitest-environment node

@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   MEETING_PHRASES,
@@ -50,4 +51,3 @@ describe('Quick Tools content pack', () => {
     });
   });
 });
-// @vitest-environment node

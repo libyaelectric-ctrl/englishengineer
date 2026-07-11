@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { LearningState } from '@/core/learning';
 import {
@@ -69,4 +70,3 @@ describe('sequential level system', () => {
     });
   });
 });
-// @vitest-environment node

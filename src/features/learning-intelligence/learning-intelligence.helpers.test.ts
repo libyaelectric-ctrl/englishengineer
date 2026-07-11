@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import { LearningState } from '@/core/learning';
 import { AssessmentProfile } from '@/features/assessment';
@@ -100,4 +101,3 @@ describe('Learning Intelligence personalization', () => {
     expect(tasks[0].description).toContain('Procurement Engineer');
   });
 });
-// @vitest-environment node

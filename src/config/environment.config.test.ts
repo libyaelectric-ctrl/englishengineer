@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   isConfiguredPublicUrl,
@@ -44,4 +45,3 @@ describe('environment validation', () => {
     expect(isConfiguredPublicUrl('not-a-url')).toBe(false);
   });
 });
-// @vitest-environment node

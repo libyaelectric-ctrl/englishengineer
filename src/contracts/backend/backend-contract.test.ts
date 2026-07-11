@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 import {
   BACKEND_CONTRACT_VERSION,
@@ -160,4 +161,3 @@ describe('backend SaaS contract', () => {
     expect(result.valid).toBe(true);
   });
 });
-// @vitest-environment node
