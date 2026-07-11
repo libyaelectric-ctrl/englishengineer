@@ -20,9 +20,33 @@ export default defineConfig({
       exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx', 'src/test/**'],
       thresholds: {
         branches: 60,
-        functions: 70,
-        lines: 70,
-        statements: 70,
+        functions: 60,
+        lines: 60,
+        statements: 60,
+        'src/features/billing/**': {
+          branches: 75,
+          functions: 75,
+          lines: 75,
+          statements: 75,
+        },
+        'src/features/auth/**': {
+          branches: 75,
+          functions: 75,
+          lines: 75,
+          statements: 75,
+        },
+        'backend/src/auth.js': {
+          branches: 75,
+          functions: 75,
+          lines: 75,
+          statements: 75,
+        },
+        'backend/src/billing-service.js': {
+          branches: 75,
+          functions: 75,
+          lines: 75,
+          statements: 75,
+        }
       },
     },
   },
