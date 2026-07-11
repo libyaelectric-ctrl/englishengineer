@@ -10,17 +10,26 @@ coverage/
 test-results/
 playwright-report/
 *.zip
-.env
-.env.local
-.env*
-!.env.example
 
-# Local env files - never commit
+# Environment files
 .env
 .env.local
 .env.*.local
+!.env.example
 backend/.env
 backend/.env.local
 backend/.env.*.local
+
+# IDE
+.vscode/
+
+# AI agent working data
+.mimocode/
+.agents/
+
+# Vercel
 .vercel
+
+# Other
 .aider*
+stryker-results/

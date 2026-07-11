@@ -1,9 +1,9 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { LucideIcon, Radio } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Button } from './Button';
 
-interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
+interface EmptyStateProps extends HTMLAttributes<HTMLDivElement> {
   title: string;
   description: string;
   icon?: LucideIcon;
@@ -11,7 +11,7 @@ interface EmptyStateProps extends React.HTMLAttributes<HTMLDivElement> {
   onAction?: () => void;
 }
 
-export const EmptyState: React.FC<EmptyStateProps> = ({
+export const EmptyState: FC<EmptyStateProps> = ({
   title,
   description,
   icon: Icon = Radio,

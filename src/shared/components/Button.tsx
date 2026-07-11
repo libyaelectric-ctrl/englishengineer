@@ -1,4 +1,4 @@
-import React from 'react';
+import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 type ButtonVariant =
@@ -23,9 +23,9 @@ const variantClasses: Record<ButtonVariant, string> = {
     'border border-success/20 bg-success/5 text-success hover:bg-success/10',
 };
 
-export const Button = React.forwardRef<
+export const Button = forwardRef<
   HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }
+  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }
 >(({ className, variant = 'primary', ...props }, ref) => (
   <button
     ref={ref}

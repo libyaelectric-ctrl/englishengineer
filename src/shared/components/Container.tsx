@@ -1,11 +1,11 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }
 
-export const Container: React.FC<ContainerProps> = ({
+export const Container: FC<ContainerProps> = ({
   children,
   className,
   size = 'xl',

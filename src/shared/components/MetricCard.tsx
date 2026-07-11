@@ -1,9 +1,9 @@
-import React from 'react';
+import { type FC, type HTMLAttributes } from 'react';
 import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
 
-interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
   label: string;
   value: string | number;
   icon: LucideIcon;
@@ -20,7 +20,7 @@ interface MetricCardProps extends React.HTMLAttributes<HTMLDivElement> {
     | 'danger';
 }
 
-export const MetricCard: React.FC<MetricCardProps> = ({
+export const MetricCard: FC<MetricCardProps> = ({
   label,
   value,
   icon: Icon,
