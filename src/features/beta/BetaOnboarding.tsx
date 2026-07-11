@@ -85,7 +85,7 @@ export const BetaOnboarding = () => {
       <select
         value={form[key]}
         onChange={(event) => updateField(key, event.target.value)}
-        className="w-full rounded-[12px] border border-border-soft bg-white px-3 py-2 text-sm font-semibold text-foreground"
+        className="w-full rounded-[12px] border border-border-soft bg-surface px-3 py-2 text-sm font-semibold text-foreground"
       >
         {options.map((option) => (
           <option key={option} value={option}>
@@ -98,7 +98,7 @@ export const BetaOnboarding = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-foreground/35 p-3 backdrop-blur-sm sm:items-center sm:p-4">
-      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-border-soft bg-white p-4 shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
+      <div className="my-auto max-h-[calc(100dvh-1.5rem)] w-full max-w-3xl overflow-y-auto rounded-[20px] border border-border-soft bg-surface p-4 shadow-[0_30px_90px_rgba(15,23,42,0.22)] sm:max-h-[calc(100dvh-2rem)] sm:p-6">
         <div className="flex items-start gap-4">
           <div className="rounded-[14px] border border-blue-200 bg-blue-50 p-3 text-blue-700">
             <CheckCircle2 className="h-5 w-5" />
@@ -160,7 +160,7 @@ export const BetaOnboarding = () => {
             <input
               value={form.timezone}
               onChange={(event) => updateField('timezone', event.target.value)}
-              className="w-full rounded-[12px] border border-border-soft bg-white px-3 py-2 text-sm font-semibold text-foreground"
+              className="w-full rounded-[12px] border border-border-soft bg-surface px-3 py-2 text-sm font-semibold text-foreground"
             />
           </label>
         </div>
@@ -186,7 +186,7 @@ export const BetaOnboarding = () => {
                     learningPathChoice: value,
                   }))
                 }
-                className={`rounded-[10px] border px-3 py-3 text-sm font-semibold transition ${form.learningPathChoice === value ? 'border-sky-300 bg-primary/5 text-sky-900' : 'border-border-soft bg-white text-foreground hover:border-primary/20 hover:bg-primary/5/50'}`}
+                className={`rounded-[10px] border px-3 py-3 text-sm font-semibold transition ${form.learningPathChoice === value ? 'border-sky-300 bg-primary/5 text-sky-900' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-primary/5/50'}`}
               >
                 {label}
               </button>

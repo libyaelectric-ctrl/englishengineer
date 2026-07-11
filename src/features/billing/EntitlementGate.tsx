@@ -31,7 +31,7 @@ export const EntitlementGate = ({
       aria-labelledby={titleId}
     >
       <StatusBadge label="Locked" tone="info" />
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[12px] border border-primary/20 bg-white text-primary">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-[12px] border border-primary/20 bg-surface text-primary">
         <LockKeyhole className="h-5 w-5" aria-hidden="true" />
       </span>
       <h2 id={titleId} className="mt-4 text-lg font-bold text-foreground">

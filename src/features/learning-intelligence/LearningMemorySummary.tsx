@@ -75,7 +75,7 @@ export const LearningMemorySummary = ({
           <Link
             key={item.label}
             to={item.href}
-            className="group flex min-w-0 items-center gap-3 rounded-[14px] border border-border-soft bg-white p-3.5 transition-colors hover:border-blue-200 hover:bg-blue-50/50"
+            className="group flex min-w-0 items-center gap-3 rounded-[14px] border border-border-soft bg-surface p-3.5 transition-colors hover:border-blue-200 hover:bg-blue-50/50"
           >
             <span className={`shrink-0 rounded-[11px] border p-2 ${item.tone}`}>
               <Icon className="h-4 w-4" aria-hidden="true" />
