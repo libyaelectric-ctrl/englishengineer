@@ -73,7 +73,7 @@ export const createMemoryAiLedger = () => {
   const prune = (now) => {
     const cutoff = now - PAID_PERIOD_MS;
     const index = ledger.findIndex((item) => item.timestamp >= cutoff);
-    if (index > 0) ledger.splice(0, index);
+    if (index >= 0) ledger.splice(0, index);
   };
 
   return {

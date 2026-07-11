@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useLearningStore } from '@/core/learning';
+import { useShallow } from 'zustand/shallow';
 import { LearningProfileEngine } from './profile.engine';
 import { LearningProfileRepository } from './profile.repository';
 import type {
@@ -19,7 +20,22 @@ const EMPTY_MEMORY: VocabularyMemorySummary = {
 };
 
 export const useLearningCockpit = (userId?: string | null) => {
-  const learningState = useLearningStore();
+  const learningState = useLearningStore(
+    useShallow((s) => ({
+      xp: s.xp,
+      level: s.level,
+      elo: s.elo,
+      streak: s.streak,
+      coins: s.coins,
+      missions: s.missions,
+      achievements: s.achievements,
+      studySessions: s.studySessions,
+      lastActivityDate: s.lastActivityDate,
+      scoreHistory: s.scoreHistory,
+      xpHistory: s.xpHistory,
+      eloHistory: s.eloHistory,
+    }))
+  );
   const storedProfile = useMemo(
     () => LearningProfileRepository.getProfile(userId || 'local-user'),
     [userId]
