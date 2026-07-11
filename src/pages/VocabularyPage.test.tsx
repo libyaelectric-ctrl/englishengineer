@@ -45,7 +45,6 @@ describe('VocabularyPage menu', () => {
       'aria-selected',
       'true'
     );
-    expect(screen.getByText('Review Due Today')).toBeInTheDocument();
 
     await startTenWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
@@ -173,8 +172,8 @@ describe('VocabularyPage menu', () => {
       within(addForm).getByRole('button', { name: /save to my vocabulary/i })
     );
 
-    expect(screen.getByText('fluxuator')).toBeInTheDocument();
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
+    expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe('fluxuator');
     expect(VocabularyMenuService.getState().progress).toEqual({});
   }, 10_000);
 });

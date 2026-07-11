@@ -20,6 +20,7 @@ import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { PageHeader } from '@/shared/components/PageHeader';
 import {
   buildReviewPriorities,
   useLearningIntelligenceStore,
@@ -93,6 +94,10 @@ const DashboardPage = () => {
 
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
+      <PageHeader 
+        title="Command Center" 
+        description="Your next step is clear. Continue one lesson at a time."
+      />
       <div className="space-y-6">
         {/* Executive Summary Widget */}
         <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
