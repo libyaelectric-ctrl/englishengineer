@@ -11,6 +11,7 @@ EngineerOS needs an AI provider for the coaching feature.
 ## Decision
 
 Use Anthropic Claude (Haiku 4.5) as the AI provider, providing:
+
 - Natural language understanding
 - Educational content generation
 - Conversation management
@@ -19,12 +20,14 @@ Use Anthropic Claude (Haiku 4.5) as the AI provider, providing:
 ## Consequences
 
 ### Positive
+
 - High-quality AI responses
 - Strong safety features
 - Good educational content generation
 - Competitive pricing
 
 ### Negative
+
 - API dependency
 - Rate limits
 - Cost per token

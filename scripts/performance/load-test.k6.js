@@ -12,8 +12,8 @@ export const options = {
       startVUs: 0,
       stages: [
         { duration: '30s', target: 20 }, // 30 saniyede 20 kullaniciya cik
-        { duration: '1m', target: 20 },  // 1 dakika boyunca 20 kullanicida kal
-        { duration: '30s', target: 0 },  // 30 saniyede 0'a in
+        { duration: '1m', target: 20 }, // 1 dakika boyunca 20 kullanicida kal
+        { duration: '30s', target: 0 }, // 30 saniyede 0'a in
       ],
       gracefulRampDown: '10s',
     },
@@ -25,7 +25,7 @@ export const options = {
       stages: [
         { duration: '10s', target: 100 }, // 10 saniyede 100 kullaniciya firlama (Spike)
         { duration: '30s', target: 100 }, // 30 saniye boyunca dayan
-        { duration: '10s', target: 0 },   // 10 saniyede normalde don
+        { duration: '10s', target: 0 }, // 10 saniyede normalde don
       ],
       startTime: '2m30s', // Normal yuk bittikten sonra baslasin
     },
@@ -34,7 +34,7 @@ export const options = {
     // 2. Performance Eşikleri (Performance Thresholds)
     // Claude'un 156-157. maddelerindeki endpoint latency gereksinimleri
     http_req_duration: ['p(95)<500'], // %95'i 500ms altinda olmali
-    http_req_failed: ['rate<0.01'],   // Hata orani %1'den kucuk olmali
+    http_req_failed: ['rate<0.01'], // Hata orani %1'den kucuk olmali
   },
 };
 
@@ -43,7 +43,7 @@ const BASE_URL = __ENV.API_BASE_URL || 'https://englishengineer.vercel.app';
 export default function () {
   // Sistem sagligi (Health Check) ve Ana sayfa render hizi kontrolu
   const res = http.get(`${BASE_URL}/`);
-  
+
   check(res, {
     'status is 200': (r) => r.status === 200,
     'latency is under 500ms': (r) => r.timings.duration < 500,

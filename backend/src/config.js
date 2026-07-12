@@ -117,7 +117,9 @@ export const createBackendConfig = (environment = process.env) => {
     environment: runtimeEnvironment,
     version: environment.APP_VERSION || '4.0.1',
     sentry: {
-      dsn: hasText(environment.SENTRY_DSN) ? environment.SENTRY_DSN.trim() : null,
+      dsn: hasText(environment.SENTRY_DSN)
+        ? environment.SENTRY_DSN.trim()
+        : null,
       environment: runtimeEnvironment,
       tracesSampleRate: runtimeEnvironment === 'production' ? 0.1 : 1.0,
     },
@@ -159,7 +161,9 @@ export const createBackendConfig = (environment = process.env) => {
     },
     stripe: {
       configured: stripeConfigured,
-      secretKey: stripeConfigured ? environment.STRIPE_SECRET_KEY.replace(/\s+/g, '') : null,
+      secretKey: stripeConfigured
+        ? environment.STRIPE_SECRET_KEY.replace(/\s+/g, '')
+        : null,
       webhookSecret: hasText(environment.STRIPE_WEBHOOK_SECRET)
         ? environment.STRIPE_WEBHOOK_SECRET.replace(/\s+/g, '')
         : null,
@@ -259,7 +263,8 @@ export const toPublicHealth = (config) => {
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
   };
 
-  const allCriticalConfigured = config.ai.configured && config.supabase.configured;
+  const allCriticalConfigured =
+    config.ai.configured && config.supabase.configured;
   const status = allCriticalConfigured ? 'ok' : 'degraded';
 
   return {

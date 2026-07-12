@@ -2,9 +2,30 @@ import { describe, it, expect } from 'vitest';
 import { TeamLeaderboardService } from './team-leaderboard';
 
 const mockMembers = [
-  { id: 'm1', displayName: 'Alice', completedTasks: 10, skillScores: { vocabulary: 85, grammar: 70 }, xpEarned: 500, streak: 5 },
-  { id: 'm2', displayName: 'Bob', completedTasks: 5, skillScores: { vocabulary: 60, grammar: 80 }, xpEarned: 300, streak: 3 },
-  { id: 'm3', displayName: 'Charlie', completedTasks: 15, skillScores: { vocabulary: 90, grammar: 90 }, xpEarned: 800, streak: 7 },
+  {
+    id: 'm1',
+    displayName: 'Alice',
+    completedTasks: 10,
+    skillScores: { vocabulary: 85, grammar: 70 },
+    xpEarned: 500,
+    streak: 5,
+  },
+  {
+    id: 'm2',
+    displayName: 'Bob',
+    completedTasks: 5,
+    skillScores: { vocabulary: 60, grammar: 80 },
+    xpEarned: 300,
+    streak: 3,
+  },
+  {
+    id: 'm3',
+    displayName: 'Charlie',
+    completedTasks: 15,
+    skillScores: { vocabulary: 90, grammar: 90 },
+    xpEarned: 800,
+    streak: 7,
+  },
 ];
 
 describe('TeamLeaderboardService', () => {
@@ -46,15 +67,25 @@ describe('TeamLeaderboardService', () => {
 
     it('marks completed challenges', () => {
       const progress = { 'vocabulary-Vocabulary Master': 50 };
-      const challenges = TeamLeaderboardService.generateWeeklyChallenges(progress, 1);
-      const vocabChallenge = challenges.find((c) => c.title === 'Vocabulary Master');
+      const challenges = TeamLeaderboardService.generateWeeklyChallenges(
+        progress,
+        1
+      );
+      const vocabChallenge = challenges.find(
+        (c) => c.title === 'Vocabulary Master'
+      );
       expect(vocabChallenge?.isCompleted).toBe(true);
     });
 
     it('caps current value at target', () => {
       const progress = { 'vocabulary-Vocabulary Master': 100 };
-      const challenges = TeamLeaderboardService.generateWeeklyChallenges(progress, 1);
-      const vocabChallenge = challenges.find((c) => c.title === 'Vocabulary Master');
+      const challenges = TeamLeaderboardService.generateWeeklyChallenges(
+        progress,
+        1
+      );
+      const vocabChallenge = challenges.find(
+        (c) => c.title === 'Vocabulary Master'
+      );
       expect(vocabChallenge?.currentValue).toBe(50);
     });
 

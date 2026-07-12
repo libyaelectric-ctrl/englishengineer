@@ -350,13 +350,7 @@ const VocabularyPage = () => {
   const initializedSet = useRef(false);
 
   // Convenience aliases for JSX compatibility
-  const {
-    terms,
-    allLevelsLoaded,
-    loadError,
-    menuState,
-    wordSetIds,
-  } = data;
+  const { terms, allLevelsLoaded, loadError, menuState, wordSetIds } = data;
   const {
     activeTab,
     mode,
@@ -384,7 +378,10 @@ const VocabularyPage = () => {
       })
       .catch(() => {
         if (!cancelled) {
-          dispatchData({ type: 'SET_LOAD_ERROR', error: 'The canonical vocabulary repository could not be loaded.' });
+          dispatchData({
+            type: 'SET_LOAD_ERROR',
+            error: 'The canonical vocabulary repository could not be loaded.',
+          });
         }
       });
     return () => {
@@ -430,7 +427,10 @@ const VocabularyPage = () => {
   useEffect(() => {
     if (initializedSet.current || terms.length === 0) return;
     initializedSet.current = true;
-    dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: selectSet('New', menuState) });
+    dispatchData({
+      type: 'SET_WORD_SET_IDS',
+      wordSetIds: selectSet('New', menuState),
+    });
   }, [menuState, selectSet, terms.length]);
 
   const termsById = useMemo(
@@ -474,7 +474,10 @@ const VocabularyPage = () => {
 
   const chooseTab = (status: VocabularyMenuStatus) => {
     dispatchUI({ type: 'CHOOSE_TAB', status });
-    dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: selectSet(status, menuState) });
+    dispatchData({
+      type: 'SET_WORD_SET_IDS',
+      wordSetIds: selectSet(status, menuState),
+    });
   };
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
@@ -485,8 +488,13 @@ const VocabularyPage = () => {
       repairVocabularyText(term.term)
     );
     if (isCorrect) playSound('ding');
-    useLearningStore.getState().completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
-    dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
+    useLearningStore
+      .getState()
+      .completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
+    dispatchData({
+      type: 'SET_MENU_STATE',
+      menuState: VocabularyMenuService.getState(),
+    });
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
       '/vocabulary',
@@ -508,7 +516,10 @@ const VocabularyPage = () => {
     VocabularyMenuService.startLearning(term.id, new Date());
     playSound('success');
     useLearningStore.getState().completeGenericPractice('Vocabulary', 100, 0.5);
-    dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
+    dispatchData({
+      type: 'SET_MENU_STATE',
+      menuState: VocabularyMenuService.getState(),
+    });
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
       '/vocabulary',
@@ -538,7 +549,10 @@ const VocabularyPage = () => {
       .filter((id, index, values) => values.indexOf(id) === index)
       .slice(0, 2);
     dispatchUI({ type: 'START_SESSION' });
-    dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: [...newWordIds, ...reviewIds].slice(0, 10) });
+    dispatchData({
+      type: 'SET_WORD_SET_IDS',
+      wordSetIds: [...newWordIds, ...reviewIds].slice(0, 10),
+    });
   };
 
   const loadNextBatch = () => {
@@ -546,7 +560,13 @@ const VocabularyPage = () => {
     const nextIds = selectSet(activeTab, menuState, learningDomain, nextOffset);
     const resolvedOffset = nextIds.length > 0 ? nextOffset : 0;
     dispatchUI({ type: 'SET_BATCH_OFFSET', offset: resolvedOffset });
-    dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: nextIds.length > 0 ? nextIds : selectSet(activeTab, menuState, learningDomain, 0) });
+    dispatchData({
+      type: 'SET_WORD_SET_IDS',
+      wordSetIds:
+        nextIds.length > 0
+          ? nextIds
+          : selectSet(activeTab, menuState, learningDomain, 0),
+    });
   };
 
   const runSearch = async (event: FormEvent) => {
@@ -556,7 +576,10 @@ const VocabularyPage = () => {
       (value) => value && value !== 'All'
     );
     if (!query && !hasFilter) {
-      dispatchSearch({ type: 'SET_SEARCH_ERROR', error: 'Enter a search term or select an advanced filter.' });
+      dispatchSearch({
+        type: 'SET_SEARCH_ERROR',
+        error: 'Enter a search term or select an advanced filter.',
+      });
       return;
     }
     dispatchSearch({ type: 'RUN_SEARCH', query });
@@ -565,7 +588,10 @@ const VocabularyPage = () => {
       try {
         await loadAllLevels();
       } catch {
-        dispatchSearch({ type: 'SET_SEARCH_ERROR', error: 'The full vocabulary index could not be loaded.' });
+        dispatchSearch({
+          type: 'SET_SEARCH_ERROR',
+          error: 'The full vocabulary index could not be loaded.',
+        });
       }
     }
   };
@@ -573,7 +599,10 @@ const VocabularyPage = () => {
   const addCustomWord = (event: FormEvent) => {
     event.preventDefault();
     VocabularyMenuService.addToMyVocabulary(customDraft);
-    dispatchData({ type: 'SET_MENU_STATE', menuState: VocabularyMenuService.getState() });
+    dispatchData({
+      type: 'SET_MENU_STATE',
+      menuState: VocabularyMenuService.getState(),
+    });
     dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: false });
   };
 
@@ -584,16 +613,18 @@ const VocabularyPage = () => {
   useEffect(() => {
     const handleStartSession = () => startVocabularySession();
     window.addEventListener('startVocabularySession', handleStartSession);
-    return () => window.removeEventListener('startVocabularySession', handleStartSession);
+    return () =>
+      window.removeEventListener('startVocabularySession', handleStartSession);
   }, [startVocabularySession]);
 
   useEffect(() => {
     const handleAddCustomWord = () => {
-       dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: true });
-       window.scrollTo({ top: 0, behavior: 'smooth' });
+      dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: true });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     window.addEventListener('addCustomWord', handleAddCustomWord);
-    return () => window.removeEventListener('addCustomWord', handleAddCustomWord);
+    return () =>
+      window.removeEventListener('addCustomWord', handleAddCustomWord);
   }, []);
 
   return (
@@ -601,7 +632,9 @@ const VocabularyPage = () => {
       {/* LEVEL 1: Fixed Title */}
       <div className="sticky top-0 z-40 bg-background pt-4 pb-2 border-b border-border-soft">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Vocabulary</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Vocabulary
+          </h1>
         </div>
       </div>
 
@@ -612,7 +645,10 @@ const VocabularyPage = () => {
             <input
               value={searchInput}
               onChange={(event) =>
-                dispatchSearch({ type: 'SET_SEARCH_INPUT', input: event.target.value })
+                dispatchSearch({
+                  type: 'SET_SEARCH_INPUT',
+                  input: event.target.value,
+                })
               }
               className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-surface px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
               placeholder="Search by English, Turkish, Domain..."
@@ -657,7 +693,10 @@ const VocabularyPage = () => {
                     aria-label={`Filter by ${label}`}
                     value={filters[field]}
                     onChange={(event) =>
-                      dispatchSearch({ type: 'COMMIT_FILTERS', filters: { ...filters, [field]: event.target.value } })
+                      dispatchSearch({
+                        type: 'COMMIT_FILTERS',
+                        filters: { ...filters, [field]: event.target.value },
+                      })
                     }
                     className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-surface px-2 font-normal focus:border-primary outline-none"
                   >
@@ -717,185 +756,220 @@ const VocabularyPage = () => {
 
       {/* Content area - scrolls under sticky headers */}
       <div className="pt-4 space-y-4 pb-20">
-      {hasSearched && searchResults.length > 0 && (
-        <SectionCard
-          title="Search Results"
-          subtitle={`Showing ${searchResults.length} of ${allSearchResults.length} matches`}
-          icon={Search}
-        >
-          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-            {searchResults.map((term) => (
-              <WordCard
-                key={term.id}
-                term={term}
-                progress={menuState.progress[term.id]}
-                mode="View"
-                onReview={reviewWord}
-                onLearn={learnWord}
-              />
-            ))}
-          </div>
-        </SectionCard>
-      )}
-
-      {hasSearched && searchResults.length === 0 && !isSearchLoading && (
-        <SectionCard
-          title="No canonical match"
-          subtitle={
-            searchQuery
-              ? `${searchQuery} is not in the canonical repository`
-              : 'No terms match the selected filters'
-          }
-          icon={Plus}
-        >
-          {searchQuery && !showAddForm && (
-            <Button
-              onClick={() => {
-                dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, term: searchQuery } });
-                dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: true });
-              }}
-            >
-              <Plus className="h-4 w-4" /> Add to My Vocabulary
-            </Button>
-          )}
-          {showAddForm && (
-            <form
-              aria-label="Add to My Vocabulary"
-              onSubmit={addCustomWord}
-              className="grid gap-4 md:grid-cols-2"
-            >
-              <label className="text-sm font-semibold">
-                English term
-                <input
-                  required
-                  value={customDraft.term}
-                  onChange={(event) =>
-                    dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, term: event.target.value } })
-                  }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
-                />
-              </label>
-              <label className="text-sm font-semibold">
-                Turkish meaning
-                <input
-                  required
-                  value={customDraft.turkishMeaning}
-                  onChange={(event) =>
-                    dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, turkishMeaning: event.target.value } })
-                  }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
-                />
-              </label>
-              <label className="text-sm font-semibold">
-                Example
-                <input
-                  required
-                  value={customDraft.exampleSentence}
-                  onChange={(event) =>
-                    dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, exampleSentence: event.target.value } })
-                  }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
-                />
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="text-sm font-semibold">
-                  CEFR
-                  <select
-                    value={customDraft.cefrLevel}
-                    onChange={(event) =>
-                      dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, cefrLevel: event.target.value as CefrLevel } })
-                    }
-                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
-                  >
-                    {CEFR_LEVELS.map((level) => (
-                      <option key={level}>{level}</option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm font-semibold">
-                  Domain
-                  <input
-                    required
-                    value={customDraft.domain}
-                    onChange={(event) =>
-                    dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft: { ...customDraft, domain: event.target.value } })
-                    }
-                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
-                  />
-                </label>
-              </div>
-              <div className="md:col-span-2 flex flex-wrap items-center gap-3">
-                <Button type="submit">
-                  <Plus className="h-4 w-4" /> Save to My Vocabulary
-                </Button>
-                <span className="text-xs font-bold text-foreground0">
-                  AI Assist Coming Soon
-                </span>
-              </div>
-            </form>
-          )}
-        </SectionCard>
-      )}
-
-      <SectionCard
-        title={`${TAB_LABELS[activeTab]} 9-word set`}
-        subtitle={`Selected by ${vocabularyProfile.cefrBand}, vocabulary skill use, memory state, and canonical order`}
-        icon={BookMarked}
-        headerActions={
-          <div className="flex flex-wrap items-center gap-1">
-            <select
-              aria-label="Learning set domain"
-              value={learningDomain}
-              onChange={(event) => {
-                const nextDomain = event.target.value;
-                dispatchUI({ type: 'SET_LEARNING_DOMAIN', domain: nextDomain });
-                dispatchData({ type: 'SET_WORD_SET_IDS', wordSetIds: selectSet(activeTab, menuState, nextDomain) });
-              }}
-              className="min-h-8 rounded-lg border border-border-soft bg-surface px-2 text-xs font-semibold text-foreground"
-            >
-              {filterOptions('domain').map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
-          </div>
-        }
-      >
-        {loadError && (
-          <p className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
-            {loadError}
-          </p>
-        )}
-        {!loadError && terms.length === 0 && (
-          <p className="text-sm text-foreground0">Loading canonical words...</p>
-        )}
-        {terms.length > 0 && wordSet.length === 0 && (
-          <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
-            No words currently have {activeTab.toLowerCase()} status. Select New
-            to begin a ten-word set.
-          </p>
-        )}
-        {wordSet.length > 0 && (
-          <div className="space-y-5">
+        {hasSearched && searchResults.length > 0 && (
+          <SectionCard
+            title="Search Results"
+            subtitle={`Showing ${searchResults.length} of ${allSearchResults.length} matches`}
+            icon={Search}
+          >
             <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-              {wordSet.map((term) => (
+              {searchResults.map((term) => (
                 <WordCard
                   key={term.id}
                   term={term}
                   progress={menuState.progress[term.id]}
-                  mode={mode}
+                  mode="View"
                   onReview={reviewWord}
                   onLearn={learnWord}
                 />
               ))}
             </div>
-            <div className="flex justify-end border-t border-border-soft pt-4">
-              <Button variant="outline" onClick={loadNextBatch}>
-                Next 9-word batch
-              </Button>
-            </div>
-          </div>
+          </SectionCard>
         )}
-      </SectionCard>
+
+        {hasSearched && searchResults.length === 0 && !isSearchLoading && (
+          <SectionCard
+            title="No canonical match"
+            subtitle={
+              searchQuery
+                ? `${searchQuery} is not in the canonical repository`
+                : 'No terms match the selected filters'
+            }
+            icon={Plus}
+          >
+            {searchQuery && !showAddForm && (
+              <Button
+                onClick={() => {
+                  dispatchUI({
+                    type: 'SET_CUSTOM_DRAFT',
+                    draft: { ...customDraft, term: searchQuery },
+                  });
+                  dispatchUI({ type: 'SET_SHOW_ADD_FORM', show: true });
+                }}
+              >
+                <Plus className="h-4 w-4" /> Add to My Vocabulary
+              </Button>
+            )}
+            {showAddForm && (
+              <form
+                aria-label="Add to My Vocabulary"
+                onSubmit={addCustomWord}
+                className="grid gap-4 md:grid-cols-2"
+              >
+                <label className="text-sm font-semibold">
+                  English term
+                  <input
+                    required
+                    value={customDraft.term}
+                    onChange={(event) =>
+                      dispatchUI({
+                        type: 'SET_CUSTOM_DRAFT',
+                        draft: { ...customDraft, term: event.target.value },
+                      })
+                    }
+                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                  />
+                </label>
+                <label className="text-sm font-semibold">
+                  Turkish meaning
+                  <input
+                    required
+                    value={customDraft.turkishMeaning}
+                    onChange={(event) =>
+                      dispatchUI({
+                        type: 'SET_CUSTOM_DRAFT',
+                        draft: {
+                          ...customDraft,
+                          turkishMeaning: event.target.value,
+                        },
+                      })
+                    }
+                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                  />
+                </label>
+                <label className="text-sm font-semibold">
+                  Example
+                  <input
+                    required
+                    value={customDraft.exampleSentence}
+                    onChange={(event) =>
+                      dispatchUI({
+                        type: 'SET_CUSTOM_DRAFT',
+                        draft: {
+                          ...customDraft,
+                          exampleSentence: event.target.value,
+                        },
+                      })
+                    }
+                    className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                  />
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="text-sm font-semibold">
+                    CEFR
+                    <select
+                      value={customDraft.cefrLevel}
+                      onChange={(event) =>
+                        dispatchUI({
+                          type: 'SET_CUSTOM_DRAFT',
+                          draft: {
+                            ...customDraft,
+                            cefrLevel: event.target.value as CefrLevel,
+                          },
+                        })
+                      }
+                      className="mt-1 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
+                    >
+                      {CEFR_LEVELS.map((level) => (
+                        <option key={level}>{level}</option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="text-sm font-semibold">
+                    Domain
+                    <input
+                      required
+                      value={customDraft.domain}
+                      onChange={(event) =>
+                        dispatchUI({
+                          type: 'SET_CUSTOM_DRAFT',
+                          draft: { ...customDraft, domain: event.target.value },
+                        })
+                      }
+                      className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                    />
+                  </label>
+                </div>
+                <div className="md:col-span-2 flex flex-wrap items-center gap-3">
+                  <Button type="submit">
+                    <Plus className="h-4 w-4" /> Save to My Vocabulary
+                  </Button>
+                  <span className="text-xs font-bold text-foreground0">
+                    AI Assist Coming Soon
+                  </span>
+                </div>
+              </form>
+            )}
+          </SectionCard>
+        )}
+
+        <SectionCard
+          title={`${TAB_LABELS[activeTab]} 9-word set`}
+          subtitle={`Selected by ${vocabularyProfile.cefrBand}, vocabulary skill use, memory state, and canonical order`}
+          icon={BookMarked}
+          headerActions={
+            <div className="flex flex-wrap items-center gap-1">
+              <select
+                aria-label="Learning set domain"
+                value={learningDomain}
+                onChange={(event) => {
+                  const nextDomain = event.target.value;
+                  dispatchUI({
+                    type: 'SET_LEARNING_DOMAIN',
+                    domain: nextDomain,
+                  });
+                  dispatchData({
+                    type: 'SET_WORD_SET_IDS',
+                    wordSetIds: selectSet(activeTab, menuState, nextDomain),
+                  });
+                }}
+                className="min-h-8 rounded-lg border border-border-soft bg-surface px-2 text-xs font-semibold text-foreground"
+              >
+                {filterOptions('domain').map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </div>
+          }
+        >
+          {loadError && (
+            <p className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+              {loadError}
+            </p>
+          )}
+          {!loadError && terms.length === 0 && (
+            <p className="text-sm text-foreground0">
+              Loading canonical words...
+            </p>
+          )}
+          {terms.length > 0 && wordSet.length === 0 && (
+            <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
+              No words currently have {activeTab.toLowerCase()} status. Select
+              New to begin a ten-word set.
+            </p>
+          )}
+          {wordSet.length > 0 && (
+            <div className="space-y-5">
+              <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                {wordSet.map((term) => (
+                  <WordCard
+                    key={term.id}
+                    term={term}
+                    progress={menuState.progress[term.id]}
+                    mode={mode}
+                    onReview={reviewWord}
+                    onLearn={learnWord}
+                  />
+                ))}
+              </div>
+              <div className="flex justify-end border-t border-border-soft pt-4">
+                <Button variant="outline" onClick={loadNextBatch}>
+                  Next 9-word batch
+                </Button>
+              </div>
+            </div>
+          )}
+        </SectionCard>
       </div>
     </div>
   );

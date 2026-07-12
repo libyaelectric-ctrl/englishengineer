@@ -8,21 +8,23 @@ EngineerOS uses Supabase (PostgreSQL) as the primary database. This document def
 
 Supabase provides automatic backups:
 
-| Plan | Backup Frequency | Retention |
-|------|------------------|-----------|
-| Free | Daily | 7 days |
-| Pro | Daily + Point-in-time | 7 days + PITR |
+| Plan | Backup Frequency      | Retention      |
+| ---- | --------------------- | -------------- |
+| Free | Daily                 | 7 days         |
+| Pro  | Daily + Point-in-time | 7 days + PITR  |
 | Team | Daily + Point-in-time | 14 days + PITR |
 
 **Current Plan:** Pro (recommended for production)
 
 ### What Supabase Backs Up Automatically
+
 - All database tables
 - Row Level Security (RLS) policies
 - Database roles and permissions
 - Extensions and functions
 
 ### What Supabase Does NOT Back Up
+
 - Storage files (separate backup needed)
 - Edge Functions (deploy from source)
 - Auth users (stored in database, included)
@@ -30,6 +32,7 @@ Supabase provides automatic backups:
 ## Manual Backup Procedures
 
 ### Database Export (pg_dump)
+
 ```bash
 # Full database dump
 pg_dump "postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres" \
@@ -51,6 +54,7 @@ pg_dump "postgresql://..." \
 ```
 
 ### Storage Backup
+
 ```bash
 # List storage buckets
 supabase storage list
@@ -61,12 +65,12 @@ supabase storage download --bucket-name avatars --local-path ./backups/avatars
 
 ## Backup Schedule
 
-| Type | Frequency | Retention | Method |
-|------|-----------|-----------|--------|
-| Automated (Supabase) | Daily | 7-14 days | Automatic |
-| Manual pg_dump | Weekly | 30 days | Script |
-| Pre-deploy snapshot | On deploy | 7 days | CI/CD |
-| Storage files | Weekly | 30 days | Script |
+| Type                 | Frequency | Retention | Method    |
+| -------------------- | --------- | --------- | --------- |
+| Automated (Supabase) | Daily     | 7-14 days | Automatic |
+| Manual pg_dump       | Weekly    | 30 days   | Script    |
+| Pre-deploy snapshot  | On deploy | 7 days    | CI/CD     |
+| Storage files        | Weekly    | 30 days   | Script    |
 
 ## Backup Storage Location
 
@@ -77,7 +81,9 @@ supabase storage download --bucket-name avatars --local-path ./backups/avatars
 ## Restore Procedures
 
 ### Point-in-time Recovery (PITR)
+
 Available on Pro plan:
+
 1. Go to Supabase Dashboard → Database → Backups
 2. Select "Point in Time Recovery"
 3. Choose restore point (timestamp)
@@ -86,6 +92,7 @@ Available on Pro plan:
 **Note:** PITR creates a new database. Update connection strings after restore.
 
 ### Full Restore from pg_dump
+
 ```bash
 # Restore full backup
 pg_restore "postgresql://..." \
@@ -103,6 +110,7 @@ pg_restore "postgresql://..." \
 ```
 
 ### Schema-only Restore
+
 ```bash
 psql "postgresql://..." -f schema_20260710.sql
 ```
@@ -117,6 +125,7 @@ Backup testing is performed quarterly:
 4. **Document results** — Update this file with test date and outcome
 
 ### Last Backup Test
+
 - **Date:** TBD (schedule quarterly)
 - **Result:** Pending
 - **Notes:** N/A

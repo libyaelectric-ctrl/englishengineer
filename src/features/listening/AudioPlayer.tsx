@@ -25,23 +25,35 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isPlaying = useListeningPlaybackStore((s) => s.isPlaying);
-  const currentTimeSeconds = useListeningPlaybackStore((s) => s.currentTimeSeconds);
-  const totalDurationSeconds = useListeningPlaybackStore((s) => s.totalDurationSeconds);
+  const currentTimeSeconds = useListeningPlaybackStore(
+    (s) => s.currentTimeSeconds
+  );
+  const totalDurationSeconds = useListeningPlaybackStore(
+    (s) => s.totalDurationSeconds
+  );
   const playbackSpeed = useListeningPlaybackStore((s) => s.playbackSpeed);
   const isAudioLoading = useListeningPlaybackStore((s) => s.isAudioLoading);
   const audioError = useListeningPlaybackStore((s) => s.audioError);
   const resumePositions = useListeningPlaybackStore((s) => s.resumePositions);
   const replayCounts = useListeningPlaybackStore((s) => s.replayCounts);
-  const audioCompletedMissionIds = useListeningPlaybackStore((s) => s.audioCompletedMissionIds);
+  const audioCompletedMissionIds = useListeningPlaybackStore(
+    (s) => s.audioCompletedMissionIds
+  );
   const startPlaying = useListeningPlaybackStore((s) => s.startPlaying);
   const pausePlaying = useListeningPlaybackStore((s) => s.pausePlaying);
   const replayPlaying = useListeningPlaybackStore((s) => s.replayPlaying);
   const setPlaybackSpeed = useListeningPlaybackStore((s) => s.setPlaybackSpeed);
   const setAudioLoading = useListeningPlaybackStore((s) => s.setAudioLoading);
   const setAudioError = useListeningPlaybackStore((s) => s.setAudioError);
-  const updateAudioProgress = useListeningPlaybackStore((s) => s.updateAudioProgress);
-  const recordListeningSecond = useListeningPlaybackStore((s) => s.recordListeningSecond);
-  const markAudioCompleted = useListeningPlaybackStore((s) => s.markAudioCompleted);
+  const updateAudioProgress = useListeningPlaybackStore(
+    (s) => s.updateAudioProgress
+  );
+  const recordListeningSecond = useListeningPlaybackStore(
+    (s) => s.recordListeningSecond
+  );
+  const markAudioCompleted = useListeningPlaybackStore(
+    (s) => s.markAudioCompleted
+  );
   const recordReplay = useListeningPlaybackStore((s) => s.recordReplay);
 
   const isCompleted = audioCompletedMissionIds.includes(mission.id);

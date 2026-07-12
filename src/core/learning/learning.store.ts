@@ -178,7 +178,9 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       };
 
       const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
+      const updatedSessions = [...get().studySessions, newSession].slice(
+        -MAX_HISTORY_SIZE
+      );
       const updatedScoreHistory = [
         ...get().scoreHistory,
         { date: todayDateStr, score: result.score, module: mission.module },
@@ -270,7 +272,9 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       };
 
       const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
+      const updatedSessions = [...get().studySessions, newSession].slice(
+        -MAX_HISTORY_SIZE
+      );
       const updatedScoreHistory = [
         ...get().scoreHistory,
         { date: todayDateStr, score: result.score, module },

@@ -14,7 +14,10 @@ import {
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
-import { WritingModelAnswer, type WritingEvaluationResult } from '@/features/writing';
+import {
+  WritingModelAnswer,
+  type WritingEvaluationResult,
+} from '@/features/writing';
 
 interface WritingEvaluationResultsProps {
   evaluationResult: WritingEvaluationResult;
@@ -75,21 +78,30 @@ export const WritingEvaluationResults = ({
                 <span>Linguistic Clarity</span>
                 <span>{evaluationResult.linguisticClarityScore}%</span>
               </div>
-              <ProgressBar value={evaluationResult.linguisticClarityScore} color="primary" />
+              <ProgressBar
+                value={evaluationResult.linguisticClarityScore}
+                color="primary"
+              />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                 <span>Jargon / Vocabulary</span>
                 <span>{evaluationResult.jargonDensityScore}%</span>
               </div>
-              <ProgressBar value={evaluationResult.jargonDensityScore} color="cyan" />
+              <ProgressBar
+                value={evaluationResult.jargonDensityScore}
+                color="cyan"
+              />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                 <span>Professional Tone</span>
                 <span>{evaluationResult.professionalToneScore}%</span>
               </div>
-              <ProgressBar value={evaluationResult.professionalToneScore} color="emerald" />
+              <ProgressBar
+                value={evaluationResult.professionalToneScore}
+                color="emerald"
+              />
             </div>
           </div>
         </div>
@@ -101,21 +113,32 @@ export const WritingEvaluationResults = ({
           </h5>
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
-              <span className="text-[9px] font-mono text-muted-copy uppercase block">XP gained</span>
-              <span className="mt-0.5 block text-sm font-bold text-foreground">+{evaluationResult.xpEarned}</span>
+              <span className="text-[9px] font-mono text-muted-copy uppercase block">
+                XP gained
+              </span>
+              <span className="mt-0.5 block text-sm font-bold text-foreground">
+                +{evaluationResult.xpEarned}
+              </span>
             </div>
             <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <Coins className="h-2.5 w-2.5 text-amber-500 shrink-0" /> COINS
               </span>
-              <span className="mt-0.5 block text-sm font-bold text-foreground">+{evaluationResult.coinsEarned}</span>
+              <span className="mt-0.5 block text-sm font-bold text-foreground">
+                +{evaluationResult.coinsEarned}
+              </span>
             </div>
             <div className="rounded-xl border border-border-soft bg-surface-hover p-3 text-center">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
-                <TrendingUp className="h-2.5 w-2.5 text-cyan-500 shrink-0" /> LEVEL PROGRESS
+                <TrendingUp className="h-2.5 w-2.5 text-cyan-500 shrink-0" />{' '}
+                LEVEL PROGRESS
               </span>
-              <span className={`text-sm font-bold block mt-0.5 ${evaluationResult.eloChange >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                {evaluationResult.eloChange >= 0 ? `+${evaluationResult.eloChange}` : evaluationResult.eloChange}
+              <span
+                className={`text-sm font-bold block mt-0.5 ${evaluationResult.eloChange >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}
+              >
+                {evaluationResult.eloChange >= 0
+                  ? `+${evaluationResult.eloChange}`
+                  : evaluationResult.eloChange}
               </span>
             </div>
           </div>
@@ -131,8 +154,13 @@ export const WritingEvaluationResults = ({
             </h5>
             <ul className="space-y-1.5">
               {evaluationResult.strengths.map((s) => (
-                <li key={s} className="text-xs text-muted-copy font-medium flex items-start gap-1.5">
-                  <span className="text-emerald-400 font-bold shrink-0 mt-0.5">•</span>
+                <li
+                  key={s}
+                  className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
+                >
+                  <span className="text-emerald-400 font-bold shrink-0 mt-0.5">
+                    •
+                  </span>
                   <span>{s}</span>
                 </li>
               ))}
@@ -145,8 +173,13 @@ export const WritingEvaluationResults = ({
             </h5>
             <ul className="space-y-1.5">
               {evaluationResult.weaknesses.map((w) => (
-                <li key={w} className="text-xs text-muted-copy font-medium flex items-start gap-1.5">
-                  <span className="text-amber-400 font-bold shrink-0 mt-0.5">•</span>
+                <li
+                  key={w}
+                  className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
+                >
+                  <span className="text-amber-400 font-bold shrink-0 mt-0.5">
+                    •
+                  </span>
                   <span>{w}</span>
                 </li>
               ))}
@@ -154,34 +187,63 @@ export const WritingEvaluationResults = ({
           </div>
         </div>
 
-        <SectionCard title="Polished Proposal Output" subtitle="Final submitted text after review" icon={FileText}>
+        <SectionCard
+          title="Polished Proposal Output"
+          subtitle="Final submitted text after review"
+          icon={FileText}
+        >
           <div className="whitespace-pre-wrap rounded-xl border border-border-soft bg-surface-hover p-5 text-sm font-medium leading-relaxed text-foreground">
             {evaluationResult.finalDraft}
           </div>
         </SectionCard>
 
-        <SectionCard title="Detailed Linguistic Audit" subtitle="Review each active syntactic flag and corresponding corrections applied" icon={Sparkles}>
+        <SectionCard
+          title="Detailed Linguistic Audit"
+          subtitle="Review each active syntactic flag and corresponding corrections applied"
+          icon={Sparkles}
+        >
           <div className="space-y-6">
             {evaluationResult.detailedCorrections.map((item, idx) => (
-              <div key={item.correctionId} className={`p-4 rounded-md border space-y-3 ${item.isFixed ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`}>
+              <div
+                key={item.correctionId}
+                className={`p-4 rounded-md border space-y-3 ${item.isFixed ? 'bg-emerald-500/5 border-emerald-500/20' : 'bg-rose-500/5 border-rose-500/20'}`}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex gap-2.5">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-black text-muted-copy">{idx + 1}</span>
-                    <h6 className="mt-0.5 text-xs font-bold leading-tight text-foreground md:text-sm">{item.text}</h6>
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-black text-muted-copy">
+                      {idx + 1}
+                    </span>
+                    <h6 className="mt-0.5 text-xs font-bold leading-tight text-foreground md:text-sm">
+                      {item.text}
+                    </h6>
                   </div>
-                  <span className={`text-[10px] font-black font-mono px-2 py-0.5 rounded uppercase flex items-center gap-1 shrink-0 ${item.isFixed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}>
-                    {item.isFixed ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
+                  <span
+                    className={`text-[10px] font-black font-mono px-2 py-0.5 rounded uppercase flex items-center gap-1 shrink-0 ${item.isFixed ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}
+                  >
+                    {item.isFixed ? (
+                      <Check className="h-3.5 w-3.5" />
+                    ) : (
+                      <X className="h-3.5 w-3.5" />
+                    )}
                     <span>{item.isFixed ? 'Optimized' : 'Unresolved'}</span>
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-3 rounded-xl border border-border-soft bg-surface p-3 md:grid-cols-2">
                   <div>
-                    <span className="text-[9px] font-mono text-muted-copy uppercase block">Casual/Error Term</span>
-                    <span className="text-xs font-bold text-rose-400 block mt-0.5">&quot;{item.original}&quot;</span>
+                    <span className="text-[9px] font-mono text-muted-copy uppercase block">
+                      Casual/Error Term
+                    </span>
+                    <span className="text-xs font-bold text-rose-400 block mt-0.5">
+                      &quot;{item.original}&quot;
+                    </span>
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono text-muted-copy uppercase block">Professional Revision</span>
-                    <span className="text-xs font-bold text-emerald-400 block mt-0.5">&quot;{item.fix}&quot;</span>
+                    <span className="text-[9px] font-mono text-muted-copy uppercase block">
+                      Professional Revision
+                    </span>
+                    <span className="text-xs font-bold text-emerald-400 block mt-0.5">
+                      &quot;{item.fix}&quot;
+                    </span>
                   </div>
                 </div>
               </div>
@@ -189,14 +251,39 @@ export const WritingEvaluationResults = ({
           </div>
         </SectionCard>
 
-        <WritingModelAnswer hasSubmitted={Boolean(evaluationResult)} modelAnswer={currentMission.sampleExcellentAnswer} suggestions={evaluationResult.weaknesses} />
+        <WritingModelAnswer
+          hasSubmitted={Boolean(evaluationResult)}
+          modelAnswer={currentMission.sampleExcellentAnswer}
+          suggestions={evaluationResult.weaknesses}
+        />
 
         <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
-          <Link to="/curriculum" className="inline-flex min-h-10 items-center rounded-xl px-3 text-xs font-bold text-primary hover:bg-surface-hover">Learning Hub</Link>
-          <Button variant="outline" onClick={() => { resetCurrentMission(); setSelectedRule(null); }} className="h-10 border-border-soft text-xs text-muted-copy hover:text-foreground">Retry Sandbox</Button>
-          <Button onClick={handleBackToMissions} className="bg-primary hover:bg-primary-hover text-foreground font-black px-6 h-10">Back to Writing list</Button>
+          <Link
+            to="/curriculum"
+            className="inline-flex min-h-10 items-center rounded-xl px-3 text-xs font-bold text-primary hover:bg-surface-hover"
+          >
+            Learning Hub
+          </Link>
+          <Button
+            variant="outline"
+            onClick={() => {
+              resetCurrentMission();
+              setSelectedRule(null);
+            }}
+            className="h-10 border-border-soft text-xs text-muted-copy hover:text-foreground"
+          >
+            Retry Sandbox
+          </Button>
+          <Button
+            onClick={handleBackToMissions}
+            className="bg-primary hover:bg-primary-hover text-foreground font-black px-6 h-10"
+          >
+            Back to Writing list
+          </Button>
           {currentMissionIndex < visibleMissions.length - 1 && (
-            <Button onClick={() => moveMission(1)}>Next lesson <ChevronRight className="h-4 w-4" /></Button>
+            <Button onClick={() => moveMission(1)}>
+              Next lesson <ChevronRight className="h-4 w-4" />
+            </Button>
           )}
         </div>
       </div>

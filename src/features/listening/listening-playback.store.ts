@@ -82,7 +82,8 @@ export const useListeningPlaybackStore = create<
 
   syncPlaybackToMission: (missionId: string) => {
     const missions = ListeningService.getMissions();
-    const currentMission = missions.find((m) => m.id === missionId) || missions[0];
+    const currentMission =
+      missions.find((m) => m.id === missionId) || missions[0];
     const { resumePositions } = get();
 
     set({
@@ -188,7 +189,8 @@ export const useListeningPlaybackStore = create<
   },
 
   selectNextMission: () => {
-    const { missions, selectedMissionId } = useListeningMissionsStore.getState();
+    const { missions, selectedMissionId } =
+      useListeningMissionsStore.getState();
     const { selectMission } = useListeningMissionsStore.getState();
     const currentIndex = missions.findIndex(
       (mission) => mission.id === selectedMissionId

@@ -6,24 +6,17 @@ interface LoadingStateProps {
   description?: string;
 }
 
-export const LoadingState: FC<LoadingStateProps> = ({
-  title,
-  description,
-}) => (
+export const LoadingState: FC<LoadingStateProps> = ({ title, description }) => (
   <div className="min-h-[60vh] w-full px-4 py-10">
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="space-y-2">
         {title ? (
-          <h2 className="text-lg font-semibold text-foreground">
-            {title}
-          </h2>
+          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
         ) : (
           <Skeleton className="h-6 w-48" />
         )}
         {description ? (
-          <p className="text-sm text-muted-copy">
-            {description}
-          </p>
+          <p className="text-sm text-muted-copy">{description}</p>
         ) : (
           <Skeleton className="h-4 w-64" />
         )}

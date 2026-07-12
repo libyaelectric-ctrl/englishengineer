@@ -62,20 +62,48 @@ export const WorkspaceDocumentBodySchema = z.object({
 // --- Billing Schemas ---
 
 export const BillingCheckoutBodySchema = z.object({
-  email: z.string().trim().min(1, 'Email is required.').email('Invalid email format.'),
-  successUrl: z.string().trim().min(1, 'Success URL is required.').url('Invalid URL.'),
-  cancelUrl: z.string().trim().min(1, 'Cancel URL is required.').url('Invalid URL.'),
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email is required.')
+    .email('Invalid email format.'),
+  successUrl: z
+    .string()
+    .trim()
+    .min(1, 'Success URL is required.')
+    .url('Invalid URL.'),
+  cancelUrl: z
+    .string()
+    .trim()
+    .min(1, 'Cancel URL is required.')
+    .url('Invalid URL.'),
   planId: z.string().max(50).optional(),
 });
 
 export const BillingTopupBodySchema = z.object({
-  email: z.string().trim().min(1, 'Email is required.').email('Invalid email format.'),
-  successUrl: z.string().trim().min(1, 'Success URL is required.').url('Invalid URL.'),
-  cancelUrl: z.string().trim().min(1, 'Cancel URL is required.').url('Invalid URL.'),
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email is required.')
+    .email('Invalid email format.'),
+  successUrl: z
+    .string()
+    .trim()
+    .min(1, 'Success URL is required.')
+    .url('Invalid URL.'),
+  cancelUrl: z
+    .string()
+    .trim()
+    .min(1, 'Cancel URL is required.')
+    .url('Invalid URL.'),
 });
 
 export const BillingPortalBodySchema = z.object({
-  returnUrl: z.string().trim().min(1, 'Return URL is required.').url('Invalid URL.'),
+  returnUrl: z
+    .string()
+    .trim()
+    .min(1, 'Return URL is required.')
+    .url('Invalid URL.'),
 });
 
 // --- Admin Schemas ---

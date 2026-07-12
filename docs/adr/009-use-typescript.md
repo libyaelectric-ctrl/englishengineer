@@ -11,6 +11,7 @@ EngineerOS needs type safety for better developer experience and code quality.
 ## Decision
 
 Use TypeScript for both frontend and backend, providing:
+
 - Static type checking
 - Better IDE support
 - Refactoring safety
@@ -19,12 +20,14 @@ Use TypeScript for both frontend and backend, providing:
 ## Consequences
 
 ### Positive
+
 - Catch errors at compile time
 - Better code documentation
 - Improved refactoring
 - Enhanced IDE support
 
 ### Negative
+
 - Learning curve
 - Additional build step
 - Slower compilation

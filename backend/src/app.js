@@ -54,7 +54,7 @@ export const createApp = ({
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", "data:", "https:"],
+          imgSrc: ["'self'", 'data:', 'https:'],
           connectSrc: ["'self'", config.appOrigin],
           fontSrc: ["'self'"],
           objectSrc: ["'none'"],
@@ -89,7 +89,7 @@ export const createApp = ({
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
-  
+
   // Timing Middleware (Performance Measurement)
   app.use((req, res, next) => {
     const start = process.hrtime();
@@ -100,7 +100,7 @@ export const createApp = ({
     });
     next();
   });
-  
+
   app.use(createI18nMiddleware());
 
   // Health check with real pings
@@ -120,18 +120,28 @@ export const createApp = ({
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
         );
-        const pingPromise = supabase.from('subscriptions').select('id').limit(1);
+        const pingPromise = supabase
+          .from('subscriptions')
+          .select('id')
+          .limit(1);
         await Promise.race([pingPromise, timeoutPromise]);
         checks.supabase = { configured: true, reachable: true };
       } catch (err) {
-        checks.supabase = { configured: true, reachable: false, error: err.message };
+        checks.supabase = {
+          configured: true,
+          reachable: false,
+          error: err.message,
+        };
         health.status = 'degraded';
         health.ok = false;
       }
     }
 
     // Real Redis ping (Upstash)
-    if (config.rateLimit?.storeMode === 'upstash' && config.rateLimit?.upstashUrl) {
+    if (
+      config.rateLimit?.storeMode === 'upstash' &&
+      config.rateLimit?.upstashUrl
+    ) {
       try {
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
@@ -146,7 +156,11 @@ export const createApp = ({
           health.ok = false;
         }
       } catch (err) {
-        checks.rateLimit = { configured: true, reachable: false, error: err.message };
+        checks.rateLimit = {
+          configured: true,
+          reachable: false,
+          error: err.message,
+        };
         health.status = 'degraded';
         health.ok = false;
       }

@@ -44,15 +44,15 @@ graph TB
 
 ## Interactions
 
-| Actor/System | Interaction | Protocol |
-|--------------|-------------|----------|
-| User → Frontend | Web UI access | HTTPS |
-| Frontend → Backend | REST API calls | HTTPS |
-| Frontend → Supabase | Auth + Realtime | WSS/HTTPS |
-| Backend → Supabase | Data operations | HTTPS |
-| Backend → Stripe | Payment processing | HTTPS |
-| Backend → Anthropic | AI inference | HTTPS |
-| Backend → Upstash | Rate limiting | HTTPS |
+| Actor/System        | Interaction        | Protocol  |
+| ------------------- | ------------------ | --------- |
+| User → Frontend     | Web UI access      | HTTPS     |
+| Frontend → Backend  | REST API calls     | HTTPS     |
+| Frontend → Supabase | Auth + Realtime    | WSS/HTTPS |
+| Backend → Supabase  | Data operations    | HTTPS     |
+| Backend → Stripe    | Payment processing | HTTPS     |
+| Backend → Anthropic | AI inference       | HTTPS     |
+| Backend → Upstash   | Rate limiting      | HTTPS     |
 
 ## Data Flow
 

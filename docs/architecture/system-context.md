@@ -7,13 +7,13 @@ C4Context
     title System Context diagram for EngineerOS
 
     Person(user, "Student / User", "A user learning English, interacting with AI teachers and taking tests.")
-    
+
     System(engineeros, "EngineerOS Platform", "Provides vocabulary, reading, writing, and AI-driven speaking capabilities.")
 
     System_Ext(stripe, "Stripe", "Handles subscriptions and payments.")
     System_Ext(openai, "OpenAI / Anthropic", "Powers the conversational AI teachers.")
     System_Ext(supabase, "Supabase", "Managed PostgreSQL database, Auth, and Storage.")
-    
+
     Rel(user, engineeros, "Learns English, tracks progress using")
     Rel(engineeros, stripe, "Processes billing via")
     Rel(engineeros, openai, "Generates AI responses via")
@@ -27,7 +27,7 @@ C4Container
     title Container diagram for EngineerOS
 
     Person(user, "Student / User", "Learns English")
-    
+
     Container(spa, "Single-Page Application", "React, Vite, Zustand", "Provides all language learning functionalities directly in the browser.")
     Container(api, "API Application", "Node.js, Express", "Handles Stripe webhooks, AI logic, and background jobs.")
     ContainerDb(db, "Database", "PostgreSQL (Supabase)", "Stores users, vocabulary, billing history, and audit logs.")

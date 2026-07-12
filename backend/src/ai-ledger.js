@@ -13,7 +13,9 @@ const getLimitForPlan = (planId) => ({
 
 export const createSupabaseAiLedger = (config) => {
   if (!config.workspace?.configured) {
-    throw new Error('AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
+    throw new Error(
+      'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
+    );
   }
 
   const supabase = createClient(

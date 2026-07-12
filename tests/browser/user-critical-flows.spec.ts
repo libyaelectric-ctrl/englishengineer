@@ -10,7 +10,12 @@ test.describe('Critical User Flows', () => {
       await pricingLink.click();
       await expect(page).toHaveURL(/.*pricing/);
       // Ensure pricing content is actually rendered
-      await expect(page.locator('h1, h2').filter({ hasText: /pricing|plan/i }).first()).toBeVisible();
+      await expect(
+        page
+          .locator('h1, h2')
+          .filter({ hasText: /pricing|plan/i })
+          .first()
+      ).toBeVisible();
     });
   });
 
@@ -32,7 +37,9 @@ test.describe('Critical User Flows', () => {
   });
 
   test.describe('Dashboard Security', () => {
-    test('dashboard redirects to login when not authenticated', async ({ page }) => {
+    test('dashboard redirects to login when not authenticated', async ({
+      page,
+    }) => {
       await page.goto('/dashboard');
       // Removed weak OR logic, enforced unconditional redirect assertion
       await expect(page).toHaveURL(/.*login/);
@@ -45,9 +52,9 @@ test.describe('Critical User Flows', () => {
       // Ensure the page either redirects to login (if guarded) or shows structural UI
       const url = page.url();
       if (url.includes('login')) {
-         await expect(page).toHaveURL(/.*login/);
+        await expect(page).toHaveURL(/.*login/);
       } else {
-         await expect(page.locator('input').first()).toBeVisible();
+        await expect(page.locator('input').first()).toBeVisible();
       }
     });
   });

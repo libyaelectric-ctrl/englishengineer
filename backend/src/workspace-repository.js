@@ -34,7 +34,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .order('created_at', { ascending: false });
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to fetch workspaces: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to fetch workspaces: ${error.message}`
+        );
       }
       return data ?? [];
     },
@@ -49,7 +53,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        throw new ApiError(502, 'workspace_db_error', `Failed to fetch workspace: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to fetch workspace: ${error.message}`
+        );
       }
       return data ?? null;
     },
@@ -67,7 +75,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .single();
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to create workspace: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to create workspace: ${error.message}`
+        );
       }
       return data;
     },
@@ -82,7 +94,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .single();
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to update workspace: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to update workspace: ${error.message}`
+        );
       }
       return data;
     },
@@ -95,7 +111,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .eq('user_id', userId);
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to delete workspace: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to delete workspace: ${error.message}`
+        );
       }
     },
 
@@ -106,7 +126,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .eq('user_id', userId);
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to count workspaces: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to count workspaces: ${error.message}`
+        );
       }
       return count ?? 0;
     },
@@ -125,7 +149,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .single();
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to add document: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to add document: ${error.message}`
+        );
       }
       return data;
     },
@@ -134,7 +162,9 @@ export const createSupabaseWorkspaceRepository = (config) => {
       const current = await this.getWorkspace(workspaceId, userId);
       if (!current) return null;
 
-      const updatedDocs = (current.documents || []).filter((doc) => doc.id !== docId);
+      const updatedDocs = (current.documents || []).filter(
+        (doc) => doc.id !== docId
+      );
       const { data, error } = await supabase
         .from('workspaces')
         .update({ documents: updatedDocs })
@@ -144,7 +174,11 @@ export const createSupabaseWorkspaceRepository = (config) => {
         .single();
 
       if (error) {
-        throw new ApiError(502, 'workspace_db_error', `Failed to delete document: ${error.message}`);
+        throw new ApiError(
+          502,
+          'workspace_db_error',
+          `Failed to delete document: ${error.message}`
+        );
       }
       return data;
     },

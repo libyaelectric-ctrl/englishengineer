@@ -16,18 +16,26 @@ describe('MarketplaceService', () => {
     });
 
     it('filters by type', () => {
-      const results = MarketplaceService.searchContent('', { type: 'vocabulary_set' });
+      const results = MarketplaceService.searchContent('', {
+        type: 'vocabulary_set',
+      });
       expect(results.every((c) => c.type === 'vocabulary_set')).toBe(true);
     });
 
     it('filters by category', () => {
-      const results = MarketplaceService.searchContent('', { category: 'Construction' });
+      const results = MarketplaceService.searchContent('', {
+        category: 'Construction',
+      });
       expect(results.every((c) => c.category === 'Construction')).toBe(true);
     });
 
     it('sorts by downloads', () => {
-      const results = MarketplaceService.searchContent('', { sortBy: 'downloads' });
-      expect(results[0].downloadCount).toBeGreaterThanOrEqual(results[1].downloadCount);
+      const results = MarketplaceService.searchContent('', {
+        sortBy: 'downloads',
+      });
+      expect(results[0].downloadCount).toBeGreaterThanOrEqual(
+        results[1].downloadCount
+      );
     });
   });
 
@@ -64,7 +72,11 @@ describe('MarketplaceService', () => {
 
   describe('rateContent', () => {
     it('creates a rating', () => {
-      const rating = MarketplaceService.rateContent('mc-1', 5, 'Great content!');
+      const rating = MarketplaceService.rateContent(
+        'mc-1',
+        5,
+        'Great content!'
+      );
       expect(rating.contentId).toBe('mc-1');
       expect(rating.rating).toBe(5);
       expect(rating.review).toBe('Great content!');
@@ -90,7 +102,9 @@ describe('MarketplaceService', () => {
     it('returns top N items by download count', () => {
       const popular = MarketplaceService.getPopularContent(2);
       expect(popular).toHaveLength(2);
-      expect(popular[0].downloadCount).toBeGreaterThanOrEqual(popular[1].downloadCount);
+      expect(popular[0].downloadCount).toBeGreaterThanOrEqual(
+        popular[1].downloadCount
+      );
     });
   });
 });

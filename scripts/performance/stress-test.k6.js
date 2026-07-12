@@ -7,11 +7,11 @@ const apiDuration = new Trend('api_duration');
 
 export const options = {
   stages: [
-    { duration: '1m', target: 50 },   // Ramp up
-    { duration: '2m', target: 50 },   // Stay at 50
-    { duration: '1m', target: 100 },  // Ramp to 100
-    { duration: '2m', target: 100 },  // Stay at 100
-    { duration: '1m', target: 0 },    // Ramp down
+    { duration: '1m', target: 50 }, // Ramp up
+    { duration: '2m', target: 50 }, // Stay at 50
+    { duration: '1m', target: 100 }, // Ramp to 100
+    { duration: '2m', target: 100 }, // Stay at 100
+    { duration: '1m', target: 0 }, // Ramp down
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'],
@@ -33,10 +33,11 @@ export default function () {
 
   // Subscription status (auth required, will get 401)
   const subRes = http.get(`${BASE_URL}/api/billing/subscription-status`, {
-    headers: { 'Authorization': 'Bearer test-token' },
+    headers: { Authorization: 'Bearer test-token' },
   });
   check(subRes, {
-    'subscription returns 401 or 200': (r) => r.status === 401 || r.status === 200,
+    'subscription returns 401 or 200': (r) =>
+      r.status === 401 || r.status === 200,
   });
 
   sleep(0.1);

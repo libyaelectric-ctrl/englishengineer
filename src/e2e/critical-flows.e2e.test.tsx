@@ -3,8 +3,13 @@ import { describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import LandingPage from '@/pages/LandingPage';
 
-const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) =>
-  render(<MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>);
+const renderWithRouter = (
+  component: React.ReactElement,
+  initialEntries = ['/']
+) =>
+  render(
+    <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
+  );
 
 describe('Critical flow: Landing → Navigation', () => {
   it('renders landing page with hero and navigation', () => {

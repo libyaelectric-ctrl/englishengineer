@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { LearningReportGenerator, type ReportData } from './learning-report-generator';
+import {
+  LearningReportGenerator,
+  type ReportData,
+} from './learning-report-generator';
 
 const mockReportData: ReportData = {
   generatedAt: '2026-07-10T12:00:00Z',
@@ -10,12 +13,54 @@ const mockReportData: ReportData = {
   totalXp: 2500,
   currentStreak: 7,
   skillBreakdown: [
-    { skill: 'vocabulary', level: 'B1', score: 75, sessionsCompleted: 12, minutesSpent: 120, trend: 'up' },
-    { skill: 'grammar', level: 'A2', score: 60, sessionsCompleted: 8, minutesSpent: 80, trend: 'stable' },
-    { skill: 'reading', level: 'B1', score: 80, sessionsCompleted: 10, minutesSpent: 100, trend: 'up' },
-    { skill: 'writing', level: 'A2', score: 55, sessionsCompleted: 6, minutesSpent: 60, trend: 'down' },
-    { skill: 'listening', level: 'B1', score: 70, sessionsCompleted: 9, minutesSpent: 90, trend: 'stable' },
-    { skill: 'speaking', level: 'A2', score: 50, sessionsCompleted: 5, minutesSpent: 50, trend: 'down' },
+    {
+      skill: 'vocabulary',
+      level: 'B1',
+      score: 75,
+      sessionsCompleted: 12,
+      minutesSpent: 120,
+      trend: 'up',
+    },
+    {
+      skill: 'grammar',
+      level: 'A2',
+      score: 60,
+      sessionsCompleted: 8,
+      minutesSpent: 80,
+      trend: 'stable',
+    },
+    {
+      skill: 'reading',
+      level: 'B1',
+      score: 80,
+      sessionsCompleted: 10,
+      minutesSpent: 100,
+      trend: 'up',
+    },
+    {
+      skill: 'writing',
+      level: 'A2',
+      score: 55,
+      sessionsCompleted: 6,
+      minutesSpent: 60,
+      trend: 'down',
+    },
+    {
+      skill: 'listening',
+      level: 'B1',
+      score: 70,
+      sessionsCompleted: 9,
+      minutesSpent: 90,
+      trend: 'stable',
+    },
+    {
+      skill: 'speaking',
+      level: 'A2',
+      score: 50,
+      sessionsCompleted: 5,
+      minutesSpent: 50,
+      trend: 'down',
+    },
   ],
   vocabularyStats: {
     totalWords: 500,
@@ -31,7 +76,10 @@ const mockReportData: ReportData = {
   ],
   strengths: ['Strong vocabulary retention', 'Consistent study habit'],
   weaknesses: ['Speaking confidence needs work', 'Grammar tense accuracy'],
-  recommendations: ['Focus on speaking practice daily', 'Review grammar tenses weekly'],
+  recommendations: [
+    'Focus on speaking practice daily',
+    'Review grammar tenses weekly',
+  ],
 };
 
 describe('LearningReportGenerator', () => {

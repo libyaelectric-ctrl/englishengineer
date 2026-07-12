@@ -11,6 +11,7 @@ EngineerOS needs a distributed rate limiting solution for API protection.
 ## Decision
 
 Use Upstash Redis for rate limiting, providing:
+
 - Serverless Redis
 - Global distribution
 - Pay-per-request pricing
@@ -19,12 +20,14 @@ Use Upstash Redis for rate limiting, providing:
 ## Consequences
 
 ### Positive
+
 - Serverless-friendly
 - Global distribution
 - Cost-effective for low traffic
 - Easy integration
 
 ### Negative
+
 - Vendor lock-in
 - Latency for global users
 - Limited Redis features

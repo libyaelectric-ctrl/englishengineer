@@ -3,7 +3,7 @@
 /**
  * AI Evaluation Script
  * Tests AI responses against expected outputs
- * 
+ *
  * Usage: node scripts/ai-eval.js
  */
 
@@ -32,7 +32,7 @@ const EVAL_SET = [
     id: 'writing-001',
     input: 'Correct this sentence: He dont like apples.',
     expected: {
-      contains: ['does', 'doesn\'t', 'third person'],
+      contains: ['does', "doesn't", 'third person'],
       minLength: 50,
       maxLength: 200,
       category: 'writing',
@@ -92,7 +92,7 @@ const EVAL_SET = [
     id: 'error-001',
     input: 'Find errors: Their going to the store yesterday.',
     expected: {
-      contains: ['they\'re', 'contraction', 'grammar'],
+      contains: ["they're", 'contraction', 'grammar'],
       minLength: 50,
       maxLength: 200,
       category: 'error_correction',
@@ -115,23 +115,41 @@ const scoreResponse = (response, expected) => {
   const details = [];
 
   // Length check
-  if (response.length >= expected.minLength && response.length <= expected.maxLength) {
+  if (
+    response.length >= expected.minLength &&
+    response.length <= expected.maxLength
+  ) {
     score += 25;
     details.push('Length: PASS');
   } else {
-    details.push(`Length: FAIL (${response.length} not in ${expected.minLength}-${expected.maxLength})`);
+    details.push(
+      `Length: FAIL (${response.length} not in ${expected.minLength}-${expected.maxLength})`
+    );
   }
 
   // Keyword check
   const lowerResponse = response.toLowerCase();
-  const keywordsFound = expected.contains.filter(kw => lowerResponse.includes(kw.toLowerCase()));
+  const keywordsFound = expected.contains.filter((kw) =>
+    lowerResponse.includes(kw.toLowerCase())
+  );
   const keywordScore = (keywordsFound.length / expected.contains.length) * 50;
   score += keywordScore;
   details.push(`Keywords: ${keywordsFound.length}/${expected.contains.length}`);
 
   // Language check (basic English detection)
-  const englishWords = ['the', 'is', 'are', 'was', 'were', 'have', 'has', 'can', 'will', 'would'];
-  const hasEnglish = englishWords.some(w => lowerResponse.includes(w));
+  const englishWords = [
+    'the',
+    'is',
+    'are',
+    'was',
+    'were',
+    'have',
+    'has',
+    'can',
+    'will',
+    'would',
+  ];
+  const hasEnglish = englishWords.some((w) => lowerResponse.includes(w));
   if (hasEnglish) {
     score += 25;
     details.push('Language: PASS');
@@ -159,10 +177,14 @@ const runEval = async () => {
 
     if (result.score >= 70) {
       passed++;
-      console.log(`✅ ${testCase.id}: ${result.score}% - ${result.details.join(', ')}`);
+      console.log(
+        `✅ ${testCase.id}: ${result.score}% - ${result.details.join(', ')}`
+      );
     } else {
       failed++;
-      console.log(`❌ ${testCase.id}: ${result.score}% - ${result.details.join(', ')}`);
+      console.log(
+        `❌ ${testCase.id}: ${result.score}% - ${result.details.join(', ')}`
+      );
     }
   }
 
@@ -175,9 +197,11 @@ const runEval = async () => {
   return { passed, failed, avgScore };
 };
 
-runEval().then(result => {
-  process.exit(result.failed > 0 ? 1 : 0);
-}).catch(err => {
-  console.error('Eval failed:', err);
-  process.exit(1);
-});
+runEval()
+  .then((result) => {
+    process.exit(result.failed > 0 ? 1 : 0);
+  })
+  .catch((err) => {
+    console.error('Eval failed:', err);
+    process.exit(1);
+  });
