@@ -368,6 +368,26 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       set({ vocabularyPool: updated });
       storage.set(STORAGE_KEY, { ...get(), vocabularyPool: updated });
       logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
+
+      // Supabase'e yaz (offline-tolerant: başarısız olursa sessizce devam)
+      try {
+        const { getSupabaseClient, isSupabaseConfigured } = require('@/features/auth/supabase.client');
+        const { useAuthStore } = require('@/features/auth');
+        if (isSupabaseConfigured()) {
+          const client = getSupabaseClient();
+          const userId = useAuthStore.getState().currentUser?.id;
+          if (client && userId) {
+            client.from('knowledge_pool_entries').upsert(
+              { user_id: userId, content_type: 'vocabulary', content_id: termId },
+              { onConflict: 'user_id,content_type,content_id' }
+            ).then(({ error }: { error: unknown }) => {
+              if (error) console.warn('[VocabPool] Supabase write failed:', error);
+            });
+          }
+        }
+      } catch {
+        // Supabase modülü mevcut değilse sessizce devam et
+      }
     },
 
     addToGrammarPool: (ruleId: string) => {

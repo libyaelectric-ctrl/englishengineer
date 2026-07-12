@@ -1,6 +1,7 @@
 import { storage } from '@/shared/storage';
 import type { CefrLevel } from '@/features/level-system';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { eventBus } from '@/core/events/event-bus';
 import type { VocabularyTerm } from './vocabulary.types';
 
 export const CANONICAL_VOCABULARY_TOTAL = 5000;
@@ -322,6 +323,15 @@ export const VocabularyMenuService = {
           isMastered ? 7 : correctReviews === 2 ? 3 : 1
         ),
       };
+      // Mastered'a geçince event bus'a bildir (havuza yazma tetiklenir)
+      if (isMastered && current.status !== 'Mastered') {
+        eventBus.publish({
+          id: `vocab-mastered-${wordId}-${Date.now()}`,
+          type: 'vocabulary:mastered',
+          timestamp: now.toISOString(),
+          payload: { termId: wordId, masteredAt: now.toISOString() },
+        });
+      }
     } else {
       const wrongReviews = current.wrongReviews + 1;
       next = {

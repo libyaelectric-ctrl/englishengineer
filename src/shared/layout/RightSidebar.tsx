@@ -307,7 +307,7 @@ function Vocab() {
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="vocabulary" compact={true} />
       </div>
-      <Section title={`Vocabulary (${v.mastered + v.learning + v.newWords} words)`}>
+      <Section title={`Vocabulary · N:${v.newWords} L:${v.learning} M:${v.mastered} W:${v.weak}`}>
         <div className="grid grid-cols-3 gap-2">
           {VOCAB_LEVELS.map((lvl, index) => {
             const isActive = lvl.id === currentLevel;
