@@ -1,27 +1,25 @@
 /**
  * ToolsPage Component
  *
- * Serves as a gateway layout routing to four essential sub-panels:
+ * Serves as a gateway layout routing to three essential sub-panels:
  * - Work Tools: Pre-configured professional phrases, shortcuts, and copy targets.
  * - Quick Tools: Simple input text transformation (rewrites, spelling fixes).
  * - AI Copilot: General engineering context chatbot assistant.
- * - Elo Progress: Animated personal development dashboard and Elo ratings.
  */
 import { lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { PageHeader } from '@/shared/components/PageHeader';
 import QuickToolsPage from './QuickToolsPage';
 import WorkToolsPage from './WorkToolsPage';
-import ProgressDashboardPage from './ProgressDashboardPage';
 
 const AIPage = lazy(() => import('./AIPage'));
 
-type ToolsSection = 'work' | 'quick' | 'ai' | 'progress';
+type ToolsSection = 'work' | 'quick' | 'ai';
 
 const ToolsPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeTab: ToolsSection =
-    section === 'quick' || section === 'ai' || section === 'progress'
+    section === 'quick' || section === 'ai'
       ? section
       : 'work';
 
@@ -35,16 +33,13 @@ const ToolsPage = () => {
             ? 'WORK TOOLS'
             : activeTab === 'quick'
               ? 'QUICK TOOLS'
-              : activeTab === 'ai'
-                ? 'AI COPILOT'
-                : 'ELO PROGRESS'
+              : 'AI COPILOT'
         }
         badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
       />
 
       {activeTab === 'work' && <WorkToolsPage embedded />}
       {activeTab === 'quick' && <QuickToolsPage embedded />}
-      {activeTab === 'progress' && <ProgressDashboardPage />}
       {activeTab === 'ai' && (
         <Suspense
           fallback={
