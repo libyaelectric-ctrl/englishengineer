@@ -125,48 +125,30 @@ const GrammarPage = () => {
           ))}
         </div>
       </div>
-      {/* Fixed Topic Nav */}
-      <div className="sticky top-[148px] z-10 bg-surface/95 backdrop-blur-sm border-b border-border-soft px-4 py-2">
-        <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" className="shrink-0 rounded-full w-8 h-8 p-0" onClick={() => { if (currentIdx > 0) setSelectedId(visibleRules[currentIdx - 1].id); }}>
-            <ChevronLeft className="h-4 w-4" />
+      {/* Fixed Topic Nav — Wide & Readable */}
+      <div className="sticky top-[148px] z-10 bg-surface/95 backdrop-blur-sm border-b border-border-soft px-6 py-3">
+        <div className="flex items-center gap-3">
+          <Button type="button" variant="outline" className="shrink-0 rounded-full w-10 h-10 p-0" onClick={() => { if (currentIdx > 0) setSelectedId(visibleRules[currentIdx - 1].id); }}>
+            <ChevronLeft className="h-5 w-5" />
           </Button>
-          <div className="flex-1 flex items-center justify-center gap-2 overflow-x-auto">
-            {visibleRules.slice(Math.max(0, currentIdx - 1), currentIdx + 3).map((rule) => (
-              <button key={rule.id} type="button" onClick={() => setSelectedId(rule.id)} className={`shrink-0 px-3 py-1 rounded-lg text-xs font-bold transition-all ${selectedRule?.id === rule.id ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy hover:bg-primary/10'}`}>
-                {rule.title.length > 20 ? rule.title.slice(0, 20) + '...' : rule.title}
+          <div className="flex-1 flex items-center justify-center gap-3 overflow-x-auto custom-scrollbar py-1">
+            {visibleRules.slice(Math.max(0, currentIdx - 2), currentIdx + 3).map((rule) => (
+              <button key={rule.id} type="button" onClick={() => setSelectedId(rule.id)} className={`shrink-0 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${selectedRule?.id === rule.id ? 'bg-primary text-white shadow-md' : 'bg-surface-hover text-muted-copy hover:bg-primary/10 hover:text-foreground'}`}>
+                {rule.title.length > 25 ? rule.title.slice(0, 25) + '...' : rule.title}
               </button>
             ))}
           </div>
-          <Button type="button" variant="outline" className="shrink-0 rounded-full w-8 h-8 p-0" onClick={() => { if (currentIdx < visibleRules.length - 1) setSelectedId(visibleRules[currentIdx + 1].id); }}>
-            <ChevronRight className="h-4 w-4" />
+          <Button type="button" variant="outline" className="shrink-0 rounded-full w-10 h-10 p-0" onClick={() => { if (currentIdx < visibleRules.length - 1) setSelectedId(visibleRules[currentIdx + 1].id); }}>
+            <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
+        <div className="flex justify-center mt-1">
+          <span className="text-[10px] font-mono text-muted-copy">{currentIdx + 1} / {visibleRules.length}</span>
+        </div>
       </div>
-      {/* Scrollable Content */}
+      {/* Full-width Scrollable Content */}
       <div className="pt-4 pb-20">
-        <div className="grid lg:grid-cols-[300px_1fr] xl:grid-cols-[350px_1fr]">
-          {/* Left: Topic List */}
-          <div className="flex flex-col border-r border-border-soft bg-surface/50">
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
-              {visibleRules.length === 0 ? (
-                <p className="text-center text-sm font-medium text-muted-copy py-3">No rules found.</p>
-              ) : visibleRules.map((rule) => {
-                const num = rules.findIndex((r) => r.id === rule.id) + 1;
-                const sel = selectedRule?.id === rule.id;
-                return (
-                  <button key={rule.id} type="button" onClick={() => setSelectedId(rule.id)} className={`w-full flex flex-col rounded-xl border p-3 text-left transition-colors ${sel ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'}`}>
-                    <p className="text-[10px] font-bold tracking-wider text-primary">LESSON {num}</p>
-                    <p className="mt-0.5 text-sm font-bold text-foreground truncate">{rule.title}</p>
-                    <p className="text-[11px] font-medium text-muted-copy truncate">{rule.grammarCategory}</p>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-          {/* Right: Rule Detail */}
-          <div className="flex flex-col bg-surface">
-            <div className="flex-1 overflow-y-auto custom-scrollbar p-5 lg:p-8">
+        <div className="w-full">
               {selectedRule ? (
                 <div className="max-w-4xl mx-auto space-y-6 pb-20">
                   <SectionCard title={selectedRule.ruleTitle || selectedRule.title} subtitle={`${selectedRule.cefrLevel} · ${selectedRule.grammarCategory}`} icon={Languages}>
@@ -241,8 +223,6 @@ const GrammarPage = () => {
                 <p className="text-center text-muted-copy py-20">Select a topic from the list.</p>
               )}
             </div>
-          </div>
-        </div>
       </div>
     </div>
   );
