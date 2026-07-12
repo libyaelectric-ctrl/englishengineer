@@ -122,7 +122,7 @@ const WritingPage = () => {
 
   if (!currentMission) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
       </div>
@@ -134,7 +134,7 @@ const WritingPage = () => {
         <EmptyLevelState skill="Writing" />
         <Link
           to="/curriculum"
-          className="inline-flex text-sm font-bold text-primary"
+          className="inline-flex text-sm font-bold text-primary hover:underline"
         >
           Back to Learning Hub
         </Link>
@@ -246,7 +246,7 @@ const WritingPage = () => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-28 lg:pb-4">
       {/* Writing sticky header */}
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
@@ -524,6 +524,9 @@ const WritingPage = () => {
                       className="h-64 w-full resize-none rounded-xl border border-border-soft bg-surface p-5 text-sm font-medium leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                       placeholder="Start writing or polishing your technical draft..."
                     />
+                    <p className="mt-1 text-right text-xs text-muted-copy">
+                      {draft.trim().split(/\s+/).filter(Boolean).length} words
+                    </p>
 
                     <div className="flex items-center justify-between text-xs font-mono text-muted-copy pt-1">
                       <span>CHARACTER COUNT: {draft.length}</span>

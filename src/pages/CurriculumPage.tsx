@@ -26,7 +26,6 @@ import {
 } from '@/features/profile';
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
-import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
@@ -160,13 +159,10 @@ const CurriculumPage = () => {
   ).length;
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
-      <PageHeader
-        title="Learning Hub"
-        description="One clear next lesson, six independent skills, and one connected Learning Memory."
-        badgeText="START AT A1"
-        badgeColor="border-primary/20 bg-primary/10 text-primary"
-      />
+    <div className="space-y-7 animate-in fade-in duration-300 pb-28 lg:pb-4">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">Learning Hub</h1>
+      </div>
 
       <section
         className="grid gap-3 md:grid-cols-3"

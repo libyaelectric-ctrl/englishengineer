@@ -66,7 +66,7 @@ const AnalyticsPage = () => {
   ).allowed;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pt-12 sm:pt-0">
+    <div className="space-y-8 animate-in fade-in duration-300 pt-12 sm:pt-0">
       <PageHeader
         title="Analytics Pro"
         description="Local analytics derived from completed EngVox activity. Estimates improve as real learning sessions accumulate."

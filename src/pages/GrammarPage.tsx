@@ -124,7 +124,7 @@ const GrammarPage = () => {
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 flex flex-col bg-background py-3 border-b border-border-soft shadow-sm space-y-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         {/* Title & Search */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Grammar
           </h1>

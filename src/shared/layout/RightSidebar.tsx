@@ -307,7 +307,7 @@ function Vocab() {
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="vocabulary" compact={true} />
       </div>
-      <Section title="CEFR Levels (Vocabulary)">
+      <Section title={`Vocabulary (${v.mastered + v.learning + v.newWords} words)`}>
         <div className="grid grid-cols-3 gap-2">
           {VOCAB_LEVELS.map((lvl, index) => {
             const isActive = lvl.id === currentLevel;
@@ -495,7 +495,7 @@ function Grammar() {
           <div>
             <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Strong</span>
-              <span>{g.strong}/360</span>
+              <span>{g.strong}/360 ({Math.round((g.strong / 360) * 100)}%)</span>
             </div>
             <Progress value={g.strong} max={360} color="#8b5cf6" />
           </div>

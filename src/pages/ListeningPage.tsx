@@ -240,7 +240,7 @@ const ListeningPage = () => {
                   <textarea
                     value={summary}
                     onChange={(event) => setSummary(event.target.value)}
-                    className="mt-2 min-h-28 w-full rounded-lg border border-border-soft p-3 font-normal"
+                    className="mt-2 min-h-[160px] w-full resize-y rounded-lg border border-border-soft p-3 font-normal"
                   />
                 </label>
                 <Button

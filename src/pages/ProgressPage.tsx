@@ -171,7 +171,7 @@ const ProgressPage = () => {
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="animate-in fade-in duration-300 pt-12 sm:pt-0">
+    <div className="animate-in fade-in duration-300 pt-12 sm:pt-0 pb-28 lg:pb-4">
       {/* Fixed Header - clean, no extra border */}
       <div className="sticky top-0 z-40 bg-background">
         <div className="flex items-center justify-between py-3">
@@ -274,7 +274,7 @@ const ProgressPage = () => {
               </div>
               <p className="text-[11px] text-muted-copy mt-0.5">Click nodes to explore connections.</p>
             </div>
-            <div className="relative aspect-[16/10] max-h-[380px] w-full bg-surface-hover select-none">
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-surface-hover select-none">
               <svg viewBox="0 0 800 500" className="h-full w-full">
                 {GRAPH_LINKS.map((link, idx) => {
                   const source = GRAPH_NODES.find((n) => n.id === link.source);
@@ -344,14 +344,14 @@ const ProgressPage = () => {
             <div className="px-4 pb-3 space-y-1.5">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-copy">Strongest</span>
-                <span className="font-bold text-emerald-600 flex items-center gap-1">
-                  <highestSkill.icon className="h-3 w-3" /> {highestSkill.label}
+                <span className="font-bold text-emerald-500 flex items-center gap-1">
+                  <highestSkill.icon className="h-3 w-3 text-emerald-500" /> {highestSkill.label}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-muted-copy">Weakest</span>
-                <span className="font-bold text-rose-600 flex items-center gap-1">
-                  <lowestSkill.icon className="h-3 w-3" /> {lowestSkill.label}
+                <span className="font-bold text-rose-500 flex items-center gap-1">
+                  <lowestSkill.icon className="h-3 w-3 text-rose-500" /> {lowestSkill.label}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">

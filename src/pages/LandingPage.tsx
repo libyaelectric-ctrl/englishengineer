@@ -284,7 +284,7 @@ function AnimatedCard({
     <div
       ref={setRefs}
       onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden rounded-2xl transition-colors duration-500 ${className}`}
+      className={`group relative overflow-hidden rounded-2xl transition-colors duration-300 ${className}`}
       style={{
         background: dark ? '#111111' : 'rgba(255,255,255,0.92)',
         border: dark ? '1px solid #111111' : '1px solid rgba(17,17,17,0.08)',
@@ -295,7 +295,7 @@ function AnimatedCard({
       }}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background: dark
             ? 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.10), transparent 62%)'

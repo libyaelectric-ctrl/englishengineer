@@ -11,7 +11,6 @@ import {
   Zap,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { PageHeader } from '@/shared/components/PageHeader';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
@@ -45,21 +44,18 @@ const GamificationPage = () => {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pt-12 sm:pt-0">
-      <PageHeader
-        title="Milestones"
-        description="Long-term Engineering English progression through missions, rewards, chains, levels, and achievements."
-        badgeText={`LEVEL ${gamification.levelInfo.currentLevel}`}
-        badgeColor="cyan"
-        actions={
+    <div className="space-y-6 animate-in fade-in duration-300 pb-28 lg:pb-4">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">Milestones</h1>
           <Button
             onClick={claimDailyLoginReward}
             className="gap-2 bg-primary text-white font-medium rounded-lg"
           >
             <Gift className="h-4 w-4" /> Claim Daily Reward
           </Button>
-        }
-      />
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <MetricCard
