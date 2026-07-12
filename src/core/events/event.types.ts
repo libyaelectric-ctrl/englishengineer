@@ -12,7 +12,8 @@ export type AppEvent =
   | AICoachStartedEvent
   | AICoachCompletedEvent
   | AICoachFailedEvent
-  | VocabularyMasteredEvent;
+  | VocabularyMasteredEvent
+  | GrammarMasteredEvent;
 
 export interface BaseEvent {
   readonly id: string;
@@ -119,6 +120,14 @@ export interface VocabularyMasteredEvent extends BaseEvent {
   readonly type: 'vocabulary:mastered';
   readonly payload: {
     readonly termId: string;
+    readonly masteredAt: string;
+  };
+}
+
+export interface GrammarMasteredEvent extends BaseEvent {
+  readonly type: 'grammar:mastered';
+  readonly payload: {
+    readonly ruleId: string;
     readonly masteredAt: string;
   };
 }
