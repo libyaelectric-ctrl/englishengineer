@@ -463,7 +463,7 @@ const verifyStripe = async (environment, authContext, evidence) => {
   }
   const backendRoot = deriveBackendRoot(billingBase);
   const health = await jsonRequest(`${backendRoot}/api/health`);
-  if (health.payload?.stripeConfigured !== true) {
+  if (health.payload?.checks?.stripe?.configured !== true && health.payload?.stripeConfigured !== true) {
     throw new Error('Backend health does not report Stripe configured.');
   }
   evidence.push(['Stripe backend configuration', 'PASS']);
