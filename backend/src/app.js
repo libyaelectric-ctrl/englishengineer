@@ -102,8 +102,56 @@ export const createApp = ({
   
   app.use(createI18nMiddleware());
 
-  app.get('/api/health', (_request, response) => {
-    response.json(toPublicHealth(config));
+  // Health check with real pings
+  app.get('/api/health', async (_request, response) => {
+    const health = toPublicHealth(config);
+    const checks = { ...health.checks };
+    const TIMEOUT_MS = 5000;
+
+    // Real Supabase ping
+    if (config.supabase?.configured) {
+      try {
+        const { createClient } = await import('@supabase/supabase-js');
+        const supabase = createClient(
+          config.auth.supabaseUrl,
+          config.auth.supabaseAnonKey
+        );
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
+        );
+        const pingPromise = supabase.from('subscriptions').select('id').limit(1);
+        await Promise.race([pingPromise, timeoutPromise]);
+        checks.supabase = { configured: true, reachable: true };
+      } catch (err) {
+        checks.supabase = { configured: true, reachable: false, error: err.message };
+        health.status = 'degraded';
+        health.ok = false;
+      }
+    }
+
+    // Real Redis ping (Upstash)
+    if (config.rateLimit?.storeMode === 'upstash' && config.rateLimit?.upstashUrl) {
+      try {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
+        );
+        const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
+          headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
+        });
+        const res = await Promise.race([pingPromise, timeoutPromise]);
+        checks.rateLimit = { configured: true, reachable: res.ok };
+        if (!res.ok) {
+          health.status = 'degraded';
+          health.ok = false;
+        }
+      } catch (err) {
+        checks.rateLimit = { configured: true, reachable: false, error: err.message };
+        health.status = 'degraded';
+        health.ok = false;
+      }
+    }
+
+    response.json({ ...health, checks });
   });
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);

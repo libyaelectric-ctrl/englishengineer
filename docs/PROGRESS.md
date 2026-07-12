@@ -16,6 +16,15 @@
 
 ## Toplam Puan: 942 → 1490 (+548)
 
+## mapv3 Düzeltmeleri
+
+| Düzeltme | Durum |
+|----------|-------|
+| Health check gerçek ping | ✅ Supabase + Redis ping eklendi |
+| `docs/~$ployment.md` silindi | ✅ |
+| `docs/AI_GUARDRAILS.md` eklendi | ✅ |
+| `backend/scripts/ai-eval.js` eklendi | ✅ |
+
 ## Doğrulama
 
 | Test | Sonuç |
@@ -24,7 +33,7 @@
 | Frontend Test | 480/481 ✅ |
 | Backend Test | 124/124 ✅ |
 
-## Son Güncelleme: 2026-07-12 11:20
+## Son Güncelleme: 2026-07-12 11:50
 
 ---
 
