@@ -94,7 +94,7 @@ const getCEFRBand = (elo: number) => {
 
 // Helper to interpolate number smoothly
 const useAnimatedNumber = (value: number, duration: number = 1.5) => {
-  const [displayValue, setDisplayValue] = useState(MIN_ELO);
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     let startTime: number;
@@ -125,7 +125,7 @@ const useAnimatedNumber = (value: number, duration: number = 1.5) => {
   return displayValue;
 };
 
-const SkillEloBar = ({
+const SkillSidebarItem = ({
   skill,
   elo,
   index,
@@ -135,58 +135,45 @@ const SkillEloBar = ({
   index: number;
 }) => {
   const displayElo = useAnimatedNumber(elo, 2);
-  const percentage = Math.max(
-    0,
-    Math.min(100, ((elo - MIN_ELO) / (MAX_ELO - MIN_ELO)) * 100)
-  );
-
-  const Icon = skill.icon;
+  // Calculate percentage out of 5000 visually so it looks accurate to the user
+  const percentage = Math.min(100, (elo / MAX_ELO) * 100);
   const cefr = getCEFRBand(elo);
+  const Icon = skill.icon;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5, ease: 'easeOut' }}
-      className="group relative rounded-2xl border border-border-soft bg-surface p-5 hover:border-border-hover transition-colors shadow-sm"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.4, ease: 'easeOut' }}
+      className="group relative rounded-xl border border-border-soft bg-surface p-4 hover:border-border-hover transition-colors shadow-sm"
     >
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <div
-            className={`flex h-10 w-10 items-center justify-center rounded-xl ${skill.bgLight} ${skill.textDark}`}
+            className={`flex h-8 w-8 items-center justify-center rounded-lg ${skill.bgLight} ${skill.textDark}`}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-4 w-4" />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground">
+            <h4 className="text-sm font-semibold text-foreground leading-none">
               {skill.label}
             </h4>
-            <p className="text-[10px] uppercase tracking-wider text-muted-copy font-medium flex items-center gap-1">
-              Elo Rating <span className="w-1 h-1 rounded-full bg-border-soft" /> Max 5000
+            <p className="text-[10px] text-muted-copy font-medium mt-1 uppercase tracking-wider">
+              {cefr} BAND
             </p>
           </div>
         </div>
         <div className="text-right">
-          <div className="flex items-baseline gap-2 justify-end">
-            <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
-              {cefr}
-            </span>
-            <motion.div
-              key={displayElo}
-              initial={{ scale: 1.1, color: '#3b82f6' }}
-              animate={{ scale: 1, color: 'inherit' }}
-              className="text-xl font-bold tracking-tight text-foreground tabular-nums"
-            >
-              {displayElo}
-            </motion.div>
-          </div>
-          <p className="text-[10px] text-muted-copy font-medium mt-1">
-            Top {Math.max(1, 100 - Math.floor(percentage))}%
-          </p>
+          <motion.div
+            key={displayElo}
+            className="text-base font-bold text-foreground tabular-nums"
+          >
+            {displayElo}
+          </motion.div>
         </div>
       </div>
 
-      <div className="relative h-3 w-full overflow-hidden rounded-full bg-surface-hover mt-4">
+      <div className="relative h-2 w-full overflow-hidden rounded-full bg-surface-hover">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
@@ -197,12 +184,6 @@ const SkillEloBar = ({
           }}
           className={`absolute inset-y-0 left-0 bg-gradient-to-r ${skill.color} rounded-full`}
         />
-      </div>
-
-      <div className="absolute inset-x-5 bottom-5 flex justify-between px-1 pointer-events-none opacity-20">
-        {[0, 25, 50, 75, 100].map((step) => (
-          <div key={step} className="h-3 w-px bg-foreground" />
-        ))}
       </div>
     </motion.div>
   );
@@ -258,6 +239,7 @@ const ProgressPage = () => {
     Object.values(eloScores).reduce((a, b) => a + b, 0) / SKILLS.length
   );
   const animatedTotalElo = useAnimatedNumber(totalElo, 2.5);
+  const totalPercentage = Math.min(100, (totalElo / MAX_ELO) * 100);
 
   const getRankBadge = (elo: number) => {
     if (elo >= 4500)
@@ -326,7 +308,7 @@ const ProgressPage = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', bounce: 0.4, duration: 1 }}
-                className="flex flex-col items-center justify-center rounded-2xl border-2 border-primary/10 bg-surface-hover p-6 shadow-inner min-w-[200px]"
+                className="flex flex-col items-center justify-center rounded-2xl border-2 border-primary/10 bg-surface-hover p-6 shadow-inner w-full md:w-64"
               >
                 <div
                   className={`mb-3 flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${rank.color}`}
@@ -335,14 +317,39 @@ const ProgressPage = () => {
                   <span className="w-1 h-1 rounded-full bg-current opacity-50" />
                   <span>{totalCEFR}</span>
                 </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-black text-foreground tabular-nums tracking-tighter">
-                    {animatedTotalElo}
-                  </span>
+                
+                {/* Visual Progress for Total Elo */}
+                <div className="relative flex items-center justify-center mb-2">
+                  <svg className="w-32 h-32 transform -rotate-90">
+                    <circle
+                      cx="64"
+                      cy="64"
+                      r="56"
+                      className="stroke-border-soft fill-none"
+                      strokeWidth="8"
+                    />
+                    <motion.circle
+                      cx="64"
+                      cy="64"
+                      r="56"
+                      className="stroke-primary fill-none"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                      strokeDasharray={2 * Math.PI * 56}
+                      initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
+                      animate={{ strokeDashoffset: 2 * Math.PI * 56 * (1 - totalPercentage / 100) }}
+                      transition={{ duration: 2, ease: "easeOut" }}
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-black text-foreground tabular-nums tracking-tighter">
+                      {animatedTotalElo}
+                    </span>
+                    <span className="text-[10px] text-muted-copy font-bold uppercase">
+                      / 5000 MAX
+                    </span>
+                  </div>
                 </div>
-                <p className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-copy">
-                  Overall Elo Rating / 5000
-                </p>
               </motion.div>
             </div>
           </div>
@@ -393,28 +400,8 @@ const ProgressPage = () => {
               </motion.div>
             ))}
           </div>
-
-          {/* Skill Bars Grid */}
-          <SectionCard
-            title="Skill Breakdown"
-            subtitle="Detailed analysis of your Elo rating and CEFR equivalence per skill."
-            icon={Layers}
-          >
-            <div className="grid gap-4 md:grid-cols-2">
-              <AnimatePresence>
-                {SKILLS.map((skill, index) => (
-                  <SkillEloBar
-                    key={skill.id}
-                    skill={skill}
-                    elo={eloScores[skill.id]}
-                    index={index}
-                  />
-                ))}
-              </AnimatePresence>
-            </div>
-          </SectionCard>
           
-          {/* Knowledge Graph Full Map (Below Skills) */}
+          {/* Knowledge Graph Full Map */}
           <SectionCard
             title="Cross-Skill Knowledge Graph"
             subtitle="Interactive representation of how vocabulary, grammar topics, and core skills connect."
@@ -519,12 +506,35 @@ const ProgressPage = () => {
         </div>
 
         {/* Right Column: Functional Sidebar (Nav2 replacement / Aside) */}
-        <aside className="space-y-6">
-          <div className="sticky top-6">
+        <aside className="relative">
+          <div className="sticky top-6 space-y-6 h-[calc(100vh-3rem)] overflow-y-auto pr-2 pb-12 custom-scrollbar">
+            
+            {/* Active Skill Breakdown Panel */}
             <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-foreground flex items-center gap-2">
-                  <Network className="h-4 w-4 text-primary" /> Graph Inspector
+                  <Layers className="h-4 w-4 text-primary" /> Skill Progress
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <AnimatePresence>
+                  {SKILLS.map((skill, index) => (
+                    <SkillSidebarItem
+                      key={skill.id}
+                      skill={skill}
+                      elo={eloScores[skill.id]}
+                      index={index}
+                    />
+                  ))}
+                </AnimatePresence>
+              </div>
+            </div>
+
+            {/* Graph Inspector */}
+            <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                  <Network className="h-4 w-4 text-primary" /> Node Inspector
                 </h3>
                 {selectedGraphNode && (
                   <button
@@ -590,26 +600,15 @@ const ProgressPage = () => {
                     )}
                 </div>
               ) : (
-                <div className="text-center py-12 px-4 rounded-lg border border-dashed border-border-soft bg-surface-hover">
+                <div className="text-center py-8 px-4 rounded-lg border border-dashed border-border-soft bg-surface-hover">
                   <Network className="h-8 w-8 text-muted-copy mx-auto mb-3 opacity-50" />
-                  <p className="text-sm font-medium text-muted-copy">
-                    Select any node on the Knowledge Graph to inspect its details, relationships, and strength.
+                  <p className="text-xs font-medium text-muted-copy">
+                    Select a node on the Knowledge Graph to inspect relationships and strength.
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Quick Actions or Summary could go here */}
-            <div className="mt-6 rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
-              <h4 className="text-xs font-bold text-muted-copy uppercase tracking-widest mb-4">
-                CEFR Mapping System
-              </h4>
-              <div className="space-y-2 text-xs font-medium text-muted-copy">
-                <div className="flex justify-between items-center"><span className="text-foreground">A1 - A2+</span><span>1000 - 2333 Elo</span></div>
-                <div className="flex justify-between items-center"><span className="text-foreground">B1 - B2+</span><span>2334 - 3999 Elo</span></div>
-                <div className="flex justify-between items-center"><span className="text-foreground">C1 - C2+</span><span>4000 - 5000 Elo</span></div>
-              </div>
-            </div>
           </div>
         </aside>
       </div>
