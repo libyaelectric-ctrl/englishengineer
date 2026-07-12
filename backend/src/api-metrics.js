@@ -11,7 +11,7 @@ export const apiMetricsMiddleware = (req, res, next) => {
 
   res.on('finish', () => {
     const diff = process.hrtime(start);
-    const duration = (diff[0] * 1e3 + diff[1] * 1e-6);
+    const duration = diff[0] * 1e3 + diff[1] * 1e-6;
 
     if (!endpointMetrics.has(endpoint)) {
       endpointMetrics.set(endpoint, {
@@ -47,7 +47,8 @@ export const getEndpointMetrics = () => {
 
   for (const [endpoint, metrics] of endpointMetrics.entries()) {
     const avgTime = metrics.count > 0 ? metrics.totalTime / metrics.count : 0;
-    const errorRate = metrics.count > 0 ? (metrics.errors / metrics.count) * 100 : 0;
+    const errorRate =
+      metrics.count > 0 ? (metrics.errors / metrics.count) * 100 : 0;
 
     results.push({
       endpoint,
@@ -62,13 +63,13 @@ export const getEndpointMetrics = () => {
 
 export const getSlowEndpoints = (thresholdMs = 500) => {
   return getEndpointMetrics()
-    .filter(e => e.avgTime > thresholdMs)
+    .filter((e) => e.avgTime > thresholdMs)
     .sort((a, b) => b.avgTime - a.avgTime);
 };
 
 export const getErrorProneEndpoints = (thresholdPercent = 5) => {
   return getEndpointMetrics()
-    .filter(e => parseFloat(e.errorRate) > thresholdPercent)
+    .filter((e) => parseFloat(e.errorRate) > thresholdPercent)
     .sort((a, b) => parseFloat(b.errorRate) - parseFloat(a.errorRate));
 };
 
