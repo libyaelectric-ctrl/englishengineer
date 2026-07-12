@@ -121,28 +121,27 @@ const GrammarPage = () => {
 
   return (
     <div className="animate-in fade-in duration-300 relative">
-      {/* Fixed Title */}
-      <div className="sticky top-0 z-40 bg-background pt-4 pb-2 border-b border-border-soft">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">
-          Grammar
-        </h1>
-      </div>
-      {/* Fixed Search */}
-      <div className="sticky top-[52px] z-30 bg-background pt-3 pb-2 border-b border-border-soft">
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search className="h-4 w-4 text-muted-copy" />
+      {/* Consolidated Sticky Header Group */}
+      <div className="sticky top-0 z-40 flex flex-col bg-background/95 backdrop-blur-md -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 border-b border-border-soft shadow-sm space-y-4">
+        {/* Title & Search */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Grammar
+          </h1>
+          <div className="relative w-full sm:max-w-md">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <Search className="h-4 w-4 text-muted-copy" />
+            </div>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="block min-h-10 w-full rounded-xl border border-border-soft bg-surface py-2 pl-10 pr-4 text-sm text-foreground shadow-sm focus:border-primary focus:ring-1 focus:ring-primary/20"
+              placeholder="Search a topic name or engineering use"
+            />
           </div>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="block min-h-10 w-full rounded-xl border border-border-soft bg-surface py-2 pl-10 pr-4 text-sm text-foreground shadow-sm focus:border-primary focus:ring-1 focus:ring-primary/20"
-            placeholder="Search a topic name or engineering use"
-          />
         </div>
-      </div>
-      {/* Fixed Tabs */}
-      <div className="sticky top-[96px] z-20 bg-background pt-2 pb-2 border-b border-border-soft">
+
+        {/* Tabs */}
         <div className="grid grid-cols-2 gap-2 rounded-xl border border-border-soft bg-surface p-1.5 sm:grid-cols-4">
           {TABS.map((item) => (
             <button
@@ -155,9 +154,8 @@ const GrammarPage = () => {
             </button>
           ))}
         </div>
-      </div>
-      {/* Fixed Topic Nav — Wide & Readable */}
-      <div className="sticky top-[148px] z-10 bg-surface/95 backdrop-blur-sm border-b border-border-soft px-6 py-3">
+
+        {/* Topic Nav */}
         <div className="flex items-center gap-3">
           <Button
             type="button"
@@ -198,7 +196,7 @@ const GrammarPage = () => {
             <ChevronRight className="h-5 w-5" />
           </Button>
         </div>
-        <div className="flex justify-center mt-1">
+        <div className="flex justify-center -mt-2 pb-1">
           <span className="text-[10px] font-mono text-muted-copy">
             {currentIdx + 1} / {visibleRules.length}
           </span>
