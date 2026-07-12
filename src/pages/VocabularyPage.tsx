@@ -598,7 +598,7 @@ const VocabularyPage = () => {
   }, []);
 
   return (
-    <div className="flex h-full flex-col animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       {/* STICKY HEADER, SEARCH, AND TABS */}
       <PageHeader title="Vocabulary">
         <form onSubmit={runSearch} className="space-y-4">
