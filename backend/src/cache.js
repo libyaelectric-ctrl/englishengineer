@@ -62,14 +62,17 @@ export const getStats = () => {
 };
 
 // Cleanup expired entries every 5 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, item] of cache.entries()) {
-    if (now > item.expiresAt) {
-      cache.delete(key);
+setInterval(
+  () => {
+    const now = Date.now();
+    for (const [key, item] of cache.entries()) {
+      if (now > item.expiresAt) {
+        cache.delete(key);
+      }
     }
-  }
-}, 5 * 60 * 1000);
+  },
+  5 * 60 * 1000
+);
 
 // Cache keys
 export const CACHE_KEYS = {
@@ -82,8 +85,8 @@ export const CACHE_KEYS = {
 
 // TTL constants
 export const TTL = {
-  SHORT: 1 * 60 * 1000,      // 1 minute
-  MEDIUM: 5 * 60 * 1000,     // 5 minutes
-  LONG: 30 * 60 * 1000,      // 30 minutes
+  SHORT: 1 * 60 * 1000, // 1 minute
+  MEDIUM: 5 * 60 * 1000, // 5 minutes
+  LONG: 30 * 60 * 1000, // 30 minutes
   VERY_LONG: 60 * 60 * 1000, // 1 hour
 };

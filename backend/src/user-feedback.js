@@ -40,23 +40,23 @@ export const getFeedback = (filters = {}) => {
   let results = [...feedbackStore];
 
   if (filters.type) {
-    results = results.filter(f => f.type === filters.type);
+    results = results.filter((f) => f.type === filters.type);
   }
   if (filters.category) {
-    results = results.filter(f => f.category === filters.category);
+    results = results.filter((f) => f.category === filters.category);
   }
   if (filters.status) {
-    results = results.filter(f => f.status === filters.status);
+    results = results.filter((f) => f.status === filters.status);
   }
   if (filters.userId) {
-    results = results.filter(f => f.userId === filters.userId);
+    results = results.filter((f) => f.userId === filters.userId);
   }
 
   return results.slice(-(filters.limit || 100)).reverse();
 };
 
 export const updateFeedbackStatus = (feedbackId, status) => {
-  const feedback = feedbackStore.find(f => f.id === feedbackId);
+  const feedback = feedbackStore.find((f) => f.id === feedbackId);
   if (feedback) {
     feedback.status = status;
     feedback.updatedAt = new Date().toISOString();
@@ -72,7 +72,7 @@ export const getFeedbackStats = () => {
   let totalRating = 0;
   let ratingCount = 0;
 
-  feedbackStore.forEach(f => {
+  feedbackStore.forEach((f) => {
     byType[f.type] = (byType[f.type] || 0) + 1;
     byCategory[f.category] = (byCategory[f.category] || 0) + 1;
     byStatus[f.status] = (byStatus[f.status] || 0) + 1;
@@ -87,7 +87,8 @@ export const getFeedbackStats = () => {
     byType,
     byCategory,
     byStatus,
-    averageRating: ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : null,
+    averageRating:
+      ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : null,
   };
 };
 
