@@ -6,6 +6,7 @@ import {
 } from './reading.types';
 import { ReadingService } from './reading.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { scoreContentByPoolRatio } from '@/core/content-selection/personalized-content.service';
 
 interface ReadingStoreState {
   missions: ReadingMission[];
@@ -28,6 +29,7 @@ interface ReadingStoreActions {
   submitCurrentMission: () => ReadingEvaluationResult;
   resetCurrentMission: () => void;
   resetAllReadingProgress: () => void;
+  getMissionsSortedByPoolRatio: (pool: { content_type: string; content_id: string }[]) => ReadingMission[];
 }
 
 export const useReadingStore = create<ReadingStoreState & ReadingStoreActions>(
@@ -155,6 +157,15 @@ export const useReadingStore = create<ReadingStoreState & ReadingStoreActions>(
         evaluationResult: null,
         history: state.history,
         completedMissions: state.completedMissions,
+      });
+    },
+
+    getMissionsSortedByPoolRatio: (pool) => {
+      const { missions } = get();
+      return [...missions].sort((a, b) => {
+        const scoreA = scoreContentByPoolRatio(a, pool).score;
+        const scoreB = scoreContentByPoolRatio(b, pool).score;
+        return scoreB - scoreA;
       });
     },
   })

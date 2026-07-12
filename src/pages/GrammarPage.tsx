@@ -89,6 +89,12 @@ const GrammarPage = () => {
     ? GrammarProgressService.get(selectedRule.id)
     : null;
 
+  const getProgressIndicator = (ruleId: string) => {
+    const progress = GrammarProgressService.get(ruleId);
+    const correctCount = Math.min(progress.correctUsages, 3);
+    return `${correctCount}/3 correct contexts`;
+  };
+
   const record = (correct: boolean) => {
     if (!selectedRule) return;
     ProductAnalyticsService.track('grammar_task_started', '/grammar', {
@@ -187,9 +193,13 @@ const GrammarPage = () => {
                       : 'bg-surface-hover text-muted-copy hover:bg-surface hover:text-foreground'
                   }`}
                 >
+                  {GrammarProgressService.get(rule.id).reviewStatus === 'Strong' && '🏆 '}
                   {rule.title.length > 25
                     ? rule.title.slice(0, 25) + '...'
                     : rule.title}
+                  <span className="ml-1 text-[10px] opacity-70">
+                    {getProgressIndicator(rule.id)}
+                  </span>
                 </button>
               ))}
           </div>

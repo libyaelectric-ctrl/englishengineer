@@ -469,7 +469,7 @@ function Grammar() {
         </div>
       </Section>
 
-      <Section title={`Status · ${g.strong > 0 ? Math.round((g.strong / (g.strong + g.learning + g.newRules + g.due)) * 100) : 0}% mastered`}>
+      <Section title={`Grammar · N:${g.newRules} L:${g.learning} S:${g.strong}`}>
         <div className="space-y-0.5">
           {(['New', 'Learning', 'Due', 'Strong'] as const).map((t) => (
             <Item
