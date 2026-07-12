@@ -21,6 +21,8 @@ const learning: LearningState = {
   scoreHistory: [],
   xpHistory: [],
   eloHistory: [],
+  vocabularyPool: [],
+  grammarPool: [],
 };
 
 const assessment: AssessmentProfile = {

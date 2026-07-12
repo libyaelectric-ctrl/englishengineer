@@ -56,6 +56,8 @@ const getInitialState = (): LearningState => {
     scoreHistory: [],
     xpHistory: [],
     eloHistory: [],
+    vocabularyPool: [],
+    grammarPool: [],
   };
 };
 
@@ -72,6 +74,12 @@ export interface LearningStoreActions {
     durationMinutes: number
   ) => ScoreResult;
   resetAll: () => void;
+  /** Add a mastered vocabulary term ID to the personal pool */
+  addToVocabularyPool: (termId: string) => void;
+  /** Add a strong grammar rule ID to the personal pool */
+  addToGrammarPool: (ruleId: string) => void;
+  /** Get current vocabulary pool (deduplicated list of mastered term IDs) */
+  getVocabularyPool: () => string[];
 }
 
 const emitLearningCompleted = (
@@ -347,8 +355,30 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
         scoreHistory: [],
         xpHistory: [],
         eloHistory: [],
+        vocabularyPool: [],
+        grammarPool: [],
       });
       storage.set(STORAGE_KEY, { ...get() });
     },
+
+    addToVocabularyPool: (termId: string) => {
+      const current = get().vocabularyPool ?? [];
+      if (current.includes(termId)) return; // already in pool
+      const updated = [...current, termId];
+      set({ vocabularyPool: updated });
+      storage.set(STORAGE_KEY, { ...get(), vocabularyPool: updated });
+      logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
+    },
+
+    addToGrammarPool: (ruleId: string) => {
+      const current = get().grammarPool ?? [];
+      if (current.includes(ruleId)) return;
+      const updated = [...current, ruleId];
+      set({ grammarPool: updated });
+      storage.set(STORAGE_KEY, { ...get(), grammarPool: updated });
+      logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
+    },
+
+    getVocabularyPool: () => get().vocabularyPool ?? [],
   })
 );

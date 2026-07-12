@@ -42,7 +42,7 @@ export const WritingEvaluationResults = ({
   visibleMissions,
   moveMission,
 }: WritingEvaluationResultsProps) => (
-  <div className="space-y-8 animate-in zoom-in-95 duration-400">
+  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       {/* Score Summary Side Panel */}
       <div className="lg:col-span-4 space-y-6">

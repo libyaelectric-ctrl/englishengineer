@@ -79,4 +79,8 @@ export interface LearningState {
   scoreHistory: { date: string; score: number; module: string }[];
   xpHistory: { date: string; amount: number; reason: string }[];
   eloHistory: { date: string; value: number }[];
+  /** Term IDs of Mastered vocabulary words — feeds Reading & Writing content selection */
+  vocabularyPool: string[];
+  /** Rule IDs of Strong grammar rules — feeds Writing prompt selection */
+  grammarPool: string[];
 }

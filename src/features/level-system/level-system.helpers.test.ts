@@ -27,6 +27,8 @@ const learning = (sessionCount = 0): LearningState => ({
   scoreHistory: [],
   xpHistory: [],
   eloHistory: [],
+  vocabularyPool: [],
+  grammarPool: [],
 });
 
 describe('sequential level system', () => {
