@@ -119,7 +119,7 @@ const ReadingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 shadow-sm">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
         <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
       </div>
         <LevelContentFilter
@@ -244,7 +244,7 @@ const ReadingPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Reading sticky header */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 shadow-sm">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
