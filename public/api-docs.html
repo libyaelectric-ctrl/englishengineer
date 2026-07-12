@@ -265,6 +265,52 @@
         </div>
         <div class="desc">Stripe webhook endpoint for billing events.</div>
       </div>
+
+      <h2>Health & Admin</h2>
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/health</span>
+          <span class="badge public">Public</span>
+        </div>
+        <div class="desc">Health check with real Supabase/Redis pings. Returns status, checks, and reachability.</div>
+        <div class="response">
+          <span class="key">Response:</span> { "ok": true, "status": "ok", "checks": { "supabase": { "reachable": true }, "rateLimit": { "reachable": true } } }
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/admin/stats</span>
+          <span class="badge auth">Admin</span>
+        </div>
+        <div class="desc">Get dashboard statistics (users, subscriptions, AI usage, revenue).</div>
+        <div class="response">
+          <span class="key">Response:</span> { "success": true, "data": { "totalUsers": 4, "activeSubscriptions": 2, "dailyAiUsage": 15 } }
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/admin/activity</span>
+          <span class="badge auth">Admin</span>
+        </div>
+        <div class="desc">Get activity timeline (audit logs). Supports filtering by userId, action, since.</div>
+        <div class="params">
+          <span class="key">Query:</span> <span class="key">userId</span>=<span class="val">string</span> & <span class="key">action</span>=<span class="val">string</span> & <span class="key">limit</span>=<span class="val">number</span>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method get">GET</span>
+          <span class="path">/api/admin/audit-logs</span>
+          <span class="badge auth">Admin</span>
+        </div>
+        <div class="desc">Get audit logs with filtering.</div>
+      </div>
     </div>
   </body>
 </html>
