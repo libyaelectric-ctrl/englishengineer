@@ -1,4 +1,5 @@
 import { storage } from '@/shared/storage';
+import { eventBus } from '@/core/events/event-bus';
 
 export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
 
@@ -121,7 +122,8 @@ export const GrammarProgressService = {
       Math.min(100, current.strength + (correct ? 25 : -20))
     );
     const strong = correctUsages >= 3 && strength >= 70;
-    return saveOne({
+    const becameStrong = strong && current.reviewStatus !== 'Strong';
+    const result = saveOne({
       ...current,
       exposures: current.exposures + 1,
       correctUsages,
@@ -133,6 +135,16 @@ export const GrammarProgressService = {
         now.getTime() + (strong ? 14 : correct ? 3 : 1) * DAY_MS
       ).toISOString(),
     });
+    // Strong'a geçince event bus'a bildir (havuza yazma tetiklenir)
+    if (becameStrong) {
+      eventBus.publish({
+        id: `grammar-mastered-${ruleId}-${Date.now()}`,
+        type: 'grammar:mastered',
+        timestamp: now.toISOString(),
+        payload: { ruleId, masteredAt: now.toISOString() },
+      });
+    }
+    return result;
   },
   reset(): void {
     storage.remove(STORAGE_KEY);
