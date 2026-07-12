@@ -16,7 +16,7 @@ import {
   Zap,
   Lock,
 } from 'lucide-react';
-import { PageHeader } from '@/shared/components/PageHeader';
+
 import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
@@ -255,24 +255,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-300 font-sans pt-12 sm:pt-0">
       {!embedded && (
-        <PageHeader
-          title="Engineering Copilot"
-          description="Practical engineering communication assistant for reports, replies, NCRs, meetings, vocabulary, grammar, and career planning."
-          badgeText={
-            providerStatus.state === 'backend-configured'
-              ? 'PROTECTED AI CONNECTION'
-              : providerStatus.state === 'backend-error'
-                ? 'AI SERVICE UNAVAILABLE'
-                : 'MOCK AI ACTIVE'
-          }
-          badgeColor={
-            providerStatus.state === 'backend-configured'
-              ? 'emerald'
-              : providerStatus.state === 'backend-error'
-                ? 'rose'
-                : 'amber'
-          }
-        />
+        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">AI Coach</h1>
+        </div>
       )}
 
       {(subscription.planId === 'project' ||

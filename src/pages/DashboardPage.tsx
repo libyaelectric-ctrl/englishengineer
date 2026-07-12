@@ -98,6 +98,14 @@ const DashboardPage = () => {
     },
   ]).slice(0, 3);
 
+  const getCompetencyLabel = (score: number) => {
+    if (score >= 80) return { text: 'High Competency', color: 'text-green-500' };
+    if (score >= 60) return { text: 'Good Progress', color: 'text-blue-500' };
+    if (score >= 40) return { text: 'Developing', color: 'text-amber-500' };
+    return { text: 'Beginner', color: 'text-rose-500' };
+  };
+  const competency = getCompetencyLabel(summary.averageScore);
+
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-28 lg:pb-4">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -122,8 +130,8 @@ const DashboardPage = () => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] font-bold text-green-500 flex items-center gap-1">
-                    <Target className="w-3 h-3" /> High Competency
+                  <span className={`text-[10px] font-bold ${competency.color} flex items-center gap-1`}>
+                    <Target className="w-3 h-3" /> {competency.text}
                   </span>
                 </div>
               </div>
@@ -241,7 +249,7 @@ const DashboardPage = () => {
 
         <SectionCard
           title="Progress Cockpit"
-          subtitle="Detailed ELO, CEFR, and Global progression for each skill"
+          subtitle={`${SKILL_NAMES.length} skills tracked — Detailed ELO, CEFR, and Global progression`}
           icon={Target}
           className="animate-on-scroll"
         >
