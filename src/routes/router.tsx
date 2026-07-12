@@ -22,6 +22,7 @@ const Gamification = lazy(() => import('@/pages/GamificationPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
+const Progress = lazy(() => import('@/pages/ProgressPage'));
 const LearningIntelligence = lazy(
   () => import('@/pages/LearningIntelligencePage')
 );
@@ -244,6 +245,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Tools />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'progress',
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Progress />
           </Suspense>
         ),
       },
