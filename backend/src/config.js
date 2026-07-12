@@ -116,6 +116,11 @@ export const createBackendConfig = (environment = process.env) => {
     appOrigin: environment.APP_ORIGIN || 'http://localhost:5173',
     environment: runtimeEnvironment,
     version: environment.APP_VERSION || '4.0.1',
+    sentry: {
+      dsn: hasText(environment.SENTRY_DSN) ? environment.SENTRY_DSN.trim() : null,
+      environment: runtimeEnvironment,
+      tracesSampleRate: runtimeEnvironment === 'production' ? 0.1 : 1.0,
+    },
     ai: {
       provider: aiProvider,
       model:
@@ -246,12 +251,23 @@ export const createBackendConfig = (environment = process.env) => {
   };
 };
 
-export const toPublicHealth = (config) => ({
-  ok: true,
-  version: config.version,
-  environment: config.environment,
-  aiConfigured: config.ai.configured,
-  stripeConfigured: config.stripe.configured,
-  supabaseConfigured: config.supabase.configured,
-  mockMode: !config.ai.configured,
-});
+export const toPublicHealth = (config) => {
+  const checks = {
+    ai: { configured: config.ai.configured },
+    stripe: { configured: config.stripe.configured },
+    supabase: { configured: config.supabase.configured },
+    rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
+  };
+
+  const allCriticalConfigured = config.ai.configured && config.supabase.configured;
+  const status = allCriticalConfigured ? 'ok' : 'degraded';
+
+  return {
+    ok: status === 'ok',
+    status,
+    version: config.version,
+    environment: config.environment,
+    checks,
+    mockMode: !config.ai.configured,
+  };
+};

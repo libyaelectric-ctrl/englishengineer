@@ -32,15 +32,14 @@ test('health returns public configuration status', async () => {
   const response = await fetch(`${url}/api/health`);
   const body = await response.json();
   assert.equal(response.status, 200);
-  assert.deepEqual(body, {
-    ok: true,
-    version: '4.0.1',
-    environment: 'staging',
-    aiConfigured: false,
-    stripeConfigured: false,
-    supabaseConfigured: false,
-    mockMode: true,
-  });
+  assert.equal(body.ok, false);
+  assert.equal(body.status, 'degraded');
+  assert.equal(body.version, '4.0.1');
+  assert.equal(body.environment, 'staging');
+  assert.equal(body.checks.ai.configured, false);
+  assert.equal(body.checks.stripe.configured, false);
+  assert.equal(body.checks.supabase.configured, false);
+  assert.equal(body.mockMode, true);
 });
 
 test('unmatched route returns 404 with route_not_found error', async () => {
@@ -72,9 +71,9 @@ test('health never exposes secret values', async () => {
     /secret-ai-value|secret-stripe-value|secret-service-role/
   );
   const body = JSON.parse(text);
-  assert.equal(body.aiConfigured, true);
-  assert.equal(body.stripeConfigured, true);
-  assert.equal(body.supabaseConfigured, true);
+  assert.equal(body.checks.ai.configured, true);
+  assert.equal(body.checks.stripe.configured, true);
+  assert.equal(body.checks.supabase.configured, true);
 });
 
 test('AI route rejects an empty prompt', async () => {

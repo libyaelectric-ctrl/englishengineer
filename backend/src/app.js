@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import * as Sentry from '@sentry/node';
 import { createAIService, registerAIRoutes } from './ai.js';
 import { createBillingService, createStripeClient } from './billing-service.js';
 import { registerBillingRoutes } from './billing-routes.js';
@@ -34,11 +35,32 @@ export const createApp = ({
 
   initAuditLog(config);
 
+  // Initialize Sentry if DSN is configured
+  if (config.sentry?.dsn) {
+    Sentry.init({
+      dsn: config.sentry.dsn,
+      environment: config.sentry.environment,
+      tracesSampleRate: config.sentry.tracesSampleRate,
+    });
+  }
+
   const app = express();
   app.disable('x-powered-by');
   app.use(
     helmet({
-      contentSecurityPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          imgSrc: ["'self'", "data:", "https:"],
+          connectSrc: ["'self'", config.appOrigin],
+          fontSrc: ["'self'"],
+          objectSrc: ["'none'"],
+          mediaSrc: ["'none'"],
+          frameSrc: ["'none'"],
+        },
+      },
       crossOriginResourcePolicy: { policy: 'cross-origin' },
     })
   );
@@ -212,6 +234,10 @@ export const createApp = ({
   });
   app.use((error, request, response, _next) => {
     console.error('[unhandled-api-error]', error);
+    // Send to Sentry if configured
+    if (config.sentry?.dsn) {
+      Sentry.captureException(error);
+    }
     const mapped = toErrorResponse(error);
     if (request.i18n && mapped.body?.error?.code) {
       const translated = request.i18n.t(mapped.body.error.code);
