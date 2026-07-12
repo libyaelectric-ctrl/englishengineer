@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 import {
-  Trophy,
   Brain,
   MessageSquare,
   BookOpen,
@@ -9,20 +8,15 @@ import {
   Headphones,
   BookMarked,
   Languages,
-  Activity,
   Target,
-  Award,
   Layers,
   Network,
-  ChevronRight,
   Zap,
   Clock,
   TrendingUp,
 } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
 import { useLearningCockpit } from '@/features/profile';
-import { PageHeader } from '@/shared/components/PageHeader';
-import { SectionCard } from '@/shared/components/SectionCard';
 import { GRAPH_NODES, GRAPH_LINKS, type GraphNode } from './CurriculumPage/curriculum-data';
 
 const SKILLS = [
@@ -35,7 +29,6 @@ const SKILLS = [
 ];
 
 const CEFR_LEVELS = ['A1', 'A1+', 'A2', 'A2+', 'B1', 'B1+', 'B2', 'B2+', 'C1', 'C1+', 'C2', 'C2+'];
-
 const MIN_ELO = 1000;
 const MAX_ELO = 5000;
 
@@ -112,7 +105,6 @@ const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: numb
           className={`absolute inset-y-0 left-0 bg-gradient-to-r ${skill.color} rounded-full`}
         />
       </div>
-      {/* Mini CEFR ladder */}
       <div className="flex gap-0.5 mt-2">
         {CEFR_LEVELS.map((level, i) => (
           <div
@@ -174,72 +166,68 @@ const ProgressPage = () => {
   };
 
   const rank = getRank(totalElo);
-
   const nextCEFR = CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
   const eloForNext = Math.floor(((totalCEFRIdx + 1) / CEFR_LEVELS.length) * (MAX_ELO - MIN_ELO) + MIN_ELO);
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="animate-in fade-in duration-300 pb-12 pt-12 sm:pt-0">
-      {/* Fixed Header */}
-      <div className="sticky top-0 z-40 bg-background pb-4 border-b border-border-soft mb-6">
-        <PageHeader
-          title="Individual Progress"
-          description="Your complete engineering English journey — CEFR band, Elo rating, and skill breakdown."
-          badgeText="ANALYTICS"
-          badgeColor="border-primary/20 bg-primary/10 text-primary"
-        />
+    <div className="animate-in fade-in duration-300 pt-12 sm:pt-0">
+      {/* Fixed Header - clean, no extra border */}
+      <div className="sticky top-0 z-40 bg-background">
+        <div className="flex items-center justify-between py-3">
+          <div>
+            <h1 className="text-xl font-bold text-foreground">Individual Progress</h1>
+            <p className="text-xs text-muted-copy">CEFR band, Elo rating, and skill breakdown.</p>
+          </div>
+          <span className="rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-bold text-primary uppercase tracking-widest">Analytics</span>
+        </div>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+      {/* Content Grid */}
+      <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
         {/* Left Column */}
-        <div className="space-y-6 min-w-0">
+        <div className="space-y-5 min-w-0">
           {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-2xl border border-border-soft bg-surface p-6 shadow-sm">
+          <div className="relative overflow-hidden rounded-2xl border border-border-soft bg-surface p-5 shadow-sm">
             <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
-              {/* Circular Progress */}
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
               <div className="relative flex-shrink-0">
-                <svg className="w-36 h-36 -rotate-90">
-                  <circle cx="68" cy="68" r="60" className="stroke-border-soft fill-none" strokeWidth="6" />
+                <svg className="w-32 h-32 -rotate-90">
+                  <circle cx="64" cy="64" r="56" className="stroke-border-soft fill-none" strokeWidth="5" />
                   <motion.circle
-                    cx="68" cy="68" r="60"
+                    cx="64" cy="64" r="56"
                     className="stroke-primary fill-none"
-                    strokeWidth="6"
+                    strokeWidth="5"
                     strokeLinecap="round"
-                    strokeDasharray={2 * Math.PI * 60}
-                    initial={{ strokeDashoffset: 2 * Math.PI * 60 }}
-                    animate={{ strokeDashoffset: 2 * Math.PI * 60 * (1 - totalPercentage / 100) }}
+                    strokeDasharray={2 * Math.PI * 56}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
+                    animate={{ strokeDashoffset: 2 * Math.PI * 56 * (1 - totalPercentage / 100) }}
                     transition={{ duration: 2, ease: 'easeOut' }}
                   />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-4xl font-black text-foreground tabular-nums">{animatedTotalElo}</span>
+                  <span className="text-3xl font-black text-foreground tabular-nums">{animatedTotalElo}</span>
                   <span className="text-[10px] text-muted-copy font-bold uppercase">/ 5000</span>
                 </div>
               </div>
-
-              {/* Info */}
               <div className="flex-1 text-center md:text-left">
-                <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start mb-3">
-                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${rank.color}`}>
+                <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start mb-2">
+                  <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}>
                     {rank.icon} {rank.label}
                   </span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-border-soft bg-background px-2.5 py-1 text-xs font-bold text-foreground">
+                  <span className="inline-flex items-center rounded-full border border-border-soft bg-background px-2 py-0.5 text-xs font-bold text-foreground">
                     CEFR {totalCEFR}
                   </span>
                 </div>
-                <h2 className="text-2xl font-bold text-foreground mb-1">Your Mastery Level</h2>
-                <p className="text-sm text-muted-copy leading-relaxed">
+                <h2 className="text-xl font-bold text-foreground mb-1">Mastery Level</h2>
+                <p className="text-xs text-muted-copy leading-relaxed">
                   {eloNeeded > 0
-                    ? `You need ${eloNeeded} more Elo to reach ${nextCEFR}. Keep practicing!`
-                    : `You've reached the highest CEFR band. Maintain your excellence!`}
+                    ? `${eloNeeded} more Elo to reach ${nextCEFR}. Keep practicing!`
+                    : `Highest CEFR band reached. Maintain your excellence!`}
                 </p>
-                {/* Next level progress */}
-                <div className="mt-4 flex items-center gap-3">
-                  <span className="text-xs font-bold text-muted-copy">{totalCEFR}</span>
-                  <div className="flex-1 h-2 rounded-full bg-surface-hover overflow-hidden">
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-muted-copy">{totalCEFR}</span>
+                  <div className="flex-1 h-1.5 rounded-full bg-surface-hover overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%` }}
@@ -247,7 +235,7 @@ const ProgressPage = () => {
                       className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400"
                     />
                   </div>
-                  <span className="text-xs font-bold text-muted-copy">{nextCEFR}</span>
+                  <span className="text-[10px] font-bold text-muted-copy">{nextCEFR}</span>
                 </div>
               </div>
             </div>
@@ -257,8 +245,8 @@ const ProgressPage = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { icon: Target, label: 'Avg Elo', value: totalElo, color: 'text-primary' },
-              { icon: TrendingUp, label: 'Best Skill', value: highestSkill.label, color: 'text-emerald-600' },
-              { icon: Zap, label: 'Peak Elo', value: Math.max(...Object.values(eloScores)), color: 'text-amber-600' },
+              { icon: TrendingUp, label: 'Best', value: highestSkill.label, color: 'text-emerald-600' },
+              { icon: Zap, label: 'Peak', value: Math.max(...Object.values(eloScores)), color: 'text-amber-600' },
               { icon: Clock, label: 'Sessions', value: learningState?.studySessions?.length || 0, color: 'text-rose-600' },
             ].map((stat, i) => (
               <motion.div
@@ -268,22 +256,25 @@ const ProgressPage = () => {
                 transition={{ delay: 0.3 + i * 0.08 }}
                 className="rounded-xl border border-border-soft bg-surface p-3 shadow-sm"
               >
-                <div className="flex items-center gap-2 mb-1.5">
-                  <stat.icon className="h-3.5 w-3.5 text-muted-copy" />
+                <div className="flex items-center gap-1.5 mb-1">
+                  <stat.icon className="h-3 w-3 text-muted-copy" />
                   <span className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold">{stat.label}</span>
                 </div>
-                <p className={`text-lg font-bold pl-5.5 ${stat.color}`}>{stat.value}</p>
+                <p className={`text-base font-bold ${stat.color}`}>{stat.value}</p>
               </motion.div>
             ))}
           </div>
 
           {/* Knowledge Graph */}
-          <SectionCard
-            title="Knowledge Graph"
-            subtitle="How your skills and topics interconnect. Click nodes to explore."
-            icon={Network}
-          >
-            <div className="relative aspect-[16/10] max-h-[400px] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
+          <div className="rounded-2xl border border-border-soft bg-surface shadow-sm overflow-hidden">
+            <div className="px-5 pt-4 pb-3 border-b border-border-soft">
+              <div className="flex items-center gap-2">
+                <Network className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Knowledge Graph</h3>
+              </div>
+              <p className="text-[11px] text-muted-copy mt-0.5">Click nodes to explore connections.</p>
+            </div>
+            <div className="relative aspect-[16/10] max-h-[380px] w-full bg-surface-hover select-none">
               <svg viewBox="0 0 800 500" className="h-full w-full">
                 {GRAPH_LINKS.map((link, idx) => {
                   const source = GRAPH_NODES.find((n) => n.id === link.source);
@@ -326,61 +317,58 @@ const ProgressPage = () => {
                 </div>
               )}
             </div>
-          </SectionCard>
+          </div>
         </div>
 
-        {/* Right Sidebar */}
+        {/* Right Sidebar - Nav2 style */}
         <aside className="relative">
-          <div className="xl:sticky xl:top-24 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-1">
-            {/* Skill Breakdown */}
-            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-                  <Layers className="h-4 w-4 text-primary" /> Skill Breakdown
-                </h3>
-                <span className="text-[10px] text-muted-copy font-bold uppercase">{SKILLS.length} skills</span>
-              </div>
-              <div className="space-y-2.5">
-                {SKILLS.map((skill, index) => (
-                  <SkillCard key={skill.id} skill={skill} elo={eloScores[skill.id]} index={index} />
-                ))}
-              </div>
+          <div className="xl:sticky xl:top-16 space-y-0 border border-border-soft bg-surface rounded-xl shadow-sm overflow-hidden">
+            {/* Skill Progress */}
+            <div className="px-4 pt-3 pb-2 border-b border-border-soft">
+              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+                <Layers className="h-3 w-3" /> Skill Progress
+              </h3>
+            </div>
+            <div className="p-3 space-y-2">
+              {SKILLS.map((skill, index) => (
+                <SkillCard key={skill.id} skill={skill} elo={eloScores[skill.id]} index={index} />
+              ))}
             </div>
 
-            {/* Strength Summary */}
-            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
-              <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm mb-3">
-                <Brain className="h-4 w-4 text-primary" /> Summary
+            {/* Summary */}
+            <div className="px-4 pt-3 pb-2 border-t border-border-soft">
+              <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+                <Brain className="h-3 w-3" /> Summary
               </h3>
-              <div className="space-y-2.5">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-copy">Strongest</span>
-                  <span className="font-bold text-emerald-600 flex items-center gap-1">
-                    <highestSkill.icon className="h-3.5 w-3.5" /> {highestSkill.label}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-copy">Weakest</span>
-                  <span className="font-bold text-rose-600 flex items-center gap-1">
-                    <lowestSkill.icon className="h-3.5 w-3.5" /> {lowestSkill.label}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-copy">CEFR Band</span>
-                  <span className="font-bold text-foreground">{totalCEFR}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-copy">Rank</span>
-                  <span className="font-bold text-foreground">{rank.icon} {rank.label}</span>
-                </div>
+            </div>
+            <div className="px-4 pb-3 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-copy">Strongest</span>
+                <span className="font-bold text-emerald-600 flex items-center gap-1">
+                  <highestSkill.icon className="h-3 w-3" /> {highestSkill.label}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-copy">Weakest</span>
+                <span className="font-bold text-rose-600 flex items-center gap-1">
+                  <lowestSkill.icon className="h-3 w-3" /> {lowestSkill.label}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-copy">CEFR</span>
+                <span className="font-bold text-foreground">{totalCEFR}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-muted-copy">Rank</span>
+                <span className="font-bold text-foreground">{rank.icon} {rank.label}</span>
               </div>
             </div>
 
             {/* Node Inspector */}
-            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
-                  <Network className="h-4 w-4 text-primary" /> Inspector
+            <div className="px-4 pt-3 pb-2 border-t border-border-soft">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+                  <Network className="h-3 w-3" /> Inspector
                 </h3>
                 {selectedGraphNode && (
                   <button onClick={() => setSelectedGraphNode(null)} className="text-[10px] font-bold uppercase text-muted-copy hover:text-primary transition-colors">
@@ -388,19 +376,21 @@ const ProgressPage = () => {
                   </button>
                 )}
               </div>
+            </div>
+            <div className="px-4 pb-4">
               {selectedGraphNode ? (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
-                  <div className="flex items-center gap-2">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5">
+                  <div className="flex items-center gap-1.5">
                     <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase">{selectedGraphNode.type}</span>
-                    <span className="text-xs font-semibold text-foreground px-2 py-0.5 rounded-md bg-surface-hover border border-border-soft">{selectedGraphNode.status}</span>
+                    <span className="text-[10px] font-semibold text-foreground px-1.5 py-0.5 rounded bg-surface-hover border border-border-soft">{selectedGraphNode.status}</span>
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-foreground">{selectedGraphNode.label}</h4>
-                    <p className="mt-1 text-xs text-muted-copy leading-5">{selectedGraphNode.description}</p>
+                    <h4 className="text-sm font-bold text-foreground">{selectedGraphNode.label}</h4>
+                    <p className="mt-0.5 text-[11px] text-muted-copy leading-4">{selectedGraphNode.description}</p>
                   </div>
-                  <div className="bg-surface-hover rounded-lg p-3 border border-border-soft">
-                    <div className="flex justify-between text-xs font-bold mb-1.5">
-                      <span className="text-muted-copy uppercase text-[10px]">Strength</span>
+                  <div className="bg-surface-hover rounded-lg p-2.5 border border-border-soft">
+                    <div className="flex justify-between text-[10px] font-bold mb-1">
+                      <span className="text-muted-copy uppercase">Strength</span>
                       <span className="text-foreground">{selectedGraphNode.strength}%</span>
                     </div>
                     <div className="h-1.5 w-full rounded-full bg-surface">
@@ -408,20 +398,20 @@ const ProgressPage = () => {
                     </div>
                   </div>
                   {selectedGraphNode.relatedVocab && selectedGraphNode.relatedVocab.length > 0 && (
-                    <div className="border-t border-border-soft pt-3">
-                      <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-2">Related Words</h4>
-                      <div className="flex flex-wrap gap-1.5">
+                    <div className="border-t border-border-soft pt-2">
+                      <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-1.5">Related Words</h4>
+                      <div className="flex flex-wrap gap-1">
                         {selectedGraphNode.relatedVocab.map((word) => (
-                          <span key={word} className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-xs font-medium text-foreground">{word}</span>
+                          <span key={word} className="rounded bg-surface border border-border-soft px-1.5 py-0.5 text-[10px] font-medium text-foreground">{word}</span>
                         ))}
                       </div>
                     </div>
                   )}
                 </motion.div>
               ) : (
-                <div className="text-center py-6 rounded-lg border border-dashed border-border-soft">
-                  <Network className="h-6 w-6 text-muted-copy mx-auto mb-2 opacity-40" />
-                  <p className="text-xs text-muted-copy">Select a node on the graph</p>
+                <div className="text-center py-5 rounded-lg border border-dashed border-border-soft">
+                  <Network className="h-5 w-5 text-muted-copy mx-auto mb-1.5 opacity-40" />
+                  <p className="text-[11px] text-muted-copy">Select a node on the graph</p>
                 </div>
               )}
             </div>
