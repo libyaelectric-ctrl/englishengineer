@@ -10,8 +10,9 @@ describe('main navigation configuration', () => {
     expect(MAIN_NAVIGATION_LABELS).toEqual([
       'Home',
       'Skills',
-      'Tools',
+      'Progress',
       'Learning Hub',
+      'Tools',
       'Profile',
     ]);
   });
