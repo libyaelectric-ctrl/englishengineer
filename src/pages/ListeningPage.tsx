@@ -5,7 +5,6 @@ import {
   Headphones,
   KeyRound,
   ListChecks,
-  Activity,
 } from 'lucide-react';
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
