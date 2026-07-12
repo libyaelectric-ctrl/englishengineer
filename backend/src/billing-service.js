@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { ApiError } from './errors.js';
 import { requireText, emptySubscription } from './billing-helpers.js';
+import { stripeRetry } from './utils/retry.js';
 import {
   handleCheckoutCompleted,
   handleSubscriptionUpdated,
@@ -61,11 +62,13 @@ const resolveOrProvisionPriceId = async (config, stripeClient, planId) => {
     throw new ApiError(400, 'INVALID_PLAN', `Unknown plan: "${planId}".`);
   }
 
-  const existingPrices = await stripeClient.prices.list({
-    active: true,
-    type: 'recurring',
-    limit: 100,
-  });
+  const existingPrices = await stripeRetry(() =>
+    stripeClient.prices.list({
+      active: true,
+      type: 'recurring',
+      limit: 100,
+    })
+  );
 
   const found = existingPrices.data.find(
     (p) =>
