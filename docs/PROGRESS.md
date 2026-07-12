@@ -25,6 +25,14 @@
 | `docs/AI_GUARDRAILS.md` eklendi | ✅ |
 | `backend/scripts/ai-eval.js` eklendi | ✅ |
 
+## 1800 Hedefi - Ek Görevler
+
+| Görev | Durum |
+|-------|-------|
+| Admin dashboard API | ✅ `backend/src/admin-routes.js` |
+| Activity Timeline API | ✅ `/api/admin/activity` endpoint'i |
+| Admin stats API | ✅ `/api/admin/stats` endpoint'i |
+
 ## Doğrulama
 
 | Test | Sonuç |
@@ -33,7 +41,7 @@
 | Frontend Test | 480/481 ✅ |
 | Backend Test | 124/124 ✅ |
 
-## Son Güncelleme: 2026-07-12 11:50
+## Son Güncelleme: 2026-07-12 12:05
 
 ---
 
