@@ -20,7 +20,6 @@ import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import { PageHeader } from '@/shared/components/PageHeader';
 import {
   buildReviewPriorities,
   useLearningIntelligenceStore,
@@ -53,8 +52,8 @@ const DashboardPage = () => {
       (a, b) =>
         a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
     )[0];
-  const focusMeta = focusSkill ? SKILL_META[focusSkill.skill] : null;
-  const primaryMission = missions[0] ?? null;
+  const focusMeta = SKILL_META[focusSkill.skill];
+  const primaryMission = missions[0];
   const reviewPriorities = buildReviewPriorities([
     ...(memory.weakWords > 0
       ? [
@@ -84,20 +83,16 @@ const DashboardPage = () => {
         source: 'repeated-mistake' as const,
         severity: item.repetitionCount,
       })),
-    ...(focusMeta && focusSkill ? [{
+    {
       id: `skill-${focusSkill.skill}`,
       label: `${focusMeta.label} needs the next practice`,
       source: 'skill-weakness' as const,
       severity: Math.round(focusSkill.weaknessScore / 10),
-    }] : []),
+    },
   ]).slice(0, 3);
 
   return (
-    <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6">
-      <PageHeader 
-        title="Command Center" 
-        description="Your next step is clear. Continue one lesson at a time."
-      />
+    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
       <div className="space-y-6">
         {/* Executive Summary Widget */}
         <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
@@ -151,7 +146,7 @@ const DashboardPage = () => {
             <Button
               type="button"
               className="min-h-10 px-5 text-xs btn-press"
-              onClick={() => navigate(primaryMission?.route ?? focusMeta?.route ?? '/curriculum')}
+              onClick={() => navigate(primaryMission?.route ?? focusMeta.route)}
             >
               Start today&apos;s lesson <ArrowRight className="h-3.5 w-3.5" />
             </Button>
@@ -164,22 +159,23 @@ const DashboardPage = () => {
                   TODAY&apos;S FOCUS
                 </p>
                 <h2 className="mt-1 text-lg font-bold text-foreground">
-                  {primaryMission?.title ?? `${focusMeta?.label ?? 'Skill'} · Lesson 1`}
+                  {primaryMission?.title ?? `${focusMeta.label} · Lesson 1`}
                 </h2>
                 <p className="mt-1 text-xs leading-5 text-muted-copy">
                   {primaryMission?.reason ??
-                    `Build your first reliable ${focusMeta?.label ?? 'skill'} baseline.`}
+                    `Build your first reliable ${focusMeta.label} baseline.`}
                 </p>
               </div>
               <div className="shrink-0 text-left sm:text-right">
                 <p className="text-xl font-bold text-foreground">
-                  {focusSkill?.cefrBand ?? ''}
+                  {focusSkill.cefrBand}
                 </p>
                 <p className="text-[10px] font-semibold text-muted-copy">
                   Lesson{' '}
-                  {focusSkill
-                    ? LessonPathEngine.getSkillProgress(profile, focusSkill.skill).lesson.number
-                    : 1}
+                  {
+                    LessonPathEngine.getSkillProgress(profile, focusSkill.skill)
+                      .lesson.number
+                  }
                 </p>
               </div>
             </div>
