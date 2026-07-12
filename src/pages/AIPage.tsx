@@ -253,7 +253,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 font-sans pt-12 sm:pt-0">
+    <div className="space-y-8 animate-in fade-in duration-300 font-sans pt-12 sm:pt-0">
       {!embedded && (
         <PageHeader
           title="Engineering Copilot"
