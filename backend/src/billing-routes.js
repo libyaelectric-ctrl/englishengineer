@@ -1,5 +1,6 @@
 import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
 import { assertUserOwnership } from './billing-helpers.js';
+import { idempotencyKey } from './middleware/idempotency.middleware.js';
 import {
   validateBody,
   BillingCheckoutBodySchema,
@@ -18,6 +19,7 @@ export const registerBillingRoutes = (
     '/api/billing/create-checkout-session',
     requireBackendAuth,
     rateLimiter,
+    idempotencyKey(),
     validateBody(BillingCheckoutBodySchema),
     async (req, res, next) => {
       try {
@@ -37,6 +39,7 @@ export const registerBillingRoutes = (
     '/api/billing/create-topup-session',
     requireBackendAuth,
     rateLimiter,
+    idempotencyKey(),
     validateBody(BillingTopupBodySchema),
     async (req, res, next) => {
       try {

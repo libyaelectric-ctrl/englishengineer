@@ -21,7 +21,6 @@ import {
   Library,
   Map,
   Mic2,
-  Network,
   PenTool,
   Settings,
   Shield,
