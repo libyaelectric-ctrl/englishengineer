@@ -112,7 +112,9 @@ const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className="flex h-full flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm"
+      className={`flex h-full flex-col rounded-xl border bg-surface p-5 shadow-sm ${
+        progress?.isWeak ? 'border-rose-300 bg-rose-50/30' : 'border-border-soft'
+      }`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
@@ -144,6 +146,31 @@ const WordCard = ({
           )}
         </div>
       </div>
+
+      {status === 'Learning' && progress && (
+        <div className="mt-3 flex items-center gap-2">
+          <span className="text-sm tracking-widest text-primary">
+            {'●'.repeat(Math.min(progress.correctReviews, 5))}
+            {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
+          </span>
+          <span className="text-xs font-semibold text-muted-copy">
+            {progress.correctReviews} correct → Mastered
+          </span>
+        </div>
+      )}
+
+      {status === 'Mastered' && (
+        <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+          <span>🏆</span>
+          Reading & Writing havuzuna eklendi
+        </div>
+      )}
+
+      {status === 'New' && (
+        <p className="mt-3 text-xs font-semibold text-muted-copy">
+          1 correct answer → moves to Learning
+        </p>
+      )}
 
       {showAnswer && (
         <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
@@ -495,6 +522,19 @@ const VocabularyPage = () => {
       type: 'SET_MENU_STATE',
       menuState: VocabularyMenuService.getState(),
     });
+
+    // Otomatik kart geçişi — 500ms sonra bir sonraki karta geç
+    setTimeout(() => {
+      const currentState = VocabularyMenuService.getState();
+      const nextSet = selectVocabularyLearningSet(terms, currentState, {
+        cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
+        skillUse: 'vocabulary',
+        status: 'Learning',
+      });
+      if (nextSet.length > 0 && nextSet[0].id !== term.id) {
+        dispatchData({ type: 'SET_MENU_STATE', menuState: currentState });
+      }
+    }, 500);
     ProductAnalyticsService.track(
       'vocabulary_review_completed',
       '/vocabulary',
@@ -635,6 +675,9 @@ const VocabularyPage = () => {
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Vocabulary
           </h1>
+          <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+            🏆 {Object.values(menuState.progress).filter((p) => p.status === 'Mastered').length} mastered
+          </span>
         </div>
 
         <div className="space-y-3">
