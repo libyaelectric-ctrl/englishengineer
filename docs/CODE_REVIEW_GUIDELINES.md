@@ -34,6 +34,20 @@ These guidelines ensure consistent, high-quality code reviews across EngineerOS.
 - [ ] SQL injection prevented
 - [ ] XSS prevention implemented
 
+### Feature Flags
+
+- [ ] New features wrapped in feature flags
+- [ ] Flag defaults are safe (disabled for beta)
+- [ ] Flag conditions are clear and documented
+- [ ] No feature flag leakage to client (if sensitive)
+
+### Components
+
+- [ ] Error boundaries wrap risky sections
+- [ ] Components are properly typed (no `any`)
+- [ ] Loading states handled
+- [ ] Empty states handled
+
 ### Performance
 
 - [ ] No unnecessary re-renders

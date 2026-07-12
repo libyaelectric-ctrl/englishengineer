@@ -2,44 +2,44 @@
 
 ## Genel Durum
 
-| Blok | Başlangıç | Hedef | Durum |
-|------|-----------|-------|-------|
-| 7. DevOps/CI-CD | 60 | 150 | ✅ TAMAMLANDI |
-| 5. Database | 85 | 155 | ✅ TAMAMLANDI |
-| 6. Security | 98 | 165 | ✅ TAMAMLANDI |
-| 4. Backend | 105 | 160 | ✅ TAMAMLANDI |
-| 3. Frontend | 98 | 155 | ✅ TAMAMLANDI |
-| 9. AI & Enterprise | 91 | 150 | ✅ TAMAMLANDI |
-| 10. Documentation | 66 | 130 | ✅ TAMAMLANDI |
-| 1. Executive | 100 | 160 | ✅ TAMAMLANDI |
-| 2. Code Quality | 122 | 165 | ✅ TAMAMLANDI |
+| Blok               | Başlangıç | Hedef | Durum         |
+| ------------------ | --------- | ----- | ------------- |
+| 7. DevOps/CI-CD    | 60        | 150   | ✅ TAMAMLANDI |
+| 5. Database        | 85        | 155   | ✅ TAMAMLANDI |
+| 6. Security        | 98        | 165   | ✅ TAMAMLANDI |
+| 4. Backend         | 105       | 160   | ✅ TAMAMLANDI |
+| 3. Frontend        | 98        | 155   | ✅ TAMAMLANDI |
+| 9. AI & Enterprise | 91        | 150   | ✅ TAMAMLANDI |
+| 10. Documentation  | 66        | 130   | ✅ TAMAMLANDI |
+| 1. Executive       | 100       | 160   | ✅ TAMAMLANDI |
+| 2. Code Quality    | 122       | 165   | ✅ TAMAMLANDI |
 
 ## Toplam Puan: 942 → 1490 (+548)
 
 ## mapv3 Düzeltmeleri
 
-| Düzeltme | Durum |
-|----------|-------|
-| Health check gerçek ping | ✅ Supabase + Redis ping eklendi |
-| `docs/~$ployment.md` silindi | ✅ |
-| `docs/AI_GUARDRAILS.md` eklendi | ✅ |
-| `backend/scripts/ai-eval.js` eklendi | ✅ |
+| Düzeltme                             | Durum                            |
+| ------------------------------------ | -------------------------------- |
+| Health check gerçek ping             | ✅ Supabase + Redis ping eklendi |
+| `docs/~$ployment.md` silindi         | ✅                               |
+| `docs/AI_GUARDRAILS.md` eklendi      | ✅                               |
+| `backend/scripts/ai-eval.js` eklendi | ✅                               |
 
 ## 1800 Hedefi - Ek Görevler
 
-| Görev | Durum |
-|-------|-------|
-| Admin dashboard API | ✅ `backend/src/admin-routes.js` |
+| Görev                 | Durum                               |
+| --------------------- | ----------------------------------- |
+| Admin dashboard API   | ✅ `backend/src/admin-routes.js`    |
 | Activity Timeline API | ✅ `/api/admin/activity` endpoint'i |
-| Admin stats API | ✅ `/api/admin/stats` endpoint'i |
+| Admin stats API       | ✅ `/api/admin/stats` endpoint'i    |
 
 ## Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ## Son Güncelleme: 2026-07-12 12:05
 
@@ -49,30 +49,30 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | Backend Dockerfile | `backend/Dockerfile` | ✅ |
-| 2 | Frontend Dockerfile | `Dockerfile` | ✅ |
-| 3 | Nginx config (SPA routing) | `nginx.conf` | ✅ |
-| 4 | Docker Compose | `docker-compose.yml` | ✅ |
-| 5 | .dockerignore | `.dockerignore` | ✅ |
-| 6 | Railway config | `backend/railway.toml` | ✅ |
-| 7 | Dependabot config | `.github/dependabot.yml` | ✅ |
-| 8 | Deployment docs | `docs/deployment.md` | ✅ |
-| 9 | Health check güçlendirme | `backend/src/config.js` | ✅ |
-| 10 | Health test güncelleme | `backend/test/health.test.js` | ✅ |
-| 11 | Backend test güncelleme | `backend/test/backend.test.js` | ✅ |
-| 12 | Sentry entegrasyonu (backend) | `backend/src/app.js`, `backend/package.json` | ✅ |
-| 13 | Sentry entegrasyonu (frontend) | `package.json` | ✅ |
-| 14 | CI'ya npm audit ekleme | `.github/workflows/ci.yml` | ✅ |
+| #   | Görev                          | Dosya                                        | Durum |
+| --- | ------------------------------ | -------------------------------------------- | ----- |
+| 1   | Backend Dockerfile             | `backend/Dockerfile`                         | ✅    |
+| 2   | Frontend Dockerfile            | `Dockerfile`                                 | ✅    |
+| 3   | Nginx config (SPA routing)     | `nginx.conf`                                 | ✅    |
+| 4   | Docker Compose                 | `docker-compose.yml`                         | ✅    |
+| 5   | .dockerignore                  | `.dockerignore`                              | ✅    |
+| 6   | Railway config                 | `backend/railway.toml`                       | ✅    |
+| 7   | Dependabot config              | `.github/dependabot.yml`                     | ✅    |
+| 8   | Deployment docs                | `docs/deployment.md`                         | ✅    |
+| 9   | Health check güçlendirme       | `backend/src/config.js`                      | ✅    |
+| 10  | Health test güncelleme         | `backend/test/health.test.js`                | ✅    |
+| 11  | Backend test güncelleme        | `backend/test/backend.test.js`               | ✅    |
+| 12  | Sentry entegrasyonu (backend)  | `backend/src/app.js`, `backend/package.json` | ✅    |
+| 13  | Sentry entegrasyonu (frontend) | `package.json`                               | ✅    |
+| 14  | CI'ya npm audit ekleme         | `.github/workflows/ci.yml`                   | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ---
 
@@ -80,23 +80,23 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | Backup politikası | `docs/BACKUP_POLICY.md` | ✅ |
-| 2 | Disaster Recovery planı | `docs/DISASTER_RECOVERY.md` | ✅ |
-| 3 | Data Retention Policy | `docs/DATA_RETENTION.md` | ✅ |
-| 4 | Database Performance | `docs/DATABASE_PERFORMANCE.md` | ✅ |
-| 5 | Transaction doğrulama | `backend/src/supabase-billing-repository.js` | ✅ |
-| 6 | Data Model dokümanı | `docs/DATA_MODEL.md` | ✅ |
-| 7 | Connection pooling belgeleme | `docs/CONNECTION_POOLING.md` | ✅ |
+| #   | Görev                        | Dosya                                        | Durum |
+| --- | ---------------------------- | -------------------------------------------- | ----- |
+| 1   | Backup politikası            | `docs/BACKUP_POLICY.md`                      | ✅    |
+| 2   | Disaster Recovery planı      | `docs/DISASTER_RECOVERY.md`                  | ✅    |
+| 3   | Data Retention Policy        | `docs/DATA_RETENTION.md`                     | ✅    |
+| 4   | Database Performance         | `docs/DATABASE_PERFORMANCE.md`               | ✅    |
+| 5   | Transaction doğrulama        | `backend/src/supabase-billing-repository.js` | ✅    |
+| 6   | Data Model dokümanı          | `docs/DATA_MODEL.md`                         | ✅    |
+| 7   | Connection pooling belgeleme | `docs/CONNECTION_POOLING.md`                 | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -109,20 +109,20 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | ENCRYPTION.md | `docs/ENCRYPTION.md` | ✅ |
-| 2 | CSP sıkılaştırma | `backend/src/app.js` | ✅ |
-| 3 | COMPLIANCE_READINESS.md | `docs/COMPLIANCE_READINESS.md` | ✅ |
-| 4 | RBAC doğrulama | `backend/src/middleware/rbac.middleware.js` | ✅ |
+| #   | Görev                   | Dosya                                       | Durum |
+| --- | ----------------------- | ------------------------------------------- | ----- |
+| 1   | ENCRYPTION.md           | `docs/ENCRYPTION.md`                        | ✅    |
+| 2   | CSP sıkılaştırma        | `backend/src/app.js`                        | ✅    |
+| 3   | COMPLIANCE_READINESS.md | `docs/COMPLIANCE_READINESS.md`              | ✅    |
+| 4   | RBAC doğrulama          | `backend/src/middleware/rbac.middleware.js` | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -136,21 +136,21 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | API Versioning dokümanı | `docs/API_VERSIONING.md` | ✅ |
-| 2 | Idempotency-key middleware | `backend/src/middleware/idempotency.middleware.js` | ✅ |
-| 3 | Exponential backoff retry | `backend/src/utils/retry.js` | ✅ |
-| 4 | BullMQ background job | `backend/src/jobs/queue.js` | ✅ |
-| 5 | RBAC | Zaten yapıldı (Blok 6) | ✅ |
+| #   | Görev                      | Dosya                                              | Durum |
+| --- | -------------------------- | -------------------------------------------------- | ----- |
+| 1   | API Versioning dokümanı    | `docs/API_VERSIONING.md`                           | ✅    |
+| 2   | Idempotency-key middleware | `backend/src/middleware/idempotency.middleware.js` | ✅    |
+| 3   | Exponential backoff retry  | `backend/src/utils/retry.js`                       | ✅    |
+| 4   | BullMQ background job      | `backend/src/jobs/queue.js`                        | ✅    |
+| 5   | RBAC                       | Zaten yapıldı (Blok 6)                             | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -165,18 +165,18 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | DESIGN_SYSTEM.md | `docs/DESIGN_SYSTEM.md` | ✅ |
-| 2 | CI'a a11y testi | `.github/workflows/ci.yml` | ✅ |
+| #   | Görev            | Dosya                      | Durum |
+| --- | ---------------- | -------------------------- | ----- |
+| 1   | DESIGN_SYSTEM.md | `docs/DESIGN_SYSTEM.md`    | ✅    |
+| 2   | CI'a a11y testi  | `.github/workflows/ci.yml` | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -190,19 +190,19 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | AI eval seti | `docs/AI_EVAL_SET.md` | ✅ |
-| 2 | AI content filter | `docs/AI_CONTENT_FILTER.md` | ✅ |
-| 3 | Multi-tenant | Zaten yapıldı (Blok 4/6) | ✅ |
+| #   | Görev             | Dosya                       | Durum |
+| --- | ----------------- | --------------------------- | ----- |
+| 1   | AI eval seti      | `docs/AI_EVAL_SET.md`       | ✅    |
+| 2   | AI content filter | `docs/AI_CONTENT_FILTER.md` | ✅    |
+| 3   | Multi-tenant      | Zaten yapıldı (Blok 4/6)    | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -216,24 +216,24 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | C4 Context diyagramı | `docs/architecture/SYSTEM_CONTEXT.md` | ✅ |
-| 2 | Container diyagramı | `docs/architecture/CONTAINER_DIAGRAM.md` | ✅ |
-| 3 | Veri akışı diyagramı | `docs/architecture/DATA_FLOW.md` | ✅ |
-| 4 | ADR'ler (10 adet) | `docs/adr/001-010-*.md` | ✅ |
-| 5 | CODE_REVIEW_GUIDELINES.md | `docs/CODE_REVIEW_GUIDELINES.md` | ✅ |
-| 6 | GOVERNANCE.md | `docs/GOVERNANCE.md` | ✅ |
-| 7 | VENDOR_RISK.md | `docs/VENDOR_RISK.md` | ✅ |
-| 8 | I18N_STRATEGY.md | `docs/I18N_STRATEGY.md` | ✅ |
+| #   | Görev                     | Dosya                                    | Durum |
+| --- | ------------------------- | ---------------------------------------- | ----- |
+| 1   | C4 Context diyagramı      | `docs/architecture/SYSTEM_CONTEXT.md`    | ✅    |
+| 2   | Container diyagramı       | `docs/architecture/CONTAINER_DIAGRAM.md` | ✅    |
+| 3   | Veri akışı diyagramı      | `docs/architecture/DATA_FLOW.md`         | ✅    |
+| 4   | ADR'ler (10 adet)         | `docs/adr/001-010-*.md`                  | ✅    |
+| 5   | CODE_REVIEW_GUIDELINES.md | `docs/CODE_REVIEW_GUIDELINES.md`         | ✅    |
+| 6   | GOVERNANCE.md             | `docs/GOVERNANCE.md`                     | ✅    |
+| 7   | VENDOR_RISK.md            | `docs/VENDOR_RISK.md`                    | ✅    |
+| 8   | I18N_STRATEGY.md          | `docs/I18N_STRATEGY.md`                  | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -247,22 +247,22 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | Executive Summary | `docs/EXECUTIVE_SUMMARY.md` | ✅ |
-| 2 | Risk Register | `docs/RISK_REGISTER.md` | ✅ |
-| 3 | Engineering Standards | `docs/ENGINEERING_STANDARDS.md` | ✅ |
-| 4 | Scalability Plan | `docs/SCALABILITY_PLAN.md` | ✅ |
-| 5 | Roadmap | `docs/ROADMAP.md` | ✅ |
-| 6 | ADR'lar | Zaten yapıldı (Blok 10) | ✅ |
+| #   | Görev                 | Dosya                           | Durum |
+| --- | --------------------- | ------------------------------- | ----- |
+| 1   | Executive Summary     | `docs/EXECUTIVE_SUMMARY.md`     | ✅    |
+| 2   | Risk Register         | `docs/RISK_REGISTER.md`         | ✅    |
+| 3   | Engineering Standards | `docs/ENGINEERING_STANDARDS.md` | ✅    |
+| 4   | Scalability Plan      | `docs/SCALABILITY_PLAN.md`      | ✅    |
+| 5   | Roadmap               | `docs/ROADMAP.md`               | ✅    |
+| 6   | ADR'lar               | Zaten yapıldı (Blok 10)         | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -276,19 +276,19 @@
 
 ### Yapılan İşler
 
-| # | Görev | Dosya | Durum |
-|---|-------|-------|-------|
-| 1 | Complexity kuralı CI'da | `.github/workflows/ci.yml` | ✅ |
-| 2 | Duplication analizi | `.github/workflows/ci.yml` | ✅ |
-| 3 | Tech debt register | `docs/TECH_DEBT.md` | ✅ |
+| #   | Görev                   | Dosya                      | Durum |
+| --- | ----------------------- | -------------------------- | ----- |
+| 1   | Complexity kuralı CI'da | `.github/workflows/ci.yml` | ✅    |
+| 2   | Duplication analizi     | `.github/workflows/ci.yml` | ✅    |
+| 3   | Tech debt register      | `docs/TECH_DEBT.md`        | ✅    |
 
 ### Doğrulama
 
-| Test | Sonuç |
-|------|-------|
-| TypeScript | 0 hata ✅ |
+| Test          | Sonuç      |
+| ------------- | ---------- |
+| TypeScript    | 0 hata ✅  |
 | Frontend Test | 480/481 ✅ |
-| Backend Test | 124/124 ✅ |
+| Backend Test  | 124/124 ✅ |
 
 ### Notlar
 
@@ -301,6 +301,7 @@
 ## Değişiklik Özeti
 
 ### Eklenen Dosyalar (46)
+
 1. `backend/Dockerfile`
 2. `Dockerfile`
 3. `nginx.conf`
@@ -348,6 +349,7 @@
 45. `docs/TECH_DEBT.md`
 
 ### Değiştirilen Dosyalar (10)
+
 1. `backend/src/config.js` - Health check güçlendirme
 2. `backend/test/health.test.js` - Test güncelleme
 3. `backend/test/backend.test.js` - Test güncelleme
