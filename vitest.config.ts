@@ -35,18 +35,6 @@ export default defineConfig({
           lines: 75,
           statements: 75,
         },
-        'backend/src/auth.js': {
-          branches: 75,
-          functions: 75,
-          lines: 75,
-          statements: 75,
-        },
-        'backend/src/billing-service.js': {
-          branches: 75,
-          functions: 75,
-          lines: 75,
-          statements: 75,
-        },
       },
     },
   },

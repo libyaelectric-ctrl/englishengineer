@@ -121,20 +121,13 @@ const GrammarPage = () => {
 
   return (
     <div className="animate-in fade-in duration-300 relative">
-      {/* Consolidated Sticky Header Group — Grammar: violet/fuchsia */}
-      <div className="sticky top-0 z-40 flex flex-col bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 border-b border-border-soft shadow-sm space-y-4">
-        {/* Color accent stripe */}
-        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-violet-500 to-fuchsia-400" />
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 flex flex-col bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 border-b border-border-soft shadow-sm space-y-4">
         {/* Title & Search */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
-              <Languages className="h-4 w-4" />
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground">
-              Grammar
-            </h1>
-          </div>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Grammar
+          </h1>
           <div className="relative w-full sm:max-w-md">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <Search className="h-4 w-4 text-muted-copy" />
@@ -157,8 +150,8 @@ const GrammarPage = () => {
               onClick={() => setTab(item)}
               className={`min-h-9 rounded-lg px-3 text-sm font-bold transition-all ${
                 tab === item
-                  ? 'bg-gradient-to-r from-violet-500 to-fuchsia-400 text-white shadow-sm'
-                  : 'text-muted-copy hover:bg-violet-50 hover:text-violet-600'
+                  ? 'bg-foreground text-background shadow-sm'
+                  : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
               }`}
             >
               {item}
@@ -189,8 +182,8 @@ const GrammarPage = () => {
                   onClick={() => setSelectedId(rule.id)}
                   className={`shrink-0 px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
                     selectedRule?.id === rule.id
-                      ? 'bg-gradient-to-r from-violet-500 to-fuchsia-400 text-white shadow-md'
-                      : 'bg-surface-hover text-muted-copy hover:bg-violet-50 hover:text-violet-600'
+                      ? 'bg-foreground text-background shadow-md'
+                      : 'bg-surface-hover text-muted-copy hover:bg-surface hover:text-foreground'
                   }`}
                 >
                   {rule.title.length > 25
