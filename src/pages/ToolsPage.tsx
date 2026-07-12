@@ -24,7 +24,7 @@ const ToolsPage = () => {
       : 'work';
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300">
+    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
       <PageHeader
         title="Tools"
         description="Templates, quick phrases, and AI copilot — all in one place."

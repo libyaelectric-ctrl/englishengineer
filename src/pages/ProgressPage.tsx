@@ -277,7 +277,7 @@ const ProgressPage = () => {
   const totalCEFR = getCEFRBand(totalElo);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pb-12">
+    <div className="space-y-7 animate-in fade-in duration-300 pb-12 pt-12 sm:pt-0">
       <PageHeader
         title="Individual Progress"
         description="Comprehensive analytics of your engineering English mastery, blending Elo scores and interactive knowledge graphs."

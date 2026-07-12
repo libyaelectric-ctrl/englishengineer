@@ -93,7 +93,7 @@ const DashboardPage = () => {
   ]).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6">
+    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
       <div className="space-y-6">
         {/* Executive Summary Widget */}
         <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">

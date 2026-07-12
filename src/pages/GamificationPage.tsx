@@ -45,7 +45,7 @@ const GamificationPage = () => {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500 pt-12 sm:pt-0">
       <PageHeader
         title="Milestones"
         description="Long-term Engineering English progression through missions, rewards, chains, levels, and achievements."
