@@ -107,11 +107,7 @@ const ListeningPage = () => {
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className={`rounded-full border px-2 py-1 text-xs font-bold ${
-                      mission.cefrLevel.startsWith('A') ? 'bg-emerald-50 border-emerald-200 text-emerald-700' :
-                      mission.cefrLevel.startsWith('B') ? 'bg-blue-50 border-blue-200 text-blue-700' :
-                      'bg-violet-50 border-violet-200 text-violet-700'
-                    }`}>
+                    <span className="rounded-full border border-border-soft bg-background px-2 py-1 text-xs font-bold text-foreground">
                       {mission.cefrLevel}
                     </span>
                     <LevelAccessBadge
@@ -262,19 +258,19 @@ const ListeningPage = () => {
               icon={CheckCircle2}
             >
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl bg-rose-50 border border-rose-200 p-4">
-                  <p className="text-xs font-medium text-rose-600">
+                <div className="rounded-xl bg-surface-hover p-4">
+                  <p className="text-xs font-medium text-muted-copy">
                     Final score
                   </p>
-                  <p className="text-2xl font-black text-rose-700">
+                  <p className="text-2xl font-black text-foreground">
                     {evaluationResult.finalScore}%
                   </p>
                 </div>
-                <div className="rounded-xl bg-pink-50 border border-pink-200 p-4">
-                  <p className="text-xs font-medium text-pink-600">
+                <div className="rounded-xl bg-surface-hover p-4">
+                  <p className="text-xs font-medium text-muted-copy">
                     Comprehension
                   </p>
-                  <p className="text-2xl font-black text-pink-700">
+                  <p className="text-2xl font-black text-foreground">
                     {evaluationResult.comprehensionScore}%
                   </p>
                 </div>
