@@ -7,7 +7,6 @@ import {
   MessageSquareText,
   RotateCcw,
   Mic,
-  Mic2,
   MicOff,
   Volume2,
   Lock,
