@@ -1,54 +1,35 @@
-import React from 'react';
-
 interface SkeletonProps {
   className?: string;
-  variant?: 'text' | 'circular' | 'rectangular';
-  width?: string | number;
-  height?: string | number;
+  count?: number;
+  style?: React.CSSProperties;
+  variant?: string;
 }
 
-export const Skeleton: React.FC<SkeletonProps> = ({
-  className = '',
-  variant = 'text',
-  width,
-  height,
-}) => {
-  const baseClasses = 'animate-pulse bg-gray-200';
-
-  const variantClasses = {
-    text: 'rounded h-4',
-    circular: 'rounded-full',
-    rectangular: 'rounded-lg',
-  };
-
+export const Skeleton = ({ className = '', count = 1 }: SkeletonProps) => {
   return (
-    <div
-      className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-      style={{ width, height }}
-    />
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <div
+          key={i}
+          className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
+        />
+      ))}
+    </>
   );
 };
 
-export const SkeletonCard: React.FC = () => (
-  <div className="rounded-lg border border-gray-200 p-4 space-y-3">
-    <Skeleton variant="rectangular" className="h-32 w-full" />
-    <Skeleton variant="text" className="h-4 w-3/4" />
-    <Skeleton variant="text" className="h-4 w-1/2" />
+export const SkeletonCard = () => (
+  <div className="rounded-xl border border-border-soft bg-surface p-4 space-y-3">
+    <Skeleton className="h-4 w-1/3" />
+    <Skeleton className="h-3 w-2/3" />
+    <Skeleton className="h-8 w-full" />
   </div>
 );
 
-export const SkeletonText: React.FC<{ lines?: number }> = ({ lines = 3 }) => (
+export const SkeletonText = ({ lines = 3 }: { lines?: number }) => (
   <div className="space-y-2">
     {Array.from({ length: lines }).map((_, i) => (
-      <Skeleton
-        key={i}
-        variant="text"
-        className={i === lines - 1 ? 'w-2/3' : 'w-full'}
-      />
+      <Skeleton key={i} className="h-3 w-full" style={{ width: `${85 - i * 15}%` }} />
     ))}
   </div>
-);
-
-export const SkeletonAvatar: React.FC<{ size?: number }> = ({ size = 40 }) => (
-  <Skeleton variant="circular" width={size} height={size} />
 );
