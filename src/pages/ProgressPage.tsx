@@ -14,6 +14,10 @@ import {
   Award,
   Layers,
   Network,
+  ChevronRight,
+  Zap,
+  Clock,
+  TrendingUp,
 } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
 import { useLearningCockpit } from '@/features/profile';
@@ -21,57 +25,16 @@ import { PageHeader } from '@/shared/components/PageHeader';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { GRAPH_NODES, GRAPH_LINKS, type GraphNode } from './CurriculumPage/curriculum-data';
 
-// Skills definitions with modern gradient palettes
 const SKILLS = [
-  {
-    id: 'vocabulary',
-    label: 'Vocabulary',
-    icon: BookMarked,
-    color: 'from-blue-500 to-cyan-400',
-    bgLight: 'bg-blue-50',
-    textDark: 'text-blue-700',
-  },
-  {
-    id: 'grammar',
-    label: 'Grammar',
-    icon: Languages,
-    color: 'from-violet-500 to-fuchsia-400',
-    bgLight: 'bg-violet-50',
-    textDark: 'text-violet-700',
-  },
-  {
-    id: 'reading',
-    label: 'Reading',
-    icon: BookOpen,
-    color: 'from-emerald-500 to-teal-400',
-    bgLight: 'bg-emerald-50',
-    textDark: 'text-emerald-700',
-  },
-  {
-    id: 'writing',
-    label: 'Writing',
-    icon: PenTool,
-    color: 'from-orange-500 to-amber-400',
-    bgLight: 'bg-orange-50',
-    textDark: 'text-orange-700',
-  },
-  {
-    id: 'listening',
-    label: 'Listening',
-    icon: Headphones,
-    color: 'from-rose-500 to-pink-400',
-    bgLight: 'bg-rose-50',
-    textDark: 'text-rose-700',
-  },
-  {
-    id: 'speaking',
-    label: 'Speaking',
-    icon: MessageSquare,
-    color: 'from-indigo-500 to-blue-400',
-    bgLight: 'bg-indigo-50',
-    textDark: 'text-indigo-700',
-  },
+  { id: 'vocabulary', label: 'Vocabulary', icon: BookMarked, color: 'from-blue-500 to-cyan-400', bgLight: 'bg-blue-50', textDark: 'text-blue-700' },
+  { id: 'grammar', label: 'Grammar', icon: Languages, color: 'from-violet-500 to-fuchsia-400', bgLight: 'bg-violet-50', textDark: 'text-violet-700' },
+  { id: 'reading', label: 'Reading', icon: BookOpen, color: 'from-emerald-500 to-teal-400', bgLight: 'bg-emerald-50', textDark: 'text-emerald-700' },
+  { id: 'writing', label: 'Writing', icon: PenTool, color: 'from-orange-500 to-amber-400', bgLight: 'bg-orange-50', textDark: 'text-orange-700' },
+  { id: 'listening', label: 'Listening', icon: Headphones, color: 'from-rose-500 to-pink-400', bgLight: 'bg-rose-50', textDark: 'text-rose-700' },
+  { id: 'speaking', label: 'Speaking', icon: MessageSquare, color: 'from-indigo-500 to-blue-400', bgLight: 'bg-indigo-50', textDark: 'text-indigo-700' },
 ];
+
+const CEFR_LEVELS = ['A1', 'A1+', 'A2', 'A2+', 'B1', 'B1+', 'B2', 'B2+', 'C1', 'C1+', 'C2', 'C2+'];
 
 const MIN_ELO = 1000;
 const MAX_ELO = 5000;
@@ -91,98 +54,75 @@ const getCEFRBand = (elo: number) => {
   return 'C2+';
 };
 
-// Helper to interpolate number smoothly
+const getCEFRIndex = (cefr: string) => CEFR_LEVELS.indexOf(cefr);
+
 const useAnimatedNumber = (value: number, duration: number = 1.5) => {
   const [displayValue, setDisplayValue] = useState(0);
-
   useEffect(() => {
     let startTime: number;
     const startValue = displayValue;
     const distance = value - startValue;
-
     const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
-
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const timeElapsed = (currentTime - startTime) / (duration * 1000);
       const progress = Math.min(timeElapsed, 1);
-
-      setDisplayValue(
-        Math.floor(startValue + distance * easeOutQuart(progress))
-      );
-
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setDisplayValue(value);
-      }
+      setDisplayValue(Math.floor(startValue + distance * easeOutQuart(progress)));
+      if (progress < 1) requestAnimationFrame(animate);
+      else setDisplayValue(value);
     };
-
     requestAnimationFrame(animate);
   }, [value, duration]);
-
   return displayValue;
 };
 
-const SkillSidebarItem = ({
-  skill,
-  elo,
-  index,
-}: {
-  skill: (typeof SKILLS)[0];
-  elo: number;
-  index: number;
-}) => {
+const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: number; index: number }) => {
   const displayElo = useAnimatedNumber(elo, 2);
-  // Calculate percentage out of 5000 visually so it looks accurate to the user
   const percentage = Math.min(100, (elo / MAX_ELO) * 100);
   const cefr = getCEFRBand(elo);
   const Icon = skill.icon;
+  const cefrIdx = getCEFRIndex(cefr);
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.4, ease: 'easeOut' }}
-      className="group relative rounded-xl border border-border-soft bg-surface p-4 hover:border-border-hover transition-colors shadow-sm"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.4 }}
+      className="group rounded-xl border border-border-soft bg-surface p-4 hover:border-border-hover transition-all shadow-sm hover:shadow-md"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
-          <div
-            className={`flex h-8 w-8 items-center justify-center rounded-lg ${skill.bgLight} ${skill.textDark}`}
-          >
+          <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${skill.bgLight} ${skill.textDark}`}>
             <Icon className="h-4 w-4" />
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground leading-none">
-              {skill.label}
-            </h4>
-            <p className="text-[10px] text-muted-copy font-medium mt-1 uppercase tracking-wider">
-              {cefr} BAND
-            </p>
+            <h4 className="text-sm font-semibold text-foreground">{skill.label}</h4>
+            <p className="text-[10px] text-muted-copy font-medium mt-0.5 uppercase tracking-wider">{cefr}</p>
           </div>
         </div>
         <div className="text-right">
-          <motion.div
-            key={displayElo}
-            className="text-base font-bold text-foreground tabular-nums"
-          >
-            {displayElo}
-          </motion.div>
+          <div className="text-lg font-bold text-foreground tabular-nums">{displayElo}</div>
         </div>
       </div>
-
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-surface-hover">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
-          transition={{
-            duration: 1.5,
-            delay: index * 0.1 + 0.2,
-            ease: 'easeOut',
-          }}
+          transition={{ duration: 1.5, delay: index * 0.08 + 0.2, ease: 'easeOut' }}
           className={`absolute inset-y-0 left-0 bg-gradient-to-r ${skill.color} rounded-full`}
         />
+      </div>
+      {/* Mini CEFR ladder */}
+      <div className="flex gap-0.5 mt-2">
+        {CEFR_LEVELS.map((level, i) => (
+          <div
+            key={level}
+            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+              i <= cefrIdx ? `bg-gradient-to-r ${skill.color}` : 'bg-surface-hover'
+            }`}
+            title={level}
+          />
+        ))}
       </div>
     </motion.div>
   );
@@ -193,306 +133,187 @@ const ProgressPage = () => {
   const { learningState } = useLearningCockpit(currentUser?.id);
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(null);
 
-  // Calculate synthetic Elo scores based on memory and learning state.
   const calculateSkillElo = (skillId: string) => {
     let base = MIN_ELO;
-    let multiplier = 0;
-
     const totalSessions = learningState?.studySessions?.length || 0;
     const levelVal = learningState?.level || 1;
-
-    base += Math.min(2000, levelVal * 150); 
-    base += Math.min(1000, totalSessions * 10); 
-
+    base += Math.min(2000, levelVal * 150);
+    base += Math.min(1000, totalSessions * 10);
+    let multiplier = 0;
     switch (skillId) {
-      case 'vocabulary':
-        multiplier = Math.min(500, (learningState?.elo || 1000) * 0.1);
-        break;
-      case 'grammar':
-        multiplier = Math.min(500, (learningState?.xp || 0) * 0.05);
-        break;
-      case 'reading':
-      case 'writing':
-        multiplier = 350 + Math.random() * 200; 
-        break;
-      case 'listening':
-      case 'speaking':
-        multiplier = 200 + Math.random() * 400; 
-        break;
-      default:
-        multiplier = 100;
+      case 'vocabulary': multiplier = Math.min(500, (learningState?.elo || 1000) * 0.1); break;
+      case 'grammar': multiplier = Math.min(500, (learningState?.xp || 0) * 0.05); break;
+      case 'reading': case 'writing': multiplier = 350 + Math.random() * 200; break;
+      case 'listening': case 'speaking': multiplier = 200 + Math.random() * 400; break;
+      default: multiplier = 100;
     }
-
     return Math.min(MAX_ELO, Math.floor(base + multiplier));
   };
 
   const [eloScores] = useState<Record<string, number>>(() => {
     const scores: Record<string, number> = {};
-    SKILLS.forEach((s) => {
-      scores[s.id] = calculateSkillElo(s.id);
-    });
+    SKILLS.forEach((s) => { scores[s.id] = calculateSkillElo(s.id); });
     return scores;
   });
 
-  const totalElo = Math.floor(
-    Object.values(eloScores).reduce((a, b) => a + b, 0) / SKILLS.length
-  );
+  const totalElo = Math.floor(Object.values(eloScores).reduce((a, b) => a + b, 0) / SKILLS.length);
   const animatedTotalElo = useAnimatedNumber(totalElo, 2.5);
   const totalPercentage = Math.min(100, (totalElo / MAX_ELO) * 100);
+  const totalCEFR = getCEFRBand(totalElo);
+  const totalCEFRIdx = getCEFRIndex(totalCEFR);
 
-  const highestSkillName = useMemo(() => {
-    return SKILLS.reduce((best, s) =>
-      eloScores[s.id] > eloScores[best.id] ? s : best
-    ).label;
-  }, [eloScores]);
+  const highestSkill = useMemo(() => SKILLS.reduce((best, s) => eloScores[s.id] > eloScores[best.id] ? s : best), [eloScores]);
+  const lowestSkill = useMemo(() => SKILLS.reduce((worst, s) => eloScores[s.id] < eloScores[worst.id] ? s : worst), [eloScores]);
 
-  const getRankBadge = (elo: number) => {
-    if (elo >= 4500)
-      return {
-        label: 'Grandmaster',
-        color: 'bg-yellow-500/10 text-yellow-600 border-yellow-200',
-      };
-    if (elo >= 3500)
-      return {
-        label: 'Diamond',
-        color: 'bg-cyan-500/10 text-cyan-600 border-cyan-200',
-      };
-    if (elo >= 2500)
-      return {
-        label: 'Platinum',
-        color: 'bg-indigo-500/10 text-indigo-600 border-indigo-200',
-      };
-    if (elo >= 1500)
-      return {
-        label: 'Gold',
-        color: 'bg-amber-500/10 text-amber-600 border-amber-200',
-      };
-    return {
-      label: 'Silver',
-      color: 'bg-slate-500/10 text-slate-600 border-slate-200',
-    };
+  const getRank = (elo: number) => {
+    if (elo >= 4500) return { label: 'Grandmaster', icon: '👑', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
+    if (elo >= 3500) return { label: 'Diamond', icon: '💎', color: 'text-cyan-600 bg-cyan-50 border-cyan-200' };
+    if (elo >= 2500) return { label: 'Platinum', icon: '🏆', color: 'text-indigo-600 bg-indigo-50 border-indigo-200' };
+    if (elo >= 1500) return { label: 'Gold', icon: '🥇', color: 'text-amber-600 bg-amber-50 border-amber-200' };
+    return { label: 'Silver', icon: '🥈', color: 'text-slate-600 bg-slate-50 border-slate-200' };
   };
 
-  const rank = getRankBadge(totalElo);
-  const totalCEFR = getCEFRBand(totalElo);
+  const rank = getRank(totalElo);
+
+  const nextCEFR = CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
+  const eloForNext = Math.floor(((totalCEFRIdx + 1) / CEFR_LEVELS.length) * (MAX_ELO - MIN_ELO) + MIN_ELO);
+  const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pb-12 pt-12 sm:pt-0">
-      <PageHeader
-        title="Individual Progress"
-        description="Comprehensive analytics of your engineering English mastery, blending Elo scores and interactive knowledge graphs."
-        badgeText="ANALYTICS"
-        badgeColor="border-primary/20 bg-primary/10 text-primary"
-      />
+    <div className="animate-in fade-in duration-300 pb-12 pt-12 sm:pt-0">
+      {/* Fixed Header */}
+      <div className="sticky top-0 z-40 bg-background pb-4 border-b border-border-soft mb-6">
+        <PageHeader
+          title="Individual Progress"
+          description="Your complete engineering English journey — CEFR band, Elo rating, and skill breakdown."
+          badgeText="ANALYTICS"
+          badgeColor="border-primary/20 bg-primary/10 text-primary"
+        />
+      </div>
 
+      {/* Scrollable Content */}
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
-        {/* Left Column: Main Dashboard */}
-        <div className="space-y-6">
-          {/* Top Banner & Total Elo */}
-          <div className="relative overflow-hidden rounded-3xl border border-border-soft bg-surface p-6 sm:p-8 shadow-sm">
-            <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
-              <div className="space-y-4 max-w-xl">
-                <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold text-primary uppercase tracking-widest">
-                  <Activity className="h-3.5 w-3.5" /> Performance Analytics
+        {/* Left Column */}
+        <div className="space-y-6 min-w-0">
+          {/* Hero Banner */}
+          <div className="relative overflow-hidden rounded-2xl border border-border-soft bg-surface p-6 shadow-sm">
+            <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6">
+              {/* Circular Progress */}
+              <div className="relative flex-shrink-0">
+                <svg className="w-36 h-36 -rotate-90">
+                  <circle cx="68" cy="68" r="60" className="stroke-border-soft fill-none" strokeWidth="6" />
+                  <motion.circle
+                    cx="68" cy="68" r="60"
+                    className="stroke-primary fill-none"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 60}
+                    initial={{ strokeDashoffset: 2 * Math.PI * 60 }}
+                    animate={{ strokeDashoffset: 2 * Math.PI * 60 * (1 - totalPercentage / 100) }}
+                    transition={{ duration: 2, ease: 'easeOut' }}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-4xl font-black text-foreground tabular-nums">{animatedTotalElo}</span>
+                  <span className="text-[10px] text-muted-copy font-bold uppercase">/ 5000</span>
                 </div>
-                <h2 className="text-3xl font-bold text-foreground tracking-tight">
-                  Personal Elo Dashboard
-                </h2>
-                <p className="text-sm text-muted-copy leading-relaxed font-medium">
-                  Track your absolute mastery across engineering communication
-                  disciplines. Your Elo rating adjusts dynamically based on exercise
-                  difficulty, accuracy, and consistency. Maximum achievable Elo per
-                  skill is 5000.
-                </p>
               </div>
 
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', bounce: 0.4, duration: 1 }}
-                className="flex flex-col items-center justify-center rounded-2xl border-2 border-primary/10 bg-surface-hover p-6 shadow-inner w-full md:w-64"
-              >
-                <div
-                  className={`mb-3 flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest ${rank.color}`}
-                >
-                  <Trophy className="h-3 w-3" /> {rank.label}
-                  <span className="w-1 h-1 rounded-full bg-current opacity-50" />
-                  <span>{totalCEFR}</span>
+              {/* Info */}
+              <div className="flex-1 text-center md:text-left">
+                <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start mb-3">
+                  <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${rank.color}`}>
+                    {rank.icon} {rank.label}
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border-soft bg-background px-2.5 py-1 text-xs font-bold text-foreground">
+                    CEFR {totalCEFR}
+                  </span>
                 </div>
-                
-                {/* Visual Progress for Total Elo */}
-                <div className="relative flex items-center justify-center mb-2">
-                  <svg className="w-32 h-32 transform -rotate-90">
-                    <circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      className="stroke-border-soft fill-none"
-                      strokeWidth="8"
+                <h2 className="text-2xl font-bold text-foreground mb-1">Your Mastery Level</h2>
+                <p className="text-sm text-muted-copy leading-relaxed">
+                  {eloNeeded > 0
+                    ? `You need ${eloNeeded} more Elo to reach ${nextCEFR}. Keep practicing!`
+                    : `You've reached the highest CEFR band. Maintain your excellence!`}
+                </p>
+                {/* Next level progress */}
+                <div className="mt-4 flex items-center gap-3">
+                  <span className="text-xs font-bold text-muted-copy">{totalCEFR}</span>
+                  <div className="flex-1 h-2 rounded-full bg-surface-hover overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%` }}
+                      transition={{ duration: 1.5, ease: 'easeOut' }}
+                      className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400"
                     />
-                    <motion.circle
-                      cx="64"
-                      cy="64"
-                      r="56"
-                      className="stroke-primary fill-none"
-                      strokeWidth="8"
-                      strokeLinecap="round"
-                      strokeDasharray={2 * Math.PI * 56}
-                      initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
-                      animate={{ strokeDashoffset: 2 * Math.PI * 56 * (1 - totalPercentage / 100) }}
-                      transition={{ duration: 2, ease: "easeOut" }}
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-3xl font-black text-foreground tabular-nums tracking-tighter">
-                      {animatedTotalElo}
-                    </span>
-                    <span className="text-[10px] text-muted-copy font-bold uppercase">
-                      / 5000 MAX
-                    </span>
                   </div>
+                  <span className="text-xs font-bold text-muted-copy">{nextCEFR}</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
 
-          {/* Quick Stats Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              {
-                icon: Target,
-                label: 'Current Elo',
-                value: totalElo,
-                color: 'text-primary',
-              },
-              {
-                icon: Activity,
-                label: 'Highest Skill',
-                value: highestSkillName,
-                color: 'text-emerald-600',
-              },
-              {
-                icon: Brain,
-                label: 'Peak Rating',
-                value: Math.max(...Object.values(eloScores)),
-              },
-              { icon: Award, label: 'Global Rank', value: 'Top 12%' },
+              { icon: Target, label: 'Avg Elo', value: totalElo, color: 'text-primary' },
+              { icon: TrendingUp, label: 'Best Skill', value: highestSkill.label, color: 'text-emerald-600' },
+              { icon: Zap, label: 'Peak Elo', value: Math.max(...Object.values(eloScores)), color: 'text-amber-600' },
+              { icon: Clock, label: 'Sessions', value: learningState?.studySessions?.length || 0, color: 'text-rose-600' },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 + i * 0.1 }}
-                className="rounded-xl border border-border-soft bg-surface p-4 flex flex-col justify-center shadow-sm min-w-0"
+                transition={{ delay: 0.3 + i * 0.08 }}
+                className="rounded-xl border border-border-soft bg-surface p-3 shadow-sm"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-hover text-muted-copy shrink-0">
-                    <stat.icon className="h-4 w-4" />
-                  </div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold truncate">
-                    {stat.label}
-                  </p>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <stat.icon className="h-3.5 w-3.5 text-muted-copy" />
+                  <span className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold">{stat.label}</span>
                 </div>
-                <p
-                  className={`text-lg font-bold pl-11 truncate ${stat.color || 'text-foreground'}`}
-                  title={stat.value.toString()}
-                >
-                  {stat.value}
-                </p>
+                <p className={`text-lg font-bold pl-5.5 ${stat.color}`}>{stat.value}</p>
               </motion.div>
             ))}
           </div>
-          
-          {/* Knowledge Graph Full Map */}
+
+          {/* Knowledge Graph */}
           <SectionCard
-            title="Cross-Skill Knowledge Graph"
-            subtitle="Interactive representation of how vocabulary, grammar topics, and core skills connect."
+            title="Knowledge Graph"
+            subtitle="How your skills and topics interconnect. Click nodes to explore."
             icon={Network}
           >
-            <div className="relative aspect-[16/10] max-h-[450px] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
+            <div className="relative aspect-[16/10] max-h-[400px] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
               <svg viewBox="0 0 800 500" className="h-full w-full">
-                {/* Connection Links */}
                 {GRAPH_LINKS.map((link, idx) => {
                   const source = GRAPH_NODES.find((n) => n.id === link.source);
                   const target = GRAPH_NODES.find((n) => n.id === link.target);
                   if (!source || !target) return null;
-
                   const isHighlighted = selectedGraphNode
-                    ? selectedGraphNode.id === source.id ||
-                      selectedGraphNode.id === target.id
+                    ? selectedGraphNode.id === source.id || selectedGraphNode.id === target.id
                     : false;
-
                   return (
                     <line
                       key={idx}
-                      x1={source.x}
-                      y1={source.y}
-                      x2={target.x}
-                      y2={target.y}
-                      stroke={
-                        isHighlighted
-                          ? 'var(--color-primary, #6366f1)'
-                          : '#e2e8f0'
-                      }
+                      x1={source.x} y1={source.y} x2={target.x} y2={target.y}
+                      stroke={isHighlighted ? 'var(--color-primary, #6366f1)' : '#e2e8f0'}
                       strokeWidth={isHighlighted ? 2.5 : 1.2}
-                      strokeDasharray={
-                        link.source.startsWith('topic') ||
-                        link.target.startsWith('topic')
-                          ? '4 4'
-                          : undefined
-                      }
-                      opacity={
-                        selectedGraphNode && !isHighlighted ? 0.25 : 0.65
-                      }
+                      strokeDasharray={link.source.startsWith('topic') || link.target.startsWith('topic') ? '4 4' : undefined}
+                      opacity={selectedGraphNode && !isHighlighted ? 0.2 : 0.6}
                       className="transition-all duration-300"
                     />
                   );
                 })}
-
-                {/* Nodes */}
                 {GRAPH_NODES.map((node) => {
                   const isSelected = selectedGraphNode?.id === node.id;
                   const isHighlighted = selectedGraphNode
-                    ? selectedGraphNode.id === node.id ||
-                      selectedGraphNode.connections.includes(node.id) ||
-                      (node.id === 'hub' &&
-                        selectedGraphNode.connections.includes(node.id))
+                    ? selectedGraphNode.id === node.id || selectedGraphNode.connections.includes(node.id)
                     : true;
-
                   return (
-                    <g
-                      key={node.id}
-                      transform={`translate(${node.x}, ${node.y})`}
-                      onClick={() => setSelectedGraphNode(node)}
-                      className="cursor-pointer group"
-                    >
-                      {/* Node Outer Glow/Ring */}
-                      <circle
-                        r={node.size + 6}
-                        fill="transparent"
-                        stroke={node.color}
-                        strokeWidth={isSelected ? 2 : 0}
-                        className="transition-all duration-300 group-hover:stroke-2"
-                        opacity={0.4}
-                      />
-                      {/* Node Body */}
-                      <circle
-                        r={node.size}
-                        fill={node.color}
-                        opacity={isHighlighted ? 1 : 0.3}
-                        className="transition-all duration-300"
-                      />
-                      {/* Label Text */}
-                      <text
-                        y={node.size + 16}
-                        textAnchor="middle"
-                        className="text-[10px] font-medium transition-all duration-300"
-                        fill="currentColor"
-                        opacity={isHighlighted ? 1 : 0.3}
-                      >
+                    <g key={node.id} transform={`translate(${node.x}, ${node.y})`} onClick={() => setSelectedGraphNode(node)} className="cursor-pointer">
+                      <circle r={node.size + 6} fill="transparent" stroke={node.color} strokeWidth={isSelected ? 2 : 0} opacity={0.4} className="transition-all duration-300" />
+                      <circle r={node.size} fill={node.color} opacity={isHighlighted ? 1 : 0.25} className="transition-all duration-300" />
+                      <text y={node.size + 14} textAnchor="middle" className="text-[10px] font-medium" fill="currentColor" opacity={isHighlighted ? 1 : 0.25}>
                         {node.label}
                       </text>
                     </g>
@@ -501,119 +322,109 @@ const ProgressPage = () => {
               </svg>
               {!selectedGraphNode && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <p className="bg-background/80 backdrop-blur-sm px-4 py-2 rounded-full text-xs font-medium text-muted-copy">
-                    Click a node to explore connections
-                  </p>
+                  <p className="bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-muted-copy">Click a node to explore</p>
                 </div>
               )}
             </div>
           </SectionCard>
         </div>
 
-        {/* Right Column: Functional Sidebar (Nav2 replacement / Aside) */}
+        {/* Right Sidebar */}
         <aside className="relative">
-          <div className="sticky top-6 space-y-6 h-[calc(100vh-3rem)] overflow-y-auto pr-2 pb-12 custom-scrollbar">
-            
-            {/* Active Skill Breakdown Panel */}
-            <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-primary" /> Skill Progress
+          <div className="xl:sticky xl:top-24 space-y-4 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-1">
+            {/* Skill Breakdown */}
+            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+                  <Layers className="h-4 w-4 text-primary" /> Skill Breakdown
                 </h3>
+                <span className="text-[10px] text-muted-copy font-bold uppercase">{SKILLS.length} skills</span>
               </div>
-              <div className="space-y-3">
-                <AnimatePresence>
-                  {SKILLS.map((skill, index) => (
-                    <SkillSidebarItem
-                      key={skill.id}
-                      skill={skill}
-                      elo={eloScores[skill.id]}
-                      index={index}
-                    />
-                  ))}
-                </AnimatePresence>
+              <div className="space-y-2.5">
+                {SKILLS.map((skill, index) => (
+                  <SkillCard key={skill.id} skill={skill} elo={eloScores[skill.id]} index={index} />
+                ))}
               </div>
             </div>
 
-            {/* Graph Inspector */}
-            <div className="rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground flex items-center gap-2">
-                  <Network className="h-4 w-4 text-primary" /> Node Inspector
+            {/* Strength Summary */}
+            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
+              <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm mb-3">
+                <Brain className="h-4 w-4 text-primary" /> Summary
+              </h3>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-copy">Strongest</span>
+                  <span className="font-bold text-emerald-600 flex items-center gap-1">
+                    <highestSkill.icon className="h-3.5 w-3.5" /> {highestSkill.label}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-copy">Weakest</span>
+                  <span className="font-bold text-rose-600 flex items-center gap-1">
+                    <lowestSkill.icon className="h-3.5 w-3.5" /> {lowestSkill.label}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-copy">CEFR Band</span>
+                  <span className="font-bold text-foreground">{totalCEFR}</span>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-copy">Rank</span>
+                  <span className="font-bold text-foreground">{rank.icon} {rank.label}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Node Inspector */}
+            <div className="rounded-xl border border-border-soft bg-surface p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-foreground flex items-center gap-2 text-sm">
+                  <Network className="h-4 w-4 text-primary" /> Inspector
                 </h3>
                 {selectedGraphNode && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedGraphNode(null)}
-                    className="text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-primary transition-colors"
-                  >
+                  <button onClick={() => setSelectedGraphNode(null)} className="text-[10px] font-bold uppercase text-muted-copy hover:text-primary transition-colors">
                     Clear
                   </button>
                 )}
               </div>
-              
               {selectedGraphNode ? (
-                <div className="space-y-5 animate-in fade-in zoom-in-95 duration-200">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-bold text-primary uppercase tracking-widest">
-                      {selectedGraphNode.type}
-                    </span>
-                    <span className="text-xs font-semibold text-foreground px-2 py-0.5 rounded-md bg-surface-hover border border-border-soft">
-                      {selectedGraphNode.status}
-                    </span>
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase">{selectedGraphNode.type}</span>
+                    <span className="text-xs font-semibold text-foreground px-2 py-0.5 rounded-md bg-surface-hover border border-border-soft">{selectedGraphNode.status}</span>
                   </div>
-
                   <div>
-                    <h3 className="text-lg font-bold text-foreground">
-                      {selectedGraphNode.label}
-                    </h3>
-                    <p className="mt-1.5 text-xs leading-5 text-muted-copy font-medium">
-                      {selectedGraphNode.description}
-                    </p>
+                    <h4 className="text-base font-bold text-foreground">{selectedGraphNode.label}</h4>
+                    <p className="mt-1 text-xs text-muted-copy leading-5">{selectedGraphNode.description}</p>
                   </div>
-
                   <div className="bg-surface-hover rounded-lg p-3 border border-border-soft">
-                    <div className="flex justify-between text-xs font-bold text-foreground mb-2">
-                      <span className="text-muted-copy uppercase tracking-widest text-[10px]">Estimated Strength</span>
-                      <span>{selectedGraphNode.strength}%</span>
+                    <div className="flex justify-between text-xs font-bold mb-1.5">
+                      <span className="text-muted-copy uppercase text-[10px]">Strength</span>
+                      <span className="text-foreground">{selectedGraphNode.strength}%</span>
                     </div>
-                    <div className="h-2 w-full rounded-full bg-surface">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400 transition-all duration-500"
-                        style={{ width: `${selectedGraphNode.strength}%` }}
-                      />
+                    <div className="h-1.5 w-full rounded-full bg-surface">
+                      <div className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400" style={{ width: `${selectedGraphNode.strength}%` }} />
                     </div>
                   </div>
-
-                  {selectedGraphNode.relatedVocab &&
-                    selectedGraphNode.relatedVocab.length > 0 && (
-                      <div className="border-t border-border-soft pt-4">
-                        <h4 className="text-[10px] font-bold text-muted-copy uppercase tracking-widest mb-3">
-                          Related Vocabulary
-                        </h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedGraphNode.relatedVocab.map((word) => (
-                            <span
-                              key={word}
-                              className="rounded-lg bg-surface border border-border-soft px-2.5 py-1 text-xs font-medium text-foreground shadow-sm"
-                            >
-                              {word}
-                            </span>
-                          ))}
-                        </div>
+                  {selectedGraphNode.relatedVocab && selectedGraphNode.relatedVocab.length > 0 && (
+                    <div className="border-t border-border-soft pt-3">
+                      <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-2">Related Words</h4>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedGraphNode.relatedVocab.map((word) => (
+                          <span key={word} className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-xs font-medium text-foreground">{word}</span>
+                        ))}
                       </div>
-                    )}
-                </div>
+                    </div>
+                  )}
+                </motion.div>
               ) : (
-                <div className="text-center py-8 px-4 rounded-lg border border-dashed border-border-soft bg-surface-hover">
-                  <Network className="h-8 w-8 text-muted-copy mx-auto mb-3 opacity-50" />
-                  <p className="text-xs font-medium text-muted-copy">
-                    Select a node on the Knowledge Graph to inspect relationships and strength.
-                  </p>
+                <div className="text-center py-6 rounded-lg border border-dashed border-border-soft">
+                  <Network className="h-6 w-6 text-muted-copy mx-auto mb-2 opacity-40" />
+                  <p className="text-xs text-muted-copy">Select a node on the graph</p>
                 </div>
               )}
             </div>
-
           </div>
         </aside>
       </div>
