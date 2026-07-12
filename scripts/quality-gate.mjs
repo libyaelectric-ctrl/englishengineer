@@ -10,21 +10,7 @@ const commands = [
   },
   {
     label: 'direct frontend tests',
-    executable: process.execPath,
-    args: [
-      './node_modules/vitest/vitest.mjs',
-      'run',
-      '--configLoader',
-      'runner',
-      '--reporter',
-      'dot',
-      '--exclude',
-      'src/e2e/**',
-      '--exclude',
-      'node_modules/**',
-      '--exclude',
-      '.mimocode/**',
-    ],
+    npmArgs: ['run', 'test'],
     timeoutMs: 300_000,
   },
   {

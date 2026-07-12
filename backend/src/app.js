@@ -103,8 +103,12 @@ export const createApp = ({
 
   app.use(createI18nMiddleware());
 
+  // API Versioning - v1 routes
+  const v1Router = express.Router();
+  app.use('/api/v1', v1Router);
+
   // Health check with real pings
-  app.get('/api/health', async (_request, response) => {
+  const healthHandler = async (_request, response) => {
     const health = toPublicHealth(config);
     const checks = { ...health.checks };
     const TIMEOUT_MS = 5000;
@@ -167,7 +171,11 @@ export const createApp = ({
     }
 
     response.json({ ...health, checks });
-  });
+  };
+
+  // Register health on both v1 and legacy paths
+  v1Router.get('/health', healthHandler);
+  app.get('/api/health', healthHandler);
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;

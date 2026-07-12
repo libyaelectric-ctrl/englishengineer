@@ -629,19 +629,12 @@ const VocabularyPage = () => {
 
   return (
     <div className="animate-in fade-in duration-300 relative">
-      {/* Consolidated Sticky Header Group — Vocabulary: blue/cyan */}
-      <div className="sticky top-0 z-40 flex flex-col bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 border-b border-border-soft shadow-sm">
-        {/* Color accent stripe */}
-        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-blue-500 to-cyan-400" />
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 flex flex-col bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 border-b border-border-soft shadow-sm">
         <div className="flex items-center justify-between pb-3 border-b border-border-soft mb-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-              <BookMarked className="h-4 w-4" />
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground">
-              Vocabulary
-            </h1>
-          </div>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Vocabulary
+          </h1>
         </div>
 
         <div className="space-y-3">
@@ -753,8 +746,8 @@ const VocabularyPage = () => {
                 onClick={() => chooseTab(tab)}
                 className={`min-h-10 rounded-[8px] px-4 py-2 text-sm font-bold transition-all ${
                   activeTab === tab
-                    ? 'bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-md'
-                    : 'text-muted-copy hover:bg-blue-50 hover:text-blue-600'
+                    ? 'bg-foreground text-background shadow-md'
+                    : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
                 }`}
               >
                 {TAB_LABELS[tab]}

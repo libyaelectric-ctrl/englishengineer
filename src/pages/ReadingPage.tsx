@@ -119,16 +119,8 @@ const ReadingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 shadow-sm relative">
-        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-emerald-500 to-teal-400" />
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-              <BookOpen className="h-4 w-4" />
-            </div>
-            <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
-          </div>
-        </div>
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 shadow-sm">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
       </div>
         <LevelContentFilter
           value={levelFilter}
@@ -251,16 +243,16 @@ const ReadingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Reading sticky header — emerald/teal */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 shadow-sm relative">
-        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-emerald-500 to-teal-400" />
+      {/* Reading sticky header */}
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
-              <BookOpen className="h-4 w-4" />
-            </div>
             <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
-            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700">
+            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${
+              currentLevel.startsWith('A') ? 'bg-emerald-50 border-emerald-200 text-emerald-700' :
+              currentLevel.startsWith('B') ? 'bg-blue-50 border-blue-200 text-blue-700' :
+              'bg-violet-50 border-violet-200 text-violet-700'
+            }`}>
               {currentLevel}
             </span>
           </div>
