@@ -20,7 +20,6 @@ import {
 } from '@/features/level-system';
 
 import { Button } from '@/shared/components/Button';
-import { PageHeader } from '@/shared/components/PageHeader';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
@@ -58,7 +57,11 @@ const ListeningPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6 p-6">
-        <PageHeader title="Listening" />
+        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-foreground">Listening</h1>
+          </div>
+        </div>
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -71,7 +74,11 @@ const ListeningPage = () => {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <PageHeader title="Listening" />
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Listening</h1>
+        </div>
+      </div>
       <LevelContentFilter
         value={levelFilter}
         currentLevel={currentLevel}

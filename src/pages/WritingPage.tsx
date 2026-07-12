@@ -1,22 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   PenTool,
   Check,
   AlertTriangle,
   Sparkles,
+  FileText,
+  FileCheck,
   CheckCircle2,
+  RefreshCw,
   Layers,
   ArrowLeft,
   Clock,
   Info,
-  Search,
+  Play,
+  ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 
+import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { Button } from '@/shared/components/Button';
-import { PageHeader } from '@/shared/components/PageHeader';
 import {
   useWritingStore,
   WritingHelpers,
@@ -27,6 +32,8 @@ import {
   DEFAULT_CONTENT_LEVEL_FILTER,
   EmptyLevelState,
   filterContentByLevel,
+  getContentAccessLabel,
+  LevelAccessBadge,
   LevelContentFilter,
   useSkillLevel,
 } from '@/features/level-system';
@@ -53,25 +60,22 @@ const WritingPage = () => {
     resetAllWritingProgress,
   } = useWritingStore();
 
-  const [selectedRule, setSelectedRule] = useState<WritingCorrection | null>(null);
+  const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>(
+    'missions'
+  );
+  const [selectedRule, setSelectedRule] = useState<WritingCorrection | null>(
+    null
+  );
   const [userErrors, setUserErrors] = useState<Record<string, string>>({});
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER
   );
-  const [query, setQuery] = useState('');
-  
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('writing').currentLevel;
-  
-  const filteredByLevel = filterContentByLevel(
+  const visibleMissions = filterContentByLevel(
     missions,
     currentLevel,
     levelFilter
-  );
-  
-  const visibleMissions = filteredByLevel.filter(m => 
-    m.title.toLowerCase().includes(query.toLowerCase()) || 
-    m.discipline.toLowerCase().includes(query.toLowerCase())
   );
 
   // Initialize writing store
@@ -79,9 +83,9 @@ const WritingPage = () => {
     initializeStore();
   }, [initializeStore]);
 
-  // Start / stop timer
+  // Start / stop timer based on active tab and state
   useEffect(() => {
-    if (!evaluationResult) {
+    if (activeTab === 'workspace' && !evaluationResult) {
       timerRef.current = setInterval(() => {
         incrementTimer();
       }, 1000);
@@ -91,33 +95,77 @@ const WritingPage = () => {
         timerRef.current = null;
       }
     }
+
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     };
-  }, [evaluationResult, incrementTimer, selectedMissionId]);
+  }, [activeTab, evaluationResult, incrementTimer]);
 
   useEffect(() => {
-    if (visibleMissions.length > 0 && (!selectedMissionId || !visibleMissions.some(m => m.id === selectedMissionId))) {
+    if (visibleMissions.length === 0) {
+      setActiveTab('missions');
+      return;
+    }
+    if (
+      visibleMissions.length > 0 &&
+      !visibleMissions.some((mission) => mission.id === selectedMissionId)
+    ) {
       selectMission(visibleMissions[0].id);
     }
   }, [selectMission, selectedMissionId, visibleMissions]);
 
-  const currentMission = visibleMissions.find((m) => m.id === selectedMissionId) || visibleMissions[0];
+  const currentMission =
+    visibleMissions.find((m) => m.id === selectedMissionId) ||
+    visibleMissions[0];
 
-  const currentMissionIndex = currentMission ? visibleMissions.findIndex((m) => m.id === currentMission.id) : -1;
-  const previousMission = currentMissionIndex > 0 ? visibleMissions[currentMissionIndex - 1] : null;
-  const nextMission = currentMissionIndex < visibleMissions.length - 1 ? visibleMissions[currentMissionIndex + 1] : null;
+  if (!currentMission) {
+    return (
+      <div className="space-y-6">
+        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
+          </div>
+        </div>
+        <LevelContentFilter
+          value={levelFilter}
+          currentLevel={currentLevel}
+          onChange={setLevelFilter}
+        />
+        <EmptyLevelState skill="Writing" />
+        <Link
+          to="/curriculum"
+          className="inline-flex text-sm font-bold text-primary"
+        >
+          Back to Learning Hub
+        </Link>
+      </div>
+    );
+  }
 
+  const currentMissionIndex = visibleMissions.findIndex(
+    (mission) => mission.id === currentMission.id
+  );
   const moveMission = (offset: number) => {
-    const target = visibleMissions[currentMissionIndex + offset];
-    if (target) {
-      selectMission(target.id);
+    const nextMission = visibleMissions[currentMissionIndex + offset];
+    if (nextMission) {
+      selectMission(nextMission.id);
       setSelectedRule(null);
       setUserErrors({});
+      setActiveTab('workspace');
     }
   };
 
+  // Helper to count total finished missions
   const finishedCount = Object.keys(completedMissions).length;
+  const bestScoreAvg =
+    finishedCount > 0
+      ? Math.round(
+          Object.values(completedMissions).reduce((a, b) => a + b, 0) /
+            finishedCount
+        )
+      : 0;
 
   // Active Draft Analysis: count unresolved corrections
   const getActiveCorrections = () => {
@@ -158,6 +206,20 @@ const WritingPage = () => {
     setDraft(updatedDraft);
   };
 
+  const handleLaunchMission = (missionId: string) => {
+    ProductAnalyticsService.track('writing_task_started', '/writing', {
+      metadata: { skill: 'writing', missionId, source: 'user' },
+    });
+    ProductAnalyticsService.trackOnce('first_task_started', '/writing', {
+      skill: 'writing',
+      source: 'user',
+    });
+    selectMission(missionId);
+    setSelectedRule(null);
+    setUserErrors({});
+    setActiveTab('workspace');
+  };
+
   const handleSubmit = () => {
     // Check if draft is completely empty
     if (!draft.trim()) {
@@ -180,132 +242,74 @@ const WritingPage = () => {
     });
   };
 
-  return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <PageHeader 
-        title="Writing"
-        badgeText={currentLevel}
-        badgeColor="border-primary/20 bg-primary/10 text-primary"
-      >
-        <LevelContentFilter
-          value={levelFilter}
-          currentLevel={currentLevel}
-          onChange={setLevelFilter}
-        />
-        <div className="relative mt-4">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search className="h-4 w-4 text-muted-copy" />
-          </div>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="block min-h-11 w-full rounded-xl border border-border-soft bg-surface py-2.5 pl-10 pr-4 text-sm text-foreground shadow-sm transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/20"
-            placeholder="Search scenarios or disciplines"
-          />
-        </div>
-      </PageHeader>
+  const handleBackToMissions = () => {
+    setActiveTab('missions');
+    setSelectedRule(null);
+  };
 
-      {/* Horizontal Topic Bar */}
-      <div className="sticky top-[72px] z-10 -mx-4 px-4 py-3 bg-surface/95 backdrop-blur-sm border-b border-border-soft lg:-mx-8 lg:px-8 shadow-sm transition-all">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="shrink-0 rounded-full w-10 h-10 p-0"
-            disabled={!previousMission}
-            onClick={() => previousMission && selectMission(previousMission.id)}
-            aria-label="Previous scenario"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          
-          <div className="flex-1 overflow-x-auto custom-scrollbar snap-x flex gap-3 pb-1 pt-1">
-            {visibleMissions.length === 0 ? (
-              <div className="w-full text-center text-sm font-medium text-muted-copy py-3">
-                No scenarios found for the current filter.
-              </div>
-            ) : (
-              visibleMissions.map((m) => {
-                const lessonNumber = filteredByLevel.findIndex((item) => item.id === m.id) + 1;
-                const isSelected = currentMission?.id === m.id;
-                const isCompleted = completedMissions[m.id] !== undefined;
-                return (
-                  <button
-                    key={m.id}
-                    type="button"
-                    onClick={() => {
-                      ProductAnalyticsService.track('writing_task_started', '/writing', {
-                        metadata: { skill: 'writing', missionId: m.id, source: 'user' },
-                      });
-                      selectMission(m.id);
-                      setSelectedRule(null);
-                      setUserErrors({});
-                    }}
-                    className={`shrink-0 snap-start w-[240px] rounded-xl border p-3 text-left transition-colors ${
-                      isSelected 
-                        ? 'border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20' 
-                        : isCompleted
-                        ? 'border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50'
-                        : 'border-border-soft bg-surface hover:border-primary/30 hover:bg-primary/5'
-                    }`}
-                  >
-                    <div className="flex flex-col h-full justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className={`text-[10px] font-bold tracking-wider ${isCompleted ? 'text-emerald-500' : 'text-primary'}`}>
-                          SCENARIO {lessonNumber}
-                        </p>
-                        <p className="mt-1 text-sm font-bold text-foreground truncate">
-                          {m.title}
-                        </p>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <p className="text-[11px] font-medium text-muted-copy truncate">
-                          {m.discipline}
-                        </p>
-                        {isCompleted && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />}
-                      </div>
-                    </div>
-                  </button>
-                );
-              })
-            )}
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
+            <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+              A1
+            </span>
           </div>
-          
-          <Button
-            type="button"
-            variant="outline"
-            className="shrink-0 rounded-full w-10 h-10 p-0"
-            disabled={!nextMission}
-            onClick={() => nextMission && selectMission(nextMission.id)}
-            aria-label="Next scenario"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+          <div className="hidden text-xs text-muted-copy lg:block">
+            {finishedCount}/{missions.length} completed
+          </div>
         </div>
       </div>
 
-      {!currentMission ? (
-        <EmptyLevelState skill="Writing" />
-      ) : (
-        <div className="space-y-6 pt-2">
-          {/* Header Bar */}
-          <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className={`text-[10px] font-medium font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(currentMission.cefrLevel)}`}
-              >
-                Level: {currentMission.cefrLevel}
-              </span>
-              <span className="text-[10px] font-medium font-mono px-2 py-0.5 rounded uppercase border border-border-soft bg-surface-hover text-muted-copy">
-                {currentMission.difficulty}
-              </span>
-              <span className="text-[10px] font-mono text-muted-copy flex items-center gap-1">
-                <Clock className="h-3 w-3" /> {currentMission.estimatedMinutes}m
-              </span>
-              <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5 ml-2">
-                <Clock className="h-3.5 w-3.5 text-primary" />
-                <span>Elapsed: {WritingHelpers.formatTime(timeSpentSeconds)}</span>
-              </span>
+      {/* Top statistics panel */}
+      {activeTab === 'missions' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <MetricCard
+            label="Drafting Practice"
+            value={`${finishedCount}/${missions.length}`}
+            icon={FileText}
+            trend="Local mission progress"
+            trendDirection="up"
+            statusColor="primary"
+          />
+          <MetricCard
+            label="Avg Assessment Accuracy"
+            value={finishedCount > 0 ? `${bestScoreAvg}%` : '0%'}
+            icon={FileCheck}
+            trend={bestScoreAvg >= 85 ? 'Meets C1 Level' : 'Developing Level'}
+            trendDirection="neutral"
+            statusColor="emerald"
+          />
+          <MetricCard
+            label="Writing Mode"
+            value="Local"
+            icon={Layers}
+            trend="No external AI required"
+            trendDirection="neutral"
+            statusColor="cyan"
+          />
+        </div>
+      )}
+
+      {/* 1. MISSIONS TAB VIEW */}
+      {activeTab === 'missions' && (
+        <div className="space-y-6">
+          <LevelContentFilter
+            value={levelFilter}
+            currentLevel={currentLevel}
+            onChange={setLevelFilter}
+          />
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-xl font-black text-foreground tracking-tight">
+                Technical Mission Library
+              </h3>
+              <p className="text-xs text-muted-copy mt-0.5 font-medium">
+                Select a professional drafting scenario to begin technical
+                revision assessment
+              </p>
             </div>
             {finishedCount > 0 && (
               <Button
@@ -318,7 +322,170 @@ const WritingPage = () => {
             )}
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {visibleMissions.map((m) => {
+              const bestScore = completedMissions[m.id];
+              const isCompleted = bestScore !== undefined;
+              const difficultyColor = WritingHelpers.getDifficultyColor(
+                m.difficulty
+              );
+
+              return (
+                <div
+                  key={m.id}
+                  id={`writing-card-${m.id}`}
+                  className={`group relative rounded-xl border bg-surface p-5 transition-all duration-200 hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/30 hover:shadow-sm ${
+                    isCompleted ? 'border-emerald-500/20' : 'border-border-soft'
+                  }`}
+                >
+                  <div className="flex flex-col h-full justify-between space-y-4">
+                    <div className="space-y-3">
+                      {/* Top Badge Row */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span
+                          className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(m.cefrLevel)}`}
+                        >
+                          {m.cefrLevel}
+                        </span>
+                        <LevelAccessBadge
+                          label={getContentAccessLabel(
+                            m.cefrLevel,
+                            currentLevel
+                          )}
+                        />
+                        <span
+                          className={`text-[10px] font-black font-mono px-2 py-0.5 rounded uppercase ${
+                            difficultyColor === 'rose'
+                              ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                              : difficultyColor === 'amber'
+                                ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                                : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                          }`}
+                        >
+                          {m.difficulty}
+                        </span>
+                        <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1">
+                          <Clock className="h-3 w-3" /> {m.estimatedMinutes}m
+                        </span>
+                      </div>
+
+                      {/* Title & Desc */}
+                      <div>
+                        <h4 className="text-base font-bold text-foreground group-hover:text-foreground transition-colors">
+                          {m.title}
+                        </h4>
+                        <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed">
+                          {m.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Footer Row */}
+                    <div className="flex items-center justify-between pt-4 border-t border-border-soft">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded">
+                          {m.discipline}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        {isCompleted ? (
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <span>Score: {bestScore}%</span>
+                          </div>
+                        ) : (
+                          <span className="text-[10px] font-bold font-mono text-muted-copy uppercase">
+                            Available
+                          </span>
+                        )}
+
+                        <Button
+                          onClick={() => handleLaunchMission(m.id)}
+                          className={`h-8 px-3 rounded-md font-bold text-xs flex items-center gap-1 ${
+                            isCompleted
+                              ? 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'
+                              : 'bg-primary hover:bg-primary-hover text-white font-black'
+                          }`}
+                        >
+                          {isCompleted ? (
+                            <RefreshCw className="h-3 w-3" />
+                          ) : (
+                            <Play className="h-3 w-3 fill-white" />
+                          )}
+                          <span>{isCompleted ? 'Retry' : 'Begin'}</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {visibleMissions.length === 0 && (
+              <div className="col-span-full rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-muted-copy">
+                No current-level content yet. No Writing missions are available
+                for this filter.
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 2. ACTIVE ASSESSMENT WORKSPACE TAB VIEW */}
+      {activeTab === 'workspace' && (
+        <div className="space-y-6">
+          {/* Header Bar */}
+          <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between">
+            <button
+              onClick={handleBackToMissions}
+              className="flex items-center gap-2 text-xs font-bold text-muted-copy hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Writing list</span>
+            </button>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <span
+                className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(currentMission.cefrLevel)}`}
+              >
+                Level: {currentMission.cefrLevel}
+              </span>
+              <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-primary" />
+                <span>
+                  Elapsed: {WritingHelpers.formatTime(timeSpentSeconds)}
+                </span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => moveMission(-1)}
+                disabled={currentMissionIndex <= 0}
+              >
+                <ChevronLeft className="h-4 w-4" /> Previous
+              </Button>
+              <span className="min-w-14 text-center text-xs font-black text-muted-copy">
+                {currentMissionIndex + 1}/{visibleMissions.length}
+              </span>
+              <Button
+                variant="outline"
+                onClick={() => moveMission(1)}
+                disabled={currentMissionIndex >= visibleMissions.length - 1}
+              >
+                Next <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Link
+                to="/curriculum"
+                className="hidden text-xs font-bold text-primary sm:inline-flex"
+              >
+                Hub
+              </Link>
+            </div>
+          </div>
+
           {!evaluationResult ? (
+            /* --- WORKSPACE SUB-VIEW (IN PROGRESS) --- */
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
               {/* Left Column: Draft Editor Sandbox & Guide Rules */}
               <div className="lg:col-span-7 space-y-6">
@@ -334,7 +501,7 @@ const WritingPage = () => {
                 >
                   <div className="space-y-4">
                     <div className="rounded-xl border border-border-soft bg-surface-hover p-4 text-sm text-foreground">
-                      <p className="text-xs font-bold uppercase text-foreground">
+                      <p className="text-xs font-black uppercase text-foreground">
                         Scenario
                       </p>
                       <p className="mt-2 leading-6">
@@ -375,10 +542,13 @@ const WritingPage = () => {
 
                 {/* Style Guideline Insights */}
                 <div className="space-y-3 rounded-xl border border-border-soft bg-surface-hover p-5">
-                  <h5 className="text-xs font-bold uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
-                    <Info className="h-4 w-4 text-primary" />
+                  <h5 className="text-xs font-black uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
+                    <Info className="h-4 w-4 text-engineer-cyan" />
                     <span>
-                      Linguistic Guideline Insights ({currentMission.corrections.length - activeCorrections.length}/{currentMission.corrections.length} resolved)
+                      Linguistic Guideline Insights (
+                      {currentMission.corrections.length -
+                        activeCorrections.length}
+                      /{currentMission.corrections.length} resolved)
                     </span>
                   </h5>
 
@@ -404,7 +574,9 @@ const WritingPage = () => {
                   ) : (
                     <div className="space-y-2">
                       <p className="text-xs text-muted-copy italic py-1 font-medium">
-                        Click on any linguistic flag in the right column checkpoint, or review the brief outline of required revisions below:
+                        Click on any linguistic flag in the right column
+                        checkpoint, or review the brief outline of required
+                        revisions below:
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {currentMission.corrections.map((c) => {
@@ -513,7 +685,7 @@ const WritingPage = () => {
 
                       <Button
                         onClick={handleSubmit}
-                        className="bg-primary hover:bg-primary/90 text-white font-medium px-5 h-10"
+                        className="bg-primary hover:bg-primary-hover text-foreground font-black px-5 h-10"
                       >
                         Submit Draft
                       </Button>
@@ -571,7 +743,7 @@ const WritingPage = () => {
               currentMission={currentMission}
               resetCurrentMission={resetCurrentMission}
               setSelectedRule={setSelectedRule}
-              handleBackToMissions={() => {}} 
+              handleBackToMissions={handleBackToMissions}
               currentMissionIndex={currentMissionIndex}
               visibleMissions={visibleMissions}
               moveMission={moveMission}

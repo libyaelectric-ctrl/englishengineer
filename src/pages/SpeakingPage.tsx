@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
-import { PageHeader } from '@/shared/components/PageHeader';
 import { MetricCard } from '@/shared/components/MetricCard';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
@@ -200,7 +199,11 @@ const SpeakingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      <PageHeader title="Speaking" />
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+        <div className="flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-foreground">Speaking</h1>
+        </div>
+      </div>
 
       {/* Voice Minute Wallet — Max plan only */}
       {hasMaxAccess && subscription.planId === 'max' && (
