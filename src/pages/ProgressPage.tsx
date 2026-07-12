@@ -81,7 +81,7 @@ const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: numb
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="group rounded-xl border border-border-soft bg-surface p-4 hover:border-border-hover transition-all shadow-sm hover:shadow-md"
+      className="group rounded-xl border border-border-soft bg-surface p-4 hover:shadow-lg hover:border-border-hover transition-all shadow-sm"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
@@ -171,9 +171,9 @@ const ProgressPage = () => {
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="animate-in fade-in duration-300 pt-12 sm:pt-0 pb-28 lg:pb-4">
+    <div className="animate-in fade-in duration-300 pb-28 lg:pb-4">
       {/* Fixed Header - clean, no extra border */}
-      <div className="sticky top-0 z-40 bg-background">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between py-3">
           <div>
             <h1 className="text-xl font-bold text-foreground">Individual Progress</h1>
@@ -313,7 +313,7 @@ const ProgressPage = () => {
               </svg>
               {!selectedGraphNode && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <p className="bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-muted-copy">Click a node to explore</p>
+                  <p className="bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-muted-copy animate-pulse">Click a node to explore</p>
                 </div>
               )}
             </div>

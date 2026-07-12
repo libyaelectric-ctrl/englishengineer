@@ -15,5 +15,7 @@ export const createLearningState = (
   scoreHistory: [],
   xpHistory: [],
   eloHistory: [],
+  vocabularyPool: [],
+  grammarPool: [],
   ...overrides,
 });

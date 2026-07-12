@@ -24,6 +24,8 @@ const createState = (
   scoreHistory: [],
   xpHistory: [],
   eloHistory: [],
+  vocabularyPool: [],
+  grammarPool: [],
   ...overrides,
 });
 

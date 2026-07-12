@@ -730,6 +730,11 @@ const VocabularyPage = () => {
                 Checking all 5,000 canonical terms before enabling a custom word…
               </p>
             )}
+            {hasSearched && searchResults.length > 0 && (
+              <p className="text-xs text-muted-copy">
+                {searchResults.length} of {allSearchResults.length} results found
+              </p>
+            )}
           </form>
 
           <div

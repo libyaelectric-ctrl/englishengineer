@@ -127,6 +127,7 @@ const GrammarPage = () => {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Grammar
+            <span className="ml-2 text-sm font-medium text-muted-copy">({rules.length} topics)</span>
           </h1>
           <div className="relative w-full sm:max-w-md">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">

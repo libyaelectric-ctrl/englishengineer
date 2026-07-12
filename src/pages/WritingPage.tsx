@@ -524,7 +524,7 @@ const WritingPage = () => {
                       className="h-64 w-full resize-none rounded-xl border border-border-soft bg-surface p-5 text-sm font-medium leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                       placeholder="Start writing or polishing your technical draft..."
                     />
-                    <p className="mt-1 text-right text-xs text-muted-copy">
+                    <p className={`mt-1 text-right text-xs font-semibold ${draft.trim().split(/\s+/).filter(Boolean).length > 200 ? 'text-green-500' : draft.trim().split(/\s+/).filter(Boolean).length > 100 ? 'text-blue-500' : 'text-muted-copy'}`}>
                       {draft.trim().split(/\s+/).filter(Boolean).length} words
                     </p>
 

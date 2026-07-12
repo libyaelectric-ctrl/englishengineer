@@ -455,6 +455,9 @@ function Grammar() {
               <p className="text-[10px] font-bold text-primary mb-1">
                 LESSON {selectedRuleIndex + 1} OF {rules.length}
               </p>
+              <div className="mt-2 h-1 w-full rounded-full bg-surface overflow-hidden">
+                <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${rules.length > 0 ? Math.round(((selectedRuleIndex + 1) / rules.length) * 100) : 0}%` }} />
+              </div>
               <p className="text-sm font-bold text-foreground">
                 {selectedRule.title}
               </p>
@@ -466,7 +469,7 @@ function Grammar() {
         </div>
       </Section>
 
-      <Section title="Status">
+      <Section title={`Status · ${g.strong > 0 ? Math.round((g.strong / (g.strong + g.learning + g.newRules + g.due)) * 100) : 0}% mastered`}>
         <div className="space-y-0.5">
           {(['New', 'Learning', 'Due', 'Strong'] as const).map((t) => (
             <Item
@@ -705,8 +708,8 @@ function Speaking() {
         </div>
       </Section>
       <Section title="Scores">
-        <Stat label="Average" value="—" />
-        <Stat label="Best" value="—" />
+        <Stat label="Average" value="0" />
+        <Stat label="Best" value="0" />
         <Stat label="Practice" value="0 min" />
       </Section>
     </>

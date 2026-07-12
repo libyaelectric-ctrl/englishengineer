@@ -51,6 +51,8 @@ const learning = (
   scoreHistory: [],
   xpHistory: [],
   eloHistory: [],
+  vocabularyPool: [],
+  grammarPool: [],
 });
 
 const content = [
