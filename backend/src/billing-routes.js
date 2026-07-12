@@ -114,14 +114,18 @@ export const registerBillingRoutes = (
           eventType = parsedBody.type || 'unknown';
         }
       }
-    } catch (err) { console.warn('[stripe-webhook-log-parse]', err?.message); }
+    } catch (err) {
+      console.warn('[stripe-webhook-log-parse]', err?.message);
+    }
 
     auditLog({
       action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
       details: { eventId, eventType },
     });
 
-    console.log(`[stripe-webhook-received] eventId=${eventId} type=${eventType}`);
+    console.log(
+      `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
+    );
 
     try {
       res.json(

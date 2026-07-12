@@ -45,7 +45,10 @@ describe('ProfilePage uiReducer', () => {
   });
 
   it('SET_MESSAGE updates message', () => {
-    const result = uiReducer(initialUi, { type: 'SET_MESSAGE', value: 'Saved!' });
+    const result = uiReducer(initialUi, {
+      type: 'SET_MESSAGE',
+      value: 'Saved!',
+    });
     expect(result.message).toBe('Saved!');
   });
 
@@ -72,17 +75,26 @@ describe('ProfilePage uiReducer', () => {
 
 describe('ProfilePage editReducer', () => {
   it('SET_EDIT_MODE updates isEditMode', () => {
-    const result = editReducer(initialEdit, { type: 'SET_EDIT_MODE', value: true });
+    const result = editReducer(initialEdit, {
+      type: 'SET_EDIT_MODE',
+      value: true,
+    });
     expect(result.isEditMode).toBe(true);
   });
 
   it('SET_FIRST_NAME updates firstName', () => {
-    const result = editReducer(initialEdit, { type: 'SET_FIRST_NAME', value: 'John' });
+    const result = editReducer(initialEdit, {
+      type: 'SET_FIRST_NAME',
+      value: 'John',
+    });
     expect(result.firstName).toBe('John');
   });
 
   it('SET_LAST_NAME updates lastName', () => {
-    const result = editReducer(initialEdit, { type: 'SET_LAST_NAME', value: 'Doe' });
+    const result = editReducer(initialEdit, {
+      type: 'SET_LAST_NAME',
+      value: 'Doe',
+    });
     expect(result.lastName).toBe('Doe');
   });
 
@@ -118,7 +130,10 @@ describe('ProfilePage prefsReducer', () => {
   });
 
   it('SET_MINUTES updates minutes', () => {
-    const result = prefsReducer(initialPrefs, { type: 'SET_MINUTES', value: 30 });
+    const result = prefsReducer(initialPrefs, {
+      type: 'SET_MINUTES',
+      value: 30,
+    });
     expect(result.minutes).toBe(30);
   });
 
@@ -128,7 +143,10 @@ describe('ProfilePage prefsReducer', () => {
   });
 
   it('SET_MISSED_DAYS updates missedDays', () => {
-    const result = prefsReducer(initialPrefs, { type: 'SET_MISSED_DAYS', value: 3 });
+    const result = prefsReducer(initialPrefs, {
+      type: 'SET_MISSED_DAYS',
+      value: 3,
+    });
     expect(result.missedDays).toBe(3);
   });
 
@@ -149,7 +167,10 @@ describe('ProfilePage prefsReducer', () => {
   });
 
   it('SET_SAVED updates saved', () => {
-    const result = prefsReducer(initialPrefs, { type: 'SET_SAVED', value: true });
+    const result = prefsReducer(initialPrefs, {
+      type: 'SET_SAVED',
+      value: true,
+    });
     expect(result.saved).toBe(true);
   });
 

@@ -19,7 +19,13 @@ export interface DailyPlan {
 export interface PlanTask {
   id: string;
   skill: SkillName;
-  type: 'vocabulary' | 'grammar' | 'reading' | 'writing' | 'listening' | 'speaking';
+  type:
+    | 'vocabulary'
+    | 'grammar'
+    | 'reading'
+    | 'writing'
+    | 'listening'
+    | 'speaking';
   title: string;
   description: string;
   estimatedMinutes: number;
@@ -37,7 +43,14 @@ export interface LearningPathPlan {
   recommendations: string[];
 }
 
-const SKILL_ORDER: SkillName[] = ['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'];
+const SKILL_ORDER: SkillName[] = [
+  'vocabulary',
+  'grammar',
+  'reading',
+  'writing',
+  'listening',
+  'speaking',
+];
 
 const CEFR_ORDER: CefrBand[] = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
@@ -149,7 +162,9 @@ function buildWeeklyPlan(
   return plan;
 }
 
-function calculateSkillDistribution(plan: DailyPlan[]): Record<SkillName, number> {
+function calculateSkillDistribution(
+  plan: DailyPlan[]
+): Record<SkillName, number> {
   const dist: Record<SkillName, number> = {
     vocabulary: 0,
     grammar: 0,
@@ -190,13 +205,17 @@ export const LearningPathAdvisor = {
 
     const recommendations: string[] = [];
     if (weakAreas.length > 0) {
-      recommendations.push(`Focus on high-priority gaps: ${weakAreas.join('; ')}`);
+      recommendations.push(
+        `Focus on high-priority gaps: ${weakAreas.join('; ')}`
+      );
     }
     if (profession) {
       recommendations.push(`Tailored for ${profession} context`);
     }
     recommendations.push(`Target level: ${targetLevel}`);
-    recommendations.push(`${totalEstimatedMinutes} minutes of practice per week`);
+    recommendations.push(
+      `${totalEstimatedMinutes} minutes of practice per week`
+    );
 
     return {
       userId,

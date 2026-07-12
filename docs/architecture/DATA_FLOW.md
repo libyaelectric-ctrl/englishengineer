@@ -124,11 +124,11 @@ sequenceDiagram
 
 ## Data Storage Patterns
 
-| Data Type | Storage | Backup | Retention |
-|-----------|---------|--------|-----------|
-| User profiles | Supabase | Daily | Account lifetime |
-| Subscriptions | Supabase | Daily | 7 years (billing) |
-| Vocabulary progress | Supabase | Daily | Account lifetime |
-| AI conversations | Supabase | Daily | 90 days |
-| Audit logs | Supabase | Daily | 1 year |
-| Rate limit counters | Upstash | None | 24 hours |
+| Data Type           | Storage  | Backup | Retention         |
+| ------------------- | -------- | ------ | ----------------- |
+| User profiles       | Supabase | Daily  | Account lifetime  |
+| Subscriptions       | Supabase | Daily  | 7 years (billing) |
+| Vocabulary progress | Supabase | Daily  | Account lifetime  |
+| AI conversations    | Supabase | Daily  | 90 days           |
+| Audit logs          | Supabase | Daily  | 1 year            |
+| Rate limit counters | Upstash  | None   | 24 hours          |

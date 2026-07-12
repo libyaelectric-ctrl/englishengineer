@@ -6,7 +6,8 @@ export const handleCheckoutCompleted = async (repository, object) => {
 
   if (object.metadata?.type === 'topup') {
     const credits = parseInt(object.metadata?.credits || '50', 10);
-    const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+    const current =
+      (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
     await repository.upsertSubscriptionStatus(userId, {
       ...current,
       topupCredits: (current.topupCredits || 0) + credits,
@@ -14,7 +15,8 @@ export const handleCheckoutCompleted = async (repository, object) => {
       source: 'stripe_webhook',
     });
   } else {
-    const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+    const current =
+      (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
     await repository.upsertSubscriptionStatus(userId, {
       planId: object.metadata?.planId || 'pro',
       status: 'active',
@@ -33,7 +35,8 @@ export const handleSubscriptionUpdated = async (repository, object) => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
-  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current =
+    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   const periodEndSec = object.current_period_end;
   const currentPeriodEnd =
     typeof periodEndSec === 'number' && periodEndSec > 0
@@ -60,7 +63,8 @@ export const handlePaymentFailed = async (repository, object) => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
-  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current =
+    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     status: 'past_due',
@@ -73,7 +77,8 @@ export const handleSubscriptionDeleted = async (repository, object) => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
-  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current =
+    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     status: 'canceled',

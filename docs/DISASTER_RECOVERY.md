@@ -6,23 +6,25 @@ This document outlines procedures for recovering EngineerOS from various disaste
 
 ## Recovery Time Objectives (RTO) & Recovery Point Objectives (RPO)
 
-| Scenario | RTO | RPO | Priority |
-|----------|-----|-----|----------|
-| Database corruption | 4 hours | 1 hour | Critical |
-| Complete data loss | 8 hours | 24 hours | Critical |
-| Service outage | 1 hour | 0 | High |
-| Security breach | 2 hours | 24 hours | Critical |
+| Scenario            | RTO     | RPO      | Priority |
+| ------------------- | ------- | -------- | -------- |
+| Database corruption | 4 hours | 1 hour   | Critical |
+| Complete data loss  | 8 hours | 24 hours | Critical |
+| Service outage      | 1 hour  | 0        | High     |
+| Security breach     | 2 hours | 24 hours | Critical |
 
 ## Scenarios and Recovery Procedures
 
 ### 1. Database Corruption
 
 **Detection:**
+
 - Application errors on data access
 - Constraint violations
 - Unexpected data states
 
 **Recovery Steps:**
+
 1. **Assess damage** — Identify affected tables/rows
 2. **Point-in-time recovery** (if Pro plan):
    - Supabase Dashboard → Database → Backups
@@ -31,19 +33,22 @@ This document outlines procedures for recovering EngineerOS from various disaste
    - Restore from latest pg_dump
    - Apply WAL logs if available
 4. **Verify integrity:**
+
    ```sql
    -- Check table integrity
    SELECT schemaname, tablename, n_tup_ins, n_tup_upd, n_tup_del
    FROM pg_stat_user_tables;
-   
+
    -- Check for orphaned records
    SELECT COUNT(*) FROM workspaces WHERE user_id NOT IN (SELECT id FROM auth.users);
    ```
+
 5. **Resume operations** — Test all API endpoints
 
 ### 2. Complete Data Loss
 
 **Recovery Steps:**
+
 1. **Provision new Supabase project**
 2. **Restore from backup:**
    ```bash
@@ -61,6 +66,7 @@ This document outlines procedures for recovering EngineerOS from various disaste
 ### 3. Service Outage (Railway/Vercel)
 
 **Recovery Steps:**
+
 1. **Check status pages:**
    - Vercel: https://vercel.status.com
    - Railway: https://status.railway.app
@@ -75,6 +81,7 @@ This document outlines procedures for recovering EngineerOS from various disaste
 ### 4. Security Breach
 
 **Immediate Actions:**
+
 1. **Rotate all secrets:**
    - Supabase: Settings → API → Rotate keys
    - Stripe: Dashboard → API Keys → Roll key
@@ -84,9 +91,10 @@ This document outlines procedures for recovering EngineerOS from various disaste
 3. **Notify affected users** (if data exposed)
 
 **Investigation:**
+
 1. **Review audit logs:**
    ```sql
-   SELECT * FROM audit_logs 
+   SELECT * FROM audit_logs
    WHERE action IN ('login', 'signup', 'data_access')
    ORDER BY timestamp DESC LIMIT 100;
    ```
@@ -95,35 +103,36 @@ This document outlines procedures for recovering EngineerOS from various disaste
 4. **Document findings**
 
 **Recovery:**
+
 1. Patch vulnerability
 2. Deploy fix
 3. Monitor for recurrence
 
 ## Communication Plan
 
-| Audience | Method | Timing |
-|----------|--------|--------|
-| Internal team | Direct message | Immediately |
-| Users | Email + Status page | Within 1 hour |
-| Stakeholders | Report | Within 24 hours |
+| Audience      | Method              | Timing          |
+| ------------- | ------------------- | --------------- |
+| Internal team | Direct message      | Immediately     |
+| Users         | Email + Status page | Within 1 hour   |
+| Stakeholders  | Report              | Within 24 hours |
 
 ## Backup Verification Schedule
 
-| Task | Frequency | Owner | Last Verified |
-|------|-----------|-------|---------------|
-| Automated backups | Daily (Supabase) | System | N/A |
-| Manual pg_dump | Weekly | DevOps | TBD |
-| Restore test | Quarterly | DevOps | TBD |
-| Full DR drill | Annually | Team | TBD |
+| Task              | Frequency        | Owner  | Last Verified |
+| ----------------- | ---------------- | ------ | ------------- |
+| Automated backups | Daily (Supabase) | System | N/A           |
+| Manual pg_dump    | Weekly           | DevOps | TBD           |
+| Restore test      | Quarterly        | DevOps | TBD           |
+| Full DR drill     | Annually         | Team   | TBD           |
 
 ## Contact Information
 
-| Service | Support | Dashboard |
-|---------|---------|-----------|
-| Supabase | support@supabase.com | https://app.supabase.com |
-| Railway | support@railway.app | https://railway.app/dashboard |
-| Vercel | support@vercel.com | https://vercel.com/dashboard |
-| Stripe | support@stripe.com | https://dashboard.stripe.com |
+| Service  | Support              | Dashboard                     |
+| -------- | -------------------- | ----------------------------- |
+| Supabase | support@supabase.com | https://app.supabase.com      |
+| Railway  | support@railway.app  | https://railway.app/dashboard |
+| Vercel   | support@vercel.com   | https://vercel.com/dashboard  |
+| Stripe   | support@stripe.com   | https://dashboard.stripe.com  |
 
 ## Recovery Checklist
 

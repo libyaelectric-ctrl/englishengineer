@@ -9,80 +9,86 @@ EngineerOS uses Supabase (PostgreSQL) as the primary database. This document des
 ### Core Tables
 
 #### `subscription_status`
+
 Stores user subscription and billing information.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `user_id` | uuid (PK) | Supabase auth user ID |
-| `plan_id` | text | Plan identifier (free, pro, team) |
-| `status` | text | Subscription status (active, canceled, past_due) |
-| `current_period_end` | timestamptz | Current billing period end |
-| `cancel_at_period_end` | boolean | Whether subscription cancels at period end |
-| `stripe_customer_id` | text | Stripe customer ID |
-| `stripe_subscription_id` | text | Stripe subscription ID |
-| `updated_at` | timestamptz | Last update timestamp |
-| `source` | text | Creation source (checkout, webhook, manual) |
-| `topup_credits` | integer | Additional AI credits from top-ups |
+| Column                   | Type        | Description                                      |
+| ------------------------ | ----------- | ------------------------------------------------ |
+| `user_id`                | uuid (PK)   | Supabase auth user ID                            |
+| `plan_id`                | text        | Plan identifier (free, pro, team)                |
+| `status`                 | text        | Subscription status (active, canceled, past_due) |
+| `current_period_end`     | timestamptz | Current billing period end                       |
+| `cancel_at_period_end`   | boolean     | Whether subscription cancels at period end       |
+| `stripe_customer_id`     | text        | Stripe customer ID                               |
+| `stripe_subscription_id` | text        | Stripe subscription ID                           |
+| `updated_at`             | timestamptz | Last update timestamp                            |
+| `source`                 | text        | Creation source (checkout, webhook, manual)      |
+| `topup_credits`          | integer     | Additional AI credits from top-ups               |
 
 #### `stripe_processed_events`
+
 Idempotency tracking for Stripe webhooks.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `stripe_event_id` | text (PK) | Stripe event ID |
-| `event_type` | text | Event type (e.g., checkout.session.completed) |
-| `processed_at` | timestamptz | Processing timestamp |
-| `metadata` | jsonb | Additional event metadata |
+| Column            | Type        | Description                                   |
+| ----------------- | ----------- | --------------------------------------------- |
+| `stripe_event_id` | text (PK)   | Stripe event ID                               |
+| `event_type`      | text        | Event type (e.g., checkout.session.completed) |
+| `processed_at`    | timestamptz | Processing timestamp                          |
+| `metadata`        | jsonb       | Additional event metadata                     |
 
 #### `workspaces`
+
 User workspaces for organizing learning content.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | uuid (PK) | Workspace ID |
-| `user_id` | uuid (FK) | Owner user ID |
-| `name` | text | Workspace name |
-| `created_at` | timestamptz | Creation timestamp |
+| Column       | Type        | Description           |
+| ------------ | ----------- | --------------------- |
+| `id`         | uuid (PK)   | Workspace ID          |
+| `user_id`    | uuid (FK)   | Owner user ID         |
+| `name`       | text        | Workspace name        |
+| `created_at` | timestamptz | Creation timestamp    |
 | `updated_at` | timestamptz | Last update timestamp |
 
 #### `audit_logs`
+
 System audit trail for compliance and debugging.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | text (PK) | Log entry ID |
-| `timestamp` | timestamptz | Event timestamp |
-| `user_id` | text | User who performed action |
-| `action` | text | Action type |
-| `details` | jsonb | Action details |
-| `severity` | text | Log level (info, warning, error, critical) |
+| Column      | Type        | Description                                |
+| ----------- | ----------- | ------------------------------------------ |
+| `id`        | text (PK)   | Log entry ID                               |
+| `timestamp` | timestamptz | Event timestamp                            |
+| `user_id`   | text        | User who performed action                  |
+| `action`    | text        | Action type                                |
+| `details`   | jsonb       | Action details                             |
+| `severity`  | text        | Log level (info, warning, error, critical) |
 
 ### Learning Data Tables
 
 #### `vocabulary_progress`
+
 Tracks vocabulary learning progress per user.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `user_id` | uuid (PK) | User ID |
-| `word` | text (PK) | Vocabulary word |
-| `status` | text | Learning status (new, learning, mastered, due_today) |
-| `next_review_at` | timestamptz | Next spaced repetition review |
-| `correct_count` | integer | Correct answer count |
-| `incorrect_count` | integer | Incorrect answer count |
-| `created_at` | timestamptz | First seen timestamp |
-| `updated_at` | timestamptz | Last practice timestamp |
+| Column            | Type        | Description                                          |
+| ----------------- | ----------- | ---------------------------------------------------- |
+| `user_id`         | uuid (PK)   | User ID                                              |
+| `word`            | text (PK)   | Vocabulary word                                      |
+| `status`          | text        | Learning status (new, learning, mastered, due_today) |
+| `next_review_at`  | timestamptz | Next spaced repetition review                        |
+| `correct_count`   | integer     | Correct answer count                                 |
+| `incorrect_count` | integer     | Incorrect answer count                               |
+| `created_at`      | timestamptz | First seen timestamp                                 |
+| `updated_at`      | timestamptz | Last practice timestamp                              |
 
 #### `ai_conversations`
+
 Stores AI assistant conversation history.
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | uuid (PK) | Conversation ID |
-| `user_id` | uuid (FK) | User ID |
-| `messages` | jsonb | Conversation messages array |
-| `created_at` | timestamptz | Conversation start |
-| `updated_at` | timestamptz | Last message timestamp |
+| Column       | Type        | Description                 |
+| ------------ | ----------- | --------------------------- |
+| `id`         | uuid (PK)   | Conversation ID             |
+| `user_id`    | uuid (FK)   | User ID                     |
+| `messages`   | jsonb       | Conversation messages array |
+| `created_at` | timestamptz | Conversation start          |
+| `updated_at` | timestamptz | Last message timestamp      |
 
 ## Entity Relationship Diagram
 
@@ -130,6 +136,7 @@ Stores AI assistant conversation history.
 ## Row Level Security (RLS) Policies
 
 ### `subscription_status`
+
 ```sql
 -- Users can read their own subscription
 CREATE POLICY "Users read own subscription" ON subscription_status
@@ -141,6 +148,7 @@ CREATE POLICY "Service role manages subscriptions" ON subscription_status
 ```
 
 ### `workspaces`
+
 ```sql
 -- Users can CRUD their own workspaces
 CREATE POLICY "Users manage own workspaces" ON workspaces
@@ -148,6 +156,7 @@ CREATE POLICY "Users manage own workspaces" ON workspaces
 ```
 
 ### `audit_logs`
+
 ```sql
 -- Only service role can write
 CREATE POLICY "Service role writes audit logs" ON audit_logs
@@ -156,7 +165,7 @@ CREATE POLICY "Service role writes audit logs" ON audit_logs
 -- Admin users can read
 CREATE POLICY "Admins read audit logs" ON audit_logs
   FOR SELECT USING (
-    auth.uid() = user_id OR 
+    auth.uid() = user_id OR
     auth.jwt()->>'role' = 'admin'
   );
 ```

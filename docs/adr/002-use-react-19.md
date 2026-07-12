@@ -11,6 +11,7 @@ EngineerOS needs a modern frontend framework for building a responsive, accessib
 ## Decision
 
 Use React 19 with Vite as the build tool, providing:
+
 - Server-side rendering capabilities (future)
 - Improved performance with React Compiler
 - Fast development with Vite HMR
@@ -19,12 +20,14 @@ Use React 19 with Vite as the build tool, providing:
 ## Consequences
 
 ### Positive
+
 - Latest React features and performance improvements
 - Excellent developer experience with Vite
 - Strong TypeScript integration
 - Large ecosystem of libraries
 
 ### Negative
+
 - React 19 is relatively new (potential edge cases)
 - Migration effort from older versions
 - Some libraries may not support React 19 yet

@@ -1,7 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, Moon, User, LayoutDashboard, Brain, CreditCard, ChevronRight, BookOpen, PenTool } from 'lucide-react';
+import {
+  Search,
+  Moon,
+  User,
+  LayoutDashboard,
+  Brain,
+  CreditCard,
+  ChevronRight,
+  BookOpen,
+  PenTool,
+} from 'lucide-react';
 
 export const CommandPalette: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,23 +49,60 @@ export const CommandPalette: React.FC = () => {
   };
 
   const commands = [
-    { id: 'dashboard', title: 'Dashboard\'a Git', icon: LayoutDashboard, action: () => navigate('/dashboard') },
-    { id: 'vocabulary', title: 'Kelime Çalış (Vocabulary)', icon: BookOpen, action: () => navigate('/vocabulary') },
-    { id: 'grammar', title: 'Gramer Kuralları (Grammar)', icon: PenTool, action: () => navigate('/grammar') },
-    { id: 'reading', title: 'Okuma Görevleri (Reading)', icon: BookOpen, action: () => navigate('/reading') },
-    { id: 'ai', title: 'AI Asistan', icon: Brain, action: () => navigate('/ai') },
-    { id: 'profile', title: 'Profil Ayarları', icon: User, action: () => navigate('/profile') },
-    { id: 'billing', title: 'Faturalandırma & Takım', icon: CreditCard, action: () => navigate('/profile') },
+    {
+      id: 'dashboard',
+      title: "Dashboard'a Git",
+      icon: LayoutDashboard,
+      action: () => navigate('/dashboard'),
+    },
+    {
+      id: 'vocabulary',
+      title: 'Kelime Çalış (Vocabulary)',
+      icon: BookOpen,
+      action: () => navigate('/vocabulary'),
+    },
+    {
+      id: 'grammar',
+      title: 'Gramer Kuralları (Grammar)',
+      icon: PenTool,
+      action: () => navigate('/grammar'),
+    },
+    {
+      id: 'reading',
+      title: 'Okuma Görevleri (Reading)',
+      icon: BookOpen,
+      action: () => navigate('/reading'),
+    },
+    {
+      id: 'ai',
+      title: 'AI Asistan',
+      icon: Brain,
+      action: () => navigate('/ai'),
+    },
+    {
+      id: 'profile',
+      title: 'Profil Ayarları',
+      icon: User,
+      action: () => navigate('/profile'),
+    },
+    {
+      id: 'billing',
+      title: 'Faturalandırma & Takım',
+      icon: CreditCard,
+      action: () => navigate('/profile'),
+    },
     { id: 'theme', title: 'Gece/Gündüz Modu', icon: Moon, action: toggleTheme },
   ];
 
-  const filtered = commands.filter((c) => c.title.toLowerCase().includes(search.toLowerCase()));
+  const filtered = commands.filter((c) =>
+    c.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   useEffect(() => {
     setSelectedIndex(0);
   }, [search]);
 
-  const executeCommand = (cmd: typeof commands[0]) => {
+  const executeCommand = (cmd: (typeof commands)[0]) => {
     cmd.action();
     setIsOpen(false);
   };
@@ -66,7 +113,9 @@ export const CommandPalette: React.FC = () => {
       setSelectedIndex((prev) => (prev + 1) % filtered.length);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + filtered.length) % filtered.length);
+      setSelectedIndex(
+        (prev) => (prev - 1 + filtered.length) % filtered.length
+      );
     } else if (e.key === 'Enter' && filtered[selectedIndex]) {
       e.preventDefault();
       executeCommand(filtered[selectedIndex]);
@@ -107,7 +156,7 @@ export const CommandPalette: React.FC = () => {
                 ESC
               </span>
             </div>
-            
+
             <div className="max-h-[300px] overflow-y-auto p-2 custom-scrollbar">
               {filtered.length === 0 ? (
                 <div className="py-8 text-center text-sm text-muted-copy">
@@ -122,12 +171,18 @@ export const CommandPalette: React.FC = () => {
                       onClick={() => executeCommand(cmd)}
                       onMouseEnter={() => setSelectedIndex(idx)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors ${
-                        isSelected ? 'bg-primary/5 text-primary font-medium' : 'text-muted-copy hover:text-foreground hover:bg-surface-hover/50'
+                        isSelected
+                          ? 'bg-primary/5 text-primary font-medium'
+                          : 'text-muted-copy hover:text-foreground hover:bg-surface-hover/50'
                       }`}
                     >
-                      <cmd.icon className={`h-4 w-4 ${isSelected ? 'text-primary' : 'text-muted-copy'}`} />
+                      <cmd.icon
+                        className={`h-4 w-4 ${isSelected ? 'text-primary' : 'text-muted-copy'}`}
+                      />
                       <span className="flex-1">{cmd.title}</span>
-                      {isSelected && <ChevronRight className="h-4 w-4 opacity-50" />}
+                      {isSelected && (
+                        <ChevronRight className="h-4 w-4 opacity-50" />
+                      )}
                     </button>
                   );
                 })

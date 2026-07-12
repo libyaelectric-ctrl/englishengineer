@@ -7,7 +7,12 @@ describe('AnalyticsDashboardV2', () => {
     grammar: { score: 60, sessions: 8, minutes: 80, trend: 'stable' as const },
     reading: { score: 75, sessions: 10, minutes: 100, trend: 'up' as const },
     writing: { score: 50, sessions: 6, minutes: 60, trend: 'down' as const },
-    listening: { score: 70, sessions: 9, minutes: 90, trend: 'stable' as const },
+    listening: {
+      score: 70,
+      sessions: 9,
+      minutes: 90,
+      trend: 'stable' as const,
+    },
     speaking: { score: 55, sessions: 5, minutes: 50, trend: 'down' as const },
   };
 
@@ -16,7 +21,14 @@ describe('AnalyticsDashboardV2', () => {
       const radar = AnalyticsDashboardV2.generateSkillRadar(mockSkillScores);
       expect(radar).toHaveLength(6);
       expect(radar.map((r) => r.skill)).toEqual(
-        expect.arrayContaining(['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'])
+        expect.arrayContaining([
+          'vocabulary',
+          'grammar',
+          'reading',
+          'writing',
+          'listening',
+          'speaking',
+        ])
       );
     });
 
@@ -47,7 +59,10 @@ describe('AnalyticsDashboardV2', () => {
         { timestamp: now.toISOString(), durationMinutes: 20, score: 90 },
       ];
       const heatmap = AnalyticsDashboardV2.generateHeatmap(sessions);
-      const totalActivity = heatmap.reduce((sum, h) => sum + h.activityCount, 0);
+      const totalActivity = heatmap.reduce(
+        (sum, h) => sum + h.activityCount,
+        0
+      );
       expect(totalActivity).toBe(2);
     });
 
@@ -95,19 +110,30 @@ describe('AnalyticsDashboardV2', () => {
       const sessions = [
         { timestamp: '2026-07-10T09:00:00Z', durationMinutes: 30, score: 85 },
       ];
-      const insights = AnalyticsDashboardV2.generateInsights(mockSkillScores, sessions);
+      const insights = AnalyticsDashboardV2.generateInsights(
+        mockSkillScores,
+        sessions
+      );
       expect(insights.length).toBeGreaterThan(0);
       expect(insights.some((i) => i.type === 'peak_hour')).toBe(true);
     });
 
     it('includes improvement insight when skills are improving', () => {
-      const insights = AnalyticsDashboardV2.generateInsights(mockSkillScores, []);
+      const insights = AnalyticsDashboardV2.generateInsights(
+        mockSkillScores,
+        []
+      );
       expect(insights.some((i) => i.type === 'improvement')).toBe(true);
     });
 
     it('includes plateau insight for low-scoring stable skills', () => {
       const lowScores = {
-        vocabulary: { score: 50, sessions: 5, minutes: 30, trend: 'stable' as const },
+        vocabulary: {
+          score: 50,
+          sessions: 5,
+          minutes: 30,
+          trend: 'stable' as const,
+        },
       };
       const insights = AnalyticsDashboardV2.generateInsights(lowScores, []);
       expect(insights.some((i) => i.type === 'plateau')).toBe(true);

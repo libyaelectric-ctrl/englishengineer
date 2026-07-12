@@ -47,7 +47,9 @@ function calculateWordSimilarity(recognized: string, expected: string): number {
   return 1 - matrix[a.length][b.length] / maxLen;
 }
 
-function classifyAccentStrength(score: number): PronunciationScoreResult['accentStrength'] {
+function classifyAccentStrength(
+  score: number
+): PronunciationScoreResult['accentStrength'] {
   if (score >= 90) return 'native';
   if (score >= 75) return 'strong';
   if (score >= 55) return 'moderate';
@@ -69,20 +71,29 @@ function generateRecommendations(analyses: PhonemeAnalysis[]): string[] {
 
   if (shortWords.length > 0) {
     recommendations.push(
-      `Practice short words: ${shortWords.slice(0, 3).map((w) => w.word).join(', ')}`
+      `Practice short words: ${shortWords
+        .slice(0, 3)
+        .map((w) => w.word)
+        .join(', ')}`
     );
   }
 
   if (longWords.length > 0) {
     recommendations.push(
-      `Break down long words: ${longWords.slice(0, 3).map((w) => w.word).join(', ')}`
+      `Break down long words: ${longWords
+        .slice(0, 3)
+        .map((w) => w.word)
+        .join(', ')}`
     );
   }
 
   const lowSimilarity = inaccurateWords.filter((a) => a.similarity < 0.5);
   if (lowSimilarity.length > 0) {
     recommendations.push(
-      `Focus on these difficult words: ${lowSimilarity.slice(0, 3).map((w) => w.word).join(', ')}`
+      `Focus on these difficult words: ${lowSimilarity
+        .slice(0, 3)
+        .map((w) => w.word)
+        .join(', ')}`
     );
   }
 

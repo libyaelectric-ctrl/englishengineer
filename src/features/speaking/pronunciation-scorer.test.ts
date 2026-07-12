@@ -73,15 +73,15 @@ describe('PronunciationScorer', () => {
     });
 
     it('generates improvement feedback for poor pronunciation', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'xyz abc def'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'xyz abc def');
       expect(result.feedback).toContain('practice');
     });
 
     it('classifies accent strength correctly', () => {
-      const perfect = PronunciationScorer.analyze(targetWords, 'coordination inspection compliance');
+      const perfect = PronunciationScorer.analyze(
+        targetWords,
+        'coordination inspection compliance'
+      );
       expect(perfect.accentStrength).toBe('native');
 
       const poor = PronunciationScorer.analyze(targetWords, 'xxx yyy zzz');

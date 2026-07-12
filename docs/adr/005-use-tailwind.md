@@ -11,6 +11,7 @@ EngineerOS needs a CSS framework for building a responsive, accessible UI.
 ## Decision
 
 Use Tailwind CSS 4 as the styling framework, providing:
+
 - Utility-first approach
 - Dark mode support
 - Responsive design
@@ -19,12 +20,14 @@ Use Tailwind CSS 4 as the styling framework, providing:
 ## Consequences
 
 ### Positive
+
 - Rapid UI development
 - Consistent design system
 - Excellent dark mode support
 - Small production bundle
 
 ### Negative
+
 - HTML can become verbose
 - Learning curve for new developers
 - Less semantic HTML

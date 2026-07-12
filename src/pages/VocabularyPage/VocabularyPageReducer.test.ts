@@ -184,7 +184,11 @@ describe('VocabularyPage searchReducer', () => {
 
   it('RUN_SEARCH sets query and appliedFilters', () => {
     const result = searchReducer(
-      { ...initialSearch, searchInput: 'test', filters: { ...initialSearch.filters, domain: 'electrical' } },
+      {
+        ...initialSearch,
+        searchInput: 'test',
+        filters: { ...initialSearch.filters, domain: 'electrical' },
+      },
       { type: 'RUN_SEARCH', query: 'test' }
     );
     expect(result.searchQuery).toBe('test');

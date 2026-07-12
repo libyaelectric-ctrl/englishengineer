@@ -11,11 +11,11 @@ export const options = {
       executor: 'ramping-vus',
       startVUs: 10,
       stages: [
-        { duration: '2m', target: 100 },   // Scale to 100 users
-        { duration: '3m', target: 100 },   // Hold at 100
-        { duration: '2m', target: 200 },   // Scale to 200 users
-        { duration: '3m', target: 200 },   // Hold at 200
-        { duration: '2m', target: 0 },     // Scale down
+        { duration: '2m', target: 100 }, // Scale to 100 users
+        { duration: '3m', target: 100 }, // Hold at 100
+        { duration: '2m', target: 200 }, // Scale to 200 users
+        { duration: '3m', target: 200 }, // Hold at 200
+        { duration: '2m', target: 0 }, // Scale down
       ],
     },
   },

@@ -90,4 +90,3 @@ describe('product analytics privacy guard', () => {
     expect(events[0]).not.toHaveProperty('userId');
   });
 });
-

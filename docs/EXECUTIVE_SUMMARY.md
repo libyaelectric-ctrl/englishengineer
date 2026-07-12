@@ -6,27 +6,27 @@ EngineerOS is a modern English language learning platform built for engineers an
 
 ## Key Metrics
 
-| Metric | Current | Target |
-|--------|---------|--------|
-| Test Coverage | 480/481 (99.8%) | 95%+ |
-| TypeScript Errors | 0 | 0 |
-| Performance Score | 100/100 | 90+ |
-| Security Score | 87/100 | 80+ |
-| Documentation | Comprehensive | Complete |
+| Metric            | Current         | Target   |
+| ----------------- | --------------- | -------- |
+| Test Coverage     | 480/481 (99.8%) | 95%+     |
+| TypeScript Errors | 0               | 0        |
+| Performance Score | 100/100         | 90+      |
+| Security Score    | 87/100          | 80+      |
+| Documentation     | Comprehensive   | Complete |
 
 ## Architecture
 
 ### Technology Stack
 
-| Layer | Technology |
-|-------|------------|
+| Layer    | Technology                     |
+| -------- | ------------------------------ |
 | Frontend | React 19 + Vite + Tailwind CSS |
-| Backend | Express 5 + Node.js 22 |
-| Database | Supabase PostgreSQL |
-| Auth | Supabase Auth |
-| Payments | Stripe |
-| AI | Anthropic Claude |
-| Hosting | Vercel (FE) + Railway (BE) |
+| Backend  | Express 5 + Node.js 22         |
+| Database | Supabase PostgreSQL            |
+| Auth     | Supabase Auth                  |
+| Payments | Stripe                         |
+| AI       | Anthropic Claude               |
+| Hosting  | Vercel (FE) + Railway (BE)     |
 
 ### Key Features
 
@@ -40,11 +40,11 @@ EngineerOS is a modern English language learning platform built for engineers an
 
 ### Pricing Tiers
 
-| Plan | Price | Features |
-|------|-------|----------|
-| Free | $0 | Basic lessons, 3 AI requests/day |
-| Pro | $19/mo | Unlimited AI, advanced features |
-| Team | $19/mo | Team management, analytics |
+| Plan | Price  | Features                         |
+| ---- | ------ | -------------------------------- |
+| Free | $0     | Basic lessons, 3 AI requests/day |
+| Pro  | $19/mo | Unlimited AI, advanced features  |
+| Team | $19/mo | Team management, analytics       |
 
 ### Revenue Streams
 
@@ -118,19 +118,19 @@ EngineerOS is a modern English language learning platform built for engineers an
 
 ### Costs (Monthly)
 
-| Category | Cost |
-|----------|------|
-| Infrastructure | $100 |
-| AI API | $50 |
-| Third-party Services | $50 |
-| **Total** | **$200** |
+| Category             | Cost     |
+| -------------------- | -------- |
+| Infrastructure       | $100     |
+| AI API               | $50      |
+| Third-party Services | $50      |
+| **Total**            | **$200** |
 
 ### Revenue (Projected)
 
-| Month | Users | Revenue |
-|-------|-------|---------|
-| Month 1 | 100 | $500 |
-| Month 6 | 1,000 | $5,000 |
+| Month    | Users | Revenue |
+| -------- | ----- | ------- |
+| Month 1  | 100   | $500    |
+| Month 6  | 1,000 | $5,000  |
 | Month 12 | 5,000 | $25,000 |
 
 ## Conclusion

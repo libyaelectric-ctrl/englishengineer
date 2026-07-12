@@ -74,11 +74,11 @@ export const filterAIResponse = (response, context) => {
   ];
 
   const results = [];
-  
+
   for (const filter of filters) {
     const passed = filter.fn(response, context);
     results.push({ filter: filter.name, passed });
-    
+
     if (!passed && filter.required) {
       throw new Error(`Content filter failed: ${filter.name}`);
     }
@@ -108,29 +108,29 @@ if (filteredResponse.safe) {
 
 ### Language Rules
 
-| Rule | Description |
-|------|-------------|
-| Primary language | Must be English |
-| Mixed language | Allow up to 10% non-English |
-| Code blocks | Allow any language |
+| Rule             | Description                 |
+| ---------------- | --------------------------- |
+| Primary language | Must be English             |
+| Mixed language   | Allow up to 10% non-English |
+| Code blocks      | Allow any language          |
 
 ### Safety Rules
 
-| Rule | Action |
-|------|--------|
-| Offensive words | Block + log |
-| Personal info request | Block + warn |
-| Harmful instructions | Block + report |
-| Adult content | Block + ban |
+| Rule                  | Action         |
+| --------------------- | -------------- |
+| Offensive words       | Block + log    |
+| Personal info request | Block + warn   |
+| Harmful instructions  | Block + report |
+| Adult content         | Block + ban    |
 
 ### Quality Rules
 
-| Rule | Threshold |
-|------|-----------|
-| Min length | 10 characters |
+| Rule       | Threshold       |
+| ---------- | --------------- |
+| Min length | 10 characters   |
 | Max length | 2000 characters |
-| Min words | 5 words |
-| Max words | 500 words |
+| Min words  | 5 words         |
+| Max words  | 500 words       |
 
 ## Logging
 

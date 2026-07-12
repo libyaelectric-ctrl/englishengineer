@@ -641,13 +641,18 @@ test('production requires an explicitly configured external rate-limit store', (
   // Memory rate limit in production now warns instead of throwing
   const originalWarn = console.warn;
   let warningMessage = '';
-  console.warn = (msg) => { warningMessage = msg; };
+  console.warn = (msg) => {
+    warningMessage = msg;
+  };
   try {
     createBackendConfig({
       NODE_ENV: 'production',
       RATE_LIMIT_STORE: 'memory',
     });
-    assert.ok(warningMessage.includes('ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION') || warningMessage.includes('Production rate limiting'));
+    assert.ok(
+      warningMessage.includes('ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION') ||
+        warningMessage.includes('Production rate limiting')
+    );
   } finally {
     console.warn = originalWarn;
   }

@@ -8,20 +8,20 @@ This document defines the governance model for EngineerOS, including decision-ma
 
 ### Core Team
 
-| Role | Responsibilities |
-|------|------------------|
-| Project Lead | Architecture decisions, roadmap, final approval |
-| Backend Lead | API design, database, security |
-| Frontend Lead | UI/UX, accessibility, performance |
-| DevOps Lead | Deployment, CI/CD, monitoring |
+| Role          | Responsibilities                                |
+| ------------- | ----------------------------------------------- |
+| Project Lead  | Architecture decisions, roadmap, final approval |
+| Backend Lead  | API design, database, security                  |
+| Frontend Lead | UI/UX, accessibility, performance               |
+| DevOps Lead   | Deployment, CI/CD, monitoring                   |
 
 ### Contributors
 
-| Role | Responsibilities |
-|------|------------------|
+| Role      | Responsibilities                  |
+| --------- | --------------------------------- |
 | Developer | Feature implementation, bug fixes |
-| Reviewer | Code review, quality assurance |
-| Tester | Testing, bug reporting |
+| Reviewer  | Code review, quality assurance    |
+| Tester    | Testing, bug reporting            |
 
 ## Decision Making
 
@@ -67,6 +67,7 @@ This document defines the governance model for EngineerOS, including decision-ma
 ### Versioning
 
 Follow Semantic Versioning:
+
 - **Major:** Breaking changes
 - **Minor:** New features
 - **Patch:** Bug fixes
@@ -85,12 +86,12 @@ Follow Semantic Versioning:
 
 ### Channels
 
-| Channel | Purpose |
-|---------|---------|
+| Channel       | Purpose                       |
+| ------------- | ----------------------------- |
 | GitHub Issues | Bug reports, feature requests |
-| Pull Requests | Code review, discussions |
-| Documentation | Architecture, guidelines |
-| Meetings | Planning, retrospectives |
+| Pull Requests | Code review, discussions      |
+| Documentation | Architecture, guidelines      |
+| Meetings      | Planning, retrospectives      |
 
 ### Meeting Cadence
 

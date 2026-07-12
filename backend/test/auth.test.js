@@ -16,7 +16,10 @@ describe('createBackendAuth', () => {
       const config = { internalApiSecret: 'secret-123' };
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest(
-        { authorization: 'Bearer secret-123', 'x-engineeros-user-id': 'user-1' },
+        {
+          authorization: 'Bearer secret-123',
+          'x-engineeros-user-id': 'user-1',
+        },
         {}
       );
       const next = () => {};
@@ -30,7 +33,9 @@ describe('createBackendAuth', () => {
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest({ authorization: 'Bearer secret-123' }, {});
       let caughtError;
-      const next = (err) => { caughtError = err; };
+      const next = (err) => {
+        caughtError = err;
+      };
       await requireBackendAuth(req, {}, next);
       assert.ok(caughtError);
       assert.equal(caughtError.status, 400);
@@ -41,7 +46,9 @@ describe('createBackendAuth', () => {
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest({}, {});
       let caughtError;
-      const next = (err) => { caughtError = err; };
+      const next = (err) => {
+        caughtError = err;
+      };
       await requireBackendAuth(req, {}, next);
       assert.ok(caughtError);
       assert.equal(caughtError.status, 401);
@@ -77,7 +84,10 @@ describe('createBackendAuth', () => {
         json: async () => mockUser,
       });
       const { requireBackendAuth } = createBackendAuth(config, fetchImpl);
-      const req = createMockRequest({ authorization: 'Bearer supabase-token' }, {});
+      const req = createMockRequest(
+        { authorization: 'Bearer supabase-token' },
+        {}
+      );
       const next = () => {};
       await requireBackendAuth(req, {}, next);
       assert.equal(req.auth.userId, 'supabase-user-1');
@@ -91,9 +101,14 @@ describe('createBackendAuth', () => {
       };
       const fetchImpl = mockFetch({ ok: false, status: 401 });
       const { requireBackendAuth } = createBackendAuth(config, fetchImpl);
-      const req = createMockRequest({ authorization: 'Bearer invalid-token' }, {});
+      const req = createMockRequest(
+        { authorization: 'Bearer invalid-token' },
+        {}
+      );
       let caughtError;
-      const next = (err) => { caughtError = err; };
+      const next = (err) => {
+        caughtError = err;
+      };
       await requireBackendAuth(req, {}, next);
       assert.ok(caughtError);
       assert.equal(caughtError.status, 401);

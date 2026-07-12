@@ -5,9 +5,9 @@ module.exports = {
       url: [
         'http://localhost:4173/',
         'http://localhost:4173/vocabulary',
-        'http://localhost:4173/dashboard'
+        'http://localhost:4173/dashboard',
       ],
-      numberOfRuns: 2
+      numberOfRuns: 2,
     },
     assert: {
       preset: 'lighthouse:no-pwa',

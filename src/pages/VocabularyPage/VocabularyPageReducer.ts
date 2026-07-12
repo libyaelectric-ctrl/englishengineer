@@ -1,4 +1,7 @@
-import type { VocabularyMenuState, VocabularyMenuStatus } from '@/features/vocabulary';
+import type {
+  VocabularyMenuState,
+  VocabularyMenuStatus,
+} from '@/features/vocabulary';
 import type { CefrLevel } from '@/features/level-system';
 import { emptyFilters } from './VocabularyPageUtils';
 

@@ -333,7 +333,9 @@ function SectionIntro({
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">{desc}</p>
+        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">
+          {desc}
+        </p>
       ) : null}
     </AnimatedSection>
   );

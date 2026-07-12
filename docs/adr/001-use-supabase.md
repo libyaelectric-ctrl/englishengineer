@@ -11,6 +11,7 @@ EngineerOS needs a backend-as-a-service for authentication, database, and real-t
 ## Decision
 
 Use Supabase as the primary backend platform, providing:
+
 - PostgreSQL database
 - Authentication (email, OAuth)
 - Row Level Security (RLS)
@@ -20,12 +21,14 @@ Use Supabase as the primary backend platform, providing:
 ## Consequences
 
 ### Positive
+
 - Rapid development with built-in auth
 - RLS for data security without custom middleware
 - PostgreSQL power with SQL access
 - Managed infrastructure (no DevOps for DB)
 
 ### Negative
+
 - Vendor lock-in to Supabase
 - Limited customization of auth flow
 - Costs scale with usage

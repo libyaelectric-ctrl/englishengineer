@@ -28,27 +28,104 @@ const PASSIVE_INDICATORS = [
   /\bare\b\s+\w+ed\b/gi,
 ];
 
-const COMMON_MISTAKES: Array<{ pattern: RegExp; message: string; fix: string; type: RealtimeSuggestion['type'] }> = [
-  { pattern: /\baffect\b/gi, message: 'Consider "impact" or "influence" in technical writing', fix: 'impact', type: 'style' },
-  { pattern: /\butilize\b/gi, message: '"Utilize" is verbose — prefer "use"', fix: 'use', type: 'style' },
-  { pattern: /\bin order to\b/gi, message: '"In order to" can be shortened to "to"', fix: 'to', type: 'style' },
-  { pattern: /\bactually\b/gi, message: '"Actually" weakens technical statements', fix: '', type: 'style' },
-  { pattern: /\bvery\b\s+\w+/gi, message: 'Avoid "very" — use a stronger adjective instead', fix: '', type: 'style' },
-  { pattern: /\bmoreover\b/gi, message: '"Moreover" is formal but overused — consider "also" or "further"', fix: 'further', type: 'style' },
-  { pattern: /\bregarding\b/gi, message: '"Regarding" is verbose — consider "for" or "about"', fix: 'for', type: 'style' },
-  { pattern: /\bdue to the fact that\b/gi, message: '"Due to the fact that" can be simplified to "because"', fix: 'because', type: 'style' },
-  { pattern: /\bat this point in time\b/gi, message: '"At this point in time" can be simplified to "now" or "currently"', fix: 'currently', type: 'style' },
-  { pattern: /\bfor the purpose of\b/gi, message: '"For the purpose of" can be simplified to "to" or "for"', fix: 'for', type: 'style' },
+const COMMON_MISTAKES: Array<{
+  pattern: RegExp;
+  message: string;
+  fix: string;
+  type: RealtimeSuggestion['type'];
+}> = [
+  {
+    pattern: /\baffect\b/gi,
+    message: 'Consider "impact" or "influence" in technical writing',
+    fix: 'impact',
+    type: 'style',
+  },
+  {
+    pattern: /\butilize\b/gi,
+    message: '"Utilize" is verbose — prefer "use"',
+    fix: 'use',
+    type: 'style',
+  },
+  {
+    pattern: /\bin order to\b/gi,
+    message: '"In order to" can be shortened to "to"',
+    fix: 'to',
+    type: 'style',
+  },
+  {
+    pattern: /\bactually\b/gi,
+    message: '"Actually" weakens technical statements',
+    fix: '',
+    type: 'style',
+  },
+  {
+    pattern: /\bvery\b\s+\w+/gi,
+    message: 'Avoid "very" — use a stronger adjective instead',
+    fix: '',
+    type: 'style',
+  },
+  {
+    pattern: /\bmoreover\b/gi,
+    message: '"Moreover" is formal but overused — consider "also" or "further"',
+    fix: 'further',
+    type: 'style',
+  },
+  {
+    pattern: /\bregarding\b/gi,
+    message: '"Regarding" is verbose — consider "for" or "about"',
+    fix: 'for',
+    type: 'style',
+  },
+  {
+    pattern: /\bdue to the fact that\b/gi,
+    message: '"Due to the fact that" can be simplified to "because"',
+    fix: 'because',
+    type: 'style',
+  },
+  {
+    pattern: /\bat this point in time\b/gi,
+    message:
+      '"At this point in time" can be simplified to "now" or "currently"',
+    fix: 'currently',
+    type: 'style',
+  },
+  {
+    pattern: /\bfor the purpose of\b/gi,
+    message: '"For the purpose of" can be simplified to "to" or "for"',
+    fix: 'for',
+    type: 'style',
+  },
 ];
 
 const TECHNICAL_VOCABULARY = new Set([
-  'implementation', 'architecture', 'deployment', 'infrastructure',
-  'specification', 'documentation', 'configuration', 'optimization',
-  'integration', 'diagnostic', 'calibration', 'commissioning',
-  'methodology', 'verification', 'validation', 'certification',
-  'reliability', 'availability', 'maintainability', 'scalability',
-  'throughput', 'latency', 'bandwidth', 'redundancy',
-  'compliance', 'audit', 'assessment', 'evaluation',
+  'implementation',
+  'architecture',
+  'deployment',
+  'infrastructure',
+  'specification',
+  'documentation',
+  'configuration',
+  'optimization',
+  'integration',
+  'diagnostic',
+  'calibration',
+  'commissioning',
+  'methodology',
+  'verification',
+  'validation',
+  'certification',
+  'reliability',
+  'availability',
+  'maintainability',
+  'scalability',
+  'throughput',
+  'latency',
+  'bandwidth',
+  'redundancy',
+  'compliance',
+  'audit',
+  'assessment',
+  'evaluation',
 ]);
 
 function countSentences(text: string): number {
@@ -147,7 +224,9 @@ function checkStylePatterns(text: string): RealtimeSuggestion[] {
   // Sentence length warning
   const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   for (let i = 0; i < sentences.length; i++) {
-    const wordCount = sentences[i].split(/\s+/).filter((w) => w.length > 0).length;
+    const wordCount = sentences[i]
+      .split(/\s+/)
+      .filter((w) => w.length > 0).length;
     if (wordCount > 35) {
       suggestions.push({
         id: `long-sentence-${i}`,
@@ -177,12 +256,17 @@ function checkStructure(text: string): RealtimeSuggestion[] {
   }
 
   // Check for bullet points or numbered lists
-  if (text.length > 300 && !/^\s*[-*•]\s/m.test(text) && !/^\s*\d+[.)]\s/m.test(text)) {
+  if (
+    text.length > 300 &&
+    !/^\s*[-*•]\s/m.test(text) &&
+    !/^\s*\d+[.)]\s/m.test(text)
+  ) {
     suggestions.push({
       id: 'no-lists',
       type: 'structure',
       severity: 'info',
-      message: 'Consider using bullet points or numbered lists for technical content',
+      message:
+        'Consider using bullet points or numbered lists for technical content',
     });
   }
 
@@ -214,10 +298,16 @@ export const WritingRealtimeAnalyzer = {
     const styleSuggestions = checkStylePatterns(text);
     const structureSuggestions = checkStructure(text);
 
-    const allSuggestions = [...grammarSuggestions, ...styleSuggestions, ...structureSuggestions];
+    const allSuggestions = [
+      ...grammarSuggestions,
+      ...styleSuggestions,
+      ...structureSuggestions,
+    ];
 
     const errors = allSuggestions.filter((s) => s.severity === 'error').length;
-    const warnings = allSuggestions.filter((s) => s.severity === 'warning').length;
+    const warnings = allSuggestions.filter(
+      (s) => s.severity === 'warning'
+    ).length;
 
     const grammarScore = Math.max(0, 100 - errors * 15 - warnings * 5);
     const styleScore = Math.max(0, 100 - styleSuggestions.length * 10);

@@ -6,32 +6,34 @@ This document outlines the scalability strategy for EngineerOS as user base grow
 
 ## Current Capacity
 
-| Component | Current Limit | Usage |
-|-----------|---------------|-------|
-| Supabase | 500MB (Free) / 8GB (Pro) | ~100MB |
-| Vercel | 100GB bandwidth | ~10GB |
-| Railway | 512MB RAM / $5/mo | ~200MB |
-| Upstash | 10,000 commands/day | ~1,000 |
+| Component | Current Limit            | Usage  |
+| --------- | ------------------------ | ------ |
+| Supabase  | 500MB (Free) / 8GB (Pro) | ~100MB |
+| Vercel    | 100GB bandwidth          | ~10GB  |
+| Railway   | 512MB RAM / $5/mo        | ~200MB |
+| Upstash   | 10,000 commands/day      | ~1,000 |
 
 ## Scaling Triggers
 
-| Metric | Threshold | Action |
-|--------|-----------|--------|
-| Database size | > 80% capacity | Upgrade plan |
-| API response time | > 200ms | Optimize queries |
-| Error rate | > 1% | Investigate issues |
-| User growth | > 1000 users | Scale infrastructure |
+| Metric            | Threshold      | Action               |
+| ----------------- | -------------- | -------------------- |
+| Database size     | > 80% capacity | Upgrade plan         |
+| API response time | > 200ms        | Optimize queries     |
+| Error rate        | > 1%           | Investigate issues   |
+| User growth       | > 1000 users   | Scale infrastructure |
 
 ## Scaling Strategy
 
 ### Phase 1: 0-1,000 Users (Current)
 
 **Infrastructure:**
+
 - Supabase Pro ($25/mo)
 - Vercel Pro ($20/mo)
 - Railway Starter ($5/mo)
 
 **Optimizations:**
+
 - Query optimization
 - CDN caching
 - Rate limiting
@@ -39,12 +41,14 @@ This document outlines the scalability strategy for EngineerOS as user base grow
 ### Phase 2: 1,000-10,000 Users
 
 **Infrastructure:**
+
 - Supabase Team ($599/mo)
 - Vercel Enterprise (custom)
 - Railway Pro ($20/mo)
 - Upstash Pro ($10/mo)
 
 **Optimizations:**
+
 - Database indexing
 - Connection pooling
 - Background jobs
@@ -53,12 +57,14 @@ This document outlines the scalability strategy for EngineerOS as user base grow
 ### Phase 3: 10,000-100,000 Users
 
 **Infrastructure:**
+
 - Supabase Enterprise (custom)
 - Multi-region deployment
 - Dedicated Redis cluster
 - Load balancing
 
 **Optimizations:**
+
 - Database sharding
 - Microservices split
 - Event-driven architecture
@@ -138,32 +144,32 @@ Request → Load Balancer → Express (multiple) → Supabase
 
 ### 1,000 Users
 
-| Service | Monthly Cost |
-|---------|--------------|
-| Supabase | $25 |
-| Vercel | $20 |
-| Railway | $5 |
-| Upstash | $10 |
-| **Total** | **$60** |
+| Service   | Monthly Cost |
+| --------- | ------------ |
+| Supabase  | $25          |
+| Vercel    | $20          |
+| Railway   | $5           |
+| Upstash   | $10          |
+| **Total** | **$60**      |
 
 ### 10,000 Users
 
-| Service | Monthly Cost |
-|---------|--------------|
-| Supabase | $599 |
-| Vercel | $200 |
-| Railway | $20 |
-| Upstash | $50 |
-| **Total** | **$869** |
+| Service   | Monthly Cost |
+| --------- | ------------ |
+| Supabase  | $599         |
+| Vercel    | $200         |
+| Railway   | $20          |
+| Upstash   | $50          |
+| **Total** | **$869**     |
 
 ### 100,000 Users
 
-| Service | Monthly Cost |
-|---------|--------------|
-| Supabase | Custom |
-| Vercel | Custom |
-| Infrastructure | Custom |
-| **Total** | **~$5,000** |
+| Service        | Monthly Cost |
+| -------------- | ------------ |
+| Supabase       | Custom       |
+| Vercel         | Custom       |
+| Infrastructure | Custom       |
+| **Total**      | **~$5,000**  |
 
 ## Monitoring
 
@@ -181,12 +187,12 @@ const metrics = {
 
 ### Alerts
 
-| Metric | Alert Threshold |
-|--------|-----------------|
-| DB Size | > 80% capacity |
-| Response Time | > 200ms |
-| Error Rate | > 1% |
-| Memory Usage | > 80% |
+| Metric        | Alert Threshold |
+| ------------- | --------------- |
+| DB Size       | > 80% capacity  |
+| Response Time | > 200ms         |
+| Error Rate    | > 1%            |
+| Memory Usage  | > 80%           |
 
 ## Last Updated
 

@@ -36,7 +36,11 @@ interface ButtonProps {
   onClick?: () => void;
 }
 
-export const Button = ({ children, variant = 'primary', onClick }: ButtonProps) => {
+export const Button = ({
+  children,
+  variant = 'primary',
+  onClick,
+}: ButtonProps) => {
   return (
     <button className={`btn btn-${variant}`} onClick={onClick}>
       {children}
@@ -52,14 +56,14 @@ export const Button = (props) => {
 
 ### Naming Conventions
 
-| Type | Convention | Example |
-|------|------------|---------|
-| Variables | camelCase | `userName` |
-| Functions | camelCase | `getUser()` |
-| Components | PascalCase | `UserProfile` |
-| Files | kebab-case | `user-profile.tsx` |
-| Constants | UPPER_SNAKE | `MAX_RETRIES` |
-| Types | PascalCase | `UserType` |
+| Type       | Convention  | Example            |
+| ---------- | ----------- | ------------------ |
+| Variables  | camelCase   | `userName`         |
+| Functions  | camelCase   | `getUser()`        |
+| Components | PascalCase  | `UserProfile`      |
+| Files      | kebab-case  | `user-profile.tsx` |
+| Constants  | UPPER_SNAKE | `MAX_RETRIES`      |
+| Types      | PascalCase  | `UserType`         |
 
 ## Testing Standards
 
@@ -83,11 +87,11 @@ it('works', () => {
 
 ### Test Coverage
 
-| Metric | Target |
-|--------|--------|
-| Line coverage | > 80% |
-| Branch coverage | > 75% |
-| Function coverage | > 85% |
+| Metric            | Target |
+| ----------------- | ------ |
+| Line coverage     | > 80%  |
+| Branch coverage   | > 75%  |
+| Function coverage | > 85%  |
 
 ## Documentation Standards
 
@@ -153,20 +157,24 @@ feat(auth): implement OAuth login (#123)
 
 ```markdown
 ## Summary
+
 - Added OAuth login with Google and GitHub
 - Updated auth middleware
 
 ## Changes
+
 - Added OAuthProvider component
 - Updated auth routes
 - Added tests
 
 ## Testing
+
 - [ ] Unit tests pass
 - [ ] Integration tests pass
 - [ ] Manual testing completed
 
 ## Screenshots
+
 (If applicable)
 ```
 
@@ -174,21 +182,21 @@ feat(auth): implement OAuth login (#123)
 
 ### Frontend
 
-| Metric | Target |
-|--------|--------|
-| First Contentful Paint | < 1.5s |
-| Largest Contentful Paint | < 2.5s |
-| Time to Interactive | < 3.5s |
-| Bundle Size | < 200KB |
+| Metric                   | Target  |
+| ------------------------ | ------- |
+| First Contentful Paint   | < 1.5s  |
+| Largest Contentful Paint | < 2.5s  |
+| Time to Interactive      | < 3.5s  |
+| Bundle Size              | < 200KB |
 
 ### Backend
 
-| Metric | Target |
-|--------|--------|
-| Response Time | < 100ms |
-| Throughput | > 1000 req/s |
-| Error Rate | < 0.1% |
-| Uptime | > 99.9% |
+| Metric        | Target       |
+| ------------- | ------------ |
+| Response Time | < 100ms      |
+| Throughput    | > 1000 req/s |
+| Error Rate    | < 0.1%       |
+| Uptime        | > 99.9%      |
 
 ## Security Standards
 

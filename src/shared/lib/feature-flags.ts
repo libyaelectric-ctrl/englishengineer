@@ -3,7 +3,7 @@
  * Controls feature rollout by user, plan, or percentage
  */
 
-export type FeatureFlag = 
+export type FeatureFlag =
   | 'ai_coaching'
   | 'vocabulary_system'
   | 'grammar_lessons'
@@ -39,7 +39,10 @@ class FeatureFlagService {
     this.flags = { ...DEFAULT_FLAGS, ...initialFlags };
   }
 
-  isEnabled(flag: FeatureFlag, context?: { plan?: string; userId?: string }): boolean {
+  isEnabled(
+    flag: FeatureFlag,
+    context?: { plan?: string; userId?: string }
+  ): boolean {
     // Check override first
     const overrideKey = context?.userId ? `${flag}:${context.userId}` : flag;
     if (this.overrides.has(overrideKey)) {
@@ -87,7 +90,7 @@ class FeatureFlagService {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash |= 0;
     }
     return Math.abs(hash);
@@ -97,13 +100,18 @@ class FeatureFlagService {
 // Singleton instance
 let instance: FeatureFlagService | null = null;
 
-export const getFeatureFlags = (config?: Partial<Record<FeatureFlag, FeatureFlagConfig>>): FeatureFlagService => {
+export const getFeatureFlags = (
+  config?: Partial<Record<FeatureFlag, FeatureFlagConfig>>
+): FeatureFlagService => {
   if (!instance) {
     instance = new FeatureFlagService(config);
   }
   return instance;
 };
 
-export const isFeatureEnabled = (flag: FeatureFlag, context?: { plan?: string; userId?: string }): boolean => {
+export const isFeatureEnabled = (
+  flag: FeatureFlag,
+  context?: { plan?: string; userId?: string }
+): boolean => {
   return getFeatureFlags().isEnabled(flag, context);
 };

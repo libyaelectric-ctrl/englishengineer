@@ -49,7 +49,9 @@ test('insecure dev auth is blocked in production by default', async () => {
 test('config warns when allowInsecureDevAuth is true in production', () => {
   const originalWarn = console.warn;
   let warningMessage = '';
-  console.warn = (msg) => { warningMessage = msg; };
+  console.warn = (msg) => {
+    warningMessage = msg;
+  };
   try {
     createBackendConfig({
       NODE_ENV: 'production',
@@ -57,7 +59,11 @@ test('config warns when allowInsecureDevAuth is true in production', () => {
       RATE_LIMIT_STORE: 'memory',
       ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
     });
-    assert.ok(warningMessage.includes('allowInsecureDevAuth cannot be true in production'));
+    assert.ok(
+      warningMessage.includes(
+        'allowInsecureDevAuth cannot be true in production'
+      )
+    );
   } finally {
     console.warn = originalWarn;
   }

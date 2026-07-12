@@ -24,10 +24,10 @@ EngineerOS uses Supabase's built-in connection pooling (PgBouncer) for efficient
 
 ### Connection Modes
 
-| Mode | Port | Use Case |
-|------|------|----------|
+| Mode        | Port | Use Case                                      |
+| ----------- | ---- | --------------------------------------------- |
 | Transaction | 6543 | Serverless functions, short-lived connections |
-| Session | 5432 | Long-lived connections, interactive sessions |
+| Session     | 5432 | Long-lived connections, interactive sessions  |
 
 ### Current Configuration
 
@@ -80,13 +80,13 @@ const supabase = createClient(
 SELECT count(*) FROM pg_stat_activity;
 
 -- Connections by state
-SELECT state, count(*) 
-FROM pg_stat_activity 
+SELECT state, count(*)
+FROM pg_stat_activity
 GROUP BY state;
 
 -- Connections by application
-SELECT application_name, count(*) 
-FROM pg_stat_activity 
+SELECT application_name, count(*)
+FROM pg_stat_activity
 GROUP BY application_name;
 ```
 
@@ -101,10 +101,12 @@ GROUP BY application_name;
 ### Issue: Connection Exhaustion
 
 **Symptoms:**
+
 - `FATAL: too many connections`
 - Application timeouts
 
 **Solutions:**
+
 1. Check for connection leaks in code
 2. Increase pool size (if plan allows)
 3. Optimize queries to reduce connection hold time
@@ -113,10 +115,12 @@ GROUP BY application_name;
 ### Issue: Idle Connection Timeout
 
 **Symptoms:**
+
 - `FATAL: connection terminated due to timeout`
 - Occasional 503 errors
 
 **Solutions:**
+
 1. Use connection keepalive
 2. Implement retry logic
 3. Check PgBouncer configuration
@@ -124,10 +128,12 @@ GROUP BY application_name;
 ### Issue: Transaction Conflicts
 
 **Symptoms:**
+
 - `FATAL: duplicate key value violates unique constraint`
 - Occasional 409 errors
 
 **Solutions:**
+
 1. Use `ON CONFLICT` (already implemented)
 2. Implement idempotent operations
 3. Use optimistic locking for concurrent updates
@@ -143,12 +149,12 @@ GROUP BY application_name;
 
 ### Connection Pool Tuning
 
-| Setting | Recommended Value | Notes |
-|---------|-------------------|-------|
-| Pool Size | 10-20 | Depends on plan |
-| Connection Timeout | 10-30 seconds | Balance between waiting and failing |
-| Idle Timeout | 300-600 seconds | Free up unused connections |
-| Max Client Connections | Plan-dependent | Check Supabase limits |
+| Setting                | Recommended Value | Notes                               |
+| ---------------------- | ----------------- | ----------------------------------- |
+| Pool Size              | 10-20             | Depends on plan                     |
+| Connection Timeout     | 10-30 seconds     | Balance between waiting and failing |
+| Idle Timeout           | 300-600 seconds   | Free up unused connections          |
+| Max Client Connections | Plan-dependent    | Check Supabase limits               |
 
 ## Security Considerations
 

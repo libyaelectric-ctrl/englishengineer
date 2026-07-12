@@ -121,23 +121,23 @@ This document tracks known technical debt items that should be addressed in futu
 
 ## Tracking
 
-| ID | Priority | Status | Assigned | Due Date |
-|----|----------|--------|----------|----------|
-| TD-001 | High | Open | TBD | TBD |
-| TD-002 | High | Open | TBD | TBD |
-| TD-003 | High | Open | TBD | TBD |
-| TD-004 | Medium | Open | TBD | TBD |
-| TD-005 | Medium | Open | TBD | TBD |
-| TD-006 | Medium | Open | TBD | TBD |
-| TD-007 | Medium | Open | TBD | TBD |
-| TD-008 | Medium | Open | TBD | TBD |
-| TD-009 | Low | Open | TBD | TBD |
-| TD-010 | Low | Open | TBD | TBD |
-| TD-011 | Low | Open | TBD | TBD |
-| TD-012 | Low | Open | TBD | TBD |
-| TD-013 | Low | Open | TBD | TBD |
-| TD-014 | Low | Open | TBD | TBD |
-| TD-015 | Low | Open | TBD | TBD |
+| ID     | Priority | Status | Assigned | Due Date |
+| ------ | -------- | ------ | -------- | -------- |
+| TD-001 | High     | Open   | TBD      | TBD      |
+| TD-002 | High     | Open   | TBD      | TBD      |
+| TD-003 | High     | Open   | TBD      | TBD      |
+| TD-004 | Medium   | Open   | TBD      | TBD      |
+| TD-005 | Medium   | Open   | TBD      | TBD      |
+| TD-006 | Medium   | Open   | TBD      | TBD      |
+| TD-007 | Medium   | Open   | TBD      | TBD      |
+| TD-008 | Medium   | Open   | TBD      | TBD      |
+| TD-009 | Low      | Open   | TBD      | TBD      |
+| TD-010 | Low      | Open   | TBD      | TBD      |
+| TD-011 | Low      | Open   | TBD      | TBD      |
+| TD-012 | Low      | Open   | TBD      | TBD      |
+| TD-013 | Low      | Open   | TBD      | TBD      |
+| TD-014 | Low      | Open   | TBD      | TBD      |
+| TD-015 | Low      | Open   | TBD      | TBD      |
 
 ## Last Updated
 

@@ -11,6 +11,7 @@ EngineerOS needs a payment processing system for subscriptions and one-time purc
 ## Decision
 
 Use Stripe as the payment processor, providing:
+
 - Subscription management
 - Checkout sessions
 - Webhook handling
@@ -19,12 +20,14 @@ Use Stripe as the payment processor, providing:
 ## Consequences
 
 ### Positive
+
 - Industry-standard payment processing
 - Excellent developer experience
 - Built-in subscription management
 - Strong security and compliance
 
 ### Negative
+
 - Transaction fees (2.9% + $0.30)
 - Vendor lock-in
 - Complex webhook handling

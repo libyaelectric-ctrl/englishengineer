@@ -18,29 +18,29 @@ All API endpoints are versioned via URL prefix:
 
 ### Version Lifecycle
 
-| Phase | Duration | Description |
-|-------|----------|-------------|
-| Active | 12 months | Full support, new features |
-| Deprecated | 6 months | Security fixes only |
-| Sunset | 0 | Removed, returns 410 Gone |
+| Phase      | Duration  | Description                |
+| ---------- | --------- | -------------------------- |
+| Active     | 12 months | Full support, new features |
+| Deprecated | 6 months  | Security fixes only        |
+| Sunset     | 0         | Removed, returns 410 Gone  |
 
 ## Current Endpoints
 
 ### v1 (Current)
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/health` | GET | Health check |
-| `/api/v1/billing/create-checkout-session` | POST | Create Stripe checkout |
-| `/api/v1/billing/create-topup-session` | POST | Create top-up checkout |
-| `/api/v1/billing/create-customer-portal-session` | POST | Stripe portal |
-| `/api/v1/billing/subscription-status` | GET | Get subscription status |
-| `/api/v1/ai/coach` | POST | AI coaching session |
-| `/api/v1/ai/stream` | POST | AI streaming response |
-| `/api/v1/vocabulary/lookup` | POST | Vocabulary lookup |
-| `/api/v1/workspace` | GET/POST | Workspace operations |
-| `/api/v1/admin/audit-logs` | GET | Admin audit logs |
-| `/api/webhooks/stripe` | POST | Stripe webhook |
+| Endpoint                                         | Method   | Description             |
+| ------------------------------------------------ | -------- | ----------------------- |
+| `/api/v1/health`                                 | GET      | Health check            |
+| `/api/v1/billing/create-checkout-session`        | POST     | Create Stripe checkout  |
+| `/api/v1/billing/create-topup-session`           | POST     | Create top-up checkout  |
+| `/api/v1/billing/create-customer-portal-session` | POST     | Stripe portal           |
+| `/api/v1/billing/subscription-status`            | GET      | Get subscription status |
+| `/api/v1/ai/coach`                               | POST     | AI coaching session     |
+| `/api/v1/ai/stream`                              | POST     | AI streaming response   |
+| `/api/v1/vocabulary/lookup`                      | POST     | Vocabulary lookup       |
+| `/api/v1/workspace`                              | GET/POST | Workspace operations    |
+| `/api/v1/admin/audit-logs`                       | GET      | Admin audit logs        |
+| `/api/webhooks/stripe`                           | POST     | Stripe webhook          |
 
 ### Backward Compatibility
 
