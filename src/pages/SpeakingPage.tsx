@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import {
   Brain,
   CheckCircle2,
+  FileText,
   History,
   Layers,
   MessageSquareText,
@@ -104,6 +105,8 @@ const SpeakingPage = () => {
   const [phonemeFeedback, setPhonemeFeedback] = useState<
     Array<{ word: string; score: number; phonemes: string }>
   >([]);
+  const waveformTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [waveformBars, setWaveformBars] = useState<number[]>(Array(24).fill(4));
 
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
@@ -145,8 +148,17 @@ const SpeakingPage = () => {
     setPronunciationScore(null);
     setPhonemeFeedback([]);
 
+    waveformTimerRef.current = setInterval(() => {
+      setWaveformBars(Array.from({ length: 24 }, () => Math.random() * 48 + 8));
+    }, 120);
+
     // Simulate recording duration
     setTimeout(() => {
+      if (waveformTimerRef.current) {
+        clearInterval(waveformTimerRef.current);
+        waveformTimerRef.current = null;
+      }
+      setWaveformBars(Array(24).fill(4));
       setIsRecording(false);
       setRecordedAudio('simulated_blob_url');
 
@@ -381,6 +393,21 @@ const SpeakingPage = () => {
                 </p>
               </div>
 
+              <div className="flex items-start gap-2 mt-3 rounded-lg border border-border-soft bg-surface-hover p-3">
+                <FileText className="h-4 w-4 text-muted-copy shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
+                    Practice Script Summary
+                  </p>
+                  <p className="mt-1 text-xs text-foreground leading-5">
+                    {activeMission.description}
+                  </p>
+                  <p className="mt-1 text-[10px] text-muted-copy">
+                    Keywords: {activeMission.expectedKeywords.join(', ')}
+                  </p>
+                </div>
+              </div>
+
               {/* Practice Mode Selector */}
               <div className="mt-5 flex gap-3 border-b border-border-soft pb-2">
                 <button
@@ -486,12 +513,15 @@ const SpeakingPage = () => {
                       {/* Active Voice Workspace for Max Subscribers */}
                       <div className="rounded-xl border border-border-soft bg-surface-hover p-5 flex flex-col items-center justify-center min-h-48 relative overflow-hidden">
                         {isRecording ? (
-                          <div className="flex flex-col items-center gap-3">
-                            <div className="flex items-center gap-1.5 h-8">
-                              <span className="w-1.5 h-6 bg-rose-500 rounded-full animate-bounce delay-75"></span>
-                              <span className="w-1.5 h-8 bg-rose-500 rounded-full animate-bounce"></span>
-                              <span className="w-1.5 h-7 bg-rose-500 rounded-full animate-bounce delay-150"></span>
-                              <span className="w-1.5 h-5 bg-rose-500 rounded-full animate-bounce delay-300"></span>
+                          <div className="flex flex-col items-center gap-3 w-full">
+                            <div className="flex items-end justify-center gap-[3px] h-16 w-full">
+                              {waveformBars.map((h, i) => (
+                                <div
+                                  key={i}
+                                  className="w-1.5 rounded-full bg-rose-500 transition-all"
+                                  style={{ height: `${h}px`, transition: 'height 120ms ease' }}
+                                />
+                              ))}
                             </div>
                             <p className="text-xs font-medium text-rose-600 uppercase tracking-widest animate-pulse">
                               Recording... Speak now.

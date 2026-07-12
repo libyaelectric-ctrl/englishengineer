@@ -14,6 +14,7 @@ import {
   Clock,
   Info,
   Play,
+  Volume2,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -529,9 +530,38 @@ const WritingPage = () => {
                     </p>
 
                     <div className="flex items-center justify-between text-xs font-mono text-muted-copy pt-1">
-                      <span>CHARACTER COUNT: {draft.length}</span>
+                      <div className="flex items-center gap-2">
+                        <span>CHARACTER COUNT: {draft.length}</span>
+                        {draft.length > 0 && (
+                          <div className="w-24 h-1.5 rounded-full bg-surface-hover overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                draft.length > 1000
+                                  ? 'bg-rose-500'
+                                  : draft.length > 500
+                                    ? 'bg-amber-500'
+                                    : 'bg-emerald-500'
+                              }`}
+                              style={{ width: `${Math.min(100, (draft.length / 1200) * 100)}%` }}
+                            />
+                          </div>
+                        )}
+                      </div>
                       <span>READABILITY LEVEL: {getReadabilityScore()}%</span>
                     </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const utterance = new SpeechSynthesisUtterance(draft);
+                        utterance.rate = 0.9;
+                        window.speechSynthesis.speak(utterance);
+                      }}
+                      disabled={!draft.trim()}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:bg-surface-hover disabled:opacity-40 disabled:cursor-not-allowed"
+                    >
+                      <Volume2 className="h-3.5 w-3.5" />
+                      Read Aloud
+                    </button>
 
                     {userErrors.draft && (
                       <p className="text-[10px] text-rose-400 font-bold font-mono flex items-center gap-1 mt-1">

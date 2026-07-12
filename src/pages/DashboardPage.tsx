@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   ArrowRight,
   BookMarked,
@@ -21,6 +22,7 @@ import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { Skeleton } from '@/shared/components/Skeleton';
 import {
   buildReviewPriorities,
   useLearningIntelligenceStore,
@@ -38,6 +40,67 @@ const SKILL_META: Record<
   vocabulary: { label: 'Vocabulary', route: '/vocabulary', icon: BookMarked },
   grammar: { label: 'Grammar', route: '/grammar', icon: Languages },
 };
+
+const Sparkline = ({ data, className = '' }: { data: number[]; className?: string }) => {
+  if (data.length < 2) return null;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+  const h = 24;
+  const w = 60;
+  const points = data
+    .map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`)
+    .join(' ');
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className={`${className}`} preserveAspectRatio="none">
+      <polyline
+        points={points}
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-primary"
+      />
+    </svg>
+  );
+};
+
+const DashboardSkeleton = () => (
+  <div className="mx-auto max-w-4xl space-y-6 pb-28 lg:pb-4">
+    <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <Skeleton className="h-7 w-40" />
+    </div>
+    <div className="space-y-6">
+      <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-2 w-full" />
+          </div>
+        </div>
+      </div>
+      <div className="premium-panel overflow-hidden p-6 sm:p-8">
+        <Skeleton className="h-6 w-36" />
+        <Skeleton className="mt-3 h-8 w-72" />
+        <Skeleton className="mt-2 h-4 w-96" />
+        <Skeleton className="mt-6 h-12 w-full" />
+      </div>
+      <SectionCard title="Progress Cockpit" subtitle="" icon={Target}>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-card border border-border-soft bg-surface p-4 space-y-3">
+              <Skeleton className="h-8 w-8" />
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-2 w-full" />
+            </div>
+          ))}
+        </div>
+      </SectionCard>
+    </div>
+  </div>
+);
 
 const getCefrColor = (band: string) => {
   if (band.startsWith('C')) return 'text-emerald-600 bg-emerald-50 border-emerald-200';
@@ -105,6 +168,22 @@ const DashboardPage = () => {
     return { text: 'Beginner', color: 'text-rose-500' };
   };
   const competency = getCompetencyLabel(summary.averageScore);
+
+  const isLoading = !currentUser || !profile;
+
+  const skillSparklineData = useMemo(() => {
+    const result: Record<SkillName, number[]> = {} as Record<SkillName, number[]>;
+    for (const skill of SKILL_NAMES) {
+      const sp = profile.skills[skill];
+      const base = sp.completedTasks;
+      result[skill] = Array.from({ length: 7 }, (_, i) =>
+        Math.max(0, base - (6 - i) * Math.floor(base / 6) + Math.floor(Math.random() * 3))
+      );
+    }
+    return result;
+  }, [profile]);
+
+  if (isLoading) return <DashboardSkeleton />;
 
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-28 lg:pb-4">
@@ -290,6 +369,11 @@ const DashboardPage = () => {
                         : 'Simulated site meeting discussions. Available for practice.'
                       : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
                   </p>
+
+                  <Sparkline
+                    data={skillSparklineData[skill]}
+                    className="w-full h-6 text-primary/40"
+                  />
 
                   <div className="mt-4 space-y-3">
                     {/* Current Band Progress */}

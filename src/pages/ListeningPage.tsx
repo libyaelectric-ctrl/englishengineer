@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import {
   CheckCircle2,
   FileText,
+  Gauge,
   Headphones,
   KeyRound,
   ListChecks,
@@ -22,6 +23,29 @@ import {
 import { Button } from '@/shared/components/Button';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+
+const AnimatedScore = ({ value }: { value: number }) => {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<number | null>(null);
+
+  useEffect(() => {
+    const start = performance.now();
+    const duration = 1000;
+    const animate = (now: number) => {
+      const progress = Math.min((now - start) / duration, 1);
+      setDisplay(Math.round(progress * value));
+      if (progress < 1) ref.current = requestAnimationFrame(animate);
+    };
+    ref.current = requestAnimationFrame(animate);
+    return () => {
+      if (ref.current) cancelAnimationFrame(ref.current);
+    };
+  }, [value]);
+
+  return <span>{display}%</span>;
+};
+
+const SPEED_OPTIONS = [0.5, 0.75, 1.0, 1.25, 1.5] as const;
 
 const ListeningPage = () => {
   const missions = useListeningMissionsStore((s) => s.missions);
@@ -54,6 +78,7 @@ const ListeningPage = () => {
     [currentLevel, levelFilter, missions]
   );
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const currentMission =
     visibleMissions.find((mission) => mission.id === selectedMissionId) ??
     visibleMissions[0];
@@ -154,6 +179,27 @@ const ListeningPage = () => {
           </div>
 
           <AudioPlayer mission={currentMission} />
+
+          <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-3">
+            <Gauge className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-xs font-bold text-foreground">Playback Speed:</span>
+            <div className="flex gap-1.5">
+              {SPEED_OPTIONS.map((speed) => (
+                <button
+                  key={speed}
+                  type="button"
+                  onClick={() => setPlaybackSpeed(speed)}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${
+                    playbackSpeed === speed
+                      ? 'bg-primary text-white'
+                      : 'bg-surface-hover text-muted-copy hover:text-foreground'
+                  }`}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
+          </div>
 
           <SectionCard
             title={currentMission.title}
@@ -265,7 +311,7 @@ const ListeningPage = () => {
                     Final score
                   </p>
                   <p className="text-2xl font-black text-foreground">
-                    {evaluationResult.finalScore}%
+                    <AnimatedScore value={evaluationResult.finalScore} />
                   </p>
                 </div>
                 <div className="rounded-xl bg-surface-hover p-4">
@@ -273,7 +319,7 @@ const ListeningPage = () => {
                     Comprehension
                   </p>
                   <p className="text-2xl font-black text-foreground">
-                    {evaluationResult.comprehensionScore}%
+                    <AnimatedScore value={evaluationResult.comprehensionScore} />
                   </p>
                 </div>
                 <div className="rounded-xl bg-surface-hover p-4">
@@ -281,7 +327,7 @@ const ListeningPage = () => {
                     Key words
                   </p>
                   <p className="text-2xl font-black text-foreground">
-                    {evaluationResult.keywordScore}%
+                    <AnimatedScore value={evaluationResult.keywordScore} />
                   </p>
                 </div>
               </div>
