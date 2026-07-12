@@ -8,7 +8,6 @@ import {
   Headphones,
   Languages,
   Mic2,
-  Network,
   PenTool,
   Sparkles,
   Target,
@@ -630,72 +629,6 @@ const CurriculumPage = () => {
             </aside>
           </div>
         </>
-      )}
-                        </h4>
-                        <ul className="mt-2 space-y-1 text-xs text-muted-copy list-disc list-inside">
-                          {selectedGraphNode.relatedGrammar.map((rule) => (
-                            <li key={rule}>{rule}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                  {selectedGraphNode.linkUrl && (
-                    <Button
-                      onClick={() => navigate(selectedGraphNode.linkUrl!)}
-                      className="mt-2 w-full justify-center"
-                    >
-                      Launch Focused Study
-                    </Button>
-                  )}
-                </div>
-              ) : (
-                <div className="py-8 text-center">
-                  <Network className="mx-auto h-8 w-8 text-muted-copy" />
-                  <p className="mt-3 text-sm font-medium text-foreground">
-                    No node selected
-                  </p>
-                  <p className="mt-1.5 text-xs leading-5 text-muted-copy">
-                    Click any node in the knowledge graph network to view
-                    related details, vocabulary alignments, and practice
-                    shortcuts.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            <div className="rounded-xl border border-border-soft bg-surface p-5">
-              <h3 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                Graph Legend
-              </h3>
-              <div className="mt-3 space-y-2.5">
-                {[
-                  { color: '#6366f1', label: 'Central CEFR Hub' },
-                  {
-                    color: '#10b981',
-                    label: 'Core Skills (Reading, Writing, etc.)',
-                  },
-                  {
-                    color: '#f59e0b',
-                    label: 'Discipline Specific Vocabularies',
-                  },
-                  { color: '#ec4899', label: 'Grammar Foundations' },
-                ].map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex items-center gap-2 text-xs"
-                  >
-                    <span
-                      className="h-3 w-3 rounded-full shrink-0"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span className="text-muted-copy">{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
       )}
     </div>
   );
