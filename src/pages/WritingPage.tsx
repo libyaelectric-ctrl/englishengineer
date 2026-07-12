@@ -123,11 +123,17 @@ const WritingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-        <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 shadow-sm relative">
+        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-orange-500 to-amber-400" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
+              <PenTool className="h-4 w-4" />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
           </div>
         </div>
+      </div>
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -249,12 +255,17 @@ const WritingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+      {/* Writing sticky header — orange/amber */}
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 shadow-sm relative">
+        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-orange-500 to-amber-400" />
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-lg font-semibold text-foreground">Writing</h1>
-            <span className="rounded-full border border-primary/20 bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-              A1
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-50 text-orange-600">
+              <PenTool className="h-4 w-4" />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
+            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+              {currentLevel}
             </span>
           </div>
           <div className="hidden text-xs text-muted-copy lg:block">

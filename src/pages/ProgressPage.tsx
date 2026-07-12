@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Trophy,
@@ -240,6 +240,12 @@ const ProgressPage = () => {
   const animatedTotalElo = useAnimatedNumber(totalElo, 2.5);
   const totalPercentage = Math.min(100, (totalElo / MAX_ELO) * 100);
 
+  const highestSkillName = useMemo(() => {
+    return SKILLS.reduce((best, s) =>
+      eloScores[s.id] > eloScores[best.id] ? s : best
+    ).label;
+  }, [eloScores]);
+
   const getRankBadge = (elo: number) => {
     if (elo >= 4500)
       return {
@@ -365,7 +371,7 @@ const ProgressPage = () => {
               {
                 icon: Activity,
                 label: 'Highest Skill',
-                value: 'Vocabulary',
+                value: highestSkillName,
                 color: 'text-emerald-600',
               },
               {

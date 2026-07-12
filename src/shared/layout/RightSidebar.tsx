@@ -381,20 +381,16 @@ function Vocab() {
           <div>
             <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Total Mastery</span>
-              <span>
-                {v.mastered}/{v.total}
-              </span>
+              <span>{v.mastered}/{v.total}</span>
             </div>
-            <Progress value={v.mastered} max={v.total} />
+            <Progress value={v.mastered} max={v.total} color="#3b82f6" />
           </div>
           <div>
             <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Learning</span>
-              <span>
-                {v.learning}/{v.total}
-              </span>
+              <span>{v.learning}/{v.total}</span>
             </div>
-            <Progress value={v.learning} max={v.total} color="#f59e0b" />
+            <Progress value={v.learning} max={v.total} color="#06b6d4" />
           </div>
         </div>
       </Section>
@@ -501,18 +497,18 @@ function Grammar() {
               <span>Strong</span>
               <span>{g.strong}/360</span>
             </div>
-            <Progress value={g.strong} max={360} />
+            <Progress value={g.strong} max={360} color="#8b5cf6" />
           </div>
           <div>
             <div className="flex justify-between text-xs text-muted-copy mb-1">
               <span>Due</span>
               <span>{g.due}/360</span>
             </div>
-            <Progress value={g.due} max={360} color="#f59e0b" />
+            <Progress value={g.due} max={360} color="#e879f9" />
           </div>
         </div>
         <Stat label="Tracked" value={g.tracked} />
-        <Stat label="New" value={g.newRules} color="text-blue-500" />
+        <Stat label="New" value={g.newRules} color="text-violet-500" />
       </Section>
       <Section title="Actions">
         <div className="space-y-1.5">
@@ -582,11 +578,9 @@ function Reading() {
         <div>
           <div className="flex justify-between text-[10px] text-muted-copy mb-1">
             <span>Completed</span>
-            <span>
-              {done}/{missions.length}
-            </span>
+            <span>{done}/{missions.length}</span>
           </div>
-          <Progress value={done} max={missions.length} />
+          <Progress value={done} max={missions.length} color="#10b981" />
         </div>
       </Section>
     </>
@@ -641,11 +635,9 @@ function Writing() {
         <div>
           <div className="flex justify-between text-[10px] text-muted-copy mb-1">
             <span>Completed</span>
-            <span>
-              {done}/{missions.length}
-            </span>
+            <span>{done}/{missions.length}</span>
           </div>
-          <Progress value={done} max={missions.length} />
+          <Progress value={done} max={missions.length} color="#f97316" />
         </div>
       </Section>
     </>
