@@ -30,6 +30,7 @@ export const toErrorResponse = (error) => {
       error: {
         code: 'internal_error',
         message: 'The backend could not complete the request.',
+        details: { name: error?.name, msg: error?.message, stack: error?.stack },
       },
     },
   };

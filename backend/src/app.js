@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/node';
 import { createAIService, registerAIRoutes } from './ai.js';
 import { createBillingService, createStripeClient } from './billing-service.js';
 import { registerBillingRoutes } from './billing-routes.js';
+import { registerAdminRoutes } from './admin-routes.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
@@ -276,6 +277,9 @@ export const createApp = ({
     store: rateLimitStore,
   });
   app.use('/api', globalRateLimiter);
+
+  // Admin routes (after global rate limiter)
+  registerAdminRoutes(app, requireBackendAuth, globalRateLimiter);
 
   app.use((_request, _response, next) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
