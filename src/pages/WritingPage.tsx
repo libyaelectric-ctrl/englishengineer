@@ -252,11 +252,7 @@ const WritingPage = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
-            <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${
-              currentLevel.startsWith('A') ? 'bg-emerald-50 border-emerald-200 text-emerald-700' :
-              currentLevel.startsWith('B') ? 'bg-blue-50 border-blue-200 text-blue-700' :
-              'bg-violet-50 border-violet-200 text-violet-700'
-            }`}>
+            <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
               {currentLevel}
             </span>
           </div>
