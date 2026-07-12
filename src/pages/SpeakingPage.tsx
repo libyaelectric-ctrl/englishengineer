@@ -200,7 +200,7 @@ const SpeakingPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Speaking sticky header */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">Speaking</h1>
         </div>

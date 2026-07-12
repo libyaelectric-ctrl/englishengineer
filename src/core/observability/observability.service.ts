@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import {
   type EngVoxEnv,
   validateEnvironment,
@@ -13,6 +14,7 @@ interface ObservabilityEnv {
   VITE_SENTRY_DSN?: string;
   VITE_ERROR_MONITORING_PROVIDER?: string;
   VITE_ERROR_MONITORING_SAMPLE_RATE?: string;
+  VITE_ENVIRONMENT_MODE?: string;
 }
 
 interface ImportMetaWithObservabilityEnv {
@@ -34,6 +36,26 @@ const getHealthStatus = (
   if (errors.length > 0) return 'blocked';
   if (warnings.length > 0) return 'degraded';
   return 'healthy';
+};
+
+let sentryInitialized = false;
+
+const initSentry = () => {
+  if (sentryInitialized) return;
+  const dsn = env?.VITE_SENTRY_DSN;
+  if (!dsn) return;
+
+  Sentry.init({
+    dsn,
+    environment: env?.VITE_ENVIRONMENT_MODE || 'development',
+    tracesSampleRate: normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE) || 0.1,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+    ],
+    enabled: Boolean(dsn),
+  });
+
+  sentryInitialized = true;
 };
 
 export const ObservabilityService = {
@@ -59,7 +81,7 @@ export const ObservabilityService = {
       ...environment.errors,
       ...environment.warnings,
       monitoring.dsnConfigured
-        ? 'Sentry DSN is configured — but Sentry SDK is not installed. Errors are logged locally only.'
+        ? 'Sentry DSN configured and SDK initialized. Errors are reported to Sentry.'
         : 'Error monitoring is not configured. Runtime errors remain local-only.',
     ];
 
@@ -80,22 +102,39 @@ export const ObservabilityService = {
     };
   },
 
-  /** Log error locally to console. Not connected to any external service. */
-  logErrorLocally(error: ErrorReport): void {
+  /** Initialize Sentry error monitoring. Call once at app startup. */
+  init() {
+    initSentry();
+  },
+
+  /** Report error to Sentry (if configured) and log locally. */
+  logError(error: ErrorReport): void {
+    if (sentryInitialized) {
+      Sentry.captureException(new Error(error.message), {
+        tags: { code: error.code },
+        extra: error.context,
+      });
+    }
     console.error(
-      `[Observability] Local error log: ${error.code}`,
+      `[Observability] Error: ${error.code}`,
       error.message,
       error.context
     );
   },
 
-  /** Log performance metric locally to console. Not connected to any external service. */
-  logPerformanceLocally(metric: {
+  /** Log performance metric locally. */
+  logPerformance(metric: {
     name: string;
     durationMs: number;
     success: boolean;
     context?: Record<string, unknown>;
   }): void {
+    if (sentryInitialized) {
+      Sentry.captureMessage(
+        `Performance: ${metric.name} ${metric.durationMs}ms ${metric.success ? 'OK' : 'FAILED'}`,
+        metric.success ? 'info' : 'warning'
+      );
+    }
     console.log(
       `[Observability] Performance: ${metric.name} took ${metric.durationMs}ms`,
       metric.success ? 'OK' : 'FAILED',

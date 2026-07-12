@@ -6,6 +6,10 @@ import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { loadVocabularyEntries } from '@/features/vocabulary';
+import { ObservabilityService } from '@/core/observability/observability.service';
+
+// Initialize Sentry error monitoring
+ObservabilityService.init();
 
 // Initialize dark mode from localStorage
 if (typeof window !== 'undefined') {
