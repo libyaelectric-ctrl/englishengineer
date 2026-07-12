@@ -104,17 +104,25 @@ const DashboardPage = () => {
             <div className="flex-1">
               <div className="flex justify-between items-end mb-1.5">
                 <div>
-                  <h3 className="text-sm font-bold text-foreground">Engineering Readiness Score</h3>
-                  <p className="text-[10px] font-medium text-muted-copy">Based on communication, technical vocabulary, and scenario performance.</p>
+                  <h3 className="text-sm font-bold text-foreground">
+                    Engineering Readiness Score
+                  </h3>
+                  <p className="text-[10px] font-medium text-muted-copy">
+                    Based on communication, technical vocabulary, and scenario
+                    performance.
+                  </p>
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] font-bold text-green-500 flex items-center gap-1">
-                    <Target className="w-3 h-3"/> High Competency
+                    <Target className="w-3 h-3" /> High Competency
                   </span>
                 </div>
               </div>
               <div className="h-2 rounded-full bg-surface-hover overflow-hidden">
-                <div className="h-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-1000 relative" style={{ width: '85%' }}>
+                <div
+                  className="h-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-1000 relative"
+                  style={{ width: '85%' }}
+                >
                   <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
               </div>
@@ -236,7 +244,7 @@ const DashboardPage = () => {
               const lesson = LessonPathEngine.getSkillProgress(profile, skill)
                 .lesson.number;
               const isSimulated = skill === 'listening' || skill === 'speaking';
-              
+
               return (
                 <button
                   key={skill}
@@ -257,7 +265,7 @@ const DashboardPage = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <p className="mt-3 text-[10px] text-muted-copy leading-4">
                     {isSimulated
                       ? skill === 'listening'
@@ -265,13 +273,15 @@ const DashboardPage = () => {
                         : 'Simulated site meeting discussions. Available for practice.'
                       : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
                   </p>
-                  
+
                   <div className="mt-4 space-y-3">
                     {/* Current Band Progress */}
                     <div className="space-y-1.5">
                       <div className="flex justify-between items-end px-1">
                         <div className="flex flex-col items-start">
-                          <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Min</span>
+                          <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                            Min
+                          </span>
                           <span className="text-[10px] font-medium text-muted-copy">
                             {getEloBandRange(skillProfile.cefrBand).min}
                           </span>
@@ -282,7 +292,9 @@ const DashboardPage = () => {
                           </span>
                         </div>
                         <div className="flex flex-col items-end">
-                          <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Max</span>
+                          <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                            Max
+                          </span>
                           <span className="text-[10px] font-medium text-muted-copy">
                             {getEloBandRange(skillProfile.cefrBand).max}
                           </span>
@@ -311,7 +323,8 @@ const DashboardPage = () => {
                           Global Progress (A1 - C2+)
                         </span>
                         <span className="text-[9px] font-bold text-foreground">
-                          {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
+                          {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}
+                          %
                         </span>
                       </div>
                       <ProgressBar
@@ -321,8 +334,12 @@ const DashboardPage = () => {
                         className="h-1.5"
                       />
                       <div className="flex justify-between items-center px-1">
-                        <span className="text-[8px] text-muted-copy/70">1000 ELO (A1)</span>
-                        <span className="text-[8px] text-muted-copy/70">5000 ELO (C2+)</span>
+                        <span className="text-[8px] text-muted-copy/70">
+                          1000 ELO (A1)
+                        </span>
+                        <span className="text-[8px] text-muted-copy/70">
+                          5000 ELO (C2+)
+                        </span>
                       </div>
                     </div>
                   </div>

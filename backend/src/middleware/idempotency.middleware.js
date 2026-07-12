@@ -3,7 +3,7 @@ import { ApiError } from '../errors.js';
 /**
  * Idempotency Key Middleware
  * Prevents duplicate processing of requests using idempotency keys.
- * 
+ *
  * Usage:
  * app.post('/api/endpoint', requireBackendAuth, idempotencyKey(), handler)
  */

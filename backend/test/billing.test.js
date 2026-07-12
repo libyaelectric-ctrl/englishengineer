@@ -1,6 +1,9 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBillingService, createStripeClient } from '../src/billing-service.js';
+import {
+  createBillingService,
+  createStripeClient,
+} from '../src/billing-service.js';
 
 describe('billing service', () => {
   it('creates billing service', () => {

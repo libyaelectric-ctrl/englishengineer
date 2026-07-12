@@ -11,6 +11,7 @@ EngineerOS needs a deployment platform for frontend and backend.
 ## Decision
 
 Use Vercel for frontend and Railway for backend, providing:
+
 - Automatic deployments
 - Preview environments
 - Custom domains
@@ -19,12 +20,14 @@ Use Vercel for frontend and Railway for backend, providing:
 ## Consequences
 
 ### Positive
+
 - Zero-config deployments
 - Automatic scaling
 - Preview environments for PRs
 - Built-in SSL
 
 ### Negative
+
 - Vendor lock-in
 - Costs scale with usage
 - Limited control over infrastructure

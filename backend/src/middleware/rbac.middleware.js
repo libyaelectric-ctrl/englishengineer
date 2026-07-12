@@ -3,7 +3,7 @@ import { ApiError } from '../errors.js';
 /**
  * Role-Based Access Control (RBAC) Middleware
  * Checks if the authenticated user has one of the required roles.
- * 
+ *
  * Usage:
  * app.get('/api/admin/data', requireBackendAuth, requireRole(['admin', 'team_lead']), handler)
  */

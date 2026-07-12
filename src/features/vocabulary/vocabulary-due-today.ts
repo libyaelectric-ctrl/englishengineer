@@ -15,12 +15,20 @@ export const getDueTodayWords = (
   return Object.values(reviewStates)
     .filter((state) => {
       const nextReview = new Date(state.nextReview);
-      const nextReviewDay = new Date(nextReview.getFullYear(), nextReview.getMonth(), nextReview.getDate());
+      const nextReviewDay = new Date(
+        nextReview.getFullYear(),
+        nextReview.getMonth(),
+        nextReview.getDate()
+      );
       return nextReviewDay.getTime() <= today.getTime();
     })
     .map((state) => {
       const nextReview = new Date(state.nextReview);
-      const nextReviewDay = new Date(nextReview.getFullYear(), nextReview.getMonth(), nextReview.getDate());
+      const nextReviewDay = new Date(
+        nextReview.getFullYear(),
+        nextReview.getMonth(),
+        nextReview.getDate()
+      );
       const diffMs = today.getTime() - nextReviewDay.getTime();
       const daysOverdue = Math.floor(diffMs / (1000 * 60 * 60 * 24));
       return { wordId: state.wordId, reviewState: state, daysOverdue };
@@ -40,13 +48,20 @@ export const getUpcomingReviews = (
   return Object.values(reviewStates)
     .filter((state) => {
       const nextReview = new Date(state.nextReview);
-      return nextReview.getTime() > today.getTime() && nextReview.getTime() <= futureDate.getTime();
+      return (
+        nextReview.getTime() > today.getTime() &&
+        nextReview.getTime() <= futureDate.getTime()
+      );
     })
     .map((state) => {
       const nextReview = new Date(state.nextReview);
       const diffMs = nextReview.getTime() - today.getTime();
       const daysUntil = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-      return { wordId: state.wordId, reviewState: state, daysOverdue: -daysUntil };
+      return {
+        wordId: state.wordId,
+        reviewState: state,
+        daysOverdue: -daysUntil,
+      };
     })
     .sort((a, b) => a.daysOverdue - b.daysOverdue);
 };
@@ -67,8 +82,11 @@ export const getReviewStats = (
     mastered: mastered.length,
     learning: learning.length,
     newWords: newWords.length,
-    averageEaseFactor: all.length > 0
-      ? Math.round((all.reduce((sum, s) => sum + s.easeFactor, 0) / all.length) * 100) / 100
-      : 0,
+    averageEaseFactor:
+      all.length > 0
+        ? Math.round(
+            (all.reduce((sum, s) => sum + s.easeFactor, 0) / all.length) * 100
+          ) / 100
+        : 0,
   };
 };

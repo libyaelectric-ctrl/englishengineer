@@ -15,7 +15,10 @@ type UIAction =
   | { type: 'TOGGLE_CLEAR_CONFIRMATION' }
   | { type: 'SET_CLEAR_CONFIRMATION'; value: string };
 
-export const uiReducer = (state: ProfileUIState, action: UIAction): ProfileUIState => {
+export const uiReducer = (
+  state: ProfileUIState,
+  action: UIAction
+): ProfileUIState => {
   switch (action.type) {
     case 'SET_SAVING':
       return { ...state, isSaving: action.value };
@@ -58,7 +61,10 @@ type EditAction =
   | { type: 'SET_GOALS'; value: string[] }
   | { type: 'RESET_EDIT' };
 
-export const editReducer = (state: ProfileEditState, action: EditAction): ProfileEditState => {
+export const editReducer = (
+  state: ProfileEditState,
+  action: EditAction
+): ProfileEditState => {
   switch (action.type) {
     case 'SET_EDIT_MODE':
       return { ...state, isEditMode: action.value };
@@ -105,9 +111,20 @@ type PrefsAction =
   | { type: 'SET_EXP_LEVEL'; value: string }
   | { type: 'SET_CAREER_GOAL'; value: string }
   | { type: 'SET_SAVED'; value: boolean }
-  | { type: 'LOAD_PROFILE'; goals: string[]; minutes: number; tasks: number; missedDays: number; expLevel: string; careerGoal: string };
+  | {
+      type: 'LOAD_PROFILE';
+      goals: string[];
+      minutes: number;
+      tasks: number;
+      missedDays: number;
+      expLevel: string;
+      careerGoal: string;
+    };
 
-export const prefsReducer = (state: ProfilePrefsState, action: PrefsAction): ProfilePrefsState => {
+export const prefsReducer = (
+  state: ProfilePrefsState,
+  action: PrefsAction
+): ProfilePrefsState => {
   switch (action.type) {
     case 'SET_GOALS':
       return { ...state, goals: action.value };

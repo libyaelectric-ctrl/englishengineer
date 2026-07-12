@@ -3,12 +3,12 @@
 
 :root {
   /* Soft off-white theme (#F0ECEC) — reduced eye strain */
-  --background: #F0ECEC;
+  --background: #f0ecec;
   --foreground: #202124;
 
   --color-primary: #202124;
   --color-primary-hover: #3c4043;
-  --color-primary-foreground: #F0ECEC;
+  --color-primary-foreground: #f0ecec;
 
   --color-surface: #f8f9fa;
   --color-surface-hover: #e8eaed;
@@ -41,17 +41,17 @@
 .dark {
   /* Dark theme - Google Dark Mode minimal */
   --background: #202124;
-  --foreground: #F0ECEC;
+  --foreground: #f0ecec;
 
-  --color-primary: #8ab4f8; 
+  --color-primary: #8ab4f8;
   --color-primary-hover: #aecbfa;
   --color-primary-foreground: #202124;
 
-  --color-surface: #303134; 
-  --color-surface-hover: #3c4043; 
+  --color-surface: #303134;
+  --color-surface-hover: #3c4043;
   --color-soft: rgba(255, 255, 255, 0.05);
-  --color-border-soft: #3c4043; 
-  --color-border-hover: #5f6368; 
+  --color-border-soft: #3c4043;
+  --color-border-hover: #5f6368;
   --color-muted-copy: #9aa0a6;
   --color-focus: rgba(255, 255, 255, 0.15);
   --color-success: #22c55e;
@@ -141,7 +141,9 @@
     background: transparent;
   }
 
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     @apply tracking-tight;
   }
 
@@ -233,7 +235,9 @@
   .dark .premium-panel {
     background: var(--color-surface);
     border: 1px solid rgba(255, 255, 255, 0.03);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.5),
+      0 2px 4px -2px rgba(0, 0, 0, 0.5);
   }
 
   .premium-surface {
@@ -245,7 +249,9 @@
   .dark .premium-surface {
     background: var(--background);
     border: 1px solid rgba(255, 255, 255, 0.03);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.5),
+      0 2px 4px -2px rgba(0, 0, 0, 0.5);
   }
 
   .premium-input {
@@ -346,7 +352,9 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.03);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.5),
+      0 2px 4px -2px rgba(0, 0, 0, 0.5);
   }
 
   .public-eyebrow {

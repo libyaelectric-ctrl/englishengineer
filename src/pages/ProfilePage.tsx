@@ -74,10 +74,14 @@ const ProfilePage = () => {
     showClearConfirmation: false,
     clearConfirmation: '',
   } satisfies ProfileUIState);
-  const { isSaving, message, error, showClearConfirmation, clearConfirmation } = ui;
-  const setIsSaving = (v: boolean) => dispatchUI({ type: 'SET_SAVING', value: v });
-  const setMessage = (v: string | null) => dispatchUI({ type: 'SET_MESSAGE', value: v });
-  const setError = (v: string | null) => dispatchUI({ type: 'SET_ERROR', value: v });
+  const { isSaving, message, error, showClearConfirmation, clearConfirmation } =
+    ui;
+  const setIsSaving = (v: boolean) =>
+    dispatchUI({ type: 'SET_SAVING', value: v });
+  const setMessage = (v: string | null) =>
+    dispatchUI({ type: 'SET_MESSAGE', value: v });
+  const setError = (v: string | null) =>
+    dispatchUI({ type: 'SET_ERROR', value: v });
   const setShowClearConfirmation = (v: React.SetStateAction<boolean>) => {
     const nextValue = typeof v === 'function' ? v(ui.showClearConfirmation) : v;
     if (nextValue !== ui.showClearConfirmation) {
@@ -158,15 +162,24 @@ const ProfilePage = () => {
     lang: editLang,
     goals: editGoals,
   } = edit;
-  const setIsEditMode = (v: boolean) => dispatchEdit({ type: 'SET_EDIT_MODE', value: v });
-  const setEditFirstName = (v: string) => dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
-  const setEditLastName = (v: string) => dispatchEdit({ type: 'SET_LAST_NAME', value: v });
-  const setEditProfession = (v: string) => dispatchEdit({ type: 'SET_PROFESSION', value: v });
-  const setEditTrack = (v: string) => dispatchEdit({ type: 'SET_TRACK', value: v });
-  const setEditSubdomain = (v: string) => dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
-  const setEditIndustry = (v: string) => dispatchEdit({ type: 'SET_INDUSTRY', value: v });
-  const setEditLang = (v: 'en' | 'tr') => dispatchEdit({ type: 'SET_LANG', value: v });
-  const setEditGoals = (v: string[]) => dispatchEdit({ type: 'SET_GOALS', value: v });
+  const setIsEditMode = (v: boolean) =>
+    dispatchEdit({ type: 'SET_EDIT_MODE', value: v });
+  const setEditFirstName = (v: string) =>
+    dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
+  const setEditLastName = (v: string) =>
+    dispatchEdit({ type: 'SET_LAST_NAME', value: v });
+  const setEditProfession = (v: string) =>
+    dispatchEdit({ type: 'SET_PROFESSION', value: v });
+  const setEditTrack = (v: string) =>
+    dispatchEdit({ type: 'SET_TRACK', value: v });
+  const setEditSubdomain = (v: string) =>
+    dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
+  const setEditIndustry = (v: string) =>
+    dispatchEdit({ type: 'SET_INDUSTRY', value: v });
+  const setEditLang = (v: 'en' | 'tr') =>
+    dispatchEdit({ type: 'SET_LANG', value: v });
+  const setEditGoals = (v: string[]) =>
+    dispatchEdit({ type: 'SET_GOALS', value: v });
 
   // Prefs state via useReducer
   const [prefs, dispatchPrefs] = useReducer(prefsReducer, {
@@ -188,19 +201,40 @@ const ProfilePage = () => {
     saved: preferencesSaved,
   } = prefs;
   const setPrefGoals = (v: React.SetStateAction<string[]>) =>
-    dispatchPrefs({ type: 'SET_GOALS', value: typeof v === 'function' ? v(prefs.goals) : v });
+    dispatchPrefs({
+      type: 'SET_GOALS',
+      value: typeof v === 'function' ? v(prefs.goals) : v,
+    });
   const setPrefMinutes = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_MINUTES', value: typeof v === 'function' ? v(prefs.minutes) : v });
+    dispatchPrefs({
+      type: 'SET_MINUTES',
+      value: typeof v === 'function' ? v(prefs.minutes) : v,
+    });
   const setPrefTasks = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_TASKS', value: typeof v === 'function' ? v(prefs.tasks) : v });
+    dispatchPrefs({
+      type: 'SET_TASKS',
+      value: typeof v === 'function' ? v(prefs.tasks) : v,
+    });
   const setPrefMissedDays = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_MISSED_DAYS', value: typeof v === 'function' ? v(prefs.missedDays) : v });
+    dispatchPrefs({
+      type: 'SET_MISSED_DAYS',
+      value: typeof v === 'function' ? v(prefs.missedDays) : v,
+    });
   const setPrefExpLevel = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({ type: 'SET_EXP_LEVEL', value: typeof v === 'function' ? v(prefs.expLevel) : v });
+    dispatchPrefs({
+      type: 'SET_EXP_LEVEL',
+      value: typeof v === 'function' ? v(prefs.expLevel) : v,
+    });
   const setPrefCareerGoal = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({ type: 'SET_CAREER_GOAL', value: typeof v === 'function' ? v(prefs.careerGoal) : v });
+    dispatchPrefs({
+      type: 'SET_CAREER_GOAL',
+      value: typeof v === 'function' ? v(prefs.careerGoal) : v,
+    });
   const setPreferencesSaved = (v: React.SetStateAction<boolean>) =>
-    dispatchPrefs({ type: 'SET_SAVED', value: typeof v === 'function' ? v(prefs.saved) : v });
+    dispatchPrefs({
+      type: 'SET_SAVED',
+      value: typeof v === 'function' ? v(prefs.saved) : v,
+    });
 
   const initializeSpeaking = useSpeakingStore((state) => state.initializeStore);
 

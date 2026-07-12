@@ -1,16 +1,17 @@
 export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
   try {
     // Check if AudioContext is supported
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass =
+      window.AudioContext || (window as any).webkitAudioContext;
     if (!AudioContextClass) return;
-    
+
     const ctx = new AudioContextClass();
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
-    
+
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
-    
+
     if (type === 'pop') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(400, ctx.currentTime);

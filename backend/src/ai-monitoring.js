@@ -88,38 +88,50 @@ export const getAIMetrics = (timeRange = '24h') => {
   }
 
   const filteredRequests = metrics.requests.filter(
-    r => new Date(r.timestamp) >= cutoff
+    (r) => new Date(r.timestamp) >= cutoff
   );
 
   const filteredUsage = {
     totalRequests: filteredRequests.length,
-    totalTokens: filteredRequests.reduce((sum, r) => sum + r.inputTokens + r.outputTokens, 0),
+    totalTokens: filteredRequests.reduce(
+      (sum, r) => sum + r.inputTokens + r.outputTokens,
+      0
+    ),
     totalCost: filteredRequests.reduce((sum, r) => sum + r.cost, 0),
-    successRate: filteredRequests.length > 0
-      ? (filteredRequests.filter(r => r.success).length / filteredRequests.length) * 100
-      : 100,
-    avgLatency: filteredRequests.length > 0
-      ? filteredRequests.reduce((sum, r) => sum + r.latencyMs, 0) / filteredRequests.length
-      : 0,
+    successRate:
+      filteredRequests.length > 0
+        ? (filteredRequests.filter((r) => r.success).length /
+            filteredRequests.length) *
+          100
+        : 100,
+    avgLatency:
+      filteredRequests.length > 0
+        ? filteredRequests.reduce((sum, r) => sum + r.latencyMs, 0) /
+          filteredRequests.length
+        : 0,
   };
 
   return {
     timeRange,
     summary: filteredUsage,
-    recentErrors: filteredRequests
-      .filter(r => !r.success)
-      .slice(-10),
+    recentErrors: filteredRequests.filter((r) => !r.success).slice(-10),
   };
 };
 
 export const getUserAIUsage = (userId) => {
-  const userRequests = metrics.requests.filter(r => r.userId === userId);
+  const userRequests = metrics.requests.filter((r) => r.userId === userId);
   return {
     userId,
     totalRequests: userRequests.length,
-    totalTokens: userRequests.reduce((sum, r) => sum + r.inputTokens + r.outputTokens, 0),
+    totalTokens: userRequests.reduce(
+      (sum, r) => sum + r.inputTokens + r.outputTokens,
+      0
+    ),
     totalCost: userRequests.reduce((sum, r) => sum + r.cost, 0),
-    lastRequest: userRequests.length > 0 ? userRequests[userRequests.length - 1].timestamp : null,
+    lastRequest:
+      userRequests.length > 0
+        ? userRequests[userRequests.length - 1].timestamp
+        : null,
   };
 };
 

@@ -43,7 +43,8 @@ function calculateMemberScore(member: {
   skillScores: Record<string, number>;
 }): number {
   const scores = Object.values(member.skillScores);
-  const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+  const avgScore =
+    scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
   return Math.round(avgScore * 0.6 + member.completedTasks * 0.4);
 }
 
@@ -205,7 +206,10 @@ export const TeamLeaderboardService = {
     )
   ): TeamLeaderboard {
     const entries = this.generateLeaderboard(members, previousScores);
-    const challenges = this.generateWeeklyChallenges(memberProgress, weekNumber);
+    const challenges = this.generateWeeklyChallenges(
+      memberProgress,
+      weekNumber
+    );
 
     const activeMembers = members.length;
 

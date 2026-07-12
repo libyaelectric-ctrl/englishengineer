@@ -25,18 +25,26 @@ import { SectionCard } from '@/shared/components/SectionCard';
 
 const ListeningPage = () => {
   const missions = useListeningMissionsStore((s) => s.missions);
-  const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
+  const selectedMissionId = useListeningMissionsStore(
+    (s) => s.selectedMissionId
+  );
   const answers = useListeningMissionsStore((s) => s.answers);
   const summary = useListeningMissionsStore((s) => s.summary);
   const userKeywords = useListeningMissionsStore((s) => s.userKeywords);
   const evaluationResult = useListeningMissionsStore((s) => s.evaluationResult);
-  const initializeStore = useListeningMissionsStore((s) => s.initializeMissions);
+  const initializeStore = useListeningMissionsStore(
+    (s) => s.initializeMissions
+  );
   const selectMission = useListeningMissionsStore((s) => s.selectMission);
   const setAnswer = useListeningMissionsStore((s) => s.setAnswer);
   const setSummary = useListeningMissionsStore((s) => s.setSummary);
   const setUserKeywords = useListeningMissionsStore((s) => s.setUserKeywords);
-  const submitCurrentMission = useListeningMissionsStore((s) => s.submitCurrentMission);
-  const resetCurrentMission = useListeningMissionsStore((s) => s.resetCurrentMission);
+  const submitCurrentMission = useListeningMissionsStore(
+    (s) => s.submitCurrentMission
+  );
+  const resetCurrentMission = useListeningMissionsStore(
+    (s) => s.resetCurrentMission
+  );
   const currentLevel = useSkillLevel('listening').currentLevel;
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER

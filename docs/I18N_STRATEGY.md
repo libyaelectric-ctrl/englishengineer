@@ -76,21 +76,21 @@ npm run i18n:integrate
 
 ### UI Strings
 
-| Category | Examples |
-|----------|----------|
-| Navigation | Menu items, buttons |
-| Forms | Labels, placeholders, errors |
-| Messages | Success, error, warning |
-| Modals | Confirmations, alerts |
+| Category   | Examples                     |
+| ---------- | ---------------------------- |
+| Navigation | Menu items, buttons          |
+| Forms      | Labels, placeholders, errors |
+| Messages   | Success, error, warning      |
+| Modals     | Confirmations, alerts        |
 
 ### Educational Content
 
-| Category | Examples |
-|----------|----------|
-| Lessons | Grammar, vocabulary |
-| Exercises | Quizzes, practice |
-| Feedback | Corrections, hints |
-| Achievements | Badges, rewards |
+| Category     | Examples            |
+| ------------ | ------------------- |
+| Lessons      | Grammar, vocabulary |
+| Exercises    | Quizzes, practice   |
+| Feedback     | Corrections, hints  |
+| Achievements | Badges, rewards     |
 
 ## File Structure
 
@@ -172,11 +172,11 @@ const preloadLanguage = (lang: string) => {
 
 ### Metrics
 
-| Metric | Target |
-|--------|--------|
-| Translation coverage | 100% |
-| Missing translations | 0 |
-| Outdated translations | < 5% |
+| Metric                     | Target  |
+| -------------------------- | ------- |
+| Translation coverage       | 100%    |
+| Missing translations       | 0       |
+| Outdated translations      | < 5%    |
 | User language distribution | Tracked |
 
 ### Alerts

@@ -1,17 +1,17 @@
 import React from 'react';
 import { cn } from '@/shared/utils/cn';
 
-export function PageHeader({ 
-  title, 
-  description, 
+export function PageHeader({
+  title,
+  description,
   icon,
   badgeText,
   badgeColor,
   actions,
-  children
-}: { 
-  title: string; 
-  description?: string; 
+  children,
+}: {
+  title: string;
+  description?: string;
   icon?: React.ReactNode;
   badgeText?: string;
   badgeColor?: string;
@@ -28,14 +28,24 @@ export function PageHeader({
         )}
         <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
         {badgeText && (
-          <span className={cn("rounded-full border px-2 py-0.5 text-[10px] font-medium", badgeColor)}>
+          <span
+            className={cn(
+              'rounded-full border px-2 py-0.5 text-[10px] font-medium',
+              badgeColor
+            )}
+          >
             {badgeText}
           </span>
         )}
       </div>
       <div className="flex justify-between items-start">
         {description && (
-          <p className={cn("text-muted-copy text-sm max-w-2xl", icon && "ml-[52px]")}>
+          <p
+            className={cn(
+              'text-muted-copy text-sm max-w-2xl',
+              icon && 'ml-[52px]'
+            )}
+          >
             {description}
           </p>
         )}

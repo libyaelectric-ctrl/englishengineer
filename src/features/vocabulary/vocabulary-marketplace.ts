@@ -1,4 +1,7 @@
-export type ContentItemType = 'vocabulary_set' | 'practice_scenario' | 'lesson_plan';
+export type ContentItemType =
+  | 'vocabulary_set'
+  | 'practice_scenario'
+  | 'lesson_plan';
 
 export interface MarketplaceContent {
   id: string;
@@ -61,10 +64,22 @@ const MOCK_CONTENT: MarketplaceContent[] = [
     category: 'Electrical Engineering',
     difficulty: 'intermediate',
     tags: ['safety', 'electrical', 'site'],
-    data: { terms: [
-      { word: 'lockout', meaning: 'Kilitleme prosedürü', example: 'Perform lockout before maintenance', cefrLevel: 'B1' },
-      { word: 'tagout', meaning: 'Etiketleme prosedürü', example: 'Apply tagout to the breaker', cefrLevel: 'B1' },
-    ]},
+    data: {
+      terms: [
+        {
+          word: 'lockout',
+          meaning: 'Kilitleme prosedürü',
+          example: 'Perform lockout before maintenance',
+          cefrLevel: 'B1',
+        },
+        {
+          word: 'tagout',
+          meaning: 'Etiketleme prosedürü',
+          example: 'Apply tagout to the breaker',
+          cefrLevel: 'B1',
+        },
+      ],
+    },
     rating: 4.8,
     ratingCount: 24,
     downloadCount: 156,
@@ -83,7 +98,8 @@ const MOCK_CONTENT: MarketplaceContent[] = [
     difficulty: 'beginner',
     tags: ['daily', 'briefing', 'construction'],
     data: {
-      prompt: 'Good morning team. Today we will focus on the foundation work for Building C. The concrete pouring is scheduled for 10 AM.',
+      prompt:
+        'Good morning team. Today we will focus on the foundation work for Building C. The concrete pouring is scheduled for 10 AM.',
       expectedKeywords: ['foundation', 'concrete', 'pouring', 'schedule'],
       discipline: 'Construction',
       estimatedMinutes: 10,
@@ -105,10 +121,22 @@ const MOCK_CONTENT: MarketplaceContent[] = [
     category: 'Architecture',
     difficulty: 'advanced',
     tags: ['design', 'review', 'meeting'],
-    data: { terms: [
-      { word: 'facade', meaning: 'Cephe', example: 'The glass facade reflects modern design', cefrLevel: 'B2' },
-      { word: 'cantilever', meaning: 'Konsol', example: 'The cantilever extends 5 meters', cefrLevel: 'B2' },
-    ]},
+    data: {
+      terms: [
+        {
+          word: 'facade',
+          meaning: 'Cephe',
+          example: 'The glass facade reflects modern design',
+          cefrLevel: 'B2',
+        },
+        {
+          word: 'cantilever',
+          meaning: 'Konsol',
+          example: 'The cantilever extends 5 meters',
+          cefrLevel: 'B2',
+        },
+      ],
+    },
     rating: 4.2,
     ratingCount: 12,
     downloadCount: 45,
@@ -149,7 +177,10 @@ export const MarketplaceService = {
     results.sort((a, b) => {
       if (sortBy === 'rating') return b.rating - a.rating;
       if (sortBy === 'downloads') return b.downloadCount - a.downloadCount;
-      if (sortBy === 'newest') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (sortBy === 'newest')
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
       return 0;
     });
 
@@ -206,8 +237,7 @@ export const MarketplaceService = {
   },
 
   getPopularContent(limit: number = 5): MarketplaceContent[] {
-    return MOCK_CONTENT
-      .filter((c) => c.isPublished)
+    return MOCK_CONTENT.filter((c) => c.isPublished)
       .sort((a, b) => b.downloadCount - a.downloadCount)
       .slice(0, limit);
   },

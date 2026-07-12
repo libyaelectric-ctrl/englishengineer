@@ -83,7 +83,9 @@ const createAuditCleanupWorker = () => {
     'audit-cleanup',
     async (job) => {
       const { retentionDays = 90 } = job.data;
-      console.log(`[AuditCleanup] Cleaning logs older than ${retentionDays} days`);
+      console.log(
+        `[AuditCleanup] Cleaning logs older than ${retentionDays} days`
+      );
 
       // Audit log cleanup logic
       // Would delete logs from Supabase older than retention period
@@ -113,21 +115,33 @@ export const startWorkers = () => {
 
 // Job helpers
 export const addEmailJob = async (type, to, data = {}) => {
-  return emailQueue.add(type, { type, to, data }, {
-    attempts: 3,
-    backoff: { type: 'exponential', delay: 1000 },
-  });
+  return emailQueue.add(
+    type,
+    { type, to, data },
+    {
+      attempts: 3,
+      backoff: { type: 'exponential', delay: 1000 },
+    }
+  );
 };
 
 export const addAIJob = async (type, payload) => {
-  return aiProcessingQueue.add(type, { type, payload }, {
-    attempts: 2,
-    backoff: { type: 'exponential', delay: 2000 },
-  });
+  return aiProcessingQueue.add(
+    type,
+    { type, payload },
+    {
+      attempts: 2,
+      backoff: { type: 'exponential', delay: 2000 },
+    }
+  );
 };
 
 export const addAuditCleanupJob = async (retentionDays = 90) => {
-  return auditCleanupQueue.add(JOB_TYPES.AUDIT_LOG_CLEANUP, { retentionDays }, {
-    attempts: 1,
-  });
+  return auditCleanupQueue.add(
+    JOB_TYPES.AUDIT_LOG_CLEANUP,
+    { retentionDays },
+    {
+      attempts: 1,
+    }
+  );
 };

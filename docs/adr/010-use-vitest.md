@@ -11,6 +11,7 @@ EngineerOS needs a fast, modern testing framework.
 ## Decision
 
 Use Vitest as the testing framework, providing:
+
 - Fast test execution
 - Vite integration
 - TypeScript support
@@ -19,12 +20,14 @@ Use Vitest as the testing framework, providing:
 ## Consequences
 
 ### Positive
+
 - Excellent Vite integration
 - Fast test execution
 - TypeScript support out of the box
 - Jest-compatible (easy migration)
 
 ### Negative
+
 - Newer than Jest (less mature)
 - Smaller ecosystem
 - Potential compatibility issues

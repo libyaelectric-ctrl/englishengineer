@@ -8,13 +8,13 @@ This document analyzes database performance, identifies bottlenecks, and recomme
 
 ### Table Sizes (Estimated)
 
-| Table | Estimated Rows | Last Analyzed |
-|-------|----------------|---------------|
-| workspaces | ~1,000 | TBD |
-| subscriptions | ~500 | TBD |
-| audit_logs | ~10,000 | TBD |
-| vocabulary_progress | ~50,000 | TBD |
-| ai_conversations | ~25,000 | TBD |
+| Table               | Estimated Rows | Last Analyzed |
+| ------------------- | -------------- | ------------- |
+| workspaces          | ~1,000         | TBD           |
+| subscriptions       | ~500           | TBD           |
+| audit_logs          | ~10,000        | TBD           |
+| vocabulary_progress | ~50,000        | TBD           |
+| ai_conversations    | ~25,000        | TBD           |
 
 ### Index Usage Analysis
 
@@ -22,7 +22,7 @@ Run these queries to identify unused or missing indexes:
 
 ```sql
 -- Find unused indexes
-SELECT 
+SELECT
   schemaname || '.' || tablename AS table,
   indexrelname AS index,
   pg_size_pretty(pg_relation_size(i.indexrelid)) AS index_size,
@@ -52,41 +52,44 @@ ORDER BY seq_tup_read DESC;
 ### High-Priority Queries
 
 #### 1. Vocabulary Progress Lookup
+
 ```sql
 -- Current query (optimize)
-SELECT * FROM vocabulary_progress 
-WHERE user_id = $1 
+SELECT * FROM vocabulary_progress
+WHERE user_id = $1
   AND status = 'due_today'
 ORDER BY next_review_at;
 
 -- Recommended index
-CREATE INDEX idx_vocabulary_progress_user_status 
+CREATE INDEX idx_vocabulary_progress_user_status
 ON vocabulary_progress(user_id, status, next_review_at);
 ```
 
 #### 2. Subscription Status Check
+
 ```sql
 -- Current query
-SELECT * FROM subscriptions 
-WHERE user_id = $1 
+SELECT * FROM subscriptions
+WHERE user_id = $1
   AND status = 'active';
 
 -- Recommended index
-CREATE INDEX idx_subscriptions_user_status 
-ON subscriptions(user_id, status) 
+CREATE INDEX idx_subscriptions_user_status
+ON subscriptions(user_id, status)
 WHERE status = 'active';
 ```
 
 #### 3. Audit Log Query
+
 ```sql
 -- Current query
-SELECT * FROM audit_logs 
-WHERE user_id = $1 
+SELECT * FROM audit_logs
+WHERE user_id = $1
   AND created_at > $2
 ORDER BY created_at DESC;
 
 -- Recommended index
-CREATE INDEX idx_audit_logs_user_time 
+CREATE INDEX idx_audit_logs_user_time
 ON audit_logs(user_id, created_at DESC);
 ```
 
@@ -97,20 +100,20 @@ Run these in Supabase SQL Editor:
 ```sql
 -- Vocabulary progress query
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
-SELECT * FROM vocabulary_progress 
-WHERE user_id = 'test-user' 
+SELECT * FROM vocabulary_progress
+WHERE user_id = 'test-user'
   AND status = 'due_today';
 
 -- Subscription check
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
-SELECT * FROM subscriptions 
-WHERE user_id = 'test-user' 
+SELECT * FROM subscriptions
+WHERE user_id = 'test-user'
   AND status = 'active';
 
 -- Audit log query
 EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
-SELECT * FROM audit_logs 
-WHERE user_id = 'test-user' 
+SELECT * FROM audit_logs
+WHERE user_id = 'test-user'
   AND created_at > NOW() - INTERVAL '7 days'
 ORDER BY created_at DESC;
 ```
@@ -118,42 +121,46 @@ ORDER BY created_at DESC;
 ## Recommended Indexes
 
 ### High Priority
+
 ```sql
 -- Vocabulary progress optimization
-CREATE INDEX IF NOT EXISTS idx_vocabulary_progress_user_status 
+CREATE INDEX IF NOT EXISTS idx_vocabulary_progress_user_status
 ON vocabulary_progress(user_id, status, next_review_at);
 
 -- Subscription lookup optimization
-CREATE INDEX IF NOT EXISTS idx_subscriptions_user_status 
-ON subscriptions(user_id, status) 
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_status
+ON subscriptions(user_id, status)
 WHERE status = 'active';
 
 -- Audit log time-based queries
-CREATE INDEX IF NOT EXISTS idx_audit_logs_user_time 
+CREATE INDEX IF NOT EXISTS idx_audit_logs_user_time
 ON audit_logs(user_id, created_at DESC);
 ```
 
 ### Medium Priority
+
 ```sql
 -- Workspace lookup by user
-CREATE INDEX IF NOT EXISTS idx_workspaces_user 
+CREATE INDEX IF NOT EXISTS idx_workspaces_user
 ON workspaces(user_id);
 
 -- AI conversations by user and date
-CREATE INDEX IF NOT EXISTS idx_ai_conversations_user_date 
+CREATE INDEX IF NOT EXISTS idx_ai_conversations_user_date
 ON ai_conversations(user_id, created_at DESC);
 ```
 
 ### Low Priority
+
 ```sql
 -- Audit logs by action type
-CREATE INDEX IF NOT EXISTS idx_audit_logs_action 
+CREATE INDEX IF NOT EXISTS idx_audit_logs_action
 ON audit_logs(action, created_at DESC);
 ```
 
 ## Connection Pooling
 
 ### Current Configuration
+
 - **Provider:** Supabase (PgBouncer)
 - **Pool Mode:** Transaction
 - **Max Connections:** Depends on plan
@@ -172,6 +179,7 @@ Port: 6543 (transaction mode) or 5432 (session mode)
 ```
 
 **Best Practices:**
+
 - Use port 6543 (transaction mode) for serverless functions
 - Use port 5432 (session mode) for long-lived connections
 - Enable `pgbouncer` in Supabase settings
@@ -180,12 +188,12 @@ Port: 6543 (transaction mode) or 5432 (session mode)
 
 ### Key Metrics
 
-| Metric | Target | Current |
-|--------|--------|---------|
-| Query response time | < 100ms | TBD |
-| Connection count | < 80% of limit | TBD |
-| Cache hit ratio | > 99% | TBD |
-| Sequential scan ratio | < 5% | TBD |
+| Metric                | Target         | Current |
+| --------------------- | -------------- | ------- |
+| Query response time   | < 100ms        | TBD     |
+| Connection count      | < 80% of limit | TBD     |
+| Cache hit ratio       | > 99%          | TBD     |
+| Sequential scan ratio | < 5%           | TBD     |
 
 ### Monitoring Queries
 
@@ -194,12 +202,12 @@ Port: 6543 (transaction mode) or 5432 (session mode)
 SELECT count(*) FROM pg_stat_activity;
 
 -- Cache hit ratio
-SELECT 
+SELECT
   sum(blks_hit) / (sum(blks_hit) + sum(blks_read)) AS cache_hit_ratio
 FROM pg_stat_database;
 
 -- Slow queries (if pg_stat_statements enabled)
-SELECT 
+SELECT
   query,
   calls,
   mean_exec_time,

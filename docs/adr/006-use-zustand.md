@@ -11,6 +11,7 @@ EngineerOS needs a lightweight state management solution for React.
 ## Decision
 
 Use Zustand as the state management library, providing:
+
 - Simple API
 - Minimal boilerplate
 - TypeScript support
@@ -19,12 +20,14 @@ Use Zustand as the state management library, providing:
 ## Consequences
 
 ### Positive
+
 - Simple and intuitive API
 - Excellent TypeScript support
 - Small bundle size
 - No context providers needed
 
 ### Negative
+
 - Less ecosystem than Redux
 - No built-in middleware (except basic)
 - Less community support

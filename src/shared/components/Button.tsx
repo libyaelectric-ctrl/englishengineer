@@ -25,7 +25,10 @@ const variantClasses: Record<ButtonVariant, string> = {
 
 export const Button = forwardRef<
   HTMLButtonElement,
-  ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant; size?: 'default' | 'sm' | 'icon' }
+  ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: ButtonVariant;
+    size?: 'default' | 'sm' | 'icon';
+  }
 >(({ className, variant = 'primary', size = 'default', ...props }, ref) => (
   <button
     ref={ref}

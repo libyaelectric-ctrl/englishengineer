@@ -27,6 +27,16 @@ At least one real staging or quality check was not verified. No failed check is 
 - Stripe backend configuration: **PASS**
 - Stripe test-mode Checkout Session: **PASS**
 - Stripe test-mode Customer Portal: **PASS**
+- Stripe webhook signature and idempotency: **PASS**
+- Stripe webhook entitlement update: **PASS**
+- Stripe Dashboard or CLI webhook delivery: **NOT VERIFIED (signed verifier delivery only)**
+- Backend-only real AI provider request: **PASS**
+- AI proxy invalid-token handling: **PASS**
+- AI provider-failure and malformed-provider live injection: **NOT RUN (unsafe to alter staging credentials)**
+- AI provider key exposure to frontend: **PASS (no key in response)**
+- Upstash REST availability: **PASS**
+- Upstash shared counter behavior: **PASS**
+- Upstash dashboard evidence: **NOT VERIFIED (REST verification only)**
 - Supabase logout: **PASS**
 
 The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
@@ -70,7 +80,9 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-No quality commands were run because live prerequisites were blocked.
+| Command             | Exit code | Result |
+| ------------------- | --------: | ------ |
+| `npm run typecheck` |         2 | FAIL   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -83,7 +95,7 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- None.
+- npm run typecheck exited with code 2.
 
 ## Next Decision
 

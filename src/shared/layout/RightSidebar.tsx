@@ -105,9 +105,7 @@ function Stat({
   return (
     <div className="flex justify-between items-center py-1">
       <span className="text-xs text-muted-copy">{label}</span>
-      <span
-        className={cn('text-xs font-semibold', color || 'text-foreground')}
-      >
+      <span className={cn('text-xs font-semibold', color || 'text-foreground')}>
         {value}
       </span>
     </div>
@@ -225,29 +223,51 @@ function Dashboard() {
           </button>
         </div>
       </Section>
-      
+
       <Section title="Active Members">
         <div className="flex items-center gap-2 py-1">
           <div className="relative">
-            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">ÖE</div>
+            <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">
+              ÖE
+            </div>
             <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface bg-green-500"></div>
           </div>
           <div className="relative -ml-3">
-            <div className="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">AI</div>
+            <div className="h-8 w-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-surface">
+              AI
+            </div>
             <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full border-2 border-surface bg-green-500 pulse-dot"></div>
           </div>
-          <div className="ml-2 text-xs font-medium text-muted-copy">2 Online</div>
+          <div className="ml-2 text-xs font-medium text-muted-copy">
+            2 Online
+          </div>
         </div>
       </Section>
 
       <Section title="Quick Actions">
         <div className="space-y-1.5">
-          <Action icon="⚡" label="Command Palette (Cmd+K)" onClick={() => {
-            const e = new KeyboardEvent('keydown', { key: 'k', metaKey: true });
-            window.dispatchEvent(e);
-          }} variant="primary" />
-          <Action icon="🤖" label="New AI Tool" onClick={() => navigate('/tools')} />
-          <Action icon="👥" label="Invite Team" onClick={() => navigate('/team')} />
+          <Action
+            icon="⚡"
+            label="Command Palette (Cmd+K)"
+            onClick={() => {
+              const e = new KeyboardEvent('keydown', {
+                key: 'k',
+                metaKey: true,
+              });
+              window.dispatchEvent(e);
+            }}
+            variant="primary"
+          />
+          <Action
+            icon="🤖"
+            label="New AI Tool"
+            onClick={() => navigate('/tools')}
+          />
+          <Action
+            icon="👥"
+            label="Invite Team"
+            onClick={() => navigate('/team')}
+          />
         </div>
       </Section>
     </>
@@ -293,25 +313,37 @@ function Vocab() {
             const isActive = lvl.id === currentLevel;
             const isCompleted = v.mastered >= lvl.max;
             const prevMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
-            
+
             const bracketTotal = lvl.max - prevMax;
-            const bracketProgress = Math.max(0, Math.min(bracketTotal, v.mastered - prevMax));
+            const bracketProgress = Math.max(
+              0,
+              Math.min(bracketTotal, v.mastered - prevMax)
+            );
             const percent = (bracketProgress / bracketTotal) * 100;
-            
+
             return (
               <div
                 key={lvl.id}
                 className={cn(
                   'flex flex-col p-2 rounded-lg border transition-all',
-                  isActive 
-                    ? 'border-primary bg-primary/5 shadow-sm' 
+                  isActive
+                    ? 'border-primary bg-primary/5 shadow-sm'
                     : isCompleted
-                    ? 'border-success/30 bg-success/5'
-                    : 'border-border-soft bg-surface-hover/50'
+                      ? 'border-success/30 bg-success/5'
+                      : 'border-border-soft bg-surface-hover/50'
                 )}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className={cn("text-xs font-bold", isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground')}>
+                  <span
+                    className={cn(
+                      'text-xs font-bold',
+                      isActive
+                        ? 'text-primary'
+                        : isCompleted
+                          ? 'text-success'
+                          : 'text-foreground'
+                    )}
+                  >
                     {lvl.id}
                   </span>
                   <span className="text-[10px] text-muted-copy font-medium">
@@ -319,10 +351,14 @@ function Vocab() {
                   </span>
                 </div>
                 <div className="h-1.5 w-full bg-border-soft rounded-full overflow-hidden relative">
-                  <div 
+                  <div
                     className={cn(
-                      "absolute top-0 left-0 h-full rounded-full transition-all duration-500", 
-                      isActive ? "bg-primary" : isCompleted ? "bg-success" : "bg-foreground/30"
+                      'absolute top-0 left-0 h-full rounded-full transition-all duration-500',
+                      isActive
+                        ? 'bg-primary'
+                        : isCompleted
+                          ? 'bg-success'
+                          : 'bg-foreground/30'
                     )}
                     style={{ width: `${percent}%` }}
                   />
@@ -394,9 +430,11 @@ function Grammar() {
   useLearningStore((state) => state.studySessions.length);
   const g = GrammarProgressService.getSummary(360);
   const { tab, setTab, rules, selectedId } = useGrammarStore();
-  
+
   const selectedRule = rules.find((rule) => rule.id === selectedId) ?? rules[0];
-  const selectedRuleIndex = selectedRule ? rules.findIndex((rule) => rule.id === selectedRule.id) : -1;
+  const selectedRuleIndex = selectedRule
+    ? rules.findIndex((rule) => rule.id === selectedRule.id)
+    : -1;
 
   return (
     <>
@@ -408,13 +446,14 @@ function Grammar() {
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {selectedRule ? selectedRule.cefrLevel : 'Loading'} PATH · {rules.length} NAMED TOPICS
+              {selectedRule ? selectedRule.cefrLevel : 'Loading'} PATH ·{' '}
+              {rules.length} NAMED TOPICS
             </p>
             <p className="text-xs text-muted-copy leading-5">
               Move through named topics in order; practice feeds Learning Memory
             </p>
           </div>
-          
+
           {selectedRule && (
             <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
               <p className="text-[10px] font-bold text-primary mb-1">
@@ -497,27 +536,32 @@ function Grammar() {
 function Reading() {
   const { missions, completedMissions, selectedMissionId } = useReadingStore();
   const done = Object.keys(completedMissions).length;
-  
-  const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? missions[0];
-  const selectedMissionIndex = selectedMission ? missions.findIndex((m) => m.id === selectedMission.id) : -1;
+
+  const selectedMission =
+    missions.find((m) => m.id === selectedMissionId) ?? missions[0];
+  const selectedMissionIndex = selectedMission
+    ? missions.findIndex((m) => m.id === selectedMission.id)
+    : -1;
 
   return (
     <>
       <div className="px-4 pt-4">
         <SkillEntryBrief skill="reading" compact={true} />
       </div>
-      
+
       <Section title="Your reading path">
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH · {missions.length} SCENARIOS
+              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH ·{' '}
+              {missions.length} SCENARIOS
             </p>
             <p className="text-xs text-muted-copy leading-5">
-              Read professional documentation and answer comprehension questions.
+              Read professional documentation and answer comprehension
+              questions.
             </p>
           </div>
-          
+
           {selectedMission && (
             <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
               <p className="text-[10px] font-bold text-primary mb-1">
@@ -552,9 +596,12 @@ function Reading() {
 function Writing() {
   const { missions, completedMissions, selectedMissionId } = useWritingStore();
   const done = Object.keys(completedMissions).length;
-  
-  const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? missions[0];
-  const selectedMissionIndex = selectedMission ? missions.findIndex((m) => m.id === selectedMission.id) : -1;
+
+  const selectedMission =
+    missions.find((m) => m.id === selectedMissionId) ?? missions[0];
+  const selectedMissionIndex = selectedMission
+    ? missions.findIndex((m) => m.id === selectedMission.id)
+    : -1;
 
   return (
     <>
@@ -566,13 +613,14 @@ function Writing() {
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH · {missions.length} SCENARIOS
+              {selectedMission ? selectedMission.cefrLevel : 'Loading'} PATH ·{' '}
+              {missions.length} SCENARIOS
             </p>
             <p className="text-xs text-muted-copy leading-5">
               Draft professional responses and master technical writing.
             </p>
           </div>
-          
+
           {selectedMission && (
             <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
               <p className="text-[10px] font-bold text-primary mb-1">
@@ -710,24 +758,34 @@ function Profile() {
     <>
       <Section title="Competency Index">
         <div className="text-center py-4">
-          <div className="text-xl font-black text-primary mb-1">Senior Engineer</div>
-          <div className="text-[10px] font-bold tracking-widest uppercase text-muted-copy mb-4">Role & Readiness</div>
+          <div className="text-xl font-black text-primary mb-1">
+            Senior Engineer
+          </div>
+          <div className="text-[10px] font-bold tracking-widest uppercase text-muted-copy mb-4">
+            Role & Readiness
+          </div>
           <Progress value={85} max={100} color="#3b82f6" />
-          <div className="mt-2 text-[10px] font-medium text-muted-copy">Score: 85/100 (High Readiness)</div>
+          <div className="mt-2 text-[10px] font-medium text-muted-copy">
+            Score: 85/100 (High Readiness)
+          </div>
         </div>
       </Section>
       <Section title="Security Logs">
         <div className="space-y-3 pt-1">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
-              <span className="text-[11px] font-medium text-foreground">MacBook Pro - Istanbul</span>
+              <span className="text-[11px] font-medium text-foreground">
+                MacBook Pro - Istanbul
+              </span>
               <span className="text-[9px] text-green-500">Current Session</span>
             </div>
             <span className="text-[10px] text-muted-copy">Now</span>
           </div>
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
-              <span className="text-[11px] font-medium text-muted-copy">iPhone 14 - Ankara</span>
+              <span className="text-[11px] font-medium text-muted-copy">
+                iPhone 14 - Ankara
+              </span>
             </div>
             <span className="text-[10px] text-muted-copy">2h ago</span>
           </div>

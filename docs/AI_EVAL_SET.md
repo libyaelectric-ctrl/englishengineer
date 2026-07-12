@@ -7,6 +7,7 @@ This document defines the evaluation set for EngineerOS AI Coach. The eval set c
 ## Eval Set Structure
 
 Each test case contains:
+
 - **id**: Unique identifier
 - **input**: User message/prompt
 - **expected**: Expected response characteristics
@@ -169,7 +170,7 @@ Each test case contains:
   "input": "Find errors: 'Their going to the store yesterday.'",
   "expected": {
     "errors": [
-      {"original": "Their", "correct": "They're", "reason": "contraction"}
+      { "original": "Their", "correct": "They're", "reason": "contraction" }
     ],
     "min_length": 50,
     "max_length": 200,
@@ -202,13 +203,13 @@ Each test case contains:
 
 ### Automatic Scoring
 
-| Criterion | Weight | Method |
-|-----------|--------|--------|
-| Length | 10% | Character count within bounds |
-| Keywords | 30% | Required keywords present |
-| Tone | 20% | Sentiment analysis |
-| Structure | 20% | Required sections present |
-| Language | 20% | English-only, no errors |
+| Criterion | Weight | Method                        |
+| --------- | ------ | ----------------------------- |
+| Length    | 10%    | Character count within bounds |
+| Keywords  | 30%    | Required keywords present     |
+| Tone      | 20%    | Sentiment analysis            |
+| Structure | 20%    | Required sections present     |
+| Language  | 20%    | English-only, no errors       |
 
 ### Manual Review
 

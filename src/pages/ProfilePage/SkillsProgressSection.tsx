@@ -78,7 +78,9 @@ export const SkillsProgressSection = ({
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-end px-1">
                       <div className="flex flex-col items-start">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Min</span>
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                          Min
+                        </span>
                         <span className="text-[10px] font-medium text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).min}
                         </span>
@@ -89,7 +91,9 @@ export const SkillsProgressSection = ({
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">Max</span>
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                          Max
+                        </span>
                         <span className="text-[10px] font-medium text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).max}
                         </span>
@@ -128,8 +132,12 @@ export const SkillsProgressSection = ({
                       className="h-1.5"
                     />
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[8px] text-muted-copy/70">1000 ELO (A1)</span>
-                      <span className="text-[8px] text-muted-copy/70">5000 ELO (C2+)</span>
+                      <span className="text-[8px] text-muted-copy/70">
+                        1000 ELO (A1)
+                      </span>
+                      <span className="text-[8px] text-muted-copy/70">
+                        5000 ELO (C2+)
+                      </span>
                     </div>
                   </div>
                 </div>

@@ -123,9 +123,7 @@ const resolveOrProvisionTopupPriceId = async (stripeClient) => {
     active: true,
     limit: 100,
   });
-  let product = existingProducts.data.find(
-    (p) => p.name === 'AI Coach Top-up'
-  );
+  let product = existingProducts.data.find((p) => p.name === 'AI Coach Top-up');
   if (!product) {
     product = await stripeClient.products.create({
       name: 'AI Coach Top-up',
@@ -179,7 +177,11 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
       const planId = body?.planId || 'pro';
 
-      const price = await resolveOrProvisionPriceId(config, stripeClient, planId);
+      const price = await resolveOrProvisionPriceId(
+        config,
+        stripeClient,
+        planId
+      );
 
       const session = await stripeClient.checkout.sessions.create({
         mode: 'subscription',

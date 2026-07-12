@@ -173,7 +173,9 @@ describe('VocabularyPage menu', () => {
     );
 
     expect(VocabularyMenuService.getState().myVocabulary).toHaveLength(1);
-    expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe('fluxuator');
+    expect(VocabularyMenuService.getState().myVocabulary[0].term).toBe(
+      'fluxuator'
+    );
     expect(VocabularyMenuService.getState().progress).toEqual({});
   }, 10_000);
 });

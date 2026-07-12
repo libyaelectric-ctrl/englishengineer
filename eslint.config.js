@@ -7,7 +7,11 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 export default tseslint.config(
   { ignores: ['dist', 'coverage', 'node_modules', '.npm-cache', '.vite'] },
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended, jsxA11y.flatConfigs.recommended],
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      jsxA11y.flatConfigs.recommended,
+    ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
@@ -17,9 +21,12 @@ export default tseslint.config(
       'jsx-a11y': jsxA11y,
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
-      'complexity': ['warn', { max: 10 }],
+      complexity: ['warn', { max: 10 }],
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/aria-props': 'warn',
       'jsx-a11y/aria-proptypes': 'warn',
