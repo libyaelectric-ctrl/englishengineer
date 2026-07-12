@@ -9,7 +9,7 @@ export class ApiError extends Error {
 }
 
 export const toErrorResponse = (error) => {
-  if (error instanceof ApiError) {
+  if (error instanceof ApiError || error.name === 'ApiError') {
     return {
       status: error.status,
       body: {
