@@ -74,7 +74,7 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
     const response = await fetchImpl(`${config.supabaseUrl}/auth/v1/user`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        apikey: config.supabaseAnonKey,
+        apikey: config.supabaseAnonKey.trim(),
       },
     });
     if (!response.ok) return null;
