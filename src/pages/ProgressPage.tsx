@@ -407,8 +407,8 @@ const ProgressPage = () => {
             subtitle="Interactive representation of how vocabulary, grammar topics, and core skills connect."
             icon={Network}
           >
-            <div className="relative aspect-[21/9] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
-              <svg viewBox="0 0 800 400" className="h-full w-full">
+            <div className="relative aspect-[16/10] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
+              <svg viewBox="0 0 800 500" className="h-full w-full">
                 {/* Connection Links */}
                 {GRAPH_LINKS.map((link, idx) => {
                   const source = GRAPH_NODES.find((n) => n.id === link.source);
@@ -424,9 +424,9 @@ const ProgressPage = () => {
                     <line
                       key={idx}
                       x1={source.x}
-                      y1={source.y - 50}
+                      y1={source.y}
                       x2={target.x}
-                      y2={target.y - 50}
+                      y2={target.y}
                       stroke={
                         isHighlighted
                           ? 'var(--color-primary, #6366f1)'
@@ -460,7 +460,7 @@ const ProgressPage = () => {
                   return (
                     <g
                       key={node.id}
-                      transform={`translate(${node.x}, ${node.y - 50})`}
+                      transform={`translate(${node.x}, ${node.y})`}
                       onClick={() => setSelectedGraphNode(node)}
                       className="cursor-pointer group"
                     >
