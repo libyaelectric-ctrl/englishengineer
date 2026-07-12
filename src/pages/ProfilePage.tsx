@@ -438,7 +438,7 @@ const ProfilePage = () => {
   })();
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300">
+    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0">
       {/* Header */}
       <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">

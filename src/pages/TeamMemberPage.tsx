@@ -11,7 +11,7 @@ const TeamMemberPage = () => {
   const member = members.find((item) => item.id === memberId);
   const summary = getMemberSummary(memberId, summaries);
   return (
-    <main className="space-y-6">
+    <main className="space-y-6 pt-12 sm:pt-0">
       <Link
         to="/team"
         className="inline-flex items-center gap-2 text-sm font-medium text-primary"

@@ -27,7 +27,7 @@ export const AppShell: FC = () => {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <main className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto p-4 pb-28 pt-12 sm:p-6 sm:pb-28 sm:pt-12 lg:p-8 lg:pb-8 lg:pt-4">
+        <main className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto p-4 pb-28 sm:p-6 sm:pb-28 lg:p-8 lg:pb-8">
           <Outlet />
         </main>
         <BetaFeedbackWidget />

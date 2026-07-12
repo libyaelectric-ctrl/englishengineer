@@ -30,7 +30,7 @@ const OfflinePage = () => {
   }, []);
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300">
+    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
       <PageHeader
         title="Offline Pack"
         description="Know exactly what remains usable on site when the connection is weak or unavailable."

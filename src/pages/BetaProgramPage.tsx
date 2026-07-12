@@ -24,7 +24,7 @@ const BetaProgramPage = () => {
   ] as const;
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300">
+    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
       <PageHeader
         title="Closed Beta Program"
         description="Local, privacy-conscious validation signals for a controlled group of professional engineers."
