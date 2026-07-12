@@ -597,13 +597,16 @@ const VocabularyPage = () => {
   }, []);
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300 relative pb-20">
-      {/* STICKY HEADER, SEARCH, AND TABS */}
-      <div className="sticky top-0 z-30 bg-background pt-4 pb-3 border-b border-border-soft space-y-3">
+    <div className="animate-in fade-in duration-300 relative">
+      {/* LEVEL 1: Fixed Title */}
+      <div className="sticky top-0 z-40 bg-background pt-4 pb-2 border-b border-border-soft">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">Vocabulary</h1>
         </div>
+      </div>
 
+      {/* LEVEL 2: Sticky Search + Tabs */}
+      <div className="sticky top-[52px] z-30 bg-background pt-3 pb-3 border-b border-border-soft space-y-3">
         <form onSubmit={runSearch} className="space-y-2">
           <div className="flex flex-col gap-2 sm:flex-row">
             <input
@@ -712,6 +715,8 @@ const VocabularyPage = () => {
         </div>
       </div>
 
+      {/* Content area - scrolls under sticky headers */}
+      <div className="pt-4 space-y-4 pb-20">
       {hasSearched && searchResults.length > 0 && (
         <SectionCard
           title="Search Results"
@@ -891,6 +896,7 @@ const VocabularyPage = () => {
           </div>
         )}
       </SectionCard>
+      </div>
     </div>
   );
 };
