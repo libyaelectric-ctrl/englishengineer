@@ -629,128 +629,127 @@ const VocabularyPage = () => {
 
   return (
     <div className="animate-in fade-in duration-300 relative">
-      {/* LEVEL 1: Fixed Title */}
-      <div className="sticky top-0 z-40 bg-background pt-4 pb-2 border-b border-border-soft">
-        <div className="flex items-center justify-between">
+      {/* Consolidated Sticky Header Group */}
+      <div className="sticky top-0 z-40 flex flex-col bg-background/95 backdrop-blur-md -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 border-b border-border-soft shadow-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-border-soft mb-3">
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Vocabulary
           </h1>
         </div>
-      </div>
 
-      {/* LEVEL 2: Sticky Search + Tabs */}
-      <div className="sticky top-[52px] z-30 bg-background pt-3 pb-3 border-b border-border-soft space-y-3">
-        <form onSubmit={runSearch} className="space-y-2">
-          <div className="flex flex-col gap-2 sm:flex-row">
-            <input
-              value={searchInput}
-              onChange={(event) =>
-                dispatchSearch({
-                  type: 'SET_SEARCH_INPUT',
-                  input: event.target.value,
-                })
-              }
-              className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-surface px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-              placeholder="Search by English, Turkish, Domain..."
-              aria-label="Search vocabulary"
-            />
-            <Button type="submit" disabled={isSearchLoading}>
-              <Search className="h-4 w-4" /> Search
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                dispatchUI({ type: 'TOGGLE_FILTERS' });
-                if (!allLevelsLoaded) void loadAllLevels();
-              }}
-            >
-              <Filter className="h-4 w-4" /> Filters
-            </Button>
-            <Button type="button" variant="ghost" onClick={resetSearch}>
-              Reset
-            </Button>
-          </div>
-          {showFilters && (
-            <div className="grid gap-3 rounded-xl border border-border-soft bg-surface-hover p-4 sm:grid-cols-2 lg:grid-cols-4">
-              {(
-                [
-                  ['cefr', 'CEFR'],
-                  ['domain', 'Domain'],
-                  ['contentDomain', 'Content domain'],
-                  ['lifeContext', 'Life context'],
-                  ['partOfSpeech', 'Part of speech'],
-                  ['skillUse', 'Skill use'],
-                  ['status', 'Status'],
-                ] as Array<[keyof VocabularySearchFilters, string]>
-              ).map(([field, label]) => (
-                <label
-                  key={field}
-                  className="text-xs font-bold text-foreground"
-                >
-                  {label}
-                  <select
-                    aria-label={`Filter by ${label}`}
-                    value={filters[field]}
-                    onChange={(event) =>
-                      dispatchSearch({
-                        type: 'COMMIT_FILTERS',
-                        filters: { ...filters, [field]: event.target.value },
-                      })
-                    }
-                    className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-surface px-2 font-normal focus:border-primary outline-none"
-                  >
-                    {(field === 'status'
-                      ? [
-                          'All',
-                          'New',
-                          'Learning',
-                          'Mastered',
-                          'Weak',
-                          'Forgotten',
-                          'Due Today',
-                        ]
-                      : filterOptions(field)
-                    ).map((option) => (
-                      <option key={option}>{option}</option>
-                    ))}
-                  </select>
-                </label>
-              ))}
+        <div className="space-y-3">
+          <form onSubmit={runSearch} className="space-y-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                value={searchInput}
+                onChange={(event) =>
+                  dispatchSearch({
+                    type: 'SET_SEARCH_INPUT',
+                    input: event.target.value,
+                  })
+                }
+                className="min-h-11 flex-1 rounded-[10px] border border-border-soft bg-surface px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                placeholder="Search by English, Turkish, Domain..."
+                aria-label="Search vocabulary"
+              />
+              <Button type="submit" disabled={isSearchLoading}>
+                <Search className="h-4 w-4" /> Search
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  dispatchUI({ type: 'TOGGLE_FILTERS' });
+                  if (!allLevelsLoaded) void loadAllLevels();
+                }}
+              >
+                <Filter className="h-4 w-4" /> Filters
+              </Button>
+              <Button type="button" variant="ghost" onClick={resetSearch}>
+                Reset
+              </Button>
             </div>
-          )}
-          {searchError && (
-            <p className="text-sm font-semibold text-rose-700">{searchError}</p>
-          )}
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy">
-            {allLevelsLoaded
-              ? 'All 5,000 canonical terms are available for this search.'
-              : `${vocabularyLevel} learning terms are loaded. Full search loads the remaining levels only when requested.`}
-          </p>
-          {isSearchLoading && (
-            <p role="status" className="text-xs font-bold text-primary">
-              Checking all 5,000 canonical terms before enabling a custom word…
+            {showFilters && (
+              <div className="grid gap-3 rounded-xl border border-border-soft bg-surface-hover p-4 sm:grid-cols-2 lg:grid-cols-4">
+                {(
+                  [
+                    ['cefr', 'CEFR'],
+                    ['domain', 'Domain'],
+                    ['contentDomain', 'Content domain'],
+                    ['lifeContext', 'Life context'],
+                    ['partOfSpeech', 'Part of speech'],
+                    ['skillUse', 'Skill use'],
+                    ['status', 'Status'],
+                  ] as Array<[keyof VocabularySearchFilters, string]>
+                ).map(([field, label]) => (
+                  <label
+                    key={field}
+                    className="text-xs font-bold text-foreground"
+                  >
+                    {label}
+                    <select
+                      aria-label={`Filter by ${label}`}
+                      value={filters[field]}
+                      onChange={(event) =>
+                        dispatchSearch({
+                          type: 'COMMIT_FILTERS',
+                          filters: { ...filters, [field]: event.target.value },
+                        })
+                      }
+                      className="mt-1 min-h-10 w-full rounded-lg border border-border-soft bg-surface px-2 font-normal focus:border-primary outline-none"
+                    >
+                      {(field === 'status'
+                        ? [
+                            'All',
+                            'New',
+                            'Learning',
+                            'Mastered',
+                            'Weak',
+                            'Forgotten',
+                            'Due Today',
+                          ]
+                        : filterOptions(field)
+                      ).map((option) => (
+                        <option key={option}>{option}</option>
+                      ))}
+                    </select>
+                  </label>
+                ))}
+              </div>
+            )}
+            {searchError && (
+              <p className="text-sm font-semibold text-rose-700">{searchError}</p>
+            )}
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-copy">
+              {allLevelsLoaded
+                ? 'All 5,000 canonical terms are available for this search.'
+                : `${vocabularyLevel} learning terms are loaded. Full search loads the remaining levels only when requested.`}
             </p>
-          )}
-        </form>
+            {isSearchLoading && (
+              <p role="status" className="text-xs font-bold text-primary">
+                Checking all 5,000 canonical terms before enabling a custom word…
+              </p>
+            )}
+          </form>
 
-        <div
-          role="tablist"
-          aria-label="Vocabulary status"
-          className="grid grid-cols-3 gap-2 rounded-xl border border-border-soft bg-surface p-2 shadow-sm"
-        >
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              role="tab"
-              type="button"
-              aria-selected={activeTab === tab}
-              onClick={() => chooseTab(tab)}
-              className={`min-h-10 rounded-[8px] px-4 py-2 text-sm font-bold transition-all ${activeTab === tab ? 'bg-foreground text-background shadow-md' : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'}`}
-            >
-              {TAB_LABELS[tab]}
-            </button>
-          ))}
+          <div
+            role="tablist"
+            aria-label="Vocabulary status"
+            className="grid grid-cols-3 gap-2 rounded-xl border border-border-soft bg-surface p-2 shadow-sm"
+          >
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                role="tab"
+                type="button"
+                aria-selected={activeTab === tab}
+                onClick={() => chooseTab(tab)}
+                className={`min-h-10 rounded-[8px] px-4 py-2 text-sm font-bold transition-all ${activeTab === tab ? 'bg-foreground text-background shadow-md' : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'}`}
+              >
+                {TAB_LABELS[tab]}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
