@@ -6,7 +6,7 @@ import {
   KeyRound,
   ListChecks,
 } from 'lucide-react';
-import { useListeningStore } from '@/features/listening';
+import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import {
   type ContentLevelFilter,
@@ -24,21 +24,19 @@ import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
 const ListeningPage = () => {
-  const {
-    missions,
-    selectedMissionId,
-    answers,
-    summary,
-    userKeywords,
-    evaluationResult,
-    initializeStore,
-    selectMission,
-    setAnswer,
-    setSummary,
-    setUserKeywords,
-    submitCurrentMission,
-    resetCurrentMission,
-  } = useListeningStore();
+  const missions = useListeningMissionsStore((s) => s.missions);
+  const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
+  const answers = useListeningMissionsStore((s) => s.answers);
+  const summary = useListeningMissionsStore((s) => s.summary);
+  const userKeywords = useListeningMissionsStore((s) => s.userKeywords);
+  const evaluationResult = useListeningMissionsStore((s) => s.evaluationResult);
+  const initializeStore = useListeningMissionsStore((s) => s.initializeMissions);
+  const selectMission = useListeningMissionsStore((s) => s.selectMission);
+  const setAnswer = useListeningMissionsStore((s) => s.setAnswer);
+  const setSummary = useListeningMissionsStore((s) => s.setSummary);
+  const setUserKeywords = useListeningMissionsStore((s) => s.setUserKeywords);
+  const submitCurrentMission = useListeningMissionsStore((s) => s.submitCurrentMission);
+  const resetCurrentMission = useListeningMissionsStore((s) => s.resetCurrentMission);
   const currentLevel = useSkillLevel('listening').currentLevel;
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER
