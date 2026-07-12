@@ -43,9 +43,11 @@
     "format:check": "prettier --check .",
     "gen-audio": "ts-node src/tools/generate-missing-audio.ts",
     "test:load": "k6 run scripts/performance/load-test.k6.js",
-    "test:lighthouse": "lighthouse https://englishengineer.vercel.app --output html --output-path ./docs/lighthouse-report.html"
+    "test:lighthouse": "lighthouse https://englishengineer.vercel.app --output html --output-path ./docs/lighthouse-report.html",
+    "test:duplication": "jscpd --min-lines 5 --min-tokens 50 --reporters console"
   },
   "dependencies": {
+    "@sentry/react": "^8.0.0",
     "@supabase/supabase-js": "^2.108.2",
     "clsx": "^2.1.1",
     "lucide-react": "^0.546.0",

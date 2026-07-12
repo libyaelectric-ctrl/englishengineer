@@ -37,6 +37,15 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Complexity check
+        run: npm run lint -- --rule '{"complexity": ["error", 15]}' --max-warnings 0 || true
+
+      - name: Duplication check
+        run: npx jscpd --min-lines 5 --min-tokens 50 --reporters console --threshold 5 || true
+
+      - name: Accessibility lint
+        run: npm run lint -- --rule '{"jsx-a11y/alt-text": "error", "jsx-a11y/anchor-has-content": "error", "jsx-a11y/aria-props": "error", "jsx-a11y/aria-proptypes": "error", "jsx-a11y/aria-role": "error", "jsx-a11y/aria-unsupported-elements": "error", "jsx-a11y/click-events-have-key-events": "error", "jsx-a11y/heading-has-content": "error", "jsx-a11y/img-redundant-alt": "error", "jsx-a11y/label-has-associated-control": "error", "jsx-a11y/no-access-key": "error", "jsx-a11y/no-distracting-elements": "error", "jsx-a11y/no-redundant-roles": "error", "jsx-a11y/role-has-required-aria-props": "error", "jsx-a11y/role-supports-aria-props": "error", "jsx-a11y/scope-is-valid": "error"}' || true
+
       - name: Unit tests
         run: npm test
 
@@ -51,6 +60,11 @@ jobs:
 
       - name: Backend tests
         run: npm run backend:test
+
+      - name: Security audit
+        run: |
+          npm audit --audit-level=moderate || true
+          npm --prefix backend audit --audit-level=moderate || true
 
       - name: Static RLS verification
         run: npm run verify:rls
