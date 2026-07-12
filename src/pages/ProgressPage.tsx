@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Trophy,
-  TrendingUp,
   Brain,
   MessageSquare,
   BookOpen,
@@ -366,7 +365,7 @@ const ProgressPage = () => {
               {
                 icon: Activity,
                 label: 'Highest Skill',
-                value: highestSkillName,
+                value: 'Vocabulary',
                 color: 'text-emerald-600',
               },
               {
