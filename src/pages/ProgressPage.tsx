@@ -354,20 +354,19 @@ const ProgressPage = () => {
             </div>
           </div>
 
-          {/* Metrics Highlights */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
             {[
               {
                 icon: Target,
-                label: 'Highest Skill',
-                value: SKILLS.reduce((a, b) =>
-                  eloScores[a.id] > eloScores[b.id] ? a : b
-                ).label,
+                label: 'Current Elo',
+                value: totalElo,
+                color: 'text-primary',
               },
               {
-                icon: TrendingUp,
-                label: 'Growth (30d)',
-                value: '+245 Elo',
+                icon: Activity,
+                label: 'Highest Skill',
+                value: highestSkillName,
                 color: 'text-emerald-600',
               },
               {
@@ -382,18 +381,19 @@ const ProgressPage = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.1 }}
-                className="rounded-xl border border-border-soft bg-surface p-4 flex flex-col justify-center shadow-sm"
+                className="rounded-xl border border-border-soft bg-surface p-4 flex flex-col justify-center shadow-sm min-w-0"
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-hover text-muted-copy">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-surface-hover text-muted-copy shrink-0">
                     <stat.icon className="h-4 w-4" />
                   </div>
-                  <p className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold truncate">
                     {stat.label}
                   </p>
                 </div>
                 <p
-                  className={`text-lg font-bold pl-11 ${stat.color || 'text-foreground'}`}
+                  className={`text-lg font-bold pl-11 truncate ${stat.color || 'text-foreground'}`}
+                  title={stat.value.toString()}
                 >
                   {stat.value}
                 </p>
@@ -407,7 +407,7 @@ const ProgressPage = () => {
             subtitle="Interactive representation of how vocabulary, grammar topics, and core skills connect."
             icon={Network}
           >
-            <div className="relative aspect-[16/10] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
+            <div className="relative aspect-[16/10] max-h-[450px] w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
               <svg viewBox="0 0 800 500" className="h-full w-full">
                 {/* Connection Links */}
                 {GRAPH_LINKS.map((link, idx) => {
