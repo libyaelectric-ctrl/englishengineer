@@ -631,7 +631,7 @@ const VocabularyPage = () => {
     <div className="animate-in fade-in duration-300 relative">
       {/* Sticky Header */}
       <div className="sticky top-0 z-40 flex flex-col bg-background py-3 border-b border-border-soft shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex items-center justify-between pb-3 border-b border-border-soft mb-3">
+        <div className="flex items-center justify-between pb-3 mb-3">
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Vocabulary
           </h1>
@@ -746,7 +746,7 @@ const VocabularyPage = () => {
                 onClick={() => chooseTab(tab)}
                 className={`min-h-10 rounded-[8px] px-4 py-2 text-sm font-bold transition-all ${
                   activeTab === tab
-                    ? 'bg-foreground text-background shadow-md'
+                    ? 'bg-primary/10 text-primary border border-primary/30 font-semibold'
                     : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
                 }`}
               >

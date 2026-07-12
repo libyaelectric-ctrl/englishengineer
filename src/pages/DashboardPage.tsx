@@ -39,6 +39,12 @@ const SKILL_META: Record<
   grammar: { label: 'Grammar', route: '/grammar', icon: Languages },
 };
 
+const getCefrColor = (band: string) => {
+  if (band.startsWith('C')) return 'text-emerald-600 bg-emerald-50 border-emerald-200';
+  if (band.startsWith('B')) return 'text-amber-600 bg-amber-50 border-amber-200';
+  return 'text-blue-600 bg-blue-50 border-blue-200';
+};
+
 const DashboardPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -93,13 +99,16 @@ const DashboardPage = () => {
   ]).slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
+    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-28 lg:pb-4">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">Dashboard</h1>
+      </div>
       <div className="space-y-6">
         {/* Executive Summary Widget */}
         <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
           <div className="flex items-center gap-4 w-full">
             <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 border-2 border-primary/20 text-primary font-black text-xl shadow-inner">
-              85
+              {summary.averageScore}
             </div>
             <div className="flex-1">
               <div className="flex justify-between items-end mb-1.5">
@@ -121,7 +130,7 @@ const DashboardPage = () => {
               <div className="h-2 rounded-full bg-surface-hover overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-primary/80 to-primary transition-all duration-1000 relative"
-                  style={{ width: '85%' }}
+                  style={{ width: `${summary.averageScore}%` }}
                 >
                   <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
                 </div>
@@ -176,9 +185,9 @@ const DashboardPage = () => {
                 </p>
               </div>
               <div className="shrink-0 text-left sm:text-right">
-                <p className="text-xl font-bold text-foreground">
+                <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-bold ${getCefrColor(focusSkill.cefrBand)}`}>
                   {focusSkill.cefrBand}
-                </p>
+                </span>
                 <p className="text-[10px] font-semibold text-muted-copy">
                   Lesson{' '}
                   {
@@ -212,9 +221,9 @@ const DashboardPage = () => {
               <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                 TARGET LEVEL
               </p>
-              <p className="mt-1 truncate text-lg font-bold text-foreground sm:text-xl">
+              <span className={`mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-bold ${getCefrColor(focusSkill.cefrBand)}`}>
                 {focusSkill.cefrBand}
-              </p>
+              </span>
             </div>
             <div
               data-testid="dashboard-summary-done"
@@ -250,7 +259,7 @@ const DashboardPage = () => {
                   key={skill}
                   type="button"
                   onClick={() => navigate(meta.route)}
-                  className="group min-w-0 rounded-card border border-border-soft bg-surface p-4 text-left transition-all hover:border-border-hover hover:bg-surface-hover/20 card-interactive relative"
+                  className="group min-w-0 rounded-card border border-border-soft bg-surface p-4 text-left transition-all hover:border-border-hover hover:bg-surface-hover/20 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-md"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <span className="rounded-[8px] border border-border-soft bg-surface-hover p-1.5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
@@ -358,6 +367,11 @@ const DashboardPage = () => {
             data-testid="dashboard-review-summary"
             className="grid gap-3 md:grid-cols-3"
           >
+            {reviewPriorities.length === 0 && (
+              <p className="text-sm text-muted-copy col-span-3 text-center py-6">
+                No weak areas detected. Keep practicing!
+              </p>
+            )}
             {reviewPriorities.map((item, index) => (
               <button
                 key={item.id}
