@@ -7,6 +7,7 @@ import {
   MessageSquareText,
   RotateCcw,
   Mic,
+  Mic2,
   MicOff,
   Volume2,
   Lock,
@@ -199,9 +200,16 @@ const SpeakingPage = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-20 border-b border-border-soft bg-background py-3">
+      {/* Speaking sticky header — indigo/blue */}
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 pt-4 pb-3 shadow-sm relative">
+        <div className="absolute top-0 left-0 h-0.5 w-full bg-gradient-to-r from-indigo-500 to-blue-400" />
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-foreground">Speaking</h1>
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600">
+              <Mic2 className="h-4 w-4" />
+            </div>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">Speaking</h1>
+          </div>
         </div>
       </div>
 
