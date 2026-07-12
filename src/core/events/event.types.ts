@@ -11,7 +11,8 @@ export type AppEvent =
   | BadgeUnlockedEvent
   | AICoachStartedEvent
   | AICoachCompletedEvent
-  | AICoachFailedEvent;
+  | AICoachFailedEvent
+  | VocabularyMasteredEvent;
 
 export interface BaseEvent {
   readonly id: string;
@@ -111,6 +112,14 @@ export interface AICoachFailedEvent extends BaseEvent {
     readonly modeId: string;
     readonly modeName: string;
     readonly message: string;
+  };
+}
+
+export interface VocabularyMasteredEvent extends BaseEvent {
+  readonly type: 'vocabulary:mastered';
+  readonly payload: {
+    readonly termId: string;
+    readonly masteredAt: string;
   };
 }
 
