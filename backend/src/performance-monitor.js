@@ -40,22 +40,26 @@ export const getPerformanceMetrics = () => {
   const now = Date.now();
   const uptime = now - metrics.system.startTime;
 
-  const durations = metrics.requests.map(r => r.duration);
-  const avgDuration = durations.length > 0
-    ? durations.reduce((a, b) => a + b, 0) / durations.length
-    : 0;
+  const durations = metrics.requests.map((r) => r.duration);
+  const avgDuration =
+    durations.length > 0
+      ? durations.reduce((a, b) => a + b, 0) / durations.length
+      : 0;
 
-  const p95 = durations.length > 0
-    ? durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.95)]
-    : 0;
+  const p95 =
+    durations.length > 0
+      ? durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.95)]
+      : 0;
 
-  const p99 = durations.length > 0
-    ? durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.99)]
-    : 0;
+  const p99 =
+    durations.length > 0
+      ? durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.99)]
+      : 0;
 
-  const errorRate = metrics.system.requestCount > 0
-    ? (metrics.system.errorCount / metrics.system.requestCount) * 100
-    : 0;
+  const errorRate =
+    metrics.system.requestCount > 0
+      ? (metrics.system.errorCount / metrics.system.requestCount) * 100
+      : 0;
 
   return {
     uptime,
@@ -71,7 +75,7 @@ export const getPerformanceMetrics = () => {
 
 export const getSlowRequests = (thresholdMs = 1000) => {
   return metrics.requests
-    .filter(r => r.duration > thresholdMs)
+    .filter((r) => r.duration > thresholdMs)
     .slice(-10)
     .reverse();
 };
@@ -87,7 +91,7 @@ export const performanceMiddleware = (req, res, next) => {
 
   res.on('finish', () => {
     const diff = process.hrtime(start);
-    const duration = (diff[0] * 1e3 + diff[1] * 1e-6);
+    const duration = diff[0] * 1e3 + diff[1] * 1e-6;
     trackRequest(req, res, duration);
   });
 

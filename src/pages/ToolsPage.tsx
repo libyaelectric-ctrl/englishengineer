@@ -5,23 +5,23 @@
  * - Work Tools: Pre-configured professional phrases, shortcuts, and copy targets.
  * - Quick Tools: Simple input text transformation (rewrites, spelling fixes).
  * - AI Copilot: General engineering context chatbot assistant.
- * - Developer Hub: Interactive scenario builder, templates, and plugin validator.
+ * - Elo Progress: Animated personal development dashboard and Elo ratings.
  */
 import { lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { PageHeader } from '@/shared/components/PageHeader';
 import QuickToolsPage from './QuickToolsPage';
 import WorkToolsPage from './WorkToolsPage';
-import DeveloperHubPage from './DeveloperHubPage';
+import ProgressDashboardPage from './ProgressDashboardPage';
 
 const AIPage = lazy(() => import('./AIPage'));
 
-type ToolsSection = 'work' | 'quick' | 'ai' | 'developer';
+type ToolsSection = 'work' | 'quick' | 'ai' | 'progress';
 
 const ToolsPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeTab: ToolsSection =
-    section === 'quick' || section === 'ai' || section === 'developer'
+    section === 'quick' || section === 'ai' || section === 'progress'
       ? section
       : 'work';
 
@@ -37,14 +37,14 @@ const ToolsPage = () => {
               ? 'QUICK TOOLS'
               : activeTab === 'ai'
                 ? 'AI COPILOT'
-                : 'DEVELOPER HUB'
+                : 'ELO PROGRESS'
         }
         badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
       />
 
       {activeTab === 'work' && <WorkToolsPage embedded />}
       {activeTab === 'quick' && <QuickToolsPage embedded />}
-      {activeTab === 'developer' && <DeveloperHubPage />}
+      {activeTab === 'progress' && <ProgressDashboardPage />}
       {activeTab === 'ai' && (
         <Suspense
           fallback={

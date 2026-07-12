@@ -78,9 +78,7 @@ const MetricCard: React.FC<{
   return (
     <div className="rounded-lg border border-gray-200 p-4">
       <div className="flex items-center gap-2">
-        <div className={`rounded p-1 ${colorClasses[color]}`}>
-          {icon}
-        </div>
+        <div className={`rounded p-1 ${colorClasses[color]}`}>{icon}</div>
         <span className="text-sm text-gray-600">{label}</span>
       </div>
       <p className="mt-2 text-2xl font-bold">{value}</p>

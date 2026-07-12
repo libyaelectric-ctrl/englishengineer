@@ -14,7 +14,6 @@ import {
   BrainCircuit,
   BriefcaseBusiness,
   Calendar,
-  Cpu,
   Headphones,
   Home,
   Languages,
@@ -26,6 +25,7 @@ import {
   PenTool,
   Settings,
   Shield,
+  Trophy,
   User,
   Wallet,
   WandSparkles,
@@ -51,7 +51,7 @@ export const TOOLS_NAV_ITEMS = [
   { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness },
   { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles },
   { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit },
-  { label: 'Developer Hub', href: '/tools/developer', icon: Cpu },
+  { label: 'Elo Progress', href: '/tools/progress', icon: Trophy },
 ] as const;
 
 export const PROFILE_NAV_ITEMS = [

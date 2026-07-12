@@ -6,12 +6,7 @@
 const activities = [];
 const MAX_ACTIVITIES = 5000;
 
-export const trackActivity = ({
-  userId,
-  action,
-  category,
-  metadata = {},
-}) => {
+export const trackActivity = ({ userId, action, category, metadata = {} }) => {
   const activity = {
     id: `act_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     userId,
@@ -33,7 +28,7 @@ export const trackActivity = ({
 
 export const getUserActivities = (userId, limit = 50) => {
   return activities
-    .filter(a => a.userId === userId)
+    .filter((a) => a.userId === userId)
     .slice(-limit)
     .reverse();
 };
@@ -58,13 +53,13 @@ export const getActivityStats = (timeRange = '24h') => {
       break;
   }
 
-  const filtered = activities.filter(a => new Date(a.timestamp) >= cutoff);
+  const filtered = activities.filter((a) => new Date(a.timestamp) >= cutoff);
 
   const byAction = {};
   const byCategory = {};
   const byUser = {};
 
-  filtered.forEach(a => {
+  filtered.forEach((a) => {
     byAction[a.action] = (byAction[a.action] || 0) + 1;
     byCategory[a.category] = (byCategory[a.category] || 0) + 1;
     byUser[a.userId] = (byUser[a.userId] || 0) + 1;
