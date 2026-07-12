@@ -7,14 +7,16 @@ export function PageHeader({
   icon,
   badgeText,
   badgeColor,
-  actions
+  actions,
+  children
 }: { 
   title: string; 
-  description: string; 
+  description?: string; 
   icon?: React.ReactNode;
   badgeText?: string;
   badgeColor?: string;
   actions?: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <div className="mb-6 flex flex-col gap-1 border-b border-border-soft pb-4">
@@ -32,11 +34,14 @@ export function PageHeader({
         )}
       </div>
       <div className="flex justify-between items-start">
-        <p className={cn("text-muted-copy text-sm max-w-2xl", icon && "ml-[52px]")}>
-          {description}
-        </p>
+        {description && (
+          <p className={cn("text-muted-copy text-sm max-w-2xl", icon && "ml-[52px]")}>
+            {description}
+          </p>
+        )}
         {actions && <div className="shrink-0">{actions}</div>}
       </div>
+      {children}
     </div>
   );
 }
