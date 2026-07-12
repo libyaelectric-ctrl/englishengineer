@@ -7,6 +7,7 @@ import {
   useReducer,
   useState,
 } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   BookMarked,
   CheckCircle2,
@@ -93,6 +94,7 @@ const WordCard = ({
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
 
@@ -112,10 +114,21 @@ const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-xl border bg-surface p-5 shadow-sm ${
+      className={`flex h-full flex-col rounded-xl border bg-surface p-5 shadow-sm relative ${
         progress?.isWeak ? 'border-rose-300 bg-rose-50/30' : 'border-border-soft'
       }`}
+      style={{ perspective: '1000px' }}
     >
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={isFlipped ? 'back' : 'front'}
+          initial={{ rotateY: isFlipped ? -90 : 90, opacity: 0 }}
+          animate={{ rotateY: 0, opacity: 1 }}
+          exit={{ rotateY: isFlipped ? 90 : -90, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="flex flex-col h-full"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="text-xl font-black text-foreground">
@@ -319,6 +332,17 @@ const WordCard = ({
           <Plus className="h-4 w-4" />
           {LocalizationService.translate('vocabulary.saveLearned', language)}
         </Button>
+      )}
+          </motion.div>
+      </AnimatePresence>
+      {mode !== 'Quiz' && (
+        <button
+          type="button"
+          onClick={() => setIsFlipped((f) => !f)}
+          className="absolute top-3 right-3 text-[10px] font-bold text-primary hover:text-primary-hover transition-colors"
+        >
+          {isFlipped ? 'Front' : 'Flip'}
+        </button>
       )}
     </article>
   );
@@ -1002,16 +1026,26 @@ const VocabularyPage = () => {
           {wordSet.length > 0 && (
             <div className="space-y-5">
               <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                {wordSet.map((term) => (
-                  <WordCard
-                    key={term.id}
-                    term={term}
-                    progress={menuState.progress[term.id]}
-                    mode={mode}
-                    onReview={reviewWord}
-                    onLearn={learnWord}
-                  />
-                ))}
+                <AnimatePresence mode="popLayout">
+                  {wordSet.map((term) => (
+                    <motion.div
+                      key={term.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <WordCard
+                        term={term}
+                        progress={menuState.progress[term.id]}
+                        mode={mode}
+                        onReview={reviewWord}
+                        onLearn={learnWord}
+                      />
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
               </div>
               <div className="flex justify-end border-t border-border-soft pt-4">
                 <Button variant="outline" onClick={loadNextBatch}>

@@ -32,6 +32,8 @@
   --color-engineer-700: #9ca3af;
   --color-engineer-cyan: #1a1a1a;
 
+  --surface: #f8f9fa;
+
   --radius-button: 8px;
   --radius-input: 8px;
   --radius-card: 12px;
@@ -42,6 +44,7 @@
   /* Dark theme - Google Dark Mode minimal */
   --background: #202124;
   --foreground: #f0ecec;
+  --surface: #303134;
 
   --color-primary: #8ab4f8;
   --color-primary-hover: #aecbfa;
@@ -78,6 +81,7 @@
 
   --color-surface: var(--color-surface);
   --color-surface-hover: var(--color-surface-hover);
+  --color-surface-solid: var(--surface);
   --color-soft: var(--color-soft);
   --color-border-soft: var(--color-border-soft);
   --color-border-hover: var(--color-border-hover);
@@ -409,6 +413,15 @@
 
 .animate-aurora-fade-in {
   animation: aurora-fade-in 140ms ease-out both;
+}
+
+/* === DARK MODE COLOR OVERRIDES === */
+.dark {
+  --color-card-bg: rgba(48, 49, 52, 0.8);
+  --color-input-bg: #2a2d30;
+  --color-badge-bg: rgba(138, 180, 248, 0.12);
+  --color-text-inverse: #202124;
+  --color-shadow: rgba(0, 0, 0, 0.4);
 }
 
 /* === MICRO-INTERACTIONS === */

@@ -451,6 +451,15 @@ const ReadingPage = () => {
                   Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}
                 </span>
               </span>
+              {timeSpentSeconds > 0 && (
+                <span className="text-xs font-mono text-primary bg-primary/5 px-3 py-1 rounded border border-primary/20">
+                  WPM: {Math.round(
+                    (currentMission.passageText.split(/\s+/).length /
+                      Math.max(timeSpentSeconds, 1)) *
+                      60
+                  )}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <Button

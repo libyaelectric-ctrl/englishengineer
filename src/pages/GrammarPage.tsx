@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  HelpCircle,
   Languages,
   Search,
   TriangleAlert,
@@ -18,6 +19,7 @@ import {
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { showToast } from '@/shared/components/Toast';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import {
   LocalizationService,
@@ -31,6 +33,7 @@ const GrammarPage = () => {
   const language = useLocalizationStore((state) => state.language);
   const { profile } = useLearningCockpit(currentUser?.id);
   const level = getBaseCefrLevel(profile.skills.grammar.cefrBand);
+  const [showHint, setShowHint] = useState(false);
 
   const {
     rules,
@@ -105,6 +108,10 @@ const GrammarPage = () => {
       },
     });
     GrammarProgressService.recordUsage(selectedRule.id, correct);
+    showToast(
+      correct ? 'Great job! Rule recorded as correct.' : 'No worries — this rule needs more practice.',
+      correct ? 'success' : 'info'
+    );
     ProductAnalyticsService.track('grammar_task_completed', '/grammar', {
       metadata: {
         skill: 'grammar',
@@ -379,7 +386,10 @@ const GrammarPage = () => {
                   </div>
                   <div className="flex flex-col gap-3 sm:flex-row pt-6 border-t border-border-soft">
                     <Button
-                      onClick={() => record(true)}
+                      onClick={() => {
+                        record(true);
+                        setShowHint(false);
+                      }}
                       className="sm:flex-1 h-12 text-base shadow-sm"
                     >
                       <CheckCircle2 className="mr-2 h-5 w-5" /> I used this
@@ -387,12 +397,31 @@ const GrammarPage = () => {
                     </Button>
                     <Button
                       variant="outline"
-                      onClick={() => record(false)}
+                      onClick={() => {
+                        record(false);
+                        setShowHint(false);
+                      }}
                       className="sm:flex-1 h-12 text-base shadow-sm"
                     >
                       <TriangleAlert className="mr-2 h-5 w-5" /> Needs review
                     </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowHint((h) => !h)}
+                      className="sm:flex-1 h-12 text-base shadow-sm"
+                    >
+                      <HelpCircle className="mr-2 h-5 w-5" /> {showHint ? 'Hide Hint' : 'Show Hint'}
+                    </Button>
                   </div>
+                  {showHint && (
+                    <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
+                      <p className="font-bold text-primary mb-1">Rule Explanation</p>
+                      <p className="text-foreground">{selectedRule.explanation}</p>
+                      {selectedRule.turkishExplanation && (
+                        <p className="mt-2 text-muted-copy">{selectedRule.turkishExplanation}</p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </SectionCard>
             </div>
