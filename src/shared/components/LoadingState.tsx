@@ -22,9 +22,9 @@ export const LoadingState: FC<LoadingStateProps> = ({ title, description }) => (
         )}
       </div>
       <div className="grid gap-4 md:grid-cols-3">
-        <Skeleton variant="card" />
-        <Skeleton variant="card" />
-        <Skeleton variant="card" />
+        <Skeleton variant="rectangular" className="h-32" />
+        <Skeleton variant="rectangular" className="h-32" />
+        <Skeleton variant="rectangular" className="h-32" />
       </div>
       <div className="space-y-3">
         <Skeleton className="w-2/3" />
