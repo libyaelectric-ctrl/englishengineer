@@ -105,7 +105,7 @@ export const AdminPage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6">
+    <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
       <header className="premium-panel overflow-hidden p-6 sm:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div>

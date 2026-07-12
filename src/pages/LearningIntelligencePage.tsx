@@ -84,7 +84,7 @@ const LearningIntelligencePage = () => {
   };
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300">
+    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
       <PageHeader
         title="Learning Intelligence"
         description="Role-based daily practice, repeated-mistake tracking and evidence-based weekly guidance."
