@@ -1,10 +1,17 @@
 const CACHE_NAME = 'engvox-v1';
-const STATIC_ASSETS = ['/', '/brand/logo.png', '/manifest.json'];
+const OFFLINE_URL = '/offline.html';
+const STATIC_ASSETS = ['/', '/brand/logo.png', '/manifest.json', OFFLINE_URL];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
+      return Promise.all(
+        STATIC_ASSETS.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn(`[SW] Failed to cache ${url}:`, err);
+          })
+        )
+      );
     })
   );
   self.skipWaiting();
@@ -25,6 +32,27 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const isNavigation = event.request.mode === 'navigate';
+
+  if (isNavigation) {
+    event.respondWith(
+      fetch(event.request)
+        .then((fetchResponse) => {
+          if (fetchResponse.status === 200) {
+            const responseClone = fetchResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return fetchResponse;
+        })
+        .catch(() =>
+          caches.match(OFFLINE_URL).then((cached) => cached || new Response('Offline', { status: 503 }))
+        )
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then((response) => {
