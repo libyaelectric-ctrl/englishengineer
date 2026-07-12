@@ -122,7 +122,7 @@ const GrammarPage = () => {
   return (
     <div className="animate-in fade-in duration-300 relative">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-40 flex flex-col bg-background py-3 border-b border-border-soft shadow-sm space-y-4">
+      <div className="sticky top-0 z-40 -mx-4 -mt-12 sm:-mx-6 sm:-mt-12 lg:-mx-8 lg:-mt-4 flex flex-col bg-background px-4 sm:px-6 lg:px-8 py-3 border-b border-border-soft shadow-sm space-y-4">
         {/* Title & Search */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">

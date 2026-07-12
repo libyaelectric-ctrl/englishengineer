@@ -63,7 +63,7 @@ const ListeningPage = () => {
   if (!currentMission) {
     return (
       <div className="animate-in fade-in duration-300">
-        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
+        <div className="sticky top-0 z-40 -mx-4 -mt-12 sm:-mx-6 sm:-mt-12 lg:-mx-8 lg:-mt-4 border-b border-border-soft bg-background px-4 sm:px-6 lg:px-8 py-3 shadow-sm">
           <h1 className="text-2xl font-black tracking-tight text-foreground">Listening</h1>
         </div>
         <div className="space-y-6 pt-4">
@@ -81,7 +81,7 @@ const ListeningPage = () => {
   return (
     <div className="animate-in fade-in duration-300">
       {/* Sticky header — clean, full-width */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
+      <div className="sticky top-0 z-40 -mx-4 -mt-12 sm:-mx-6 sm:-mt-12 lg:-mx-8 lg:-mt-4 border-b border-border-soft bg-background px-4 sm:px-6 lg:px-8 py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">Listening</h1>
         </div>

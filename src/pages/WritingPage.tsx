@@ -123,7 +123,7 @@ const WritingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-6">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
+      <div className="sticky top-0 z-40 -mx-4 -mt-12 sm:-mx-6 sm:-mt-12 lg:-mx-8 lg:-mt-4 border-b border-border-soft bg-background px-4 sm:px-6 lg:px-8 py-3 shadow-sm">
         <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
       </div>
         <LevelContentFilter
@@ -248,7 +248,7 @@ const WritingPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Writing sticky header */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm">
+      <div className="sticky top-0 z-40 -mx-4 -mt-12 sm:-mx-6 sm:-mt-12 lg:-mx-8 lg:-mt-4 border-b border-border-soft bg-background px-4 sm:px-6 lg:px-8 py-3 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
@@ -620,7 +620,7 @@ const WritingPage = () => {
                     )
                   }
                 >
-                  <div className="space-y-6">
+      <div className="space-y-6">
                     {activeCorrections.length === 0 ? (
                       <div className="flex flex-col items-center justify-center text-center p-6 bg-emerald-500/5 rounded-lg border border-emerald-500/20 space-y-4 animate-in zoom-in-95 duration-300">
                         <Check className="h-10 w-10 text-emerald-400 bg-emerald-500/10 p-2 rounded-full" />
