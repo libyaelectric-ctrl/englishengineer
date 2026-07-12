@@ -42,9 +42,6 @@ import {
 import {
   SKILL_META,
   DOMAINS,
-  GRAPH_NODES,
-  GRAPH_LINKS,
-  type GraphNode,
 } from './CurriculumPage/curriculum-data';
 
 const ICON_MAP: Record<string, typeof BookOpen> = {
@@ -77,9 +74,6 @@ const CurriculumPage = () => {
   const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<
     UnifiedReviewItem[]
   >([]);
-  const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(
-    null
-  );
 
   useEffect(() => {
     ProductAnalyticsService.track('review_queue_opened', '/curriculum', {
@@ -637,178 +631,6 @@ const CurriculumPage = () => {
           </div>
         </>
       )}
-      {activeSection === 'graph' && (
-        <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
-          <div className="rounded-xl border border-border-soft bg-surface p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-medium text-foreground">
-                  Cross-Skill Knowledge Graph
-                </h2>
-                <p className="text-xs text-muted-copy">
-                  Interactive representation of how vocabulary, grammar topics,
-                  and core skills connect.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedGraphNode(null)}
-                className="text-xs font-medium text-primary hover:underline"
-              >
-                Reset Selection
-              </button>
-            </div>
-
-            <div className="relative aspect-video w-full rounded-lg border border-border-soft bg-surface-hover overflow-hidden select-none">
-              <svg viewBox="0 0 800 500" className="h-full w-full">
-                {/* Connection Links */}
-                {GRAPH_LINKS.map((link, idx) => {
-                  const source = GRAPH_NODES.find((n) => n.id === link.source);
-                  const target = GRAPH_NODES.find((n) => n.id === link.target);
-                  if (!source || !target) return null;
-
-                  const isHighlighted = selectedGraphNode
-                    ? selectedGraphNode.id === source.id ||
-                      selectedGraphNode.id === target.id
-                    : false;
-
-                  return (
-                    <line
-                      key={idx}
-                      x1={source.x}
-                      y1={source.y}
-                      x2={target.x}
-                      y2={target.y}
-                      stroke={
-                        isHighlighted
-                          ? 'var(--color-primary, #6366f1)'
-                          : '#e2e8f0'
-                      }
-                      strokeWidth={isHighlighted ? 2.5 : 1.2}
-                      strokeDasharray={
-                        link.source.startsWith('topic') ||
-                        link.target.startsWith('topic')
-                          ? '4 4'
-                          : undefined
-                      }
-                      opacity={
-                        selectedGraphNode && !isHighlighted ? 0.25 : 0.65
-                      }
-                      className="transition-all duration-300"
-                    />
-                  );
-                })}
-
-                {/* Nodes */}
-                {GRAPH_NODES.map((node) => {
-                  const isSelected = selectedGraphNode?.id === node.id;
-                  const isHighlighted = selectedGraphNode
-                    ? selectedGraphNode.id === node.id ||
-                      selectedGraphNode.connections.includes(node.id) ||
-                      (node.id === 'hub' &&
-                        selectedGraphNode.connections.includes(node.id))
-                    : true;
-
-                  return (
-                    <g
-                      key={node.id}
-                      transform={`translate(${node.x}, ${node.y})`}
-                      onClick={() => setSelectedGraphNode(node)}
-                      className="cursor-pointer group"
-                    >
-                      {/* Node Outer Glow/Ring */}
-                      <circle
-                        r={node.size + 6}
-                        fill="transparent"
-                        stroke={node.color}
-                        strokeWidth={isSelected ? 2 : 0}
-                        className="transition-all duration-300 group-hover:stroke-2"
-                        opacity={0.4}
-                      />
-                      {/* Node Body */}
-                      <circle
-                        r={node.size}
-                        fill={node.color}
-                        opacity={isHighlighted ? 1 : 0.3}
-                        className="transition-all duration-300"
-                      />
-                      {/* Label Text */}
-                      <text
-                        y={node.size + 16}
-                        textAnchor="middle"
-                        className="text-[10px] font-medium transition-all duration-300"
-                        fill="currentColor"
-                        opacity={isHighlighted ? 1 : 0.3}
-                      >
-                        {node.label}
-                      </text>
-                    </g>
-                  );
-                })}
-              </svg>
-            </div>
-          </div>
-
-          {/* Details Panel */}
-          <div className="space-y-6">
-            <div className="rounded-xl border border-border-soft bg-surface p-5">
-              {selectedGraphNode ? (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-medium text-primary uppercase">
-                      {selectedGraphNode.type}
-                    </span>
-                    <span className="text-xs font-semibold text-foreground">
-                      {selectedGraphNode.status}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-base font-semibold text-foreground">
-                      {selectedGraphNode.label}
-                    </h3>
-                    <p className="mt-1 text-xs leading-5 text-muted-copy">
-                      {selectedGraphNode.description}
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="flex justify-between text-xs font-medium text-foreground">
-                      <span>Estimated Strength</span>
-                      <span>{selectedGraphNode.strength}%</span>
-                    </div>
-                    <div className="mt-1.5 h-2 w-full rounded-full bg-surface-hover">
-                      <div
-                        className="h-full rounded-full bg-primary transition-all duration-500"
-                        style={{ width: `${selectedGraphNode.strength}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {selectedGraphNode.relatedVocab &&
-                    selectedGraphNode.relatedVocab.length > 0 && (
-                      <div className="border-t border-border-soft pt-3">
-                        <h4 className="text-xs font-medium text-foreground uppercase tracking-wider">
-                          Related Vocabulary
-                        </h4>
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {selectedGraphNode.relatedVocab.map((word) => (
-                            <span
-                              key={word}
-                              className="rounded-md bg-surface-hover border border-border-soft px-2 py-0.5 text-xs text-foreground"
-                            >
-                              {word}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                  {selectedGraphNode.relatedGrammar &&
-                    selectedGraphNode.relatedGrammar.length > 0 && (
-                      <div className="border-t border-border-soft pt-3">
-                        <h4 className="text-xs font-medium text-foreground uppercase tracking-wider">
-                          Grammar Context
                         </h4>
                         <ul className="mt-2 space-y-1 text-xs text-muted-copy list-disc list-inside">
                           {selectedGraphNode.relatedGrammar.map((rule) => (
