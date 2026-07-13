@@ -68,9 +68,17 @@ const WritingPage = () => {
     null
   );
   const [userErrors, setUserErrors] = useState<Record<string, string>>({});
+  const [showModelAnswer, setShowModelAnswer] = useState(false);
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER
   );
+  const [writingHistory, setWritingHistory] = useState<Array<{date: string; wordCount: number; score: number}>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('writing_history') || '[]');
+    } catch {
+      return [];
+    }
+  });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('writing').currentLevel;
   const visibleMissions = filterContentByLevel(
@@ -220,7 +228,6 @@ const WritingPage = () => {
   };
 
   const handleSubmit = () => {
-    // Check if draft is completely empty
     if (!draft.trim()) {
       setUserErrors({ draft: 'Draft cannot be empty' });
       return;
@@ -228,6 +235,12 @@ const WritingPage = () => {
 
     setUserErrors({});
     submitCurrentMission();
+    const newEntry = { date: new Date().toLocaleDateString(), wordCount: draft.trim().split(/\s+/).filter(Boolean).length, score: 0 };
+    setWritingHistory((prev) => {
+      const next = [newEntry, ...prev].slice(0, 5);
+      localStorage.setItem('writing_history', JSON.stringify(next));
+      return next;
+    });
     ProductAnalyticsService.track('writing_task_completed', '/writing', {
       metadata: {
         skill: 'writing',
@@ -321,6 +334,35 @@ const WritingPage = () => {
               </Button>
             )}
           </div>
+
+          {writingHistory.length > 0 && (
+            <SectionCard
+              title="Recent Writing History"
+              subtitle="Last 5 submissions"
+              icon={Clock}
+            >
+              <div className="overflow-x-auto">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-border-soft">
+                      <th className="py-2 text-left font-medium text-muted-copy">Date</th>
+                      <th className="py-2 text-left font-medium text-muted-copy">Word Count</th>
+                      <th className="py-2 text-left font-medium text-muted-copy">Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {writingHistory.map((entry, i) => (
+                      <tr key={i} className="border-b border-border-soft last:border-0">
+                        <td className="py-2 text-foreground">{entry.date}</td>
+                        <td className="py-2 text-foreground">{entry.wordCount}</td>
+                        <td className="py-2 text-foreground">{entry.score > 0 ? `${entry.score}%` : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </SectionCard>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {visibleMissions.map((m) => {
@@ -528,6 +570,19 @@ const WritingPage = () => {
                     <p className={`mt-1 text-right text-xs font-semibold ${draft.trim().split(/\s+/).filter(Boolean).length > 200 ? 'text-green-500' : draft.trim().split(/\s+/).filter(Boolean).length > 100 ? 'text-blue-500' : 'text-muted-copy'}`}>
                       {draft.trim().split(/\s+/).filter(Boolean).length} words
                     </p>
+
+                    <div className="space-y-1.5">
+                      <div className="flex items-center justify-between text-[10px] font-bold text-muted-copy">
+                        <span>Goal: {Math.min(draft.trim().split(/\s+/).filter(Boolean).length, 200)}/200 words</span>
+                        <span>{Math.round(Math.min(100, (draft.trim().split(/\s+/).filter(Boolean).length / 200) * 100))}%</span>
+                      </div>
+                      <div className="h-1.5 w-full rounded-full bg-surface-hover overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-500 transition-all duration-300"
+                          style={{ width: `${Math.min(100, (draft.trim().split(/\s+/).filter(Boolean).length / 200) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
 
                     <div className="flex items-center justify-between text-xs font-mono text-muted-copy pt-1">
                       <div className="flex items-center gap-2">
@@ -770,16 +825,47 @@ const WritingPage = () => {
               </div>
             </div>
           ) : (
-            <WritingEvaluationResults
-              evaluationResult={evaluationResult}
-              currentMission={currentMission}
-              resetCurrentMission={resetCurrentMission}
-              setSelectedRule={setSelectedRule}
-              handleBackToMissions={handleBackToMissions}
-              currentMissionIndex={currentMissionIndex}
-              visibleMissions={visibleMissions}
-              moveMission={moveMission}
-            />
+            <>
+              <WritingEvaluationResults
+                evaluationResult={evaluationResult}
+                currentMission={currentMission}
+                resetCurrentMission={resetCurrentMission}
+                setSelectedRule={setSelectedRule}
+                handleBackToMissions={handleBackToMissions}
+                currentMissionIndex={currentMissionIndex}
+                visibleMissions={visibleMissions}
+                moveMission={moveMission}
+              />
+              <SectionCard
+                title="Model Answer"
+                subtitle="Reference structure for this mission"
+                icon={FileText}
+                headerActions={
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowModelAnswer((s) => !s)}
+                    className="text-xs h-8"
+                  >
+                    {showModelAnswer ? 'Hide Model Answer' : 'Show Model Answer'}
+                  </Button>
+                }
+              >
+                {showModelAnswer && currentMission.expectedStructure ? (
+                  <div className="space-y-2">
+                    {currentMission.expectedStructure.map((point, i) => (
+                      <div
+                        key={i}
+                        className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
+                      >
+                        {point}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-copy">Toggle above to reveal the model answer.</p>
+                )}
+              </SectionCard>
+            </>
           )}
         </div>
       )}

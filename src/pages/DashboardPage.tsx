@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ProgressService } from '@/core/learning';
+import { useLearningStore } from '@/core/learning';
 import { useAuthStore } from '@/features/auth';
 import {
   SKILL_NAMES,
@@ -108,6 +109,33 @@ const getCefrColor = (band: string) => {
   return 'text-blue-600 bg-blue-50 border-blue-200';
 };
 
+const DAILY_GOAL = 10;
+
+const DailyGoalBar = () => {
+  const learningState = useLearningStore();
+  const today = new Date().toDateString();
+  const todayCount = learningState.studySessions.filter(
+    (s) => new Date(s.timestamp).toDateString() === today
+  ).length;
+  return (
+    <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm animate-on-scroll">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-bold text-foreground">
+          Today: {todayCount}/{DAILY_GOAL} tasks completed
+        </span>
+        <span className="text-[10px] font-medium text-muted-copy">
+          {Math.min(todayCount, DAILY_GOAL)}/{DAILY_GOAL}
+        </span>
+      </div>
+      <ProgressBar
+        value={Math.min(todayCount, DAILY_GOAL)}
+        max={DAILY_GOAL}
+        color={todayCount >= DAILY_GOAL ? 'emerald' : 'primary'}
+      />
+    </div>
+  );
+};
+
 const DashboardPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -169,6 +197,10 @@ const DashboardPage = () => {
   };
   const competency = getCompetencyLabel(summary.averageScore);
 
+  const userName = currentUser?.displayName || 'Engineer';
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
+
   const isLoading = !currentUser || !profile;
 
   const skillSparklineData = useMemo(() => {
@@ -191,6 +223,8 @@ const DashboardPage = () => {
         <h1 className="text-2xl font-black tracking-tight text-foreground">Dashboard</h1>
       </div>
       <div className="space-y-6">
+        <DailyGoalBar />
+
         {/* Executive Summary Widget */}
         <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
           <div className="flex items-center gap-4 w-full">
@@ -237,6 +271,7 @@ const DashboardPage = () => {
                   tone="success"
                 />
               </div>
+              <p className="text-lg font-bold text-foreground">Good {greeting}, {userName}!</p>
               <h1 className="mt-5 text-xs font-bold text-primary uppercase tracking-wider">
                 EngVox Command Center
               </h1>

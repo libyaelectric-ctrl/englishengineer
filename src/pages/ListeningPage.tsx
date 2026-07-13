@@ -6,6 +6,7 @@ import {
   Headphones,
   KeyRound,
   ListChecks,
+  RefreshCw,
 } from 'lucide-react';
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
@@ -79,6 +80,13 @@ const ListeningPage = () => {
   );
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
+  const [categoryFilter, setCategoryFilter] = useState<string>('All');
+  const CATEGORIES = ['All', 'Site Meetings', 'Technical', 'Safety', 'Commissioning'] as const;
+  const filteredMissions = useMemo(
+    () => categoryFilter === 'All' ? visibleMissions : visibleMissions.filter((m) => m.missionType?.toLowerCase().includes(categoryFilter.toLowerCase())),
+    [visibleMissions, categoryFilter]
+  );
+  const [showTranscript, setShowTranscript] = useState(true);
   const currentMission =
     visibleMissions.find((mission) => mission.id === selectedMissionId) ??
     visibleMissions[0];
@@ -126,8 +134,24 @@ const ListeningPage = () => {
           subtitle="Choose a level-safe task; the system recommendation remains changeable"
           icon={Headphones}
         >
+          <div className="flex flex-wrap gap-2 mb-4">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => setCategoryFilter(cat)}
+                className={`min-h-9 rounded-lg px-3 text-xs font-bold transition-all ${
+                  categoryFilter === cat
+                    ? 'bg-foreground text-background shadow-sm'
+                    : 'text-muted-copy border border-border-soft bg-surface hover:bg-surface-hover hover:text-foreground'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {visibleMissions.map((mission) => (
+            {filteredMissions.map((mission) => (
               <article
                 key={mission.id}
                 className="rounded-xl border border-border-soft bg-background p-5 hover:shadow-md transition-shadow"
@@ -201,15 +225,24 @@ const ListeningPage = () => {
             </div>
           </div>
 
-          <SectionCard
-            title={currentMission.title}
-            subtitle="Read the transcript, then complete all three response modes"
-            icon={FileText}
+          <Button
+            variant="outline"
+            onClick={() => setShowTranscript((prev) => !prev)}
           >
-            <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
-              {currentMission.transcript}
-            </div>
-          </SectionCard>
+            {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
+          </Button>
+
+          {showTranscript && (
+            <SectionCard
+              title={currentMission.title}
+              subtitle="Read the transcript, then complete all three response modes"
+              icon={FileText}
+            >
+              <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
+                {currentMission.transcript}
+              </div>
+            </SectionCard>
+          )}
 
           {!evaluationResult ? (
             <SectionCard
@@ -336,6 +369,13 @@ const ListeningPage = () => {
               </p>
               <Button className="mt-4" onClick={resetCurrentMission}>
                 Try another response
+              </Button>
+              <Button
+                variant="outline"
+                className="mt-4 ml-2"
+                onClick={resetCurrentMission}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio
               </Button>
             </SectionCard>
           )}
