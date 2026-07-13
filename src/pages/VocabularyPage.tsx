@@ -279,11 +279,12 @@ const WordCard = ({
           >
             I Know This — Take Mini Quiz
           </Button>
-          {knowThisCheck && (
-            <p className="text-xs font-semibold text-primary">
-              Use the mini quiz if you want to check recall before saving.
-            </p>
-          )}
+          <p
+            hidden={!knowThisCheck}
+            className="text-xs font-semibold text-primary"
+          >
+            Use the mini quiz if you want to check recall before saving.
+          </p>
           <label className="text-xs font-bold text-foreground">
             Turkish meaning
             <input
