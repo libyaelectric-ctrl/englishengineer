@@ -104,9 +104,8 @@ describe('VocabularyPage menu', () => {
     fireEvent.click(
       within(firstCard).getByRole('button', { name: /I Know This/i })
     );
-    expect(
-      within(firstCard).getByText(/check recall before saving/i)
-    ).toBeVisible();
+    const quizText = await within(firstCard).findByText(/check recall before saving/i);
+    expect(quizText).toBeVisible();
     expect(VocabularyMenuService.getState().progress).toEqual({});
     fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
       target: { value: 'yükseklik' },
