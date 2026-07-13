@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
+  Bookmark,
   HelpCircle,
   GraduationCap,
   CheckCircle2,
@@ -66,6 +67,22 @@ const ReadingPage = () => {
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER
   );
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem('reading_bookmarks') || '[]'));
+    } catch {
+      return new Set<string>();
+    }
+  });
+  const toggleBookmark = (id: string) => {
+    setBookmarkedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      localStorage.setItem('reading_bookmarks', JSON.stringify([...next]));
+      return next;
+    });
+  };
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('reading').currentLevel;
   const visibleMissions = filterContentByLevel(
@@ -333,6 +350,7 @@ const ReadingPage = () => {
                     isCompleted ? 'border-success/20' : 'border-border-soft'
                   }`}
                 >
+                  <div className='absolute top-0 left-0 right-0 h-1 rounded-t-xl' style={{background: m.cefrLevel.startsWith('A') ? '#3b82f6' : m.cefrLevel.startsWith('B') ? '#f59e0b' : '#10b981'}} />
                   <div className="flex flex-col h-full justify-between space-y-4">
                     <div className="space-y-3">
                       {/* Top Badge Row */}
@@ -362,6 +380,15 @@ const ReadingPage = () => {
                         <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1">
                           <Clock className="h-3 w-3" /> {m.estimatedMinutes}m
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleBookmark(m.id)}
+                          className="ml-1 shrink-0 p-1 rounded transition-colors hover:bg-surface-hover"
+                        >
+                          <Bookmark
+                            className={`h-4 w-4 ${bookmarkedIds.has(m.id) ? 'fill-foreground text-foreground' : 'text-muted-copy'}`}
+                          />
+                        </button>
                       </div>
 
                       {/* Title & Desc */}
@@ -684,15 +711,21 @@ const ReadingPage = () => {
               </div>
             </div>
           ) : (
-            <ReadingEvaluationResults
-              evaluationResult={evaluationResult}
-              resetCurrentMission={resetCurrentMission}
-              setSelectedWord={setSelectedWord}
-              handleBackToMissions={handleBackToMissions}
-              currentMissionIndex={currentMissionIndex}
-              visibleMissions={visibleMissions}
-              moveMission={moveMission}
-            />
+            <>
+              <div className="text-center py-4">
+                <p className="text-4xl font-black text-primary">{evaluationResult.finalScore}%</p>
+                <p className="text-sm text-muted-copy">Comprehension Score</p>
+              </div>
+              <ReadingEvaluationResults
+                evaluationResult={evaluationResult}
+                resetCurrentMission={resetCurrentMission}
+                setSelectedWord={setSelectedWord}
+                handleBackToMissions={handleBackToMissions}
+                currentMissionIndex={currentMissionIndex}
+                visibleMissions={visibleMissions}
+                moveMission={moveMission}
+              />
+            </>
           )}
         </div>
       )}

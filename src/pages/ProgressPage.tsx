@@ -318,6 +318,62 @@ const ProgressPage = () => {
               )}
             </div>
           </div>
+
+          {/* Weekly XP Chart */}
+          <div className="rounded-2xl border border-border-soft bg-surface shadow-sm overflow-hidden">
+            <div className="px-5 pt-4 pb-3 border-b border-border-soft">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-primary" />
+                <h3 className="text-sm font-semibold text-foreground">Weekly XP</h3>
+              </div>
+              <p className="text-[11px] text-muted-copy mt-0.5">Last 7 days experience points.</p>
+            </div>
+            <div className="p-4">
+              {(() => {
+                const xpHistory = learningState?.xpHistory || [];
+                const now = new Date();
+                const days = Array.from({ length: 7 }, (_, i) => {
+                  const d = new Date(now);
+                  d.setDate(d.getDate() - (6 - i));
+                  return d.toISOString().split('T')[0];
+                });
+                const xpByDay = days.map((date) =>
+                  xpHistory.filter((e) => e.date === date).reduce((sum, e) => sum + e.amount, 0)
+                );
+                const maxXP = Math.max(...xpByDay, 1);
+                const barWidth = 40;
+                const gap = 16;
+                const chartHeight = 120;
+                const labelY = chartHeight + 16;
+                return (
+                  <svg viewBox={`0 0 ${7 * (barWidth + gap) + gap} ${labelY + 16}`} className="w-full" preserveAspectRatio="xMidYMid meet">
+                    {xpByDay.map((xp, i) => {
+                      const x = gap + i * (barWidth + gap);
+                      const barH = (xp / maxXP) * chartHeight;
+                      const y = chartHeight - barH;
+                      return (
+                        <g key={i}>
+                          <rect
+                            x={x} y={y} width={barWidth} height={Math.max(barH, 2)}
+                            rx={4} className="fill-primary"
+                            opacity={xp > 0 ? 0.85 : 0.15}
+                          />
+                          {xp > 0 && (
+                            <text x={x + barWidth / 2} y={y - 4} textAnchor="middle" className="text-[9px] font-bold" fill="currentColor">
+                              {xp}
+                            </text>
+                          )}
+                          <text x={x + barWidth / 2} y={labelY} textAnchor="middle" className="text-[8px] font-medium" fill="currentColor" opacity={0.6}>
+                            {new Date(days[i] + 'T12:00:00').toLocaleDateString('en', { weekday: 'short' })}
+                          </text>
+                        </g>
+                      );
+                    })}
+                  </svg>
+                );
+              })()}
+            </div>
+          </div>
         </div>
 
         {/* Right Sidebar - Nav2 style */}

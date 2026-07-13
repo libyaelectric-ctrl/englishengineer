@@ -8,7 +8,7 @@ import {
   type ProfilePrefsState,
 } from './ProfilePage/ProfilePageReducer';
 import { useLocation, useParams } from 'react-router-dom';
-import { UserRound } from 'lucide-react';
+import { UserRound, Trophy } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
@@ -611,6 +611,44 @@ const ProfilePage = () => {
                 </div>
               </form>
             )}
+          </SectionCard>
+
+          <SectionCard
+            title="Earned Badges"
+            subtitle="Achievements unlocked through your progress"
+            icon={Trophy}
+          >
+            {(() => {
+              const earnedBadges = (learningState.achievements ?? []).filter(
+                (a) => a.unlocked
+              );
+              if (earnedBadges.length === 0) {
+                return (
+                  <p className="text-sm text-muted-copy text-center py-6">
+                    No badges earned yet. Keep practicing!
+                  </p>
+                );
+              }
+              return (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {earnedBadges.map((badge) => (
+                    <div
+                      key={badge.id}
+                      className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-center space-y-2"
+                    >
+                      <Trophy className="h-6 w-6 mx-auto text-primary" />
+                      <p className="text-sm font-bold text-foreground">{badge.title}</p>
+                      <p className="text-[10px] text-muted-copy leading-4">{badge.description}</p>
+                      {badge.unlockedAt && (
+                        <p className="text-[10px] font-medium text-muted-copy">
+                          {new Date(badge.unlockedAt).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </SectionCard>
         </section>
       )}

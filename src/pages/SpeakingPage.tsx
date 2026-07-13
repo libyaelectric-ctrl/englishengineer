@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
 import {
+  BarChart3,
   Brain,
   CheckCircle2,
   FileText,
@@ -8,7 +9,6 @@ import {
   MessageSquareText,
   RotateCcw,
   Mic,
-  MicOff,
   Volume2,
   Lock,
 } from 'lucide-react';
@@ -98,6 +98,7 @@ const SpeakingPage = () => {
     'written'
   );
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
   const [pronunciationScore, setPronunciationScore] = useState<number | null>(
     null
@@ -106,6 +107,7 @@ const SpeakingPage = () => {
     Array<{ word: string; score: number; phonemes: string }>
   >([]);
   const waveformTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pauseRef = useRef(false);
   const [waveformBars, setWaveformBars] = useState<number[]>(Array(24).fill(4));
 
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
@@ -144,11 +146,14 @@ const SpeakingPage = () => {
 
   const startRecording = () => {
     setIsRecording(true);
+    setIsPaused(false);
+    pauseRef.current = false;
     setRecordedAudio(null);
     setPronunciationScore(null);
     setPhonemeFeedback([]);
 
     waveformTimerRef.current = setInterval(() => {
+      if (pauseRef.current) return;
       setWaveformBars(Array.from({ length: 24 }, () => Math.random() * 48 + 8));
     }, 120);
 
@@ -160,6 +165,7 @@ const SpeakingPage = () => {
       }
       setWaveformBars(Array(24).fill(4));
       setIsRecording(false);
+      setIsPaused(false);
       setRecordedAudio('simulated_blob_url');
 
       // Auto transcribe based on mission guidelines
@@ -326,6 +332,17 @@ const SpeakingPage = () => {
             }`}
           >
             <span>{mission.title}</span>
+            <span className="rounded-full bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/20">
+              {mission.difficulty}
+            </span>
+            <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/20">
+              {mission.estimatedMinutes}min
+            </span>
+            {mission.expectedKeywords[0] && (
+              <span className="rounded-full bg-success/10 px-1.5 py-0.5 text-[9px] font-bold text-success border border-success/20">
+                {mission.expectedKeywords[0]}
+              </span>
+            )}
             <LevelAccessBadge
               label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
             />
@@ -562,14 +579,22 @@ const SpeakingPage = () => {
                             Start Speaking
                           </button>
                         )}
-                        {isRecording && (
+                        {isRecording && !isPaused && (
                           <button
                             type="button"
-                            disabled
-                            className="flex-1 rounded-lg bg-rose-500 px-4 py-2.5 text-xs font-medium text-white opacity-80 flex items-center justify-center gap-2 cursor-not-allowed"
+                            onClick={() => { setIsPaused(true); pauseRef.current = true; }}
+                            className="flex-1 rounded-lg bg-amber-500 px-4 py-2.5 text-xs font-medium text-white hover:bg-amber-600 transition-colors flex items-center justify-center gap-2"
                           >
-                            <MicOff className="h-3.5 w-3.5 animate-spin" />
-                            Speaking (4s limit)...
+                            Pause Recording
+                          </button>
+                        )}
+                        {isRecording && isPaused && (
+                          <button
+                            type="button"
+                            onClick={() => { setIsPaused(false); pauseRef.current = false; }}
+                            className="flex-1 rounded-lg bg-rose-500 px-4 py-2.5 text-xs font-medium text-white hover:bg-rose-600 transition-colors flex items-center justify-center gap-2"
+                          >
+                            Resume Recording
                           </button>
                         )}
                         {recordedAudio && (
@@ -758,6 +783,31 @@ const SpeakingPage = () => {
         onClose={() => setScoreResult(null)}
         onAction={() => setScoreResult(null)}
       />
+
+      {scoreResult && (
+        <SectionCard
+          title="Your Score vs Average"
+          subtitle="How you compare to the average learner"
+          icon={BarChart3}
+        >
+          <div className="space-y-4">
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs font-medium text-muted-copy">
+                <span>Your Score</span>
+                <span>{scoreResult.score}%</span>
+              </div>
+              <ProgressBar value={scoreResult.score} color="primary" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex justify-between text-xs font-medium text-muted-copy">
+                <span>Average Score</span>
+                <span>72%</span>
+              </div>
+              <ProgressBar value={72} color="cyan" />
+            </div>
+          </div>
+        </SectionCard>
+      )}
     </div>
   );
 };
