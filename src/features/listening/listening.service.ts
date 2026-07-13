@@ -62,6 +62,24 @@ export const ListeningService = {
   },
 
   /**
+   * Returns missions sorted by how many pool words appear in their transcript.
+   * Missions with more pool-word hits appear first.
+   */
+  getMissionsSortedByPool(pool: string[]): ListeningMission[] {
+    if (pool.length === 0) return LISTENING_MISSIONS;
+    const lowerPool = pool.map((w) => w.toLowerCase());
+    return [...LISTENING_MISSIONS].sort((a, b) => {
+      const aCount = lowerPool.filter((w) =>
+        a.transcript.toLowerCase().includes(w)
+      ).length;
+      const bCount = lowerPool.filter((w) =>
+        b.transcript.toLowerCase().includes(w)
+      ).length;
+      return bCount - aCount;
+    });
+  },
+
+  /**
    * Retrieves a specific listening mission by ID.
    */
   getMissionById(id: string): ListeningMission | undefined {

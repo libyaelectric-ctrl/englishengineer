@@ -6,6 +6,8 @@ import {
 } from './writing.types';
 import { WritingService } from './writing.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { scoreContentByPoolRatio } from '@/core/content-selection/personalized-content.service';
+import { useLearningStore } from '@/core/learning';
 
 interface WritingStoreState {
   missions: WritingMission[];
@@ -28,6 +30,7 @@ interface WritingStoreActions {
   submitCurrentMission: () => WritingEvaluationResult;
   resetCurrentMission: () => void;
   resetAllWritingProgress: () => void;
+  getMissionsSortedByPoolRatio: () => WritingMission[];
 }
 
 export const useWritingStore = create<WritingStoreState & WritingStoreActions>(
@@ -158,6 +161,20 @@ export const useWritingStore = create<WritingStoreState & WritingStoreActions>(
         evaluationResult: null,
         history: state.history,
         completedMissions: state.completedMissions,
+      });
+    },
+
+    getMissionsSortedByPoolRatio: () => {
+      const pool = useLearningStore.getState().vocabularyPool.map(id => ({
+        content_type: 'vocabulary' as const,
+        content_id: id,
+      }));
+      const missions = WritingService.getMissions();
+      if (pool.length === 0) return missions;
+      return [...missions].sort((a, b) => {
+        const scoreA = scoreContentByPoolRatio(a, pool).score;
+        const scoreB = scoreContentByPoolRatio(b, pool).score;
+        return scoreB - scoreA;
       });
     },
   })

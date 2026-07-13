@@ -59,7 +59,11 @@ const WritingPage = () => {
     submitCurrentMission,
     resetCurrentMission,
     resetAllWritingProgress,
+    getMissionsSortedByPoolRatio,
   } = useWritingStore();
+
+  // Havuza göre sıralanmış mission'lar
+  const sortedMissions = getMissionsSortedByPoolRatio();
 
   const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>(
     'missions'
@@ -82,7 +86,7 @@ const WritingPage = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('writing').currentLevel;
   const visibleMissions = filterContentByLevel(
-    missions,
+    sortedMissions,
     currentLevel,
     levelFilter
   );
