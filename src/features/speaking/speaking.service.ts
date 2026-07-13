@@ -41,6 +41,22 @@ export const SpeakingService = {
     return SPEAKING_MISSIONS;
   },
 
+  /**
+   * Returns missions sorted by how many pool words appear in their prompt/keywords.
+   * Missions with more pool-word hits appear first.
+   */
+  getMissionsSortedByPool(pool: string[]): SpeakingMission[] {
+    if (pool.length === 0) return SPEAKING_MISSIONS;
+    const lowerPool = pool.map((w) => w.toLowerCase());
+    return [...SPEAKING_MISSIONS].sort((a, b) => {
+      const aText = `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
+      const bText = `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
+      const aCount = lowerPool.filter((w) => aText.includes(w)).length;
+      const bCount = lowerPool.filter((w) => bText.includes(w)).length;
+      return bCount - aCount;
+    });
+  },
+
   getMissionById(id: string): SpeakingMission | undefined {
     return SPEAKING_MISSIONS.find((mission) => mission.id === id);
   },
