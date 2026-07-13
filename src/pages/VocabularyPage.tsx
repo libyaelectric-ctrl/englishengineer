@@ -534,6 +534,9 @@ const VocabularyPage = () => {
   };
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
+    // Review'dan önce durumu kaydet (New'den Learning'e geçişi tespit etmek için)
+    const prevStatus = VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
+
     VocabularyMenuService.reviewWord(
       term.id,
       isCorrect,
@@ -552,10 +555,12 @@ const VocabularyPage = () => {
     // Otomatik kart geçişi — 500ms sonra bir sonraki karta geç
     setTimeout(() => {
       const currentState = VocabularyMenuService.getState();
+      // Yeni kelime Learning'e geçtiyse, bir sonraki kart da Learning'den gelsin
+      const nextStatus = (isCorrect && prevStatus === 'New') ? 'Learning' : activeTab;
       const nextSet = selectVocabularyLearningSet(terms, currentState, {
         cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
         skillUse: 'vocabulary',
-        status: activeTab,
+        status: nextStatus,
       });
       if (nextSet.length > 0 && nextSet[0].id !== term.id) {
         dispatchData({ type: 'SET_MENU_STATE', menuState: currentState });
