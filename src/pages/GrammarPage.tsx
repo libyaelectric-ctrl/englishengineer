@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   HelpCircle,
@@ -34,6 +35,11 @@ const GrammarPage = () => {
   const { profile } = useLearningCockpit(currentUser?.id);
   const level = getBaseCefrLevel(profile.skills.grammar.cefrBand);
   const [showHint, setShowHint] = useState(false);
+  const [quickQuizOpen, setQuickQuizOpen] = useState(false);
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+  const [showAllRules, setShowAllRules] = useState(false);
+  const [expandedRuleIds, setExpandedRuleIds] = useState<Set<string>>(new Set());
+  const [showMistakes, setShowMistakes] = useState(false);
 
   const {
     rules,
@@ -132,6 +138,15 @@ const GrammarPage = () => {
 
   const currentIdx = visibleRules.findIndex((r) => r.id === selectedRule?.id);
 
+  const mistakeRules = useMemo(
+    () =>
+      rules.filter((rule) => {
+        const progress = GrammarProgressService.get(rule.id);
+        return progress.correctUsages === 0 && progress.reviewStatus !== 'New';
+      }),
+    [rules]
+  );
+
   return (
     <div className="animate-in fade-in duration-300 relative">
       {/* Sticky Header */}
@@ -172,6 +187,62 @@ const GrammarPage = () => {
             </button>
           ))}
         </div>
+
+        <div className="flex justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowMistakes((v) => !v)}
+            className="text-xs h-9"
+          >
+            {showMistakes ? 'Close Review' : `Review Mistakes (${mistakeRules.length})`}
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowAllRules((v) => !v)}
+            className="text-xs font-bold text-primary hover:text-primary-hover transition-colors"
+          >
+            {showAllRules ? 'Hide All Rules' : 'Explore All Rules'}
+          </button>
+          <span className="text-[10px] text-muted-copy">({rules.length} rules)</span>
+        </div>
+
+        {showAllRules && (
+          <div className="max-h-64 overflow-y-auto custom-scrollbar rounded-xl border border-border-soft bg-surface p-2 space-y-1">
+            {rules.map((rule) => {
+              const isExpanded = expandedRuleIds.has(rule.id);
+              return (
+                <div key={rule.id} className="rounded-lg border border-border-soft bg-background overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExpandedRuleIds((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(rule.id)) next.delete(rule.id);
+                        else next.add(rule.id);
+                        return next;
+                      });
+                    }}
+                    className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-surface-hover transition-colors"
+                  >
+                    <span className="text-[10px] font-mono font-bold text-primary">{rule.cefrLevel}</span>
+                    <span className="text-[10px] font-mono text-muted-copy">{rule.grammarCategory}</span>
+                    <span className="flex-1 text-xs font-semibold text-foreground truncate">{rule.title}</span>
+                    <ChevronDown className={`h-3 w-3 text-muted-copy transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  </button>
+                  {isExpanded && (
+                    <div className="px-3 pb-2 text-xs text-muted-copy leading-relaxed border-t border-border-soft pt-2">
+                      {rule.explanation}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Topic Nav */}
         <div className="flex items-center gap-3">
@@ -231,6 +302,31 @@ const GrammarPage = () => {
       {/* Full-width Scrollable Content */}
       <div className="pt-4 pb-20">
         <div className="w-full">
+          {showMistakes && mistakeRules.length > 0 && (
+            <SectionCard title="Review Mistakes" subtitle="Rules you got wrong and haven't practiced enough" icon={TriangleAlert}>
+              <div className="space-y-2">
+                {mistakeRules.map((rule) => (
+                  <div key={rule.id} className="flex items-center justify-between rounded-lg border border-border-soft bg-surface p-3">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">{rule.title}</p>
+                      <p className="text-xs text-muted-copy">{rule.grammarCategory}</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedId(rule.id);
+                        setShowMistakes(false);
+                      }}
+                      className="h-8 px-3 text-xs"
+                    >
+                      Practice
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </SectionCard>
+          )}
           {selectedRule ? (
             <div className="max-w-4xl mx-auto space-y-6 pb-20">
               <SectionCard
@@ -412,7 +508,82 @@ const GrammarPage = () => {
                     >
                       <HelpCircle className="mr-2 h-5 w-5" /> {showHint ? 'Hide Hint' : 'Show Hint'}
                     </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setQuickQuizOpen((q) => !q);
+                        if (!quickQuizOpen) setQuizAnswers({});
+                      }}
+                      className="sm:flex-1 h-12 text-base shadow-sm"
+                    >
+                      {quickQuizOpen ? 'Close Quiz' : 'Quick Quiz'}
+                    </Button>
                   </div>
+                  {quickQuizOpen && selectedRule && (
+                    <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-5">
+                      <p className="font-bold text-primary text-sm">Quick Quiz — 3 Questions</p>
+                      {([
+                        {
+                          q: 'What is the structure of this rule?',
+                          choices: [selectedRule.structure, selectedRule.definition, selectedRule.explanation, selectedRule.engineeringUseCase],
+                          correct: 0,
+                        },
+                        {
+                          q: 'Which category does this rule belong to?',
+                          choices: [selectedRule.grammarCategory, 'Vocabulary', 'Pronunciation', 'Writing'],
+                          correct: 0,
+                        },
+                        {
+                          q: 'What is the correct example?',
+                          choices: [selectedRule.correctedExampleEnglish, selectedRule.badExampleEnglish, 'N/A', 'N/A'],
+                          correct: 0,
+                        },
+                      ] as const).map((item, qi) => (
+                        <div key={qi} className="space-y-2">
+                          <p className="text-sm font-semibold text-foreground">Q{qi + 1}: {item.q}</p>
+                          <div className="grid gap-2">
+                            {item.choices.map((choice, ci) => {
+                              const letter = String.fromCharCode(65 + ci);
+                              const isSelected = quizAnswers[qi] === letter;
+                              const isRevealed = Object.keys(quizAnswers).length === 3;
+                              const isCorrect = ci === item.correct;
+                              return (
+                                <button
+                                  key={ci}
+                                  type="button"
+                                  onClick={() => setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))}
+                                  disabled={isRevealed}
+                                  className={`w-full text-left p-3 rounded-lg border transition-all text-xs font-medium ${
+                                    isRevealed
+                                      ? isCorrect
+                                        ? 'border-success bg-success/10 text-foreground'
+                                        : isSelected
+                                          ? 'border-rose-400 bg-rose-50 text-foreground'
+                                          : 'border-border-soft bg-surface text-muted-copy opacity-50'
+                                      : isSelected
+                                        ? 'border-primary bg-primary/10 text-foreground'
+                                        : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5'
+                                  }`}
+                                >
+                                  <span className="font-bold mr-2">{letter}.</span> {choice}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                      {Object.keys(quizAnswers).length === 3 && (
+                        <div className="text-center pt-2 border-t border-primary/20">
+                          <p className="text-lg font-black text-primary">
+                            Score: {[0, 1, 2].filter((i) => {
+                              const correctIdx = [0, 0, 0][i];
+                              return quizAnswers[i] === String.fromCharCode(65 + correctIdx);
+                            }).length} / 3
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                   {showHint && (
                     <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
                       <p className="font-bold text-primary mb-1">Rule Explanation</p>
