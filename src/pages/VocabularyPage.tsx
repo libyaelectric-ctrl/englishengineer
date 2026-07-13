@@ -351,6 +351,7 @@ const WordCard = ({
 
 const VocabularyPage = () => {
   const userId = useAuthStore((state) => state.currentUser?.id);
+  const vocabularyPool = useLearningStore((state) => state.vocabularyPool);
   const learningProfile = useMemo(
     () => LearningProfileRepository.getProfile(userId || 'local-user'),
     [userId]
@@ -725,6 +726,9 @@ const VocabularyPage = () => {
           </h1>
           <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
             🏆 {Object.values(menuState.progress).filter((p) => p.status === 'Mastered').length} mastered
+          </span>
+          <span className="rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-bold text-primary">
+            {vocabularyPool.length} in pool
           </span>
         </div>
 

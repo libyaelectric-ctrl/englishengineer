@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -27,6 +27,8 @@ import {
   VocabularyItem,
   ReadingTranslation,
 } from '@/features/reading';
+import { useLearningStore } from '@/core/learning';
+import { scoreContentByPoolRatio } from '@/core/content-selection/personalized-content.service';
 import {
   ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
@@ -85,11 +87,27 @@ const ReadingPage = () => {
   };
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('reading').currentLevel;
-  const visibleMissions = filterContentByLevel(
+  const vocabularyPool = useLearningStore((s) => s.vocabularyPool);
+
+  const poolEntries = useMemo(() =>
+    vocabularyPool.map(id => ({ content_type: 'vocabulary' as const, content_id: id })),
+    [vocabularyPool]
+  );
+
+  const filteredMissions = filterContentByLevel(
     missions,
     currentLevel,
     levelFilter
   );
+
+  const visibleMissions = useMemo(() => {
+    if (poolEntries.length === 0) return filteredMissions;
+    return [...filteredMissions].sort((a, b) => {
+      const scoreA = scoreContentByPoolRatio(a, poolEntries).score;
+      const scoreB = scoreContentByPoolRatio(b, poolEntries).score;
+      return scoreB - scoreA;
+    });
+  }, [filteredMissions, poolEntries]);
 
   // Initialize reading store
   useEffect(() => {

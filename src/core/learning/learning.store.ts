@@ -412,3 +412,15 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
     getVocabularyPool: () => get().vocabularyPool ?? [],
   })
 );
+
+// Event bus → Pool bağlantısı (MimoCan Faz 1 kritik bağlantısı)
+
+eventBus.subscribe('vocabulary:mastered', (event) => {
+  const termId = (event.payload as { termId: string }).termId;
+  useLearningStore.getState().addToVocabularyPool(termId);
+});
+
+eventBus.subscribe('grammar:mastered', (event) => {
+  const ruleId = (event.payload as { ruleId: string }).ruleId;
+  useLearningStore.getState().addToGrammarPool(ruleId);
+});

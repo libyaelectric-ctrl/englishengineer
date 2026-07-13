@@ -285,6 +285,7 @@ const VOCAB_LEVELS = [
 
 function Vocab() {
   const [v, setV] = useState(() => VocabularyMenuService.getSummary());
+  const vocabularyPool = useLearningStore((state) => state.vocabularyPool);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -375,6 +376,7 @@ function Vocab() {
         <Stat label="Weak" value={v.weak} color="text-red-500" />
         <Stat label="Forgotten" value={v.forgotten} color="text-orange-500" />
         <Stat label="Due Today" value={v.dueToday} color="text-purple-500" />
+        <Stat label="In Pool" value={vocabularyPool.length} color="text-primary" />
       </Section>
       <Section title="Progress">
         <div className="space-y-2">

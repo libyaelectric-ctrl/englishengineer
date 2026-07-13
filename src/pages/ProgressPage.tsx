@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
 import { useLearningCockpit } from '@/features/profile';
+import { useLearningStore } from '@/core/learning';
 import { GRAPH_NODES, GRAPH_LINKS, type GraphNode } from './CurriculumPage/curriculum-data';
 
 const SKILLS = [
@@ -123,6 +124,8 @@ const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: numb
 const ProgressPage = () => {
   const { currentUser } = useAuthStore();
   const { learningState } = useLearningCockpit(currentUser?.id);
+  const vocabularyPool = useLearningStore((state) => state.vocabularyPool);
+  const grammarPool = useLearningStore((state) => state.grammarPool);
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(null);
 
   const calculateSkillElo = (skillId: string) => {
@@ -242,12 +245,13 @@ const ProgressPage = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
             {[
               { icon: Target, label: 'Avg Elo', value: totalElo, color: 'text-primary' },
               { icon: TrendingUp, label: 'Best', value: highestSkill.label, color: 'text-emerald-600' },
               { icon: Zap, label: 'Peak', value: Math.max(...Object.values(eloScores)), color: 'text-amber-600' },
               { icon: Clock, label: 'Sessions', value: learningState?.studySessions?.length || 0, color: 'text-rose-600' },
+              { icon: Layers, label: 'Knowledge Pool', value: vocabularyPool.length + grammarPool.length, color: 'text-indigo-600' },
             ].map((stat, i) => (
               <motion.div
                 key={stat.label}
