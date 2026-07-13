@@ -24,6 +24,7 @@ import {
   PenTool,
   Settings,
   Shield,
+  Star,
   Trophy,
   User,
   Wallet,
@@ -62,6 +63,7 @@ export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
   { label: 'Progress', href: '/progress', icon: Trophy },
+  { label: 'Gamification', href: '/gamification', icon: Star },
   {
     label: 'Learning Hub',
     href: null,
