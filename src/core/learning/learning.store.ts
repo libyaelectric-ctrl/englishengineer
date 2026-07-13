@@ -14,6 +14,8 @@ import { AchievementService } from './achievement.service';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { calculateStreak } from './learning.streak';
+import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth/supabase.client';
+import { useAuthStore } from '@/features/auth';
 
 const STORAGE_KEY = 'learning_state';
 const MAX_HISTORY_SIZE = 500;
@@ -370,23 +372,17 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
 
       // Supabase'e yaz (offline-tolerant: başarısız olursa sessizce devam)
-      try {
-        const { getSupabaseClient, isSupabaseConfigured } = require('@/features/auth/supabase.client');
-        const { useAuthStore } = require('@/features/auth');
-        if (isSupabaseConfigured()) {
-          const client = getSupabaseClient();
-          const userId = useAuthStore.getState().currentUser?.id;
-          if (client && userId) {
-            client.from('knowledge_pool_entries').upsert(
-              { user_id: userId, content_type: 'vocabulary', content_id: termId },
-              { onConflict: 'user_id,content_type,content_id' }
-            ).then(({ error }: { error: unknown }) => {
-              if (error) console.warn('[VocabPool] Supabase write failed:', error);
-            });
-          }
+      if (isSupabaseConfigured()) {
+        const client = getSupabaseClient();
+        const userId = useAuthStore.getState().currentUser?.id;
+        if (client && userId) {
+          client.from('knowledge_pool_entries').upsert(
+            { user_id: userId, content_type: 'vocabulary', content_id: termId },
+            { onConflict: 'user_id,content_type,content_id' }
+          ).then(({ error }: { error: unknown }) => {
+            if (error) logger.w('[VocabPool] Supabase write failed: ' + String(error));
+          });
         }
-      } catch {
-        // Supabase modülü mevcut değilse sessizce devam et
       }
     },
 
@@ -399,23 +395,17 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
 
       // Supabase'e yaz (offline-tolerant)
-      try {
-        const { getSupabaseClient, isSupabaseConfigured } = require('@/features/auth/supabase.client');
-        const { useAuthStore } = require('@/features/auth');
-        if (isSupabaseConfigured()) {
-          const client = getSupabaseClient();
-          const userId = useAuthStore.getState().currentUser?.id;
-          if (client && userId) {
-            client.from('knowledge_pool_entries').upsert(
-              { user_id: userId, content_type: 'grammar', content_id: ruleId },
-              { onConflict: 'user_id,content_type,content_id' }
-            ).then(({ error }: { error: unknown }) => {
-              if (error) console.warn('[GrammarPool] Supabase write failed:', error);
-            });
-          }
+      if (isSupabaseConfigured()) {
+        const client = getSupabaseClient();
+        const userId = useAuthStore.getState().currentUser?.id;
+        if (client && userId) {
+          client.from('knowledge_pool_entries').upsert(
+            { user_id: userId, content_type: 'grammar', content_id: ruleId },
+            { onConflict: 'user_id,content_type,content_id' }
+          ).then(({ error }: { error: unknown }) => {
+            if (error) logger.w('[GrammarPool] Supabase write failed: ' + String(error));
+          });
         }
-      } catch {
-        // Supabase modülü mevcut değilse sessizce devam et
       }
     },
 
