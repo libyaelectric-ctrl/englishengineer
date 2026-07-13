@@ -280,7 +280,7 @@ const WordCard = ({
             I Know This — Take Mini Quiz
           </Button>
           <p
-            hidden={!knowThisCheck}
+            style={{ display: knowThisCheck ? undefined : 'none' }}
             className="text-xs font-semibold text-primary"
           >
             Use the mini quiz if you want to check recall before saving.
