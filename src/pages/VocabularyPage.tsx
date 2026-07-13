@@ -555,7 +555,7 @@ const VocabularyPage = () => {
       const nextSet = selectVocabularyLearningSet(terms, currentState, {
         cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
         skillUse: 'vocabulary',
-        status: 'Learning',
+        status: activeTab,
       });
       if (nextSet.length > 0 && nextSet[0].id !== term.id) {
         dispatchData({ type: 'SET_MENU_STATE', menuState: currentState });
