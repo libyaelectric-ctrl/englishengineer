@@ -4,7 +4,6 @@ import {
   BarChart3,
   BookOpen,
   Brain,
-  ChevronDown,
   Headphones,
   Mic,
   PenLine,
@@ -90,56 +89,6 @@ const WORKFLOW = [
     kicker: '03 / Improve',
     title: 'Turn feedback into the next action',
     desc: 'AI review, mistake memory and analytics keep the learner moving from attempt to measurable progress.',
-  },
-];
-
-const AGENTS = [
-  {
-    image: '/agentic/analyst.png',
-    role: 'Analyst',
-    title: 'Finds weak patterns',
-    desc: 'Tracks recurring grammar, vocabulary and confidence gaps across the learning path.',
-  },
-  {
-    image: '/agentic/researcher.png',
-    role: 'Researcher',
-    title: 'Builds the context',
-    desc: 'Connects practice to engineering documents, specifications and site scenarios.',
-  },
-  {
-    image: '/agentic/coach.png',
-    role: 'Coach',
-    title: 'Reviews every attempt',
-    desc: 'Gives direct correction, better phrasing and next-step guidance without slowing the user down.',
-  },
-  {
-    image: '/agentic/executor.png',
-    role: 'Executor',
-    title: 'Keeps practice moving',
-    desc: 'Queues daily drills, review sessions and project-ready tasks from the user profile.',
-  },
-];
-
-const FAQ = [
-  {
-    q: 'What is EngVox?',
-    a: 'EngVox is AI-powered English training for engineers, focused on writing, speaking, listening and reading with technical content.',
-  },
-  {
-    q: 'Is there a free plan?',
-    a: 'Yes. The free plan includes the core modules, vocabulary, grammar and a small daily AI allowance.',
-  },
-  {
-    q: 'Which engineering disciplines fit?',
-    a: 'Electrical, civil, mechanical, MEP, commissioning, QA/QC and project management workflows are supported.',
-  },
-  {
-    q: 'How does AI feedback work?',
-    a: 'The AI coach reviews attempts for clarity, grammar, technical tone and the next practical improvement.',
-  },
-  {
-    q: 'Can teams use it?',
-    a: 'Yes. Project workspaces are designed for teams that need shared readiness and communication improvement.',
   },
 ];
 
@@ -295,7 +244,6 @@ function SectionIntro({
 }
 
 const LandingPage = () => {
-  const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [scrollShift, setScrollShift] = useState(0);
 
@@ -347,6 +295,9 @@ const LandingPage = () => {
             <a href="#system" className="transition-colors hover:text-black">
               System
             </a>
+            <Link to="/pricing" className="transition-colors hover:text-black">
+              Pricing
+            </Link>
             <a href="#faq" className="transition-colors hover:text-black">
               FAQ
             </a>
@@ -537,56 +488,6 @@ const LandingPage = () => {
                     {item.desc}
                   </p>
                 </div>
-              </AnimatedCard>
-            ))}
-          </div>
-
-          <div className="mt-8 grid grid-cols-2 gap-2 md:grid-cols-4">
-            {AGENTS.map((agent, index) => (
-              <AnimatedCard key={agent.role} delay={index * 50} className="p-3">
-                <div className="relative z-10 mb-2 flex h-7 w-7 items-center justify-center rounded-lg border border-black/10 bg-white">
-                  <span className="text-[10px] font-bold text-black/60">{index + 1}</span>
-                </div>
-                <div className="text-[10px] font-medium uppercase text-black/38">
-                  {agent.role}
-                </div>
-                <h3 className="mt-1 text-sm font-medium">{agent.title}</h3>
-                <p className="mt-1 text-[10px] leading-4 text-muted-copy">
-                  {agent.desc}
-                </p>
-              </AnimatedCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="faq"
-        className="border-t border-black/[0.06] px-6 py-12 md:px-12 lg:py-16"
-      >
-        <div className="mx-auto max-w-3xl">
-          <SectionIntro eyebrow="FAQ" title="Common questions" />
-          <div className="space-y-2">
-            {FAQ.map((item, index) => (
-              <AnimatedCard key={item.q} delay={index * 45} className="p-0">
-                <button
-                  onClick={() => setFaqOpen(faqOpen === index ? null : index)}
-                  className="relative z-10 flex w-full items-center justify-between px-6 py-5 text-left text-sm font-medium text-black/75"
-                >
-                  {item.q}
-                  <ChevronDown
-                    className="h-4 w-4 text-black/35 transition-transform duration-300"
-                    style={{
-                      transform:
-                        faqOpen === index ? 'rotate(180deg)' : 'rotate(0deg)',
-                    }}
-                  />
-                </button>
-                {faqOpen === index ? (
-                  <p className="relative z-10 px-6 pb-6 text-sm leading-6 text-muted-copy">
-                    {item.a}
-                  </p>
-                ) : null}
               </AnimatedCard>
             ))}
           </div>
