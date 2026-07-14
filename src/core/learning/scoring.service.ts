@@ -31,7 +31,7 @@ export const ScoringService = {
 
     const baseXP = 60;
     const baseCoins = 15;
-    const baseElo = 12;
+    const baseElo = 4;
 
     const xpEarned = Math.round(baseXP * difficultyMultiplier * (score / 100));
     const coinsEarned = Math.round(
