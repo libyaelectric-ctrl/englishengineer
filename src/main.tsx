@@ -92,7 +92,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 // Preload vocabulary data in background (non-blocking)
 loadVocabularyEntries().catch((err) => {
-  console.warn('[preload] Vocabulary data preload failed:', err);
+  logger.w('[preload] Vocabulary data preload failed:', err);
 });
 
 // Register service worker for PWA

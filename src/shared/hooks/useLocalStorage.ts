@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { logger } from '@/shared/logger';
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
   const [storedValue, setStoredValue] = useState<T>(() => {
@@ -17,7 +18,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
         setStoredValue(valueToStore);
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       } catch (error) {
-        console.error('useLocalStorage error:', error);
+        logger.e('useLocalStorage error:', error);
       }
     },
     [key, storedValue]
@@ -28,7 +29,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
       window.localStorage.removeItem(key);
       setStoredValue(initialValue);
     } catch (error) {
-      console.error('useLocalStorage remove error:', error);
+      logger.e('useLocalStorage remove error:', error);
     }
   }, [key, initialValue]);
 
@@ -53,7 +54,7 @@ export const useSessionStorage = <T>(key: string, initialValue: T) => {
         setStoredValue(valueToStore);
         window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
       } catch (error) {
-        console.error('useSessionStorage error:', error);
+        logger.e('useSessionStorage error:', error);
       }
     },
     [key, storedValue]
@@ -64,7 +65,7 @@ export const useSessionStorage = <T>(key: string, initialValue: T) => {
       window.sessionStorage.removeItem(key);
       setStoredValue(initialValue);
     } catch (error) {
-      console.error('useSessionStorage remove error:', error);
+      logger.e('useSessionStorage remove error:', error);
     }
   }, [key, initialValue]);
 
