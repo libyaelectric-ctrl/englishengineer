@@ -524,8 +524,8 @@ const GrammarPage = () => {
         </div>
       </header>
 
-      <main className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <section className="min-w-0 space-y-5">
+      <main className="mt-6 space-y-5">
+        <section className="min-w-0 space-y-4">
           {selectedRule && selectedProgress ? (
             <>
               <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-4">
@@ -545,6 +545,67 @@ const GrammarPage = () => {
                     </p>
                   </div>
                   <StatusPill status={selectedStatus} />
+                </div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                  <p className="text-base font-black">{rules.length}</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-copy">This Level</p>
+                </div>
+                <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                  <p className="text-base font-black">{totalGrammarLessons}</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-copy">Total Map</p>
+                </div>
+                <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                  <p className="text-base font-black">{masteredCount}</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-copy">Mastered</p>
+                </div>
+                <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                  <p className="text-base font-black">{grammarPoolIds.length}</p>
+                  <p className="text-[10px] font-bold uppercase text-muted-copy">Pool</p>
+                </div>
+              </div>
+
+              <div className="rounded-lg border border-border-soft bg-surface p-4">
+                <div className="flex flex-wrap items-center gap-4">
+                  <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">Mastery</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <MasteryPill
+                      label="Practice"
+                      value={`${getPracticeCount(selectedProgress)}/3`}
+                      complete={getPracticeCount(selectedProgress) >= 3}
+                    />
+                    <MasteryPill
+                      label="Reading"
+                      value={
+                        selectedProgress.skillEvidence.reading
+                          ? `${selectedProgress.skillEvidence.reading.score}%`
+                          : 'Missing'
+                      }
+                      complete={Boolean(selectedProgress.skillEvidence.reading)}
+                    />
+                    <MasteryPill
+                      label="Writing"
+                      value={
+                        selectedProgress.skillEvidence.writing
+                          ? `${selectedProgress.skillEvidence.writing.score}%`
+                          : 'Missing'
+                      }
+                      complete={Boolean(selectedProgress.skillEvidence.writing)}
+                    />
+                    <MasteryPill
+                      label="R/W"
+                      value={`${getTransferCount(selectedProgress)}/2`}
+                      complete={getTransferCount(selectedProgress) >= 2}
+                    />
+                  </div>
+                  {getMissingGrammarTransferEvidence(selectedProgress).length >
+                    0 && (
+                    <span className="rounded-full border border-warning/30 bg-warning/5 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                      Missing: {getMissingGrammarTransferEvidence(selectedProgress).join(', ')}
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -795,129 +856,42 @@ const GrammarPage = () => {
           )}
         </section>
 
-        <aside className="space-y-4">
-          <section className="lg:sticky lg:top-[14rem]">
-            <div className="mb-5 grid grid-cols-2 gap-2">
-              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
-                <p className="text-lg font-black">{rules.length}</p>
-                <p className="text-[10px] font-bold uppercase text-muted-copy">This Level</p>
-              </div>
-              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
-                <p className="text-lg font-black">{totalGrammarLessons}</p>
-                <p className="text-[10px] font-bold uppercase text-muted-copy">Total Map</p>
-              </div>
-              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
-                <p className="text-lg font-black">{masteredCount}</p>
-                <p className="text-[10px] font-bold uppercase text-muted-copy">Mastered</p>
-              </div>
-              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
-                <p className="text-lg font-black">{grammarPoolIds.length}</p>
-                <p className="text-[10px] font-bold uppercase text-muted-copy">Pool</p>
-              </div>
-            </div>
+        {selectedRule && nextLesson && (
+          <div className="rounded-lg border border-border-soft bg-surface p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">Next Step</p>
+            <button
+              type="button"
+              onClick={() => selectRule(nextLesson.id)}
+              className="mt-2 flex w-full items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3 text-left hover:bg-primary/10"
+            >
+              <ArrowRight className="h-4 w-4 shrink-0 text-primary" />
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-bold">{nextLesson.title}</span>
+                <span className="text-[11px] text-muted-copy">{getModuleLabel(nextLesson.grammarCategory)}</span>
+              </span>
+            </button>
+          </div>
+        )}
 
-            <SectionHeading
-              title="Mastery"
-              subtitle="A rule is mastered after practice, Reading, and Writing."
-            />
-            {selectedRule && selectedProgress && (
-              <div className="mt-3 space-y-3 rounded-lg border border-border-soft bg-surface p-4">
-                <MasteryRow
-                  label="Practice"
-                  value={`${getPracticeCount(selectedProgress)}/3`}
-                  complete={getPracticeCount(selectedProgress) >= 3}
-                />
-                <MasteryRow
-                  label="Reading"
-                  value={
-                    selectedProgress.skillEvidence.reading
-                      ? `${selectedProgress.skillEvidence.reading.score}%`
-                      : 'Missing'
-                  }
-                  complete={Boolean(selectedProgress.skillEvidence.reading)}
-                />
-                <MasteryRow
-                  label="Writing"
-                  value={
-                    selectedProgress.skillEvidence.writing
-                      ? `${selectedProgress.skillEvidence.writing.score}%`
-                      : 'Missing'
-                  }
-                  complete={Boolean(selectedProgress.skillEvidence.writing)}
-                />
-                <MasteryRow
-                  label="R/W Evidence"
-                  value={`${getTransferCount(selectedProgress)}/2`}
-                  complete={getTransferCount(selectedProgress) >= 2}
-                />
-                {getMissingGrammarTransferEvidence(selectedProgress).length >
-                  0 && (
-                  <p className="rounded-lg border border-warning/30 bg-warning/5 p-3 text-xs font-semibold text-warning">
-                    Missing:{' '}
-                    {getMissingGrammarTransferEvidence(selectedProgress).join(
-                      ', '
-                    )}
-                  </p>
-                )}
-              </div>
-            )}
-
-            <div className="mt-5 rounded-lg border border-border-soft bg-surface p-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
-                Next Step
-              </p>
-              {nextLesson ? (
+        {reviewTargets.length > 0 && (
+          <div className="rounded-lg border border-border-soft bg-surface p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">Review Queue</p>
+            <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+              {reviewTargets.map(({ rule, status }) => (
                 <button
+                  key={rule.id}
                   type="button"
-                  onClick={() => selectRule(nextLesson.id)}
-                  className="mt-3 flex w-full items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3 text-left hover:bg-primary/10"
+                  onClick={() => selectRule(rule.id)}
+                  className="flex shrink-0 items-center gap-2 rounded-lg border border-border-soft bg-background px-3 py-2 text-left hover:border-warning/40"
                 >
-                  <ArrowRight className="h-4 w-4 text-primary" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-bold">
-                      {nextLesson.title}
-                    </span>
-                    <span className="text-xs text-muted-copy">
-                      {getModuleLabel(nextLesson.grammarCategory)}
-                    </span>
-                  </span>
+                  <TriangleAlert className="h-3.5 w-3.5 shrink-0 text-warning" />
+                  <span className="truncate text-xs font-bold">{rule.title}</span>
+                  <StatusPill status={status} compact />
                 </button>
-              ) : (
-                <p className="mt-3 text-sm text-muted-copy">
-                  This level has no pending grammar lesson.
-                </p>
-              )}
+              ))}
             </div>
-
-            <div className="mt-5 rounded-lg border border-border-soft bg-surface p-4">
-              <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
-                Review Queue
-              </p>
-              {reviewTargets.length > 0 ? (
-                <div className="mt-3 space-y-2">
-                  {reviewTargets.map(({ rule, status }) => (
-                    <button
-                      key={rule.id}
-                      type="button"
-                      onClick={() => selectRule(rule.id)}
-                      className="flex w-full items-center gap-2 rounded-lg border border-border-soft bg-background p-3 text-left hover:border-warning/40"
-                    >
-                      <TriangleAlert className="h-4 w-4 shrink-0 text-warning" />
-                      <span className="min-w-0 flex-1 truncate text-xs font-bold">
-                        {rule.title}
-                      </span>
-                      <StatusPill status={status} compact />
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <p className="mt-3 text-sm text-muted-copy">
-                  No urgent grammar review right now.
-                </p>
-              )}
-            </div>
-          </section>
-        </aside>
+          </div>
+        )}
       </main>
     </div>
   );
@@ -972,7 +946,7 @@ const LessonBlock = ({
   </div>
 );
 
-const MasteryRow = ({
+const MasteryPill = ({
   label,
   value,
   complete,
@@ -981,16 +955,16 @@ const MasteryRow = ({
   value: string;
   complete: boolean;
 }) => (
-  <div className="flex items-center justify-between gap-3 rounded-lg border border-border-soft bg-background px-3 py-2">
-    <span className="min-w-0 break-words text-sm font-bold">{label}</span>
-    <span
-      className={`text-xs font-black ${
-        complete ? 'text-success' : 'text-muted-copy'
-      }`}
-    >
-      {value}
-    </span>
-  </div>
+  <span
+    className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold ${
+      complete
+        ? 'border-success/30 bg-success/5 text-success'
+        : 'border-border-soft bg-background text-muted-copy'
+    }`}
+  >
+    {label}
+    <span className="font-black">{value}</span>
+  </span>
 );
 
 export default GrammarPage;
