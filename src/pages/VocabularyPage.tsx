@@ -44,10 +44,6 @@ import { Button } from '@/shared/components/Button';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import {
-  LocalizationService,
-  useLocalizationStore,
-} from '@/features/localization';
-import {
   dataReducer,
   uiReducer,
   searchReducer,
@@ -88,7 +84,6 @@ const WordCard = ({
   onReview,
   onLearn,
 }: WordCardProps) => {
-  const language = useLocalizationStore((state) => state.language);
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);
@@ -347,12 +342,6 @@ const WordCard = ({
         </div>
       )}
 
-      {mode === 'View' && status === 'New' && onLearn && (
-        <Button className="mt-4 w-full" onClick={() => onLearn(term)}>
-          <Plus className="h-4 w-4" />
-          {LocalizationService.translate('vocabulary.saveLearned', language)}
-        </Button>
-      )}
           </motion.div>
       </AnimatePresence>
       {mode !== 'Quiz' && (

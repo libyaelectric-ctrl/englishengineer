@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Shield,
   Users,
@@ -6,9 +6,15 @@ import {
   Settings,
   Activity,
   CheckCircle,
+  Lock,
+  LogOut,
 } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
+
+const ADMIN_USERNAME = 'ozcaneymen';
+const ADMIN_PASSWORD = '08022010';
+const ADMIN_SESSION_KEY = 'eos_admin_auth';
 
 interface UserRecord {
   id: string;
@@ -65,6 +71,84 @@ const INITIAL_USERS: UserRecord[] = [
 ];
 
 export const AdminPage: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return localStorage.getItem(ADMIN_SESSION_KEY) === 'true';
+  });
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      localStorage.setItem(ADMIN_SESSION_KEY, 'true');
+    } else {
+      localStorage.removeItem(ADMIN_SESSION_KEY);
+    }
+  }, [isAuthenticated]);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+    } else {
+      setLoginError('Invalid credentials');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUsername('');
+    setPassword('');
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background px-4">
+        <div className="w-full max-w-sm">
+          <div className="rounded-2xl border border-border-soft bg-surface p-8 shadow-lg">
+            <div className="text-center mb-6">
+              <div className="mx-auto h-14 w-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <Lock className="h-6 w-6 text-primary" />
+              </div>
+              <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
+              <p className="text-xs text-muted-copy mt-1">Authorized personnel only</p>
+            </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-muted-copy">Username</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-border-soft bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-muted-copy">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-border-soft bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  required
+                />
+              </div>
+              {loginError && (
+                <p className="text-xs font-medium text-danger">{loginError}</p>
+              )}
+              <Button type="submit" className="w-full">
+                <Shield className="h-4 w-4" /> Access Admin Panel
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
   const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
     'users'
@@ -118,10 +202,14 @@ export const AdminPage: React.FC = () => {
             <h1 className="mt-4 text-2xl font-bold text-foreground">
               EngineerOS Command Console
             </h1>
-            <p className="mt-1.5 text-xs text-muted-copy">
-              Monitor active student metrics, manage subscriptions, check
-              integrations, and manage configuration parameters.
-            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="mt-2 text-xs"
+            >
+              <LogOut className="h-3.5 w-3.5" /> Logout
+            </Button>
           </div>
           <div className="flex gap-2">
             <Button
