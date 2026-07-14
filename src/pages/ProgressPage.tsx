@@ -138,8 +138,10 @@ const ProgressPage = () => {
     switch (skillId) {
       case 'vocabulary': multiplier = Math.min(500, (learningState?.elo || 1000) * 0.1); break;
       case 'grammar': multiplier = Math.min(500, (learningState?.xp || 0) * 0.05); break;
-      case 'reading': case 'writing': multiplier = 350 + Math.random() * 200; break;
-      case 'listening': case 'speaking': multiplier = 200 + Math.random() * 400; break;
+      case 'reading': multiplier = 350 + Math.min(200, totalSessions * 5); break;
+      case 'writing': multiplier = 300 + Math.min(200, totalSessions * 4); break;
+      case 'listening': multiplier = 200 + Math.min(400, totalSessions * 8); break;
+      case 'speaking': multiplier = 250 + Math.min(350, totalSessions * 7); break;
       default: multiplier = 100;
     }
     return Math.min(MAX_ELO, Math.floor(base + multiplier));
