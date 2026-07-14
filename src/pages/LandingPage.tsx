@@ -516,82 +516,53 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section
-        id="workflow"
-        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
-      >
+      <section className="border-t border-black/[0.06] px-6 py-10 md:px-12 lg:py-14">
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="Workflow"
             title={<>Define, compose and improve through one guided loop.</>}
-            desc="The sample2 process panels are preserved as a visual rhythm, then rewritten for engineering communication practice."
           />
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
             {WORKFLOW.map((item, index) => (
-              <AnimatedCard key={item.title} delay={index * 90} className="p-3">
-                <div className="relative z-10 overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
+              <AnimatedCard key={item.title} delay={index * 60} className="p-3">
+                <div className="relative z-10 overflow-hidden rounded-lg border border-black/[0.06] bg-[#111]">
                   <img
                     src={item.image}
                     alt=""
-                    className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.025]"
+                    className="aspect-[16/9] w-full object-cover transition duration-700 group-hover:scale-[1.025]"
                   />
                 </div>
-                <div className="relative z-10 p-4">
-                  <div className="text-[11px] font-medium uppercase text-black/38">
+                <div className="relative z-10 p-3">
+                  <div className="text-[10px] font-medium uppercase text-black/38">
                     {item.kicker}
                   </div>
-                  <h3 className="mt-3 text-2xl font-light leading-tight">
+                  <h3 className="mt-1.5 text-base font-light leading-tight">
                     {item.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 text-muted-copy">
+                  <p className="mt-1.5 text-[11px] leading-4 text-muted-copy">
                     {item.desc}
                   </p>
                 </div>
               </AnimatedCard>
             ))}
           </div>
-        </div>
-      </section>
 
-      <section className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <SectionIntro
-            eyebrow="Orchestration"
-            title={<>Multiple coaching roles, one clean learning path.</>}
-            desc="The agent-card structure from sample2 becomes EngVox's coaching model: diagnose, contextualize, correct and move forward."
-          />
-          <AnimatedSection>
-            <div className="overflow-hidden rounded-2xl border border-black/10 bg-[#111] shadow-[0_28px_90px_rgba(17,17,17,0.16)]">
-              <img
-                src="/agentic/org-arc.png"
-                alt="EngVox coaching orchestration"
-                className="aspect-[16/9] w-full object-cover opacity-95"
-              />
-            </div>
-          </AnimatedSection>
-        </div>
-
-        <div className="mx-auto mt-8 grid max-w-7xl grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
-          {AGENTS.map((agent, index) => (
-            <AnimatedCard key={agent.role} delay={index * 70} className="p-3">
-              <div className="relative z-10 overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
-                <img
-                  src={agent.image}
-                  alt=""
-                  className="aspect-[16/10] w-full object-cover transition duration-700 group-hover:scale-[1.03]"
-                />
-              </div>
-              <div className="relative z-10 p-4">
-                <div className="text-[11px] font-medium uppercase text-black/38">
+          <div className="mt-8 grid grid-cols-2 gap-2 md:grid-cols-4">
+            {AGENTS.map((agent, index) => (
+              <AnimatedCard key={agent.role} delay={index * 50} className="p-3">
+                <div className="relative z-10 mb-2 flex h-7 w-7 items-center justify-center rounded-lg border border-black/10 bg-white">
+                  <span className="text-[10px] font-bold text-black/60">{index + 1}</span>
+                </div>
+                <div className="text-[10px] font-medium uppercase text-black/38">
                   {agent.role}
                 </div>
-                <h3 className="mt-3 text-xl font-light">{agent.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-muted-copy">
+                <h3 className="mt-1 text-sm font-medium">{agent.title}</h3>
+                <p className="mt-1 text-[10px] leading-4 text-muted-copy">
                   {agent.desc}
                 </p>
-              </div>
-            </AnimatedCard>
-          ))}
+              </AnimatedCard>
+            ))}
+          </div>
         </div>
       </section>
 
