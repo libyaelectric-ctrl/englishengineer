@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { AuthState, UserProfile } from './auth.types';
 import { AuthService } from './auth.service';
 import { logger } from '@/shared/logger';
+import { storage } from '@/shared/storage';
 
 interface AuthActions {
   initialize: () => Promise<void>;
@@ -33,8 +34,10 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
       const user = await AuthService.restoreSession();
       if (user) {
         set({ currentUser: user, isAuthenticated: true });
+        storage.setUserId(user.id);
       } else {
         set({ currentUser: null, isAuthenticated: false });
+        storage.setUserId(null);
       }
     } catch (e) {
       logger.e('Auth initialization failed.', e);
@@ -48,6 +51,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     try {
       const user = await AuthService.login(displayName, email, password);
       set({ currentUser: user, isAuthenticated: true });
+      storage.setUserId(user.id);
     } catch (e) {
       logger.e('Auth login failed.', e);
       throw e;
@@ -61,6 +65,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     try {
       const user = await AuthService.signUp(displayName, email, password);
       set({ currentUser: user, isAuthenticated: true });
+      storage.setUserId(user.id);
     } catch (e) {
       logger.e('Auth sign up failed.', e);
       throw e;
@@ -74,9 +79,9 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     try {
       const user = await AuthService.demoLogin();
       set({ currentUser: user, isAuthenticated: true });
+      storage.setUserId(user.id);
     } catch (e) {
       logger.e('Auth demo login failed.', e);
-      throw e;
     } finally {
       set({ isLoading: false });
     }
@@ -87,6 +92,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
     try {
       await AuthService.logout();
       set({ currentUser: null, isAuthenticated: false });
+      storage.setUserId(null);
     } catch (e) {
       logger.e('Auth logout failed.', e);
     } finally {
