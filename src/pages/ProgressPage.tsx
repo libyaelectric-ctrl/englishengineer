@@ -124,8 +124,8 @@ const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: numb
 const ProgressPage = () => {
   const { currentUser } = useAuthStore();
   const { learningState } = useLearningCockpit(currentUser?.id);
-  const vocabularyPool = useLearningStore((state) => state.vocabularyPool);
-  const grammarPool = useLearningStore((state) => state.grammarPool);
+  const vocabularyPool = useLearningStore((state) => state.vocabularyPool) ?? [];
+  const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(null);
 
   const calculateSkillElo = (skillId: string) => {
