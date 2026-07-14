@@ -128,23 +128,10 @@ const ProgressPage = () => {
   const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(null);
 
-  const calculateSkillElo = (skillId: string) => {
-    let base = MIN_ELO;
-    const totalSessions = learningState?.studySessions?.length || 0;
-    const levelVal = learningState?.level || 1;
-    base += Math.min(2000, levelVal * 150);
-    base += Math.min(1000, totalSessions * 10);
-    let multiplier = 0;
-    switch (skillId) {
-      case 'vocabulary': multiplier = Math.min(500, (learningState?.elo || 1000) * 0.1); break;
-      case 'grammar': multiplier = Math.min(500, (learningState?.xp || 0) * 0.05); break;
-      case 'reading': multiplier = 350 + Math.min(200, totalSessions * 5); break;
-      case 'writing': multiplier = 300 + Math.min(200, totalSessions * 4); break;
-      case 'listening': multiplier = 200 + Math.min(400, totalSessions * 8); break;
-      case 'speaking': multiplier = 250 + Math.min(350, totalSessions * 7); break;
-      default: multiplier = 100;
-    }
-    return Math.min(MAX_ELO, Math.floor(base + multiplier));
+  const calculateSkillElo = (_skillId: string) => {
+    // Use the actual stored elo as base, not a calculated one
+    const storedElo = learningState?.elo || MIN_ELO;
+    return Math.min(MAX_ELO, Math.max(MIN_ELO, storedElo));
   };
 
   const [eloScores] = useState<Record<string, number>>(() => {
