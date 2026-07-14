@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  BookOpen,
   CheckCircle2,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Circle,
   HelpCircle,
   Languages,
   Search,
@@ -15,9 +17,11 @@ import {
   GrammarProgressService,
   GrammarRepository,
   getGrammarReviewReason,
+  getMissingGrammarTransferEvidence,
   useGrammarStore,
 } from '@/features/grammar';
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
+import { VocabularyRepository } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { showToast } from '@/shared/components/Toast';
@@ -29,6 +33,33 @@ import {
 
 const TABS = ['New', 'Learning', 'Due', 'Strong'] as const;
 
+const formatUnitName = (value: string): string =>
+  value
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+
+const normalizeKey = (value: string): string =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[-_\s]+/g, ' ');
+
+const getLearningStatus = (
+  ruleId: string
+): 'New' | 'In Progress' | 'Mastered' => {
+  const status = GrammarProgressService.get(ruleId).reviewStatus;
+  if (status === 'Strong') return 'Mastered';
+  if (status === 'New') return 'New';
+  return 'In Progress';
+};
+
+const statusStyles = {
+  New: 'border-border-soft bg-surface text-muted-copy',
+  'In Progress': 'border-warning/30 bg-warning/5 text-warning',
+  Mastered: 'border-success/30 bg-success/5 text-success',
+} as const;
+
 const GrammarPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const language = useLocalizationStore((state) => state.language);
@@ -38,7 +69,15 @@ const GrammarPage = () => {
   const [quickQuizOpen, setQuickQuizOpen] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [showAllRules, setShowAllRules] = useState(false);
-  const [expandedRuleIds, setExpandedRuleIds] = useState<Set<string>>(new Set());
+  const [expandedRuleIds, setExpandedRuleIds] = useState<Set<string>>(
+    new Set()
+  );
+  const [expandedCategoryIds, setExpandedCategoryIds] = useState<Set<string>>(
+    new Set()
+  );
+  const [vocabularyTagIndex, setVocabularyTagIndex] = useState<
+    Record<string, string>
+  >({});
   const [showMistakes, setShowMistakes] = useState(false);
 
   const {
@@ -67,6 +106,30 @@ const GrammarPage = () => {
     };
   }, [level, setRules, setSelectedId, selectedId]);
 
+  useEffect(() => {
+    let active = true;
+    void VocabularyRepository.getVocabularyByLevel(level).then((terms) => {
+      if (!active) return;
+      const index: Record<string, string> = {};
+      terms.forEach((term) => {
+        [
+          term.id,
+          term.term,
+          term.normalizedTerm,
+          term.grammarDomainAlias,
+          ...term.tags,
+          ...term.grammarFits,
+        ].forEach((key) => {
+          if (key) index[normalizeKey(key)] = term.term;
+        });
+      });
+      setVocabularyTagIndex(index);
+    });
+    return () => {
+      active = false;
+    };
+  }, [level]);
+
   const visibleRules = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return rules.filter((rule) => {
@@ -87,6 +150,26 @@ const GrammarPage = () => {
     });
   }, [query, rules, tab]);
 
+  const unitGroups = useMemo(() => {
+    const groups = new Map<string, typeof visibleRules>();
+    visibleRules.forEach((rule) => {
+      const items = groups.get(rule.grammarCategory) ?? [];
+      groups.set(rule.grammarCategory, [...items, rule]);
+    });
+    return Array.from(groups.entries())
+      .map(([category, items]) => ({
+        category,
+        items: [...items].sort(
+          (a, b) =>
+            a.difficulty - b.difficulty || a.title.localeCompare(b.title)
+        ),
+        mastered: items.filter(
+          (rule) => getLearningStatus(rule.id) === 'Mastered'
+        ).length,
+      }))
+      .sort((a, b) => a.category.localeCompare(b.category));
+  }, [visibleRules]);
+
   const selectedRule =
     rules.find((rule) => rule.id === selectedId) ?? visibleRules[0];
   const visibleRuleIndex = selectedRule
@@ -98,10 +181,35 @@ const GrammarPage = () => {
     ? GrammarProgressService.get(selectedRule.id)
     : null;
 
+  useEffect(() => {
+    if (!selectedRule) return;
+    setExpandedCategoryIds((prev) => {
+      if (prev.has(selectedRule.grammarCategory)) return prev;
+      const next = new Set(prev);
+      next.add(selectedRule.grammarCategory);
+      return next;
+    });
+  }, [selectedRule]);
+
+  const linkedVocabularyMatches = useMemo(() => {
+    if (!selectedRule) return [];
+    return selectedRule.linkedVocabularyTags
+      .map((tag) => ({
+        tag,
+        term: vocabularyTagIndex[normalizeKey(tag)],
+      }))
+      .filter((item): item is { tag: string; term: string } =>
+        Boolean(item.term)
+      )
+      .slice(0, 8);
+  }, [selectedRule, vocabularyTagIndex]);
+
   const getProgressIndicator = (ruleId: string) => {
     const progress = GrammarProgressService.get(ruleId);
     const correctCount = Math.min(progress.correctUsages, 3);
-    return `${correctCount}/3 correct contexts`;
+    const transferCount =
+      2 - getMissingGrammarTransferEvidence(progress).length;
+    return `${correctCount}/3 practice · ${transferCount}/2 transfer`;
   };
 
   const record = (correct: boolean) => {
@@ -115,7 +223,9 @@ const GrammarPage = () => {
     });
     GrammarProgressService.recordUsage(selectedRule.id, correct);
     showToast(
-      correct ? 'Great job! Rule recorded as correct.' : 'No worries — this rule needs more practice.',
+      correct
+        ? 'Great job! Rule recorded as correct.'
+        : 'No worries — this rule needs more practice.',
       correct ? 'success' : 'info'
     );
     ProductAnalyticsService.track('grammar_task_completed', '/grammar', {
@@ -155,7 +265,9 @@ const GrammarPage = () => {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">
             Grammar
-            <span className="ml-2 text-sm font-medium text-muted-copy">({rules.length} topics)</span>
+            <span className="ml-2 text-sm font-medium text-muted-copy">
+              ({rules.length} topics)
+            </span>
           </h1>
           <div className="relative w-full sm:max-w-md">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -195,7 +307,9 @@ const GrammarPage = () => {
             onClick={() => setShowMistakes((v) => !v)}
             className="text-xs h-9"
           >
-            {showMistakes ? 'Close Review' : `Review Mistakes (${mistakeRules.length})`}
+            {showMistakes
+              ? 'Close Review'
+              : `Review Mistakes (${mistakeRules.length})`}
           </Button>
         </div>
 
@@ -207,7 +321,9 @@ const GrammarPage = () => {
           >
             {showAllRules ? 'Hide All Rules' : 'Explore All Rules'}
           </button>
-          <span className="text-[10px] text-muted-copy">({rules.length} rules)</span>
+          <span className="text-[10px] text-muted-copy">
+            ({rules.length} rules)
+          </span>
         </div>
 
         {showAllRules && (
@@ -215,7 +331,10 @@ const GrammarPage = () => {
             {rules.map((rule) => {
               const isExpanded = expandedRuleIds.has(rule.id);
               return (
-                <div key={rule.id} className="rounded-lg border border-border-soft bg-background overflow-hidden">
+                <div
+                  key={rule.id}
+                  className="rounded-lg border border-border-soft bg-background overflow-hidden"
+                >
                   <button
                     type="button"
                     onClick={() => {
@@ -228,10 +347,18 @@ const GrammarPage = () => {
                     }}
                     className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-surface-hover transition-colors"
                   >
-                    <span className="text-[10px] font-mono font-bold text-primary">{rule.cefrLevel}</span>
-                    <span className="text-[10px] font-mono text-muted-copy">{rule.grammarCategory}</span>
-                    <span className="flex-1 text-xs font-semibold text-foreground truncate">{rule.title}</span>
-                    <ChevronDown className={`h-3 w-3 text-muted-copy transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                    <span className="text-[10px] font-mono font-bold text-primary">
+                      {rule.cefrLevel}
+                    </span>
+                    <span className="text-[10px] font-mono text-muted-copy">
+                      {rule.grammarCategory}
+                    </span>
+                    <span className="flex-1 text-xs font-semibold text-foreground truncate">
+                      {rule.title}
+                    </span>
+                    <ChevronDown
+                      className={`h-3 w-3 text-muted-copy transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    />
                   </button>
                   {isExpanded && (
                     <div className="px-3 pb-2 text-xs text-muted-copy leading-relaxed border-t border-border-soft pt-2">
@@ -243,6 +370,87 @@ const GrammarPage = () => {
             })}
           </div>
         )}
+
+        {/* Unit Tree */}
+        <div className="max-h-72 overflow-y-auto custom-scrollbar rounded-xl border border-border-soft bg-surface p-2">
+          <div className="mb-2 flex items-center justify-between px-2">
+            <span className="text-xs font-black uppercase text-muted-copy">
+              Units
+            </span>
+            <span className="text-[10px] font-mono text-muted-copy">
+              {visibleRules.length} visible topics
+            </span>
+          </div>
+          <div className="space-y-2">
+            {unitGroups.map((group) => {
+              const isExpanded = expandedCategoryIds.has(group.category);
+              return (
+                <div
+                  key={group.category}
+                  className="overflow-hidden rounded-lg border border-border-soft bg-background"
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setExpandedCategoryIds((prev) => {
+                        const next = new Set(prev);
+                        if (next.has(group.category))
+                          next.delete(group.category);
+                        else next.add(group.category);
+                        return next;
+                      });
+                    }}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-surface-hover"
+                  >
+                    <ChevronDown
+                      className={`h-4 w-4 text-muted-copy transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    />
+                    <span className="flex-1 text-sm font-black text-foreground">
+                      {formatUnitName(group.category)}
+                    </span>
+                    <span className="rounded-full border border-border-soft bg-surface px-2 py-0.5 text-[11px] font-bold text-muted-copy">
+                      {group.mastered}/{group.items.length}
+                    </span>
+                  </button>
+                  {isExpanded && (
+                    <div className="border-t border-border-soft p-1">
+                      {group.items.map((rule) => {
+                        const learningStatus = getLearningStatus(rule.id);
+                        const isSelected = selectedRule?.id === rule.id;
+                        return (
+                          <button
+                            key={rule.id}
+                            type="button"
+                            onClick={() => setSelectedId(rule.id)}
+                            className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-left transition-colors ${
+                              isSelected
+                                ? 'bg-foreground text-background'
+                                : 'text-foreground hover:bg-surface-hover'
+                            }`}
+                          >
+                            {learningStatus === 'Mastered' ? (
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
+                            ) : (
+                              <Circle className="h-4 w-4 shrink-0 text-muted-copy" />
+                            )}
+                            <span className="min-w-0 flex-1 truncate text-xs font-semibold">
+                              {rule.title}
+                            </span>
+                            <span
+                              className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-bold ${statusStyles[learningStatus]}`}
+                            >
+                              {learningStatus}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         {/* Topic Nav */}
         <div className="flex items-center gap-3">
@@ -271,7 +479,8 @@ const GrammarPage = () => {
                       : 'bg-surface-hover text-muted-copy hover:bg-surface hover:text-foreground'
                   }`}
                 >
-                  {GrammarProgressService.get(rule.id).reviewStatus === 'Strong' && '🏆 '}
+                  {GrammarProgressService.get(rule.id).reviewStatus ===
+                    'Strong' && '🏆 '}
                   {rule.title.length > 25
                     ? rule.title.slice(0, 25) + '...'
                     : rule.title}
@@ -303,13 +512,24 @@ const GrammarPage = () => {
       <div className="pt-4 pb-20">
         <div className="w-full">
           {showMistakes && mistakeRules.length > 0 && (
-            <SectionCard title="Review Mistakes" subtitle="Rules you got wrong and haven't practiced enough" icon={TriangleAlert}>
+            <SectionCard
+              title="Review Mistakes"
+              subtitle="Rules you got wrong and haven't practiced enough"
+              icon={TriangleAlert}
+            >
               <div className="space-y-2">
                 {mistakeRules.map((rule) => (
-                  <div key={rule.id} className="flex items-center justify-between rounded-lg border border-border-soft bg-surface p-3">
+                  <div
+                    key={rule.id}
+                    className="flex items-center justify-between rounded-lg border border-border-soft bg-surface p-3"
+                  >
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-foreground">{rule.title}</p>
-                      <p className="text-xs text-muted-copy">{rule.grammarCategory}</p>
+                      <p className="text-sm font-medium text-foreground">
+                        {rule.title}
+                      </p>
+                      <p className="text-xs text-muted-copy">
+                        {rule.grammarCategory}
+                      </p>
                     </div>
                     <Button
                       type="button"
@@ -346,6 +566,80 @@ const GrammarPage = () => {
                         </span>
                       </div>
                     )}
+                  {selectedProgress && (
+                    <div className="rounded-xl border border-border-soft bg-surface p-4 text-sm leading-6 text-foreground shadow-sm">
+                      <span className="font-bold text-foreground">
+                        Mastery check:{' '}
+                      </span>
+                      <span className="font-medium text-muted-copy">
+                        {Math.min(selectedProgress.correctUsages, 3)}/3 grammar
+                        practice,{' '}
+                        {2 -
+                          getMissingGrammarTransferEvidence(selectedProgress)
+                            .length}
+                        /2 Reading/Writing transfer.
+                      </span>
+                      {getMissingGrammarTransferEvidence(selectedProgress)
+                        .length > 0 && (
+                        <span className="ml-2 font-medium text-warning">
+                          Missing:{' '}
+                          {getMissingGrammarTransferEvidence(
+                            selectedProgress
+                          ).join(', ')}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
+                    <div className="mb-4 flex items-center gap-2">
+                      <BookOpen className="h-5 w-5 text-primary" />
+                      <p className="text-sm font-black text-primary">
+                        Neden bu konu?
+                      </p>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div>
+                        <p className="text-xs font-bold uppercase text-muted-copy">
+                          Teacher intro
+                        </p>
+                        <p className="mt-2 text-sm leading-7 text-foreground">
+                          Today you use this pattern to turn known words into a
+                          clear engineering sentence. The goal is not to
+                          memorize the name; the goal is to say the work,
+                          status, risk, or request correctly.
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold uppercase text-muted-copy">
+                          Where you use it
+                        </p>
+                        <p className="mt-2 text-sm leading-7 text-foreground">
+                          {selectedRule.engineeringUseCase ||
+                            selectedRule.languageFunction}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold uppercase text-muted-copy">
+                          Turkish learner note
+                        </p>
+                        <p className="mt-2 text-sm leading-7 text-foreground">
+                          {selectedRule.turkishExplanation ||
+                            selectedRule.commonMistakes}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold uppercase text-muted-copy">
+                          Common trap
+                        </p>
+                        <p className="mt-2 text-sm font-bold text-rose-800">
+                          {selectedRule.badExampleEnglish}
+                        </p>
+                        <p className="mt-1 text-sm font-bold text-success">
+                          {selectedRule.correctedExampleEnglish}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                   <div className="grid gap-6 md:grid-cols-2 items-stretch">
                     <div className="h-full flex flex-col rounded-xl border border-border-soft bg-surface p-5 shadow-sm">
                       <p className="text-xs font-bold uppercase tracking-wider text-muted-copy">
@@ -459,27 +753,37 @@ const GrammarPage = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border-soft bg-surface-hover p-4 shadow-sm">
-                    <span className="mr-auto text-xs font-bold text-muted-copy tracking-wider uppercase">
-                      Use this rule in a connected skill task
-                    </span>
-                    {selectedRule.skillUse.includes('reading') && (
-                      <Link
-                        className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
-                        to="/reading"
-                      >
-                        Reading
-                      </Link>
-                    )}
-                    {selectedRule.skillUse.includes('writing') && (
-                      <Link
-                        className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
-                        to="/writing"
-                      >
-                        Writing
-                      </Link>
-                    )}
-                  </div>
+                  {linkedVocabularyMatches.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border-soft bg-surface-hover p-4 shadow-sm">
+                      <span className="mr-auto text-xs font-bold text-muted-copy tracking-wider uppercase">
+                        You saw these first in Vocabulary
+                      </span>
+                      {linkedVocabularyMatches.map((item) => (
+                        <span
+                          key={`${item.tag}-${item.term}`}
+                          className="inline-flex min-h-8 items-center rounded-full border border-success/30 bg-success/5 px-3 text-xs font-bold text-success"
+                        >
+                          {item.term}
+                        </span>
+                      ))}
+                      {selectedRule.skillUse.includes('reading') && (
+                        <Link
+                          className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
+                          to="/reading"
+                        >
+                          Reading
+                        </Link>
+                      )}
+                      {selectedRule.skillUse.includes('writing') && (
+                        <Link
+                          className="inline-flex min-h-10 items-center rounded-lg border border-border-hover bg-surface px-4 text-sm font-bold text-foreground transition-colors hover:border-primary/30 hover:bg-primary/5"
+                          to="/writing"
+                        >
+                          Writing
+                        </Link>
+                      )}
+                    </div>
+                  )}
                   <div className="flex flex-col gap-3 sm:flex-row pt-6 border-t border-border-soft">
                     <Button
                       onClick={() => {
@@ -506,7 +810,8 @@ const GrammarPage = () => {
                       onClick={() => setShowHint((h) => !h)}
                       className="sm:flex-1 h-12 text-base shadow-sm"
                     >
-                      <HelpCircle className="mr-2 h-5 w-5" /> {showHint ? 'Hide Hint' : 'Show Hint'}
+                      <HelpCircle className="mr-2 h-5 w-5" />{' '}
+                      {showHint ? 'Hide Hint' : 'Show Hint'}
                     </Button>
                     <Button
                       variant="outline"
@@ -521,37 +826,64 @@ const GrammarPage = () => {
                   </div>
                   {quickQuizOpen && selectedRule && (
                     <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-5">
-                      <p className="font-bold text-primary text-sm">Quick Quiz — 3 Questions</p>
-                      {([
-                        {
-                          q: 'What is the structure of this rule?',
-                          choices: [selectedRule.structure, selectedRule.definition, selectedRule.explanation, selectedRule.engineeringUseCase],
-                          correct: 0,
-                        },
-                        {
-                          q: 'Which category does this rule belong to?',
-                          choices: [selectedRule.grammarCategory, 'Vocabulary', 'Pronunciation', 'Writing'],
-                          correct: 0,
-                        },
-                        {
-                          q: 'What is the correct example?',
-                          choices: [selectedRule.correctedExampleEnglish, selectedRule.badExampleEnglish, 'N/A', 'N/A'],
-                          correct: 0,
-                        },
-                      ] as const).map((item, qi) => (
+                      <p className="font-bold text-primary text-sm">
+                        Quick Quiz — 3 Questions
+                      </p>
+                      {(
+                        [
+                          {
+                            q: 'What is the structure of this rule?',
+                            choices: [
+                              selectedRule.structure,
+                              selectedRule.definition,
+                              selectedRule.explanation,
+                              selectedRule.engineeringUseCase,
+                            ],
+                            correct: 0,
+                          },
+                          {
+                            q: 'Which category does this rule belong to?',
+                            choices: [
+                              selectedRule.grammarCategory,
+                              'Vocabulary',
+                              'Pronunciation',
+                              'Writing',
+                            ],
+                            correct: 0,
+                          },
+                          {
+                            q: 'What is the correct example?',
+                            choices: [
+                              selectedRule.correctedExampleEnglish,
+                              selectedRule.badExampleEnglish,
+                              'N/A',
+                              'N/A',
+                            ],
+                            correct: 0,
+                          },
+                        ] as const
+                      ).map((item, qi) => (
                         <div key={qi} className="space-y-2">
-                          <p className="text-sm font-semibold text-foreground">Q{qi + 1}: {item.q}</p>
+                          <p className="text-sm font-semibold text-foreground">
+                            Q{qi + 1}: {item.q}
+                          </p>
                           <div className="grid gap-2">
                             {item.choices.map((choice, ci) => {
                               const letter = String.fromCharCode(65 + ci);
                               const isSelected = quizAnswers[qi] === letter;
-                              const isRevealed = Object.keys(quizAnswers).length === 3;
+                              const isRevealed =
+                                Object.keys(quizAnswers).length === 3;
                               const isCorrect = ci === item.correct;
                               return (
                                 <button
                                   key={ci}
                                   type="button"
-                                  onClick={() => setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))}
+                                  onClick={() =>
+                                    setQuizAnswers((prev) => ({
+                                      ...prev,
+                                      [qi]: letter,
+                                    }))
+                                  }
                                   disabled={isRevealed}
                                   className={`w-full text-left p-3 rounded-lg border transition-all text-xs font-medium ${
                                     isRevealed
@@ -565,7 +897,10 @@ const GrammarPage = () => {
                                         : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5'
                                   }`}
                                 >
-                                  <span className="font-bold mr-2">{letter}.</span> {choice}
+                                  <span className="font-bold mr-2">
+                                    {letter}.
+                                  </span>{' '}
+                                  {choice}
                                 </button>
                               );
                             })}
@@ -575,10 +910,17 @@ const GrammarPage = () => {
                       {Object.keys(quizAnswers).length === 3 && (
                         <div className="text-center pt-2 border-t border-primary/20">
                           <p className="text-lg font-black text-primary">
-                            Score: {[0, 1, 2].filter((i) => {
-                              const correctIdx = [0, 0, 0][i];
-                              return quizAnswers[i] === String.fromCharCode(65 + correctIdx);
-                            }).length} / 3
+                            Score:{' '}
+                            {
+                              [0, 1, 2].filter((i) => {
+                                const correctIdx = [0, 0, 0][i];
+                                return (
+                                  quizAnswers[i] ===
+                                  String.fromCharCode(65 + correctIdx)
+                                );
+                              }).length
+                            }{' '}
+                            / 3
                           </p>
                         </div>
                       )}
@@ -586,10 +928,16 @@ const GrammarPage = () => {
                   )}
                   {showHint && (
                     <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6">
-                      <p className="font-bold text-primary mb-1">Rule Explanation</p>
-                      <p className="text-foreground">{selectedRule.explanation}</p>
+                      <p className="font-bold text-primary mb-1">
+                        Rule Explanation
+                      </p>
+                      <p className="text-foreground">
+                        {selectedRule.explanation}
+                      </p>
                       {selectedRule.turkishExplanation && (
-                        <p className="mt-2 text-muted-copy">{selectedRule.turkishExplanation}</p>
+                        <p className="mt-2 text-muted-copy">
+                          {selectedRule.turkishExplanation}
+                        </p>
                       )}
                     </div>
                   )}

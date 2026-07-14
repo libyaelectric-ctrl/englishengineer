@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
+  getMissingGrammarTransferEvidence,
   getGrammarReviewReason,
   GrammarProgressService,
 } from './grammar.progress';
@@ -15,11 +16,31 @@ describe('Grammar progression', () => {
     expect(progress.strength).toBe(0);
     expect(progress.correctUsages).toBe(0);
   });
-  it('requires correct task usage to strengthen a rule', () => {
+  it('requires grammar practice plus reading and writing transfer to master a rule', () => {
     const now = new Date('2026-06-29T10:00:00Z');
     GrammarProgressService.recordUsage('rule_1', true, now);
     GrammarProgressService.recordUsage('rule_1', true, now);
-    const progress = GrammarProgressService.recordUsage('rule_1', true, now);
+    const practiced = GrammarProgressService.recordUsage('rule_1', true, now);
+    expect(practiced.reviewStatus).toBe('Learning');
+    expect(practiced.strength).toBe(75);
+    expect(getMissingGrammarTransferEvidence(practiced)).toEqual([
+      'reading',
+      'writing',
+    ]);
+    GrammarProgressService.recordSkillEvidence(
+      'rule_1',
+      'reading',
+      'reading_mission',
+      86,
+      now
+    );
+    const progress = GrammarProgressService.recordSkillEvidence(
+      'rule_1',
+      'writing',
+      'writing_mission',
+      91,
+      now
+    );
     expect(progress.reviewStatus).toBe('Strong');
     expect(progress.strength).toBe(75);
     expect(progress.nextReviewDate).toBe('2026-07-13T10:00:00.000Z');
@@ -30,6 +51,20 @@ describe('Grammar progression', () => {
     GrammarProgressService.recordUsage('rule_strong', true, now);
     GrammarProgressService.recordUsage('rule_strong', true, now);
     GrammarProgressService.recordUsage('rule_strong', true, now);
+    GrammarProgressService.recordSkillEvidence(
+      'rule_strong',
+      'reading',
+      'reading_mission',
+      85,
+      now
+    );
+    GrammarProgressService.recordSkillEvidence(
+      'rule_strong',
+      'writing',
+      'writing_mission',
+      85,
+      now
+    );
     const summary = GrammarProgressService.getSummary(360, now);
     expect(summary).toMatchObject({
       tracked: 2,

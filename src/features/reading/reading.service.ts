@@ -10,6 +10,11 @@ import {
 import { ReadingEvaluator } from './reading.evaluator';
 import { useLearningStore } from '@/core/learning';
 import { VocabularyService } from '@/features/vocabulary';
+import { GrammarTransferService } from '@/features/grammar';
+import {
+  KnowledgePoolEntry,
+  sortContentByPoolRatio,
+} from '@/core/content-selection/personalized-content.service';
 
 const STORAGE_KEY = 'EngVox_reading_state';
 export const READING_CONTENT_SCHEMA_VERSION = 1;
@@ -59,6 +64,17 @@ export const ReadingService = {
    */
   getMissions(): ReadingMission[] {
     return getReadingCatalog();
+  },
+
+  getMissionsSortedByPoolRatio(
+    pool: KnowledgePoolEntry[] = useLearningStore
+      .getState()
+      .vocabularyPool.map((id) => ({
+        content_type: 'vocabulary',
+        content_id: id,
+      }))
+  ): ReadingMission[] {
+    return sortContentByPoolRatio(this.getMissions(), pool);
   },
 
   /**
@@ -135,6 +151,8 @@ export const ReadingService = {
         submission.timeSpentMinutes
       );
     }
+
+    void GrammarTransferService.recordReadingEvidence(mission, evaluation);
 
     return evaluation;
   },

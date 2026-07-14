@@ -28,7 +28,6 @@ import {
   ReadingTranslation,
 } from '@/features/reading';
 import { useLearningStore } from '@/core/learning';
-import { scoreContentByPoolRatio } from '@/core/content-selection/personalized-content.service';
 import {
   ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
@@ -59,6 +58,7 @@ const ReadingPage = () => {
     submitCurrentMission,
     resetCurrentMission,
     resetAllReadingProgress,
+    getMissionsSortedByPoolRatio,
   } = useReadingStore();
 
   const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>(
@@ -71,7 +71,9 @@ const ReadingPage = () => {
   );
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     try {
-      return new Set(JSON.parse(localStorage.getItem('reading_bookmarks') || '[]'));
+      return new Set(
+        JSON.parse(localStorage.getItem('reading_bookmarks') || '[]')
+      );
     } catch {
       return new Set<string>();
     }
@@ -89,25 +91,28 @@ const ReadingPage = () => {
   const currentLevel = useSkillLevel('reading').currentLevel;
   const vocabularyPool = useLearningStore((s) => s.vocabularyPool);
 
-  const poolEntries = useMemo(() =>
-    vocabularyPool.map(id => ({ content_type: 'vocabulary' as const, content_id: id })),
+  const poolEntries = useMemo(
+    () =>
+      vocabularyPool.map((id) => ({
+        content_type: 'vocabulary' as const,
+        content_id: id,
+      })),
     [vocabularyPool]
   );
 
-  const filteredMissions = filterContentByLevel(
-    missions,
+  const sortedMissions = useMemo(
+    () =>
+      poolEntries.length === 0
+        ? missions
+        : getMissionsSortedByPoolRatio(poolEntries),
+    [getMissionsSortedByPoolRatio, missions, poolEntries]
+  );
+
+  const visibleMissions = filterContentByLevel(
+    sortedMissions,
     currentLevel,
     levelFilter
   );
-
-  const visibleMissions = useMemo(() => {
-    if (poolEntries.length === 0) return filteredMissions;
-    return [...filteredMissions].sort((a, b) => {
-      const scoreA = scoreContentByPoolRatio(a, poolEntries).score;
-      const scoreB = scoreContentByPoolRatio(b, poolEntries).score;
-      return scoreB - scoreA;
-    });
-  }, [filteredMissions, poolEntries]);
 
   // Initialize reading store
   useEffect(() => {
@@ -154,9 +159,11 @@ const ReadingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-4">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
-      </div>
+        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Reading
+          </h1>
+        </div>
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -282,7 +289,9 @@ const ReadingPage = () => {
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-black tracking-tight text-foreground">Reading</h1>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">
+              Reading
+            </h1>
             <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
               {currentLevel}
             </span>
@@ -368,7 +377,16 @@ const ReadingPage = () => {
                     isCompleted ? 'border-success/20' : 'border-border-soft'
                   }`}
                 >
-                  <div className='absolute top-0 left-0 right-0 h-1 rounded-t-xl' style={{background: m.cefrLevel.startsWith('A') ? '#3b82f6' : m.cefrLevel.startsWith('B') ? '#f59e0b' : '#10b981'}} />
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 rounded-t-xl"
+                    style={{
+                      background: m.cefrLevel.startsWith('A')
+                        ? '#3b82f6'
+                        : m.cefrLevel.startsWith('B')
+                          ? '#f59e0b'
+                          : '#10b981',
+                    }}
+                  />
                   <div className="flex flex-col h-full justify-between space-y-4">
                     <div className="space-y-3">
                       {/* Top Badge Row */}
@@ -498,7 +516,8 @@ const ReadingPage = () => {
               </span>
               {timeSpentSeconds > 0 && (
                 <span className="text-xs font-mono text-primary bg-primary/5 px-3 py-1 rounded border border-primary/20">
-                  WPM: {Math.round(
+                  WPM:{' '}
+                  {Math.round(
                     (currentMission.passageText.split(/\s+/).length /
                       Math.max(timeSpentSeconds, 1)) *
                       60
@@ -605,7 +624,7 @@ const ReadingPage = () => {
                   subtitle="Verify structural and semantic intake to earn rewards"
                   icon={HelpCircle}
                 >
-      <div className="space-y-6">
+                  <div className="space-y-6">
                     {currentMission.questions.map((q, idx) => (
                       <div
                         key={q.id}
@@ -731,7 +750,9 @@ const ReadingPage = () => {
           ) : (
             <>
               <div className="text-center py-4">
-                <p className="text-4xl font-black text-primary">{evaluationResult.finalScore}%</p>
+                <p className="text-4xl font-black text-primary">
+                  {evaluationResult.finalScore}%
+                </p>
                 <p className="text-sm text-muted-copy">Comprehension Score</p>
               </div>
               <ReadingEvaluationResults
