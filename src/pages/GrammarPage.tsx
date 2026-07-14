@@ -446,87 +446,76 @@ const GrammarPage = () => {
         </div>
 
         <div className="mt-3 rounded-lg border border-border-soft bg-surface p-2">
-          <div className="flex items-center justify-between gap-3 px-1">
-            <div className="min-w-0">
-              <p className="text-xs font-black uppercase tracking-wide">
-                Complete Grammar Map
-              </p>
-              <p className="text-xs font-bold text-muted-copy">
-                {totalGrammarLessons} lessons loaded from 6 CEFR levels
-              </p>
-            </div>
-            <div className="flex shrink-0 gap-2">
-              <button
-                type="button"
-                onClick={() => scrollLessonStrip('left')}
-                className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground"
-                aria-label="Scroll lessons left"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollLessonStrip('right')}
-                className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground"
-                aria-label="Scroll lessons right"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <div
-            ref={lessonStripRef}
-            className="mt-2 flex gap-2 overflow-x-auto scroll-smooth pb-1"
-          >
-            {pathGroups.length === 0 ? (
-              <p className="px-2 py-3 text-sm text-muted-copy">
-                No lessons match this filter.
-              </p>
-            ) : (
-              pathGroups.map((group) => (
-                <div
-                  key={group.module}
-                  className="flex shrink-0 items-stretch gap-2"
-                >
-                  <div className="flex w-44 shrink-0 flex-col justify-between rounded-lg border border-border-soft bg-background px-3 py-2">
-                    <span className="line-clamp-2 text-xs font-black leading-4">
-                      {group.module}
-                    </span>
-                    <span className="mt-2 text-[11px] font-bold text-muted-copy">
-                      {group.mastered}/{group.entries.length} mastered
-                    </span>
+          <div className="flex items-center">
+            <button
+              type="button"
+              onClick={() => scrollLessonStrip('left')}
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-copy hover:text-foreground"
+              aria-label="Scroll lessons left"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <div
+              ref={lessonStripRef}
+              className="flex flex-1 gap-1.5 overflow-x-auto scroll-smooth px-1 pb-1"
+            >
+              {pathGroups.length === 0 ? (
+                <p className="px-2 py-3 text-[10px] text-muted-copy">
+                  No lessons match this filter.
+                </p>
+              ) : (
+                pathGroups.map((group) => (
+                  <div
+                    key={group.module}
+                    className="flex shrink-0 items-stretch gap-1.5"
+                  >
+                    <div className="flex w-32 shrink-0 flex-col justify-between rounded-lg border border-border-soft bg-background px-2 py-1.5">
+                      <span className="line-clamp-2 text-[10px] font-black leading-3">
+                        {group.module}
+                      </span>
+                      <span className="mt-1 text-[9px] font-bold text-muted-copy">
+                        {group.mastered}/{group.entries.length}
+                      </span>
+                    </div>
+                    {group.entries.map(({ rule, status }) => {
+                      const selected = rule.id === selectedRule?.id;
+                      return (
+                        <button
+                          key={rule.id}
+                          type="button"
+                          onClick={() => selectRule(rule.id)}
+                          className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${
+                            selected
+                              ? 'border-foreground bg-foreground text-background'
+                              : 'border-border-soft bg-background hover:border-primary/40'
+                          }`}
+                        >
+                          <span className="line-clamp-2 text-[10px] font-black leading-3">
+                            {rule.title}
+                          </span>
+                          <span className="mt-1 flex items-center justify-between gap-1">
+                            {status === 'Mastered' ? (
+                              <CheckCircle2 className="h-3 w-3 shrink-0 text-success" />
+                            ) : (
+                              <Circle className="h-3 w-3 shrink-0 text-muted-copy" />
+                            )}
+                            <StatusPill status={status} compact />
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
-                  {group.entries.map(({ rule, status }) => {
-                    const selected = rule.id === selectedRule?.id;
-                    return (
-                      <button
-                        key={rule.id}
-                        type="button"
-                        onClick={() => selectRule(rule.id)}
-                        className={`flex w-56 shrink-0 flex-col justify-between rounded-lg border px-3 py-2 text-left transition-colors ${
-                          selected
-                            ? 'border-foreground bg-foreground text-background'
-                            : 'border-border-soft bg-background hover:border-primary/40'
-                        }`}
-                      >
-                        <span className="line-clamp-2 text-xs font-black leading-4">
-                          {rule.title}
-                        </span>
-                        <span className="mt-2 flex items-center justify-between gap-2">
-                          {status === 'Mastered' ? (
-                            <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
-                          ) : (
-                            <Circle className="h-4 w-4 shrink-0 text-muted-copy" />
-                          )}
-                          <StatusPill status={status} compact />
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={() => scrollLessonStrip('right')}
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-copy hover:text-foreground"
+              aria-label="Scroll lessons right"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </header>
@@ -535,16 +524,16 @@ const GrammarPage = () => {
         <section className="min-w-0 space-y-5">
           {selectedRule && selectedProgress ? (
             <>
-              <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-5">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-xs font-bold uppercase tracking-wide text-primary">
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
                       {selectedModule}
                     </p>
-                    <h2 className="mt-1 break-words text-2xl font-black">
+                    <h2 className="mt-0.5 break-words text-base font-black">
                       {selectedRule.ruleTitle || selectedRule.title}
                     </h2>
-                    <p className="mt-2 text-sm leading-6 text-muted-copy">
+                    <p className="mt-1 text-[11px] leading-5 text-muted-copy">
                       {compact(
                         selectedRule.engineeringUseCase,
                         selectedRule.languageFunction
@@ -567,80 +556,80 @@ const GrammarPage = () => {
                 body="Grammar is the bridge between the words you know and the message you need to produce. This lesson helps you turn vocabulary into a clear site sentence, report sentence, or professional reply."
               />
 
-              <div className="rounded-lg border border-border-soft bg-surface p-5">
+              <div className="rounded-lg border border-border-soft bg-surface p-4">
                 <SectionHeading
                   title="Words You Will Use Today"
                   subtitle="Grammar should reuse vocabulary before it introduces new language."
                 />
                 {linkedVocabulary.length > 0 ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {linkedVocabulary.map((item) => (
                       <span
                         key={`${item.tag}-${item.term}`}
-                        className="rounded-full border border-success/30 bg-success/5 px-3 py-1 text-xs font-bold text-success"
+                        className="rounded-full border border-success/30 bg-success/5 px-2 py-0.5 text-[10px] font-bold text-success"
                       >
                         {item.term}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-3 text-sm text-muted-copy">
+                  <p className="mt-2 text-[11px] text-muted-copy">
                     No confirmed Vocabulary match yet. This lesson stays in
                     Grammar until matching vocabulary is available.
                   </p>
                 )}
               </div>
 
-              <div className="rounded-lg border border-border-soft bg-surface p-5">
+              <div className="rounded-lg border border-border-soft bg-surface p-4">
                 <SectionHeading
                   title="Teacher Explanation"
                   subtitle="Learn the use, not only the grammar name."
                 />
-                <p className="mt-3 text-sm leading-7">
+                <p className="mt-2 text-[11px] leading-5">
                   {compact(selectedRule.explanation, selectedRule.definition)}
                 </p>
-                <p className="mt-3 rounded-lg border border-border-soft bg-background p-4 text-sm leading-7 text-muted-copy">
+                <p className="mt-2 rounded-lg border border-border-soft bg-background p-3 text-[11px] leading-5 text-muted-copy">
                   Turkish speaker note: {selectedRule.turkishExplanation}
                 </p>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-lg border border-primary/20 bg-primary/5 p-5">
-                  <p className="text-xs font-bold uppercase tracking-wide text-primary">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
                     Structure
                   </p>
-                  <p className="mt-3 break-words font-mono text-lg font-black">
+                  <p className="mt-2 break-words font-mono text-sm font-black">
                     {selectedRule.structure}
                   </p>
-                  <p className="mt-3 break-words text-sm text-muted-copy">
+                  <p className="mt-2 break-words text-[11px] text-muted-copy">
                     Target output: {selectedRule.minimumUserOutput}
                   </p>
                 </div>
-                <div className="rounded-lg border border-warning/30 bg-warning/5 p-5">
-                  <p className="text-xs font-bold uppercase tracking-wide text-warning">
+                <div className="rounded-lg border border-warning/30 bg-warning/5 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wide text-warning">
                     Guided Practice
                   </p>
-                  <p className="mt-3 break-words text-sm font-bold leading-6">
+                  <p className="mt-2 break-words text-[11px] font-bold leading-5">
                     {selectedRule.taskPromptTemplate}
                   </p>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-border-soft bg-surface p-5">
+              <div className="rounded-lg border border-border-soft bg-surface p-4">
                 <SectionHeading
                   title="Examples"
                   subtitle="Read the pattern before you try to produce it."
                 />
-                <div className="mt-4 grid gap-3">
+                <div className="mt-2 grid gap-2">
                   {selectedRule.examples.map((example, index) => (
                     <div
                       key={`${example.english}-${index}`}
-                      className="rounded-lg border border-border-soft bg-background p-4"
+                      className="rounded-lg border border-border-soft bg-background p-3"
                     >
-                      <p className="break-words font-bold">
+                      <p className="break-words text-[11px] font-bold">
                         {example.english}
                       </p>
-                      <p className="mt-1 break-words text-sm text-muted-copy">
+                      <p className="mt-0.5 break-words text-[10px] text-muted-copy">
                         {example.turkish}
                       </p>
                     </div>
@@ -648,43 +637,43 @@ const GrammarPage = () => {
                 </div>
               </div>
 
-              <div className="rounded-lg border border-rose-200 bg-rose-50 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-rose-700">
+              <div className="rounded-lg border border-rose-200 bg-rose-50 p-4">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-rose-700">
                   Common Turkish Mistake
                 </p>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                <div className="mt-2 grid gap-2 md:grid-cols-2">
                   <div>
-                    <p className="break-words text-sm font-bold text-rose-900">
+                    <p className="break-words text-[11px] font-bold text-rose-900">
                       {selectedRule.badExampleEnglish}
                     </p>
-                    <p className="mt-2 break-words text-sm leading-6 text-rose-800">
+                    <p className="mt-1 break-words text-[11px] leading-5 text-rose-800">
                       {selectedRule.badExampleTurkishExplanation ||
                         selectedRule.commonMistakes}
                     </p>
                   </div>
-                  <div className="rounded-lg border border-success/30 bg-white p-4">
-                    <p className="text-xs font-bold uppercase text-success">
+                  <div className="rounded-lg border border-success/30 bg-white p-3">
+                    <p className="text-[10px] font-bold uppercase text-success">
                       Better
                     </p>
-                    <p className="mt-2 break-words text-sm font-bold">
+                    <p className="mt-1 break-words text-[11px] font-bold">
                       {selectedRule.correctedExampleEnglish}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-lg border border-border-soft bg-surface p-5">
+              <div className="rounded-lg border border-border-soft bg-surface p-4">
                 <SectionHeading
                   title="Practice"
                   subtitle="Save honest evidence. Mastery also needs Reading and Writing use."
                 />
-                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                   <Button onClick={() => recordUsage(true)}>
-                    <CheckCircle2 className="h-4 w-4" />
+                    <CheckCircle2 className="h-3.5 w-3.5" />
                     Used Correctly
                   </Button>
                   <Button variant="outline" onClick={() => recordUsage(false)}>
-                    <TriangleAlert className="h-4 w-4" />
+                    <TriangleAlert className="h-3.5 w-3.5" />
                     Needs Review
                   </Button>
                   <Button
@@ -694,32 +683,32 @@ const GrammarPage = () => {
                       setQuizAnswers({});
                     }}
                   >
-                    <HelpCircle className="h-4 w-4" />
+                    <HelpCircle className="h-3.5 w-3.5" />
                     Mini Quiz
                   </Button>
                   <Button
                     variant="outline"
                     onClick={() => setHintOpen((v) => !v)}
                   >
-                    <BookOpen className="h-4 w-4" />
+                    <BookOpen className="h-3.5 w-3.5" />
                     Hint
                   </Button>
                 </div>
 
                 {hintOpen && (
-                  <p className="mt-4 rounded-lg border border-border-soft bg-background p-4 text-sm leading-7 text-muted-copy">
+                  <p className="mt-3 rounded-lg border border-border-soft bg-background p-3 text-[11px] leading-5 text-muted-copy">
                     {getGrammarReviewReason(selectedProgress)}
                   </p>
                 )}
 
                 {quizOpen && (
-                  <div className="mt-4 space-y-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
+                  <div className="mt-3 space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
                     {quizItems.map((item, questionIndex) => (
                       <div key={item.question}>
-                        <p className="text-sm font-bold">
+                        <p className="text-[11px] font-bold">
                           {questionIndex + 1}. {item.question}
                         </p>
-                        <div className="mt-2 grid gap-2">
+                        <div className="mt-1.5 grid gap-1.5">
                           {item.choices.map((choice, choiceIndex) => {
                             const letter = String.fromCharCode(
                               65 + choiceIndex
@@ -740,7 +729,7 @@ const GrammarPage = () => {
                                     [questionIndex]: letter,
                                   }))
                                 }
-                                className={`break-words rounded-lg border p-3 text-left text-xs font-semibold transition-colors ${
+                                className={`break-words rounded-lg border p-2 text-left text-[10px] font-semibold transition-colors ${
                                   revealed
                                     ? correct
                                       ? 'border-success bg-success/10'
@@ -752,7 +741,7 @@ const GrammarPage = () => {
                                       : 'border-border-soft bg-surface hover:border-primary/30'
                                 }`}
                               >
-                                <span className="mr-2 font-black">
+                                <span className="mr-1.5 font-black">
                                   {letter}.
                                 </span>
                                 {choice}
@@ -767,27 +756,27 @@ const GrammarPage = () => {
               </div>
 
               {linkedVocabulary.length > 0 && (
-                <div className="rounded-lg border border-border-soft bg-surface p-5">
+                <div className="rounded-lg border border-border-soft bg-surface p-4">
                   <SectionHeading
                     title="Use It in Skills"
                     subtitle="Use this lesson in Reading and Writing to prove mastery."
                   />
-                  <div className="mt-4 flex flex-wrap gap-3">
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {selectedRule.skillUse.includes('reading') && (
                       <Link
                         to="/reading"
-                        className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border-soft bg-background px-4 text-sm font-bold hover:border-primary/40"
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-[11px] font-bold hover:border-primary/40"
                       >
-                        <FileText className="h-4 w-4" />
+                        <FileText className="h-3 w-3" />
                         Reading
                       </Link>
                     )}
                     {selectedRule.skillUse.includes('writing') && (
                       <Link
                         to="/writing"
-                        className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border-soft bg-background px-4 text-sm font-bold hover:border-primary/40"
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-[11px] font-bold hover:border-primary/40"
                       >
-                        <PenLine className="h-4 w-4" />
+                        <PenLine className="h-3 w-3" />
                         Writing
                       </Link>
                     )}
@@ -796,14 +785,14 @@ const GrammarPage = () => {
               )}
             </>
           ) : (
-            <div className="rounded-lg border border-border-soft bg-surface p-8 text-center text-muted-copy">
+            <div className="rounded-lg border border-border-soft bg-surface p-6 text-center text-[11px] text-muted-copy">
               Select a grammar lesson to begin.
             </div>
           )}
         </section>
 
-        <aside className="space-y-5">
-          <section className="lg:sticky lg:top-[18rem]">
+        <aside className="space-y-4">
+          <section className="lg:sticky lg:top-[14rem]">
             <div className="mb-5 grid grid-cols-2 gap-2">
               <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
                 <p className="text-lg font-black">{rules.length}</p>
@@ -938,8 +927,8 @@ const SectionHeading = ({
   subtitle: string;
 }) => (
   <div>
-    <h2 className="text-sm font-black uppercase tracking-wide">{title}</h2>
-    <p className="mt-1 text-xs leading-5 text-muted-copy">{subtitle}</p>
+    <h2 className="text-[11px] font-black uppercase tracking-wide">{title}</h2>
+    <p className="mt-0.5 text-[10px] leading-4 text-muted-copy">{subtitle}</p>
   </div>
 );
 
@@ -968,12 +957,12 @@ const LessonBlock = ({
   title: string;
   body: string;
 }) => (
-  <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-5">
-    <div className="flex items-center gap-2">
-      <Icon className="h-5 w-5 text-primary" />
-      <h2 className="text-sm font-black uppercase tracking-wide">{title}</h2>
+  <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-4">
+    <div className="flex items-center gap-1.5">
+      <Icon className="h-3.5 w-3.5 text-primary" />
+      <h2 className="text-[11px] font-black uppercase tracking-wide">{title}</h2>
     </div>
-    <p className="mt-3 break-words text-sm leading-7 text-muted-copy">
+    <p className="mt-2 break-words text-[11px] leading-5 text-muted-copy">
       {body}
     </p>
   </div>
