@@ -287,7 +287,6 @@ const GrammarPage = () => {
     return Array.from(groups.entries()).map(([module, entries]) => ({
       module,
       entries,
-      mastered: entries.filter((entry) => entry.status === 'Mastered').length,
     }));
   }, [visibleRules]);
 
@@ -460,52 +459,60 @@ const GrammarPage = () => {
               className="flex flex-1 gap-1.5 overflow-x-auto scroll-smooth px-1 pb-1"
             >
               {pathGroups.length === 0 ? (
-                <p className="px-2 py-3 text-[10px] text-muted-copy">
+                <p className="px-2 py-3 text-xs text-muted-copy">
                   No lessons match this filter.
                 </p>
               ) : (
-                pathGroups.map((group) => (
-                  <div
-                    key={group.module}
-                    className="flex shrink-0 items-stretch gap-1.5"
-                  >
-                    <div className="flex w-32 shrink-0 flex-col justify-between rounded-lg border border-border-soft bg-background px-2 py-1.5">
-                      <span className="line-clamp-2 text-[10px] font-black leading-3">
-                        {group.module}
-                      </span>
-                      <span className="mt-1 text-[9px] font-bold text-muted-copy">
-                        {group.mastered}/{group.entries.length}
-                      </span>
-                    </div>
-                    {group.entries.map(({ rule, status }) => {
-                      const selected = rule.id === selectedRule?.id;
-                      return (
-                        <button
-                          key={rule.id}
-                          type="button"
-                          onClick={() => selectRule(rule.id)}
-                          className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${
-                            selected
-                              ? 'border-foreground bg-foreground text-background'
-                              : 'border-border-soft bg-background hover:border-primary/40'
-                          }`}
-                        >
-                          <span className="line-clamp-2 text-[10px] font-black leading-3">
-                            {rule.title}
+                (() => {
+                  let lessonNum = 0;
+                  return pathGroups.map((group) => {
+                    const startNum = lessonNum + 1;
+                    lessonNum += group.entries.length;
+                    return (
+                      <div
+                        key={group.module}
+                        className="flex shrink-0 items-stretch gap-1.5"
+                      >
+                        <div className="flex w-36 shrink-0 flex-col justify-center rounded-lg border border-border-soft bg-background px-2 py-1.5">
+                          <span className="line-clamp-2 text-xs font-black leading-4">
+                            {group.module}
                           </span>
-                          <span className="mt-1 flex items-center justify-between gap-1">
-                            {status === 'Mastered' ? (
-                              <CheckCircle2 className="h-3 w-3 shrink-0 text-success" />
-                            ) : (
-                              <Circle className="h-3 w-3 shrink-0 text-muted-copy" />
-                            )}
-                            <StatusPill status={status} compact />
+                          <span className="mt-0.5 text-[10px] font-bold text-muted-copy">
+                            {startNum}–{lessonNum}
                           </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ))
+                        </div>
+                        {group.entries.map(({ rule, status }, idx) => {
+                          const selected = rule.id === selectedRule?.id;
+                          return (
+                            <button
+                              key={rule.id}
+                              type="button"
+                              onClick={() => selectRule(rule.id)}
+                              className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${
+                                selected
+                                  ? 'border-foreground bg-foreground text-background'
+                                  : 'border-border-soft bg-background hover:border-primary/40'
+                              }`}
+                            >
+                              <span className="line-clamp-2 text-xs font-black leading-4">
+                                <span className="mr-1 text-[10px] opacity-60">{startNum + idx}.</span>
+                                {rule.title}
+                              </span>
+                              <span className="mt-1 flex items-center justify-between gap-1">
+                                {status === 'Mastered' ? (
+                                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
+                                ) : (
+                                  <Circle className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
+                                )}
+                                <StatusPill status={status} compact />
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    );
+                  });
+                })()
               )}
             </div>
             <button
@@ -527,13 +534,13 @@ const GrammarPage = () => {
               <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
                       {selectedModule}
                     </p>
                     <h2 className="mt-0.5 break-words text-base font-black">
                       {selectedRule.ruleTitle || selectedRule.title}
                     </h2>
-                    <p className="mt-1 text-[11px] leading-5 text-muted-copy">
+                    <p className="mt-1 text-xs leading-5 text-muted-copy">
                       {compact(
                         selectedRule.engineeringUseCase,
                         selectedRule.languageFunction
@@ -566,14 +573,14 @@ const GrammarPage = () => {
                     {linkedVocabulary.map((item) => (
                       <span
                         key={`${item.tag}-${item.term}`}
-                        className="rounded-full border border-success/30 bg-success/5 px-2 py-0.5 text-[10px] font-bold text-success"
+                        className="rounded-full border border-success/30 bg-success/5 px-2.5 py-0.5 text-[11px] font-bold text-success"
                       >
                         {item.term}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-2 text-[11px] text-muted-copy">
+                  <p className="mt-2 text-xs text-muted-copy">
                     No confirmed Vocabulary match yet. This lesson stays in
                     Grammar until matching vocabulary is available.
                   </p>
@@ -585,31 +592,31 @@ const GrammarPage = () => {
                   title="Teacher Explanation"
                   subtitle="Learn the use, not only the grammar name."
                 />
-                <p className="mt-2 text-[11px] leading-5">
+                <p className="mt-2 text-xs leading-5">
                   {compact(selectedRule.explanation, selectedRule.definition)}
                 </p>
-                <p className="mt-2 rounded-lg border border-border-soft bg-background p-3 text-[11px] leading-5 text-muted-copy">
+                <p className="mt-2 rounded-lg border border-border-soft bg-background p-3 text-xs leading-5 text-muted-copy">
                   Turkish speaker note: {selectedRule.turkishExplanation}
                 </p>
               </div>
 
               <div className="grid gap-3 md:grid-cols-2">
                 <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
                     Structure
                   </p>
                   <p className="mt-2 break-words font-mono text-sm font-black">
                     {selectedRule.structure}
                   </p>
-                  <p className="mt-2 break-words text-[11px] text-muted-copy">
+                  <p className="mt-2 break-words text-xs text-muted-copy">
                     Target output: {selectedRule.minimumUserOutput}
                   </p>
                 </div>
                 <div className="rounded-lg border border-warning/30 bg-warning/5 p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wide text-warning">
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-warning">
                     Guided Practice
                   </p>
-                  <p className="mt-2 break-words text-[11px] font-bold leading-5">
+                  <p className="mt-2 break-words text-xs font-bold leading-5">
                     {selectedRule.taskPromptTemplate}
                   </p>
                 </div>
@@ -626,10 +633,10 @@ const GrammarPage = () => {
                       key={`${example.english}-${index}`}
                       className="rounded-lg border border-border-soft bg-background p-3"
                     >
-                      <p className="break-words text-[11px] font-bold">
+                      <p className="break-words text-xs font-bold">
                         {example.english}
                       </p>
-                      <p className="mt-0.5 break-words text-[10px] text-muted-copy">
+                      <p className="mt-0.5 break-words text-[11px] text-muted-copy">
                         {example.turkish}
                       </p>
                     </div>
@@ -638,24 +645,24 @@ const GrammarPage = () => {
               </div>
 
               <div className="rounded-lg border border-rose-200 bg-rose-50 p-4">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-rose-700">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-rose-700">
                   Common Turkish Mistake
                 </p>
                 <div className="mt-2 grid gap-2 md:grid-cols-2">
                   <div>
-                    <p className="break-words text-[11px] font-bold text-rose-900">
+                    <p className="break-words text-xs font-bold text-rose-900">
                       {selectedRule.badExampleEnglish}
                     </p>
-                    <p className="mt-1 break-words text-[11px] leading-5 text-rose-800">
+                    <p className="mt-1 break-words text-xs leading-5 text-rose-800">
                       {selectedRule.badExampleTurkishExplanation ||
                         selectedRule.commonMistakes}
                     </p>
                   </div>
                   <div className="rounded-lg border border-success/30 bg-white p-3">
-                    <p className="text-[10px] font-bold uppercase text-success">
+                    <p className="text-[11px] font-bold uppercase text-success">
                       Better
                     </p>
-                    <p className="mt-1 break-words text-[11px] font-bold">
+                    <p className="mt-1 break-words text-xs font-bold">
                       {selectedRule.correctedExampleEnglish}
                     </p>
                   </div>
@@ -696,7 +703,7 @@ const GrammarPage = () => {
                 </div>
 
                 {hintOpen && (
-                  <p className="mt-3 rounded-lg border border-border-soft bg-background p-3 text-[11px] leading-5 text-muted-copy">
+                  <p className="mt-3 rounded-lg border border-border-soft bg-background p-3 text-xs leading-5 text-muted-copy">
                     {getGrammarReviewReason(selectedProgress)}
                   </p>
                 )}
@@ -705,7 +712,7 @@ const GrammarPage = () => {
                   <div className="mt-3 space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
                     {quizItems.map((item, questionIndex) => (
                       <div key={item.question}>
-                        <p className="text-[11px] font-bold">
+                        <p className="text-xs font-bold">
                           {questionIndex + 1}. {item.question}
                         </p>
                         <div className="mt-1.5 grid gap-1.5">
@@ -729,7 +736,7 @@ const GrammarPage = () => {
                                     [questionIndex]: letter,
                                   }))
                                 }
-                                className={`break-words rounded-lg border p-2 text-left text-[10px] font-semibold transition-colors ${
+                                className={`break-words rounded-lg border p-2 text-left text-[11px] font-semibold transition-colors ${
                                   revealed
                                     ? correct
                                       ? 'border-success bg-success/10'
@@ -765,7 +772,7 @@ const GrammarPage = () => {
                     {selectedRule.skillUse.includes('reading') && (
                       <Link
                         to="/reading"
-                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-[11px] font-bold hover:border-primary/40"
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-xs font-bold hover:border-primary/40"
                       >
                         <FileText className="h-3 w-3" />
                         Reading
@@ -774,7 +781,7 @@ const GrammarPage = () => {
                     {selectedRule.skillUse.includes('writing') && (
                       <Link
                         to="/writing"
-                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-[11px] font-bold hover:border-primary/40"
+                        className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-border-soft bg-background px-3 text-xs font-bold hover:border-primary/40"
                       >
                         <PenLine className="h-3 w-3" />
                         Writing
@@ -785,7 +792,7 @@ const GrammarPage = () => {
               )}
             </>
           ) : (
-            <div className="rounded-lg border border-border-soft bg-surface p-6 text-center text-[11px] text-muted-copy">
+            <div className="rounded-lg border border-border-soft bg-surface p-6 text-center text-xs text-muted-copy">
               Select a grammar lesson to begin.
             </div>
           )}
@@ -927,8 +934,8 @@ const SectionHeading = ({
   subtitle: string;
 }) => (
   <div>
-    <h2 className="text-[11px] font-black uppercase tracking-wide">{title}</h2>
-    <p className="mt-0.5 text-[10px] leading-4 text-muted-copy">{subtitle}</p>
+    <h2 className="text-xs font-black uppercase tracking-wide">{title}</h2>
+    <p className="mt-0.5 text-[11px] leading-4 text-muted-copy">{subtitle}</p>
   </div>
 );
 
@@ -960,9 +967,9 @@ const LessonBlock = ({
   <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-4">
     <div className="flex items-center gap-1.5">
       <Icon className="h-3.5 w-3.5 text-primary" />
-      <h2 className="text-[11px] font-black uppercase tracking-wide">{title}</h2>
+      <h2 className="text-xs font-black uppercase tracking-wide">{title}</h2>
     </div>
-    <p className="mt-2 break-words text-[11px] leading-5 text-muted-copy">
+    <p className="mt-2 break-words text-xs leading-5 text-muted-copy">
       {body}
     </p>
   </div>
