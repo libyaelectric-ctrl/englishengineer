@@ -216,7 +216,7 @@ const SpeakingPage = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-28 lg:pb-4">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-8">
       {/* Speaking sticky header */}
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
@@ -301,7 +301,9 @@ const SpeakingPage = () => {
         </div>
       </SectionCard>
 
-      <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-2.5">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-wide text-muted-copy mb-2">Select Mission</p>
+        <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-2.5">
         {roleplayMissions.map((mission) => (
           <button
             key={mission.id}
@@ -357,6 +359,7 @@ const SpeakingPage = () => {
             this category and level filter.
           </p>
         )}
+      </div>
       </div>
 
       {activeMission && (
@@ -528,7 +531,7 @@ const SpeakingPage = () => {
                   ) : (
                     <div className="space-y-4">
                       {/* Active Voice Workspace for Max Subscribers */}
-                      <div className="rounded-xl border border-border-soft bg-surface-hover p-5 flex flex-col items-center justify-center min-h-48 relative overflow-hidden">
+                      <div className="rounded-xl border border-border-soft bg-surface-hover p-5 flex flex-col items-center justify-center min-h-32 relative overflow-hidden">
                         {isRecording ? (
                           <div className="flex flex-col items-center gap-3 w-full">
                             <div className="flex items-end justify-center gap-[3px] h-16 w-full">

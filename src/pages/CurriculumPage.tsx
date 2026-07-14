@@ -159,7 +159,7 @@ const CurriculumPage = () => {
   ).length;
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pb-28 lg:pb-4">
+    <div className="space-y-7 animate-in fade-in duration-300 pb-8">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <h1 className="text-2xl font-black tracking-tight text-foreground">Learning Hub</h1>
       </div>

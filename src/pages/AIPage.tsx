@@ -355,8 +355,8 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
           <SectionCard
             title="Coach Mode"
             subtitle="Choose a practical engineering communication mode"
@@ -544,7 +544,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                     value={input}
                     onChange={(event) => setInput(event.target.value)}
                     disabled={!aiEntitlement.allowed}
-                    rows={8}
+                    rows={5}
                     className="premium-input w-full resize-none p-4 font-mono text-sm text-foreground"
                     placeholder={selectedMode?.placeholder ?? ''}
                   />
@@ -741,7 +741,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           )}
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           <SectionCard
             title="User Context"
             subtitle="Live local learning profile"
@@ -839,7 +839,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             subtitle="Stored locally through the existing storage layer"
             icon={Sparkles}
           >
-            <div className="space-y-3 max-h-[360px] overflow-y-auto custom-scrollbar pr-1">
+            <div className="space-y-3 max-h-[240px] overflow-y-auto custom-scrollbar pr-1">
               {sessions.slice(0, 5).map((session) => (
                 <div
                   key={session.id}

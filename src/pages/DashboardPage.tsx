@@ -68,7 +68,7 @@ const Sparkline = ({ data, className = '' }: { data: number[]; className?: strin
 };
 
 const DashboardSkeleton = () => (
-  <div className="mx-auto max-w-4xl space-y-6 pb-28 lg:pb-4">
+  <div className="mx-auto max-w-4xl space-y-6 pb-8">
     <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <Skeleton className="h-7 w-40" />
     </div>
@@ -218,7 +218,7 @@ const DashboardPage = () => {
   if (isLoading) return <DashboardSkeleton />;
 
   return (
-    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-28 lg:pb-4">
+    <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <h1 className="text-2xl font-black tracking-tight text-foreground">Dashboard</h1>
       </div>

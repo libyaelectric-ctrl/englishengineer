@@ -174,10 +174,10 @@ const ProgressPage = () => {
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="animate-in fade-in duration-300 pb-28 lg:pb-4">
+    <div className="animate-in fade-in duration-300 pb-8">
       {/* Fixed Header - clean, no extra border */}
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-foreground">Individual Progress</h1>
             <p className="text-xs text-muted-copy">CEFR band, Elo rating, and skill breakdown.</p>
