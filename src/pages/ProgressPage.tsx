@@ -123,15 +123,15 @@ const SkillCard = ({ skill, elo, index }: { skill: (typeof SKILLS)[0]; elo: numb
 
 const ProgressPage = () => {
   const { currentUser } = useAuthStore();
-  const { learningState } = useLearningCockpit(currentUser?.id);
+  const { profile, learningState } = useLearningCockpit(currentUser?.id);
   const vocabularyPool = useLearningStore((state) => state.vocabularyPool) ?? [];
   const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(null);
 
-  const calculateSkillElo = (_skillId: string) => {
-    // Use the actual stored elo as base, not a calculated one
-    const storedElo = learningState?.elo || MIN_ELO;
-    return Math.min(MAX_ELO, Math.max(MIN_ELO, storedElo));
+  const calculateSkillElo = (skillId: string) => {
+    // Read per-skill elo from profile, not global elo
+    const skillProfile = profile?.skills?.[skillId as keyof typeof profile.skills];
+    return Math.min(MAX_ELO, Math.max(MIN_ELO, skillProfile?.elo || MIN_ELO));
   };
 
   const [eloScores] = useState<Record<string, number>>(() => {
