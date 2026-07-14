@@ -160,14 +160,34 @@ const WordCard = ({
       </div>
 
       {status === 'Learning' && progress && (
-        <div className="mt-3 flex items-center gap-2">
-          <span className="text-sm tracking-widest text-primary">
-            {'●'.repeat(Math.min(progress.correctReviews, 5))}
-            {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
-          </span>
-          <span className="text-xs font-semibold text-muted-copy">
-            {progress.correctReviews} correct → Mastered
-          </span>
+        <div className="mt-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-sm tracking-widest text-primary">
+              {'●'.repeat(Math.min(progress.correctReviews, 5))}
+              {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
+            </span>
+            <span className="text-xs font-semibold text-muted-copy">
+              {progress.correctReviews} correct → Mastered
+            </span>
+          </div>
+          {mode !== 'Review' && (
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant="success"
+                className="px-3"
+                onClick={() => onReview(term, true)}
+              >
+                <CheckCircle2 className="h-4 w-4" /> Remembered
+              </Button>
+              <Button
+                variant="danger"
+                className="px-3"
+                onClick={() => onReview(term, false)}
+              >
+                <XCircle className="h-4 w-4" /> Review again
+              </Button>
+            </div>
+          )}
         </div>
       )}
 
