@@ -362,7 +362,7 @@ const LandingPage = () => {
 
       <section
         id="main-content"
-        className="relative flex min-h-[70svh] items-end overflow-hidden px-6 pb-10 pt-28 md:px-12 md:pb-14"
+        className="relative flex min-h-[55svh] items-end overflow-hidden px-6 pb-8 pt-24 md:px-12 md:pb-10"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -378,7 +378,7 @@ const LandingPage = () => {
         <div className="relative z-10 grid w-full grid-cols-1 items-end gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.55fr)]">
           <div className="max-w-4xl">
             <span
-              className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/55 px-3 py-1 text-xs font-medium text-muted-copy backdrop-blur"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/55 px-2.5 py-0.5 text-[10px] font-medium text-muted-copy backdrop-blur"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(12px)',
@@ -391,7 +391,7 @@ const LandingPage = () => {
               AI English operating system for engineers
             </span>
             <h1
-              className="mt-5 max-w-4xl text-3xl font-light leading-[1.0] text-[#111] sm:text-4xl md:text-5xl lg:text-6xl"
+              className="mt-5 max-w-4xl text-xl font-light leading-[1.05] text-[#111] sm:text-2xl md:text-3xl lg:text-4xl"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(24px)',
@@ -403,7 +403,7 @@ const LandingPage = () => {
               Engineering English OS for project teams.
             </h1>
             <p
-              className="mt-4 max-w-xl text-sm leading-6 text-muted-copy"
+              className="mt-3 max-w-xl text-xs leading-5 text-muted-copy"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -416,7 +416,7 @@ const LandingPage = () => {
               orchestrated practice system for real engineering work.
             </p>
             <div
-              className="mt-6 flex flex-col gap-3 sm:flex-row"
+              className="mt-5 flex flex-col gap-2 sm:flex-row"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
