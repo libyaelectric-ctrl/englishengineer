@@ -78,6 +78,36 @@ export const AdminPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
+  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
+    'users'
+  );
+  const [systemLogs] = useState([
+    {
+      id: 1,
+      time: '10:04:12',
+      type: 'info',
+      msg: 'Stripe webhook checkout.session.completed received',
+    },
+    {
+      id: 2,
+      time: '09:48:02',
+      type: 'info',
+      msg: 'User catexozcan@gmail.com logged in successfully',
+    },
+    {
+      id: 3,
+      time: '09:12:44',
+      type: 'warning',
+      msg: 'AI rate limit warning triggered for user usr_002',
+    },
+    {
+      id: 4,
+      time: '08:05:04',
+      type: 'info',
+      msg: 'Production database health-check OK',
+    },
+  ]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -101,6 +131,14 @@ export const AdminPage: React.FC = () => {
     setIsAuthenticated(false);
     setUsername('');
     setPassword('');
+  };
+
+  const handlePromote = (id: string) => {
+    setUsers((prev) =>
+      prev.map((u) =>
+        u.id === id ? { ...u, plan: u.plan === 'Pro' ? 'Free' : 'Pro' } : u
+      )
+    );
   };
 
   if (!isAuthenticated) {
@@ -148,45 +186,6 @@ export const AdminPage: React.FC = () => {
       </div>
     );
   }
-
-  const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
-  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
-    'users'
-  );
-  const [systemLogs] = useState([
-    {
-      id: 1,
-      time: '10:04:12',
-      type: 'info',
-      msg: 'Stripe webhook checkout.session.completed received',
-    },
-    {
-      id: 2,
-      time: '09:48:02',
-      type: 'info',
-      msg: 'User catexozcan@gmail.com logged in successfully',
-    },
-    {
-      id: 3,
-      time: '09:12:44',
-      type: 'warning',
-      msg: 'AI rate limit warning triggered for user usr_002',
-    },
-    {
-      id: 4,
-      time: '08:05:04',
-      type: 'info',
-      msg: 'Production database health-check OK',
-    },
-  ]);
-
-  const handlePromote = (id: string) => {
-    setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, plan: u.plan === 'Pro' ? 'Free' : 'Pro' } : u
-      )
-    );
-  };
 
   return (
     <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
