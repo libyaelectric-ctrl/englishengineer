@@ -180,9 +180,9 @@ const SpeakingPage = () => {
             : ['compliance', 'schedule', 'system']
           )
             .slice(0, 3)
-            .map((kw) => ({
+            .map((kw, idx) => ({
               word: kw,
-              score: Math.floor(Math.random() * 15) + 85,
+              score: 85 + ((idx * 7 + kw.length) % 15),
               phonemes: `/${kw.toLowerCase().replace(/a/g, 'æ').replace(/e/g, 'ɛ')}/`,
             }))
         );

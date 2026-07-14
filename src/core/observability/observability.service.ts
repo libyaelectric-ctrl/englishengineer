@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import { logger } from '@/shared/logger';
 import {
   type EngVoxEnv,
   validateEnvironment,
@@ -115,7 +116,7 @@ export const ObservabilityService = {
         extra: error.context,
       });
     }
-    console.error(
+    logger.e(
       `[Observability] Error: ${error.code}`,
       error.message,
       error.context
@@ -135,7 +136,7 @@ export const ObservabilityService = {
         metric.success ? 'info' : 'warning'
       );
     }
-    console.log(
+    logger.i(
       `[Observability] Performance: ${metric.name} took ${metric.durationMs}ms`,
       metric.success ? 'OK' : 'FAILED',
       metric.context
