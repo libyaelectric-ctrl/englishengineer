@@ -310,7 +310,7 @@ const LandingPage = () => {
 
       <section
         id="main-content"
-        className="relative flex min-h-[55svh] items-end overflow-hidden px-6 pb-8 pt-24 md:px-12 md:pb-10"
+        className="relative flex min-h-[50svh] items-end overflow-hidden px-6 pb-6 pt-20 md:px-12 md:pb-8"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -389,12 +389,12 @@ const LandingPage = () => {
 
             <div className="mt-5 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
               {FEATURES.map((feature) => (
-                <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-2.5 backdrop-blur">
-                  <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-md border border-black/10 bg-white">
-                    <feature.icon className="h-3 w-3 text-black/60" />
+                <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-3 backdrop-blur">
+                  <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-md border border-black/10 bg-white">
+                    <feature.icon className="h-3.5 w-3.5 text-black/60" />
                   </div>
-                  <h3 className="text-[11px] font-medium text-[#111]">{feature.title}</h3>
-                  <p className="mt-0.5 text-[9px] leading-3 text-muted-copy">{feature.desc}</p>
+                  <h3 className="text-xs font-medium text-[#111]">{feature.title}</h3>
+                  <p className="mt-1 text-[10px] leading-3.5 text-muted-copy">{feature.desc}</p>
                 </div>
               ))}
             </div>
