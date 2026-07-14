@@ -4,15 +4,10 @@ import {
   BarChart3,
   BookOpen,
   Brain,
-  Check,
   ChevronDown,
-  Cpu,
   Headphones,
-  Layers3,
   Mic,
   PenLine,
-  Route,
-  ShieldCheck,
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
@@ -122,48 +117,6 @@ const AGENTS = [
     role: 'Executor',
     title: 'Keeps practice moving',
     desc: 'Queues daily drills, review sessions and project-ready tasks from the user profile.',
-  },
-];
-
-const PLANS = [
-  {
-    name: 'Free',
-    price: '$0',
-    period: 'forever',
-    features: [
-      'Core skill modules',
-      'Vocabulary and grammar',
-      '3 AI requests per day',
-      'Progress tracking',
-    ],
-    cta: 'Start free',
-    primary: false,
-  },
-  {
-    name: 'Pro',
-    price: '$19',
-    period: '/month',
-    features: [
-      'Unlimited AI feedback',
-      'Full A1-C2 access',
-      'Mistake log',
-      '2 document uploads per month',
-    ],
-    cta: 'Upgrade to Pro',
-    primary: true,
-  },
-  {
-    name: 'Project',
-    price: '$39',
-    period: '/month',
-    features: [
-      '3 project workspaces',
-      'Workspace memory',
-      '20 documents per month',
-      'LinkedIn optimizer',
-    ],
-    cta: 'Upgrade to Project',
-    primary: false,
   },
 ];
 
@@ -342,7 +295,7 @@ function SectionIntro({
 }
 
 const LandingPage = () => {
-  const [faqOpen, setFaqOpen] = useState<number | null>(0);
+  const [faqOpen, setFaqOpen] = useState<number | null>(null);
   const [heroVisible, setHeroVisible] = useState(false);
   const [scrollShift, setScrollShift] = useState(0);
 
@@ -535,27 +488,26 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section id="system" className="px-6 py-20 md:px-12 lg:py-28">
+      <section id="system" className="px-6 py-12 md:px-12 lg:py-16">
         <div className="mx-auto max-w-7xl">
           <SectionIntro
             eyebrow="System"
             title={<>A learning interface shaped like an agentic workflow.</>}
-            desc="Sample2's full-bleed imagery, blur entrances, hover light and staged workflow are adapted here to EngVox's engineering English product."
           />
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-6">
             {FEATURES.map((feature, index) => (
               <AnimatedCard
                 key={feature.title}
-                delay={index * 70}
-                className="min-h-[205px] p-7"
+                delay={index * 50}
+                className="p-4"
               >
-                <div className="relative z-10 mb-6 flex h-11 w-11 items-center justify-center rounded-xl border border-black/10 bg-white">
-                  <feature.icon className="h-5 w-5 text-black/60" />
+                <div className="relative z-10 mb-3 flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
+                  <feature.icon className="h-4 w-4 text-black/60" />
                 </div>
-                <h3 className="relative z-10 text-xl font-light">
+                <h3 className="relative z-10 text-sm font-medium">
                   {feature.title}
                 </h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-muted-copy">
+                <p className="relative z-10 mt-1.5 text-[11px] leading-4 text-muted-copy">
                   {feature.desc}
                 </p>
               </AnimatedCard>
@@ -643,129 +595,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28">
-        <div className="mx-auto max-w-7xl">
-          <SectionIntro
-            eyebrow="Project readiness"
-            title={<>Built for repeated practice, not a one-time lesson.</>}
-            align="center"
-          />
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            {[
-              {
-                icon: Cpu,
-                title: 'Adaptive engine',
-                desc: 'Tasks adjust around level, weak skills and the communication mode the engineer needs next.',
-              },
-              {
-                icon: Route,
-                title: 'Scenario routing',
-                desc: 'A learner can move from document reading to writing response to spoken project update.',
-              },
-              {
-                icon: ShieldCheck,
-                title: 'Local-first feel',
-                desc: 'The app keeps the workspace calm, focused and repeatable for daily engineering practice.',
-              },
-            ].map((item, index) => (
-              <AnimatedCard
-                key={item.title}
-                delay={index * 80}
-                className="min-h-[220px] p-7"
-              >
-                <div className="relative z-10 mb-8 flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-black/10 bg-white">
-                    <item.icon className="h-5 w-5 text-black/60" />
-                  </div>
-                  <Layers3 className="h-4 w-4 text-[#64770f]" />
-                </div>
-                <h3 className="relative z-10 text-2xl font-light">
-                  {item.title}
-                </h3>
-                <p className="relative z-10 mt-3 text-sm leading-6 text-muted-copy">
-                  {item.desc}
-                </p>
-              </AnimatedCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="pricing"
-        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
-      >
-        <div className="mx-auto max-w-7xl">
-          <SectionIntro
-            eyebrow="Pricing"
-            title={<>Start free. Upgrade when the workflow is ready.</>}
-            align="center"
-          />
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-            {PLANS.map((plan, index) => (
-              <AnimatedCard
-                key={plan.name}
-                delay={index * 80}
-                dark={plan.primary}
-                className="flex min-h-[430px] flex-col p-7"
-              >
-                <div className="relative z-10 flex items-center justify-between">
-                  <h3 className="text-lg font-medium">{plan.name}</h3>
-                  {plan.primary ? (
-                    <span className="rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-medium text-white/75">
-                      Popular
-                    </span>
-                  ) : null}
-                </div>
-                <div className="relative z-10 mt-8">
-                  <span className="text-5xl font-light">{plan.price}</span>
-                  <span
-                    className={
-                      plan.primary
-                        ? 'ml-2 text-sm text-white/45'
-                        : 'ml-2 text-sm text-black/42'
-                    }
-                  >
-                    {plan.period}
-                  </span>
-                </div>
-                <ul className="relative z-10 mt-8 space-y-3">
-                  {plan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className={
-                        plan.primary
-                          ? 'flex items-center gap-3 text-sm text-white/76'
-                          : 'flex items-center gap-3 text-sm text-black/60'
-                      }
-                    >
-                      <Check
-                        className={
-                          plan.primary
-                            ? 'h-4 w-4 text-white/60'
-                            : 'h-4 w-4 text-black/32'
-                        }
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/start"
-                  className={
-                    plan.primary
-                      ? 'relative z-10 mt-auto rounded-xl bg-white px-4 py-3 text-center text-sm font-semibold text-[#111] transition hover:bg-white/90'
-                      : 'relative z-10 mt-auto rounded-xl border border-black/10 px-4 py-3 text-center text-sm font-semibold text-black/60 transition hover:bg-black/[0.04] hover:text-black'
-                  }
-                >
-                  {plan.cta}
-                </Link>
-              </AnimatedCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section
         id="faq"
         className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
@@ -797,25 +626,6 @@ const LandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="relative border-t border-black/[0.06] px-6 py-20 text-center md:px-12 lg:py-28">
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,#f6f4ee_0%,#ece9df_100%)]" />
-        <AnimatedSection className="relative z-10 mx-auto max-w-4xl">
-          <h2 className="text-4xl font-light leading-[1.04] md:text-6xl">
-            Ready to make engineering English feel operational?
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-muted-copy">
-            Start with the free plan, build daily momentum and let the AI coach
-            shape the next practice loop.
-          </p>
-          <Link
-            to="/start"
-            className="mt-9 inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-7 py-4 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]"
-          >
-            Start free <ArrowRight className="h-4 w-4" />
-          </Link>
-        </AnimatedSection>
       </section>
 
       <footer className="border-t border-black/[0.06] bg-[#ece9df] px-6 py-8 md:px-12">
