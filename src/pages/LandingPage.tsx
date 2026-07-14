@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight,
   BarChart3,
   BookOpen,
   Brain,
@@ -363,31 +362,7 @@ const LandingPage = () => {
               EngVox turns writing, speaking, listening and reading into an
               orchestrated practice system for real engineering work.
             </p>
-            <div
-              className="mt-4 flex flex-col gap-2 sm:flex-row"
-              style={{
-                opacity: heroVisible ? 1 : 0,
-                filter: heroVisible ? 'blur(0)' : 'blur(16px)',
-                transform: heroVisible ? 'translateY(0)' : 'translateY(24px)',
-                transition:
-                  'opacity 820ms cubic-bezier(0.16,1,0.3,1) 340ms, filter 820ms cubic-bezier(0.16,1,0.3,1) 340ms, transform 820ms cubic-bezier(0.16,1,0.3,1) 340ms',
-              }}
-            >
-              <Link
-                to="/start"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#2a2a2a]"
-              >
-                Start free <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <Link
-                to="/pricing"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/45 px-5 py-2.5 text-xs font-semibold text-black/65 transition hover:bg-white/70 hover:text-black"
-              >
-                View pricing
-              </Link>
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+            <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
               {FEATURES.map((feature) => (
                 <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-3 backdrop-blur">
                   <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-md border border-black/10 bg-white">
