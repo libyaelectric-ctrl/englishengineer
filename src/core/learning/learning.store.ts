@@ -16,6 +16,7 @@ import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { calculateStreak } from './learning.streak';
 import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth/supabase.client';
 import { useAuthStore } from '@/features/auth';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 const STORAGE_KEY = 'learning_state';
 const MAX_HISTORY_SIZE = 500;
@@ -281,7 +282,23 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       );
       const totalXP = get().xp + result.xp;
       const computedLevel = Math.floor(totalXP / 500) + 1;
-      const newElo = get().elo + result.eloChange;
+
+      // Update per-skill elo in profile (not global elo)
+      const skillName = module.toLowerCase() as import('@/features/profile/profile.types').SkillName;
+      const userId = useAuthStore.getState().currentUser?.id || 'local-user';
+      const profile = LearningProfileRepository.getProfile(userId);
+      const currentSkillElo = profile.skills[skillName]?.elo || 1000;
+      const newSkillElo = Math.max(1000, currentSkillElo + result.eloChange);
+
+      LearningProfileRepository.updateSkill(userId, skillName, {
+        elo: newSkillElo,
+        accuracy: score,
+        completedTasks: (profile.skills[skillName]?.completedTasks || 0) + 1,
+        weaknessScore: 100 - score,
+        lastPracticedAt: now.toISOString(),
+      });
+
+      const newElo = newSkillElo; // Use per-skill elo as display value
 
       const newSession: StudySession = {
         timestamp: now.toISOString(),
