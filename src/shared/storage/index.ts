@@ -7,6 +7,14 @@ import { logger } from '@/shared/logger';
 export const STORAGE_CHANGE_EVENT = 'EngVox:storage-change';
 export type StorageNamespaceSnapshot = Record<string, unknown>;
 
+// User-scoped namespace: all learning data is isolated per user
+let currentUserId: string | null = null;
+
+const getUserPrefix = (): string => {
+  if (currentUserId) return `user_${currentUserId}_`;
+  return '';
+};
+
 const notifyStorageChange = (key: string): void => {
   if (typeof window === 'undefined') return;
   window.dispatchEvent(
@@ -17,6 +25,17 @@ const notifyStorageChange = (key: string): void => {
 };
 
 export const storage = {
+  /**
+   * Set the current user ID for scoped storage.
+   * Call this on login; pass null on logout.
+   */
+  setUserId: (userId: string | null): void => {
+    currentUserId = userId;
+    logger.i(`[STORAGE] User namespace set to: ${userId ?? 'global'}`);
+  },
+
+  getUserId: (): string | null => currentUserId,
+
   /**
    * Safe check to verify if localStorage is fully accessible and available.
    */
@@ -35,38 +54,40 @@ export const storage = {
   },
 
   /**
-   * Sets an item in storage under a namespace-prefixed key.
+   * Sets an item in storage under a user-scoped, namespace-prefixed key.
    */
   set: <T>(k: string, v: T): boolean => {
     try {
       if (typeof window === 'undefined' || !window.localStorage) {
         return false;
       }
-      localStorage.setItem(`eos_${k}`, JSON.stringify(v));
+      const fullKey = `eos_${getUserPrefix()}${k}`;
+      localStorage.setItem(fullKey, JSON.stringify(v));
       notifyStorageChange(k);
       return true;
     } catch (e) {
-      logger.w(`[STORAGE] Failed to write key "eos_${k}" to localStorage:`, e);
+      logger.w(`[STORAGE] Failed to write key "${k}" to localStorage:`, e);
       return false;
     }
   },
 
   /**
-   * Retrieves and parses an item from storage under a namespace-prefixed key.
+   * Retrieves and parses an item from storage under a user-scoped, namespace-prefixed key.
    */
   get: <T>(k: string): T | null => {
     try {
       if (typeof window === 'undefined' || !window.localStorage) {
         return null;
       }
-      const item = localStorage.getItem(`eos_${k}`);
+      const fullKey = `eos_${getUserPrefix()}${k}`;
+      const item = localStorage.getItem(fullKey);
       if (!item) {
         return null;
       }
       return JSON.parse(item) as T;
     } catch (e) {
       logger.w(
-        `[STORAGE] Failed to read/parse key "eos_${k}" from localStorage:`,
+        `[STORAGE] Failed to read/parse key "${k}" from localStorage:`,
         e
       );
       return null;
@@ -81,12 +102,13 @@ export const storage = {
       if (typeof window === 'undefined' || !window.localStorage) {
         return false;
       }
-      localStorage.removeItem(`eos_${k}`);
+      const fullKey = `eos_${getUserPrefix()}${k}`;
+      localStorage.removeItem(fullKey);
       notifyStorageChange(k);
       return true;
     } catch (e) {
       logger.w(
-        `[STORAGE] Failed to remove key "eos_${k}" from localStorage:`,
+        `[STORAGE] Failed to remove key "${k}" from localStorage:`,
         e
       );
       return false;
@@ -99,15 +121,16 @@ export const storage = {
       if (typeof window === 'undefined' || !window.localStorage) {
         return snapshot;
       }
+      const prefix = `eos_${getUserPrefix()}`;
       const keys: string[] = [];
       for (let index = 0; index < localStorage.length; index++) {
         const key = localStorage.key(index);
-        if (key?.startsWith('eos_')) keys.push(key);
+        if (key?.startsWith(prefix)) keys.push(key);
       }
       keys.sort().forEach((key) => {
         const value = localStorage.getItem(key);
         if (value === null) return;
-        const exportKey = key.slice(4);
+        const exportKey = key.slice(prefix.length);
         try {
           snapshot[exportKey] = JSON.parse(value) as unknown;
         } catch {
@@ -121,17 +144,18 @@ export const storage = {
   },
 
   /**
-   * Completely clears the namespace-prefixed items.
+   * Completely clears the current user's namespace-prefixed items.
    */
   clear: (): void => {
     try {
       if (typeof window === 'undefined' || !window.localStorage) {
         return;
       }
+      const prefix = `eos_${getUserPrefix()}`;
       const keysToRemove: string[] = [];
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('eos_')) {
+        if (key && key.startsWith(prefix)) {
           keysToRemove.push(key);
         }
       }

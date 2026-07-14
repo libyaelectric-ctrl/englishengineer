@@ -413,15 +413,10 @@ const GrammarPage = () => {
 
         <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
           <div className="flex flex-1 gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-            {CEFR_LEVELS.map((cefrLevel) => (
+              {CEFR_LEVELS.map((cefrLevel) => (
               <button
                 key={cefrLevel}
                 type="button"
-                onClick={() => {
-                  if (cefrLevel !== level) {
-                    /* level change handled elsewhere */
-                  }
-                }}
                 className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
                   cefrLevel === level
                     ? 'border-primary/40 bg-primary/5 text-primary'

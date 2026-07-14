@@ -303,7 +303,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   </Button>
                 </div>
                 <p className="text-sm text-foreground">
-                  <strong>Turkce:</strong> {item.turkishMeaning}
+                  <strong>Türkçe:</strong> {item.turkishMeaning}
                 </p>
                 <p className="text-sm text-muted-copy">
                   <strong>Use:</strong> {item.whenToUse}

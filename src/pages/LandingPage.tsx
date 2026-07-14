@@ -831,6 +831,9 @@ const LandingPage = () => {
             <Link to="/legal/cookies" className="transition hover:text-black">
               Cookies
             </Link>
+            <Link to="/admin" className="transition hover:text-black opacity-40">
+              Admin
+            </Link>
           </div>
         </div>
       </footer>

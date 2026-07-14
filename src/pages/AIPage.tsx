@@ -857,10 +857,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
               server-side AI proxy. This frontend never receives vendor secrets.
             </p>
           </div>
-
-          <pre className="hidden">
-            {lastResult ? formatCoachResult(lastResult) : ''}
-          </pre>
         </div>
       </div>
     </div>
