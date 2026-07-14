@@ -44,7 +44,7 @@ export class LocalAuthAdapter implements AuthAdapter {
 
   async getCurrentUser(): Promise<UserProfile | null> {
     if (!this.enabled) return null;
-    return storage.get<UserProfile>(STORAGE_KEY);
+    return storage.globalGet<UserProfile>(STORAGE_KEY);
   }
 
   async login(
@@ -72,7 +72,7 @@ export class LocalAuthAdapter implements AuthAdapter {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      storage.set(STORAGE_KEY, superUser);
+      storage.globalSet(STORAGE_KEY, superUser);
       return superUser;
     }
 
@@ -83,7 +83,7 @@ export class LocalAuthAdapter implements AuthAdapter {
         displayName,
         updatedAt: new Date().toISOString(),
       };
-      storage.set(STORAGE_KEY, updated);
+      storage.globalSet(STORAGE_KEY, updated);
       return updated;
     }
 
@@ -100,7 +100,7 @@ export class LocalAuthAdapter implements AuthAdapter {
       updatedAt: new Date().toISOString(),
     };
 
-    storage.set(STORAGE_KEY, newUser);
+    storage.globalSet(STORAGE_KEY, newUser);
     return newUser;
   }
 
@@ -118,12 +118,12 @@ export class LocalAuthAdapter implements AuthAdapter {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
-    storage.set(STORAGE_KEY, demoUser);
+    storage.globalSet(STORAGE_KEY, demoUser);
     return demoUser;
   }
 
   async logout(): Promise<void> {
-    storage.remove(STORAGE_KEY);
+    storage.globalRemove(STORAGE_KEY);
   }
 
   async updateProfile(updates: Partial<UserProfile>): Promise<UserProfile> {
@@ -142,7 +142,7 @@ export class LocalAuthAdapter implements AuthAdapter {
       updatedAt: new Date().toISOString(),
     };
 
-    storage.set(STORAGE_KEY, updated);
+    storage.globalSet(STORAGE_KEY, updated);
     return updated;
   }
 }

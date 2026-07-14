@@ -9,11 +9,11 @@ const STORAGE_KEY = 'EngVox_interface_language';
 
 export const LocalizationService = {
   getLanguage(): SupportedInterfaceLanguage {
-    return storage.get<SupportedInterfaceLanguage>(STORAGE_KEY) ?? 'en';
+    return storage.globalGet<SupportedInterfaceLanguage>(STORAGE_KEY) ?? 'en';
   },
 
   setLanguage(language: SupportedInterfaceLanguage): void {
-    storage.set(STORAGE_KEY, language);
+    storage.globalSet(STORAGE_KEY, language);
   },
 
   translate(key: TranslationKey, language: SupportedInterfaceLanguage): string {
