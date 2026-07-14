@@ -4,7 +4,6 @@ import {
   Brain,
   CheckCircle2,
   FileText,
-  History,
   Layers,
   MessageSquareText,
   RotateCcw,
@@ -684,33 +683,6 @@ const SpeakingPage = () => {
             </SectionCard>
 
             <div className="space-y-6">
-              <SectionCard
-                title="Target Language"
-                subtitle="Current task reference"
-                icon={Brain}
-              >
-                <div className="flex flex-wrap gap-2">
-                  {activeMission.expectedKeywords.map((term) => (
-                    <span
-                      key={term}
-                      className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
-                    >
-                      {term}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-5 space-y-2">
-                  {activeMission.grammarTargets.map((target) => (
-                    <p
-                      key={target}
-                      className="rounded-lg border border-border-soft bg-surface p-3 text-xs text-muted-copy"
-                    >
-                      {target}
-                    </p>
-                  ))}
-                </div>
-              </SectionCard>
-
               {evaluationResult && (
                 <SectionCard
                   title="Latest Speaking Score"
@@ -739,43 +711,6 @@ const SpeakingPage = () => {
                   </div>
                 </SectionCard>
               )}
-
-              <SectionCard
-                title="Task History"
-                subtitle="No audio recordings are stored"
-                icon={History}
-              >
-                {history.length === 0 ? (
-                  <p className="text-sm text-muted-copy">
-                    No written roleplay attempt yet.
-                  </p>
-                ) : (
-                  <div className="space-y-3">
-                    {history.slice(0, 3).map((entry) => (
-                      <div
-                        key={`${entry.missionId}-${entry.timestamp}`}
-                        className="rounded-lg border border-border-soft bg-surface-hover p-3"
-                      >
-                        <div className="flex items-center justify-between gap-3">
-                          <span className="text-xs font-medium text-foreground">
-                            {entry.roleplayMode ?? SPEAKING_MVP_MODE}
-                          </span>
-                          <span className="text-xs font-medium text-primary">
-                            {entry.score}%
-                          </span>
-                        </div>
-                        <p className="mt-2 text-xs text-muted-copy">
-                          Error type: {entry.errorType ?? 'No critical issue'}
-                        </p>
-                        <p className="mt-1 text-xs leading-5 text-muted-copy">
-                          {entry.progressNote ??
-                            'Progress note will appear after the next attempt.'}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </SectionCard>
             </div>
           </div>
         </>
