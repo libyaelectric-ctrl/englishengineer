@@ -477,9 +477,6 @@ const GrammarPage = () => {
                           <span className="line-clamp-2 text-xs font-black leading-4">
                             {group.module}
                           </span>
-                          <span className="mt-0.5 text-[10px] font-bold text-muted-copy">
-                            {startNum}–{lessonNum}
-                          </span>
                         </div>
                         {group.entries.map(({ rule, status }, idx) => {
                           const selected = rule.id === selectedRule?.id;
