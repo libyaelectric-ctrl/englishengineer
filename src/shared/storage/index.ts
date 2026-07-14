@@ -37,6 +37,34 @@ export const storage = {
   getUserId: (): string | null => currentUserId,
 
   /**
+   * Global storage bypass — ignores user scoping.
+   * Use for auth, billing, and cross-user data.
+   */
+  globalSet: <T>(k: string, v: T): boolean => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return false;
+      localStorage.setItem(`eos_${k}`, JSON.stringify(v));
+      return true;
+    } catch { return false; }
+  },
+
+  globalGet: <T>(k: string): T | null => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return null;
+      const item = localStorage.getItem(`eos_${k}`);
+      return item ? (JSON.parse(item) as T) : null;
+    } catch { return null; }
+  },
+
+  globalRemove: (k: string): boolean => {
+    try {
+      if (typeof window === 'undefined' || !window.localStorage) return false;
+      localStorage.removeItem(`eos_${k}`);
+      return true;
+    } catch { return false; }
+  },
+
+  /**
    * Safe check to verify if localStorage is fully accessible and available.
    */
   isAvailable: (): boolean => {

@@ -27,7 +27,7 @@ const getReturnUrl = (path: string): string => {
 };
 
 const saveSubscription = (subscription: SubscriptionSnapshot): void => {
-  storage.set(STORAGE_KEY, subscription);
+  storage.globalSet(STORAGE_KEY, subscription);
 };
 
 export const BillingService = {
@@ -37,7 +37,7 @@ export const BillingService = {
 
   getLocalSubscription(): SubscriptionSnapshot {
     return (
-      storage.get<SubscriptionSnapshot>(STORAGE_KEY) || createFreeSubscription()
+      storage.globalGet<SubscriptionSnapshot>(STORAGE_KEY) || createFreeSubscription()
     );
   },
 

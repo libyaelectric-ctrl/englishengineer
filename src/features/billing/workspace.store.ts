@@ -54,7 +54,7 @@ const createDefaultWorkspace = (): Workspace => ({
 });
 
 const loadInitialState = (): PersistedWorkspaceState => {
-  const persisted = storage.get<PersistedWorkspaceState>(STORAGE_KEY);
+  const persisted = storage.globalGet<PersistedWorkspaceState>(STORAGE_KEY);
   if (persisted && persisted.workspaces?.length > 0) {
     return {
       workspaces: persisted.workspaces,
@@ -70,7 +70,7 @@ const loadInitialState = (): PersistedWorkspaceState => {
 };
 
 const saveState = (state: PersistedWorkspaceState) => {
-  storage.set(STORAGE_KEY, state);
+  storage.globalSet(STORAGE_KEY, state);
 };
 
 export const useWorkspaceStore = create<WorkspaceStoreState>((set, get) => {
