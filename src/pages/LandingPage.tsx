@@ -323,7 +323,7 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(246,244,238,0.18)_0%,rgba(246,244,238,0.36)_34%,rgba(246,244,238,0.96)_88%)]" />
         <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(246,244,238,0)_0%,#f6f4ee_80%)]" />
 
-        <div className="relative z-10 grid w-full grid-cols-1 items-end gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(360px,0.55fr)]">
+        <div className="relative z-10 grid w-full grid-cols-1 items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.55fr)]">
           <div className="max-w-4xl">
             <span
               className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/55 px-2.5 py-0.5 text-[10px] font-medium text-muted-copy backdrop-blur"
@@ -339,7 +339,7 @@ const LandingPage = () => {
               AI English operating system for engineers
             </span>
             <h1
-              className="mt-5 max-w-4xl text-xl font-light leading-[1.05] text-[#111] sm:text-2xl md:text-3xl lg:text-4xl"
+              className="mt-4 max-w-4xl text-xl font-light leading-[1.05] text-[#111] sm:text-2xl md:text-3xl lg:text-4xl"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(24px)',
@@ -351,7 +351,7 @@ const LandingPage = () => {
               Engineering English OS for project teams.
             </h1>
             <p
-              className="mt-3 max-w-xl text-xs leading-5 text-muted-copy"
+              className="mt-2 max-w-xl text-xs leading-5 text-muted-copy"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -364,7 +364,7 @@ const LandingPage = () => {
               orchestrated practice system for real engineering work.
             </p>
             <div
-              className="mt-5 flex flex-col gap-2 sm:flex-row"
+              className="mt-4 flex flex-col gap-2 sm:flex-row"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -375,16 +375,28 @@ const LandingPage = () => {
             >
               <Link
                 to="/start"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2a2a2a]"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#111] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#2a2a2a]"
               >
-                Start free <ArrowRight className="h-4 w-4" />
+                Start free <ArrowRight className="h-3.5 w-3.5" />
               </Link>
-              <a
-                href="#system"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/45 px-6 py-3 text-sm font-semibold text-black/65 transition hover:bg-white/70 hover:text-black"
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white/45 px-5 py-2.5 text-xs font-semibold text-black/65 transition hover:bg-white/70 hover:text-black"
               >
-                Explore system
-              </a>
+                View pricing
+              </Link>
+            </div>
+
+            <div className="mt-5 grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+              {FEATURES.map((feature) => (
+                <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-2.5 backdrop-blur">
+                  <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-md border border-black/10 bg-white">
+                    <feature.icon className="h-3 w-3 text-black/60" />
+                  </div>
+                  <h3 className="text-[11px] font-medium text-[#111]">{feature.title}</h3>
+                  <p className="mt-0.5 text-[9px] leading-3 text-muted-copy">{feature.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -411,7 +423,7 @@ const LandingPage = () => {
                 <source src="/agentic-hero.mp4" type="video/mp4" />
               </video>
             </div>
-            <div className="grid grid-cols-2 gap-2 pt-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 pt-3">
               {STATS.map((stat) => (
                 <div
                   key={stat.label}
@@ -423,17 +435,6 @@ const LandingPage = () => {
                   <div className="mt-0.5 text-[9px] font-medium uppercase text-black/40">
                     {stat.label}
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-1.5 pt-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
-              {FEATURES.map((feature) => (
-                <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-2.5">
-                  <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-md border border-black/10 bg-white">
-                    <feature.icon className="h-3 w-3 text-black/60" />
-                  </div>
-                  <h3 className="text-[11px] font-medium text-[#111]">{feature.title}</h3>
-                  <p className="mt-0.5 text-[9px] leading-3 text-muted-copy">{feature.desc}</p>
                 </div>
               ))}
             </div>
