@@ -209,7 +209,7 @@ const DashboardPage = () => {
       const sp = profile.skills[skill];
       const base = sp.completedTasks;
       result[skill] = Array.from({ length: 7 }, (_, i) =>
-        Math.max(0, base - (6 - i) * Math.floor(base / 6) + Math.floor(Math.random() * 3))
+        Math.max(0, base - (6 - i) * Math.floor(base / 6) + ((i * 7 + SKILL_NAMES.indexOf(skill)) % 3))
       );
     }
     return result;
