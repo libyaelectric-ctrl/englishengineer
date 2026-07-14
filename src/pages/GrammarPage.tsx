@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Circle,
   FileText,
   HelpCircle,
@@ -31,7 +32,11 @@ import { Button } from '@/shared/components/Button';
 import { showToast } from '@/shared/components/Toast';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 
-type LessonStatus = 'New' | 'Practicing' | 'Transfer Needed' | 'Mastered';
+type LessonStatus =
+  | 'New'
+  | 'Practicing'
+  | 'Needs Reading/Writing'
+  | 'Mastered';
 type StatusFilter = 'All' | LessonStatus;
 
 const MODULE_LABELS: Record<string, string> = {
@@ -62,7 +67,7 @@ const MODULE_LABELS: Record<string, string> = {
 const STATUS_STYLES: Record<LessonStatus, string> = {
   New: 'border-border-soft bg-surface text-muted-copy',
   Practicing: 'border-primary/25 bg-primary/5 text-primary',
-  'Transfer Needed': 'border-warning/30 bg-warning/5 text-warning',
+  'Needs Reading/Writing': 'border-warning/30 bg-warning/5 text-warning',
   Mastered: 'border-success/30 bg-success/5 text-success',
 };
 
@@ -70,7 +75,7 @@ const FILTERS: StatusFilter[] = [
   'All',
   'New',
   'Practicing',
-  'Transfer Needed',
+  'Needs Reading/Writing',
   'Mastered',
 ];
 
@@ -101,7 +106,7 @@ const getModuleLabel = (category: string): string =>
 const getLessonStatus = (progress: GrammarRuleProgress): LessonStatus => {
   if (progress.reviewStatus === 'Strong') return 'Mastered';
   const practiceReady = progress.correctUsages >= 3 && progress.strength >= 70;
-  if (practiceReady) return 'Transfer Needed';
+  if (practiceReady) return 'Needs Reading/Writing';
   if (
     progress.reviewStatus !== 'New' ||
     progress.exposures > 0 ||
@@ -122,6 +127,13 @@ const getTransferCount = (progress: GrammarRuleProgress): number =>
 const compact = (value: string, fallback: string): string =>
   value.trim() ? value : fallback;
 
+const getStatusLabel = (status: LessonStatus, compactLabel = false): string => {
+  if (status === 'Needs Reading/Writing') {
+    return compactLabel ? 'R/W' : status;
+  }
+  return status;
+};
+
 const GrammarPage = () => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile } = useLearningCockpit(currentUser?.id);
@@ -131,8 +143,8 @@ const GrammarPage = () => {
   const { rules, selectedId, query, setRules, setSelectedId, setQuery } =
     useGrammarStore();
 
+  const lessonStripRef = useRef<HTMLDivElement>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('All');
-  const [openModules, setOpenModules] = useState<Set<string>>(new Set());
   const [vocabularyIndex, setVocabularyIndex] = useState<
     Record<string, string>
   >({});
@@ -277,16 +289,6 @@ const GrammarPage = () => {
     ? getModuleLabel(selectedRule.grammarCategory)
     : '';
 
-  useEffect(() => {
-    if (!selectedModule) return;
-    setOpenModules((prev) => {
-      if (prev.has(selectedModule)) return prev;
-      const next = new Set(prev);
-      next.add(selectedModule);
-      return next;
-    });
-  }, [selectedModule]);
-
   const pathGroups = useMemo(() => {
     const groups = new Map<string, typeof visibleRules>();
     visibleRules.forEach((entry) => {
@@ -343,6 +345,13 @@ const GrammarPage = () => {
     setQuizOpen(false);
     setHintOpen(false);
     setQuizAnswers({});
+  };
+
+  const scrollLessonStrip = (direction: 'left' | 'right') => {
+    lessonStripRef.current?.scrollBy({
+      left: direction === 'left' ? -420 : 420,
+      behavior: 'smooth',
+    });
   };
 
   const recordUsage = (correct: boolean) => {
@@ -409,17 +418,17 @@ const GrammarPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground">
-      <header className="-mx-4 border-b border-border-soft bg-background px-4 py-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div>
+      <header className="sticky top-0 z-20 -mx-4 border-b border-border-soft bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="min-w-0">
             <p className="text-xs font-bold uppercase tracking-wide text-primary">
               {level} Grammar Path
             </p>
-            <h1 className="mt-1 text-2xl font-black tracking-tight">
+            <h1 className="mt-1 text-xl font-black tracking-tight sm:text-2xl">
               Learn grammar by building real engineering sentences
             </h1>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-center sm:min-w-[460px] sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4 lg:w-[460px]">
             <HeaderStat label="This Level" value={rules.length} />
             <HeaderStat label="Total Map" value={totalGrammarLessons} />
             <HeaderStat label="Mastered" value={statusCounts.Mastered ?? 0} />
@@ -427,42 +436,32 @@ const GrammarPage = () => {
           </div>
         </div>
 
-        <div className="mt-4 rounded-lg border border-border-soft bg-surface p-3">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs font-black uppercase tracking-wide text-foreground">
-              Complete Grammar Map
-            </p>
-            <p className="text-xs font-bold text-muted-copy">
-              {totalGrammarLessons} lessons loaded from 6 CEFR levels
-            </p>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-6">
-            {CEFR_LEVELS.map((cefrLevel) => (
-              <div
-                key={cefrLevel}
-                className={`rounded-lg border px-3 py-2 ${
-                  cefrLevel === level
-                    ? 'border-primary/40 bg-primary/5'
-                    : 'border-border-soft bg-background'
-                }`}
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-black">{cefrLevel}</span>
-                  {cefrLevel === level && (
-                    <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-black uppercase text-primary-foreground">
-                      Now
-                    </span>
-                  )}
-                </div>
-                <p className="mt-1 text-xs font-bold text-muted-copy">
-                  {levelCounts[cefrLevel]} lessons
-                </p>
+        <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
+          {CEFR_LEVELS.map((cefrLevel) => (
+            <div
+              key={cefrLevel}
+              className={`rounded-lg border px-3 py-2 ${
+                cefrLevel === level
+                  ? 'border-primary/40 bg-primary/5'
+                  : 'border-border-soft bg-surface'
+              }`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-black">{cefrLevel}</span>
+                {cefrLevel === level && (
+                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-black uppercase text-primary-foreground">
+                    Now
+                  </span>
+                )}
               </div>
-            ))}
-          </div>
+              <p className="mt-1 text-xs font-bold text-muted-copy">
+                {levelCounts[cefrLevel]} lessons
+              </p>
+            </div>
+          ))}
         </div>
 
-        <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-center">
           <label className="relative flex-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
             <input
@@ -489,102 +488,104 @@ const GrammarPage = () => {
             ))}
           </div>
         </div>
-      </header>
 
-      <main className="mt-6 grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)_300px]">
-        <aside className="order-2 lg:order-1">
-          <section className="lg:sticky lg:top-4">
-            <SectionHeading
-              title="Learning Path"
-              subtitle="Choose the next lesson inside your current level."
-            />
-            <div className="mt-3 max-h-[70vh] overflow-y-auto rounded-lg border border-border-soft bg-surface p-2">
-              {pathGroups.length === 0 ? (
-                <p className="p-4 text-sm text-muted-copy">
-                  No lessons match this filter.
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {pathGroups.map((group) => {
-                    const open = openModules.has(group.module);
+        <div className="mt-3 rounded-lg border border-border-soft bg-surface p-2">
+          <div className="flex items-center justify-between gap-3 px-1">
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-wide">
+                Complete Grammar Map
+              </p>
+              <p className="text-xs font-bold text-muted-copy">
+                {totalGrammarLessons} lessons loaded from 6 CEFR levels
+              </p>
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <button
+                type="button"
+                onClick={() => scrollLessonStrip('left')}
+                className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground"
+                aria-label="Scroll lessons left"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollLessonStrip('right')}
+                className="grid h-9 w-9 place-items-center rounded-lg border border-border-soft bg-background text-muted-copy hover:text-foreground"
+                aria-label="Scroll lessons right"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={lessonStripRef}
+            className="mt-2 flex gap-2 overflow-x-auto scroll-smooth pb-1"
+          >
+            {pathGroups.length === 0 ? (
+              <p className="px-2 py-3 text-sm text-muted-copy">
+                No lessons match this filter.
+              </p>
+            ) : (
+              pathGroups.map((group) => (
+                <div
+                  key={group.module}
+                  className="flex shrink-0 items-stretch gap-2"
+                >
+                  <div className="flex w-44 shrink-0 flex-col justify-between rounded-lg border border-border-soft bg-background px-3 py-2">
+                    <span className="line-clamp-2 text-xs font-black leading-4">
+                      {group.module}
+                    </span>
+                    <span className="mt-2 text-[11px] font-bold text-muted-copy">
+                      {group.mastered}/{group.entries.length} mastered
+                    </span>
+                  </div>
+                  {group.entries.map(({ rule, status }) => {
+                    const selected = rule.id === selectedRule?.id;
                     return (
-                      <div
-                        key={group.module}
-                        className="rounded-lg border border-border-soft bg-background"
+                      <button
+                        key={rule.id}
+                        type="button"
+                        onClick={() => selectRule(rule.id)}
+                        className={`flex w-56 shrink-0 flex-col justify-between rounded-lg border px-3 py-2 text-left transition-colors ${
+                          selected
+                            ? 'border-foreground bg-foreground text-background'
+                            : 'border-border-soft bg-background hover:border-primary/40'
+                        }`}
                       >
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setOpenModules((prev) => {
-                              const next = new Set(prev);
-                              if (next.has(group.module))
-                                next.delete(group.module);
-                              else next.add(group.module);
-                              return next;
-                            })
-                          }
-                          className="flex w-full items-center gap-2 px-3 py-2 text-left"
-                        >
-                          <ChevronDown
-                            className={`h-4 w-4 text-muted-copy transition-transform ${
-                              open ? 'rotate-180' : ''
-                            }`}
-                          />
-                          <span className="min-w-0 flex-1 truncate text-sm font-black">
-                            {group.module}
-                          </span>
-                          <span className="rounded-full border border-border-soft px-2 py-0.5 text-[11px] font-bold text-muted-copy">
-                            {group.mastered}/{group.entries.length}
-                          </span>
-                        </button>
-                        {open && (
-                          <div className="border-t border-border-soft p-1">
-                            {group.entries.map(({ rule, status }) => {
-                              const selected = rule.id === selectedRule?.id;
-                              return (
-                                <button
-                                  key={rule.id}
-                                  type="button"
-                                  onClick={() => selectRule(rule.id)}
-                                  className={`flex w-full items-center gap-2 rounded-md px-2 py-2 text-left transition-colors ${
-                                    selected
-                                      ? 'bg-foreground text-background'
-                                      : 'hover:bg-surface-hover'
-                                  }`}
-                                >
-                                  {status === 'Mastered' ? (
-                                    <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
-                                  ) : (
-                                    <Circle className="h-4 w-4 shrink-0 text-muted-copy" />
-                                  )}
-                                  <span className="min-w-0 flex-1 truncate text-xs font-semibold">
-                                    {rule.title}
-                                  </span>
-                                  <StatusPill status={status} compact />
-                                </button>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
+                        <span className="line-clamp-2 text-xs font-black leading-4">
+                          {rule.title}
+                        </span>
+                        <span className="mt-2 flex items-center justify-between gap-2">
+                          {status === 'Mastered' ? (
+                            <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
+                          ) : (
+                            <Circle className="h-4 w-4 shrink-0 text-muted-copy" />
+                          )}
+                          <StatusPill status={status} compact />
+                        </span>
+                      </button>
                     );
                   })}
                 </div>
-              )}
-            </div>
-          </section>
-        </aside>
+              ))
+            )}
+          </div>
+        </div>
+      </header>
 
-        <section className="order-1 space-y-5 lg:order-2">
+      <main className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="min-w-0 space-y-5">
           {selectedRule && selectedProgress ? (
             <>
-              <div className="rounded-lg border border-border-soft bg-surface p-5">
+              <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold uppercase tracking-wide text-primary">
                       {selectedModule}
                     </p>
-                    <h2 className="mt-1 text-2xl font-black">
+                    <h2 className="mt-1 break-words text-2xl font-black">
                       {selectedRule.ruleTitle || selectedRule.title}
                     </h2>
                     <p className="mt-2 text-sm leading-6 text-muted-copy">
@@ -600,7 +601,7 @@ const GrammarPage = () => {
 
               <LessonBlock
                 icon={Target}
-            title="Today's Objective"
+                title="Today's Objective"
                 body={`Use "${selectedRule.structure}" to ${selectedRule.languageFunction.toLowerCase()} in a real engineering context.`}
               />
 
@@ -652,10 +653,10 @@ const GrammarPage = () => {
                   <p className="text-xs font-bold uppercase tracking-wide text-primary">
                     Structure
                   </p>
-                  <p className="mt-3 font-mono text-lg font-black">
+                  <p className="mt-3 break-words font-mono text-lg font-black">
                     {selectedRule.structure}
                   </p>
-                  <p className="mt-3 text-sm text-muted-copy">
+                  <p className="mt-3 break-words text-sm text-muted-copy">
                     Target output: {selectedRule.minimumUserOutput}
                   </p>
                 </div>
@@ -663,7 +664,7 @@ const GrammarPage = () => {
                   <p className="text-xs font-bold uppercase tracking-wide text-warning">
                     Guided Practice
                   </p>
-                  <p className="mt-3 text-sm font-bold leading-6">
+                  <p className="mt-3 break-words text-sm font-bold leading-6">
                     {selectedRule.taskPromptTemplate}
                   </p>
                 </div>
@@ -680,8 +681,10 @@ const GrammarPage = () => {
                       key={`${example.english}-${index}`}
                       className="rounded-lg border border-border-soft bg-background p-4"
                     >
-                      <p className="font-bold">{example.english}</p>
-                      <p className="mt-1 text-sm text-muted-copy">
+                      <p className="break-words font-bold">
+                        {example.english}
+                      </p>
+                      <p className="mt-1 break-words text-sm text-muted-copy">
                         {example.turkish}
                       </p>
                     </div>
@@ -695,10 +698,10 @@ const GrammarPage = () => {
                 </p>
                 <div className="mt-3 grid gap-3 md:grid-cols-2">
                   <div>
-                    <p className="text-sm font-bold text-rose-900">
+                    <p className="break-words text-sm font-bold text-rose-900">
                       {selectedRule.badExampleEnglish}
                     </p>
-                    <p className="mt-2 text-sm leading-6 text-rose-800">
+                    <p className="mt-2 break-words text-sm leading-6 text-rose-800">
                       {selectedRule.badExampleTurkishExplanation ||
                         selectedRule.commonMistakes}
                     </p>
@@ -707,7 +710,7 @@ const GrammarPage = () => {
                     <p className="text-xs font-bold uppercase text-success">
                       Better
                     </p>
-                    <p className="mt-2 text-sm font-bold">
+                    <p className="mt-2 break-words text-sm font-bold">
                       {selectedRule.correctedExampleEnglish}
                     </p>
                   </div>
@@ -717,7 +720,7 @@ const GrammarPage = () => {
               <div className="rounded-lg border border-border-soft bg-surface p-5">
                 <SectionHeading
                   title="Practice"
-                  subtitle="Save honest evidence. Mastery still needs Reading and Writing transfer."
+                  subtitle="Save honest evidence. Mastery also needs Reading and Writing use."
                 />
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                   <Button onClick={() => recordUsage(true)}>
@@ -781,7 +784,7 @@ const GrammarPage = () => {
                                     [questionIndex]: letter,
                                   }))
                                 }
-                                className={`rounded-lg border p-3 text-left text-xs font-semibold transition-colors ${
+                                className={`break-words rounded-lg border p-3 text-left text-xs font-semibold transition-colors ${
                                   revealed
                                     ? correct
                                       ? 'border-success bg-success/10'
@@ -810,7 +813,7 @@ const GrammarPage = () => {
               {linkedVocabulary.length > 0 && (
                 <div className="rounded-lg border border-border-soft bg-surface p-5">
                   <SectionHeading
-                    title="Transfer"
+                    title="Use It in Skills"
                     subtitle="Use this lesson in Reading and Writing to prove mastery."
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
@@ -843,11 +846,11 @@ const GrammarPage = () => {
           )}
         </section>
 
-        <aside className="order-3 space-y-5">
-          <section className="lg:sticky lg:top-4">
+        <aside className="space-y-5">
+          <section className="lg:sticky lg:top-[18rem]">
             <SectionHeading
               title="Mastery"
-              subtitle="A rule is mastered only after practice plus transfer."
+              subtitle="A rule is mastered after practice, Reading, and Writing."
             />
             {selectedRule && selectedProgress && (
               <div className="mt-3 space-y-3 rounded-lg border border-border-soft bg-surface p-4">
@@ -875,7 +878,7 @@ const GrammarPage = () => {
                   complete={Boolean(selectedProgress.skillEvidence.writing)}
                 />
                 <MasteryRow
-                  label="Transfer"
+                  label="R/W Evidence"
                   value={`${getTransferCount(selectedProgress)}/2`}
                   complete={getTransferCount(selectedProgress) >= 2}
                 />
@@ -955,7 +958,9 @@ const GrammarPage = () => {
 const HeaderStat = ({ label, value }: { label: string; value: number }) => (
   <div className="rounded-lg border border-border-soft bg-surface px-3 py-2">
     <p className="text-lg font-black">{value}</p>
-    <p className="text-[11px] font-bold uppercase text-muted-copy">{label}</p>
+    <p className="break-words text-[11px] font-bold uppercase text-muted-copy">
+      {label}
+    </p>
   </div>
 );
 
@@ -980,11 +985,11 @@ const StatusPill = ({
   compact?: boolean;
 }) => (
   <span
-    className={`shrink-0 rounded-full border font-bold ${
+    className={`shrink-0 whitespace-nowrap rounded-full border font-bold ${
       compact ? 'px-2 py-0.5 text-[10px]' : 'px-3 py-1 text-xs'
     } ${STATUS_STYLES[status]}`}
   >
-    {status}
+    {getStatusLabel(status, compact)}
   </span>
 );
 
@@ -997,12 +1002,14 @@ const LessonBlock = ({
   title: string;
   body: string;
 }) => (
-  <div className="rounded-lg border border-border-soft bg-surface p-5">
+  <div className="min-w-0 rounded-lg border border-border-soft bg-surface p-5">
     <div className="flex items-center gap-2">
       <Icon className="h-5 w-5 text-primary" />
       <h2 className="text-sm font-black uppercase tracking-wide">{title}</h2>
     </div>
-    <p className="mt-3 text-sm leading-7 text-muted-copy">{body}</p>
+    <p className="mt-3 break-words text-sm leading-7 text-muted-copy">
+      {body}
+    </p>
   </div>
 );
 
@@ -1016,7 +1023,7 @@ const MasteryRow = ({
   complete: boolean;
 }) => (
   <div className="flex items-center justify-between gap-3 rounded-lg border border-border-soft bg-background px-3 py-2">
-    <span className="text-sm font-bold">{label}</span>
+    <span className="min-w-0 break-words text-sm font-bold">{label}</span>
     <span
       className={`text-xs font-black ${
         complete ? 'text-success' : 'text-muted-copy'
