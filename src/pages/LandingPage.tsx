@@ -295,15 +295,9 @@ const LandingPage = () => {
             <span className="text-[9px] font-medium text-black/40">v{APP_VERSION}</span>
           </Link>
           <div className="hidden items-center gap-7 text-[11px] font-medium text-muted-copy md:flex">
-            <a href="#system" className="transition-colors hover:text-black">
-              System
-            </a>
             <Link to="/pricing" className="transition-colors hover:text-black">
               Pricing
             </Link>
-            <a href="#faq" className="transition-colors hover:text-black">
-              FAQ
-            </a>
           </div>
           <Link
             to="/login"
@@ -417,49 +411,32 @@ const LandingPage = () => {
                 <source src="/agentic-hero.mp4" type="video/mp4" />
               </video>
             </div>
-            <div className="grid grid-cols-2 gap-2 pt-4 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 pt-3 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               {STATS.map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-xl border border-black/[0.06] bg-white/68 p-3"
+                  className="rounded-xl border border-black/[0.06] bg-white/68 p-2.5"
                 >
-                  <div className="text-2xl font-light text-[#111]">
+                  <div className="text-xl font-light text-[#111]">
                     {stat.value}
                   </div>
-                  <div className="mt-1 text-[10px] font-medium uppercase text-black/40">
+                  <div className="mt-0.5 text-[9px] font-medium uppercase text-black/40">
                     {stat.label}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="system" className="px-6 py-12 md:px-12 lg:py-16">
-        <div className="mx-auto max-w-7xl">
-          <SectionIntro
-            eyebrow="System"
-            title={<>A learning interface shaped like an agentic workflow.</>}
-          />
-          <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-6">
-            {FEATURES.map((feature, index) => (
-              <AnimatedCard
-                key={feature.title}
-                delay={index * 50}
-                className="p-4"
-              >
-                <div className="relative z-10 mb-3 flex h-8 w-8 items-center justify-center rounded-lg border border-black/10 bg-white">
-                  <feature.icon className="h-4 w-4 text-black/60" />
+            <div className="grid grid-cols-2 gap-1.5 pt-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+              {FEATURES.map((feature) => (
+                <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-2.5">
+                  <div className="mb-1.5 flex h-6 w-6 items-center justify-center rounded-md border border-black/10 bg-white">
+                    <feature.icon className="h-3 w-3 text-black/60" />
+                  </div>
+                  <h3 className="text-[11px] font-medium text-[#111]">{feature.title}</h3>
+                  <p className="mt-0.5 text-[9px] leading-3 text-muted-copy">{feature.desc}</p>
                 </div>
-                <h3 className="relative z-10 text-sm font-medium">
-                  {feature.title}
-                </h3>
-                <p className="relative z-10 mt-1.5 text-[11px] leading-4 text-muted-copy">
-                  {feature.desc}
-                </p>
-              </AnimatedCard>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
