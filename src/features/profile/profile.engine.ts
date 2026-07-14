@@ -141,11 +141,15 @@ export const LearningProfileEngine = {
     const weakestLevel = toCefrLevel(weakest.cefrBand);
     const grammarLevel = toCefrLevel(profile.skills.grammar.cefrBand);
     const vocabularyLevel = toCefrLevel(profile.skills.vocabulary.cefrBand);
+    const grammarMix =
+      profile.skills.grammar.completedTasks % 4 === 3 ? 'stretch' : 'safe';
     const [grammarRules, vocabularyTerms] = await Promise.all([
       GrammarEngine.selectGrammarForTask(
         weakest.skill,
         weakestLevel,
-        TASK_TYPE_BY_SKILL[weakest.skill]
+        TASK_TYPE_BY_SKILL[weakest.skill],
+        undefined,
+        grammarMix
       ),
       VocabularyEngine.selectVocabularyForTask('vocabulary', vocabularyLevel),
     ]);
@@ -155,7 +159,9 @@ export const LearningProfileEngine = {
         await GrammarEngine.selectGrammarForTask(
           'writing',
           grammarLevel,
-          'writing-correction'
+          'writing-correction',
+          undefined,
+          grammarMix
         )
       )[0];
     const skillLabel =
@@ -206,7 +212,7 @@ export const LearningProfileEngine = {
         difficulty: 'current',
         estimatedMinutes: 7,
         reason: grammarFocus
-          ? `Use ${grammarFocus.structure} in an engineering context.`
+          ? `${grammarMix === 'safe' ? 'Safe review' : 'Stretch practice'}: use ${grammarFocus.structure} in an engineering context.`
           : 'Build a reliable grammar baseline for technical communication.',
         route: '/grammar',
       },
