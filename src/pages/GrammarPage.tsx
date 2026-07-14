@@ -23,6 +23,7 @@ import {
   useGrammarStore,
   type GrammarRuleProgress,
 } from '@/features/grammar';
+import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import { getBaseCefrLevel, useLearningCockpit } from '@/features/profile';
 import { VocabularyRepository } from '@/features/vocabulary';
 import { useLearningStore } from '@/core/learning';
@@ -72,6 +73,15 @@ const FILTERS: StatusFilter[] = [
   'Transfer Needed',
   'Mastered',
 ];
+
+const EMPTY_LEVEL_COUNTS: Record<CefrLevel, number> = {
+  A1: 0,
+  A2: 0,
+  B1: 0,
+  B2: 0,
+  C1: 0,
+  C2: 0,
+};
 
 const normalizeKey = (value: string): string =>
   value
@@ -130,6 +140,8 @@ const GrammarPage = () => {
   const [hintOpen, setHintOpen] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
   const [progressVersion, setProgressVersion] = useState(0);
+  const [levelCounts, setLevelCounts] =
+    useState<Record<CefrLevel, number>>(EMPTY_LEVEL_COUNTS);
 
   useEffect(() => {
     let active = true;
@@ -145,6 +157,31 @@ const GrammarPage = () => {
       active = false;
     };
   }, [level, selectedId, setRules, setSelectedId]);
+
+  useEffect(() => {
+    let active = true;
+    void Promise.all(
+      CEFR_LEVELS.map(async (cefrLevel) => {
+        const levelRules = await GrammarRepository.getGrammarRulesByLevel(
+          cefrLevel
+        );
+        return [cefrLevel, levelRules.length] as const;
+      })
+    ).then((entries) => {
+      if (!active) return;
+      setLevelCounts({
+        A1: entries.find(([cefrLevel]) => cefrLevel === 'A1')?.[1] ?? 0,
+        A2: entries.find(([cefrLevel]) => cefrLevel === 'A2')?.[1] ?? 0,
+        B1: entries.find(([cefrLevel]) => cefrLevel === 'B1')?.[1] ?? 0,
+        B2: entries.find(([cefrLevel]) => cefrLevel === 'B2')?.[1] ?? 0,
+        C1: entries.find(([cefrLevel]) => cefrLevel === 'C1')?.[1] ?? 0,
+        C2: entries.find(([cefrLevel]) => cefrLevel === 'C2')?.[1] ?? 0,
+      });
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -209,6 +246,11 @@ const GrammarPage = () => {
       return matchesStatus && matchesQuery;
     });
   }, [query, rulesWithProgress, statusFilter]);
+
+  const totalGrammarLessons = CEFR_LEVELS.reduce(
+    (total, cefrLevel) => total + levelCounts[cefrLevel],
+    0
+  );
 
   useEffect(() => {
     if (visibleRules.length === 0) return;
@@ -377,10 +419,46 @@ const GrammarPage = () => {
               Learn grammar by building real engineering sentences
             </h1>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-center sm:min-w-[360px]">
-            <HeaderStat label="Lessons" value={rules.length} />
+          <div className="grid grid-cols-2 gap-2 text-center sm:min-w-[460px] sm:grid-cols-4">
+            <HeaderStat label="This Level" value={rules.length} />
+            <HeaderStat label="Total Map" value={totalGrammarLessons} />
             <HeaderStat label="Mastered" value={statusCounts.Mastered ?? 0} />
             <HeaderStat label="Pool" value={grammarPoolIds.length} />
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-lg border border-border-soft bg-surface p-3">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs font-black uppercase tracking-wide text-foreground">
+              Complete Grammar Map
+            </p>
+            <p className="text-xs font-bold text-muted-copy">
+              {totalGrammarLessons} lessons loaded from 6 CEFR levels
+            </p>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-6">
+            {CEFR_LEVELS.map((cefrLevel) => (
+              <div
+                key={cefrLevel}
+                className={`rounded-lg border px-3 py-2 ${
+                  cefrLevel === level
+                    ? 'border-primary/40 bg-primary/5'
+                    : 'border-border-soft bg-background'
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-black">{cefrLevel}</span>
+                  {cefrLevel === level && (
+                    <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-black uppercase text-primary-foreground">
+                      Now
+                    </span>
+                  )}
+                </div>
+                <p className="mt-1 text-xs font-bold text-muted-copy">
+                  {levelCounts[cefrLevel]} lessons
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
