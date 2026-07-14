@@ -45,7 +45,7 @@ const GamificationPage = () => {
   );
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-28 lg:pb-4">
+    <div className="space-y-6 animate-in fade-in duration-300 pb-8">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-black tracking-tight text-foreground">Milestones</h1>
@@ -142,8 +142,8 @@ const GamificationPage = () => {
             </div>
           </SectionCard>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
               <SectionCard
                 title="Daily Missions"
                 subtitle="Short repeatable goals for today's learning loop"
@@ -169,7 +169,7 @@ const GamificationPage = () => {
               </SectionCard>
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               <SectionCard
                 title="Bonus Engine"
                 subtitle="Derived bonuses from streaks, combos, and quality"
