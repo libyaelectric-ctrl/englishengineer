@@ -86,15 +86,15 @@ export const router = createBrowserRouter([
           ),
         })
       ),
-      {
-        path: '/admin',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Admin />
-          </Suspense>
-        ),
-      },
     ],
+  },
+  {
+    path: '/admin',
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Admin />
+      </Suspense>
+    ),
   },
   {
     errorElement: <RouteErrorPage />,
