@@ -43,6 +43,13 @@ const getInitialState = (): LearningState => {
         ...newAchievements,
       ];
     }
+    // Ensure arrays always exist (added after initial release)
+    if (!Array.isArray(persisted.vocabularyPool)) persisted.vocabularyPool = [];
+    if (!Array.isArray(persisted.grammarPool)) persisted.grammarPool = [];
+    if (!Array.isArray(persisted.studySessions)) persisted.studySessions = [];
+    if (!Array.isArray(persisted.scoreHistory)) persisted.scoreHistory = [];
+    if (!Array.isArray(persisted.xpHistory)) persisted.xpHistory = [];
+    if (!Array.isArray(persisted.eloHistory)) persisted.eloHistory = [];
     return persisted;
   }
   return {
