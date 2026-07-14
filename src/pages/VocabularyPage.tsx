@@ -1123,7 +1123,7 @@ const VocabularyPage = () => {
                             const d = new Date(e.lastReviewed);
                             return d.toISOString().split('T')[0] === dateStr;
                           }).length;
-                          const simulatedCount = count > 0 ? count : (Math.random() < 0.15 ? Math.floor(Math.random() * 4) + 1 : 0);
+                          const simulatedCount = count > 0 ? count : ((wi * 7 + di) % 5 === 0 ? ((wi + di) % 4) + 1 : 0);
                           return (
                             <div
                               key={`${wi}-${di}`}
