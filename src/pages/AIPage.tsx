@@ -356,80 +356,59 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-4">
           <SectionCard
             title="Coach Mode"
             subtitle="Choose a practical engineering communication mode"
             icon={Brain}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-2">
               {modes.map((mode) => {
                 const isActive = mode.id === selectedModeId;
                 return (
                   <button
                     key={mode.id}
                     onClick={() => setMode(mode.id)}
-                    className={`text-left p-4 rounded-xl border transition-all duration-200 ease-out ${
+                    className={`text-left px-3 py-2 rounded-lg border text-xs font-medium transition-all ${
                       isActive
-                        ? 'bg-primary/10 border-primary ring-1 ring-primary/20'
-                        : 'border-border-soft bg-surface hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-hover'
+                        ? 'bg-primary/10 border-primary text-primary'
+                        : 'border-border-soft bg-surface text-muted-copy hover:border-primary/40'
                     }`}
                   >
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`h-2 w-2 rounded-full ${isActive ? 'bg-primary' : 'bg-foreground'}`}
-                      />
-                      <h4 className="text-sm font-medium text-foreground flex items-center gap-1.5">
-                        {mode.name}
-                        {(() => {
-                          const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
-                          const isLocked = reqFeat
-                            ? !canAccessFeature(
-                                subscription,
-                                reqFeat as BillingFeature
-                              ).allowed
-                            : false;
-                          return isLocked ? (
-                            <Lock
-                              className="h-3.5 w-3.5 text-muted-copy shrink-0"
-                              aria-hidden="true"
-                            />
-                          ) : null;
-                        })()}
-                      </h4>
-                    </div>
-                    <p className="text-xs text-muted-copy mt-2 leading-relaxed">
-                      {mode.description}
-                    </p>
-                    <p className="mt-3 text-[10px] font-mono uppercase tracking-widest text-muted-copy">
-                      {mode.operation}
-                    </p>
+                    <span className="flex items-center gap-1.5">
+                      {mode.name}
+                      {(() => {
+                        const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
+                        const isLocked = reqFeat
+                          ? !canAccessFeature(subscription, reqFeat as BillingFeature).allowed
+                          : false;
+                        return isLocked ? <Lock className="h-3 w-3 text-muted-copy" /> : null;
+                      })()}
+                    </span>
                   </button>
                 );
               })}
             </div>
+            {selectedMode && (
+              <p className="mt-2 text-[11px] text-muted-copy">{selectedMode.description}</p>
+            )}
           </SectionCard>
 
           {promptTemplates.length > 0 && (
             <SectionCard
               title="Prompt Templates"
-              subtitle="Professional engineering starting points for this Copilot mode"
+              subtitle="Quick starting points"
               icon={Sparkles}
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="flex flex-wrap gap-2">
                 {promptTemplates.map((template) => (
                   <button
                     key={template.id}
                     type="button"
                     onClick={() => setInput(template.prompt)}
-                    className="rounded-xl border border-border-soft bg-surface p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-surface-hover"
+                    className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-left text-xs font-medium transition-all hover:border-primary/40 hover:bg-surface-hover"
                   >
-                    <p className="text-sm font-medium text-foreground">
-                      {template.title}
-                    </p>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-                      {template.description}
-                    </p>
+                    {template.title}
                   </button>
                 ))}
               </div>
@@ -441,11 +420,11 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             subtitle="Paste notes, transcripts, messages, or study reflections"
             icon={Terminal}
             headerActions={
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 <Button
                   onClick={() => regenerateLast(currentUser, learningState)}
                   variant="outline"
-                  className="h-8 border-border-soft text-xs"
+                  className="h-7 border-border-soft text-[10px]"
                   disabled={sessions.length === 0 || isLoading}
                 >
                   Regenerate
@@ -453,17 +432,17 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                 <Button
                   onClick={clearSessionHistory}
                   variant="outline"
-                  className="h-8 border-border-soft text-xs"
+                  className="h-7 border-border-soft text-[10px]"
                   disabled={sessions.length === 0}
                 >
-                  Clear Session
+                  Clear
                 </Button>
                 <Button
                   onClick={resetCoach}
                   variant="outline"
-                  className="h-8 border-border-soft text-xs"
+                  className="h-7 border-border-soft text-[10px]"
                 >
-                  Reset Coach
+                  Reset
                 </Button>
               </div>
             }
@@ -544,23 +523,23 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
                     value={input}
                     onChange={(event) => setInput(event.target.value)}
                     disabled={!aiEntitlement.allowed}
-                    rows={5}
-                    className="premium-input w-full resize-none p-4 font-mono text-sm text-foreground"
+                    rows={3}
+                    className="premium-input w-full resize-none p-3 font-mono text-sm text-foreground"
                     placeholder={selectedMode?.placeholder ?? ''}
                   />
                   {error && (
-                    <div className="flex items-center gap-2 rounded-xl border border-danger/20 bg-danger/5 px-4 py-3 text-xs text-danger">
-                      <AlertCircle className="h-4 w-4" />
+                    <div className="flex items-center gap-2 rounded-lg border border-danger/20 bg-danger/5 px-3 py-2 text-xs text-danger">
+                      <AlertCircle className="h-3.5 w-3.5" />
                       {error}
                     </div>
                   )}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest">
                       Mode: {selectedMode?.name ?? ''}
                     </p>
                     <Button
                       type="submit"
-                      className="h-11 bg-primary text-white font-medium flex items-center justify-center gap-2"
+                      className="h-9 bg-primary text-white font-medium flex items-center justify-center gap-2 text-xs"
                       disabled={
                         isLoading ||
                         input.trim().length === 0 ||
@@ -741,13 +720,13 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:sticky lg:top-[5rem] lg:self-start">
           <SectionCard
             title="User Context"
             subtitle="Live local learning profile"
             icon={Zap}
           >
-            <div className="space-y-4 text-sm">
+            <div className="space-y-2 text-sm">
               {[
                 ['Learner', coachContext.userName],
                 ['Role', coachContext.role],
@@ -767,12 +746,12 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex items-center justify-between border-b border-border-soft pb-2"
+                  className="flex items-center justify-between border-b border-border-soft pb-1.5"
                 >
-                  <span className="text-muted-copy font-mono text-xs uppercase">
+                  <span className="text-muted-copy font-mono text-[10px] uppercase">
                     {label}
                   </span>
-                  <span className="text-right font-medium text-foreground">
+                  <span className="text-right font-medium text-foreground text-xs">
                     {value}
                   </span>
                 </div>
@@ -811,22 +790,22 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           {lastResult && (
             <SectionCard
               title="Suggested Actions"
-              subtitle="Short loop for the next practice session"
+              subtitle="Next practice steps"
               icon={CheckCircle2}
             >
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {lastResult.suggestedActions.map((action) => (
                   <div
                     key={action}
-                    className="flex gap-3 rounded-xl border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
+                    className="flex gap-2 rounded-lg border border-border-soft bg-surface-hover p-2 text-xs text-foreground"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-success shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
                     <span>{action}</span>
                   </div>
                 ))}
                 <Button
                   onClick={() => navigate('/dashboard')}
-                  className="w-full h-10 bg-success text-foreground font-medium"
+                  className="w-full h-8 bg-success text-foreground font-medium text-xs"
                 >
                   Open Dashboard
                 </Button>
@@ -835,28 +814,28 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
           )}
 
           <SectionCard
-            title="Recent Coach Sessions"
-            subtitle="Stored locally through the existing storage layer"
+            title="Recent Sessions"
+            subtitle="Last 5 coach interactions"
             icon={Sparkles}
           >
-            <div className="space-y-3 max-h-[240px] overflow-y-auto custom-scrollbar pr-1">
+            <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
               {sessions.slice(0, 5).map((session) => (
                 <div
                   key={session.id}
-                  className="rounded-xl border border-border-soft bg-surface-hover p-4"
+                  className="rounded-lg border border-border-soft bg-surface-hover p-2.5"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-medium text-foreground">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[10px] font-medium text-foreground">
                       {session.modeName}
                     </p>
                     <span className="text-[9px] font-mono text-muted-copy">
                       {new Date(session.timestamp).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-xs text-muted-copy mt-2 line-clamp-2">
+                  <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">
                     {session.input}
                   </p>
-                  <p className="text-[10px] font-mono text-primary mt-2 uppercase">
+                  <p className="text-[9px] font-mono text-primary mt-1 uppercase">
                     {session.result.focusArea}
                   </p>
                 </div>
