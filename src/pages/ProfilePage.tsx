@@ -427,6 +427,34 @@ const ProfilePage = () => {
     window.location.assign('/start');
   };
 
+  const resetLearningProgress = async () => {
+    if (clearConfirmation !== 'CLEAR') return;
+    const LEARNING_KEYS = [
+      'learning_state',
+      'EngVox_vocabulary_menu',
+      'EngVox_grammar_progress',
+      'EngVox_reading_state',
+      'EngVox_writing_state',
+      'EngVox_listening_state',
+      'EngVox_speaking_state',
+      'EngVox_vocabulary_state',
+      'EngVox_vocabulary_memory',
+      'EngVox_placement_result',
+      'task_evaluation_records',
+      'learning_intelligence',
+      'gamification_pro_state',
+      'streak_data',
+      'ai_coach_pro_state',
+    ];
+    LEARNING_KEYS.forEach((key) => storage.remove(key));
+    // Also clear profile skills
+    if (currentUser?.id) {
+      LearningProfileRepository.reset(currentUser.id);
+    }
+    storage.clear();
+    window.location.assign('/start');
+  };
+
   const completionPercent = (() => {
     let completed = 0;
     if (currentUser?.displayName) completed += 20;
@@ -710,6 +738,7 @@ const ProfilePage = () => {
           setClearConfirmation={setClearConfirmation}
           exportLocalData={exportLocalData}
           clearLocalData={clearLocalData}
+          resetLearningProgress={resetLearningProgress}
         />
       )}
     </div>
