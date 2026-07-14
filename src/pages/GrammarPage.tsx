@@ -37,8 +37,6 @@ type LessonStatus =
   | 'Practicing'
   | 'Needs Reading/Writing'
   | 'Mastered';
-type StatusFilter = 'All' | LessonStatus;
-
 const MODULE_LABELS: Record<string, string> = {
   'sentence-structure': 'Sentence Basics',
   tense: 'Talking About Time',
@@ -70,14 +68,6 @@ const STATUS_STYLES: Record<LessonStatus, string> = {
   'Needs Reading/Writing': 'border-warning/30 bg-warning/5 text-warning',
   Mastered: 'border-success/30 bg-success/5 text-success',
 };
-
-const FILTERS: StatusFilter[] = [
-  'All',
-  'New',
-  'Practicing',
-  'Needs Reading/Writing',
-  'Mastered',
-];
 
 const EMPTY_LEVEL_COUNTS: Record<CefrLevel, number> = {
   A1: 0,
@@ -144,7 +134,7 @@ const GrammarPage = () => {
     useGrammarStore();
 
   const lessonStripRef = useRef<HTMLDivElement>(null);
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('All');
+
   const [vocabularyIndex, setVocabularyIndex] = useState<
     Record<string, string>
   >({});
@@ -240,9 +230,8 @@ const GrammarPage = () => {
 
   const visibleRules = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
-    return rulesWithProgress.filter(({ rule, status }) => {
-      const matchesStatus = statusFilter === 'All' || status === statusFilter;
-      const matchesQuery =
+    return rulesWithProgress.filter(({ rule }) => {
+      return (
         !normalizedQuery ||
         [
           rule.title,
@@ -254,10 +243,10 @@ const GrammarPage = () => {
         ]
           .join(' ')
           .toLowerCase()
-          .includes(normalizedQuery);
-      return matchesStatus && matchesQuery;
+          .includes(normalizedQuery)
+      );
     });
-  }, [query, rulesWithProgress, statusFilter]);
+  }, [query, rulesWithProgress]);
 
   const totalGrammarLessons = CEFR_LEVELS.reduce(
     (total, cefrLevel) => total + levelCounts[cefrLevel],
@@ -329,16 +318,9 @@ const GrammarPage = () => {
     )
     .slice(0, 5);
 
-  const statusCounts = FILTERS.reduce(
-    (acc, status) => {
-      acc[status] =
-        status === 'All'
-          ? rulesWithProgress.length
-          : rulesWithProgress.filter((entry) => entry.status === status).length;
-      return acc;
-    },
-    {} as Record<StatusFilter, number>
-  );
+  const masteredCount = rulesWithProgress.filter(
+    (entry) => entry.status === 'Mastered'
+  ).length;
 
   const selectRule = (ruleId: string) => {
     setSelectedId(ruleId);
@@ -419,74 +401,48 @@ const GrammarPage = () => {
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground">
       <header className="sticky top-0 z-20 -mx-4 border-b border-border-soft bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex items-center justify-between">
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-wide text-primary">
+            <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
               {level} Grammar Path
             </p>
-            <h1 className="mt-1 text-xl font-black tracking-tight sm:text-2xl">
+            <h1 className="mt-0.5 truncate text-sm font-black tracking-tight sm:text-base">
               Learn grammar by building real engineering sentences
             </h1>
           </div>
-          <div className="grid grid-cols-2 gap-2 text-center sm:grid-cols-4 lg:w-[460px]">
-            <HeaderStat label="This Level" value={rules.length} />
-            <HeaderStat label="Total Map" value={totalGrammarLessons} />
-            <HeaderStat label="Mastered" value={statusCounts.Mastered ?? 0} />
-            <HeaderStat label="Pool" value={grammarPoolIds.length} />
+        </div>
+
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <div className="flex flex-1 gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+            {CEFR_LEVELS.map((cefrLevel) => (
+              <button
+                key={cefrLevel}
+                type="button"
+                onClick={() => {
+                  if (cefrLevel !== level) {
+                    /* level change handled elsewhere */
+                  }
+                }}
+                className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
+                  cefrLevel === level
+                    ? 'border-primary/40 bg-primary/5 text-primary'
+                    : 'border-border-soft bg-surface text-muted-copy hover:text-foreground'
+                }`}
+              >
+                <span>{cefrLevel}</span>
+                <span className="text-[10px] opacity-60">{levelCounts[cefrLevel]}</span>
+              </button>
+            ))}
           </div>
-        </div>
-
-        <div className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
-          {CEFR_LEVELS.map((cefrLevel) => (
-            <div
-              key={cefrLevel}
-              className={`rounded-lg border px-3 py-2 ${
-                cefrLevel === level
-                  ? 'border-primary/40 bg-primary/5'
-                  : 'border-border-soft bg-surface'
-              }`}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-sm font-black">{cefrLevel}</span>
-                {cefrLevel === level && (
-                  <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-black uppercase text-primary-foreground">
-                    Now
-                  </span>
-                )}
-              </div>
-              <p className="mt-1 text-xs font-bold text-muted-copy">
-                {levelCounts[cefrLevel]} lessons
-              </p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-center">
-          <label className="relative flex-1">
+          <label className="relative flex-1 sm:max-w-xs">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-10 text-sm outline-none focus:border-primary/50"
-              placeholder="Search lesson, structure, or engineering use"
+              className="min-h-10 w-full rounded-lg border border-border-soft bg-surface px-10 text-sm outline-none focus:border-primary/50"
+              placeholder="Search..."
             />
           </label>
-          <div className="flex gap-2 overflow-x-auto pb-1 lg:pb-0">
-            {FILTERS.map((filter) => (
-              <button
-                key={filter}
-                type="button"
-                onClick={() => setStatusFilter(filter)}
-                className={`shrink-0 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
-                  statusFilter === filter
-                    ? 'border-foreground bg-foreground text-background'
-                    : 'border-border-soft bg-surface text-muted-copy hover:text-foreground'
-                }`}
-              >
-                {filter} {statusCounts[filter]}
-              </button>
-            ))}
-          </div>
         </div>
 
         <div className="mt-3 rounded-lg border border-border-soft bg-surface p-2">
@@ -848,6 +804,25 @@ const GrammarPage = () => {
 
         <aside className="space-y-5">
           <section className="lg:sticky lg:top-[18rem]">
+            <div className="mb-5 grid grid-cols-2 gap-2">
+              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                <p className="text-lg font-black">{rules.length}</p>
+                <p className="text-[10px] font-bold uppercase text-muted-copy">This Level</p>
+              </div>
+              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                <p className="text-lg font-black">{totalGrammarLessons}</p>
+                <p className="text-[10px] font-bold uppercase text-muted-copy">Total Map</p>
+              </div>
+              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                <p className="text-lg font-black">{masteredCount}</p>
+                <p className="text-[10px] font-bold uppercase text-muted-copy">Mastered</p>
+              </div>
+              <div className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-center">
+                <p className="text-lg font-black">{grammarPoolIds.length}</p>
+                <p className="text-[10px] font-bold uppercase text-muted-copy">Pool</p>
+              </div>
+            </div>
+
             <SectionHeading
               title="Mastery"
               subtitle="A rule is mastered after practice, Reading, and Writing."
@@ -954,15 +929,6 @@ const GrammarPage = () => {
     </div>
   );
 };
-
-const HeaderStat = ({ label, value }: { label: string; value: number }) => (
-  <div className="rounded-lg border border-border-soft bg-surface px-3 py-2">
-    <p className="text-lg font-black">{value}</p>
-    <p className="break-words text-[11px] font-bold uppercase text-muted-copy">
-      {label}
-    </p>
-  </div>
-);
 
 const SectionHeading = ({
   title,
