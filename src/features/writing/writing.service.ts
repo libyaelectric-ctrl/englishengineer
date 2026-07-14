@@ -11,6 +11,11 @@ import { WritingEvaluator } from './writing.evaluator';
 import { useLearningStore } from '@/core/learning';
 import { VocabularyService } from '@/features/vocabulary';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { GrammarTransferService } from '@/features/grammar';
+import {
+  KnowledgePoolEntry,
+  sortContentByPoolRatio,
+} from '@/core/content-selection/personalized-content.service';
 
 const STORAGE_KEY = 'EngVox_writing_state';
 
@@ -47,6 +52,17 @@ export const WritingService = {
    */
   getMissions(): WritingMission[] {
     return WRITING_MISSIONS;
+  },
+
+  getMissionsSortedByPoolRatio(
+    pool: KnowledgePoolEntry[] = useLearningStore
+      .getState()
+      .vocabularyPool.map((id) => ({
+        content_type: 'vocabulary',
+        content_id: id,
+      }))
+  ): WritingMission[] {
+    return sortContentByPoolRatio(this.getMissions(), pool);
   },
 
   /**
@@ -131,6 +147,8 @@ export const WritingService = {
         submission.timeSpentMinutes
       );
     }
+
+    void GrammarTransferService.recordWritingEvidence(mission, evaluation);
 
     return evaluation;
   },
