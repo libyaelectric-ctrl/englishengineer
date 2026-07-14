@@ -121,7 +121,7 @@ const ListeningPage = () => {
           </h1>
         </div>
       </div>
-      <div className="space-y-6 pt-4 pb-20">
+      <div className="space-y-6 pt-4 pb-8">
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
