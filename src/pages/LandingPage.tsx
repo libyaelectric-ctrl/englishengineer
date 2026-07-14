@@ -347,12 +347,6 @@ const LandingPage = () => {
             <a href="#system" className="transition-colors hover:text-black">
               System
             </a>
-            <a href="#workflow" className="transition-colors hover:text-black">
-              Workflow
-            </a>
-            <a href="#pricing" className="transition-colors hover:text-black">
-              Pricing
-            </a>
             <a href="#faq" className="transition-colors hover:text-black">
               FAQ
             </a>
@@ -368,7 +362,7 @@ const LandingPage = () => {
 
       <section
         id="main-content"
-        className="relative flex min-h-[100svh] items-end overflow-hidden px-6 pb-12 pt-32 md:px-12 md:pb-16"
+        className="relative flex min-h-[70svh] items-end overflow-hidden px-6 pb-10 pt-28 md:px-12 md:pb-14"
       >
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -397,7 +391,7 @@ const LandingPage = () => {
               AI English operating system for engineers
             </span>
             <h1
-              className="mt-7 max-w-4xl text-5xl font-light leading-[0.96] text-[#111] sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[96px]"
+              className="mt-5 max-w-4xl text-3xl font-light leading-[1.0] text-[#111] sm:text-4xl md:text-5xl lg:text-6xl"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(24px)',
@@ -409,7 +403,7 @@ const LandingPage = () => {
               Engineering English OS for project teams.
             </h1>
             <p
-              className="mt-8 max-w-xl text-base leading-7 text-muted-copy"
+              className="mt-4 max-w-xl text-sm leading-6 text-muted-copy"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -422,7 +416,7 @@ const LandingPage = () => {
               orchestrated practice system for real engineering work.
             </p>
             <div
-              className="mt-9 flex flex-col gap-3 sm:flex-row"
+              className="mt-6 flex flex-col gap-3 sm:flex-row"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -568,7 +562,7 @@ const LandingPage = () => {
 
       <section
         id="faq"
-        className="border-t border-black/[0.06] px-6 py-20 md:px-12 lg:py-28"
+        className="border-t border-black/[0.06] px-6 py-12 md:px-12 lg:py-16"
       >
         <div className="mx-auto max-w-3xl">
           <SectionIntro eyebrow="FAQ" title="Common questions" />
