@@ -39,10 +39,7 @@ const hashString = (str: string): number => {
   return Math.abs(hash);
 };
 
-export const assignVariant = (
-  test: ABTest,
-  userId: string
-): string => {
+export const assignVariant = (test: ABTest, userId: string): string => {
   const stored = getStoredAssignments();
   if (stored[test.id]) return stored[test.id].variant;
 

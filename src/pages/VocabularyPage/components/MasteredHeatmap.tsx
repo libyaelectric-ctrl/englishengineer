@@ -1,6 +1,10 @@
 import type { VocabularyMenuState } from '@/features/vocabulary';
 
-export function MasteredHeatmap({ menuState }: { menuState: VocabularyMenuState }) {
+export function MasteredHeatmap({
+  menuState,
+}: {
+  menuState: VocabularyMenuState;
+}) {
   const masteredEntries = Object.values(menuState.progress).filter(
     (p) => p.status === 'Mastered'
   );
@@ -25,9 +29,16 @@ export function MasteredHeatmap({ menuState }: { menuState: VocabularyMenuState 
   };
   return (
     <div className="space-y-3">
-      <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
+      <div
+        className="grid gap-1"
+        style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}
+      >
         {weeks.map((week, wi) => (
-          <div key={wi} className="grid gap-1" style={{ gridTemplateRows: 'repeat(7, 1fr)' }}>
+          <div
+            key={wi}
+            className="grid gap-1"
+            style={{ gridTemplateRows: 'repeat(7, 1fr)' }}
+          >
             {week.map((day, di) => {
               const dateStr = day.toISOString().split('T')[0];
               const count = masteredEntries.filter((e) => {
@@ -35,7 +46,12 @@ export function MasteredHeatmap({ menuState }: { menuState: VocabularyMenuState 
                 const d = new Date(e.lastReviewed);
                 return d.toISOString().split('T')[0] === dateStr;
               }).length;
-              const simulatedCount = count > 0 ? count : ((wi * 7 + di) % 5 === 0 ? ((wi + di) % 4) + 1 : 0);
+              const simulatedCount =
+                count > 0
+                  ? count
+                  : (wi * 7 + di) % 5 === 0
+                    ? ((wi + di) % 4) + 1
+                    : 0;
               return (
                 <div
                   key={`${wi}-${di}`}
@@ -54,7 +70,9 @@ export function MasteredHeatmap({ menuState }: { menuState: VocabularyMenuState 
         <div className="w-3 h-3 rounded-[2px] bg-emerald-400" />
         <div className="w-3 h-3 rounded-[2px] bg-emerald-600" />
         <span>More</span>
-        <span className="ml-auto font-semibold">{masteredEntries.length} total mastered</span>
+        <span className="ml-auto font-semibold">
+          {masteredEntries.length} total mastered
+        </span>
       </div>
     </div>
   );

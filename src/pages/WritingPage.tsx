@@ -1,9 +1,5 @@
 import { Link } from 'react-router-dom';
-import {
-  FileText,
-  FileCheck,
-  Layers,
-} from 'lucide-react';
+import { FileText, FileCheck, Layers } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { LevelContentFilter, EmptyLevelState } from '@/features/level-system';
@@ -50,9 +46,11 @@ const WritingPage = () => {
   if (!currentMission) {
     return (
       <div className="space-y-4">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
-      </div>
+        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Writing
+          </h1>
+        </div>
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -75,7 +73,9 @@ const WritingPage = () => {
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-black tracking-tight text-foreground">Writing</h1>
+            <h1 className="text-2xl font-black tracking-tight text-foreground">
+              Writing
+            </h1>
             <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
               {currentLevel}
             </span>

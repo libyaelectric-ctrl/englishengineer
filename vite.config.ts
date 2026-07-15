@@ -12,7 +12,9 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
-      ...(process.env.ANALYZE ? [visualizer({ open: true, filename: 'bundle-report.html' })] : []),
+      ...(process.env.ANALYZE
+        ? [visualizer({ open: true, filename: 'bundle-report.html' })]
+        : []),
     ],
     resolve: {
       alias: {

@@ -62,7 +62,8 @@ export const useScrollInfiniteScroll = ({
   useEffect(() => {
     const handleScroll = () => {
       if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200 &&
+        window.innerHeight + window.scrollY >=
+          document.body.offsetHeight - 200 &&
         hasMore &&
         !loading
       ) {

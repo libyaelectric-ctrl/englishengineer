@@ -14,7 +14,10 @@ import type {
 } from '@/features/profile/profile.types';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { PlacementService } from '@/features/placement';
-import { LocalizationService, useLocalizationStore } from '@/features/localization';
+import {
+  LocalizationService,
+  useLocalizationStore,
+} from '@/features/localization';
 import { ProfileStep } from './steps/ProfileStep';
 import { RoleStep } from './steps/RoleStep';
 import { GoalsStep } from './steps/GoalsStep';

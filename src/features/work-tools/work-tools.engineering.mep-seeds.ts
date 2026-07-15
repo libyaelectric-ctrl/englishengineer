@@ -38,7 +38,7 @@ export const MEP_SEEDS: EngineeringSeed[] = [
     'MEP Coordination Meeting Action',
     'MEP Coordination',
     'Create an accountable coordination action',
-    'Builder\'s work opening location is unresolved.',
+    "Builder's work opening location is unresolved.",
     'assign owner, date and required drawing',
   ],
   [

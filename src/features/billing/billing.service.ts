@@ -37,7 +37,8 @@ export const BillingService = {
 
   getLocalSubscription(): SubscriptionSnapshot {
     return (
-      storage.globalGet<SubscriptionSnapshot>(STORAGE_KEY) || createFreeSubscription()
+      storage.globalGet<SubscriptionSnapshot>(STORAGE_KEY) ||
+      createFreeSubscription()
     );
   },
 

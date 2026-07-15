@@ -30,7 +30,9 @@ export function useGrammarPage() {
 
   const lessonStripRef = useRef<HTMLDivElement>(null);
 
-  const [vocabularyIndex, setVocabularyIndex] = useState<Record<string, string>>({});
+  const [vocabularyIndex, setVocabularyIndex] = useState<
+    Record<string, string>
+  >({});
   const [quizOpen, setQuizOpen] = useState(false);
   const [hintOpen, setHintOpen] = useState(false);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
@@ -48,14 +50,17 @@ export function useGrammarPage() {
         setSelectedId(ordered[0]?.id ?? null);
       }
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [level, selectedId, setRules, setSelectedId]);
 
   useEffect(() => {
     let active = true;
     void Promise.all(
       CEFR_LEVELS.map(async (cefrLevel) => {
-        const levelRules = await GrammarRepository.getGrammarRulesByLevel(cefrLevel);
+        const levelRules =
+          await GrammarRepository.getGrammarRulesByLevel(cefrLevel);
         return [cefrLevel, levelRules.length] as const;
       })
     ).then((entries) => {
@@ -69,25 +74,37 @@ export function useGrammarPage() {
         C2: entries.find(([l]) => l === 'C2')?.[1] ?? 0,
       });
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
     let active = true;
-    void VocabularyRepository.getVocabularyForUserSkillLevel('grammar', level).then((terms) => {
+    void VocabularyRepository.getVocabularyForUserSkillLevel(
+      'grammar',
+      level
+    ).then((terms) => {
       if (!active) return;
       const next: Record<string, string> = {};
       terms.forEach((term) => {
         [
-          term.id, term.term, term.normalizedTerm, term.grammarDomainAlias,
-          ...term.tags, ...term.grammarFits, ...term.relatedTerms,
+          term.id,
+          term.term,
+          term.normalizedTerm,
+          term.grammarDomainAlias,
+          ...term.tags,
+          ...term.grammarFits,
+          ...term.relatedTerms,
         ].forEach((key) => {
           if (key) next[normalizeKey(key)] = term.term;
         });
       });
       setVocabularyIndex(next);
     });
-    return () => { active = false; };
+    return () => {
+      active = false;
+    };
   }, [level]);
 
   const rulesWithProgress = useMemo(
@@ -102,31 +119,47 @@ export function useGrammarPage() {
 
   const visibleRules = useMemo(() => {
     const nq = query.trim().toLowerCase();
-    return rulesWithProgress.filter(({ rule }) =>
-      !nq ||
-      [rule.title, rule.ruleTitle, rule.structure, rule.engineeringUseCase,
-       rule.turkishExplanation, getModuleLabel(rule.grammarCategory)]
-        .join(' ').toLowerCase().includes(nq)
+    return rulesWithProgress.filter(
+      ({ rule }) =>
+        !nq ||
+        [
+          rule.title,
+          rule.ruleTitle,
+          rule.structure,
+          rule.engineeringUseCase,
+          rule.turkishExplanation,
+          getModuleLabel(rule.grammarCategory),
+        ]
+          .join(' ')
+          .toLowerCase()
+          .includes(nq)
     );
   }, [query, rulesWithProgress]);
 
   const totalGrammarLessons = CEFR_LEVELS.reduce(
-    (total, cefrLevel) => total + levelCounts[cefrLevel], 0
+    (total, cefrLevel) => total + levelCounts[cefrLevel],
+    0
   );
 
   useEffect(() => {
     if (visibleRules.length === 0) return;
-    if (!selectedId || !visibleRules.some(({ rule }) => rule.id === selectedId)) {
+    if (
+      !selectedId ||
+      !visibleRules.some(({ rule }) => rule.id === selectedId)
+    ) {
       setSelectedId(visibleRules[0].rule.id);
     }
   }, [selectedId, setSelectedId, visibleRules]);
 
   const selectedRule =
     rules.find((rule) => rule.id === selectedId) ??
-    visibleRules[0]?.rule ?? rules[0] ?? null;
+    visibleRules[0]?.rule ??
+    rules[0] ??
+    null;
 
   const selectedProgress = selectedRule
-    ? GrammarProgressService.get(selectedRule.id) : null;
+    ? GrammarProgressService.get(selectedRule.id)
+    : null;
 
   const pathGroups = useMemo(() => {
     const groups = new Map<string, typeof visibleRules>();
@@ -134,29 +167,41 @@ export function useGrammarPage() {
       const module = getModuleLabel(entry.rule.grammarCategory);
       groups.set(module, [...(groups.get(module) ?? []), entry]);
     });
-    return Array.from(groups.entries()).map(([module, entries]) => ({ module, entries }));
+    return Array.from(groups.entries()).map(([module, entries]) => ({
+      module,
+      entries,
+    }));
   }, [visibleRules]);
 
   const linkedVocabulary = useMemo(() => {
     if (!selectedRule) return [];
     return selectedRule.linkedVocabularyTags
       .map((tag) => ({ tag, term: vocabularyIndex[normalizeKey(tag)] }))
-      .filter((item): item is { tag: string; term: string } => Boolean(item.term))
+      .filter((item): item is { tag: string; term: string } =>
+        Boolean(item.term)
+      )
       .slice(0, 8);
   }, [selectedRule, vocabularyIndex]);
 
   const nextLesson = useMemo(
-    () => rulesWithProgress.find(
-      (e) => e.status !== 'Mastered' && e.rule.id !== selectedRule?.id
-    )?.rule ?? null,
+    () =>
+      rulesWithProgress.find(
+        (e) => e.status !== 'Mastered' && e.rule.id !== selectedRule?.id
+      )?.rule ?? null,
     [rulesWithProgress, selectedRule]
   );
 
   const reviewTargets = rulesWithProgress
-    .filter((e) => e.progress.reviewStatus === 'Due' || e.progress.incorrectUsages > e.progress.correctUsages)
+    .filter(
+      (e) =>
+        e.progress.reviewStatus === 'Due' ||
+        e.progress.incorrectUsages > e.progress.correctUsages
+    )
     .slice(0, 5);
 
-  const masteredCount = rulesWithProgress.filter((e) => e.status === 'Mastered').length;
+  const masteredCount = rulesWithProgress.filter(
+    (e) => e.status === 'Mastered'
+  ).length;
 
   const selectRule = (ruleId: string) => {
     setSelectedId(ruleId);
@@ -166,33 +211,71 @@ export function useGrammarPage() {
   };
 
   const scrollLessonStrip = (direction: 'left' | 'right') => {
-    lessonStripRef.current?.scrollBy({ left: direction === 'left' ? -420 : 420, behavior: 'smooth' });
+    lessonStripRef.current?.scrollBy({
+      left: direction === 'left' ? -420 : 420,
+      behavior: 'smooth',
+    });
   };
 
   const recordUsage = (correct: boolean) => {
     if (!selectedRule) return;
     ProductAnalyticsService.track('grammar_task_started', '/grammar', {
-      metadata: { skill: 'grammar', missionId: selectedRule.id, source: 'user' },
+      metadata: {
+        skill: 'grammar',
+        missionId: selectedRule.id,
+        source: 'user',
+      },
     });
     GrammarProgressService.recordUsage(selectedRule.id, correct);
     setProgressVersion((v) => v + 1);
     showToast(
-      correct ? 'Good. Practice evidence was saved.' : 'Saved for review. This lesson will stay in practice.',
+      correct
+        ? 'Good. Practice evidence was saved.'
+        : 'Saved for review. This lesson will stay in practice.',
       correct ? 'success' : 'info'
     );
     ProductAnalyticsService.track('grammar_task_completed', '/grammar', {
-      metadata: { skill: 'grammar', missionId: selectedRule.id, source: 'user' },
+      metadata: {
+        skill: 'grammar',
+        missionId: selectedRule.id,
+        source: 'user',
+      },
     });
     ProductAnalyticsService.trackOnce('first_task_completed', '/grammar', {
-      skill: 'grammar', source: 'user',
+      skill: 'grammar',
+      source: 'user',
     });
   };
 
   const quizItems = selectedRule
     ? [
-        { question: 'Which structure are you practicing?', choices: [selectedRule.structure, selectedRule.engineeringUseCase, selectedRule.commonMistakes], correct: 0 },
-        { question: 'Which sentence is safer?', choices: [selectedRule.correctedExampleEnglish, selectedRule.badExampleEnglish, selectedRule.definition], correct: 0 },
-        { question: 'Where does this lesson help you most?', choices: [selectedRule.engineeringUseCase, selectedRule.grammarCategory, 'Pronunciation only'], correct: 0 },
+        {
+          question: 'Which structure are you practicing?',
+          choices: [
+            selectedRule.structure,
+            selectedRule.engineeringUseCase,
+            selectedRule.commonMistakes,
+          ],
+          correct: 0,
+        },
+        {
+          question: 'Which sentence is safer?',
+          choices: [
+            selectedRule.correctedExampleEnglish,
+            selectedRule.badExampleEnglish,
+            selectedRule.definition,
+          ],
+          correct: 0,
+        },
+        {
+          question: 'Where does this lesson help you most?',
+          choices: [
+            selectedRule.engineeringUseCase,
+            selectedRule.grammarCategory,
+            'Pronunciation only',
+          ],
+          correct: 0,
+        },
       ]
     : [];
 

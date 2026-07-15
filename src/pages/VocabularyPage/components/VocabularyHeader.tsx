@@ -1,5 +1,9 @@
 import { Search } from 'lucide-react';
-import type { VocabularySearchFilters, VocabularyTerm, VocabularyMenuStatus } from '@/features/vocabulary';
+import type {
+  VocabularySearchFilters,
+  VocabularyTerm,
+  VocabularyMenuStatus,
+} from '@/features/vocabulary';
 
 const TABS = ['New', 'Learning', 'Mastered'] as const;
 const TAB_LABELS = {
@@ -115,7 +119,10 @@ export function VocabularyHeader({
               ['status', 'Status'],
             ] as Array<[keyof VocabularySearchFilters, string]>
           ).map(([field, label]) => (
-            <label key={field} className="text-[10px] font-bold text-foreground">
+            <label
+              key={field}
+              className="text-[10px] font-bold text-foreground"
+            >
               {label}
               <select
                 aria-label={`Filter by ${label}`}
@@ -124,7 +131,15 @@ export function VocabularyHeader({
                 className="mt-1 min-h-8 w-full rounded-lg border border-border-soft bg-background px-2 text-[11px] font-normal focus:border-primary outline-none"
               >
                 {(field === 'status'
-                  ? ['All', 'New', 'Learning', 'Mastered', 'Weak', 'Forgotten', 'Due Today']
+                  ? [
+                      'All',
+                      'New',
+                      'Learning',
+                      'Mastered',
+                      'Weak',
+                      'Forgotten',
+                      'Due Today',
+                    ]
                   : filterOptions(field)
                 ).map((option) => (
                   <option key={option}>{option}</option>
@@ -136,7 +151,9 @@ export function VocabularyHeader({
       )}
 
       {searchError && (
-        <p className="mt-2 text-xs font-semibold text-rose-700">{searchError}</p>
+        <p className="mt-2 text-xs font-semibold text-rose-700">
+          {searchError}
+        </p>
       )}
       {isSearchLoading && (
         <p role="status" className="mt-2 text-[10px] font-bold text-primary">

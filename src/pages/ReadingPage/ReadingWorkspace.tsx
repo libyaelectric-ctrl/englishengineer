@@ -135,9 +135,7 @@ export function ReadingWorkspace({
           </span>
           <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5 text-primary" />
-            <span>
-              Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}
-            </span>
+            <span>Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}</span>
           </span>
           {timeSpentSeconds > 0 && (
             <span className="text-xs font-mono text-primary bg-primary/5 px-3 py-1 rounded border border-primary/20">
@@ -232,9 +230,8 @@ export function ReadingWorkspace({
                 </div>
               ) : (
                 <p className="text-xs text-muted-copy italic py-2 font-medium">
-                  No word currently selected. Click any highlighted
-                  underlined word in the passage above to explore its
-                  technical note.
+                  No word currently selected. Click any highlighted underlined
+                  word in the passage above to explore its technical note.
                 </p>
               )}
             </div>

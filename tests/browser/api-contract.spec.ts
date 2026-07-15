@@ -40,7 +40,11 @@ test.describe('API Contract Tests', () => {
 
   test('billing endpoint requires authentication', async ({ request }) => {
     const response = await request.post(`${API_BASE}/api/billing/checkout`, {
-      data: { email: 'test@test.com', successUrl: 'http://localhost', cancelUrl: 'http://localhost' },
+      data: {
+        email: 'test@test.com',
+        successUrl: 'http://localhost',
+        cancelUrl: 'http://localhost',
+      },
     });
     expect(response.status()).toBe(401);
   });

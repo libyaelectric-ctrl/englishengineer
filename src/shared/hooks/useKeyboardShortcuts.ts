@@ -11,7 +11,11 @@ export function useKeyboardShortcuts(shortcuts: ShortcutMap = {}) {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      )
+        return;
 
       const key = [
         e.ctrlKey || e.metaKey ? 'ctrl' : '',
@@ -30,7 +34,9 @@ export function useKeyboardShortcuts(shortcuts: ShortcutMap = {}) {
 
       if (key === 'ctrl+k') {
         e.preventDefault();
-        document.querySelector<HTMLInputElement>('[aria-label*="Search"]')?.focus();
+        document
+          .querySelector<HTMLInputElement>('[aria-label*="Search"]')
+          ?.focus();
       }
 
       if (key === 'ctrl+d') {

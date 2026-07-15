@@ -1,14 +1,14 @@
-import {
-  CheckCircle2,
-  Sparkles,
-  Zap,
-} from 'lucide-react';
+import { CheckCircle2, Sparkles, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import type { AICoachContext, AICoachResult, AICoachSession } from '@/features/ai';
+import type {
+  AICoachContext,
+  AICoachResult,
+  AICoachSession,
+} from '@/features/ai';
 import type { AssessmentProfile } from '@/features/assessment';
 
 interface UserContextSidebarProps {
@@ -68,10 +68,7 @@ export const UserContextSidebar = ({
               <span>Average Score</span>
               <span>{coachContext.averageScore}%</span>
             </div>
-            <ProgressBar
-              value={coachContext.averageScore}
-              color="primary"
-            />
+            <ProgressBar value={coachContext.averageScore} color="primary" />
           </div>
           <div className="flex flex-wrap gap-2 pt-2">
             <StatusBadge
@@ -148,9 +145,7 @@ export const UserContextSidebar = ({
             </div>
           ))}
           {sessions.length === 0 && (
-            <p className="text-xs text-muted-copy">
-              No coach sessions yet.
-            </p>
+            <p className="text-xs text-muted-copy">No coach sessions yet.</p>
           )}
         </div>
       </SectionCard>

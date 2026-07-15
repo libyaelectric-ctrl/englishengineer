@@ -9,7 +9,8 @@ export function ListeningSidebar() {
   const config: SidebarConfig = {
     skill: 'listening',
     pathLabel: 'Listening Tasks',
-    pathDescription: 'Listen to professional scenarios and improve comprehension.',
+    pathDescription:
+      'Listen to professional scenarios and improve comprehension.',
     totalItems: missions.length,
     tabs: missions.slice(0, 5).map((m) => ({
       label: m.title,

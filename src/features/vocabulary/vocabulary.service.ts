@@ -63,7 +63,15 @@ export const VocabularyService = {
     return getVocabularyEntries() ?? [];
   },
 
-  getEntriesPaginated(page: number, pageSize: number): { entries: VocabularyEntry[]; total: number; totalPages: number; page: number } {
+  getEntriesPaginated(
+    page: number,
+    pageSize: number
+  ): {
+    entries: VocabularyEntry[];
+    total: number;
+    totalPages: number;
+    page: number;
+  } {
     const all = getVocabularyEntries() ?? [];
     const total = all.length;
     const totalPages = Math.ceil(total / pageSize);

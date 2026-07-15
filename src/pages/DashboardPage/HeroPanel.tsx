@@ -44,7 +44,9 @@ export const HeroPanel = ({
               </p>
             </div>
             <div className="text-right">
-              <span className={`text-[10px] font-bold ${competency.color} flex items-center gap-1`}>
+              <span
+                className={`text-[10px] font-bold ${competency.color} flex items-center gap-1`}
+              >
                 <Target className="w-3 h-3" /> {competency.text}
               </span>
             </div>
@@ -69,7 +71,9 @@ export const HeroPanel = ({
             <StatusBadge label="Demo default" tone="neutral" />
             <StatusBadge label="Skills progress separately" tone="success" />
           </div>
-          <p className="text-lg font-bold text-foreground">Good {greeting}, {userName}!</p>
+          <p className="text-lg font-bold text-foreground">
+            Good {greeting}, {userName}!
+          </p>
           <h1 className="mt-5 text-xs font-bold text-primary uppercase tracking-wider">
             EngVox Command Center
           </h1>
@@ -105,7 +109,9 @@ export const HeroPanel = ({
             </p>
           </div>
           <div className="shrink-0 text-left sm:text-right">
-            <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-bold ${getCefrColor(focusSkill.cefrBand)}`}>
+            <span
+              className={`inline-flex items-center rounded-full border px-2.5 py-1 text-sm font-bold ${getCefrColor(focusSkill.cefrBand)}`}
+            >
               {focusSkill.cefrBand}
             </span>
             <p className="text-[10px] font-semibold text-muted-copy">
@@ -115,8 +121,14 @@ export const HeroPanel = ({
         </div>
       </div>
 
-      <div data-testid="dashboard-summary-metrics" className="mt-6 grid grid-cols-3 gap-3">
-        <div data-testid="dashboard-summary-score" className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4">
+      <div
+        data-testid="dashboard-summary-metrics"
+        className="mt-6 grid grid-cols-3 gap-3"
+      >
+        <div
+          data-testid="dashboard-summary-score"
+          className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
+        >
           <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
             COMPETENCY INDEX
           </p>
@@ -124,15 +136,23 @@ export const HeroPanel = ({
             {summary.averageScore}%
           </p>
         </div>
-        <div data-testid="dashboard-summary-elo" className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4">
+        <div
+          data-testid="dashboard-summary-elo"
+          className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
+        >
           <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
             TARGET LEVEL
           </p>
-          <span className={`mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-bold ${getCefrColor(focusSkill.cefrBand)}`}>
+          <span
+            className={`mt-1 inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-bold ${getCefrColor(focusSkill.cefrBand)}`}
+          >
             {focusSkill.cefrBand}
           </span>
         </div>
-        <div data-testid="dashboard-summary-done" className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4">
+        <div
+          data-testid="dashboard-summary-done"
+          className="min-w-0 rounded-card border border-border-soft bg-surface/50 p-4"
+        >
           <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
             COMPLETION RATE
           </p>

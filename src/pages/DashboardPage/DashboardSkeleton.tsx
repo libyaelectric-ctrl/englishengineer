@@ -26,7 +26,10 @@ export const DashboardSkeleton = () => (
       <SectionCard title="Progress Cockpit" subtitle="" icon={Target}>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-card border border-border-soft bg-surface p-4 space-y-3">
+            <div
+              key={i}
+              className="rounded-card border border-border-soft bg-surface p-4 space-y-3"
+            >
               <Skeleton className="h-8 w-8" />
               <Skeleton className="h-4 w-24" />
               <Skeleton className="h-2 w-full" />

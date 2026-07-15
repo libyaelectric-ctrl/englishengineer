@@ -44,9 +44,7 @@ export const UsersTab: React.FC<UsersTabProps> = ({ users, onPromote }) => {
                   <p className="font-semibold text-foreground">{u.name}</p>
                   <p className="text-[10px] text-muted-copy">{u.email}</p>
                 </td>
-                <td className="py-3.5 px-4 text-muted-copy">
-                  {u.discipline}
-                </td>
+                <td className="py-3.5 px-4 text-muted-copy">{u.discipline}</td>
                 <td className="py-3.5 px-4">
                   <span className="rounded bg-primary/10 px-1.5 py-0.5 font-bold text-primary">
                     {u.level}

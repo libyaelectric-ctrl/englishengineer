@@ -5,22 +5,39 @@ import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 export function ReadingSidebar() {
   const { missions, completedMissions, selectedMissionId } = useReadingStore();
   const done = Object.keys(completedMissions).length;
-  const selectedMission = missions.find((m) => m.id === selectedMissionId) ?? missions[0];
-  const selectedMissionIndex = selectedMission ? missions.findIndex((m) => m.id === selectedMission.id) : -1;
+  const selectedMission =
+    missions.find((m) => m.id === selectedMissionId) ?? missions[0];
+  const selectedMissionIndex = selectedMission
+    ? missions.findIndex((m) => m.id === selectedMission.id)
+    : -1;
 
   const config: SidebarConfig = {
     skill: 'reading',
     pathLabel: 'Your reading path',
-    pathDescription: 'Read professional documentation and answer comprehension questions.',
+    pathDescription:
+      'Read professional documentation and answer comprehension questions.',
     currentLevel: selectedMission?.cefrLevel,
     totalItems: missions.length,
-    progressBars: [{ label: 'Completed', value: done, max: missions.length, color: '#10b981' }],
+    progressBars: [
+      {
+        label: 'Completed',
+        value: done,
+        max: missions.length,
+        color: '#10b981',
+      },
+    ],
     actions: [],
     custom: selectedMission ? (
       <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
-        <p className="text-[10px] font-bold text-primary mb-1">SCENARIO {selectedMissionIndex + 1} OF {missions.length}</p>
-        <p className="text-sm font-bold text-foreground">{selectedMission.title}</p>
-        <p className="text-[10px] text-muted-copy mt-1 truncate">{selectedMission.discipline}</p>
+        <p className="text-[10px] font-bold text-primary mb-1">
+          SCENARIO {selectedMissionIndex + 1} OF {missions.length}
+        </p>
+        <p className="text-sm font-bold text-foreground">
+          {selectedMission.title}
+        </p>
+        <p className="text-[10px] text-muted-copy mt-1 truncate">
+          {selectedMission.discipline}
+        </p>
       </div>
     ) : undefined,
   };

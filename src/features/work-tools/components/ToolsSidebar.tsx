@@ -6,7 +6,9 @@ export function ToolsSidebar() {
     skill: 'tools',
     pathLabel: 'Tools',
     pathDescription: 'Access your engineering tools.',
-    tabs: ['Work Tools', 'Quick Tools', 'AI Copilot'].map((t) => ({ label: t })),
+    tabs: ['Work Tools', 'Quick Tools', 'AI Copilot'].map((t) => ({
+      label: t,
+    })),
     stats: [],
     actions: [],
   };

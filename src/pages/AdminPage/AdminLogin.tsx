@@ -28,11 +28,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
               <Lock className="h-6 w-6 text-primary" />
             </div>
             <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-xs text-muted-copy mt-1">Authorized personnel only</p>
+            <p className="text-xs text-muted-copy mt-1">
+              Authorized personnel only
+            </p>
           </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-muted-copy">Username</label>
+              <label className="text-xs font-bold text-muted-copy">
+                Username
+              </label>
               <input
                 type="text"
                 value={username}
@@ -42,7 +46,9 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-muted-copy">Password</label>
+              <label className="text-xs font-bold text-muted-copy">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}

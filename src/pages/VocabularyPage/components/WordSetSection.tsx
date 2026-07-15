@@ -1,6 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { BookMarked } from 'lucide-react';
-import type { VocabularyTerm, VocabularyMenuStatus, VocabularyMenuState, VocabularySearchFilters } from '@/features/vocabulary';
+import type {
+  VocabularyTerm,
+  VocabularyMenuStatus,
+  VocabularyMenuState,
+  VocabularySearchFilters,
+} from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { WordCard } from './WordCard';
@@ -65,14 +70,12 @@ export function WordSetSection({
         </p>
       )}
       {!loadError && terms.length === 0 && (
-        <p className="text-sm text-foreground0">
-          Loading canonical words...
-        </p>
+        <p className="text-sm text-foreground0">Loading canonical words...</p>
       )}
       {terms.length > 0 && wordSet.length === 0 && (
         <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
-          No words currently have {activeTab.toLowerCase()} status. Select
-          New to begin a ten-word set.
+          No words currently have {activeTab.toLowerCase()} status. Select New
+          to begin a ten-word set.
         </p>
       )}
       {wordSet.length > 0 && (

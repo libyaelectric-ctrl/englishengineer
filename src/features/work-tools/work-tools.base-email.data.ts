@@ -1,6 +1,9 @@
 import { EmailTemplate } from './work-tools.types';
 
-export type BaseEmailTemplate = Omit<EmailTemplate, 'category' | 'subject' | 'tags'>;
+export type BaseEmailTemplate = Omit<
+  EmailTemplate,
+  'category' | 'subject' | 'tags'
+>;
 
 const email = (
   id: string,
