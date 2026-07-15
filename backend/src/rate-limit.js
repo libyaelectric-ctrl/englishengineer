@@ -1,5 +1,13 @@
 import { ApiError } from './errors.js';
 
+const logRateLimit = (scope, identity, count, max) => {
+  if (count > max) {
+    console.warn(
+      `[rate-limit] scope=${scope} identity=${identity} count=${count} max=${max} BLOCKED`
+    );
+  }
+};
+
 const UPSTASH_COUNTER_SCRIPT = `
 local count = redis.call('INCR', KEYS[1])
 if count == 1 then
@@ -94,6 +102,7 @@ export const createRateLimiter = ({
         response.setHeader('RateLimit-Reset', resetSeconds);
         response.setHeader('X-RateLimit-Reset', resetSeconds);
         if (result.count > max) {
+          logRateLimit(scope, identity, result.count, max);
           return next(
             new ApiError(
               429,
@@ -158,6 +167,7 @@ export const createRateLimiter = ({
     setRateLimitHeaders(response, max, bucket.count);
 
     if (bucket.count > max) {
+      logRateLimit(scope, identity, bucket.count, max);
       return next(
         new ApiError(
           429,

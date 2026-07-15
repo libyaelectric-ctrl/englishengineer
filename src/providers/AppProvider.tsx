@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { ThemeProvider } from './ThemeProvider';
+import { QueryProvider } from './QueryProvider';
 import { CloudSyncService, useAuthStore } from '@/features/auth';
 import { reportEnvironmentValidation } from '@/config/environment.config';
 import { logger } from '@/shared/logger';
@@ -62,7 +63,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   return (
     <ErrorBoundaryProvider>
-      <ThemeProvider>{children}</ThemeProvider>
+      <QueryProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </QueryProvider>
     </ErrorBoundaryProvider>
   );
 };

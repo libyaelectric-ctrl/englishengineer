@@ -23,6 +23,7 @@ export const toErrorResponse = (error) => {
     };
   }
 
+  const isProduction = process.env.NODE_ENV === 'production';
   return {
     status: 500,
     body: {
@@ -30,11 +31,14 @@ export const toErrorResponse = (error) => {
       error: {
         code: 'internal_error',
         message: 'The backend could not complete the request.',
-        details: {
-          name: error?.name,
-          msg: error?.message,
-          stack: error?.stack,
-        },
+        ...(isProduction
+          ? {}
+          : {
+              details: {
+                name: error?.name,
+                msg: error?.message,
+              },
+            }),
       },
     },
   };

@@ -15,7 +15,17 @@ const config = {
     low: 60,
     break: null,
   },
-  mutate: ['src/shared/utils/cn.ts', 'src/config/navigation.config.ts'],
+  mutate: [
+    'src/shared/utils/cn.ts',
+    'src/config/navigation.config.ts',
+    'src/core/result/result.helpers.ts',
+    'src/core/validation/validation.helpers.ts',
+    'src/core/ids/id.service.ts',
+    'src/features/vocabulary/vocabulary.helpers.ts',
+    'src/features/vocabulary/vocabulary.spaced-repetition.ts',
+    'src/features/billing/billing.helpers.ts',
+    'src/features/billing/billing.entitlements.ts',
+  ],
   ignorePatterns: [
     '**/*.test.ts',
     '**/*.test.tsx',

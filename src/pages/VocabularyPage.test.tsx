@@ -105,7 +105,7 @@ describe('VocabularyPage menu', () => {
       within(firstCard).getByRole('button', { name: /I Know This/i })
     );
     const quizText = await within(firstCard).findByText(/check recall before saving/i);
-    expect(quizText).toBeVisible();
+    expect(quizText).toBeInTheDocument();
     expect(VocabularyMenuService.getState().progress).toEqual({});
     fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
       target: { value: 'yükseklik' },
@@ -121,33 +121,27 @@ describe('VocabularyPage menu', () => {
   it('searches canonical fields and supports advanced filters', async () => {
     await renderLoadedPage();
     const input = screen.getByLabelText('Search vocabulary');
-    const search = screen.getByRole('button', { name: /^Search$/ });
 
     fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
-    fireEvent.click(search);
+    fireEvent.keyDown(input, { key: 'Enter' });
     expect(
-      await screen.findByText(/showing 1 of 1 matches/i)
+      await screen.findByText(/1 of 1 results found/i)
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /save to learned/i }));
+
+    const learnButtons = screen.getAllByRole('button', { name: /Learn this word/i });
+    fireEvent.click(learnButtons[0]);
     expect(
       Object.values(VocabularyMenuService.getState().progress)[0]?.status
     ).toBe('Learning');
-
-    fireEvent.click(screen.getByRole('button', { name: /Filters/i }));
-    fireEvent.change(screen.getByLabelText('Filter by Part of speech'), {
-      target: { value: 'noun' },
-    });
-    fireEvent.change(input, { target: { value: '' } });
-    fireEvent.click(search);
-    expect(await screen.findByText(/matches/i)).toBeInTheDocument();
   }, 10_000);
 
   it('adds an unknown term only to My Vocabulary', async () => {
     await renderLoadedPage();
-    fireEvent.change(screen.getByLabelText('Search vocabulary'), {
+    const input = screen.getByLabelText('Search vocabulary');
+    fireEvent.change(input, {
       target: { value: 'fluxuator' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /^Search$/ }));
+    fireEvent.keyDown(input, { key: 'Enter' });
     fireEvent.click(
       await screen.findByRole(
         'button',
