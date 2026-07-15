@@ -1,25 +1,38 @@
 import { IdPrefix } from './id.types';
 
+const hexEncode = (bytes: Uint8Array): string =>
+  Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+
+const secureRandomHex = (length: number): string => {
+  const bytes = new Uint8Array(Math.ceil(length / 2));
+  if (typeof globalThis.crypto?.getRandomValues === 'function') {
+    globalThis.crypto.getRandomValues(bytes);
+  } else {
+    // Last resort: Node.js crypto (SSR / test environments)
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const nodeCrypto = require('node:crypto');
+      const buf = nodeCrypto.randomBytes(bytes.length);
+      bytes.set(buf);
+    } catch {
+      // Should never happen in any JS runtime
+      for (let i = 0; i < bytes.length; i++) bytes[i] = (Math.random() * 256) | 0;
+    }
+  }
+  return hexEncode(bytes).substring(0, length);
+};
+
 export const IdService = {
-  /**
-   * Generates a unique secure ID with an optional prefix (e.g. "usr_...")
-   */
   createId(prefix?: IdPrefix | string): string {
     let uuid = '';
 
-    // Attempt standard web crypto randomUUID
     if (
-      typeof window !== 'undefined' &&
-      window.crypto &&
-      typeof window.crypto.randomUUID === 'function'
+      typeof globalThis.crypto?.randomUUID === 'function'
     ) {
-      uuid = window.crypto.randomUUID();
+      uuid = globalThis.crypto.randomUUID();
     } else {
-      // Robust fallback using timestamp and cryptographic random values or math random
-      const timestamp = Date.now().toString(36);
-      const randomPart = Math.random().toString(36).substring(2, 15);
-      const secondaryRandom = Math.random().toString(36).substring(2, 10);
-      uuid = `${timestamp}-${randomPart}-${secondaryRandom}`;
+      const ts = Date.now().toString(36);
+      uuid = `${ts}-${secureRandomHex(12)}-${secureRandomHex(8)}`;
     }
 
     return prefix ? `${prefix}_${uuid}` : uuid;

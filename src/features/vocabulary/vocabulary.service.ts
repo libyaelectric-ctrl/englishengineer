@@ -63,6 +63,16 @@ export const VocabularyService = {
     return getVocabularyEntries() ?? [];
   },
 
+  getEntriesPaginated(page: number, pageSize: number): { entries: VocabularyEntry[]; total: number; totalPages: number; page: number } {
+    const all = getVocabularyEntries() ?? [];
+    const total = all.length;
+    const totalPages = Math.ceil(total / pageSize);
+    const safePage = Math.max(1, Math.min(page, totalPages || 1));
+    const start = (safePage - 1) * pageSize;
+    const entries = all.slice(start, start + pageSize);
+    return { entries, total, totalPages, page: safePage };
+  },
+
   getEntryById(id: string): VocabularyEntry | undefined {
     return (getVocabularyEntries() ?? []).find((entry) => entry.id === id);
   },

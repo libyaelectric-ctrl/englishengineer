@@ -1,24 +1,67 @@
 {
-  "name": "EngVox",
-  "short_name": "EngVox",
-  "description": "Engineering English Training Platform",
+  "name": "EngineerOS - Engineering English Training",
+  "short_name": "EngineerOS",
+  "description": "Master engineering English with AI-powered learning, vocabulary building, and professional communication practice.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1a1a1a",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "productivity"],
   "icons": [
     {
-      "src": "/brand/logo.png",
+      "src": "/brand/logo-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/brand/logo.png",
+      "src": "/brand/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/logo-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/brand/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Desktop dashboard"
+    },
+    {
+      "src": "/brand/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Mobile learning view"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Vocabulary",
+      "url": "/vocabulary",
+      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "AI Coach",
+      "url": "/ai",
+      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
     }
   ]
 }
