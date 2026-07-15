@@ -17,9 +17,7 @@ export default tseslint.config(
       ecmaVersion: 2022,
       globals: globals.browser,
     },
-    plugins: {
-      'jsx-a11y': jsxA11y,
-    },
+
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'warn',
