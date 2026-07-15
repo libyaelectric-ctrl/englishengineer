@@ -1,6 +1,12 @@
 import { Check } from 'lucide-react';
-import { CAREER_GOALS, COMMUNICATION_GOALS } from '@/features/profile/profile.preferences';
-import type { CommunicationGoal, SkillName } from '@/features/profile/profile.types';
+import {
+  CAREER_GOALS,
+  COMMUNICATION_GOALS,
+} from '@/features/profile/profile.preferences';
+import type {
+  CommunicationGoal,
+  SkillName,
+} from '@/features/profile/profile.types';
 
 const focusOptions: Array<{ id: SkillName; label: string }> = [
   { id: 'reading', label: 'Reading' },

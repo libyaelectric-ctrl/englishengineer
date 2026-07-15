@@ -24,9 +24,7 @@ export const SystemTab: React.FC<SystemTabProps> = ({ systemLogs }) => {
           <div className="mt-3 grid gap-3 text-xs sm:grid-cols-2">
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">Dev Auth Bypass:</span>
-              <span className="font-bold text-rose-600">
-                Blocked (Secure)
-              </span>
+              <span className="font-bold text-rose-600">Blocked (Secure)</span>
             </div>
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">Supabase RLS Rules:</span>
@@ -41,9 +39,7 @@ export const SystemTab: React.FC<SystemTabProps> = ({ systemLogs }) => {
               </span>
             </div>
             <div className="flex justify-between border-b border-border-soft pb-1">
-              <span className="text-muted-copy">
-                Rate-Limiter (Upstash):
-              </span>
+              <span className="text-muted-copy">Rate-Limiter (Upstash):</span>
               <span className="font-bold text-emerald-600">Connected</span>
             </div>
           </div>

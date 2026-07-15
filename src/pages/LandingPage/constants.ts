@@ -28,7 +28,11 @@ export const STATS = [
   { value: '24/7', label: 'AI coach' },
 ];
 
-export const FEATURES: Array<{ icon: LucideIcon; title: string; desc: string }> = [
+export const FEATURES: Array<{
+  icon: LucideIcon;
+  title: string;
+  desc: string;
+}> = [
   {
     icon: PenLine,
     title: 'Writing desk',

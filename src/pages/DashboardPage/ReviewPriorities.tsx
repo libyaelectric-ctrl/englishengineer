@@ -12,7 +12,9 @@ interface ReviewPrioritiesProps {
   reviewPriorities: ReviewItem[];
 }
 
-export const ReviewPriorities = ({ reviewPriorities }: ReviewPrioritiesProps) => {
+export const ReviewPriorities = ({
+  reviewPriorities,
+}: ReviewPrioritiesProps) => {
   const navigate = useNavigate();
 
   return (

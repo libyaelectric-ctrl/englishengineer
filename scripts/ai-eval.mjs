@@ -17,8 +17,16 @@ const EVAL_CASES = [
 const aiConfig = {
   provider: process.env.AI_PROVIDER || 'openai',
   model: process.env.AI_MODEL || 'gpt-4.1-mini',
-  apiKey: process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.GEMINI_API_KEY || null,
-  configured: !!(process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.GEMINI_API_KEY),
+  apiKey:
+    process.env.OPENAI_API_KEY ||
+    process.env.ANTHROPIC_API_KEY ||
+    process.env.GEMINI_API_KEY ||
+    null,
+  configured: !!(
+    process.env.OPENAI_API_KEY ||
+    process.env.ANTHROPIC_API_KEY ||
+    process.env.GEMINI_API_KEY
+  ),
   timeoutMs: 30_000,
 };
 
@@ -31,7 +39,9 @@ async function runEvaluation() {
   for (const [index, testCase] of EVAL_CASES.entries()) {
     console.log(`\nEvaluating Case ${index + 1}: "${testCase.input}"`);
     try {
-      const result = await aiService.complete('evaluate', { prompt: testCase.input });
+      const result = await aiService.complete('evaluate', {
+        prompt: testCase.input,
+      });
       const response = result.text;
       console.log(`Response length: ${response.split(' ').length} words.`);
 

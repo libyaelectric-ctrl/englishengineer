@@ -43,11 +43,19 @@ export const STATUS_STYLES: Record<LessonStatus, string> = {
 };
 
 export const EMPTY_LEVEL_COUNTS: Record<CefrLevel, number> = {
-  A1: 0, A2: 0, B1: 0, B2: 0, C1: 0, C2: 0,
+  A1: 0,
+  A2: 0,
+  B1: 0,
+  B2: 0,
+  C1: 0,
+  C2: 0,
 };
 
 export const normalizeKey = (value: string): string =>
-  value.trim().toLowerCase().replace(/[-_\s]+/g, ' ');
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[-_\s]+/g, ' ');
 
 const toTitle = (value: string): string =>
   value
@@ -58,7 +66,9 @@ const toTitle = (value: string): string =>
 export const getModuleLabel = (category: string): string =>
   MODULE_LABELS[category] ?? toTitle(category);
 
-export const getLessonStatus = (progress: GrammarRuleProgress): LessonStatus => {
+export const getLessonStatus = (
+  progress: GrammarRuleProgress
+): LessonStatus => {
   if (progress.reviewStatus === 'Strong') return 'Mastered';
   const practiceReady = progress.correctUsages >= 3 && progress.strength >= 70;
   if (practiceReady) return 'Needs Reading/Writing';
@@ -82,7 +92,10 @@ export const getTransferCount = (progress: GrammarRuleProgress): number =>
 export const compact = (value: string, fallback: string): string =>
   value.trim() ? value : fallback;
 
-export const getStatusLabel = (status: LessonStatus, compactLabel = false): string => {
+export const getStatusLabel = (
+  status: LessonStatus,
+  compactLabel = false
+): string => {
   if (status === 'Needs Reading/Writing') return compactLabel ? 'R/W' : status;
   return status;
 };

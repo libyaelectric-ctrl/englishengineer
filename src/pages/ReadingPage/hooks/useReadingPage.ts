@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import {
-  useReadingStore,
-  VocabularyItem,
-} from '@/features/reading';
+import { useReadingStore, VocabularyItem } from '@/features/reading';
 import { useLearningStore } from '@/core/learning';
 import {
   ContentLevelFilter,

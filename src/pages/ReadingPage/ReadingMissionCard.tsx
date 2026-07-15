@@ -1,10 +1,4 @@
-import {
-  Bookmark,
-  CheckCircle2,
-  Clock,
-  Play,
-  RefreshCw,
-} from 'lucide-react';
+import { Bookmark, CheckCircle2, Clock, Play, RefreshCw } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { ReadingHelpers } from '@/features/reading';
 import {
@@ -68,7 +62,10 @@ export function ReadingMissionCard({
               {m.cefrLevel}
             </span>
             <LevelAccessBadge
-              label={getContentAccessLabel(m.cefrLevel as CefrLevel, currentLevel as CefrLevel)}
+              label={getContentAccessLabel(
+                m.cefrLevel as CefrLevel,
+                currentLevel as CefrLevel
+              )}
             />
             <span
               className={`text-[10px] font-medium font-mono px-2 py-0.5 rounded uppercase ${

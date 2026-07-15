@@ -5,8 +5,12 @@ import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
 const VOCAB_LEVELS = [
-  { id: 'A1', max: 500 }, { id: 'A2', max: 1200 }, { id: 'B1', max: 2500 },
-  { id: 'B2', max: 4000 }, { id: 'C1', max: 6000 }, { id: 'C2', max: 8000 },
+  { id: 'A1', max: 500 },
+  { id: 'A2', max: 1200 },
+  { id: 'B1', max: 2500 },
+  { id: 'B2', max: 4000 },
+  { id: 'C1', max: 6000 },
+  { id: 'C2', max: 8000 },
 ];
 
 function getVocabLevel(mastered: number): string {
@@ -25,16 +29,31 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
         const isCompleted = mastered >= lvl.max;
         const prevMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
         const bracketTotal = lvl.max - prevMax;
-        const bracketProgress = Math.max(0, Math.min(bracketTotal, mastered - prevMax));
+        const bracketProgress = Math.max(
+          0,
+          Math.min(bracketTotal, mastered - prevMax)
+        );
         const percent = (bracketProgress / bracketTotal) * 100;
         return (
-          <div key={lvl.id} className={`flex flex-col p-2 rounded-lg border transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}>
+          <div
+            key={lvl.id}
+            className={`flex flex-col p-2 rounded-lg border transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}
+          >
             <div className="flex items-center justify-between mb-2">
-              <span className={`text-xs font-bold ${isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground'}`}>{lvl.id}</span>
-              <span className="text-[10px] text-muted-copy font-medium">{lvl.max}</span>
+              <span
+                className={`text-xs font-bold ${isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground'}`}
+              >
+                {lvl.id}
+              </span>
+              <span className="text-[10px] text-muted-copy font-medium">
+                {lvl.max}
+              </span>
             </div>
             <div className="h-1.5 w-full bg-border-soft rounded-full overflow-hidden relative">
-              <div className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isActive ? 'bg-primary' : isCompleted ? 'bg-success' : 'bg-foreground/30'}`} style={{ width: `${percent}%` }} />
+              <div
+                className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isActive ? 'bg-primary' : isCompleted ? 'bg-success' : 'bg-foreground/30'}`}
+                style={{ width: `${percent}%` }}
+              />
             </div>
           </div>
         );
@@ -50,7 +69,10 @@ export function VocabSidebar() {
   const vocabularyPool = useLearningStore((s) => s.vocabularyPool);
 
   useEffect(() => {
-    const id = setInterval(() => setV(VocabularyMenuService.getSummary()), 1000);
+    const id = setInterval(
+      () => setV(VocabularyMenuService.getSummary()),
+      1000
+    );
     return () => clearInterval(id);
   }, []);
 
@@ -70,12 +92,33 @@ export function VocabSidebar() {
       { label: 'In Pool', value: vocabularyPool.length, color: 'text-primary' },
     ],
     progressBars: [
-      { label: 'Total Mastery', value: v.mastered, max: v.total, color: '#3b82f6' },
+      {
+        label: 'Total Mastery',
+        value: v.mastered,
+        max: v.total,
+        color: '#3b82f6',
+      },
       { label: 'Learning', value: v.learning, max: v.total, color: '#06b6d4' },
     ],
     actions: [
-      { icon: '⏰', label: `Review ${v.dueToday} due words`, onClick: () => { log('/vocabulary', 'review', `${v.dueToday} due`); window.scrollTo({ top: 0, behavior: 'smooth' }); }, variant: 'warning' },
-      { icon: '➕', label: 'Add custom word', onClick: () => { document.querySelector('input')?.scrollIntoView({ behavior: 'smooth' }); } },
+      {
+        icon: '⏰',
+        label: `Review ${v.dueToday} due words`,
+        onClick: () => {
+          log('/vocabulary', 'review', `${v.dueToday} due`);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+        variant: 'warning',
+      },
+      {
+        icon: '➕',
+        label: 'Add custom word',
+        onClick: () => {
+          document
+            .querySelector('input')
+            ?.scrollIntoView({ behavior: 'smooth' });
+        },
+      },
     ],
     custom: <VocabLevelGrid mastered={v.mastered} />,
   };

@@ -122,7 +122,6 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
   const authenticate = async (request) => {
     const token = readBearerToken(request);
     if (secretsMatch(token, config.internalApiSecret)) {
-
       const userId = request.headers['x-engineeros-user-id'];
       if (typeof userId !== 'string' || !userId.trim()) {
         throw new ApiError(

@@ -17,7 +17,9 @@ export function VirtualList<T>({
 }: VirtualListProps<T>) {
   if (data.length === 0) {
     return (
-      <div className={`flex items-center justify-center p-8 text-muted-copy ${className ?? ''}`}>
+      <div
+        className={`flex items-center justify-center p-8 text-muted-copy ${className ?? ''}`}
+      >
         {emptyMessage}
       </div>
     );

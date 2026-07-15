@@ -261,9 +261,7 @@ export const SiteDictionaryTab = () => {
                     variant="ghost"
                     className="px-3"
                     onClick={() => toggleFavorite(item.id)}
-                    aria-label={
-                      favorite ? 'Remove favorite' : 'Save favorite'
-                    }
+                    aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
                   >
                     <Heart
                       className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}

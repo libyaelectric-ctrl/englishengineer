@@ -10,11 +10,7 @@ interface Props {
   profile: UserLearningProfile;
 }
 
-export const CurriculumSidebar = ({
-  domain,
-  setDomain,
-  profile,
-}: Props) => {
+export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
   return (
     <aside className="space-y-5">
       <SectionCard
@@ -42,9 +38,7 @@ export const CurriculumSidebar = ({
 
       <SectionCard
         title="Placement Test"
-        subtitle={
-          profile.placementCompleted ? 'Completed' : 'Available'
-        }
+        subtitle={profile.placementCompleted ? 'Completed' : 'Available'}
         icon={Clock3}
       >
         <p className="text-sm leading-6 text-muted-copy">
@@ -56,9 +50,7 @@ export const CurriculumSidebar = ({
           to="/placement"
           className="mt-4 inline-flex text-sm font-medium text-primary"
         >
-          {profile.placementCompleted
-            ? 'Retake placement'
-            : 'Start placement'}
+          {profile.placementCompleted ? 'Retake placement' : 'Start placement'}
         </Link>
       </SectionCard>
     </aside>

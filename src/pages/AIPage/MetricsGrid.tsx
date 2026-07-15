@@ -2,7 +2,11 @@ import { Sparkles, Target, ShieldAlert } from 'lucide-react';
 import { MetricCard } from '@/shared/components/MetricCard';
 
 interface MetricsGridProps {
-  usage: { totalSessions: number; mostUsedMode: string; suggestedFocusArea: string };
+  usage: {
+    totalSessions: number;
+    mostUsedMode: string;
+    suggestedFocusArea: string;
+  };
   coachContext: { averageScore: number };
   connectionValue: string;
   connectionTrend: string;

@@ -3,10 +3,7 @@ import { BookOpen, FileText, GraduationCap } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { Button } from '@/shared/components/Button';
-import {
-  EmptyLevelState,
-  LevelContentFilter,
-} from '@/features/level-system';
+import { EmptyLevelState, LevelContentFilter } from '@/features/level-system';
 import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
 import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';

@@ -6,7 +6,14 @@ export const createTraceId = () => randomUUID();
 
 export const startSpan = (name, traceId) => {
   const spanId = randomUUID();
-  const span = { name, traceId, spanId, start: Date.now(), end: null, status: 'ok' };
+  const span = {
+    name,
+    traceId,
+    spanId,
+    start: Date.now(),
+    end: null,
+    status: 'ok',
+  };
   spans.set(spanId, span);
   return spanId;
 };
