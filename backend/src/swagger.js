@@ -21,7 +21,7 @@ export const swaggerSpec = {
         tags: ['Health'],
         summary: 'Health check endpoint',
         responses: {
-          '200': {
+          200: {
             description: 'Service healthy',
             content: {
               'application/json': {
@@ -54,7 +54,15 @@ export const swaggerSpec = {
                 required: ['prompt'],
                 properties: {
                   prompt: { type: 'string', maxLength: 20000 },
-                  operation: { type: 'string', enum: ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText', 'generatePractice'] },
+                  operation: {
+                    type: 'string',
+                    enum: [
+                      'analyzeProgress',
+                      'evaluateEngineeringEnglish',
+                      'analyzeText',
+                      'generatePractice',
+                    ],
+                  },
                   modeId: { type: 'string' },
                 },
               },
@@ -62,9 +70,9 @@ export const swaggerSpec = {
           },
         },
         responses: {
-          '200': { description: 'AI response' },
-          '401': { description: 'Unauthorized' },
-          '429': { description: 'Rate limit exceeded' },
+          200: { description: 'AI response' },
+          401: { description: 'Unauthorized' },
+          429: { description: 'Rate limit exceeded' },
         },
       },
     },
@@ -91,8 +99,8 @@ export const swaggerSpec = {
           },
         },
         responses: {
-          '200': { description: 'Checkout URL' },
-          '401': { description: 'Unauthorized' },
+          200: { description: 'Checkout URL' },
+          401: { description: 'Unauthorized' },
         },
       },
     },
@@ -101,12 +109,21 @@ export const swaggerSpec = {
         tags: ['Vocabulary'],
         summary: 'Lookup vocabulary word',
         parameters: [
-          { name: 'word', in: 'query', required: true, schema: { type: 'string' } },
-          { name: 'targetLang', in: 'query', schema: { type: 'string', default: 'tr' } },
+          {
+            name: 'word',
+            in: 'query',
+            required: true,
+            schema: { type: 'string' },
+          },
+          {
+            name: 'targetLang',
+            in: 'query',
+            schema: { type: 'string', default: 'tr' },
+          },
         ],
         responses: {
-          '200': { description: 'Vocabulary entry' },
-          '400': { description: 'Invalid query' },
+          200: { description: 'Vocabulary entry' },
+          400: { description: 'Invalid query' },
         },
       },
     },

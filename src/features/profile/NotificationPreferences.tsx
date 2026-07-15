@@ -46,7 +46,9 @@ export const NotificationPreferences = () => {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Bell className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-bold text-foreground">Notification Preferences</h3>
+        <h3 className="text-sm font-bold text-foreground">
+          Notification Preferences
+        </h3>
       </div>
       <div className="space-y-3">
         <Toggle

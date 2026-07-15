@@ -63,10 +63,24 @@ const DashboardPage = () => {
   const primaryMission = missions[0];
   const reviewPriorities = buildReviewPriorities([
     ...(memory.weakWords > 0
-      ? [{ id: 'weak-words', label: `${memory.weakWords} weak vocabulary items`, source: 'weak-word' as const, severity: memory.weakWords }]
+      ? [
+          {
+            id: 'weak-words',
+            label: `${memory.weakWords} weak vocabulary items`,
+            source: 'weak-word' as const,
+            severity: memory.weakWords,
+          },
+        ]
       : []),
     ...(memory.dueToday > 0
-      ? [{ id: 'due-words', label: `${memory.dueToday} vocabulary reviews due`, source: 'due-item' as const, severity: memory.dueToday }]
+      ? [
+          {
+            id: 'due-words',
+            label: `${memory.dueToday} vocabulary reviews due`,
+            source: 'due-item' as const,
+            severity: memory.dueToday,
+          },
+        ]
       : []),
     ...mistakeLog
       .filter((item) => (item.repetitionCount ?? 1) >= 3)
@@ -90,12 +104,20 @@ const DashboardPage = () => {
   const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
 
   const skillSparklineData = useMemo(() => {
-    const result: Record<SkillName, number[]> = {} as Record<SkillName, number[]>;
+    const result: Record<SkillName, number[]> = {} as Record<
+      SkillName,
+      number[]
+    >;
     for (const skill of SKILL_NAMES) {
       const sp = profile.skills[skill];
       const base = sp.completedTasks;
       result[skill] = Array.from({ length: 7 }, (_, i) =>
-        Math.max(0, base - (6 - i) * Math.floor(base / 6) + ((i * 7 + SKILL_NAMES.indexOf(skill)) % 3))
+        Math.max(
+          0,
+          base -
+            (6 - i) * Math.floor(base / 6) +
+            ((i * 7 + SKILL_NAMES.indexOf(skill)) % 3)
+        )
       );
     }
     return result;
@@ -104,12 +126,17 @@ const DashboardPage = () => {
   const isLoading = !currentUser || !profile;
   if (isLoading) return <DashboardSkeleton />;
 
-  const focusLessonNumber = LessonPathEngine.getSkillProgress(profile, focusSkill.skill).lesson.number;
+  const focusLessonNumber = LessonPathEngine.getSkillProgress(
+    profile,
+    focusSkill.skill
+  ).lesson.number;
 
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">Dashboard</h1>
+        <h1 className="text-2xl font-black tracking-tight text-foreground">
+          Dashboard
+        </h1>
       </div>
       <div className="space-y-6">
         <DailyGoalBar />
@@ -122,7 +149,9 @@ const DashboardPage = () => {
           focusMeta={focusMeta}
           focusSkill={focusSkill}
           focusLessonNumber={focusLessonNumber}
-          onStartLesson={() => navigate(primaryMission?.route ?? focusMeta.route)}
+          onStartLesson={() =>
+            navigate(primaryMission?.route ?? focusMeta.route)
+          }
         />
         <ProgressCockpit
           skillNames={SKILL_NAMES}

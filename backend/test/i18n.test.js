@@ -8,11 +8,16 @@ describe('i18n middleware', () => {
     const req = { headers: {} };
     const res = {};
     let called = false;
-    middleware(req, res, () => { called = true; });
+    middleware(req, res, () => {
+      called = true;
+    });
 
     assert.equal(called, true);
     assert.equal(req.i18n.lang, 'en');
-    assert.equal(req.i18n.t('authentication_required'), 'A valid backend authorization token is required.');
+    assert.equal(
+      req.i18n.t('authentication_required'),
+      'A valid backend authorization token is required.'
+    );
   });
 
   it('detects Turkish from Accept-Language header', () => {
@@ -20,10 +25,15 @@ describe('i18n middleware', () => {
     const req = { headers: { 'accept-language': 'tr-TR,tr;q=0.9,en;q=0.8' } };
     const res = {};
     let called = false;
-    middleware(req, res, () => { called = true; });
+    middleware(req, res, () => {
+      called = true;
+    });
 
     assert.equal(req.i18n.lang, 'tr');
-    assert.equal(req.i18n.t('authentication_required'), 'Geçerli bir yetkilendirme jetonu gerekiyor.');
+    assert.equal(
+      req.i18n.t('authentication_required'),
+      'Geçerli bir yetkilendirme jetonu gerekiyor.'
+    );
   });
 
   it('falls back to English for unknown language', () => {
@@ -31,7 +41,9 @@ describe('i18n middleware', () => {
     const req = { headers: { 'accept-language': 'fr-FR,fr;q=0.9' } };
     const res = {};
     let called = false;
-    middleware(req, res, () => { called = true; });
+    middleware(req, res, () => {
+      called = true;
+    });
 
     assert.equal(req.i18n.lang, 'en');
   });
@@ -70,9 +82,14 @@ describe('i18n middleware', () => {
     middleware(req, res, () => {});
 
     const keys = [
-      'validation_error', 'authentication_required', 'STRIPE_NOT_CONFIGURED',
-      'ai_timeout', 'vocabulary_not_found', 'workspace_not_found',
-      'rate_limit_exceeded', 'internal_error',
+      'validation_error',
+      'authentication_required',
+      'STRIPE_NOT_CONFIGURED',
+      'ai_timeout',
+      'vocabulary_not_found',
+      'workspace_not_found',
+      'rate_limit_exceeded',
+      'internal_error',
     ];
     keys.forEach((key) => {
       const translated = req.i18n.t(key);

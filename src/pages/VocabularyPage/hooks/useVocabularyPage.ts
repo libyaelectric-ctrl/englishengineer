@@ -222,7 +222,8 @@ export function useVocabularyPage() {
   };
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
-    const prevStatus = VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
+    const prevStatus =
+      VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
 
     VocabularyMenuService.reviewWord(
       term.id,
@@ -241,7 +242,8 @@ export function useVocabularyPage() {
 
     setTimeout(() => {
       const currentState = VocabularyMenuService.getState();
-      const nextStatus = (isCorrect && prevStatus === 'New') ? 'Learning' : activeTab;
+      const nextStatus =
+        isCorrect && prevStatus === 'New' ? 'Learning' : activeTab;
       const nextSet = selectVocabularyLearningSet(terms, currentState, {
         cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
         skillUse: 'vocabulary',
@@ -313,18 +315,20 @@ export function useVocabularyPage() {
 
   const exportCSV = () => {
     const header = 'term,turkishMeaning,cefrLevel,domain,status\n';
-    const rows = wordSet.map((term) => {
-      const progress = menuState.progress[term.id];
-      const status = progress?.status ?? 'New';
-      const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
-      return [
-        escape(term.term),
-        escape(term.turkishMeaning),
-        term.cefrLevel,
-        escape(term.domain),
-        status,
-      ].join(',');
-    }).join('\n');
+    const rows = wordSet
+      .map((term) => {
+        const progress = menuState.progress[term.id];
+        const status = progress?.status ?? 'New';
+        const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
+        return [
+          escape(term.term),
+          escape(term.turkishMeaning),
+          term.cefrLevel,
+          escape(term.domain),
+          status,
+        ].join(',');
+      })
+      .join('\n');
     const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');

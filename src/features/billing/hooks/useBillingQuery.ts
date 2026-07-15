@@ -4,7 +4,8 @@ import type { BillingPlanId } from '../billing.types';
 
 export const BILLING_KEYS = {
   all: ['billing'] as const,
-  subscription: (userId: string | null) => [...BILLING_KEYS.all, 'subscription', userId] as const,
+  subscription: (userId: string | null) =>
+    [...BILLING_KEYS.all, 'subscription', userId] as const,
   providerStatus: () => [...BILLING_KEYS.all, 'providerStatus'] as const,
 };
 
@@ -27,8 +28,15 @@ export function useStartCheckout() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ userId, email, planId }: { userId: string; email: string; planId: BillingPlanId }) =>
-      BillingService.startCheckout(userId, email, planId),
+    mutationFn: ({
+      userId,
+      email,
+      planId,
+    }: {
+      userId: string;
+      email: string;
+      planId: BillingPlanId;
+    }) => BillingService.startCheckout(userId, email, planId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: BILLING_KEYS.all });
     },

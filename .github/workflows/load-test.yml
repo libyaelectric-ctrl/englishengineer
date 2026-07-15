@@ -2,7 +2,7 @@ name: Load Test
 
 on:
   schedule:
-    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM
+    - cron: '0 2 * * 1' # Weekly on Monday at 2 AM
   workflow_dispatch:
 
 jobs:

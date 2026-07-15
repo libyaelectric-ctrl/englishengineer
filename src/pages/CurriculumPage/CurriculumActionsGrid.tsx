@@ -1,5 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import type { SkillName, DailyMission, SkillProfile, VocabularyMemorySummary } from '@/features/profile';
+import type {
+  SkillName,
+  DailyMission,
+  SkillProfile,
+  VocabularyMemorySummary,
+} from '@/features/profile';
 
 interface Props {
   primaryMission: DailyMission | undefined;

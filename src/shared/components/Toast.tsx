@@ -64,8 +64,13 @@ export const ToastContainer = () => {
               className={`flex items-center gap-3 rounded-lg border p-3 shadow-lg ${colors[toast.type]}`}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              <span className="text-sm font-medium flex-1">{toast.message}</span>
-              <button onClick={() => dismiss(toast.id)} className="shrink-0 opacity-60 hover:opacity-100">
+              <span className="text-sm font-medium flex-1">
+                {toast.message}
+              </span>
+              <button
+                onClick={() => dismiss(toast.id)}
+                className="shrink-0 opacity-60 hover:opacity-100"
+              >
                 <X className="h-3.5 w-3.5" />
               </button>
             </motion.div>

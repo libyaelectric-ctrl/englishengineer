@@ -3,7 +3,11 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import { LearningMemorySummary, type UnifiedReviewItem, type ReviewPriorityItem } from '@/features/learning-intelligence';
+import {
+  LearningMemorySummary,
+  type UnifiedReviewItem,
+  type ReviewPriorityItem,
+} from '@/features/learning-intelligence';
 import type { VocabularyMemorySummary, ProfileBadge } from '@/features/profile';
 import type { GrammarProgressSummary } from '@/features/grammar';
 

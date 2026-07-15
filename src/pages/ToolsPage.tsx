@@ -19,9 +19,7 @@ type ToolsSection = 'work' | 'quick' | 'ai';
 const ToolsPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeTab: ToolsSection =
-    section === 'quick' || section === 'ai'
-      ? section
-      : 'work';
+    section === 'quick' || section === 'ai' ? section : 'work';
 
   return (
     <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">

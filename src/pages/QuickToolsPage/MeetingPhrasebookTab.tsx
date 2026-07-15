@@ -1,5 +1,9 @@
 import { Clipboard, Heart } from 'lucide-react';
-import { MEETING_PHRASES, WorkToolsService, useWorkToolsStore } from '@/features/work-tools';
+import {
+  MEETING_PHRASES,
+  WorkToolsService,
+  useWorkToolsStore,
+} from '@/features/work-tools';
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
 
@@ -45,10 +49,7 @@ export const MeetingPhrasebookTab = () => {
             <p className="rounded-xl border border-border-soft bg-surface-hover p-3 text-sm italic text-foreground">
               {item.example}
             </p>
-            <Button
-              variant="secondary"
-              onClick={() => copy(item.phrase)}
-            >
+            <Button variant="secondary" onClick={() => copy(item.phrase)}>
               <Clipboard className="h-4 w-4" /> Copy
             </Button>
           </Card>

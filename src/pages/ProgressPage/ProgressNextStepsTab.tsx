@@ -194,7 +194,10 @@ const PersonalLeaderboard = ({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.date} className="border-b border-border-soft/50 last:border-b-0">
+              <tr
+                key={row.date}
+                className="border-b border-border-soft/50 last:border-b-0"
+              >
                 <td className="py-2 font-medium text-foreground">{row.date}</td>
                 <td className="py-2 text-right font-mono text-foreground">
                   {row.xp > 0 ? `+${row.xp}` : '—'}
@@ -291,9 +294,15 @@ export const ProgressNextStepsTab = () => {
       {/* Daily Claim Banner */}
       <div className="flex items-center justify-between rounded-2xl border border-primary/20 bg-primary/5 p-5">
         <div>
-          <p className="text-xs font-medium text-primary uppercase tracking-widest">Daily Reward</p>
-          <h3 className="mt-1 text-lg font-bold text-foreground">Claim your daily bonus</h3>
-          <p className="text-xs text-muted-copy mt-0.5">Keep your streak alive and earn bonus XP.</p>
+          <p className="text-xs font-medium text-primary uppercase tracking-widest">
+            Daily Reward
+          </p>
+          <h3 className="mt-1 text-lg font-bold text-foreground">
+            Claim your daily bonus
+          </h3>
+          <p className="text-xs text-muted-copy mt-0.5">
+            Keep your streak alive and earn bonus XP.
+          </p>
         </div>
         <Button
           onClick={claimDailyLoginReward}
@@ -519,8 +528,13 @@ export const ProgressNextStepsTab = () => {
 
       {/* Learning Intelligence Section */}
       <div className="border-t border-border-soft pt-8">
-        <h2 className="text-xl font-bold text-foreground mb-1">Learning Intelligence</h2>
-        <p className="text-xs text-muted-copy mb-6">Role-based daily practice, repeated-mistake tracking and evidence-based weekly guidance.</p>
+        <h2 className="text-xl font-bold text-foreground mb-1">
+          Learning Intelligence
+        </h2>
+        <p className="text-xs text-muted-copy mb-6">
+          Role-based daily practice, repeated-mistake tracking and
+          evidence-based weekly guidance.
+        </p>
       </div>
 
       <Card hoverEffect={false}>
@@ -579,10 +593,10 @@ export const ProgressNextStepsTab = () => {
                     onClick={() => {
                       intelligence.toggleTask(task.id);
                       if (!completed) {
-                      BetaService.trackEvent(
-                        'daily_task_completed',
-                        '/progress/next-steps'
-                      );
+                        BetaService.trackEvent(
+                          'daily_task_completed',
+                          '/progress/next-steps'
+                        );
                       }
                     }}
                     className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition ${completed ? 'border-success bg-success/10 text-success' : 'border-border-soft bg-surface text-muted-copy hover:border-primary hover:bg-primary/10'}`}

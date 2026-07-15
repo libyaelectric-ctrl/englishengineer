@@ -42,7 +42,11 @@ const staleWhileRevalidate = async (request) => {
     })
     .catch(() => null);
 
-  return cachedResponse || (await fetchPromise) || new Response('Offline', { status: 503 });
+  return (
+    cachedResponse ||
+    (await fetchPromise) ||
+    new Response('Offline', { status: 503 })
+  );
 };
 
 const cacheFirst = async (request) => {
@@ -72,11 +76,17 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(STATIC_CACHE).then((cache) => cache.put(event.request, clone));
+            caches
+              .open(STATIC_CACHE)
+              .then((cache) => cache.put(event.request, clone));
           }
           return response;
         })
-        .catch(() => caches.match(OFFLINE_URL).then((c) => c || new Response('Offline', { status: 503 })))
+        .catch(() =>
+          caches
+            .match(OFFLINE_URL)
+            .then((c) => c || new Response('Offline', { status: 503 }))
+        )
     );
     return;
   }

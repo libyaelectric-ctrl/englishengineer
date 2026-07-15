@@ -104,7 +104,9 @@ describe('VocabularyPage menu', () => {
     fireEvent.click(
       within(firstCard).getByRole('button', { name: /I Know This/i })
     );
-    const quizText = await within(firstCard).findByText(/check recall before saving/i);
+    const quizText = await within(firstCard).findByText(
+      /check recall before saving/i
+    );
     expect(quizText).toBeInTheDocument();
     expect(VocabularyMenuService.getState().progress).toEqual({});
     fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
@@ -128,7 +130,9 @@ describe('VocabularyPage menu', () => {
       await screen.findByText(/1 of 1 results found/i)
     ).toBeInTheDocument();
 
-    const learnButtons = screen.getAllByRole('button', { name: /Learn this word/i });
+    const learnButtons = screen.getAllByRole('button', {
+      name: /Learn this word/i,
+    });
     fireEvent.click(learnButtons[0]);
     expect(
       Object.values(VocabularyMenuService.getState().progress)[0]?.status

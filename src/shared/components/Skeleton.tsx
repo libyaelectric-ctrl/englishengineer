@@ -29,7 +29,11 @@ export const SkeletonCard = () => (
 export const SkeletonText = ({ lines = 3 }: { lines?: number }) => (
   <div className="space-y-2">
     {Array.from({ length: lines }).map((_, i) => (
-      <Skeleton key={i} className="h-3 w-full" style={{ width: `${85 - i * 15}%` }} />
+      <Skeleton
+        key={i}
+        className="h-3 w-full"
+        style={{ width: `${85 - i * 15}%` }}
+      />
     ))}
   </div>
 );

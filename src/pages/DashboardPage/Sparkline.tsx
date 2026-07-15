@@ -1,4 +1,10 @@
-export const Sparkline = ({ data, className = '' }: { data: number[]; className?: string }) => {
+export const Sparkline = ({
+  data,
+  className = '',
+}: {
+  data: number[];
+  className?: string;
+}) => {
   if (data.length < 2) return null;
   const min = Math.min(...data);
   const max = Math.max(...data);
@@ -6,10 +12,16 @@ export const Sparkline = ({ data, className = '' }: { data: number[]; className?
   const h = 24;
   const w = 60;
   const points = data
-    .map((v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`)
+    .map(
+      (v, i) => `${(i / (data.length - 1)) * w},${h - ((v - min) / range) * h}`
+    )
     .join(' ');
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className={`${className}`} preserveAspectRatio="none">
+    <svg
+      viewBox={`0 0 ${w} ${h}`}
+      className={`${className}`}
+      preserveAspectRatio="none"
+    >
       <polyline
         points={points}
         fill="none"

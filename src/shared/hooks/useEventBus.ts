@@ -9,9 +9,8 @@ export function useEventSubscription<T extends AppEvent['type']>(
   handlerRef.current = handler;
 
   useEffect(() => {
-    const token: EventSubscriptionToken = eventBus.subscribe(
-      type,
-      (event) => handlerRef.current(event as Extract<AppEvent, { type: T }>)
+    const token: EventSubscriptionToken = eventBus.subscribe(type, (event) =>
+      handlerRef.current(event as Extract<AppEvent, { type: T }>)
     );
     return () => token.unsubscribe();
   }, [type]);

@@ -8,7 +8,8 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export const InstallPrompt = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
   const [showBanner, setShowBanner] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -55,7 +56,9 @@ export const InstallPrompt = () => {
             <Download className="h-5 w-5 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-bold text-foreground">Install EngVox</h3>
+            <h3 className="text-sm font-bold text-foreground">
+              Install EngVox
+            </h3>
             <p className="text-xs text-muted-copy mt-0.5">
               Add to your home screen for faster access and offline practice.
             </p>
@@ -68,7 +71,10 @@ export const InstallPrompt = () => {
               </Button>
             </div>
           </div>
-          <button onClick={handleDismiss} className="shrink-0 text-muted-copy hover:text-foreground">
+          <button
+            onClick={handleDismiss}
+            className="shrink-0 text-muted-copy hover:text-foreground"
+          >
             <X className="h-4 w-4" />
           </button>
         </div>

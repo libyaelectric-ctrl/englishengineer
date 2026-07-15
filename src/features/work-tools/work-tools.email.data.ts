@@ -72,7 +72,7 @@ const EMAIL_SEEDS: EmailSeed[] = [
     'Inspection',
     'Cancellation of inspection request',
     'A prerequisite test record is not yet complete.',
-    'cancel today\'s inspection and await a revised request',
+    "cancel today's inspection and await a revised request",
   ],
   [
     'inspection-ready-2',

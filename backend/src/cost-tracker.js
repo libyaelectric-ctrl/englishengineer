@@ -7,7 +7,8 @@ const COST_PER_1K_TOKENS = {
 };
 
 export const trackAIUsage = ({ model, inputTokens, outputTokens, userId }) => {
-  const costs = COST_PER_1K_TOKENS[model] || COST_PER_1K_TOKENS['claude-haiku-4-5'];
+  const costs =
+    COST_PER_1K_TOKENS[model] || COST_PER_1K_TOKENS['claude-haiku-4-5'];
   const inputCost = (inputTokens / 1000) * costs.input;
   const outputCost = (outputTokens / 1000) * costs.output;
   const totalCost = inputCost + outputCost;
@@ -36,7 +37,9 @@ export const getUsageSummary = (hours = 24) => {
   return {
     period: `${hours}h`,
     requests: recent.length,
-    totalCost: recent.reduce((sum, r) => sum + parseFloat(r.totalCost), 0).toFixed(4),
+    totalCost: recent
+      .reduce((sum, r) => sum + parseFloat(r.totalCost), 0)
+      .toFixed(4),
     byModel: recent.reduce((acc, r) => {
       acc[r.model] = (acc[r.model] || 0) + 1;
       return acc;

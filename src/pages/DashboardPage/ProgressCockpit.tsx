@@ -130,8 +130,7 @@ export const ProgressCockpit = ({
                       Global Progress (A1 - C2+)
                     </span>
                     <span className="text-[9px] font-bold text-foreground">
-                      {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}
-                      %
+                      {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
                     </span>
                   </div>
                   <ProgressBar

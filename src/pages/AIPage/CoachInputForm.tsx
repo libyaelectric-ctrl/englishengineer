@@ -1,11 +1,5 @@
 import { FormEvent } from 'react';
-import {
-  AlertCircle,
-  Lock,
-  RefreshCw,
-  Send,
-  Terminal,
-} from 'lucide-react';
+import { AlertCircle, Lock, RefreshCw, Send, Terminal } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import type { AICoachModeId, AICoachMode } from '@/features/ai';
@@ -98,8 +92,8 @@ export const CoachInputForm = ({
               </div>
               <div className="space-y-2">
                 <h4 className="text-sm font-medium text-foreground">
-                  {selectedMode?.name} is a{' '}
-                  {isProLocked ? 'Pro' : 'Project'} Plan Feature
+                  {selectedMode?.name} is a {isProLocked ? 'Pro' : 'Project'}{' '}
+                  Plan Feature
                 </h4>
                 <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
                   {isProLocked
@@ -147,8 +141,8 @@ export const CoachInputForm = ({
                 />
                 <span className="text-xs font-mono text-muted-copy bg-border-soft/50 px-2.5 py-1 rounded-full">
                   {uploadedDocsCount} /{' '}
-                  {docLimit === 'unlimited' ? '∞' : docLimit} uploads
-                  used this month
+                  {docLimit === 'unlimited' ? '∞' : docLimit} uploads used this
+                  month
                 </span>
               </div>
               {uploadError && (
@@ -181,9 +175,7 @@ export const CoachInputForm = ({
               type="submit"
               className="h-9 bg-primary text-white font-medium flex items-center justify-center gap-2 text-xs"
               disabled={
-                isLoading ||
-                input.trim().length === 0 ||
-                !aiEntitlement.allowed
+                isLoading || input.trim().length === 0 || !aiEntitlement.allowed
               }
             >
               {isLoading ? (

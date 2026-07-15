@@ -18,11 +18,14 @@ export const useNetworkStatus = (): NetworkStatus => {
   });
 
   useEffect(() => {
-    const handleOnline = () => setStatus(prev => ({ ...prev, online: true }));
-    const handleOffline = () => setStatus(prev => ({ ...prev, online: false }));
+    const handleOnline = () => setStatus((prev) => ({ ...prev, online: true }));
+    const handleOffline = () =>
+      setStatus((prev) => ({ ...prev, online: false }));
 
     const updateNetworkInfo = () => {
-      const connection = (navigator as unknown as { connection?: NetworkInformation }).connection;
+      const connection = (
+        navigator as unknown as { connection?: NetworkInformation }
+      ).connection;
       if (connection) {
         setStatus({
           online: navigator.onLine,
@@ -38,7 +41,9 @@ export const useNetworkStatus = (): NetworkStatus => {
     window.addEventListener('offline', handleOffline);
 
     if ('connection' in navigator) {
-      const connection = (navigator as unknown as { connection?: NetworkInformation }).connection;
+      const connection = (
+        navigator as unknown as { connection?: NetworkInformation }
+      ).connection;
       connection?.addEventListener('change', updateNetworkInfo);
       updateNetworkInfo();
     }
@@ -47,7 +52,9 @@ export const useNetworkStatus = (): NetworkStatus => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
       if ('connection' in navigator) {
-        const connection = (navigator as unknown as { connection?: NetworkInformation }).connection;
+        const connection = (
+          navigator as unknown as { connection?: NetworkInformation }
+        ).connection;
         connection?.removeEventListener('change', updateNetworkInfo);
       }
     };

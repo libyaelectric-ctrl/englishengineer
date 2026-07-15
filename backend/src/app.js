@@ -83,7 +83,10 @@ export const createApp = ({
   // HTTPS enforcement in production
   if (config.environment === 'production') {
     app.use((req, res, next) => {
-      if (req.headers['x-forwarded-proto'] !== 'https' && req.method !== 'GET') {
+      if (
+        req.headers['x-forwarded-proto'] !== 'https' &&
+        req.method !== 'GET'
+      ) {
         return res.redirect(301, `https://${req.headers.host}${req.url}`);
       }
       next();
@@ -211,14 +214,20 @@ export const createApp = ({
   // Swagger documentation
   app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
   app.get('/api-docs', (_req, res) => {
-    res.send(`<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`);
+    res.send(
+      `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
+    );
   });
 
   // CSP violation report endpoint
-  app.post('/api/csp-report', express.json({ type: 'application/csp-report' }), (req, res) => {
-    console.warn('[CSP-VIOLATION]', req.body);
-    res.status(204).end();
-  });
+  app.post(
+    '/api/csp-report',
+    express.json({ type: 'application/csp-report' }),
+    (req, res) => {
+      console.warn('[CSP-VIOLATION]', req.body);
+      res.status(204).end();
+    }
+  );
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;

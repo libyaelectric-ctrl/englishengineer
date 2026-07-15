@@ -46,7 +46,9 @@ export function useWritingPage() {
   const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
     DEFAULT_CONTENT_LEVEL_FILTER
   );
-  const [writingHistory, setWritingHistory] = useState<Array<{date: string; wordCount: number; score: number}>>(() => {
+  const [writingHistory, setWritingHistory] = useState<
+    Array<{ date: string; wordCount: number; score: number }>
+  >(() => {
     try {
       return JSON.parse(localStorage.getItem('writing_history') || '[]');
     } catch {
@@ -178,7 +180,11 @@ export function useWritingPage() {
 
     setUserErrors({});
     submitCurrentMission();
-    const newEntry = { date: new Date().toLocaleDateString(), wordCount: draft.trim().split(/\s+/).filter(Boolean).length, score: 0 };
+    const newEntry = {
+      date: new Date().toLocaleDateString(),
+      wordCount: draft.trim().split(/\s+/).filter(Boolean).length,
+      score: 0,
+    };
     setWritingHistory((prev) => {
       const next = [newEntry, ...prev].slice(0, 5);
       localStorage.setItem('writing_history', JSON.stringify(next));

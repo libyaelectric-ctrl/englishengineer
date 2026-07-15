@@ -1,5 +1,9 @@
 import { Target } from 'lucide-react';
-import { SKILL_NAMES, type SkillName, type UserLearningProfile } from '@/features/profile';
+import {
+  SKILL_NAMES,
+  type SkillName,
+  type UserLearningProfile,
+} from '@/features/profile';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SKILL_META, ICON_MAP } from './curriculum-data';
@@ -57,8 +61,7 @@ export const CurriculumSkillSelector = ({
                 {meta.label}
               </p>
               <p className="mt-1 text-xs text-muted-copy">
-                {skillProfile.cefrBand} ·{' '}
-                {skillProfile.progressToNextBand}%
+                {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
               </p>
               <p className="mt-1 text-xs font-medium text-primary">
                 Lesson{' '}

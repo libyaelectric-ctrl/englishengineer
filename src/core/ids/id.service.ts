@@ -16,7 +16,8 @@ const secureRandomHex = (length: number): string => {
       bytes.set(buf);
     } catch {
       // Should never happen in any JS runtime
-      for (let i = 0; i < bytes.length; i++) bytes[i] = (Math.random() * 256) | 0;
+      for (let i = 0; i < bytes.length; i++)
+        bytes[i] = (Math.random() * 256) | 0;
     }
   }
   return hexEncode(bytes).substring(0, length);
@@ -26,9 +27,7 @@ export const IdService = {
   createId(prefix?: IdPrefix | string): string {
     let uuid = '';
 
-    if (
-      typeof globalThis.crypto?.randomUUID === 'function'
-    ) {
+    if (typeof globalThis.crypto?.randomUUID === 'function') {
       uuid = globalThis.crypto.randomUUID();
     } else {
       const ts = Date.now().toString(36);

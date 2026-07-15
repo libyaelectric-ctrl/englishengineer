@@ -10,7 +10,8 @@ export const logQuery = (query, durationMs, meta = {}) => {
       ...meta,
     };
     slowQueries.push(record);
-    if (slowQueries.length > 1000) slowQueries.splice(0, slowQueries.length - 1000);
+    if (slowQueries.length > 1000)
+      slowQueries.splice(0, slowQueries.length - 1000);
     console.warn(`[SLOW-QUERY] ${durationMs}ms`, record);
   }
 };

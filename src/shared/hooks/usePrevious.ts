@@ -11,7 +11,9 @@ export const usePrevious = <T>(value: T): T | undefined => {
 };
 
 // Compare hook
-export const useChanged = <T>(value: T): { current: T; previous: T | undefined; changed: boolean } => {
+export const useChanged = <T>(
+  value: T
+): { current: T; previous: T | undefined; changed: boolean } => {
   const previous = usePrevious(value);
   return {
     current: value,

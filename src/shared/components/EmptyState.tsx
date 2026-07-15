@@ -9,7 +9,13 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export const EmptyState = ({ icon: Icon, title, description, actionLabel, onAction }: EmptyStateProps) => (
+export const EmptyState = ({
+  icon: Icon,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) => (
   <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-surface-hover mb-4">
       <Icon className="h-8 w-8 text-muted-copy" />

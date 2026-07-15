@@ -33,7 +33,10 @@ export const RoleStep = ({
   <section>
     <h2 className="text-xl font-medium">Tell us where you work</h2>
     <p className="mt-2 text-sm text-muted-copy">
-      {LocalizationService.translate('onboarding.roleContext', interfaceLanguage)}
+      {LocalizationService.translate(
+        'onboarding.roleContext',
+        interfaceLanguage
+      )}
     </p>
     <div className="mt-6 grid gap-4 sm:grid-cols-2">
       <label className="text-sm font-medium sm:col-span-2">
@@ -76,12 +79,13 @@ export const RoleStep = ({
         </select>
       </label>
       <label className="text-sm font-medium">
-        {LocalizationService.translate('onboarding.industry', interfaceLanguage)}
+        {LocalizationService.translate(
+          'onboarding.industry',
+          interfaceLanguage
+        )}
         <select
           value={industryId}
-          onChange={(event) =>
-            setIndustryId(event.target.value as IndustryId)
-          }
+          onChange={(event) => setIndustryId(event.target.value as IndustryId)}
           className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
         >
           <option value="">Select industry</option>

@@ -1,6 +1,10 @@
 import { Clock, CheckCircle2, RefreshCw, Play } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
-import { LevelAccessBadge, getContentAccessLabel, type CefrLevel } from '@/features/level-system';
+import {
+  LevelAccessBadge,
+  getContentAccessLabel,
+  type CefrLevel,
+} from '@/features/level-system';
 import { WritingHelpers } from '@/features/writing';
 
 interface MissionCardProps {

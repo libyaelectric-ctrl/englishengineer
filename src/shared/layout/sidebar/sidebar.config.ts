@@ -30,6 +30,11 @@ export interface SidebarConfig {
   stats?: SidebarStat[];
   progressBars?: SidebarProgress[];
   actions?: SidebarAction[];
-  tabs?: { label: string; active?: boolean; badge?: string | number; onClick?: () => void }[];
+  tabs?: {
+    label: string;
+    active?: boolean;
+    badge?: string | number;
+    onClick?: () => void;
+  }[];
   custom?: ReactNode;
 }

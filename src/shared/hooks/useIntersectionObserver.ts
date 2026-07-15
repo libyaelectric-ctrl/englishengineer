@@ -10,7 +10,12 @@ interface UseIntersectionObserverOptions {
 export const useIntersectionObserver = <T extends Element>(
   options: UseIntersectionObserverOptions = {}
 ): [RefObject<T | null>, boolean] => {
-  const { threshold = 0, root = null, rootMargin = '0%', freezeOnceVisible = false } = options;
+  const {
+    threshold = 0,
+    root = null,
+    rootMargin = '0%',
+    freezeOnceVisible = false,
+  } = options;
   const ref = useRef<T>(null);
   const [isVisible, setIsVisible] = useState(false);
 

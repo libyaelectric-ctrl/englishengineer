@@ -1,5 +1,8 @@
 import { VocabularyEntry } from './vocabulary.types';
-import { VocabularyContentRow, buildEntries } from './vocabulary.expansion-helpers';
+import {
+  VocabularyContentRow,
+  buildEntries,
+} from './vocabulary.expansion-helpers';
 
 let _entriesPromise: Promise<VocabularyEntry[]> | null = null;
 let _entriesSync: VocabularyEntry[] | null = null;

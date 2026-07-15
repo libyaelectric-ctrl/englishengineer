@@ -30,8 +30,7 @@ export const ProviderStatusPanel = ({
         {providerStatus.state === 'mock-fallback'
           ? 'Mock AI is active for this demo. Secure AI feedback is not connected.'
           : providerStatus.detail}{' '}
-        Provider credentials are never requested or stored in this
-        workspace.
+        Provider credentials are never requested or stored in this workspace.
       </p>
       {typeof subscription.topupCredits === 'number' &&
         subscription.topupCredits > 0 && (
@@ -51,9 +50,7 @@ export const ProviderStatusPanel = ({
         <StatusBadge label={AI_ACCESS_POLICY.freeAccess} tone="info" />
         <StatusBadge
           label={
-            providerStatus.state === 'mock-fallback'
-              ? 'Mock AI'
-              : 'Secure AI'
+            providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
           }
           tone={providerTone}
         />

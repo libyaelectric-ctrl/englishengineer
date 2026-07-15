@@ -84,8 +84,8 @@ export const ProfileOverviewSection = ({
                   : []),
                 [
                   'Industry Sectors',
-                  INDUSTRIES.find((i) => i.id === profile.industryId)
-                    ?.label || 'Not Selected',
+                  INDUSTRIES.find((i) => i.id === profile.industryId)?.label ||
+                    'Not Selected',
                 ],
                 [
                   'Interface Language',
@@ -117,8 +117,8 @@ export const ProfileOverviewSection = ({
                       key={gId}
                       className="rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary"
                     >
-                      {COMMUNICATION_GOALS.find((g) => g.id === gId)
-                        ?.label || gId}
+                      {COMMUNICATION_GOALS.find((g) => g.id === gId)?.label ||
+                        gId}
                     </span>
                   ))}
                 </div>
@@ -201,8 +201,12 @@ export const ProfileOverviewSection = ({
                   className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-center space-y-2"
                 >
                   <Trophy className="h-6 w-6 mx-auto text-primary" />
-                  <p className="text-sm font-bold text-foreground">{badge.title}</p>
-                  <p className="text-[10px] text-muted-copy leading-4">{badge.description}</p>
+                  <p className="text-sm font-bold text-foreground">
+                    {badge.title}
+                  </p>
+                  <p className="text-[10px] text-muted-copy leading-4">
+                    {badge.description}
+                  </p>
                   {badge.unlockedAt && (
                     <p className="text-[10px] font-medium text-muted-copy">
                       {new Date(badge.unlockedAt).toLocaleDateString()}

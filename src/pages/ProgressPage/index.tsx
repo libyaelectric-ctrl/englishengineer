@@ -19,13 +19,17 @@ const ProgressPage = () => {
         <div className="flex items-center justify-between py-3">
           <div>
             <h1 className="text-xl font-bold text-foreground">Progress Hub</h1>
-            <p className="text-xs text-muted-copy">Analytics, milestones, and next steps.</p>
+            <p className="text-xs text-muted-copy">
+              Analytics, milestones, and next steps.
+            </p>
           </div>
           <div className="flex gap-1 rounded-xl border border-border-soft bg-surface-hover p-1">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => navigate(`/progress/${tab.id}`, { replace: true })}
+                onClick={() =>
+                  navigate(`/progress/${tab.id}`, { replace: true })
+                }
                 className={`px-4 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? 'bg-primary text-white'

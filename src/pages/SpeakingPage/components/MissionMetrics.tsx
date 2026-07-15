@@ -1,6 +1,9 @@
 import { Brain, Layers, MessageSquareText } from 'lucide-react';
 import { MetricCard } from '@/shared/components/MetricCard';
-import { getSpeakingRoleplayCategory, type SpeakingMission } from '@/features/speaking';
+import {
+  getSpeakingRoleplayCategory,
+  type SpeakingMission,
+} from '@/features/speaking';
 
 interface MissionMetricsProps {
   activeMission: SpeakingMission;

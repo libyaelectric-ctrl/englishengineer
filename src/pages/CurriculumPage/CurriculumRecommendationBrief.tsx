@@ -79,9 +79,7 @@ export const CurriculumRecommendationBrief = ({
               <p className="text-[10px] font-medium uppercase text-muted-copy">
                 AI required
               </p>
-              <p className="mt-1 text-xl font-medium text-success">
-                No
-              </p>
+              <p className="mt-1 text-xl font-medium text-success">No</p>
             </Card>
           </div>
 
@@ -118,33 +116,27 @@ export const CurriculumRecommendationBrief = ({
 
           <div className="grid gap-5 lg:grid-cols-2">
             <div>
-              <h3 className="font-medium text-foreground">
-                Vocabulary focus
-              </h3>
+              <h3 className="font-medium text-foreground">Vocabulary focus</h3>
               <div className="mt-3 flex flex-wrap gap-2">
                 {recommendation.vocabularyFocus.length > 0 ? (
-                  recommendation.vocabularyFocus.map(
-                    ({ term, bucket }) => (
-                      <span
-                        key={term.id}
-                        className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
-                      >
-                        {term.term} · {bucket}
-                      </span>
-                    )
-                  )
+                  recommendation.vocabularyFocus.map(({ term, bucket }) => (
+                    <span
+                      key={term.id}
+                      className="rounded-full border border-border-soft bg-surface-hover px-3 py-1 text-xs font-medium text-foreground"
+                    >
+                      {term.term} · {bucket}
+                    </span>
+                  ))
                 ) : (
                   <span className="text-sm text-muted-copy">
-                    No matching vocabulary for this manual domain.
-                    Choose All to use the current-level database set.
+                    No matching vocabulary for this manual domain. Choose All to
+                    use the current-level database set.
                   </span>
                 )}
               </div>
             </div>
             <div>
-              <h3 className="font-medium text-foreground">
-                Grammar focus
-              </h3>
+              <h3 className="font-medium text-foreground">Grammar focus</h3>
               <div className="mt-3 space-y-2">
                 {recommendation.grammarFocus.length > 0 ? (
                   recommendation.grammarFocus.map((rule) => (
@@ -203,8 +195,8 @@ export const CurriculumRecommendationBrief = ({
             </Button>
           ) : (
             <p className="rounded-xl border border-warning bg-surface-hover p-4 text-sm text-foreground">
-              Grammar selection is active in this hub. A dedicated
-              Grammar task runner is not connected in this sprint.
+              Grammar selection is active in this hub. A dedicated Grammar task
+              runner is not connected in this sprint.
             </p>
           )}
         </div>

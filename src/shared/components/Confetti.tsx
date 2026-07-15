@@ -1,4 +1,11 @@
-const COLORS = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff6eb4', '#a66cff'];
+const COLORS = [
+  '#ff6b6b',
+  '#ffd93d',
+  '#6bcb77',
+  '#4d96ff',
+  '#ff6eb4',
+  '#a66cff',
+];
 
 interface Particle {
   x: number;

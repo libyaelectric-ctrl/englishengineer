@@ -500,7 +500,9 @@ export function dedupeRowsByWord(
   });
 }
 
-export function buildEntries(rawData: VocabularyContentRow[]): VocabularyEntry[] {
+export function buildEntries(
+  rawData: VocabularyContentRow[]
+): VocabularyEntry[] {
   const beginnerRows = rawData.filter((r) => r.difficulty === 'Beginner');
   const contentRows = rawData.filter((r) => r.difficulty !== 'Beginner');
 

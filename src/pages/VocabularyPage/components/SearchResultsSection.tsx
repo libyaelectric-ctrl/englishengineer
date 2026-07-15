@@ -1,6 +1,9 @@
 import { Plus, Search } from 'lucide-react';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
-import type { VocabularyTerm, VocabularyMenuState } from '@/features/vocabulary';
+import type {
+  VocabularyTerm,
+  VocabularyMenuState,
+} from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { WordCard } from './WordCard';
@@ -106,7 +109,10 @@ export function SearchResultsSection({
                 required
                 value={customDraft.turkishMeaning}
                 onChange={(event) =>
-                  onSetCustomDraft({ ...customDraft, turkishMeaning: event.target.value })
+                  onSetCustomDraft({
+                    ...customDraft,
+                    turkishMeaning: event.target.value,
+                  })
                 }
                 className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
               />
@@ -117,7 +123,10 @@ export function SearchResultsSection({
                 required
                 value={customDraft.exampleSentence}
                 onChange={(event) =>
-                  onSetCustomDraft({ ...customDraft, exampleSentence: event.target.value })
+                  onSetCustomDraft({
+                    ...customDraft,
+                    exampleSentence: event.target.value,
+                  })
                 }
                 className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
               />
@@ -146,7 +155,10 @@ export function SearchResultsSection({
                   required
                   value={customDraft.domain}
                   onChange={(event) =>
-                    onSetCustomDraft({ ...customDraft, domain: event.target.value })
+                    onSetCustomDraft({
+                      ...customDraft,
+                      domain: event.target.value,
+                    })
                   }
                   className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
                 />

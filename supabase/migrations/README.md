@@ -18,12 +18,14 @@ supabase/
 Format: `YYYYMMDDHHMMSS_description.sql`
 
 Examples:
+
 - `20240101000000_initial_schema.sql`
 - `20240115000000_add_vocabulary_progress_index.sql`
 
 ## Creating New Migrations
 
 ### Option 1: Supabase CLI (Recommended)
+
 ```bash
 supabase migration new add_feature_name
 # Edit the generated file in supabase/migrations/
@@ -31,6 +33,7 @@ supabase db push
 ```
 
 ### Option 2: Manual
+
 1. Create new file in `supabase/migrations/`
 2. Follow naming convention
 3. Write forward SQL only (no rollback)
@@ -39,6 +42,7 @@ supabase db push
 ## Migration Rules
 
 ### DO:
+
 - Use `IF NOT EXISTS` for idempotency
 - Add indexes for frequently queried columns
 - Use `created_at` and `updated_at` timestamps
@@ -46,6 +50,7 @@ supabase db push
 - Test migrations locally before pushing
 
 ### DON'T:
+
 - Drop columns without checking dependencies
 - Rename columns (add new, migrate data, drop old)
 - Use `DROP TABLE` in production migrations
@@ -76,6 +81,7 @@ CREATE POLICY "Users can update own data"
 ## Rollback Strategy
 
 Since Supabase doesn't support rollback migrations:
+
 1. Always backup before major migrations
 2. Write reversible SQL when possible
 3. Keep migration history in git
@@ -84,6 +90,7 @@ Since Supabase doesn't support rollback migrations:
 ## Verification
 
 After running migrations:
+
 ```bash
 # Verify schema
 supabase db dump --schema-only > schema.sql

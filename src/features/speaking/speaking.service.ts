@@ -49,8 +49,10 @@ export const SpeakingService = {
     if (pool.length === 0) return SPEAKING_MISSIONS;
     const lowerPool = pool.map((w) => w.toLowerCase());
     return [...SPEAKING_MISSIONS].sort((a, b) => {
-      const aText = `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
-      const bText = `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
+      const aText =
+        `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
+      const bText =
+        `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
       const aCount = lowerPool.filter((w) => aText.includes(w)).length;
       const bCount = lowerPool.filter((w) => bText.includes(w)).length;
       return bCount - aCount;

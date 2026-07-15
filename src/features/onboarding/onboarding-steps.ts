@@ -27,7 +27,8 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'vocabulary',
     title: 'Vocabulary Builder',
-    description: 'Learn engineering-specific vocabulary with spaced repetition.',
+    description:
+      'Learn engineering-specific vocabulary with spaced repetition.',
     target: 'a[href="/vocabulary"]',
     placement: 'right',
     action: 'click',
@@ -35,7 +36,8 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
   {
     id: 'grammar',
     title: 'Grammar Practice',
-    description: 'Master technical grammar rules for professional communication.',
+    description:
+      'Master technical grammar rules for professional communication.',
     target: 'a[href="/grammar"]',
     placement: 'right',
     action: 'click',
@@ -74,9 +76,14 @@ export const markStepComplete = (stepId: string): void => {
     const completed: string[] = raw ? JSON.parse(raw) : [];
     if (!completed.includes(stepId)) {
       completed.push(stepId);
-      localStorage.setItem('onboarding_completed_steps', JSON.stringify(completed));
+      localStorage.setItem(
+        'onboarding_completed_steps',
+        JSON.stringify(completed)
+      );
     }
-  } catch { /* noop */ }
+  } catch {
+    /* noop */
+  }
 };
 
 export const isOnboardingComplete = (): boolean => {

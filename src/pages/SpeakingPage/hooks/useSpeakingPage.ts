@@ -42,7 +42,10 @@ export function useSpeakingPage() {
   } = useSpeakingStore();
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasMaxAccess = canAccessFeature(subscription, 'realVoiceSpeaking').allowed;
+  const hasMaxAccess = canAccessFeature(
+    subscription,
+    'realVoiceSpeaking'
+  ).allowed;
 
   // Voice minute wallet
   const voiceMinutesUsedThisMonth = useMemo(() => {
@@ -71,11 +74,15 @@ export function useSpeakingPage() {
   );
 
   // UI state
-  const [responseMode, setResponseMode] = useState<'written' | 'voice'>('written');
+  const [responseMode, setResponseMode] = useState<'written' | 'voice'>(
+    'written'
+  );
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
-  const [pronunciationScore, setPronunciationScore] = useState<number | null>(null);
+  const [pronunciationScore, setPronunciationScore] = useState<number | null>(
+    null
+  );
   const [phonemeFeedback, setPhonemeFeedback] = useState<
     Array<{ word: string; score: number; phonemes: string }>
   >([]);

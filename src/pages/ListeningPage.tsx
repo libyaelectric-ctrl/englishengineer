@@ -81,9 +81,20 @@ const ListeningPage = () => {
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1.0);
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
-  const CATEGORIES = ['All', 'Site Meetings', 'Technical', 'Safety', 'Commissioning'] as const;
+  const CATEGORIES = [
+    'All',
+    'Site Meetings',
+    'Technical',
+    'Safety',
+    'Commissioning',
+  ] as const;
   const filteredMissions = useMemo(
-    () => categoryFilter === 'All' ? visibleMissions : visibleMissions.filter((m) => m.missionType?.toLowerCase().includes(categoryFilter.toLowerCase())),
+    () =>
+      categoryFilter === 'All'
+        ? visibleMissions
+        : visibleMissions.filter((m) =>
+            m.missionType?.toLowerCase().includes(categoryFilter.toLowerCase())
+          ),
     [visibleMissions, categoryFilter]
   );
   const [showTranscript, setShowTranscript] = useState(true);
@@ -97,7 +108,9 @@ const ListeningPage = () => {
     return (
       <div className="animate-in fade-in duration-300">
         <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Listening</h1>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Listening
+          </h1>
         </div>
         <div className="space-y-6 pt-4">
           <LevelContentFilter
@@ -116,8 +129,13 @@ const ListeningPage = () => {
       {/* Sticky header — clean, full-width */}
       <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">Listening
-            <span className="ml-2 text-sm font-medium text-muted-copy">Mission {visibleMissions.findIndex(m => m.id === currentMission.id) + 1}/{visibleMissions.length}</span>
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
+            Listening
+            <span className="ml-2 text-sm font-medium text-muted-copy">
+              Mission{' '}
+              {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}
+              /{visibleMissions.length}
+            </span>
           </h1>
         </div>
       </div>
@@ -128,259 +146,263 @@ const ListeningPage = () => {
           onChange={setLevelFilter}
         />
 
-      {!workspaceOpen ? (
-        <SectionCard
-          title="Transcript Tasks"
-          subtitle="Choose a level-safe task; the system recommendation remains changeable"
-          icon={Headphones}
-        >
-          <div className="flex flex-wrap gap-2 mb-4">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategoryFilter(cat)}
-                className={`min-h-9 rounded-lg px-3 text-xs font-bold transition-all ${
-                  categoryFilter === cat
-                    ? 'bg-foreground text-background shadow-sm'
-                    : 'text-muted-copy border border-border-soft bg-surface hover:bg-surface-hover hover:text-foreground'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filteredMissions.map((mission) => (
-              <article
-                key={mission.id}
-                className="rounded-xl border border-border-soft bg-background p-5 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-border-soft bg-background px-2 py-1 text-xs font-bold text-foreground">
-                      {mission.cefrLevel}
-                    </span>
-                    <LevelAccessBadge
-                      label={getContentAccessLabel(
-                        mission.cefrLevel,
-                        currentLevel
-                      )}
-                    />
-                  </div>
-                  <span className="text-xs text-muted-copy">
-                    {mission.estimatedMinutes} min
-                  </span>
-                </div>
-                <h2 className="mt-3 font-medium text-foreground">
-                  {mission.title}
-                </h2>
-                <p className="mt-2 text-sm leading-6 text-muted-copy">
-                  {mission.description}
-                </p>
-                <Button
-                  className="mt-4 w-full"
-                  onClick={() => {
-                    selectMission(mission.id);
-                    setWorkspaceOpen(true);
-                  }}
-                >
-                  Open transcript task
-                </Button>
-              </article>
-            ))}
-          </div>
-        </SectionCard>
-      ) : (
-        <div className="space-y-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <Button variant="outline" onClick={() => setWorkspaceOpen(false)}>
-              Back to tasks
-            </Button>
-            <span className="text-sm font-medium text-muted-copy">
-              {currentMission.cefrLevel} · {currentMission.missionType}
-            </span>
-          </div>
-
-          <AudioPlayer mission={currentMission} />
-
-          <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-3">
-            <Gauge className="h-4 w-4 text-primary shrink-0" />
-            <span className="text-xs font-bold text-foreground">Playback Speed:</span>
-            <div className="flex gap-1.5">
-              {SPEED_OPTIONS.map((speed) => (
+        {!workspaceOpen ? (
+          <SectionCard
+            title="Transcript Tasks"
+            subtitle="Choose a level-safe task; the system recommendation remains changeable"
+            icon={Headphones}
+          >
+            <div className="flex flex-wrap gap-2 mb-4">
+              {CATEGORIES.map((cat) => (
                 <button
-                  key={speed}
+                  key={cat}
                   type="button"
-                  onClick={() => setPlaybackSpeed(speed)}
-                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${
-                    playbackSpeed === speed
-                      ? 'bg-primary text-white'
-                      : 'bg-surface-hover text-muted-copy hover:text-foreground'
+                  onClick={() => setCategoryFilter(cat)}
+                  className={`min-h-9 rounded-lg px-3 text-xs font-bold transition-all ${
+                    categoryFilter === cat
+                      ? 'bg-foreground text-background shadow-sm'
+                      : 'text-muted-copy border border-border-soft bg-surface hover:bg-surface-hover hover:text-foreground'
                   }`}
                 >
-                  {speed}x
+                  {cat}
                 </button>
               ))}
             </div>
-          </div>
-
-          <Button
-            variant="outline"
-            onClick={() => setShowTranscript((prev) => !prev)}
-          >
-            {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
-          </Button>
-
-          {showTranscript && (
-            <SectionCard
-              title={currentMission.title}
-              subtitle="Read the transcript, then complete all three response modes"
-              icon={FileText}
-            >
-              <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
-                {currentMission.transcript}
-              </div>
-            </SectionCard>
-          )}
-
-          {!evaluationResult ? (
-            <SectionCard
-              title="Comprehension Check"
-              subtitle="Multiple choice, fill-gap/short response, and key words"
-              icon={ListChecks}
-            >
-              <div className="space-y-5">
-                {currentMission.questions.map((question, index) => (
-                  <fieldset
-                    key={question.id}
-                    className="rounded-xl border border-border-soft p-4"
-                  >
-                    <legend className="px-2 text-sm font-medium text-foreground">
-                      {index + 1}. {question.questionText}
-                    </legend>
-                    {question.type === 'multiple_choice' ? (
-                      <div className="mt-3 space-y-2">
-                        {question.choices?.map((choice, choiceIndex) => {
-                          const value = String.fromCharCode(65 + choiceIndex);
-                          return (
-                            <label
-                              key={choice}
-                              className="flex cursor-pointer gap-2 rounded-lg border border-border-soft p-3 text-sm text-foreground"
-                            >
-                              <input
-                                type="radio"
-                                name={question.id}
-                                value={value}
-                                checked={answers[question.id] === value}
-                                onChange={() => setAnswer(question.id, value)}
-                              />
-                              {choice}
-                            </label>
-                          );
-                        })}
-                      </div>
-                    ) : question.type === 'true_false' ? (
-                      <select
-                        value={answers[question.id] ?? ''}
-                        onChange={(event) =>
-                          setAnswer(question.id, event.target.value)
-                        }
-                        className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
-                      >
-                        <option value="">Select true or false</option>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                      </select>
-                    ) : (
-                      <input
-                        value={answers[question.id] ?? ''}
-                        onChange={(event) =>
-                          setAnswer(question.id, event.target.value)
-                        }
-                        placeholder="Complete the missing technical phrase"
-                        className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
-                      />
-                    )}
-                  </fieldset>
-                ))}
-
-                <label className="block text-sm font-medium text-foreground">
-                  <span className="flex items-center gap-2">
-                    <KeyRound className="h-4 w-4" /> Key words you identified
-                  </span>
-                  <input
-                    value={userKeywords}
-                    onChange={(event) => setUserKeywords(event.target.value)}
-                    placeholder="Separate key words with commas"
-                    className="mt-2 w-full rounded-lg border border-border-soft p-3 font-normal"
-                  />
-                </label>
-                <label className="block text-sm font-medium text-foreground">
-                  Short transcript summary
-                  <textarea
-                    value={summary}
-                    onChange={(event) => setSummary(event.target.value)}
-                    className="mt-2 min-h-[160px] w-full resize-y rounded-lg border border-border-soft p-3 font-normal"
-                  />
-                </label>
-                <Button
-                  onClick={() => submitCurrentMission()}
-                  disabled={!summary.trim()}
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {filteredMissions.map((mission) => (
+                <article
+                  key={mission.id}
+                  className="rounded-xl border border-border-soft bg-background p-5 hover:shadow-md transition-shadow"
                 >
-                  Submit transcript task
-                </Button>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full border border-border-soft bg-background px-2 py-1 text-xs font-bold text-foreground">
+                        {mission.cefrLevel}
+                      </span>
+                      <LevelAccessBadge
+                        label={getContentAccessLabel(
+                          mission.cefrLevel,
+                          currentLevel
+                        )}
+                      />
+                    </div>
+                    <span className="text-xs text-muted-copy">
+                      {mission.estimatedMinutes} min
+                    </span>
+                  </div>
+                  <h2 className="mt-3 font-medium text-foreground">
+                    {mission.title}
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-muted-copy">
+                    {mission.description}
+                  </p>
+                  <Button
+                    className="mt-4 w-full"
+                    onClick={() => {
+                      selectMission(mission.id);
+                      setWorkspaceOpen(true);
+                    }}
+                  >
+                    Open transcript task
+                  </Button>
+                </article>
+              ))}
+            </div>
+          </SectionCard>
+        ) : (
+          <div className="space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <Button variant="outline" onClick={() => setWorkspaceOpen(false)}>
+                Back to tasks
+              </Button>
+              <span className="text-sm font-medium text-muted-copy">
+                {currentMission.cefrLevel} · {currentMission.missionType}
+              </span>
+            </div>
+
+            <AudioPlayer mission={currentMission} />
+
+            <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-3">
+              <Gauge className="h-4 w-4 text-primary shrink-0" />
+              <span className="text-xs font-bold text-foreground">
+                Playback Speed:
+              </span>
+              <div className="flex gap-1.5">
+                {SPEED_OPTIONS.map((speed) => (
+                  <button
+                    key={speed}
+                    type="button"
+                    onClick={() => setPlaybackSpeed(speed)}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${
+                      playbackSpeed === speed
+                        ? 'bg-primary text-white'
+                        : 'bg-surface-hover text-muted-copy hover:text-foreground'
+                    }`}
+                  >
+                    {speed}x
+                  </button>
+                ))}
               </div>
-            </SectionCard>
-          ) : (
-            <SectionCard
-              title="Deterministic Result"
-              subtitle="Local scoring only; no AI or speech evaluation"
-              icon={CheckCircle2}
+            </div>
+
+            <Button
+              variant="outline"
+              onClick={() => setShowTranscript((prev) => !prev)}
             >
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl bg-surface-hover p-4">
-                  <p className="text-xs font-medium text-muted-copy">
-                    Final score
-                  </p>
-                  <p className="text-2xl font-black text-foreground">
-                    <AnimatedScore value={evaluationResult.finalScore} />
-                  </p>
-                </div>
-                <div className="rounded-xl bg-surface-hover p-4">
-                  <p className="text-xs font-medium text-muted-copy">
-                    Comprehension
-                  </p>
-                  <p className="text-2xl font-black text-foreground">
-                    <AnimatedScore value={evaluationResult.comprehensionScore} />
-                  </p>
-                </div>
-                <div className="rounded-xl bg-surface-hover p-4">
-                  <p className="text-xs font-medium text-muted-copy">
-                    Key words
-                  </p>
-                  <p className="text-2xl font-black text-foreground">
-                    <AnimatedScore value={evaluationResult.keywordScore} />
-                  </p>
-                </div>
-              </div>
-              <p className="mt-4 text-sm leading-6 text-foreground">
-                {evaluationResult.feedback}
-              </p>
-              <Button className="mt-4" onClick={resetCurrentMission}>
-                Try another response
-              </Button>
-              <Button
-                variant="outline"
-                className="mt-4 ml-2"
-                onClick={resetCurrentMission}
+              {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
+            </Button>
+
+            {showTranscript && (
+              <SectionCard
+                title={currentMission.title}
+                subtitle="Read the transcript, then complete all three response modes"
+                icon={FileText}
               >
-                <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio
-              </Button>
-            </SectionCard>
-          )}
-        </div>
-      )}
+                <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
+                  {currentMission.transcript}
+                </div>
+              </SectionCard>
+            )}
+
+            {!evaluationResult ? (
+              <SectionCard
+                title="Comprehension Check"
+                subtitle="Multiple choice, fill-gap/short response, and key words"
+                icon={ListChecks}
+              >
+                <div className="space-y-5">
+                  {currentMission.questions.map((question, index) => (
+                    <fieldset
+                      key={question.id}
+                      className="rounded-xl border border-border-soft p-4"
+                    >
+                      <legend className="px-2 text-sm font-medium text-foreground">
+                        {index + 1}. {question.questionText}
+                      </legend>
+                      {question.type === 'multiple_choice' ? (
+                        <div className="mt-3 space-y-2">
+                          {question.choices?.map((choice, choiceIndex) => {
+                            const value = String.fromCharCode(65 + choiceIndex);
+                            return (
+                              <label
+                                key={choice}
+                                className="flex cursor-pointer gap-2 rounded-lg border border-border-soft p-3 text-sm text-foreground"
+                              >
+                                <input
+                                  type="radio"
+                                  name={question.id}
+                                  value={value}
+                                  checked={answers[question.id] === value}
+                                  onChange={() => setAnswer(question.id, value)}
+                                />
+                                {choice}
+                              </label>
+                            );
+                          })}
+                        </div>
+                      ) : question.type === 'true_false' ? (
+                        <select
+                          value={answers[question.id] ?? ''}
+                          onChange={(event) =>
+                            setAnswer(question.id, event.target.value)
+                          }
+                          className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
+                        >
+                          <option value="">Select true or false</option>
+                          <option value="true">True</option>
+                          <option value="false">False</option>
+                        </select>
+                      ) : (
+                        <input
+                          value={answers[question.id] ?? ''}
+                          onChange={(event) =>
+                            setAnswer(question.id, event.target.value)
+                          }
+                          placeholder="Complete the missing technical phrase"
+                          className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
+                        />
+                      )}
+                    </fieldset>
+                  ))}
+
+                  <label className="block text-sm font-medium text-foreground">
+                    <span className="flex items-center gap-2">
+                      <KeyRound className="h-4 w-4" /> Key words you identified
+                    </span>
+                    <input
+                      value={userKeywords}
+                      onChange={(event) => setUserKeywords(event.target.value)}
+                      placeholder="Separate key words with commas"
+                      className="mt-2 w-full rounded-lg border border-border-soft p-3 font-normal"
+                    />
+                  </label>
+                  <label className="block text-sm font-medium text-foreground">
+                    Short transcript summary
+                    <textarea
+                      value={summary}
+                      onChange={(event) => setSummary(event.target.value)}
+                      className="mt-2 min-h-[160px] w-full resize-y rounded-lg border border-border-soft p-3 font-normal"
+                    />
+                  </label>
+                  <Button
+                    onClick={() => submitCurrentMission()}
+                    disabled={!summary.trim()}
+                  >
+                    Submit transcript task
+                  </Button>
+                </div>
+              </SectionCard>
+            ) : (
+              <SectionCard
+                title="Deterministic Result"
+                subtitle="Local scoring only; no AI or speech evaluation"
+                icon={CheckCircle2}
+              >
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-xl bg-surface-hover p-4">
+                    <p className="text-xs font-medium text-muted-copy">
+                      Final score
+                    </p>
+                    <p className="text-2xl font-black text-foreground">
+                      <AnimatedScore value={evaluationResult.finalScore} />
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-surface-hover p-4">
+                    <p className="text-xs font-medium text-muted-copy">
+                      Comprehension
+                    </p>
+                    <p className="text-2xl font-black text-foreground">
+                      <AnimatedScore
+                        value={evaluationResult.comprehensionScore}
+                      />
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-surface-hover p-4">
+                    <p className="text-xs font-medium text-muted-copy">
+                      Key words
+                    </p>
+                    <p className="text-2xl font-black text-foreground">
+                      <AnimatedScore value={evaluationResult.keywordScore} />
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-4 text-sm leading-6 text-foreground">
+                  {evaluationResult.feedback}
+                </p>
+                <Button className="mt-4" onClick={resetCurrentMission}>
+                  Try another response
+                </Button>
+                <Button
+                  variant="outline"
+                  className="mt-4 ml-2"
+                  onClick={resetCurrentMission}
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio
+                </Button>
+              </SectionCard>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

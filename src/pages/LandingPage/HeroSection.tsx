@@ -66,12 +66,19 @@ export function HeroSection({
           </p>
           <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
             {FEATURES.map((feature) => (
-              <div key={feature.title} className="rounded-lg border border-black/[0.06] bg-white/68 p-3 backdrop-blur">
+              <div
+                key={feature.title}
+                className="rounded-lg border border-black/[0.06] bg-white/68 p-3 backdrop-blur"
+              >
                 <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-md border border-black/10 bg-white">
                   <feature.icon className="h-3.5 w-3.5 text-black/60" />
                 </div>
-                <h3 className="text-xs font-medium text-[#111]">{feature.title}</h3>
-                <p className="mt-1 text-[10px] leading-3.5 text-muted-copy">{feature.desc}</p>
+                <h3 className="text-xs font-medium text-[#111]">
+                  {feature.title}
+                </h3>
+                <p className="mt-1 text-[10px] leading-3.5 text-muted-copy">
+                  {feature.desc}
+                </p>
               </div>
             ))}
           </div>

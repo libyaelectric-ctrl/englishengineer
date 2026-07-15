@@ -81,12 +81,12 @@ EngineerOS uses a multi-layered observability strategy covering error monitoring
 
 ### Severity Levels
 
-| Level | Description | Response Time |
-|-------|-------------|---------------|
-| P0 - Critical | Service down, data loss risk | Immediate |
-| P1 - High | Major feature broken, security issue | < 1 hour |
-| P2 - Medium | Degraded performance, non-critical bug | < 4 hours |
-| P3 - Low | Minor issue, cosmetic | Next sprint |
+| Level         | Description                            | Response Time |
+| ------------- | -------------------------------------- | ------------- |
+| P0 - Critical | Service down, data loss risk           | Immediate     |
+| P1 - High     | Major feature broken, security issue   | < 1 hour      |
+| P2 - Medium   | Degraded performance, non-critical bug | < 4 hours     |
+| P3 - Low      | Minor issue, cosmetic                  | Next sprint   |
 
 ### Incident Response Process
 
@@ -98,11 +98,11 @@ EngineerOS uses a multi-layered observability strategy covering error monitoring
 
 ## Environment Variables
 
-| Variable | Service | Purpose |
-|----------|---------|---------|
-| `SENTRY_DSN` | Backend | Sentry Data Source Name |
-| `VITE_SENTRY_DSN` | Frontend | Sentry Data Source Name |
-| `VITE_ERROR_MONITORING_PROVIDER` | Frontend | Set to `sentry` to enable |
+| Variable                            | Service  | Purpose                           |
+| ----------------------------------- | -------- | --------------------------------- |
+| `SENTRY_DSN`                        | Backend  | Sentry Data Source Name           |
+| `VITE_SENTRY_DSN`                   | Frontend | Sentry Data Source Name           |
+| `VITE_ERROR_MONITORING_PROVIDER`    | Frontend | Set to `sentry` to enable         |
 | `VITE_ERROR_MONITORING_SAMPLE_RATE` | Frontend | 0-1, percentage of errors to send |
 
 ## Dashboard Access

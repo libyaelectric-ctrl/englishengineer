@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { Bot, Check, Clipboard, Send, WifiOff } from 'lucide-react';
 import { AIService, AIProviderStatus } from '@/features/ai';
 import { BetaService } from '@/features/beta';
-import { QUICK_AI_ACTIONS, WorkToolsService, useWorkToolsStore } from '@/features/work-tools';
+import {
+  QUICK_AI_ACTIONS,
+  WorkToolsService,
+  useWorkToolsStore,
+} from '@/features/work-tools';
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -13,7 +17,11 @@ type QuickAITabProps = {
   onStatusChange: (s: AIProviderStatus) => void;
 };
 
-export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabProps) => {
+export const QuickAITab = ({
+  initialDraft,
+  status,
+  onStatusChange,
+}: QuickAITabProps) => {
   const { remember } = useWorkToolsStore();
   const [input, setInput] = useState(initialDraft);
   const [result, setResult] = useState('');
@@ -54,8 +62,8 @@ export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabP
               Quick AI Editor
             </h2>
             <p className="mt-1 text-sm text-muted-copy">
-              AI requires an internet-connected backend. No vendor API key
-              is stored in this browser.
+              AI requires an internet-connected backend. No vendor API key is
+              stored in this browser.
             </p>
           </div>
           <StatusBadge
@@ -89,9 +97,7 @@ export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabP
               key={action.id}
               variant="secondary"
               disabled={isRunning || !input.trim()}
-              onClick={() =>
-                runAction(action.label, action.systemInstruction)
-              }
+              onClick={() => runAction(action.label, action.systemInstruction)}
               title={action.expectedOutputStyle}
             >
               <Bot className="h-4 w-4" /> {action.label}

@@ -49,10 +49,9 @@ const initSentry = () => {
   Sentry.init({
     dsn,
     environment: env?.VITE_ENVIRONMENT_MODE || 'development',
-    tracesSampleRate: normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE) || 0.1,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-    ],
+    tracesSampleRate:
+      normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE) || 0.1,
+    integrations: [Sentry.browserTracingIntegration()],
     enabled: Boolean(dsn),
   });
 

@@ -186,8 +186,8 @@ const SpeakingPage = () => {
                     Written Roleplay response
                   </label>
                   <p className="mt-1 text-xs leading-5 text-muted-copy">
-                    This is text-based communication practice, not real speech or
-                    pronunciation scoring.
+                    This is text-based communication practice, not real speech
+                    or pronunciation scoring.
                   </p>
                   <textarea
                     id="written-roleplay-response"

@@ -1,8 +1,4 @@
-import {
-  Clipboard,
-  Cpu,
-  Download,
-} from 'lucide-react';
+import { Clipboard, Cpu, Download } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -72,8 +68,8 @@ export const CoachResultPanel = ({
         <div className="rounded-xl border border-warning/20 bg-warning/5 p-4 text-sm text-warning">
           <p className="font-medium">Limited AI response</p>
           <p className="mt-1">
-            A complete structured result was unavailable. The readable
-            response is shown below.
+            A complete structured result was unavailable. The readable response
+            is shown below.
           </p>
         </div>
       )}
@@ -92,8 +88,7 @@ export const CoachResultPanel = ({
             Professional Version
           </p>
           <p className="text-sm text-muted-copy mt-2 leading-relaxed">
-            {lastResult.professionalVersion ||
-              lastResult.nativeRewrite}
+            {lastResult.professionalVersion || lastResult.nativeRewrite}
           </p>
         </div>
         <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
@@ -162,8 +157,7 @@ export const CoachResultPanel = ({
             {lastResult.recommendedNextTask}
           </p>
           <p className="text-xs text-engineer-cyan mt-3">
-            {lastResult.cefrEstimate ||
-              lastResult.estimatedCefrImpact}
+            {lastResult.cefrEstimate || lastResult.estimatedCefrImpact}
           </p>
           <p className="text-xs text-success mt-1">
             {lastResult.engineerEloImpactEstimate ||

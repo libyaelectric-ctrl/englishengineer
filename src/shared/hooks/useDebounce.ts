@@ -19,7 +19,9 @@ export const useDebouncedCallback = <T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay: number
 ) => {
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   const debouncedCallback = (...args: Parameters<T>) => {
     if (timer) clearTimeout(timer);

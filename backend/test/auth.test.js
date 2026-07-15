@@ -119,17 +119,25 @@ describe('createBackendAuth', () => {
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest({}, { userId: 'dev-user-1' });
       let caughtError;
-      const next = (err) => { caughtError = err; };
+      const next = (err) => {
+        caughtError = err;
+      };
       await requireBackendAuth(req, {}, next);
       assert.ok(caughtError);
       assert.equal(caughtError.status, 401);
     });
 
     it('internal-secret takes priority over dev-bypass when both configured', async () => {
-      const config = { internalApiSecret: 'secret-123', allowInsecureDevAuth: true };
+      const config = {
+        internalApiSecret: 'secret-123',
+        allowInsecureDevAuth: true,
+      };
       const { requireBackendAuth } = createBackendAuth(config);
       const req = createMockRequest(
-        { authorization: 'Bearer secret-123', 'x-engineeros-user-id': 'user-priority' },
+        {
+          authorization: 'Bearer secret-123',
+          'x-engineeros-user-id': 'user-priority',
+        },
         { userId: 'dev-should-not-appear' }
       );
       const next = () => {};

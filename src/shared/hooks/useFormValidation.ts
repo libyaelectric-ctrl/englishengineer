@@ -19,39 +19,48 @@ export const useFormValidation = (config: FormConfig) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const validateField = useCallback((name: string, value: unknown): string | null => {
-    const fieldConfig = config[name];
-    if (!fieldConfig) return null;
+  const validateField = useCallback(
+    (name: string, value: unknown): string | null => {
+      const fieldConfig = config[name];
+      if (!fieldConfig) return null;
 
-    for (const rule of fieldConfig.rules) {
-      if (!rule.validate(value)) {
-        return rule.message;
+      for (const rule of fieldConfig.rules) {
+        if (!rule.validate(value)) {
+          return rule.message;
+        }
       }
-    }
-    return null;
-  }, [config]);
+      return null;
+    },
+    [config]
+  );
 
-  const validate = useCallback((values: Record<string, unknown>): boolean => {
-    const newErrors: FormErrors = {};
-    let isValid = true;
+  const validate = useCallback(
+    (values: Record<string, unknown>): boolean => {
+      const newErrors: FormErrors = {};
+      let isValid = true;
 
-    for (const [name, value] of Object.entries(values)) {
-      const error = validateField(name, value);
-      newErrors[name] = error;
-      if (error) isValid = false;
-    }
+      for (const [name, value] of Object.entries(values)) {
+        const error = validateField(name, value);
+        newErrors[name] = error;
+        if (error) isValid = false;
+      }
 
-    setErrors(newErrors);
-    return isValid;
-  }, [validateField]);
+      setErrors(newErrors);
+      return isValid;
+    },
+    [validateField]
+  );
 
   const setFieldTouched = useCallback((name: string) => {
-    setTouched(prev => ({ ...prev, [name]: true }));
+    setTouched((prev) => ({ ...prev, [name]: true }));
   }, []);
 
-  const getFieldError = useCallback((name: string): string | null => {
-    return touched[name] ? errors[name] || null : null;
-  }, [touched, errors]);
+  const getFieldError = useCallback(
+    (name: string): string | null => {
+      return touched[name] ? errors[name] || null : null;
+    },
+    [touched, errors]
+  );
 
   const reset = useCallback(() => {
     setErrors({});

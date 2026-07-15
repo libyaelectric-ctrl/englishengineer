@@ -1,4 +1,10 @@
-type HapticPattern = 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error';
+type HapticPattern =
+  | 'light'
+  | 'medium'
+  | 'heavy'
+  | 'success'
+  | 'warning'
+  | 'error';
 
 const PATTERNS: Record<HapticPattern, number[]> = {
   light: [10],

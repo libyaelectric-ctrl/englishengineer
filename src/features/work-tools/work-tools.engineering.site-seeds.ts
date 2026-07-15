@@ -45,7 +45,7 @@ export const SITE_SEEDS: EngineeringSeed[] = [
     'Inspection Reschedule Request',
     'QA/QC',
     'Move an inspection without losing control',
-    'Ceiling access was not released for today\'s inspection.',
+    "Ceiling access was not released for today's inspection.",
     'reschedule the inspection for tomorrow at 10:00',
   ],
   [
@@ -102,7 +102,7 @@ export const SITE_SEEDS: EngineeringSeed[] = [
     'Electrical',
     'Report cable-pulling status',
     'Four of six feeders were pulled today.',
-    'record drum references and tomorrow\'s sequence',
+    "record drum references and tomorrow's sequence",
   ],
   [
     'termination-complete',

@@ -21,7 +21,7 @@ export const useGeolocation = (enableHighAccuracy = false) => {
 
   useEffect(() => {
     if (!navigator.geolocation) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: 'Geolocation is not supported',
         loading: false,
@@ -41,7 +41,7 @@ export const useGeolocation = (enableHighAccuracy = false) => {
     };
 
     const errorHandler = (error: GeolocationPositionError) => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: error.message,
         loading: false,

@@ -144,10 +144,7 @@ export const storage = {
       notifyStorageChange(k);
       return true;
     } catch (e) {
-      logger.w(
-        `[STORAGE] Failed to remove key "${k}" from localStorage:`,
-        e
-      );
+      logger.w(`[STORAGE] Failed to remove key "${k}" from localStorage:`, e);
       return false;
     }
   },

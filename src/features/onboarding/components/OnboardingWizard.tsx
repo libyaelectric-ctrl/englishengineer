@@ -18,7 +18,7 @@ const LevelStep = () => {
 
   return (
     <div className="grid grid-cols-3 gap-3">
-      {levels.map(level => (
+      {levels.map((level) => (
         <button
           key={level}
           onClick={() => setSelected(level)}
@@ -45,14 +45,14 @@ const GoalsStep = () => {
   const [selected, setSelected] = useState<string[]>([]);
 
   const toggle = (id: string) => {
-    setSelected(prev =>
-      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      {goals.map(goal => (
+      {goals.map((goal) => (
         <button
           key={goal.id}
           onClick={() => toggle(goal.id)}
@@ -80,13 +80,35 @@ const ReadyStep = () => (
 );
 
 const steps = [
-  { id: 'welcome', title: 'Welcome to EngineerOS', description: 'Your journey to English mastery begins here.', component: WelcomeStep },
-  { id: 'level', title: 'Your English Level', description: 'Help us personalize your experience.', component: LevelStep },
-  { id: 'goals', title: 'Learning Goals', description: 'What would you like to improve?', component: GoalsStep },
-  { id: 'ready', title: 'You\'re All Set!', description: 'Start learning now.', component: ReadyStep },
+  {
+    id: 'welcome',
+    title: 'Welcome to EngineerOS',
+    description: 'Your journey to English mastery begins here.',
+    component: WelcomeStep,
+  },
+  {
+    id: 'level',
+    title: 'Your English Level',
+    description: 'Help us personalize your experience.',
+    component: LevelStep,
+  },
+  {
+    id: 'goals',
+    title: 'Learning Goals',
+    description: 'What would you like to improve?',
+    component: GoalsStep,
+  },
+  {
+    id: 'ready',
+    title: "You're All Set!",
+    description: 'Start learning now.',
+    component: ReadyStep,
+  },
 ];
 
-export const OnboardingWizard: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
+export const OnboardingWizard: React.FC<{ onComplete: () => void }> = ({
+  onComplete,
+}) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleNext = () => {
@@ -128,14 +150,22 @@ export const OnboardingWizard: React.FC<{ onComplete: () => void }> = ({ onCompl
       </div>
 
       <div className="flex justify-between">
-        <Button variant="secondary" onClick={handleBack} disabled={currentStep === 0}>
+        <Button
+          variant="secondary"
+          onClick={handleBack}
+          disabled={currentStep === 0}
+        >
           <ChevronLeft className="mr-2 h-4 w-4" /> Back
         </Button>
         <Button onClick={handleNext}>
           {currentStep === steps.length - 1 ? (
-            <>Get Started <Check className="ml-2 h-4 w-4" /></>
+            <>
+              Get Started <Check className="ml-2 h-4 w-4" />
+            </>
           ) : (
-            <>Next <ChevronRight className="ml-2 h-4 w-4" /></>
+            <>
+              Next <ChevronRight className="ml-2 h-4 w-4" />
+            </>
           )}
         </Button>
       </div>
