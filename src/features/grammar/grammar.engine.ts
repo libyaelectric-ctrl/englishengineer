@@ -4,7 +4,7 @@ import {
   isCefrAtOrBelow,
   type LearningDataSkill,
   type UserSkillProfile,
-} from '@/features/learning-data';
+} from '@/core/learning';
 import { GrammarRepository } from './grammar.repository';
 import { GrammarProgressService } from './grammar.progress';
 import type { GrammarExplanationLanguage, GrammarRule } from './grammar.types';

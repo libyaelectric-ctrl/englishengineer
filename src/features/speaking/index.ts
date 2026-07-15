@@ -6,3 +6,4 @@ export * from './speaking.service';
 export * from './speaking.store';
 export * from './speaking-mvp';
 export * from './pronunciation-scorer';
+export * from './components';

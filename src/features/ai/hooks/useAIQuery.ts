@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { AIService } from '../ai.service';
-import type { AIOperation, AIRequest, AIResponse, MockExample } from '../ai.types';
+import type { AIOperation, AIRequest } from '../ai.types';
+import type { MockExample } from '../mock-ai.provider';
 
 export function useAIRun(examples: MockExample[]) {
   return useMutation({

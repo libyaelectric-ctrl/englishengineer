@@ -24,6 +24,7 @@ import {
   PenTool,
   Settings,
   Shield,
+  Target,
   Trophy,
   User,
   Wallet,
@@ -58,10 +59,15 @@ export const PROFILE_NAV_ITEMS = [
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
 ] as const;
 
+export const PROGRESS_NAV_ITEMS = [
+  { label: 'Overview', href: '/progress/overview', icon: Target },
+  { label: 'Next Steps', href: '/progress/next-steps', icon: Trophy },
+] as const;
+
 export const NAV_ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
   { label: 'Skills', href: null, icon: Layers3, children: SKILL_NAV_ITEMS },
-  { label: 'Progress', href: '/progress', icon: Trophy },
+  { label: 'Progress', href: null, icon: Trophy, children: PROGRESS_NAV_ITEMS },
   {
     label: 'Learning Hub',
     href: null,

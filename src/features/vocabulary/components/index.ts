@@ -1,0 +1,1 @@
+export { VocabSidebar } from './VocabSidebar';

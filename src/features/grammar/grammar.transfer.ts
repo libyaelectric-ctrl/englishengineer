@@ -6,7 +6,7 @@ import type {
   WritingEvaluationResult,
   WritingMission,
 } from '@/features/writing';
-import { includesNormalized } from '@/features/learning-data';
+import { includesNormalized } from '@/core/learning';
 import { GrammarProgressService } from './grammar.progress';
 import { GrammarRepository } from './grammar.repository';
 import type { GrammarRule } from './grammar.types';

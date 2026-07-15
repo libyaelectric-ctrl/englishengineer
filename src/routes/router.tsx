@@ -15,17 +15,11 @@ const Grammar = lazy(() => import('@/pages/GrammarPage'));
 const Reading = lazy(() => import('@/pages/ReadingPage'));
 const Writing = lazy(() => import('@/pages/WritingPage'));
 const Listening = lazy(() => import('@/pages/ListeningPage'));
-const AI = lazy(() => import('@/pages/AIPage'));
-const Analytics = lazy(() => import('@/pages/AnalyticsPage'));
 const Admin = lazy(() => import('@/pages/AdminPage'));
-const Gamification = lazy(() => import('@/pages/GamificationPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
-const LearningIntelligence = lazy(
-  () => import('@/pages/LearningIntelligencePage')
-);
 const BetaProgram = lazy(() => import('@/pages/BetaProgramPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
@@ -202,27 +196,15 @@ export const router = createBrowserRouter([
       },
       {
         path: 'ai',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <AI />
-          </Suspense>
-        ),
+        element: <Navigate to="/tools/ai" replace />,
       },
       {
         path: 'analytics',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Analytics />
-          </Suspense>
-        ),
+        element: <Navigate to="/progress/overview" replace />,
       },
       {
         path: 'gamification',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Gamification />
-          </Suspense>
-        ),
+        element: <Navigate to="/progress/next-steps" replace />,
       },
       {
         path: 'curriculum',
@@ -250,6 +232,10 @@ export const router = createBrowserRouter([
       },
       {
         path: 'progress',
+        element: <Navigate to="/progress/overview" replace />,
+      },
+      {
+        path: 'progress/:section',
         element: (
           <Suspense fallback={<LoadingState />}>
             <Progress />
@@ -258,11 +244,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'learning-plan',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <LearningIntelligence />
-          </Suspense>
-        ),
+        element: <Navigate to="/progress/next-steps" replace />,
       },
       {
         path: 'beta-program',

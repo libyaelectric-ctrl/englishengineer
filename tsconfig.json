@@ -23,5 +23,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "exclude": ["yenisrc"]
+  "exclude": ["tests/**", "backend/**"]
 }
