@@ -66,6 +66,23 @@ npm run format
 npm run build
 ```
 
+## Test Coverage
+
+Coverage thresholds are enforced in CI. Current minimums:
+
+| Scope | Branches | Functions | Lines | Statements |
+|-------|----------|-----------|-------|------------|
+| Global | 75% | 75% | 75% | 75% |
+| `src/features/billing/**` | 85% | 85% | 85% | 85% |
+| `src/features/auth/**` | 85% | 85% | 85% | 85% |
+| `src/features/ai/**` | 80% | 80% | 80% | 80% |
+| `src/features/vocabulary/**` | 80% | 80% | 80% | 80% |
+| `src/core/**` | 80% | 80% | 80% | 80% |
+
+Run `npm run test:coverage` locally to see the full report. The HTML report is generated in `coverage/`.
+
+If a PR drops coverage below the threshold, the CI pipeline will fail.
+
 ## CI/CD Pipeline
 
 ### On Every Push to `main` or `develop`

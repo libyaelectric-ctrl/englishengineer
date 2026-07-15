@@ -1,6 +1,6 @@
 import { MissionDifficulty } from '@/core/learning';
 import { CefrLevel } from '@/features/level-system';
-import type { LearningDataSkill } from '@/features/learning-data';
+import type { LearningDataSkill } from '@/core/learning';
 
 export type VocabularyDiscipline =
   | 'Electrical Engineering'

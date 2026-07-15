@@ -5,7 +5,7 @@ import {
   getLevelsThrough,
   includesNormalized,
   type LearningDataSkill,
-} from '@/features/learning-data';
+} from '@/core/learning';
 import { assertGrammarRules } from './grammar.schema';
 import type { GrammarRule } from './grammar.types';
 

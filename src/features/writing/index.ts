@@ -8,3 +8,4 @@ export * from './WritingModelAnswer';
 export * from './writing.task-model';
 export * from './writing-realtime-analyzer';
 export * from './WritingRealtimeFeedback';
+export * from './components';

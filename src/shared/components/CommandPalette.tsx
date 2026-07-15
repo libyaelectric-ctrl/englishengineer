@@ -77,7 +77,7 @@ export const CommandPalette: React.FC = () => {
       id: 'ai',
       title: 'AI Asistan',
       icon: Brain,
-      action: () => navigate('/ai'),
+      action: () => navigate('/tools/ai'),
     },
     {
       id: 'profile',
