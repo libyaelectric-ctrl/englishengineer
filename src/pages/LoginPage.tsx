@@ -146,6 +146,11 @@ const LoginPage = () => {
   const handleSocialLogin = async (
     provider: 'google' | 'linkedin' | 'apple'
   ) => {
+    if (provider === 'apple') {
+      setError('Apple Sign In is coming soon. Please use Google or LinkedIn.');
+      return;
+    }
+
     const client = getSupabaseClient();
     if (!client) {
       setError(
@@ -337,24 +342,33 @@ const LoginPage = () => {
 
           {/* Social logins */}
           <div className="space-y-3">
-            {SOCIAL_PROVIDERS.map((sp) => (
-              <button
-                key={sp.provider}
-                type="button"
-                onClick={() => handleSocialLogin(sp.provider)}
-                disabled={socialLoading !== null}
-                className="flex h-11 w-full items-center justify-center gap-3 rounded-lg border border-border-soft bg-surface text-sm font-medium text-foreground hover:bg-surface-hover hover:border-border-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {socialLoading === sp.provider ? (
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
-                ) : (
-                  sp.icon
-                )}
-                {socialLoading === sp.provider
-                  ? 'Connecting...'
-                  : `Continue with ${sp.name}`}
-              </button>
-            ))}
+            {SOCIAL_PROVIDERS.map((sp) => {
+              const isApple = sp.provider === 'apple';
+              return (
+                <button
+                  key={sp.provider}
+                  type="button"
+                  onClick={() => handleSocialLogin(sp.provider)}
+                  disabled={socialLoading !== null || isApple}
+                  className={`flex h-11 w-full items-center justify-center gap-3 rounded-lg border text-sm font-medium transition-colors disabled:cursor-not-allowed ${
+                    isApple
+                      ? 'border-border-soft bg-surface/50 text-muted-copy opacity-60'
+                      : 'border-border-soft bg-surface text-foreground hover:bg-surface-hover hover:border-border-hover disabled:opacity-50'
+                  }`}
+                >
+                  {socialLoading === sp.provider ? (
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
+                  ) : (
+                    sp.icon
+                  )}
+                  {isApple
+                    ? `${sp.name} — Coming Soon`
+                    : socialLoading === sp.provider
+                      ? 'Connecting...'
+                      : `Continue with ${sp.name}`}
+                </button>
+              );
+            })}
 
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
