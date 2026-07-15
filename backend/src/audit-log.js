@@ -73,4 +73,17 @@ export const getAuditLogs = async (filters = {}) => {
 export const AUDIT_ACTIONS = {
   CHECKOUT_CREATED: 'checkout_created',
   WEBHOOK_RECEIVED: 'webhook_received',
+  AUTH_LOGIN: 'auth_login',
+  AUTH_LOGOUT: 'auth_logout',
+  AUTH_SIGNUP: 'auth_signup',
+  AI_REQUEST: 'ai_request',
+  AI_LIMIT_EXCEEDED: 'ai_limit_exceeded',
+  VOCABULARY_REVIEW: 'vocabulary_review',
+  VOCABULARY_PROGRESS: 'vocabulary_progress',
+  BILLING_SUBSCRIPTION_CHANGED: 'billing_subscription_changed',
+  BILLING_PORTAL_OPENED: 'billing_portal_opened',
+  WORKSPACE_CREATED: 'workspace_created',
+  WORKSPACE_DELETED: 'workspace_deleted',
+  RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
+  ADMIN_ACCESS: 'admin_access',
 };

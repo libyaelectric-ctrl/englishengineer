@@ -23,6 +23,7 @@ import {
 import { createI18nMiddleware } from './i18n.js';
 import { initAuditLog, getAuditLogs } from './audit-log.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
+import { swaggerSpec } from './swagger.js';
 
 export const createApp = ({
   config,
@@ -55,19 +56,49 @@ export const createApp = ({
           scriptSrc: ["'self'"],
           styleSrc: ["'self'", "'unsafe-inline'"],
           imgSrc: ["'self'", 'data:', 'https:'],
-          connectSrc: ["'self'", config.appOrigin],
-          fontSrc: ["'self'"],
+          connectSrc: ["'self'", config.appOrigin, 'https://sentry.io'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
           objectSrc: ["'none'"],
-          mediaSrc: ["'none'"],
+          mediaSrc: ["'self'"],
           frameSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          formAction: ["'self'"],
+          baseUri: ["'self'"],
+          upgradeInsecureRequests: [],
+          reportUri: ['/api/csp-report'],
         },
       },
       crossOriginResourcePolicy: { policy: 'cross-origin' },
+      hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      crossOriginEmbedderPolicy: false,
     })
   );
+  const allowedOrigins = [
+    config.appOrigin,
+    'https://englishengineer.vercel.app',
+    'https://www.englishengineer.vercel.app',
+  ].filter(Boolean);
+
+  // HTTPS enforcement in production
+  if (config.environment === 'production') {
+    app.use((req, res, next) => {
+      if (req.headers['x-forwarded-proto'] !== 'https' && req.method !== 'GET') {
+        return res.redirect(301, `https://${req.headers.host}${req.url}`);
+      }
+      next();
+    });
+  }
+
   app.use(
     cors({
-      origin: config.appOrigin,
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: [
         'Authorization',
@@ -176,6 +207,18 @@ export const createApp = ({
   // Register health on both v1 and legacy paths
   v1Router.get('/health', healthHandler);
   app.get('/api/health', healthHandler);
+
+  // Swagger documentation
+  app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
+  app.get('/api-docs', (_req, res) => {
+    res.send(`<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`);
+  });
+
+  // CSP violation report endpoint
+  app.post('/api/csp-report', express.json({ type: 'application/csp-report' }), (req, res) => {
+    console.warn('[CSP-VIOLATION]', req.body);
+    res.status(204).end();
+  });
 
   const backendAuth = createBackendAuth(config.auth, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;

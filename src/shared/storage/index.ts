@@ -45,7 +45,10 @@ export const storage = {
       if (typeof window === 'undefined' || !window.localStorage) return false;
       localStorage.setItem(`eos_${k}`, JSON.stringify(v));
       return true;
-    } catch { return false; }
+    } catch (e) {
+      logger.w(`[STORAGE] Failed to write global key "${k}":`, e);
+      return false;
+    }
   },
 
   globalGet: <T>(k: string): T | null => {
@@ -53,7 +56,10 @@ export const storage = {
       if (typeof window === 'undefined' || !window.localStorage) return null;
       const item = localStorage.getItem(`eos_${k}`);
       return item ? (JSON.parse(item) as T) : null;
-    } catch { return null; }
+    } catch (e) {
+      logger.w(`[STORAGE] Failed to read global key "${k}":`, e);
+      return null;
+    }
   },
 
   globalRemove: (k: string): boolean => {
@@ -61,7 +67,10 @@ export const storage = {
       if (typeof window === 'undefined' || !window.localStorage) return false;
       localStorage.removeItem(`eos_${k}`);
       return true;
-    } catch { return false; }
+    } catch (e) {
+      logger.w(`[STORAGE] Failed to remove global key "${k}":`, e);
+      return false;
+    }
   },
 
   /**
