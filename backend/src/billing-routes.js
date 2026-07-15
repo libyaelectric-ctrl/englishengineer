@@ -118,17 +118,15 @@ export const registerBillingRoutes = (
         }
       }
     } catch (err) {
-      console.warn('[stripe-webhook-log-parse]', err?.message);
+      if (process.env.NODE_ENV !== 'production') {
+        console.warn('[stripe-webhook-log-parse]', err?.message);
+      }
     }
 
     auditLog({
       action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
       details: { eventId, eventType },
     });
-
-    console.log(
-      `[stripe-webhook-received] eventId=${eventId} type=${eventType}`
-    );
 
     try {
       res.json(

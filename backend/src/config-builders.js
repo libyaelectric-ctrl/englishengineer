@@ -52,7 +52,10 @@ export const resolveAuth = (env, runtimeEnv) => {
       : runtimeEnv === 'test' || isTrue(env.ALLOW_INSECURE_DEV_AUTH);
 
   if (runtimeEnv === 'production' && isTrue(env.ALLOW_INSECURE_DEV_AUTH)) {
-    console.warn('WARNING: allowInsecureDevAuth cannot be true in production.');
+    throw new Error(
+      'ALLOW_INSECURE_DEV_AUTH must not be true in production. ' +
+      'Set ALLOW_INSECURE_DEV_AUTH=false or remove it from your environment.'
+    );
   }
 
   return {

@@ -6,3 +6,4 @@ export * from './profile.engine';
 export * from './SkillRadar';
 export * from './useLearningCockpit';
 export * from './OnboardingGate';
+export * from './components';

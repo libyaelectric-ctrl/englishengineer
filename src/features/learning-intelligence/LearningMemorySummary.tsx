@@ -53,7 +53,7 @@ export const LearningMemorySummary = ({
         repeatedMistakes > 0
           ? 'Included in your review plan'
           : 'No repeated pattern yet',
-      href: '/learning-plan',
+      href: '/progress/next-steps',
       icon: TriangleAlert,
       tone: 'border-amber-200 bg-amber-50 text-amber-700',
     },
@@ -61,7 +61,7 @@ export const LearningMemorySummary = ({
       label: 'Achievements',
       value: `${unlockedBadges}/${badges.length} unlocked`,
       detail: 'Earned only from recorded practice',
-      href: '/gamification',
+      href: '/progress/next-steps',
       icon: Award,
       tone: 'border-emerald-200 bg-emerald-50 text-emerald-700',
     },

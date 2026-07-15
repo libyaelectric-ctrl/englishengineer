@@ -5,7 +5,7 @@ import {
   getLevelsThrough,
   includesNormalized,
   type LearningDataSkill,
-} from '@/features/learning-data';
+} from '@/core/learning';
 import { assertVocabularyTerms } from './vocabulary.schema';
 import type { VocabularyTerm } from './vocabulary.types';
 

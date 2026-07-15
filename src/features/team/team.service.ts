@@ -122,18 +122,41 @@ class SupabaseTeamProvider implements TeamProvider {
       );
     }
 
-    const mappedMembers: TeamMember[] = (members || []).map((m: any) => ({
-      id: m.user_id,
-      organizationId: orgId,
-      displayName: m.profiles?.display_name || 'Team Member',
-      email: m.profiles?.email || '',
-      role: m.role as OrganizationRole,
-      discipline: m.profiles?.discipline || 'Engineering',
-      lastActiveAt: m.profiles?.updated_at || m.joined_at || null,
-    }));
+    const mappedMembers: TeamMember[] = (members || []).map(
+      (m: {
+        user_id: string;
+        role: string;
+        joined_at: string | null;
+        profiles?: {
+          display_name?: string;
+          email?: string;
+          discipline?: string;
+          updated_at?: string;
+        }[];
+      }) => {
+        const profile = m.profiles?.[0];
+        return {
+          id: m.user_id,
+          organizationId: orgId,
+          displayName: profile?.display_name || 'Team Member',
+          email: profile?.email || '',
+          role: m.role as OrganizationRole,
+          discipline: profile?.discipline || 'Engineering',
+          lastActiveAt: profile?.updated_at || m.joined_at || null,
+        };
+      }
+    );
 
     const mappedSummaries: TeamProgressSummary[] = (summaries || []).map(
-      (s: any) => {
+      (s: {
+        user_id: string;
+        cefr_estimate?: string;
+        overall_progress?: number;
+        completed_tasks?: number;
+        skill_summary?: Record<string, number>;
+        mistake_categories?: string[];
+        recommended_tasks?: string[];
+      }) => {
         const skills = s.skill_summary || {};
         return {
           memberId: s.user_id,
@@ -159,7 +182,13 @@ class SupabaseTeamProvider implements TeamProvider {
     );
 
     const mappedInvitations: TeamInvitation[] = (invites || []).map(
-      (inv: any) => ({
+      (inv: {
+        id: string;
+        email: string;
+        role: string;
+        status: string;
+        created_at: string;
+      }) => ({
         id: inv.id,
         organizationId: orgId,
         email: inv.email,

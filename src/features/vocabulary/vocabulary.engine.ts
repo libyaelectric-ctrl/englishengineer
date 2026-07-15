@@ -4,7 +4,7 @@ import {
   includesNormalized,
   isCefrAtOrBelow,
   type LearningDataSkill,
-} from '@/features/learning-data';
+} from '@/core/learning';
 import { VocabularyRepository } from './vocabulary.repository';
 import type { VocabularyTerm } from './vocabulary.types';
 

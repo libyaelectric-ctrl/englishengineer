@@ -97,12 +97,24 @@ export const extractAuthenticatedUser = (request) => request.auth ?? null;
 /**
  * Creates backend authentication middleware supporting internal API secrets,
  * Supabase JWT verification, and development bypass modes.
+ *
+ * Auth decision chain (first match wins):
+ *
+ * | Priority | Path            | Trigger condition                                              |
+ * |----------|-----------------|----------------------------------------------------------------|
+ * | 1        | internal-secret | Bearer token === config.internalApiSecret + X-EngineerOS-User-Id header |
+ * | 2        | local-jwt       | config.supabaseJwtSecret is set + Bearer token is valid HMAC-SHA256 JWT with sub claim |
+ * | 3        | supabase-jwt    | config.supabaseUrl is set + Bearer token validated via Supabase /auth/v1/user |
+ * | 4        | dev-bypass      | config.allowInsecureDevAuth=true AND config.environment !== 'production' |
+ * | —        | rejected        | None of the above → 401                                       |
+ *
  * @param {Object} config - Auth configuration
  * @param {string} [config.internalApiSecret] - Internal API secret for server-to-server auth
  * @param {string} [config.supabaseJwtSecret] - Supabase JWT secret for local token verification
  * @param {Object} [config.supabaseUrl] - Supabase URL for remote token validation
  * @param {Object} [config.supabaseAnonKey] - Supabase anon key for remote validation
  * @param {boolean} [config.allowInsecureDevAuth] - Allow dev bypass (non-production only)
+ * @param {string} [config.environment] - Runtime environment ('development'|'test'|'staging'|'production')
  * @param {Function} [fetchImpl=fetch] - Fetch implementation for testing
  * @returns {{ requireBackendAuth, optionalBackendAuth }} Express middleware functions
  */
@@ -110,6 +122,7 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
   const authenticate = async (request) => {
     const token = readBearerToken(request);
     if (secretsMatch(token, config.internalApiSecret)) {
+
       const userId = request.headers['x-engineeros-user-id'];
       if (typeof userId !== 'string' || !userId.trim()) {
         throw new ApiError(
@@ -136,7 +149,7 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
     const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
     if (supabaseUser) return supabaseUser;
 
-    if (config.allowInsecureDevAuth) {
+    if (config.allowInsecureDevAuth && config.environment !== 'production') {
       const requestedUser =
         request.body?.userId ??
         request.query?.userId ??

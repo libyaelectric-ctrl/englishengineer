@@ -1,0 +1,366 @@
+﻿# Sayfa Konsolidasyon Planı (Mimo için)
+
+**Hazırlanma tarihi:** 15 Temmuz 2026
+**Konu:** `src/pages/` altında birbirine benzeyen/çakışan işi yapan sayfaların birleştirilmesi
+**Kim için:** Bu dosya bir AI kod ajanının (Mimo) veya bir geliştiricinin tek başına, adım adım takip ederek uygulayabileceği şekilde yazıldı. Her adımda **ne yapılacağı**, **neden yapıldığı**, **hangi dosyaya dokunulacağı** ve **nasıl doğrulanacağı** ayrı ayrı belirtildi.
+
+> ⚠️ **En önemli kural:** Bu plandaki hiçbir adım "tahmin" ile yapılmamalı. Her adımdan önce ilgili dosya gerçekten açılıp okunmalı (satır numaraları/içerik zamanla değişmiş olabilir). Her adımdan sonra `npm run test`, `npm run typecheck`, `npm run lint` çalıştırılıp **hepsi yeşil olmadan bir sonraki adıma geçilmemeli**. Emin olunmayan bir nokta varsa, tahmin yürütüp devam etmek yerine durup soru sorulmalı.
+
+---
+
+## 📋 Önce: Neden bu değişiklik yapılıyor?
+
+Kod tabanında 5 ayrı sayfa (`DashboardPage`, `ProgressPage`, `AnalyticsPage`, `GamificationPage`, `LearningIntelligencePage`) kullanıcıya aynı temel şeyi farklı şekillerde gösteriyor: **"Ne kadar ilerledim, seviyem ne, rozetlerim/hedeflerim neler?"**
+
+Bunun kanıtı:
+- Hepsi aynı state kaynağını (`useLearningStore` from `@/core/learning`) okuyor.
+- 3 tanesi (`Analytics`, `Gamification`, `LearningIntelligence`) ana navigasyon menüsünde **hiç yok** — kullanıcı bunlara ancak başka sayfaların içine gömülü linklerden tesadüfen ulaşabiliyor.
+- `ProgressPage.tsx`, `CurriculumPage`'in kendi iç veri dosyasından doğrudan import yapıyor (`./CurriculumPage/curriculum-data`) — bu, iki sayfanın aslında birbirinden kopyalanmış/birbirine bağımlı olduğunun kanıtı.
+
+Ayrıca `AIPage` bileşeni hem `/ai` bağımsız sayfası olarak hem de `/tools/ai` sekmesi olarak **iki kere** tanımlanmış; aynı iş için iki farklı giriş noktası var.
+
+**Hedef:** Kullanıcı deneyimini bozmadan (aynı özellikler kaybolmadan), bu dağınık yapıyı `ToolsPage`'de zaten kanıtlanmış olan "tek sayfa + sekmeler" pattern'iyle birleştirmek.
+
+---
+
+> **Güncelleme (2. tur karar):** İçerik başlıkları tek tek incelendi ve gerçek çakışmalar bulundu — örneğin "Achievement Feed" (Gamification) ile "Recent Achievements" (Analytics) aynı veriyi iki kez gösteriyordu; "Weak Skills" (Analytics) ile Dashboard'daki "Needs attention" aynı şeydi. Bu yüzden plan **4 sekme yerine 2 sekmeye** indirildi. Aşağıdaki tüm adımlar bu 2-sekmeli yapıya göre güncellendi.
+
+## 🗺️ ÖNCESİ / SONRASI Route Haritası
+
+### Şu anki durum (SORUNLU)
+
+| Route | Sayfa | Ana menüde var mı? |
+|---|---|---|
+| `/dashboard` | DashboardPage | ✅ Evet ("Home") |
+| `/progress` | ProgressPage | ✅ Evet ("Progress") |
+| `/analytics` | AnalyticsPage | ❌ Hayır (gizli link: ProfilePage içinden) |
+| `/gamification` | GamificationPage | ❌ Hayır (gizli link: CurriculumPage/LearningMemorySummary içinden) |
+| `/learning-plan` | LearningIntelligencePage | ❌ Hayır (gizli link: CurriculumPage/LearningMemorySummary içinden) |
+| `/ai` | AIPage (bağımsız) | ❌ Hayır |
+| `/tools/ai` | AIPage (embedded, ToolsPage sekmesi) | ✅ Evet ("Tools" → "AI Copilot") |
+
+### Hedef durum (TEMİZ)
+
+| Route | Sayfa | Ana menüde var mı? |
+|---|---|---|
+| `/dashboard` | DashboardPage (değişmedi, tekrarlanan kısımlar temizlendi) | ✅ Evet ("Home") |
+| `/progress/overview` | Eski Dashboard cockpit + eski ProgressPage + eski AnalyticsPage birleşimi | ✅ Evet ("Progress" → "Overview") |
+| `/progress/next-steps` | Eski LearningIntelligencePage + eski GamificationPage birleşimi | ✅ Evet ("Progress" → "Next Steps") |
+| ~~`/analytics`~~ | **Kaldırıldı**, `/progress/overview`'a yönleniyor | — |
+| ~~`/gamification`~~ | **Kaldırıldı**, `/progress/next-steps`'e yönleniyor | — |
+| ~~`/learning-plan`~~ | **Kaldırıldı**, `/progress/next-steps`'e yönleniyor | — |
+| ~~`/ai`~~ | **Kaldırıldı** | — |
+| `/tools/ai` | AIPage (değişmedi, tek giriş noktası) | ✅ Evet |
+
+> **Neden 4 değil 2 sekme:** İçerik incelemesinde "Achievement Feed" (Gamification) ile "Recent Achievements" (Analytics) aynı veriyi iki kez gösteriyordu; ProgressPage'in "Weekly XP/Mastery Level" ile Analytics'in "XP Timeline/Skill Progress Timeline" kavramsal olarak aynı soruya ("durumum ne?") cevap veriyordu. Bu ikisi **Overview**'da birleşti. Learning Plan (ne çalışmalıyım) ile Gamification'daki missions/rewards (ne kazanıyorum) ise ikisi de "şimdi ne yapmalıyım" sorusuna cevap verdiği için **Next Steps**'te birleşti. Gamification içindeki "Full Gamification Locked / Upgrade" kilit kartları aynen korunuyor — sadece artık kendi route'u değil, Next Steps sekmesinin bir bölümü.
+
+> Not: `DashboardPage` (`/dashboard`, "Home") bilinçli olarak ayrı bırakıldı çünkü uygulamanın giriş/karşılama sayfası — konsolide edilecek olan onun **içindeki tekrar eden "Progress Cockpit" widget'ı**, ayrı bir sayfa değil.
+
+---
+
+## 🔧 ADIM 1 — AI Copilot ikiliğini çöz (küçük, düşük riskli, önce bunu yap)
+
+Bu en basit adım, önce bunu bitirip test etmek güven verir.
+
+1. **Dosya:** `src/routes/router.tsx`
+   - Şu bloğu bul:
+     ```tsx
+     const AI = lazy(() => import('@/pages/AIPage'));
+     ```
+     ve route tanımındaki:
+     ```tsx
+     {
+       path: 'ai',
+       element: (
+         <Suspense fallback={<LoadingState />}>
+           <AI />
+         </Suspense>
+       ),
+     },
+     ```
+   - Bu route bloğunu **tamamen sil**. `const AI = lazy(...)` satırını da sil (artık kullanılmıyor).
+   - Geriye kalan olası eski linkler kırılmasın diye, silinen route'un yerine bir yönlendirme koy:
+     ```tsx
+     {
+       path: 'ai',
+       element: <Navigate to="/tools/ai" replace />,
+     },
+     ```
+
+2. **Dosya:** `src/shared/utils/prefetch.ts` ve nav ile ilgili diğer dosyalarda `/ai` (tam eşleşme, `/tools/ai` değil) geçen başka referans var mı kontrol et:
+   ```bash
+   grep -rn "'/ai'\|\"/ai\"" src --include="*.ts" --include="*.tsx"
+   ```
+   Bulunan her referansı `/tools/ai` ile değiştir (yönlendirme yeterli olmayan, doğrudan link üreten yerler varsa).
+
+3. **Doğrulama:**
+   - `npm run typecheck`, `npm run lint`, `npm run test` yeşil.
+   - Uygulamayı çalıştırıp `/ai` adresine gidildiğinde otomatik olarak `/tools/ai`'ye yönlendirildiğini manuel kontrol et (veya bir e2e test ekle: `tests/e2e/` altında benzer bir test varsa örnek alınabilir).
+
+---
+
+## 🔧 ADIM 2 — `learning-data` feature'ını yeniden konumlandır (küçük, düşük riskli)
+
+1. **Neden:** `src/features/learning-data/` sadece 3 dosyadan (index, types, helpers — toplam ~35 satır kod) oluşuyor, kendi başına bir "feature" değil; sadece `vocabulary` ve `grammar` feature'larının paylaştığı ortak bir yardımcı modül. İsmi `learning-intelligence` ve `learning-orchestrator` ile karıştığı için kod okuyanı yanıltıyor.
+
+2. **Yapılacak:**
+   - `src/features/learning-data/learning-data.types.ts` ve `learning-data.helpers.ts` dosyalarının içeriğini `src/core/learning/` altına taşı (örn. `src/core/learning/spaced-repetition.types.ts`, `src/core/learning/spaced-repetition.helpers.ts` gibi anlamlı isimlerle).
+   - `src/features/learning-data/` klasörünü sil.
+   - Bu modülü import eden dosyaları güncelle:
+     ```bash
+     grep -rln "from '@/features/learning-data'" src
+     ```
+     Bulunan her dosyada import path'ini `@/core/learning`'e çevir.
+   - Test dosyasını (`learning-data.helpers.test.ts`) da yeni konuma taşı, dosya adını güncelle.
+
+3. **Doğrulama:** `npm run typecheck`, `npm run lint`, `npm run test` yeşil; `grep -rn "learning-data" src` komutu artık hiçbir sonuç döndürmemeli.
+
+---
+
+## 🔧 ADIM 3 — "Progress" hub sayfasını oluştur (2 sekme, asıl büyük iş, dikkatli ilerle)
+
+Bu adımı **tek seferde değil, alt adımlara bölerek** yap. Her alt adımdan sonra test çalıştır.
+
+**Hedef yapı — sadece 2 sekme:**
+- **Overview** = eski `ProgressPage` + eski `AnalyticsPage` + `DashboardPage`'deki tekrar eden "Progress Cockpit"/"Needs attention" içeriği
+- **Next Steps** = eski `LearningIntelligencePage` (review queue, önerilen çalışma) + eski `GamificationPage` (missions, rewards, upgrade-kilitli kartlar)
+
+### 3.1 — Yeni klasör yapısını kur
+
+`ToolsPage`'in yaptığı gibi bir "container + sekmeler" yapısı kurulacak, ama sadece 2 sekmeyle:
+
+```
+src/pages/ProgressPage/
+  ├── index.tsx                  ← yeni container (2 sekme arası yönlendirici)
+  ├── ProgressOverviewTab.tsx    ← eski ProgressPage + eski AnalyticsPage + Dashboard cockpit birleşimi
+  └── ProgressNextStepsTab.tsx   ← eski LearningIntelligencePage + eski GamificationPage birleşimi
+```
+
+> Not: `src/pages/ProgressPage.tsx` zaten var (474 satır) — sıfırdan yazılmayacak, bu dosyanın içine `AnalyticsPage.tsx`'in içeriği **birleştirilerek** `ProgressOverviewTab.tsx` oluşturulacak.
+
+### 3.2 — Overview sekmesini oluştur (2 dosyayı 1'de birleştir — kopyala-yapıştır değil, gerçek birleştirme)
+
+Bu adım diğerlerinden farklı: burada sadece "taşıma" değil, **iki ayrı dosyanın birbirini tekrar eden bölümlerini elemek** gerekiyor. Aceleye getirme.
+
+1. `src/pages/ProgressPage.tsx` dosyasını `src/pages/ProgressPage/ProgressOverviewTab.tsx` olarak taşı (`git mv`).
+2. `src/pages/AnalyticsPage.tsx` dosyasını aç, içindeki bölümleri tek tek şu şekilde değerlendir:
+   - **"XP Timeline" / "Skill Progress Timeline"** → `ProgressOverviewTab.tsx`'teki "Weekly XP" / "Mastery Level" / "Knowledge Graph" ile **aynı bilgiyi** veriyor. İkisini karşılaştır, hangisi daha iyi görselleştirilmişse **onu tut, diğerini sil** (iki tane XP grafiği aynı sekmede olmamalı).
+   - **"Weak Skills" / "Strong Skills"** → bunları `ProgressOverviewTab.tsx`'e yeni bir bölüm olarak ekle (Overview'da eşdeğeri yoktu, bu gerçekten ek değer).
+   - **"Recent Sessions"**, **"Next Recommended Study"** → bunları da Overview'a ekle.
+   - **"Recent Achievements"** → **EKLEME**. Bu, aşağıda Next Steps sekmesine taşınacak olan Gamification'daki "Achievement Feed" ile birebir aynı veri. Sadece birinde kalsın (bkz. 3.3, orada tutulacak).
+   - **"AI Coach Analytics"**, **"Performance Command Center"**, **"Assessment Profile"**, **"Analytics Pro" (upgrade kartı)** → Overview'a ekle.
+3. `DashboardPage.tsx` içindeki `SectionCard title="Progress Cockpit"` bölümünü aç, `ProgressOverviewTab.tsx`'teki karşılığıyla kıyasla:
+   - Aynı bilgiyi tekrar ediyorsa, **Dashboard'daki tam bölümü sil**, yerine küçük bir özet kart + "Detaylı ilerlemeni gör →" linkini `/progress/overview`'a koy.
+   - Dashboard'a özgü, Overview'da olmayan bir bilgi varsa (örn. "bugünkü görev" gibi günlük bir şey), onu Dashboard'da bırak — her şeyi Progress'e taşımak zorunda değilsin.
+4. `AnalyticsPage.tsx`'in kendi `<PageHeader title="..." />` kısmını **kaldır** (artık container tek başlığı basacak).
+5. `ProgressOverviewTab.tsx`'in relative import'larını güncelle (örn. `./CurriculumPage/curriculum-data` → `../CurriculumPage/curriculum-data`, artık bir klasör derinliğinde).
+6. İşin sonunda `src/pages/AnalyticsPage.tsx` dosyası **silinmiş** olmalı (içeriği `ProgressOverviewTab.tsx`'e taşındı, ayrı dosya olarak kalmıyor).
+
+### 3.3 — Next Steps sekmesini oluştur (2 dosyayı 1'de birleştir)
+
+1. `src/pages/LearningIntelligencePage.tsx` dosyasını `src/pages/ProgressPage/ProgressNextStepsTab.tsx` olarak taşı (`git mv`).
+2. `src/pages/GamificationPage.tsx` dosyasını aç, bölümlerini değerlendir:
+   - **"Achievement Feed"** → burada tut (3.2'de Analytics'teki "Recent Achievements" buraya işaret edip silinmişti — tekilleştirme burada tamamlanıyor).
+   - **"Level Progression"**, **"Daily/Weekly/Monthly Missions"**, **"Bonus Engine"**, **"Challenge Progress"**, **"Learner Titles"**, **"Recent Rewards"**, **"Personal Score History"** → hepsini `ProgressNextStepsTab.tsx`'e ekle.
+   - **"Full Gamification Locked / Upgrade" kilit kartı** → **aynen koru**, sil**me**. Bu bir upsell yüzeyi, sekme içinde kalmalı.
+3. `LearningIntelligencePage.tsx`'ten gelen review-queue / önerilen çalışma bölümleriyle Gamification'dan gelen missions bölümleri **aynı sekme içinde ayrı iki alt başlık** olarak dursun (örn. "Bugün Ne Çalışmalıyım" / "Görevler & Ödüller") — birbirine karıştırılıp tek bir liste haline getirilmemeli, ikisi farklı veri kaynağından geliyor.
+4. `GamificationPage.tsx`'in kendi `<PageHeader>` kısmını kaldır.
+5. İşin sonunda `src/pages/GamificationPage.tsx` dosyası **silinmiş** olmalı.
+
+### 3.4 — Container'ı yaz
+
+`src/pages/ProgressPage/index.tsx` dosyasını `ToolsPage.tsx`'teki mantığın aynısıyla, ama **2 sekmeli** olarak yaz:
+
+```tsx
+import { lazy, Suspense } from 'react';
+import { useParams } from 'react-router-dom';
+import { PageHeader } from '@/shared/components/PageHeader';
+import { ProgressOverviewTab } from './ProgressOverviewTab';
+
+const ProgressNextStepsTab = lazy(() =>
+  import('./ProgressNextStepsTab').then((m) => ({ default: m.ProgressNextStepsTab }))
+);
+
+type ProgressSection = 'overview' | 'next-steps';
+
+const ProgressPage = () => {
+  const { section } = useParams<{ section: string }>();
+  const activeTab: ProgressSection = section === 'next-steps' ? 'next-steps' : 'overview';
+
+  return (
+    <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
+      <PageHeader
+        title="Progress"
+        description="İlerlemen ve şimdi ne yapman gerektiği — tek yerde."
+        badgeText={activeTab === 'overview' ? 'OVERVIEW' : 'NEXT STEPS'}
+        badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
+      />
+
+      {activeTab === 'overview' && <ProgressOverviewTab />}
+      {activeTab === 'next-steps' && (
+        <Suspense fallback={<div className="h-64 animate-pulse rounded-xl border border-border-soft bg-surface-hover" />}>
+          <ProgressNextStepsTab />
+        </Suspense>
+      )}
+    </div>
+  );
+};
+
+export default ProgressPage;
+```
+
+> ⚠️ Bu kod bir **taslak/örnek**tir — mevcut `ToolsPage.tsx` ile birebir tutarlı olacak şekilde, gerçek dosya açılıp stil/import kuralları (örn. `embedded` prop pattern'i) oraya göre uyarlanmalı. Kör kopyala-yapıştır yapma.
+
+### 3.5 — Router'ı güncelle
+
+**Dosya:** `src/routes/router.tsx`
+
+Şu satırları:
+```tsx
+const Progress = lazy(() => import('@/pages/ProgressPage'));
+const Analytics = lazy(() => import('@/pages/AnalyticsPage'));
+const Gamification = lazy(() => import('@/pages/GamificationPage'));
+const LearningIntelligence = lazy(() => import('@/pages/LearningIntelligencePage'));
+```
+şu şekilde değiştir:
+```tsx
+const Progress = lazy(() => import('@/pages/ProgressPage'));
+```
+(Diğer 3 satır tamamen silinsin, artık bu sayfalar ayrı dosya olarak yok.)
+
+Route bloklarını (`path: 'progress'`, `path: 'analytics'`, `path: 'gamification'`, `path: 'learning-plan'`) şu şekilde değiştir:
+
+```tsx
+{
+  path: 'progress',
+  element: <Navigate to="/progress/overview" replace />,
+},
+{
+  path: 'progress/:section',
+  element: (
+    <Suspense fallback={<LoadingState />}>
+      <Progress />
+    </Suspense>
+  ),
+},
+// Eski URL'leri kıranlarla karşılaşmamak için yönlendirmeler:
+{ path: 'analytics', element: <Navigate to="/progress/overview" replace /> },
+{ path: 'gamification', element: <Navigate to="/progress/next-steps" replace /> },
+{ path: 'learning-plan', element: <Navigate to="/progress/next-steps" replace /> },
+```
+
+> Eski route'ları (`/analytics`, `/gamification`, `/learning-plan`) **direkt silme** — bunlara yönlendirme koy. Çünkü kod içinde başka yerlerde (`CurriculumPage.tsx`, `LearningMemorySummary.tsx`, `ProfilePage/SkillsProgressSection.tsx`) bu eski path'lere `to="..."` şeklinde linkler var; bunları da güncellemen gerekiyor (aşağıya bak) ama yönlendirme bir güvenlik ağı olarak kalsın.
+
+### 3.6 — İçe gömülü (deep-link) referansları güncelle
+
+Şu dosyalarda eski path'lere doğrudan link veren yerler var, bunları yeni path'lerle değiştir:
+
+| Dosya | Satır (yaklaşık) | Eski | Yeni |
+|---|---|---|---|
+| `src/features/learning-intelligence/LearningMemorySummary.tsx` | ~56 | `href: '/learning-plan'` | `href: '/progress/next-steps'` |
+| `src/features/learning-intelligence/LearningMemorySummary.tsx` | ~64 | `href: '/gamification'` | `href: '/progress/next-steps'` |
+| `src/pages/CurriculumPage.tsx` | ~298 | `to="/learning-plan"` | `to="/progress/next-steps"` |
+| `src/pages/ProfilePage/SkillsProgressSection.tsx` | ~263 | `to="/analytics"` | `to="/progress/overview"` |
+
+> Not: `LearningMemorySummary.tsx` muhtemelen artık `learning-intelligence` içeriği bir sekmenin (`ProgressNextStepsTab`) parçası haline geldiği için, bu component'in **kendi içinden kendine link vermesi** anlamsızlaşabilir — o linkleri kaldırıp yerine sekme içi bir bölüme kaydırma (scroll) davranışı koymak daha doğru olabilir. Kör path değişikliği yerine, gerçekten mantıklı olanı seç.
+
+### 3.7 — Navigasyon menüsünü güncelle
+
+**Dosya:** `src/config/navigation.config.ts`
+
+Şu anki:
+```ts
+{ label: 'Progress', href: '/progress', icon: Trophy },
+```
+
+satırını, `Tools` girişindeki gibi alt menülü hale getir (ama sadece 2 çocukla):
+
+```ts
+export const PROGRESS_NAV_ITEMS = [
+  { label: 'Overview', href: '/progress/overview', icon: Trophy },
+  { label: 'Next Steps', href: '/progress/next-steps', icon: BrainCircuit },
+] as const;
+```
+ve `NAV_ITEMS` içindeki `Progress` satırını:
+```ts
+{
+  label: 'Progress',
+  href: null,
+  icon: Trophy,
+  children: PROGRESS_NAV_ITEMS,
+},
+```
+şeklinde değiştir (`Tools` girişiyle birebir aynı pattern).
+
+> `BrainCircuit` ikonu zaten dosyada import edilmiş durumda (Tools için kullanılıyor), tekrar import etmene gerek yok.
+
+### 3.8 — Eski dosyaları temizle
+
+Birleştirme tamamlandıktan sonra:
+- `src/pages/AnalyticsPage.tsx`, `src/pages/GamificationPage.tsx` artık **silinmiş** olmalı (içerikleri `ProgressOverviewTab.tsx` ve `ProgressNextStepsTab.tsx`'e birleştirildi, ayrı dosya olarak yaşamıyorlar).
+- `src/pages/LearningIntelligencePage.tsx` da `ProgressPage/ProgressNextStepsTab.tsx`'e taşındığı için kökte kalmamalı.
+- `git status` ile kontrol et, hiçbiri kökte kalmasın.
+- Bu üç dosyaya ait eski test dosyaları varsa, içeriklerini `ProgressOverviewTab.test.tsx` / `ProgressNextStepsTab.test.tsx` olarak birleştir (iki ayrı test dosyasının birleşen bölümler için birbirini tekrar eden testleri varsa tekilleştir).
+
+### 3.9 — Prefetch ayarlarını güncelle
+
+**Dosya:** `src/shared/utils/prefetch.ts`
+
+```ts
+'/analytics': () => import('@/pages/AnalyticsPage'),
+'/gamification': () => import('@/pages/GamificationPage'),
+'/learning-plan': () => import('@/pages/LearningIntelligencePage'),
+```
+
+satırlarını sil, yerine:
+```ts
+'/progress/overview': () => import('@/pages/ProgressPage/ProgressOverviewTab').then((m) => ({ default: m.ProgressOverviewTab })),
+'/progress/next-steps': () => import('@/pages/ProgressPage/ProgressNextStepsTab').then((m) => ({ default: m.ProgressNextStepsTab })),
+```
+
+---
+
+## ✅ Genel Doğrulama Checklist (Adım 3 bittiğinde)
+
+Aşağıdakilerin **hepsi** tamamlanmadan bu iş "bitti" sayılmamalı:
+
+- [ ] `npm run typecheck` → hatasız
+- [ ] `npm run lint` → hatasız
+- [ ] `npm run test` → tüm testler yeşil
+- [ ] `npm run test:e2e` (varsa) → yeşil
+- [ ] `npm run build` → hatasız tamamlanıyor
+- [ ] Uygulama local'de açılıp şunlar **manuel** kontrol edildi:
+  - [ ] `/progress` → otomatik `/progress/overview`'a yönleniyor
+  - [ ] `/analytics` → `/progress/overview`'a, `/gamification` ve `/learning-plan` → `/progress/next-steps`'e yönleniyor
+  - [ ] `/ai` → `/tools/ai`'ye yönleniyor
+  - [ ] Sol menüde "Progress" artık **2** alt sekmeyle açılıyor: Overview, Next Steps
+  - [ ] Her sekmede önceki içerik (veri, grafik, buton) eksiksiz görünüyor — hiçbir widget kaybolmamış
+  - [ ] **Hiçbir bilgi iki kez görünmüyor**: özellikle "Achievement Feed"/"Recent Achievements" tek yerde, "XP Timeline"/"Weekly XP" tek grafikte birleşmiş
+  - [ ] Gamification'daki "Full Gamification Locked / Upgrade" kilit kartı Next Steps sekmesinde hâlâ görünüyor (upsell kaybolmamış)
+  - [ ] `CurriculumPage`, `ProfilePage`, `LearningMemorySummary` içindeki linkler artık yeni path'lere gidiyor ve kırık değil
+- [ ] `grep -rn "AnalyticsPage\|GamificationPage\|LearningIntelligencePage" src` komutu **hiçbir sonuç döndürmüyor** (bu üç dosya artık ayrı yaşamıyor, tamamen 2 sekmenin içine birleşti)
+- [ ] Değişiklik tek bir PR'da değil, mantıklı küçük commit'lere bölünmüş (Adım 1, Adım 2, Adım 3.1-3.9 ayrı ayrı commit edilebilir; 3.2 ve 3.3 özellikle kendi commit'lerinde olsun çünkü içerik birleştirme riski en yüksek adımlar)
+
+---
+
+## 🚫 Bu planda YAPILMAYACAKLAR (bilerek dışarıda bırakıldı)
+
+Önceki incelemede kontrol edilip **çakışma bulunmayan**, dolayısıyla bu planın kapsamı dışında tutulan alanlar:
+
+- **`assessment` / `placement` / `level-system` feature'ları** — bunlar birbirinden farklı, doğru katmanlanmış sorumluluklar (bir kerelik giriş testi → sürekli skorlama → UI'da seviye filtreleme). **Birleştirilmeyecek.**
+- **`ToolsPage` (Work Tools / Quick Tools / AI)** — zaten doğru pattern'de, örnek alındı, değiştirilmeyecek.
+- **`CurriculumPage`'in `today`/`full`/`memory` sekmeleri** — zaten tek sayfa + sekme olarak doğru kurulmuş, değiştirilmeyecek.
+
+Eğer ilerleyen bir noktada bu alanlarda da gerçek bir çakışma bulunursa, bu yeni bulgu **ayrı bir plan dosyasında** ele alınmalı — bu dosyaya sonradan eklenmemeli (dosyanın kapsamı net kalsın diye).
+
+---
+
+## 📎 Son not
+
+Bu plan üç bağımsız adımdan oluşuyor (AI route temizliği → learning-data taşıma → Progress hub'ı, 2 sekme). **Sırayla, birini bitirip test ettikten sonra diğerine geçilmeli.** Adım 3 en riskli ve en büyük adım olduğu için, mümkünse ayrı bir feature branch'te yapılıp:
+1. önce Adım 3.2 ve 3.3 (içerik birleştirme — en dikkat gerektiren kısım, çünkü burada "hangi bölüm tutulacak hangisi silinecek" kararları veriliyor) ayrı ayrı commit'lerde tamamlanıp test edilmeli,
+2. sonra Adım 3.4 (container) yazılmalı,
+3. en son Adım 3.5-3.9 (router + nav + linkler + prefetch) ayrı bir commit'te yapılmalı.
+
+Özellikle 3.2/3.3'te bir bölümü "aynı, sil" diye işaretlerken emin olunmuyorsa, silmek yerine geçici olarak yorum satırına alıp bir insan onayı istenmeli — bilgi kaybı geri döndürülmesi zor bir hatadır.
+

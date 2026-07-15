@@ -91,3 +91,19 @@ export interface WritingState {
   lastSelectedMissionId: string | null;
   history: WritingHistoryEntry[];
 }
+
+export type WritingSpec = {
+  id: string;
+  title: string;
+  category: string;
+  discipline: string;
+  cefrLevel: CefrLevel;
+  difficulty: MissionDifficulty;
+  scenario: string;
+  task: string;
+  expectedStructure: string[];
+  targetVocabulary: string[];
+  grammarFocus: string[];
+  strongPhrase: string;
+  weakPhrase: string;
+};

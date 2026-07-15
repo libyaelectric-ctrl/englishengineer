@@ -113,6 +113,30 @@ describe('createBackendAuth', () => {
       assert.ok(caughtError);
       assert.equal(caughtError.status, 401);
     });
+
+    it('dev-bypass is blocked when environment is production', async () => {
+      const config = { allowInsecureDevAuth: true, environment: 'production' };
+      const { requireBackendAuth } = createBackendAuth(config);
+      const req = createMockRequest({}, { userId: 'dev-user-1' });
+      let caughtError;
+      const next = (err) => { caughtError = err; };
+      await requireBackendAuth(req, {}, next);
+      assert.ok(caughtError);
+      assert.equal(caughtError.status, 401);
+    });
+
+    it('internal-secret takes priority over dev-bypass when both configured', async () => {
+      const config = { internalApiSecret: 'secret-123', allowInsecureDevAuth: true };
+      const { requireBackendAuth } = createBackendAuth(config);
+      const req = createMockRequest(
+        { authorization: 'Bearer secret-123', 'x-engineeros-user-id': 'user-priority' },
+        { userId: 'dev-should-not-appear' }
+      );
+      const next = () => {};
+      await requireBackendAuth(req, {}, next);
+      assert.equal(req.auth.userId, 'user-priority');
+      assert.equal(req.auth.source, 'internal-secret');
+    });
   });
 
   describe('optionalBackendAuth', () => {

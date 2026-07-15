@@ -5,3 +5,4 @@ export * from './reading.service';
 export * from './reading.store';
 export * from './reading.helpers';
 export * from './ReadingTranslation';
+export * from './components';

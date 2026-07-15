@@ -44,7 +44,7 @@ export const ONBOARDING_STEPS: OnboardingStep[] = [
     id: 'ai-coach',
     title: 'AI Writing Coach',
     description: 'Get personalized feedback on your writing from AI.',
-    target: 'a[href="/ai"]',
+    target: 'a[href="/tools/ai"]',
     placement: 'left',
     action: 'click',
   },

@@ -18,3 +18,4 @@ export * from './vocabulary.spaced-repetition';
 export * from './vocabulary-due-today';
 export * from './vocabulary.menu';
 export * from './vocabulary.selection';
+export * from './components';

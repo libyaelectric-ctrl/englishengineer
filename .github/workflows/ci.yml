@@ -46,6 +46,17 @@ jobs:
       - name: Unit Tests
         run: npm run test
 
+      - name: Test Coverage
+        run: npm run test:coverage
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 14
+
       - name: Backend Tests
         run: npm run backend:test
 

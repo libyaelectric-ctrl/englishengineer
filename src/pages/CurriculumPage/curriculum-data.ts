@@ -1,4 +1,21 @@
 import type { SkillName } from '@/features/profile';
+import {
+  BookOpen,
+  Database,
+  Headphones,
+  Languages,
+  Mic2,
+  PenTool,
+} from 'lucide-react';
+
+export const ICON_MAP: Record<string, typeof BookOpen> = {
+  BookOpen,
+  PenTool,
+  Headphones,
+  Mic2,
+  Languages,
+  Database,
+};
 
 export interface GraphNode {
   id: string;
