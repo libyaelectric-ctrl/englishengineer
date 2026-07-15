@@ -2,23 +2,36 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import ts from 'typescript';
 
-const sourcePath = resolve(
-  'src/features/content-library/content-library.data.ts'
-);
-const source = readFileSync(sourcePath, 'utf8');
-const compiled = ts.transpileModule(source, {
-  compilerOptions: {
-    module: ts.ModuleKind.ESNext,
-    target: ts.ScriptTarget.ES2022,
-  },
-  fileName: sourcePath,
-});
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(compiled.outputText).toString('base64')}`;
-const content = await import(moduleUrl);
+const compile = (filePath) => {
+  const source = readFileSync(filePath, 'utf8');
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.ESNext,
+      target: ts.ScriptTarget.ES2022,
+    },
+    fileName: filePath,
+  });
+  return compiled.outputText;
+};
 
-const listening = content.PROFESSIONAL_LISTENING_LESSONS;
-const roleplay = content.PROFESSIONAL_ROLEPLAY_SCENARIOS;
-const writing = content.PROFESSIONAL_WRITING_TASKS;
+const baseDir = resolve('src/features/content-library');
+
+const listeningModule = compile(resolve(baseDir, 'listening-data.ts'));
+const roleplayModule = compile(resolve(baseDir, 'roleplay-data.ts'));
+const writingModule = compile(resolve(baseDir, 'writing-data.ts'));
+
+const load = async (code, filePath) => {
+  const moduleUrl = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
+  return import(moduleUrl);
+};
+
+const listeningContent = await load(listeningModule, 'listening-data.ts');
+const roleplayContent = await load(roleplayModule, 'roleplay-data.ts');
+const writingContent = await load(writingModule, 'writing-data.ts');
+
+const listening = listeningContent.PROFESSIONAL_LISTENING_LESSONS;
+const roleplay = roleplayContent.PROFESSIONAL_ROLEPLAY_SCENARIOS;
+const writing = writingContent.PROFESSIONAL_WRITING_TASKS;
 const errors = [];
 const validLevels = new Set(['A1', 'A2', 'B1', 'B2', 'C1', 'C2']);
 const validStatuses = new Set([
