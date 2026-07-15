@@ -56,7 +56,7 @@
     "clsx": "^2.1.1",
     "isomorphic-dompurify": "^3.18.0",
     "lucide-react": "^0.546.0",
-    "motion": "^12.42.0",
+    "motion": "^12.42.2",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
     "react-error-boundary": "^6.1.2",
