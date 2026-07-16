@@ -85,9 +85,11 @@ export const router = createBrowserRouter([
   {
     path: '/admin',
     element: (
-      <Suspense fallback={<LoadingState />}>
-        <Admin />
-      </Suspense>
+      <AuthGuard>
+        <Suspense fallback={<LoadingState />}>
+          <Admin />
+        </Suspense>
+      </AuthGuard>
     ),
   },
   {
