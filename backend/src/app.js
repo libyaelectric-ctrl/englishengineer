@@ -24,6 +24,7 @@ import { createI18nMiddleware } from './i18n.js';
 import { initAuditLog, getAuditLogs } from './audit-log.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 import { swaggerSpec } from './swagger.js';
+import { logger } from './logger.js';
 
 export const createApp = ({
   config,
@@ -130,7 +131,7 @@ export const createApp = ({
     res.on('finish', () => {
       const diff = process.hrtime(start);
       const timeMs = (diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2);
-      console.log(`[Timing] ${req.method} ${req.originalUrl} - ${timeMs}ms`);
+      logger.info('Timing', { method: req.method, path: req.originalUrl, timeMs });
     });
     next();
   });
@@ -224,7 +225,7 @@ export const createApp = ({
     '/api/csp-report',
     express.json({ type: 'application/csp-report' }),
     (req, res) => {
-      console.warn('[CSP-VIOLATION]', req.body);
+      logger.warn('CSP violation reported', { report: req.body });
       res.status(204).end();
     }
   );
@@ -301,7 +302,7 @@ export const createApp = ({
         fetchImpl
       );
     } catch (err) {
-      console.warn('[workspace] Failed to create workspace repository:', err);
+      logger.warn('Failed to create workspace repository', { error: err.message });
     }
   }
   registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {
@@ -359,7 +360,7 @@ export const createApp = ({
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
   app.use((error, request, response, _next) => {
-    console.error('[unhandled-api-error]', error);
+    logger.error('Unhandled API error', { path: request.path }, error);
     // Send to Sentry if configured
     if (config.sentry?.dsn) {
       Sentry.captureException(error);

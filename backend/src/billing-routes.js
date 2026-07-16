@@ -1,3 +1,4 @@
+import { logger } from './logger.js';
 import { auditLog, AUDIT_ACTIONS } from './audit-log.js';
 import { assertUserOwnership } from './billing-helpers.js';
 import { idempotencyKey } from './middleware/idempotency.middleware.js';
@@ -119,7 +120,7 @@ export const registerBillingRoutes = (
       }
     } catch (err) {
       if (process.env.NODE_ENV !== 'production') {
-        console.warn('[stripe-webhook-log-parse]', err?.message);
+        logger.warn('Stripe webhook log parse error', { error: err?.message });
       }
     }
 
