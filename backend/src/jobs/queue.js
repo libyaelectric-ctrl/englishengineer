@@ -1,4 +1,5 @@
 import { Queue, Worker } from 'bullmq';
+import { logger } from '../logger.js';
 
 // BullMQ Background Job System
 // Uses Upstash Redis for production, local Redis for development
@@ -29,7 +30,7 @@ const createEmailWorker = () => {
     'email-sending',
     async (job) => {
       const { type, to, data } = job.data;
-      console.log(`[EmailWorker] Processing ${type} for ${to}`);
+      logger.info('Processing email', { worker: 'email', type, to });
 
       // Email sending logic would go here
       // For now, just log the attempt
@@ -40,11 +41,11 @@ const createEmailWorker = () => {
   );
 
   worker.on('failed', (job, err) => {
-    console.error(`[EmailWorker] Job ${job?.id} failed:`, err.message);
+    logger.error('Job failed', { worker: 'email', jobId: job?.id }, err);
   });
 
   worker.on('completed', (job) => {
-    console.log(`[EmailWorker] Job ${job.id} completed`);
+    logger.info('Job completed', { worker: 'email', jobId: job.id });
   });
 
   return worker;
@@ -56,7 +57,7 @@ const createAIWorker = () => {
     'ai-processing',
     async (job) => {
       const { type, payload } = job.data;
-      console.log(`[AIWorker] Processing ${type}`);
+      logger.info('Processing AI job', { worker: 'ai', type });
 
       // Heavy AI processing logic
       await job.updateProgress(50);
@@ -71,7 +72,7 @@ const createAIWorker = () => {
   );
 
   worker.on('failed', (job, err) => {
-    console.error(`[AIWorker] Job ${job?.id} failed:`, err.message);
+    logger.error('Job failed', { worker: 'ai', jobId: job?.id }, err);
   });
 
   return worker;
@@ -83,9 +84,7 @@ const createAuditCleanupWorker = () => {
     'audit-cleanup',
     async (job) => {
       const { retentionDays = 90 } = job.data;
-      console.log(
-        `[AuditCleanup] Cleaning logs older than ${retentionDays} days`
-      );
+      logger.info('Cleaning audit logs', { worker: 'audit', retentionDays });
 
       // Audit log cleanup logic
       // Would delete logs from Supabase older than retention period
@@ -96,7 +95,7 @@ const createAuditCleanupWorker = () => {
   );
 
   worker.on('failed', (job, err) => {
-    console.error(`[AuditCleanup] Job ${job?.id} failed:`, err.message);
+    logger.error('Job failed', { worker: 'audit', jobId: job?.id }, err);
   });
 
   return worker;
@@ -104,7 +103,7 @@ const createAuditCleanupWorker = () => {
 
 // Start all workers
 export const startWorkers = () => {
-  console.log('[Jobs] Starting BullMQ workers...');
+  logger.info('Starting BullMQ workers');
 
   const emailWorker = createEmailWorker();
   const aiWorker = createAIWorker();

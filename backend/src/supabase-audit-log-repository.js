@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from './logger.js';
 
 const MAX_BATCH_SIZE = 50;
 const FLUSH_INTERVAL_MS = 5_000;
@@ -30,14 +31,11 @@ export const createSupabaseAuditLogRepository = (config) => {
         }))
       );
       if (error) {
-        console.error(
-          '[audit-log] Failed to flush to Supabase:',
-          error.message
-        );
+        logger.error('Failed to flush audit log to Supabase', { message: error.message });
         pendingBatch.unshift(...batch);
       }
     } catch (err) {
-      console.error('[audit-log] Flush error:', err.message);
+      logger.error('Audit log flush error', { message: err.message });
       pendingBatch.unshift(...batch);
     }
   };
@@ -83,7 +81,7 @@ export const createSupabaseAuditLogRepository = (config) => {
 
       const { data, error } = await query;
       if (error) {
-        console.error('[audit-log] Query error:', error.message);
+        logger.error('Audit log query error', { message: error.message });
         return [];
       }
 
@@ -96,7 +94,7 @@ export const createSupabaseAuditLogRepository = (config) => {
         severity: row.severity,
       }));
     } catch (err) {
-      console.error('[audit-log] Query error:', err.message);
+      logger.error('Audit log query error', { message: err.message });
       return [];
     }
   };

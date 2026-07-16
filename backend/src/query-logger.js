@@ -1,3 +1,5 @@
+import { logger } from './logger.js';
+
 const slowQueries = [];
 const SLOW_THRESHOLD_MS = 500;
 
@@ -12,7 +14,7 @@ export const logQuery = (query, durationMs, meta = {}) => {
     slowQueries.push(record);
     if (slowQueries.length > 1000)
       slowQueries.splice(0, slowQueries.length - 1000);
-    console.warn(`[SLOW-QUERY] ${durationMs}ms`, record);
+    logger.warn('Slow query detected', { durationMs, query: record });
   }
 };
 

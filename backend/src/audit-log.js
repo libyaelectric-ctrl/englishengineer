@@ -1,3 +1,5 @@
+import { logger } from './logger.js';
+
 const MAX_LOG_SIZE = 10_000;
 
 const logs = [];
@@ -15,10 +17,7 @@ export const initAuditLog = async (config) => {
       supabaseRepository = createSupabaseAuditLogRepository(config.workspace);
     }
   } catch (error) {
-    console.warn(
-      '[audit-log] Failed to initialize remote audit repository:',
-      error?.message || error
-    );
+    logger.warn('Failed to initialize remote audit repository', { error: error?.message || error });
     supabaseRepository = null;
   }
 };
@@ -41,7 +40,7 @@ export const auditLog = (entry) => {
   }
 
   if (entry.severity === 'critical' || entry.severity === 'error') {
-    console.warn(`[AUDIT-${entry.severity?.toUpperCase()}]`, record);
+    logger.warn(`Audit ${entry.severity?.toUpperCase()}`, { record });
   }
 
   return record;

@@ -1,5 +1,6 @@
 import { timingSafeEqual, webcrypto } from 'node:crypto';
 import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 
 const subtle = webcrypto.subtle;
 
@@ -83,7 +84,7 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
       ? { userId: user.id, email: user.email, source: 'supabase-jwt' }
       : null;
   } catch (error) {
-    console.error('[validateSupabaseToken] failed:', error);
+    logger.error('validateSupabaseToken failed', {}, error);
     throw new ApiError(
       503,
       'auth_provider_unavailable',

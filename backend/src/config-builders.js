@@ -6,6 +6,7 @@ import {
   isTrue,
   resolveProviderKey,
 } from './config-helpers.js';
+import { logger } from './logger.js';
 
 const SUPPORTED_AI_PROVIDERS = new Set([
   'mock',
@@ -144,9 +145,7 @@ export const resolveRateLimit = (env, runtimeEnv) => {
 
   const allowInMemory = isTrue(env.ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION);
   if (runtimeEnv === 'production' && requested === 'memory' && !allowInMemory) {
-    console.warn(
-      'WARNING: Production rate limiting requires RATE_LIMIT_STORE=upstash.'
-    );
+    logger.warn('Production rate limiting requires RATE_LIMIT_STORE=upstash');
   }
   if (requested === 'upstash' && !upstashConfigured) {
     throw new Error(

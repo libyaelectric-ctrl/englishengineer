@@ -1,3 +1,5 @@
+import { logger } from '../logger.js';
+
 /**
  * Exponential Backoff Retry Utility
  * Retries failed operations with exponential delay.
@@ -40,9 +42,7 @@ export const withRetry = async (fn, options = {}) => {
         maxDelay
       );
 
-      console.log(
-        `[retry] Attempt ${attempt + 1}/${maxRetries} failed: ${error.message}. Retrying in ${Math.round(delay)}ms...`
-      );
+      logger.info('Retry attempt', { attempt: attempt + 1, maxRetries, error: error.message, delayMs: Math.round(delay) });
 
       await sleep(delay);
     }

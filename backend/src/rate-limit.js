@@ -1,10 +1,9 @@
 import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 
 const logRateLimit = (scope, identity, count, max) => {
   if (count > max) {
-    console.warn(
-      `[rate-limit] scope=${scope} identity=${identity} count=${count} max=${max} BLOCKED`
-    );
+    logger.warn('Rate limit blocked', { scope, identity, count, max });
   }
 };
 

@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from './logger.js';
 
 const FREE_DAILY_LIMIT = 3;
 const PAID_MONTHLY_LIMIT = 300;
@@ -36,12 +37,12 @@ export const createSupabaseAiLedger = (config) => {
           .gte('created_at', startDateIso);
 
         if (error) {
-          console.error('[ai-ledger-count-error]', error.message);
+          logger.error('Ledger count error', { error: error.message });
           return 0;
         }
         return count ?? 0;
       } catch (err) {
-        console.error('[ai-ledger-count-error]', err.message);
+        logger.error('Ledger count error', { error: err.message });
         return 0;
       }
     },
@@ -60,10 +61,10 @@ export const createSupabaseAiLedger = (config) => {
         });
 
         if (error) {
-          console.error('[ai-ledger-log-error]', error.message);
+          logger.error('Ledger log error', { error: error.message });
         }
       } catch (err) {
-        console.error('[ai-ledger-log-error]', err.message);
+        logger.error('Ledger log error', { error: err.message });
       }
     },
   };

@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { ApiError } from '../errors.js';
+import { logger } from '../logger.js';
 import {
   mockText,
   callOpenAI,
@@ -109,10 +110,7 @@ export const createAIService = (config, fetchImpl = fetch) => ({
         structuredResult = parsed;
         responseText = parsed.professionalVersion || parsed.summary || text;
       } catch (err) {
-        console.error(
-          'Failed to parse AI evaluation structured response:',
-          err
-        );
+        logger.error('Failed to parse AI evaluation structured response', {}, err);
       }
     }
 
