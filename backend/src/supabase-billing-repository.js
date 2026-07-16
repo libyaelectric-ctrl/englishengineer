@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { logger } from './logger.js';
 
 const assertConfigured = (config) => {
   if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
@@ -75,7 +76,7 @@ export const createSupabaseBillingRepository = (config, fetchImpl = fetch) => {
       try {
         bodyText = await response.text();
       } catch (readErr) {
-        console.warn('[billing-repo-error-body]', readErr?.message);
+        logger.warn('Billing repo error body', { error: readErr?.message });
       }
       const err = new Error(
         `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`

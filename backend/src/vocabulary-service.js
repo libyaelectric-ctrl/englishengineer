@@ -1,4 +1,5 @@
 import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 
 const dictionaryEndpoint = (word) =>
   `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
@@ -154,7 +155,7 @@ export const createUpstashVocabularyCache = ({
         signal: controller.signal,
       });
     } catch (err) {
-      console.warn('[vocabulary-cache-set]', err?.message);
+      logger.warn('Vocabulary cache set failed', { message: err?.message });
     } finally {
       clearTimeout(timeoutId);
     }

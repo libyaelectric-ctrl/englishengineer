@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { logger } from './logger.js';
 import { ApiError } from './errors.js';
 import { requireText, emptySubscription } from './billing-helpers.js';
 import { stripeRetry } from './utils/retry.js';
@@ -325,10 +326,18 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           config.webhookSecret
         );
       } catch (err) {
-        console.error(
-          `[stripe-webhook-error] eventId=unknown type=unknown step=${step} ` +
-            `errorName=${err.name} errorMessage="Stripe webhook signature verification failed." ` +
-            `stackTrace=${err.stack} supabaseCode=N/A supabaseDetails=N/A`
+        logger.error(
+          'Stripe webhook error',
+          {
+            eventId: 'unknown',
+            type: 'unknown',
+            step,
+            errorName: err.name,
+            errorMessage: 'Stripe webhook signature verification failed.',
+            supabaseCode: 'N/A',
+            supabaseDetails: 'N/A',
+          },
+          err
         );
         throw new ApiError(
           400,
@@ -377,10 +386,18 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       } catch (err) {
         const supabaseCode = err.code || 'N/A';
         const supabaseDetails = err.details || 'N/A';
-        console.error(
-          `[stripe-webhook-error] eventId=${eventId} type=${eventType} step=${step} ` +
-            `errorName=${err.name} errorMessage="${err.message || 'Unknown error'}" ` +
-            `stackTrace=${err.stack} supabaseCode=${supabaseCode} supabaseDetails=${supabaseDetails}`
+        logger.error(
+          'Stripe webhook error',
+          {
+            eventId,
+            type: eventType,
+            step,
+            errorName: err.name,
+            errorMessage: err.message || 'Unknown error',
+            supabaseCode,
+            supabaseDetails,
+          },
+          err
         );
         throw err;
       }
