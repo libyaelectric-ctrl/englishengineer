@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules', '.npm-cache', '.vite'] },
+  { ignores: ['dist', 'coverage', 'node_modules', '.npm-cache', '.vite', 'test-results', 'coverage/**'] },
   {
     extends: [
       js.configs.recommended,
@@ -39,7 +39,7 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
-      globals: globals.node,
+      globals: { ...globals.node, self: 'readonly', caches: 'readonly' },
     },
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],

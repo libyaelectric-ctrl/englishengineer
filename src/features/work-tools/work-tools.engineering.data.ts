@@ -1,18 +1,12 @@
 import { EngineeringTemplate } from './work-tools.types';
 import { SITE_SEEDS } from './work-tools.engineering.site-seeds';
 import { MEP_SEEDS } from './work-tools.engineering.mep-seeds';
-import { PROCUREMENT_SEEDS } from './work-tools.engineering.procurement-seeds';
-import { PM_SEEDS } from './work-tools.engineering.pm-seeds';
+import { MANAGEMENT_SEEDS } from './work-tools.engineering.management-seeds';
 
-const ALL_SEEDS = [
-  ...SITE_SEEDS,
-  ...MEP_SEEDS,
-  ...PROCUREMENT_SEEDS,
-  ...PM_SEEDS,
-];
+const ENGINEERING_SEEDS = [...SITE_SEEDS, ...MEP_SEEDS, ...MANAGEMENT_SEEDS];
 
 export const EXPANDED_ENGINEERING_TEMPLATES: EngineeringTemplate[] =
-  ALL_SEEDS.map(
+  ENGINEERING_SEEDS.map(
     ([id, title, category, useCase, sampleInput, requiredAction]) => ({
       id: `expanded-${id}`,
       title,
