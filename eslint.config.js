@@ -35,12 +35,18 @@ export default tseslint.config(
       ],
       '@typescript-eslint/no-explicit-any': 'warn',
       complexity: ['warn', { max: 10 }],
+      'prefer-const': 'warn',
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/aria-props': 'warn',
       'jsx-a11y/aria-proptypes': 'warn',
       'jsx-a11y/aria-unsupported-elements': 'warn',
       'jsx-a11y/role-has-required-aria-props': 'warn',
       'jsx-a11y/role-supports-aria-props': 'warn',
+      'jsx-a11y/no-autofocus': 'warn',
+      'jsx-a11y/no-static-element-interactions': 'warn',
+      'jsx-a11y/click-events-have-key-events': 'warn',
+      'jsx-a11y/label-has-associated-control': 'warn',
+      'no-undef': 'off',
     },
   },
   {
@@ -49,7 +55,12 @@ export default tseslint.config(
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'module',
-      globals: { ...globals.node, self: 'readonly', caches: 'readonly' },
+      globals: {
+        ...globals.node,
+        self: 'readonly',
+        caches: 'readonly',
+        __ENV: 'readonly',
+      },
     },
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
