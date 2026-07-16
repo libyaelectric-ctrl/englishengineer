@@ -5,7 +5,17 @@ import tseslint from 'typescript-eslint';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', 'node_modules', '.npm-cache', '.vite', 'test-results', 'coverage/**'] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'node_modules',
+      '.npm-cache',
+      '.vite',
+      'test-results',
+      'coverage/**',
+    ],
+  },
   {
     extends: [
       js.configs.recommended,
