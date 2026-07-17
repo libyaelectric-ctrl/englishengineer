@@ -9,8 +9,8 @@ import {
 } from './reading.types';
 import { ReadingEvaluator } from './reading.evaluator';
 import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary';
-import { GrammarTransferService } from '@/features/grammar';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
 import {
   KnowledgePoolEntry,
   sortContentByPoolRatio,

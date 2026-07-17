@@ -1,6 +1,6 @@
 import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrBand, SkillName } from '@/features/profile/profile.types';
-import type { VocabularyTerm } from '@/features/vocabulary/vocabulary.types';
+import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 
 export type TaskSourceBucket = 'memory' | 'current-new' | 'stretch';
 

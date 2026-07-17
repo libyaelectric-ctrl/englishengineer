@@ -9,9 +9,9 @@ import {
 } from './writing.types';
 import { WritingEvaluator } from './writing.evaluator';
 import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
-import { GrammarTransferService } from '@/features/grammar';
+import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
 import {
   KnowledgePoolEntry,
   sortContentByPoolRatio,

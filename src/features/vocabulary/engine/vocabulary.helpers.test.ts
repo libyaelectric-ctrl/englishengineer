@@ -8,7 +8,7 @@ import {
   normalizeVocabularyText,
   sortByNextReview,
 } from './vocabulary.helpers';
-import { VocabularyEntry } from './vocabulary.types';
+import { VocabularyEntry } from '../types/vocabulary.types';
 
 const entry: VocabularyEntry = {
   id: 'transformer',

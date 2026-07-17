@@ -1,6 +1,6 @@
 import { MissionModule } from '@/core/learning/learning.types';
 import { AssessmentProfile } from '@/features/assessment';
-import { VocabularySummary } from '@/features/vocabulary';
+import { VocabularySummary } from '@/features/vocabulary/types/vocabulary.types';
 
 export type AnalyticsSkillName = Extract<
   MissionModule,

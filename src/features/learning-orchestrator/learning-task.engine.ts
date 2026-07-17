@@ -11,9 +11,9 @@ import type {
   SkillName,
   UserLearningProfile,
 } from '@/features/profile/profile.types';
-import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
-import { VocabularyRepository } from '@/features/vocabulary/vocabulary.repository';
-import type { VocabularyTerm } from '@/features/vocabulary/vocabulary.types';
+import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
+import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
+import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 import type {
   LearningTaskRecommendation,
   SelectedVocabularyTerm,

@@ -6,7 +6,7 @@ import {
   TriangleAlert,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import type { GrammarProgressSummary } from '@/features/grammar';
+import type { GrammarProgressSummary } from '@/features/grammar/grammar.progress';
 import type { ProfileBadge, VocabularyMemorySummary } from '@/features/profile';
 
 interface LearningMemorySummaryProps {

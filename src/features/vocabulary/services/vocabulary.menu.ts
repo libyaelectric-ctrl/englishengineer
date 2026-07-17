@@ -2,7 +2,7 @@ import { storage } from '@/shared/storage';
 import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
 import { eventBus } from '@/core/events/event-bus';
-import type { VocabularyTerm } from './vocabulary.types';
+import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const CANONICAL_VOCABULARY_TOTAL = 5000;
 

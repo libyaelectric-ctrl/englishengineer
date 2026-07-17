@@ -17,19 +17,19 @@ export {
   type VocabularyHistoryEntry,
   type VocabularyState,
   type VocabularySummary,
-} from './vocabulary.types';
+} from './types/vocabulary.types';
 
-export { isVocabularyTerm, assertVocabularyTerms } from './vocabulary.schema';
+export { isVocabularyTerm, assertVocabularyTerms } from './types/vocabulary.schema';
 
-export { VocabularyRepository } from './vocabulary.repository';
+export { VocabularyRepository } from './services/vocabulary.repository';
 
-export { VocabularyEngine } from './vocabulary.engine';
+export { VocabularyEngine } from './engine/vocabulary.engine';
 
 export {
   loadVocabularyEntries,
   getVocabularyEntries,
   getVocabularyEntriesOrWait,
-} from './vocabulary.data';
+} from './data/vocabulary.data';
 
 export {
   normalizeVocabularyText,
@@ -38,40 +38,40 @@ export {
   getPreviousDateKey,
   isDueForReview,
   sortByNextReview,
-} from './vocabulary.helpers';
+} from './engine/vocabulary.helpers';
 
-export { VocabularyEvaluator } from './vocabulary.evaluator';
+export { VocabularyEvaluator } from './engine/vocabulary.evaluator';
 
-export { VocabularyService } from './vocabulary.service';
+export { VocabularyService } from './services/vocabulary.service';
 
-export { useVocabularyStore } from './vocabulary.store';
+export { useVocabularyStore } from './store/vocabulary.store';
 
 export {
   isVocabularyWordDue,
   filterMyVocabulary,
   VocabularyMemoryService,
-} from './vocabulary.memory';
+} from './services/vocabulary.memory';
 
-export { useVocabularyMemoryStore } from './vocabulary.memory.store';
+export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
 
 export {
   searchVocabularyEntries,
   lookupExternalVocabulary,
   isExternalVocabularyResult,
   clearVocabularyLookupCache,
-} from './vocabulary.search';
+} from './services/vocabulary.search';
 
 export {
   createInitialReviewState,
   updateSm2ReviewState,
-} from './vocabulary.spaced-repetition';
+} from './spaced-repetition/vocabulary.spaced-repetition';
 
 export {
   type DueTodayItem,
   getDueTodayWords,
   getUpcomingReviews,
   getReviewStats,
-} from './vocabulary-due-today';
+} from './spaced-repetition/vocabulary-due-today';
 
 export {
   CANONICAL_VOCABULARY_TOTAL,
@@ -89,9 +89,9 @@ export {
   getVocabularyMenuStatus,
   searchVocabularyMenu,
   VocabularyMenuService,
-} from './vocabulary.menu';
+} from './services/vocabulary.menu';
 
 export {
   type VocabularyLearningSetOptions,
   selectVocabularyLearningSet,
-} from './vocabulary.selection';
+} from './services/vocabulary.selection';
