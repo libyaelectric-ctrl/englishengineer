@@ -1,5 +1,6 @@
 import { storage } from '@/shared/storage';
 import { eventBus } from '@/core/events/event-bus';
+import { GrammarRepository } from './grammar.repository';
 
 export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
 export type GrammarTransferSkill = 'reading' | 'writing';
@@ -21,6 +22,7 @@ export interface GrammarRuleProgress {
   lastUsedAt: string | null;
   nextReviewDate: string | null;
   skillEvidence: Partial<Record<GrammarTransferSkill, GrammarSkillEvidence>>;
+  isPassed?: boolean;
 }
 
 export interface GrammarProgressSummary {
@@ -82,6 +84,7 @@ const initialProgress = (ruleId: string): GrammarRuleProgress => ({
   lastUsedAt: null,
   nextReviewDate: null,
   skillEvidence: {},
+  isPassed: false,
 });
 const normalizeProgress = (
   progress: GrammarRuleProgress
@@ -163,6 +166,27 @@ export const GrammarProgressService = {
       return { ...progress, reviewStatus: 'Due' };
     }
     return progress;
+  },
+  async isLessonUnlocked(ruleId: string): Promise<boolean> {
+    const all = await GrammarRepository.getAllRulesSorted();
+    const index = all.findIndex((r) => r.id === ruleId);
+    if (index <= 0) return true;
+    const prev = this.get(all[index - 1].id);
+    return (
+      prev.isPassed === true ||
+      prev.reviewStatus === 'Strong' ||
+      prev.correctUsages >= 3
+    );
+  },
+  recordPass(ruleId: string, now = new Date()): GrammarRuleProgress {
+    const current = this.get(ruleId, now);
+    return saveOne({
+      ...current,
+      isPassed: true,
+      reviewStatus:
+        current.reviewStatus === 'New' ? 'Learning' : current.reviewStatus,
+      lastUsedAt: now.toISOString(),
+    });
   },
   recordExposure(ruleId: string, now = new Date()): GrammarRuleProgress {
     const current = this.get(ruleId, now);

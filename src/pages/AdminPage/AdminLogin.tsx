@@ -34,7 +34,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
           </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label htmlFor="admin-username" className="text-xs font-bold text-muted-copy">
+              <label
+                htmlFor="admin-username"
+                className="text-xs font-bold text-muted-copy"
+              >
                 Username
               </label>
               <input
@@ -47,7 +50,10 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
               />
             </div>
             <div>
-              <label htmlFor="admin-password" className="text-xs font-bold text-muted-copy">
+              <label
+                htmlFor="admin-password"
+                className="text-xs font-bold text-muted-copy"
+              >
                 Password
               </label>
               <input

@@ -52,32 +52,41 @@ export const MistakeLog = ({
         </div>
       </div>
       <form onSubmit={handleSubmit} className="space-y-3">
-        <select
-          value={category}
-          onChange={(event) =>
-            setCategory(event.target.value as MistakeCategory)
-          }
-          className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-        >
-          {MISTAKE_CATEGORIES.map((item) => (
-            <option key={item}>{item}</option>
-          ))}
-        </select>
+        <label className="block">
+          <span className="sr-only">Mistake category</span>
+          <select
+            value={category}
+            onChange={(event) =>
+              setCategory(event.target.value as MistakeCategory)
+            }
+            className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+          >
+            {MISTAKE_CATEGORIES.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </label>
         <p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs leading-5 text-foreground">
           Suggestion: {MISTAKE_SUGGESTIONS[category]}
         </p>
-        <textarea
-          value={originalText}
-          onChange={(event) => setOriginalText(event.target.value)}
-          placeholder="Original sentence or repeated mistake"
-          className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
-        />
-        <textarea
-          value={correction}
-          onChange={(event) => setCorrection(event.target.value)}
-          placeholder="Correction and why it is better"
-          className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
-        />
+        <label className="block">
+          <span className="sr-only">Original sentence or repeated mistake</span>
+          <textarea
+            value={originalText}
+            onChange={(event) => setOriginalText(event.target.value)}
+            placeholder="Original sentence or repeated mistake"
+            className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
+          />
+        </label>
+        <label className="block">
+          <span className="sr-only">Correction and why it is better</span>
+          <textarea
+            value={correction}
+            onChange={(event) => setCorrection(event.target.value)}
+            placeholder="Correction and why it is better"
+            className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
+          />
+        </label>
         <Button
           type="submit"
           disabled={!originalText.trim() || !correction.trim()}

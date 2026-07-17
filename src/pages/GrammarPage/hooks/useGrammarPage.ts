@@ -3,7 +3,6 @@ import { useAuthStore } from '@/features/auth';
 import {
   GrammarProgressService,
   GrammarRepository,
-  sortByCurriculumOrder,
   useGrammarStore,
 } from '@/features/grammar';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
@@ -40,20 +39,37 @@ export function useGrammarPage() {
   const [levelCounts, setLevelCounts] =
     useState<Record<CefrLevel, number>>(EMPTY_LEVEL_COUNTS);
 
+  const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     let active = true;
-    void GrammarRepository.getGrammarRulesByLevel(level).then((items) => {
+    void GrammarRepository.getAllRulesSorted().then(async (all) => {
       if (!active) return;
-      const ordered = sortByCurriculumOrder(items);
-      setRules(ordered);
-      if (!selectedId || !ordered.some((rule) => rule.id === selectedId)) {
-        setSelectedId(ordered[0]?.id ?? null);
+      setRules(all);
+
+      const unlocked = new Set<string>();
+      for (const r of all) {
+        const isUnlocked = await GrammarProgressService.isLessonUnlocked(r.id);
+        if (isUnlocked) {
+          unlocked.add(r.id);
+        } else {
+          break;
+        }
+      }
+      if (all[0]) unlocked.add(all[0].id);
+      setUnlockedIds(unlocked);
+
+      if (!selectedId) {
+        const currentActive = all.find(
+          (r) => !GrammarProgressService.get(r.id).isPassed
+        );
+        setSelectedId(currentActive?.id ?? all[0]?.id ?? null);
       }
     });
     return () => {
       active = false;
     };
-  }, [level, selectedId, setRules, setSelectedId]);
+  }, [selectedId, setRules, setSelectedId, progressVersion]);
 
   useEffect(() => {
     let active = true;
@@ -113,8 +129,9 @@ export function useGrammarPage() {
         rule,
         progress: GrammarProgressService.get(rule.id),
         status: getLessonStatus(GrammarProgressService.get(rule.id)),
+        isUnlocked: unlockedIds.has(rule.id),
       })),
-    [rules, progressVersion]
+    [rules, progressVersion, unlockedIds]
   );
 
   const visibleRules = useMemo(() => {
@@ -183,13 +200,12 @@ export function useGrammarPage() {
       .slice(0, 8);
   }, [selectedRule, vocabularyIndex]);
 
-  const nextLesson = useMemo(
-    () =>
-      rulesWithProgress.find(
-        (e) => e.status !== 'Mastered' && e.rule.id !== selectedRule?.id
-      )?.rule ?? null,
-    [rulesWithProgress, selectedRule]
-  );
+  const nextLesson = useMemo(() => {
+    if (!selectedRule) return null;
+    const index = rules.findIndex((r) => r.id === selectedRule.id);
+    if (index === -1 || index >= rules.length - 1) return null;
+    return rules[index + 1];
+  }, [rules, selectedRule]);
 
   const reviewTargets = rulesWithProgress
     .filter(
@@ -246,6 +262,39 @@ export function useGrammarPage() {
       source: 'user',
     });
   };
+
+  const recordQuizResult = (correctCount: number) => {
+    if (!selectedRule) return;
+    const passed = correctCount >= 2;
+    if (passed) {
+      GrammarProgressService.recordPass(selectedRule.id);
+      GrammarProgressService.recordUsage(selectedRule.id, true);
+      showToast(
+        'Congratulations! You passed the lesson quiz! Next lesson is unlocked.',
+        'success'
+      );
+    } else {
+      GrammarProgressService.recordUsage(selectedRule.id, false);
+      showToast(
+        'You did not pass the quiz. Review the explanation and try again.',
+        'error'
+      );
+    }
+    setProgressVersion((v) => v + 1);
+  };
+
+  useEffect(() => {
+    if (!selectedRule || Object.keys(quizAnswers).length !== 3) return;
+    let correctCount = 0;
+    quizItems.forEach((item, index) => {
+      const selectedLetter = quizAnswers[index];
+      const correctLetter = String.fromCharCode(65 + item.correct);
+      if (selectedLetter === correctLetter) {
+        correctCount++;
+      }
+    });
+    recordQuizResult(correctCount);
+  }, [quizAnswers, selectedRule]);
 
   const quizItems = selectedRule
     ? [

@@ -201,16 +201,20 @@ export const WorkspaceMemoryPanel = ({
               setNewKey(e.target.value);
               setKeyError(null);
             }}
+            aria-label="Memory entry key"
             className="w-full rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
           />
-          <textarea
-            id="memory-new-value"
-            placeholder="Value (e.g. Offshore Wind Project Phase 2, IEC 61400 standard)"
-            value={newValue}
-            onChange={(e) => setNewValue(e.target.value)}
-            rows={2}
-            className="w-full resize-none rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
-          />
+          <label className="block">
+            <span className="sr-only">Memory entry value</span>
+            <textarea
+              id="memory-new-value"
+              placeholder="Value (e.g. Offshore Wind Project Phase 2, IEC 61400 standard)"
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              rows={2}
+              className="w-full resize-none rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
+            />
+          </label>
           {keyError && (
             <p className="text-[10px] text-error leading-4">{keyError}</p>
           )}

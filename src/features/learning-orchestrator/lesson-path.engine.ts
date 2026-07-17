@@ -1,4 +1,7 @@
-import type { SkillName, UserLearningProfile } from '@/features/profile/profile.types';
+import type {
+  SkillName,
+  UserLearningProfile,
+} from '@/features/profile/profile.types';
 import {
   getSkillLessonNumber,
   LESSON_PATH_LENGTH,

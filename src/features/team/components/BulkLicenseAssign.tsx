@@ -1,5 +1,11 @@
 import { useState, type FC, type FormEvent } from 'react';
-import { Send, CheckCircle2, AlertCircle, Loader2, MailPlus } from 'lucide-react';
+import {
+  Send,
+  CheckCircle2,
+  AlertCircle,
+  Loader2,
+  MailPlus,
+} from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import type { OrganizationRole } from '../team.types';
@@ -13,7 +19,8 @@ interface BulkLicenseAssignProps {
 export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
   const bulkInviteMembers = useTeamStore((s) => s.bulkInviteMembers);
   const [emailText, setEmailText] = useState('');
-  const [role, setRole] = useState<Exclude<OrganizationRole, 'admin'>>('learner');
+  const [role, setRole] =
+    useState<Exclude<OrganizationRole, 'admin'>>('learner');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<BulkInviteResult | null>(null);
 
@@ -59,7 +66,9 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
             value={emailText}
             onChange={(e) => setEmailText(e.target.value)}
             rows={5}
-            placeholder={"engineer1@company.com\nengineer2@company.com\nmanager@company.com"}
+            placeholder={
+              'engineer1@company.com\nengineer2@company.com\nmanager@company.com'
+            }
             className="premium-input mt-2 w-full resize-none rounded-lg px-3 py-3 text-sm"
             disabled={isSubmitting}
           />
@@ -104,7 +113,9 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
               ) : (
                 <>
                   <Send className="h-4 w-4" />
-                  Assign {parsedEmails.length > 0 ? `${parsedEmails.length} ` : ''}Licenses
+                  Assign{' '}
+                  {parsedEmails.length > 0 ? `${parsedEmails.length} ` : ''}
+                  Licenses
                 </>
               )}
             </Button>
@@ -117,7 +128,9 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
               <div className="flex items-start gap-2 text-sm text-success">
                 <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" />
                 <span>
-                  {result.succeeded.length} invitation{result.succeeded.length !== 1 ? 's' : ''} created successfully.
+                  {result.succeeded.length} invitation
+                  {result.succeeded.length !== 1 ? 's' : ''} created
+                  successfully.
                 </span>
               </div>
             )}

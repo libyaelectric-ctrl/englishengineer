@@ -84,6 +84,7 @@ export function ReadingMissionCard({
             <button
               type="button"
               onClick={() => onToggleBookmark(m.id)}
+              aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
               className="ml-1 shrink-0 p-1 rounded transition-colors hover:bg-surface-hover"
             >
               <Bookmark
