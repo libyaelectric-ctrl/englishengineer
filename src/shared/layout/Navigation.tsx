@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '@/config/navigation.config';
@@ -21,7 +21,7 @@ const linkClasses = ({ isActive }: { isActive: boolean }) =>
       : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
   );
 
-export const Navigation = ({ onItemClick }: NavigationProps) => {
+export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
   const location = useLocation();
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -101,4 +101,5 @@ export const Navigation = ({ onItemClick }: NavigationProps) => {
       })}
     </nav>
   );
-};
+});
+Navigation.displayName = 'Navigation';
