@@ -27,7 +27,6 @@ import {
   Target,
   Trophy,
   User,
-  Wallet,
   WandSparkles,
 } from 'lucide-react';
 
@@ -55,7 +54,6 @@ export const TOOLS_NAV_ITEMS = [
 export const PROFILE_NAV_ITEMS = [
   { label: 'Overview', href: '/profile/overview', icon: User },
   { label: 'Preferences', href: '/profile/preferences', icon: Settings },
-  { label: 'Billing', href: '/profile/billing', icon: Wallet },
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
 ] as const;
 

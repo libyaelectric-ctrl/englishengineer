@@ -2,7 +2,6 @@ import { PROFESSIONS } from '@/features/profile/profile.preferences';
 import { useProfilePage } from './ProfilePage/useProfilePage';
 import {
   ProfileOverviewSection,
-  BillingSection,
   SecuritySection,
   SkillsProgressSection,
   LearningPreferencesSection,
@@ -52,18 +51,9 @@ const ProfilePage = () => {
     clearConfirmation,
     setClearConfirmation,
     providerMode,
-    providerStatus,
-    isBillingLoading,
-    todaysCoachSessions,
-    todaysAttempts,
-    todaysReviews,
-    uploadedDocsCount,
-    voiceMinutesUsed,
     enterEditMode,
     handleSaveProfile,
     handleSavePreferences,
-    handleUpgrade,
-    handleManageSubscription,
     exportLocalData,
     clearLocalData,
     resetLearningProgress,
@@ -164,23 +154,6 @@ const ProfilePage = () => {
           setPrefCareerGoal={setPrefCareerGoal}
           preferencesSaved={preferencesSaved}
           onSave={handleSavePreferences}
-        />
-      )}
-
-      {/* Billing Section */}
-      {activeSection === 'billing' && (
-        <BillingSection
-          subscription={subscription}
-          providerStatus={providerStatus}
-          isBillingLoading={isBillingLoading}
-          billingError={billingError}
-          onUpgrade={handleUpgrade}
-          onOpenPortal={handleManageSubscription}
-          todaysCoachSessions={todaysCoachSessions}
-          todaysAttempts={todaysAttempts}
-          todaysReviews={todaysReviews}
-          uploadedDocsCount={uploadedDocsCount}
-          voiceMinutesUsed={voiceMinutesUsed}
         />
       )}
 
