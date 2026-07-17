@@ -18,19 +18,19 @@ export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
         subtitle="Recommendations never remove user control"
         icon={Target}
       >
-        <label className="text-sm font-medium text-foreground">
+        <label className="text-xs font-bold uppercase tracking-wider text-foreground">
           Vocabulary/domain focus
           <select
             value={domain}
             onChange={(event) => setDomain(event.target.value)}
-            className="mt-2 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
+            className="mt-2 min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer focus:border-[#0047bb] focus:ring-0 shadow-sm"
           >
             {DOMAINS.map((item) => (
               <option key={item}>{item}</option>
             ))}
           </select>
         </label>
-        <p className="mt-4 text-xs leading-5 text-muted-copy">
+        <p className="mt-4 text-xs leading-5 text-muted-copy font-medium">
           Difficulty remains bounded to the selected skill: three safe
           allocations and one controlled stretch allocation.
         </p>
@@ -41,14 +41,14 @@ export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
         subtitle={profile.placementCompleted ? 'Completed' : 'Available'}
         icon={Clock3}
       >
-        <p className="text-sm leading-6 text-muted-copy">
+        <p className="text-xs leading-5 text-muted-copy font-medium">
           {profile.placementCompleted
             ? `Local placement recommends ${profile.placementBand ?? 'A1'} with ${profile.placementConfidence} confidence.`
             : 'Take the short Reading, Vocabulary and Grammar placement, or continue at A1.'}
         </p>
         <Link
           to="/placement"
-          className="mt-4 inline-flex text-sm font-medium text-primary"
+          className="mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm"
         >
           {profile.placementCompleted ? 'Retake placement' : 'Start placement'}
         </Link>
