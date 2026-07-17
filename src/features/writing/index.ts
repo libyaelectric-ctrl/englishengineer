@@ -1,11 +1,39 @@
-export * from './writing.types';
-export * from './writing.data';
-export * from './writing.evaluator';
-export * from './writing.service';
-export * from './writing.store';
-export * from './writing.helpers';
-export * from './WritingModelAnswer';
-export * from './writing.task-model';
-export * from './writing-realtime-analyzer';
-export * from './WritingRealtimeFeedback';
-export * from './components';
+export {
+  type CorrectionType,
+  type WritingCorrection,
+  type WritingAssessmentRubric,
+  type WritingMission,
+  type WritingSubmission,
+  type DetailedCorrectionFeedback,
+  type WritingEvaluationResult,
+  type WritingHistoryEntry,
+  type WritingState,
+  type WritingSpec,
+} from './writing.types';
+
+export { WRITING_MISSIONS } from './writing.data';
+
+export { WritingEvaluator } from './writing.evaluator';
+
+export { WritingService } from './writing.service';
+
+export { useWritingStore } from './writing.store';
+
+export { WritingHelpers } from './writing.helpers';
+
+export { WritingModelAnswer } from './WritingModelAnswer';
+
+export {
+  type WritingTaskFormat,
+  getWritingTaskFormats,
+} from './writing.task-model';
+
+export {
+  type RealtimeSuggestion,
+  type RealtimeAnalysisResult,
+  WritingRealtimeAnalyzer,
+} from './writing-realtime-analyzer';
+
+export { WritingRealtimeFeedback } from './WritingRealtimeFeedback';
+
+export { WritingSidebar } from './components';
