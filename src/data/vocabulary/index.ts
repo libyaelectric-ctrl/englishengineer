@@ -1,5 +1,5 @@
 import type { CefrLevel } from '@/features/level-system';
-import type { VocabularyTerm } from '@/features/vocabulary/vocabulary.types';
+import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 
 export const loadVocabularyByLevel = async (
   level: CefrLevel
