@@ -9,7 +9,8 @@ const documents: Record<
 > = {
   terms: {
     title: 'Terms of Service',
-    summary: 'Terms and conditions for using the EngVox engineering communication platform.',
+    summary:
+      'Terms and conditions for using the EngVox engineering communication platform.',
     sections: [
       [
         'Acceptance of terms',
@@ -55,7 +56,8 @@ const documents: Record<
   },
   privacy: {
     title: 'Privacy Policy (GDPR / KVKK)',
-    summary: 'How EngVox collects, uses, stores, and protects your personal data in compliance with GDPR and Turkish KVKK regulations.',
+    summary:
+      'How EngVox collects, uses, stores, and protects your personal data in compliance with GDPR and Turkish KVKK regulations.',
     sections: [
       [
         'Data controller',
@@ -94,7 +96,7 @@ const documents: Record<
         'Essential cookies are used for authentication and preferences. Analytics cookies require your consent. See our Cookie Notice for details.',
       ],
       [
-        'Children\'s privacy',
+        "Children's privacy",
         'EngVox is not directed at children under 16. We do not knowingly collect data from minors.',
       ],
       [

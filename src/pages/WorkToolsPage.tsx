@@ -138,26 +138,21 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           {templates.map((item) => (
             <Card
               key={item.id}
-              className="space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300"
+              className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-center justify-between border-b border-border-soft pb-2">
                 <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
-                  {item.id.toUpperCase()} // TEMPLATE
-                </span>
-                <span className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                  {item.id.toUpperCase()}
                 </span>
               </div>
-              <div>
-                <p className="text-xs font-black uppercase tracking-wider text-muted-copy">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
                   Workflow Specification
                 </p>
-                <h2 className="mt-1 text-base font-black tracking-tight text-foreground">
+                <h2 className="text-base font-black tracking-tight text-foreground">
                   {item.title}
                 </h2>
-                <p className="mt-1 text-xs leading-relaxed text-muted-copy">
+                <p className="text-xs leading-relaxed text-muted-copy">
                   {item.context}
                 </p>
               </div>
@@ -167,7 +162,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                     [TECHNICAL CONTEXT]
                   </p>
-                  <p className="mt-1.5 text-xs text-foreground font-medium">
+                  <p className="mt-1 text-xs text-foreground font-medium">
                     {item.sampleInput}
                   </p>
                 </div>
@@ -176,7 +171,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
                     [ORCHESTRATED PRODUCTION PHRASE]
                   </p>
-                  <p className="mt-1.5 text-xs leading-relaxed text-foreground font-semibold">
+                  <p className="mt-1 text-xs leading-relaxed text-foreground font-semibold">
                     {item.professionalOutput}
                   </p>
                 </div>
@@ -193,17 +188,19 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button
                   variant="secondary"
+                  size="sm"
                   onClick={() => copy(item.id, item.professionalOutput)}
                 >
                   {copiedId === item.id ? (
-                    <Check className="h-4 w-4" />
+                    <Check className="h-3.5 w-3.5" />
                   ) : (
-                    <Clipboard className="h-4 w-4" />
+                    <Clipboard className="h-3.5 w-3.5" />
                   )}
                   {copiedId === item.id ? 'Copied' : 'Copy'}
                 </Button>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() =>
                     openQuickAI(
                       item.id,
@@ -213,7 +210,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     )
                   }
                 >
-                  <Bot className="h-4 w-4" /> Send to Quick AI
+                  <Bot className="h-3.5 w-3.5" /> Send to Quick AI
                 </Button>
               </div>
             </Card>
@@ -226,23 +223,18 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           {emails.map((item) => (
             <Card
               key={item.id}
-              className="space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300"
+              className="p-5 space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300"
             >
               <div className="flex items-center justify-between border-b border-border-soft pb-2">
                 <span className="font-mono text-[9px] uppercase tracking-widest text-secondary font-bold bg-secondary/5 px-2 py-0.5 rounded">
-                  {item.id.toUpperCase()} // EMAIL
-                </span>
-                <span className="flex gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                  {item.id.toUpperCase()}
                 </span>
               </div>
-              <div>
-                <p className="text-xs font-black uppercase tracking-wider text-muted-copy">
+              <div className="space-y-1">
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
                   Communication Spec
                 </p>
-                <h2 className="mt-1 text-base font-black tracking-tight text-foreground">
+                <h2 className="text-base font-black tracking-tight text-foreground">
                   {item.title}
                 </h2>
               </div>
@@ -270,12 +262,14 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                       <div className="flex flex-wrap gap-2 pt-2 border-t border-border-soft">
                         <Button
                           variant="secondary"
+                          size="sm"
                           onClick={() => copy(`${item.id}-${label}`, text)}
                         >
-                          <Clipboard className="h-4 w-4" /> Copy
+                          <Clipboard className="h-3.5 w-3.5" /> Copy
                         </Button>
                         <Button
                           variant="outline"
+                          size="sm"
                           onClick={() =>
                             openQuickAI(
                               item.id,
@@ -285,7 +279,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                             )
                           }
                         >
-                          <Bot className="h-4 w-4" /> Send to Quick AI
+                          <Bot className="h-3.5 w-3.5" /> Send to Quick AI
                         </Button>
                       </div>
                     </div>
@@ -313,7 +307,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             return (
               <Card
                 key={item.id}
-                className="space-y-3 border-l-4 border-l-cyan-500 shadow-sm hover:shadow-md transition-all duration-300"
+                className="p-5 space-y-3 border-l-4 border-l-cyan-500 shadow-sm hover:shadow-md transition-all duration-300"
                 hoverEffect
               >
                 <div className="flex items-center justify-between border-b border-border-soft pb-2">
@@ -323,7 +317,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   <div className="flex items-center gap-2">
                     <Button
                       variant="ghost"
-                      className="px-2 py-1"
+                      size="sm"
+                      className="px-2 py-1 min-h-0"
                       onClick={() => toggleFavorite(item.id)}
                       aria-label={
                         favorite ? 'Remove favorite' : 'Save favorite'
@@ -333,11 +328,6 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                         className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
                       />
                     </Button>
-                    <span className="flex gap-1">
-                      <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                      <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
-                    </span>
                   </div>
                 </div>
                 <div>
@@ -365,9 +355,10 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 <div className="pt-2 border-t border-border-soft">
                   <Button
                     variant="secondary"
+                    size="sm"
                     onClick={() => copy(item.id, item.phrase)}
                   >
-                    <Clipboard className="h-4 w-4" /> Copy Phrase
+                    <Clipboard className="h-3.5 w-3.5" /> Copy Phrase
                   </Button>
                 </div>
               </Card>
