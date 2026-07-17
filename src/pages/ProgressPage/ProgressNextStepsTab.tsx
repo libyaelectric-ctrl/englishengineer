@@ -105,13 +105,13 @@ export const ProgressNextStepsTab = () => {
           subtitle="Upgrade to unlock mission chains, full rewards, bonuses, and long-term challenge progression."
           icon={Trophy}
         >
-          <div className="rounded-xl border border-warning/20 bg-warning/5 p-5">
-            <p className="text-sm text-warning">
+          <div className="rounded-[4px] border border-warning/20 bg-warning/5 p-5 shadow-sm">
+            <p className="text-sm text-warning font-bold uppercase tracking-wider">
               {fullGamificationEntitlement.reason}
             </p>
             <Button
               onClick={() => navigate('/profile')}
-              className="mt-4 h-10 bg-primary text-white font-medium rounded-lg"
+              className="mt-4 h-10 bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[10px] rounded-[4px] px-4 cursor-pointer shadow-sm"
             >
               Upgrade to Pro
             </Button>

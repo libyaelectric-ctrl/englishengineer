@@ -19,29 +19,29 @@ export const WordCardHeader = ({
 }: WordCardHeaderProps) => (
   <div className="flex flex-wrap items-start justify-between gap-3">
     <div>
-      <h3 className="text-xl font-black text-foreground">
+      <h3 className="text-xl font-bold text-foreground">
         {repairVocabularyText(term.term)}
       </h3>
       {showAnswer && (
-        <p className="mt-1 font-semibold text-primary">
+        <p className="mt-1 font-bold text-[#0047bb]">
           {repairVocabularyText(term.turkishMeaning)}
         </p>
       )}
     </div>
     <div className="flex flex-wrap justify-end gap-1.5">
-      <span className="rounded-full border border-primary/20 bg-primary/5 px-2 py-1 text-[10px] font-bold text-primary">
-        {term.cefrLevel}
+      <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+        LVL-<span>{term.cefrLevel}</span>
       </span>
-      <span className="rounded-full border border-border-soft bg-surface-hover px-2 py-1 text-[10px] font-bold text-muted-copy">
+      <span className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
         {status}
       </span>
       {progress?.isWeak && (
-        <span className="rounded-full border border-rose-200 bg-rose-50 px-2 py-1 text-[10px] font-bold text-rose-700">
+        <span className="rounded-[4px] border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9px] font-bold text-rose-700 uppercase tracking-wider">
           Weak
         </span>
       )}
       {progress?.isForgotten && (
-        <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-1 text-[10px] font-bold text-amber-700">
+        <span className="rounded-[4px] border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold text-amber-700 uppercase tracking-wider">
           Forgotten
         </span>
       )}

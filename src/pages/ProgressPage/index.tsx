@@ -13,9 +13,9 @@ const ProgressPage = () => {
   const activeTab = section === 'next-steps' ? 'next-steps' : 'overview';
 
   return (
-    <div className="animate-in fade-in duration-300 pb-8">
+    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Fixed Header with Tabs */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between py-3">
           <div>
             <h1 className="text-xl font-bold text-foreground">Progress Hub</h1>
@@ -23,17 +23,17 @@ const ProgressPage = () => {
               Analytics, milestones, and next steps.
             </p>
           </div>
-          <div className="flex gap-1 rounded-xl border border-border-soft bg-surface-hover p-1">
+          <div className="flex gap-1 rounded-[4px] border border-[#d9d9e3] bg-white p-1 shadow-sm">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() =>
                   navigate(`/progress/${tab.id}`, { replace: true })
                 }
-                className={`px-4 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
+                className={`px-4 py-1.5 text-xs font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                   activeTab === tab.id
-                    ? 'bg-primary text-white'
-                    : 'text-muted-copy hover:bg-surface-hover hover:text-primary'
+                    ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                    : 'text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                 }`}
               >
                 {tab.label}

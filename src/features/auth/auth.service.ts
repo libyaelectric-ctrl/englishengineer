@@ -39,7 +39,10 @@ const activeAdapter: AuthAdapter = (() => {
   try {
     return new SupabaseAuthAdapter();
   } catch (e) {
-    logger.e('Failed to initialize Supabase adapter, falling back to local.', e);
+    logger.e(
+      'Failed to initialize Supabase adapter, falling back to local.',
+      e
+    );
     return localAdapter;
   }
 })();

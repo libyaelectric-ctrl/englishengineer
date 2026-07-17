@@ -40,7 +40,7 @@ export const ProgressCockpit = React.memo(
         icon={Target}
         className="animate-on-scroll"
       >
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {skillNames.map((skill) => {
             const skillProfile = profile.skills[skill];
             const meta = skillMeta[skill];
@@ -54,10 +54,10 @@ export const ProgressCockpit = React.memo(
                 key={skill}
                 type="button"
                 onClick={() => navigate(meta.route)}
-                className="group min-w-0 rounded-card border border-border-soft bg-surface p-4 text-left transition-all hover:border-border-hover hover:bg-surface-hover/20 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-md"
+                className="group min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-[8px] border border-border-soft bg-surface-hover p-1.5 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <span className="rounded-[4px] border border-[#d9d9e3] bg-surface-hover p-1.5 text-[#0047bb] group-hover:bg-[#0047bb] group-hover:text-white transition-colors">
                     <Icon className="h-4 w-4" />
                   </span>
                   <div className="text-right">
@@ -80,7 +80,7 @@ export const ProgressCockpit = React.memo(
 
                 <Sparkline
                   data={skillSparklineData[skill]}
-                  className="w-full h-6 text-primary/40"
+                  className="w-full h-6 text-[#0047bb]/40"
                 />
 
                 <div className="mt-4 space-y-3">
@@ -116,7 +116,7 @@ export const ProgressCockpit = React.memo(
                       className=""
                     />
                     <div className="flex justify-between items-center px-1 pt-0.5">
-                      <span className="text-[10px] font-bold text-primary">
+                      <span className="text-[10px] font-bold text-[#0047bb]">
                         {skillProfile.cefrBand} Level
                       </span>
                       <span className="text-[9px] font-medium text-muted-copy">
@@ -126,7 +126,7 @@ export const ProgressCockpit = React.memo(
                   </div>
 
                   {/* Global Progress */}
-                  <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
+                  <div className="space-y-1.5 border-t border-[#d9d9e3]/50 pt-2.5">
                     <div className="flex justify-between items-center px-1">
                       <span className="text-[9px] font-medium text-muted-copy">
                         Global Progress (A1 - C2+)

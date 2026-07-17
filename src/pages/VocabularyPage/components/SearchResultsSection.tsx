@@ -82,6 +82,7 @@ export function SearchResultsSection({
               onSetCustomDraft({ ...customDraft, term: searchQuery });
               onSetShowAddForm(true);
             }}
+            className="rounded-[4px]"
           >
             <Plus className="h-4 w-4" /> Add to My Vocabulary
           </Button>
@@ -100,7 +101,7 @@ export function SearchResultsSection({
                 onChange={(event) =>
                   onSetCustomDraft({ ...customDraft, term: event.target.value })
                 }
-                className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
               />
             </label>
             <label className="text-sm font-semibold">
@@ -114,7 +115,7 @@ export function SearchResultsSection({
                     turkishMeaning: event.target.value,
                   })
                 }
-                className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
               />
             </label>
             <label className="text-sm font-semibold">
@@ -128,7 +129,7 @@ export function SearchResultsSection({
                     exampleSentence: event.target.value,
                   })
                 }
-                className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
               />
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -142,7 +143,7 @@ export function SearchResultsSection({
                       cefrLevel: event.target.value as CefrLevel,
                     })
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 font-normal"
+                  className="mt-1 min-h-11 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 font-normal cursor-pointer outline-none focus:border-[#0047bb]"
                 >
                   {CEFR_LEVELS.map((level) => (
                     <option key={level}>{level}</option>
@@ -160,12 +161,12 @@ export function SearchResultsSection({
                       domain: event.target.value,
                     })
                   }
-                  className="mt-1 min-h-11 w-full rounded-lg border border-border-soft px-3 font-normal"
+                  className="mt-1 min-h-11 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
                 />
               </label>
             </div>
             <div className="md:col-span-2 flex flex-wrap items-center gap-3">
-              <Button type="submit">
+              <Button type="submit" className="rounded-[4px]">
                 <Plus className="h-4 w-4" /> Save to My Vocabulary
               </Button>
               <span className="text-xs font-bold text-foreground0">

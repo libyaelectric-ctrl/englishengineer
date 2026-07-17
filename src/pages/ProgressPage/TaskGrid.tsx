@@ -30,10 +30,10 @@ export const TaskGrid = ({
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="text-2xl font-medium text-foreground">
+        <h2 className="text-xl font-bold text-foreground">
           Today's Engineering Communication Tasks
         </h2>
-        <p className="mt-1 text-sm text-muted-copy">
+        <p className="mt-1 text-xs text-muted-copy font-medium">
           A balanced six-skill plan ordered for {careerRole}.
         </p>
       </div>
@@ -41,13 +41,17 @@ export const TaskGrid = ({
         {tasks.map((task, index) => {
           const completed = isTaskCompletedToday(task.id, completedTaskDates);
           return (
-            <Card key={task.id} className="flex flex-col gap-4">
+            <Card
+              key={task.id}
+              className="flex flex-col gap-4 p-5 shadow-sm"
+              hoverEffect={false}
+            >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-widest text-primary">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#0047bb]">
                     Priority {index + 1} · {task.module}
                   </p>
-                  <h3 className="mt-1 text-lg font-medium text-foreground">
+                  <h3 className="mt-1 text-base font-bold text-foreground">
                     {task.title}
                   </h3>
                 </div>
@@ -61,7 +65,7 @@ export const TaskGrid = ({
                       );
                     }
                   }}
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border transition ${completed ? 'border-success bg-success/10 text-success' : 'border-border-soft bg-surface text-muted-copy hover:border-primary hover:bg-primary/10'}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition cursor-pointer ${completed ? 'border-success bg-success/10 text-success shadow-sm' : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb] hover:bg-[#0047bb]/5 shadow-sm'}`}
                   aria-label={
                     completed ? 'Mark task incomplete' : 'Mark task complete'
                   }
@@ -69,16 +73,17 @@ export const TaskGrid = ({
                   <Check className="h-5 w-5" />
                 </button>
               </div>
-              <p className="flex-1 text-sm leading-6 text-muted-copy">
+              <p className="flex-1 text-xs leading-5 text-muted-copy font-medium">
                 {task.description}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted-copy">
+                <span className="text-xs font-bold text-muted-copy">
                   {task.estimatedMinutes} min
                 </span>
                 <Button
                   variant="secondary"
                   onClick={() => navigate(task.route)}
+                  className="h-9 px-4 border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center"
                 >
                   Open task
                 </Button>

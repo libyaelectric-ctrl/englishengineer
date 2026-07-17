@@ -52,17 +52,17 @@ export function VocabularyHeader({
   onFilterChange,
 }: VocabularyHeaderProps) {
   return (
-    <div className="sticky top-0 z-40 flex flex-col bg-background py-3 border-b border-border-soft shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl py-3 border-b border-[#d9d9e3] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Vocabulary
           </h1>
-          <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
+          <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
         </div>
-        <div className="hidden text-xs text-muted-copy lg:block">
+        <div className="hidden text-xs text-muted-copy lg:block font-bold">
           {allLevelsLoaded
             ? 'All 5,000 canonical terms are available'
             : `${vocabularyLevel} learning terms loaded`}
@@ -78,10 +78,10 @@ export function VocabularyHeader({
               type="button"
               aria-selected={activeTab === tab}
               onClick={() => chooseTab(tab)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${
+              className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === tab
-                  ? 'border-primary/40 bg-primary/5 text-primary'
-                  : 'border-border-soft bg-surface text-muted-copy hover:text-foreground'
+                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
+                  : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
               }`}
             >
               {TAB_LABELS[tab]}
@@ -99,15 +99,15 @@ export function VocabularyHeader({
                 void onSearchSubmit(event);
               }
             }}
-            className="min-h-10 w-full rounded-lg border border-border-soft bg-surface px-10 text-sm outline-none focus:border-primary/50"
-            placeholder="Search..."
+            className="min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
+            placeholder="Search term bank..."
             aria-label="Search vocabulary"
           />
         </label>
       </div>
 
       {showFilters && (
-        <div className="mt-3 grid gap-2 rounded-lg border border-border-soft bg-surface p-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-3 grid gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-3 sm:grid-cols-2 lg:grid-cols-4 shadow-sm animate-in slide-in-from-top-2 duration-200">
           {(
             [
               ['cefr', 'CEFR'],
@@ -121,14 +121,14 @@ export function VocabularyHeader({
           ).map(([field, label]) => (
             <label
               key={field}
-              className="text-[10px] font-bold text-foreground"
+              className="text-[10px] font-bold text-muted-copy uppercase tracking-wider"
             >
               {label}
               <select
                 aria-label={`Filter by ${label}`}
                 value={filters[field]}
                 onChange={(event) => onFilterChange(field, event.target.value)}
-                className="mt-1 min-h-8 w-full rounded-lg border border-border-soft bg-background px-2 text-[11px] font-normal focus:border-primary outline-none"
+                className="mt-1 min-h-8 w-full rounded-[4px] border border-[#d9d9e3] bg-background px-2 text-[11px] font-normal focus:border-[#0047bb] outline-none cursor-pointer"
               >
                 {(field === 'status'
                   ? [
@@ -156,12 +156,15 @@ export function VocabularyHeader({
         </p>
       )}
       {isSearchLoading && (
-        <p role="status" className="mt-2 text-[10px] font-bold text-primary">
+        <p
+          role="status"
+          className="mt-2 text-[10px] font-bold text-[#0047bb] animate-pulse"
+        >
           Checking all 5,000 canonical terms…
         </p>
       )}
       {hasSearched && searchResults.length > 0 && (
-        <p className="mt-2 text-[10px] text-muted-copy">
+        <p className="mt-2 text-[10px] text-muted-copy font-mono uppercase">
           {searchResults.length} of {allSearchResults.length} results found
         </p>
       )}

@@ -15,25 +15,30 @@ export const QuickStats = ({
   knowledgePoolSize: number;
 }) => {
   const stats = [
-    { icon: Target, label: 'Avg Elo', value: totalElo, color: 'text-primary' },
+    {
+      icon: Target,
+      label: 'Avg Elo',
+      value: totalElo,
+      color: 'text-[#0047bb]',
+    },
     {
       icon: TrendingUp,
       label: 'Best',
       value: highestSkillLabel,
-      color: 'text-emerald-600',
+      color: 'text-success',
     },
-    { icon: Zap, label: 'Peak', value: peakElo, color: 'text-amber-600' },
+    { icon: Zap, label: 'Peak', value: peakElo, color: 'text-warning' },
     {
       icon: Clock,
       label: 'Sessions',
       value: sessionsCount,
-      color: 'text-rose-600',
+      color: 'text-error',
     },
     {
       icon: Layers,
       label: 'Knowledge Pool',
       value: knowledgePoolSize,
-      color: 'text-indigo-600',
+      color: 'text-[#0047bb]',
     },
   ];
 
@@ -45,11 +50,11 @@ export const QuickStats = ({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 + i * 0.08 }}
-          className="rounded-xl border border-border-soft bg-surface p-3 shadow-sm"
+          className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
         >
           <div className="flex items-center gap-1.5 mb-1">
             <stat.icon className="h-3 w-3 text-muted-copy" />
-            <span className="text-[10px] uppercase tracking-wider text-muted-copy font-semibold">
+            <span className="text-[10px] uppercase tracking-wider text-muted-copy font-bold">
               {stat.label}
             </span>
           </div>

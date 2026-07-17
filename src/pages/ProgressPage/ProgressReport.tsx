@@ -11,14 +11,14 @@ export const ProgressReport = ({
   report: SevenDayProgressReport;
   markReportGenerated: () => void;
 }) => (
-  <Card className="space-y-5" hoverEffect={false}>
+  <Card className="space-y-5 p-5 shadow-sm" hoverEffect={false}>
     <div className="flex items-center gap-3">
-      <FileChartColumn className="h-5 w-5 text-primary" />
+      <FileChartColumn className="h-5 w-5 text-[#0047bb]" />
       <div>
-        <h2 className="text-xl font-medium text-foreground">
+        <h2 className="text-xl font-bold text-foreground">
           7-Day Progress Report
         </h2>
-        <p className="text-sm text-muted-copy">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-copy">
           Built from existing learning and assessment evidence.
         </p>
       </div>
@@ -35,52 +35,60 @@ export const ProgressReport = ({
       ].map(([label, value]) => (
         <div
           key={label}
-          className="rounded-xl border border-border-soft bg-surface-hover p-4"
+          className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
         >
-          <dt className="text-xs font-medium uppercase tracking-wider text-muted-copy">
+          <dt className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {label}
           </dt>
-          <dd className="mt-2 text-sm font-medium text-foreground">{value}</dd>
+          <dd className="mt-2 text-sm font-bold text-foreground">{value}</dd>
         </div>
       ))}
     </dl>
     <div>
-      <p className="text-sm font-medium text-foreground">Repeated mistakes</p>
-      <p className="mt-1 text-sm text-muted-copy">
+      <p className="text-xs font-bold uppercase tracking-wider text-foreground">
+        Repeated mistakes
+      </p>
+      <p className="mt-1 text-sm text-muted-copy font-medium">
         {report.repeatedMistakes.length
           ? report.repeatedMistakes.join(', ')
           : 'No repeated pattern identified yet.'}
       </p>
     </div>
     <div className="grid gap-3 sm:grid-cols-3">
-      <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
-        <p className="text-xs font-medium text-muted-copy">Work Tools</p>
-        <p className="mt-1 text-sm text-foreground">
+      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+          Work Tools
+        </p>
+        <p className="mt-1 text-sm font-medium text-foreground">
           {report.recommendedWorkTools}
         </p>
       </div>
-      <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
-        <p className="text-xs font-medium text-muted-copy">Quick AI</p>
-        <p className="mt-1 text-sm text-foreground">
+      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+          Quick AI
+        </p>
+        <p className="mt-1 text-sm font-medium text-foreground">
           {report.recommendedQuickAIAction}
         </p>
       </div>
-      <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
-        <p className="text-xs font-medium text-muted-copy">Phrase category</p>
-        <p className="mt-1 text-sm text-foreground">
+      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+          Phrase category
+        </p>
+        <p className="mt-1 text-sm font-medium text-foreground">
           {report.recommendedPhraseCategory}
         </p>
       </div>
     </div>
     <div>
-      <p className="text-sm font-medium text-foreground">
+      <p className="text-xs font-bold uppercase tracking-wider text-foreground">
         Recommended next tasks
       </p>
       <ul className="mt-2 space-y-2">
         {report.recommendedNextTasks.map((task) => (
           <li
             key={task}
-            className="flex items-center gap-2 text-sm text-foreground"
+            className="flex items-center gap-2 text-sm font-medium text-foreground"
           >
             <BookOpenCheck className="h-4 w-4 text-success" />
             {task}
@@ -97,6 +105,7 @@ export const ProgressReport = ({
           '/progress/next-steps'
         );
       }}
+      className="w-full h-10 border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-2"
     >
       Mark report reviewed
     </Button>
