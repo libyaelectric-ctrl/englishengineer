@@ -124,9 +124,10 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 - **Açıklama:** `expansion-categories.ts` (642 satır) gibi 500+ satırlı devasa sözlük genişletme dosyalarını daha küçük fonksiyonel dosyalara bölerek kod kalitesini artır.
 - **Durum:** Yapıldı (commit 6ab9ca3). 3 dosya (642+509+525 satır) → 13 modüle bölündü. electrical, mechanical, civil, hse, project-management, specialized kategorileri + meanings, examples, collocations helper'ları.
 
-### [ ] Kademe 19: Playwright ile E2E Test Kapsamının Artırılması
+### [x] YAPILDI — Kademe 19: Playwright ile E2E Test Kapsamının Artırılması
 
 - **Açıklama:** Playwright E2E testlerine kullanıcı üyelik, mülakat simülatörü ve ödeme akışlarını içeren kapsamlı "User Journey" entegrasyon testleri ekle.
+- **Durum:** Yapıldı (commit 3b3ec50). 38 Playwright test: user-journey (6), navigation (22), vocabulary (10). Demo mode login, responsive selectors, Cmd+K testleri dahil.
 
 ### [x] YAPILDI — Kademe 20: React Query Cache ve Virtual Scroll Performans İyileştirmesi
 

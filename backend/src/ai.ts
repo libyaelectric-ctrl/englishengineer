@@ -2,6 +2,7 @@ import { ApiError } from './errors.js';
 import { createAiLedger } from './ai-ledger.js';
 import { validateBody, AiRequestBodySchema } from './validation.js';
 import { createAIService, AI_CONTRACT_VERSION } from './ai-core/index.js';
+import { checkUserLimits } from './cost-tracker.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
 
@@ -66,6 +67,16 @@ export const registerAIRoutes = (
 
             const freeLimitReached = planId === 'free' && count >= 3;
             const paidLimitReached = planId !== 'free' && count >= 300;
+
+            // Also check cost-based limits
+            const costLimits = checkUserLimits(userId);
+            if (!costLimits.allowed) {
+              throw new ApiError(
+                429,
+                'user_rate_limit_exceeded',
+                costLimits.reason || 'Rate limit exceeded.'
+              );
+            }
 
             if (freeLimitReached || paidLimitReached) {
               if (topupCredits > 0) {
