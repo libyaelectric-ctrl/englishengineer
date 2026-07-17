@@ -183,10 +183,21 @@ interface TopupCheckoutSessionBody {
 }
 
 export interface BillingService {
-  createCheckoutSession(userId: string, body: CheckoutSessionBody): Promise<{ url: string }>;
-  createTopupCheckoutSession(userId: string, body: TopupCheckoutSessionBody): Promise<{ url: string }>;
-  createPortalSession(userId: string, body: PortalSessionBody): Promise<{ url: string }>;
-  getSubscriptionStatus(userIdValue: string | null | undefined): Promise<SubscriptionSnapshot>;
+  createCheckoutSession(
+    userId: string,
+    body: CheckoutSessionBody
+  ): Promise<{ url: string }>;
+  createTopupCheckoutSession(
+    userId: string,
+    body: TopupCheckoutSessionBody
+  ): Promise<{ url: string }>;
+  createPortalSession(
+    userId: string,
+    body: PortalSessionBody
+  ): Promise<{ url: string }>;
+  getSubscriptionStatus(
+    userIdValue: string | null | undefined
+  ): Promise<SubscriptionSnapshot>;
   processWebhook(
     rawBody: Buffer,
     signature: string | undefined,
@@ -456,5 +467,7 @@ export const createBillingService = ({
   };
 };
 
-export const createStripeClient = (config: { configured: boolean; secretKey: string | null }): Stripe | null =>
-  config.configured ? new Stripe(config.secretKey!) : null;
+export const createStripeClient = (config: {
+  configured: boolean;
+  secretKey: string | null;
+}): Stripe | null => (config.configured ? new Stripe(config.secretKey!) : null);

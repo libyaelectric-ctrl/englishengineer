@@ -39,7 +39,8 @@ export const registerWorkspaceRoutes = (
 ): void => {
   if (!repository) return;
 
-  const getUserId = (req: Request): string | undefined => (req as any).auth?.userId;
+  const getUserId = (req: Request): string | undefined =>
+    (req as any).auth?.userId;
 
   app.get(
     '/api/workspaces',
@@ -77,7 +78,10 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const data = await repository.getWorkspace(req.params.id as string, userId);
+        const data = await repository.getWorkspace(
+          req.params.id as string,
+          userId
+        );
         if (!data) {
           throw new ApiError(
             404,
@@ -152,7 +156,10 @@ export const registerWorkspaceRoutes = (
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
 
-        const existing = await repository.getWorkspace(req.params.id as string, userId);
+        const existing = await repository.getWorkspace(
+          req.params.id as string,
+          userId
+        );
         if (!existing) {
           throw new ApiError(
             404,
@@ -189,7 +196,10 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const existing = await repository.getWorkspace(req.params.id as string, userId);
+        const existing = await repository.getWorkspace(
+          req.params.id as string,
+          userId
+        );
         if (!existing) {
           throw new ApiError(
             404,
@@ -246,7 +256,11 @@ export const registerWorkspaceRoutes = (
           uploaded_at: new Date().toISOString(),
         };
 
-        const data = await repository.addDocument(req.params.id as string, userId, doc);
+        const data = await repository.addDocument(
+          req.params.id as string,
+          userId,
+          doc
+        );
         if (!data) {
           throw new ApiError(
             404,

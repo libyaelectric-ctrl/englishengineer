@@ -22,7 +22,9 @@ interface AuditLogFilters {
 const logs: AuditLogEntry[] = [];
 let supabaseRepository: any = null;
 
-export const initAuditLog = async (config: Record<string, any>): Promise<void> => {
+export const initAuditLog = async (
+  config: Record<string, any>
+): Promise<void> => {
   try {
     if (
       config?.workspace?.configured &&
@@ -41,7 +43,9 @@ export const initAuditLog = async (config: Record<string, any>): Promise<void> =
   }
 };
 
-export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
+export const auditLog = (
+  entry: Omit<AuditLogEntry, 'id' | 'timestamp'>
+): AuditLogEntry => {
   const record: AuditLogEntry = {
     id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: new Date().toISOString(),
@@ -65,7 +69,9 @@ export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditL
   return record;
 };
 
-export const getAuditLogs = async (filters: AuditLogFilters = {}): Promise<AuditLogEntry[]> => {
+export const getAuditLogs = async (
+  filters: AuditLogFilters = {}
+): Promise<AuditLogEntry[]> => {
   if (supabaseRepository) {
     const remoteLogs = await supabaseRepository.query(filters);
     if (remoteLogs.length > 0) return remoteLogs;

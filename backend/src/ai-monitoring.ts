@@ -185,7 +185,11 @@ export const getUserAIUsage = (userId: string): UserAiUsageResult => {
   };
 };
 
-const calculateCost = (model: string, inputTokens: number, outputTokens: number): number => {
+const calculateCost = (
+  model: string,
+  inputTokens: number,
+  outputTokens: number
+): number => {
   const pricing: Record<string, { input: number; output: number }> = {
     'claude-haiku-4-5': { input: 0.00025, output: 0.00125 },
     'claude-sonnet-4': { input: 0.003, output: 0.015 },

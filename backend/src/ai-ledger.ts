@@ -30,7 +30,9 @@ export interface AiLedger {
   logSession(userId: string, session: AiLedgerSession): Promise<void>;
 }
 
-export const createSupabaseAiLedger = (config: Record<string, any>): AiLedger => {
+export const createSupabaseAiLedger = (
+  config: Record<string, any>
+): AiLedger => {
   if (!config.workspace?.configured) {
     throw new Error(
       'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'

@@ -33,7 +33,11 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
     store = options.store || globalIdempotencyStore || new Map(),
   } = options;
 
-  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const key = req.headers[headerName.toLowerCase()] as string | undefined;
 
@@ -92,10 +96,18 @@ export const createIdempotencyStore = (
   if (type === 'memory') {
     const map = new Map<string, IdempotencyEntry>();
     return {
-      async get(key: string) { return map.get(key) ?? null; },
-      async set(key: string, value: IdempotencyEntry) { map.set(key, value); },
-      entries() { return map.entries(); },
-      delete(key: string) { map.delete(key); },
+      async get(key: string) {
+        return map.get(key) ?? null;
+      },
+      async set(key: string, value: IdempotencyEntry) {
+        map.set(key, value);
+      },
+      entries() {
+        return map.entries();
+      },
+      delete(key: string) {
+        map.delete(key);
+      },
     };
   }
 

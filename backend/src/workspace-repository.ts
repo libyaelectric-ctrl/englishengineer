@@ -11,12 +11,28 @@ interface WorkspaceConfig {
 export interface WorkspaceRepository {
   getWorkspaces(userId: string): Promise<Workspace[]>;
   getWorkspace(workspaceId: string, userId: string): Promise<Workspace | null>;
-  createWorkspace(userId: string, name: string, memory: Record<string, unknown>): Promise<Workspace>;
-  updateWorkspaceMemory(workspaceId: string, userId: string, memory: Record<string, unknown>): Promise<Workspace>;
+  createWorkspace(
+    userId: string,
+    name: string,
+    memory: Record<string, unknown>
+  ): Promise<Workspace>;
+  updateWorkspaceMemory(
+    workspaceId: string,
+    userId: string,
+    memory: Record<string, unknown>
+  ): Promise<Workspace>;
   deleteWorkspace(workspaceId: string, userId: string): Promise<void>;
   countWorkspaces(userId: string): Promise<number>;
-  addDocument(workspaceId: string, userId: string, doc: WorkspaceDocument): Promise<Workspace | null>;
-  deleteDocument(workspaceId: string, userId: string, docId: string): Promise<Workspace | null>;
+  addDocument(
+    workspaceId: string,
+    userId: string,
+    doc: WorkspaceDocument
+  ): Promise<Workspace | null>;
+  deleteDocument(
+    workspaceId: string,
+    userId: string,
+    docId: string
+  ): Promise<Workspace | null>;
 }
 
 export const createSupabaseWorkspaceRepository = (

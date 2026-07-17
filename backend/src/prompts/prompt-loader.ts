@@ -28,7 +28,9 @@ interface PracticeContext {
   discipline?: string;
 }
 
-export const getCustomPracticePrompt = (context: PracticeContext = {}): string => {
+export const getCustomPracticePrompt = (
+  context: PracticeContext = {}
+): string => {
   const mistakes = context.recentMistakes || [];
   const weakVocab = context.weakVocabulary || [];
   const noData = mistakes.length === 0 && weakVocab.length === 0;

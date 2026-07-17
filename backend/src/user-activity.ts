@@ -41,7 +41,10 @@ export const trackActivity = ({
   return activity;
 };
 
-export const getUserActivities = (userId: string, limit: number = 50): ActivityRecord[] => {
+export const getUserActivities = (
+  userId: string,
+  limit: number = 50
+): ActivityRecord[] => {
   return activities
     .filter((a) => a.userId === userId)
     .slice(-limit)

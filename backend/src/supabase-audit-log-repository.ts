@@ -91,7 +91,9 @@ export const createSupabaseAuditLogRepository = (
     }
   };
 
-  const query = async (filters: AuditLogFilters = {}): Promise<AuditLogRecord[]> => {
+  const query = async (
+    filters: AuditLogFilters = {}
+  ): Promise<AuditLogRecord[]> => {
     try {
       let queryBuilder = client
         .from('audit_logs')

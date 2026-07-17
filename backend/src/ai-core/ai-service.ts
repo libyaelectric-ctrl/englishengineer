@@ -59,7 +59,10 @@ interface AiRequestBody {
   context?: any;
 }
 
-export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetch) => ({
+export const createAIService = (
+  config: AiConfig,
+  fetchImpl: typeof fetch = fetch
+) => ({
   async complete(operation: string, body: AiRequestBody): Promise<AiResult> {
     const prompt = readPrompt(body as Record<string, any>);
     const requestId =
@@ -82,9 +85,13 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
     }
 
     const isEvaluation =
-      (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(
-        operation
-      ) && body?.context !== undefined;
+      (
+        [
+          'analyzeProgress',
+          'evaluateEngineeringEnglish',
+          'analyzeText',
+        ] as string[]
+      ).includes(operation) && body?.context !== undefined;
 
     let finalPrompt = prompt;
     if (isEvaluation) {
@@ -108,9 +115,21 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
       if (config.provider === 'anthropic') {
         return callAnthropic(config as any, finalPrompt, signal, fetchImpl);
       } else if (config.provider === 'gemini') {
-        return callGemini(config as any, finalPrompt, signal, fetchImpl, isEvaluation);
+        return callGemini(
+          config as any,
+          finalPrompt,
+          signal,
+          fetchImpl,
+          isEvaluation
+        );
       }
-      return callOpenAI(config as any, finalPrompt, signal, fetchImpl, isEvaluation);
+      return callOpenAI(
+        config as any,
+        finalPrompt,
+        signal,
+        fetchImpl,
+        isEvaluation
+      );
     }, config.timeoutMs);
 
     let structuredResult: Record<string, any> | null = null;

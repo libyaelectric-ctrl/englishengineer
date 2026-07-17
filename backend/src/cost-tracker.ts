@@ -70,9 +70,12 @@ export const getUsageSummary = (hours: number = 24): UsageSummary => {
     totalCost: recent
       .reduce((sum, r) => sum + parseFloat(r.totalCost), 0)
       .toFixed(4),
-    byModel: recent.reduce((acc, r) => {
-      acc[r.model] = (acc[r.model] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>),
+    byModel: recent.reduce(
+      (acc, r) => {
+        acc[r.model] = (acc[r.model] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    ),
   };
 };

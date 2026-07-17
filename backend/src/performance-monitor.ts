@@ -28,7 +28,11 @@ const metricsState: MetricsState = {
   },
 };
 
-export const trackRequest = (req: Request, res: Response, duration: number): RequestMetric => {
+export const trackRequest = (
+  req: Request,
+  res: Response,
+  duration: number
+): RequestMetric => {
   const metric: RequestMetric = {
     method: req.method,
     path: req.path,
@@ -84,7 +88,8 @@ export const getPerformanceMetrics = (): PerformanceMetricsResult => {
 
   const errorRate =
     metricsState.system.requestCount > 0
-      ? (metricsState.system.errorCount / metricsState.system.requestCount) * 100
+      ? (metricsState.system.errorCount / metricsState.system.requestCount) *
+        100
       : 0;
 
   return {
@@ -99,7 +104,9 @@ export const getPerformanceMetrics = (): PerformanceMetricsResult => {
   };
 };
 
-export const getSlowRequests = (thresholdMs: number = 1000): RequestMetric[] => {
+export const getSlowRequests = (
+  thresholdMs: number = 1000
+): RequestMetric[] => {
   return metricsState.requests
     .filter((r) => r.duration > thresholdMs)
     .slice(-10)
@@ -108,10 +115,16 @@ export const getSlowRequests = (thresholdMs: number = 1000): RequestMetric[] => 
 
 export const getErrorRate = (): number => {
   if (metricsState.system.requestCount === 0) return 0;
-  return (metricsState.system.errorCount / metricsState.system.requestCount) * 100;
+  return (
+    (metricsState.system.errorCount / metricsState.system.requestCount) * 100
+  );
 };
 
-export const performanceMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const performanceMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const start = process.hrtime();
 
   res.on('finish', () => {
