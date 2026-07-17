@@ -22,30 +22,30 @@ export const MissionSelector = ({
   onMissionSelect,
 }: MissionSelectorProps) => (
   <div>
-    <p className="text-xs font-bold uppercase tracking-wide text-muted-copy mb-2">
+    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy mb-2">
       Select Mission
     </p>
-    <div className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-2.5">
+    <div className="flex flex-wrap gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-2.5 shadow-sm">
       {roleplayMissions.map((mission) => (
         <button
           key={mission.id}
           type="button"
           onClick={() => onMissionSelect(mission.id)}
-          className={`flex min-h-11 items-center gap-2 rounded-lg border px-4 py-2 text-xs font-medium transition-colors ${
+          className={`flex min-h-9 items-center gap-2 rounded-[4px] border px-4 py-1.5 text-xs font-bold transition-all cursor-pointer ${
             selectedMissionId === mission.id
-              ? 'border-primary bg-primary/10 text-foreground'
-              : 'border-transparent text-muted-copy hover:border-primary/30 hover:bg-surface-hover'
+              ? 'border-[#0047bb] bg-[#0047bb]/10 text-foreground'
+              : 'border-transparent text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
           }`}
         >
           <span>{mission.title}</span>
-          <span className="rounded-full bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/20">
+          <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/20">
             {mission.difficulty}
           </span>
-          <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/20">
-            {mission.estimatedMinutes}min
+          <span className="rounded-[4px] bg-[#0047bb]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] border border-[#0047bb]/20">
+            {mission.estimatedMinutes}M
           </span>
           {mission.expectedKeywords[0] && (
-            <span className="rounded-full bg-success/10 px-1.5 py-0.5 text-[9px] font-bold text-success border border-success/20">
+            <span className="rounded-[4px] bg-success/10 px-1.5 py-0.5 text-[9px] font-bold text-success border border-success/20">
               {mission.expectedKeywords[0]}
             </span>
           )}
@@ -58,7 +58,7 @@ export const MissionSelector = ({
         </button>
       ))}
       {roleplayMissions.length === 0 && (
-        <p className="px-3 py-3 text-sm text-muted-copy">
+        <p className="px-3 py-3 text-sm text-muted-copy font-bold uppercase">
           No current-level content yet. No Speaking roleplay is available for
           this category and level filter.
         </p>

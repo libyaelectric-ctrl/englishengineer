@@ -75,7 +75,7 @@ export const MetricCard: FC<MetricCardProps> = ({
         </div>
         <div
           className={cn(
-            'flex h-10 w-10 items-center justify-center rounded-lg',
+            'flex h-10 w-10 items-center justify-center rounded-[4px]',
             iconColors[statusColor]
           )}
         >
