@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ApiError } from './errors.js';
+import type { Request, Response, NextFunction } from 'express';
 
 // --- AI Schemas ---
 
@@ -8,7 +9,7 @@ const AI_OPERATIONS = [
   'evaluateEngineeringEnglish',
   'analyzeText',
   'generatePractice',
-];
+] as const;
 
 export const AiRequestBodySchema = z.object({
   prompt: z
@@ -119,43 +120,48 @@ export const AdminAuditLogsQuerySchema = z.object({
       return Number.isFinite(num) && num > 0 ? Math.min(num, 1000) : 100;
     })
     .optional()
-    .default('100'),
+    .default(100),
 });
 
 // --- Middleware Factory ---
 
-const formatZodError = (error) => {
-  const issues = error.issues.map((i) => ({
+type ZodSchema = z.ZodTypeAny;
+
+const formatZodError = (error: z.ZodError) => {
+  return error.issues.map((i) => ({
     path: i.path.join('.'),
     message: i.message,
   }));
-  return issues;
 };
 
-export const validateBody = (schema) => (req, _res, next) => {
-  const result = schema.safeParse(req.body);
-  if (!result.success) {
-    throw new ApiError(
-      400,
-      'validation_error',
-      'Invalid request body.',
-      formatZodError(result.error)
-    );
-  }
-  req.validatedBody = result.data;
-  next();
+export const validateBody = (schema: ZodSchema) => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    const result = schema.safeParse(req.body);
+    if (!result.success) {
+      throw new ApiError(
+        400,
+        'validation_error',
+        'Invalid request body.',
+        formatZodError(result.error)
+      );
+    }
+    (req as any).validatedBody = result.data;
+    next();
+  };
 };
 
-export const validateQuery = (schema) => (req, _res, next) => {
-  const result = schema.safeParse(req.query);
-  if (!result.success) {
-    throw new ApiError(
-      400,
-      'validation_error',
-      'Invalid query parameters.',
-      formatZodError(result.error)
-    );
-  }
-  req.validatedQuery = result.data;
-  next();
+export const validateQuery = (schema: ZodSchema) => {
+  return (req: Request, _res: Response, next: NextFunction): void => {
+    const result = schema.safeParse(req.query);
+    if (!result.success) {
+      throw new ApiError(
+        400,
+        'validation_error',
+        'Invalid query parameters.',
+        formatZodError(result.error)
+      );
+    }
+    (req as any).validatedQuery = result.data;
+    next();
+  };
 };
