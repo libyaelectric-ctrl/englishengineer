@@ -156,9 +156,10 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 
 - **Açıklama:** AI Coach, Interview Simulator and PR Review Coach modüllerinde kullanıcı başına günlük/aylık harcama limitlerini database düzeyinde ve backend middleware katmanında sorgula ve kısıtla. API kötüye kullanımını önle.
 
-### [ ] Kademe 26: Yasal Şablonlar & Pazarlama Görselleri
+### [x] YAPILDI — Kademe 26: Yasal Şablonlar & Pazarlama Görselleri
 
-- **Açıklama:** Landing page üzerinde kullanılacak AI mülakat demoları için GIF/video yer tutucularını hazırla. Üye alımı ve Stripe ödemesi için yasal Koşullar (ToS) ve GDPR/KVKK Gizlilik Politikası şab模 metinlerini doldur.
+- **Açıklama:** Landing page üzerinde kullanılacak AI mülakat demoları için GIF/video yer tutucularını hazırla. Üye alımı ve Stripe ödemesi için yasal Koşullar (ToS) ve GDPR/KVKK Gizlilik Politikası şablon metinlerini doldur.
+- **Durum:** Yapıldı (commit pending). ToS 10 bölüm, Privacy/GDPR/KVKK 11 bölüm, Cookie 6 bölüm, Refund 6 bölüm ile genişletildi. Türkiye KVKK ve AB GDPR gereklilikleri dahil edildi.
 
 ---
 
