@@ -24,42 +24,67 @@ const API_BASE = 'https://api.github.com';
 const GRAMMAR_PATTERNS = [
   {
     pattern: /\b(its|it's)\b/gi,
-    description: 'its vs it\'s',
+    description: "its vs it's",
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (match.toLowerCase() === 'its' && (lower.includes('it is') || lower.includes('it has'))) {
-        return { suggestion: 'it\'s', reason: 'Use "it\'s" for "it is" or "it has"' };
+      if (
+        match.toLowerCase() === 'its' &&
+        (lower.includes('it is') || lower.includes('it has'))
+      ) {
+        return {
+          suggestion: "it's",
+          reason: 'Use "it\'s" for "it is" or "it has"',
+        };
       }
-      if (match.toLowerCase() === 'it\'s' && !lower.includes('it is') && !lower.includes('it has')) {
+      if (
+        match.toLowerCase() === "it's" &&
+        !lower.includes('it is') &&
+        !lower.includes('it has')
+      ) {
         return { suggestion: 'its', reason: 'Use "its" for possessive form' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(your|you're)\b/gi,
-    description: 'your vs you\'re',
+    description: "your vs you're",
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (match.toLowerCase() === 'your' && (lower.includes('you are') || lower.includes('you were'))) {
-        return { suggestion: 'you\'re', reason: 'Use "you\'re" for "you are" or "you were"' };
+      if (
+        match.toLowerCase() === 'your' &&
+        (lower.includes('you are') || lower.includes('you were'))
+      ) {
+        return {
+          suggestion: "you're",
+          reason: 'Use "you\'re" for "you are" or "you were"',
+        };
       }
-      if (match.toLowerCase() === 'you\'re' && !lower.includes('you are') && !lower.includes('you were')) {
+      if (
+        match.toLowerCase() === "you're" &&
+        !lower.includes('you are') &&
+        !lower.includes('you were')
+      ) {
         return { suggestion: 'your', reason: 'Use "your" for possessive form' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(then|than)\b/gi,
     description: 'then vs than',
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (match.toLowerCase() === 'then' && (lower.includes('more') || lower.includes('better') || lower.includes('worse'))) {
+      if (
+        match.toLowerCase() === 'then' &&
+        (lower.includes('more') ||
+          lower.includes('better') ||
+          lower.includes('worse'))
+      ) {
         return { suggestion: 'than', reason: 'Use "than" for comparisons' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(accept|except)\b/gi,
@@ -70,7 +95,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'except', reason: 'Use "except" for exclusion' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(affect|effect)\b/gi,
@@ -84,43 +109,61 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'affect', reason: 'Use "affect" as a verb' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(their|there|they're)\b/gi,
-    description: 'their/there/they\'re',
+    description: "their/there/they're",
     check: (match, context) => {
       const lower = context.toLowerCase();
       if (match.toLowerCase() === 'their' && lower.includes('they are')) {
-        return { suggestion: 'they\'re', reason: 'Use "they\'re" for "they are"' };
+        return {
+          suggestion: "they're",
+          reason: 'Use "they\'re" for "they are"',
+        };
       }
-      if (match.toLowerCase() === 'they\'re' && !lower.includes('they are')) {
-        return { suggestion: 'their', reason: 'Use "their" for possessive form' };
+      if (match.toLowerCase() === "they're" && !lower.includes('they are')) {
+        return {
+          suggestion: 'their',
+          reason: 'Use "their" for possessive form',
+        };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(lose|loose)\b/gi,
     description: 'lose vs loose',
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (match.toLowerCase() === 'loose' && (lower.includes('weight') || lower.includes('game'))) {
-        return { suggestion: 'lose', reason: 'Use "lose" for "to not win" or "to misplace"' };
+      if (
+        match.toLowerCase() === 'loose' &&
+        (lower.includes('weight') || lower.includes('game'))
+      ) {
+        return {
+          suggestion: 'lose',
+          reason: 'Use "lose" for "to not win" or "to misplace"',
+        };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(principal|principle)\b/gi,
     description: 'principal vs principle',
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (match.toLowerCase() === 'principle' && (lower.includes('principal') || lower.includes('head'))) {
-        return { suggestion: 'principal', reason: 'Use "principal" for "head of school" or "main"' };
+      if (
+        match.toLowerCase() === 'principle' &&
+        (lower.includes('principal') || lower.includes('head'))
+      ) {
+        return {
+          suggestion: 'principal',
+          reason: 'Use "principal" for "head of school" or "main"',
+        };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(definitely|definately|definatly)\b/gi,
@@ -130,7 +173,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'definitely', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(seperate|separate)\b/gi,
@@ -140,7 +183,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'separate', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(occured|occurred)\b/gi,
@@ -150,7 +193,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'occurred', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(refered|referred)\b/gi,
@@ -160,7 +203,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'referred', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(commiting|committing)\b/gi,
@@ -170,7 +213,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'committing', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(dependancy|dependency)\b/gi,
@@ -180,7 +223,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'dependency', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(recieve|receive)\b/gi,
@@ -190,7 +233,7 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'receive', reason: 'Common misspelling' };
       }
       return null;
-    }
+    },
   },
   {
     pattern: /\b(acheive|achieve)\b/gi,
@@ -200,8 +243,8 @@ const GRAMMAR_PATTERNS = [
         return { suggestion: 'achieve', reason: 'Common misspelling' };
       }
       return null;
-    }
-  }
+    },
+  },
 ];
 
 /**
@@ -212,8 +255,8 @@ async function githubApi(endpoint, options = {}) {
   const response = await fetch(url, {
     ...options,
     headers: {
-      'Accept': 'application/vnd.github.v3+json',
-      'Authorization': `token ${GITHUB_TOKEN}`,
+      Accept: 'application/vnd.github.v3+json',
+      Authorization: `token ${GITHUB_TOKEN}`,
       'User-Agent': 'EngVox-Grammar-Bot',
       ...options.headers,
     },
@@ -256,8 +299,10 @@ function checkGrammar(text, source = 'text') {
  */
 async function getPRCommits() {
   try {
-    const commits = await githubApi(`/repos/${REPOSITORY}/pulls/${PR_NUMBER}/commits`);
-    return commits.map(c => ({
+    const commits = await githubApi(
+      `/repos/${REPOSITORY}/pulls/${PR_NUMBER}/commits`
+    );
+    return commits.map((c) => ({
       message: c.commit.message,
       sha: c.sha.substring(0, 7),
     }));
@@ -272,13 +317,16 @@ async function getPRCommits() {
  */
 async function getPRDiff() {
   try {
-    const response = await fetch(`${API_BASE}/repos/${REPOSITORY}/pulls/${PR_NUMBER}`, {
-      headers: {
-        'Accept': 'application/vnd.github.v3.diff',
-        'Authorization': `token ${GITHUB_TOKEN}`,
-        'User-Agent': 'EngVox-Grammar-Bot',
-      },
-    });
+    const response = await fetch(
+      `${API_BASE}/repos/${REPOSITORY}/pulls/${PR_NUMBER}`,
+      {
+        headers: {
+          Accept: 'application/vnd.github.v3.diff',
+          Authorization: `token ${GITHUB_TOKEN}`,
+          'User-Agent': 'EngVox-Grammar-Bot',
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to fetch diff: ${response.status}`);
@@ -301,7 +349,11 @@ function extractDiffComments(diff) {
   for (const line of lines) {
     if (line.startsWith('+') && !line.startsWith('+++')) {
       const content = line.substring(1).trim();
-      if (content.length > 0 && !content.startsWith('//') && !content.startsWith('/*')) {
+      if (
+        content.length > 0 &&
+        !content.startsWith('//') &&
+        !content.startsWith('/*')
+      ) {
         comments.push(content);
       }
     }
@@ -399,7 +451,7 @@ async function main() {
   console.log(`Found ${allIssues.length} grammar issues`);
 }
 
-main().catch(error => {
+main().catch((error) => {
   console.error('Grammar review bot failed:', error.message);
   process.exit(1);
 });
