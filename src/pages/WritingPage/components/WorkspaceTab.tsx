@@ -50,12 +50,27 @@ const getTechnicalDensity = (id: string) =>
   id === 'writing_cache_draft' ? 68 : id === 'writing_rfc_migration' ? 84 : 95;
 
 export const WorkspaceTab = ({
-  currentMission, draft, setDraft, timeSpentSeconds, evaluationResult,
-  selectedMissionId, selectedRule, setSelectedRule, userErrors,
-  showModelAnswer, setShowModelAnswer, activeCorrections,
-  getReadabilityScore, handleApplyFix, handleAutoFixAll,
-  handleSubmit, resetCurrentMission, handleBackToMissions, moveMission,
-  currentMissionIndex, visibleMissionsLength,
+  currentMission,
+  draft,
+  setDraft,
+  timeSpentSeconds,
+  evaluationResult,
+  selectedMissionId,
+  selectedRule,
+  setSelectedRule,
+  userErrors,
+  showModelAnswer,
+  setShowModelAnswer,
+  activeCorrections,
+  getReadabilityScore,
+  handleApplyFix,
+  handleAutoFixAll,
+  handleSubmit,
+  resetCurrentMission,
+  handleBackToMissions,
+  moveMission,
+  currentMissionIndex,
+  visibleMissionsLength,
 }: WorkspaceTabProps) => (
   <div className="space-y-6">
     <WorkspaceHeader

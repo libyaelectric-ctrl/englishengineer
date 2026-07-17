@@ -20,6 +20,9 @@ export const ScoreFeedbackOverlay = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4 backdrop-blur-sm">
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Evaluation results"
         data-testid="speaking-result-panel"
         className="max-h-[calc(100vh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-2xl border border-border-soft bg-surface p-6 shadow-xl"
       >

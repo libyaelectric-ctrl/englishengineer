@@ -17,25 +17,80 @@ const MOCK_PATH_GROUPS = [
   {
     module: 'Verb Tenses',
     entries: [
-      { rule: { id: 'vt-1', title: 'Present Simple', grammarCategory: 'Tenses' }, status: 'Mastered' as const },
-      { rule: { id: 'vt-2', title: 'Present Continuous', grammarCategory: 'Tenses' }, status: 'Practicing' as const },
-      { rule: { id: 'vt-3', title: 'Past Simple', grammarCategory: 'Tenses' }, status: 'New' as const },
-      { rule: { id: 'vt-4', title: 'Present Perfect', grammarCategory: 'Tenses' }, status: 'New' as const },
+      {
+        rule: {
+          id: 'vt-1',
+          title: 'Present Simple',
+          grammarCategory: 'Tenses',
+        },
+        status: 'Mastered' as const,
+      },
+      {
+        rule: {
+          id: 'vt-2',
+          title: 'Present Continuous',
+          grammarCategory: 'Tenses',
+        },
+        status: 'Practicing' as const,
+      },
+      {
+        rule: { id: 'vt-3', title: 'Past Simple', grammarCategory: 'Tenses' },
+        status: 'New' as const,
+      },
+      {
+        rule: {
+          id: 'vt-4',
+          title: 'Present Perfect',
+          grammarCategory: 'Tenses',
+        },
+        status: 'New' as const,
+      },
     ],
   },
   {
     module: 'Conditionals',
     entries: [
-      { rule: { id: 'cd-1', title: 'Zero Conditional', grammarCategory: 'Conditionals' }, status: 'Mastered' as const },
-      { rule: { id: 'cd-2', title: 'First Conditional', grammarCategory: 'Conditionals' }, status: 'Practicing' as const },
-      { rule: { id: 'cd-3', title: 'Second Conditional', grammarCategory: 'Conditionals' }, status: 'New' as const },
+      {
+        rule: {
+          id: 'cd-1',
+          title: 'Zero Conditional',
+          grammarCategory: 'Conditionals',
+        },
+        status: 'Mastered' as const,
+      },
+      {
+        rule: {
+          id: 'cd-2',
+          title: 'First Conditional',
+          grammarCategory: 'Conditionals',
+        },
+        status: 'Practicing' as const,
+      },
+      {
+        rule: {
+          id: 'cd-3',
+          title: 'Second Conditional',
+          grammarCategory: 'Conditionals',
+        },
+        status: 'New' as const,
+      },
     ],
   },
   {
     module: 'Passive Voice',
     entries: [
-      { rule: { id: 'pv-1', title: 'Passive Present', grammarCategory: 'Voice' }, status: 'Needs Reading/Writing' as const },
-      { rule: { id: 'pv-2', title: 'Passive Past', grammarCategory: 'Voice' }, status: 'New' as const },
+      {
+        rule: {
+          id: 'pv-1',
+          title: 'Passive Present',
+          grammarCategory: 'Voice',
+        },
+        status: 'Needs Reading/Writing' as const,
+      },
+      {
+        rule: { id: 'pv-2', title: 'Passive Past', grammarCategory: 'Voice' },
+        status: 'New' as const,
+      },
     ],
   },
 ];

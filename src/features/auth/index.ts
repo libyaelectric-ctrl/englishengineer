@@ -1,7 +1,4 @@
-export {
-  type UserProfile,
-  type AuthState,
-} from './auth.types';
+export { type UserProfile, type AuthState } from './auth.types';
 
 export {
   type SupabaseReadyConfig,
@@ -40,10 +37,7 @@ export {
   type CloudSnapshotEnvelope,
 } from './cloud-sync.types';
 
-export {
-  isSupabaseConfigured,
-  getSupabaseClient,
-} from './supabase.client';
+export { isSupabaseConfigured, getSupabaseClient } from './supabase.client';
 
 export {
   type JsonPrimitive,

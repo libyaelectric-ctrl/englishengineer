@@ -290,6 +290,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               onClick={handleSkipBack}
               disabled={isAudioLoading}
               title="Back 10s"
+              aria-label="Back 10s"
             >
               <SkipBack className="h-4 w-4" />
             </Button>
@@ -299,6 +300,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               onClick={handleReplay}
               disabled={isAudioLoading}
               title="Replay"
+              aria-label="Replay"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -308,6 +310,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               disabled={isAudioLoading}
               className="h-10 w-10 rounded-full p-0 flex items-center justify-center"
               title={isPlaying ? 'Pause' : 'Play'}
+              aria-label={isPlaying ? 'Pause' : 'Play'}
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5" />
@@ -321,6 +324,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               onClick={handleSkipForward}
               disabled={isAudioLoading}
               title="Forward 10s"
+              aria-label="Forward 10s"
             >
               <SkipForward className="h-4 w-4" />
             </Button>

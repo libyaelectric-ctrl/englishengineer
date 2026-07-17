@@ -59,7 +59,8 @@ const DashboardPage = () => {
         .map((skill) => profile.skills[skill])
         .sort(
           (a, b) =>
-            a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
+            a.completedTasks - b.completedTasks ||
+            b.weaknessScore - a.weaknessScore
         )[0],
     [profile]
   );

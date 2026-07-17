@@ -1,4 +1,7 @@
-import type { LearningState, MissionModule } from '@/core/learning/learning.types';
+import type {
+  LearningState,
+  MissionModule,
+} from '@/core/learning/learning.types';
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';

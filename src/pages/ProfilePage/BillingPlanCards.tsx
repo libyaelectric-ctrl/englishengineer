@@ -19,7 +19,14 @@ interface UsageCardProps {
   helpText: string;
 }
 
-const UsageCard = ({ label, display, value, max, color, helpText }: UsageCardProps) => (
+const UsageCard = ({
+  label,
+  display,
+  value,
+  max,
+  color,
+  helpText,
+}: UsageCardProps) => (
   <div className="space-y-1.5">
     <div className="flex justify-between text-xs">
       <span className="font-medium text-foreground">{label}</span>
@@ -142,13 +149,7 @@ export const BillingPlanCards = ({
                 ? Math.min(100, (uploadedDocsCount / 2) * 100)
                 : 100
           }
-          color={
-            isFree
-              ? 'rose'
-              : uploadedDocsCount >= 2
-                ? 'amber'
-                : 'primary'
-          }
+          color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
         />
         <p className="text-[10px] text-muted-copy">
           {isFree

@@ -111,8 +111,8 @@ const DocumentUploadSection = ({
         className="text-xs text-muted-copy file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <span className="text-xs font-mono text-muted-copy bg-border-soft/50 px-2.5 py-1 rounded-full">
-        {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit} uploads used this
-        month
+        {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
+        uploads used this month
       </span>
     </div>
     {uploadError && (

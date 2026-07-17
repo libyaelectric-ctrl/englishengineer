@@ -59,7 +59,8 @@ const ruleBasedTransform = (raw: string): PRReviewResult => {
     .filter(Boolean);
   const politePrefix = 'Thank you for your review feedback. ';
   if (sentences.length > 0) {
-    polished = politePrefix + polished.charAt(0).toUpperCase() + polished.slice(1);
+    polished =
+      politePrefix + polished.charAt(0).toUpperCase() + polished.slice(1);
   }
 
   const keyChanges: string[] = [];

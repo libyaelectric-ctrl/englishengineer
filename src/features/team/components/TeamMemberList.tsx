@@ -103,7 +103,10 @@ export const TeamMemberList: FC<TeamMemberListProps> = ({
                   <span className="truncate text-sm font-medium text-foreground">
                     {member.displayName}
                   </span>
-                  <StatusBadge label={roleLabel[member.role]} tone={roleTone[member.role]} />
+                  <StatusBadge
+                    label={roleLabel[member.role]}
+                    tone={roleTone[member.role]}
+                  />
                 </div>
                 <p className="mt-0.5 text-xs text-muted-copy">
                   {member.discipline}

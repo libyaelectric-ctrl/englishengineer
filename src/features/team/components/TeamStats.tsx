@@ -43,9 +43,7 @@ export const TeamStats: FC<TeamStatsProps> = ({ members, summaries }) => {
 
     const avgScore =
       allScores.length > 0
-        ? Math.round(
-            allScores.reduce((a, b) => a + b, 0) / allScores.length
-          )
+        ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length)
         : 0;
 
     return {

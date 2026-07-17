@@ -149,7 +149,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
 const hasString = (value: Record<string, unknown>, field: string): boolean =>
-  typeof value[field] === 'string' && (value[field] as string).trim().length > 0;
+  typeof value[field] === 'string' &&
+  (value[field] as string).trim().length > 0;
 
 const hasBoolean = (value: Record<string, unknown>, field: string): boolean =>
   typeof value[field] === 'boolean';
