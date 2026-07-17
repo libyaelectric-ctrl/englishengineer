@@ -75,19 +75,19 @@ export const LearningMemorySummary = ({
           <Link
             key={item.label}
             to={item.href}
-            className="group flex min-w-0 items-center gap-3 rounded-[14px] border border-border-soft bg-surface p-3.5 transition-colors hover:border-blue-200 hover:bg-blue-50/50"
+            className="group flex min-w-0 items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white p-3.5 transition-colors hover:border-[#0047bb]/40 hover:bg-[#faf8ff] shadow-sm"
           >
-            <span className={`shrink-0 rounded-[11px] border p-2 ${item.tone}`}>
+            <span className={`shrink-0 rounded-[4px] border p-2 ${item.tone}`}>
               <Icon className="h-4 w-4" aria-hidden="true" />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block text-xs font-bold text-muted-copy">
+              <span className="block text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 {item.label}
               </span>
-              <span className="mt-0.5 block text-sm font-black text-foreground">
+              <span className="mt-0.5 block text-sm font-bold text-foreground">
                 {item.value}
               </span>
-              <span className="mt-0.5 block text-xs leading-5 text-muted-copy">
+              <span className="mt-0.5 block text-xs leading-5 text-muted-copy font-medium">
                 {item.detail}
               </span>
             </span>

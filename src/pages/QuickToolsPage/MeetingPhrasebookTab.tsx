@@ -19,38 +19,52 @@ export const MeetingPhrasebookTab = () => {
       {MEETING_PHRASES.map((item) => {
         const favorite = favoritePhraseIds.includes(item.id);
         return (
-          <Card key={item.id} className="space-y-3">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-medium uppercase tracking-widest text-primary">
-                  {item.category}
-                </p>
-                <h2 className="mt-1 text-lg font-medium text-foreground">
-                  {item.phrase}
-                </h2>
+          <Card
+            key={item.id}
+            className="p-5 space-y-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+            hoverEffect={false}
+          >
+            <div>
+              <div className="flex items-start justify-between gap-3 border-b border-[#d9d9e3] pb-2">
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                    {item.category}
+                  </p>
+                  <h2 className="mt-1 text-sm font-bold text-foreground">
+                    {item.phrase}
+                  </h2>
+                </div>
+                <Button
+                  variant="ghost"
+                  className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-[#faf8ff]"
+                  onClick={() => toggleFavorite(item.id)}
+                  aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
+                >
+                  <Heart
+                    className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : 'text-muted-copy'}`}
+                  />
+                </Button>
               </div>
-              <Button
-                variant="ghost"
-                className="px-3"
-                onClick={() => toggleFavorite(item.id)}
-                aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
-              >
-                <Heart
-                  className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
-                />
-              </Button>
+              <div className="mt-3 space-y-2">
+                <p className="text-xs text-foreground font-medium">
+                  <strong className="text-foreground">Türkçe:</strong>{' '}
+                  {item.turkishMeaning}
+                </p>
+                <p className="text-xs text-muted-copy font-medium">
+                  <strong className="text-foreground font-bold">Use:</strong>{' '}
+                  {item.whenToUse}
+                </p>
+                <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs italic text-foreground font-medium shadow-sm">
+                  {item.example}
+                </p>
+              </div>
             </div>
-            <p className="text-sm text-foreground">
-              <strong>Türkçe:</strong> {item.turkishMeaning}
-            </p>
-            <p className="text-sm text-muted-copy">
-              <strong>Use:</strong> {item.whenToUse}
-            </p>
-            <p className="rounded-xl border border-border-soft bg-surface-hover p-3 text-sm italic text-foreground">
-              {item.example}
-            </p>
-            <Button variant="secondary" onClick={() => copy(item.phrase)}>
-              <Clipboard className="h-4 w-4" /> Copy
+            <Button
+              variant="secondary"
+              onClick={() => copy(item.phrase)}
+              className="mt-4 h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1.5"
+            >
+              <Clipboard className="h-4 w-4 text-muted-copy" /> Copy
             </Button>
           </Card>
         );

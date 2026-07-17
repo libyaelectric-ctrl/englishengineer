@@ -53,12 +53,12 @@ export const UserContextSidebar = ({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="flex items-center justify-between border-b border-border-soft pb-1.5"
+              className="flex items-center justify-between border-b border-[#d9d9e3]/60 pb-1.5"
             >
-              <span className="text-muted-copy font-mono text-[10px] uppercase">
+              <span className="text-muted-copy font-mono text-[9px] font-bold uppercase tracking-wider">
                 {label}
               </span>
-              <span className="text-right font-medium text-foreground text-xs">
+              <span className="text-right font-semibold text-foreground text-xs">
                 {value}
               </span>
             </div>
@@ -78,11 +78,12 @@ export const UserContextSidebar = ({
                   : 'Assessment data limited'
               }
               tone={assessmentProfile.hasEnoughData ? 'success' : 'warning'}
+              className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
             />
             {coachContext.weakSkills.map((skill) => (
               <span
                 key={skill}
-                className="text-[10px] font-mono bg-danger/10 text-danger border border-danger/20 px-2 py-1 rounded-lg"
+                className="text-[9px] font-mono bg-danger/5 text-danger border border-danger/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
               >
                 {skill}
               </span>
@@ -101,7 +102,7 @@ export const UserContextSidebar = ({
             {lastResult.suggestedActions.map((action) => (
               <div
                 key={action}
-                className="flex gap-2 rounded-lg border border-border-soft bg-surface-hover p-2 text-xs text-foreground"
+                className="flex gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2 text-xs text-foreground shadow-sm font-medium"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
                 <span>{action}</span>
@@ -109,7 +110,7 @@ export const UserContextSidebar = ({
             ))}
             <Button
               onClick={() => navigate('/dashboard')}
-              className="w-full h-8 bg-success text-foreground font-medium text-xs"
+              className="w-full h-8 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center"
             >
               Open Dashboard
             </Button>
@@ -126,10 +127,10 @@ export const UserContextSidebar = ({
           {sessions.slice(0, 5).map((session) => (
             <div
               key={session.id}
-              className="rounded-lg border border-border-soft bg-surface-hover p-2.5"
+              className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2.5 shadow-sm"
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[10px] font-medium text-foreground">
+                <p className="text-[10px] font-bold text-foreground">
                   {session.modeName}
                 </p>
                 <span className="text-[9px] font-mono text-muted-copy">
@@ -139,7 +140,7 @@ export const UserContextSidebar = ({
               <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">
                 {session.input}
               </p>
-              <p className="text-[9px] font-mono text-primary mt-1 uppercase">
+              <p className="text-[9px] font-mono font-bold text-[#0047bb] mt-1 uppercase tracking-wider">
                 {session.result.focusArea}
               </p>
             </div>
@@ -150,11 +151,11 @@ export const UserContextSidebar = ({
         </div>
       </SectionCard>
 
-      <div className="rounded-xl border border-border-soft bg-surface-hover p-6">
-        <p className="text-[10px] font-mono text-engineer-cyan uppercase tracking-widest font-medium">
+      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+        <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
           Integration Notice
         </p>
-        <p className="text-xs text-muted-copy mt-3 leading-relaxed">
+        <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
           Set VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL to connect the
           server-side AI proxy. This frontend never receives vendor secrets.
         </p>
