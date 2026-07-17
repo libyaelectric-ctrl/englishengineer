@@ -22,7 +22,9 @@ interface SubscriptionRow {
   topup_credits?: number;
 }
 
-const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot | null =>
+const mapSubscriptionRow = (
+  row: SubscriptionRow | null
+): SubscriptionSnapshot | null =>
   row
     ? {
         planId: row.plan_id,
@@ -37,7 +39,10 @@ const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot |
       }
     : null;
 
-const mapSubscriptionSnapshot = (userId: string, snapshot: SubscriptionSnapshot) => ({
+const mapSubscriptionSnapshot = (
+  userId: string,
+  snapshot: SubscriptionSnapshot
+) => ({
   user_id: userId,
   plan_id: snapshot.planId,
   status: snapshot.status,
@@ -62,9 +67,15 @@ const handleDbError = (error: any): Error => {
 interface BillingRepository {
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
-  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  upsertSubscriptionStatus(
+    userId: string,
+    snapshot: SubscriptionSnapshot
+  ): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
-  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
+  markStripeEventProcessed(
+    eventId: string,
+    metadata?: Record<string, unknown>
+  ): Promise<void>;
 }
 
 export const createSupabaseBillingRepository = (

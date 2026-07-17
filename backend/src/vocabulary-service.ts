@@ -50,11 +50,16 @@ interface ParsedDictionaryResult {
 }
 
 const parseDictionaryResponse = (payload: unknown): ParsedDictionaryResult => {
-  const entry: DictionaryEntry | null = Array.isArray(payload) ? payload[0] : null;
+  const entry: DictionaryEntry | null = Array.isArray(payload)
+    ? payload[0]
+    : null;
   const definitions = entry?.meanings
     ?.flatMap((meaning) => meaning?.definitions ?? [])
     .map((item) => item?.definition)
-    .filter((definition): definition is string => typeof definition === 'string' && !!definition.trim())
+    .filter(
+      (definition): definition is string =>
+        typeof definition === 'string' && !!definition.trim()
+    )
     .slice(0, 5);
   if (!entry || !definitions?.length) {
     throw new ApiError(
@@ -203,7 +208,10 @@ export const createUpstashVocabularyCache = ({
 });
 
 export interface VocabularyLookupService {
-  lookup(query: { word: string; targetLang: string }): Promise<VocabularyLookupResult>;
+  lookup(query: {
+    word: string;
+    targetLang: string;
+  }): Promise<VocabularyLookupResult>;
 }
 
 export const createVocabularyLookupService = (

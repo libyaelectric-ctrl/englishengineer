@@ -1,11 +1,18 @@
 import { logger } from './logger.js';
 
-const slowQueries = [];
+interface SlowQueryRecord {
+  timestamp: string;
+  query: string;
+  durationMs: number;
+  [key: string]: unknown;
+}
+
+const slowQueries: SlowQueryRecord[] = [];
 const SLOW_THRESHOLD_MS = 500;
 
-export const logQuery = (query, durationMs, meta = {}) => {
+export const logQuery = (query: string | unknown, durationMs: number, meta: Record<string, unknown> = {}): void => {
   if (durationMs >= SLOW_THRESHOLD_MS) {
-    const record = {
+    const record: SlowQueryRecord = {
       timestamp: new Date().toISOString(),
       query: typeof query === 'string' ? query.slice(0, 200) : 'unknown',
       durationMs,
@@ -18,6 +25,6 @@ export const logQuery = (query, durationMs, meta = {}) => {
   }
 };
 
-export const getSlowQueries = (limit = 50) => {
+export const getSlowQueries = (limit: number = 50): SlowQueryRecord[] => {
   return slowQueries.slice(-limit);
 };

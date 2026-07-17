@@ -14,9 +14,15 @@ interface WebhookObject {
 
 export interface BillingRepository {
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
-  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  upsertSubscriptionStatus(
+    userId: string,
+    snapshot: SubscriptionSnapshot
+  ): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
-  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
+  markStripeEventProcessed(
+    eventId: string,
+    metadata?: Record<string, unknown>
+  ): Promise<void>;
 }
 
 export const handleCheckoutCompleted = async (

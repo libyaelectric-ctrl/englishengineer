@@ -60,7 +60,9 @@ interface FeedbackFilters {
   limit?: number;
 }
 
-export const getFeedback = (filters: FeedbackFilters = {}): FeedbackRecord[] => {
+export const getFeedback = (
+  filters: FeedbackFilters = {}
+): FeedbackRecord[] => {
   let results = [...feedbackStore];
 
   if (filters.type) {
@@ -79,7 +81,10 @@ export const getFeedback = (filters: FeedbackFilters = {}): FeedbackRecord[] => 
   return results.slice(-(filters.limit || 100)).reverse();
 };
 
-export const updateFeedbackStatus = (feedbackId: string, status: string): FeedbackRecord | null => {
+export const updateFeedbackStatus = (
+  feedbackId: string,
+  status: string
+): FeedbackRecord | null => {
   const feedback = feedbackStore.find((f) => f.id === feedbackId);
   if (feedback) {
     feedback.status = status;

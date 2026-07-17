@@ -51,7 +51,11 @@ export class ConversationMemory {
     };
   }
 
-  addMessage(role: string, content: string, metadata: MessageMetadata = {}): MemoryMessage {
+  addMessage(
+    role: string,
+    content: string,
+    metadata: MessageMetadata = {}
+  ): MemoryMessage {
     const message: MemoryMessage = {
       role,
       content,
@@ -112,7 +116,10 @@ export class ConversationMemory {
 
 const conversations = new Map<string, ConversationMemory>();
 
-export const getConversation = (userId: string, sessionId: string): ConversationMemory => {
+export const getConversation = (
+  userId: string,
+  sessionId: string
+): ConversationMemory => {
   const key = `${userId}:${sessionId}`;
   if (!conversations.has(key)) {
     conversations.set(key, new ConversationMemory(userId, sessionId));
