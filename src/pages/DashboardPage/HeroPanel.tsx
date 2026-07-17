@@ -1,3 +1,4 @@
+import React from 'react';
 import { ArrowRight, Target } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -15,7 +16,7 @@ interface HeroPanelProps {
   onStartLesson: () => void;
 }
 
-export const HeroPanel = ({
+export const HeroPanel = React.memo(({
   userName,
   greeting,
   summary,
@@ -163,4 +164,5 @@ export const HeroPanel = ({
       </div>
     </header>
   </>
-);
+));
+HeroPanel.displayName = 'HeroPanel';

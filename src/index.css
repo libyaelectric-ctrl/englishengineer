@@ -10,8 +10,8 @@
   --color-primary-hover: #003bb3;
   --color-primary-foreground: #faf8ff;
 
-  --color-surface: #f3f3fd;
-  --color-surface-hover: #e9e9f9;
+  --color-surface: #ffffff;
+  --color-surface-hover: #faf8ff;
   --color-soft: rgba(0, 71, 187, 0.04);
   --color-border-soft: #d9d9e3;
   --color-border-hover: #b0b0c5;
@@ -22,7 +22,7 @@
   --color-error: #dc2626;
 
   /* Sidebar-specific colors for 3-column distinction */
-  --color-sidebar-bg: #ffffff;
+  --color-sidebar-bg: #f3f3fd;
   --color-sidebar-border: #d9d9e3;
   --color-sidebar-inner-border: #e9e9f9;
 
@@ -32,7 +32,7 @@
   --color-engineer-700: #8f93a9;
   --color-engineer-cyan: #0047bb;
 
-  --surface: #f3f3fd;
+  --surface: #ffffff;
 
   --radius-button: 4px;
   --radius-input: 4px;
@@ -443,7 +443,8 @@
   box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.08);
 }
 .btn-press:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
+  transition: transform 0.1s ease;
 }
 @keyframes pulse-dot {
   0%,
@@ -555,8 +556,8 @@
   opacity: 1;
 }
 .card-interactive:hover {
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  background: #fafaf8 !important;
+  border-color: rgba(0, 71, 187, 0.5) !important;
+  background: var(--color-surface-hover) !important;
 }
 
 /* Row slide in animation */
