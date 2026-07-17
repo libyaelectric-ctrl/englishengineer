@@ -37,19 +37,19 @@ export const ReadingEvaluationResults = ({
   <div className="space-y-8 animate-in zoom-in-95 duration-400">
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-4 space-y-6">
-        <div className="flex flex-col items-center space-y-6 rounded-xl border border-border-soft bg-surface p-6 text-center">
+        <div className="flex flex-col items-center space-y-6 rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-center shadow-sm">
           <div>
-            <h4 className="text-sm font-medium text-muted-copy uppercase tracking-widest font-mono">
+            <h4 className="text-sm font-bold text-muted-copy uppercase tracking-widest font-mono">
               Verification Outcome
             </h4>
             <p className="text-[10px] text-muted-copy mt-0.5 uppercase">
               Substation Signal Standard Match
             </p>
           </div>
-          <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-primary/20 bg-primary/5">
-            <div className="absolute inset-2 rounded-full border border-dashed border-primary/30" />
+          <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-[#0047bb]/20 bg-[#0047bb]/5">
+            <div className="absolute inset-2 rounded-full border border-dashed border-[#0047bb]/30" />
             <div className="flex flex-col items-center">
-              <span className="text-4xl font-medium leading-none text-foreground">
+              <span className="text-4xl font-bold leading-none text-foreground">
                 {evaluationResult.finalScore}
               </span>
               <span className="text-[10px] font-mono text-muted-copy uppercase mt-1">
@@ -60,7 +60,7 @@ export const ReadingEvaluationResults = ({
           <p className="text-xs text-muted-copy italic px-2 font-medium leading-relaxed">
             &quot;{evaluationResult.feedback}&quot;
           </p>
-          <div className="w-full space-y-4 border-t border-border-soft pt-4">
+          <div className="w-full space-y-4 border-t border-[#d9d9e3] pt-4">
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
                 <span>Comprehension Rate</span>
@@ -94,35 +94,35 @@ export const ReadingEvaluationResults = ({
           </div>
         </div>
 
-        <div className="p-5 bg-success/5 border border-success/20 rounded-lg space-y-4">
-          <h5 className="text-xs font-medium uppercase text-success tracking-wider flex items-center gap-1.5">
+        <div className="p-5 bg-success/5 border border-success/20 rounded-[4px] space-y-4 shadow-sm">
+          <h5 className="text-xs font-bold uppercase text-success tracking-wider flex items-center gap-1.5">
             <Award className="h-4.5 w-4.5" />
             <span>Scoring Rewards Claimed</span>
           </h5>
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block">
                 XP gained
               </span>
-              <span className="mt-0.5 block text-sm font-medium text-foreground">
+              <span className="mt-0.5 block text-sm font-bold text-foreground">
                 +{evaluationResult.xpEarned}
               </span>
             </div>
-            <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <Coins className="h-2.5 w-2.5 text-warning shrink-0" /> COINS
               </span>
-              <span className="mt-0.5 block text-sm font-medium text-foreground">
+              <span className="mt-0.5 block text-sm font-bold text-foreground">
                 +{evaluationResult.coinsEarned}
               </span>
             </div>
-            <div className="rounded-lg border border-border-soft bg-surface-hover p-3 text-center">
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
-                <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" />{' '}
+                <TrendingUp className="h-2.5 w-2.5 text-[#0047bb] shrink-0" />{' '}
                 LEVEL PROGRESS
               </span>
               <span
-                className={`text-sm font-medium block mt-0.5 ${evaluationResult.eloChange >= 0 ? 'text-success' : 'text-rose-400'}`}
+                className={`text-sm font-bold block mt-0.5 ${evaluationResult.eloChange >= 0 ? 'text-success' : 'text-rose-400'}`}
               >
                 {evaluationResult.eloChange >= 0
                   ? `+${evaluationResult.eloChange}`
@@ -134,9 +134,9 @@ export const ReadingEvaluationResults = ({
       </div>
 
       <div className="lg:col-span-8 space-y-6">
-        <div className="grid grid-cols-1 gap-4 rounded-xl border border-border-soft bg-surface-hover p-5 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-5 md:grid-cols-2 shadow-sm">
           <div className="space-y-3">
-            <h5 className="text-xs font-medium text-success uppercase tracking-widest font-mono flex items-center gap-1.5">
+            <h5 className="text-xs font-bold text-success uppercase tracking-widest font-mono flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
               <span>Identified Strengths</span>
             </h5>
@@ -154,8 +154,8 @@ export const ReadingEvaluationResults = ({
               ))}
             </ul>
           </div>
-          <div className="space-y-3 border-t border-border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
-            <h5 className="text-xs font-medium text-warning uppercase tracking-widest font-mono flex items-center gap-1.5">
+          <div className="space-y-3 border-t border-[#d9d9e3] pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+            <h5 className="text-xs font-bold text-warning uppercase tracking-widest font-mono flex items-center gap-1.5">
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span>Development Gaps</span>
             </h5>
@@ -184,19 +184,19 @@ export const ReadingEvaluationResults = ({
             {evaluationResult.detailedAnswers.map((item, idx) => (
               <div
                 key={item.questionId}
-                className={`p-4 rounded-lg border space-y-3 ${item.isCorrect ? 'bg-success/5 border-success/20' : 'bg-rose-500/5 border-rose-500/20'}`}
+                className={`p-4 rounded-[4px] border space-y-3 ${item.isCorrect ? 'bg-success/5 border-success/20' : 'bg-rose-500/5 border-rose-500/20'}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex gap-2.5">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded border border-border-soft bg-surface font-mono text-xs font-medium text-muted-copy">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white font-mono text-xs font-bold text-muted-copy">
                       {idx + 1}
                     </span>
-                    <h6 className="mt-0.5 text-xs font-medium leading-tight text-foreground md:text-sm">
+                    <h6 className="mt-0.5 text-xs font-bold leading-tight text-foreground md:text-sm">
                       {item.questionText}
                     </h6>
                   </div>
                   <span
-                    className={`text-[10px] font-medium font-mono px-2 py-0.5 rounded uppercase flex items-center gap-1 shrink-0 ${item.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}
+                    className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase flex items-center gap-1 shrink-0 ${item.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}
                   >
                     {item.isCorrect ? (
                       <Check className="h-3.5 w-3.5" />
@@ -206,12 +206,12 @@ export const ReadingEvaluationResults = ({
                     <span>{item.isCorrect ? 'Correct' : 'Incorrect'}</span>
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-3 rounded-lg border border-border-soft bg-surface p-3 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-3 md:grid-cols-2">
                   <div>
                     <span className="text-[9px] font-mono text-muted-copy uppercase block">
                       Your Answer
                     </span>
-                    <span className="mt-0.5 block text-xs font-medium text-foreground">
+                    <span className="mt-0.5 block text-xs font-bold text-foreground">
                       {item.userAnswer}
                     </span>
                   </div>
@@ -219,16 +219,16 @@ export const ReadingEvaluationResults = ({
                     <span className="text-[9px] font-mono text-muted-copy uppercase block">
                       Expected Key / Option
                     </span>
-                    <span className="text-xs font-medium text-success block mt-0.5">
+                    <span className="text-xs font-bold text-success block mt-0.5">
                       {item.correctAnswer}
                     </span>
                   </div>
                 </div>
-                <div className="space-y-1 rounded-lg border border-border-soft bg-surface-hover p-3">
-                  <span className="text-[9px] font-medium uppercase text-muted-copy tracking-wider font-mono">
+                <div className="space-y-1 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+                  <span className="text-[9px] font-bold uppercase text-muted-copy tracking-wider font-mono">
                     Technical Justification
                   </span>
-                  <p className="text-xs text-muted-copy leading-relaxed font-medium">
+                  <p className="text-xs text-muted-copy leading-relaxed font-normal">
                     {item.explanation}
                   </p>
                 </div>
@@ -240,7 +240,7 @@ export const ReadingEvaluationResults = ({
         <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
           <Link
             to="/writing"
-            className="inline-flex min-h-10 items-center rounded-lg px-3 text-xs font-medium text-primary hover:bg-primary/5"
+            className="inline-flex min-h-10 items-center rounded-[4px] px-3 text-xs font-bold text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
           >
             Follow up in Writing
           </Link>
@@ -250,18 +250,21 @@ export const ReadingEvaluationResults = ({
               resetCurrentMission();
               setSelectedWord(null);
             }}
-            className="h-10 border-border-soft text-xs text-muted-copy hover:text-primary"
+            className="h-10 rounded-[4px] border-[#d9d9e3] text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
           >
             Retry Assessment
           </Button>
           <Button
             onClick={handleBackToMissions}
-            className="bg-primary hover:bg-primary/90 text-white font-medium px-6 h-10"
+            className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-6 h-10 rounded-[4px] cursor-pointer border border-[#0047bb]"
           >
             Back to Reading list
           </Button>
           {currentMissionIndex < visibleMissions.length - 1 && (
-            <Button onClick={() => moveMission(1)}>
+            <Button
+              onClick={() => moveMission(1)}
+              className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-[#0047bb] flex items-center gap-1"
+            >
               Next lesson <ChevronRight className="h-4 w-4" />
             </Button>
           )}

@@ -39,12 +39,12 @@ export function ReadingMissionCard({
   return (
     <div
       id={`reading-card-${m.id}`}
-      className={`group relative rounded-xl border bg-surface p-5 transition-all duration-200 hover:-translate-y-px hover:border-primary/20 hover:bg-primary/5 hover:shadow-sm ${
-        isCompleted ? 'border-success/20' : 'border-border-soft'
+      className={`group relative rounded-[4px] border bg-white p-5 transition-all duration-200 hover:border-[#0047bb]/30 hover:shadow-md ${
+        isCompleted ? 'border-success/20' : 'border-[#d9d9e3]'
       }`}
     >
       <div
-        className="absolute top-0 left-0 right-0 h-1 rounded-t-xl"
+        className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[4px]"
         style={{
           background: m.cefrLevel.startsWith('A')
             ? '#3b82f6'
@@ -57,7 +57,7 @@ export function ReadingMissionCard({
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`text-[10px] font-medium font-mono px-2 py-0.5 rounded border ${ReadingHelpers.getCefrBadgeStyles(m.cefrLevel)}`}
+              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${ReadingHelpers.getCefrBadgeStyles(m.cefrLevel)}`}
             >
               {m.cefrLevel}
             </span>
@@ -68,7 +68,7 @@ export function ReadingMissionCard({
               )}
             />
             <span
-              className={`text-[10px] font-medium font-mono px-2 py-0.5 rounded uppercase ${
+              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
                 difficultyColor === 'rose'
                   ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                   : difficultyColor === 'amber'
@@ -78,56 +78,57 @@ export function ReadingMissionCard({
             >
               {m.difficulty}
             </span>
-            <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {m.estimatedMinutes}m
+            <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1 font-bold">
+              <Clock className="h-3 w-3 text-muted-copy" /> {m.estimatedMinutes}
+              M
             </span>
             <button
               type="button"
               onClick={() => onToggleBookmark(m.id)}
               aria-label={isBookmarked ? 'Remove bookmark' : 'Add bookmark'}
-              className="ml-1 shrink-0 p-1 rounded transition-colors hover:bg-surface-hover"
+              className="ml-1 shrink-0 p-1 rounded-[4px] transition-colors hover:bg-surface-hover cursor-pointer"
             >
               <Bookmark
-                className={`h-4 w-4 ${isBookmarked ? 'fill-foreground text-foreground' : 'text-muted-copy'}`}
+                className={`h-4 w-4 ${isBookmarked ? 'fill-[#0047bb] text-[#0047bb]' : 'text-muted-copy'}`}
               />
             </button>
           </div>
 
           <div>
-            <h4 className="text-base font-medium text-foreground group-hover:text-primary transition-colors">
+            <h4 className="text-base font-bold text-foreground group-hover:text-[#0047bb] transition-colors tracking-tight">
               {m.title}
             </h4>
-            <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed font-normal">
               {m.description}
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-border-soft">
+        <div className="flex items-center justify-between pt-4 border-t border-[#d9d9e3]">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-medium font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded">
+            <span className="text-[9px] font-bold font-mono bg-[#f3f3fd] border border-[#d9d9e3] text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {m.discipline}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {isCompleted ? (
-              <div className="flex items-center gap-1.5 text-xs text-success font-medium">
+              <div className="flex items-center gap-1.5 text-xs text-success font-bold">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Score: {bestScore}%</span>
               </div>
             ) : (
-              <span className="text-[10px] font-medium font-mono text-muted-copy uppercase">
+              <span className="text-[9px] font-bold font-mono text-muted-copy uppercase tracking-wider">
                 Available
               </span>
             )}
 
             <Button
               onClick={() => onLaunch(m.id)}
-              className={`h-8 px-3 rounded-lg font-medium text-xs flex items-center gap-1 ${
+              className={`h-8 px-3.5 rounded-[4px] font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors ${
                 isCompleted
-                  ? 'border border-border-soft bg-surface text-foreground hover:bg-primary/5'
-                  : 'bg-primary hover:bg-primary/90 text-white font-medium'
+                  ? 'border border-[#d9d9e3] bg-white text-foreground hover:bg-[#0047bb]/5'
+                  : 'bg-[#0047bb] hover:bg-[#0047bb]/90 text-white border border-[#0047bb]'
               }`}
             >
               {isCompleted ? (
