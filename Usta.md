@@ -117,11 +117,12 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 ### [x] YAPILDI — Kademe 17: Supabase Key & JWT Güvenlik Düzenlemesi
 
 - **Açıklama:** Projedeki Supabase JWT anahtarlarını ve API erişim güvenliğini gözden geçir, gerçek üretim JWT imzalama güvenliğini doğrula.
-- **Durum:** Yapıldı (commit c342762). URL validation (supabase.co domain kontrolü), JWT key validation (3-part split + base64 decode + audience/sub claim kontrolü) eklendi. isSupabaseReady artık hem URL hem key formatını doğruluyor.
+- **Durum:** Yapıldı (commit c342762 + fa8995d). URL validation (supabase.co domain kontrolü), JWT key validation (3-part split + base64 decode + audience/sub claim kontrolü) eklendi. isSupabaseReady artık hem URL hem key formatını doğruluyor.
 
-### [ ] Kademe 18: Vocabulary Expansion Dosyalarının Bölünmesi
+### [x] YAPILDI — Kademe 18: Vocabulary Expansion Dosyalarının Bölünmesi
 
 - **Açıklama:** `expansion-categories.ts` (642 satır) gibi 500+ satırlı devasa sözlük genişletme dosyalarını daha küçük fonksiyonel dosyalara bölerek kod kalitesini artır.
+- **Durum:** Yapıldı (commit 6ab9ca3). 3 dosya (642+509+525 satır) → 13 modüle bölündü. electrical, mechanical, civil, hse, project-management, specialized kategorileri + meanings, examples, collocations helper'ları.
 
 ### [ ] Kademe 19: Playwright ile E2E Test Kapsamının Artırılması
 
@@ -135,13 +136,15 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 
 - **Açıklama:** Görsel yükleme öncelikleri, script defer özellikleri ve sayfa boyutu optimizasyonları ile Lighthouse Core Web Vitals performans skorunu 95+ seviyesine taşı.
 
-### [ ] Kademe 22: Detaylı Erişilebilirlik (A11y) İyileştirmeleri
+### [x] YAPILDI — Kademe 22: Detaylı Erişilebilirlik (A11y) İyileştirmeleri
 
 - **Açıklama:** Tüm sayfalarda ekran okuyucu desteği, klavye navigasyon tabIndex odaklamaları ve eksik ARIA-label tanımlarını tamamla.
+- **Durum:** Yapıldı (commit 1c1226c). 18 a11y sorunu 15 dosyada düzeltildi. 64 aria-label, role, dialog semantiği eklendi.
 
-### [ ] Kademe 23: Storybook Component Stories Güncellemesi
+### [x] YAPILDI — Kademe 23: Storybook Component Stories Güncellemesi
 
 - **Açıklama:** Refaktör edilen ve yeni eklenen (PR Coach, Interview Simulator, Cmd+K) tüm yeni bileşenlerin Storybook story dosyalarını oluştur ve entegre et.
+- **Durum:** Yapıldı (commit cbab530). 9 story dosyası mevcut: Button, Card, StatusBadge, CommandPalette, PRReviewCoach, InterviewSimulator, TeamDashboard, GrammarLessonMap, VocabSidebar.
 
 ### [ ] Kademe 24: CI/CD Pipeline & GitHub Actions Optimizasyonu
 
