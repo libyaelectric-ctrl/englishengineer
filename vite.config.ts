@@ -43,8 +43,8 @@ export default defineConfig(() => {
             state: ['zustand'],
             error: ['react-error-boundary'],
             vocabularyData: [
-              './src/features/vocabulary/vocabulary.data.ts',
-              './src/features/vocabulary/vocabulary.data.json',
+              './src/features/vocabulary/data/vocabulary.data.ts',
+              './src/features/vocabulary/data/vocabulary.data.json',
             ],
           },
         },
