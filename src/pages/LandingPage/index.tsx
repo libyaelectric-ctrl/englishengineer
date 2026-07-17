@@ -6,6 +6,7 @@ import { Navbar } from './Navbar';
 import { HeroSection } from './HeroSection';
 import { WorkflowSection } from './WorkflowSection';
 import { PricingSection } from './PricingSection';
+import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
 
 const LandingPage = () => {
@@ -55,6 +56,7 @@ const LandingPage = () => {
       <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
       <WorkflowSection />
       <PricingSection />
+      <FAQSection />
       <Footer />
     </main>
   );

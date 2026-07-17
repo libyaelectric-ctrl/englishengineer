@@ -25,5 +25,3 @@ export { useListeningPlaybackStore } from './listening-playback.store';
 export { useListeningStore } from './listening.store';
 
 export { ListeningHelpers } from './listening.helpers';
-
-export { ListeningSidebar } from './components';

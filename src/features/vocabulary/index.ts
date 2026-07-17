@@ -95,5 +95,3 @@ export {
   type VocabularyLearningSetOptions,
   selectVocabularyLearningSet,
 } from './vocabulary.selection';
-
-export { VocabSidebar } from './components';

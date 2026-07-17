@@ -25,5 +25,3 @@ export {
   type QuickAIDraft,
   type WorkToolsPreferences,
 } from './work-tools.types';
-
-export { ToolsSidebar } from './components';

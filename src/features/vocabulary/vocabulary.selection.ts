@@ -1,6 +1,6 @@
-import { getBaseCefrLevel, getNextCefrBand } from '@/features/profile';
-import type { CefrBand } from '@/features/profile';
-import type { LearningDataSkill } from '@/core/learning';
+import { getBaseCefrLevel, getNextCefrBand } from '@/features/profile/profile.utils';
+import type { CefrBand } from '@/features/profile/profile.types';
+import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 import {
   getVocabularyMenuStatus,
   isVocabularyProgressDue,

@@ -15,12 +15,7 @@ import {
 } from '@/features/gamification';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
-import {
-  MissionList,
-  DetailRow,
-  MiniStat,
-  FeedList,
-} from './NextStepsHelpers';
+import { MissionList, DetailRow, MiniStat, FeedList } from './NextStepsHelpers';
 import { PersonalLeaderboard } from './PersonalLeaderboard';
 
 export const GamificationContent = ({

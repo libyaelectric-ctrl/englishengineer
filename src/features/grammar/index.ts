@@ -28,6 +28,7 @@ export {
 
 export { GrammarTransferService } from './grammar.transfer';
 
-export { type GrammarTab, useGrammarStore } from './grammar.store';
-
-export { GrammarSidebar } from './components';
+export {
+  type GrammarTab,
+  useGrammarStore,
+} from './grammar.store';

@@ -1,5 +1,9 @@
 import { Network } from 'lucide-react';
-import { GRAPH_NODES, GRAPH_LINKS, type GraphNode } from '@/pages/CurriculumPage/curriculum-data';
+import {
+  GRAPH_NODES,
+  GRAPH_LINKS,
+  type GraphNode,
+} from '@/pages/CurriculumPage/curriculum-data';
 
 export const KnowledgeGraph = ({
   selectedGraphNode,

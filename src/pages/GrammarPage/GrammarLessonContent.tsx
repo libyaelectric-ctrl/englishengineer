@@ -14,8 +14,16 @@ import {
   type GrammarRuleProgress,
 } from '@/features/grammar';
 import { Button } from '@/shared/components/Button';
-import { getPracticeCount, getTransferCount, compact } from './GrammarPageHelpers';
-import { SectionHeading, MasteryPill, LessonBlock } from './GrammarPageComponents';
+import {
+  getPracticeCount,
+  getTransferCount,
+  compact,
+} from './GrammarPageHelpers';
+import {
+  SectionHeading,
+  MasteryPill,
+  LessonBlock,
+} from './GrammarPageComponents';
 
 type Rule = {
   id: string;
@@ -79,7 +87,9 @@ export const GrammarLessonContent = ({
   hintOpen: boolean;
   setHintOpen: (fn: (v: boolean) => boolean) => void;
   quizAnswers: Record<number, string>;
-  setQuizAnswers: (fn: (prev: Record<number, string>) => Record<number, string>) => void;
+  setQuizAnswers: (
+    fn: (prev: Record<number, string>) => Record<number, string>
+  ) => void;
   quizItems: QuizItem[];
 }) => (
   <>
@@ -93,15 +103,21 @@ export const GrammarLessonContent = ({
             {selectedRule.ruleTitle || selectedRule.title}
           </h2>
           <p className="mt-1 text-xs leading-5 text-muted-copy">
-            {compact(selectedRule.engineeringUseCase, selectedRule.languageFunction)}
+            {compact(
+              selectedRule.engineeringUseCase,
+              selectedRule.languageFunction
+            )}
           </p>
         </div>
         <span
           className={`shrink-0 whitespace-nowrap rounded-full border font-bold px-3 py-1 text-xs ${
-            selectedStatus === 'Mastered' ? 'border-success/30 bg-success/5 text-success' :
-            selectedStatus === 'Needs Reading/Writing' ? 'border-warning/30 bg-warning/5 text-warning' :
-            selectedStatus === 'Practicing' ? 'border-primary/25 bg-primary/5 text-primary' :
-            'border-border-soft bg-surface text-muted-copy'
+            selectedStatus === 'Mastered'
+              ? 'border-success/30 bg-success/5 text-success'
+              : selectedStatus === 'Needs Reading/Writing'
+                ? 'border-warning/30 bg-warning/5 text-warning'
+                : selectedStatus === 'Practicing'
+                  ? 'border-primary/25 bg-primary/5 text-primary'
+                  : 'border-border-soft bg-surface text-muted-copy'
           }`}
         >
           {selectedStatus}
@@ -203,7 +219,8 @@ export const GrammarLessonContent = ({
         </div>
       ) : (
         <p className="mt-2 text-xs text-muted-copy">
-          No confirmed Vocabulary match yet. This lesson stays in Grammar until matching vocabulary is available.
+          No confirmed Vocabulary match yet. This lesson stays in Grammar until
+          matching vocabulary is available.
         </p>
       )}
     </div>
@@ -273,7 +290,8 @@ export const GrammarLessonContent = ({
             {selectedRule.badExampleEnglish}
           </p>
           <p className="mt-1 break-words text-xs leading-5 text-rose-800">
-            {selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
+            {selectedRule.badExampleTurkishExplanation ||
+              selectedRule.commonMistakes}
           </p>
         </div>
         <div className="rounded-lg border border-success/30 bg-white p-3">
@@ -319,7 +337,9 @@ export const GrammarLessonContent = ({
         <div className="mt-3 space-y-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
           {quizItems.map((item, qi) => (
             <div key={item.question}>
-              <p className="text-xs font-bold">{qi + 1}. {item.question}</p>
+              <p className="text-xs font-bold">
+                {qi + 1}. {item.question}
+              </p>
               <div className="mt-1.5 grid gap-1.5">
                 {item.choices.map((choice, ci) => {
                   const letter = String.fromCharCode(65 + ci);

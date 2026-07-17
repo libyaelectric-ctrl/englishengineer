@@ -72,5 +72,3 @@ export { SkillRadar } from './SkillRadar';
 export { useLearningCockpit } from './useLearningCockpit';
 
 export { OnboardingGate } from './OnboardingGate';
-
-export { ProfileSidebar } from './components';

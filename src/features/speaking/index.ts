@@ -39,5 +39,3 @@ export {
   type PronunciationScoreResult,
   PronunciationScorer,
 } from './pronunciation-scorer';
-
-export { SpeakingSidebar } from './components';

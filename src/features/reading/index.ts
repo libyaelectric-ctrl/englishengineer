@@ -25,5 +25,3 @@ export { useReadingStore } from './reading.store';
 export { ReadingHelpers } from './reading.helpers';
 
 export { ReadingTranslation } from './ReadingTranslation';
-
-export { ReadingSidebar } from './components';

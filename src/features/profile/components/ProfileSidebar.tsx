@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/features/auth';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import { Section } from '@/shared/layout/sidebar/SidebarComponents';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';

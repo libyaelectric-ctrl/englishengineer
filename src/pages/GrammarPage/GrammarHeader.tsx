@@ -1,9 +1,6 @@
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
-import {
-  CheckCircle2,
-  Circle,
-} from 'lucide-react';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { StatusPill } from './GrammarPageComponents';
 import { type LessonStatus } from './GrammarPageHelpers';
 

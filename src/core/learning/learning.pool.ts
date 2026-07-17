@@ -27,7 +27,9 @@ const syncPoolToSupabase = (
     )
     .then(({ error }: { error: unknown }) => {
       if (error)
-        logger.w(`[${contentType}Pool] Supabase write failed: ${String(error)}`);
+        logger.w(
+          `[${contentType}Pool] Supabase write failed: ${String(error)}`
+        );
     });
 };
 
@@ -36,7 +38,10 @@ export const addToVocabularyPool = (termId: string) => {
   if (current.includes(termId)) return;
   const updated = [...current, termId];
   useLearningStore.setState({ vocabularyPool: updated });
-  storage.set(STORAGE_KEY, { ...useLearningStore.getState(), vocabularyPool: updated });
+  storage.set(STORAGE_KEY, {
+    ...useLearningStore.getState(),
+    vocabularyPool: updated,
+  });
   logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
   syncPoolToSupabase('vocabulary', termId);
 };
@@ -46,7 +51,10 @@ export const addToGrammarPool = (ruleId: string) => {
   if (current.includes(ruleId)) return;
   const updated = [...current, ruleId];
   useLearningStore.setState({ grammarPool: updated });
-  storage.set(STORAGE_KEY, { ...useLearningStore.getState(), grammarPool: updated });
+  storage.set(STORAGE_KEY, {
+    ...useLearningStore.getState(),
+    grammarPool: updated,
+  });
   logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
   syncPoolToSupabase('grammar', ruleId);
 };

@@ -1,11 +1,12 @@
 import { loadGrammarRulesByLevel } from '@/data/grammar';
-import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
 import {
   extractCefrFromId,
   getLevelsThrough,
   includesNormalized,
-  type LearningDataSkill,
-} from '@/core/learning';
+} from '@/core/learning/spaced-repetition.helpers';
+import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 import { assertGrammarRules } from './grammar.schema';
 import type { GrammarRule } from './grammar.types';
 

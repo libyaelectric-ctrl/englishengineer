@@ -1,10 +1,6 @@
 import { storage } from '@/shared/storage';
 import { AI_COACH_MODES } from './ai.helpers';
-import {
-  AICoachModeId,
-  AICoachSession,
-  AISessionLog,
-} from './ai.types';
+import { AICoachModeId, AICoachSession, AISessionLog } from './ai.types';
 
 export interface PersistedAIState {
   selectedModeId: AICoachModeId;

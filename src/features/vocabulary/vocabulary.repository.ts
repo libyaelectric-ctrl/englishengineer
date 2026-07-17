@@ -1,5 +1,6 @@
 import { loadVocabularyByLevel } from '@/data/vocabulary';
-import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
 import {
   extractCefrFromId,
   getLevelsThrough,

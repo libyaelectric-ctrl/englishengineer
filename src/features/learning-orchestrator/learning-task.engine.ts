@@ -1,18 +1,19 @@
-import { GrammarEngine, GrammarRepository } from '@/features/grammar';
-import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { GrammarEngine } from '@/features/grammar/grammar.engine';
+import { GrammarRepository } from '@/features/grammar/grammar.repository';
+import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
 import {
   getBaseCefrLevel,
   getNextCefrBand,
   getTaskBandMix,
-  getPreferredDomains,
-  type SkillName,
-  type UserLearningProfile,
-} from '@/features/profile';
-import {
-  VocabularyMenuService,
-  VocabularyRepository,
-  type VocabularyTerm,
-} from '@/features/vocabulary';
+} from '@/features/profile/profile.utils';
+import { getPreferredDomains } from '@/features/profile/profile.preferences';
+import type {
+  SkillName,
+  UserLearningProfile,
+} from '@/features/profile/profile.types';
+import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
+import { VocabularyRepository } from '@/features/vocabulary/vocabulary.repository';
+import type { VocabularyTerm } from '@/features/vocabulary/vocabulary.types';
 import type {
   LearningTaskRecommendation,
   SelectedVocabularyTerm,

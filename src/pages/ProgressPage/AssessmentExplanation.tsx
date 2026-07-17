@@ -19,9 +19,7 @@ export const AssessmentExplanation = ({
     </h2>
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
       <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
-        <p className="text-xs font-medium text-muted-copy">
-          Why this score
-        </p>
+        <p className="text-xs font-medium text-muted-copy">Why this score</p>
         <p className="mt-2 text-sm text-foreground">
           {assessment.confidenceExplanation}
         </p>
@@ -41,9 +39,7 @@ export const AssessmentExplanation = ({
         </p>
       </div>
       <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
-        <p className="text-xs font-medium text-muted-copy">
-          What to do next
-        </p>
+        <p className="text-xs font-medium text-muted-copy">What to do next</p>
         <p className="mt-2 text-sm text-foreground">
           {assessment.recommendedNextMissions[0] ??
             'Complete one assessed mission in each core skill.'}

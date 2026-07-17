@@ -66,5 +66,3 @@ export {
 } from './workspace.store';
 
 export { WorkspaceSelector } from './WorkspaceSelector';
-
-export { WorkspaceMemoryPanel } from './WorkspaceMemoryPanel';

@@ -85,3 +85,21 @@ export const WORKFLOW = [
     desc: 'AI review, mistake memory and analytics keep the learner moving from attempt to measurable progress.',
   },
 ];
+
+export const FAQ_ITEMS = [
+  {
+    question: 'Is there a free plan?',
+    answer:
+      'Yes. The free plan includes the core modules, vocabulary and grammar practice, and a small daily AI request allowance.',
+  },
+  {
+    question: 'Who is EngVox built for?',
+    answer:
+      'EngVox is built for engineers, site teams and project professionals who need practical English for technical work.',
+  },
+  {
+    question: 'Can teams use project workspaces?',
+    answer:
+      'Yes. Project plans add workspaces, memory and document support for recurring project communication.',
+  },
+];
