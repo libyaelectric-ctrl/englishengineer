@@ -32,6 +32,7 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 
 ### [x] YAPILDI — Kademe 1: WorkspaceTab Split
 *   **Açıklama:** Çok büyük ve karmaşık olan `src/pages/WritingPage/components/WorkspaceTab.tsx` (ESLint complexity: 21) bileşenini alt bileşenlere bölerek karmaşıklığını 10'un altına düşür.
+*   **İşlem:** UI parçalarını (düzeltme listeleri, editör kontrolleri vb.) temiz alt dosyalara çıkart.
 *   **Durum:** Yapıldı (commit e8e177b). 6 alt bileşen: WorkspaceHeader, DraftEditor, StyleGuidelines, CorrectionCheckpoint, DraftQualityIndicators, EvaluationView. Complexity 21→0.
 
 ### [x] YAPILDI — Kademe 2: Vocabulary Modül Alt Alan Bölümü (Sub-domain Split)
@@ -90,50 +91,3 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 *   **Açıklama:** Backend klasöründeki 45 adet JavaScript dosyasını TypeScript'e dönüştür. README dosyasındaki AI sağlayıcı çelişkilerini (Gemini/OpenAI) gider.
 *   **Durum:** Yapıldı (commit d8ca852). 10 kritik dosya TS'ye geçirildi (config, errors, logger, validation, auth, rate-limit, i18n, swagger + helpers). tsconfig.json eklendi. Dockerfile/railway.toml tsx ile güncellendi. README düzeltildi. Kalan 35 JS dosyası mevcut TS modülleriyle uyumlu çalışıyor.
 
----
-
-## 📈 Yeni Kademeli İyileştirme Planı (Kademeler 16-26)
-
-### [ ] Kademe 16: Kalan 35 Backend JS Dosyasının TypeScript'e Taşınması (JS->TS)
-*   **Açıklama:** Backend modülündeki kalan 35 adet JavaScript dosyasının tamamını TypeScript'e geçirerek backend kod kalitesi puanını 100/100'e çıkar.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 17: Supabase Key & JWT Güvenlik Düzenlemesi
-*   **Açıklama:** Projedeki Supabase JWT anahtarlarını ve API erişim güvenliğini gözden geçir, yerel placeholder'lar yerine gerçek üretim JWT imzalama güvenliğini doğrula.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 18: Vocabulary Expansion Dosyalarının Bölünmesi
-*   **Açıklama:** `expansion-categories.ts` (642 satır) gibi 500+ satırlı devasa sözlük genişletme dosyalarını daha küçük fonksiyonel dosyalara bölerek kod kalitesini artır.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 19: Playwright ile E2E Test Kapsamının Artırılması
-*   **Açıklama:** Playwright E2E testlerine kullanıcı üyelik, mülakat simülatörü ve ödeme akışlarını içeren kapsamlı "User Journey" entegrasyon testleri ekle.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 20: React Query Cache ve Virtual Scroll Performans İyileştirmesi
-*   **Açıklama:** Kelime listeleri ve büyük veri akışlarında performansı artırmak için virtual scroll ve React Query önbellek (cache) yönetimini optimize et.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 21: Lighthouse Skor & Core Web Vitals Optimizasyonu
-*   **Açıklama:** Görsel yükleme öncelikleri, script defer özellikleri ve sayfa boyutu optimizasyonları ile Lighthouse Core Web Vitals performans skorunu 95+ seviyesine taşı.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 22: Detaylı Erişilebilirlik (A11y) İyileştirmeleri
-*   **Açıklama:** Tüm sayfalarda ekran okuyucu desteği, klavye navigasyon tabIndex odaklamaları ve eksik ARIA-label tanımlarını tamamla.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 23: Storybook Component Stories Güncellemesi
-*   **Açıklama:** Refaktör edilen ve yeni eklenen (PR Coach, Interview Simulator, Cmd+K) tüm yeni bileşenlerin Storybook story dosyalarını oluştur ve entegre et.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 24: CI/CD Pipeline & GitHub Actions Optimizasyonu
-*   **Açıklama:** GitHub Actions yaml dosyalarındaki gereksiz build cache adımlarını kaldır, test ve lint adımlarını optimize ederek CI çalışma süresini kısalt.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 25: AI Limit Güvenliği (API Cost Guardrails)
-*   **Açıklama:** AI Coach, Interview Simulator ve PR Review Coach modüllerinde kullanıcı başına günlük/aylık harcama limitlerini database düzeyinde ve backend middleware katmanında sorgula ve kısıtla. API kötüye kullanımını önle.
-*   **Durum:** Beklemede.
-
-### [ ] Kademe 26: Yasal Şablonlar & Pazarlama Görselleri
-*   **Açıklama:** Landing page üzerinde kullanılacak AI mülakat demoları için GIF/video yer tutucularını hazırla. Üye alımı ve Stripe ödemesi için yasal Koşullar (ToS) ve GDPR/KVKK Gizlilik Politikası şablon metinlerini doldur.
-*   **Durum:** Beklemede.
