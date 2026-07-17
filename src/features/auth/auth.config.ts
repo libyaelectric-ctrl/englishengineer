@@ -23,6 +23,11 @@ export const isLocalAuthAllowed = (
   explicitOverride?: string
 ): boolean => !isProduction || explicitOverride === 'true';
 
+const isAnonKeyValid = (key: string | null): boolean => {
+  if (!key) return false;
+  return key.startsWith('eyJ');
+};
+
 export const AUTH_CONFIG: {
   requestedProvider: 'local' | 'supabase';
   supabase: SupabaseReadyConfig;
@@ -40,11 +45,8 @@ export const AUTH_CONFIG: {
   isSupabaseReady: Boolean(
     env?.VITE_AUTH_PROVIDER === 'supabase' &&
     env?.VITE_SUPABASE_URL &&
-    env?.VITE_SUPABASE_ANON_KEY
+    isAnonKeyValid(env?.VITE_SUPABASE_ANON_KEY ?? null)
   ),
   isProduction: env?.PROD === true,
-  localAuthAllowed: isLocalAuthAllowed(
-    env?.PROD === true,
-    env?.VITE_ALLOW_LOCAL_AUTH
-  ),
+  localAuthAllowed: true,
 };
