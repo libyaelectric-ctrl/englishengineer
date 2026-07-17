@@ -1,6 +1,7 @@
 import { useGrammarPage } from './GrammarPage/hooks/useGrammarPage';
 import { getModuleLabel } from './GrammarPage/GrammarPageHelpers';
 import { GrammarHeader } from './GrammarPage/GrammarHeader';
+import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
 import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
 import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
 import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
@@ -52,14 +53,17 @@ const GrammarPage = () => {
         levelCounts={levelCounts}
         query={query}
         setQuery={setQuery}
-        pathGroups={pathGroups}
-        selectedRule={selectedRule}
-        selectRule={selectRule}
-        scrollLessonStrip={scrollLessonStrip}
-        lessonStripRef={lessonStripRef as React.RefObject<HTMLDivElement>}
       />
 
       <main className="mt-6 space-y-5">
+        <GrammarLessonMap
+          pathGroups={pathGroups}
+          selectedRule={selectedRule}
+          selectRule={selectRule}
+          scrollLessonStrip={scrollLessonStrip}
+          lessonStripRef={lessonStripRef as React.RefObject<HTMLDivElement>}
+        />
+
         <section className="min-w-0 space-y-4">
           {selectedRule && selectedProgress ? (
             <GrammarLessonContent
