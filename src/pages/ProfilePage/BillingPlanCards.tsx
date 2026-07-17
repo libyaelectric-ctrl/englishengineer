@@ -29,8 +29,8 @@ const UsageCard = ({
 }: UsageCardProps) => (
   <div className="space-y-1.5">
     <div className="flex justify-between text-xs">
-      <span className="font-medium text-foreground">{label}</span>
-      <span className="font-medium text-foreground">{display}</span>
+      <span className="font-bold text-foreground">{label}</span>
+      <span className="font-bold text-foreground">{display}</span>
     </div>
     <ProgressBar value={Math.min(100, (value / max) * 100)} color={color} />
     <p className="text-[10px] text-muted-copy">{helpText}</p>
@@ -48,8 +48,8 @@ const UnlimitedCard = ({
 }) => (
   <div className="space-y-1.5">
     <div className="flex justify-between text-xs">
-      <span className="font-medium text-foreground">{label}</span>
-      <span className="font-medium text-foreground">Unlimited</span>
+      <span className="font-bold text-foreground">{label}</span>
+      <span className="font-bold text-foreground">Unlimited</span>
     </div>
     <ProgressBar value={100} color={color} />
     <p className="text-[10px] text-muted-copy">{helpText}</p>
@@ -130,10 +130,10 @@ export const BillingPlanCards = ({
       {/* Document Uploads */}
       <div className="space-y-1.5">
         <div className="flex justify-between text-xs">
-          <span className="font-medium text-foreground">
+          <span className="font-bold text-foreground">
             Monthly Document Uploads
           </span>
-          <span className="font-medium text-foreground">
+          <span className="font-bold text-foreground">
             {isFree
               ? 'Blocked'
               : isPro
@@ -164,10 +164,10 @@ export const BillingPlanCards = ({
       {isMaxTier && (
         <div className="col-span-full space-y-1.5 mt-1">
           <div className="flex justify-between text-xs">
-            <span className="font-medium text-foreground flex items-center gap-1.5">
+            <span className="font-bold text-foreground flex items-center gap-1.5">
               🎙️ Monthly Voice Minutes
             </span>
-            <span className="font-medium text-foreground">
+            <span className="font-bold text-foreground">
               {subscription.planId === 'max'
                 ? `${voiceMinutesUsed} / 120 min`
                 : 'Unlimited'}
