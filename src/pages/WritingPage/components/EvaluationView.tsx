@@ -60,7 +60,7 @@ export const EvaluationView = ({
         <Button
           variant="outline"
           onClick={() => setShowModelAnswer((s) => !s)}
-          className="text-xs h-8"
+          className="text-xs h-8 rounded-[4px] cursor-pointer"
         >
           {showModelAnswer ? 'Hide Model Answer' : 'Show Model Answer'}
         </Button>
@@ -71,14 +71,14 @@ export const EvaluationView = ({
           {currentMission.expectedStructure.map((point, i) => (
             <div
               key={i}
-              className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm text-foreground"
+              className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-3 text-sm text-foreground shadow-sm font-normal"
             >
               {point}
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-xs text-muted-copy">
+        <p className="text-xs text-muted-copy font-medium italic">
           Toggle above to reveal the model answer.
         </p>
       )}

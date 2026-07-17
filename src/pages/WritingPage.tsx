@@ -45,9 +45,9 @@ const WritingPage = () => {
 
   if (!currentMission) {
     return (
-      <div className="space-y-4">
-        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
+      <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-4">
+        <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Writing
           </h1>
         </div>
@@ -59,7 +59,7 @@ const WritingPage = () => {
         <EmptyLevelState skill="Writing" />
         <Link
           to="/curriculum"
-          className="inline-flex text-sm font-bold text-primary hover:underline"
+          className="inline-flex text-sm font-bold text-[#0047bb] hover:underline"
         >
           Back to Learning Hub
         </Link>
@@ -68,19 +68,19 @@ const WritingPage = () => {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 pb-8">
+    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Writing sticky header */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-black tracking-tight text-foreground">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground">
               Writing
             </h1>
-            <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
-              {currentLevel}
+            <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+              ENG-W{currentLevel.replace(/[^0-9]/g, '') || currentLevel}
             </span>
           </div>
-          <div className="hidden text-xs text-muted-copy lg:block">
+          <div className="hidden text-xs text-muted-copy lg:block font-bold">
             {finishedCount}/{missions.length} completed
           </div>
         </div>
