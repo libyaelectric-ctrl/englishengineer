@@ -27,6 +27,7 @@ export interface SidebarConfig {
   pathDescription: string;
   currentLevel?: string;
   totalItems?: number;
+  header?: ReactNode;
   stats?: SidebarStat[];
   progressBars?: SidebarProgress[];
   actions?: SidebarAction[];

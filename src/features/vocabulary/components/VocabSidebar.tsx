@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
 import { useLearningStore } from '@/core/learning';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
@@ -77,6 +78,7 @@ export function VocabSidebar() {
   }, []);
 
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill="vocabulary" compact={true} />,
     skill: 'vocabulary',
     pathLabel: `Vocabulary · N:${v.newWords} L:${v.learning} M:${v.mastered} W:${v.weak}`,
     pathDescription: 'Learn and review engineering vocabulary.',

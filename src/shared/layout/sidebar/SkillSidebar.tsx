@@ -1,24 +1,10 @@
 import { Section, Item, Stat, Progress, Action } from './SidebarComponents';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import type { SidebarConfig } from './sidebar.config';
 
 export function SkillSidebar({ config }: { config: SidebarConfig }) {
   return (
     <>
-      <div className="px-4 pt-4">
-        <SkillEntryBrief
-          skill={
-            config.skill as
-              | 'vocabulary'
-              | 'grammar'
-              | 'reading'
-              | 'writing'
-              | 'listening'
-              | 'speaking'
-          }
-          compact={true}
-        />
-      </div>
+      {config.header && <div className="px-4 pt-4">{config.header}</div>}
 
       <Section title={config.pathLabel}>
         <div className="space-y-3">
