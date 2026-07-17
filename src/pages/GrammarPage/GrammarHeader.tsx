@@ -12,17 +12,17 @@ export const GrammarHeader = ({
   query: string;
   setQuery: (q: string) => void;
 }) => (
-  <header className="sticky top-0 z-20 -mx-4 border-b border-border-soft bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+  <header className="sticky top-0 z-20 -mx-4 border-b border-[#d9d9e3] bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-black tracking-tight text-foreground">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Grammar
         </h1>
-        <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
+        <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
           {level}
         </span>
       </div>
-      <div className="hidden text-xs text-muted-copy lg:block">
+      <div className="hidden text-xs text-muted-copy lg:block font-bold">
         Learn grammar by building real engineering sentences
       </div>
     </div>
@@ -33,7 +33,11 @@ export const GrammarHeader = ({
           <button
             key={cefrLevel}
             type="button"
-            className={`flex shrink-0 items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition-colors ${cefrLevel === level ? 'border-primary/40 bg-primary/5 text-primary' : 'border-border-soft bg-surface text-muted-copy hover:text-foreground'}`}
+            className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-xs font-bold transition-colors cursor-pointer ${
+              cefrLevel === level
+                ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
+                : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+            }`}
           >
             <span>{cefrLevel}</span>
             <span className="text-[10px] opacity-60">
@@ -48,8 +52,8 @@ export const GrammarHeader = ({
           id="grammar-search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="min-h-10 w-full rounded-lg border border-border-soft bg-surface px-10 text-sm outline-none focus:border-primary/50"
-          placeholder="Search..."
+          className="min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
+          placeholder="Search grammar concepts..."
         />
       </label>
     </div>
