@@ -2,6 +2,14 @@
 export default {
   forbidden: [
     {
+      name: 'no-circular',
+      comment:
+        'Barrel export * döngüsel bağımlılık üretir. Named export kullan veya doğrudan dosyadan import et.',
+      severity: 'error',
+      from: {},
+      to: { circular: true },
+    },
+    {
       name: 'no-ui-imports-from-backend',
       comment:
         'Frontend UI code (src/) must not import from backend (backend/). These are separate deployment targets.',
