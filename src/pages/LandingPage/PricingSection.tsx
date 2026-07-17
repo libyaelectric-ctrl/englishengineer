@@ -30,65 +30,81 @@ const PLANS = [
 
 export function PricingSection() {
   return (
-    <section className="border-t border-black/[0.06] px-6 py-12 md:px-12 lg:py-16">
+    <section
+      id="pricing"
+      className="border-t border-[#d9d9e3] bg-[#faf8ff] px-6 py-12 md:px-12 md:py-20"
+    >
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Pricing"
           title={<>Start free. Upgrade when ready.</>}
           align="center"
         />
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 items-stretch">
           {PLANS.map((plan, index) => (
             <AnimatedCard
               key={plan.name}
               delay={index * 70}
               dark={plan.primary}
-              className="flex min-h-[280px] flex-col p-6"
+              className={`flex flex-col p-6 h-full justify-between transition-all duration-300 ${
+                plan.primary ? 'border-t-4 border-t-[#0047bb] shadow-md' : ''
+              }`}
             >
-              <div className="relative z-10 flex items-center justify-between">
-                <h3 className="text-base font-medium">{plan.name}</h3>
-                {plan.primary ? (
-                  <span className="rounded-full bg-white/15 px-2 py-0.5 text-[9px] font-medium text-white/75">
-                    Popular
-                  </span>
-                ) : null}
-              </div>
-              <div className="relative z-10 mt-5">
-                <span className="text-3xl font-light">{plan.price}</span>
-                <span
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <div className="relative z-10 flex items-center justify-between">
+                    <h3 className="text-base font-bold uppercase tracking-wider">
+                      {plan.name}
+                    </h3>
+                    {plan.primary ? (
+                      <span className="rounded-[4px] bg-[#0047bb]/20 border border-[#0047bb] px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider animate-pulse">
+                        Recommended
+                      </span>
+                    ) : null}
+                  </div>
+                  <div className="relative z-10 mt-5">
+                    <span className="text-4xl font-black tracking-tight">
+                      {plan.price}
+                    </span>
+                    <span
+                      className={
+                        plan.primary
+                          ? 'ml-1.5 text-xs text-white/50 font-mono'
+                          : 'ml-1.5 text-xs text-black/40 font-mono'
+                      }
+                    >
+                      {plan.period}
+                    </span>
+                  </div>
+                  <ul className="relative z-10 mt-6 mb-8 space-y-2.5">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className={
+                          plan.primary
+                            ? 'flex items-center gap-2 text-xs text-white/80'
+                            : 'flex items-center gap-2 text-xs text-black/70'
+                        }
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 shrink-0 rounded-full ${plan.primary ? 'bg-white' : 'bg-[#0047bb]'}`}
+                        />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <Link
+                  to="/pricing"
                   className={
                     plan.primary
-                      ? 'ml-1.5 text-xs text-white/45'
-                      : 'ml-1.5 text-xs text-black/42'
+                      ? 'relative z-10 w-full rounded-[4px] bg-[#0047bb] px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#0047bb]/90'
+                      : 'relative z-10 w-full rounded-[4px] border border-black/10 px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-black/60 transition hover:bg-black/[0.04] hover:text-black'
                   }
                 >
-                  {plan.period}
-                </span>
+                  {plan.cta}
+                </Link>
               </div>
-              <ul className="relative z-10 mt-5 space-y-2">
-                {plan.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className={
-                      plan.primary
-                        ? 'flex items-center gap-2 text-xs text-white/76'
-                        : 'flex items-center gap-2 text-xs text-black/60'
-                    }
-                  >
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                to="/pricing"
-                className={
-                  plan.primary
-                    ? 'relative z-10 mt-auto rounded-xl bg-white px-4 py-2.5 text-center text-xs font-semibold text-[#111] transition hover:bg-white/90'
-                    : 'relative z-10 mt-auto rounded-xl border border-black/10 px-4 py-2.5 text-center text-xs font-semibold text-black/60 transition hover:bg-black/[0.04] hover:text-black'
-                }
-              >
-                {plan.cta}
-              </Link>
             </AnimatedCard>
           ))}
         </div>
