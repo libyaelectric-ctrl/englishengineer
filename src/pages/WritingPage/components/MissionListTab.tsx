@@ -48,7 +48,7 @@ export const MissionListTab = ({
       />
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-black text-foreground tracking-tight">
+          <h3 className="text-xl font-bold text-foreground tracking-tight">
             Technical Mission Library
           </h3>
           <p className="text-xs text-muted-copy mt-0.5 font-medium">
@@ -60,7 +60,7 @@ export const MissionListTab = ({
           <Button
             variant="outline"
             onClick={resetAllWritingProgress}
-            className="text-xs h-9 text-rose-400 border-rose-500/30 hover:bg-rose-500/10"
+            className="text-xs h-9 text-rose-400 border-rose-500/30 hover:bg-rose-500/10 rounded-[4px] cursor-pointer"
           >
             Reset Progress
           </Button>
@@ -76,14 +76,14 @@ export const MissionListTab = ({
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-border-soft">
-                  <th className="py-2 text-left font-medium text-muted-copy">
+                <tr className="border-b border-[#d9d9e3]">
+                  <th className="py-2 text-left font-bold text-muted-copy uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="py-2 text-left font-medium text-muted-copy">
+                  <th className="py-2 text-left font-bold text-muted-copy uppercase tracking-wider">
                     Word Count
                   </th>
-                  <th className="py-2 text-left font-medium text-muted-copy">
+                  <th className="py-2 text-left font-bold text-muted-copy uppercase tracking-wider">
                     Score
                   </th>
                 </tr>
@@ -92,11 +92,13 @@ export const MissionListTab = ({
                 {writingHistory.map((entry, i) => (
                   <tr
                     key={i}
-                    className="border-b border-border-soft last:border-0"
+                    className="border-b border-[#d9d9e3] last:border-0"
                   >
                     <td className="py-2 text-foreground">{entry.date}</td>
-                    <td className="py-2 text-foreground">{entry.wordCount}</td>
-                    <td className="py-2 text-foreground">
+                    <td className="py-2 text-foreground font-mono font-bold">
+                      {entry.wordCount}
+                    </td>
+                    <td className="py-2 text-foreground font-mono font-bold">
                       {entry.score > 0 ? `${entry.score}%` : '—'}
                     </td>
                   </tr>
@@ -118,7 +120,7 @@ export const MissionListTab = ({
           />
         ))}
         {visibleMissions.length === 0 && (
-          <div className="col-span-full rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-muted-copy">
+          <div className="col-span-full rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-sm text-muted-copy">
             No current-level content yet. No Writing missions are available for
             this filter.
           </div>
