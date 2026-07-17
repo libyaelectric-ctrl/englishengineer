@@ -15,9 +15,9 @@ interface NavigationProps {
 
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
-    'group relative flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
+    'group relative flex min-h-9 items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium transition-all duration-150',
     isActive
-      ? 'bg-primary/10 text-primary border border-primary/20 font-semibold'
+      ? 'bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/25 font-semibold'
       : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
   );
 
@@ -68,7 +68,7 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
             <button
               type="button"
               onClick={() => toggleMenu(item.label)}
-              className="group flex min-h-9 w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground"
+              className="group flex min-h-9 w-full items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium text-muted-copy transition-all hover:bg-surface-hover hover:text-foreground"
               aria-expanded={isOpen}
             >
               <Icon className="h-4 w-4 shrink-0" />
@@ -81,7 +81,7 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
               />
             </button>
             {isOpen && 'children' in item && (
-              <div className="ml-4 space-y-0.5 border-l border-border-soft pl-3">
+              <div className="ml-4 space-y-0.5 border-l border-[#d9d9e3] pl-3">
                 {item.children.map((child) => (
                   <NavLink
                     key={child.label}

@@ -74,12 +74,12 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
   };
 
   return (
-    <div className="mt-3 rounded-lg border border-border-soft bg-surface-hover p-3 text-xs text-muted-copy">
+    <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-3 text-xs text-muted-copy shadow-sm">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={showDetails}
-        className="flex w-full items-center justify-between font-bold text-foreground"
+        className="flex w-full items-center justify-between font-bold text-foreground cursor-pointer"
       >
         Word details
         <ChevronDown
@@ -128,18 +128,18 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
           </dl>
 
           {/* AI Vocab Tutor Chat */}
-          <div className="mt-4 border-t border-border-soft pt-4">
+          <div className="mt-4 border-t border-[#d9d9e3] pt-4">
             <h4 className="text-xs font-black uppercase tracking-wide text-foreground">
               AI Vocabulary Teacher
             </h4>
-            <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-lg border border-border-soft bg-background p-2.5">
+            <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-[#d9d9e3] bg-background p-2.5">
               {messages.map((msg, i) => (
                 <div
                   key={i}
                   className={cn(
-                    'flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs leading-5',
+                    'flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs leading-relaxed',
                     msg.role === 'assistant'
-                      ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
+                      ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
                       : 'bg-foreground text-background ml-auto'
                   )}
                 >
@@ -150,7 +150,7 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
                 </div>
               ))}
               {isTalking && (
-                <div className="flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
+                <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto animate-pulse">
                   <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
                     AI Teacher 🎓
                   </p>
@@ -168,11 +168,12 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
                 }}
                 disabled={isTalking}
                 placeholder="Type your sentence, translation, or question..."
-                className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
+                className="flex-1 rounded-[4px] border border-[#d9d9e3] bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
               />
               <Button
                 onClick={handleSend}
                 disabled={!chatInput.trim() || isTalking}
+                className="rounded-[4px]"
               >
                 <Send className="h-3.5 w-3.5" />
               </Button>

@@ -37,7 +37,7 @@ export const EmailPasswordForm = ({
   <>
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="mb-1.5 block text-xs font-medium text-foreground">
+        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-foreground">
           {copy.emailLabel}
         </label>
         <div className="relative">
@@ -46,7 +46,7 @@ export const EmailPasswordForm = ({
             type="email"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
-            className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
+            className="h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm"
             placeholder="you@example.com"
           />
         </div>
@@ -54,13 +54,13 @@ export const EmailPasswordForm = ({
 
       <div>
         <div className="flex items-center justify-between">
-          <label className="mb-1.5 block text-xs font-medium text-foreground">
+          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-foreground">
             {copy.passwordLabel}
           </label>
           {!isSignUpMode && (
             <button
               type="button"
-              className="text-xs text-muted-copy hover:text-foreground transition-colors"
+              className="text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors"
             >
               {copy.forgotPassword}
             </button>
@@ -72,7 +72,7 @@ export const EmailPasswordForm = ({
             type="password"
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
-            className="h-11 w-full rounded-lg border border-border-soft bg-surface pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-border-hover transition-colors"
+            className="h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm"
             placeholder="••••••••"
           />
         </div>
@@ -81,7 +81,7 @@ export const EmailPasswordForm = ({
       <Button
         type="submit"
         disabled={isLoading || isLocalAuthBlocked}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-foreground text-sm font-medium text-background hover:opacity-90 transition-opacity"
+        className="flex h-10 w-full items-center justify-center gap-2 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
       >
         {isLoading
           ? 'Loading...'
@@ -96,7 +96,7 @@ export const EmailPasswordForm = ({
       <button
         type="button"
         onClick={onShowSsoForm}
-        className="w-full text-center text-xs font-medium text-muted-copy hover:text-foreground transition-colors pt-2"
+        className="w-full text-center text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors pt-2"
       >
         Sign in with Single Sign-On (SSO)
       </button>

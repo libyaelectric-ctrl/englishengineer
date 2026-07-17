@@ -88,8 +88,8 @@ export const ProgressMetrics = ({ summary }: ProgressMetricsProps) => (
         statusColor="amber"
       />
     </div>
-    <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-      <p className="text-sm font-black text-emerald-950">
+    <div className="mt-4 rounded-[4px] border border-emerald-200 bg-emerald-50 p-4">
+      <p className="text-sm font-bold text-emerald-950">
         Mastered: {summary.mastered} / {summary.total}
       </p>
       <p className="mt-1 text-xs text-emerald-800">

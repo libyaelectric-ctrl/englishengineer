@@ -31,12 +31,12 @@ export const AnalyticsChartsSection = ({
       subtitle="Derived from existing learning, vocabulary, achievement, and AI Coach state"
       icon={BarChart3}
       headerActions={
-        <div className="flex flex-wrap gap-1 rounded-xl border border-border-soft bg-surface-hover p-1">
+        <div className="flex flex-wrap gap-1 rounded-[4px] border border-[#d9d9e3] bg-white p-1 shadow-sm">
           {chartTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveChart(tab.id)}
-              className={`px-3 py-1.5 text-xs font-mono font-medium rounded-lg uppercase tracking-wider transition-all cursor-pointer ${activeChart === tab.id ? 'bg-primary text-white' : 'text-muted-copy hover:bg-surface-hover hover:text-primary'}`}
+              className={`px-3 py-1.5 text-xs font-mono font-bold rounded-[4px] uppercase tracking-wider transition-all cursor-pointer ${activeChart === tab.id ? 'bg-[#0047bb] text-white border border-[#0047bb]' : 'text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
             >
               {tab.label}
             </button>
@@ -76,10 +76,10 @@ export const AnalyticsChartsSection = ({
               {analytics.skillRadar.map((skill) => (
                 <div
                   key={skill.module}
-                  className="rounded-xl border border-border-soft bg-surface-hover p-4"
+                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-medium text-foreground">
+                    <h4 className="text-sm font-bold text-foreground">
                       {skill.module}
                     </h4>
                     <span

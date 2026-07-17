@@ -55,7 +55,7 @@ export function WordSetSection({
             aria-label="Learning set domain"
             value={learningDomain}
             onChange={(event) => onDomainChange(event.target.value)}
-            className="min-h-8 rounded-lg border border-border-soft bg-surface px-2 text-xs font-semibold text-foreground"
+            className="min-h-8 rounded-[4px] border border-[#d9d9e3] bg-white px-2 text-xs font-semibold text-foreground cursor-pointer outline-none focus:border-[#0047bb]"
           >
             {filterOptions('domain').map((item) => (
               <option key={item}>{item}</option>
@@ -65,7 +65,7 @@ export function WordSetSection({
       }
     >
       {loadError && (
-        <p className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+        <p className="rounded-[4px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
           {loadError}
         </p>
       )}
@@ -73,7 +73,7 @@ export function WordSetSection({
         <p className="text-sm text-foreground0">Loading canonical words...</p>
       )}
       {terms.length > 0 && wordSet.length === 0 && (
-        <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-sm text-muted-copy">
+        <p className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-white/60 p-8 text-center text-sm text-muted-copy">
           No words currently have {activeTab.toLowerCase()} status. Select New
           to begin a ten-word set.
         </p>
@@ -102,13 +102,21 @@ export function WordSetSection({
               ))}
             </AnimatePresence>
           </div>
-          <div className="flex justify-end border-t border-border-soft pt-4 gap-2">
+          <div className="flex justify-end border-t border-[#d9d9e3] pt-4 gap-2">
             {wordSet.length > 0 && (
-              <Button variant="outline" onClick={onExportCSV}>
+              <Button
+                variant="outline"
+                className="rounded-[4px]"
+                onClick={onExportCSV}
+              >
                 Export as CSV
               </Button>
             )}
-            <Button variant="outline" onClick={onLoadNextBatch}>
+            <Button
+              variant="outline"
+              className="rounded-[4px]"
+              onClick={onLoadNextBatch}
+            >
               Next 9-word batch
             </Button>
           </div>

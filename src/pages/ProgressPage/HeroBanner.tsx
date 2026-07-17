@@ -28,8 +28,8 @@ export const HeroBanner = ({
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border-soft bg-surface p-5 shadow-sm">
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+    <div className="relative overflow-hidden rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-[#0047bb]/5 rounded-full blur-3xl" />
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
           <svg className="w-32 h-32 -rotate-90">
@@ -37,14 +37,14 @@ export const HeroBanner = ({
               cx="64"
               cy="64"
               r="56"
-              className="stroke-border-soft fill-none"
+              className="stroke-[#d9d9e3] fill-none"
               strokeWidth="5"
             />
             <motion.circle
               cx="64"
               cy="64"
               r="56"
-              className="stroke-primary fill-none"
+              className="stroke-[#0047bb] fill-none"
               strokeWidth="5"
               strokeLinecap="round"
               strokeDasharray={2 * Math.PI * 56}
@@ -57,7 +57,7 @@ export const HeroBanner = ({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-black text-foreground tabular-nums">
+            <span className="text-3xl font-bold text-foreground tabular-nums">
               {animatedTotalElo}
             </span>
             <span className="text-[10px] text-muted-copy font-bold uppercase">
@@ -68,11 +68,11 @@ export const HeroBanner = ({
         <div className="flex-1 text-center md:text-left">
           <div className="flex flex-wrap items-center gap-2 justify-center md:justify-start mb-2">
             <span
-              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}
+              className={`inline-flex items-center gap-1 rounded-[4px] border px-2.5 py-0.5 text-xs font-bold ${rank.color}`}
             >
               {rank.icon} {rank.label}
             </span>
-            <span className="inline-flex items-center rounded-full border border-border-soft bg-background px-2 py-0.5 text-xs font-bold text-foreground">
+            <span className="inline-flex items-center rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-xs font-bold text-foreground">
               CEFR {totalCEFR}
             </span>
           </div>
@@ -88,14 +88,14 @@ export const HeroBanner = ({
             <span className="text-[10px] font-bold text-muted-copy">
               {totalCEFR}
             </span>
-            <div className="flex-1 h-1.5 rounded-full bg-surface-hover overflow-hidden">
+            <div className="flex-1 h-1.5 rounded-[4px] bg-[#d9d9e3] overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{
                   width: `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%`,
                 }}
                 transition={{ duration: 1.5, ease: 'easeOut' }}
-                className="h-full rounded-full bg-gradient-to-r from-primary to-indigo-400"
+                className="h-full rounded-[4px] bg-[#0047bb]"
               />
             </div>
             <span className="text-[10px] font-bold text-muted-copy">

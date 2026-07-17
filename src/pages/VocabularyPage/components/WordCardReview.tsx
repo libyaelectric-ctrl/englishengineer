@@ -23,7 +23,7 @@ export const LearningReview = ({
 }: LearningReviewProps) => (
   <div className="mt-3 space-y-2">
     <div className="flex items-center gap-2">
-      <span className="text-sm tracking-widest text-primary">
+      <span className="text-sm tracking-widest text-[#0047bb]">
         {'●'.repeat(Math.min(progress.correctReviews, 5))}
         {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
       </span>
@@ -35,14 +35,14 @@ export const LearningReview = ({
       <div className="grid grid-cols-2 gap-2">
         <Button
           variant="success"
-          className="px-3"
+          className="px-3 rounded-[4px]"
           onClick={() => onReview(term, true)}
         >
           <CheckCircle2 className="h-4 w-4" /> Remembered
         </Button>
         <Button
           variant="danger"
-          className="px-3"
+          className="px-3 rounded-[4px]"
           onClick={() => onReview(term, false)}
         >
           <XCircle className="h-4 w-4" /> Review again
@@ -53,7 +53,7 @@ export const LearningReview = ({
 );
 
 export const MasteredBadge = () => (
-  <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+  <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 uppercase tracking-wider">
     <span>🏆</span>
     Reading & Writing havuzuna eklendi
   </div>
@@ -72,7 +72,7 @@ export const ReviewReasonBanner = ({
   term: VocabularyTerm;
   progress: VocabularyMenuProgress;
 }) => (
-  <div className="mt-3 rounded-[10px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950">
+  <div className="mt-3 rounded-[4px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950">
     <span className="font-black">Why review now: </span>
     {getVocabularyReviewReason(progress)}
   </div>
@@ -100,20 +100,24 @@ export const QuizForm = ({
   onLearn,
 }: QuizFormProps) => (
   <form onSubmit={onSubmit} className="mt-4 space-y-2">
-    <Button type="button" className="w-full" onClick={() => onLearn?.(term)}>
+    <Button
+      type="button"
+      className="w-full rounded-[4px]"
+      onClick={() => onLearn?.(term)}
+    >
       <CheckCircle2 className="h-4 w-4" /> Learn this word
     </Button>
     <Button
       type="button"
       variant="outline"
-      className="w-full"
+      className="w-full rounded-[4px]"
       onClick={() => onSetKnowThisCheck(true)}
     >
       I Know This — Take Mini Quiz
     </Button>
     <p
       style={{ display: knowThisCheck ? undefined : 'none' }}
-      className="text-xs font-semibold text-primary"
+      className="text-xs font-semibold text-[#0047bb]"
     >
       Use the mini quiz if you want to check recall before saving.
     </p>
@@ -123,10 +127,14 @@ export const QuizForm = ({
         value={answer}
         disabled={quizResult !== null}
         onChange={(event) => onAnswerChange(event.target.value)}
-        className="mt-1 min-h-10 w-full rounded-lg border border-border-soft px-3 font-normal"
+        className="mt-1 min-h-10 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb]"
       />
     </label>
-    <Button type="submit" className="w-full" disabled={!answer.trim()}>
+    <Button
+      type="submit"
+      className="w-full rounded-[4px]"
+      disabled={!answer.trim()}
+    >
       Check answer
     </Button>
     {quizResult !== null && (
@@ -148,7 +156,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
   <div className="mt-4 grid grid-cols-2 gap-2">
     <Button
       variant="success"
-      className="px-3"
+      className="px-3 rounded-[4px]"
       aria-label={`Mark ${term.term} remembered`}
       onClick={() => onReview(term, true)}
     >
@@ -156,7 +164,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
     </Button>
     <Button
       variant="danger"
-      className="px-3"
+      className="px-3 rounded-[4px]"
       aria-label={`Review ${term.term} again`}
       onClick={() => onReview(term, false)}
     >

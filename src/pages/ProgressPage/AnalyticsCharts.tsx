@@ -4,8 +4,8 @@ import type { AnalyticsTimelinePoint } from '@/features/analytics';
 export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
   const maxValue = Math.max(...values, 1);
   return (
-    <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
-      <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
+    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+      <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
         Weekly Activity
       </p>
       <div className="h-36 flex items-end gap-2 mt-5">
@@ -15,10 +15,10 @@ export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
             className="flex-1 flex flex-col items-center gap-2"
           >
             <div
-              className="w-full rounded-t bg-primary/80 min-h-[6px]"
+              className="w-full rounded-t bg-[#0047bb]/80 min-h-[6px]"
               style={{ height: `${Math.max(6, (value / maxValue) * 120)}px` }}
             />
-            <span className="text-[9px] font-mono text-muted-copy">
+            <span className="text-[9px] font-mono text-muted-copy font-bold">
               {value}m
             </span>
           </div>
@@ -33,8 +33,8 @@ export const StudyHeatmap = ({
 }: {
   values: Array<{ date: string; count: number }>;
 }) => (
-  <div className="rounded-xl border border-border-soft bg-surface-hover p-5">
-    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
+  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+    <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
       Study Heatmap
     </p>
     <div className="grid grid-cols-7 gap-2 mt-5">
@@ -42,14 +42,14 @@ export const StudyHeatmap = ({
         <div
           key={item.date}
           title={`${item.date}: ${item.count} sessions`}
-          className={`aspect-square rounded-md border border-border-soft ${
+          className={`aspect-square rounded-[4px] border border-[#d9d9e3] ${
             item.count >= 3
               ? 'bg-success'
               : item.count === 2
-                ? 'bg-primary'
+                ? 'bg-[#0047bb]'
                 : item.count === 1
-                  ? 'bg-primary/40'
-                  : 'bg-surface-hover'
+                  ? 'bg-[#0047bb]/40'
+                  : 'bg-[#faf8ff]'
           }`}
         />
       ))}
@@ -79,8 +79,8 @@ export const SkillRadar = ({
   const polygon = points.map((point) => `${point.x},${point.y}`).join(' ');
 
   return (
-    <div className="overflow-x-auto rounded-xl border border-border-soft bg-surface-hover p-5">
-      <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-medium">
+    <div className="overflow-x-auto rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+      <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
         Skill Radar
       </p>
       <svg viewBox={`0 0 ${size} ${size}`} className="mx-auto mt-4 h-64 w-64">
@@ -91,25 +91,25 @@ export const SkillRadar = ({
             cy={center}
             r={radius * ratio}
             fill="none"
-            stroke="var(--border-soft)"
+            stroke="#d9d9e3"
             strokeWidth="1"
           />
         ))}
         <polygon
           points={polygon}
-          fill="rgba(59,130,246,0.15)"
-          stroke="var(--primary)"
+          fill="rgba(0, 71, 187, 0.15)"
+          stroke="#0047bb"
           strokeWidth="2"
         />
         {points.map((point) => (
           <g key={point.skill.module}>
-            <circle cx={point.x} cy={point.y} r="4" fill="var(--primary)" />
+            <circle cx={point.x} cy={point.y} r="4" fill="#0047bb" />
             <text
               x={point.labelX}
               y={point.labelY}
               textAnchor="middle"
               fill="var(--muted-copy)"
-              className="text-[9px] font-mono"
+              className="text-[9px] font-bold font-mono"
             >
               {point.skill.module}
             </text>
@@ -133,8 +133,8 @@ export const TimelinePanel = ({
 }) => (
   <div className="space-y-5">
     <div className="flex items-center gap-2 text-foreground">
-      <Icon className="h-5 w-5 text-primary" />
-      <h3 className="text-lg font-medium">{title}</h3>
+      <Icon className="h-5 w-5 text-[#0047bb]" />
+      <h3 className="text-lg font-bold">{title}</h3>
     </div>
     <LineSvg points={points} />
     <div className="space-y-3 max-h-64 overflow-y-auto custom-scrollbar pr-2">
@@ -145,17 +145,15 @@ export const TimelinePanel = ({
         .map((point) => (
           <div
             key={`${point.date}-${point.label}-${point.value}`}
-            className="flex items-center justify-between rounded-xl border border-border-soft bg-surface-hover p-3"
+            className="flex items-center justify-between rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
           >
             <div>
-              <p className="text-xs font-medium text-foreground">
-                {point.label}
-              </p>
+              <p className="text-xs font-bold text-foreground">{point.label}</p>
               <p className="text-[9px] font-mono text-muted-copy">
                 {point.date}
               </p>
             </div>
-            <span className="text-xs font-mono font-medium text-primary">
+            <span className="text-xs font-mono font-bold text-[#0047bb]">
               {point.value}
             </span>
           </div>
@@ -193,7 +191,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
     .join(' ');
 
   return (
-    <div className="relative overflow-x-auto rounded-xl border border-border-soft bg-surface-hover p-4">
+    <div className="relative overflow-x-auto rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-44 overflow-visible"
@@ -201,7 +199,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
         <path
           d={path}
           fill="none"
-          stroke="var(--primary)"
+          stroke="#0047bb"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -213,7 +211,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
               cy={item.y}
               r="4"
               fill="var(--foreground)"
-              stroke="var(--primary)"
+              stroke="#0047bb"
               strokeWidth="2"
             />
           </g>
