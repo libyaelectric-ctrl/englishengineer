@@ -19,19 +19,21 @@ export function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-1 border-b border-border-soft pb-4">
+    <div className="mb-6 flex flex-col gap-1 border-b border-[#d9d9e3] pb-4 font-sans">
       <div className="flex items-center gap-3">
         {icon && (
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-surface border border-border-soft text-xl shadow-sm">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] bg-white border border-[#d9d9e3] text-xl shadow-sm">
             {icon}
           </div>
         )}
-        <h1 className="text-2xl font-bold tracking-tight">{title}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          {title}
+        </h1>
         {badgeText && (
           <span
             className={cn(
-              'rounded-full border px-2 py-0.5 text-[10px] font-medium',
-              badgeColor
+              'rounded-[4px] border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider',
+              badgeColor || 'border-[#d9d9e3] bg-[#faf8ff] text-muted-copy'
             )}
           >
             {badgeText}
@@ -42,7 +44,7 @@ export function PageHeader({
         {description && (
           <p
             className={cn(
-              'text-muted-copy text-sm max-w-2xl',
+              'text-muted-copy text-xs font-medium max-w-2xl mt-1',
               icon && 'ml-[52px]'
             )}
           >

@@ -67,7 +67,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative font-sans">
       {/* Trigger */}
       <button
         type="button"
@@ -75,10 +75,10 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((v) => !v)}
-        className="flex items-center gap-2 rounded-[8px] border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground hover:bg-surface-hover transition-colors"
+        className="flex items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] cursor-pointer transition-colors shadow-sm"
       >
         <FolderOpen
-          className="h-3.5 w-3.5 text-primary shrink-0"
+          className="h-3.5 w-3.5 text-[#0047bb] shrink-0"
           aria-hidden="true"
         />
         <span className="max-w-[140px] truncate">
@@ -95,16 +95,16 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
         <div
           role="listbox"
           aria-label="Project Workspaces"
-          className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-[10px] border border-border-soft bg-surface shadow-xl shadow-black/10 overflow-hidden"
+          className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-[4px] border border-[#d9d9e3] bg-white shadow-xl shadow-black/10 overflow-hidden"
         >
-          <div className="border-b border-border-soft px-3 py-2 flex items-center justify-between">
-            <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
+          <div className="border-b border-[#d9d9e3] px-3 py-2 flex items-center justify-between">
+            <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
               Project Workspaces
             </p>
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="text-muted-copy hover:text-foreground"
+              className="text-muted-copy hover:text-foreground cursor-pointer"
               aria-label="Close workspace menu"
             >
               <X className="h-3 w-3" />
@@ -119,15 +119,15 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                   role="option"
                   aria-selected={ws.id === activeWorkspaceId}
                   onClick={() => handleSwitch(ws)}
-                  className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-xs transition-colors hover:bg-surface-hover/60 ${
+                  className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-xs transition-colors hover:bg-[#faf8ff] cursor-pointer ${
                     ws.id === activeWorkspaceId
-                      ? 'bg-primary/5 font-semibold text-primary'
+                      ? 'bg-[#0047bb]/5 font-bold text-[#0047bb]'
                       : 'text-foreground'
                   }`}
                 >
                   <span className="flex items-center gap-2 min-w-0">
                     <FolderOpen
-                      className="h-3 w-3 shrink-0"
+                      className="h-3 w-3 shrink-0 text-muted-copy"
                       aria-hidden="true"
                     />
                     <span className="truncate">{ws.name}</span>
@@ -137,7 +137,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                       type="button"
                       onClick={(e) => handleDelete(e, ws.id)}
                       aria-label={`Delete workspace ${ws.name}`}
-                      className="shrink-0 rounded p-0.5 text-muted-copy hover:text-error hover:bg-error/10 transition-colors"
+                      className="shrink-0 rounded-[4px] p-0.5 text-muted-copy hover:text-error hover:bg-error/10 transition-colors border border-transparent hover:border-error/20 cursor-pointer"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
@@ -149,7 +149,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
 
           {/* Create new workspace */}
           {canCreate && (
-            <div className="border-t border-border-soft p-2">
+            <div className="border-t border-[#d9d9e3] p-2">
               {showCreate ? (
                 <div className="flex flex-col gap-1.5">
                   <input
@@ -164,10 +164,10 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                     }}
                     autoFocus
                     aria-label="New workspace name"
-                    className="w-full rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
                   />
                   {createError && (
-                    <p className="text-[10px] text-error leading-4">
+                    <p className="text-[10px] text-error font-bold uppercase tracking-wider leading-4">
                       {createError}
                     </p>
                   )}
@@ -175,7 +175,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                     <button
                       type="button"
                       onClick={handleCreate}
-                      className="flex-1 rounded-[6px] bg-primary px-2 py-1 text-[10px] font-bold text-white hover:bg-primary/90 transition-colors"
+                      className="flex-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
                     >
                       Create
                     </button>
@@ -185,7 +185,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                         setShowCreate(false);
                         setCreateError(null);
                       }}
-                      className="rounded-[6px] border border-border-soft px-2 py-1 text-[10px] text-muted-copy hover:text-foreground transition-colors"
+                      className="rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
                     >
                       Cancel
                     </button>
@@ -195,12 +195,12 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                 <button
                   type="button"
                   onClick={() => setShowCreate(true)}
-                  className="flex w-full items-center gap-1.5 rounded-[6px] px-2 py-1.5 text-xs text-primary hover:bg-primary/5 transition-colors font-medium"
+                  className="flex w-full items-center gap-1.5 rounded-[4px] px-2 py-1.5 text-xs text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors font-bold uppercase tracking-wider cursor-pointer border border-[#d9d9e3] bg-white shadow-sm"
                 >
                   <Plus className="h-3 w-3" aria-hidden="true" />
                   New Workspace
                   {limit !== null && (
-                    <span className="ml-auto text-[10px] text-muted-copy">
+                    <span className="ml-auto text-[10px] text-muted-copy font-bold">
                       {workspaces.length}/{limit}
                     </span>
                   )}
@@ -210,8 +210,8 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
           )}
 
           {!canCreate && (
-            <div className="border-t border-border-soft px-3 py-2">
-              <p className="text-[10px] leading-4 text-muted-copy">
+            <div className="border-t border-[#d9d9e3] px-3 py-2">
+              <p className="text-[10px] leading-4 text-muted-copy font-bold uppercase tracking-wider">
                 {limit === 1
                   ? 'Upgrade to Project ($39) for up to 3 workspaces.'
                   : `Workspace limit reached (${limit}).`}
@@ -219,9 +219,9 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
             </div>
           )}
 
-          <div className="border-t border-border-soft px-3 py-2">
-            <p className="text-[10px] text-muted-copy leading-4">
-              <span className="font-semibold text-foreground">
+          <div className="border-t border-[#d9d9e3] px-3 py-2">
+            <p className="text-[10px] text-muted-copy leading-4 font-mono font-medium">
+              <span className="font-bold text-foreground">
                 {activeWorkspace?.name}
               </span>
               {' · '}

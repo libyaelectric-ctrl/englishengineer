@@ -15,11 +15,11 @@ const ProgressPage = () => {
   return (
     <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Fixed Header with Tabs */}
-      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex items-center justify-between py-3">
+      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-[#faf8ff] py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-foreground">Progress Hub</h1>
-            <p className="text-xs text-muted-copy">
+            <h1 className="text-2xl font-bold text-foreground">Progress Hub</h1>
+            <p className="text-xs text-muted-copy font-medium mt-0.5">
               Analytics, milestones, and next steps.
             </p>
           </div>
