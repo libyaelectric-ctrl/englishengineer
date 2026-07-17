@@ -355,7 +355,14 @@ export const WorkspaceTab = ({
                     {activeCorrections.map((alert) => (
                       <div
                         key={alert.id}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => setSelectedRule(alert)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setSelectedRule(alert);
+                          }
+                        }}
                         className="group relative cursor-pointer space-y-3 rounded-xl border border-border-soft bg-surface p-4 shadow-sm transition-all hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/60"
                       >
                         <div className="flex items-start gap-2.5 text-xs">

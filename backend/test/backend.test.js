@@ -349,6 +349,7 @@ const productionAuthEnvironment = {
 
 const internalHeaders = (userId = 'user-authenticated') => ({
   Authorization: 'Bearer internal-test-secret',
+  'X-Forwarded-Proto': 'https',
   'X-EngineerOS-User-Id': userId,
   'Content-Type': 'application/json',
 });
@@ -357,7 +358,10 @@ test('production AI routes reject missing authentication while billing status fa
   const url = await start(productionAuthEnvironment);
   const aiResponse = await fetch(`${url}/api/ai/coach`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Forwarded-Proto': 'https',
+    },
     body: JSON.stringify({ prompt: 'Prepare an update.' }),
   });
   const billingResponse = await fetch(`${url}/api/billing/subscription-status`);

@@ -34,10 +34,11 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
           </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-muted-copy">
+              <label htmlFor="admin-username" className="text-xs font-bold text-muted-copy">
                 Username
               </label>
               <input
+                id="admin-username"
                 type="text"
                 value={username}
                 onChange={(e) => onUsernameChange(e.target.value)}
@@ -46,10 +47,11 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-muted-copy">
+              <label htmlFor="admin-password" className="text-xs font-bold text-muted-copy">
                 Password
               </label>
               <input
+                id="admin-password"
                 type="password"
                 value={password}
                 onChange={(e) => onPasswordChange(e.target.value)}

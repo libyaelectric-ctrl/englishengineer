@@ -52,8 +52,16 @@ export const Sidebar: React.FC = () => {
     <>
       {isSidebarOpen && (
         <div
+          role="button"
+          tabIndex={0}
           className="fixed inset-0 z-30 bg-foreground/10 backdrop-blur-[1px] lg:hidden"
           onClick={toggleSidebar}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              toggleSidebar();
+            }
+          }}
+          aria-label="Close sidebar"
         />
       )}
 

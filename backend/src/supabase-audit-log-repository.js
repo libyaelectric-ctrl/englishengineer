@@ -31,7 +31,9 @@ export const createSupabaseAuditLogRepository = (config) => {
         }))
       );
       if (error) {
-        logger.error('Failed to flush audit log to Supabase', { message: error.message });
+        logger.error('Failed to flush audit log to Supabase', {
+          message: error.message,
+        });
         pendingBatch.unshift(...batch);
       }
     } catch (err) {
