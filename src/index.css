@@ -1,75 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import 'tailwindcss';
 
 :root {
-  /* Soft off-white theme (#F0ECEC) — reduced eye strain */
-  --background: #f0ecec;
-  --foreground: #202124;
+  /* Precision Engineering OS Light Theme */
+  --background: #faf8ff;
+  --foreground: #1c1d22;
 
-  --color-primary: #202124;
-  --color-primary-hover: #3c4043;
-  --color-primary-foreground: #f0ecec;
+  --color-primary: #0047bb;
+  --color-primary-hover: #003bb3;
+  --color-primary-foreground: #faf8ff;
 
-  --color-surface: #f8f9fa;
-  --color-surface-hover: #e8eaed;
-  --color-soft: rgba(0, 0, 0, 0.04);
-  --color-border-soft: #dadce0;
-  --color-border-hover: #bdc1c6;
-  --color-muted-copy: #5f6368;
-  --color-focus: rgba(0, 0, 0, 0.12);
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-surface: #f3f3fd;
+  --color-surface-hover: #e9e9f9;
+  --color-soft: rgba(0, 71, 187, 0.04);
+  --color-border-soft: #d9d9e3;
+  --color-border-hover: #b0b0c5;
+  --color-muted-copy: #5b5d72;
+  --color-focus: rgba(0, 71, 187, 0.1);
+  --color-success: #16a34a;
+  --color-warning: #ea580c;
+  --color-error: #dc2626;
 
   /* Sidebar-specific colors for 3-column distinction */
   --color-sidebar-bg: #ffffff;
-  --color-sidebar-border: #d1d5db;
-  --color-sidebar-inner-border: #e5e7eb;
+  --color-sidebar-border: #d9d9e3;
+  --color-sidebar-inner-border: #e9e9f9;
 
-  --color-engineer-950: #f3f4f6;
-  --color-engineer-900: #e5e7eb;
-  --color-engineer-800: #d1d5db;
-  --color-engineer-700: #9ca3af;
-  --color-engineer-cyan: #1a1a1a;
+  --color-engineer-950: #f3f3fd;
+  --color-engineer-900: #e9e9f9;
+  --color-engineer-800: #d9d9e3;
+  --color-engineer-700: #8f93a9;
+  --color-engineer-cyan: #0047bb;
 
-  --surface: #f8f9fa;
+  --surface: #f3f3fd;
 
-  --radius-button: 8px;
-  --radius-input: 8px;
-  --radius-card: 12px;
-  --radius-dialog: 16px;
+  --radius-button: 4px;
+  --radius-input: 4px;
+  --radius-card: 4px;
+  --radius-dialog: 4px;
 }
 
 .dark {
-  /* Dark theme - Google Dark Mode minimal */
-  --background: #202124;
-  --foreground: #f0ecec;
-  --surface: #303134;
+  /* Precision Engineering OS Dark Theme */
+  --background: #0b0b14;
+  --foreground: #faf8ff;
+  --surface: #161625;
 
-  --color-primary: #8ab4f8;
-  --color-primary-hover: #aecbfa;
-  --color-primary-foreground: #202124;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-primary-foreground: #0b0b14;
 
-  --color-surface: #303134;
-  --color-surface-hover: #3c4043;
-  --color-soft: rgba(255, 255, 255, 0.05);
-  --color-border-soft: #3c4043;
-  --color-border-hover: #5f6368;
-  --color-muted-copy: #9aa0a6;
-  --color-focus: rgba(255, 255, 255, 0.15);
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
+  --color-surface: #161625;
+  --color-surface-hover: #202035;
+  --color-soft: rgba(59, 130, 246, 0.05);
+  --color-border-soft: #2c2c3e;
+  --color-border-hover: #404058;
+  --color-muted-copy: #8f93a9;
+  --color-focus: rgba(59, 130, 246, 0.15);
+  --color-success: #16a34a;
+  --color-warning: #ea580c;
+  --color-error: #dc2626;
 
-  --color-engineer-950: #020617;
-  --color-engineer-900: #0f172a;
-  --color-engineer-800: #1e293b;
-  --color-engineer-700: #334155;
-  --color-engineer-cyan: #38bdf8; /* sky-400 */
+  --color-engineer-950: #05050a;
+  --color-engineer-900: #0b0b14;
+  --color-engineer-800: #161625;
+  --color-engineer-700: #2c2c3e;
+  --color-engineer-cyan: #3b82f6;
 }
 
 @theme {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
   --color-background: var(--background);
@@ -97,10 +97,17 @@
   --color-engineer-700: var(--color-engineer-700);
   --color-engineer-cyan: var(--color-engineer-cyan);
 
-  --radius-button: var(--radius-button);
-  --radius-input: var(--radius-input);
-  --radius-card: var(--radius-card);
-  --radius-dialog: var(--radius-dialog);
+  --radius-xs: 4px;
+  --radius-sm: 4px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-card: 4px;
+  --radius-button: 4px;
+  --radius-input: 4px;
+  --radius-dialog: 4px;
 }
 
 @layer base {
