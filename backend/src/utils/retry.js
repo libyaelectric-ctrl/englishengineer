@@ -42,7 +42,12 @@ export const withRetry = async (fn, options = {}) => {
         maxDelay
       );
 
-      logger.info('Retry attempt', { attempt: attempt + 1, maxRetries, error: error.message, delayMs: Math.round(delay) });
+      logger.info('Retry attempt', {
+        attempt: attempt + 1,
+        maxRetries,
+        error: error.message,
+        delayMs: Math.round(delay),
+      });
 
       await sleep(delay);
     }

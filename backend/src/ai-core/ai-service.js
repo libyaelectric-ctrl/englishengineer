@@ -110,7 +110,11 @@ export const createAIService = (config, fetchImpl = fetch) => ({
         structuredResult = parsed;
         responseText = parsed.professionalVersion || parsed.summary || text;
       } catch (err) {
-        logger.error('Failed to parse AI evaluation structured response', {}, err);
+        logger.error(
+          'Failed to parse AI evaluation structured response',
+          {},
+          err
+        );
       }
     }
 
