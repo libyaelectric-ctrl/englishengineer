@@ -175,7 +175,7 @@ const COMMANDS = [
   {
     id: 'profile-billing',
     label: 'Billing',
-    href: '/profile/billing',
+    href: '/billing',
     icon: 'Wallet',
     category: 'Account',
     keywords: ['fatura'],

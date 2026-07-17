@@ -7,6 +7,7 @@ import {
   ChevronRight,
   BookOpenCheck,
   HardDrive,
+  Wallet,
 } from 'lucide-react';
 import { useAppStore } from '@/store/app.store';
 import { useAuthStore } from '@/features/auth';
@@ -121,24 +122,38 @@ export const Sidebar: React.FC = () => {
             />
           </div>
 
-          {/* User Info + Alarm */}
+          {/* User Info + Alarm + Billing */}
           {currentUser && (
-            <div className="shrink-0 border-t border-[#d9d9e3] p-4">
+            <div className="shrink-0 border-t border-[#d9d9e3] p-4 space-y-2.5">
+              {/* Billing Hub Trigger */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (window.innerWidth < 1024 && isSidebarOpen)
+                    toggleSidebar();
+                  navigate('/billing');
+                }}
+                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-left transition-all hover:border-[#0047bb] hover:bg-[#0047bb]/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
+              >
+                <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
+                <span className="flex-1 truncate">Billing & Plan</span>
+              </button>
+
               {/* Alarm Bell */}
-              <div className="relative mb-3" ref={notificationsRef}>
+              <div className="relative" ref={notificationsRef}>
                 <button
                   type="button"
-                  className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover"
+                  className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm"
                   aria-label="View system notifications"
                   aria-expanded={notificationsOpen}
                   onClick={() => setNotificationsOpen((open) => !open)}
                 >
                   <Bell className="h-5 w-5 shrink-0 text-muted-copy" />
                   <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-medium text-foreground truncate">
+                    <span className="block text-xs font-bold text-foreground truncate">
                       {currentUser.displayName}
                     </span>
-                    <span className="block text-[10px] text-muted-copy capitalize">
+                    <span className="block text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                       {planName} plan
                     </span>
                   </span>
@@ -152,14 +167,14 @@ export const Sidebar: React.FC = () => {
                   >
                     <div className="flex items-center justify-between border-b border-[#d9d9e3] px-4 py-3">
                       <div>
-                        <p className="text-sm font-medium text-foreground">
+                        <p className="text-xs font-bold text-foreground uppercase tracking-wider">
                           Workspace status
                         </p>
-                        <p className="mt-0.5 text-xs text-muted-copy">
+                        <p className="mt-0.5 text-xs text-muted-copy font-medium">
                           No unread system alerts
                         </p>
                       </div>
-                      <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
+                      <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
                         Ready
                       </span>
                     </div>
@@ -167,6 +182,8 @@ export const Sidebar: React.FC = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
+                        if (window.innerWidth < 1024 && isSidebarOpen)
+                          toggleSidebar();
                         navigate('/curriculum');
                       }}
                       className="group flex w-full items-start gap-3 border-b border-[#d9d9e3] px-4 py-3 text-left transition-colors hover:bg-surface-hover"
@@ -175,10 +192,10 @@ export const Sidebar: React.FC = () => {
                         <BookOpenCheck className="h-4 w-4" />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium text-foreground">
+                        <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
                           Learning queue is ready
                         </span>
-                        <span className="mt-0.5 block text-xs text-muted-copy">
+                        <span className="mt-0.5 block text-xs text-muted-copy font-medium">
                           Continue from your current independent skill levels.
                         </span>
                       </span>
@@ -188,6 +205,8 @@ export const Sidebar: React.FC = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
+                        if (window.innerWidth < 1024 && isSidebarOpen)
+                          toggleSidebar();
                         navigate('/profile');
                       }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
@@ -196,10 +215,10 @@ export const Sidebar: React.FC = () => {
                         <HardDrive className="h-4 w-4" />
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-medium text-foreground">
+                        <span className="block text-xs font-bold text-foreground uppercase tracking-wider">
                           Local progress protection
                         </span>
-                        <span className="mt-0.5 block text-xs text-muted-copy">
+                        <span className="mt-0.5 block text-xs text-muted-copy font-medium">
                           Check cloud-sync and account status before changing
                           devices.
                         </span>
@@ -212,10 +231,10 @@ export const Sidebar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
+                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
               >
-                <LogOut className="h-3.5 w-3.5" />
-                <span>Sign Out</span>
+                <LogOut className="h-5 w-5 shrink-0 text-muted-copy" />
+                <span className="flex-1">Sign Out</span>
               </button>
             </div>
           )}
