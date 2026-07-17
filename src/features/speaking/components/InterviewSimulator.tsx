@@ -155,7 +155,6 @@ export const InterviewSimulator = () => {
       setSession(updatedSession);
       setState('results');
     } else {
-      updatedSession.questions = updatedSession.questions;
       setSession(updatedSession);
       setTimeRemaining(
         updatedSession.questions[updatedSession.currentQuestionIndex].timeLimitSeconds
