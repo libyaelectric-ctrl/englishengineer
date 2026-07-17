@@ -24,7 +24,11 @@ export const get = <T = unknown>(key: string): T | null => {
   return item.value as T;
 };
 
-export const set = (key: string, value: unknown, ttlMs: number = defaultTTL): void => {
+export const set = (
+  key: string,
+  value: unknown,
+  ttlMs: number = defaultTTL
+): void => {
   cache.set(key, {
     value,
     expiresAt: Date.now() + ttlMs,
@@ -82,7 +86,8 @@ setInterval(
 export const CACHE_KEYS = {
   USER_SUBSCRIPTION: (userId: string) => `sub:${userId}`,
   USER_PROFILE: (userId: string) => `profile:${userId}`,
-  VOCABULARY_LOOKUP: (level: string, domain: string) => `vocab:${level}:${domain}`,
+  VOCABULARY_LOOKUP: (level: string, domain: string) =>
+    `vocab:${level}:${domain}`,
   HEALTH_CHECK: 'health',
   API_METRICS: 'metrics',
 };
