@@ -231,17 +231,17 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   }, [totalDurationSeconds, updateAudioProgress]);
 
   return (
-    <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
+    <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
-          <Volume2 className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium text-foreground">
+          <Volume2 className="h-4 w-4 text-[#0047bb]" />
+          <span className="text-sm font-bold text-foreground">
             {ListeningHelpers.getAudioFormatLabel(mission.audioUrl)}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 font-bold">
           {isCompleted && (
-            <span className="flex items-center gap-1 text-xs text-emerald-500">
+            <span className="flex items-center gap-1 text-xs text-success">
               <CheckCircle className="h-3 w-3" />
               Completed
             </span>
@@ -255,7 +255,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
       </div>
 
       {audioError ? (
-        <div className="rounded-lg bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-400">
+        <div className="rounded-[4px] bg-rose-500/10 border border-rose-500/30 p-3 text-sm text-rose-400">
           {audioError}
         </div>
       ) : (
@@ -268,12 +268,12 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               max={totalDurationSeconds}
               value={currentTimeSeconds}
               onChange={handleSeek}
-              className="w-full h-1.5 bg-border-soft rounded-full appearance-none cursor-pointer
+              className="w-full h-1.5 bg-[#d9d9e3] rounded-full appearance-none cursor-pointer
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:cursor-pointer"
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[#0047bb] [&::-webkit-slider-thumb]:cursor-pointer"
               disabled={isAudioLoading}
             />
-            <div className="flex justify-between mt-1">
+            <div className="flex justify-between mt-1 font-bold">
               <span className="text-xs text-muted-copy">
                 {ListeningHelpers.formatTime(currentTimeSeconds)}
               </span>
@@ -284,23 +284,25 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
           </div>
 
           {/* Controls */}
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2.5">
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleSkipBack}
               disabled={isAudioLoading}
               title="Back 10s"
               aria-label="Back 10s"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <SkipBack className="h-4 w-4" />
             </Button>
 
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleReplay}
               disabled={isAudioLoading}
               title="Replay"
               aria-label="Replay"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -308,7 +310,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
             <Button
               onClick={handlePlayPause}
               disabled={isAudioLoading}
-              className="h-10 w-10 rounded-full p-0 flex items-center justify-center"
+              className="h-10 w-10 rounded-[4px] p-0 flex items-center justify-center cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white shadow-sm"
               title={isPlaying ? 'Pause' : 'Play'}
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
@@ -320,26 +322,27 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
             </Button>
 
             <Button
-              variant="ghost"
+              variant="outline"
               onClick={handleSkipForward}
               disabled={isAudioLoading}
               title="Forward 10s"
               aria-label="Forward 10s"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <SkipForward className="h-4 w-4" />
             </Button>
           </div>
 
           {/* Speed control */}
-          <div className="flex items-center justify-center gap-1 mt-3">
+          <div className="flex items-center justify-center gap-1.5 mt-3">
             {SPEED_OPTIONS.map((speed) => (
               <button
                 key={speed}
                 onClick={() => handleSpeedChange(speed)}
-                className={`px-2 py-1 text-xs rounded-md transition-colors ${
+                className={`px-2.5 py-1 text-xs rounded-[4px] transition-colors cursor-pointer border ${
                   playbackSpeed === speed
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-surface-hover text-muted-copy hover:text-foreground'
+                    ? 'bg-[#0047bb] text-white border-[#0047bb] font-bold'
+                    : 'bg-white border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                 }`}
               >
                 {speed}x
@@ -349,7 +352,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
         </>
       )}
 
-      <p className="mt-3 text-xs text-center text-muted-copy">
+      <p className="mt-3 text-xs text-center text-muted-copy font-bold uppercase tracking-wider">
         {mission.accentLabel}
       </p>
     </div>
