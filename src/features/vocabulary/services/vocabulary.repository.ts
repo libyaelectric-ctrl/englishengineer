@@ -7,8 +7,8 @@ import {
   includesNormalized,
   type LearningDataSkill,
 } from '@/core/learning';
-import { assertVocabularyTerms } from './vocabulary.schema';
-import type { VocabularyTerm } from './vocabulary.types';
+import { assertVocabularyTerms } from '../types/vocabulary.schema';
+import type { VocabularyTerm } from '../types/vocabulary.types';
 
 const levelCache = new Map<CefrLevel, VocabularyTerm[]>();
 const VOCABULARY_LEVEL_COUNTS: Record<CefrLevel, number> = {

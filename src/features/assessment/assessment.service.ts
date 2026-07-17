@@ -3,7 +3,7 @@ import {
   MissionModule,
   ScoreResult,
 } from '@/core/learning/learning.types';
-import { VocabularyService } from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 import {
   averageScores,
   buildDimensionScore,

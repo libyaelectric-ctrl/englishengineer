@@ -7,7 +7,7 @@ import {
   type VocabularyMenuState,
   type VocabularyMenuStatus,
 } from './vocabulary.menu';
-import type { VocabularyTerm } from './vocabulary.types';
+import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export interface VocabularyLearningSetOptions {
   cefrBand: CefrBand;

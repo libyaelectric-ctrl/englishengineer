@@ -1,12 +1,12 @@
-import type { GrammarRule } from '@/features/grammar';
+import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrLevel } from '@/features/level-system';
 import {
   includesNormalized,
   isCefrAtOrBelow,
   type LearningDataSkill,
 } from '@/core/learning';
-import { VocabularyRepository } from './vocabulary.repository';
-import type { VocabularyTerm } from './vocabulary.types';
+import { VocabularyRepository } from '../services/vocabulary.repository';
+import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const VocabularyEngine = {
   async selectVocabularyForTask(

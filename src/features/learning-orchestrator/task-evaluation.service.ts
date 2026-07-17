@@ -6,7 +6,7 @@ import {
   getCefrBandFromElo,
 } from '@/features/profile/profile.utils';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
+import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import type {
   TaskEvaluationInput,

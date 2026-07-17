@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { isVocabularyResponseCorrect } from './vocabulary.helpers';
-import { VocabularyService } from './vocabulary.service';
+import { isVocabularyResponseCorrect } from '../engine/vocabulary.helpers';
+import { VocabularyService } from '../services/vocabulary.service';
 import {
   VocabularyAnswer,
   VocabularyEntry,
@@ -8,7 +8,7 @@ import {
   VocabularyHistoryEntry,
   VocabularyState,
   VocabularyTrainingMode,
-} from './vocabulary.types';
+} from '../types/vocabulary.types';
 
 interface VocabularyStoreState {
   entries: VocabularyEntry[];

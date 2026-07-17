@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, beforeAll } from 'vitest';
-import { loadVocabularyEntries } from './vocabulary.data';
+import { loadVocabularyEntries } from '../data/vocabulary.data';
 import {
   filterMyVocabulary,
   VocabularyMemoryService,
 } from './vocabulary.memory';
-import { VocabularyEntry } from './vocabulary.types';
+import { VocabularyEntry } from '../types/vocabulary.types';
 
 let entries: VocabularyEntry[] = [];
 

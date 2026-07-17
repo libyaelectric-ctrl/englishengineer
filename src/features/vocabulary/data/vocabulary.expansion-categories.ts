@@ -1,5 +1,5 @@
 import { MissionDifficulty } from '@/core/learning';
-import { VocabularyDiscipline, VocabularyEntry } from './vocabulary.types';
+import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
 
 export type ExpansionCategory = {
   discipline: VocabularyDiscipline;

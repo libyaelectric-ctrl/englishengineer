@@ -4,7 +4,7 @@ import {
   getUpcomingReviews,
   getReviewStats,
 } from './vocabulary-due-today';
-import type { VocabularyReviewState } from './vocabulary.types';
+import type { VocabularyReviewState } from '../types/vocabulary.types';
 
 const makeReview = (
   overrides: Partial<VocabularyReviewState> = {}
