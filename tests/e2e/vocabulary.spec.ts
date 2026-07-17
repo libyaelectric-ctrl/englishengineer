@@ -11,14 +11,18 @@ async function loginAsDemo(page: import('@playwright/test').Page) {
 async function navigateToVocabulary(page: import('@playwright/test').Page) {
   await loginAsDemo(page);
   await page.goto('/vocabulary');
-  await expect(page.getByRole('heading', { name: /vocabulary/i })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: /vocabulary/i })
+  ).toBeVisible();
 }
 
 test.describe('Vocabulary page loading', () => {
   test('vocabulary page renders with header and tabs', async ({ page }) => {
     await navigateToVocabulary(page);
     // Heading
-    await expect(page.getByRole('heading', { name: /vocabulary/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /vocabulary/i })
+    ).toBeVisible();
     // Tabs: New, Learned, Mastered
     await expect(page.getByRole('tab', { name: /new/i })).toBeVisible();
     await expect(page.getByRole('tab', { name: /learned/i })).toBeVisible();
@@ -36,7 +40,9 @@ test.describe('Vocabulary page loading', () => {
 test.describe('Vocabulary search', () => {
   test('searching for a word shows results', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', { name: /search vocabulary/i });
+    const searchInput = page.getByRole('textbox', {
+      name: /search vocabulary/i,
+    });
     await searchInput.fill('compile');
     await searchInput.press('Enter');
 
@@ -44,18 +50,24 @@ test.describe('Vocabulary search', () => {
     await page.waitForTimeout(2000);
 
     // Should show results section or "no match" message
-    const resultsOrNoMatch = page.getByText(/search results|no canonical match|results found/i);
+    const resultsOrNoMatch = page.getByText(
+      /search results|no canonical match|results found/i
+    );
     await expect(resultsOrNoMatch.first()).toBeVisible();
   });
 
   test('search input handles empty query gracefully', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', { name: /search vocabulary/i });
+    const searchInput = page.getByRole('textbox', {
+      name: /search vocabulary/i,
+    });
     await searchInput.fill('');
     await searchInput.press('Enter');
     await page.waitForTimeout(500);
     // No crash, page stays intact
-    await expect(page.getByRole('heading', { name: /vocabulary/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /vocabulary/i })
+    ).toBeVisible();
   });
 });
 
@@ -92,7 +104,9 @@ test.describe('Vocabulary word card details', () => {
     await page.waitForTimeout(2000);
 
     // Find a word card's details toggle
-    const detailsToggle = page.getByRole('button', { name: /word details/i }).first();
+    const detailsToggle = page
+      .getByRole('button', { name: /word details/i })
+      .first();
     if (await detailsToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
       await expect(detailsToggle).toHaveAttribute('aria-expanded', 'false');
       await detailsToggle.click();
@@ -111,7 +125,9 @@ test.describe('Vocabulary word card details', () => {
     if (await flipButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await flipButton.click();
       // After flip, button should say "Front"
-      await expect(page.getByRole('button', { name: /front/i }).first()).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: /front/i }).first()
+      ).toBeVisible();
     }
   });
 });
@@ -121,29 +137,39 @@ test.describe('Add to My Vocabulary', () => {
     page,
   }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', { name: /search vocabulary/i });
+    const searchInput = page.getByRole('textbox', {
+      name: /search vocabulary/i,
+    });
     // Search for something unlikely to be in the canonical set
     await searchInput.fill('zzznonexistentwordxyz');
     await searchInput.press('Enter');
     await page.waitForTimeout(3000);
 
     // "No canonical match" section should appear with Add button
-    const addButton = page.getByRole('button', { name: /add to my vocabulary/i });
+    const addButton = page.getByRole('button', {
+      name: /add to my vocabulary/i,
+    });
     if (await addButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await addButton.click();
       // Add form should appear
-      await expect(page.getByRole('form', { name: /add to my vocabulary/i })).toBeVisible();
+      await expect(
+        page.getByRole('form', { name: /add to my vocabulary/i })
+      ).toBeVisible();
     }
   });
 
   test('add form has required fields', async ({ page }) => {
     await navigateToVocabulary(page);
-    const searchInput = page.getByRole('textbox', { name: /search vocabulary/i });
+    const searchInput = page.getByRole('textbox', {
+      name: /search vocabulary/i,
+    });
     await searchInput.fill('zzznonexistentwordxyz');
     await searchInput.press('Enter');
     await page.waitForTimeout(3000);
 
-    const addButton = page.getByRole('button', { name: /add to my vocabulary/i });
+    const addButton = page.getByRole('button', {
+      name: /add to my vocabulary/i,
+    });
     if (await addButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await addButton.click();
       const form = page.getByRole('form', { name: /add to my vocabulary/i });

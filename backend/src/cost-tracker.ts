@@ -19,7 +19,7 @@ const COST_PER_1K_TOKENS: Record<string, { input: number; output: number }> = {
 
 // Per-user rate limits
 const USER_DAILY_LIMIT = 50; // requests per day
-const USER_MONTHLY_COST_LIMIT = 10.00; // USD per month
+const USER_MONTHLY_COST_LIMIT = 10.0; // USD per month
 
 interface TrackAiUsageOpts {
   model: string;
