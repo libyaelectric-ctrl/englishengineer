@@ -1,4 +1,5 @@
 import { useListeningStore } from '@/features/listening';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
@@ -7,6 +8,7 @@ const log = (_page: string, _action: string, _details: string) => {};
 export function ListeningSidebar() {
   const { missions } = useListeningStore();
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill="listening" compact={true} />,
     skill: 'listening',
     pathLabel: 'Listening Tasks',
     pathDescription:

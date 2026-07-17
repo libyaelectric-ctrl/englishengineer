@@ -1,5 +1,6 @@
 import { GrammarProgressService, useGrammarStore } from '@/features/grammar';
 import { useLearningStore } from '@/core/learning';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
@@ -15,6 +16,7 @@ export function GrammarSidebar() {
     : -1;
 
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill="grammar" compact={true} />,
     skill: 'grammar',
     pathLabel: 'Your grammar path',
     pathDescription:

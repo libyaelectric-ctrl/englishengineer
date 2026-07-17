@@ -1,8 +1,10 @@
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
 export function ToolsSidebar() {
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill={'tools' as any} compact={true} />,
     skill: 'tools',
     pathLabel: 'Tools',
     pathDescription: 'Access your engineering tools.',
