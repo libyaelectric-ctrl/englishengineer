@@ -13,7 +13,14 @@ export const SkillSidebar = ({
   selectedGraphNode,
   setSelectedGraphNode,
 }: {
-  skills: Array<{ id: string; label: string; icon: LucideIcon; color: string; bgLight: string; textDark: string }>;
+  skills: Array<{
+    id: string;
+    label: string;
+    icon: LucideIcon;
+    color: string;
+    bgLight: string;
+    textDark: string;
+  }>;
   eloScores: Record<string, number>;
   highestSkill: { label: string; icon: LucideIcon };
   lowestSkill: { label: string; icon: LucideIcon };

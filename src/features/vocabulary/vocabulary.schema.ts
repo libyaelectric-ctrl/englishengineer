@@ -1,4 +1,4 @@
-import { CEFR_LEVELS } from '@/features/level-system';
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
 import type { VocabularyTerm } from './vocabulary.types';
 
 export const isVocabularyTerm = (value: unknown): value is VocabularyTerm => {

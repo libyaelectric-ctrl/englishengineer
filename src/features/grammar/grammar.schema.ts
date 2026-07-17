@@ -1,4 +1,4 @@
-import { CEFR_LEVELS } from '@/features/level-system';
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
 import type { GrammarRule } from './grammar.types';
 
 export const isGrammarRule = (value: unknown): value is GrammarRule => {

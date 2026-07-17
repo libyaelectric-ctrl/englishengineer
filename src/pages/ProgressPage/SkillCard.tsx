@@ -1,5 +1,11 @@
 import { motion } from 'motion/react';
-import { CEFR_LEVELS, MAX_ELO, getCEFRBand, getCEFRIndex, useAnimatedNumber } from './utils';
+import {
+  CEFR_LEVELS,
+  MAX_ELO,
+  getCEFRBand,
+  getCEFRIndex,
+  useAnimatedNumber,
+} from './utils';
 
 export const SkillCard = ({
   skill,

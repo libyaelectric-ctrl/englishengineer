@@ -1,4 +1,4 @@
-import type { SkillName } from '@/features/profile';
+import type { SkillName } from '@/features/profile/profile.types';
 
 export interface SharedLesson {
   id: string;

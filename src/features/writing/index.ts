@@ -35,5 +35,3 @@ export {
 } from './writing-realtime-analyzer';
 
 export { WritingRealtimeFeedback } from './WritingRealtimeFeedback';
-
-export { WritingSidebar } from './components';

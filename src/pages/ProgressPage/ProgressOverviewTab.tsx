@@ -16,12 +16,7 @@ import { KnowledgeGraph } from './KnowledgeGraph';
 import { AnalyticsChartsSection } from './AnalyticsChartsSection';
 import { RecentSessions } from './RecentSessions';
 import { SkillSidebar } from './SkillSidebar';
-import {
-  SKILLS,
-  MIN_ELO,
-  MAX_ELO,
-  getCEFRBand,
-} from './utils';
+import { SKILLS, MIN_ELO, MAX_ELO, getCEFRBand } from './utils';
 
 export const ProgressOverviewTab = () => {
   const { currentUser } = useAuthStore();
@@ -122,10 +117,7 @@ export const ProgressOverviewTab = () => {
 
   return (
     <div className="space-y-5 animate-in fade-in duration-300">
-      <HeroBanner
-        totalElo={totalElo}
-        totalPercentage={totalPercentage}
-      />
+      <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
 
       <QuickStats
         totalElo={totalElo}

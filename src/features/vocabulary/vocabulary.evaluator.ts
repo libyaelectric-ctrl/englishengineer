@@ -1,4 +1,4 @@
-import { ScoringService } from '@/core/learning';
+import { ScoringService } from '@/core/learning/scoring.service';
 import {
   VocabularyAnswer,
   VocabularyEvaluationResult,

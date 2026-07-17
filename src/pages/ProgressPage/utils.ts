@@ -60,7 +60,18 @@ export const SKILLS = [
 ];
 
 export const CEFR_LEVELS = [
-  'A1', 'A1+', 'A2', 'A2+', 'B1', 'B1+', 'B2', 'B2+', 'C1', 'C1+', 'C2', 'C2+',
+  'A1',
+  'A1+',
+  'A2',
+  'A2+',
+  'B1',
+  'B1+',
+  'B2',
+  'B2+',
+  'C1',
+  'C1+',
+  'C2',
+  'C2+',
 ];
 export const MIN_ELO = 1000;
 export const MAX_ELO = 5000;
@@ -84,14 +95,34 @@ export const getCEFRIndex = (cefr: string) => CEFR_LEVELS.indexOf(cefr);
 
 export const getRank = (elo: number) => {
   if (elo >= 4500)
-    return { label: 'Grandmaster', icon: '👑', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' };
+    return {
+      label: 'Grandmaster',
+      icon: '👑',
+      color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+    };
   if (elo >= 3500)
-    return { label: 'Diamond', icon: '💎', color: 'text-cyan-600 bg-cyan-50 border-cyan-200' };
+    return {
+      label: 'Diamond',
+      icon: '💎',
+      color: 'text-cyan-600 bg-cyan-50 border-cyan-200',
+    };
   if (elo >= 2500)
-    return { label: 'Platinum', icon: '🏆', color: 'text-indigo-600 bg-indigo-50 border-indigo-200' };
+    return {
+      label: 'Platinum',
+      icon: '🏆',
+      color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+    };
   if (elo >= 1500)
-    return { label: 'Gold', icon: '🥇', color: 'text-amber-600 bg-amber-50 border-amber-200' };
-  return { label: 'Silver', icon: '🥈', color: 'text-slate-600 bg-slate-50 border-slate-200' };
+    return {
+      label: 'Gold',
+      icon: '🥇',
+      color: 'text-amber-600 bg-amber-50 border-amber-200',
+    };
+  return {
+    label: 'Silver',
+    icon: '🥈',
+    color: 'text-slate-600 bg-slate-50 border-slate-200',
+  };
 };
 
 export const useAnimatedNumber = (value: number, duration: number = 1.5) => {

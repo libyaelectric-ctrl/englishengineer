@@ -1,9 +1,9 @@
-import type { SkillName, UserLearningProfile } from '@/features/profile';
+import type { SkillName, UserLearningProfile } from '@/features/profile/profile.types';
 import {
   getSkillLessonNumber,
   LESSON_PATH_LENGTH,
-  SKILL_NAMES,
-} from '@/features/profile';
+} from '@/features/profile/profile.utils';
+import { SKILL_NAMES } from '@/features/profile/profile.types';
 import type { SharedLesson, SkillLessonProgress } from './lesson-path.types';
 
 const TOPICS = [

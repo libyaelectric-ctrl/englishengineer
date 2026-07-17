@@ -1,11 +1,7 @@
 import { Gift } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 
-export const DailyClaimBanner = ({
-  onClaim,
-}: {
-  onClaim: () => void;
-}) => (
+export const DailyClaimBanner = ({ onClaim }: { onClaim: () => void }) => (
   <div className="flex items-center justify-between rounded-2xl border border-primary/20 bg-primary/5 p-5">
     <div>
       <p className="text-xs font-medium text-primary uppercase tracking-widest">
