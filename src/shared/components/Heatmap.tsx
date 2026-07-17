@@ -2,7 +2,7 @@ import React from 'react';
 import { useLearningStore } from '@/core/learning';
 import { cn } from '@/shared/utils/cn';
 
-export const Heatmap: React.FC = () => {
+export const Heatmap: React.FC = React.memo(() => {
   const sessions = useLearningStore((state) => state.studySessions);
 
   const today = new Date();
@@ -63,4 +63,5 @@ export const Heatmap: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+Heatmap.displayName = 'Heatmap';

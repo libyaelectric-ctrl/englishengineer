@@ -1,4 +1,4 @@
-export const Sparkline = ({
+export const Sparkline = React.memo(({
   data,
   className = '',
 }: {
@@ -33,4 +33,5 @@ export const Sparkline = ({
       />
     </svg>
   );
-};
+});
+Sparkline.displayName = 'Sparkline';

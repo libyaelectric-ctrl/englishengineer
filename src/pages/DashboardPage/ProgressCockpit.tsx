@@ -1,3 +1,4 @@
+import React from 'react';
 import { Target } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -23,7 +24,7 @@ interface ProgressCockpitProps {
   skillSparklineData: Record<SkillName, number[]>;
 }
 
-export const ProgressCockpit = ({
+export const ProgressCockpit = React.memo(({
   skillNames,
   skillMeta,
   profile,
@@ -155,4 +156,5 @@ export const ProgressCockpit = ({
       </div>
     </SectionCard>
   );
-};
+});
+ProgressCockpit.displayName = 'ProgressCockpit';
