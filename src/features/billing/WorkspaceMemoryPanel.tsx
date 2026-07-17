@@ -67,14 +67,16 @@ export const WorkspaceMemoryPanel = ({
   };
 
   return (
-    <div className="rounded-card border border-border-soft bg-surface p-4">
+    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 border-b border-[#d9d9e3] pb-2">
         <div className="flex items-center gap-2">
-          <Brain className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-          <p className="text-xs font-bold text-foreground">Workspace Memory</p>
+          <Brain className="h-3.5 w-3.5 text-[#0047bb]" aria-hidden="true" />
+          <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">
+            Workspace Memory
+          </p>
           {entries.length > 0 && (
-            <span className="rounded-full border border-primary/20 bg-primary/5 px-1.5 py-0.5 text-[9px] font-bold text-primary">
+            <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
               {entries.length} active
             </span>
           )}
@@ -87,17 +89,17 @@ export const WorkspaceMemoryPanel = ({
               setAddingNew(true);
               setKeyError(null);
             }}
-            className="flex items-center gap-1 rounded-[6px] px-2 py-1 text-[10px] font-medium text-primary hover:bg-primary/5 transition-colors"
+            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 border border-[#d9d9e3] bg-white cursor-pointer shadow-sm"
             aria-label="Add memory entry"
           >
-            <Plus className="h-3 w-3" aria-hidden="true" />
+            <Plus className="h-3 w-3 text-muted-copy" aria-hidden="true" />
             Add
           </button>
         )}
       </div>
 
       {/* Description */}
-      <p className="text-[10px] leading-4 text-muted-copy mb-3">
+      <p className="text-[10px] leading-4 text-muted-copy mb-3 font-medium">
         Memory entries are automatically included in every AI request for this
         workspace. Use them to store project context, team names, standards, or
         preferences.
@@ -105,8 +107,8 @@ export const WorkspaceMemoryPanel = ({
 
       {/* Entries */}
       {entries.length === 0 && !addingNew && (
-        <div className="rounded-[8px] border border-dashed border-border-soft bg-surface-hover/10 px-4 py-5 text-center">
-          <p className="text-[10px] text-muted-copy">
+        <div className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] px-4 py-5 text-center shadow-sm">
+          <p className="text-[10px] text-muted-copy font-medium">
             No memory entries yet. Add project context, standards, or team info.
           </p>
         </div>
@@ -117,7 +119,7 @@ export const WorkspaceMemoryPanel = ({
           {entries.map(([key, value]) => (
             <li
               key={key}
-              className="flex items-start gap-2 rounded-[6px] border border-border-soft bg-background p-2"
+              className="flex items-start gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2 shadow-sm"
             >
               {editingKey === key ? (
                 <div className="flex flex-1 flex-col gap-1.5">
@@ -128,13 +130,13 @@ export const WorkspaceMemoryPanel = ({
                     onChange={(e) => setEditValue(e.target.value)}
                     rows={2}
                     autoFocus
-                    className="w-full resize-none rounded-[6px] border border-border-soft bg-surface px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
+                    className="w-full resize-none rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm"
                   />
                   <div className="flex gap-1">
                     <button
                       type="button"
                       onClick={handleSaveEdit}
-                      className="flex items-center gap-1 rounded-[6px] bg-primary px-2 py-1 text-[10px] font-bold text-white hover:bg-primary/90 transition-colors"
+                      className="flex items-center gap-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-2.5 py-1 text-[10px] font-bold text-white cursor-pointer shadow-sm"
                     >
                       <Check className="h-3 w-3" />
                       Save
@@ -142,7 +144,7 @@ export const WorkspaceMemoryPanel = ({
                     <button
                       type="button"
                       onClick={() => setEditingKey(null)}
-                      className="flex items-center gap-1 rounded-[6px] border border-border-soft px-2 py-1 text-[10px] text-muted-copy hover:text-foreground transition-colors"
+                      className="flex items-center gap-1 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] px-2.5 py-1 text-[10px] font-bold text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
                     >
                       <X className="h-3 w-3" />
                       Cancel
@@ -152,10 +154,10 @@ export const WorkspaceMemoryPanel = ({
               ) : (
                 <>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-bold text-primary truncate">
+                    <p className="text-[10px] font-bold text-[#0047bb] truncate">
                       {key}
                     </p>
-                    <p className="mt-0.5 text-[11px] leading-4 text-foreground break-words">
+                    <p className="mt-0.5 text-xs leading-4 text-foreground font-semibold break-words">
                       {value}
                     </p>
                   </div>
@@ -165,7 +167,7 @@ export const WorkspaceMemoryPanel = ({
                         type="button"
                         onClick={() => handleStartEdit(key, value)}
                         aria-label={`Edit ${key}`}
-                        className="rounded p-1 text-muted-copy hover:text-primary hover:bg-primary/5 transition-colors"
+                        className="rounded-[4px] p-1 text-muted-copy hover:text-[#0047bb] hover:bg-[#faf8ff] transition-colors border border-transparent hover:border-[#d9d9e3] cursor-pointer"
                       >
                         <Edit2 className="h-3 w-3" />
                       </button>
@@ -173,7 +175,7 @@ export const WorkspaceMemoryPanel = ({
                         type="button"
                         onClick={() => handleDelete(key)}
                         aria-label={`Delete ${key}`}
-                        className="rounded p-1 text-muted-copy hover:text-error hover:bg-error/10 transition-colors"
+                        className="rounded-[4px] p-1 text-muted-copy hover:text-error hover:bg-error/10 transition-colors border border-transparent hover:border-error/20 cursor-pointer"
                       >
                         <Trash2 className="h-3 w-3" />
                       </button>
@@ -188,8 +190,8 @@ export const WorkspaceMemoryPanel = ({
 
       {/* Add new entry form */}
       {addingNew && (
-        <div className="mt-2 rounded-[8px] border border-primary/20 bg-primary/3 p-3 space-y-2">
-          <p className="text-[10px] font-bold text-foreground">
+        <div className="mt-2 rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 space-y-2 shadow-sm">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             New Memory Entry
           </p>
           <input
@@ -202,7 +204,7 @@ export const WorkspaceMemoryPanel = ({
               setKeyError(null);
             }}
             aria-label="Memory entry key"
-            className="w-full rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
+            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
           />
           <label className="block">
             <span className="sr-only">Memory entry value</span>
@@ -212,18 +214,20 @@ export const WorkspaceMemoryPanel = ({
               value={newValue}
               onChange={(e) => setNewValue(e.target.value)}
               rows={2}
-              className="w-full resize-none rounded-[6px] border border-border-soft bg-background px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:ring-1 focus:ring-primary/50"
+              className="w-full resize-none rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
             />
           </label>
           {keyError && (
-            <p className="text-[10px] text-error leading-4">{keyError}</p>
+            <p className="text-[10px] text-error font-bold uppercase tracking-wider leading-4">
+              {keyError}
+            </p>
           )}
           <div className="flex gap-1.5">
             <button
               type="button"
               id="memory-add-confirm-btn"
               onClick={handleAddNew}
-              className="flex-1 rounded-[6px] bg-primary px-3 py-1.5 text-[10px] font-bold text-white hover:bg-primary/90 transition-colors"
+              className="flex-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
             >
               Add to Memory
             </button>
@@ -235,7 +239,7 @@ export const WorkspaceMemoryPanel = ({
                 setNewValue('');
                 setKeyError(null);
               }}
-              className="rounded-[6px] border border-border-soft px-3 py-1.5 text-[10px] text-muted-copy hover:text-foreground transition-colors"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
             >
               Cancel
             </button>
@@ -244,8 +248,8 @@ export const WorkspaceMemoryPanel = ({
       )}
 
       {!hasProjectAccess && entries.length > 0 && (
-        <div className="mt-3 rounded-[8px] bg-surface-hover border border-border-soft p-2.5 text-center">
-          <p className="text-[10px] text-muted-copy leading-normal">
+        <div className="mt-3 rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3] p-2.5 text-center shadow-sm">
+          <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
             Workspace memory is read-only. Upgrade to the Project Plan ($39/mo)
             to edit details.
           </p>
