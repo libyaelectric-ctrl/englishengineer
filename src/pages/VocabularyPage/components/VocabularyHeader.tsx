@@ -54,18 +54,18 @@ export function VocabularyHeader({
   return (
     <div className="sticky top-0 z-40 flex flex-col bg-background py-3 border-b border-border-soft shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex items-center justify-between">
-        <div className="min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
-            {vocabularyLevel} Vocabulary Path
-          </p>
-          <h1 className="mt-0.5 truncate text-sm font-black tracking-tight sm:text-base">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-black tracking-tight text-foreground">
             Vocabulary
           </h1>
-          <p className="mt-0.5 text-[10px] text-muted-copy">
-            {allLevelsLoaded
-              ? 'All 5,000 canonical terms are available for this search.'
-              : `${vocabularyLevel} learning terms are loaded. Full search loads the remaining levels only when requested.`}
-          </p>
+          <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
+            {vocabularyLevel}
+          </span>
+        </div>
+        <div className="hidden text-xs text-muted-copy lg:block">
+          {allLevelsLoaded
+            ? 'All 5,000 canonical terms are available'
+            : `${vocabularyLevel} learning terms loaded`}
         </div>
       </div>
 
