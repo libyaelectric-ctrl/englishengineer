@@ -13,7 +13,9 @@ import type { BackendConfig, RuntimeEnvironment } from '../types.js';
 
 type Env = Record<string, string | undefined>;
 
-export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
+export const createBackendConfig = (
+  environment: Env = process.env
+): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
   const supabase = resolveSupabase(environment);
 

@@ -7,12 +7,30 @@ const PAID_MONTHLY_LIMIT = 300;
 const FREE_PERIOD_MS = 24 * 60 * 60 * 1000;
 const PAID_PERIOD_MS = 30 * 24 * 60 * 60 * 1000;
 
-const getLimitForPlan = (planId) => ({
+interface PlanLimits {
+  max: number;
+  windowMs: number;
+}
+
+const getLimitForPlan = (planId: string): PlanLimits => ({
   max: planId === 'free' ? FREE_DAILY_LIMIT : PAID_MONTHLY_LIMIT,
   windowMs: planId === 'free' ? FREE_PERIOD_MS : PAID_PERIOD_MS,
 });
 
-export const createSupabaseAiLedger = (config) => {
+interface AiLedgerSession {
+  modeId?: string;
+  provider?: string;
+  operation: string;
+  durationMs?: number;
+  resultSummary?: string;
+}
+
+export interface AiLedger {
+  countRecentRequests(userId: string, planId: string): Promise<number>;
+  logSession(userId: string, session: AiLedgerSession): Promise<void>;
+}
+
+export const createSupabaseAiLedger = (config: Record<string, any>): AiLedger => {
   if (!config.workspace?.configured) {
     throw new Error(
       'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
@@ -41,7 +59,7 @@ export const createSupabaseAiLedger = (config) => {
           return 0;
         }
         return count ?? 0;
-      } catch (err) {
+      } catch (err: any) {
         logger.error('Ledger count error', { error: err.message });
         return 0;
       }
@@ -63,17 +81,22 @@ export const createSupabaseAiLedger = (config) => {
         if (error) {
           logger.error('Ledger log error', { error: error.message });
         }
-      } catch (err) {
+      } catch (err: any) {
         logger.error('Ledger log error', { error: err.message });
       }
     },
   };
 };
 
-export const createMemoryAiLedger = () => {
-  const ledger = [];
+interface LedgerEntry extends AiLedgerSession {
+  userId: string;
+  timestamp: number;
+}
 
-  const prune = (now) => {
+export const createMemoryAiLedger = (): AiLedger => {
+  const ledger: LedgerEntry[] = [];
+
+  const prune = (now: number): void => {
     const cutoff = now - PAID_PERIOD_MS;
     const index = ledger.findIndex((item) => item.timestamp >= cutoff);
     if (index >= 0) ledger.splice(0, index);
@@ -96,14 +119,19 @@ export const createMemoryAiLedger = () => {
   };
 };
 
-export const createAiLedger = (config) => {
+export const createAiLedger = (config: Record<string, any>): AiLedger => {
   if (config.workspace?.configured) {
     return createSupabaseAiLedger(config);
   }
   return createMemoryAiLedger();
 };
 
-export const getAiPlanLimits = () => ({
+interface PlanLimitInfo {
+  daily: number | null;
+  monthly: number | null;
+}
+
+export const getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
   free: { daily: FREE_DAILY_LIMIT, monthly: null },
   pro: { daily: null, monthly: PAID_MONTHLY_LIMIT },
   project: { daily: null, monthly: PAID_MONTHLY_LIMIT },

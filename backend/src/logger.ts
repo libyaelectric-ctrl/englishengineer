@@ -2,11 +2,19 @@ interface LogMeta {
   [key: string]: unknown;
 }
 
-const LOG_LEVELS: Record<string, number> = { debug: 0, info: 1, warn: 2, error: 3 };
-const currentLevel: number =
-  LOG_LEVELS[process.env.LOG_LEVEL || 'info'] ?? 1;
+const LOG_LEVELS: Record<string, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
+const currentLevel: number = LOG_LEVELS[process.env.LOG_LEVEL || 'info'] ?? 1;
 
-const formatJSON = (level: string, message: string, meta: LogMeta = {}): string => {
+const formatJSON = (
+  level: string,
+  message: string,
+  meta: LogMeta = {}
+): string => {
   return JSON.stringify({
     timestamp: new Date().toISOString(),
     level,

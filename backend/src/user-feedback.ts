@@ -1,9 +1,26 @@
-/**
- * User Feedback Service
- * Collects and manages user feedback
- */
+interface FeedbackRecord {
+  id: string;
+  userId: string;
+  type: string;
+  category: string;
+  message: string;
+  rating?: number;
+  metadata: Record<string, unknown>;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-const feedbackStore = [];
+const feedbackStore: FeedbackRecord[] = [];
+
+interface SubmitFeedbackOpts {
+  userId: string;
+  type: string;
+  category: string;
+  message: string;
+  rating?: number;
+  metadata?: Record<string, unknown>;
+}
 
 export const submitFeedback = ({
   userId,
@@ -12,14 +29,14 @@ export const submitFeedback = ({
   message,
   rating,
   metadata = {},
-}) => {
-  const feedback = {
+}: SubmitFeedbackOpts): FeedbackRecord => {
+  const feedback: FeedbackRecord = {
     id: `fb_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     userId,
-    type, // 'bug', 'feature', 'improvement', 'general'
-    category, // 'ui', 'ai', 'billing', 'performance', 'other'
+    type,
+    category,
     message,
-    rating, // 1-5
+    rating,
     metadata,
     status: 'new',
     createdAt: new Date().toISOString(),
@@ -28,7 +45,6 @@ export const submitFeedback = ({
 
   feedbackStore.push(feedback);
 
-  // Keep only last 1000 feedbacks
   if (feedbackStore.length > 1000) {
     feedbackStore.splice(0, feedbackStore.length - 1000);
   }
@@ -36,7 +52,15 @@ export const submitFeedback = ({
   return feedback;
 };
 
-export const getFeedback = (filters = {}) => {
+interface FeedbackFilters {
+  type?: string;
+  category?: string;
+  status?: string;
+  userId?: string;
+  limit?: number;
+}
+
+export const getFeedback = (filters: FeedbackFilters = {}): FeedbackRecord[] => {
   let results = [...feedbackStore];
 
   if (filters.type) {
@@ -55,7 +79,7 @@ export const getFeedback = (filters = {}) => {
   return results.slice(-(filters.limit || 100)).reverse();
 };
 
-export const updateFeedbackStatus = (feedbackId, status) => {
+export const updateFeedbackStatus = (feedbackId: string, status: string): FeedbackRecord | null => {
   const feedback = feedbackStore.find((f) => f.id === feedbackId);
   if (feedback) {
     feedback.status = status;
@@ -65,10 +89,18 @@ export const updateFeedbackStatus = (feedbackId, status) => {
   return null;
 };
 
-export const getFeedbackStats = () => {
-  const byType = {};
-  const byCategory = {};
-  const byStatus = {};
+interface FeedbackStats {
+  total: number;
+  byType: Record<string, number>;
+  byCategory: Record<string, number>;
+  byStatus: Record<string, number>;
+  averageRating: string | null;
+}
+
+export const getFeedbackStats = (): FeedbackStats => {
+  const byType: Record<string, number> = {};
+  const byCategory: Record<string, number> = {};
+  const byStatus: Record<string, number> = {};
   let totalRating = 0;
   let ratingCount = 0;
 
@@ -97,7 +129,7 @@ export const FEEDBACK_TYPES = {
   FEATURE: 'feature',
   IMPROVEMENT: 'improvement',
   GENERAL: 'general',
-};
+} as const;
 
 export const FEEDBACK_CATEGORIES = {
   UI: 'ui',
@@ -105,4 +137,4 @@ export const FEEDBACK_CATEGORIES = {
   BILLING: 'billing',
   PERFORMANCE: 'performance',
   OTHER: 'other',
-};
+} as const;

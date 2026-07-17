@@ -1,15 +1,22 @@
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
+import type { VocabularyConfig } from '../types.js';
+import type { VocabularyLookupResult } from '../types.js';
 
-const dictionaryEndpoint = (word) =>
+const dictionaryEndpoint = (word: string): string =>
   `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
 
-const fetchWithTimeout = async (fetchImpl, url, init, timeoutMs) => {
+const fetchWithTimeout = async (
+  fetchImpl: typeof fetch,
+  url: string,
+  init: RequestInit,
+  timeoutMs: number
+): Promise<Response> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetchImpl(url, { ...init, signal: controller.signal });
-  } catch (error) {
+  } catch (error: any) {
     if (error?.name === 'AbortError') {
       throw new ApiError(
         504,
@@ -27,12 +34,27 @@ const fetchWithTimeout = async (fetchImpl, url, init, timeoutMs) => {
   }
 };
 
-const parseDictionaryResponse = (payload) => {
-  const entry = Array.isArray(payload) ? payload[0] : null;
+interface DictionaryEntry {
+  word?: string;
+  phonetic?: string;
+  phonetics?: Array<{ text?: string }>;
+  meanings?: Array<{
+    definitions?: Array<{ definition?: string }>;
+  }>;
+}
+
+interface ParsedDictionaryResult {
+  word: string;
+  phonetic: string | null;
+  definitions: string[];
+}
+
+const parseDictionaryResponse = (payload: unknown): ParsedDictionaryResult => {
+  const entry: DictionaryEntry | null = Array.isArray(payload) ? payload[0] : null;
   const definitions = entry?.meanings
     ?.flatMap((meaning) => meaning?.definitions ?? [])
     .map((item) => item?.definition)
-    .filter((definition) => typeof definition === 'string' && definition.trim())
+    .filter((definition): definition is string => typeof definition === 'string' && !!definition.trim())
     .slice(0, 5);
   if (!entry || !definitions?.length) {
     throw new ApiError(
@@ -51,7 +73,17 @@ const parseDictionaryResponse = (payload) => {
   };
 };
 
-const translateWithLibre = async (config, fetchImpl, text, targetLang) => {
+interface TranslationResult {
+  text: string;
+  source: string;
+}
+
+const translateWithLibre = async (
+  config: VocabularyConfig,
+  fetchImpl: typeof fetch,
+  text: string,
+  targetLang: string
+): Promise<TranslationResult | null> => {
   if (!config.libreTranslateUrl) return null;
   const response = await fetchWithTimeout(
     fetchImpl,
@@ -78,7 +110,12 @@ const translateWithLibre = async (config, fetchImpl, text, targetLang) => {
     : null;
 };
 
-const translateWithMyMemory = async (config, fetchImpl, text, targetLang) => {
+const translateWithMyMemory = async (
+  config: VocabularyConfig,
+  fetchImpl: typeof fetch,
+  text: string,
+  targetLang: string
+): Promise<TranslationResult | null> => {
   if (!config.myMemoryEnabled) return null;
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${encodeURIComponent(targetLang)}`;
   const response = await fetchWithTimeout(
@@ -94,22 +131,25 @@ const translateWithMyMemory = async (config, fetchImpl, text, targetLang) => {
     : null;
 };
 
-/**
- * Creates an Upstash Redis-backed cache for vocabulary lookups.
- * @param {Object} opts - Cache configuration
- * @param {string} opts.url - Upstash Redis REST URL
- * @param {string} opts.token - Upstash Redis auth token
- * @param {number} [opts.timeoutMs=3000] - Request timeout in milliseconds
- * @param {Function} [opts.fetchImpl=fetch] - Fetch implementation for testing
- * @returns {{ get: Function, set: Function }} Cache interface with get/set methods
- */
+export interface VocabularyCache {
+  get(key: string): Promise<VocabularyLookupResult | null>;
+  set(key: string, value: VocabularyLookupResult): Promise<void>;
+}
+
+interface UpstashCacheOpts {
+  url: string;
+  token: string;
+  timeoutMs?: number;
+  fetchImpl?: typeof fetch;
+}
+
 export const createUpstashVocabularyCache = ({
   url,
   token,
   timeoutMs = 3000,
   fetchImpl = fetch,
-}) => ({
-  async get(key) {
+}: UpstashCacheOpts): VocabularyCache => ({
+  async get(key: string): Promise<VocabularyLookupResult | null> {
     if (!url || !token) return null;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -134,7 +174,7 @@ export const createUpstashVocabularyCache = ({
       clearTimeout(timeoutId);
     }
   },
-  async set(key, value) {
+  async set(key: string, value: VocabularyLookupResult): Promise<void> {
     if (!url || !token) return;
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -154,7 +194,7 @@ export const createUpstashVocabularyCache = ({
         ]),
         signal: controller.signal,
       });
-    } catch (err) {
+    } catch (err: any) {
       logger.warn('Vocabulary cache set failed', { message: err?.message });
     } finally {
       clearTimeout(timeoutId);
@@ -162,23 +202,15 @@ export const createUpstashVocabularyCache = ({
   },
 });
 
-/**
- * Creates a vocabulary lookup service that fetches definitions from Free Dictionary API
- * and translates them using LibreTranslate or MyMemory fallback.
- * @param {Object} config - Service configuration
- * @param {number} config.timeoutMs - Request timeout in milliseconds
- * @param {string} [config.libreTranslateUrl] - LibreTranslate API URL
- * @param {string} [config.libreTranslateApiKey] - LibreTranslate API key
- * @param {boolean} [config.myMemoryEnabled] - Enable MyMemory fallback translation
- * @param {Function} [fetchImpl=fetch] - Fetch implementation for testing
- * @param {Object} [cache=new Map()] - Cache instance (Map or Upstash cache)
- * @returns {{ lookup: Function }} Service with lookup method
- */
+export interface VocabularyLookupService {
+  lookup(query: { word: string; targetLang: string }): Promise<VocabularyLookupResult>;
+}
+
 export const createVocabularyLookupService = (
-  config,
-  fetchImpl = fetch,
-  cache = new Map()
-) => ({
+  config: VocabularyConfig,
+  fetchImpl: typeof fetch = fetch,
+  cache: VocabularyCache = new Map() as unknown as VocabularyCache
+): VocabularyLookupService => ({
   async lookup(query) {
     const { word, targetLang } = query;
     const cacheKey = `engineeros:cache:vocab:${word.toLowerCase()}:${targetLang}`;
@@ -204,7 +236,7 @@ export const createVocabularyLookupService = (
     }
 
     const parsed = parseDictionaryResponse(await response.json());
-    let translation = null;
+    let translation: TranslationResult | null = null;
     try {
       translation =
         (await translateWithLibre(
@@ -223,7 +255,7 @@ export const createVocabularyLookupService = (
       translation = null;
     }
 
-    const result = {
+    const result: VocabularyLookupResult = {
       ...parsed,
       translation: translation?.text ?? null,
       source: 'Free Dictionary API',

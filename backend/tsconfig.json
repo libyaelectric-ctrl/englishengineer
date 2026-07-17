@@ -17,6 +17,6 @@
     "checkJs": false,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "server.js", "types.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.js", "types.d.ts"],
   "exclude": ["node_modules", "dist", "test"]
 }

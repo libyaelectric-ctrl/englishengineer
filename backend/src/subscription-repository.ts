@@ -1,6 +1,21 @@
 import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
+import type { SubscriptionSnapshot } from './billing-helpers.js';
 
-const pruneEvents = (events, now, ttlMs, maxEntries) => {
+export interface SubscriptionRepository {
+  mode: string;
+  getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
+  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
+  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
+  getProcessedEventCount?(): number;
+}
+
+const pruneEvents = (
+  events: Map<string, number>,
+  now: number,
+  ttlMs: number,
+  maxEntries: number
+): void => {
   for (const [eventId, timestamp] of events) {
     if (now - timestamp >= ttlMs) events.delete(eventId);
   }
@@ -11,16 +26,23 @@ const pruneEvents = (events, now, ttlMs, maxEntries) => {
   }
 };
 
+interface MemoryRepoOpts {
+  eventTtlMs?: number;
+  eventCacheMax?: number;
+  subscriptionCacheMax?: number;
+  now?: () => number;
+}
+
 export const createMemorySubscriptionRepository = ({
   eventTtlMs = 86_400_000,
   eventCacheMax = 5_000,
   subscriptionCacheMax = 10_000,
   now = () => Date.now(),
-} = {}) => {
-  const subscriptions = new Map();
-  const events = new Map();
+}: MemoryRepoOpts = {}): SubscriptionRepository => {
+  const subscriptions = new Map<string, SubscriptionSnapshot>();
+  const events = new Map<string, number>();
 
-  const pruneSubscriptions = () => {
+  const pruneSubscriptions = (): void => {
     while (subscriptions.size > subscriptionCacheMax) {
       const oldest = subscriptions.keys().next().value;
       if (oldest === undefined) break;
@@ -53,7 +75,10 @@ export const createMemorySubscriptionRepository = ({
   };
 };
 
-export const createSubscriptionRepository = (config, fetchImpl = fetch) => {
+export const createSubscriptionRepository = (
+  config: Record<string, any>,
+  fetchImpl: typeof fetch = fetch
+): SubscriptionRepository => {
   if (config.repositoryMode === 'supabase') {
     return createSupabaseBillingRepository(config, fetchImpl);
   }

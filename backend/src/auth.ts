@@ -1,7 +1,11 @@
 import { timingSafeEqual, webcrypto } from 'node:crypto';
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
-import type { AuthConfig, AuthenticatedUser, RuntimeEnvironment } from '../types.js';
+import type {
+  AuthConfig,
+  AuthenticatedUser,
+  RuntimeEnvironment,
+} from '../types.js';
 import type { Request, Response, NextFunction } from 'express';
 
 const subtle = webcrypto.subtle;
@@ -94,9 +98,13 @@ const validateSupabaseToken = async (
       },
     });
     if (!response.ok) return null;
-    const user = await response.json() as Record<string, unknown>;
+    const user = (await response.json()) as Record<string, unknown>;
     return typeof user?.id === 'string' && user.id
-      ? { userId: user.id as string, email: user.email as string | undefined, source: 'supabase-jwt' }
+      ? {
+          userId: user.id as string,
+          email: user.email as string | undefined,
+          source: 'supabase-jwt',
+        }
       : null;
   } catch (error) {
     logger.error('validateSupabaseToken failed', {}, error as Error);
@@ -108,16 +116,25 @@ const validateSupabaseToken = async (
   }
 };
 
-export const extractAuthenticatedUser = (request: Request): AuthenticatedUser | null =>
-  (request as any).auth ?? null;
+export const extractAuthenticatedUser = (
+  request: Request
+): AuthenticatedUser | null => (request as any).auth ?? null;
 
 export interface BackendAuthConfig extends AuthConfig {
   environment: RuntimeEnvironment;
 }
 
 export interface BackendAuth {
-  requireBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
-  optionalBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  requireBackendAuth: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
+  optionalBackendAuth: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => Promise<void>;
 }
 
 export const createBackendAuth = (

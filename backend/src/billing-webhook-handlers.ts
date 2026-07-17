@@ -1,6 +1,28 @@
 import { emptySubscription } from './billing-helpers.js';
+import type { SubscriptionSnapshot } from './billing-helpers.js';
 
-export const handleCheckoutCompleted = async (repository, object) => {
+interface WebhookObject {
+  metadata?: Record<string, string>;
+  client_reference_id?: string;
+  customer?: string;
+  subscription?: string;
+  status?: string;
+  current_period_end?: number;
+  cancel_at_period_end?: boolean;
+  id?: string;
+}
+
+export interface BillingRepository {
+  getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
+  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
+  hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
+  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
+}
+
+export const handleCheckoutCompleted = async (
+  repository: BillingRepository,
+  object: WebhookObject
+): Promise<void> => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
@@ -31,7 +53,10 @@ export const handleCheckoutCompleted = async (repository, object) => {
   }
 };
 
-export const handleSubscriptionUpdated = async (repository, object) => {
+export const handleSubscriptionUpdated = async (
+  repository: BillingRepository,
+  object: WebhookObject
+): Promise<void> => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
@@ -59,7 +84,10 @@ export const handleSubscriptionUpdated = async (repository, object) => {
   });
 };
 
-export const handlePaymentFailed = async (repository, object) => {
+export const handlePaymentFailed = async (
+  repository: BillingRepository,
+  object: WebhookObject
+): Promise<void> => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 
@@ -73,7 +101,10 @@ export const handlePaymentFailed = async (repository, object) => {
   });
 };
 
-export const handleSubscriptionDeleted = async (repository, object) => {
+export const handleSubscriptionDeleted = async (
+  repository: BillingRepository,
+  object: WebhookObject
+): Promise<void> => {
   const userId = object.metadata?.userId || object.client_reference_id;
   if (!userId) return;
 

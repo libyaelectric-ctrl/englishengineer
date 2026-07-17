@@ -4,7 +4,37 @@ import { logger } from './logger.js';
 const MAX_BATCH_SIZE = 50;
 const FLUSH_INTERVAL_MS = 5_000;
 
-export const createSupabaseAuditLogRepository = (config) => {
+interface AuditLogRecord {
+  id: string;
+  timestamp: string;
+  action?: string;
+  userId?: string;
+  details?: Record<string, unknown>;
+  severity?: string;
+  [key: string]: unknown;
+}
+
+interface AuditLogFilters {
+  userId?: string;
+  action?: string;
+  since?: string;
+  limit?: number;
+}
+
+interface AuditLogRepository {
+  insert(record: AuditLogRecord): void;
+  query(filters?: AuditLogFilters): Promise<AuditLogRecord[]>;
+  flush(): Promise<void>;
+}
+
+interface AuditLogConfig {
+  supabaseUrl?: string | null;
+  supabaseServiceRoleKey?: string | null;
+}
+
+export const createSupabaseAuditLogRepository = (
+  config: AuditLogConfig
+): AuditLogRepository | null => {
   if (!config?.supabaseUrl || !config?.supabaseServiceRoleKey) {
     return null;
   }
@@ -13,10 +43,10 @@ export const createSupabaseAuditLogRepository = (config) => {
     config.supabaseUrl,
     config.supabaseServiceRoleKey
   );
-  const pendingBatch = [];
-  let flushTimer = null;
+  const pendingBatch: AuditLogRecord[] = [];
+  let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
-  const flush = async () => {
+  const flush = async (): Promise<void> => {
     if (pendingBatch.length === 0) return;
     const batch = pendingBatch.splice(0, MAX_BATCH_SIZE);
     try {
@@ -36,13 +66,13 @@ export const createSupabaseAuditLogRepository = (config) => {
         });
         pendingBatch.unshift(...batch);
       }
-    } catch (err) {
+    } catch (err: any) {
       logger.error('Audit log flush error', { message: err.message });
       pendingBatch.unshift(...batch);
     }
   };
 
-  const scheduleFlush = () => {
+  const scheduleFlush = (): void => {
     if (flushTimer) return;
     flushTimer = setTimeout(() => {
       flushTimer = null;
@@ -50,7 +80,7 @@ export const createSupabaseAuditLogRepository = (config) => {
     }, FLUSH_INTERVAL_MS);
   };
 
-  const insert = (record) => {
+  const insert = (record: AuditLogRecord): void => {
     pendingBatch.push(record);
     if (pendingBatch.length >= MAX_BATCH_SIZE) {
       if (flushTimer) clearTimeout(flushTimer);
@@ -61,33 +91,33 @@ export const createSupabaseAuditLogRepository = (config) => {
     }
   };
 
-  const query = async (filters = {}) => {
+  const query = async (filters: AuditLogFilters = {}): Promise<AuditLogRecord[]> => {
     try {
-      let query = client
+      let queryBuilder = client
         .from('audit_logs')
         .select('*')
         .order('timestamp', { ascending: false });
 
       if (filters.userId) {
-        query = query.eq('user_id', filters.userId);
+        queryBuilder = queryBuilder.eq('user_id', filters.userId);
       }
       if (filters.action) {
-        query = query.eq('action', filters.action);
+        queryBuilder = queryBuilder.eq('action', filters.action);
       }
       if (filters.since) {
-        query = query.gte('timestamp', filters.since);
+        queryBuilder = queryBuilder.gte('timestamp', filters.since);
       }
 
       const limit = filters.limit || 100;
-      query = query.limit(limit);
+      queryBuilder = queryBuilder.limit(limit);
 
-      const { data, error } = await query;
+      const { data, error } = await queryBuilder;
       if (error) {
         logger.error('Audit log query error', { message: error.message });
         return [];
       }
 
-      return (data || []).map((row) => ({
+      return (data || []).map((row: any) => ({
         id: row.id,
         timestamp: row.timestamp,
         action: row.action,
@@ -95,7 +125,7 @@ export const createSupabaseAuditLogRepository = (config) => {
         details: row.details ? JSON.parse(row.details) : null,
         severity: row.severity,
       }));
-    } catch (err) {
+    } catch (err: any) {
       logger.error('Audit log query error', { message: err.message });
       return [];
     }

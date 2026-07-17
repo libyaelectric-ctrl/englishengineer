@@ -5,7 +5,12 @@ export class ApiError extends Error {
   code: string;
   details?: unknown;
 
-  constructor(status: number, code: string, message: string, details?: unknown) {
+  constructor(
+    status: number,
+    code: string,
+    message: string,
+    details?: unknown
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
@@ -15,7 +20,9 @@ export class ApiError extends Error {
 }
 
 export const toErrorResponse = (
-  error: ApiError | (Error & { status?: number; code?: string; details?: unknown })
+  error:
+    | ApiError
+    | (Error & { status?: number; code?: string; details?: unknown })
 ): { status: number; body: ApiErrorResponse } => {
   if (error instanceof ApiError || error.name === 'ApiError') {
     const apiErr = error as ApiError;
