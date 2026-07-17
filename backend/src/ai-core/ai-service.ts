@@ -11,17 +11,21 @@ import {
   getJsonStructureInstruction,
   getCustomPracticePrompt,
 } from '../prompts/prompt-loader.js';
+import type { AiConfig, AiOperation } from '../../types.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
-const readPrompt = (body) => body?.prompt ?? '';
+const readPrompt = (body: Record<string, any>): string => body?.prompt ?? '';
 
-const withTimeout = async (work, timeoutMs) => {
+const withTimeout = async <T>(
+  work: (signal: AbortSignal) => Promise<T>,
+  timeoutMs: number
+): Promise<T> => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await work(controller.signal);
-  } catch (error) {
+  } catch (error: any) {
     if (error?.name === 'AbortError') {
       throw new ApiError(
         504,
@@ -35,9 +39,29 @@ const withTimeout = async (work, timeoutMs) => {
   }
 };
 
-export const createAIService = (config, fetchImpl = fetch) => ({
-  async complete(operation, body) {
-    const prompt = readPrompt(body);
+interface AiResult {
+  contractVersion: string;
+  requestId: string;
+  operation: string;
+  text: string;
+  structuredResult?: Record<string, any> | null;
+  provider: string;
+  mode: 'mock' | 'real';
+  mockMode: boolean;
+  durationMs: number;
+}
+
+interface AiRequestBody {
+  prompt?: string;
+  operation?: string;
+  modeId?: string;
+  metadata?: { requestId?: string };
+  context?: any;
+}
+
+export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetch) => ({
+  async complete(operation: string, body: AiRequestBody): Promise<AiResult> {
+    const prompt = readPrompt(body as Record<string, any>);
     const requestId =
       typeof body?.metadata?.requestId === 'string'
         ? body.metadata.requestId
@@ -57,9 +81,8 @@ export const createAIService = (config, fetchImpl = fetch) => ({
       };
     }
 
-    // Only apply structured evaluation if requested by the frontend with a context object
     const isEvaluation =
-      ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'].includes(
+      (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(
         operation
       ) && body?.context !== undefined;
 
@@ -83,14 +106,14 @@ export const createAIService = (config, fetchImpl = fetch) => ({
 
     const text = await withTimeout((signal) => {
       if (config.provider === 'anthropic') {
-        return callAnthropic(config, finalPrompt, signal, fetchImpl);
+        return callAnthropic(config as any, finalPrompt, signal, fetchImpl);
       } else if (config.provider === 'gemini') {
-        return callGemini(config, finalPrompt, signal, fetchImpl, isEvaluation);
+        return callGemini(config as any, finalPrompt, signal, fetchImpl, isEvaluation);
       }
-      return callOpenAI(config, finalPrompt, signal, fetchImpl, isEvaluation);
+      return callOpenAI(config as any, finalPrompt, signal, fetchImpl, isEvaluation);
     }, config.timeoutMs);
 
-    let structuredResult = null;
+    let structuredResult: Record<string, any> | null = null;
     let responseText = text;
 
     if (isEvaluation) {
@@ -113,7 +136,7 @@ export const createAIService = (config, fetchImpl = fetch) => ({
         logger.error(
           'Failed to parse AI evaluation structured response',
           {},
-          err
+          err as Error
         );
       }
     }

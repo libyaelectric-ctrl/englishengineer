@@ -5,7 +5,9 @@ import { registerAdminRoutes } from '../src/admin-routes.js';
 const createMockApp = () => {
   const routes = {};
   return {
-    get: (path, ...handlers) => { routes[`GET ${path}`] = handlers; },
+    get: (path, ...handlers) => {
+      routes[`GET ${path}`] = handlers;
+    },
     routes,
   };
 };
@@ -35,7 +37,11 @@ describe('Admin Routes', () => {
 
     const req = { auth: { userId: 'admin-user', role: 'admin' } };
     let responseBody;
-    const res = { json: (body) => { responseBody = body; } };
+    const res = {
+      json: (body) => {
+        responseBody = body;
+      },
+    };
     const next = () => {};
 
     await routeHandler(req, res, next);
@@ -58,7 +64,11 @@ describe('Admin Routes', () => {
       validatedQuery: {},
     };
     let responseBody;
-    const res = { json: (body) => { responseBody = body; } };
+    const res = {
+      json: (body) => {
+        responseBody = body;
+      },
+    };
     const next = () => {};
 
     await routeHandler(req, res, next);
@@ -78,7 +88,11 @@ describe('Admin Routes', () => {
       validatedQuery: { limit: 5 },
     };
     let responseBody;
-    const res = { json: (body) => { responseBody = body; } };
+    const res = {
+      json: (body) => {
+        responseBody = body;
+      },
+    };
     const next = () => {};
 
     await routeHandler(req, res, next);

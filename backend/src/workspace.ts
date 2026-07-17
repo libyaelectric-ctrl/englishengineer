@@ -6,12 +6,17 @@ import {
   WorkspaceDocumentBodySchema,
 } from './validation.js';
 import { createSupabaseWorkspaceRepository } from './workspace-repository.js';
+import type { WorkspaceRepository } from './workspace-repository.js';
+import type { Request, Response, NextFunction } from 'express';
 
-export const createWorkspaceRepository = (config, fetchImpl = fetch) => {
+export const createWorkspaceRepository = (
+  config: Record<string, any>,
+  fetchImpl: typeof fetch = fetch
+): WorkspaceRepository => {
   return createSupabaseWorkspaceRepository(config.workspace);
 };
 
-const getWorkspaceLimit = (planId) => {
+const getWorkspaceLimit = (planId: string): number => {
   switch (planId) {
     case 'free':
     case 'pro':
@@ -27,20 +32,20 @@ const getWorkspaceLimit = (planId) => {
 };
 
 export const registerWorkspaceRoutes = (
-  app,
-  requireBackendAuth,
-  rateLimiter,
-  { repository }
-) => {
+  app: any,
+  requireBackendAuth: any,
+  rateLimiter: any,
+  { repository }: { repository: WorkspaceRepository | null }
+): void => {
   if (!repository) return;
 
-  const getUserId = (req) => req.auth?.userId;
+  const getUserId = (req: Request): string | undefined => (req as any).auth?.userId;
 
   app.get(
     '/api/workspaces',
     requireBackendAuth,
     rateLimiter,
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -62,7 +67,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces/:id',
     requireBackendAuth,
     rateLimiter,
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -72,7 +77,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const data = await repository.getWorkspace(req.params.id, userId);
+        const data = await repository.getWorkspace(req.params.id as string, userId);
         if (!data) {
           throw new ApiError(
             404,
@@ -92,7 +97,7 @@ export const registerWorkspaceRoutes = (
     requireBackendAuth,
     rateLimiter,
     validateBody(WorkspaceCreateBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -102,7 +107,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { name, planId } = req.validatedBody;
+        const { name, planId } = (req as any).validatedBody;
 
         const existingCount = await repository.countWorkspaces(userId);
         const limit = getWorkspaceLimit(planId || 'free');
@@ -132,7 +137,7 @@ export const registerWorkspaceRoutes = (
     requireBackendAuth,
     rateLimiter,
     validateBody(WorkspaceMemoryBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -142,12 +147,12 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { key, value } = req.validatedBody;
+        const { key, value } = (req as any).validatedBody;
         if (!key) {
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
 
-        const existing = await repository.getWorkspace(req.params.id, userId);
+        const existing = await repository.getWorkspace(req.params.id as string, userId);
         if (!existing) {
           throw new ApiError(
             404,
@@ -158,7 +163,7 @@ export const registerWorkspaceRoutes = (
 
         const updatedMemory = { ...(existing.memory || {}), [key]: value };
         const data = await repository.updateWorkspaceMemory(
-          req.params.id,
+          req.params.id as string,
           userId,
           updatedMemory
         );
@@ -173,7 +178,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces/:id',
     requireBackendAuth,
     rateLimiter,
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -184,7 +189,7 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const existing = await repository.getWorkspace(req.params.id, userId);
+        const existing = await repository.getWorkspace(req.params.id as string, userId);
         if (!existing) {
           throw new ApiError(
             404,
@@ -202,7 +207,7 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        await repository.deleteWorkspace(req.params.id, userId);
+        await repository.deleteWorkspace(req.params.id as string, userId);
         res.json({ success: true });
       } catch (error) {
         next(error);
@@ -215,7 +220,7 @@ export const registerWorkspaceRoutes = (
     requireBackendAuth,
     rateLimiter,
     validateBody(WorkspaceDocumentBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -225,7 +230,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { docName, docContent } = req.validatedBody;
+        const { docName, docContent } = (req as any).validatedBody;
         if (!docName) {
           throw new ApiError(
             400,
@@ -241,7 +246,7 @@ export const registerWorkspaceRoutes = (
           uploaded_at: new Date().toISOString(),
         };
 
-        const data = await repository.addDocument(req.params.id, userId, doc);
+        const data = await repository.addDocument(req.params.id as string, userId, doc);
         if (!data) {
           throw new ApiError(
             404,
@@ -260,7 +265,7 @@ export const registerWorkspaceRoutes = (
     '/api/workspaces/:id/documents/:docId',
     requireBackendAuth,
     rateLimiter,
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = getUserId(req);
         if (!userId) {
@@ -272,9 +277,9 @@ export const registerWorkspaceRoutes = (
         }
 
         const data = await repository.deleteDocument(
-          req.params.id,
+          req.params.id as string,
           userId,
-          req.params.docId
+          req.params.docId as string
         );
         if (!data) {
           throw new ApiError(

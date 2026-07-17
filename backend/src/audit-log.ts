@@ -2,10 +2,27 @@ import { logger } from './logger.js';
 
 const MAX_LOG_SIZE = 10_000;
 
-const logs = [];
-let supabaseRepository = null;
+interface AuditLogEntry {
+  id: string;
+  timestamp: string;
+  action?: string;
+  userId?: string;
+  details?: Record<string, unknown>;
+  severity?: string;
+  [key: string]: unknown;
+}
 
-export const initAuditLog = async (config) => {
+interface AuditLogFilters {
+  userId?: string;
+  action?: string;
+  since?: string;
+  limit?: number;
+}
+
+const logs: AuditLogEntry[] = [];
+let supabaseRepository: any = null;
+
+export const initAuditLog = async (config: Record<string, any>): Promise<void> => {
   try {
     if (
       config?.workspace?.configured &&
@@ -16,7 +33,7 @@ export const initAuditLog = async (config) => {
         await import('./supabase-audit-log-repository.js');
       supabaseRepository = createSupabaseAuditLogRepository(config.workspace);
     }
-  } catch (error) {
+  } catch (error: any) {
     logger.warn('Failed to initialize remote audit repository', {
       error: error?.message || error,
     });
@@ -24,8 +41,8 @@ export const initAuditLog = async (config) => {
   }
 };
 
-export const auditLog = (entry) => {
-  const record = {
+export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
+  const record: AuditLogEntry = {
     id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: new Date().toISOString(),
     ...entry,
@@ -48,7 +65,7 @@ export const auditLog = (entry) => {
   return record;
 };
 
-export const getAuditLogs = async (filters = {}) => {
+export const getAuditLogs = async (filters: AuditLogFilters = {}): Promise<AuditLogEntry[]> => {
   if (supabaseRepository) {
     const remoteLogs = await supabaseRepository.query(filters);
     if (remoteLogs.length > 0) return remoteLogs;
@@ -87,4 +104,4 @@ export const AUDIT_ACTIONS = {
   WORKSPACE_DELETED: 'workspace_deleted',
   RATE_LIMIT_EXCEEDED: 'rate_limit_exceeded',
   ADMIN_ACCESS: 'admin_access',
-};
+} as const;

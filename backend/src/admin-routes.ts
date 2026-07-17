@@ -1,17 +1,20 @@
 import { requireRole } from './middleware/rbac.middleware.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 import { getAuditLogs } from './audit-log.js';
+import type { Request, Response, NextFunction } from 'express';
 
-export const registerAdminRoutes = (app, requireBackendAuth, rateLimiter) => {
-  // Admin dashboard stats
+export const registerAdminRoutes = (
+  app: any,
+  requireBackendAuth: any,
+  rateLimiter: any
+): void => {
   app.get(
     '/api/admin/stats',
     requireBackendAuth,
     requireRole(['admin']),
     rateLimiter,
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
-        // In production, these would come from database
         const stats = {
           totalUsers: 4,
           activeSubscriptions: 2,
@@ -34,20 +37,19 @@ export const registerAdminRoutes = (app, requireBackendAuth, rateLimiter) => {
     }
   );
 
-  // Activity timeline (audit logs)
   app.get(
     '/api/admin/activity',
     requireBackendAuth,
     requireRole(['admin']),
     rateLimiter,
     validateQuery(AdminAuditLogsQuerySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const filters = {
-          userId: req.validatedQuery.userId || undefined,
-          action: req.validatedQuery.action || undefined,
-          since: req.validatedQuery.since || undefined,
-          limit: req.validatedQuery.limit || 50,
+          userId: (req as any).validatedQuery.userId || undefined,
+          action: (req as any).validatedQuery.action || undefined,
+          since: (req as any).validatedQuery.since || undefined,
+          limit: (req as any).validatedQuery.limit || 50,
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });
