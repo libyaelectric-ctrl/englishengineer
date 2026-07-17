@@ -19,6 +19,25 @@ const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
   ['free', 'pro', 'project', 'max', 'exec', 'private'].includes(plan.id)
 );
 
+const getAccessBadge = (id: string): string => {
+  switch (id) {
+    case 'free':
+      return 'ACCESS-LVL-00';
+    case 'pro':
+      return 'ACCESS-LVL-01';
+    case 'project':
+      return 'ACCESS-LVL-02';
+    case 'max':
+      return 'ACCESS-LVL-03';
+    case 'exec':
+      return 'ACCESS-LVL-04';
+    case 'private':
+      return 'SECURE-PRIVATE';
+    default:
+      return 'ACCESS-LVL-01';
+  }
+};
+
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -111,7 +130,7 @@ const PricingPage = () => {
       return (
         <Link
           to={href}
-          className="mt-6 flex h-10 w-full items-center justify-center rounded-lg border border-border-soft text-sm font-medium hover:bg-surface-hover transition-colors"
+          className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-bold uppercase tracking-wider hover:bg-[#faf8ff] transition-all cursor-pointer shadow-sm text-foreground"
         >
           {currentUser ? 'Go to dashboard' : 'Start free'}
         </Link>
@@ -122,7 +141,7 @@ const PricingPage = () => {
         <button
           type="button"
           disabled
-          className="mt-6 flex h-10 w-full items-center justify-center rounded-lg border border-border-soft bg-surface text-sm font-medium text-muted-copy cursor-not-allowed opacity-50"
+          className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-bold uppercase tracking-wider text-muted-copy cursor-not-allowed opacity-50 shadow-sm"
         >
           Coming soon
         </button>
@@ -133,7 +152,7 @@ const PricingPage = () => {
         <button
           type="button"
           disabled
-          className="mt-6 flex h-10 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 text-sm font-medium text-success cursor-not-allowed"
+          className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-success/20 bg-success/10 text-xs font-bold uppercase tracking-wider text-success cursor-not-allowed shadow-sm"
         >
           Current plan
         </button>
@@ -145,7 +164,7 @@ const PricingPage = () => {
         type="button"
         onClick={() => void handleCheckout(plan.id)}
         disabled={!billingEnabled || inProgress || isBillingHealthLoading}
-        className="mt-6 flex h-10 w-full items-center justify-center rounded-lg bg-foreground text-sm font-medium text-background hover:opacity-90 transition-opacity disabled:opacity-50"
+        className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] bg-[#0047bb] text-xs font-bold uppercase tracking-wider text-white hover:bg-[#0047bb]/95 transition-all cursor-pointer shadow-sm"
       >
         {inProgress ? 'Loading...' : `Upgrade to ${plan.name}`}
       </button>
@@ -153,35 +172,47 @@ const PricingPage = () => {
   };
 
   return (
-    <main className="bg-transparent text-foreground min-h-screen">
+    <main className="bg-[#faf8ff] text-foreground min-h-screen relative z-10 pb-16">
       <PageMetadata
         title="Pricing"
         description="Choose the EngVox plan that fits your work."
       />
 
-      <section className="py-10 text-center">
-        <div className="mx-auto max-w-3xl px-4">
+      <section className="py-10 text-center relative overflow-hidden border-b border-[#d9d9e3] bg-white">
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage:
+              'linear-gradient(#0047bb 1px, transparent 1px), linear-gradient(90deg, #0047bb 1px, transparent 1px)',
+            backgroundSize: '20px 20px',
+          }}
+        />
+        <div className="mx-auto max-w-3xl px-4 relative z-10">
           <div className="flex justify-center mb-4">
-            <img src="/brand/mascot.png" alt="EngVox" className="h-20 w-auto" />
+            <img src="/brand/mascot.png" alt="Mascor" className="h-20 w-auto" />
           </div>
-          <p className="text-xs font-medium text-muted-copy">Pricing</p>
-          <h1 className="mt-2 text-3xl font-bold sm:text-4xl">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+            Pricing Plans & Access Control
+          </p>
+          <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl tracking-tight text-foreground">
             Choose your access level.
           </h1>
-          <p className="mt-3 text-sm text-muted-copy max-w-xl mx-auto">
+          <p className="mt-3 text-xs text-muted-copy max-w-xl mx-auto font-medium">
             AI-powered communication training for engineers on international
             projects.
           </p>
 
           {billingReadiness !== 'ready' && subscription?.planId !== 'pro' && (
-            <div className="mx-auto mt-6 flex w-fit items-start gap-2 rounded-lg border border-warning/20 bg-warning/5 px-4 py-2.5 text-xs text-warning">
+            <div className="mx-auto mt-6 flex w-fit items-start gap-2 rounded-[4px] border border-warning/20 bg-warning/5 px-4 py-2.5 text-xs text-warning">
               <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              <span>{billingBanner}</span>
+              <span className="font-bold uppercase tracking-wider text-[10px]">
+                {billingBanner}
+              </span>
             </div>
           )}
           {checkoutError && (
             <p
-              className="mx-auto mt-3 max-w-xl rounded-lg border border-error/20 bg-error/5 px-4 py-2.5 text-xs text-error"
+              className="mx-auto mt-3 max-w-xl rounded-[4px] border border-error/20 bg-error/5 px-4 py-2.5 text-xs text-error font-bold uppercase tracking-wider"
               role="alert"
             >
               {checkoutError}
@@ -191,55 +222,63 @@ const PricingPage = () => {
       </section>
 
       {/* Plans grid */}
-      <section className="pb-16">
+      <section className="py-16">
         <div className="mx-auto grid max-w-5xl gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
           {ACTIVE_PLANS.map((plan) => (
             <article
               key={plan.id}
-              className={`relative flex flex-col rounded-xl border p-6 ${
+              className={`relative flex flex-col rounded-[4px] border p-6 bg-white ${
                 plan.id === 'pro' || plan.id === 'project'
-                  ? 'border-border-hover bg-surface shadow-sm'
-                  : 'border-border-soft'
+                  ? 'border-[#0047bb]/50 shadow-md'
+                  : 'border-[#d9d9e3] shadow-sm'
               }`}
             >
+              {plan.id === 'pro' && (
+                <div className="absolute -top-3 left-4 rounded-[4px] bg-[#0047bb] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
+                  Recommended
+                </div>
+              )}
               <div className="flex items-start justify-between">
-                <p className="text-sm font-semibold">{plan.name}</p>
-                <span
-                  className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${
-                    plan.id === 'free' || billingEnabled
-                      ? 'border-success/20 bg-success/10 text-success'
-                      : 'border-border-soft bg-surface text-muted-copy'
-                  }`}
-                >
-                  {plan.id === 'free' || billingEnabled ? 'Available' : 'Soon'}
+                <p className="text-sm font-bold text-foreground">{plan.name}</p>
+                <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                  {getAccessBadge(plan.id)}
                 </span>
               </div>
-              <p className="mt-3 text-3xl font-bold">{plan.price}</p>
-              <p className="text-xs text-muted-copy">{plan.cadence}</p>
-              <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed">
+              <p className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
+                {plan.price}
+              </p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+                {plan.cadence}
+              </p>
+              <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed font-medium">
                 {plan.audience}
               </p>
 
-              <div className="mt-3 rounded-lg border border-border-soft bg-surface p-3">
-                <p className="text-[10px] font-medium text-muted-copy uppercase">
+              <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
+                <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                   Best for
                 </p>
-                <p className="mt-0.5 text-xs font-medium">{plan.bestFor}</p>
+                <p className="mt-0.5 text-xs font-bold text-foreground">
+                  {plan.bestFor}
+                </p>
               </div>
 
-              <p className="mt-4 text-[10px] font-medium text-muted-copy uppercase">
+              <p className="mt-4 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                 Included
               </p>
               <ul className="mt-2 flex-1 space-y-2">
                 {plan.benefits.map((b) => (
-                  <li key={b} className="flex gap-2 text-xs text-muted-copy">
-                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+                  <li
+                    key={b}
+                    className="flex gap-2 text-xs text-muted-copy font-medium"
+                  >
+                    <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0047bb]" />
                     {b}
                   </li>
                 ))}
               </ul>
-              <div className="mt-3 flex gap-2 border-t border-border-soft pt-3 text-[10px] text-muted-copy">
-                <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+              <div className="mt-3 flex gap-2 border-t border-[#d9d9e3] pt-3 text-[10px] text-muted-copy font-medium">
+                <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
                 {plan.notIncluded}
               </div>
               {renderPlanAction(plan)}
@@ -249,14 +288,14 @@ const PricingPage = () => {
       </section>
 
       {/* Comparison table */}
-      <section className="border-t border-border-soft bg-surface py-12">
+      <section className="py-12 bg-white border-t border-b border-[#d9d9e3]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-lg font-semibold">Compare plans</h2>
-          <div className="mt-4 overflow-x-auto rounded-xl border border-border-soft">
-            <table className="w-full min-w-[600px] border-collapse bg-surface text-left text-xs">
-              <thead className="bg-surface-hover/30">
+          <h2 className="text-lg font-bold text-foreground">Compare plans</h2>
+          <div className="mt-4 overflow-x-auto rounded-[4px] border border-[#d9d9e3] shadow-sm">
+            <table className="w-full min-w-[600px] border-collapse bg-white text-left text-xs">
+              <thead className="bg-[#f3f3fd]">
                 <tr>
-                  <th className="border-b border-border-soft p-3 font-medium">
+                  <th className="border-b border-[#d9d9e3] p-3 text-xs font-bold uppercase tracking-wider text-foreground">
                     Feature
                   </th>
                   {ACTIVE_PLANS.filter((p) =>
@@ -264,7 +303,7 @@ const PricingPage = () => {
                   ).map((p) => (
                     <th
                       key={p.id}
-                      className="border-b border-border-soft p-3 font-medium text-center"
+                      className="border-b border-[#d9d9e3] p-3 text-xs font-bold uppercase tracking-wider text-foreground text-center"
                     >
                       {p.name}
                     </th>
@@ -277,9 +316,9 @@ const PricingPage = () => {
                 ).map((key) => (
                   <tr
                     key={key}
-                    className="border-b border-border-soft/50 last:border-0 hover:bg-surface-hover/20"
+                    className="border-b border-[#d9d9e3]/60 last:border-0 hover:bg-[#faf8ff] transition-colors"
                   >
-                    <td className="p-3 font-medium capitalize">
+                    <td className="p-3 font-bold text-foreground capitalize">
                       {key === 'ai' ? 'AI Coach' : key}
                     </td>
                     {ACTIVE_PLANS.filter((p) =>
@@ -287,7 +326,7 @@ const PricingPage = () => {
                     ).map((p) => (
                       <td
                         key={p.id}
-                        className="p-3 text-center text-muted-copy"
+                        className="p-3 text-center text-muted-copy font-medium"
                       >
                         {p.comparison[key]}
                       </td>
@@ -299,33 +338,58 @@ const PricingPage = () => {
           </div>
 
           {/* Enterprise section */}
-          <div className="mt-8 rounded-xl border border-border-soft bg-background p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-foreground text-background text-sm font-bold">
+          <div
+            className="mt-8 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-6 shadow-sm relative overflow-hidden"
+            style={{
+              backgroundImage:
+                'linear-gradient(rgba(0, 71, 187, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 71, 187, 0.03) 1px, transparent 1px)',
+              backgroundSize: '20px 20px',
+            }}
+          >
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-[#0047bb] text-white text-xs font-bold uppercase tracking-wider font-mono shadow-sm">
                 EP
               </div>
               <div>
-                <h3 className="text-sm font-semibold">Enterprise & Private</h3>
-                <p className="text-xs text-muted-copy">
+                <h3 className="text-sm font-bold text-foreground">
+                  Enterprise & Private
+                </h3>
+                <p className="text-xs text-muted-copy font-medium">
                   For large teams and government contractors
                 </p>
               </div>
             </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-lg border border-border-soft p-4">
-                <p className="text-sm font-medium">Exec · $99/mo</p>
-                <p className="mt-1 text-xs text-muted-copy">
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 relative z-10">
+              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-foreground">Exec</p>
+                  <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                    ACCESS-LVL-04
+                  </span>
+                </div>
+                <p className="mt-2 text-xs font-extrabold tracking-tight text-foreground">
+                  $99/mo
+                </p>
+                <p className="mt-1.5 text-xs text-muted-copy font-medium leading-relaxed">
                   VIP coaching, priority support, offline audio
                 </p>
               </div>
-              <div className="rounded-lg border border-border-soft p-4">
-                <p className="text-sm font-medium">Private · $999/mo</p>
-                <p className="mt-1 text-xs text-muted-copy">
+              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-bold text-foreground">Private</p>
+                  <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                    SECURE-PRIVATE
+                  </span>
+                </div>
+                <p className="mt-2 text-xs font-extrabold tracking-tight text-foreground">
+                  $999/mo
+                </p>
+                <p className="mt-1.5 text-xs text-muted-copy font-medium leading-relaxed">
                   Dedicated server, zero-data retention, custom security
                 </p>
               </div>
             </div>
-            <p className="mt-4 text-xs text-muted-copy">
+            <p className="mt-4 text-xs text-muted-copy font-medium relative z-10">
               Contact us for enterprise deployment and custom requirements.
             </p>
           </div>
