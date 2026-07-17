@@ -106,9 +106,9 @@ const ListeningPage = () => {
 
   if (!currentMission) {
     return (
-      <div className="animate-in fade-in duration-300">
-        <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
+      <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-4 animate-in fade-in duration-300">
+        <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Listening
           </h1>
         </div>
@@ -125,13 +125,13 @@ const ListeningPage = () => {
   }
 
   return (
-    <div className="animate-in fade-in duration-300">
+    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Sticky header — clean, full-width */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-black tracking-tight text-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Listening
-            <span className="ml-2 text-sm font-medium text-muted-copy">
+            <span className="ml-2 text-sm font-bold text-muted-copy">
               Mission{' '}
               {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}
               /{visibleMissions.length}
@@ -139,7 +139,7 @@ const ListeningPage = () => {
           </h1>
         </div>
       </div>
-      <div className="space-y-6 pt-4 pb-8">
+      <div className="space-y-6 pt-4">
         <LevelContentFilter
           value={levelFilter}
           currentLevel={currentLevel}
@@ -158,10 +158,10 @@ const ListeningPage = () => {
                   key={cat}
                   type="button"
                   onClick={() => setCategoryFilter(cat)}
-                  className={`min-h-9 rounded-lg px-3 text-xs font-bold transition-all ${
+                  className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
                     categoryFilter === cat
-                      ? 'bg-foreground text-background shadow-sm'
-                      : 'text-muted-copy border border-border-soft bg-surface hover:bg-surface-hover hover:text-foreground'
+                      ? 'bg-[#0047bb] border-[#0047bb] text-white shadow-sm'
+                      : 'text-muted-copy border-[#d9d9e3] bg-white hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                   }`}
                 >
                   {cat}
@@ -172,11 +172,11 @@ const ListeningPage = () => {
               {filteredMissions.map((mission) => (
                 <article
                   key={mission.id}
-                  className="rounded-xl border border-border-soft bg-background p-5 hover:shadow-md transition-shadow"
+                  className="group rounded-[4px] border border-[#d9d9e3] bg-white p-5 hover:border-[#0047bb]/30 hover:shadow-md transition-all duration-200"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full border border-border-soft bg-background px-2 py-1 text-xs font-bold text-foreground">
+                      <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                         {mission.cefrLevel}
                       </span>
                       <LevelAccessBadge
@@ -186,18 +186,18 @@ const ListeningPage = () => {
                         )}
                       />
                     </div>
-                    <span className="text-xs text-muted-copy">
-                      {mission.estimatedMinutes} min
+                    <span className="text-xs text-muted-copy font-bold">
+                      {mission.estimatedMinutes} M
                     </span>
                   </div>
-                  <h2 className="mt-3 font-medium text-foreground">
+                  <h2 className="mt-3 font-bold text-foreground group-hover:text-[#0047bb] transition-colors tracking-tight">
                     {mission.title}
                   </h2>
-                  <p className="mt-2 text-sm leading-6 text-muted-copy">
+                  <p className="mt-2 text-sm leading-6 text-muted-copy font-normal">
                     {mission.description}
                   </p>
                   <Button
-                    className="mt-4 w-full"
+                    className="mt-4 w-full rounded-[4px] font-bold uppercase tracking-wider text-[10px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] h-10"
                     onClick={() => {
                       selectMission(mission.id);
                       setWorkspaceOpen(true);
@@ -212,19 +212,23 @@ const ListeningPage = () => {
         ) : (
           <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Button variant="outline" onClick={() => setWorkspaceOpen(false)}>
+              <Button
+                variant="outline"
+                className="rounded-[4px] cursor-pointer text-xs h-9 border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+                onClick={() => setWorkspaceOpen(false)}
+              >
                 Back to tasks
               </Button>
-              <span className="text-sm font-medium text-muted-copy">
+              <span className="text-sm font-bold text-muted-copy uppercase tracking-wider">
                 {currentMission.cefrLevel} · {currentMission.missionType}
               </span>
             </div>
 
             <AudioPlayer mission={currentMission} />
 
-            <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-3">
-              <Gauge className="h-4 w-4 text-primary shrink-0" />
-              <span className="text-xs font-bold text-foreground">
+            <div className="flex items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+              <Gauge className="h-4 w-4 text-[#0047bb] shrink-0" />
+              <span className="text-xs font-bold text-foreground uppercase tracking-wider">
                 Playback Speed:
               </span>
               <div className="flex gap-1.5">
@@ -233,10 +237,10 @@ const ListeningPage = () => {
                     key={speed}
                     type="button"
                     onClick={() => setPlaybackSpeed(speed)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-colors ${
+                    className={`rounded-[4px] px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer border ${
                       playbackSpeed === speed
-                        ? 'bg-primary text-white'
-                        : 'bg-surface-hover text-muted-copy hover:text-foreground'
+                        ? 'bg-[#0047bb] text-white border-[#0047bb]'
+                        : 'bg-[#f3f3fd] border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                     }`}
                   >
                     {speed}x
@@ -247,6 +251,7 @@ const ListeningPage = () => {
 
             <Button
               variant="outline"
+              className="rounded-[4px] cursor-pointer text-xs h-9 border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
               onClick={() => setShowTranscript((prev) => !prev)}
             >
               {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
@@ -258,7 +263,7 @@ const ListeningPage = () => {
                 subtitle="Read the transcript, then complete all three response modes"
                 icon={FileText}
               >
-                <div className="whitespace-pre-line rounded-xl border border-border-soft bg-surface-hover p-5 text-sm leading-7 text-foreground">
+                <div className="whitespace-pre-line rounded-[4px] border border-[#d9d9e3] bg-white p-5 text-sm leading-[1.7] text-foreground font-normal shadow-sm">
                   {currentMission.transcript}
                 </div>
               </SectionCard>
@@ -274,9 +279,9 @@ const ListeningPage = () => {
                   {currentMission.questions.map((question, index) => (
                     <fieldset
                       key={question.id}
-                      className="rounded-xl border border-border-soft p-4"
+                      className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 shadow-sm"
                     >
-                      <legend className="px-2 text-sm font-medium text-foreground">
+                      <legend className="px-2 text-sm font-bold text-foreground uppercase tracking-wider font-mono">
                         {index + 1}. {question.questionText}
                       </legend>
                       {question.type === 'multiple_choice' ? (
@@ -286,7 +291,7 @@ const ListeningPage = () => {
                             return (
                               <label
                                 key={choice}
-                                className="flex cursor-pointer gap-2 rounded-lg border border-border-soft p-3 text-sm text-foreground"
+                                className="flex cursor-pointer gap-2.5 rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm text-foreground hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 transition-colors"
                               >
                                 <input
                                   type="radio"
@@ -308,7 +313,7 @@ const ListeningPage = () => {
                             onChange={(event) =>
                               setAnswer(question.id, event.target.value)
                             }
-                            className="w-full rounded-lg border border-border-soft p-3 text-sm"
+                            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none"
                           >
                             <option value="">Select true or false</option>
                             <option value="true">True</option>
@@ -324,35 +329,37 @@ const ListeningPage = () => {
                               setAnswer(question.id, event.target.value)
                             }
                             placeholder="Complete the missing technical phrase"
-                            className="w-full rounded-lg border border-border-soft p-3 text-sm"
+                            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold"
                           />
                         </label>
                       )}
                     </fieldset>
                   ))}
 
-                  <label className="block text-sm font-medium text-foreground">
+                  <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
                     <span className="flex items-center gap-2">
-                      <KeyRound className="h-4 w-4" /> Key words you identified
+                      <KeyRound className="h-4 w-4 text-[#0047bb]" /> Key words
+                      you identified
                     </span>
                     <input
                       value={userKeywords}
                       onChange={(event) => setUserKeywords(event.target.value)}
                       placeholder="Separate key words with commas"
-                      className="mt-2 w-full rounded-lg border border-border-soft p-3 font-normal"
+                      className="mt-2 w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy"
                     />
                   </label>
-                  <label className="block text-sm font-medium text-foreground">
+                  <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
                     Short transcript summary
                     <textarea
                       value={summary}
                       onChange={(event) => setSummary(event.target.value)}
-                      className="mt-2 min-h-[160px] w-full resize-y rounded-lg border border-border-soft p-3 font-normal"
+                      className="mt-2 min-h-[160px] w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy leading-relaxed"
                     />
                   </label>
                   <Button
                     onClick={() => submitCurrentMission()}
                     disabled={!summary.trim()}
+                    className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
                   >
                     Submit transcript task
                   </Button>
@@ -365,42 +372,45 @@ const ListeningPage = () => {
                 icon={CheckCircle2}
               >
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-xl bg-surface-hover p-4">
-                    <p className="text-xs font-medium text-muted-copy">
+                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                    <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Final score
                     </p>
-                    <p className="text-2xl font-black text-foreground">
+                    <p className="text-2xl font-bold text-foreground">
                       <AnimatedScore value={evaluationResult.finalScore} />
                     </p>
                   </div>
-                  <div className="rounded-xl bg-surface-hover p-4">
-                    <p className="text-xs font-medium text-muted-copy">
+                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                    <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Comprehension
                     </p>
-                    <p className="text-2xl font-black text-foreground">
+                    <p className="text-2xl font-bold text-foreground">
                       <AnimatedScore
                         value={evaluationResult.comprehensionScore}
                       />
                     </p>
                   </div>
-                  <div className="rounded-xl bg-surface-hover p-4">
-                    <p className="text-xs font-medium text-muted-copy">
+                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                    <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Key words
                     </p>
-                    <p className="text-2xl font-black text-foreground">
+                    <p className="text-2xl font-bold text-foreground">
                       <AnimatedScore value={evaluationResult.keywordScore} />
                     </p>
                   </div>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-foreground">
+                <p className="mt-4 text-sm leading-6 text-foreground font-normal">
                   {evaluationResult.feedback}
                 </p>
-                <Button className="mt-4" onClick={resetCurrentMission}>
+                <Button
+                  className="mt-4 bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm animate-in fade-in"
+                  onClick={resetCurrentMission}
+                >
                   Try another response
                 </Button>
                 <Button
                   variant="outline"
-                  className="mt-4 ml-2"
+                  className="mt-4 ml-2 rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm"
                   onClick={resetCurrentMission}
                 >
                   <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio
