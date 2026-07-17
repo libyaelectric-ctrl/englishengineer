@@ -13,19 +13,17 @@ export const KnowledgeGraph = ({
   setSelectedGraphNode: (node: GraphNode | null) => void;
 }) => {
   return (
-    <div className="rounded-2xl border border-border-soft bg-surface shadow-sm overflow-hidden">
-      <div className="px-5 pt-4 pb-3 border-b border-border-soft">
+    <div className="rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div className="px-5 pt-4 pb-3 border-b border-[#d9d9e3]">
         <div className="flex items-center gap-2">
-          <Network className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold text-foreground">
-            Knowledge Graph
-          </h3>
+          <Network className="h-4 w-4 text-[#0047bb]" />
+          <h3 className="text-sm font-bold text-foreground">Knowledge Graph</h3>
         </div>
-        <p className="text-[11px] text-muted-copy mt-0.5">
+        <p className="text-[11px] text-muted-copy mt-0.5 font-medium">
           Click nodes to explore connections.
         </p>
       </div>
-      <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-surface-hover select-none">
+      <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-[#faf8ff] select-none">
         <svg viewBox="0 0 800 500" className="h-full w-full">
           {GRAPH_LINKS.map((link, idx) => {
             const source = GRAPH_NODES.find((n) => n.id === link.source);
@@ -42,9 +40,7 @@ export const KnowledgeGraph = ({
                 y1={source.y}
                 x2={target.x}
                 y2={target.y}
-                stroke={
-                  isHighlighted ? 'var(--color-primary, #6366f1)' : '#e2e8f0'
-                }
+                stroke={isHighlighted ? '#0047bb' : '#e2e8f0'}
                 strokeWidth={isHighlighted ? 2.5 : 1.2}
                 strokeDasharray={
                   link.source.startsWith('topic') ||
@@ -87,7 +83,7 @@ export const KnowledgeGraph = ({
                 <text
                   y={node.size + 14}
                   textAnchor="middle"
-                  className="text-[10px] font-medium"
+                  className="text-[10px] font-bold"
                   fill="currentColor"
                   opacity={isHighlighted ? 1 : 0.25}
                 >
@@ -99,7 +95,7 @@ export const KnowledgeGraph = ({
         </svg>
         {!selectedGraphNode && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-medium text-muted-copy animate-pulse">
+            <p className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-[4px] border border-[#d9d9e3] text-xs font-bold text-muted-copy animate-pulse uppercase tracking-wider shadow-sm">
               Click a node to explore
             </p>
           </div>

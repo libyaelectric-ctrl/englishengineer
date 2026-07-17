@@ -17,17 +17,17 @@ const WordCard = ({
   word: MyVocabularyWord;
   onArchive: (id: string) => void;
 }) => (
-  <div className="rounded-xl border border-border-soft bg-surface p-4">
+  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm hover:shadow-md transition-all duration-300">
     <div className="flex items-start justify-between">
       <div>
-        <p className="text-sm font-medium text-foreground">{word.term}</p>
+        <p className="text-sm font-bold text-foreground">{word.term}</p>
         {word.turkishMeaning && (
           <p className="mt-1 text-xs text-muted-copy">{word.turkishMeaning}</p>
         )}
       </div>
       <button
         onClick={() => onArchive(word.id)}
-        className="text-muted-copy hover:text-error transition-colors"
+        className="text-muted-copy hover:text-error transition-colors cursor-pointer"
         aria-label="Archive word"
       >
         <svg
@@ -68,7 +68,7 @@ export const MyVocabularySection = ({
       icon={BookMarked}
     >
       {activeWords.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-border-soft bg-surface-hover p-8 text-center text-xs text-muted-copy">
+        <p className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-white/60 p-8 text-center text-xs text-muted-copy">
           Your custom vocabulary list is empty. Any custom terms you save will
           appear here.
         </p>

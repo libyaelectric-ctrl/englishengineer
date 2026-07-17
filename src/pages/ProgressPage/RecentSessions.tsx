@@ -17,10 +17,10 @@ export const RecentSessions = ({
         {sessions.map((session) => (
           <div
             key={`${session.timestamp}-${session.module}`}
-            className="flex items-center justify-between rounded-xl border border-border-soft bg-surface-hover p-4"
+            className="flex items-center justify-between rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
           >
             <div>
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-sm font-bold text-foreground">
                 {session.module}
               </p>
               <p className="text-[10px] font-mono text-muted-copy">
@@ -28,7 +28,7 @@ export const RecentSessions = ({
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-medium text-primary">
+              <p className="text-sm font-bold text-[#0047bb]">
                 {session.score}%
               </p>
               <p className="text-[10px] font-mono text-muted-copy">
@@ -38,7 +38,9 @@ export const RecentSessions = ({
           </div>
         ))}
         {sessions.length === 0 && (
-          <p className="text-xs text-muted-copy">No recent sessions yet.</p>
+          <p className="text-xs text-muted-copy font-medium">
+            No recent sessions yet.
+          </p>
         )}
       </div>
     </SectionCard>

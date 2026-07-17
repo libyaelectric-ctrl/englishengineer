@@ -48,14 +48,14 @@ export const GamificationContent = ({
               color="primary"
             />
           </div>
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-            <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-medium">
+          <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-5 shadow-sm">
+            <p className="text-[10px] font-mono text-[#0047bb] uppercase tracking-widest font-bold">
               Next Reward
             </p>
-            <h3 className="mt-2 text-lg font-medium text-foreground">
+            <h3 className="mt-2 text-lg font-bold text-foreground">
               {gamification.nextReward.title}
             </h3>
-            <p className="text-xs text-muted-copy mt-2">
+            <p className="text-xs text-muted-copy mt-2 font-medium">
               {gamification.nextReward.description}
             </p>
           </div>
@@ -153,7 +153,7 @@ export const GamificationContent = ({
               {gamification.titles.map((title) => (
                 <span
                   key={title}
-                  className="text-[10px] font-mono uppercase bg-primary/15 text-primary border border-primary/20 px-2 py-1 rounded-lg"
+                  className="text-[10px] font-mono uppercase bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/20 px-2 py-1 rounded-[4px] font-bold"
                 >
                   {title}
                 </span>

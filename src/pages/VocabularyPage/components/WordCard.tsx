@@ -64,10 +64,10 @@ export const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-xl border bg-surface p-5 shadow-sm relative ${
+      className={`flex h-full flex-col rounded-[4px] border-y border-r border-[#d9d9e3] border-l-2 bg-white/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${
         progress?.isWeak
-          ? 'border-rose-300 bg-rose-50/30'
-          : 'border-border-soft'
+          ? 'border-l-rose-500 bg-rose-50/10'
+          : 'border-l-[#0047bb]'
       }`}
       style={{ perspective: '1000px' }}
     >

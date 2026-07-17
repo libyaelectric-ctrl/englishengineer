@@ -39,14 +39,18 @@ export const MistakeLog = ({
   };
 
   return (
-    <Card id="mistake-log" className="space-y-5" hoverEffect={false}>
+    <Card
+      id="mistake-log"
+      className="space-y-5 p-5 shadow-sm"
+      hoverEffect={false}
+    >
       <div className="flex items-center gap-3">
-        <ClipboardList className="h-5 w-5 text-primary" />
+        <ClipboardList className="h-5 w-5 text-[#0047bb]" />
         <div>
-          <h2 className="text-xl font-medium text-foreground">
+          <h2 className="text-xl font-bold text-foreground">
             Mistake Log / Hata Defteri
           </h2>
-          <p className="text-sm text-muted-copy">
+          <p className="text-xs text-muted-copy font-medium uppercase tracking-wider">
             Record patterns worth practising again.
           </p>
         </div>
@@ -59,14 +63,14 @@ export const MistakeLog = ({
             onChange={(event) =>
               setCategory(event.target.value as MistakeCategory)
             }
-            className="min-h-11 w-full rounded-lg border border-border-soft bg-surface px-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/20 shadow-sm cursor-pointer"
           >
             {MISTAKE_CATEGORIES.map((item) => (
               <option key={item}>{item}</option>
             ))}
           </select>
         </label>
-        <p className="rounded-lg border border-primary/20 bg-primary/5 p-3 text-xs leading-5 text-foreground">
+        <p className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 text-xs leading-5 text-foreground font-medium shadow-sm">
           Suggestion: {MISTAKE_SUGGESTIONS[category]}
         </p>
         <label className="block">
@@ -75,7 +79,7 @@ export const MistakeLog = ({
             value={originalText}
             onChange={(event) => setOriginalText(event.target.value)}
             placeholder="Original sentence or repeated mistake"
-            className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
+            className="min-h-24 w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/20 font-bold placeholder-muted-copy shadow-sm"
           />
         </label>
         <label className="block">
@@ -84,42 +88,43 @@ export const MistakeLog = ({
             value={correction}
             onChange={(event) => setCorrection(event.target.value)}
             placeholder="Correction and why it is better"
-            className="min-h-24 w-full rounded-lg border border-border-soft bg-surface-hover p-3 text-sm outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/20"
+            className="min-h-24 w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/20 font-bold placeholder-muted-copy shadow-sm"
           />
         </label>
         <Button
           type="submit"
           disabled={!originalText.trim() || !correction.trim()}
+          className="bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer shadow-sm flex items-center gap-1.5"
         >
           <Plus className="h-4 w-4" /> Add mistake
         </Button>
       </form>
       <div className="max-h-80 space-y-3 overflow-y-auto pr-1">
         {mistakeLog.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-border-hover bg-surface-hover p-6 text-center text-sm text-muted-copy">
+          <p className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] p-6 text-center text-sm font-medium text-muted-copy shadow-sm">
             No mistakes saved yet. Add only patterns you want to revisit.
           </p>
         ) : (
           mistakeLog.map((entry) => (
             <div
               key={entry.id}
-              className="rounded-xl border border-border-soft bg-surface p-4"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wider text-error">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-error">
                     {entry.category}
                   </p>
-                  <p className="mt-2 text-sm text-muted-copy line-through">
+                  <p className="mt-2 text-sm text-muted-copy line-through font-normal">
                     {entry.originalText}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-foreground">
+                  <p className="mt-1 text-sm font-bold text-foreground">
                     {entry.correction}
                   </p>
                 </div>
                 <button
                   onClick={() => removeMistake(entry.id)}
-                  className="rounded-lg p-2 text-muted-copy hover:bg-error/10 hover:text-error"
+                  className="rounded-[4px] p-2 text-muted-copy hover:bg-error/10 hover:text-error cursor-pointer border border-[#d9d9e3] hover:border-error/20 bg-[#faf8ff] flex items-center justify-center shadow-sm"
                   aria-label="Delete mistake"
                 >
                   <Trash2 className="h-4 w-4" />
