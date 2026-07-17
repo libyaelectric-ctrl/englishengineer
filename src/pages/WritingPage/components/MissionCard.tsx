@@ -34,8 +34,8 @@ export const MissionCard = ({
   return (
     <div
       id={`writing-card-${mission.id}`}
-      className={`group relative rounded-xl border bg-surface p-5 transition-all duration-200 hover:-translate-y-px hover:border-border-hover hover:bg-surface-hover/30 hover:shadow-sm ${
-        isCompleted ? 'border-emerald-500/20' : 'border-border-soft'
+      className={`group relative rounded-[4px] border bg-white p-5 transition-all duration-200 hover:border-[#0047bb]/30 hover:shadow-md ${
+        isCompleted ? 'border-success/20' : 'border-[#d9d9e3]'
       }`}
     >
       <div className="flex flex-col h-full justify-between space-y-4">
@@ -43,7 +43,7 @@ export const MissionCard = ({
           {/* Top Badge Row */}
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(mission.cefrLevel)}`}
+              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${WritingHelpers.getCefrBadgeStyles(mission.cefrLevel)}`}
             >
               {mission.cefrLevel}
             </span>
@@ -51,58 +51,59 @@ export const MissionCard = ({
               label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
             />
             <span
-              className={`text-[10px] font-black font-mono px-2 py-0.5 rounded uppercase ${
+              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
                 difficultyColor === 'rose'
                   ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                   : difficultyColor === 'amber'
                     ? 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    : 'bg-success/10 text-success border-success/20'
               }`}
             >
               {mission.difficulty}
             </span>
-            <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1">
-              <Clock className="h-3 w-3" /> {mission.estimatedMinutes}m
+            <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1 font-bold">
+              <Clock className="h-3 w-3 text-muted-copy" />{' '}
+              {mission.estimatedMinutes}M
             </span>
           </div>
 
           {/* Title & Desc */}
           <div>
-            <h4 className="text-base font-bold text-foreground group-hover:text-foreground transition-colors">
+            <h4 className="text-base font-bold text-foreground group-hover:text-[#0047bb] transition-colors tracking-tight">
               {mission.title}
             </h4>
-            <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed font-normal">
               {mission.description}
             </p>
           </div>
         </div>
 
         {/* Footer Row */}
-        <div className="flex items-center justify-between pt-4 border-t border-border-soft">
+        <div className="flex items-center justify-between pt-4 border-t border-[#d9d9e3]">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded">
+            <span className="text-[9px] font-bold font-mono bg-[#f3f3fd] border border-[#d9d9e3] text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {mission.discipline}
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {isCompleted ? (
-              <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-bold">
+              <div className="flex items-center gap-1.5 text-xs text-success font-bold">
                 <CheckCircle2 className="h-4 w-4" />
                 <span>Score: {bestScore}%</span>
               </div>
             ) : (
-              <span className="text-[10px] font-bold font-mono text-muted-copy uppercase">
+              <span className="text-[9px] font-bold font-mono text-muted-copy uppercase tracking-wider">
                 Available
               </span>
             )}
 
             <Button
               onClick={() => onLaunch(mission.id)}
-              className={`h-8 px-3 rounded-md font-bold text-xs flex items-center gap-1 ${
+              className={`h-8 px-3.5 rounded-[4px] font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors ${
                 isCompleted
-                  ? 'border border-border-soft bg-surface text-foreground hover:bg-surface-hover'
-                  : 'bg-primary hover:bg-primary-hover text-white font-black'
+                  ? 'border border-[#d9d9e3] bg-white text-foreground hover:bg-[#0047bb]/5'
+                  : 'bg-[#0047bb] hover:bg-[#0047bb]/90 text-white border border-[#0047bb]'
               }`}
             >
               {isCompleted ? (
