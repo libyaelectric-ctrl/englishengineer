@@ -12,13 +12,16 @@ export const ResultList = ({ title, items, tone }: ResultListProps) => {
   }[tone];
 
   return (
-    <div className={`rounded-xl border p-5 ${toneClass}`}>
-      <p className="text-[10px] font-mono uppercase tracking-widest font-medium">
+    <div className={`rounded-[4px] border p-5 shadow-sm ${toneClass}`}>
+      <p className="text-[9px] font-mono font-bold uppercase tracking-wider">
         {title}
       </p>
       <ul className="mt-3 space-y-2">
         {items.map((item) => (
-          <li key={item} className="text-sm text-muted-copy leading-relaxed">
+          <li
+            key={item}
+            className="text-xs text-muted-copy font-medium leading-relaxed"
+          >
             {item}
           </li>
         ))}

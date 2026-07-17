@@ -55,13 +55,16 @@ export const QuickAITab = ({
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
-      <Card className="space-y-5" hoverEffect={false}>
+      <Card
+        className="p-5 space-y-5 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm"
+        hoverEffect={false}
+      >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-xl font-medium text-foreground">
+            <h2 className="text-base font-bold text-foreground">
               Quick AI Editor
             </h2>
-            <p className="mt-1 text-sm text-muted-copy">
+            <p className="mt-1 text-xs text-muted-copy font-medium">
               AI requires an internet-connected backend. No vendor API key is
               stored in this browser.
             </p>
@@ -69,16 +72,25 @@ export const QuickAITab = ({
           <StatusBadge
             label={status.label}
             tone={status.isConnected ? 'success' : 'warning'}
+            className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
           />
         </div>
         {!status.isConnected && (
-          <div className="space-y-2 rounded-xl border border-warning/30 bg-warning/5 p-3 text-sm text-foreground">
+          <div className="space-y-2 rounded-[4px] border border-warning/30 bg-warning/5 p-3 text-xs text-foreground font-medium">
             <div className="flex flex-wrap gap-2">
-              <StatusBadge label="Backend required" tone="warning" />
-              <StatusBadge label="Mock preview" tone="neutral" />
+              <StatusBadge
+                label="Backend required"
+                tone="warning"
+                className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+              />
+              <StatusBadge
+                label="Mock preview"
+                tone="neutral"
+                className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+              />
             </div>
             <div className="flex gap-3">
-              <WifiOff className="mt-0.5 h-4 w-4 shrink-0" />
+              <WifiOff className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
               <span>
                 {status.detail} Connect AI backend for real rewriting.
               </span>
@@ -89,7 +101,7 @@ export const QuickAITab = ({
           value={input}
           onChange={(event) => setInput(event.target.value)}
           placeholder="Paste a site message, report note or email draft"
-          className="min-h-44 w-full rounded-lg border border-border-soft bg-surface-hover p-4 text-sm leading-6 text-foreground outline-none transition focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
+          className="min-h-44 w-full rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 text-xs leading-6 text-foreground outline-none transition focus:border-[#0047bb] focus:ring-0 shadow-sm"
         />
         <div className="flex flex-wrap gap-2">
           {QUICK_AI_ACTIONS.map((action) => (
@@ -99,28 +111,33 @@ export const QuickAITab = ({
               disabled={isRunning || !input.trim()}
               onClick={() => runAction(action.label, action.systemInstruction)}
               title={action.expectedOutputStyle}
+              className="h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1.5"
             >
-              <Bot className="h-4 w-4" /> {action.label}
+              <Bot className="h-4 w-4 text-muted-copy" /> {action.label}
             </Button>
           ))}
         </div>
       </Card>
-      <Card className="space-y-4" hoverEffect={false}>
-        <h2 className="text-xl font-medium text-foreground">Result</h2>
+      <Card
+        className="p-5 space-y-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm"
+        hoverEffect={false}
+      >
+        <h2 className="text-base font-bold text-foreground">Result</h2>
         {isRunning ? (
           <div className="space-y-3" aria-live="polite">
-            <div className="h-4 animate-pulse rounded-lg bg-surface-hover" />
-            <div className="h-4 animate-pulse rounded-lg bg-surface-hover" />
-            <div className="h-24 animate-pulse rounded-lg bg-surface-hover" />
+            <div className="h-4 animate-pulse rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3]" />
+            <div className="h-4 animate-pulse rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3]" />
+            <div className="h-24 animate-pulse rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3]" />
           </div>
         ) : result ? (
           <>
-            <p className="whitespace-pre-line rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm leading-6 text-foreground">
+            <p className="whitespace-pre-line rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 text-xs leading-6 text-foreground font-medium shadow-sm">
               {result}
             </p>
             <Button
               variant="secondary"
               onClick={() => copy('quick-ai-result', result)}
+              className="h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1.5"
             >
               {copied === 'quick-ai-result' ? (
                 <Check className="h-4 w-4" />
@@ -131,8 +148,8 @@ export const QuickAITab = ({
             </Button>
           </>
         ) : (
-          <div className="rounded-xl border border-dashed border-border-hover bg-surface-hover p-10 text-center text-sm text-muted-copy">
-            <Send className="mx-auto mb-3 h-6 w-6" />
+          <div className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] p-10 text-center text-xs text-muted-copy font-medium">
+            <Send className="mx-auto mb-3 h-6 w-6 text-muted-copy" />
             Choose an action to create a result.
           </div>
         )}

@@ -36,15 +36,15 @@ const PlanLockBanner = ({
   isProLocked: boolean;
   onNavigate: (path: string) => void;
 }) => (
-  <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center space-y-4 animate-in fade-in duration-300">
-    <div className="mx-auto h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+  <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center space-y-4 animate-in fade-in duration-300 shadow-sm">
+    <div className="mx-auto h-12 w-12 rounded-[4px] bg-[#0047bb]/10 flex items-center justify-center text-[#0047bb]">
       <Lock className="h-5 w-5" />
     </div>
     <div className="space-y-2">
-      <h4 className="text-sm font-medium text-foreground">
+      <h4 className="text-sm font-bold text-foreground">
         {name} is a {isProLocked ? 'Pro' : 'Project'} Plan Feature
       </h4>
-      <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed">
+      <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
         {isProLocked
           ? 'Upgrade to the Pro Plan ($19/mo) to unlock professional engineering CV optimization, unlimited daily AI requests, and 12-month study history.'
           : 'Upgrade to the Project Plan ($39/mo) to unlock workspace memory integration, custom scenario generation from documents, LinkedIn profile optimization, and persistent AI agents.'}
@@ -53,7 +53,7 @@ const PlanLockBanner = ({
     <Button
       type="button"
       onClick={() => onNavigate('/pricing')}
-      className="bg-primary text-white font-medium px-6 py-2 rounded-card hover:bg-primary-hover transition-all"
+      className="h-9 bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
     >
       Upgrade to {isProLocked ? 'Pro' : 'Project'} Plan
     </Button>
@@ -67,12 +67,12 @@ const AIEntitlementWarning = ({
   reason: string;
   onNavigate: (path: string) => void;
 }) => (
-  <div className="rounded-xl border border-warning/20 bg-warning/5 px-4 py-3 text-xs text-warning">
+  <div className="rounded-[4px] border border-warning/30 bg-warning/5 px-4 py-3 text-xs text-warning font-bold uppercase tracking-wider shadow-sm">
     {reason}
     <Button
       type="button"
       onClick={() => onNavigate('/profile')}
-      className="mt-3 h-9 bg-primary text-white font-medium"
+      className="mt-3 h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
     >
       Upgrade to Pro
     </Button>
@@ -94,10 +94,10 @@ const DocumentUploadSection = ({
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   allowed: boolean;
 }) => (
-  <div className="rounded-xl border border-border-soft bg-surface-hover p-4 space-y-3">
+  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 space-y-3 shadow-sm">
     <label
       htmlFor="technical-document-upload"
-      className="block text-xs font-medium text-foreground"
+      className="block text-xs font-bold uppercase tracking-wider text-foreground"
     >
       Upload Technical Document (TXT, PDF, DOCX) - Limit: {docLimitLabel}
     </label>
@@ -108,15 +108,15 @@ const DocumentUploadSection = ({
         accept=".txt,.pdf,.docx"
         onChange={onFileUpload}
         disabled={!allowed}
-        className="text-xs text-muted-copy file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-primary/10 file:text-primary hover:file:bg-primary/20 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-[#d9d9e3] file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-[#0047bb] hover:file:bg-[#faf8ff] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
-      <span className="text-xs font-mono text-muted-copy bg-border-soft/50 px-2.5 py-1 rounded-full">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-white border border-[#d9d9e3] px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
         {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
         uploads used this month
       </span>
     </div>
     {uploadError && (
-      <div className="text-xs text-danger font-medium flex items-center gap-1.5 mt-1">
+      <div className="text-xs text-danger font-bold uppercase tracking-wider flex items-center gap-1.5 mt-1">
         <AlertCircle className="h-3.5 w-3.5" />
         {uploadError}
       </div>
@@ -148,14 +148,14 @@ export const CoachInputForm = ({
 }: CoachInputFormProps) => (
   <SectionCard
     title={`${selectedMode?.name ?? ''} Input`}
-    subtitle="Paste notes, transcripts, messages, or study reflections"
+    subtitle="Paste notes, reflections or site messages"
     icon={Terminal}
     headerActions={
       <div className="flex flex-wrap gap-1.5">
         <Button
           onClick={onRegenerate}
           variant="outline"
-          className="h-7 border-border-soft text-[10px]"
+          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
           disabled={sessions.length === 0 || isLoading}
         >
           Regenerate
@@ -163,7 +163,7 @@ export const CoachInputForm = ({
         <Button
           onClick={onClearHistory}
           variant="outline"
-          className="h-7 border-border-soft text-[10px]"
+          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
           disabled={sessions.length === 0}
         >
           Clear
@@ -171,7 +171,7 @@ export const CoachInputForm = ({
         <Button
           onClick={onReset}
           variant="outline"
-          className="h-7 border-border-soft text-[10px]"
+          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
         >
           Reset
         </Button>
@@ -208,23 +208,23 @@ export const CoachInputForm = ({
             onChange={(event) => onSetInput(event.target.value)}
             disabled={!aiEntitlement.allowed}
             rows={3}
-            className="premium-input w-full resize-none p-3 font-mono text-sm text-foreground"
+            className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] focus:border-[#0047bb] focus:ring-0 shadow-sm"
             placeholder={selectedMode?.placeholder ?? ''}
             aria-label="Technical note content input"
           />
           {error && (
-            <div className="flex items-center gap-2 rounded-lg border border-danger/20 bg-danger/5 px-3 py-2 text-xs text-danger">
+            <div className="flex items-center gap-2 rounded-[4px] border border-danger/25 bg-danger/5 px-3 py-2 text-xs font-bold uppercase tracking-wider text-danger shadow-sm">
               <AlertCircle className="h-3.5 w-3.5" />
               {error}
             </div>
           )}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
               Mode: {selectedMode?.name ?? ''}
             </p>
             <Button
               type="submit"
-              className="h-9 bg-primary text-white font-medium flex items-center justify-center gap-2 text-xs"
+              className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
               disabled={
                 isLoading || input.trim().length === 0 || !aiEntitlement.allowed
               }
