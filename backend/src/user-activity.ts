@@ -1,13 +1,29 @@
-/**
- * User Activity Tracking Service
- * Tracks user actions for analytics and audit
- */
+interface ActivityRecord {
+  id: string;
+  userId: string;
+  action: string;
+  category: string;
+  metadata: Record<string, unknown>;
+  timestamp: string;
+}
 
-const activities = [];
+const activities: ActivityRecord[] = [];
 const MAX_ACTIVITIES = 5000;
 
-export const trackActivity = ({ userId, action, category, metadata = {} }) => {
-  const activity = {
+interface TrackActivityOpts {
+  userId: string;
+  action: string;
+  category: string;
+  metadata?: Record<string, unknown>;
+}
+
+export const trackActivity = ({
+  userId,
+  action,
+  category,
+  metadata = {},
+}: TrackActivityOpts): ActivityRecord => {
+  const activity: ActivityRecord = {
     id: `act_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     userId,
     action,
@@ -18,7 +34,6 @@ export const trackActivity = ({ userId, action, category, metadata = {} }) => {
 
   activities.push(activity);
 
-  // Keep only last N activities in memory
   if (activities.length > MAX_ACTIVITIES) {
     activities.splice(0, activities.length - MAX_ACTIVITIES);
   }
@@ -26,18 +41,26 @@ export const trackActivity = ({ userId, action, category, metadata = {} }) => {
   return activity;
 };
 
-export const getUserActivities = (userId, limit = 50) => {
+export const getUserActivities = (userId: string, limit: number = 50): ActivityRecord[] => {
   return activities
     .filter((a) => a.userId === userId)
     .slice(-limit)
     .reverse();
 };
 
-export const getRecentActivities = (limit = 100) => {
+export const getRecentActivities = (limit: number = 100): ActivityRecord[] => {
   return activities.slice(-limit).reverse();
 };
 
-export const getActivityStats = (timeRange = '24h') => {
+interface ActivityStats {
+  total: number;
+  byAction: Record<string, number>;
+  byCategory: Record<string, number>;
+  byUser: Record<string, number>;
+  uniqueUsers: number;
+}
+
+export const getActivityStats = (timeRange: string = '24h'): ActivityStats => {
   const now = new Date();
   const cutoff = new Date(now);
 
@@ -55,9 +78,9 @@ export const getActivityStats = (timeRange = '24h') => {
 
   const filtered = activities.filter((a) => new Date(a.timestamp) >= cutoff);
 
-  const byAction = {};
-  const byCategory = {};
-  const byUser = {};
+  const byAction: Record<string, number> = {};
+  const byCategory: Record<string, number> = {};
+  const byUser: Record<string, number> = {};
 
   filtered.forEach((a) => {
     byAction[a.action] = (byAction[a.action] || 0) + 1;
@@ -74,16 +97,14 @@ export const getActivityStats = (timeRange = '24h') => {
   };
 };
 
-// Activity categories
 export const ACTIVITY_CATEGORIES = {
   AUTH: 'auth',
   LEARNING: 'learning',
   BILLING: 'billing',
   AI: 'ai',
   ADMIN: 'admin',
-};
+} as const;
 
-// Activity actions
 export const ACTIVITY_ACTIONS = {
   LOGIN: 'login',
   LOGOUT: 'logout',
@@ -93,4 +114,4 @@ export const ACTIVITY_ACTIONS = {
   AI_REQUEST: 'ai_request',
   SUBSCRIPTION_CHANGE: 'subscription_change',
   ADMIN_ACTION: 'admin_action',
-};
+} as const;

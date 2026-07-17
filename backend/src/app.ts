@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
 import { createAIService, registerAIRoutes } from './ai.js';
@@ -10,7 +10,6 @@ import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
-import { createSubscriptionRepository } from './subscription-repository.js';
 import {
   createVocabularyLookupService,
   createUpstashVocabularyCache,
@@ -29,27 +28,40 @@ import {
   createIdempotencyStore,
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
+import type { BackendConfig } from '../types.js';
+import type { BillingService } from './billing-service.js';
+import type { WorkspaceRepository } from './workspace-repository.js';
+import type { SubscriptionRepository } from './subscription-repository.js';
+import { createSubscriptionRepository } from './subscription-repository.js';
+
+interface CreateAppOpts {
+  config?: BackendConfig;
+  fetchImpl?: typeof fetch;
+  stripeClient?: ReturnType<typeof createStripeClient>;
+  billingRepository?: SubscriptionRepository;
+  workspaceRepository?: WorkspaceRepository | null;
+  rateLimitStore?: any;
+}
 
 export const createApp = ({
   config,
   fetchImpl = fetch,
-  stripeClient = createStripeClient(config.stripe),
+  stripeClient = createStripeClient(config!.stripe),
   billingRepository,
   workspaceRepository,
-  rateLimitStore = createRateLimitStore(config.rateLimit, fetchImpl),
-} = {}) => {
+  rateLimitStore = createRateLimitStore(config!.rateLimit, fetchImpl),
+}: CreateAppOpts = {}) => {
   if (!config) throw new Error('Backend config is required.');
 
   initAuditLog(config);
 
   const idempotencyStore = createIdempotencyStore(
     config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory',
-    config,
+    config as any,
     fetchImpl
   );
   setGlobalIdempotencyStore(idempotencyStore);
 
-  // Initialize Sentry if DSN is configured
   if (config.sentry?.dsn) {
     Sentry.init({
       dsn: config.sentry.dsn,
@@ -92,9 +104,8 @@ export const createApp = ({
     'https://www.englishengineer.vercel.app',
   ].filter(Boolean);
 
-  // HTTPS enforcement in production
   if (config.environment === 'production') {
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
       if (
         req.headers['x-forwarded-proto'] !== 'https' &&
         req.method !== 'GET'
@@ -107,7 +118,7 @@ export const createApp = ({
 
   app.use(
     cors({
-      origin: (origin, callback) => {
+      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
@@ -131,13 +142,12 @@ export const createApp = ({
   stripeRawRouter.post(
     '/api/webhooks/stripe',
     express.raw({ type: 'application/json', limit: '1mb' }),
-    (_req, _res, next) => next()
+    (_req: Request, _res: Response, next: NextFunction) => next()
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
 
-  // Timing Middleware (Performance Measurement)
-  app.use((req, res, next) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     const start = process.hrtime();
     res.on('finish', () => {
       const diff = process.hrtime(start);
@@ -153,23 +163,20 @@ export const createApp = ({
 
   app.use(createI18nMiddleware());
 
-  // API Versioning - v1 routes
   const v1Router = express.Router();
   app.use('/api/v1', v1Router);
 
-  // Health check with real pings
-  const healthHandler = async (_request, response) => {
+  const healthHandler = async (_request: Request, response: Response) => {
     const health = toPublicHealth(config);
-    const checks = { ...health.checks };
+    const checks: Record<string, any> = { ...health.checks };
     const TIMEOUT_MS = 5000;
 
-    // Real Supabase ping
     if (config.supabase?.configured) {
       try {
         const { createClient } = await import('@supabase/supabase-js');
         const supabase = createClient(
-          config.auth.supabaseUrl,
-          config.auth.supabaseAnonKey
+          config.auth.supabaseUrl!,
+          config.auth.supabaseAnonKey!
         );
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
@@ -180,7 +187,7 @@ export const createApp = ({
           .limit(1);
         await Promise.race([pingPromise, timeoutPromise]);
         checks.supabase = { configured: true, reachable: true };
-      } catch (err) {
+      } catch (err: any) {
         checks.supabase = {
           configured: true,
           reachable: false,
@@ -191,25 +198,24 @@ export const createApp = ({
       }
     }
 
-    // Real Redis ping (Upstash)
     if (
       config.rateLimit?.storeMode === 'upstash' &&
       config.rateLimit?.upstashUrl
     ) {
       try {
-        const timeoutPromise = new Promise((_, reject) =>
+        const timeoutPromise: Promise<Response> = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
         );
         const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
           headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
         });
-        const res = await Promise.race([pingPromise, timeoutPromise]);
-        checks.rateLimit = { configured: true, reachable: res.ok };
-        if (!res.ok) {
+        const pingRes = await Promise.race([pingPromise, timeoutPromise]) as globalThis.Response;
+        checks.rateLimit = { configured: true, reachable: pingRes.ok };
+        if (!pingRes.ok) {
           health.status = 'degraded';
           health.ok = false;
         }
-      } catch (err) {
+      } catch (err: any) {
         checks.rateLimit = {
           configured: true,
           reachable: false,
@@ -223,29 +229,26 @@ export const createApp = ({
     response.json({ ...health, checks });
   };
 
-  // Register health on both v1 and legacy paths
   v1Router.get('/health', healthHandler);
   app.get('/api/health', healthHandler);
 
-  // Swagger documentation
-  app.get('/api-docs.json', (_req, res) => res.json(swaggerSpec));
-  app.get('/api-docs', (_req, res) => {
+  app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
+  app.get('/api-docs', (_req: Request, res: Response) => {
     res.send(
       `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
     );
   });
 
-  // CSP violation report endpoint
   app.post(
     '/api/csp-report',
     express.json({ type: 'application/csp-report' }),
-    (req, res) => {
+    (req: Request, res: Response) => {
       logger.warn('CSP violation reported', { report: req.body });
       res.status(204).end();
     }
   );
 
-  const backendAuth = createBackendAuth(config.auth, fetchImpl);
+  const backendAuth = createBackendAuth({ ...config.auth, environment: config.environment } as any, fetchImpl);
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const aiRateLimiter = createRateLimiter({
     windowMs: config.ai.rateLimitWindowMs,
@@ -284,8 +287,8 @@ export const createApp = ({
   const vocabCache =
     config.rateLimit.storeMode === 'upstash'
       ? createUpstashVocabularyCache({
-          url: config.rateLimit.upstashUrl,
-          token: config.rateLimit.upstashToken,
+          url: config.rateLimit.upstashUrl!,
+          token: config.rateLimit.upstashToken!,
           timeoutMs: config.rateLimit.storeTimeoutMs,
           fetchImpl,
         })
@@ -293,14 +296,14 @@ export const createApp = ({
 
   registerVocabularyRoutes(
     app,
-    createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache),
+    createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as any),
     vocabularyRateLimiter
   );
   registerBillingRoutes(
     app,
     createBillingService({
-      config: config.stripe,
-      stripeClient,
+      config: config.stripe as any,
+      stripeClient: stripeClient as any,
       repository:
         billingRepository ??
         createSubscriptionRepository(config.stripe, fetchImpl),
@@ -309,14 +312,14 @@ export const createApp = ({
     billingRateLimiter,
     optionalBackendAuth
   );
-  let resolvedWorkspaceRepository = workspaceRepository ?? null;
+  let resolvedWorkspaceRepository: WorkspaceRepository | null = workspaceRepository ?? null;
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
       resolvedWorkspaceRepository = createWorkspaceRepository(
         config,
         fetchImpl
       );
-    } catch (err) {
+    } catch (err: any) {
       logger.warn('Failed to create workspace repository', {
         error: err.message,
       });
@@ -326,14 +329,13 @@ export const createApp = ({
     repository: resolvedWorkspaceRepository,
   });
 
-  // Admin audit logs endpoint
   app.get(
     '/api/admin/audit-logs',
     requireBackendAuth,
     validateQuery(AdminAuditLogsQuerySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const userId = req.auth?.userId;
+        const userId = (req as any).auth?.userId;
         if (!userId) {
           throw new ApiError(
             401,
@@ -343,15 +345,15 @@ export const createApp = ({
         }
         const isAdmin =
           userId === 'engineeros-dev-user' ||
-          req.auth?.source === 'internal-secret';
+          (req as any).auth?.source === 'internal-secret';
         if (!isAdmin) {
           throw new ApiError(403, 'admin_required', 'Admin access required.');
         }
         const filters = {
-          userId: req.validatedQuery.userId || undefined,
-          action: req.validatedQuery.action || undefined,
-          since: req.validatedQuery.since || undefined,
-          limit: req.validatedQuery.limit,
+          userId: (req as any).validatedQuery.userId || undefined,
+          action: (req as any).validatedQuery.action || undefined,
+          since: (req as any).validatedQuery.since || undefined,
+          limit: (req as any).validatedQuery.limit,
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });
@@ -361,7 +363,6 @@ export const createApp = ({
     }
   );
 
-  // Global rate limiter — protects all API routes not covered by specific limiters
   const globalRateLimiter = createRateLimiter({
     windowMs: config.rateLimit.windowMs,
     max: config.rateLimit.max * 2,
@@ -370,21 +371,19 @@ export const createApp = ({
   });
   app.use('/api', globalRateLimiter);
 
-  // Admin routes (after global rate limiter)
   registerAdminRoutes(app, requireBackendAuth, globalRateLimiter);
 
-  app.use((_request, _response, next) => {
+  app.use((_request: Request, _response: Response, next: NextFunction) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
-  app.use((error, request, response, _next) => {
+  app.use((error: any, request: Request, response: Response, _next: NextFunction) => {
     logger.error('Unhandled API error', { path: request.path }, error);
-    // Send to Sentry if configured
     if (config.sentry?.dsn) {
       Sentry.captureException(error);
     }
     const mapped = toErrorResponse(error);
-    if (request.i18n && mapped.body?.error?.code) {
-      const translated = request.i18n.t(mapped.body.error.code);
+    if ((request as any).i18n && mapped.body?.error?.code) {
+      const translated = (request as any).i18n.t(mapped.body.error.code);
       if (translated !== mapped.body.error.code) {
         mapped.body.error.message = translated;
       }

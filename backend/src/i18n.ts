@@ -114,7 +114,8 @@ export const createI18nMiddleware = () => {
     const lang = parseAcceptLanguage(req.headers['accept-language'] as string);
     (req as any).i18n = {
       lang,
-      t: (key: string): string => translations[lang]?.[key] ?? translations.en[key] ?? key,
+      t: (key: string): string =>
+        translations[lang]?.[key] ?? translations.en[key] ?? key,
     };
     next();
   };

@@ -29,7 +29,12 @@ const SUPPORTED_AI_PROVIDERS = new Set<string>([
 type Env = Record<string, string | undefined>;
 
 export const resolveEnvironment = (env: Env): RuntimeEnvironment => {
-  const valid: RuntimeEnvironment[] = ['development', 'test', 'staging', 'production'];
+  const valid: RuntimeEnvironment[] = [
+    'development',
+    'test',
+    'staging',
+    'production',
+  ];
   return valid.includes(env.NODE_ENV as RuntimeEnvironment)
     ? (env.NODE_ENV as RuntimeEnvironment)
     : 'development';
@@ -71,7 +76,10 @@ export const resolveAI = (env: Env): AiConfig => {
   };
 };
 
-export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfig => {
+export const resolveAuth = (
+  env: Env,
+  runtimeEnv: RuntimeEnvironment
+): AuthConfig => {
   const supabaseAuthConfigured =
     hasText(env.SUPABASE_URL) &&
     (hasText(env.SUPABASE_ANON_KEY) || hasText(env.SUPABASE_SERVICE_ROLE_KEY));
@@ -102,7 +110,10 @@ export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfi
   };
 };
 
-export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeConfig => {
+export const resolveStripe = (
+  env: Env,
+  runtimeEnv: RuntimeEnvironment
+): StripeConfig => {
   const configured = [
     env.STRIPE_SECRET_KEY,
     env.STRIPE_PRICE_PRO_MONTHLY,
@@ -147,7 +158,10 @@ export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeC
   };
 };
 
-export const resolveRateLimit = (env: Env, runtimeEnv: RuntimeEnvironment): RateLimitConfig => {
+export const resolveRateLimit = (
+  env: Env,
+  runtimeEnv: RuntimeEnvironment
+): RateLimitConfig => {
   const upstashConfigured = [
     env.UPSTASH_REDIS_REST_URL,
     env.UPSTASH_REDIS_REST_TOKEN,

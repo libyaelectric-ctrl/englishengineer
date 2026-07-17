@@ -1,16 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 import { ApiError } from './errors.js';
+import type { Workspace, WorkspaceDocument } from '../types.js';
 
-/**
- * Creates a Supabase-backed workspace repository for CRUD operations on user workspaces.
- * Uses @supabase/supabase-js client with service role key for backend operations.
- * @param {Object} config - Workspace configuration
- * @param {boolean} config.configured - Whether Supabase is configured
- * @param {string} config.supabaseUrl - Supabase project URL
- * @param {string} config.supabaseServiceRoleKey - Supabase service role key
- * @returns {{ getWorkspaces, getWorkspace, createWorkspace, updateWorkspaceMemory, deleteWorkspace, countWorkspaces, addDocument, deleteDocument }} Repository methods
- */
-export const createSupabaseWorkspaceRepository = (config) => {
+interface WorkspaceConfig {
+  configured: boolean;
+  supabaseUrl: string | null;
+  supabaseServiceRoleKey: string | null;
+}
+
+export interface WorkspaceRepository {
+  getWorkspaces(userId: string): Promise<Workspace[]>;
+  getWorkspace(workspaceId: string, userId: string): Promise<Workspace | null>;
+  createWorkspace(userId: string, name: string, memory: Record<string, unknown>): Promise<Workspace>;
+  updateWorkspaceMemory(workspaceId: string, userId: string, memory: Record<string, unknown>): Promise<Workspace>;
+  deleteWorkspace(workspaceId: string, userId: string): Promise<void>;
+  countWorkspaces(userId: string): Promise<number>;
+  addDocument(workspaceId: string, userId: string, doc: WorkspaceDocument): Promise<Workspace | null>;
+  deleteDocument(workspaceId: string, userId: string, docId: string): Promise<Workspace | null>;
+}
+
+export const createSupabaseWorkspaceRepository = (
+  config: WorkspaceConfig
+): WorkspaceRepository => {
   if (!config?.configured) {
     throw new ApiError(
       503,
@@ -20,8 +31,8 @@ export const createSupabaseWorkspaceRepository = (config) => {
   }
 
   const supabase = createClient(
-    config.supabaseUrl,
-    config.supabaseServiceRoleKey,
+    config.supabaseUrl!,
+    config.supabaseServiceRoleKey!,
     { auth: { persistSession: false } }
   );
 
@@ -163,7 +174,7 @@ export const createSupabaseWorkspaceRepository = (config) => {
       if (!current) return null;
 
       const updatedDocs = (current.documents || []).filter(
-        (doc) => doc.id !== docId
+        (doc: WorkspaceDocument) => doc.id !== docId
       );
       const { data, error } = await supabase
         .from('workspaces')

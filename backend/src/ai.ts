@@ -5,7 +5,7 @@ import { createAIService, AI_CONTRACT_VERSION } from './ai-core/index.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
 
-export const AI_ROUTES = {
+export const AI_ROUTES: Record<string, string> = {
   '/api/ai/coach': 'analyzeProgress',
   '/api/ai/writing-review': 'evaluateEngineeringEnglish',
   '/api/ai/assessment-feedback': 'analyzeText',
@@ -13,15 +13,15 @@ export const AI_ROUTES = {
 };
 
 export const registerAIRoutes = (
-  app,
-  aiService,
-  requireBackendAuth,
-  rateLimiter,
-  billingRepository,
-  config,
-  fetchImpl = fetch
-) => {
-  const ledger = createAiLedger(config, fetchImpl);
+  app: any,
+  aiService: any,
+  requireBackendAuth: any,
+  rateLimiter: any,
+  billingRepository: any,
+  config: Record<string, any>,
+  fetchImpl: typeof fetch = fetch
+): void => {
+  const ledger = createAiLedger(config);
 
   Object.entries(AI_ROUTES).forEach(([path, defaultOperation]) => {
     app.post(
@@ -29,7 +29,7 @@ export const registerAIRoutes = (
       requireBackendAuth,
       rateLimiter,
       validateBody(AiRequestBodySchema),
-      async (request, response, next) => {
+      async (request: any, response: any, next: any) => {
         try {
           const body = request.validatedBody;
 
@@ -46,8 +46,7 @@ export const registerAIRoutes = (
 
           const userId = request.auth?.userId || 'unknown';
 
-          // Get user subscription details
-          let subscription = null;
+          let subscription: any = null;
           if (billingRepository) {
             subscription =
               await billingRepository.getSubscriptionStatus(userId);
@@ -56,7 +55,6 @@ export const registerAIRoutes = (
           const planId = subscription?.planId || 'free';
           const topupCredits = subscription?.topupCredits || 0;
 
-          // Ledger check
           let count = 0;
           const isBypassUser =
             userId === 'engineeros-dev-user' ||
@@ -90,10 +88,8 @@ export const registerAIRoutes = (
             }
           }
 
-          // Complete AI request
           const result = await aiService.complete(defaultOperation, body);
 
-          // If top-up credit was used, decrement it in the database
           if (useTopup && billingRepository && !isBypassUser) {
             await billingRepository.upsertSubscriptionStatus(userId, {
               ...subscription,
@@ -103,7 +99,6 @@ export const registerAIRoutes = (
             });
           }
 
-          // Ledger insert on success
           if (result && !result.error && !isBypassUser) {
             ledger.logSession(userId, {
               modeId: body.modeId || 'unknown',

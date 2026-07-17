@@ -1,9 +1,33 @@
-/**
- * AI Monitoring & Analytics Service
- * Tracks AI usage, performance, and costs
- */
+interface AiRequestMetric {
+  timestamp: string;
+  userId: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  latencyMs: number;
+  success: boolean;
+  error?: string;
+  cost: number;
+}
 
-const metrics = {
+interface UsageAggregate {
+  requests: number;
+  tokens: number;
+  cost: number;
+}
+
+interface MetricsState {
+  requests: AiRequestMetric[];
+  usage: {
+    totalRequests: number;
+    totalTokens: number;
+    totalCost: number;
+    byModel: Record<string, UsageAggregate>;
+    byHour: Record<string, UsageAggregate>;
+  };
+}
+
+const metrics: MetricsState = {
   requests: [],
   usage: {
     totalRequests: 0,
@@ -14,6 +38,16 @@ const metrics = {
   },
 };
 
+interface TrackAiRequestOpts {
+  userId: string;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  latencyMs: number;
+  success: boolean;
+  error?: string;
+}
+
 export const trackAIRequest = ({
   userId,
   model,
@@ -22,7 +56,7 @@ export const trackAIRequest = ({
   latencyMs,
   success,
   error,
-}) => {
+}: TrackAiRequestOpts): { timestamp: string; cost: number } => {
   const timestamp = new Date().toISOString();
   const cost = calculateCost(model, inputTokens, outputTokens);
 
@@ -38,17 +72,14 @@ export const trackAIRequest = ({
     cost,
   });
 
-  // Keep only last 1000 requests in memory
   if (metrics.requests.length > 1000) {
     metrics.requests = metrics.requests.slice(-1000);
   }
 
-  // Update aggregates
   metrics.usage.totalRequests++;
   metrics.usage.totalTokens += inputTokens + outputTokens;
   metrics.usage.totalCost += cost;
 
-  // By model
   if (!metrics.usage.byModel[model]) {
     metrics.usage.byModel[model] = { requests: 0, tokens: 0, cost: 0 };
   }
@@ -56,7 +87,6 @@ export const trackAIRequest = ({
   metrics.usage.byModel[model].tokens += inputTokens + outputTokens;
   metrics.usage.byModel[model].cost += cost;
 
-  // By hour
   const hour = timestamp.slice(0, 13);
   if (!metrics.usage.byHour[hour]) {
     metrics.usage.byHour[hour] = { requests: 0, tokens: 0, cost: 0 };
@@ -68,7 +98,19 @@ export const trackAIRequest = ({
   return { timestamp, cost };
 };
 
-export const getAIMetrics = (timeRange = '24h') => {
+interface AiMetricsResult {
+  timeRange: string;
+  summary: {
+    totalRequests: number;
+    totalTokens: number;
+    totalCost: number;
+    successRate: number;
+    avgLatency: number;
+  };
+  recentErrors: AiRequestMetric[];
+}
+
+export const getAIMetrics = (timeRange: string = '24h'): AiMetricsResult => {
   const now = new Date();
   const cutoff = new Date(now);
 
@@ -118,7 +160,15 @@ export const getAIMetrics = (timeRange = '24h') => {
   };
 };
 
-export const getUserAIUsage = (userId) => {
+interface UserAiUsageResult {
+  userId: string;
+  totalRequests: number;
+  totalTokens: number;
+  totalCost: number;
+  lastRequest: string | null;
+}
+
+export const getUserAIUsage = (userId: string): UserAiUsageResult => {
   const userRequests = metrics.requests.filter((r) => r.userId === userId);
   return {
     userId,
@@ -135,8 +185,8 @@ export const getUserAIUsage = (userId) => {
   };
 };
 
-const calculateCost = (model, inputTokens, outputTokens) => {
-  const pricing = {
+const calculateCost = (model: string, inputTokens: number, outputTokens: number): number => {
+  const pricing: Record<string, { input: number; output: number }> = {
     'claude-haiku-4-5': { input: 0.00025, output: 0.00125 },
     'claude-sonnet-4': { input: 0.003, output: 0.015 },
     'gpt-4.1-mini': { input: 0.0004, output: 0.0016 },

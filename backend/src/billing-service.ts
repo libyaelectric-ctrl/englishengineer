@@ -2,6 +2,7 @@ import Stripe from 'stripe';
 import { logger } from './logger.js';
 import { ApiError } from './errors.js';
 import { requireText, emptySubscription } from './billing-helpers.js';
+import type { SubscriptionSnapshot } from './billing-helpers.js';
 import { stripeRetry } from './utils/retry.js';
 import {
   handleCheckoutCompleted,
@@ -9,8 +10,15 @@ import {
   handlePaymentFailed,
   handleSubscriptionDeleted,
 } from './billing-webhook-handlers.js';
+import type { BillingRepository } from './billing-webhook-handlers.js';
 
-const PLAN_META = {
+interface PlanMeta {
+  unitAmount: number;
+  nickname: string;
+  productName: string;
+}
+
+const PLAN_META: Record<string, PlanMeta> = {
   pro: {
     unitAmount: 1900,
     nickname: 'Pro Monthly',
@@ -43,7 +51,7 @@ const PLAN_META = {
   },
 };
 
-const PLAN_PRICE_CONFIG = {
+const PLAN_PRICE_CONFIG: Record<string, string> = {
   pro: 'priceProMonthly',
   project: 'priceProjectMonthly',
   max: 'priceMaxMonthly',
@@ -52,7 +60,11 @@ const PLAN_PRICE_CONFIG = {
   team: 'priceTeamMonthly',
 };
 
-const resolveOrProvisionPriceId = async (config, stripeClient, planId) => {
+const resolveOrProvisionPriceId = async (
+  config: Record<string, any>,
+  stripeClient: Stripe,
+  planId: string
+): Promise<string> => {
   const configKey = PLAN_PRICE_CONFIG[planId];
   if (configKey && config[configKey]) {
     return config[configKey];
@@ -108,7 +120,9 @@ const resolveOrProvisionPriceId = async (config, stripeClient, planId) => {
   return newPrice.id;
 };
 
-const resolveOrProvisionTopupPriceId = async (stripeClient) => {
+const resolveOrProvisionTopupPriceId = async (
+  stripeClient: Stripe
+): Promise<string> => {
   const nickname = 'AI Coach Top-up 50 Credits';
   const existingPrices = await stripeClient.prices.list({
     active: true,
@@ -145,15 +159,52 @@ const resolveOrProvisionTopupPriceId = async (stripeClient) => {
   return newPrice.id;
 };
 
-/**
- * Creates a billing service for managing Stripe subscriptions, checkout sessions, and webhooks.
- * @param {Object} opts - Service dependencies
- * @param {Object} opts.config - Stripe configuration (secretKey, webhookSecret, price IDs)
- * @param {Object} opts.stripeClient - Stripe SDK client instance
- * @param {Object} opts.repository - Subscription data repository
- * @returns {{ createCheckoutSession, createTopupCheckoutSession, createPortalSession, getSubscriptionStatus, processWebhook }} Billing service methods
- */
-export const createBillingService = ({ config, stripeClient, repository }) => {
+interface BillingServiceConfig {
+  configured: boolean;
+  webhookSecret: string | null;
+  [key: string]: any;
+}
+
+interface CheckoutSessionBody {
+  email?: string;
+  successUrl?: string;
+  cancelUrl?: string;
+  planId?: string;
+}
+
+interface PortalSessionBody {
+  returnUrl?: string;
+}
+
+interface TopupCheckoutSessionBody {
+  email?: string;
+  successUrl?: string;
+  cancelUrl?: string;
+}
+
+export interface BillingService {
+  createCheckoutSession(userId: string, body: CheckoutSessionBody): Promise<{ url: string }>;
+  createTopupCheckoutSession(userId: string, body: TopupCheckoutSessionBody): Promise<{ url: string }>;
+  createPortalSession(userId: string, body: PortalSessionBody): Promise<{ url: string }>;
+  getSubscriptionStatus(userIdValue: string | null | undefined): Promise<SubscriptionSnapshot>;
+  processWebhook(
+    rawBody: Buffer,
+    signature: string | undefined,
+    onEventDetected?: (step: string, eventId: string, eventType: string) => void
+  ): Promise<{ received: boolean; duplicate: boolean; eventId: string }>;
+}
+
+interface CreateBillingServiceOpts {
+  config: BillingServiceConfig;
+  stripeClient: Stripe | null;
+  repository: BillingRepository;
+}
+
+export const createBillingService = ({
+  config,
+  stripeClient,
+  repository,
+}: CreateBillingServiceOpts): BillingService => {
   if (!repository) throw new Error('Billing repository is required.');
   const ensureConfigured = () => {
     if (!config.configured || !stripeClient) {
@@ -183,11 +234,11 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
 
       const price = await resolveOrProvisionPriceId(
         config,
-        stripeClient,
+        stripeClient!,
         planId
       );
 
-      const session = await stripeClient.checkout.sessions.create({
+      const session = await stripeClient!.checkout.sessions.create({
         mode: 'subscription',
         customer_email: email,
         line_items: [{ price, quantity: 1 }],
@@ -220,9 +271,9 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
       const successUrl = requireText(body?.successUrl, 'successUrl');
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
 
-      const price = await resolveOrProvisionTopupPriceId(stripeClient);
+      const price = await resolveOrProvisionTopupPriceId(stripeClient!);
 
-      const session = await stripeClient.checkout.sessions.create({
+      const session = await stripeClient!.checkout.sessions.create({
         mode: 'payment',
         customer_email: email,
         line_items: [{ price, quantity: 1 }],
@@ -260,7 +311,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           'No Stripe customer is linked to this user.'
         );
       }
-      const session = await stripeClient.billingPortal.sessions.create({
+      const session = await stripeClient!.billingPortal.sessions.create({
         customer: subscription.stripeCustomerId,
         return_url: returnUrl,
       });
@@ -279,7 +330,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         return emptySubscription();
       }
 
-      let subscription;
+      let subscription: SubscriptionSnapshot | null;
       try {
         subscription = await repository.getSubscriptionStatus(userId);
       } catch (error) {
@@ -318,14 +369,14 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         );
       }
       let step = 'signature_verification';
-      let event;
+      let event: Stripe.Event;
       try {
-        event = stripeClient.webhooks.constructEvent(
+        event = stripeClient!.webhooks.constructEvent(
           rawBody,
           requireText(signature, 'Stripe-Signature'),
           config.webhookSecret
         );
-      } catch (err) {
+      } catch (err: any) {
         logger.error(
           'Stripe webhook error',
           {
@@ -362,19 +413,19 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
         const object = event.data?.object ?? {};
         if (eventType === 'checkout.session.completed') {
           step = 'process_checkout_completed';
-          await handleCheckoutCompleted(repository, object);
+          await handleCheckoutCompleted(repository, object as any);
         } else if (
           eventType === 'customer.subscription.created' ||
           eventType === 'customer.subscription.updated'
         ) {
           step = 'process_subscription_created_or_updated';
-          await handleSubscriptionUpdated(repository, object);
+          await handleSubscriptionUpdated(repository, object as any);
         } else if (eventType === 'invoice.payment_failed') {
           step = 'process_payment_failed';
-          await handlePaymentFailed(repository, object);
+          await handlePaymentFailed(repository, object as any);
         } else if (eventType === 'customer.subscription.deleted') {
           step = 'process_subscription_deleted';
-          await handleSubscriptionDeleted(repository, object);
+          await handleSubscriptionDeleted(repository, object as any);
         }
 
         step = 'mark_processed';
@@ -383,7 +434,7 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
           processedAt: new Date().toISOString(),
         });
         return { received: true, duplicate: false, eventId };
-      } catch (err) {
+      } catch (err: any) {
         const supabaseCode = err.code || 'N/A';
         const supabaseDetails = err.details || 'N/A';
         logger.error(
@@ -405,5 +456,5 @@ export const createBillingService = ({ config, stripeClient, repository }) => {
   };
 };
 
-export const createStripeClient = (config) =>
-  config.configured ? new Stripe(config.secretKey) : null;
+export const createStripeClient = (config: { configured: boolean; secretKey: string | null }): Stripe | null =>
+  config.configured ? new Stripe(config.secretKey!) : null;

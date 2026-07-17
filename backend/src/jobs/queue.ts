@@ -1,9 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import { logger } from '../logger.js';
 
-// BullMQ Background Job System
-// Uses Upstash Redis for production, local Redis for development
-
 const connection = {
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT || '6379'),
@@ -11,29 +8,29 @@ const connection = {
   tls: process.env.REDIS_TLS === 'true' ? {} : undefined,
 };
 
-// Queues
 export const emailQueue = new Queue('email-sending', { connection });
 export const aiProcessingQueue = new Queue('ai-processing', { connection });
 export const auditCleanupQueue = new Queue('audit-cleanup', { connection });
 
-// Job Types
 export const JOB_TYPES = {
   EMAIL_WELCOME: 'email-welcome',
   EMAIL_BILLING: 'email-billing',
   AI_HEAVY_PROCESSING: 'ai-heavy-processing',
   AUDIT_LOG_CLEANUP: 'audit-cleanup',
-};
+} as const;
 
-// Worker: Email Sending
-const createEmailWorker = () => {
+interface EmailJobData {
+  type: string;
+  to: string;
+  data: Record<string, unknown>;
+}
+
+const createEmailWorker = (): Worker => {
   const worker = new Worker(
     'email-sending',
     async (job) => {
-      const { type, to, data } = job.data;
+      const { type, to, data } = job.data as EmailJobData;
       logger.info('Processing email', { worker: 'email', type, to });
-
-      // Email sending logic would go here
-      // For now, just log the attempt
       await job.updateProgress(100);
       return { success: true, type, to };
     },
@@ -51,20 +48,19 @@ const createEmailWorker = () => {
   return worker;
 };
 
-// Worker: AI Heavy Processing
-const createAIWorker = () => {
+interface AiJobData {
+  type: string;
+  payload: Record<string, unknown>;
+}
+
+const createAIWorker = (): Worker => {
   const worker = new Worker(
     'ai-processing',
     async (job) => {
-      const { type, payload } = job.data;
+      const { type, payload } = job.data as AiJobData;
       logger.info('Processing AI job', { worker: 'ai', type });
-
-      // Heavy AI processing logic
       await job.updateProgress(50);
-
-      // Simulate processing time
       await new Promise((resolve) => setTimeout(resolve, 1000));
-
       await job.updateProgress(100);
       return { success: true, type };
     },
@@ -78,16 +74,16 @@ const createAIWorker = () => {
   return worker;
 };
 
-// Worker: Audit Log Cleanup
-const createAuditCleanupWorker = () => {
+interface AuditCleanupJobData {
+  retentionDays?: number;
+}
+
+const createAuditCleanupWorker = (): Worker => {
   const worker = new Worker(
     'audit-cleanup',
     async (job) => {
-      const { retentionDays = 90 } = job.data;
+      const { retentionDays = 90 } = job.data as AuditCleanupJobData;
       logger.info('Cleaning audit logs', { worker: 'audit', retentionDays });
-
-      // Audit log cleanup logic
-      // Would delete logs from Supabase older than retention period
       await job.updateProgress(100);
       return { success: true, retentionDays };
     },
@@ -101,7 +97,6 @@ const createAuditCleanupWorker = () => {
   return worker;
 };
 
-// Start all workers
 export const startWorkers = () => {
   logger.info('Starting BullMQ workers');
 
@@ -112,8 +107,11 @@ export const startWorkers = () => {
   return { emailWorker, aiWorker, auditCleanupWorker };
 };
 
-// Job helpers
-export const addEmailJob = async (type, to, data = {}) => {
+export const addEmailJob = async (
+  type: string,
+  to: string,
+  data: Record<string, unknown> = {}
+) => {
   return emailQueue.add(
     type,
     { type, to, data },
@@ -124,7 +122,10 @@ export const addEmailJob = async (type, to, data = {}) => {
   );
 };
 
-export const addAIJob = async (type, payload) => {
+export const addAIJob = async (
+  type: string,
+  payload: Record<string, unknown>
+) => {
   return aiProcessingQueue.add(
     type,
     { type, payload },
@@ -135,7 +136,7 @@ export const addAIJob = async (type, payload) => {
   );
 };
 
-export const addAuditCleanupJob = async (retentionDays = 90) => {
+export const addAuditCleanupJob = async (retentionDays: number = 90) => {
   return auditCleanupQueue.add(
     JOB_TYPES.AUDIT_LOG_CLEANUP,
     { retentionDays },

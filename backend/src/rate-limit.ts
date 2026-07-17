@@ -2,7 +2,12 @@ import { ApiError } from './errors.js';
 import { logger } from './logger.js';
 import type { Request, Response, NextFunction } from 'express';
 
-const logRateLimit = (scope: string, identity: string, count: number, max: number): void => {
+const logRateLimit = (
+  scope: string,
+  identity: string,
+  count: number,
+  max: number
+): void => {
   if (count > max) {
     logger.warn('Rate limit blocked', { scope, identity, count, max });
   }
@@ -17,7 +22,11 @@ local ttl = redis.call('PTTL', KEYS[1])
 return {count, ttl}
 `.trim();
 
-const setRateLimitHeaders = (response: Response, max: number, count: number): void => {
+const setRateLimitHeaders = (
+  response: Response,
+  max: number,
+  count: number
+): void => {
   const remaining = String(Math.max(0, max - count));
   response.setHeader('RateLimit-Limit', String(max));
   response.setHeader('RateLimit-Remaining', remaining);
@@ -26,7 +35,10 @@ const setRateLimitHeaders = (response: Response, max: number, count: number): vo
 };
 
 export interface UpstashRateLimitStore {
-  consume: (key: string, windowMs: number) => Promise<{ count: number; resetAfterMs: number }>;
+  consume: (
+    key: string,
+    windowMs: number
+  ) => Promise<{ count: number; resetAfterMs: number }>;
 }
 
 interface UpstashRateLimitConfig {
@@ -66,7 +78,7 @@ export const createUpstashRateLimitStore = ({
           `External rate-limit store returned ${response.status}.`
         );
       }
-      const payload = await response.json() as { result?: [number, number] };
+      const payload = (await response.json()) as { result?: [number, number] };
       const [count, ttlMs] = Array.isArray(payload?.result)
         ? payload.result
         : [];
@@ -103,7 +115,11 @@ export const createRateLimitStore = (
   throw new Error(`Unsupported rate-limit store: ${config.storeMode}`);
 };
 
-type RateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => void;
+type RateLimitMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => void;
 
 interface RateLimiterConfig {
   windowMs: number;

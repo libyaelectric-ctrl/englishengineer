@@ -14,8 +14,9 @@ export const toPositiveInteger = (
 export const trimEnv = (value: string | undefined | null): string | null =>
   hasText(value) ? value.trim() : null;
 
-export const stripWhitespace = (value: string | undefined | null): string | null =>
-  hasText(value) ? value.replace(/\s+/g, '') : null;
+export const stripWhitespace = (
+  value: string | undefined | null
+): string | null => (hasText(value) ? value.replace(/\s+/g, '') : null);
 
 export const isTrue = (value: unknown): boolean =>
   String(value).toLowerCase() === 'true';

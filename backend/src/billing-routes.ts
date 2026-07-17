@@ -8,29 +8,31 @@ import {
   BillingTopupBodySchema,
   BillingPortalBodySchema,
 } from './validation.js';
+import type { BillingService } from './billing-service.js';
+import type { Request, Response, NextFunction } from 'express';
 
 export const registerBillingRoutes = (
-  app,
-  billingService,
-  requireBackendAuth,
-  rateLimiter,
-  optionalBackendAuth = requireBackendAuth
-) => {
+  app: any,
+  billingService: BillingService,
+  requireBackendAuth: any,
+  rateLimiter: any,
+  optionalBackendAuth: any = requireBackendAuth
+): void => {
   app.post(
     '/api/billing/create-checkout-session',
     requireBackendAuth,
     rateLimiter,
     idempotencyKey(),
     validateBody(BillingCheckoutBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = assertUserOwnership(req);
         auditLog({
           action: AUDIT_ACTIONS.CHECKOUT_CREATED,
-          userId,
+          userId: userId || undefined,
           details: { planId: req.body?.planId },
         });
-        res.json(await billingService.createCheckoutSession(userId, req.body));
+        res.json(await billingService.createCheckoutSession(userId || '', req.body));
       } catch (error) {
         next(error);
       }
@@ -42,16 +44,16 @@ export const registerBillingRoutes = (
     rateLimiter,
     idempotencyKey(),
     validateBody(BillingTopupBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         const userId = assertUserOwnership(req);
         auditLog({
           action: AUDIT_ACTIONS.CHECKOUT_CREATED,
-          userId,
+          userId: userId || undefined,
           details: { type: 'topup', credits: 50 },
         });
         res.json(
-          await billingService.createTopupCheckoutSession(userId, req.body)
+          await billingService.createTopupCheckoutSession(userId || '', req.body)
         );
       } catch (error) {
         next(error);
@@ -63,11 +65,11 @@ export const registerBillingRoutes = (
     requireBackendAuth,
     rateLimiter,
     validateBody(BillingPortalBodySchema),
-    async (req, res, next) => {
+    async (req: Request, res: Response, next: NextFunction) => {
       try {
         res.json(
           await billingService.createPortalSession(
-            assertUserOwnership(req),
+            assertUserOwnership(req) || '',
             req.body
           )
         );
@@ -76,7 +78,7 @@ export const registerBillingRoutes = (
       }
     }
   );
-  const subscriptionStatusHandler = async (req, res, next) => {
+  const subscriptionStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.json(
         await billingService.getSubscriptionStatus(assertUserOwnership(req))
@@ -86,11 +88,11 @@ export const registerBillingRoutes = (
     }
   };
 
-  const publicSubscriptionStatusAuth = async (req, res, next) => {
+  const publicSubscriptionStatusAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
       await optionalBackendAuth(req, res, next);
     } catch {
-      req.auth = null;
+      (req as any).auth = null;
       next();
     }
   };
@@ -107,7 +109,7 @@ export const registerBillingRoutes = (
     rateLimiter,
     subscriptionStatusHandler
   );
-  app.post('/api/webhooks/stripe', async (req, res, next) => {
+  app.post('/api/webhooks/stripe', async (req: Request, res: Response, next: NextFunction) => {
     let eventId = 'unknown';
     let eventType = 'unknown';
     try {
@@ -118,7 +120,7 @@ export const registerBillingRoutes = (
           eventType = parsedBody.type || 'unknown';
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       if (process.env.NODE_ENV !== 'production') {
         logger.warn('Stripe webhook log parse error', { error: err?.message });
       }
@@ -133,8 +135,8 @@ export const registerBillingRoutes = (
       res.json(
         await billingService.processWebhook(
           req.body,
-          req.headers['stripe-signature'],
-          (step, evId, evType) => {
+          req.headers['stripe-signature'] as string | undefined,
+          (step: string, evId: string, evType: string) => {
             if (evId) eventId = evId;
             if (evType) eventType = evType;
           }
