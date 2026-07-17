@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { CEFR_LEVELS } from '@/features/level-system';
-import { VocabularyEngine } from './vocabulary.engine';
+import { VocabularyEngine } from '../engine/vocabulary.engine';
 import { VocabularyRepository } from './vocabulary.repository';
 
 describe('vocabulary database integration', () => {

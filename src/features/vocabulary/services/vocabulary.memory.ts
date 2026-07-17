@@ -8,7 +8,7 @@ import type {
   VocabularyMemorySummary,
   VocabularyWordSource,
   VocabularyWordStatus,
-} from './vocabulary.types';
+} from '../types/vocabulary.types';
 import type { CefrLevel } from '@/features/level-system';
 
 const STORAGE_KEY = 'EngVox_vocabulary_memory';

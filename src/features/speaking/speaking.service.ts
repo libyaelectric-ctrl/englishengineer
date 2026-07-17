@@ -9,7 +9,7 @@ import {
   SpeakingSubmission,
 } from './speaking.types';
 import { SpeakingEvaluator } from './speaking.evaluator';
-import { VocabularyService } from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 import { LearningIntelligenceService } from '@/features/learning-intelligence';
 import { getSpeakingHistoryDetails } from './speaking-mvp';
 

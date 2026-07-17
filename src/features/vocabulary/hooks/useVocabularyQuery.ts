@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { VocabularyService } from '../vocabulary.service';
-import type { VocabularyAnswer } from '../vocabulary.types';
+import { VocabularyService } from '../services/vocabulary.service';
+import type { VocabularyAnswer } from '../types/vocabulary.types';
 
 export const VOCABULARY_KEYS = {
   all: ['vocabulary'] as const,

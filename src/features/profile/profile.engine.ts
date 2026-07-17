@@ -1,9 +1,9 @@
 import type { LearningState, MissionModule } from '@/core/learning/learning.types';
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import type { CefrLevel } from '@/features/level-system/level-system.types';
-import { VocabularyEngine } from '@/features/vocabulary/vocabulary.engine';
-import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
-import { VocabularyRepository } from '@/features/vocabulary/vocabulary.repository';
+import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
+import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
+import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
 import {
   SKILL_NAMES,
   type CefrBand,

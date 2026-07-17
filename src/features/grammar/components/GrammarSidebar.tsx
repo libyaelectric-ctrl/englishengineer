@@ -1,4 +1,5 @@
-import { GrammarProgressService, useGrammarStore } from '@/features/grammar';
+import { GrammarProgressService } from '@/features/grammar/grammar.progress';
+import { useGrammarStore } from '@/features/grammar/grammar.store';
 import { useLearningStore } from '@/core/learning';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';

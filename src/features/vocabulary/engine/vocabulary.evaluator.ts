@@ -3,7 +3,7 @@ import {
   VocabularyAnswer,
   VocabularyEvaluationResult,
   VocabularyReviewState,
-} from './vocabulary.types';
+} from '../types/vocabulary.types';
 
 export const VocabularyEvaluator = {
   evaluate(

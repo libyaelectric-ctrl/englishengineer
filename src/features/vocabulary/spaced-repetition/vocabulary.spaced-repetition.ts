@@ -1,4 +1,4 @@
-import { VocabularyReviewState } from './vocabulary.types';
+import { VocabularyReviewState } from '../types/vocabulary.types';
 
 export const createInitialReviewState = (
   wordId: string

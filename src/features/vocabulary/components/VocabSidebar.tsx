@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
+import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { useLearningStore } from '@/core/learning';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';

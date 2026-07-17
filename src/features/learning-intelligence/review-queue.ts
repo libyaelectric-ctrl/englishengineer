@@ -2,9 +2,9 @@ import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { GrammarRepository } from '@/features/grammar/grammar.repository';
 import { SKILL_NAMES } from '@/features/profile/profile.types';
 import type { UserLearningProfile } from '@/features/profile/profile.types';
-import { isVocabularyProgressDue } from '@/features/vocabulary/vocabulary.menu';
-import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
-import { VocabularyRepository } from '@/features/vocabulary/vocabulary.repository';
+import { isVocabularyProgressDue } from '@/features/vocabulary/services/vocabulary.menu';
+import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
+import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
 import { buildReviewPriorities } from './review-priority';
 import { LearningIntelligenceService } from './learning-intelligence.service';
 import type {

@@ -2,7 +2,7 @@ import { ProgressService } from '@/core/learning/progress.service';
 import { LearningState } from '@/core/learning/learning.types';
 import { IdService } from '@/core/ids/id.service';
 import { UserProfile } from '@/features/auth/auth.types';
-import { VocabularyService } from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 import {
   AICoachContext,
   AICoachMode,

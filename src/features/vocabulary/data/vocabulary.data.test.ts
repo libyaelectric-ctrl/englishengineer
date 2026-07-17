@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, beforeAll } from 'vitest';
 import { loadVocabularyEntries } from './vocabulary.data';
-import { VocabularyDiscipline, VocabularyEntry } from './vocabulary.types';
+import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
 
 const requiredDisciplines: VocabularyDiscipline[] = [
   'Electrical Engineering',

@@ -1,4 +1,4 @@
-import { VocabularyEntry } from './vocabulary.types';
+import { VocabularyEntry } from '../types/vocabulary.types';
 import {
   VocabularyContentRow,
   buildEntries,

@@ -1,12 +1,12 @@
 import { create } from 'zustand';
-import { VocabularyMemoryService } from './vocabulary.memory';
+import { VocabularyMemoryService } from '../services/vocabulary.memory';
 import type {
   SavedVocabularyWord,
   VocabularyEntry,
   ExternalVocabularyResult,
   VocabularyMemorySummary,
   VocabularyWordStatus,
-} from './vocabulary.types';
+} from '../types/vocabulary.types';
 import type { CefrLevel } from '@/features/level-system';
 
 interface VocabularyMemoryStore {

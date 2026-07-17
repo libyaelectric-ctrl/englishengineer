@@ -10,7 +10,7 @@ import {
 } from './listening.types';
 import { ListeningEvaluator } from './listening.evaluator';
 import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 
 const STORAGE_KEY = 'EngVox_listening_state';
 

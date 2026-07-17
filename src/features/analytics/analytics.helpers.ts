@@ -1,6 +1,6 @@
 import { LearningState } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
-import { VocabularySummary } from '@/features/vocabulary';
+import { VocabularySummary } from '@/features/vocabulary/types/vocabulary.types';
 import {
   AnalyticsAIContextSummary,
   AnalyticsNextStudy,

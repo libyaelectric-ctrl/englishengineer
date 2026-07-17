@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { VocabularyTerm } from './vocabulary.types';
+import type { VocabularyTerm } from '../types/vocabulary.types';
 import {
   CANONICAL_VOCABULARY_TOTAL,
   getVocabularyReviewReason,

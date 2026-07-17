@@ -3,7 +3,7 @@ import type {
   ExternalLookupState,
   ExternalVocabularyResult,
   VocabularyEntry,
-} from './vocabulary.types';
+} from '../types/vocabulary.types';
 
 const CACHE_KEY = 'EngVox_vocabulary_lookup_cache';
 
