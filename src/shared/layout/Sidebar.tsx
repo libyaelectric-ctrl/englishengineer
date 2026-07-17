@@ -76,12 +76,12 @@ export const Sidebar: React.FC = () => {
       >
         <div className="flex h-screen flex-col overflow-hidden bg-surface">
           {/* Logo */}
-          <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-soft px-4">
+          <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#d9d9e3] px-4">
             <div className="flex items-center gap-2.5">
               <img
                 src="/brand/logo.png"
                 alt="EngVox"
-                className="h-9 w-9 rounded-lg"
+                className="h-9 w-9 rounded-[4px]"
               />
               <div className="flex flex-col">
                 <span className="text-lg font-bold leading-tight text-foreground">
@@ -96,7 +96,7 @@ export const Sidebar: React.FC = () => {
               <ThemeToggle />
               <button
                 onClick={toggleSidebar}
-                className="cursor-pointer rounded-lg p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
+                className="cursor-pointer rounded-[4px] p-1.5 text-muted-copy hover:bg-surface-hover hover:text-foreground lg:hidden"
                 aria-label="Close navigation"
               >
                 <X className="h-4 w-4" />
@@ -123,12 +123,12 @@ export const Sidebar: React.FC = () => {
 
           {/* User Info + Alarm */}
           {currentUser && (
-            <div className="shrink-0 border-t border-border-soft p-4">
+            <div className="shrink-0 border-t border-[#d9d9e3] p-4">
               {/* Alarm Bell */}
               <div className="relative mb-3" ref={notificationsRef}>
                 <button
                   type="button"
-                  className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-lg border border-border-soft bg-surface px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover"
+                  className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-left transition-all hover:border-border-hover hover:bg-surface-hover"
                   aria-label="View system notifications"
                   aria-expanded={notificationsOpen}
                   onClick={() => setNotificationsOpen((open) => !open)}
@@ -148,9 +148,9 @@ export const Sidebar: React.FC = () => {
                 {notificationsOpen && (
                   <div
                     role="status"
-                    className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-hidden rounded-xl border border-border-soft bg-surface shadow-lg"
+                    className="absolute bottom-full left-0 right-0 z-50 mb-2 overflow-hidden rounded-[4px] border border-[#d9d9e3] bg-white shadow-lg"
                   >
-                    <div className="flex items-center justify-between border-b border-border-soft px-4 py-3">
+                    <div className="flex items-center justify-between border-b border-[#d9d9e3] px-4 py-3">
                       <div>
                         <p className="text-sm font-medium text-foreground">
                           Workspace status
@@ -159,7 +159,7 @@ export const Sidebar: React.FC = () => {
                           No unread system alerts
                         </p>
                       </div>
-                      <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
+                      <span className="rounded-[4px] bg-success/10 px-2 py-0.5 text-[10px] font-medium text-success">
                         Ready
                       </span>
                     </div>
@@ -169,9 +169,9 @@ export const Sidebar: React.FC = () => {
                         setNotificationsOpen(false);
                         navigate('/curriculum');
                       }}
-                      className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
+                      className="group flex w-full items-start gap-3 border-b border-[#d9d9e3] px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >
-                      <span className="rounded-lg bg-foreground/5 p-2 text-foreground">
+                      <span className="rounded-[4px] bg-foreground/5 p-2 text-foreground">
                         <BookOpenCheck className="h-4 w-4" />
                       </span>
                       <span className="min-w-0 flex-1">
@@ -192,7 +192,7 @@ export const Sidebar: React.FC = () => {
                       }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >
-                      <span className="rounded-lg bg-warning/10 p-2 text-warning">
+                      <span className="rounded-[4px] bg-warning/10 p-2 text-warning">
                         <HardDrive className="h-4 w-4" />
                       </span>
                       <span className="min-w-0 flex-1">
@@ -212,7 +212,7 @@ export const Sidebar: React.FC = () => {
 
               <button
                 onClick={handleLogout}
-                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border-soft bg-surface text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
+                className="mt-2 flex h-9 w-full cursor-pointer items-center justify-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-medium text-muted-copy transition-all hover:border-border-hover hover:text-foreground"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span>Sign Out</span>
