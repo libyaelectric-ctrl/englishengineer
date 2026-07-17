@@ -25,3 +25,6 @@ export {
   type QuickAIDraft,
   type WorkToolsPreferences,
 } from './work-tools.types';
+
+export { PRReviewCoachService } from './pr-review-coach';
+export type { PRReviewInput, PRReviewResult } from './pr-review-coach';
