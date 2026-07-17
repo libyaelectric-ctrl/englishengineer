@@ -42,6 +42,83 @@ const unwrapInitializer = (node) => {
   return init;
 };
 
+const resolveVariableCount = (sourceFile, filePath, variableName) => {
+  let count = 0;
+  let found = false;
+  const visit = (node) => {
+    if (ts.isVariableDeclaration(node) && node.name.text === variableName) {
+      const init = unwrapInitializer(node);
+      if (init && ts.isArrayLiteralExpression(init)) {
+        found = true;
+        for (const el of init.elements) {
+          if (ts.isSpreadElement(el) && ts.isIdentifier(el.expression)) {
+            count += resolveVariableCount(
+              sourceFile,
+              filePath,
+              el.expression.text
+            );
+          } else {
+            count++;
+          }
+        }
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  ts.forEachChild(sourceFile, visit);
+
+  if (found) return count;
+
+  let importPath = '';
+  const findImport = (node) => {
+    if (ts.isImportDeclaration(node)) {
+      const clause = node.importClause;
+      if (
+        clause &&
+        clause.namedBindings &&
+        ts.isNamedImports(clause.namedBindings)
+      ) {
+        const hasSpecifier = clause.namedBindings.elements.some(
+          (spec) => spec.name.text === variableName
+        );
+        if (hasSpecifier) {
+          importPath = node.moduleSpecifier.text;
+        }
+      }
+    }
+    ts.forEachChild(node, findImport);
+  };
+  ts.forEachChild(sourceFile, findImport);
+
+  if (importPath) {
+    const dir = resolve(filePath, '..');
+    let resolvedFile = resolve(dir, importPath);
+    if (!resolvedFile.endsWith('.ts')) {
+      if (existsSync(resolvedFile + '.ts')) {
+        resolvedFile += '.ts';
+      } else if (existsSync(resolvedFile + '.tsx')) {
+        resolvedFile += '.tsx';
+      }
+    }
+    if (existsSync(resolvedFile)) {
+      const importedCode = readFileSync(resolvedFile, 'utf8');
+      const importedSourceFile = ts.createSourceFile(
+        resolvedFile,
+        importedCode,
+        ts.ScriptTarget.Latest,
+        true
+      );
+      return resolveVariableCount(
+        importedSourceFile,
+        resolvedFile,
+        variableName
+      );
+    }
+  }
+
+  return 0;
+};
+
 const countArrayElements = (filePath, variableName) => {
   if (!existsSync(resolve(filePath))) return 0;
   const sourceCode = readFileSync(resolve(filePath), 'utf8');
@@ -51,18 +128,7 @@ const countArrayElements = (filePath, variableName) => {
     ts.ScriptTarget.Latest,
     true
   );
-  let count = 0;
-  const visit = (node) => {
-    if (ts.isVariableDeclaration(node) && node.name.text === variableName) {
-      const init = unwrapInitializer(node);
-      if (init && ts.isArrayLiteralExpression(init)) {
-        count = init.elements.length;
-      }
-    }
-    ts.forEachChild(node, visit);
-  };
-  ts.forEachChild(sourceFile, visit);
-  return count;
+  return resolveVariableCount(sourceFile, filePath, variableName);
 };
 
 const getPhraseLibraryCount = (filePath) => {
@@ -165,7 +231,7 @@ const content = {
       'BASE_ENGINEERING_TEMPLATES'
     ) +
     countArrayElements(
-      'src/features/work-tools/work-tools.expanded.data.ts',
+      'src/features/work-tools/work-tools.engineering.data.ts',
       'ENGINEERING_SEEDS'
     ),
   emailTemplates:
@@ -174,11 +240,11 @@ const content = {
       'BASE_EMAIL_TEMPLATES'
     ) +
     countArrayElements(
-      'src/features/work-tools/work-tools.expanded.data.ts',
+      'src/features/work-tools/work-tools.email.data.ts',
       'EMAIL_SEEDS'
     ),
   phraseLibrary: getPhraseLibraryCount(
-    'src/features/work-tools/work-tools.expanded.data.ts'
+    'src/features/work-tools/work-tools.phrase.data.ts'
   ),
   meetingPhrasebook: getMeetingPhrasebookCount(),
   siteDictionary: getSiteDictionaryCount(),

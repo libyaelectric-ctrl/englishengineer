@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -9,7 +10,10 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Send,
 } from 'lucide-react';
+import { cn } from '@/shared/utils/cn';
+import { AITeacherService, type AITeacherChatMessage } from '@/features/ai';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
 import {
@@ -70,6 +74,50 @@ export function ReadingWorkspace({
   handleBackToMissions,
   moveMission,
 }: ReadingWorkspaceProps) {
+  const [messages, setMessages] = useState<AITeacherChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isTalking, setIsTalking] = useState(false);
+
+  useEffect(() => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: `Hi! I am your AI Reading Companion for this technical article: **"${currentMission.title}"**.
+        
+I can explain complex sentences, help you translate paragraphs, or discuss the engineering topics covered in the text.
+What questions do you have about this passage?`,
+      },
+    ]);
+    setChatInput('');
+  }, [currentMission.id]);
+
+  const handleSendChat = async () => {
+    if (!chatInput.trim() || isTalking) return;
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    const nextHistory = [
+      ...messages,
+      { role: 'user' as const, content: userMsg },
+    ];
+    setMessages(nextHistory);
+    setIsTalking(true);
+
+    try {
+      const response = await AITeacherService.chat(
+        'reading',
+        `Title: "${currentMission.title}". Passage: "${currentMission.passageText}"`,
+        nextHistory,
+        userMsg
+      );
+      setMessages([
+        ...nextHistory,
+        { role: 'assistant' as const, content: response.message },
+      ]);
+    } finally {
+      setIsTalking(false);
+    }
+  };
+
   const renderPassage = (text: string, vocabList: VocabularyItem[]) => {
     if (!vocabList || vocabList.length === 0)
       return <span className="whitespace-pre-wrap">{text}</span>;
@@ -246,6 +294,58 @@ export function ReadingWorkspace({
                   word in the passage above to explore its technical note.
                 </p>
               )}
+            </div>
+
+            {/* AI Reading Companion */}
+            <div className="space-y-3 rounded-xl border border-primary/20 bg-surface p-5">
+              <h5 className="text-xs font-black uppercase text-foreground tracking-wider flex items-center gap-1.5">
+                <span>AI Reading Companion 🎓</span>
+              </h5>
+              <div className="flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-lg border border-border-soft bg-background p-2.5">
+                {messages.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={cn(
+                      'flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs leading-5',
+                      msg.role === 'assistant'
+                        ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
+                        : 'bg-foreground text-background ml-auto'
+                    )}
+                  >
+                    <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                      {msg.role === 'assistant' ? 'AI Mentor 🎓' : 'You 💻'}
+                    </p>
+                    <p className="whitespace-pre-wrap">{msg.content}</p>
+                  </div>
+                ))}
+                {isTalking && (
+                  <div className="flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
+                    <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                      AI Mentor 🎓
+                    </p>
+                    <p>Typing response...</p>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSendChat();
+                  }}
+                  disabled={isTalking}
+                  placeholder="Ask a question about the text..."
+                  className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
+                />
+                <Button
+                  onClick={handleSendChat}
+                  disabled={!chatInput.trim() || isTalking}
+                >
+                  <Send className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </div>
           </div>
 

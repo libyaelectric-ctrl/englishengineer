@@ -10,11 +10,13 @@ export const SectionHeading = ({
   subtitle,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }) => (
   <div>
     <h2 className="text-xs font-black uppercase tracking-wide">{title}</h2>
-    <p className="mt-0.5 text-[11px] leading-4 text-muted-copy">{subtitle}</p>
+    {subtitle && (
+      <p className="mt-0.5 text-[11px] leading-4 text-muted-copy">{subtitle}</p>
+    )}
   </div>
 );
 

@@ -1,13 +1,6 @@
 import { useState } from 'react';
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  CheckCircle2,
-  Circle,
-} from 'lucide-react';
-import { StatusPill } from './GrammarPageComponents';
-import type { LessonStatus } from './GrammarPageHelpers';
+import { ChevronDown } from 'lucide-react';
+import { type LessonStatus } from './GrammarPageHelpers';
 
 type PathEntry = {
   rule: { id: string; title: string; grammarCategory: string };
@@ -24,121 +17,119 @@ export const GrammarLessonMap = ({
   pathGroups,
   selectedRule,
   selectRule,
-  scrollLessonStrip,
-  lessonStripRef,
 }: {
   pathGroups: PathGroup[];
   selectedRule: { id: string } | null;
   selectRule: (id: string) => void;
-  scrollLessonStrip: (dir: 'left' | 'right') => void;
-  lessonStripRef: React.RefObject<HTMLDivElement | null>;
+  scrollLessonStrip?: (dir: 'left' | 'right') => void;
+  lessonStripRef?: React.RefObject<HTMLDivElement | null>;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const totalLessons = pathGroups.reduce((acc, g) => acc + g.entries.length, 0);
+  const masteredLessons = pathGroups.reduce(
+    (acc, g) => acc + g.entries.filter((e) => e.status === 'Mastered').length,
+    0
+  );
+
   return (
-    <div className="rounded-lg border border-border-soft bg-surface">
+    <div className="rounded-lg border border-border-soft bg-surface transition-all">
+      {/* Header bar */}
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
+        className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-background/45"
       >
-        <span className="text-xs font-black uppercase tracking-wide text-muted-copy">
-          Complete Grammar Map
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 text-muted-copy transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-        />
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs font-black uppercase tracking-wider text-primary">
+            Curriculum Map
+          </span>
+          <span className="text-[11px] text-muted-copy">
+            {masteredLessons} of {totalLessons} Lessons Mastered
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* Progress bar */}
+          <div className="hidden h-1.5 w-24 overflow-hidden rounded-full bg-border-soft sm:block">
+            <div
+              className="h-full bg-success transition-all duration-300"
+              style={{
+                width: `${totalLessons > 0 ? (masteredLessons / totalLessons) * 100 : 0}%`,
+              }}
+            />
+          </div>
+          <ChevronDown
+            className={`h-4 w-4 text-muted-copy transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+          />
+        </div>
       </button>
 
       {isExpanded && (
-        <div className="border-t border-border-soft px-2 py-2">
-          <div className="flex items-center">
-            <button
-              type="button"
-              onClick={() => scrollLessonStrip('left')}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-copy hover:text-foreground"
-              aria-label="Scroll lessons left"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <div
-              ref={lessonStripRef}
-              className="flex flex-1 gap-1.5 overflow-x-auto scroll-smooth px-1 pb-1"
-            >
-              {pathGroups.length === 0 ? (
-                <p className="px-2 py-3 text-xs text-muted-copy">
-                  No lessons match this filter.
-                </p>
-              ) : (
-                (() => {
-                  let lessonNum = 0;
-                  return pathGroups.map((group) => {
-                    const startNum = lessonNum + 1;
-                    lessonNum += group.entries.length;
-                    return (
-                      <div
-                        key={group.module}
-                        className="flex shrink-0 items-stretch gap-1.5"
-                      >
-                        <div className="flex w-36 shrink-0 flex-col justify-center rounded-lg border border-border-soft bg-background px-2 py-1.5">
-                          <span className="line-clamp-2 text-xs font-black leading-4">
-                            {group.module}
+        <div className="border-t border-border-soft bg-background/30 p-5">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {pathGroups.map((group) => {
+              const masteredInGroup = group.entries.filter(
+                (e) => e.status === 'Mastered'
+              ).length;
+              return (
+                <div
+                  key={group.module}
+                  className="flex flex-col rounded bg-white border border-border-soft p-4 shadow-sm"
+                >
+                  <div className="mb-3 flex items-center justify-between border-b border-border-soft pb-2">
+                    <h3 className="text-xs font-black uppercase tracking-wide text-foreground">
+                      {group.module}
+                    </h3>
+                    <span className="text-[10px] font-bold text-muted-copy bg-background px-2 py-0.5 rounded-full border border-border-soft">
+                      {masteredInGroup}/{group.entries.length} Passed
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-1.5">
+                    {group.entries.map(({ rule, status, isUnlocked }) => {
+                      const selected = rule.id === selectedRule?.id;
+                      const locked = isUnlocked === false;
+                      return (
+                        <button
+                          key={rule.id}
+                          type="button"
+                          disabled={locked}
+                          onClick={() => selectRule(rule.id)}
+                          className={`flex w-full items-center justify-between rounded px-3 py-2 text-left transition-all ${
+                            selected
+                              ? 'bg-foreground text-background font-bold shadow'
+                              : locked
+                                ? 'bg-surface-hover/50 text-muted-copy opacity-50 cursor-not-allowed border border-dashed border-border-soft'
+                                : 'hover:bg-primary/5 text-foreground hover:text-primary border border-border-soft hover:border-primary/30'
+                          }`}
+                        >
+                          <span className="truncate text-xs font-semibold pr-2">
+                            {rule.title}
                           </span>
-                        </div>
-                        {group.entries.map(
-                          ({ rule, status, isUnlocked }, idx) => {
-                            const selected = rule.id === selectedRule?.id;
-                            const locked = isUnlocked === false;
-                            return (
-                              <button
-                                key={rule.id}
-                                type="button"
-                                disabled={locked}
-                                onClick={() => selectRule(rule.id)}
-                                className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${
-                                  selected
-                                    ? 'border-foreground bg-foreground text-background'
-                                    : locked
-                                      ? 'border-border-soft bg-surface-hover opacity-50 cursor-not-allowed'
-                                      : 'border-border-soft bg-background hover:border-primary/40'
-                                }`}
-                              >
-                                <span className="line-clamp-2 text-xs font-black leading-4">
-                                  <span className="mr-1 text-[10px] opacity-60">
-                                    {startNum + idx}.
-                                  </span>
-                                  {rule.title}
-                                </span>
-                                <span className="mt-1 flex items-center justify-between gap-1">
-                                  {locked ? (
-                                    <span className="text-[10px] text-muted-copy leading-3">
-                                      Locked 🔒
-                                    </span>
-                                  ) : status === 'Mastered' ? (
-                                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
-                                  ) : (
-                                    <Circle className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
-                                  )}
-                                  <StatusPill status={status} compact />
-                                </span>
-                              </button>
-                            );
-                          }
-                        )}
-                      </div>
-                    );
-                  });
-                })()
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => scrollLessonStrip('right')}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-muted-copy hover:text-foreground"
-              aria-label="Scroll lessons right"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+                          <span className="flex shrink-0 items-center gap-1.5">
+                            {locked ? (
+                              <span className="text-[10px] text-muted-copy opacity-75">
+                                🔒
+                              </span>
+                            ) : status === 'Mastered' ? (
+                              <span className="text-xs font-black text-success">
+                                ✓
+                              </span>
+                            ) : status === 'Needs Reading/Writing' ? (
+                              <span className="text-[9px] bg-warning/10 text-warning px-1.5 py-0.5 rounded font-black uppercase border border-warning/20">
+                                R/W
+                              </span>
+                            ) : (
+                              <span className="h-1.5 w-1.5 rounded-full bg-primary/40" />
+                            )}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -252,21 +252,13 @@ Would you like to practice? Try translating this Turkish sentence or write your 
 
       <LessonBlock
         icon={Target}
-        title="Today's Objective"
-        body={`Use "${selectedRule.structure}" to ${selectedRule.languageFunction.toLowerCase()} in a real engineering context.`}
-      />
-      <LessonBlock
-        icon={BookOpen}
-        title="Why This Matters"
-        body="Grammar is the bridge between the words you know and the message you need to produce. This lesson helps you turn vocabulary into a clear site sentence, report sentence, or professional reply."
+        title="Lesson Objective"
+        body={`Practice how to "${selectedRule.languageFunction.toLowerCase()}" in an engineering context: "${selectedRule.engineeringUseCase}" using the structure "${selectedRule.structure}".`}
       />
 
-      <div className="rounded-lg border border-border-soft bg-surface p-4">
-        <SectionHeading
-          title="Words You Will Use Today"
-          subtitle="Grammar should reuse vocabulary before it introduces new language."
-        />
-        {linkedVocabulary.length > 0 ? (
+      {linkedVocabulary.length > 0 && (
+        <div className="rounded-lg border border-border-soft bg-surface p-4">
+          <SectionHeading title="Words You Will Use Today" />
           <div className="mt-2 flex flex-wrap gap-1.5">
             {linkedVocabulary.map((item) => (
               <span
@@ -277,19 +269,11 @@ Would you like to practice? Try translating this Turkish sentence or write your 
               </span>
             ))}
           </div>
-        ) : (
-          <p className="mt-2 text-xs text-muted-copy">
-            No confirmed Vocabulary match yet. This lesson stays in Grammar
-            until matching vocabulary is available.
-          </p>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="rounded-lg border border-border-soft bg-surface p-4">
-        <SectionHeading
-          title="Teacher Explanation"
-          subtitle="Learn the use, not only the grammar name."
-        />
+        <SectionHeading title="Teacher Explanation" />
         <p className="mt-2 text-xs leading-5">
           {compact(selectedRule.explanation, selectedRule.definition)}
         </p>
@@ -422,10 +406,7 @@ Would you like to practice? Try translating this Turkish sentence or write your 
       </div>
 
       <div className="rounded-lg border border-border-soft bg-surface p-4">
-        <SectionHeading
-          title="Practice"
-          subtitle="Save honest evidence. Mastery also needs Reading and Writing use."
-        />
+        <SectionHeading title="Practice & Evaluation" />
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <Button onClick={() => recordUsage(true)}>
             <CheckCircle2 className="h-3.5 w-3.5" /> Used Correctly

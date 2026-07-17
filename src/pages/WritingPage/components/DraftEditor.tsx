@@ -1,4 +1,8 @@
-import { PenTool, AlertTriangle, Volume2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { PenTool, AlertTriangle, Volume2, Send } from 'lucide-react';
+import { cn } from '@/shared/utils/cn';
+import { Button } from '@/shared/components/Button';
+import { AITeacherService, type AITeacherChatMessage } from '@/features/ai';
 import { SectionCard } from '@/shared/components/SectionCard';
 
 interface DraftEditorProps {
@@ -26,6 +30,50 @@ export const DraftEditor = ({
   getReadabilityScore,
   userErrors,
 }: DraftEditorProps) => {
+  const [messages, setMessages] = useState<AITeacherChatMessage[]>([]);
+  const [chatInput, setChatInput] = useState('');
+  const [isTalking, setIsTalking] = useState(false);
+
+  useEffect(() => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: `Hi! I am your AI Writing Coach for this drafting task: **"${title}"**.
+        
+I can suggest professional alternatives, check your passive voice usage, or help you outline your draft.
+Tell me what you want to write or paste a sentence you want to improve!`,
+      },
+    ]);
+    setChatInput('');
+  }, [title]);
+
+  const handleSendChat = async () => {
+    if (!chatInput.trim() || isTalking) return;
+    const userMsg = chatInput.trim();
+    setChatInput('');
+    const nextHistory = [
+      ...messages,
+      { role: 'user' as const, content: userMsg },
+    ];
+    setMessages(nextHistory);
+    setIsTalking(true);
+
+    try {
+      const response = await AITeacherService.chat(
+        'writing',
+        `Task: "${title}". Description: "${description}". Scenario: "${scenario}". Current draft: "${draft}"`,
+        nextHistory,
+        userMsg
+      );
+      setMessages([
+        ...nextHistory,
+        { role: 'assistant' as const, content: response.message },
+      ]);
+    } finally {
+      setIsTalking(false);
+    }
+  };
+
   const wordCount = draft.trim().split(/\s+/).filter(Boolean).length;
 
   return (
@@ -120,6 +168,58 @@ export const DraftEditor = ({
             <span>{userErrors.draft}</span>
           </p>
         )}
+
+        {/* AI Writing Coach Chat */}
+        <div className="mt-4 border-t border-border-soft pt-4">
+          <h4 className="text-xs font-black uppercase tracking-wide text-foreground">
+            AI Writing Coach 🎓
+          </h4>
+          <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-lg border border-border-soft bg-background p-2.5">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={cn(
+                  'flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs leading-5',
+                  msg.role === 'assistant'
+                    ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
+                    : 'bg-foreground text-background ml-auto'
+                )}
+              >
+                <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                  {msg.role === 'assistant' ? 'AI Coach 🎓' : 'You 💻'}
+                </p>
+                <p className="whitespace-pre-wrap">{msg.content}</p>
+              </div>
+            ))}
+            {isTalking && (
+              <div className="flex flex-col max-w-[85%] rounded-lg p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
+                <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                  AI Coach 🎓
+                </p>
+                <p>Analyzing draft and context...</p>
+              </div>
+            )}
+          </div>
+          <div className="mt-2 flex gap-2">
+            <input
+              type="text"
+              value={chatInput}
+              onChange={(e) => setChatInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSendChat();
+              }}
+              disabled={isTalking}
+              placeholder="Ask for feedback or outline ideas..."
+              className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
+            />
+            <Button
+              onClick={handleSendChat}
+              disabled={!chatInput.trim() || isTalking}
+            >
+              <Send className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
       </div>
     </SectionCard>
   );
