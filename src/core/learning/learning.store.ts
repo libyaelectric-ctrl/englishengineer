@@ -14,10 +14,6 @@ import { AchievementService } from './achievement.service';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { calculateStreak } from './learning.streak';
-import {
-  getSupabaseClient,
-  isSupabaseConfigured,
-} from '@/features/auth/supabase.client';
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
@@ -87,14 +83,6 @@ export interface LearningStoreActions {
     durationMinutes: number
   ) => ScoreResult;
   resetAll: () => void;
-  /** Add a mastered vocabulary term ID to the personal pool */
-  addToVocabularyPool: (termId: string) => void;
-  /** Add a strong grammar rule ID to the personal pool */
-  addToGrammarPool: (ruleId: string) => void;
-  /** Get current vocabulary pool (deduplicated list of mastered term IDs) */
-  getVocabularyPool: () => string[];
-  /** Get current grammar pool (deduplicated list of strong rule IDs) */
-  getGrammarPool: () => string[];
 }
 
 const emitLearningCompleted = (
@@ -392,80 +380,5 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
       });
       storage.set(STORAGE_KEY, { ...get() });
     },
-
-    addToVocabularyPool: (termId: string) => {
-      const current = get().vocabularyPool ?? [];
-      if (current.includes(termId)) return; // already in pool
-      const updated = [...current, termId];
-      set({ vocabularyPool: updated });
-      storage.set(STORAGE_KEY, { ...get(), vocabularyPool: updated });
-      logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
-
-      // Supabase'e yaz (offline-tolerant: başarısız olursa sessizce devam)
-      if (isSupabaseConfigured()) {
-        const client = getSupabaseClient();
-        const userId = useAuthStore.getState().currentUser?.id;
-        if (client && userId) {
-          client
-            .from('knowledge_pool_entries')
-            .upsert(
-              {
-                user_id: userId,
-                content_type: 'vocabulary',
-                content_id: termId,
-              },
-              { onConflict: 'user_id,content_type,content_id' }
-            )
-            .then(({ error }: { error: unknown }) => {
-              if (error)
-                logger.w('[VocabPool] Supabase write failed: ' + String(error));
-            });
-        }
-      }
-    },
-
-    addToGrammarPool: (ruleId: string) => {
-      const current = get().grammarPool ?? [];
-      if (current.includes(ruleId)) return;
-      const updated = [...current, ruleId];
-      set({ grammarPool: updated });
-      storage.set(STORAGE_KEY, { ...get(), grammarPool: updated });
-      logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
-
-      // Supabase'e yaz (offline-tolerant)
-      if (isSupabaseConfigured()) {
-        const client = getSupabaseClient();
-        const userId = useAuthStore.getState().currentUser?.id;
-        if (client && userId) {
-          client
-            .from('knowledge_pool_entries')
-            .upsert(
-              { user_id: userId, content_type: 'grammar', content_id: ruleId },
-              { onConflict: 'user_id,content_type,content_id' }
-            )
-            .then(({ error }: { error: unknown }) => {
-              if (error)
-                logger.w(
-                  '[GrammarPool] Supabase write failed: ' + String(error)
-                );
-            });
-        }
-      }
-    },
-
-    getVocabularyPool: () => get().vocabularyPool ?? [],
-    getGrammarPool: () => get().grammarPool ?? [],
   })
 );
-
-// Event bus → Pool bağlantısı (MimoCan Faz 1 kritik bağlantısı)
-
-eventBus.subscribe('vocabulary:mastered', (event) => {
-  const termId = (event.payload as { termId: string }).termId;
-  useLearningStore.getState().addToVocabularyPool(termId);
-});
-
-eventBus.subscribe('grammar:mastered', (event) => {
-  const ruleId = (event.payload as { ruleId: string }).ruleId;
-  useLearningStore.getState().addToGrammarPool(ruleId);
-});
