@@ -10,7 +10,7 @@
     "dev:all": "concurrently -n \"frontend,backend\" -c \"blue,green\" \"npm run dev\" \"npm --prefix backend run dev\"",
     "build": "tsc --noEmit && vite build --configLoader runner",
     "clean": "node -e \"const fs=require('fs'); ['dist','.vite','.npm-cache'].forEach((p)=>fs.rmSync(p,{recursive:true,force:true}));\"",
-    "test": "vitest run --configLoader runner --reporter dot --exclude \"src/e2e/**\" --exclude \".mimocode/**\"",
+    "test": "vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude '.mimocode/**'",
     "test:watch": "vitest --configLoader runner",
     "test:coverage": "vitest run --coverage --configLoader runner",
     "typecheck": "tsc --noEmit",
