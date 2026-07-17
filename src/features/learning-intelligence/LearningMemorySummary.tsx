@@ -33,7 +33,7 @@ export const LearningMemorySummary = ({
           : 'Review queue is clear',
       href: '/vocabulary',
       icon: BookMarked,
-      tone: 'border-primary/20 bg-primary/5 text-primary',
+      tone: 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]',
     },
     {
       label: 'Grammar path',
@@ -44,7 +44,7 @@ export const LearningMemorySummary = ({
           : `${grammar.learning} learning`,
       href: '/grammar',
       icon: Languages,
-      tone: 'border-indigo-200 bg-indigo-50 text-indigo-700',
+      tone: 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]',
     },
     {
       label: 'Mistake memory',
@@ -55,7 +55,7 @@ export const LearningMemorySummary = ({
           : 'No repeated pattern yet',
       href: '/progress/next-steps',
       icon: TriangleAlert,
-      tone: 'border-amber-200 bg-amber-50 text-amber-700',
+      tone: 'border-rose-500/25 bg-rose-500/5 text-rose-600',
     },
     {
       label: 'Achievements',
@@ -63,7 +63,7 @@ export const LearningMemorySummary = ({
       detail: 'Earned only from recorded practice',
       href: '/progress/next-steps',
       icon: Award,
-      tone: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+      tone: 'border-emerald-500/25 bg-emerald-500/5 text-emerald-600',
     },
   ] as const;
 

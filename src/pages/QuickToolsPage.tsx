@@ -28,7 +28,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div
-        className="flex flex-wrap gap-2 rounded-xl border border-border-soft bg-surface p-3"
+        className="flex flex-wrap gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm font-sans"
         role="tablist"
       >
         {(
