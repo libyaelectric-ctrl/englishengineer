@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const Sparkline = React.memo(({
   data,
   className = '',

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import {
   BookMarked,
   BookOpen,
@@ -53,50 +53,58 @@ const DashboardPage = () => {
   );
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const summary = ProgressService.getSummary(learningState);
-  const focusSkill = [...SKILL_NAMES]
-    .map((skill) => profile.skills[skill])
-    .sort(
-      (a, b) =>
-        a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
-    )[0];
+  const focusSkill = useMemo(
+    () =>
+      [...SKILL_NAMES]
+        .map((skill) => profile.skills[skill])
+        .sort(
+          (a, b) =>
+            a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
+        )[0],
+    [profile]
+  );
   const focusMeta = SKILL_META[focusSkill.skill];
   const primaryMission = missions[0];
-  const reviewPriorities = buildReviewPriorities([
-    ...(memory.weakWords > 0
-      ? [
-          {
-            id: 'weak-words',
-            label: `${memory.weakWords} weak vocabulary items`,
-            source: 'weak-word' as const,
-            severity: memory.weakWords,
-          },
-        ]
-      : []),
-    ...(memory.dueToday > 0
-      ? [
-          {
-            id: 'due-words',
-            label: `${memory.dueToday} vocabulary reviews due`,
-            source: 'due-item' as const,
-            severity: memory.dueToday,
-          },
-        ]
-      : []),
-    ...mistakeLog
-      .filter((item) => (item.repetitionCount ?? 1) >= 3)
-      .map((item) => ({
-        id: item.id,
-        label: `${item.category}: ${item.originalText}`,
-        source: 'repeated-mistake' as const,
-        severity: item.repetitionCount,
-      })),
-    {
-      id: `skill-${focusSkill.skill}`,
-      label: `${focusMeta.label} needs the next practice`,
-      source: 'skill-weakness' as const,
-      severity: Math.round(focusSkill.weaknessScore / 10),
-    },
-  ]).slice(0, 3);
+  const reviewPriorities = useMemo(
+    () =>
+      buildReviewPriorities([
+        ...(memory.weakWords > 0
+          ? [
+              {
+                id: 'weak-words',
+                label: `${memory.weakWords} weak vocabulary items`,
+                source: 'weak-word' as const,
+                severity: memory.weakWords,
+              },
+            ]
+          : []),
+        ...(memory.dueToday > 0
+          ? [
+              {
+                id: 'due-words',
+                label: `${memory.dueToday} vocabulary reviews due`,
+                source: 'due-item' as const,
+                severity: memory.dueToday,
+              },
+            ]
+          : []),
+        ...mistakeLog
+          .filter((item) => (item.repetitionCount ?? 1) >= 3)
+          .map((item) => ({
+            id: item.id,
+            label: `${item.category}: ${item.originalText}`,
+            source: 'repeated-mistake' as const,
+            severity: item.repetitionCount,
+          })),
+        {
+          id: `skill-${focusSkill.skill}`,
+          label: `${focusMeta.label} needs the next practice`,
+          source: 'skill-weakness' as const,
+          severity: Math.round(focusSkill.weaknessScore / 10),
+        },
+      ]).slice(0, 3),
+    [memory, mistakeLog, focusSkill, focusMeta]
+  );
 
   const competency = getCompetencyLabel(summary.averageScore);
   const userName = currentUser?.displayName || 'Engineer';
@@ -122,6 +130,11 @@ const DashboardPage = () => {
     }
     return result;
   }, [profile]);
+
+  const handleStartLesson = useCallback(
+    () => navigate(primaryMission?.route ?? focusMeta.route),
+    [navigate, primaryMission, focusMeta]
+  );
 
   const isLoading = !currentUser || !profile;
   if (isLoading) return <DashboardSkeleton />;
@@ -149,9 +162,7 @@ const DashboardPage = () => {
           focusMeta={focusMeta}
           focusSkill={focusSkill}
           focusLessonNumber={focusLessonNumber}
-          onStartLesson={() =>
-            navigate(primaryMission?.route ?? focusMeta.route)
-          }
+          onStartLesson={handleStartLesson}
         />
         <ProgressCockpit
           skillNames={SKILL_NAMES}
