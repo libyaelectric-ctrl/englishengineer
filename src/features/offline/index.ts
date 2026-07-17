@@ -1,5 +1,20 @@
-export * from './offline.data';
-export * from './offline.helpers';
-export * from './offline.types';
-export * from './sync-queue.types';
-export * from './sync-queue';
+export { OFFLINE_CAPABILITIES } from './offline.data';
+
+export {
+  canUseCapability,
+  getCapabilityLabel,
+  getOfflineSummary,
+} from './offline.helpers';
+
+export {
+  type OfflineCapabilityStatus,
+  type OfflineCapability,
+} from './offline.types';
+
+export {
+  type SyncQueueItem,
+  type SyncQueueState,
+  type SyncQueueListener,
+} from './sync-queue.types';
+
+export { SyncQueue } from './sync-queue';

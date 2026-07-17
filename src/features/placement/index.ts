@@ -1,5 +1,14 @@
-export * from './placement.types';
-export * from './placement.data';
-export * from './placement.helpers';
-export * from './placement.service';
-export * from './placement.store';
+export {
+  type PlacementDomain,
+  type PlacementQuestion,
+  type PlacementResult,
+  type PlacementAnswers,
+} from './placement.types';
+
+export { PLACEMENT_QUESTIONS } from './placement.data';
+
+export { evaluatePlacement } from './placement.helpers';
+
+export { PlacementService } from './placement.service';
+
+export { usePlacementStore } from './placement.store';
