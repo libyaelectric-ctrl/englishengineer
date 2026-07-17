@@ -1,10 +1,17 @@
-import { FileText, Mic, RotateCcw, MessageSquareText } from 'lucide-react';
+import { lazy, useState } from 'react';
+import { FileText, Mic, RotateCcw, MessageSquareText, Trophy } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { LevelContentFilter } from '@/features/level-system';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
+
+const InterviewSimulator = lazy(() =>
+  import('@/features/speaking/components/InterviewSimulator').then((m) => ({
+    default: m.InterviewSimulator,
+  }))
+);
 
 import {
   VoiceMinuteWallet,
@@ -17,7 +24,10 @@ import {
   useSpeakingPage,
 } from './SpeakingPage/index';
 
+type SpeakingTab = 'roleplay' | 'interview';
+
 const SpeakingPage = () => {
+  const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
   const {
     ROLEPLAY_FILTERS,
     MAX_VOICE_MINUTES,
@@ -70,172 +80,200 @@ const SpeakingPage = () => {
         </div>
       </div>
 
-      {/* Voice Minute Wallet — Max plan only */}
-      {hasMaxAccess && subscription.planId === 'max' && (
-        <VoiceMinuteWallet
-          voiceMinutesUsedThisMonth={voiceMinutesUsedThisMonth}
-          maxVoiceMinutes={MAX_VOICE_MINUTES}
-          walletPercent={walletPercent}
-        />
-      )}
+      {/* Speaking mode tabs */}
+      <div className="flex gap-2" role="tablist" aria-label="Speaking mode">
+        <Button
+          role="tab"
+          aria-selected={speakingTab === 'roleplay'}
+          variant={speakingTab === 'roleplay' ? 'primary' : 'ghost'}
+          onClick={() => setSpeakingTab('roleplay')}
+        >
+          <MessageSquareText className="h-4 w-4" />
+          Roleplay
+        </Button>
+        <Button
+          role="tab"
+          aria-selected={speakingTab === 'interview'}
+          variant={speakingTab === 'interview' ? 'primary' : 'ghost'}
+          onClick={() => setSpeakingTab('interview')}
+        >
+          <Trophy className="h-4 w-4" />
+          Interview Simulator
+        </Button>
+      </div>
 
-      <LevelContentFilter
-        value={levelFilter}
-        currentLevel={currentLevel}
-        onChange={setLevelFilter}
-      />
-
-      <RoleplayCategoryFilter
-        roleplayFilters={ROLEPLAY_FILTERS}
-        roleplayFilter={roleplayFilter}
-        onFilterChange={setRoleplayFilter}
-      />
-
-      <MissionSelector
-        roleplayMissions={roleplayMissions}
-        selectedMissionId={selectedMissionId}
-        completedMissions={completedMissions}
-        currentLevel={currentLevel}
-        onMissionSelect={handleMissionSelect}
-      />
-
-      {activeMission && (
+      {speakingTab === 'interview' ? (
+        <InterviewSimulator />
+      ) : (
         <>
-          <MissionMetrics
-            activeMission={activeMission}
-            completedMissions={completedMissions}
+          {/* Voice Minute Wallet — Max plan only */}
+          {hasMaxAccess && subscription.planId === 'max' && (
+            <VoiceMinuteWallet
+              voiceMinutesUsedThisMonth={voiceMinutesUsedThisMonth}
+              maxVoiceMinutes={MAX_VOICE_MINUTES}
+              walletPercent={walletPercent}
+            />
+          )}
+
+          <LevelContentFilter
+            value={levelFilter}
+            currentLevel={currentLevel}
+            onChange={setLevelFilter}
           />
 
-          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-            <SectionCard
-              title={activeMission.title}
-              subtitle={activeMission.description}
-              icon={MessageSquareText}
-              headerActions={
-                <StatusBadge
-                  label={`${SPEAKING_MVP_MODE} · No microphone required`}
-                  tone="info"
-                />
-              }
-            >
-              {/* Roleplay prompt */}
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
-                <p className="text-xs font-medium uppercase text-primary">
-                  Roleplay prompt
-                </p>
-                <p className="mt-2 text-base leading-7 text-foreground">
-                  {activeMission.promptText}
-                </p>
-              </div>
+          <RoleplayCategoryFilter
+            roleplayFilters={ROLEPLAY_FILTERS}
+            roleplayFilter={roleplayFilter}
+            onFilterChange={setRoleplayFilter}
+          />
 
-              {/* Practice Script Summary */}
-              <div className="flex items-start gap-2 mt-3 rounded-lg border border-border-soft bg-surface-hover p-3">
-                <FileText className="h-4 w-4 text-muted-copy shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
-                    Practice Script Summary
-                  </p>
-                  <p className="mt-1 text-xs text-foreground leading-5">
-                    {activeMission.description}
-                  </p>
-                  <p className="mt-1 text-[10px] text-muted-copy">
-                    Keywords: {activeMission.expectedKeywords.join(', ')}
-                  </p>
+          <MissionSelector
+            roleplayMissions={roleplayMissions}
+            selectedMissionId={selectedMissionId}
+            completedMissions={completedMissions}
+            currentLevel={currentLevel}
+            onMissionSelect={handleMissionSelect}
+          />
+
+          {activeMission && (
+            <>
+              <MissionMetrics
+                activeMission={activeMission}
+                completedMissions={completedMissions}
+              />
+
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+                <SectionCard
+                  title={activeMission.title}
+                  subtitle={activeMission.description}
+                  icon={MessageSquareText}
+                  headerActions={
+                    <StatusBadge
+                      label={`${SPEAKING_MVP_MODE} · No microphone required`}
+                      tone="info"
+                    />
+                  }
+                >
+                  {/* Roleplay prompt */}
+                  <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
+                    <p className="text-xs font-medium uppercase text-primary">
+                      Roleplay prompt
+                    </p>
+                    <p className="mt-2 text-base leading-7 text-foreground">
+                      {activeMission.promptText}
+                    </p>
+                  </div>
+
+                  {/* Practice Script Summary */}
+                  <div className="flex items-start gap-2 mt-3 rounded-lg border border-border-soft bg-surface-hover p-3">
+                    <FileText className="h-4 w-4 text-muted-copy shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
+                        Practice Script Summary
+                      </p>
+                      <p className="mt-1 text-xs text-foreground leading-5">
+                        {activeMission.description}
+                      </p>
+                      <p className="mt-1 text-[10px] text-muted-copy">
+                        Keywords: {activeMission.expectedKeywords.join(', ')}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Practice Mode Selector */}
+                  <div className="mt-5 flex gap-3 border-b border-border-soft pb-2">
+                    <button
+                      type="button"
+                      onClick={() => setResponseMode('written')}
+                      className={`pb-2 px-1 text-xs font-medium transition-all relative ${
+                        responseMode === 'written'
+                          ? 'text-primary font-semibold border-b-2 border-primary'
+                          : 'text-muted-copy hover:text-foreground'
+                      }`}
+                    >
+                      Written Response
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setResponseMode('voice')}
+                      className={`pb-2 px-1 text-xs font-medium transition-all flex items-center gap-1.5 ${
+                        responseMode === 'voice'
+                          ? 'text-primary font-semibold border-b-2 border-primary'
+                          : 'text-muted-copy hover:text-foreground'
+                      }`}
+                    >
+                      <Mic className="h-3.5 w-3.5" />
+                      Voice & Microphone Response
+                      {!hasMaxAccess && (
+                        <span className="rounded bg-warning/10 px-1 text-[8px] font-semibold text-warning uppercase">
+                          Max
+                        </span>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Response Mode Content */}
+                  {responseMode === 'written' ? (
+                    <>
+                      <label
+                        className="mt-5 block text-sm font-medium text-foreground"
+                        htmlFor="written-roleplay-response"
+                      >
+                        Written Roleplay response
+                      </label>
+                      <p className="mt-1 text-xs leading-5 text-muted-copy">
+                        This is text-based communication practice, not real speech
+                        or pronunciation scoring.
+                      </p>
+                      <textarea
+                        id="written-roleplay-response"
+                        value={typedTranscript}
+                        onChange={(event) => setTypedTranscript(event.target.value)}
+                        className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
+                        placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
+                      />
+                      <div className="mt-4 flex flex-wrap gap-3">
+                        <Button
+                          onClick={submitRoleplay}
+                          disabled={!typedTranscript.trim()}
+                        >
+                          Submit Written Roleplay
+                        </Button>
+                        <Button variant="secondary" onClick={resetMission}>
+                          <RotateCcw className="h-4 w-4" /> Reset response
+                        </Button>
+                      </div>
+                      <p className="mt-4 text-xs font-medium text-muted-copy">
+                        Microphone required: No · AI required: No
+                      </p>
+                    </>
+                  ) : (
+                    <VoicePracticePanel
+                      hasMaxAccess={hasMaxAccess}
+                      isRecording={isRecording}
+                      isPaused={isPaused}
+                      setIsPaused={setIsPaused}
+                      pauseRef={pauseRef}
+                      recordedAudio={recordedAudio}
+                      pronunciationScore={pronunciationScore}
+                      phonemeFeedback={phonemeFeedback}
+                      waveformBars={waveformBars}
+                      typedTranscript={typedTranscript}
+                      onStartRecording={startRecording}
+                      onSubmitRoleplay={submitRoleplay}
+                      onResetRecording={resetRecording}
+                    />
+                  )}
+                </SectionCard>
+
+                <div className="space-y-6">
+                  {evaluationResult && (
+                    <EvaluationScores evaluationResult={evaluationResult} />
+                  )}
                 </div>
               </div>
-
-              {/* Practice Mode Selector */}
-              <div className="mt-5 flex gap-3 border-b border-border-soft pb-2">
-                <button
-                  type="button"
-                  onClick={() => setResponseMode('written')}
-                  className={`pb-2 px-1 text-xs font-medium transition-all relative ${
-                    responseMode === 'written'
-                      ? 'text-primary font-semibold border-b-2 border-primary'
-                      : 'text-muted-copy hover:text-foreground'
-                  }`}
-                >
-                  Written Response
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setResponseMode('voice')}
-                  className={`pb-2 px-1 text-xs font-medium transition-all flex items-center gap-1.5 ${
-                    responseMode === 'voice'
-                      ? 'text-primary font-semibold border-b-2 border-primary'
-                      : 'text-muted-copy hover:text-foreground'
-                  }`}
-                >
-                  <Mic className="h-3.5 w-3.5" />
-                  Voice & Microphone Response
-                  {!hasMaxAccess && (
-                    <span className="rounded bg-warning/10 px-1 text-[8px] font-semibold text-warning uppercase">
-                      Max
-                    </span>
-                  )}
-                </button>
-              </div>
-
-              {/* Response Mode Content */}
-              {responseMode === 'written' ? (
-                <>
-                  <label
-                    className="mt-5 block text-sm font-medium text-foreground"
-                    htmlFor="written-roleplay-response"
-                  >
-                    Written Roleplay response
-                  </label>
-                  <p className="mt-1 text-xs leading-5 text-muted-copy">
-                    This is text-based communication practice, not real speech
-                    or pronunciation scoring.
-                  </p>
-                  <textarea
-                    id="written-roleplay-response"
-                    value={typedTranscript}
-                    onChange={(event) => setTypedTranscript(event.target.value)}
-                    className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
-                    placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
-                  />
-                  <div className="mt-4 flex flex-wrap gap-3">
-                    <Button
-                      onClick={submitRoleplay}
-                      disabled={!typedTranscript.trim()}
-                    >
-                      Submit Written Roleplay
-                    </Button>
-                    <Button variant="secondary" onClick={resetMission}>
-                      <RotateCcw className="h-4 w-4" /> Reset response
-                    </Button>
-                  </div>
-                  <p className="mt-4 text-xs font-medium text-muted-copy">
-                    Microphone required: No · AI required: No
-                  </p>
-                </>
-              ) : (
-                <VoicePracticePanel
-                  hasMaxAccess={hasMaxAccess}
-                  isRecording={isRecording}
-                  isPaused={isPaused}
-                  setIsPaused={setIsPaused}
-                  pauseRef={pauseRef}
-                  recordedAudio={recordedAudio}
-                  pronunciationScore={pronunciationScore}
-                  phonemeFeedback={phonemeFeedback}
-                  waveformBars={waveformBars}
-                  typedTranscript={typedTranscript}
-                  onStartRecording={startRecording}
-                  onSubmitRoleplay={submitRoleplay}
-                  onResetRecording={resetRecording}
-                />
-              )}
-            </SectionCard>
-
-            <div className="space-y-6">
-              {evaluationResult && (
-                <EvaluationScores evaluationResult={evaluationResult} />
-              )}
-            </div>
-          </div>
+            </>
+          )}
         </>
       )}
 
