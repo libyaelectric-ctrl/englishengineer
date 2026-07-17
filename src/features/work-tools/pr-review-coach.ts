@@ -41,7 +41,7 @@ const ruleBasedTransform = (raw: string): PRReviewResult => {
     [/\bwhy would anyone\b/gi, 'one consideration is that'],
     [/\bthis is (?:clearly )?wrong\b/gi, 'this may benefit from revision'],
     [/\bnever should have\b/gi, 'an alternative approach might be'],
-    [/\bcan\'?t believe\b/gi, "it's worth noting that"],
+    [/\bcan'?t believe\b/gi, "it's worth noting that"],
     [/\bhorrible\b/gi, 'challenging'],
     [/\bgarbage\b/gi, 'needs refinement'],
     [/\bjust\b(?=.*\bfix\b)/gi, ''],
