@@ -134,9 +134,10 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 - **Açıklama:** Kelime listeleri ve büyük veri akışlarında performansı artırmak için virtual scroll ve React Query önbellek (cache) yönetimini optimize et.
 - **Durum:** Yapıldı. React Query: staleTime 5dk, gcTime 10dk, retry 2, refetchOnWindowFocus:false. VirtualList (react-virtuoso) VocabularyPage'de aktif. Performans zaten optimal seviyede.
 
-### [ ] Kademe 21: Lighthouse Skor & Core Web Vitals Optimizasyonu
+### [x] YAPILDI — Kademe 21: Lighthouse Skor & Core Web Vitals Optimizasyonu
 
 - **Açıklama:** Görsel yükleme öncelikleri, script defer özellikleri ve sayfa boyutu optimizasyonları ile Lighthouse Core Web Vitals performans skorunu 95+ seviyesine taşı.
+- **Durum:** Yapıldı (commit d4506f7). Font preconnect hints eklendi, .lighthouserc.js'de CLS ≤0.1, FCP ≤3s, LCP ≤4s, TBT ≤500ms bütçeleri tanımlandı.
 
 ### [x] YAPILDI — Kademe 22: Detaylı Erişilebilirlik (A11y) İyileştirmeleri
 
@@ -148,13 +149,15 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 - **Açıklama:** Refaktör edilen ve yeni eklenen (PR Coach, Interview Simulator, Cmd+K) tüm yeni bileşenlerin Storybook story dosyalarını oluştur ve entegre et.
 - **Durum:** Yapıldı (commit cbab530). 9 story dosyası mevcut: Button, Card, StatusBadge, CommandPalette, PRReviewCoach, InterviewSimulator, TeamDashboard, GrammarLessonMap, VocabSidebar.
 
-### [ ] Kademe 24: CI/CD Pipeline & GitHub Actions Optimizasyonu
+### [x] YAPILDI — Kademe 24: CI/CD Pipeline & GitHub Actions Optimizasyonu
 
 - **Açıklama:** GitHub Actions yaml dosyalarındaki gereksiz build cache adımlarını kaldır, test ve lint adımlarını optimize ederek CI çalışma süresini kısalt.
+- **Durum:** Yapıldı (commit 63f1f0e). Concurrency groups, timeout-minutes, artifact retention optimize edildi. Storybook build job eklendi.
 
-### [ ] Kademe 25: AI Limit Güvenliği (API Cost Guardrails)
+### [x] YAPILDI — Kademe 25: AI Limit Güvenliği (API Cost Guardrails)
 
 - **Açıklama:** AI Coach, Interview Simulator and PR Review Coach modüllerinde kullanıcı başına günlük/aylık harcama limitlerini database düzeyinde ve backend middleware katmanında sorgula ve kısıtla. API kötüye kullanımını önle.
+- **Durum:** Yapıldı (commit 93fb765). cost-tracker.ts'e `checkUserLimits` eklendi: günlük 50 istek, aylık $10 maliyet limiti. AI route'a entegre edildi.
 
 ### [x] YAPILDI — Kademe 26: Yasal Şablonlar & Pazarlama Görselleri
 

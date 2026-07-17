@@ -7,7 +7,7 @@ import {
   WandSparkles,
 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
-import { SectionCard } from '@/shared/components/SectionCard';
+import { Card } from '@/shared/components/Card';
 import { PRReviewCoachService, type PRReviewResult } from '../pr-review-coach';
 
 const SAMPLE_REVIEWS = [
@@ -50,27 +50,40 @@ export const PRReviewCoach = () => {
 
   return (
     <div className="space-y-6">
-      <SectionCard
-        title="PR Review Polite Coach"
-        subtitle="Convert harsh or unclear code review comments into professional, constructive feedback"
-        icon={WandSparkles}
-        headerActions={
-          result?.isAiPowered && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              <Sparkles className="h-3 w-3" /> AI Powered
+      <Card className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="flex items-center justify-between border-b border-border-soft pb-2">
+          <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
+            PR-REVIEW-COACH // MENTOR
+          </span>
+          {result?.isAiPowered && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+              <Sparkles className="h-2.5 w-2.5" /> AI POWERED
             </span>
-          )
-        }
-      >
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
+            Technical Code Review Refactoring
+          </p>
+          <h2 className="text-base font-black tracking-tight text-foreground">
+            PR Review Polite Coach
+          </h2>
+          <p className="text-xs leading-relaxed text-muted-copy">
+            Convert harsh or unclear code review comments into professional,
+            constructive feedback.
+          </p>
+        </div>
+
         <div className="space-y-4">
-          <div>
+          <div className="rounded-lg border border-border-soft bg-surface-hover p-4 space-y-2">
             <label
               htmlFor="pr-review-input"
-              className="block text-sm font-medium text-foreground"
+              className="block text-sm font-medium text-foreground animate-in fade-in"
             >
               Paste harsh review comment
             </label>
-            <p className="mt-1 text-xs text-muted-copy">
+            <p className="text-[10px] text-muted-copy leading-normal">
               Paste the raw, harsh, or unclear code review comment you want to
               transform into professional English.
             </p>
@@ -78,104 +91,119 @@ export const PRReviewCoach = () => {
               id="pr-review-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="mt-3 min-h-32 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
+              className="min-h-24 w-full resize-y rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               placeholder="e.g., This code is terrible. Why did you write it this way? Fix it now."
             />
           </div>
 
-          <div className="flex flex-wrap gap-2">
-            <span className="text-xs text-muted-copy">Try a sample:</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[10px] text-muted-copy">Try a sample:</span>
             {SAMPLE_REVIEWS.map((sample, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => handleSample(sample)}
-                className="rounded-md border border-border-soft bg-surface-hover px-2 py-1 text-xs text-muted-copy transition-colors hover:border-border-hover hover:text-foreground"
+                className="rounded-md border border-border-soft bg-surface-hover px-2 py-1 text-[10px] text-muted-copy transition-colors hover:border-border-hover hover:text-foreground cursor-pointer"
               >
                 Sample {i + 1}
               </button>
             ))}
           </div>
 
-          <Button
-            onClick={handlePolish}
-            disabled={!input.trim() || isProcessing}
-          >
-            {isProcessing ? (
-              'Processing...'
-            ) : (
-              <>
-                <WandSparkles className="h-4 w-4" /> Make Polite
-              </>
-            )}
-          </Button>
+          <div className="pt-2">
+            <Button
+              onClick={handlePolish}
+              disabled={!input.trim() || isProcessing}
+              size="sm"
+            >
+              {isProcessing ? (
+                'Processing...'
+              ) : (
+                <>
+                  <WandSparkles className="h-3.5 w-3.5" /> Make Polite
+                </>
+              )}
+            </Button>
+          </div>
         </div>
-      </SectionCard>
+      </Card>
 
       {result && (
-        <SectionCard
-          title="Polished Review"
-          subtitle={result.toneAnalysis}
-          icon={Sparkles}
-          footer={
-            <div className="flex items-center gap-3">
-              <Button variant="secondary" onClick={handleCopy}>
-                {copied ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Clipboard className="h-4 w-4" />
-                )}
-                {copied ? 'Copied' : 'Copy to clipboard'}
-              </Button>
-              {result.isAiPowered && (
-                <span className="text-xs text-muted-copy">
-                  AI-refined output
-                </span>
-              )}
-            </div>
-          }
-        >
+        <Card className="p-5 space-y-4 border-l-4 border-l-success shadow-sm hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-bottom duration-300">
+          <div className="flex items-center justify-between border-b border-border-soft pb-2">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-success font-bold bg-success/5 px-2 py-0.5 rounded">
+              ORCHESTRATED-OUTPUT // REFACTORED
+            </span>
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
+              Feedback Analysis & Tone Adjustment
+            </p>
+            <p className="text-xs text-muted-copy leading-relaxed">
+              {result.toneAnalysis}
+            </p>
+          </div>
+
           <div className="space-y-4">
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-              <p className="text-xs font-medium text-primary">Original</p>
-              <p className="mt-2 text-sm text-foreground line-through opacity-60">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+                [ORIGINAL HARSH REVIEW]
+              </p>
+              <p className="mt-2 text-xs text-foreground line-through opacity-60">
                 {input}
               </p>
             </div>
 
-            <div className="flex justify-center">
-              <ArrowRight className="h-5 w-5 text-muted-copy" />
+            <div className="flex justify-center animate-in zoom-in duration-200">
+              <ArrowRight className="h-4 w-4 text-muted-copy" />
             </div>
 
             <div className="rounded-lg border border-success/20 bg-success/5 p-4">
-              <p className="text-xs font-medium text-success">
-                Professional Version
+              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-success">
+                [ORCHESTRATED PROFESSIONAL VERSION]
               </p>
-              <p className="mt-2 text-sm leading-6 text-foreground whitespace-pre-wrap">
+              <p className="mt-2 text-xs leading-relaxed text-foreground whitespace-pre-wrap font-semibold">
                 {result.polishedText}
               </p>
             </div>
 
             {result.keyChanges.length > 0 && (
               <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
-                <p className="text-xs font-medium text-muted-copy">
-                  Key Changes
+                <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                  [REFACTORING KEY ACTIONS]
                 </p>
-                <ul className="mt-2 space-y-1">
+                <ul className="mt-2 space-y-1.5">
                   {result.keyChanges.map((change, i) => (
                     <li
                       key={i}
-                      className="flex items-start gap-2 text-sm text-foreground"
+                      className="flex items-start gap-2 text-xs text-foreground"
                     >
-                      <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                      {change}
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+                      <span>{change}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
           </div>
-        </SectionCard>
+
+          <div className="flex items-center gap-3 border-t border-border-soft pt-3">
+            <Button variant="secondary" size="sm" onClick={handleCopy}>
+              {copied ? (
+                <Check className="h-3.5 w-3.5" />
+              ) : (
+                <Clipboard className="h-3.5 w-3.5" />
+              )}
+              {copied ? 'Copied' : 'Copy review'}
+            </Button>
+            {result.isAiPowered && (
+              <span className="text-[10px] font-mono uppercase text-muted-copy">
+                AI-Refined Output
+              </span>
+            )}
+          </div>
+        </Card>
       )}
     </div>
   );
