@@ -77,11 +77,18 @@ export interface RateLimitConfig {
   storeTimeoutMs: number;
 }
 
+export interface SentryConfig {
+  dsn: string | null;
+  environment: RuntimeEnvironment;
+  tracesSampleRate: number;
+}
+
 export interface BackendConfig {
   port: number;
   appOrigin: string;
   environment: RuntimeEnvironment;
   version: string;
+  sentry: SentryConfig;
   ai: AiConfig;
   auth: AuthConfig;
   stripe: StripeConfig;

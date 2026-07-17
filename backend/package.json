@@ -7,9 +7,10 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "node --watch server.js",
-    "start": "node server.js",
-    "test": "node --test"
+    "dev": "tsx watch server.js",
+    "start": "tsx server.js",
+    "test": "tsx --test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@sentry/node": "^8.0.0",
@@ -21,6 +22,12 @@
     "stripe": "^18.5.0",
     "swagger-jsdoc": "^6.3.0",
     "swagger-ui-express": "^5.0.1",
+    "tsx": "^4.19.0",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
   }
 }

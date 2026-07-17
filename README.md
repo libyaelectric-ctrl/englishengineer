@@ -25,7 +25,7 @@ EngineerOS v4.0.1 extends the proven closed-beta foundation with practical
 engineering communication and learning-intelligence tools:
 
 - Express API with safe `GET /api/health` readiness flags
-- Server-only OpenAI/Anthropic provider adapters with explicit mock mode
+- Server-only AI provider adapters (Anthropic, OpenAI, Gemini) with explicit mock mode
 - Stripe Checkout, Customer Portal, subscription-status and signed-webhook contracts
 - Separate backend dependency lock and Node test suite
 - Light, calm engineering SaaS visual system with soft hover and motion states
@@ -145,6 +145,12 @@ The foundation of EngineerOS is built on a modern, robust, and highly optimized 
 npm --prefix backend ci
 npm --prefix backend test
 npm --prefix backend start
+```
+
+The backend uses TypeScript for core modules. Type-check with:
+
+```bash
+npm --prefix backend run typecheck
 ```
 
 Copy `backend/.env.example` to `backend/.env` only in the deployment

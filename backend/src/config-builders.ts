@@ -7,22 +7,39 @@ import {
   resolveProviderKey,
 } from './config-helpers.js';
 import { logger } from './logger.js';
+import type {
+  RuntimeEnvironment,
+  AiConfig,
+  AuthConfig,
+  StripeConfig,
+  RateLimitConfig,
+  VocabularyConfig,
+  WorkspaceConfig,
+  BillingRepositoryMode,
+  RateLimitStoreMode,
+} from '../types.js';
 
-const SUPPORTED_AI_PROVIDERS = new Set([
+const SUPPORTED_AI_PROVIDERS = new Set<string>([
   'mock',
   'openai',
   'anthropic',
   'gemini',
 ]);
 
-export const resolveEnvironment = (env) => {
-  const valid = ['development', 'test', 'staging', 'production'];
-  return valid.includes(env.NODE_ENV) ? env.NODE_ENV : 'development';
+type Env = Record<string, string | undefined>;
+
+export const resolveEnvironment = (env: Env): RuntimeEnvironment => {
+  const valid: RuntimeEnvironment[] = ['development', 'test', 'staging', 'production'];
+  return valid.includes(env.NODE_ENV as RuntimeEnvironment)
+    ? (env.NODE_ENV as RuntimeEnvironment)
+    : 'development';
 };
 
-export const resolveAI = (env) => {
+export const resolveAI = (env: Env): AiConfig => {
   const requested = (env.AI_PROVIDER || 'mock').toLowerCase();
-  const provider = SUPPORTED_AI_PROVIDERS.has(requested) ? requested : 'mock';
+  const provider = SUPPORTED_AI_PROVIDERS.has(requested)
+    ? (requested as AiConfig['provider'])
+    : 'mock';
   const key = resolveProviderKey(provider, env);
   const configured = provider !== 'mock' && hasText(key);
 
@@ -48,13 +65,13 @@ export const resolveAI = (env) => {
           : 'mock'),
     timeoutMs: toPositiveInteger(env.AI_TIMEOUT_MS, 20_000),
     configured,
-    apiKey: configured ? key.trim() : null,
+    apiKey: configured ? key!.trim() : null,
     rateLimitWindowMs: toPositiveInteger(env.AI_RATE_LIMIT_WINDOW_MS, 900_000),
     rateLimitMax: toPositiveInteger(env.AI_RATE_LIMIT_MAX, 30),
   };
 };
 
-export const resolveAuth = (env, runtimeEnv) => {
+export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfig => {
   const supabaseAuthConfigured =
     hasText(env.SUPABASE_URL) &&
     (hasText(env.SUPABASE_ANON_KEY) || hasText(env.SUPABASE_SERVICE_ROLE_KEY));
@@ -74,9 +91,9 @@ export const resolveAuth = (env, runtimeEnv) => {
   return {
     internalApiSecret: trimEnv(env.ENGINEEROS_INTERNAL_API_SECRET),
     allowInsecureDevAuth,
-    supabaseUrl: supabaseAuthConfigured ? env.SUPABASE_URL.trim() : null,
+    supabaseUrl: supabaseAuthConfigured ? env.SUPABASE_URL!.trim() : null,
     supabaseAnonKey: supabaseAuthConfigured
-      ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY).replace(
+      ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY)!.replace(
           /\s+/g,
           ''
         )
@@ -85,7 +102,7 @@ export const resolveAuth = (env, runtimeEnv) => {
   };
 };
 
-export const resolveStripe = (env, runtimeEnv) => {
+export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeConfig => {
   const configured = [
     env.STRIPE_SECRET_KEY,
     env.STRIPE_PRICE_PRO_MONTHLY,
@@ -105,9 +122,9 @@ export const resolveStripe = (env, runtimeEnv) => {
 
   return {
     configured,
-    secretKey: configured ? env.STRIPE_SECRET_KEY.replace(/\s+/g, '') : null,
+    secretKey: configured ? env.STRIPE_SECRET_KEY!.replace(/\s+/g, '') : null,
     webhookSecret: stripWhitespace(env.STRIPE_WEBHOOK_SECRET),
-    priceProMonthly: configured ? env.STRIPE_PRICE_PRO_MONTHLY.trim() : null,
+    priceProMonthly: configured ? env.STRIPE_PRICE_PRO_MONTHLY!.trim() : null,
     priceProjectMonthly: trimEnv(env.STRIPE_PRICE_PROJECT_MONTHLY),
     priceMaxMonthly: trimEnv(env.STRIPE_PRICE_MAX_MONTHLY),
     priceExecMonthly: trimEnv(env.STRIPE_PRICE_EXEC_MONTHLY),
@@ -122,15 +139,15 @@ export const resolveStripe = (env, runtimeEnv) => {
       86_400_000
     ),
     eventCacheMax: toPositiveInteger(env.STRIPE_EVENT_CACHE_MAX, 5_000),
-    repositoryMode: requestedBillingRepository,
-    supabaseUrl: supabaseConfigured ? env.SUPABASE_URL.trim() : null,
+    repositoryMode: requestedBillingRepository as BillingRepositoryMode,
+    supabaseUrl: supabaseConfigured ? env.SUPABASE_URL!.trim() : null,
     supabaseServiceRoleKey: supabaseConfigured
-      ? env.SUPABASE_SERVICE_ROLE_KEY.replace(/\s+/g, '')
+      ? env.SUPABASE_SERVICE_ROLE_KEY!.replace(/\s+/g, '')
       : null,
   };
 };
 
-export const resolveRateLimit = (env, runtimeEnv) => {
+export const resolveRateLimit = (env: Env, runtimeEnv: RuntimeEnvironment): RateLimitConfig => {
   const upstashConfigured = [
     env.UPSTASH_REDIS_REST_URL,
     env.UPSTASH_REDIS_REST_TOKEN,
@@ -156,19 +173,19 @@ export const resolveRateLimit = (env, runtimeEnv) => {
   return {
     windowMs: toPositiveInteger(env.RATE_LIMIT_WINDOW_MS, 900_000),
     max: toPositiveInteger(env.RATE_LIMIT_MAX, 100),
-    storeMode: requested,
+    storeMode: requested as RateLimitStoreMode,
     allowInMemoryInProduction: allowInMemory,
     upstashUrl: upstashConfigured
-      ? env.UPSTASH_REDIS_REST_URL.trim().replace(/\/$/, '')
+      ? env.UPSTASH_REDIS_REST_URL!.trim().replace(/\/$/, '')
       : null,
     upstashToken: upstashConfigured
-      ? env.UPSTASH_REDIS_REST_TOKEN.replace(/\s+/g, '')
+      ? env.UPSTASH_REDIS_REST_TOKEN!.replace(/\s+/g, '')
       : null,
     storeTimeoutMs: toPositiveInteger(env.RATE_LIMIT_STORE_TIMEOUT_MS, 3_000),
   };
 };
 
-export const resolveVocabulary = (env) => ({
+export const resolveVocabulary = (env: Env): VocabularyConfig => ({
   timeoutMs: toPositiveInteger(env.VOCABULARY_LOOKUP_TIMEOUT_MS, 8_000),
   libreTranslateUrl: trimEnv(env.LIBRETRANSLATE_URL),
   libreTranslateApiKey: trimEnv(env.LIBRETRANSLATE_API_KEY),
@@ -177,19 +194,19 @@ export const resolveVocabulary = (env) => ({
   rateLimitMax: toPositiveInteger(env.VOCABULARY_LOOKUP_RATE_LIMIT_MAX, 60),
 });
 
-export const resolveSupabase = (env) => ({
+export const resolveSupabase = (env: Env): { configured: boolean } => ({
   configured: [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText),
 });
 
-export const resolveWorkspace = (env) => {
+export const resolveWorkspace = (env: Env): WorkspaceConfig => {
   const configured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(
     hasText
   );
   return {
     configured,
-    supabaseUrl: configured ? env.SUPABASE_URL.trim() : null,
+    supabaseUrl: configured ? env.SUPABASE_URL!.trim() : null,
     supabaseServiceRoleKey: configured
-      ? env.SUPABASE_SERVICE_ROLE_KEY.replace(/\s+/g, '')
+      ? env.SUPABASE_SERVICE_ROLE_KEY!.replace(/\s+/g, '')
       : null,
   };
 };

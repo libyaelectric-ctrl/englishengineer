@@ -1,10 +1,12 @@
 import { timingSafeEqual, webcrypto } from 'node:crypto';
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
+import type { AuthConfig, AuthenticatedUser, RuntimeEnvironment } from '../types.js';
+import type { Request, Response, NextFunction } from 'express';
 
 const subtle = webcrypto.subtle;
 
-const base64urlDecode = (str) => {
+const base64urlDecode = (str: string): Buffer => {
   str = str.replace(/-/g, '+').replace(/_/g, '/');
   while (str.length % 4) {
     str += '=';
@@ -12,7 +14,16 @@ const base64urlDecode = (str) => {
   return Buffer.from(str, 'base64');
 };
 
-const verifyJwtLocally = async (token, jwtSecret) => {
+interface JwtPayload {
+  sub?: string;
+  email?: string;
+  exp?: number;
+}
+
+const verifyJwtLocally = async (
+  token: string,
+  jwtSecret: string
+): Promise<AuthenticatedUser | null> => {
   if (!token || !jwtSecret) return null;
   const parts = token.split('.');
   if (parts.length !== 3) return null;
@@ -25,7 +36,7 @@ const verifyJwtLocally = async (token, jwtSecret) => {
       false,
       ['verify']
     );
-    const signatureBytes = base64urlDecode(signatureB64);
+    const signatureBytes = base64urlDecode(signatureB64!);
     const dataBytes = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
     const isValid = await subtle.verify(
       'HMAC',
@@ -34,8 +45,8 @@ const verifyJwtLocally = async (token, jwtSecret) => {
       dataBytes
     );
     if (!isValid) return null;
-    const payloadJson = Buffer.from(payloadB64, 'base64').toString('utf8');
-    const payload = JSON.parse(payloadJson);
+    const payloadJson = Buffer.from(payloadB64!, 'base64').toString('utf8');
+    const payload: JwtPayload = JSON.parse(payloadJson);
     const now = Math.floor(Date.now() / 1000);
     if (payload.exp && payload.exp < now) {
       return null;
@@ -48,7 +59,7 @@ const verifyJwtLocally = async (token, jwtSecret) => {
   }
 };
 
-const readBearerToken = (request) => {
+const readBearerToken = (request: Request): string | null => {
   const authorization = request.headers.authorization;
   if (
     typeof authorization !== 'string' ||
@@ -59,7 +70,7 @@ const readBearerToken = (request) => {
   return authorization.slice('Bearer '.length).trim() || null;
 };
 
-const secretsMatch = (left, right) => {
+const secretsMatch = (left: string | null, right: string | null): boolean => {
   if (!left || !right) return false;
   const leftBuffer = Buffer.from(left);
   const rightBuffer = Buffer.from(right);
@@ -69,7 +80,11 @@ const secretsMatch = (left, right) => {
   );
 };
 
-const validateSupabaseToken = async (config, token, fetchImpl) => {
+const validateSupabaseToken = async (
+  config: AuthConfig,
+  token: string | null,
+  fetchImpl: typeof fetch
+): Promise<AuthenticatedUser | null> => {
   if (!config.supabaseUrl || !config.supabaseAnonKey || !token) return null;
   try {
     const response = await fetchImpl(`${config.supabaseUrl}/auth/v1/user`, {
@@ -79,12 +94,12 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
       },
     });
     if (!response.ok) return null;
-    const user = await response.json();
+    const user = await response.json() as Record<string, unknown>;
     return typeof user?.id === 'string' && user.id
-      ? { userId: user.id, email: user.email, source: 'supabase-jwt' }
+      ? { userId: user.id as string, email: user.email as string | undefined, source: 'supabase-jwt' }
       : null;
   } catch (error) {
-    logger.error('validateSupabaseToken failed', {}, error);
+    logger.error('validateSupabaseToken failed', {}, error as Error);
     throw new ApiError(
       503,
       'auth_provider_unavailable',
@@ -93,34 +108,23 @@ const validateSupabaseToken = async (config, token, fetchImpl) => {
   }
 };
 
-export const extractAuthenticatedUser = (request) => request.auth ?? null;
+export const extractAuthenticatedUser = (request: Request): AuthenticatedUser | null =>
+  (request as any).auth ?? null;
 
-/**
- * Creates backend authentication middleware supporting internal API secrets,
- * Supabase JWT verification, and development bypass modes.
- *
- * Auth decision chain (first match wins):
- *
- * | Priority | Path            | Trigger condition                                              |
- * |----------|-----------------|----------------------------------------------------------------|
- * | 1        | internal-secret | Bearer token === config.internalApiSecret + X-EngineerOS-User-Id header |
- * | 2        | local-jwt       | config.supabaseJwtSecret is set + Bearer token is valid HMAC-SHA256 JWT with sub claim |
- * | 3        | supabase-jwt    | config.supabaseUrl is set + Bearer token validated via Supabase /auth/v1/user |
- * | 4        | dev-bypass      | config.allowInsecureDevAuth=true AND config.environment !== 'production' |
- * | —        | rejected        | None of the above → 401                                       |
- *
- * @param {Object} config - Auth configuration
- * @param {string} [config.internalApiSecret] - Internal API secret for server-to-server auth
- * @param {string} [config.supabaseJwtSecret] - Supabase JWT secret for local token verification
- * @param {Object} [config.supabaseUrl] - Supabase URL for remote token validation
- * @param {Object} [config.supabaseAnonKey] - Supabase anon key for remote validation
- * @param {boolean} [config.allowInsecureDevAuth] - Allow dev bypass (non-production only)
- * @param {string} [config.environment] - Runtime environment ('development'|'test'|'staging'|'production')
- * @param {Function} [fetchImpl=fetch] - Fetch implementation for testing
- * @returns {{ requireBackendAuth, optionalBackendAuth }} Express middleware functions
- */
-export const createBackendAuth = (config, fetchImpl = fetch) => {
-  const authenticate = async (request) => {
+export interface BackendAuthConfig extends AuthConfig {
+  environment: RuntimeEnvironment;
+}
+
+export interface BackendAuth {
+  requireBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  optionalBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+}
+
+export const createBackendAuth = (
+  config: BackendAuthConfig,
+  fetchImpl: typeof fetch = fetch
+): BackendAuth => {
+  const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
     if (secretsMatch(token, config.internalApiSecret)) {
       const userId = request.headers['x-engineeros-user-id'];
@@ -174,20 +178,28 @@ export const createBackendAuth = (config, fetchImpl = fetch) => {
     );
   };
 
-  const requireBackendAuth = async (request, _response, next) => {
+  const requireBackendAuth = async (
+    request: Request,
+    _response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      request.auth = await authenticate(request);
+      (request as any).auth = await authenticate(request);
       next();
     } catch (error) {
       next(error);
     }
   };
 
-  const optionalBackendAuth = async (request, _response, next) => {
+  const optionalBackendAuth = async (
+    request: Request,
+    _response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
-      request.auth = await authenticate(request);
+      (request as any).auth = await authenticate(request);
     } catch {
-      request.auth = null;
+      (request as any).auth = null;
     }
     next();
   };
