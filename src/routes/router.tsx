@@ -9,6 +9,7 @@ import { PublicLayout } from '@/shared/layout/PublicLayout';
 
 const Dashboard = lazy(() => import('@/pages/DashboardPage'));
 const Profile = lazy(() => import('@/pages/ProfilePage'));
+const Billing = lazy(() => import('@/pages/BillingPage'));
 const Speaking = lazy(() => import('@/pages/SpeakingPage'));
 const Vocabulary = lazy(() => import('@/pages/VocabularyPage'));
 const Grammar = lazy(() => import('@/pages/GrammarPage'));
@@ -137,6 +138,14 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <Profile />
+          </Suspense>
+        ),
+      },
+      {
+        path: 'billing',
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Billing />
           </Suspense>
         ),
       },

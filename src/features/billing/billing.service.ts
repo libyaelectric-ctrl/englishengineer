@@ -84,8 +84,8 @@ export const BillingService = {
         userId,
         email,
         planId,
-        successUrl: getReturnUrl('/profile?billing=success'),
-        cancelUrl: getReturnUrl('/profile?billing=cancelled'),
+        successUrl: getReturnUrl('/billing?billing=success'),
+        cancelUrl: getReturnUrl('/billing?billing=cancelled'),
       });
 
       window.location.assign(response.url);
@@ -106,7 +106,7 @@ export const BillingService = {
     try {
       const response = await provider.createCustomerPortalSession({
         userId,
-        returnUrl: getReturnUrl('/profile'),
+        returnUrl: getReturnUrl('/billing'),
       });
 
       window.location.assign(response.url);
@@ -128,8 +128,8 @@ export const BillingService = {
       const response = await provider.createTopupCheckoutSession({
         userId,
         email,
-        successUrl: getReturnUrl('/profile?topup=success'),
-        cancelUrl: getReturnUrl('/profile?topup=cancelled'),
+        successUrl: getReturnUrl('/billing?topup=success'),
+        cancelUrl: getReturnUrl('/billing?topup=cancelled'),
       });
 
       window.location.assign(response.url);
