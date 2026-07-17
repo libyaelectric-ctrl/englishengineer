@@ -1,7 +1,8 @@
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
+import type { Request, Response, NextFunction } from 'express';
 
-const logRateLimit = (scope, identity, count, max) => {
+const logRateLimit = (scope: string, identity: string, count: number, max: number): void => {
   if (count > max) {
     logger.warn('Rate limit blocked', { scope, identity, count, max });
   }
@@ -16,7 +17,7 @@ local ttl = redis.call('PTTL', KEYS[1])
 return {count, ttl}
 `.trim();
 
-const setRateLimitHeaders = (response, max, count) => {
+const setRateLimitHeaders = (response: Response, max: number, count: number): void => {
   const remaining = String(Math.max(0, max - count));
   response.setHeader('RateLimit-Limit', String(max));
   response.setHeader('RateLimit-Remaining', remaining);
@@ -24,13 +25,24 @@ const setRateLimitHeaders = (response, max, count) => {
   response.setHeader('X-RateLimit-Remaining', remaining);
 };
 
+export interface UpstashRateLimitStore {
+  consume: (key: string, windowMs: number) => Promise<{ count: number; resetAfterMs: number }>;
+}
+
+interface UpstashRateLimitConfig {
+  url: string;
+  token: string;
+  timeoutMs?: number;
+  fetchImpl?: typeof fetch;
+}
+
 export const createUpstashRateLimitStore = ({
   url,
   token,
   timeoutMs = 3_000,
   fetchImpl = fetch,
-}) => ({
-  async consume(key, windowMs) {
+}: UpstashRateLimitConfig): UpstashRateLimitStore => ({
+  async consume(key: string, windowMs: number) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -54,32 +66,59 @@ export const createUpstashRateLimitStore = ({
           `External rate-limit store returned ${response.status}.`
         );
       }
-      const payload = await response.json();
+      const payload = await response.json() as { result?: [number, number] };
       const [count, ttlMs] = Array.isArray(payload?.result)
         ? payload.result
         : [];
       if (!Number.isFinite(count) || !Number.isFinite(ttlMs)) {
         throw new Error('External rate-limit store returned malformed data.');
       }
-      return { count, resetAfterMs: Math.max(0, ttlMs) };
+      return { count: count!, resetAfterMs: Math.max(0, ttlMs!) };
     } finally {
       clearTimeout(timeoutId);
     }
   },
 });
 
-export const createRateLimitStore = (config, fetchImpl = fetch) => {
+interface RateLimitStoreConfig {
+  storeMode: string;
+  upstashUrl: string | null;
+  upstashToken: string | null;
+  storeTimeoutMs: number;
+}
+
+export const createRateLimitStore = (
+  config: RateLimitStoreConfig,
+  fetchImpl: typeof fetch = fetch
+): UpstashRateLimitStore | null => {
   if (config.storeMode === 'memory') return null;
   if (config.storeMode === 'upstash') {
     return createUpstashRateLimitStore({
-      url: config.upstashUrl,
-      token: config.upstashToken,
+      url: config.upstashUrl!,
+      token: config.upstashToken!,
       timeoutMs: config.storeTimeoutMs,
       fetchImpl,
     });
   }
   throw new Error(`Unsupported rate-limit store: ${config.storeMode}`);
 };
+
+type RateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => void;
+
+interface RateLimiterConfig {
+  windowMs: number;
+  max: number;
+  scope: string;
+  maxBuckets?: number;
+  pruneIntervalMs?: number;
+  now?: () => number;
+  store?: UpstashRateLimitStore | null;
+}
+
+interface Bucket {
+  count: number;
+  resetAt: number;
+}
 
 export const createRateLimiter = ({
   windowMs,
@@ -89,10 +128,10 @@ export const createRateLimiter = ({
   pruneIntervalMs = 60_000,
   now = () => Date.now(),
   store = null,
-}) => {
+}: RateLimiterConfig): RateLimitMiddleware => {
   if (store) {
-    return async (request, response, next) => {
-      const identity = request.auth?.userId || request.ip || 'unknown';
+    return async (request: Request, response: Response, next: NextFunction) => {
+      const identity = (request as any).auth?.userId || request.ip || 'unknown';
       const key = `engineeros:rate-limit:${scope}:${identity}`;
       try {
         const result = await store.consume(key, windowMs);
@@ -124,22 +163,22 @@ export const createRateLimiter = ({
     };
   }
 
-  const buckets = new Map();
+  const buckets = new Map<string, Bucket>();
   const bucketLimit = Math.max(1, maxBuckets);
   let lastPruneAt = 0;
 
-  const pruneExpired = (currentTime) => {
+  const pruneExpired = (currentTime: number): void => {
     for (const [key, bucket] of buckets) {
       if (bucket.resetAt <= currentTime) buckets.delete(key);
     }
   };
 
-  const evictOldest = () => {
+  const evictOldest = (): void => {
     const oldestKey = buckets.keys().next().value;
     if (oldestKey !== undefined) buckets.delete(oldestKey);
   };
 
-  return (request, response, next) => {
+  return (request: Request, response: Response, next: NextFunction): void => {
     const currentTime = now();
     if (
       currentTime - lastPruneAt >= pruneIntervalMs ||
@@ -149,10 +188,10 @@ export const createRateLimiter = ({
       lastPruneAt = currentTime;
     }
 
-    const identity = request.auth?.userId || request.ip || 'unknown';
+    const identity = (request as any).auth?.userId || request.ip || 'unknown';
     const key = `${scope}:${identity}`;
     let bucket = buckets.get(key);
-    if (bucket?.resetAt <= currentTime) {
+    if (bucket && bucket.resetAt <= currentTime) {
       buckets.delete(key);
       bucket = undefined;
     }

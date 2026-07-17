@@ -9,8 +9,11 @@ import {
   resolveSupabase,
   resolveWorkspace,
 } from './config-builders.js';
+import type { BackendConfig, RuntimeEnvironment } from '../types.js';
 
-export const createBackendConfig = (environment = process.env) => {
+type Env = Record<string, string | undefined>;
+
+export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
   const supabase = resolveSupabase(environment);
 
@@ -21,7 +24,7 @@ export const createBackendConfig = (environment = process.env) => {
     version: environment.APP_VERSION || '4.0.1',
     sentry: {
       dsn: hasText(environment.SENTRY_DSN)
-        ? environment.SENTRY_DSN.trim()
+        ? environment.SENTRY_DSN!.trim()
         : null,
       environment: runtimeEnv,
       tracesSampleRate: runtimeEnv === 'production' ? 0.1 : 1.0,
@@ -36,8 +39,29 @@ export const createBackendConfig = (environment = process.env) => {
   };
 };
 
-export const toPublicHealth = (config) => {
-  const checks = {
+interface HealthCheck {
+  configured: boolean;
+  reachable?: boolean;
+  error?: string;
+}
+
+interface PublicHealth {
+  ok: boolean;
+  status: 'ok' | 'degraded';
+  version: string;
+  environment: RuntimeEnvironment;
+  checks: {
+    ai: HealthCheck;
+    stripe: HealthCheck;
+    supabase: HealthCheck;
+    rateLimit: HealthCheck;
+    [key: string]: HealthCheck;
+  };
+  mockMode: boolean;
+}
+
+export const toPublicHealth = (config: BackendConfig): PublicHealth => {
+  const checks: PublicHealth['checks'] = {
     ai: { configured: config.ai.configured },
     stripe: { configured: config.stripe.configured },
     supabase: { configured: config.supabase.configured },

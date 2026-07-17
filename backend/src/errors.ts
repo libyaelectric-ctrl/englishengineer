@@ -1,5 +1,11 @@
+import type { ApiErrorResponse } from '../types.js';
+
 export class ApiError extends Error {
-  constructor(status, code, message, details) {
+  status: number;
+  code: string;
+  details?: unknown;
+
+  constructor(status: number, code: string, message: string, details?: unknown) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
@@ -8,16 +14,19 @@ export class ApiError extends Error {
   }
 }
 
-export const toErrorResponse = (error) => {
+export const toErrorResponse = (
+  error: ApiError | (Error & { status?: number; code?: string; details?: unknown })
+): { status: number; body: ApiErrorResponse } => {
   if (error instanceof ApiError || error.name === 'ApiError') {
+    const apiErr = error as ApiError;
     return {
-      status: error.status,
+      status: apiErr.status,
       body: {
         ok: false,
         error: {
-          code: error.code,
-          message: error.message,
-          ...(error.details ? { details: error.details } : {}),
+          code: apiErr.code,
+          message: apiErr.message,
+          ...(apiErr.details ? { details: apiErr.details } : {}),
         },
       },
     };
