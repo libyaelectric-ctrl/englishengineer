@@ -4,7 +4,9 @@ import { MetricCard } from '@/shared/components/MetricCard';
 export const AnalyticsMetricCards = ({
   analytics,
 }: {
-  analytics: ReturnType<typeof import('@/features/analytics').AnalyticsService.getSummary>;
+  analytics: ReturnType<
+    typeof import('@/features/analytics').AnalyticsService.getSummary
+  >;
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

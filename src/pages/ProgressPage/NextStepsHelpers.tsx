@@ -56,14 +56,26 @@ export const MissionList = ({
   </div>
 );
 
-export const DetailRow = ({ label, value }: { label: string; value: string }) => (
+export const DetailRow = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => (
   <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase">{label}</span>
     <span className="font-medium text-foreground">{value}</span>
   </div>
 );
 
-export const MiniStat = ({ label, value }: { label: string; value: string }) => (
+export const MiniStat = ({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) => (
   <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
     <p className="text-[10px] font-mono text-muted-copy uppercase">{label}</p>
     <p className="mt-1 text-2xl font-medium text-foreground">{value}</p>

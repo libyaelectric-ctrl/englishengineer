@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VocabularyMenuService } from '@/features/vocabulary/vocabulary.menu';
 import { useLearningStore } from '@/core/learning';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 

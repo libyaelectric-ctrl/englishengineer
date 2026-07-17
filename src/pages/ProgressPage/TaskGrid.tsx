@@ -39,10 +39,7 @@ export const TaskGrid = ({
       </div>
       <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
         {tasks.map((task, index) => {
-          const completed = isTaskCompletedToday(
-            task.id,
-            completedTaskDates
-          );
+          const completed = isTaskCompletedToday(task.id, completedTaskDates);
           return (
             <Card key={task.id} className="flex flex-col gap-4">
               <div className="flex items-start justify-between gap-3">

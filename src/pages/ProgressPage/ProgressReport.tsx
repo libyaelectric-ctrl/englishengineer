@@ -40,9 +40,7 @@ export const ProgressReport = ({
           <dt className="text-xs font-medium uppercase tracking-wider text-muted-copy">
             {label}
           </dt>
-          <dd className="mt-2 text-sm font-medium text-foreground">
-            {value}
-          </dd>
+          <dd className="mt-2 text-sm font-medium text-foreground">{value}</dd>
         </div>
       ))}
     </dl>
@@ -68,9 +66,7 @@ export const ProgressReport = ({
         </p>
       </div>
       <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
-        <p className="text-xs font-medium text-muted-copy">
-          Phrase category
-        </p>
+        <p className="text-xs font-medium text-muted-copy">Phrase category</p>
         <p className="mt-1 text-sm text-foreground">
           {report.recommendedPhraseCategory}
         </p>

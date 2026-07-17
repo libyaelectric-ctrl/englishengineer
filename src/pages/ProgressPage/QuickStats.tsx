@@ -16,10 +16,25 @@ export const QuickStats = ({
 }) => {
   const stats = [
     { icon: Target, label: 'Avg Elo', value: totalElo, color: 'text-primary' },
-    { icon: TrendingUp, label: 'Best', value: highestSkillLabel, color: 'text-emerald-600' },
+    {
+      icon: TrendingUp,
+      label: 'Best',
+      value: highestSkillLabel,
+      color: 'text-emerald-600',
+    },
     { icon: Zap, label: 'Peak', value: peakElo, color: 'text-amber-600' },
-    { icon: Clock, label: 'Sessions', value: sessionsCount, color: 'text-rose-600' },
-    { icon: Layers, label: 'Knowledge Pool', value: knowledgePoolSize, color: 'text-indigo-600' },
+    {
+      icon: Clock,
+      label: 'Sessions',
+      value: sessionsCount,
+      color: 'text-rose-600',
+    },
+    {
+      icon: Layers,
+      label: 'Knowledge Pool',
+      value: knowledgePoolSize,
+      color: 'text-indigo-600',
+    },
   ];
 
   return (

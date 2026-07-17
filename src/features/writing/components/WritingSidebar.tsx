@@ -1,5 +1,5 @@
 import { useWritingStore } from '@/features/writing';
-import { SkillEntryBrief } from '@/features/learning-orchestrator';
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 

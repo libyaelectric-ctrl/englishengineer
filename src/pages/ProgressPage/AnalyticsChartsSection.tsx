@@ -18,7 +18,9 @@ export const AnalyticsChartsSection = ({
   setActiveChart,
   chartTabs,
 }: {
-  analytics: ReturnType<typeof import('@/features/analytics').AnalyticsService.getSummary>;
+  analytics: ReturnType<
+    typeof import('@/features/analytics').AnalyticsService.getSummary
+  >;
   activeChart: AnalyticsStoreState['activeChart'];
   setActiveChart: AnalyticsStoreState['setActiveChart'];
   chartTabs: Array<{ id: AnalyticsStoreState['activeChart']; label: string }>;

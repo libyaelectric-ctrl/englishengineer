@@ -82,7 +82,15 @@ class SupabaseTeamProvider implements TeamProvider {
     }
 
     const orgId = membership.organization_id;
-    const orgRecord = (membership as { organizations?: { name: string; created_by: string; created_at: string }[] })?.organizations?.[0];
+    const orgRecord = (
+      membership as {
+        organizations?: {
+          name: string;
+          created_by: string;
+          created_at: string;
+        }[];
+      }
+    )?.organizations?.[0];
 
     // 2. Fetch organization members
     const { data: members, error: membersError } = await supabase

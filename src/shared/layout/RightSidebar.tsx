@@ -2,14 +2,14 @@ import { useLocation } from 'react-router-dom';
 import { cn } from '@/shared/utils/cn';
 import { DashboardSidebar } from './sidebar/DashboardSidebar';
 import { CurriculumSidebar } from './sidebar/CurriculumSidebar';
-import { VocabSidebar } from '@/features/vocabulary/components';
-import { GrammarSidebar } from '@/features/grammar/components';
-import { ReadingSidebar } from '@/features/reading/components';
-import { WritingSidebar } from '@/features/writing/components';
-import { ListeningSidebar } from '@/features/listening/components';
-import { SpeakingSidebar } from '@/features/speaking/components';
-import { ToolsSidebar } from '@/features/work-tools/components';
-import { ProfileSidebar } from '@/features/profile/components';
+import { VocabSidebar } from '@/features/vocabulary/components/VocabSidebar';
+import { GrammarSidebar } from '@/features/grammar/components/GrammarSidebar';
+import { ReadingSidebar } from '@/features/reading/components/ReadingSidebar';
+import { WritingSidebar } from '@/features/writing/components/WritingSidebar';
+import { ListeningSidebar } from '@/features/listening/components/ListeningSidebar';
+import { SpeakingSidebar } from '@/features/speaking/components/SpeakingSidebar';
+import { ToolsSidebar } from '@/features/work-tools/components/ToolsSidebar';
+import { ProfileSidebar } from '@/features/profile/components/ProfileSidebar';
 
 function getContent(path: string): React.ReactNode {
   if (path === '/dashboard' || path === '/') return <DashboardSidebar />;

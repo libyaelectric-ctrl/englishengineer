@@ -1,11 +1,9 @@
 import { useMemo } from 'react';
 import { useLearningStore } from '@/core/learning';
 import { useAuthStore } from '@/features/auth';
-import {
-  getBaseCefrLevel,
-  LearningProfileEngine,
-  LearningProfileRepository,
-} from '@/features/profile';
+import { getBaseCefrLevel } from '@/features/profile/profile.utils';
+import { LearningProfileEngine } from '@/features/profile/profile.engine';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import type { SkillKey } from './level-system.types';
 
 export const useSkillLevel = (skill: SkillKey) => {

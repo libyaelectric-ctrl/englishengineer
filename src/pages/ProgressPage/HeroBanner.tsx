@@ -1,5 +1,13 @@
 import { motion } from 'motion/react';
-import { CEFR_LEVELS, MIN_ELO, MAX_ELO, getCEFRBand, getCEFRIndex, getRank, useAnimatedNumber } from './utils';
+import {
+  CEFR_LEVELS,
+  MIN_ELO,
+  MAX_ELO,
+  getCEFRBand,
+  getCEFRIndex,
+  getRank,
+  useAnimatedNumber,
+} from './utils';
 
 export const HeroBanner = ({
   totalElo,
@@ -12,7 +20,8 @@ export const HeroBanner = ({
   const totalCEFR = getCEFRBand(totalElo);
   const totalCEFRIdx = getCEFRIndex(totalCEFR);
   const rank = getRank(totalElo);
-  const nextCEFR = CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
+  const nextCEFR =
+    CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
   const eloForNext = Math.floor(
     ((totalCEFRIdx + 1) / CEFR_LEVELS.length) * (MAX_ELO - MIN_ELO) + MIN_ELO
   );
