@@ -71,29 +71,29 @@ const ProfilePage = () => {
   } = state;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0">
+    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10">
       {/* Header */}
-      <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
+      <header className="flex flex-col gap-4 border-b border-[#d9d9e3] pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-medium text-foreground sm:text-3xl">
+            <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
               {currentUser?.displayName || 'Demo Engineer'}
             </h1>
-            <p className="mt-1 text-xs font-medium text-muted-copy">
+            <p className="mt-1.5 text-xs font-bold uppercase tracking-wider text-muted-copy">
               {PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
                 'Engineering Professional'}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-medium uppercase tracking-wider text-primary">
+            <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
               {subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial'}
             </span>
-            <span className="rounded-full border border-border-soft bg-surface px-3 py-1 text-[10px] font-medium text-muted-copy">
+            <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
               Profile Completion: {completionPercent}%
             </span>
           </div>
         </div>
-        <p className="text-xs leading-5 text-muted-copy max-w-2xl">
+        <p className="text-xs leading-5 text-muted-copy max-w-2xl font-medium">
           Manage your professional profile, learning preferences and EngVox
           access.
         </p>
@@ -103,10 +103,10 @@ const ProfilePage = () => {
       {(message || error || billingError) && (
         <div
           role="status"
-          className={`rounded-xl border p-4 text-xs leading-5 ${
+          className={`rounded-[4px] border p-4 text-xs leading-5 shadow-sm font-bold uppercase tracking-wider ${
             error || billingError
-              ? 'border-error/20 bg-error/5 text-error'
-              : 'border-success/25 bg-success/10 text-success'
+              ? 'border-rose-500/20 bg-rose-500/5 text-rose-600'
+              : 'border-success/20 bg-success/5 text-success'
           }`}
         >
           {error || billingError || message}
