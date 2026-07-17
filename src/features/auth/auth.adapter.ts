@@ -76,6 +76,11 @@ export class LocalAuthAdapter implements AuthAdapter {
       return superUser;
     }
 
+    // Require password for non-super-users
+    if (!password || password.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
+    }
+
     const existing = await this.getCurrentUser();
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
       const updated = {
