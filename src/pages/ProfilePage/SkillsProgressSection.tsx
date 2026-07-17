@@ -58,15 +58,15 @@ export const SkillsProgressSection = ({
             return (
               <article
                 key={skill}
-                className="rounded-xl border border-border-soft bg-surface p-4 relative"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 relative shadow-sm"
               >
                 <div className="flex justify-between items-start">
-                  <p className="text-xs font-medium uppercase tracking-wider text-foreground capitalize">
+                  <p className="text-xs font-bold uppercase tracking-wider text-foreground capitalize">
                     {skill}
                   </p>
                   {/* Replaced top badge with the new detailed progress bar below */}
                 </div>
-                <p className="mt-2 text-[10px] text-muted-copy leading-4">
+                <p className="mt-2 text-[10px] text-muted-copy leading-4 font-medium">
                   {isSimulated
                     ? skill === 'listening'
                       ? 'Simulated listening talks. Available for practice.'
@@ -78,23 +78,23 @@ export const SkillsProgressSection = ({
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-end px-1">
                       <div className="flex flex-col items-start">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70 font-bold">
                           Min
                         </span>
-                        <span className="text-[10px] font-medium text-muted-copy">
+                        <span className="text-[10px] font-bold text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).min}
                         </span>
                       </div>
                       <div className="flex flex-col items-center">
-                        <span className="text-[10px] font-bold text-foreground">
+                        <span className="text-[10px] font-bold text-foreground font-mono">
                           {skillProfile.elo} ELO
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70 font-bold">
                           Max
                         </span>
-                        <span className="text-[10px] font-medium text-muted-copy">
+                        <span className="text-[10px] font-bold text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).max}
                         </span>
                       </div>
@@ -157,12 +157,12 @@ export const SkillsProgressSection = ({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-xl border border-border-soft bg-surface p-3"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
             >
-              <p className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 {label}
               </p>
-              <p className="mt-1 text-base font-medium text-foreground">
+              <p className="mt-1 text-base font-bold text-foreground">
                 {value}
               </p>
             </div>
@@ -170,15 +170,15 @@ export const SkillsProgressSection = ({
         </div>
 
         {/* Vocabulary Progress */}
-        <div className="mt-6 rounded-xl border border-border-soft bg-surface p-4">
-          <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+        <div className="mt-6 rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
             Vocabulary Mastery
           </span>
           <div className="mt-2 flex items-center justify-between gap-3 text-xs font-medium">
             <span>
               {memory.mastered} of {memory.total} terms mastered
             </span>
-            <span className="text-primary">
+            <span className="text-[#0047bb] font-bold">
               {memory.dueToday} terms due today
             </span>
           </div>
@@ -191,7 +191,7 @@ export const SkillsProgressSection = ({
 
         {/* Unlocked Badges */}
         <div className="mt-6">
-          <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
             Achievements & Badges
           </span>
           <div className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -201,14 +201,14 @@ export const SkillsProgressSection = ({
               .map((badge) => (
                 <div
                   key={badge.id}
-                  className="flex items-start gap-3 rounded-xl border border-success/20 bg-success/5 p-3.5"
+                  className="flex items-start gap-3 rounded-[4px] border border-success/20 bg-success/5 p-3.5 shadow-sm"
                 >
                   <Award className="h-4 w-4 text-success shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-medium text-foreground">
+                    <p className="text-xs font-bold text-foreground">
                       {badge.label}
                     </p>
-                    <p className="mt-0.5 text-[10px] text-muted-copy leading-4">
+                    <p className="mt-0.5 text-[10px] text-muted-copy leading-4 font-medium">
                       {badge.description}
                     </p>
                   </div>
@@ -219,11 +219,11 @@ export const SkillsProgressSection = ({
 
         {/* Mistake Log Summary */}
         <div className="mt-6">
-          <span className="text-[9px] font-medium uppercase tracking-wider text-muted-copy">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
             Mistake Log Summary
           </span>
           {mistakeLog.length === 0 ? (
-            <p className="mt-2 rounded-xl border border-dashed border-border-soft bg-surface p-4 text-center text-xs text-muted-copy">
+            <p className="mt-2 rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] p-4 text-center text-xs text-muted-copy font-medium shadow-sm">
               No mistakes recorded yet.
             </p>
           ) : (
@@ -231,22 +231,22 @@ export const SkillsProgressSection = ({
               {mistakeLog.slice(0, 2).map((m) => (
                 <div
                   key={m.id}
-                  className="rounded-xl border border-border-soft bg-surface p-3 text-xs"
+                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-xs shadow-sm"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-mono text-[9px] text-muted-copy uppercase">
+                    <span className="font-mono text-[9px] text-muted-copy uppercase font-bold">
                       {m.category}
                     </span>
-                    <span className="text-[9px] font-medium text-error bg-error/10 px-1.5 py-0.5 rounded">
+                    <span className="text-[9px] font-bold text-rose-600 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded-[4px] shadow-sm">
                       {(m.repetitionCount ?? 1) >= 3
                         ? 'Critical'
                         : `${m.repetitionCount ?? 1}x`}
                     </span>
                   </div>
-                  <p className="mt-1 font-medium text-foreground">
+                  <p className="mt-1 font-bold text-foreground">
                     &quot;{m.originalText}&quot;
                   </p>
-                  <p className="mt-0.5 text-muted-copy">
+                  <p className="mt-0.5 text-muted-copy font-medium">
                     Correction: {m.correction}
                   </p>
                 </div>
@@ -256,12 +256,12 @@ export const SkillsProgressSection = ({
         </div>
 
         {/* Heatmap & Analytics CTA */}
-        <div className="mt-6 flex flex-col gap-4 border-t border-border-soft pt-4">
+        <div className="mt-6 flex flex-col gap-4 border-t border-[#d9d9e3] pt-4">
           <Heatmap />
           <div className="flex justify-end mt-2">
             <Link
               to="/progress/overview"
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-lg px-4 text-xs font-medium text-primary hover:bg-primary/5 transition-colors"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-4 text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors cursor-pointer shadow-sm"
             >
               View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
             </Link>
