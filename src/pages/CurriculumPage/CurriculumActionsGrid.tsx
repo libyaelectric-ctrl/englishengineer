@@ -63,19 +63,19 @@ export const CurriculumActionsGrid = ({
           key={item.label}
           type="button"
           onClick={item.action}
-          className={`min-h-32 rounded-xl border p-4 text-left transition-all hover:-translate-y-px hover:border-primary hover:bg-surface-hover ${
+          className={`min-h-32 rounded-[4px] border p-4 text-left transition-all hover:border-[#0047bb] hover:bg-[#0047bb]/5 shadow-sm cursor-pointer ${
             index === 0
-              ? 'border-primary bg-surface-hover'
-              : 'border-border-soft bg-surface'
+              ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
+              : 'border-[#d9d9e3] bg-white'
           }`}
         >
-          <span className="text-[10px] font-medium uppercase text-muted-copy">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
             {item.label}
           </span>
-          <span className="mt-2 block line-clamp-2 text-sm font-medium text-foreground">
+          <span className="mt-2 block line-clamp-2 text-sm font-bold text-foreground">
             {item.value}
           </span>
-          <span className="mt-2 block text-xs text-muted-copy">
+          <span className="mt-2 block text-xs text-muted-copy font-medium">
             {item.detail}
           </span>
         </button>

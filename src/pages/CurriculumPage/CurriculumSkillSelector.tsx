@@ -43,27 +43,27 @@ export const CurriculumSkillSelector = ({
                 setSelectedSkill(skill);
                 setDomain('All');
               }}
-              className={`rounded-xl border p-4 text-left transition-colors ${
+              className={`rounded-[4px] border p-4 text-left transition-all cursor-pointer shadow-sm ${
                 selectedSkill === skill
-                  ? 'border-primary bg-surface-hover'
-                  : 'border-border-soft bg-surface hover:border-primary'
+                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
+                  : 'border-[#d9d9e3] bg-white hover:border-[#0047bb]'
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <Icon className="h-5 w-5 text-primary" />
+                <Icon className="h-5 w-5 text-[#0047bb]" />
                 {skill === weakestSkill && (
-                  <span className="text-[9px] font-medium uppercase text-warning">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-warning">
                     Focus
                   </span>
                 )}
               </div>
-              <p className="mt-3 text-sm font-medium text-foreground">
+              <p className="mt-3 text-sm font-bold text-foreground">
                 {meta.label}
               </p>
-              <p className="mt-1 text-xs text-muted-copy">
+              <p className="mt-1 text-xs text-muted-copy font-medium">
                 {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
               </p>
-              <p className="mt-1 text-xs font-medium text-primary">
+              <p className="mt-1 text-xs font-bold text-[#0047bb] uppercase tracking-wider">
                 Lesson{' '}
                 {
                   LessonPathEngine.getSkillProgress(profile, skill).lesson

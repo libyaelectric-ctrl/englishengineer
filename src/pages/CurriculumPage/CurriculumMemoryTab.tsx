@@ -47,16 +47,16 @@ export const CurriculumMemoryTab = ({
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
             <div>
-              <p className="text-xs font-medium text-primary">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
                 Unified Review Queue
               </p>
-              <p className="mt-1 text-sm text-muted-copy">
+              <p className="mt-1 text-xs text-muted-copy font-medium">
                 Focus on the most useful improvement first.
               </p>
             </div>
             <Link
               to="/progress/next-steps"
-              className="text-sm font-medium text-primary hover:text-primary"
+              className="text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:underline cursor-pointer"
             >
               View plan
             </Link>
@@ -70,7 +70,7 @@ export const CurriculumMemoryTab = ({
               .map((item, index) => (
                 <div
                   key={item.id}
-                  className="rounded-xl border border-border-soft bg-surface-hover p-4"
+                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm hover:bg-[#faf8ff] transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <StatusBadge
@@ -78,21 +78,22 @@ export const CurriculumMemoryTab = ({
                         index === 0 ? 'Start here' : `Priority ${index + 1}`
                       }
                       tone={index === 0 ? 'warning' : 'neutral'}
+                      className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
                     />
-                    <span className="text-xs font-medium text-muted-copy">
+                    <span className="text-xs font-bold text-muted-copy">
                       {item.priority}
                     </span>
                   </div>
-                  <p className="mt-3 text-sm font-medium text-foreground">
+                  <p className="mt-3 text-sm font-bold text-foreground">
                     {item.label}
                   </p>
-                  <p className="mt-2 text-xs leading-5 text-muted-copy">
+                  <p className="mt-2 text-xs leading-5 text-muted-copy font-medium">
                     {item.reason}
                   </p>
                   {'route' in item && (
                     <Button
                       variant="ghost"
-                      className="mt-3 px-0"
+                      className="mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm gap-1.5"
                       onClick={() =>
                         navigate((item as UnifiedReviewItem).route)
                       }
