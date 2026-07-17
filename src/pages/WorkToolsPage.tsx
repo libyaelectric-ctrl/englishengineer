@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { lazy, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BookOpenText,
@@ -9,6 +9,7 @@ import {
   Heart,
   Mail,
   Search,
+  WandSparkles,
 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
@@ -22,7 +23,13 @@ import {
 } from '@/features/work-tools';
 import { BetaService } from '@/features/beta';
 
-type Tab = 'templates' | 'emails' | 'phrases';
+const PRReviewCoach = lazy(() =>
+  import('@/features/work-tools/components/PRReviewCoach').then((m) => ({
+    default: m.PRReviewCoach,
+  }))
+);
+
+type Tab = 'templates' | 'emails' | 'phrases' | 'review-coach';
 
 const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const navigate = useNavigate();
@@ -98,6 +105,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               ['templates', 'Engineering Templates', FileText],
               ['emails', 'Email Templates', Mail],
               ['phrases', 'Phrase Library', BookOpenText],
+              ['review-coach', 'PR Review Coach', WandSparkles],
             ] as const
           ).map(([id, label, Icon]) => (
             <Button
@@ -306,6 +314,10 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             No matching work tool found.
           </p>
         </Card>
+      )}
+
+      {tab === 'review-coach' && (
+        <PRReviewCoach />
       )}
     </div>
   );
