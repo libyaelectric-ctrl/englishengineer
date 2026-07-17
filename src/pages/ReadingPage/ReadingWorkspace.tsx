@@ -327,17 +327,20 @@ export function ReadingWorkspace({
                     {(q.type === 'short_answer' ||
                       q.type === 'keyword_answer') && (
                       <div className="pt-1">
-                        <input
-                          type="text"
-                          value={answers[q.id] || ''}
-                          onChange={(e) => setAnswer(q.id, e.target.value)}
-                          placeholder={
-                            q.type === 'keyword_answer'
-                              ? 'Enter precise number or code standard...'
-                              : 'Draft technical explanation...'
-                          }
-                          className="w-full rounded-lg border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                        />
+                        <label className="block">
+                          <span className="sr-only">{q.questionText}</span>
+                          <input
+                            type="text"
+                            value={answers[q.id] || ''}
+                            onChange={(e) => setAnswer(q.id, e.target.value)}
+                            placeholder={
+                              q.type === 'keyword_answer'
+                                ? 'Enter precise number or code standard...'
+                                : 'Draft technical explanation...'
+                            }
+                            className="w-full rounded-lg border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                          />
+                        </label>
                         {q.type === 'short_answer' && (
                           <p className="text-[10px] text-muted-copy mt-1.5 leading-relaxed font-mono">
                             Type a comprehensive response using correct

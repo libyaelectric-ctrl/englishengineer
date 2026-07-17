@@ -89,7 +89,10 @@ export const validateBackendResponse = (
     return validateBillingRedirectResponse(payload, BACKEND_CONTRACT_VERSION);
   }
   if (endpointId === 'billing.subscriptionStatus') {
-    return validateSubscriptionStatusResponse(payload, BACKEND_CONTRACT_VERSION);
+    return validateSubscriptionStatusResponse(
+      payload,
+      BACKEND_CONTRACT_VERSION
+    );
   }
   if (endpointId === 'health.status') {
     return validateHealthResponse(payload, BACKEND_CONTRACT_VERSION);

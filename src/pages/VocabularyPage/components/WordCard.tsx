@@ -1,6 +1,10 @@
 import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { repairVocabularyText, type VocabularyMenuProgress, type VocabularyTerm } from '@/features/vocabulary';
+import {
+  repairVocabularyText,
+  type VocabularyMenuProgress,
+  type VocabularyTerm,
+} from '@/features/vocabulary';
 import { WordCardHeader } from './WordCardHeader';
 import {
   LearningReview,

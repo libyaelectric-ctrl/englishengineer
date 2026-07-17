@@ -15,8 +15,16 @@ interface DraftEditorProps {
 }
 
 export const DraftEditor = ({
-  title, description, discipline, scenario, task, expectedStructure,
-  draft, onDraftChange, getReadabilityScore, userErrors,
+  title,
+  description,
+  discipline,
+  scenario,
+  task,
+  expectedStructure,
+  draft,
+  onDraftChange,
+  getReadabilityScore,
+  userErrors,
 }: DraftEditorProps) => {
   const wordCount = draft.trim().split(/\s+/).filter(Boolean).length;
 
@@ -33,9 +41,13 @@ export const DraftEditor = ({
     >
       <div className="space-y-4">
         <div className="rounded-xl border border-border-soft bg-surface-hover p-4 text-sm text-foreground">
-          <p className="text-xs font-black uppercase text-foreground">Scenario</p>
+          <p className="text-xs font-black uppercase text-foreground">
+            Scenario
+          </p>
           <p className="mt-2 leading-6">{scenario ?? description}</p>
-          {task && <p className="mt-3 font-semibold text-foreground">Goal: {task}</p>}
+          {task && (
+            <p className="mt-3 font-semibold text-foreground">Goal: {task}</p>
+          )}
           {expectedStructure && (
             <p className="mt-2 text-xs leading-5 text-muted-copy">
               Required points: {expectedStructure.join(' · ')}
@@ -43,14 +55,19 @@ export const DraftEditor = ({
           )}
         </div>
 
-        <textarea
-          value={draft}
-          onChange={(e) => onDraftChange(e.target.value)}
-          className="h-64 w-full resize-none rounded-xl border border-border-soft bg-surface p-5 text-sm font-medium leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
-          placeholder="Start writing or polishing your technical draft..."
-        />
+        <label className="block">
+          <span className="sr-only">Draft your technical writing</span>
+          <textarea
+            value={draft}
+            onChange={(e) => onDraftChange(e.target.value)}
+            className="h-64 w-full resize-none rounded-xl border border-border-soft bg-surface p-5 text-sm font-medium leading-relaxed text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+            placeholder="Start writing or polishing your technical draft..."
+          />
+        </label>
 
-        <p className={`mt-1 text-right text-xs font-semibold ${wordCount > 200 ? 'text-green-500' : wordCount > 100 ? 'text-blue-500' : 'text-muted-copy'}`}>
+        <p
+          className={`mt-1 text-right text-xs font-semibold ${wordCount > 200 ? 'text-green-500' : wordCount > 100 ? 'text-blue-500' : 'text-muted-copy'}`}
+        >
           {wordCount} words
         </p>
 
@@ -74,7 +91,9 @@ export const DraftEditor = ({
               <div className="w-24 h-1.5 rounded-full bg-surface-hover overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${draft.length > 1000 ? 'bg-rose-500' : draft.length > 500 ? 'bg-amber-500' : 'bg-emerald-500'}`}
-                  style={{ width: `${Math.min(100, (draft.length / 1200) * 100)}%` }}
+                  style={{
+                    width: `${Math.min(100, (draft.length / 1200) * 100)}%`,
+                  }}
                 />
               </div>
             )}

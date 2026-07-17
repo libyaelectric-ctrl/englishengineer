@@ -18,7 +18,10 @@ export const SSOForm = ({
 }: SSOFormProps) => (
   <form onSubmit={onSubmit} className="space-y-4">
     <div>
-      <label htmlFor="company-sso-domain" className="mb-1.5 block text-xs font-medium text-foreground">
+      <label
+        htmlFor="company-sso-domain"
+        className="mb-1.5 block text-xs font-medium text-foreground"
+      >
         Company email domain
       </label>
       <div className="relative">

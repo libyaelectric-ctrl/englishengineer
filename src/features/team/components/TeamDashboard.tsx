@@ -29,7 +29,8 @@ export const TeamDashboard: FC = () => {
             <StatusBadge label="Admin panel" tone="info" />
           </div>
           <p className="mt-2 text-sm text-muted-copy">
-            Assign training licenses, track team progress, and view individual performance.
+            Assign training licenses, track team progress, and view individual
+            performance.
           </p>
         </div>
       </header>
@@ -45,7 +46,8 @@ export const TeamDashboard: FC = () => {
               <ShieldAlert className="h-5 w-5 shrink-0" />
               <p>
                 <strong>Demo team data.</strong> These names, metrics and
-                invitations are fictional and are not live organization analytics.
+                invitations are fictional and are not live organization
+                analytics.
               </p>
             </div>
           )}

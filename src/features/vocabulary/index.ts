@@ -19,7 +19,10 @@ export {
   type VocabularySummary,
 } from './types/vocabulary.types';
 
-export { isVocabularyTerm, assertVocabularyTerms } from './types/vocabulary.schema';
+export {
+  isVocabularyTerm,
+  assertVocabularyTerms,
+} from './types/vocabulary.schema';
 
 export { VocabularyRepository } from './services/vocabulary.repository';
 

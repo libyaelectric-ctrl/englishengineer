@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Clipboard, Check, Sparkles, ArrowRight, WandSparkles } from 'lucide-react';
+import {
+  Clipboard,
+  Check,
+  Sparkles,
+  ArrowRight,
+  WandSparkles,
+} from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { PRReviewCoachService, type PRReviewResult } from '../pr-review-coach';
@@ -7,8 +13,8 @@ import { PRReviewCoachService, type PRReviewResult } from '../pr-review-coach';
 const SAMPLE_REVIEWS = [
   'This code is terrible. Why did you write it this way? Fix it now.',
   'This is completely wrong. The whole approach is bad. Start over.',
-  'I can\'t believe you committed this. This never should have passed review.',
-  'Why would anyone use this pattern? It\'s so stupid and useless.',
+  "I can't believe you committed this. This never should have passed review.",
+  "Why would anyone use this pattern? It's so stupid and useless.",
 ];
 
 export const PRReviewCoach = () => {
@@ -21,7 +27,9 @@ export const PRReviewCoach = () => {
     if (!input.trim()) return;
     setIsProcessing(true);
     try {
-      const response = await PRReviewCoachService.polishReview({ rawText: input });
+      const response = await PRReviewCoachService.polishReview({
+        rawText: input,
+      });
       setResult(response);
     } finally {
       setIsProcessing(false);
@@ -89,7 +97,10 @@ export const PRReviewCoach = () => {
             ))}
           </div>
 
-          <Button onClick={handlePolish} disabled={!input.trim() || isProcessing}>
+          <Button
+            onClick={handlePolish}
+            disabled={!input.trim() || isProcessing}
+          >
             {isProcessing ? (
               'Processing...'
             ) : (

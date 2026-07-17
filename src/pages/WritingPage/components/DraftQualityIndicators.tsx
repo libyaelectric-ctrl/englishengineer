@@ -7,8 +7,15 @@ interface DraftQualityIndicatorsProps {
   technicalDensity: number;
 }
 
-export const DraftQualityIndicators = ({ getReadabilityScore, technicalDensity }: DraftQualityIndicatorsProps) => (
-  <SectionCard title="Draft Quality Indicators" subtitle="Active textual metrics" icon={Layers}>
+export const DraftQualityIndicators = ({
+  getReadabilityScore,
+  technicalDensity,
+}: DraftQualityIndicatorsProps) => (
+  <SectionCard
+    title="Draft Quality Indicators"
+    subtitle="Active textual metrics"
+    icon={Layers}
+  >
     <div className="space-y-4">
       <div className="space-y-1">
         <div className="flex justify-between text-xs font-mono text-muted-copy font-bold">

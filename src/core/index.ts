@@ -45,15 +45,9 @@ export {
   eventBus,
 } from './events';
 
-export {
-  type ServiceMetadata,
-  BaseService,
-} from './services';
+export { type ServiceMetadata, BaseService } from './services';
 
-export {
-  type IRepository,
-  BaseRepository,
-} from './repositories';
+export { type IRepository, BaseRepository } from './repositories';
 
 export {
   type EntityId,
@@ -68,16 +62,9 @@ export {
   createSoftDeleteProps,
 } from './entities';
 
-export {
-  type IdPrefix,
-  IdService,
-} from './ids';
+export { type IdPrefix, IdService } from './ids';
 
-export {
-  clock,
-  formatDate,
-  formatRelativeTime,
-} from './time';
+export { clock, formatDate, formatRelativeTime } from './time';
 
 export {
   type ValidationError,

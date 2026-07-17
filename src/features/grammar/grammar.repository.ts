@@ -23,10 +23,30 @@ const loadLevel = async (level: CefrLevel): Promise<GrammarRule[]> => {
 const loadAll = async (): Promise<GrammarRule[]> =>
   (await Promise.all(CEFR_LEVELS.map(loadLevel))).flat();
 
+const levelOrder: Record<CefrLevel, number> = {
+  A1: 1,
+  A2: 2,
+  B1: 3,
+  B2: 4,
+  C1: 5,
+  C2: 6,
+};
+
 const containsText = (value: string, query: string): boolean =>
   value.toLowerCase().includes(query.trim().toLowerCase());
 
 export const GrammarRepository = {
+  async getAllRulesSorted(): Promise<GrammarRule[]> {
+    const all = await loadAll();
+    return [...all].sort((a, b) => {
+      const aVal = levelOrder[a.cefrLevel] || 0;
+      const bVal = levelOrder[b.cefrLevel] || 0;
+      if (aVal !== bVal) return aVal - bVal;
+      if (a.difficulty !== b.difficulty) return a.difficulty - b.difficulty;
+      return a.title.localeCompare(b.title);
+    });
+  },
+
   async getGrammarRuleById(id: string): Promise<GrammarRule | undefined> {
     const level = extractCefrFromId(id);
     const rules = level ? await loadLevel(level) : await loadAll();

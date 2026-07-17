@@ -30,7 +30,9 @@ export const WorkspaceHeader = ({
     </button>
 
     <div className="flex flex-wrap items-center gap-3">
-      <span className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(cefrLevel)}`}>
+      <span
+        className={`text-[10px] font-black font-mono px-2 py-0.5 rounded border ${WritingHelpers.getCefrBadgeStyles(cefrLevel)}`}
+      >
         Level: {cefrLevel}
       </span>
       <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded border border-border-soft flex items-center gap-1.5">
@@ -40,16 +42,27 @@ export const WorkspaceHeader = ({
     </div>
 
     <div className="flex items-center gap-2">
-      <Button variant="outline" onClick={() => onMove(-1)} disabled={currentMissionIndex <= 0}>
+      <Button
+        variant="outline"
+        onClick={() => onMove(-1)}
+        disabled={currentMissionIndex <= 0}
+      >
         <ChevronLeft className="h-4 w-4" /> Previous
       </Button>
       <span className="min-w-14 text-center text-xs font-black text-muted-copy">
         {currentMissionIndex + 1}/{visibleMissionsLength}
       </span>
-      <Button variant="outline" onClick={() => onMove(1)} disabled={currentMissionIndex >= visibleMissionsLength - 1}>
+      <Button
+        variant="outline"
+        onClick={() => onMove(1)}
+        disabled={currentMissionIndex >= visibleMissionsLength - 1}
+      >
         Next <ChevronRight className="h-4 w-4" />
       </Button>
-      <Link to="/curriculum" className="hidden text-xs font-bold text-primary sm:inline-flex">
+      <Link
+        to="/curriculum"
+        className="hidden text-xs font-bold text-primary sm:inline-flex"
+      >
         Hub
       </Link>
     </div>

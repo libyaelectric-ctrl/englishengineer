@@ -83,7 +83,8 @@ export const InterviewSimulator = () => {
       return;
     }
 
-    const SpeechRecognitionConstructor = (w.SpeechRecognition || w.webkitSpeechRecognition) as new () => {
+    const SpeechRecognitionConstructor = (w.SpeechRecognition ||
+      w.webkitSpeechRecognition) as new () => {
       continuous: boolean;
       interimResults: boolean;
       lang: string;
@@ -102,13 +103,19 @@ export const InterviewSimulator = () => {
       const e = event as { results: SpeechRecognitionResultList };
       let finalTranscript = '';
       for (let i = 0; i < e.results.length; i++) {
-        const result = e.results[i] as unknown as { isFinal: boolean; length: number; item: (index: number) => { transcript: string } };
+        const result = e.results[i] as unknown as {
+          isFinal: boolean;
+          length: number;
+          item: (index: number) => { transcript: string };
+        };
         if (result.isFinal) {
           finalTranscript += result.item(0).transcript;
         }
       }
       if (finalTranscript) {
-        setCurrentAnswer((prev) => (prev ? `${prev} ${finalTranscript}` : finalTranscript));
+        setCurrentAnswer((prev) =>
+          prev ? `${prev} ${finalTranscript}` : finalTranscript
+        );
       }
     };
 
@@ -137,7 +144,10 @@ export const InterviewSimulator = () => {
       recordingSeconds: currentQuestion.timeLimitSeconds - timeRemaining,
     };
 
-    const score = await InterviewSimulatorService.scoreAnswer(answer, currentQuestion);
+    const score = await InterviewSimulatorService.scoreAnswer(
+      answer,
+      currentQuestion
+    );
     const updatedSession: InterviewSession = {
       ...session,
       answers: [...session.answers, answer],
@@ -150,14 +160,17 @@ export const InterviewSimulator = () => {
     setTimeRemaining(0);
     setIsScoring(false);
 
-    if (updatedSession.currentQuestionIndex >= updatedSession.questions.length) {
+    if (
+      updatedSession.currentQuestionIndex >= updatedSession.questions.length
+    ) {
       updatedSession.completedAt = new Date().toISOString();
       setSession(updatedSession);
       setState('results');
     } else {
       setSession(updatedSession);
       setTimeRemaining(
-        updatedSession.questions[updatedSession.currentQuestionIndex].timeLimitSeconds
+        updatedSession.questions[updatedSession.currentQuestionIndex]
+          .timeLimitSeconds
       );
     }
   }, [session, currentQuestion, currentAnswer, timeRemaining, stopTimer]);
@@ -176,7 +189,9 @@ export const InterviewSimulator = () => {
 
   const overallScore =
     scores.length > 0
-      ? Math.round(scores.reduce((sum, s) => sum + s.overall, 0) / scores.length)
+      ? Math.round(
+          scores.reduce((sum, s) => sum + s.overall, 0) / scores.length
+        )
       : 0;
 
   const handleTypeSelect = (type: InterviewType) => {
@@ -350,7 +365,7 @@ export const InterviewSimulator = () => {
 
   if (state === 'interview' && currentQuestion && session) {
     const progress =
-      ((session.currentQuestionIndex) / session.questions.length) * 100;
+      (session.currentQuestionIndex / session.questions.length) * 100;
     const isTimeUp = timeRemaining === 0;
 
     return (
@@ -365,7 +380,12 @@ export const InterviewSimulator = () => {
                 <Clock className="mr-1 inline h-3.5 w-3.5" />
                 {InterviewSimulatorService.formatTime(timeRemaining)}
               </span>
-              <Button variant="ghost" size="icon" onClick={resetInterview}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={resetInterview}
+                aria-label="Reset interview"
+              >
                 <RotateCcw className="h-4 w-4" />
               </Button>
             </div>
@@ -446,7 +466,8 @@ export const InterviewSimulator = () => {
               >
                 {isScoring
                   ? 'Scoring...'
-                  : session.currentQuestionIndex + 1 === session.questions.length
+                  : session.currentQuestionIndex + 1 ===
+                      session.questions.length
                     ? 'Submit & Finish'
                     : 'Submit & Next'}
               </Button>

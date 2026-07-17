@@ -127,6 +127,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search tools"
+            aria-label="Search work tools"
             className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-copy"
           />
         </label>
@@ -316,9 +317,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         </Card>
       )}
 
-      {tab === 'review-coach' && (
-        <PRReviewCoach />
-      )}
+      {tab === 'review-coach' && <PRReviewCoach />}
     </div>
   );
 };

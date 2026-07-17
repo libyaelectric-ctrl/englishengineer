@@ -1,4 +1,8 @@
-import { repairVocabularyText, type VocabularyMenuProgress, type VocabularyTerm } from '@/features/vocabulary';
+import {
+  repairVocabularyText,
+  type VocabularyMenuProgress,
+  type VocabularyTerm,
+} from '@/features/vocabulary';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;
@@ -7,7 +11,12 @@ interface WordCardHeaderProps {
   progress?: VocabularyMenuProgress;
 }
 
-export const WordCardHeader = ({ term, showAnswer, status, progress }: WordCardHeaderProps) => (
+export const WordCardHeader = ({
+  term,
+  showAnswer,
+  status,
+  progress,
+}: WordCardHeaderProps) => (
   <div className="flex flex-wrap items-start justify-between gap-3">
     <div>
       <h3 className="text-xl font-black text-foreground">

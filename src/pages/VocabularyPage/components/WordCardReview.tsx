@@ -1,6 +1,10 @@
 import { FormEvent } from 'react';
 import { CheckCircle2, XCircle } from 'lucide-react';
-import { getVocabularyReviewReason, type VocabularyMenuProgress, type VocabularyTerm } from '@/features/vocabulary';
+import {
+  getVocabularyReviewReason,
+  type VocabularyMenuProgress,
+  type VocabularyTerm,
+} from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import type { VocabularySetMode } from './WordCard';
 
@@ -11,7 +15,12 @@ interface LearningReviewProps {
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
 }
 
-export const LearningReview = ({ term, progress, mode, onReview }: LearningReviewProps) => (
+export const LearningReview = ({
+  term,
+  progress,
+  mode,
+  onReview,
+}: LearningReviewProps) => (
   <div className="mt-3 space-y-2">
     <div className="flex items-center gap-2">
       <span className="text-sm tracking-widest text-primary">
@@ -24,10 +33,18 @@ export const LearningReview = ({ term, progress, mode, onReview }: LearningRevie
     </div>
     {mode !== 'Review' && (
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="success" className="px-3" onClick={() => onReview(term, true)}>
+        <Button
+          variant="success"
+          className="px-3"
+          onClick={() => onReview(term, true)}
+        >
           <CheckCircle2 className="h-4 w-4" /> Remembered
         </Button>
-        <Button variant="danger" className="px-3" onClick={() => onReview(term, false)}>
+        <Button
+          variant="danger"
+          className="px-3"
+          onClick={() => onReview(term, false)}
+        >
           <XCircle className="h-4 w-4" /> Review again
         </Button>
       </div>

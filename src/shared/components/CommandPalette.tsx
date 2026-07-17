@@ -32,45 +32,218 @@ import { useCommandPalette } from '@/shared/hooks/useCommandPalette';
 
 const COMMANDS = [
   // Skills
-  { id: 'dashboard', label: 'Dashboard', href: '/dashboard', icon: 'Home', category: 'Navigate', keywords: ['home', 'main'] },
-  { id: 'vocabulary', label: 'Vocabulary', href: '/vocabulary', icon: 'BookMarked', category: 'Skills', keywords: ['words', 'kelime'] },
-  { id: 'grammar', label: 'Grammar', href: '/grammar', icon: 'Languages', category: 'Skills', keywords: ['gr kuralları'] },
-  { id: 'reading', label: 'Reading', href: '/reading', icon: 'BookOpen', category: 'Skills', keywords: ['okuma'] },
-  { id: 'writing', label: 'Writing', href: '/writing', icon: 'PenTool', category: 'Skills', keywords: ['yazma'] },
-  { id: 'listening', label: 'Listening', href: '/listening', icon: 'Headphones', category: 'Skills', keywords: ['dinleme'] },
-  { id: 'speaking', label: 'Speaking', href: '/speaking', icon: 'Mic2', category: 'Skills', keywords: ['konuşma'] },
+  {
+    id: 'dashboard',
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'Home',
+    category: 'Navigate',
+    keywords: ['home', 'main'],
+  },
+  {
+    id: 'vocabulary',
+    label: 'Vocabulary',
+    href: '/vocabulary',
+    icon: 'BookMarked',
+    category: 'Skills',
+    keywords: ['words', 'kelime'],
+  },
+  {
+    id: 'grammar',
+    label: 'Grammar',
+    href: '/grammar',
+    icon: 'Languages',
+    category: 'Skills',
+    keywords: ['gr kuralları'],
+  },
+  {
+    id: 'reading',
+    label: 'Reading',
+    href: '/reading',
+    icon: 'BookOpen',
+    category: 'Skills',
+    keywords: ['okuma'],
+  },
+  {
+    id: 'writing',
+    label: 'Writing',
+    href: '/writing',
+    icon: 'PenTool',
+    category: 'Skills',
+    keywords: ['yazma'],
+  },
+  {
+    id: 'listening',
+    label: 'Listening',
+    href: '/listening',
+    icon: 'Headphones',
+    category: 'Skills',
+    keywords: ['dinleme'],
+  },
+  {
+    id: 'speaking',
+    label: 'Speaking',
+    href: '/speaking',
+    icon: 'Mic2',
+    category: 'Skills',
+    keywords: ['konuşma'],
+  },
   // Learning Hub
-  { id: 'curriculum-today', label: "Today's Curriculum", href: '/curriculum/today', icon: 'Calendar', category: 'Learning Hub', keywords: ['bugün', 'plan'] },
-  { id: 'curriculum-full', label: 'Full Curriculum', href: '/curriculum/full', icon: 'Library', category: 'Learning Hub', keywords: ['müfredat'] },
-  { id: 'curriculum-memory', label: 'Learning Memory', href: '/curriculum/memory', icon: 'BarChart3', category: 'Learning Hub', keywords: ['bellek'] },
+  {
+    id: 'curriculum-today',
+    label: "Today's Curriculum",
+    href: '/curriculum/today',
+    icon: 'Calendar',
+    category: 'Learning Hub',
+    keywords: ['bugün', 'plan'],
+  },
+  {
+    id: 'curriculum-full',
+    label: 'Full Curriculum',
+    href: '/curriculum/full',
+    icon: 'Library',
+    category: 'Learning Hub',
+    keywords: ['müfredat'],
+  },
+  {
+    id: 'curriculum-memory',
+    label: 'Learning Memory',
+    href: '/curriculum/memory',
+    icon: 'BarChart3',
+    category: 'Learning Hub',
+    keywords: ['bellek'],
+  },
   // Progress
-  { id: 'progress-overview', label: 'Progress Overview', href: '/progress/overview', icon: 'Target', category: 'Progress', keywords: ['ilerleme'] },
-  { id: 'progress-next-steps', label: 'Next Steps', href: '/progress/next-steps', icon: 'Trophy', category: 'Progress', keywords: ['sonraki', 'adım'] },
+  {
+    id: 'progress-overview',
+    label: 'Progress Overview',
+    href: '/progress/overview',
+    icon: 'Target',
+    category: 'Progress',
+    keywords: ['ilerleme'],
+  },
+  {
+    id: 'progress-next-steps',
+    label: 'Next Steps',
+    href: '/progress/next-steps',
+    icon: 'Trophy',
+    category: 'Progress',
+    keywords: ['sonraki', 'adım'],
+  },
   // Tools
-  { id: 'tools-work', label: 'Work Tools', href: '/tools/work', icon: 'BriefcaseBusiness', category: 'Tools', keywords: ['iş'] },
-  { id: 'tools-quick', label: 'Quick Tools', href: '/tools/quick', icon: 'WandSparkles', category: 'Tools', keywords: ['hızlı'] },
-  { id: 'tools-ai', label: 'AI Copilot', href: '/tools/ai', icon: 'BrainCircuit', category: 'Tools', keywords: ['asistan', 'ai'] },
+  {
+    id: 'tools-work',
+    label: 'Work Tools',
+    href: '/tools/work',
+    icon: 'BriefcaseBusiness',
+    category: 'Tools',
+    keywords: ['iş'],
+  },
+  {
+    id: 'tools-quick',
+    label: 'Quick Tools',
+    href: '/tools/quick',
+    icon: 'WandSparkles',
+    category: 'Tools',
+    keywords: ['hızlı'],
+  },
+  {
+    id: 'tools-ai',
+    label: 'AI Copilot',
+    href: '/tools/ai',
+    icon: 'BrainCircuit',
+    category: 'Tools',
+    keywords: ['asistan', 'ai'],
+  },
   // Profile
-  { id: 'profile-overview', label: 'Profile', href: '/profile/overview', icon: 'User', category: 'Account', keywords: ['hesap'] },
-  { id: 'profile-preferences', label: 'Settings', href: '/profile/preferences', icon: 'Settings', category: 'Account', keywords: ['ayarlar'] },
-  { id: 'profile-billing', label: 'Billing', href: '/profile/billing', icon: 'Wallet', category: 'Account', keywords: ['fatura'] },
-  { id: 'profile-security', label: 'Security & Data', href: '/profile/security', icon: 'Shield', category: 'Account', keywords: ['güvenlik'] },
+  {
+    id: 'profile-overview',
+    label: 'Profile',
+    href: '/profile/overview',
+    icon: 'User',
+    category: 'Account',
+    keywords: ['hesap'],
+  },
+  {
+    id: 'profile-preferences',
+    label: 'Settings',
+    href: '/profile/preferences',
+    icon: 'Settings',
+    category: 'Account',
+    keywords: ['ayarlar'],
+  },
+  {
+    id: 'profile-billing',
+    label: 'Billing',
+    href: '/profile/billing',
+    icon: 'Wallet',
+    category: 'Account',
+    keywords: ['fatura'],
+  },
+  {
+    id: 'profile-security',
+    label: 'Security & Data',
+    href: '/profile/security',
+    icon: 'Shield',
+    category: 'Account',
+    keywords: ['güvenlik'],
+  },
   // Admin
-  { id: 'admin', label: 'Admin Panel', href: '/admin', icon: 'Settings', category: 'Account', keywords: ['admin'] },
+  {
+    id: 'admin',
+    label: 'Admin Panel',
+    href: '/admin',
+    icon: 'Settings',
+    category: 'Account',
+    keywords: ['admin'],
+  },
   // Pricing (public)
-  { id: 'pricing', label: 'Pricing', href: '/pricing', icon: 'Wallet', category: 'Account', keywords: ['fiyat'] },
+  {
+    id: 'pricing',
+    label: 'Pricing',
+    href: '/pricing',
+    icon: 'Wallet',
+    category: 'Account',
+    keywords: ['fiyat'],
+  },
 ];
 
 const ICON_MAP: Record<string, React.FC<{ className?: string }>> = {
-  Home, User, BookMarked, Languages, BookOpen, PenTool, Headphones, Mic2,
-  Library, Calendar, BarChart3, Target, Trophy, BriefcaseBusiness,
-  WandSparkles, BrainCircuit, Shield, Wallet, Settings, Moon, Sun,
+  Home,
+  User,
+  BookMarked,
+  Languages,
+  BookOpen,
+  PenTool,
+  Headphones,
+  Mic2,
+  Library,
+  Calendar,
+  BarChart3,
+  Target,
+  Trophy,
+  BriefcaseBusiness,
+  WandSparkles,
+  BrainCircuit,
+  Shield,
+  Wallet,
+  Settings,
+  Moon,
+  Sun,
 };
 
-const CATEGORIES_ORDER = ['Navigate', 'Skills', 'Learning Hub', 'Progress', 'Tools', 'Account'];
+const CATEGORIES_ORDER = [
+  'Navigate',
+  'Skills',
+  'Learning Hub',
+  'Progress',
+  'Tools',
+  'Account',
+];
 
 export const CommandPalette: React.FC = () => {
-  const { isOpen, close, recordVisit, getRecent, getFrequency } = useCommandPalette();
+  const { isOpen, close, recordVisit, getRecent, getFrequency } =
+    useCommandPalette();
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -86,8 +259,14 @@ export const CommandPalette: React.FC = () => {
     }
   }, [isOpen]);
 
-  const recentHrefs = useMemo(() => (isOpen ? getRecent() : []), [isOpen, getRecent]);
-  const frequency = useMemo(() => (isOpen ? getFrequency() : []), [isOpen, getFrequency]);
+  const recentHrefs = useMemo(
+    () => (isOpen ? getRecent() : []),
+    [isOpen, getRecent]
+  );
+  const frequency = useMemo(
+    () => (isOpen ? getFrequency() : []),
+    [isOpen, getFrequency]
+  );
 
   const isDark = document.documentElement.classList.contains('dark');
   const toggleTheme = () => {
@@ -121,12 +300,16 @@ export const CommandPalette: React.FC = () => {
 
   const flatItems = useMemo(() => grouped.flatMap((g) => g.items), [grouped]);
 
-  useEffect(() => { setSelectedIndex(0); }, [search]);
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [search]);
 
   // Keep selected item visible
   useEffect(() => {
     if (!listRef.current) return;
-    const btn = listRef.current.querySelector(`[data-index="${selectedIndex}"]`);
+    const btn = listRef.current.querySelector(
+      `[data-index="${selectedIndex}"]`
+    );
     btn?.scrollIntoView({ block: 'nearest' });
   }, [selectedIndex]);
 
@@ -169,12 +352,16 @@ export const CommandPalette: React.FC = () => {
     return Object.entries(frequency)
       .sort((a, b) => b[1] - a[1])
       .map(([href]) => COMMANDS.find((c) => c.href === href))
-      .filter((cmd): cmd is (typeof COMMANDS)[0] => !!cmd && !recentSet.has(cmd.href))
+      .filter(
+        (cmd): cmd is (typeof COMMANDS)[0] => !!cmd && !recentSet.has(cmd.href)
+      )
       .slice(0, 3);
   }, [search, recentHrefs, frequency]);
 
   // Build display sections
-  type Section = { type: 'header'; label: string } | { type: 'item'; cmd: (typeof COMMANDS)[0]; globalIndex: number };
+  type Section =
+    | { type: 'header'; label: string }
+    | { type: 'item'; cmd: (typeof COMMANDS)[0]; globalIndex: number };
 
   const sections: Section[] = useMemo(() => {
     const result: Section[] = [];
@@ -247,7 +434,11 @@ export const CommandPalette: React.FC = () => {
                   aria-label="Toggle theme"
                   title="Toggle dark/light mode"
                 >
-                  {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                  {isDark ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
                 </button>
                 <kbd className="ml-1 rounded border border-border-soft px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                   ESC
@@ -256,7 +447,10 @@ export const CommandPalette: React.FC = () => {
             </div>
 
             {/* Results */}
-            <div ref={listRef} className="max-h-[360px] overflow-y-auto p-2 custom-scrollbar">
+            <div
+              ref={listRef}
+              className="max-h-[360px] overflow-y-auto p-2 custom-scrollbar"
+            >
               {sections.length === 0 ? (
                 <div className="py-10 text-center text-sm text-muted-copy">
                   No results for "{search}"
@@ -265,7 +459,10 @@ export const CommandPalette: React.FC = () => {
                 sections.map((section) => {
                   if (section.type === 'header') {
                     return (
-                      <div key={`hdr-${section.label}`} className="mb-1 mt-3 px-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy/60 first:mt-1">
+                      <div
+                        key={`hdr-${section.label}`}
+                        className="mb-1 mt-3 px-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy/60 first:mt-1"
+                      >
                         {section.label}
                       </div>
                     );
@@ -323,12 +520,18 @@ export const CommandPalette: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">&uarr;</kbd>
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">&darr;</kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                    &uarr;
+                  </kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                    &darr;
+                  </kbd>
                   navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">↵</kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                    ↵
+                  </kbd>
                   select
                 </span>
               </div>

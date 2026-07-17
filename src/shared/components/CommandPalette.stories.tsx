@@ -19,13 +19,23 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
     { id: 'writing', label: 'Writing', category: 'Skills' },
     { id: 'listening', label: 'Listening', category: 'Skills' },
     { id: 'speaking', label: 'Speaking', category: 'Skills' },
-    { id: 'curriculum-today', label: "Today's Curriculum", category: 'Learning Hub' },
-    { id: 'progress-overview', label: 'Progress Overview', category: 'Progress' },
+    {
+      id: 'curriculum-today',
+      label: "Today's Curriculum",
+      category: 'Learning Hub',
+    },
+    {
+      id: 'progress-overview',
+      label: 'Progress Overview',
+      category: 'Progress',
+    },
     { id: 'tools-work', label: 'Work Tools', category: 'Tools' },
   ];
 
   const filtered = searchQuery
-    ? COMMANDS.filter((c) => c.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    ? COMMANDS.filter((c) =>
+        c.label.toLowerCase().includes(searchQuery.toLowerCase())
+      )
     : COMMANDS;
 
   const grouped = filtered.reduce(
@@ -41,7 +51,13 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" />
       <div className="relative w-full max-w-xl overflow-hidden rounded-xl border border-border-soft bg-surface shadow-2xl">
         <div className="flex items-center border-b border-border-soft px-4">
-          <svg className="h-5 w-5 shrink-0 text-muted-copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            className="h-5 w-5 shrink-0 text-muted-copy"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
           </svg>

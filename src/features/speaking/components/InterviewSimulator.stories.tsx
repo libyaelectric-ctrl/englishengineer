@@ -26,9 +26,15 @@ export default meta;
 
 type InterviewState = 'select' | 'interview' | 'results';
 
-const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewState }) => {
+const InterviewSimulatorDemo = ({
+  initialState,
+}: {
+  initialState?: InterviewState;
+}) => {
   const [state, setState] = useState<InterviewState>(initialState ?? 'select');
-  const [selectedType, setSelectedType] = useState<'system-design' | 'coding'>('system-design');
+  const [selectedType, setSelectedType] = useState<'system-design' | 'coding'>(
+    'system-design'
+  );
 
   if (state === 'select') {
     return (
@@ -90,10 +96,24 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
 
   if (state === 'results') {
     const scores = [
-      { overall: 85, technicalAccuracy: 90, clarity: 80, depth: 85, communication: 85 },
-      { overall: 72, technicalAccuracy: 75, clarity: 70, depth: 65, communication: 78 },
+      {
+        overall: 85,
+        technicalAccuracy: 90,
+        clarity: 80,
+        depth: 85,
+        communication: 85,
+      },
+      {
+        overall: 72,
+        technicalAccuracy: 75,
+        clarity: 70,
+        depth: 65,
+        communication: 78,
+      },
     ];
-    const overallScore = Math.round(scores.reduce((sum, s) => sum + s.overall, 0) / scores.length);
+    const overallScore = Math.round(
+      scores.reduce((sum, s) => sum + s.overall, 0) / scores.length
+    );
 
     return (
       <div className="space-y-6">
@@ -153,8 +173,12 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
                     ['Communication', score.communication],
                   ].map(([label, value]) => (
                     <div key={label} className="text-center">
-                      <p className="text-[10px] uppercase text-muted-copy">{label}</p>
-                      <p className="text-sm font-semibold text-foreground">{value}</p>
+                      <p className="text-[10px] uppercase text-muted-copy">
+                        {label}
+                      </p>
+                      <p className="text-sm font-semibold text-foreground">
+                        {value}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -179,7 +203,11 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
               <Clock className="mr-1 inline h-3.5 w-3.5" />
               04:30
             </span>
-            <Button variant="ghost" size="icon" onClick={() => setState('select')}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setState('select')}
+            >
               <RotateCcw className="h-4 w-4" />
             </Button>
           </div>
@@ -193,8 +221,8 @@ const InterviewSimulatorDemo = ({ initialState }: { initialState?: InterviewStat
               MEDIUM · scalability, api-design
             </p>
             <p className="mt-2 text-base leading-7 text-foreground">
-              Design a URL shortener like bit.ly. Discuss the API design, database
-              schema, and how you would handle high traffic.
+              Design a URL shortener like bit.ly. Discuss the API design,
+              database schema, and how you would handle high traffic.
             </p>
           </div>
 

@@ -18,7 +18,9 @@ export const StyleGuidelines = ({
     <h5 className="text-xs font-black uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
       <Info className="h-4 w-4 text-engineer-cyan" />
       <span>
-        Linguistic Guideline Insights ({corrections.length - activeCorrections.length}/{corrections.length} resolved)
+        Linguistic Guideline Insights (
+        {corrections.length - activeCorrections.length}/{corrections.length}{' '}
+        resolved)
       </span>
     </h5>
 
@@ -28,18 +30,24 @@ export const StyleGuidelines = ({
           {selectedRule.type} Correction Guide
         </h6>
         <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
-          <strong className="text-foreground">Guideline:</strong> {selectedRule.text}
+          <strong className="text-foreground">Guideline:</strong>{' '}
+          {selectedRule.text}
         </p>
         <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-mono">
-          <span className="text-rose-400 font-bold">"{selectedRule.original}"</span>{' '}
+          <span className="text-rose-400 font-bold">
+            "{selectedRule.original}"
+          </span>{' '}
           →{' '}
-          <span className="text-emerald-400 font-bold">"{selectedRule.fix}"</span>
+          <span className="text-emerald-400 font-bold">
+            "{selectedRule.fix}"
+          </span>
         </p>
       </div>
     ) : (
       <div className="space-y-2">
         <p className="text-xs text-muted-copy italic py-1 font-medium">
-          Click on any linguistic flag in the right column checkpoint, or review the brief outline of required revisions below:
+          Click on any linguistic flag in the right column checkpoint, or review
+          the brief outline of required revisions below:
         </p>
         <div className="flex flex-wrap gap-2">
           {corrections.map((c) => {

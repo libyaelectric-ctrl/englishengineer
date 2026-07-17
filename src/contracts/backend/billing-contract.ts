@@ -121,7 +121,8 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
 const hasString = (value: Record<string, unknown>, field: string): boolean =>
-  typeof value[field] === 'string' && (value[field] as string).trim().length > 0;
+  typeof value[field] === 'string' &&
+  (value[field] as string).trim().length > 0;
 
 const validateContractVersion = (
   value: Record<string, unknown>,
@@ -215,10 +216,7 @@ export const validateStripeWebhookRequest = (
   return { valid: errors.length === 0, errors };
 };
 
-export const STRIPE_WEBHOOK_EVENT_STATES: Record<
-  string,
-  string
-> = {
+export const STRIPE_WEBHOOK_EVENT_STATES: Record<string, string> = {
   'checkout.session.completed': 'checkout_completed',
   'invoice.payment_failed': 'payment_failed',
   'customer.subscription.created': 'subscription_active',
@@ -227,9 +225,7 @@ export const STRIPE_WEBHOOK_EVENT_STATES: Record<
   'customer.subscription.trial_will_end': 'grace_period',
 };
 
-export const mapStripeWebhookState = (
-  eventType: string
-): string =>
+export const mapStripeWebhookState = (eventType: string): string =>
   eventType in STRIPE_WEBHOOK_EVENT_STATES
     ? STRIPE_WEBHOOK_EVENT_STATES[eventType]
     : 'unsupported_event';

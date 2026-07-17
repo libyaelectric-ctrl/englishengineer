@@ -1,5 +1,8 @@
 import { MissionDifficulty } from '@/core/learning';
-import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
+import {
+  VocabularyDiscipline,
+  VocabularyEntry,
+} from '../types/vocabulary.types';
 import { expansionCategories } from './expansion-categories';
 import { meaningMap } from './expansion-data/meanings';
 import { examples, resolveExample } from './expansion-data/examples';

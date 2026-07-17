@@ -1,11 +1,18 @@
 import { useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, CheckCircle2, Circle } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle2,
+  Circle,
+} from 'lucide-react';
 import { StatusPill } from './GrammarPageComponents';
 import type { LessonStatus } from './GrammarPageHelpers';
 
 type PathEntry = {
   rule: { id: string; title: string; grammarCategory: string };
   status: LessonStatus;
+  isUnlocked?: boolean;
 };
 
 type PathGroup = {
@@ -78,32 +85,46 @@ export const GrammarLessonMap = ({
                             {group.module}
                           </span>
                         </div>
-                        {group.entries.map(({ rule, status }, idx) => {
-                          const selected = rule.id === selectedRule?.id;
-                          return (
-                            <button
-                              key={rule.id}
-                              type="button"
-                              onClick={() => selectRule(rule.id)}
-                              className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${selected ? 'border-foreground bg-foreground text-background' : 'border-border-soft bg-background hover:border-primary/40'}`}
-                            >
-                              <span className="line-clamp-2 text-xs font-black leading-4">
-                                <span className="mr-1 text-[10px] opacity-60">
-                                  {startNum + idx}.
+                        {group.entries.map(
+                          ({ rule, status, isUnlocked }, idx) => {
+                            const selected = rule.id === selectedRule?.id;
+                            const locked = isUnlocked === false;
+                            return (
+                              <button
+                                key={rule.id}
+                                type="button"
+                                disabled={locked}
+                                onClick={() => selectRule(rule.id)}
+                                className={`flex w-44 shrink-0 flex-col justify-between rounded-lg border px-2 py-1.5 text-left transition-colors ${
+                                  selected
+                                    ? 'border-foreground bg-foreground text-background'
+                                    : locked
+                                      ? 'border-border-soft bg-surface-hover opacity-50 cursor-not-allowed'
+                                      : 'border-border-soft bg-background hover:border-primary/40'
+                                }`}
+                              >
+                                <span className="line-clamp-2 text-xs font-black leading-4">
+                                  <span className="mr-1 text-[10px] opacity-60">
+                                    {startNum + idx}.
+                                  </span>
+                                  {rule.title}
                                 </span>
-                                {rule.title}
-                              </span>
-                              <span className="mt-1 flex items-center justify-between gap-1">
-                                {status === 'Mastered' ? (
-                                  <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
-                                ) : (
-                                  <Circle className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
-                                )}
-                                <StatusPill status={status} compact />
-                              </span>
-                            </button>
-                          );
-                        })}
+                                <span className="mt-1 flex items-center justify-between gap-1">
+                                  {locked ? (
+                                    <span className="text-[10px] text-muted-copy leading-3">
+                                      Locked 🔒
+                                    </span>
+                                  ) : status === 'Mastered' ? (
+                                    <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />
+                                  ) : (
+                                    <Circle className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
+                                  )}
+                                  <StatusPill status={status} compact />
+                                </span>
+                              </button>
+                            );
+                          }
+                        )}
                       </div>
                     );
                   });

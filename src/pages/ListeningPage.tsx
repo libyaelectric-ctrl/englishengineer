@@ -301,26 +301,32 @@ const ListeningPage = () => {
                           })}
                         </div>
                       ) : question.type === 'true_false' ? (
-                        <select
-                          value={answers[question.id] ?? ''}
-                          onChange={(event) =>
-                            setAnswer(question.id, event.target.value)
-                          }
-                          className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
-                        >
-                          <option value="">Select true or false</option>
-                          <option value="true">True</option>
-                          <option value="false">False</option>
-                        </select>
+                        <label className="block mt-3">
+                          <span className="sr-only">True or false answer</span>
+                          <select
+                            value={answers[question.id] ?? ''}
+                            onChange={(event) =>
+                              setAnswer(question.id, event.target.value)
+                            }
+                            className="w-full rounded-lg border border-border-soft p-3 text-sm"
+                          >
+                            <option value="">Select true or false</option>
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                          </select>
+                        </label>
                       ) : (
-                        <input
-                          value={answers[question.id] ?? ''}
-                          onChange={(event) =>
-                            setAnswer(question.id, event.target.value)
-                          }
-                          placeholder="Complete the missing technical phrase"
-                          className="mt-3 w-full rounded-lg border border-border-soft p-3 text-sm"
-                        />
+                        <label className="block mt-3">
+                          <span className="sr-only">Short answer</span>
+                          <input
+                            value={answers[question.id] ?? ''}
+                            onChange={(event) =>
+                              setAnswer(question.id, event.target.value)
+                            }
+                            placeholder="Complete the missing technical phrase"
+                            className="w-full rounded-lg border border-border-soft p-3 text-sm"
+                          />
+                        </label>
                       )}
                     </fieldset>
                   ))}

@@ -7,7 +7,14 @@ import {
 import { ScoringService } from '@/core/learning/scoring.service';
 
 function customizeFeedback(
-  scoringResult: { strengths: string[]; weaknesses: string[]; xp: number; coins: number; eloChange: number; feedback: string },
+  scoringResult: {
+    strengths: string[];
+    weaknesses: string[];
+    xp: number;
+    coins: number;
+    eloChange: number;
+    feedback: string;
+  },
   linguisticClarityScore: number,
   jargonDensityScore: number,
   professionalToneScore: number,
@@ -26,7 +33,9 @@ function customizeFeedback(
   if (jargonDensityScore >= 100) {
     strengths.push('Excellent integration of precise engineering terms');
   } else {
-    weaknesses.push('Casual operational phrases limit professional jargon usage');
+    weaknesses.push(
+      'Casual operational phrases limit professional jargon usage'
+    );
   }
 
   if (professionalToneScore >= 90) {
@@ -36,16 +45,23 @@ function customizeFeedback(
   }
 
   if (autoFixesUsed === 0 && finalScore === 100) {
-    strengths.push('Manual mastery: Resolved all linguistic flags without auto-fix');
+    strengths.push(
+      'Manual mastery: Resolved all linguistic flags without auto-fix'
+    );
   } else if (autoFixesUsed > 0) {
-    strengths.push('Systemic review: Correctly leveraged compiler-assisted suggestions');
+    strengths.push(
+      'Systemic review: Correctly leveraged compiler-assisted suggestions'
+    );
   }
 
   const finalWeaknesses = weaknesses.filter((w) => w !== 'None detected');
 
   return {
     strengths: Array.from(new Set(strengths)),
-    weaknesses: finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
+    weaknesses:
+      finalWeaknesses.length > 0
+        ? Array.from(new Set(finalWeaknesses))
+        : ['None detected'],
   };
 }
 

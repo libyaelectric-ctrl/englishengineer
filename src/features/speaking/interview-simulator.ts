@@ -162,25 +162,37 @@ const MOCK_EXAMPLES: MockExample[] = [
   {
     input: 'system design answer about notification system',
     output:
-      "AI SCORING:\nTechnical Accuracy: 78/100\nClarity: 82/100\nDepth: 70/100\nCommunication: 85/100\nOverall: 79/100\n\nFeedback: Good understanding of basic notification architecture. Consider mentioning message queues, retry mechanisms, and delivery guarantees.\n\nStrengths: Clear structure, mentioned key components\nImprovements: Add more depth on scalability, discuss trade-offs",
+      'AI SCORING:\nTechnical Accuracy: 78/100\nClarity: 82/100\nDepth: 70/100\nCommunication: 85/100\nOverall: 79/100\n\nFeedback: Good understanding of basic notification architecture. Consider mentioning message queues, retry mechanisms, and delivery guarantees.\n\nStrengths: Clear structure, mentioned key components\nImprovements: Add more depth on scalability, discuss trade-offs',
   },
   {
     input: 'coding answer about LRU cache',
     output:
-      "AI SCORING:\nTechnical Accuracy: 85/100\nClarity: 80/100\nDepth: 75/100\nCommunication: 78/100\nOverall: 80/100\n\nFeedback: Correct approach using HashMap and Doubly Linked List. Good time complexity analysis.\n\nStrengths: Correct data structure choice, O(1) operations\nImprovements: Discuss edge cases, mention thread safety considerations",
+      'AI SCORING:\nTechnical Accuracy: 85/100\nClarity: 80/100\nDepth: 75/100\nCommunication: 78/100\nOverall: 80/100\n\nFeedback: Correct approach using HashMap and Doubly Linked List. Good time complexity analysis.\n\nStrengths: Correct data structure choice, O(1) operations\nImprovements: Discuss edge cases, mention thread safety considerations',
   },
 ];
 
-const ruleBasedScoring = (answer: InterviewAnswer, question: InterviewQuestion): InterviewScore => {
-  const wordCount = answer.transcript.trim().split(/\s+/).filter(Boolean).length;
+const ruleBasedScoring = (
+  answer: InterviewAnswer,
+  question: InterviewQuestion
+): InterviewScore => {
+  const wordCount = answer.transcript
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean).length;
   const timeRatio = answer.timeSpentSeconds / question.timeLimitSeconds;
 
-  const technicalAccuracy = Math.min(85, 40 + wordCount * 0.8 + (timeRatio < 1 ? 10 : 0));
+  const technicalAccuracy = Math.min(
+    85,
+    40 + wordCount * 0.8 + (timeRatio < 1 ? 10 : 0)
+  );
   const clarity = Math.min(90, 45 + wordCount * 0.6);
   const depth = Math.min(80, 30 + wordCount * 0.7);
   const communication = Math.min(88, 50 + wordCount * 0.5);
   const overall = Math.round(
-    technicalAccuracy * 0.35 + clarity * 0.25 + depth * 0.25 + communication * 0.15
+    technicalAccuracy * 0.35 +
+      clarity * 0.25 +
+      depth * 0.25 +
+      communication * 0.15
   );
 
   return {
@@ -192,11 +204,15 @@ const ruleBasedScoring = (answer: InterviewAnswer, question: InterviewQuestion):
     feedback:
       'Rule-based scoring active. Connect AI for more detailed technical feedback.',
     strengths: [
-      wordCount >= 50 ? 'Provided detailed response' : 'Clear and concise answer',
+      wordCount >= 50
+        ? 'Provided detailed response'
+        : 'Clear and concise answer',
       'Addressed the core question',
     ],
     improvements: [
-      wordCount < 30 ? 'Consider adding more technical detail' : 'Good depth of response',
+      wordCount < 30
+        ? 'Consider adding more technical detail'
+        : 'Good depth of response',
       'Discuss trade-offs and alternatives',
     ],
   };
@@ -226,17 +242,23 @@ export const InterviewSimulatorService = {
     question: InterviewQuestion
   ): Promise<InterviewScore> {
     try {
-      const response = await AIService.run(MOCK_EXAMPLES, 'evaluateEngineeringEnglish', {
-        modeId: 'roleplay_simulator',
-        modeName: 'Interview Simulator',
-        prompt: `Score this technical interview answer. Question: "${question.question}" Answer: "${answer.transcript}". Provide scores for technical accuracy, clarity, depth, and communication (0-100 each), plus overall score, feedback, strengths, and improvements.`,
-      });
+      const response = await AIService.run(
+        MOCK_EXAMPLES,
+        'evaluateEngineeringEnglish',
+        {
+          modeId: 'roleplay_simulator',
+          modeName: 'Interview Simulator',
+          prompt: `Score this technical interview answer. Question: "${question.question}" Answer: "${answer.transcript}". Provide scores for technical accuracy, clarity, depth, and communication (0-100 each), plus overall score, feedback, strengths, and improvements.`,
+        }
+      );
 
       const text = response.text;
       const scoreMatch = text.match(/Overall:\s*(\d+)/i);
       const overall = scoreMatch ? parseInt(scoreMatch[1], 10) : 75;
 
-      const strengthsMatch = text.match(/Strengths:\s*(.+?)(?=Improvements|$)/is);
+      const strengthsMatch = text.match(
+        /Strengths:\s*(.+?)(?=Improvements|$)/is
+      );
       const improvementsMatch = text.match(/Improvements:\s*(.+?)$/is);
 
       return {
@@ -247,10 +269,16 @@ export const InterviewSimulatorService = {
         overall,
         feedback: text.split('\n').slice(0, 3).join(' '),
         strengths: strengthsMatch
-          ? strengthsMatch[1].split(/[,.]/).map((s: string) => s.trim()).filter(Boolean)
+          ? strengthsMatch[1]
+              .split(/[,.]/)
+              .map((s: string) => s.trim())
+              .filter(Boolean)
           : ['Answered the question'],
         improvements: improvementsMatch
-          ? improvementsMatch[1].split(/[,.]/).map((s: string) => s.trim()).filter(Boolean)
+          ? improvementsMatch[1]
+              .split(/[,.]/)
+              .map((s: string) => s.trim())
+              .filter(Boolean)
           : ['Add more technical depth'],
       };
     } catch {

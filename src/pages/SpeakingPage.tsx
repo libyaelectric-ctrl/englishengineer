@@ -1,5 +1,11 @@
 import { lazy, useState } from 'react';
-import { FileText, Mic, RotateCcw, MessageSquareText, Trophy } from 'lucide-react';
+import {
+  FileText,
+  Mic,
+  RotateCcw,
+  MessageSquareText,
+  Trophy,
+} from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -222,13 +228,15 @@ const SpeakingPage = () => {
                         Written Roleplay response
                       </label>
                       <p className="mt-1 text-xs leading-5 text-muted-copy">
-                        This is text-based communication practice, not real speech
-                        or pronunciation scoring.
+                        This is text-based communication practice, not real
+                        speech or pronunciation scoring.
                       </p>
                       <textarea
                         id="written-roleplay-response"
                         value={typedTranscript}
-                        onChange={(event) => setTypedTranscript(event.target.value)}
+                        onChange={(event) =>
+                          setTypedTranscript(event.target.value)
+                        }
                         className="mt-3 min-h-48 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
                         placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                       />

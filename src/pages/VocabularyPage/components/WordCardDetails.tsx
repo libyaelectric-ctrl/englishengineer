@@ -1,5 +1,8 @@
 import { ChevronDown } from 'lucide-react';
-import { repairVocabularyText, type VocabularyTerm } from '@/features/vocabulary';
+import {
+  repairVocabularyText,
+  type VocabularyTerm,
+} from '@/features/vocabulary';
 
 interface WordCardDetailsProps {
   term: VocabularyTerm;
@@ -7,7 +10,11 @@ interface WordCardDetailsProps {
   onToggle: () => void;
 }
 
-export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetailsProps) => (
+export const WordCardDetails = ({
+  term,
+  showDetails,
+  onToggle,
+}: WordCardDetailsProps) => (
   <div className="mt-3 rounded-lg border border-border-soft bg-surface-hover p-3 text-xs text-muted-copy">
     <button
       type="button"
