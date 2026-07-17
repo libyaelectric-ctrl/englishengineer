@@ -15,14 +15,14 @@ export const ScoreComparison = ({ scoreResult }: ScoreComparisonProps) => (
   >
     <div className="space-y-4">
       <div className="space-y-1">
-        <div className="flex justify-between text-xs font-medium text-muted-copy">
+        <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           <span>Your Score</span>
           <span>{scoreResult.score}%</span>
         </div>
         <ProgressBar value={scoreResult.score} color="primary" />
       </div>
       <div className="space-y-1">
-        <div className="flex justify-between text-xs font-medium text-muted-copy">
+        <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           <span>Average Score</span>
           <span>72%</span>
         </div>

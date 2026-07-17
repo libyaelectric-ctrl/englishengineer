@@ -200,7 +200,7 @@ export const InterviewSimulator = () => {
 
   if (state === 'select') {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-in fade-in">
         <SectionCard
           title="Technical Interview Simulator"
           subtitle="Practice System Design and Coding interviews with AI scoring and voice recording"
@@ -210,17 +210,17 @@ export const InterviewSimulator = () => {
             <button
               type="button"
               onClick={() => handleTypeSelect('system-design')}
-              className="group rounded-xl border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
+              className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
             >
-              <Layers className="h-8 w-8 text-primary" />
-              <h3 className="mt-3 text-lg font-semibold text-foreground">
+              <Layers className="h-8 w-8 text-[#0047bb]" />
+              <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
                 System Design
               </h3>
-              <p className="mt-2 text-sm text-muted-copy">
+              <p className="mt-2 text-sm text-muted-copy font-normal">
                 Practice designing scalable systems. Cover architecture,
                 trade-offs, and technical decisions.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
+              <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
                 Start practice
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -229,17 +229,17 @@ export const InterviewSimulator = () => {
             <button
               type="button"
               onClick={() => handleTypeSelect('coding')}
-              className="group rounded-xl border border-border-soft bg-surface-hover p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5"
+              className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
             >
-              <Code className="h-8 w-8 text-primary" />
-              <h3 className="mt-3 text-lg font-semibold text-foreground">
+              <Code className="h-8 w-8 text-[#0047bb]" />
+              <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
                 Coding Interview
               </h3>
-              <p className="mt-2 text-sm text-muted-copy">
+              <p className="mt-2 text-sm text-muted-copy font-normal">
                 Solve coding problems aloud. Practice explaining your approach,
                 complexity, and edge cases.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-sm font-medium text-primary">
+              <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
                 Start practice
                 <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -252,20 +252,25 @@ export const InterviewSimulator = () => {
 
   if (state === 'results' && session) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-in fade-in">
         <SectionCard
           title="Interview Results"
           subtitle={`${session.type === 'system-design' ? 'System Design' : 'Coding'} interview completed`}
           icon={Trophy}
           footer={
-            <Button onClick={resetInterview}>
+            <Button
+              onClick={resetInterview}
+              className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
+            >
               <RotateCcw className="h-4 w-4" /> New Interview
             </Button>
           }
         >
           <div className="space-y-6">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-6 text-center">
-              <p className="text-sm font-medium text-primary">Overall Score</p>
+            <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center shadow-sm">
+              <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+                Overall Score
+              </p>
               <p className="mt-2 text-4xl font-bold text-foreground">
                 {overallScore}
                 <span className="text-lg text-muted-copy">/100</span>
@@ -278,78 +283,83 @@ export const InterviewSimulator = () => {
             {scores.map((score, i) => (
               <div
                 key={i}
-                className="rounded-lg border border-border-soft bg-surface-hover p-4"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <div>
-                    <p className="text-xs font-medium text-muted-copy">
+                    <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
                       Question {i + 1}
                     </p>
-                    <p className="mt-1 text-sm text-foreground">
+                    <p className="mt-1 text-sm text-foreground font-medium leading-relaxed">
                       {session.questions[i].question.slice(0, 80)}...
                     </p>
                   </div>
                   <span
-                    className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    className={`rounded-[4px] px-2.5 py-1 text-xs font-bold uppercase tracking-wider ${
                       score.overall >= 80
-                        ? 'bg-success/10 text-success'
+                        ? 'bg-success/10 text-success border border-success/20'
                         : score.overall >= 60
-                          ? 'bg-warning/10 text-warning'
-                          : 'bg-error/10 text-error'
+                          ? 'bg-warning/10 text-warning border border-warning/20'
+                          : 'bg-error/10 text-error border border-error/20'
                     }`}
                   >
                     {score.overall}
                   </span>
                 </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 border-t border-[#d9d9e3] pt-3">
                   {[
                     ['Technical', score.technicalAccuracy],
                     ['Clarity', score.clarity],
                     ['Depth', score.depth],
                     ['Communication', score.communication],
                   ].map(([label, value]) => (
-                    <div key={label} className="text-center">
-                      <p className="text-[10px] uppercase text-muted-copy">
+                    <div
+                      key={label}
+                      className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-[#d9d9e3]"
+                    >
+                      <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
                         {label}
                       </p>
-                      <p className="text-sm font-semibold text-foreground">
-                        {value}
+                      <p className="text-sm font-bold text-foreground mt-0.5">
+                        {value}%
                       </p>
                     </div>
                   ))}
                 </div>
-                <p className="mt-3 text-xs text-muted-copy">{score.feedback}</p>
+                <p className="mt-3 text-xs text-muted-copy font-medium leading-relaxed italic">
+                  &quot;{score.feedback}&quot;
+                </p>
                 {score.strengths.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-[10px] font-bold uppercase text-success">
+                  <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+                    <p className="text-[10px] font-bold uppercase text-success tracking-wider">
                       Strengths
                     </p>
-                    <ul className="mt-1 space-y-0.5">
+                    <ul className="mt-1 space-y-1">
                       {score.strengths.map((s, j) => (
                         <li
                           key={j}
-                          className="flex items-start gap-1.5 text-xs text-foreground"
+                          className="flex items-start gap-1.5 text-xs text-foreground font-medium"
                         >
-                          <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-success" />
-                          {s}
+                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                          <span>{s}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
                 {score.improvements.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-[10px] font-bold uppercase text-warning">
+                  <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+                    <p className="text-[10px] font-bold uppercase text-warning tracking-wider">
                       Improvements
                     </p>
-                    <ul className="mt-1 space-y-0.5">
+                    <ul className="mt-1 space-y-1">
                       {score.improvements.map((s, j) => (
                         <li
                           key={j}
-                          className="flex items-start gap-1.5 text-xs text-foreground"
+                          className="flex items-start gap-1.5 text-xs text-foreground font-medium"
                         >
-                          <span className="mt-1 h-1 w-1 shrink-0 rounded-full bg-warning" />
-                          {s}
+                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-warning" />
+                          <span>{s}</span>
                         </li>
                       ))}
                     </ul>
@@ -369,22 +379,23 @@ export const InterviewSimulator = () => {
     const isTimeUp = timeRemaining === 0;
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-in fade-in">
         <SectionCard
           title={`${session.type === 'system-design' ? 'System Design' : 'Coding'} Interview`}
           subtitle={`Question ${session.currentQuestionIndex + 1} of ${session.questions.length}`}
           icon={session.type === 'system-design' ? Layers : Code}
           headerActions={
             <div className="flex items-center gap-3">
-              <span className="text-sm font-mono text-muted-copy">
-                <Clock className="mr-1 inline h-3.5 w-3.5" />
+              <span className="text-sm font-mono text-muted-copy font-bold uppercase">
+                <Clock className="mr-1 inline h-3.5 w-3.5 text-[#0047bb]" />
                 {InterviewSimulatorService.formatTime(timeRemaining)}
               </span>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={resetInterview}
                 aria-label="Reset interview"
+                className="h-8 w-8 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
               >
                 <RotateCcw className="h-4 w-4" />
               </Button>
@@ -395,17 +406,17 @@ export const InterviewSimulator = () => {
             <ProgressBar value={progress} color="primary" showValue />
 
             <div
-              className={`rounded-xl border p-5 ${
+              className={`rounded-[4px] border p-5 shadow-sm ${
                 isTimeUp
-                  ? 'border-error/40 bg-error/5'
-                  : 'border-primary/20 bg-primary/5'
+                  ? 'border-rose-500/30 bg-rose-500/5'
+                  : 'border-[#0047bb]/25 bg-[#0047bb]/5'
               }`}
             >
-              <p className="text-xs font-medium uppercase text-primary">
+              <p className="text-xs font-bold uppercase text-[#0047bb] tracking-wider">
                 {currentQuestion.difficulty.toUpperCase()} ·{' '}
                 {currentQuestion.topics.join(', ')}
               </p>
-              <p className="mt-2 text-base leading-7 text-foreground">
+              <p className="mt-2 text-base leading-7 text-foreground font-normal">
                 {currentQuestion.question}
               </p>
             </div>
@@ -413,11 +424,11 @@ export const InterviewSimulator = () => {
             <div>
               <label
                 htmlFor="interview-answer"
-                className="block text-sm font-medium text-foreground"
+                className="block text-sm font-bold text-foreground uppercase tracking-wider"
               >
                 Your Answer
               </label>
-              <p className="mt-1 text-xs text-muted-copy">
+              <p className="mt-1 text-xs text-muted-copy font-medium">
                 Type your answer or use voice recording to speak your response.
               </p>
               <textarea
@@ -425,7 +436,7 @@ export const InterviewSimulator = () => {
                 value={currentAnswer}
                 onChange={(e) => setCurrentAnswer(e.target.value)}
                 disabled={isScoring}
-                className="mt-3 min-h-40 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10 disabled:opacity-50"
+                className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
                 placeholder={
                   isTimeUp
                     ? "Time's up! Submit your answer below."
@@ -439,6 +450,7 @@ export const InterviewSimulator = () => {
                 variant={isRecording ? 'danger' : 'secondary'}
                 onClick={toggleRecording}
                 disabled={isScoring || isTimeUp}
+                className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
               >
                 {isRecording ? (
                   <>
@@ -452,17 +464,18 @@ export const InterviewSimulator = () => {
               </Button>
 
               {isRecording && (
-                <span className="flex items-center gap-2 text-xs text-error">
-                  <span className="h-2 w-2 animate-pulse rounded-full bg-error" />
+                <span className="flex items-center gap-2 text-xs text-rose-600 font-bold uppercase tracking-wider animate-pulse">
+                  <span className="h-2.5 w-2.5 rounded-full bg-rose-600 shrink-0" />
                   Recording in progress...
                 </span>
               )}
             </div>
 
-            <div className="flex items-center gap-3 border-t border-border-soft pt-4">
+            <div className="flex items-center gap-3 border-t border-[#d9d9e3] pt-4">
               <Button
                 onClick={submitAnswer}
                 disabled={(!currentAnswer.trim() && !isTimeUp) || isScoring}
+                className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
               >
                 {isScoring
                   ? 'Scoring...'
@@ -471,7 +484,11 @@ export const InterviewSimulator = () => {
                     ? 'Submit & Finish'
                     : 'Submit & Next'}
               </Button>
-              <Button variant="ghost" onClick={resetInterview}>
+              <Button
+                variant="outline"
+                onClick={resetInterview}
+                className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+              >
                 <StopCircle className="h-4 w-4" /> End Interview
               </Button>
             </div>

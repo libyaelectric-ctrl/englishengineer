@@ -16,20 +16,20 @@ export const VoiceMinuteWallet = ({
   const isWarning = voiceMinutesUsedThisMonth >= 96;
 
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-      <Mic className="h-4 w-4 shrink-0 text-primary" />
+    <div className="flex items-center gap-4 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] px-4 py-3 shadow-sm">
+      <Mic className="h-4 w-4 shrink-0 text-[#0047bb]" />
       <div className="flex-1 min-w-0">
         <div className="flex justify-between text-xs mb-1">
-          <span className="font-medium text-foreground">
+          <span className="font-bold text-foreground uppercase tracking-wider text-[10px]">
             Monthly Voice Minutes
           </span>
           <span
-            className={`font-mono font-medium ${
+            className={`font-mono font-bold ${
               isOverQuota
                 ? 'text-rose-600'
                 : isWarning
                   ? 'text-warning'
-                  : 'text-primary'
+                  : 'text-[#0047bb]'
             }`}
           >
             {voiceMinutesUsedThisMonth} / {maxVoiceMinutes} min
@@ -39,7 +39,7 @@ export const VoiceMinuteWallet = ({
           value={walletPercent}
           color={isOverQuota ? 'rose' : isWarning ? 'warning' : 'primary'}
         />
-        <p className="mt-1 text-[10px] text-muted-copy">
+        <p className="mt-1 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
           {isOverQuota
             ? 'Monthly voice quota reached. Upgrade to Exec for unlimited minutes.'
             : `${maxVoiceMinutes - voiceMinutesUsedThisMonth} min remaining this month`}

@@ -29,7 +29,7 @@ export const EvaluationScores = ({
         ['Confidence', evaluationResult.confidenceScore],
       ].map(([label, value]) => (
         <div key={String(label)}>
-          <div className="mb-1 flex justify-between text-xs font-medium text-muted-copy">
+          <div className="mb-1 flex justify-between text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             <span>{label}</span>
             <span>{value}%</span>
           </div>
