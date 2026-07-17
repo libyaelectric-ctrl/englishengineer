@@ -6,6 +6,7 @@ import {
 } from './speaking.types';
 import { SpeakingService } from './speaking.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { logger } from '@/shared/logger';
 
 interface SpeakingStoreState {
   missions: SpeakingMission[];
@@ -166,7 +167,7 @@ export const useSpeakingStore = create<
         cefrLevel: mission?.cefrLevel ?? 'A1',
         vocabularyTerms: mission?.expectedKeywords,
         grammarHints: mission?.grammarTargets,
-      }).catch(() => undefined);
+      }).catch((err) => logger.d('KnowledgeCapture failed', err));
       set({
         evaluationResult: result,
         history: state.history,

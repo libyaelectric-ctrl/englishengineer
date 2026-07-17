@@ -2,7 +2,7 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
   try {
     // Check if AudioContext is supported
     const AudioContextClass =
-      window.AudioContext || (window as any).webkitAudioContext;
+      window.AudioContext ?? (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
 
     const ctx = new AudioContextClass();
