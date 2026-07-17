@@ -6,6 +6,7 @@ import {
 } from './listening.types';
 import { ListeningService } from './listening.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { logger } from '@/shared/logger';
 
 interface ListeningMissionsState {
   missions: ListeningMission[];
@@ -114,7 +115,7 @@ export const useListeningMissionsStore = create<
       void KnowledgeCaptureService.capture({
         cefrLevel: mission?.cefrLevel ?? 'A1',
         vocabularyTerms: mission?.vocabulary.map((item) => item.term),
-      }).catch(() => undefined);
+      }).catch((err) => logger.d('KnowledgeCapture failed', err));
 
       set({
         evaluationResult: result,

@@ -6,6 +6,7 @@ import {
 } from './reading.types';
 import { ReadingService } from './reading.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { logger } from '@/shared/logger';
 import type { KnowledgePoolEntry } from '@/core/content-selection/personalized-content.service';
 
 interface ReadingStoreState {
@@ -123,7 +124,7 @@ export const useReadingStore = create<ReadingStoreState & ReadingStoreActions>(
             ...(mission?.vocabulary.map((item) => item.term) ?? []),
             ...clickedVocab,
           ],
-        }).catch(() => undefined);
+        }).catch((err) => logger.d('KnowledgeCapture failed', err));
 
         set({
           evaluationResult: result,

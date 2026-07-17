@@ -82,7 +82,7 @@ class SupabaseTeamProvider implements TeamProvider {
     }
 
     const orgId = membership.organization_id;
-    const orgInfo = (membership as any).organizations;
+    const orgRecord = (membership as { organizations?: { name: string; created_by: string; created_at: string }[] })?.organizations?.[0];
 
     // 2. Fetch organization members
     const { data: members, error: membersError } = await supabase
@@ -203,9 +203,9 @@ class SupabaseTeamProvider implements TeamProvider {
       source: 'backend',
       organization: {
         id: orgId,
-        name: orgInfo?.name || 'Unnamed Team',
-        createdBy: orgInfo?.created_by || '',
-        createdAt: orgInfo?.created_at || new Date().toISOString(),
+        name: orgRecord?.name || 'Unnamed Team',
+        createdBy: orgRecord?.created_by || '',
+        createdAt: orgRecord?.created_at || new Date().toISOString(),
       },
       members: mappedMembers,
       summaries: mappedSummaries,

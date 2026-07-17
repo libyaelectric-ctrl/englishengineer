@@ -1,9 +1,10 @@
 import { TriangleAlert } from 'lucide-react';
 import { StatusPill } from './GrammarPageComponents';
+import { type LessonStatus } from './GrammarPageHelpers';
 
 type ReviewTarget = {
   rule: { id: string; title: string };
-  status: string;
+  status: LessonStatus;
 };
 
 export const GrammarReviewQueue = ({
@@ -27,7 +28,7 @@ export const GrammarReviewQueue = ({
         >
           <TriangleAlert className="h-3.5 w-3.5 shrink-0 text-warning" />
           <span className="truncate text-xs font-bold">{rule.title}</span>
-          <StatusPill status={status as any} compact />
+          <StatusPill status={status} compact />
         </button>
       ))}
     </div>

@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
-import { ReadingHelpers, VocabularyItem } from '@/features/reading';
+import { ReadingHelpers, VocabularyItem, type ReadingEvaluationResult } from '@/features/reading';
 import { ReadingTranslation } from '@/features/reading';
 import { ReadingEvaluationResults } from './ReadingEvaluationResults';
 
@@ -36,7 +36,7 @@ interface ReadingWorkspaceProps {
   answers: Record<string, string>;
   clickedVocab: string[];
   timeSpentSeconds: number;
-  evaluationResult: any;
+  evaluationResult: ReadingEvaluationResult | null;
   selectedWord: VocabularyItem | null;
   userErrors: Record<string, string>;
   setSelectedWord: (word: VocabularyItem | null) => void;

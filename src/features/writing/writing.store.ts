@@ -6,6 +6,7 @@ import {
 } from './writing.types';
 import { WritingService } from './writing.service';
 import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { logger } from '@/shared/logger';
 
 interface WritingStoreState {
   missions: WritingMission[];
@@ -116,7 +117,7 @@ export const useWritingStore = create<WritingStoreState & WritingStoreActions>(
           cefrLevel: mission?.cefrLevel ?? 'A1',
           vocabularyTerms: mission?.targetVocabulary,
           grammarHints: mission?.grammarFocus,
-        }).catch(() => undefined);
+        }).catch((err) => logger.d('KnowledgeCapture failed', err));
 
         set({
           evaluationResult: result,

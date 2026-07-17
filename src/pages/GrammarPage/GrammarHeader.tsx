@@ -5,10 +5,11 @@ import {
   Circle,
 } from 'lucide-react';
 import { StatusPill } from './GrammarPageComponents';
+import { type LessonStatus } from './GrammarPageHelpers';
 
 type PathEntry = {
   rule: { id: string; title: string; grammarCategory: string };
-  status: string;
+  status: LessonStatus;
 };
 
 type PathGroup = {
@@ -130,7 +131,7 @@ export const GrammarHeader = ({
                             ) : (
                               <Circle className="h-3.5 w-3.5 shrink-0 text-muted-copy" />
                             )}
-                            <StatusPill status={status as any} compact />
+                            <StatusPill status={status} compact />
                           </span>
                         </button>
                       );
