@@ -14,6 +14,9 @@ const supabaseReadyAdapter = new SupabaseReadyAuthAdapter(
   localAdapter,
   AUTH_CONFIG.supabase
 );
+const supabaseMisconfigured =
+  AUTH_CONFIG.requestedProvider === 'supabase' && !AUTH_CONFIG.isSupabaseReady;
+
 const activeAdapter: AuthAdapter = (() => {
   if (AUTH_CONFIG.requestedProvider !== 'supabase') {
     if (!AUTH_CONFIG.localAuthAllowed) {
@@ -24,18 +27,19 @@ const activeAdapter: AuthAdapter = (() => {
     return localAdapter;
   }
 
-  if (
-    !AUTH_CONFIG.isSupabaseReady ||
-    !AUTH_CONFIG.supabase.url ||
-    !AUTH_CONFIG.supabase.anonKey
-  ) {
-    logger.w(
-      'Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.'
+  if (supabaseMisconfigured) {
+    logger.e(
+      'Supabase auth requested but key/URL is invalid. Authentication disabled until corrected.'
     );
     return localAdapter;
   }
 
-  return new SupabaseAuthAdapter();
+  try {
+    return new SupabaseAuthAdapter();
+  } catch (e) {
+    logger.e('Failed to initialize Supabase adapter, falling back to local.', e);
+    return localAdapter;
+  }
 })();
 
 const syncAfterAuth = async (
@@ -75,12 +79,22 @@ export const AuthService = {
   },
 
   async login(displayName: string, email: string, password?: string) {
+    if (supabaseMisconfigured) {
+      throw new Error(
+        'Authentication is temporarily unavailable. The Supabase configuration is invalid. Please contact support.'
+      );
+    }
     const user = await activeAdapter.login(displayName, email, password);
     await syncAfterAuth(user, 'auth-state-ready');
     return user;
   },
 
   async signUp(displayName: string, email: string, password: string) {
+    if (supabaseMisconfigured) {
+      throw new Error(
+        'Registration is temporarily unavailable. The Supabase configuration is invalid. Please contact support.'
+      );
+    }
     const user = activeAdapter.signUp
       ? await activeAdapter.signUp(displayName, email, password)
       : await activeAdapter.login(displayName, email);
