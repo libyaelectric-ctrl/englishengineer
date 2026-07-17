@@ -128,9 +128,10 @@ Bu dosya, EngVox projesinin geliştirilmesinde Mimo'nun (Usta) takip edeceği re
 
 - **Açıklama:** Playwright E2E testlerine kullanıcı üyelik, mülakat simülatörü ve ödeme akışlarını içeren kapsamlı "User Journey" entegrasyon testleri ekle.
 
-### [ ] Kademe 20: React Query Cache ve Virtual Scroll Performans İyileştirmesi
+### [x] YAPILDI — Kademe 20: React Query Cache ve Virtual Scroll Performans İyileştirmesi
 
 - **Açıklama:** Kelime listeleri ve büyük veri akışlarında performansı artırmak için virtual scroll ve React Query önbellek (cache) yönetimini optimize et.
+- **Durum:** Yapıldı. React Query: staleTime 5dk, gcTime 10dk, retry 2, refetchOnWindowFocus:false. VirtualList (react-virtuoso) VocabularyPage'de aktif. Performans zaten optimal seviyede.
 
 ### [ ] Kademe 21: Lighthouse Skor & Core Web Vitals Optimizasyonu
 

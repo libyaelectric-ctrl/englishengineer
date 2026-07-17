@@ -14,13 +14,16 @@ export const GrammarHeader = ({
 }) => (
   <header className="sticky top-0 z-20 -mx-4 border-b border-border-soft bg-background/95 px-4 py-3 shadow-sm backdrop-blur sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
     <div className="flex items-center justify-between">
-      <div className="min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-wide text-primary">
-          {level} Grammar Path
-        </p>
-        <h1 className="mt-0.5 truncate text-sm font-black tracking-tight sm:text-base">
-          Learn grammar by building real engineering sentences
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl font-black tracking-tight text-foreground">
+          Grammar
         </h1>
+        <span className="rounded-full border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold text-foreground">
+          {level}
+        </span>
+      </div>
+      <div className="hidden text-xs text-muted-copy lg:block">
+        Learn grammar by building real engineering sentences
       </div>
     </div>
 

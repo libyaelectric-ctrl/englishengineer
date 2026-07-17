@@ -29,7 +29,11 @@ export const startSpan = (name: string, traceId: string): string => {
   return spanId;
 };
 
-export const endSpan = (spanId: string, status: string = 'ok', error: Error | null = null): TraceSpan | undefined => {
+export const endSpan = (
+  spanId: string,
+  status: string = 'ok',
+  error: Error | null = null
+): TraceSpan | undefined => {
   const span = spans.get(spanId);
   if (span) {
     span.end = Date.now();
@@ -40,7 +44,9 @@ export const endSpan = (spanId: string, status: string = 'ok', error: Error | nu
   return span;
 };
 
-export const getTraceContext = (req: { headers: Record<string, string | string[] | undefined> }): { traceId: string } => {
+export const getTraceContext = (req: {
+  headers: Record<string, string | string[] | undefined>;
+}): { traceId: string } => {
   const traceId = (req.headers['x-trace-id'] as string) || createTraceId();
   return { traceId };
 };

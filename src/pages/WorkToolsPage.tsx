@@ -136,39 +136,61 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {tab === 'templates' && (
         <div className="grid gap-5 xl:grid-cols-2">
           {templates.map((item) => (
-            <Card key={item.id} className="space-y-4">
+            <Card
+              key={item.id}
+              className="space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-center justify-between border-b border-border-soft pb-2">
+                <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
+                  {item.id.toUpperCase()} // TEMPLATE
+                </span>
+                <span className="flex gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                </span>
+              </div>
               <div>
-                <p className="text-xs font-medium uppercase tracking-widest text-primary">
-                  Engineering workflow
+                <p className="text-xs font-black uppercase tracking-wider text-muted-copy">
+                  Workflow Specification
                 </p>
-                <h2 className="mt-1 text-xl font-medium text-foreground">
+                <h2 className="mt-1 text-base font-black tracking-tight text-foreground">
                   {item.title}
                 </h2>
-                <p className="mt-2 text-sm leading-6 text-muted-copy">
+                <p className="mt-1 text-xs leading-relaxed text-muted-copy">
                   {item.context}
                 </p>
               </div>
-              <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
-                <p className="text-xs font-medium text-muted-copy">
-                  Sample input
-                </p>
-                <p className="mt-2 text-sm text-foreground">
-                  {item.sampleInput}
+
+              <div className="space-y-3">
+                <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                    [TECHNICAL CONTEXT]
+                  </p>
+                  <p className="mt-1.5 text-xs text-foreground font-medium">
+                    {item.sampleInput}
+                  </p>
+                </div>
+
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+                    [ORCHESTRATED PRODUCTION PHRASE]
+                  </p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-foreground font-semibold">
+                    {item.professionalOutput}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-t border-border-soft pt-3">
+                <p className="text-xs text-muted-copy leading-5">
+                  <strong className="text-foreground font-black">
+                    Türkçe Açıklama:
+                  </strong>{' '}
+                  {item.turkishExplanation}
                 </p>
               </div>
-              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-                <p className="text-xs font-medium text-primary">
-                  Professional output
-                </p>
-                <p className="mt-2 text-sm leading-6 text-foreground">
-                  {item.professionalOutput}
-                </p>
-              </div>
-              <p className="text-sm text-muted-copy">
-                <strong className="text-foreground">Turkce:</strong>{' '}
-                {item.turkishExplanation}
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 pt-1">
                 <Button
                   variant="secondary"
                   onClick={() => copy(item.id, item.professionalOutput)}
@@ -202,57 +224,83 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {tab === 'emails' && (
         <div className="grid gap-5 xl:grid-cols-2">
           {emails.map((item) => (
-            <Card key={item.id} className="space-y-4">
-              <h2 className="text-xl font-medium text-foreground">
-                {item.title}
-              </h2>
-              {(
-                [
-                  ['Short', item.shortVersion],
-                  ['Professional', item.professionalVersion],
-                  ['Polite', item.politeVersion],
-                  ['Technical', item.technicalVersion],
-                ] as const
-              ).map(([label, text]) => (
-                <details
-                  key={label}
-                  className="rounded-lg border border-border-soft bg-surface-hover open:bg-surface"
-                >
-                  <summary className="cursor-pointer px-4 py-3 text-sm font-medium text-foreground">
-                    {label} version
-                  </summary>
-                  <div className="space-y-3 border-t border-border-soft p-4">
-                    <p className="whitespace-pre-line text-sm leading-6 text-foreground">
-                      {text}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <Button
-                        variant="secondary"
-                        onClick={() => copy(`${item.id}-${label}`, text)}
-                      >
-                        <Clipboard className="h-4 w-4" /> Copy
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() =>
-                          openQuickAI(
-                            item.id,
-                            'email-template',
-                            `${item.title} - ${label}`,
-                            text
-                          )
-                        }
-                      >
-                        <Bot className="h-4 w-4" /> Send to Quick AI
-                      </Button>
+            <Card
+              key={item.id}
+              className="space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300"
+            >
+              <div className="flex items-center justify-between border-b border-border-soft pb-2">
+                <span className="font-mono text-[9px] uppercase tracking-widest text-secondary font-bold bg-secondary/5 px-2 py-0.5 rounded">
+                  {item.id.toUpperCase()} // EMAIL
+                </span>
+                <span className="flex gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                </span>
+              </div>
+              <div>
+                <p className="text-xs font-black uppercase tracking-wider text-muted-copy">
+                  Communication Spec
+                </p>
+                <h2 className="mt-1 text-base font-black tracking-tight text-foreground">
+                  {item.title}
+                </h2>
+              </div>
+
+              <div className="space-y-3">
+                {(
+                  [
+                    ['Short', item.shortVersion],
+                    ['Professional', item.professionalVersion],
+                    ['Polite', item.politeVersion],
+                    ['Technical', item.technicalVersion],
+                  ] as const
+                ).map(([label, text]) => (
+                  <details
+                    key={label}
+                    className="rounded-lg border border-border-soft bg-surface-hover open:bg-surface"
+                  >
+                    <summary className="cursor-pointer px-4 py-3 text-xs font-bold text-foreground flex items-center justify-between">
+                      <span>[VERSION: {label.toUpperCase()}]</span>
+                    </summary>
+                    <div className="space-y-3 border-t border-border-soft p-4 bg-background">
+                      <p className="whitespace-pre-line text-xs leading-relaxed text-foreground font-medium">
+                        {text}
+                      </p>
+                      <div className="flex flex-wrap gap-2 pt-2 border-t border-border-soft">
+                        <Button
+                          variant="secondary"
+                          onClick={() => copy(`${item.id}-${label}`, text)}
+                        >
+                          <Clipboard className="h-4 w-4" /> Copy
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            openQuickAI(
+                              item.id,
+                              'email-template',
+                              `${item.title} - ${label}`,
+                              text
+                            )
+                          }
+                        >
+                          <Bot className="h-4 w-4" /> Send to Quick AI
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </details>
-              ))}
-              <p className="text-sm text-muted-copy">
-                <strong className="text-foreground">Turkce:</strong>{' '}
-                {item.turkishExplanation}
-              </p>
+                  </details>
+                ))}
+              </div>
+
+              <div className="border-t border-border-soft pt-3">
+                <p className="text-xs text-muted-copy leading-5">
+                  <strong className="text-foreground font-black">
+                    Türkçe Açıklama:
+                  </strong>{' '}
+                  {item.turkishExplanation}
+                </p>
+              </div>
             </Card>
           ))}
         </div>
@@ -263,43 +311,65 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           {phrases.map((item) => {
             const favorite = favoritePhraseIds.includes(item.id);
             return (
-              <Card key={item.id} className="space-y-3" hoverEffect>
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-widest text-primary">
-                      {item.category}
-                    </p>
-                    <h2 className="mt-1 text-lg font-medium leading-7 text-foreground">
-                      {item.phrase}
-                    </h2>
+              <Card
+                key={item.id}
+                className="space-y-3 border-l-4 border-l-cyan-500 shadow-sm hover:shadow-md transition-all duration-300"
+                hoverEffect
+              >
+                <div className="flex items-center justify-between border-b border-border-soft pb-2">
+                  <span className="font-mono text-[9px] uppercase tracking-widest text-cyan-500 font-bold bg-cyan-500/5 px-2 py-0.5 rounded">
+                    {item.category.toUpperCase()}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      className="px-2 py-1"
+                      onClick={() => toggleFavorite(item.id)}
+                      aria-label={
+                        favorite ? 'Remove favorite' : 'Save favorite'
+                      }
+                    >
+                      <Heart
+                        className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
+                      />
+                    </Button>
+                    <span className="flex gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-green-400" />
+                    </span>
                   </div>
+                </div>
+                <div>
+                  <h2 className="text-sm font-black leading-relaxed text-foreground">
+                    {item.phrase}
+                  </h2>
+                </div>
+                <div className="space-y-2 pt-1">
+                  <p className="text-xs text-foreground">
+                    <strong className="text-foreground font-black">
+                      Türkçe:
+                    </strong>{' '}
+                    {item.turkishMeaning}
+                  </p>
+                  <p className="text-xs text-muted-copy">
+                    <strong className="text-foreground font-black">
+                      Target Usage:
+                    </strong>{' '}
+                    {item.usageContext}
+                  </p>
+                  <p className="rounded-lg border border-border-soft bg-surface-hover p-3 text-xs italic text-foreground leading-relaxed">
+                    {item.example}
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-border-soft">
                   <Button
-                    variant="ghost"
-                    className="px-3"
-                    onClick={() => toggleFavorite(item.id)}
-                    aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
+                    variant="secondary"
+                    onClick={() => copy(item.id, item.phrase)}
                   >
-                    <Heart
-                      className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
-                    />
+                    <Clipboard className="h-4 w-4" /> Copy Phrase
                   </Button>
                 </div>
-                <p className="text-sm text-foreground">
-                  <strong>Turkce:</strong> {item.turkishMeaning}
-                </p>
-                <p className="text-sm text-muted-copy">
-                  <strong className="text-foreground">Use:</strong>{' '}
-                  {item.usageContext}
-                </p>
-                <p className="rounded-lg border border-border-soft bg-surface-hover p-3 text-sm italic text-foreground">
-                  {item.example}
-                </p>
-                <Button
-                  variant="secondary"
-                  onClick={() => copy(item.id, item.phrase)}
-                >
-                  <Clipboard className="h-4 w-4" /> Copy phrase
-                </Button>
               </Card>
             );
           })}

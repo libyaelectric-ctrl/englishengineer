@@ -10,7 +10,11 @@ interface SlowQueryRecord {
 const slowQueries: SlowQueryRecord[] = [];
 const SLOW_THRESHOLD_MS = 500;
 
-export const logQuery = (query: string | unknown, durationMs: number, meta: Record<string, unknown> = {}): void => {
+export const logQuery = (
+  query: string | unknown,
+  durationMs: number,
+  meta: Record<string, unknown> = {}
+): void => {
   if (durationMs >= SLOW_THRESHOLD_MS) {
     const record: SlowQueryRecord = {
       timestamp: new Date().toISOString(),
