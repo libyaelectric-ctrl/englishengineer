@@ -99,7 +99,7 @@ export const SiteDictionaryTab = () => {
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-surface px-4 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10">
+        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white px-4 focus-within:border-[#0047bb] shadow-sm">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search site dictionary</span>
           <input
@@ -110,7 +110,7 @@ export const SiteDictionaryTab = () => {
               if (event.key === 'Enter') rememberSearch(query);
             }}
             placeholder="Search English, Turkish or category"
-            className="w-full bg-transparent text-sm outline-none"
+            className="w-full bg-transparent text-sm outline-none text-foreground"
           />
         </label>
         <Button
@@ -124,7 +124,7 @@ export const SiteDictionaryTab = () => {
             }
             setIsAddingTerm(true);
           }}
-          className="gap-1.5 h-11 bg-primary text-white font-medium"
+          className="gap-1.5 h-11 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {!hasProjectAccess && (
@@ -135,15 +135,15 @@ export const SiteDictionaryTab = () => {
       </div>
 
       {isAddingTerm && (
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-4 animate-in fade-in duration-300">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-foreground">
+        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-5 space-y-4 shadow-sm animate-in fade-in duration-300">
+          <div className="flex items-center justify-between border-b border-[#0047bb]/20 pb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0047bb]">
               Add Custom Terminology
             </h3>
             <button
               type="button"
               onClick={() => setIsAddingTerm(false)}
-              className="text-muted-copy hover:text-foreground"
+              className="text-muted-copy hover:text-foreground cursor-pointer"
             >
               <X className="h-4 w-4" />
             </button>
@@ -155,21 +155,21 @@ export const SiteDictionaryTab = () => {
               placeholder="Term (e.g. Grounding grid)"
               value={newTerm}
               onChange={(e) => setNewTerm(e.target.value)}
-              className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Turkish Meaning (e.g. Topraklama ağı)"
               value={newMeaning}
               onChange={(e) => setNewMeaning(e.target.value)}
-              className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Category (e.g. electrical, civil)"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
           </div>
 
@@ -179,14 +179,14 @@ export const SiteDictionaryTab = () => {
               value={newExplanation}
               onChange={(e) => setNewExplanation(e.target.value)}
               rows={2}
-              className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+              className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
               value={newExample}
               onChange={(e) => setNewExample(e.target.value)}
-              className="w-full rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+              className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input
@@ -194,20 +194,22 @@ export const SiteDictionaryTab = () => {
                 placeholder="Common Wrong Usage (e.g. ground grid)"
                 value={newWrongUsage}
                 onChange={(e) => setNewWrongUsage(e.target.value)}
-                className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
               />
               <input
                 type="text"
                 placeholder="Related Terms (comma-separated)"
                 value={newRelated}
                 onChange={(e) => setNewRelated(e.target.value)}
-                className="rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
               />
             </div>
           </div>
 
           {termError && (
-            <p className="text-xs font-medium text-error">{termError}</p>
+            <p className="text-xs font-bold text-error uppercase tracking-wider">
+              {termError}
+            </p>
           )}
 
           <div className="flex justify-end gap-2">
@@ -215,13 +217,14 @@ export const SiteDictionaryTab = () => {
               type="button"
               variant="outline"
               onClick={() => setIsAddingTerm(false)}
+              className="h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm"
             >
               Cancel
             </Button>
             <Button
               type="button"
               onClick={handleAddTerm}
-              className="bg-primary text-white font-medium"
+              className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
             >
               Add to Scope
             </Button>
@@ -233,52 +236,66 @@ export const SiteDictionaryTab = () => {
         {filteredTerms.map((item) => {
           const favorite = favoritePhraseIds.includes(item.id);
           return (
-            <Card key={item.id} className="space-y-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-medium uppercase tracking-widest text-primary">
-                    {item.category}
-                  </p>
-                  <h2 className="mt-1 text-xl font-medium text-foreground">
-                    {item.term}
-                  </h2>
-                  <p className="text-sm font-medium text-foreground">
-                    {item.turkishMeaning}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {item.isCustom && (
+            <Card
+              key={item.id}
+              className="p-5 space-y-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              hoverEffect={false}
+            >
+              <div>
+                <div className="flex items-start justify-between border-b border-[#d9d9e3] pb-2">
+                  <div>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                      {item.category}
+                    </p>
+                    <h2 className="mt-1 text-sm font-bold text-foreground">
+                      {item.term}
+                    </h2>
+                    <p className="text-xs font-semibold text-foreground mt-0.5">
+                      {item.turkishMeaning}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {item.isCustom && (
+                      <Button
+                        variant="ghost"
+                        className="px-2 text-error hover:bg-error/10 h-8 w-8 inline-flex items-center justify-center rounded-[4px]"
+                        onClick={() => handleDeleteTerm(item.id)}
+                        aria-label="Delete custom term"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                     <Button
                       variant="ghost"
-                      className="px-2.5 text-error hover:bg-error/10"
-                      onClick={() => handleDeleteTerm(item.id)}
-                      aria-label="Delete custom term"
+                      className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-[#faf8ff]"
+                      onClick={() => toggleFavorite(item.id)}
+                      aria-label={
+                        favorite ? 'Remove favorite' : 'Save favorite'
+                      }
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Heart
+                        className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : 'text-muted-copy'}`}
+                      />
                     </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    className="px-3"
-                    onClick={() => toggleFavorite(item.id)}
-                    aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
-                  >
-                    <Heart
-                      className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
-                    />
-                  </Button>
+                  </div>
+                </div>
+                <div className="mt-3 space-y-2">
+                  <p className="text-xs leading-5 text-muted-copy font-medium">
+                    {item.technicalExplanation}
+                  </p>
+                  <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs text-foreground font-medium shadow-sm">
+                    <strong className="text-foreground">Site:</strong>{' '}
+                    {item.siteExample}
+                  </p>
+                  <p className="text-xs text-warning font-medium">
+                    <strong className="text-foreground font-bold">
+                      Common mistake:
+                    </strong>{' '}
+                    {item.commonWrongUsage}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm leading-6 text-muted-copy">
-                {item.technicalExplanation}
-              </p>
-              <p className="rounded-xl border border-border-soft bg-surface-hover p-3 text-sm text-foreground">
-                <strong>Site:</strong> {item.siteExample}
-              </p>
-              <p className="text-sm text-warning">
-                <strong>Common mistake:</strong> {item.commonWrongUsage}
-              </p>
-              <p className="text-xs font-medium text-muted-copy">
+              <p className="mt-3 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                 Related: {item.relatedTerms.join(', ')}
               </p>
             </Card>

@@ -21,12 +21,12 @@ export const ProviderStatusPanel = ({
   isBuyingCredits,
   onBuyCredits,
 }: ProviderStatusPanelProps) => (
-  <div className="premium-panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between font-sans">
+  <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm font-sans">
     <div>
-      <p className="text-sm font-medium text-foreground">
+      <p className="text-sm font-bold text-foreground">
         {providerStatus.label}
       </p>
-      <p className="text-xs text-muted-copy mt-1">
+      <p className="text-xs text-muted-copy mt-1 font-medium">
         {providerStatus.state === 'mock-fallback'
           ? 'Mock AI is active for this demo. Secure AI feedback is not connected.'
           : providerStatus.detail}{' '}
@@ -34,7 +34,7 @@ export const ProviderStatusPanel = ({
       </p>
       {typeof subscription.topupCredits === 'number' &&
         subscription.topupCredits > 0 && (
-          <p className="text-xs text-emerald-500 font-medium mt-2 flex items-center gap-1">
+          <p className="text-xs text-emerald-600 font-bold mt-2 flex items-center gap-1 uppercase tracking-wider">
             ✓ Active Top-up Credits: {subscription.topupCredits} requests
             remaining
           </p>
@@ -47,19 +47,24 @@ export const ProviderStatusPanel = ({
     </div>
     <div className="flex flex-col sm:items-end gap-2 shrink-0">
       <div className="flex flex-wrap gap-2">
-        <StatusBadge label={AI_ACCESS_POLICY.freeAccess} tone="info" />
+        <StatusBadge
+          label={AI_ACCESS_POLICY.freeAccess}
+          tone="info"
+          className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+        />
         <StatusBadge
           label={
             providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
           }
           tone={providerTone}
+          className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
         />
       </div>
       <Button
         type="button"
         onClick={onBuyCredits}
         disabled={isBuyingCredits}
-        className="text-[11px] font-medium bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 hover:bg-emerald-500/20 h-7 px-3 flex items-center gap-1 mt-1 rounded-card transition-all"
+        className="h-8 rounded-[4px] border border-emerald-500/25 bg-emerald-500/5 hover:bg-emerald-500/10 text-[10px] font-bold uppercase tracking-wider text-emerald-600 cursor-pointer shadow-sm gap-1 transition-all mt-1 px-3 inline-flex items-center justify-center"
       >
         {isBuyingCredits ? 'Processing...' : '+ Buy 50 AI Credits ($5)'}
       </Button>
