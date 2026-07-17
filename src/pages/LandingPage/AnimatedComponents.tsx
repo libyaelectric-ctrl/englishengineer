@@ -100,10 +100,10 @@ export function AnimatedCard({
     <div
       ref={setRefs}
       onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden rounded-2xl transition-colors duration-300 ${className}`}
+      className={`group relative overflow-hidden rounded-[4px] transition-colors duration-300 ${className}`}
       style={{
-        background: dark ? '#111111' : 'rgba(255,255,255,0.92)',
-        border: dark ? '1px solid #111111' : '1px solid rgba(17,17,17,0.08)',
+        background: dark ? '#111111' : 'rgba(255,255,255,0.6)',
+        border: dark ? '1px solid #111111' : '1px solid #d9d9e3',
         color: dark ? '#ffffff' : '#111111',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
@@ -142,10 +142,10 @@ export function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-full bg-black/[0.05] px-3 py-1 text-[11px] font-medium uppercase text-muted-copy">
+      <span className="inline-flex rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy">
         {eyebrow}
       </span>
-      <h2 className="mt-5 text-3xl font-light leading-[1.05] text-[#111] md:text-5xl">
+      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#111] md:text-5xl">
         {title}
       </h2>
       {desc ? (
