@@ -83,7 +83,9 @@ export const callAnthropic = async (
     );
   }
   const payload = await response.json();
-  const text = payload?.content?.find((item: any) => item?.type === 'text')?.text;
+  const text = payload?.content?.find(
+    (item: any) => item?.type === 'text'
+  )?.text;
   if (typeof text !== 'string' || !text.trim()) {
     throw new ApiError(
       502,

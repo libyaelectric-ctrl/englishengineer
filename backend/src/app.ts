@@ -1,5 +1,9 @@
 import cors from 'cors';
-import express, { type Request, type Response, type NextFunction } from 'express';
+import express, {
+  type Request,
+  type Response,
+  type NextFunction,
+} from 'express';
 import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
 import { createAIService, registerAIRoutes } from './ai.js';
@@ -118,7 +122,10 @@ export const createApp = ({
 
   app.use(
     cors({
-      origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      origin: (
+        origin: string | undefined,
+        callback: (err: Error | null, allow?: boolean) => void
+      ) => {
         if (!origin || allowedOrigins.includes(origin)) {
           callback(null, true);
         } else {
@@ -209,7 +216,10 @@ export const createApp = ({
         const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
           headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
         });
-        const pingRes = await Promise.race([pingPromise, timeoutPromise]) as globalThis.Response;
+        const pingRes = (await Promise.race([
+          pingPromise,
+          timeoutPromise,
+        ])) as globalThis.Response;
         checks.rateLimit = { configured: true, reachable: pingRes.ok };
         if (!pingRes.ok) {
           health.status = 'degraded';
@@ -232,7 +242,9 @@ export const createApp = ({
   v1Router.get('/health', healthHandler);
   app.get('/api/health', healthHandler);
 
-  app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
+  app.get('/api-docs.json', (_req: Request, res: Response) =>
+    res.json(swaggerSpec)
+  );
   app.get('/api-docs', (_req: Request, res: Response) => {
     res.send(
       `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
@@ -248,7 +260,10 @@ export const createApp = ({
     }
   );
 
-  const backendAuth = createBackendAuth({ ...config.auth, environment: config.environment } as any, fetchImpl);
+  const backendAuth = createBackendAuth(
+    { ...config.auth, environment: config.environment } as any,
+    fetchImpl
+  );
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
   const aiRateLimiter = createRateLimiter({
     windowMs: config.ai.rateLimitWindowMs,
@@ -296,7 +311,11 @@ export const createApp = ({
 
   registerVocabularyRoutes(
     app,
-    createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as any),
+    createVocabularyLookupService(
+      config.vocabulary,
+      fetchImpl,
+      vocabCache as any
+    ),
     vocabularyRateLimiter
   );
   registerBillingRoutes(
@@ -312,7 +331,8 @@ export const createApp = ({
     billingRateLimiter,
     optionalBackendAuth
   );
-  let resolvedWorkspaceRepository: WorkspaceRepository | null = workspaceRepository ?? null;
+  let resolvedWorkspaceRepository: WorkspaceRepository | null =
+    workspaceRepository ?? null;
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
       resolvedWorkspaceRepository = createWorkspaceRepository(
@@ -376,20 +396,22 @@ export const createApp = ({
   app.use((_request: Request, _response: Response, next: NextFunction) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
-  app.use((error: any, request: Request, response: Response, _next: NextFunction) => {
-    logger.error('Unhandled API error', { path: request.path }, error);
-    if (config.sentry?.dsn) {
-      Sentry.captureException(error);
-    }
-    const mapped = toErrorResponse(error);
-    if ((request as any).i18n && mapped.body?.error?.code) {
-      const translated = (request as any).i18n.t(mapped.body.error.code);
-      if (translated !== mapped.body.error.code) {
-        mapped.body.error.message = translated;
+  app.use(
+    (error: any, request: Request, response: Response, _next: NextFunction) => {
+      logger.error('Unhandled API error', { path: request.path }, error);
+      if (config.sentry?.dsn) {
+        Sentry.captureException(error);
       }
+      const mapped = toErrorResponse(error);
+      if ((request as any).i18n && mapped.body?.error?.code) {
+        const translated = (request as any).i18n.t(mapped.body.error.code);
+        if (translated !== mapped.body.error.code) {
+          mapped.body.error.message = translated;
+        }
+      }
+      response.status(mapped.status).json(mapped.body);
     }
-    response.status(mapped.status).json(mapped.body);
-  });
+  );
 
   return app;
 };

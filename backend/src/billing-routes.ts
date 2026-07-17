@@ -32,7 +32,9 @@ export const registerBillingRoutes = (
           userId: userId || undefined,
           details: { planId: req.body?.planId },
         });
-        res.json(await billingService.createCheckoutSession(userId || '', req.body));
+        res.json(
+          await billingService.createCheckoutSession(userId || '', req.body)
+        );
       } catch (error) {
         next(error);
       }
@@ -53,7 +55,10 @@ export const registerBillingRoutes = (
           details: { type: 'topup', credits: 50 },
         });
         res.json(
-          await billingService.createTopupCheckoutSession(userId || '', req.body)
+          await billingService.createTopupCheckoutSession(
+            userId || '',
+            req.body
+          )
         );
       } catch (error) {
         next(error);
@@ -78,7 +83,11 @@ export const registerBillingRoutes = (
       }
     }
   );
-  const subscriptionStatusHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const subscriptionStatusHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       res.json(
         await billingService.getSubscriptionStatus(assertUserOwnership(req))
@@ -88,7 +97,11 @@ export const registerBillingRoutes = (
     }
   };
 
-  const publicSubscriptionStatusAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const publicSubscriptionStatusAuth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       await optionalBackendAuth(req, res, next);
     } catch {
@@ -109,41 +122,46 @@ export const registerBillingRoutes = (
     rateLimiter,
     subscriptionStatusHandler
   );
-  app.post('/api/webhooks/stripe', async (req: Request, res: Response, next: NextFunction) => {
-    let eventId = 'unknown';
-    let eventType = 'unknown';
-    try {
-      if (req.body) {
-        const parsedBody = JSON.parse(req.body.toString('utf8'));
-        if (parsedBody && typeof parsedBody === 'object') {
-          eventId = parsedBody.id || 'unknown';
-          eventType = parsedBody.type || 'unknown';
+  app.post(
+    '/api/webhooks/stripe',
+    async (req: Request, res: Response, next: NextFunction) => {
+      let eventId = 'unknown';
+      let eventType = 'unknown';
+      try {
+        if (req.body) {
+          const parsedBody = JSON.parse(req.body.toString('utf8'));
+          if (parsedBody && typeof parsedBody === 'object') {
+            eventId = parsedBody.id || 'unknown';
+            eventType = parsedBody.type || 'unknown';
+          }
+        }
+      } catch (err: any) {
+        if (process.env.NODE_ENV !== 'production') {
+          logger.warn('Stripe webhook log parse error', {
+            error: err?.message,
+          });
         }
       }
-    } catch (err: any) {
-      if (process.env.NODE_ENV !== 'production') {
-        logger.warn('Stripe webhook log parse error', { error: err?.message });
+
+      auditLog({
+        action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
+        details: { eventId, eventType },
+      });
+
+      try {
+        res.json(
+          await billingService.processWebhook(
+            req.body,
+            req.headers['stripe-signature'] as string | undefined,
+            (step: string, evId: string, evType: string) => {
+              if (evId) eventId = evId;
+              if (evType) eventType = evType;
+            }
+          )
+        );
+      } catch (error) {
+        next(error);
       }
     }
-
-    auditLog({
-      action: AUDIT_ACTIONS.WEBHOOK_RECEIVED,
-      details: { eventId, eventType },
-    });
-
-    try {
-      res.json(
-        await billingService.processWebhook(
-          req.body,
-          req.headers['stripe-signature'] as string | undefined,
-          (step: string, evId: string, evType: string) => {
-            if (evId) eventId = evId;
-            if (evType) eventType = evType;
-          }
-        )
-      );
-    } catch (error) {
-      next(error);
-    }
-  });
+  );
 };

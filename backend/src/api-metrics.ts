@@ -17,7 +17,11 @@ interface EndpointMetricResult {
 
 const endpointMetrics = new Map<string, EndpointMetricData>();
 
-export const apiMetricsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+export const apiMetricsMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
   const start = process.hrtime();
   const endpoint = `${req.method} ${(req as any).route?.path || req.path}`;
 
@@ -57,7 +61,8 @@ export const getEndpointMetrics = (): EndpointMetricResult[] => {
   const results: EndpointMetricResult[] = [];
 
   for (const [endpoint, metricData] of endpointMetrics.entries()) {
-    const avgTime = metricData.count > 0 ? metricData.totalTime / metricData.count : 0;
+    const avgTime =
+      metricData.count > 0 ? metricData.totalTime / metricData.count : 0;
     const errorRate =
       metricData.count > 0 ? (metricData.errors / metricData.count) * 100 : 0;
 
@@ -72,13 +77,17 @@ export const getEndpointMetrics = (): EndpointMetricResult[] => {
   return results.sort((a, b) => b.count - a.count);
 };
 
-export const getSlowEndpoints = (thresholdMs: number = 500): EndpointMetricResult[] => {
+export const getSlowEndpoints = (
+  thresholdMs: number = 500
+): EndpointMetricResult[] => {
   return getEndpointMetrics()
     .filter((e) => e.avgTime > thresholdMs)
     .sort((a, b) => b.avgTime - a.avgTime);
 };
 
-export const getErrorProneEndpoints = (thresholdPercent: number = 5): EndpointMetricResult[] => {
+export const getErrorProneEndpoints = (
+  thresholdPercent: number = 5
+): EndpointMetricResult[] => {
   return getEndpointMetrics()
     .filter((e) => parseFloat(e.errorRate) > thresholdPercent)
     .sort((a, b) => parseFloat(b.errorRate) - parseFloat(a.errorRate));
