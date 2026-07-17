@@ -42,21 +42,34 @@ test.describe('Full user journey', () => {
     await expect(page.getByText(/command center/i).first()).toBeVisible();
 
     // 6. Navigate to vocabulary via sidebar
-    await page.getByRole('link', { name: /vocabulary/i }).first().click();
+    await page
+      .getByRole('link', { name: /vocabulary/i })
+      .first()
+      .click();
     await page.waitForURL(/\/vocabulary/);
-    await expect(page.getByRole('heading', { name: /vocabulary/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /vocabulary/i })
+    ).toBeVisible();
 
     // 7. Navigate to grammar via sidebar
-    await page.getByRole('link', { name: /grammar/i }).first().click();
+    await page
+      .getByRole('link', { name: /grammar/i })
+      .first()
+      .click();
     await page.waitForURL(/\/grammar/);
-    await expect(page.getByText(/Select a grammar lesson/i).first()).toBeVisible();
+    await expect(
+      page.getByText(/Select a grammar lesson/i).first()
+    ).toBeVisible();
 
     // 8. Navigate to profile via sidebar
     const profileMenu = page.getByRole('button', { name: /profile/i });
     if (await profileMenu.isVisible({ timeout: 2000 }).catch(() => false)) {
       await profileMenu.click();
     }
-    await page.getByRole('link', { name: /overview/i }).last().click();
+    await page
+      .getByRole('link', { name: /overview/i })
+      .last()
+      .click();
     await page.waitForURL(/\/profile\/overview/);
 
     // 9. Navigate to tools via sidebar
@@ -64,16 +77,19 @@ test.describe('Full user journey', () => {
     if (await toolsMenu.isVisible({ timeout: 2000 }).catch(() => false)) {
       await toolsMenu.click();
     }
-    await page.getByRole('link', { name: /work tools/i }).first().click();
+    await page
+      .getByRole('link', { name: /work tools/i })
+      .first()
+      .click();
     await page.waitForURL(/\/tools\/work/);
   });
 
   test('landing CTA buttons navigate correctly', async ({ page }) => {
     await page.goto('/');
     // Verify main CTA exists
-    const cta = page.getByRole('link', { name: /start free/i }).or(
-      page.getByRole('link', { name: /get started/i })
-    );
+    const cta = page
+      .getByRole('link', { name: /start free/i })
+      .or(page.getByRole('link', { name: /get started/i }));
     if (await cta.isVisible({ timeout: 3000 }).catch(() => false)) {
       await cta.first().click();
       await expect(page).toHaveURL(/login|signup|start/);
@@ -123,8 +139,6 @@ test.describe('Full user journey', () => {
     });
 
     // Sign Out button should exist
-    await expect(
-      page.getByRole('button', { name: /sign out/i })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /sign out/i })).toBeVisible();
   });
 });

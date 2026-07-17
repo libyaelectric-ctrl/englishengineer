@@ -12,7 +12,7 @@ export default defineConfig({
     maxWorkers: 2,
     testTimeout: 15_000,
     teardownTimeout: 10_000,
-    exclude: ['node_modules/**', 'dist/**', 'tests/browser/**', 'backend/**'],
+    exclude: ['node_modules/**', 'dist/**', 'tests/**', 'backend/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

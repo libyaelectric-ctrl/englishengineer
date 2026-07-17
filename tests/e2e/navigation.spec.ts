@@ -13,9 +13,9 @@ test.describe('Public route rendering', () => {
     test(`public route ${route.path} renders`, async ({ page }) => {
       await page.goto(route.path);
       await expect(
-        page.getByRole('heading', { name: route.headingPattern }).or(
-          page.getByText(route.headingPattern).first()
-        )
+        page
+          .getByRole('heading', { name: route.headingPattern })
+          .or(page.getByText(route.headingPattern).first())
       ).toBeVisible();
     });
   }
@@ -138,7 +138,9 @@ test.describe('404 page', () => {
     });
 
     await page.goto('/nonexistent-page-12345');
-    const returnLink = page.getByRole('link', { name: /return|command center/i });
+    const returnLink = page.getByRole('link', {
+      name: /return|command center/i,
+    });
     if (await returnLink.isVisible({ timeout: 3000 }).catch(() => false)) {
       await returnLink.click();
       await page.waitForURL(/\/dashboard/);
@@ -170,7 +172,9 @@ test.describe('Command palette (Cmd+K)', () => {
     await expect(input).toBeVisible();
 
     // Should show Dashboard command
-    await expect(page.getByRole('button', { name: /dashboard/i })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: /dashboard/i })
+    ).toBeVisible();
   });
 
   test('command palette search filters results', async ({ page }) => {
