@@ -1,10 +1,10 @@
 import {
-  BarChart3,
-  BookOpen,
-  Brain,
-  Headphones,
+  Terminal,
   Mic,
-  PenLine,
+  Headphones,
+  FolderOpen,
+  Bot,
+  Activity,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -34,7 +34,7 @@ export const FEATURES: Array<{
   desc: string;
 }> = [
   {
-    icon: PenLine,
+    icon: Terminal,
     title: 'Writing desk',
     desc: 'RFIs, NCRs, submittals and email drafts reviewed for clarity, grammar and engineering tone.',
   },
@@ -49,17 +49,17 @@ export const FEATURES: Array<{
     desc: 'Commissioning notes, safety talks and technical briefings tuned for real project audio.',
   },
   {
-    icon: BookOpen,
+    icon: FolderOpen,
     title: 'Reading vault',
     desc: 'Specifications, contracts and reports converted into vocabulary and comprehension practice.',
   },
   {
-    icon: Brain,
+    icon: Bot,
     title: 'AI coach',
     desc: 'Personal feedback loops remember weak points and turn each attempt into a next action.',
   },
   {
-    icon: BarChart3,
+    icon: Activity,
     title: 'Progress control',
     desc: 'Skill analytics show readiness, risk areas and what to practice before the next project moment.',
   },

@@ -11,23 +11,23 @@ export function HeroSection({
   return (
     <section
       id="main-content"
-      className="relative flex min-h-[50svh] items-end overflow-hidden px-6 pb-6 pt-20 md:px-12 md:pb-8"
+      className="relative flex min-h-[70svh] items-end overflow-hidden bg-[#faf8ff] bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] px-6 pb-12 pt-32 md:px-12 md:pb-16"
     >
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: "url('/agentic/org-arc.png')",
-          opacity: 0.34,
+          opacity: 0.2,
           transform: `translate3d(0, ${scrollShift}px, 0) scale(1.04)`,
         }}
       />
-      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(246,244,238,0.18)_0%,rgba(246,244,238,0.36)_34%,rgba(246,244,238,0.96)_88%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(246,244,238,0)_0%,#f6f4ee_80%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(250,248,255,0.1)_0%,rgba(250,248,255,0.2)_34%,rgba(250,248,255,0.9)_88%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-[linear-gradient(180deg,rgba(250,248,255,0)_0%,#faf8ff_80%)]" />
 
-      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(340px,0.55fr)]">
-        <div className="max-w-4xl">
+      <div className="relative z-10 grid w-full grid-cols-1 items-end gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(380px,0.55fr)]">
+        <div className="max-w-4xl space-y-6">
           <span
-            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white/55 px-2.5 py-0.5 text-[10px] font-medium text-muted-copy backdrop-blur"
+            className="inline-flex items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white/55 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy backdrop-blur"
             style={{
               opacity: heroVisible ? 1 : 0,
               filter: heroVisible ? 'blur(0)' : 'blur(12px)',
@@ -36,11 +36,11 @@ export function HeroSection({
                 'opacity 760ms cubic-bezier(0.16,1,0.3,1), filter 760ms cubic-bezier(0.16,1,0.3,1), transform 760ms cubic-bezier(0.16,1,0.3,1)',
             }}
           >
-            <Sparkles className="h-3.5 w-3.5 text-[#5b6f11]" />
+            <Sparkles className="h-3.5 w-3.5 text-[#0047bb]" />
             AI English operating system for engineers
           </span>
           <h1
-            className="mt-4 max-w-4xl text-xl font-light leading-[1.05] text-[#111] sm:text-2xl md:text-3xl lg:text-4xl"
+            className="max-w-4xl text-2xl font-bold tracking-tight text-[#111] sm:text-4xl md:text-5xl lg:text-6xl"
             style={{
               opacity: heroVisible ? 1 : 0,
               filter: heroVisible ? 'blur(0)' : 'blur(24px)',
@@ -52,7 +52,7 @@ export function HeroSection({
             Engineering English OS for project teams.
           </h1>
           <p
-            className="mt-2 max-w-xl text-xs leading-5 text-muted-copy"
+            className="max-w-xl text-xs leading-5 text-muted-copy"
             style={{
               opacity: heroVisible ? 1 : 0,
               filter: heroVisible ? 'blur(0)' : 'blur(16px)',
@@ -64,19 +64,41 @@ export function HeroSection({
             EngVox turns writing, speaking, listening and reading into an
             orchestrated practice system for real engineering work.
           </p>
-          <div className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+
+          <div
+            className="flex flex-wrap gap-3"
+            style={{
+              opacity: heroVisible ? 1 : 0,
+              transition: 'opacity 820ms ease-out 300ms',
+            }}
+          >
+            <a
+              href="/login"
+              className="inline-flex min-h-10 items-center justify-center rounded-[4px] bg-[#0047bb] px-6 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#0047bb]/90"
+            >
+              Initialize Core
+            </a>
+            <a
+              href="#pricing"
+              className="inline-flex min-h-10 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white/60 px-6 text-xs font-bold uppercase tracking-wider text-black/70 backdrop-blur transition hover:bg-black/[0.04]"
+            >
+              View Schema
+            </a>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 pt-6 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
             {FEATURES.map((feature) => (
               <div
                 key={feature.title}
-                className="rounded-lg border border-black/[0.06] bg-white/68 p-3 backdrop-blur"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white/60 py-8 px-6 transition-all duration-300 hover:border-black/20 hover:shadow-sm"
               >
-                <div className="mb-2 flex h-7 w-7 items-center justify-center rounded-md border border-black/10 bg-white">
+                <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff]">
                   <feature.icon className="h-3.5 w-3.5 text-black/60" />
                 </div>
-                <h3 className="text-xs font-medium text-[#111]">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#111]">
                   {feature.title}
                 </h3>
-                <p className="mt-1 text-[10px] leading-3.5 text-muted-copy">
+                <p className="mt-2 text-[10px] leading-relaxed text-muted-copy">
                   {feature.desc}
                 </p>
               </div>
@@ -85,7 +107,7 @@ export function HeroSection({
         </div>
 
         <div
-          className="rounded-2xl border border-black/10 bg-white/62 p-4 shadow-[0_24px_80px_rgba(17,17,17,0.13)] backdrop-blur-xl"
+          className="rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 shadow-sm hover:shadow-md transition-all duration-300 backdrop-blur-xl"
           style={{
             opacity: heroVisible ? 1 : 0,
             transform: heroVisible
@@ -95,7 +117,7 @@ export function HeroSection({
               'opacity 900ms cubic-bezier(0.16,1,0.3,1) 420ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 420ms',
           }}
         >
-          <div className="overflow-hidden rounded-xl border border-black/[0.06] bg-[#111]">
+          <div className="overflow-hidden rounded-[4px] border border-[#d9d9e3] bg-[#111]">
             <video
               autoPlay
               loop
@@ -111,9 +133,9 @@ export function HeroSection({
             {STATS.map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-xl border border-black/[0.06] bg-white/68 p-2.5"
+                className="rounded-[4px] border border-[#d9d9e3] bg-white/68 p-2.5"
               >
-                <div className="text-xl font-light text-[#111]">
+                <div className="text-xl font-bold tracking-tight text-[#111]">
                   {stat.value}
                 </div>
                 <div className="mt-0.5 text-[9px] font-medium uppercase text-black/40">
