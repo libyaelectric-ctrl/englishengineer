@@ -36,8 +36,8 @@ export const MODULE_LABELS: Record<string, string> = {
 };
 
 export const STATUS_STYLES: Record<LessonStatus, string> = {
-  New: 'border-border-soft bg-surface text-muted-copy',
-  Practicing: 'border-primary/25 bg-primary/5 text-primary',
+  New: 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy',
+  Practicing: 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]',
   'Needs Reading/Writing': 'border-warning/30 bg-warning/5 text-warning',
   Mastered: 'border-success/30 bg-success/5 text-success',
 };

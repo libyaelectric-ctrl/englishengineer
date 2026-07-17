@@ -47,7 +47,7 @@ const GrammarPage = () => {
     : '';
 
   return (
-    <div className="min-h-screen bg-background pb-16 text-foreground">
+    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground">
       <GrammarHeader
         level={level}
         levelCounts={levelCounts}
@@ -86,7 +86,7 @@ const GrammarPage = () => {
               quizItems={quizItems}
             />
           ) : (
-            <div className="rounded-lg border border-border-soft bg-surface p-6 text-center text-xs text-muted-copy">
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-center text-xs text-muted-copy">
               Select a grammar lesson to begin.
             </div>
           )}

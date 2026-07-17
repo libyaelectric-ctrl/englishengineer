@@ -14,7 +14,7 @@ export const GrammarReviewQueue = ({
   reviewTargets: ReviewTarget[];
   selectRule: (id: string) => void;
 }) => (
-  <div className="rounded-lg border border-border-soft bg-surface p-4">
+  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
     <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
       Review Queue
     </p>
@@ -24,7 +24,7 @@ export const GrammarReviewQueue = ({
           key={rule.id}
           type="button"
           onClick={() => selectRule(rule.id)}
-          className="flex shrink-0 items-center gap-2 rounded-lg border border-border-soft bg-background px-3 py-2 text-left hover:border-warning/40"
+          className="flex shrink-0 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-background px-3 py-2 text-left hover:border-warning/40 cursor-pointer"
         >
           <TriangleAlert className="h-3.5 w-3.5 shrink-0 text-warning" />
           <span className="truncate text-xs font-bold">{rule.title}</span>
