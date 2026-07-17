@@ -24,7 +24,7 @@ export const GrammarLessonMap = ({
   selectedRule: { id: string } | null;
   selectRule: (id: string) => void;
   scrollLessonStrip: (dir: 'left' | 'right') => void;
-  lessonStripRef: React.RefObject<HTMLDivElement>;
+  lessonStripRef: React.RefObject<HTMLDivElement | null>;
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
