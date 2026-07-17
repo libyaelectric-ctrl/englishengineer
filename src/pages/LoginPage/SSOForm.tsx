@@ -18,12 +18,13 @@ export const SSOForm = ({
 }: SSOFormProps) => (
   <form onSubmit={onSubmit} className="space-y-4">
     <div>
-      <label className="mb-1.5 block text-xs font-medium text-foreground">
+      <label htmlFor="company-sso-domain" className="mb-1.5 block text-xs font-medium text-foreground">
         Company email domain
       </label>
       <div className="relative">
         <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
         <input
+          id="company-sso-domain"
           required
           type="text"
           value={ssoDomain}

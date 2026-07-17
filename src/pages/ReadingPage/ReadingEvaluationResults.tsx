@@ -13,27 +13,7 @@ import {
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
-
-interface ReadingEvaluationResult {
-  finalScore: number;
-  feedback: string;
-  comprehensionScore: number;
-  vocabularyScore: number;
-  technicalAccuracyScore: number;
-  xpEarned: number;
-  coinsEarned: number;
-  eloChange: number;
-  strengths: string[];
-  weaknesses: string[];
-  detailedAnswers: Array<{
-    questionId: string;
-    questionText: string;
-    isCorrect: boolean;
-    userAnswer: string;
-    correctAnswer: string;
-    explanation: string;
-  }>;
-}
+import type { ReadingEvaluationResult } from '@/features/reading/reading.types';
 
 interface ReadingEvaluationResultsProps {
   evaluationResult: ReadingEvaluationResult;

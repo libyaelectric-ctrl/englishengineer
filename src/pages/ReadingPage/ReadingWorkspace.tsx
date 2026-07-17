@@ -96,9 +96,17 @@ export function ReadingWorkspace({
             return (
               <span
                 key={index}
+                role="button"
+                tabIndex={0}
                 onClick={() => {
                   setSelectedWord(matchingVocab);
                   addClickedVocab(matchingVocab.term);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    setSelectedWord(matchingVocab);
+                    addClickedVocab(matchingVocab.term);
+                  }
                 }}
                 className={`underline decoration-2 underline-offset-4 cursor-pointer px-1 rounded font-medium transition-all duration-200 ${
                   isSelected

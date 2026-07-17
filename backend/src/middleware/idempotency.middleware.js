@@ -7,11 +7,20 @@ import { ApiError } from '../errors.js';
  * Usage:
  * app.post('/api/endpoint', requireBackendAuth, idempotencyKey(), handler)
  */
+let globalIdempotencyStore = null;
+
+/**
+ * Configure the global idempotency store
+ */
+export const setGlobalIdempotencyStore = (store) => {
+  globalIdempotencyStore = store;
+};
+
 export const idempotencyKey = (options = {}) => {
   const {
     headerName = 'X-Idempotency-Key',
     ttlMs = 24 * 60 * 60 * 1000, // 24 hours default
-    store = new Map(), // In-memory store (use Redis in production)
+    store = options.store || globalIdempotencyStore || new Map(),
   } = options;
 
   return async (req, res, next) => {
@@ -32,8 +41,8 @@ export const idempotencyKey = (options = {}) => {
         );
       }
 
-      // Check if key already processed
-      const existing = store.get(key);
+      // Check if key already processed (support both async and sync stores)
+      const existing = await store.get(key);
       if (existing) {
         // Return cached response
         res.status(existing.statusCode).json(existing.body);
@@ -44,17 +53,21 @@ export const idempotencyKey = (options = {}) => {
       const originalJson = res.json.bind(res);
       res.json = (body) => {
         // Store response for idempotency
-        store.set(key, {
-          statusCode: res.statusCode,
-          body,
-          timestamp: Date.now(),
-        });
+        void Promise.resolve(
+          store.set(key, {
+            statusCode: res.statusCode,
+            body,
+            timestamp: Date.now(),
+          })
+        ).catch(() => {});
 
-        // Clean up old entries
-        const now = Date.now();
-        for (const [k, v] of store.entries()) {
-          if (now - v.timestamp > ttlMs) {
-            store.delete(k);
+        // Clean up old entries (only for in-memory Map)
+        if (typeof store.entries === 'function') {
+          const now = Date.now();
+          for (const [k, v] of store.entries()) {
+            if (now - v.timestamp > ttlMs) {
+              store.delete(k);
+            }
           }
         }
 
@@ -71,15 +84,69 @@ export const idempotencyKey = (options = {}) => {
 /**
  * Create idempotency store with configurable backend
  */
-export const createIdempotencyStore = (type = 'memory', config = {}) => {
+export const createIdempotencyStore = (type = 'memory', config = {}, fetchImpl = fetch) => {
   if (type === 'memory') {
     return new Map();
   }
 
   if (type === 'redis') {
-    // Redis-based store for production
-    // Implement with Upstash Redis
-    throw new Error('Redis idempotency store not yet implemented');
+    const url = config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL;
+    const token = config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN;
+    const timeoutMs = config.rateLimit?.storeTimeoutMs || 3000;
+
+    if (!url || !token) {
+      throw new Error('Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.');
+    }
+
+    return {
+      get: async (key) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          const response = await fetchImpl(url, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(['GET', `engineeros:idempotency:${key}`]),
+            signal: controller.signal,
+          });
+          if (!response.ok) return null;
+          const payload = await response.json();
+          return payload?.result ? JSON.parse(payload.result) : null;
+        } catch (error) {
+          return null;
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      },
+      set: async (key, value) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          await fetchImpl(url, {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify([
+              'SET',
+              `engineeros:idempotency:${key}`,
+              JSON.stringify(value),
+              'PX',
+              '86400000', // 24 hours TTL
+            ]),
+            signal: controller.signal,
+          });
+        } catch (error) {
+          // Fail silently
+        } finally {
+          clearTimeout(timeoutId);
+        }
+      },
+    };
   }
 
   throw new Error(`Unknown idempotency store type: ${type}`);

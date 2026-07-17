@@ -6,6 +6,49 @@ import {
 } from './writing.types';
 import { ScoringService } from '@/core/learning/scoring.service';
 
+function customizeFeedback(
+  scoringResult: { strengths: string[]; weaknesses: string[]; xp: number; coins: number; eloChange: number; feedback: string },
+  linguisticClarityScore: number,
+  jargonDensityScore: number,
+  professionalToneScore: number,
+  autoFixesUsed: number,
+  finalScore: number
+) {
+  const strengths = [...scoringResult.strengths];
+  const weaknesses = [...scoringResult.weaknesses];
+
+  if (linguisticClarityScore >= 90) {
+    strengths.push('Impeccable syntax and grammatical tense accuracy');
+  } else {
+    weaknesses.push('Unresolved grammatical errors in technical logs');
+  }
+
+  if (jargonDensityScore >= 100) {
+    strengths.push('Excellent integration of precise engineering terms');
+  } else {
+    weaknesses.push('Casual operational phrases limit professional jargon usage');
+  }
+
+  if (professionalToneScore >= 90) {
+    strengths.push('Strict compliance with formal technical report styling');
+  } else {
+    weaknesses.push('Imprecise tone or vague performance boosters found');
+  }
+
+  if (autoFixesUsed === 0 && finalScore === 100) {
+    strengths.push('Manual mastery: Resolved all linguistic flags without auto-fix');
+  } else if (autoFixesUsed > 0) {
+    strengths.push('Systemic review: Correctly leveraged compiler-assisted suggestions');
+  }
+
+  const finalWeaknesses = weaknesses.filter((w) => w !== 'None detected');
+
+  return {
+    strengths: Array.from(new Set(strengths)),
+    weaknesses: finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
+  };
+}
+
 export const WritingEvaluator = {
   /**
    * Evaluates a writing submission locally using rule-based matching.
@@ -87,42 +130,14 @@ export const WritingEvaluator = {
       timeSpentMinutes,
     });
 
-    // Customize strengths & weaknesses based on writing-specific sub-scores
-    const strengths: string[] = [...scoringResult.strengths];
-    const weaknesses: string[] = [...scoringResult.weaknesses];
-
-    if (linguisticClarityScore >= 90) {
-      strengths.push('Impeccable syntax and grammatical tense accuracy');
-    } else {
-      weaknesses.push('Unresolved grammatical errors in technical logs');
-    }
-
-    if (jargonDensityScore >= 100) {
-      strengths.push('Excellent integration of precise engineering terms');
-    } else {
-      weaknesses.push(
-        'Casual operational phrases limit professional jargon usage'
-      );
-    }
-
-    if (professionalToneScore >= 90) {
-      strengths.push('Strict compliance with formal technical report styling');
-    } else {
-      weaknesses.push('Imprecise tone or vague performance boosters found');
-    }
-
-    if (autoFixesUsed === 0 && finalScore === 100) {
-      strengths.push(
-        'Manual mastery: Resolved all linguistic flags without auto-fix'
-      );
-    } else if (autoFixesUsed > 0) {
-      strengths.push(
-        'Systemic review: Correctly leveraged compiler-assisted suggestions'
-      );
-    }
-
-    // Filter "None detected" from weaknesses if we have real weaknesses
-    const finalWeaknesses = weaknesses.filter((w) => w !== 'None detected');
+    const feedbackCustomization = customizeFeedback(
+      scoringResult,
+      linguisticClarityScore,
+      jargonDensityScore,
+      professionalToneScore,
+      autoFixesUsed,
+      finalScore
+    );
 
     return {
       missionId: mission.id,
@@ -133,11 +148,8 @@ export const WritingEvaluator = {
       xpEarned: scoringResult.xp,
       coinsEarned: scoringResult.coins,
       eloChange: scoringResult.eloChange,
-      strengths: Array.from(new Set(strengths)),
-      weaknesses:
-        finalWeaknesses.length > 0
-          ? Array.from(new Set(finalWeaknesses))
-          : ['None detected'],
+      strengths: feedbackCustomization.strengths,
+      weaknesses: feedbackCustomization.weaknesses,
       feedback: scoringResult.feedback,
       detailedCorrections,
       finalDraft,

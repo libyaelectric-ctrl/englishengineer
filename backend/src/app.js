@@ -25,6 +25,10 @@ import { initAuditLog, getAuditLogs } from './audit-log.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 import { swaggerSpec } from './swagger.js';
 import { logger } from './logger.js';
+import {
+  createIdempotencyStore,
+  setGlobalIdempotencyStore,
+} from './middleware/idempotency.middleware.js';
 
 export const createApp = ({
   config,
@@ -37,6 +41,13 @@ export const createApp = ({
   if (!config) throw new Error('Backend config is required.');
 
   initAuditLog(config);
+
+  const idempotencyStore = createIdempotencyStore(
+    config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory',
+    config,
+    fetchImpl
+  );
+  setGlobalIdempotencyStore(idempotencyStore);
 
   // Initialize Sentry if DSN is configured
   if (config.sentry?.dsn) {
@@ -131,7 +142,11 @@ export const createApp = ({
     res.on('finish', () => {
       const diff = process.hrtime(start);
       const timeMs = (diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2);
-      logger.info('Timing', { method: req.method, path: req.originalUrl, timeMs });
+      logger.info('Timing', {
+        method: req.method,
+        path: req.originalUrl,
+        timeMs,
+      });
     });
     next();
   });
@@ -302,7 +317,9 @@ export const createApp = ({
         fetchImpl
       );
     } catch (err) {
-      logger.warn('Failed to create workspace repository', { error: err.message });
+      logger.warn('Failed to create workspace repository', {
+        error: err.message,
+      });
     }
   }
   registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {

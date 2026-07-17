@@ -36,6 +36,7 @@ test('insecure dev auth is blocked in production by default', async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'X-Forwarded-Proto': 'https',
       'X-EngineerOS-User-Id': 'demo_user_123',
     },
     body: JSON.stringify({ prompt: 'Test' }),
