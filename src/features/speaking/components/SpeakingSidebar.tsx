@@ -1,4 +1,5 @@
 import { useSpeakingStore } from '@/features/speaking';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
@@ -7,6 +8,7 @@ const log = (_page: string, _action: string, _details: string) => {};
 export function SpeakingSidebar() {
   const { missions } = useSpeakingStore();
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill="speaking" compact={true} />,
     skill: 'speaking',
     pathLabel: 'Speaking Scenarios',
     pathDescription: 'Practice speaking in professional engineering contexts.',

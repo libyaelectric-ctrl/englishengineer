@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/features/auth';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import { Section } from '@/shared/layout/sidebar/SidebarComponents';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
@@ -6,6 +7,7 @@ import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 export function ProfileSidebar() {
   const { currentUser } = useAuthStore();
   const config: SidebarConfig = {
+    header: <SkillEntryBrief skill={'profile' as any} compact={true} />,
     skill: 'profile',
     pathLabel: 'Competency Index',
     pathDescription: 'Your role and readiness score.',
