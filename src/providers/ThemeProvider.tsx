@@ -10,9 +10,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const root = document.documentElement;
-    // data-theme attribute ile dark mode
-    root.setAttribute('data-theme', theme);
-    // Fallback: class-based dark mode da desteklenir
     if (theme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');

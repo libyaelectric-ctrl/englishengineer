@@ -39,37 +39,32 @@
   --radius-dialog: 4px;
 }
 
-/* Dark Mode - gecce.txt rehberine gore */
-.dark,
-[data-theme='dark'] {
-  /* Gece Modu Degiskenleri - Patlamayi onleyen tonlar */
-  --background: #121212;     /* Saf siyah degil, gozu yormaz */
-  --foreground: #E0E0E0;     /* Saf beyaz degil, parlama yapmaz */
-  --surface: #1E1E1E;        /* Derinlik hissi verir */
-  --card-bg: #1E1E1E;        /* Kartlar icin hafif gri ton */
+.dark {
+  /* Precision Engineering OS Dark Theme */
+  --background: #0b0b14;
+  --foreground: #faf8ff;
+  --surface: #161625;
 
-  --color-primary: #3291ff;  /* Karanlikta daha iyi gorunen mavi */
+  --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
-  --color-primary-foreground: #121212;
+  --color-primary-foreground: #0b0b14;
 
-  --color-surface: #1E1E1E;
-  --color-surface-hover: #2A2A2A;
-  --color-soft: rgba(50, 145, 255, 0.08);
-  --color-border-soft: #333333;
-  --color-border-hover: #444444;
-  --color-muted-copy: #a0a0a0;     /* Ikincil yazilar icin yumusak gri */
-  --color-focus: rgba(50, 145, 255, 0.2);
-  --color-success: #4ade80;
-  --color-warning: #fb923c;
-  --color-error: #f87171;
+  --color-surface: #161625;
+  --color-surface-hover: #202035;
+  --color-soft: rgba(59, 130, 246, 0.05);
+  --color-border-soft: #2c2c3e;
+  --color-border-hover: #404058;
+  --color-muted-copy: #8f93a9;
+  --color-focus: rgba(59, 130, 246, 0.15);
+  --color-success: #16a34a;
+  --color-warning: #ea580c;
+  --color-error: #dc2626;
 
-  --color-engineer-950: #0A0A0A;
-  --color-engineer-900: #121212;
-  --color-engineer-800: #1E1E1E;
-  --color-engineer-700: #333333;
-  --color-engineer-cyan: #3291ff;
-
-  --surface: #1E1E1E;
+  --color-engineer-950: #05050a;
+  --color-engineer-900: #0b0b14;
+  --color-engineer-800: #161625;
+  --color-engineer-700: #2c2c3e;
+  --color-engineer-cyan: #3b82f6;
 }
 
 @theme {

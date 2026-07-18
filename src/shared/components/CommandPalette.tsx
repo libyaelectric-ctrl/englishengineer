@@ -270,11 +270,8 @@ export const CommandPalette: React.FC = () => {
 
   const isDark = document.documentElement.classList.contains('dark');
   const toggleTheme = () => {
-    const newTheme = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
     document.documentElement.classList.toggle('dark', !isDark);
-    document.documentElement.classList.toggle('light', isDark);
-    localStorage.setItem('theme', newTheme);
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
   };
 
   const filtered = useMemo(() => {

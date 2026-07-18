@@ -16,8 +16,8 @@ import { ListeningService } from '@/features/listening';
 import { SpeakingService } from '@/features/speaking';
 import {
   VocabularyService,
-  loadVocabularyEntries,
 } from '@/features/vocabulary';
+import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
 import { AssessmentService } from '@/features/assessment';
 import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';
 import { createMockAIProvider } from '@/features/ai/mock-ai.provider';
