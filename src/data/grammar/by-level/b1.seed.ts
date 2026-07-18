@@ -1,5 +1,7 @@
 import type { GrammarRule } from '@/features/grammar/grammar.types';
 
-import data from './b1.seed.json';
-
-export const B1_GRAMMAR_RULES: GrammarRule[] = data as GrammarRule[];
+export const loadB1GrammarRules = async (): Promise<GrammarRule[]> => {
+  const res = await fetch('/data/grammar/b1.seed.json');
+  if (!res.ok) throw new Error(`Failed to load B1 grammar: ${res.status}`);
+  return res.json() as Promise<GrammarRule[]>;
+};

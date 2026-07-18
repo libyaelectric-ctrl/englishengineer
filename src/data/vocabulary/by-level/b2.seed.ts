@@ -1,5 +1,7 @@
 import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 
-import data from './b2.seed.json';
-
-export const B2_VOCABULARY_TERMS: VocabularyTerm[] = data as VocabularyTerm[];
+export const loadB2VocabularyTerms = async (): Promise<VocabularyTerm[]> => {
+  const res = await fetch('/data/vocabulary/b2.seed.json');
+  if (!res.ok) throw new Error(`Failed to load B2 vocabulary: ${res.status}`);
+  return res.json() as Promise<VocabularyTerm[]>;
+};
