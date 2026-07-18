@@ -76,7 +76,7 @@ const PRReviewCoachDemo = ({
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-foreground">
+            <label htmlFor="review-comment-input" className="block text-sm font-medium text-foreground">
               Paste harsh review comment
             </label>
             <p className="mt-1 text-xs text-muted-copy">
@@ -84,6 +84,7 @@ const PRReviewCoachDemo = ({
               transform into professional English.
             </p>
             <textarea
+              id="review-comment-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="mt-3 min-h-32 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"

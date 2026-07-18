@@ -12,7 +12,7 @@ export function MasteredHeatmap({
   const startDate = new Date(now);
   startDate.setDate(startDate.getDate() - 83);
   const weeks: Date[][] = [];
-  let current = new Date(startDate);
+  const current = new Date(startDate);
   while (current <= now) {
     const week: Date[] = [];
     for (let d = 0; d < 7; d++) {

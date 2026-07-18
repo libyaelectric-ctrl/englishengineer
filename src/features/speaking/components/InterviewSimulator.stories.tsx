@@ -227,13 +227,14 @@ const InterviewSimulatorDemo = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-foreground">
+            <label htmlFor="answer-textarea" className="block text-sm font-medium text-foreground">
               Your Answer
             </label>
             <p className="mt-1 text-xs text-muted-copy">
               Type your answer or use voice recording to speak your response.
             </p>
             <textarea
+              id="answer-textarea"
               className="mt-3 min-h-40 w-full resize-y rounded-lg border border-border-soft bg-surface-hover px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10"
               placeholder="Type your answer here, or click the microphone to speak..."
             />

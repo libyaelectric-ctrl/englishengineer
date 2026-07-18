@@ -162,7 +162,6 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
                       if (e.key === 'Enter') handleCreate();
                       if (e.key === 'Escape') setShowCreate(false);
                     }}
-                    autoFocus
                     aria-label="New workspace name"
                     className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
                   />

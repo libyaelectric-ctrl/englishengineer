@@ -68,7 +68,7 @@ globalThis.fetch = async (
         json: async () => JSON.parse(content),
         text: async () => content,
       } as unknown as Response;
-    } catch (_err) {
+    } catch {
       return {
         ok: false,
         status: 404,

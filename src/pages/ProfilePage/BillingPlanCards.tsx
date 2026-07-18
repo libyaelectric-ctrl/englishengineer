@@ -56,6 +56,92 @@ const UnlimitedCard = ({
   </div>
 );
 
+const DocumentUploadCard = ({
+  isFree,
+  isPro,
+  uploadedDocsCount,
+}: {
+  isFree: boolean;
+  isPro: boolean;
+  uploadedDocsCount: number;
+}) => (
+  <div className="space-y-1.5">
+    <div className="flex justify-between text-xs">
+      <span className="font-bold text-foreground">
+        Monthly Document Uploads
+      </span>
+      <span className="font-bold text-foreground">
+        {isFree
+          ? 'Blocked'
+          : isPro
+            ? `${uploadedDocsCount} / 2 uploads`
+            : `${uploadedDocsCount} / Unlimited`}
+      </span>
+    </div>
+    <ProgressBar
+      value={
+        isFree
+          ? 0
+          : isPro
+            ? Math.min(100, (uploadedDocsCount / 2) * 100)
+            : 100
+      }
+      color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
+    />
+    <p className="text-[10px] text-muted-copy">
+      {isFree
+        ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
+        : isPro
+          ? '✓ Upload documents inside the AI Copilot tab.'
+          : '✓ Unlimited document uploads enabled.'}
+    </p>
+  </div>
+);
+
+const VoiceMinutesCard = ({
+  planId,
+  voiceMinutesUsed,
+}: {
+  planId: string;
+  voiceMinutesUsed: number;
+}) => (
+  <div className="col-span-full space-y-1.5 mt-1">
+    <div className="flex justify-between text-xs">
+      <span className="font-bold text-foreground flex items-center gap-1.5">
+        🎙️ Monthly Voice Minutes
+      </span>
+      <span className="font-bold text-foreground">
+        {planId === 'max'
+          ? `${voiceMinutesUsed} / 120 min`
+          : 'Unlimited'}
+      </span>
+    </div>
+    <ProgressBar
+      value={
+        planId === 'max'
+          ? Math.min(100, (voiceMinutesUsed / 120) * 100)
+          : 100
+      }
+      color={
+        planId !== 'max'
+          ? 'cyan'
+          : voiceMinutesUsed >= 108
+            ? 'rose'
+            : voiceMinutesUsed >= 84
+              ? 'amber'
+              : 'cyan'
+      }
+    />
+    <p className="text-[10px] text-muted-copy">
+      {planId === 'max'
+        ? voiceMinutesUsed >= 120
+          ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
+          : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
+        : '✓ Unlimited voice minutes included in your plan.'}
+    </p>
+  </div>
+);
+
 export const BillingPlanCards = ({
   subscription,
   todaysCoachSessions,
@@ -73,7 +159,6 @@ export const BillingPlanCards = ({
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      {/* AI Coach Sessions */}
       {isPro ? (
         <UnlimitedCard
           label="Daily AI Coach Requests"
@@ -91,7 +176,6 @@ export const BillingPlanCards = ({
         />
       )}
 
-      {/* Module Attempts */}
       {isPro ? (
         <UnlimitedCard
           label="Daily Module Attempts"
@@ -109,7 +193,6 @@ export const BillingPlanCards = ({
         />
       )}
 
-      {/* Vocabulary Reviews */}
       {isPro ? (
         <UnlimitedCard
           label="Daily Vocabulary Reviews"
@@ -127,76 +210,17 @@ export const BillingPlanCards = ({
         />
       )}
 
-      {/* Document Uploads */}
-      <div className="space-y-1.5">
-        <div className="flex justify-between text-xs">
-          <span className="font-bold text-foreground">
-            Monthly Document Uploads
-          </span>
-          <span className="font-bold text-foreground">
-            {isFree
-              ? 'Blocked'
-              : isPro
-                ? `${uploadedDocsCount} / 2 uploads`
-                : `${uploadedDocsCount} / Unlimited`}
-          </span>
-        </div>
-        <ProgressBar
-          value={
-            isFree
-              ? 0
-              : isPro
-                ? Math.min(100, (uploadedDocsCount / 2) * 100)
-                : 100
-          }
-          color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
-        />
-        <p className="text-[10px] text-muted-copy">
-          {isFree
-            ? 'Upgrade to Pro to upload up to 2 technical documents/month.'
-            : isPro
-              ? '✓ Upload documents inside the AI Copilot tab.'
-              : '✓ Unlimited document uploads enabled.'}
-        </p>
-      </div>
+      <DocumentUploadCard
+        isFree={isFree}
+        isPro={isPro}
+        uploadedDocsCount={uploadedDocsCount}
+      />
 
-      {/* Voice Minute Wallet (Max+) */}
       {isMaxTier && (
-        <div className="col-span-full space-y-1.5 mt-1">
-          <div className="flex justify-between text-xs">
-            <span className="font-bold text-foreground flex items-center gap-1.5">
-              🎙️ Monthly Voice Minutes
-            </span>
-            <span className="font-bold text-foreground">
-              {subscription.planId === 'max'
-                ? `${voiceMinutesUsed} / 120 min`
-                : 'Unlimited'}
-            </span>
-          </div>
-          <ProgressBar
-            value={
-              subscription.planId === 'max'
-                ? Math.min(100, (voiceMinutesUsed / 120) * 100)
-                : 100
-            }
-            color={
-              subscription.planId !== 'max'
-                ? 'cyan'
-                : voiceMinutesUsed >= 108
-                  ? 'rose'
-                  : voiceMinutesUsed >= 84
-                    ? 'amber'
-                    : 'cyan'
-            }
-          />
-          <p className="text-[10px] text-muted-copy">
-            {subscription.planId === 'max'
-              ? voiceMinutesUsed >= 120
-                ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
-                : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
-              : '✓ Unlimited voice minutes included in your plan.'}
-          </p>
-        </div>
+        <VoiceMinutesCard
+          planId={subscription.planId}
+          voiceMinutesUsed={voiceMinutesUsed}
+        />
       )}
     </div>
   );

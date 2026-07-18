@@ -23,6 +23,191 @@ import {
 
 type InterviewState = 'select' | 'interview' | 'results';
 
+const SelectView = ({
+  onSelect,
+}: {
+  onSelect: (type: InterviewType) => void;
+}) => (
+  <div className="space-y-6 animate-in fade-in">
+    <SectionCard
+      title="Technical Interview Simulator"
+      subtitle="Practice System Design and Coding interviews with AI scoring and voice recording"
+      icon={Trophy}
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => onSelect('system-design')}
+          className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+        >
+          <Layers className="h-8 w-8 text-[#0047bb]" />
+          <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
+            System Design
+          </h3>
+          <p className="mt-2 text-sm text-muted-copy font-normal">
+            Practice designing scalable systems. Cover architecture,
+            trade-offs, and technical decisions.
+          </p>
+          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
+            Start practice
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onSelect('coding')}
+          className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+        >
+          <Code className="h-8 w-8 text-[#0047bb]" />
+          <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
+            Coding Interview
+          </h3>
+          <p className="mt-2 text-sm text-muted-copy font-normal">
+            Solve coding problems aloud. Practice explaining your approach,
+            complexity, and edge cases.
+          </p>
+          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
+            Start practice
+            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </div>
+        </button>
+      </div>
+    </SectionCard>
+  </div>
+);
+
+const ResultsView = ({
+  session,
+  scores,
+  overallScore,
+  onReset,
+}: {
+  session: InterviewSession;
+  scores: InterviewScore[];
+  overallScore: number;
+  onReset: () => void;
+}) => (
+  <div className="space-y-6 animate-in fade-in">
+    <SectionCard
+      title="Interview Results"
+      subtitle={`${session.type === 'system-design' ? 'System Design' : 'Coding'} interview completed`}
+      icon={Trophy}
+      footer={
+        <Button
+          onClick={onReset}
+          className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
+        >
+          <RotateCcw className="h-4 w-4" /> New Interview
+        </Button>
+      }
+    >
+      <div className="space-y-6">
+        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center shadow-sm">
+          <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+            Overall Score
+          </p>
+          <p className="mt-2 text-4xl font-bold text-foreground">
+            {overallScore}
+            <span className="text-lg text-muted-copy">/100</span>
+          </p>
+          <div className="mt-3">
+            <ProgressBar value={overallScore} color="primary" />
+          </div>
+        </div>
+
+        {scores.map((score, i) => (
+          <div
+            key={i}
+            className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
+                  Question {i + 1}
+                </p>
+                <p className="mt-1 text-sm text-foreground font-medium leading-relaxed">
+                  {session.questions[i].question.slice(0, 80)}...
+                </p>
+              </div>
+              <span
+                className={`rounded-[4px] px-2.5 py-1 text-xs font-bold uppercase tracking-wider ${
+                  score.overall >= 80
+                    ? 'bg-success/10 text-success border border-success/20'
+                    : score.overall >= 60
+                      ? 'bg-warning/10 text-warning border border-warning/20'
+                      : 'bg-error/10 text-error border border-error/20'
+                }`}
+              >
+                {score.overall}
+              </span>
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 border-t border-[#d9d9e3] pt-3">
+              {[
+                ['Technical', score.technicalAccuracy],
+                ['Clarity', score.clarity],
+                ['Depth', score.depth],
+                ['Communication', score.communication],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-[#d9d9e3]"
+                >
+                  <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
+                    {label}
+                  </p>
+                  <p className="text-sm font-bold text-foreground mt-0.5">
+                    {value}%
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-muted-copy font-medium leading-relaxed italic">
+              &quot;{score.feedback}&quot;
+            </p>
+            {score.strengths.length > 0 && (
+              <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+                <p className="text-[10px] font-bold uppercase text-success tracking-wider">
+                  Strengths
+                </p>
+                <ul className="mt-1 space-y-1">
+                  {score.strengths.map((s, j) => (
+                    <li
+                      key={j}
+                      className="flex items-start gap-1.5 text-xs text-foreground font-medium"
+                    >
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {score.improvements.length > 0 && (
+              <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+                <p className="text-[10px] font-bold uppercase text-warning tracking-wider">
+                  Improvements
+                </p>
+                <ul className="mt-1 space-y-1">
+                  {score.improvements.map((s, j) => (
+                    <li
+                      key={j}
+                      className="flex items-start gap-1.5 text-xs text-foreground font-medium"
+                    >
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-warning" />
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </SectionCard>
+  </div>
+);
+
 export const InterviewSimulator = () => {
   const [state, setState] = useState<InterviewState>('select');
   const [session, setSession] = useState<InterviewSession | null>(null);
@@ -199,177 +384,17 @@ export const InterviewSimulator = () => {
   };
 
   if (state === 'select') {
-    return (
-      <div className="space-y-6 animate-in fade-in">
-        <SectionCard
-          title="Technical Interview Simulator"
-          subtitle="Practice System Design and Coding interviews with AI scoring and voice recording"
-          icon={Trophy}
-        >
-          <div className="grid gap-4 sm:grid-cols-2">
-            <button
-              type="button"
-              onClick={() => handleTypeSelect('system-design')}
-              className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
-            >
-              <Layers className="h-8 w-8 text-[#0047bb]" />
-              <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
-                System Design
-              </h3>
-              <p className="mt-2 text-sm text-muted-copy font-normal">
-                Practice designing scalable systems. Cover architecture,
-                trade-offs, and technical decisions.
-              </p>
-              <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
-                Start practice
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleTypeSelect('coding')}
-              className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
-            >
-              <Code className="h-8 w-8 text-[#0047bb]" />
-              <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
-                Coding Interview
-              </h3>
-              <p className="mt-2 text-sm text-muted-copy font-normal">
-                Solve coding problems aloud. Practice explaining your approach,
-                complexity, and edge cases.
-              </p>
-              <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
-                Start practice
-                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </div>
-            </button>
-          </div>
-        </SectionCard>
-      </div>
-    );
+    return <SelectView onSelect={handleTypeSelect} />;
   }
 
   if (state === 'results' && session) {
     return (
-      <div className="space-y-6 animate-in fade-in">
-        <SectionCard
-          title="Interview Results"
-          subtitle={`${session.type === 'system-design' ? 'System Design' : 'Coding'} interview completed`}
-          icon={Trophy}
-          footer={
-            <Button
-              onClick={resetInterview}
-              className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
-            >
-              <RotateCcw className="h-4 w-4" /> New Interview
-            </Button>
-          }
-        >
-          <div className="space-y-6">
-            <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center shadow-sm">
-              <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
-                Overall Score
-              </p>
-              <p className="mt-2 text-4xl font-bold text-foreground">
-                {overallScore}
-                <span className="text-lg text-muted-copy">/100</span>
-              </p>
-              <div className="mt-3">
-                <ProgressBar value={overallScore} color="primary" />
-              </div>
-            </div>
-
-            {scores.map((score, i) => (
-              <div
-                key={i}
-                className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
-                      Question {i + 1}
-                    </p>
-                    <p className="mt-1 text-sm text-foreground font-medium leading-relaxed">
-                      {session.questions[i].question.slice(0, 80)}...
-                    </p>
-                  </div>
-                  <span
-                    className={`rounded-[4px] px-2.5 py-1 text-xs font-bold uppercase tracking-wider ${
-                      score.overall >= 80
-                        ? 'bg-success/10 text-success border border-success/20'
-                        : score.overall >= 60
-                          ? 'bg-warning/10 text-warning border border-warning/20'
-                          : 'bg-error/10 text-error border border-error/20'
-                    }`}
-                  >
-                    {score.overall}
-                  </span>
-                </div>
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 border-t border-[#d9d9e3] pt-3">
-                  {[
-                    ['Technical', score.technicalAccuracy],
-                    ['Clarity', score.clarity],
-                    ['Depth', score.depth],
-                    ['Communication', score.communication],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-[#d9d9e3]"
-                    >
-                      <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
-                        {label}
-                      </p>
-                      <p className="text-sm font-bold text-foreground mt-0.5">
-                        {value}%
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <p className="mt-3 text-xs text-muted-copy font-medium leading-relaxed italic">
-                  &quot;{score.feedback}&quot;
-                </p>
-                {score.strengths.length > 0 && (
-                  <div className="mt-3 border-t border-[#d9d9e3] pt-3">
-                    <p className="text-[10px] font-bold uppercase text-success tracking-wider">
-                      Strengths
-                    </p>
-                    <ul className="mt-1 space-y-1">
-                      {score.strengths.map((s, j) => (
-                        <li
-                          key={j}
-                          className="flex items-start gap-1.5 text-xs text-foreground font-medium"
-                        >
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-success" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {score.improvements.length > 0 && (
-                  <div className="mt-3 border-t border-[#d9d9e3] pt-3">
-                    <p className="text-[10px] font-bold uppercase text-warning tracking-wider">
-                      Improvements
-                    </p>
-                    <ul className="mt-1 space-y-1">
-                      {score.improvements.map((s, j) => (
-                        <li
-                          key={j}
-                          className="flex items-start gap-1.5 text-xs text-foreground font-medium"
-                        >
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-warning" />
-                          <span>{s}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </SectionCard>
-      </div>
+      <ResultsView
+        session={session}
+        scores={scores}
+        overallScore={overallScore}
+        onReset={resetInterview}
+      />
     );
   }
 

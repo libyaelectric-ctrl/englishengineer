@@ -33,7 +33,6 @@ import {
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
 import type { BackendConfig } from '../types.js';
-import type { BillingService } from './billing-service.js';
 import type { WorkspaceRepository } from './workspace-repository.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';

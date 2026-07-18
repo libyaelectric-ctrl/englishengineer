@@ -73,6 +73,7 @@ export const sanitizeProductAnalyticsMetadata = (
   }
   const input = value as Record<string, unknown>;
   const sanitized: ProductAnalyticsMetadata = {};
+
   if (typeof input.skill === 'string' && skills.has(input.skill)) {
     sanitized.skill = input.skill as ProductAnalyticsMetadata['skill'];
   }

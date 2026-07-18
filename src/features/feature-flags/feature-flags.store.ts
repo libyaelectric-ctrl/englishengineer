@@ -10,6 +10,27 @@ interface FeatureFlagsState {
   isFeatureEnabled: (key: string) => boolean;
 }
 
+const isFlagEligible = (
+  flagConfig: (typeof FEATURE_FLAGS)[string] | undefined,
+  subscription: { planId?: string } | null,
+  currentUser: { id?: string } | null,
+  userId: string | undefined,
+  key: string
+): boolean => {
+  if (!flagConfig) return false;
+  if (flagConfig.allowedPlans && subscription?.planId) {
+    if (!flagConfig.allowedPlans.includes(subscription.planId)) return false;
+  }
+  if (flagConfig.allowedUsers && currentUser?.id) {
+    if (!flagConfig.allowedUsers.includes(currentUser.id)) return false;
+  }
+  if (flagConfig.rolloutPercentage !== undefined) {
+    const hash = userId ? hashString(userId + key) : Math.random() * 100;
+    if (hash % 100 >= flagConfig.rolloutPercentage) return false;
+  }
+  return true;
+};
+
 export const useFeatureFlagsStore = create<FeatureFlagsState>()(
   persist(
     (set, get) => ({
@@ -23,37 +44,11 @@ export const useFeatureFlagsStore = create<FeatureFlagsState>()(
       isFeatureEnabled: (key) => {
         const { flags } = get();
         const flagConfig = FEATURE_FLAGS[key];
-
-        if (!flagConfig) return false;
-
-        const baseEnabled = flags[key] ?? flagConfig.enabled;
+        const baseEnabled = flags[key] ?? flagConfig?.enabled;
         if (!baseEnabled) return false;
-
         const { subscription } = useBillingStore.getState();
         const { currentUser } = useAuthStore.getState();
-
-        if (flagConfig.allowedPlans && subscription?.planId) {
-          if (!flagConfig.allowedPlans.includes(subscription.planId)) {
-            return false;
-          }
-        }
-
-        if (flagConfig.allowedUsers && currentUser?.id) {
-          if (!flagConfig.allowedUsers.includes(currentUser.id)) {
-            return false;
-          }
-        }
-
-        if (flagConfig.rolloutPercentage !== undefined) {
-          const hash = currentUser?.id
-            ? hashString(currentUser.id + key)
-            : Math.random() * 100;
-          if (hash % 100 >= flagConfig.rolloutPercentage) {
-            return false;
-          }
-        }
-
-        return true;
+        return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
       },
     }),
     {

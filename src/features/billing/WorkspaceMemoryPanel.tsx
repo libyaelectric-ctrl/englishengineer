@@ -129,7 +129,7 @@ export const WorkspaceMemoryPanel = ({
                     value={editValue}
                     onChange={(e) => setEditValue(e.target.value)}
                     rows={2}
-                    autoFocus
+                    aria-label={`Edit memory for ${key}`}
                     className="w-full resize-none rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm"
                   />
                   <div className="flex gap-1">
