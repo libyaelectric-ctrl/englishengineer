@@ -435,16 +435,21 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
           aria-label="Work tool type"
         >
           {TAB_ITEMS.map(([id, label, Icon]) => (
-            <Button
+            <button
               key={id}
               role="tab"
+              type="button"
               aria-selected={tab === id}
-              variant={tab === id ? 'primary' : 'ghost'}
               onClick={() => setTab(id)}
+              className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+                tab === id
+                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
+                  : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+              }`}
             >
               <Icon className="h-4 w-4" />
               {label}
-            </Button>
+            </button>
           ))}
         </div>
         <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-3 focus-within:border-[#0047bb] md:w-72 shadow-sm font-sans">
