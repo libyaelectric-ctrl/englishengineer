@@ -146,7 +146,7 @@ const RoleplayTab = () => {
                 <button
                   type="button"
                   onClick={() => setResponseMode('written')}
-                  className={`pb-2 px-1 text-xs font-bold transition-all relative cursor-pointer ${
+                  className={`pb-2 px-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all relative cursor-pointer ${
                     responseMode === 'written'
                       ? 'text-[#0047bb] font-bold border-b-2 border-[#0047bb]'
                       : 'text-muted-copy hover:text-foreground'
@@ -157,7 +157,7 @@ const RoleplayTab = () => {
                 <button
                   type="button"
                   onClick={() => setResponseMode('voice')}
-                  className={`pb-2 px-1 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`pb-2 px-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                     responseMode === 'voice'
                       ? 'text-[#0047bb] font-bold border-b-2 border-[#0047bb]'
                       : 'text-muted-copy hover:text-[#0047bb]'

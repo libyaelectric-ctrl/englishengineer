@@ -181,7 +181,7 @@ What questions do you have about this passage?`,
       <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 md:flex-row md:items-center md:justify-between shadow-sm">
         <button
           onClick={handleBackToMissions}
-          className="flex items-center gap-2 text-xs font-medium text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Reading list</span>

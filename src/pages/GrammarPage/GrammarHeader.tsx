@@ -33,7 +33,7 @@ export const GrammarHeader = ({
           <button
             key={cefrLevel}
             type="button"
-            className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-xs font-bold transition-colors cursor-pointer ${
+            className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
               cefrLevel === level
                 ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
                 : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
