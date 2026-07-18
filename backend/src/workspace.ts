@@ -7,13 +7,21 @@ import {
 } from './validation.js';
 import { createSupabaseWorkspaceRepository } from './workspace-repository.js';
 import type { WorkspaceRepository } from './workspace-repository.js';
-import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
 export const createWorkspaceRepository = (
   config: { workspace?: Record<string, unknown> },
   _fetchImpl: typeof fetch = fetch
 ): WorkspaceRepository => {
-  return createSupabaseWorkspaceRepository(config.workspace as Record<string, unknown>);
+  return createSupabaseWorkspaceRepository(
+    config.workspace as Record<string, unknown>
+  );
 };
 
 const getWorkspaceLimit = (planId: string): number => {
@@ -239,7 +247,10 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { docName, docContent } = req.validatedBody as Record<string, unknown>;
+        const { docName, docContent } = req.validatedBody as Record<
+          string,
+          unknown
+        >;
         if (!docName) {
           throw new ApiError(
             400,

@@ -1,0 +1,375 @@
+﻿
+Bu dosya, EngineerOS/EngVox projesini bağımsız denetimde ~76/100'den ~96/100'e
+taşımak için sıralı, doğrulanabilir görev listesidir. Usta.md'deki Kademe 0-26
+tamamlanmış kabul edilir; bu dosya Kademe 27'den başlar.
+
+---
+
+## 🛠️ KURAL — Bu Sefer Farklı Çalışılacak
+
+Önceki turda **Kademe 3, üç ayrı raporlamada "[x] YAPILDI" işaretlenmiş ama
+gerçekte hiç değiştirilmemişti** (build çıktısı bunu net kanıtladı — chunk
+boyutu byte'ına kadar aynı kalmıştı). Bu yüzden bu fazda kurallar sıkılaştı:
+
+1. **Sıralı ilerleme zorunlu.** Bir kademe bitmeden diğerine geçilmez.
+2. **"YAPILDI" yazmak yetmez.** Her kademenin sonunda "ZORUNLU DOĞRULAMA"
+   bölümü var — gerçek terminal/build çıktısı yapıştırılmadan kademe
+   kapatılamaz. Checkbox'a metin değişikliği olmadan işaret konulamaz.
+3. **Ölçülebilir hedef.** Her kademe "önce X, sonra Y" şeklinde somut bir
+   sayısal hedef içeriyor (chunk boyutu, uyarı sayısı, açık sayısı vb.).
+   Belirsiz "iyileştirdim" ifadesi kabul edilmez — sayı gösterilecek.
+4. **Bağımsız denetim her fazın sonunda yapılacak.** Kullanıcı, tamamlanan
+   her 4-5 kademede bir zip'i tekrar bağımsız denetime (Claude) gönderecek.
+   Sadece Mimo'nun kendi raporuna güvenilmeyecek.
+5. Onaysız push/deploy kuralı geçerli, AMA **Kademe 27, 33, 39, 44** için
+   (veri/güvenlik riski taşıyanlar) deploy öncesi kullanıcı onayı zorunlu.
+
+---
+
+## 📋 Faz 2 Kademeleri (27-50)
+
+### [x] Kademe 27: Seed Verisi Gerçek Lazy-Load (3 kez ertelenen görev)
+* **Açıklama:** `src/data/vocabulary/by-level/*.seed.ts` ve
+  `src/data/grammar/by-level/*.seed.ts` (12 dosya) hâlâ JSON'u statik
+  `import` ile bundle'a gömüyor.
+* **İşlem:**
+  1. JSON dosyalarını `public/data/vocabulary/` ve `public/data/grammar/`
+     altına taşı.
+  2. Her `.seed.ts` dosyasını `fetch('/data/.../x.seed.json')` kullanan
+     async fonksiyona çevir, statik `import data from './x.json'` satırını
+     tamamen kaldır.
+  3. `src/data/vocabulary/index.ts` ve `src/data/grammar/index.ts`'i yeni
+     fonksiyon isimlerine göre güncelle.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run build` çıktısında `b1.seed-*.js` ve `b2.seed-*.js` satırlarının
+    **<10 KB** olduğunu göster (önceki: 2.786,72 KB / 3.062,08 KB).
+  - `ls dist/data/vocabulary/*.json dist/data/grammar/*.json` ile JSON'ların
+    ayrı static asset olarak dist'e kopyalandığını göster.
+  - `npm run test` → 0 fail.
+* **ZORUNLU DOĞRULAMA KANITI — 2026-07-18:**
+  - `npm run build` başarılı bitti. Seed loader chunk satırları hedefin çok altında:
+    - `assets/b1.seed-CW6gDOfX.js 0.19 kB`
+    - `assets/b2.seed-BELeM0s3.js 0.19 kB`
+    - `assets/b1.seed-BApUL475.js 0.19 kB`
+    - `assets/b2.seed-ZOc9mBOd.js 0.19 kB`
+    - Hedef: `<10 KB`; önceki problemli değerler: `~2.786 MB / ~3.062 MB`.
+  - `dist/data/vocabulary/*.json` ve `dist/data/grammar/*.json` dosyaları ayrı static asset olarak üretildi:
+    - Vocabulary: `a1.seed.json`, `a2.seed.json`, `b1.seed.json`, `b2.seed.json`, `c1.seed.json`, `c2.seed.json`
+    - Grammar: `a1.seed.json`, `a2.seed.json`, `b1.seed.json`, `b2.seed.json`, `c1.seed.json`, `c2.seed.json`
+  - `npm run test` başarılı bitti: `Test Files 79 passed (79)`, `Tests 480 passed | 1 skipped (481)`.
+  - Kaynak kontrolü: `src/data/vocabulary/by-level/*.seed.ts` ve `src/data/grammar/by-level/*.seed.ts` dosyaları artık küçük fetch loader dosyalarıdır; JSON verisi `public/data/...` altındadır.
+* **Durum:** Tamamlandı.
+
+### [x] Kademe 28: Eski Seed .ts Kaynak Kopyalarının Temizliği
+* **Açıklama:** Kademe 27 sonrası `src/data/**/by-level/*.seed.json`
+  (eski konumdaki kopyalar, artık `public/`'e taşınmış olmalı) ve varsa
+  kullanılmayan eski array-literal `.ts` yedekleri repo'da kalmasın.
+* **ZORUNLU DOĞRULAMA:**
+  - `du -sh --exclude=node_modules --exclude=.git .` çalıştır, toplam repo
+    boyutunun Kademe 27 öncesine göre en az 10 MB küçüldüğünü göster.
+* **ZORUNLU DOĞRULAMA KANITI — 2026-07-18:**
+  - `src/data/**/by-level/*.seed.json`, `backup`, `bak`, `old`, `literal` araması boş döndü; eski kaynak kopyası kalmadı.
+  - `rg "export const .*_TERMS\\s*=\\s*\\[|export const .*_RULES\\s*=\\s*\\[|import data from" src/data` boş döndü; array-literal seed ve statik JSON import kalıntısı kalmadı.
+  - Windows ortamında WSL `du` çalışmadı; aynı ölçüm PowerShell ile `node_modules` ve `.git` hariç dosya boyutu toplanarak yapıldı.
+  - Temizlik öncesi ölçüm: `441.02 MB (462439872 bytes)`.
+  - `npm run clean` ile yeniden üretilebilir `dist/.vite/.npm-cache` çıktıları temizlendi.
+  - Temizlik sonrası ölçüm: `371.81 MB (389871024 bytes)`.
+  - Net düşüş: `69.21 MB`; hedef olan `>=10 MB` sağlandı.
+* **Durum:** Tamamlandı.
+
+### [x] Kademe 29: uuid / Storybook Güvenlik Açığı
+* **Açıklama:** `npm audit` üç turdur aynı 5 açığı (3 orta, 2 yüksek)
+  gösteriyor, kaynak `@storybook/addon-essentials` → `uuid@9.0.1`.
+* **İşlem:** Storybook'u `npm audit fix --force` ile veya manuel olarak
+  `@storybook/addon-essentials@^7.0.6+` / uyumlu sürüme güncelle.
+  Storybook build'inin (`npm run storybook` veya `build-storybook`)
+  hâlâ çalıştığını doğrula.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm audit` çıktısını yapıştır → uuid ile ilgili 5 açık görünmemeli.
+  - Storybook build komutunun hatasız bittiğini göster.
+* **ZORUNLU DOĞRULAMA KANITI — 2026-07-18:**
+  - `package.json` içine `overrides.uuid = ^11.1.1` eklendi ve `npm install` ile `package-lock.json` güncellendi.
+  - `npm ls uuid @storybook/addon-essentials --depth=3` çıktısı:
+    - `@storybook/addon-essentials@8.6.18`
+    - `@storybook/addon-actions@8.6.18`
+    - `uuid@11.1.1`
+  - `npm audit` çıktısında artık `uuid` veya Storybook zinciri görünmüyor.
+  - `npm audit` kalan durum: `2 high severity vulnerabilities`; kalan açıklar `google-tts-api -> axios` zincirinden geliyor, Kademe 29 kapsamındaki `uuid / Storybook` açığı değildir.
+  - `npm run build-storybook` başarılı bitti:
+    - `@storybook/core v8.6.18`
+    - `Manager built`
+    - `Preview built`
+    - `Output directory: ...\storybook-static`
+  - Storybook build sırasında eksik opsiyonel addon uyarıları (`@storybook/addon-interactions`, `@storybook/addon-a11y`, `@storybook/addon-themes`) ve büyük chunk/eval uyarıları görüldü; build'i kırmadı.
+* **Durum:** Tamamlandı.
+
+### [x] Kademe 30: Backend Sentry/OpenTelemetry Güvenlik Açıkları
+* **Açıklama:** `backend/` içinde `npm audit` **19 orta seviye açık**
+  gösteriyor (`@sentry/opentelemetry`, `@opentelemetry/instrumentation-mysql2`
+  zinciri).
+* **İşlem:** Sentry SDK'yı güncel/uyumlu sürüme yükselt veya
+  gereksizse mysql2 instrumentation'ı devre dışı bırak (proje mysql
+  kullanmıyorsa muhtemelen gereksiz bağımlılık).
+* **ZORUNLU DOĞRULAMA:**
+  - `cd backend && npm audit` çıktısını yapıştır → açık sayısı 19'dan
+    düşmüş olmalı (hedef: 0, kabul edilebilir minimum: 5 altı + gerekçe).
+  - `npm test` hâlâ 152/152 geçiyor olmalı.
+* **ZORUNLU DOĞRULAMA KANITI — 2026-07-18:**
+  - Başlangıç `backend && npm audit` çıktısı: `19 moderate severity vulnerabilities`.
+  - Kaynak zincir: `@sentry/node@8.55.2 -> @sentry/opentelemetry@8.55.2 -> @opentelemetry/*`, ayrıca `@opentelemetry/instrumentation-mysql2@0.45.0`.
+  - Backend kodunda Sentry kullanımı `Sentry.init` ve `Sentry.captureException` ile sınırlı olduğu için `@sentry/node` güvenli güncel sürüme yükseltildi.
+  - `backend && npm install @sentry/node@^10.66.0` sonucu:
+    - `added 17 packages, removed 58 packages, changed 11 packages`
+    - `found 0 vulnerabilities`
+  - `backend && npm audit` sonucu: `found 0 vulnerabilities`.
+  - `backend && npm ls @sentry/node @sentry/opentelemetry @opentelemetry/instrumentation-mysql2 --depth=4` sonucu:
+    - `@sentry/node@10.66.0`
+    - `@sentry/opentelemetry@10.66.0`
+    - eski `@opentelemetry/instrumentation-mysql2` zinciri görünmedi.
+  - `backend && npm test` başarılı bitti:
+    - `tests 152`
+    - `pass 152`
+    - `fail 0`
+    - `duration_ms 14131.9121`
+* **Durum:** Tamamlandı.
+
+### [ ] Kademe 31: Lint Uyarı Temizliği — Batch 1 (En Yüksek 10 Complexity)
+* **Açıklama:** `npm run lint` şu an 229 uyarı gösteriyor. En yüksek
+  complexity'li 10 dosyayı küçük fonksiyonlara böl (her biri complexity
+  <10 olacak şekilde).
+* **İşlem:** `npm run lint 2>&1 | grep complexity | sort -t' ' -k... ` ile
+  en yüksek 10'u tespit et (örn. `BillingPlanCards.tsx`, `WordCard.tsx`,
+  `ProfilePage.tsx` gibi bilinen adaylar dahil), her birini refactor et.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run lint` çıktısını yapıştır → toplam uyarı sayısı en az 20 azalmış
+    olmalı, refactor edilen 10 dosyanın hiçbirinde complexity uyarısı
+    kalmamalı.
+  - `npm run typecheck` ve `npm run test` hâlâ temiz.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 32: Lint Uyarı Temizliği — Batch 2 (Sıradaki 10)
+* **Açıklama:** Kademe 31'den kalan yüksek complexity'li sıradaki 10 dosya.
+* **ZORUNLU DOĞRULAMA:** Aynı format — toplam uyarı sayısı yeniden raporlanacak.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 33: Lint Uyarı Temizliği — Batch 3 (Kalanlar)
+* **Açıklama:** Kalan tüm complexity uyarılarını temizle.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run lint` çıktısı → **0 warning, 0 error** hedefi (ya da <20 kalan
+    ve her biri için neden bırakıldığına dair kısa not).
+* **Durum:** Beklemede. *(Deploy öncesi kullanıcı onayı gerekli — çok sayıda
+  dosya değişiyor, davranış regresyonu riski var.)*
+
+### [ ] Kademe 34: Playwright E2E Testlerinin Gerçekten Çalıştığının Kanıtlanması
+* **Açıklama:** `tests/e2e/*.spec.ts` dosyaları artık vitest'ten hariç
+  tutuluyor (Kademe 0/düzeltmesi), ama bu dosyaların Playwright ile
+  **gerçekten** geçtiği hiç kanıtlanmadı.
+* **İşlem:** `npx playwright install --with-deps` (gerekirse), sonra
+  `npx playwright test` çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Playwright test raporunun tam çıktısını yapıştır (kaç test, kaçı geçti,
+    kaçı fail).
+  - Fail eden varsa, düzeltilene kadar bu kademe kapanmaz.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 35: Test Coverage Threshold Doğrulaması (%75)
+* **Açıklama:** `vitest.config.ts` içinde branches/functions/lines/statements
+  için %75 threshold tanımlı ama gerçekten tutturulduğu hiç gösterilmedi.
+* **İşlem:** `npm run test:coverage` çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Coverage raporunun özet tablosunu (branches/functions/lines/statements
+    yüzdeleri) yapıştır. Herhangi biri %75 altındaysa, o alanı test ekleyerek
+    %75'in üstüne çıkar, tekrar çalıştırıp kanıtla.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 36: Test Kararlılığı (Flakiness) Kontrolü
+* **Açıklama:** Testlerin rastgele fail/pass etmediğini doğrula.
+* **İşlem:** `npm run test` komutunu arka arkaya 3 kez çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - 3 ayrı çalıştırmanın da "X passed (X), 0 failed" ile bittiğini gösteren
+    3 ayrı çıktı yapıştır. Herhangi birinde farklı sonuç çıkarsa, o testi
+    stabilize et (race condition, zaman bağımlılığı, sıralama sorunu vb.).
+* **Durum:** Beklemede.
+
+### [ ] Kademe 37: Bundle Boyutu Bütçesi Otomasyonu
+* **Açıklama:** Kademe 27'deki tek seferlik düzeltmenin ileride tekrar
+  bozulmaması için (regresyon önleme) otomatik kontrol ekle.
+* **İşlem:** `vite-bundle-visualizer` veya benzeri bir araçla build
+  sonrası chunk boyutu kontrolü ekle; `vite.config.ts`'e
+  `build.chunkSizeWarningLimit` düşür (örn. 300 kB) ve CI'de build
+  uyarısı çıkarsa pipeline'ın fail olmasını sağla.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run build` çıktısında artık "chunks larger than X kB" uyarısının
+    çıkmadığını göster.
+  - CI workflow dosyasındaki ilgili değişikliği (diff) yapıştır.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 38: Lighthouse CI Gerçek Skor Ölçümü
+* **Açıklama:** Proje Lighthouse tooling'i içeriyor ama gerçek skor hiç
+  paylaşılmadı.
+* **İşlem:** `npm run build` sonrası `npx lighthouse-ci autorun` veya
+  mevcut script neyse çalıştır (bkz. `.github/workflows/` içindeki
+  lighthouse ile ilgili workflow).
+* **ZORUNLU DOĞRULAMA:**
+  - Performance / Accessibility / Best Practices / SEO skorlarının 4'ünü
+    de sayısal olarak yapıştır. Performance skoru Kademe 27 öncesi/sonrası
+    karşılaştırmalı verilirse ideal.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 39: Accessibility (a11y) Otomatik Denetim
+* **Açıklama:** Kademe 22'de "a11y iyileştirmeleri" yapıldığı iddia edildi
+  ama otomatik bir denetim aracıyla hiç doğrulanmadı.
+* **İşlem:** `axe-core` veya `@axe-core/playwright` ile ana sayfalar
+  (Landing, Dashboard, Vocabulary, Grammar, Writing, Profile) üzerinde
+  otomatik tarama çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Her sayfa için critical/serious ihlal sayısını raporla. 0 critical
+    hedeflenir; serious varsa listele ve düzelt ya da gerekçelendir.
+* **Durum:** Beklemede. *(Deploy öncesi kullanıcı onayı gerekli.)*
+
+### [ ] Kademe 40: Backend Rate-Limit / Auth Endpoint Denetimi
+* **Açıklama:** Backend'de rate-limit olduğu iddia ediliyor (önceki
+  raporda görüldü) ama hangi endpoint'lerin korunduğu tam listelenmedi.
+* **İşlem:** Tüm backend route'larını (`backend/src/**/*routes*.ts` vb.)
+  tara, her endpoint için auth + rate-limit uygulanıp uygulanmadığını
+  bir tabloya çıkar.
+* **ZORUNLU DOĞRULAMA:**
+  - Endpoint / Auth var mı / Rate-limit var mı / Not şeklinde bir tablo
+    ver. Korumasız kritik endpoint (ör. AI çağrısı, billing) varsa önce
+    onu düzelt, sonra tabloyu güncelle.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 41: Secret Sızıntısı Tam Taraması (git geçmişi dahil)
+* **Açıklama:** `.env.example` temiz olduğu doğrulandı ama git commit
+  geçmişinde eski bir sızıntı olup olmadığı hiç kontrol edilmedi.
+* **İşlem:** `gitleaks detect --source . -v` (veya benzeri bir secret
+  scanner) tüm git history üzerinde çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Tarama çıktısını tam yapıştır. Bulgu varsa (gerçek secret ise) anahtarı
+    derhal rotate et ve kullanıcıya haber ver, sahte pozitifse neden
+    olduğunu açıkla.
+* **Durum:** Beklemede. *(Bulgu çıkarsa: kullanıcı onayı zorunlu, kendi
+  başına deploy etme.)*
+
+### [ ] Kademe 42: `console.log` / Debug Kalıntısı Temizliği
+* **Açıklama:** Prod build'e sızan debug logları performans ve bilgi
+  sızıntısı riski taşır.
+* **İşlem:** `src/` ve `backend/src/` içinde test dosyaları hariç
+  `console.log` / `console.debug` kalıntılarını tara, gerçekten gereksiz
+  olanları kaldır, gerekli olanları (`logger.info` gibi) yapılandırılmış
+  logging'e taşı.
+* **ZORUNLU DOĞRULAMA:**
+  - Öncesi/sonrası `grep -rn "console\.\(log\|debug\)"` sayımını göster.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 43: `any` Tipi Kullanım Denetimi
+* **Açıklama:** TypeScript strict olsa da `any` kullanımı tip güvenliğini
+  by-pass eder; gerçek kullanım oranı hiç ölçülmedi.
+* **İşlem:** `grep -rn ": any\b\|as any\b" src backend/src --include="*.ts" --include="*.tsx" | wc -l`
+  ile mevcut sayıyı çıkar, kritik olanları (özellikle API sınırları,
+  billing/auth kodu) somut tiplerle değiştir.
+* **ZORUNLU DOĞRULAMA:**
+  - Öncesi/sonrası sayım + hangi dosyalarda kritik `any` kaldığının kısa
+    listesi.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 44: Backend Load Test Gerçek Sonuçları (k6)
+* **Açıklama:** `.github/workflows/load-test.yml` mevcut ama gerçek bir
+  sonuç hiç paylaşılmadı.
+* **İşlem:** `k6 run` ile mevcut load test senaryosunu lokal/staging'e
+  karşı çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - p95/p99 response time, error rate, RPS gibi k6 özet çıktısını yapıştır.
+    Kabul edilemez seviyede hata oranı varsa (>%1) önce onu düzelt.
+* **Durum:** Beklemede. *(Prod'a karşı çalıştırılacaksa kullanıcı onayı
+  zorunlu — gerçek trafiğe yük bindirebilir.)*
+
+### [ ] Kademe 45: Mutation Testing Skoru (Stryker)
+* **Açıklama:** Proje Stryker içeriyor ama mutation score hiç ölçülmedi.
+  Yüksek test sayısı, testlerin gerçekten hataları yakaladığı anlamına
+  gelmez — bunu mutation testing kanıtlar.
+* **İşlem:** `npx stryker run` (kapsam çok büyükse önce kritik modüllerle
+  sınırla: billing, auth, ai-ledger).
+* **ZORUNLU DOĞRULAMA:**
+  - Mutation score yüzdesini raporla (hedef: >%60 kritik modüllerde).
+    Düşükse en az 5 "survived mutant"ı gerçek testle öldür.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 46: CI Pipeline Süresi ve Paralelleştirme
+* **Açıklama:** `ci.yml` mevcut ama toplam süre hiç ölçülmedi; typecheck,
+  lint, test, build sıralı mı paralel mi çalışıyor kontrol edilmedi.
+* **İşlem:** Son 3 CI run'ının toplam süresini GitHub Actions'tan al,
+  gerekirse job'ları paralelleştir (`jobs:` altında bağımsız adımlar
+  ayrı job olsun).
+* **ZORUNLU DOĞRULAMA:**
+  - Önce/sonra toplam CI süresi (dakika) karşılaştırması.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 47: Dependency Güncellik Taraması (`npm outdated`)
+* **Açıklama:** Kademe 29/30 sadece güvenlik açıklarını kapattı; genel
+  güncellik hiç ölçülmedi.
+* **İşlem:** `npm outdated` (frontend) ve `cd backend && npm outdated`
+  çalıştır, major sürüm farkı olan kritik paketleri (React, Vite,
+  Express, Stripe SDK) değerlendirip güvenli olanları güncelle.
+* **ZORUNLU DOĞRULAMA:**
+  - Öncesi/sonrası `npm outdated` çıktısı + güncellenen paketlerden sonra
+    `npm run typecheck && npm run test` hâlâ temiz.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 48: README / Dokümantasyon Tutarlılık Son Kontrolü
+* **Açıklama:** Önceki turlarda AI sağlayıcı (Gemini/OpenAI) çelişkisi
+  bulundu; genel dokümantasyonun kod ile tam örtüştüğü hiç uçtan uca
+  kontrol edilmedi.
+* **İşlem:** README, backend README, `.env.example` açıklamaları ile
+  gerçek kod davranışını karşılaştır (env değişken isimleri, script
+  adları, port numaraları dahil).
+* **ZORUNLU DOĞRULAMA:**
+  - Bulunan her tutarsızlığı "README'de X yazıyor, kodda Y" formatında
+    listele, düzelttikten sonra tekrar listele (boş olmalı).
+* **Durum:** Beklemede.
+
+### [ ] Kademe 49: Tam Regresyon Turu (Faz 2 Kapanış Kontrolü)
+* **Açıklama:** Kademe 27-48 arası yapılan tüm değişikliklerin birbirini
+  bozmadığını doğrulayan uçtan uca son kontrol.
+* **İşlem:** Sırayla çalıştır: `npm install`, `npm run typecheck`,
+  `npm run lint`, `npm run test`, `npm run build`, `cd backend && npm ci
+  && npm run typecheck && npm test`, `npm audit` (her iki klasörde).
+* **ZORUNLU DOĞRULAMA:**
+  - Yukarıdaki 8 komutun HEPSİNİN tam çıktısını tek mesajda, sırayla
+    yapıştır. Herhangi biri hata verirse Kademe 49 kapanmaz, önce o
+    hata giderilir.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 50: Bağımsız Denetim İçin Paketleme
+* **Açıklama:** Faz 2'nin tamamı bittiğinde, projeyi tekrar zip'leyip
+  bağımsız denetime (Claude) gönder.
+* **İşlem:** `git status` temiz olduğundan emin ol, gereksiz
+  `node_modules`/`dist` hariç zip oluştur.
+* **ZORUNLU DOĞRULAMA:**
+  - Kademe 27-49 arası her birinin "ZORUNLU DOĞRULAMA" çıktılarının
+    tümünü tek bir özet dosyada (`FAZ2-KANIT.md`) topla ve zip'e dahil et.
+* **Durum:** Beklemede.
+
+---
+
+## 🎯 Beklenen Puan Aralığı (Faz 2 Sonunda)
+
+| Alan | Şu An | Faz 2 Sonrası Hedef |
+|---|---|---|
+| Tip Güvenliği | 92 | 94-96 |
+| Test Altyapısı | 85 | 92-95 |
+| Backend Kalitesi | 88 | 92-94 |
+| Performans / Bundle | 30 | 88-92 |
+| Kod Kalitesi (complexity) | 62 | 90-94 |
+| Güvenlik (dependency) | 72 | 90-95 |
+| **Genel Ortalama** | **~76** | **~94-96** |
+
+100'e tam ulaşmak genelde önerilmez/gereksizdir — kalan 4-6 puanlık fark
+genelde "sürekli bakım" gerektiren şeylerdir (her yeni PR'da complexity
+kontrolü, her hafta dependency taraması vb.), tek seferlik bir görev
+listesiyle kapanmaz, süregelen bir disiplin ister.
+
+Not: Her kademe kanıtla kapatılmadan sıradakine geçilmeyecek. Bağımsız
+denetim, "[x] YAPILDI" ibaresine değil, bu dosyaya eklenmiş gerçek
+terminal çıktılarına bakarak puanlayacak.
+

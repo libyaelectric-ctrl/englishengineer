@@ -227,7 +227,10 @@ const InterviewSimulatorDemo = ({
           </div>
 
           <div>
-            <label htmlFor="answer-textarea" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="answer-textarea"
+              className="block text-sm font-medium text-foreground"
+            >
               Your Answer
             </label>
             <p className="mt-1 text-xs text-muted-copy">

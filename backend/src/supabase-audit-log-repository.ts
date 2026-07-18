@@ -67,7 +67,9 @@ export const createSupabaseAuditLogRepository = (
         pendingBatch.unshift(...batch);
       }
     } catch (err: unknown) {
-      logger.error('Audit log flush error', { message: err instanceof Error ? err.message : String(err) });
+      logger.error('Audit log flush error', {
+        message: err instanceof Error ? err.message : String(err),
+      });
       pendingBatch.unshift(...batch);
     }
   };
@@ -128,7 +130,9 @@ export const createSupabaseAuditLogRepository = (
         severity: row.severity,
       }));
     } catch (err: unknown) {
-      logger.error('Audit log query error', { message: err instanceof Error ? err.message : String(err) });
+      logger.error('Audit log query error', {
+        message: err instanceof Error ? err.message : String(err),
+      });
       return [];
     }
   };

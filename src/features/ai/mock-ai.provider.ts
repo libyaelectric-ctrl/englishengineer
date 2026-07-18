@@ -197,7 +197,13 @@ const formatEloImpact = (wordCount: number): string =>
 
 const resolveContext = (context: AIRequest['context']) => {
   if (!context) {
-    return { weakSkills: [], focusArea: 'Writing', userName: 'the learner', targetLevel: 'B2', weakVocabulary: [] };
+    return {
+      weakSkills: [],
+      focusArea: 'Writing',
+      userName: 'the learner',
+      targetLevel: 'B2',
+      weakVocabulary: [],
+    };
   }
   const weakSkills = context.weakSkills?.filter((s) => s !== 'None') ?? [];
   const focusArea = context.recommendedFocus || weakSkills[0] || 'Writing';
@@ -234,7 +240,10 @@ const createMockCoachResult = (
     keyVocabulary: technicalVocabulary,
     grammarNotes: MOCK_GRAMMAR_NOTES,
     toneFeedback: getToneFeedback(request.modeId),
-    recommendedNextTask: getRecommendedNextTask(request.operation, ctx.focusArea),
+    recommendedNextTask: getRecommendedNextTask(
+      request.operation,
+      ctx.focusArea
+    ),
     estimatedCefrImpact: `Likely impact: stronger ${ctx.targetLevel} control if repeated 3 times this week.`,
     cefrEstimate: ctx.targetLevel,
     engineerEloImpactEstimate: formatEloImpact(wordCount),

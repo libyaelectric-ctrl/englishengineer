@@ -9,7 +9,13 @@ import {
   BillingPortalBodySchema,
 } from './validation.js';
 import type { BillingService } from './billing-service.js';
-import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
 export const registerBillingRoutes = (
   app: Express,

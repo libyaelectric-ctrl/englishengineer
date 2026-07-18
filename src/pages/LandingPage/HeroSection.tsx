@@ -84,8 +84,8 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       className="max-w-xl text-xs leading-5 text-muted-copy"
       style={heroFadeStyle(heroVisible, '220ms')}
     >
-      EngVox turns writing, speaking, listening and reading into an
-      orchestrated practice system for real engineering work.
+      EngVox turns writing, speaking, listening and reading into an orchestrated
+      practice system for real engineering work.
     </p>
 
     <div

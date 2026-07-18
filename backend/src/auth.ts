@@ -141,28 +141,49 @@ export const createBackendAuth = (
   config: BackendAuthConfig,
   fetchImpl: typeof fetch = fetch
 ): BackendAuth => {
-  const authenticateInternalSecret = (token: string | undefined, request: Request): AuthenticatedUser | null => {
+  const authenticateInternalSecret = (
+    token: string | undefined,
+    request: Request
+  ): AuthenticatedUser | null => {
     if (!secretsMatch(token, config.internalApiSecret)) return null;
     const userId = request.headers['x-engineeros-user-id'];
     if (typeof userId !== 'string' || !userId.trim()) {
-      throw new ApiError(400, 'missing_authenticated_user', 'X-EngineerOS-User-Id is required for internal authentication.');
+      throw new ApiError(
+        400,
+        'missing_authenticated_user',
+        'X-EngineerOS-User-Id is required for internal authentication.'
+      );
     }
     return {
       userId: userId.trim(),
-      email: typeof request.headers['x-engineeros-user-email'] === 'string' ? request.headers['x-engineeros-user-email'] : undefined,
+      email:
+        typeof request.headers['x-engineeros-user-email'] === 'string'
+          ? request.headers['x-engineeros-user-email']
+          : undefined,
       source: 'internal-secret',
     };
   };
 
   const getRequestedUserId = (request: Request): string | undefined => {
-    const raw = request.body?.userId ?? request.query?.userId ?? request.headers['x-engineeros-user-id'];
+    const raw =
+      request.body?.userId ??
+      request.query?.userId ??
+      request.headers['x-engineeros-user-id'];
     return typeof raw === 'string' && raw.trim() ? raw.trim() : undefined;
   };
 
-  const authenticateDevBypass = (request: Request): AuthenticatedUser | null => {
-    if (!config.allowInsecureDevAuth || config.environment === 'production') return null;
-    const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
-    return { userId: getRequestedUserId(request) ?? 'engineeros-dev-user', email, source: 'dev-bypass' };
+  const authenticateDevBypass = (
+    request: Request
+  ): AuthenticatedUser | null => {
+    if (!config.allowInsecureDevAuth || config.environment === 'production')
+      return null;
+    const email =
+      typeof request.body?.email === 'string' ? request.body.email : undefined;
+    return {
+      userId: getRequestedUserId(request) ?? 'engineeros-dev-user',
+      email,
+      source: 'dev-bypass',
+    };
   };
 
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
@@ -182,7 +203,11 @@ export const createBackendAuth = (
     const devUser = authenticateDevBypass(request);
     if (devUser) return devUser;
 
-    throw new ApiError(401, 'authentication_required', 'A valid backend authorization token is required.');
+    throw new ApiError(
+      401,
+      'authentication_required',
+      'A valid backend authorization token is required.'
+    );
   };
 
   const requireBackendAuth = async (
@@ -206,7 +231,7 @@ export const createBackendAuth = (
     try {
       request.auth = await authenticate(request);
     } catch {
-      request.auth = undefined;
+      request.auth = null;
     }
     next();
   };

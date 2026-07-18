@@ -16,8 +16,9 @@ import type { AiConfig } from '../../types.js';
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
 const isEvaluationOperation = (operation: string, body: AiRequestBody) =>
-  (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(operation) &&
-  body?.context !== undefined;
+  (
+    ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]
+  ).includes(operation) && body?.context !== undefined;
 
 const isCustomPracticeRequest = (prompt: string) => {
   const lower = prompt.toLowerCase();
@@ -31,7 +32,11 @@ const isCustomPracticeRequest = (prompt: string) => {
   );
 };
 
-const buildPrompt = (prompt: string, body: AiRequestBody, evaluation: boolean): string => {
+const buildPrompt = (
+  prompt: string,
+  body: AiRequestBody,
+  evaluation: boolean
+): string => {
   let finalPrompt = prompt;
   if (evaluation) {
     finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
@@ -50,12 +55,28 @@ const callProvider = async (
   fetchImpl: typeof fetch,
   evaluation: boolean
 ): Promise<string> => {
-  if (config.provider === 'anthropic') return callAnthropic(config as ProviderConfig, prompt, signal, fetchImpl);
-  if (config.provider === 'gemini') return callGemini(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
-  return callOpenAI(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
+  if (config.provider === 'anthropic')
+    return callAnthropic(config as ProviderConfig, prompt, signal, fetchImpl);
+  if (config.provider === 'gemini')
+    return callGemini(
+      config as ProviderConfig,
+      prompt,
+      signal,
+      fetchImpl,
+      evaluation
+    );
+  return callOpenAI(
+    config as ProviderConfig,
+    prompt,
+    signal,
+    fetchImpl,
+    evaluation
+  );
 };
 
-const parseEvaluationResponse = (text: string): { structured: Record<string, unknown> | null; responseText: string } => {
+const parseEvaluationResponse = (
+  text: string
+): { structured: Record<string, unknown> | null; responseText: string } => {
   try {
     let cleanText = text.trim();
     if (cleanText.startsWith('```')) {
@@ -65,9 +86,16 @@ const parseEvaluationResponse = (text: string): { structured: Record<string, unk
       cleanText = lines.join('\n').trim();
     }
     const parsed = JSON.parse(cleanText);
-    return { structured: parsed, responseText: parsed.professionalVersion || parsed.summary || text };
+    return {
+      structured: parsed,
+      responseText: parsed.professionalVersion || parsed.summary || text,
+    };
   } catch (err) {
-    logger.error('Failed to parse AI evaluation structured response', {}, err as Error);
+    logger.error(
+      'Failed to parse AI evaluation structured response',
+      {},
+      err as Error
+    );
     return { structured: null, responseText: text };
   }
 };
@@ -143,7 +171,8 @@ export const createAIService = (
     const finalPrompt = buildPrompt(prompt, body, evaluation);
 
     const text = await withTimeout(
-      (signal) => callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
+      (signal) =>
+        callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
       config.timeoutMs
     );
 

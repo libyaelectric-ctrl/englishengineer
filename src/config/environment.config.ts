@@ -164,11 +164,23 @@ export const validateEnvironment = (
   const unsafeFrontendKeys = getUnsafeFrontendEnvKeys(source);
 
   const warnings = collectEnvironmentWarnings(
-    cfg.aiProvider, cfg.hasAiProxyUrl, cfg.authProvider, cfg.hasSupabaseUrl, cfg.hasSupabaseAnonKey, cfg.hasBillingApiUrl
+    cfg.aiProvider,
+    cfg.hasAiProxyUrl,
+    cfg.authProvider,
+    cfg.hasSupabaseUrl,
+    cfg.hasSupabaseAnonKey,
+    cfg.hasBillingApiUrl
   );
   const errors = collectEnvironmentErrors(
-    mode, cfg.aiProvider, cfg.hasAiProxyUrl, cfg.authProvider, cfg.hasSupabaseUrl, cfg.hasSupabaseAnonKey,
-    cfg.hasBillingApiUrl, cfg.appVersion, unsafeFrontendKeys
+    mode,
+    cfg.aiProvider,
+    cfg.hasAiProxyUrl,
+    cfg.authProvider,
+    cfg.hasSupabaseUrl,
+    cfg.hasSupabaseAnonKey,
+    cfg.hasBillingApiUrl,
+    cfg.appVersion,
+    unsafeFrontendKeys
   );
 
   return {

@@ -127,136 +127,148 @@ const PricingPage = () => {
     }
   };
 
-const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
-  <Link
-    to={currentUser ? '/dashboard' : '/start'}
-    className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-bold uppercase tracking-wider hover:bg-[#faf8ff] transition-all cursor-pointer shadow-sm text-foreground"
-  >
-    {currentUser ? 'Go to dashboard' : 'Start free'}
-  </Link>
-);
+  const FreePlanButton = ({
+    currentUser,
+  }: {
+    currentUser: { id: string } | null;
+  }) => (
+    <Link
+      to={currentUser ? '/dashboard' : '/start'}
+      className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-bold uppercase tracking-wider hover:bg-[#faf8ff] transition-all cursor-pointer shadow-sm text-foreground"
+    >
+      {currentUser ? 'Go to dashboard' : 'Start free'}
+    </Link>
+  );
 
-const isPlanCardHighlighted = (planId: string) =>
-  planId === 'pro' || planId === 'project';
+  const isPlanCardHighlighted = (planId: string) =>
+    planId === 'pro' || planId === 'project';
 
-const PlanCard = ({
-  plan,
-  subscription,
-  billingEnabled,
-  isCheckoutLoading,
-  checkoutPlanId,
-  isBillingHealthLoading,
-  currentUser,
-  onCheckout,
-}: {
-  plan: CommercialPlanPreview;
-  subscription: { planId: string } | null;
-  billingEnabled: boolean;
-  isCheckoutLoading: boolean;
-  checkoutPlanId: string | null;
-  isBillingHealthLoading: boolean;
-  currentUser: { id: string } | null;
-  onCheckout: (planId: BillingPlanId) => void;
-}) => (
-  <article
-    key={plan.id}
-    className={`relative flex flex-col rounded-[4px] border p-6 bg-white ${
-      isPlanCardHighlighted(plan.id)
-        ? 'border-[#0047bb]/50 shadow-md'
-        : 'border-[#d9d9e3] shadow-sm'
-    }`}
-  >
-    {plan.id === 'pro' && (
-      <div className="absolute -top-3 left-4 rounded-[4px] bg-[#0047bb] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
-        Recommended
+  const PlanCard = ({
+    plan,
+    subscription,
+    billingEnabled,
+    isCheckoutLoading,
+    checkoutPlanId,
+    isBillingHealthLoading,
+    currentUser,
+    onCheckout,
+  }: {
+    plan: CommercialPlanPreview;
+    subscription: { planId: string } | null;
+    billingEnabled: boolean;
+    isCheckoutLoading: boolean;
+    checkoutPlanId: string | null;
+    isBillingHealthLoading: boolean;
+    currentUser: { id: string } | null;
+    onCheckout: (planId: BillingPlanId) => void;
+  }) => (
+    <article
+      key={plan.id}
+      className={`relative flex flex-col rounded-[4px] border p-6 bg-white ${
+        isPlanCardHighlighted(plan.id)
+          ? 'border-[#0047bb]/50 shadow-md'
+          : 'border-[#d9d9e3] shadow-sm'
+      }`}
+    >
+      {plan.id === 'pro' && (
+        <div className="absolute -top-3 left-4 rounded-[4px] bg-[#0047bb] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
+          Recommended
+        </div>
+      )}
+      <div className="flex items-start justify-between">
+        <p className="text-sm font-bold text-foreground">{plan.name}</p>
+        <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+          {getAccessBadge(plan.id)}
+        </span>
       </div>
-    )}
-    <div className="flex items-start justify-between">
-      <p className="text-sm font-bold text-foreground">{plan.name}</p>
-      <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-        {getAccessBadge(plan.id)}
-      </span>
-    </div>
-    <p className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
-      {plan.price}
-    </p>
-    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-      {plan.cadence}
-    </p>
-    <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed font-medium">
-      {plan.audience}
-    </p>
-    <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
-      <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-        Best for
+      <p className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
+        {plan.price}
       </p>
-      <p className="mt-0.5 text-xs font-bold text-foreground">
-        {plan.bestFor}
+      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+        {plan.cadence}
       </p>
-    </div>
-    <p className="mt-4 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-      Included
-    </p>
-    <ul className="mt-2 flex-1 space-y-2">
-      {plan.benefits.map((b) => (
-        <li key={b} className="flex gap-2 text-xs text-muted-copy font-medium">
-          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0047bb]" />
-          {b}
-        </li>
-      ))}
-    </ul>
-    <div className="mt-3 flex gap-2 border-t border-[#d9d9e3] pt-3 text-[10px] text-muted-copy font-medium">
-      <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
-      {plan.notIncluded}
-    </div>
-    {plan.id === 'free' ? (
-      <FreePlanButton currentUser={currentUser} />
-    ) : (
-      <PlanAction
-        plan={plan}
-        isCurrent={subscription?.planId === plan.id}
-        inProgress={isCheckoutLoading && checkoutPlanId === plan.id}
-        disabled={!billingEnabled || isCheckoutLoading && checkoutPlanId === plan.id || isBillingHealthLoading || isPlanUnavailable(plan)}
-        onClick={() => onCheckout(plan.id)}
-      />
-    )}
-  </article>
-);
+      <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed font-medium">
+        {plan.audience}
+      </p>
+      <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
+        <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+          Best for
+        </p>
+        <p className="mt-0.5 text-xs font-bold text-foreground">
+          {plan.bestFor}
+        </p>
+      </div>
+      <p className="mt-4 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+        Included
+      </p>
+      <ul className="mt-2 flex-1 space-y-2">
+        {plan.benefits.map((b) => (
+          <li
+            key={b}
+            className="flex gap-2 text-xs text-muted-copy font-medium"
+          >
+            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0047bb]" />
+            {b}
+          </li>
+        ))}
+      </ul>
+      <div className="mt-3 flex gap-2 border-t border-[#d9d9e3] pt-3 text-[10px] text-muted-copy font-medium">
+        <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
+        {plan.notIncluded}
+      </div>
+      {plan.id === 'free' ? (
+        <FreePlanButton currentUser={currentUser} />
+      ) : (
+        <PlanAction
+          plan={plan}
+          isCurrent={subscription?.planId === plan.id}
+          inProgress={isCheckoutLoading && checkoutPlanId === plan.id}
+          disabled={
+            !billingEnabled ||
+            (isCheckoutLoading && checkoutPlanId === plan.id) ||
+            isBillingHealthLoading ||
+            isPlanUnavailable(plan)
+          }
+          onClick={() => onCheckout(plan.id)}
+        />
+      )}
+    </article>
+  );
 
-const PlanAction = ({
-  plan,
-  isCurrent,
-  inProgress,
-  disabled,
-  onClick,
-}: {
-  plan: CommercialPlanPreview;
-  isCurrent: boolean;
-  inProgress: boolean;
-  disabled: boolean;
-  onClick: () => void;
-}) => (
-  <button
-    type="button"
-    onClick={onClick}
-    disabled={disabled}
-    className={`mt-6 flex h-10 w-full items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
-      isPlanUnavailable(plan)
-        ? 'border border-[#d9d9e3] bg-white text-muted-copy cursor-not-allowed opacity-50'
+  const PlanAction = ({
+    plan,
+    isCurrent,
+    inProgress,
+    disabled,
+    onClick,
+  }: {
+    plan: CommercialPlanPreview;
+    isCurrent: boolean;
+    inProgress: boolean;
+    disabled: boolean;
+    onClick: () => void;
+  }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`mt-6 flex h-10 w-full items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+        isPlanUnavailable(plan)
+          ? 'border border-[#d9d9e3] bg-white text-muted-copy cursor-not-allowed opacity-50'
+          : isCurrent
+            ? 'border border-success/20 bg-success/10 text-success cursor-not-allowed'
+            : 'bg-[#0047bb] text-white hover:bg-[#0047bb]/95'
+      }`}
+    >
+      {isPlanUnavailable(plan)
+        ? 'Coming soon'
         : isCurrent
-          ? 'border border-success/20 bg-success/10 text-success cursor-not-allowed'
-          : 'bg-[#0047bb] text-white hover:bg-[#0047bb]/95'
-    }`}
-  >
-    {isPlanUnavailable(plan)
-      ? 'Coming soon'
-      : isCurrent
-        ? 'Current plan'
-        : inProgress
-          ? 'Loading...'
-          : `Upgrade to ${plan.name}`}
-  </button>
-);
+          ? 'Current plan'
+          : inProgress
+            ? 'Loading...'
+            : `Upgrade to ${plan.name}`}
+    </button>
+  );
 
   return (
     <main className="bg-[#faf8ff] text-foreground min-h-screen relative z-10 pb-16">

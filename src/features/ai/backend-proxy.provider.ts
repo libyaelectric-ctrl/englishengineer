@@ -327,20 +327,17 @@ export const createBackendProxyProvider = (
 
     try {
       const authHeaders = await getBackendAuthHeaders();
-      const response = await fetch(
-        resolveProxyEndpoint(proxyUrl, operation),
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-EngVox-AI-Contract': CONTRACT_VERSION,
-            'X-EngVox-Request-Id': requestId,
-            ...authHeaders,
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
-        }
-      );
+      const response = await fetch(resolveProxyEndpoint(proxyUrl, operation), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-EngVox-AI-Contract': CONTRACT_VERSION,
+          'X-EngVox-Request-Id': requestId,
+          ...authHeaders,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
       window.clearTimeout(timeoutId);
 
       if (!response.ok) {
@@ -376,10 +373,23 @@ export const createBackendProxyProvider = (
 
     while (retryCount <= MAX_RETRIES) {
       try {
-        const data = await executeSingleAttempt(proxyUrl!, operation, requestId, payload);
-        return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
+        const data = await executeSingleAttempt(
+          proxyUrl!,
+          operation,
+          requestId,
+          payload
+        );
+        return buildSuccessResponse(
+          data,
+          operation,
+          requestId,
+          status,
+          startedAt,
+          retryCount
+        );
       } catch (error) {
-        lastError = error instanceof BackendProxyError ? error : mapUnknownError(error);
+        lastError =
+          error instanceof BackendProxyError ? error : mapUnknownError(error);
         if (!lastError.retryable || retryCount >= MAX_RETRIES) break;
         retryCount += 1;
       }

@@ -28,8 +28,8 @@ const LockedView = () => (
       </p>
       <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
         Real Voice Speaking, pronunciation analysis, and voice simulator
-        workflows are exclusive features of the Max Plan ($59/mo). Upgrade
-        today to practice speech dynamically.
+        workflows are exclusive features of the Max Plan ($59/mo). Upgrade today
+        to practice speech dynamically.
       </p>
     </div>
     <Button

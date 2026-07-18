@@ -57,7 +57,9 @@ const buildSavePayload = (overrides: {
   minutes: number;
   taskCount: number;
 }) => ({
-  professionId: (overrides.professionalTrack === 'electrical' ? 'electrical-engineer' : null) as ProfessionId | null,
+  professionId: (overrides.professionalTrack === 'electrical'
+    ? 'electrical-engineer'
+    : null) as ProfessionId | null,
   industryId: overrides.industryId || null,
   communicationGoals: overrides.communicationGoals,
   selfReportedCefr: overrides.selfReportedCefr,
@@ -74,52 +76,98 @@ const buildSavePayload = (overrides: {
 
 const StepContent = ({
   step,
-  minutes, setMinutes, taskCount, setTaskCount,
-  country, setCountry, timezone, setTimezone,
-  interfaceLanguage, setInterfaceLanguage, initialTimezone, setGlobalLanguage,
-  professionalTrack, setProfessionalTrack,
-  electricalSubdomain, setElectricalSubdomain,
-  industryId, setIndustryId,
-  communicationGoals, setCommunicationGoals,
-  learningFocus, setLearningFocus,
-  careerGoal, setCareerGoal,
-  selfReportedCefr, setSelfReportedCefr,
-  selectedPlan, setSelectedPlan,
+  minutes,
+  setMinutes,
+  taskCount,
+  setTaskCount,
+  country,
+  setCountry,
+  timezone,
+  setTimezone,
+  interfaceLanguage,
+  setInterfaceLanguage,
+  initialTimezone,
+  setGlobalLanguage,
+  professionalTrack,
+  setProfessionalTrack,
+  electricalSubdomain,
+  setElectricalSubdomain,
+  industryId,
+  setIndustryId,
+  communicationGoals,
+  setCommunicationGoals,
+  learningFocus,
+  setLearningFocus,
+  careerGoal,
+  setCareerGoal,
+  selfReportedCefr,
+  setSelfReportedCefr,
+  selectedPlan,
+  setSelectedPlan,
 }: {
   step: Step;
-  minutes: number; setMinutes: React.Dispatch<React.SetStateAction<number>>;
-  taskCount: number; setTaskCount: React.Dispatch<React.SetStateAction<number>>;
-  country: string; setCountry: React.Dispatch<React.SetStateAction<string>>;
-  timezone: string; setTimezone: React.Dispatch<React.SetStateAction<string>>;
-  interfaceLanguage: InterfaceLanguage; setInterfaceLanguage: React.Dispatch<React.SetStateAction<InterfaceLanguage>>;
-  initialTimezone: string; setGlobalLanguage: (l: InterfaceLanguage) => void;
-  professionalTrack: ProfessionalTrack; setProfessionalTrack: React.Dispatch<React.SetStateAction<ProfessionalTrack>>;
-  electricalSubdomain: ElectricalSubdomain; setElectricalSubdomain: React.Dispatch<React.SetStateAction<ElectricalSubdomain>>;
-  industryId: IndustryId | ''; setIndustryId: React.Dispatch<React.SetStateAction<IndustryId | ''>>;
-  communicationGoals: CommunicationGoal[]; setCommunicationGoals: React.Dispatch<React.SetStateAction<CommunicationGoal[]>>;
-  learningFocus: SkillName[]; setLearningFocus: React.Dispatch<React.SetStateAction<SkillName[]>>;
-  careerGoal: string; setCareerGoal: React.Dispatch<React.SetStateAction<string>>;
-  selfReportedCefr: SelfReportedCefr; setSelfReportedCefr: React.Dispatch<React.SetStateAction<SelfReportedCefr>>;
-  selectedPlan: UserLearningProfile['selectedPlan']; setSelectedPlan: React.Dispatch<React.SetStateAction<UserLearningProfile['selectedPlan']>>;
+  minutes: number;
+  setMinutes: React.Dispatch<React.SetStateAction<number>>;
+  taskCount: number;
+  setTaskCount: React.Dispatch<React.SetStateAction<number>>;
+  country: string;
+  setCountry: React.Dispatch<React.SetStateAction<string>>;
+  timezone: string;
+  setTimezone: React.Dispatch<React.SetStateAction<string>>;
+  interfaceLanguage: InterfaceLanguage;
+  setInterfaceLanguage: React.Dispatch<React.SetStateAction<InterfaceLanguage>>;
+  initialTimezone: string;
+  setGlobalLanguage: (l: InterfaceLanguage) => void;
+  professionalTrack: ProfessionalTrack;
+  setProfessionalTrack: React.Dispatch<React.SetStateAction<ProfessionalTrack>>;
+  electricalSubdomain: ElectricalSubdomain;
+  setElectricalSubdomain: React.Dispatch<
+    React.SetStateAction<ElectricalSubdomain>
+  >;
+  industryId: IndustryId | '';
+  setIndustryId: React.Dispatch<React.SetStateAction<IndustryId | ''>>;
+  communicationGoals: CommunicationGoal[];
+  setCommunicationGoals: React.Dispatch<
+    React.SetStateAction<CommunicationGoal[]>
+  >;
+  learningFocus: SkillName[];
+  setLearningFocus: React.Dispatch<React.SetStateAction<SkillName[]>>;
+  careerGoal: string;
+  setCareerGoal: React.Dispatch<React.SetStateAction<string>>;
+  selfReportedCefr: SelfReportedCefr;
+  setSelfReportedCefr: React.Dispatch<React.SetStateAction<SelfReportedCefr>>;
+  selectedPlan: UserLearningProfile['selectedPlan'];
+  setSelectedPlan: React.Dispatch<
+    React.SetStateAction<UserLearningProfile['selectedPlan']>
+  >;
 }) => {
   if (step === 'profile') {
     return (
       <ProfileStep
-        minutes={minutes} setMinutes={setMinutes}
-        taskCount={taskCount} setTaskCount={setTaskCount}
-        country={country} setCountry={setCountry}
-        timezone={timezone} setTimezone={setTimezone}
-        interfaceLanguage={interfaceLanguage} setInterfaceLanguage={setInterfaceLanguage}
-        initialTimezone={initialTimezone} setGlobalLanguage={setGlobalLanguage}
+        minutes={minutes}
+        setMinutes={setMinutes}
+        taskCount={taskCount}
+        setTaskCount={setTaskCount}
+        country={country}
+        setCountry={setCountry}
+        timezone={timezone}
+        setTimezone={setTimezone}
+        interfaceLanguage={interfaceLanguage}
+        setInterfaceLanguage={setInterfaceLanguage}
+        initialTimezone={initialTimezone}
+        setGlobalLanguage={setGlobalLanguage}
       />
     );
   }
   if (step === 'role') {
     return (
       <RoleStep
-        professionalTrack={professionalTrack} setProfessionalTrack={setProfessionalTrack}
-        electricalSubdomain={electricalSubdomain} setElectricalSubdomain={setElectricalSubdomain}
-        industryId={industryId} setIndustryId={setIndustryId}
+        professionalTrack={professionalTrack}
+        setProfessionalTrack={setProfessionalTrack}
+        electricalSubdomain={electricalSubdomain}
+        setElectricalSubdomain={setElectricalSubdomain}
+        industryId={industryId}
+        setIndustryId={setIndustryId}
         interfaceLanguage={interfaceLanguage}
       />
     );
@@ -127,15 +175,21 @@ const StepContent = ({
   if (step === 'goals') {
     return (
       <GoalsStep
-        communicationGoals={communicationGoals} setCommunicationGoals={setCommunicationGoals}
-        learningFocus={learningFocus} setLearningFocus={setLearningFocus}
-        careerGoal={careerGoal} setCareerGoal={setCareerGoal}
+        communicationGoals={communicationGoals}
+        setCommunicationGoals={setCommunicationGoals}
+        learningFocus={learningFocus}
+        setLearningFocus={setLearningFocus}
+        careerGoal={careerGoal}
+        setCareerGoal={setCareerGoal}
       />
     );
   }
   if (step === 'level') {
     return (
-      <LevelStep selfReportedCefr={selfReportedCefr} setSelfReportedCefr={setSelfReportedCefr} />
+      <LevelStep
+        selfReportedCefr={selfReportedCefr}
+        setSelfReportedCefr={setSelfReportedCefr}
+      />
     );
   }
   return (
@@ -144,10 +198,17 @@ const StepContent = ({
 };
 
 const OnboardingFooter = ({
-  index, save, isLiteMode, exploreLiteAtA1, continueFlow,
+  index,
+  save,
+  isLiteMode,
+  exploreLiteAtA1,
+  continueFlow,
 }: {
-  index: number; save: () => void; isLiteMode: boolean;
-  exploreLiteAtA1: () => void; continueFlow: () => void;
+  index: number;
+  save: () => void;
+  isLiteMode: boolean;
+  exploreLiteAtA1: () => void;
+  continueFlow: () => void;
 }) => (
   <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-surface-hover px-4 py-4 sm:px-7">
     {index > 0 ? (
@@ -228,10 +289,19 @@ const OnboardingPage = () => {
   const save = (complete = false) => {
     LearningProfileRepository.updatePreferences(userId, {
       ...buildSavePayload({
-        professionalTrack, industryId, communicationGoals,
-        selfReportedCefr, learningFocus, selectedPlan,
-        electricalSubdomain, careerGoal, country, timezone,
-        interfaceLanguage, minutes, taskCount,
+        professionalTrack,
+        industryId,
+        communicationGoals,
+        selfReportedCefr,
+        learningFocus,
+        selectedPlan,
+        electricalSubdomain,
+        careerGoal,
+        country,
+        timezone,
+        interfaceLanguage,
+        minutes,
+        taskCount,
       }),
       onboardingCompleted: complete,
     });
@@ -245,13 +315,18 @@ const OnboardingPage = () => {
     ProductAnalyticsService.track('onboarding_completed', '/onboarding/plan', {
       metadata: { plan: selectedPlan, source: 'user' },
     });
-    navigate(initial.placementCompleted ? '/curriculum' : '/placement', { replace: true });
+    navigate(initial.placementCompleted ? '/curriculum' : '/placement', {
+      replace: true,
+    });
   };
 
   const continueFlow = () => {
     const complete = index === STEPS.length - 1;
     save(complete);
-    if (!complete) { navigateNext(); return; }
+    if (!complete) {
+      navigateNext();
+      return;
+    }
     navigateFinal();
   };
 
@@ -272,11 +347,17 @@ const OnboardingPage = () => {
                 Personal setup
               </p>
               <h1 className="text-xl font-medium text-foreground sm:text-2xl">
-                {LocalizationService.translate('onboarding.title', interfaceLanguage)}
+                {LocalizationService.translate(
+                  'onboarding.title',
+                  interfaceLanguage
+                )}
               </h1>
             </div>
           </div>
-          <ol className="mt-5 grid grid-cols-5 gap-2" aria-label="Onboarding progress">
+          <ol
+            className="mt-5 grid grid-cols-5 gap-2"
+            aria-label="Onboarding progress"
+          >
             {STEPS.map((item, itemIndex) => (
               <li
                 key={item}
@@ -284,7 +365,9 @@ const OnboardingPage = () => {
                 aria-current={item === step ? 'step' : undefined}
                 aria-label={`Step ${itemIndex + 1}: ${labels[item]}${itemIndex < index ? ', completed' : item === step ? ', current' : ''}`}
               >
-                <div className={`h-1.5 rounded-full ${itemIndex <= index ? 'bg-primary' : 'bg-border-soft'}`} />
+                <div
+                  className={`h-1.5 rounded-full ${itemIndex <= index ? 'bg-primary' : 'bg-border-soft'}`}
+                />
                 <span className="mt-2 hidden truncate text-[10px] font-medium text-muted-copy sm:block">
                   {labels[item]}
                 </span>
@@ -299,26 +382,43 @@ const OnboardingPage = () => {
         <div className="min-h-[410px] p-5 sm:p-7">
           <StepContent
             step={step}
-            minutes={minutes} setMinutes={setMinutes}
-            taskCount={taskCount} setTaskCount={setTaskCount}
-            country={country} setCountry={setCountry}
-            timezone={timezone} setTimezone={setTimezone}
-            interfaceLanguage={interfaceLanguage} setInterfaceLanguage={setInterfaceLanguage}
-            initialTimezone={initial.timezone} setGlobalLanguage={setGlobalLanguage}
-            professionalTrack={professionalTrack} setProfessionalTrack={setProfessionalTrack}
-            electricalSubdomain={electricalSubdomain} setElectricalSubdomain={setElectricalSubdomain}
-            industryId={industryId} setIndustryId={setIndustryId}
-            communicationGoals={communicationGoals} setCommunicationGoals={setCommunicationGoals}
-            learningFocus={learningFocus} setLearningFocus={setLearningFocus}
-            careerGoal={careerGoal} setCareerGoal={setCareerGoal}
-            selfReportedCefr={selfReportedCefr} setSelfReportedCefr={setSelfReportedCefr}
-            selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan}
+            minutes={minutes}
+            setMinutes={setMinutes}
+            taskCount={taskCount}
+            setTaskCount={setTaskCount}
+            country={country}
+            setCountry={setCountry}
+            timezone={timezone}
+            setTimezone={setTimezone}
+            interfaceLanguage={interfaceLanguage}
+            setInterfaceLanguage={setInterfaceLanguage}
+            initialTimezone={initial.timezone}
+            setGlobalLanguage={setGlobalLanguage}
+            professionalTrack={professionalTrack}
+            setProfessionalTrack={setProfessionalTrack}
+            electricalSubdomain={electricalSubdomain}
+            setElectricalSubdomain={setElectricalSubdomain}
+            industryId={industryId}
+            setIndustryId={setIndustryId}
+            communicationGoals={communicationGoals}
+            setCommunicationGoals={setCommunicationGoals}
+            learningFocus={learningFocus}
+            setLearningFocus={setLearningFocus}
+            careerGoal={careerGoal}
+            setCareerGoal={setCareerGoal}
+            selfReportedCefr={selfReportedCefr}
+            setSelfReportedCefr={setSelfReportedCefr}
+            selectedPlan={selectedPlan}
+            setSelectedPlan={setSelectedPlan}
           />
         </div>
 
         <OnboardingFooter
-          index={index} save={save} isLiteMode={isLiteMode}
-          exploreLiteAtA1={exploreLiteAtA1} continueFlow={continueFlow}
+          index={index}
+          save={save}
+          isLiteMode={isLiteMode}
+          exploreLiteAtA1={exploreLiteAtA1}
+          continueFlow={continueFlow}
         />
       </section>
     </main>
