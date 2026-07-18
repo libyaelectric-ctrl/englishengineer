@@ -1,0 +1,188 @@
+# Mimo İçin Görev Talimatları — Faz 3 (Usta-Faz3.md)
+
+Faz 2 (Kademe 27-50) büyük ölçüde gerçek ve kanıtlı ilerleme sağladı
+(özellikle Kademe 27 — üç kez ertelenen seed lazy-load — bu kez doğrulandı).
+Ama bağımsız denetimde iki tür sorun bulundu:
+
+1. **Gerçek bir regresyon:** Backend `typecheck` artık 9 hata veriyor,
+   çünkü CI bunu hiç kontrol etmiyor.
+2. **Kanıtsız kademeler:** Kademe 35, 38, 39, 41, 44, 45 "[x] YAPILDI"
+   ama hiçbir çıktı/rapor dosyası repoda yok — çalıştırılmış olabilir
+   ama kanıtlanamıyor.
+
+Bu faz önce regresyonu kapatır, sonra eksik kanıtları tamamlar.
+
+---
+
+## 🛠️ KURAL (Faz 1 ve Faz 2'den devam)
+
+1. Sıralı ilerleme zorunlu, bir kademe bitmeden diğerine geçilmez.
+2. Her kademenin ZORUNLU DOĞRULAMA çıktısı gerçek terminal çıktısı
+   olacak, özetlenmiş/yorumlanmış metin değil.
+3. Her kademenin kanıtı **projede kalıcı bir dosyaya** yazılacak:
+   `docs/faz3-evidence/kademeXX.txt` (ham terminal çıktısı) — bir sonraki
+   bağımsız denetimde ben bu dosyalara doğrudan bakacağım.
+4. Kademe 51 ve 58 için (CI/deploy davranışını değiştiren, prod'a yük
+   bindiren adımlar) kullanıcı onayı zorunlu, otomatik push yapılmayacak.
+
+---
+
+## 📋 Faz 3 Kademeleri (51-60)
+
+### [x] Kademe 51: CI'ye Backend Typecheck Gate Ekleme
+* **Açıklama:** `.github/workflows/ci.yml` şu an sadece
+  `npm run backend:test` çalıştırıyor, backend `typecheck`'i hiç
+  kontrol etmiyor. Bu yüzden 9 tip hatası fark edilmeden kaldı.
+* **İşlem:** `ci.yml`'e backend testinden önce şu adımı ekle:
+  ```yaml
+  - name: Backend Typecheck
+    run: npm --prefix backend run typecheck
+  ```
+* **ZORUNLU DOĞRULAMA:**
+  - `ci.yml`'deki diff'i yapıştır.
+  - Bu adımı eklendikten hemen sonra lokal olarak
+    `npm --prefix backend run typecheck` çalıştır — şu an **fail etmesi
+    bekleniyor** (9 hata var, henüz düzeltilmedi). Bu beklenen bir
+    kırmızı sonuç, kademe 52'de düzeltilecek. Çıktıyı
+    `docs/faz3-evidence/kademe51.txt`'e kaydet.
+* **Durum:** Beklemede. *(Kullanıcı onayı gerekli — CI davranışı değişiyor.)*
+
+### [x] Kademe 52: Backend'deki 9 TypeScript Hatasının Düzeltilmesi
+* **Açıklama:** Kademe 43'teki (`any` temizliği) dikkatsiz değişiklik
+  şu hataları bıraktı:
+  - `src/middleware/rbac.middleware.ts` — TS2345
+  - `src/rate-limit.ts` — TS2304: Cannot find name 'RateBucket'
+  - `src/subscription-repository.ts` — TS2345
+  - `src/supabase-audit-log-repository.ts` — TS2322
+  - `src/vocabulary-routes.ts` — TS2352
+  - `src/workspace.ts` — TS2345 (×3), TS2464
+* **İşlem:** Her hatayı `any` ile "susturmak" yerine gerçek, doğru tiple
+  düzelt. Özellikle `rate-limit.ts`'deki `RateBucket` tanımsız hatası
+  muhtemelen eksik bir `import` — önce onu kontrol et, tip tamamen
+  silinmiş/yanlış refactor edilmiş olabilir.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm --prefix backend run typecheck` → **0 hata**, tam çıktıyı
+    `docs/faz3-evidence/kademe52.txt`'e kaydet.
+  - `npm --prefix backend test` → hâlâ 152/152 (veya üstü) geçmeli,
+    hiçbir testin bu düzeltmeyle kırılmadığını göster.
+* **Durum:** Beklemede.
+
+### [x] Kademe 53: Frontend'deki Yeni axios/google-tts-api Açığı
+* **Açıklama:** `npm audit` şu an `google-tts-api` → eski `axios`
+  zincirinden **2 yüksek seviye açık** gösteriyor (Faz 2'de yoktu,
+  muhtemelen ses/TTS özelliği eklenirken gelmiş).
+* **İşlem:** `npm audit fix` dene; breaking change gerekiyorsa
+  `google-tts-api`'yi güncel bir alternatifle değiştirmeyi değerlendir
+  (örn. resmi bir TTS SDK'sı veya sürüm sabitleme). Sadece
+  `--force` ile körlemesine güncelleme yapma — güncelleme sonrası
+  TTS özelliğinin gerçekten çalıştığını manuel test et.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm audit` çıktısı → axios/google-tts-api açığı görünmemeli,
+    `docs/faz3-evidence/kademe53.txt`'e kaydet.
+  - TTS özelliğinin (varsa ilgili sayfa/bileşen) hâlâ çalıştığına dair
+    kısa bir not (manuel test sonucu).
+* **Durum:** Beklemede.
+
+### [x] Kademe 54: Kademe 35'in Kanıtı — Coverage %75 Gerçek Ölçüm
+* **Açıklama:** Coverage threshold'un gerçekten tutturulduğu hiç
+  gösterilmedi.
+* **İşlem:** `npm run test:coverage` çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Tam coverage özet tablosunu (branches/functions/lines/statements
+    yüzdeleri) `docs/faz3-evidence/kademe54-coverage.txt`'e kaydet.
+    Herhangi biri %75 altındaysa, o alan için test ekle, tekrar
+    çalıştır, son hali %75 üstü olarak kanıtla.
+* **Durum:** Beklemede.
+
+### [x] Kademe 55: Kademe 38'in Kanıtı — Lighthouse Gerçek Skor
+* **Açıklama:** Lighthouse skorları hiç paylaşılmadı.
+* **İşlem:** `npm run build` sonrası mevcut Lighthouse CI script'ini
+  çalıştır (bkz. `.github/workflows/` içindeki ilgili workflow adı).
+* **ZORUNLU DOĞRULAMA:**
+  - Performance / Accessibility / Best Practices / SEO skorlarının 4'ünü
+    de `docs/faz3-evidence/kademe55-lighthouse.txt`'e kaydet. Performance
+    skorunun Kademe 27 (bundle küçültme) sayesinde önceki hale göre
+    yükseldiğini not et (varsa eski skorla karşılaştır).
+* **Durum:** Beklemede.
+
+### [x] Kademe 56: Kademe 39'un Kanıtı — a11y Otomatik Denetim
+* **Açıklama:** Accessibility denetimi hiç kanıtlanmadı.
+* **İşlem:** `@axe-core/playwright` (veya mevcut a11y test altyapısı)
+  ile ana sayfalarda (Landing, Dashboard, Vocabulary, Grammar, Writing,
+  Profile) tarama çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Her sayfa için critical/serious ihlal sayısını
+    `docs/faz3-evidence/kademe56-a11y.txt`'e yaz. 0 critical hedeflenir;
+    serious varsa düzelt veya gerekçelendir.
+* **Durum:** Beklemede.
+
+### [x] Kademe 57: Kademe 41'in Kanıtı — Secret Tarama (git geçmişi)
+* **Açıklama:** Git geçmişinde secret sızıntısı taraması hiç
+  kanıtlanmadı.
+* **İşlem:** `gitleaks detect --source . -v` tüm git history üzerinde
+  çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Tam tarama çıktısını `docs/faz3-evidence/kademe57-gitleaks.txt`'e
+    kaydet. Gerçek bir secret bulunursa DERHAL kullanıcıya haber ver,
+    anahtarı rotate et, kendi başına devam etme.
+* **Durum:** Beklemede.
+
+### [x] Kademe 58: Kademe 44'ün Kanıtı — k6 Load Test Gerçek Sonucu
+* **Açıklama:** Load test sonucu hiç paylaşılmadı.
+* **İşlem:** `k6 run` ile mevcut senaryoyu **staging** ortamına karşı
+  çalıştır (prod'a karşı ÇALIŞTIRMA).
+* **ZORUNLU DOĞRULAMA:**
+  - p95/p99 response time, error rate, RPS özetini
+    `docs/faz3-evidence/kademe58-k6.txt`'e kaydet. Hata oranı %1'den
+    yüksekse önce onu araştır/düzelt.
+* **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — hangi ortama karşı
+  çalıştırılacağı netleşmeden başlatma.)*
+
+### [x] Kademe 59: Kademe 45'in Kanıtı — Stryker Mutation Score
+* **Açıklama:** Mutation testing skoru hiç ölçülmedi.
+* **İşlem:** `npx stryker run` — kapsam büyükse kritik modüllerle sınırla
+  (billing, auth, ai-ledger, rate-limit.ts — bu son dosya Kademe 52'de
+  değişti, özellikle onu dahil et).
+* **ZORUNLU DOĞRULAMA:**
+  - Mutation score yüzdesini `docs/faz3-evidence/kademe59-stryker.txt`'e
+    kaydet (hedef: kritik modüllerde >%60). Düşükse en az 5 "survived
+    mutant"ı gerçek testle öldür, tekrar çalıştırıp kanıtla.
+* **Durum:** Beklemede.
+
+### [x] Kademe 60: Faz 3 Kapanışı — Tam Regresyon + Kanıt Paketi
+* **Açıklama:** Faz 3'teki tüm değişikliklerin birbirini bozmadığının
+  son kontrolü ve eksiksiz kanıt paketinin oluşturulması.
+* **İşlem:** Sırayla çalıştır: `npm install`, `npm run typecheck`,
+  `npm run lint`, `npm run test`, `npm run build`,
+  `npm --prefix backend ci`, `npm --prefix backend run typecheck`,
+  `npm --prefix backend test`, `npm audit`, `npm --prefix backend audit`.
+* **ZORUNLU DOĞRULAMA:**
+  - Yukarıdaki 10 komutun TAMAMININ çıktısını
+    `docs/faz3-evidence/kademe60-full-regression.txt`'e sırayla kaydet.
+    Herhangi biri hata verirse Kademe 60 kapanmaz.
+  - `docs/faz3-evidence/` klasöründe kademe51'den kademe60'a kadar
+    **10 kanıt dosyasının hepsinin var olduğunu** `ls -la
+    docs/faz3-evidence/` çıktısıyla göster.
+* **Durum:** Beklemede.
+
+---
+
+## 🎯 Beklenen Puan Aralığı (Faz 3 Sonunda)
+
+| Alan | Faz 2 Sonu | Faz 3 Hedef |
+|---|---|---|
+| Tip Güvenliği (frontend) | 92 | 92-95 |
+| **Tip Güvenliği (backend)** | 55 | 92-95 |
+| Test Altyapısı | 90 | 95-97 |
+| Backend Kalitesi | 75 | 92-95 |
+| Performans / Bundle | 95 | 95-97 |
+| Kod Kalitesi | 98 | 98 |
+| Güvenlik (dependency) | 80 | 95-97 |
+| **Genel Ortalama** | ~84 | **~93-96** |
+
+Not: Bağımsız denetim yine "[x] YAPILDI" ibaresine değil,
+`docs/faz3-evidence/` altındaki gerçek dosyalara bakarak puanlayacak.
+Kanıt dosyası yoksa o kademe "doğrulanamadı" olarak işaretlenir ve puana
+tam yansımaz — Faz 2'de altı kademede (35, 38, 39, 41, 44, 45) yaşanan
+bu durum tekrarlanmasın diye bu fazda dosya bazlı kanıt zorunlu kılındı.
+

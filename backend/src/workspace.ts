@@ -7,6 +7,7 @@ import {
 } from './validation.js';
 import { createSupabaseWorkspaceRepository } from './workspace-repository.js';
 import type { WorkspaceRepository } from './workspace-repository.js';
+import type { WorkspaceConfig } from '../types.js';
 import type {
   Express,
   Request,
@@ -16,11 +17,11 @@ import type {
 } from 'express';
 
 export const createWorkspaceRepository = (
-  config: { workspace?: Record<string, unknown> },
+  config: { workspace?: WorkspaceConfig },
   _fetchImpl: typeof fetch = fetch
 ): WorkspaceRepository => {
   return createSupabaseWorkspaceRepository(
-    config.workspace as Record<string, unknown>
+    config.workspace as WorkspaceConfig
   );
 };
 
@@ -118,7 +119,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { name, planId } = req.validatedBody as Record<string, unknown>;
+        const { name, planId } = req.validatedBody as { name?: string; planId?: string };
 
         const existingCount = await repository.countWorkspaces(userId);
         const limit = getWorkspaceLimit(planId || 'free');
@@ -130,7 +131,7 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const workspaceName = name || `Workspace ${existingCount + 1}`;
+        const workspaceName = (name as string) || `Workspace ${existingCount + 1}`;
         const data = await repository.createWorkspace(
           userId,
           workspaceName,
@@ -158,7 +159,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { key, value } = req.validatedBody as Record<string, unknown>;
+        const { key, value } = req.validatedBody as { key?: string; value?: unknown };
         if (!key) {
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
@@ -175,7 +176,7 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const updatedMemory = { ...(existing.memory || {}), [key]: value };
+        const updatedMemory = { ...(existing.memory || {}), [key as string]: value };
         const data = await repository.updateWorkspaceMemory(
           req.params.id as string,
           userId,
@@ -247,10 +248,10 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { docName, docContent } = req.validatedBody as Record<
-          string,
-          unknown
-        >;
+        const { docName, docContent } = req.validatedBody as {
+          docName?: string;
+          docContent?: string;
+        };
         if (!docName) {
           throw new ApiError(
             400,
@@ -261,8 +262,8 @@ export const registerWorkspaceRoutes = (
 
         const doc = {
           id: `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          name: docName,
-          content: docContent || '',
+          name: docName as string,
+          content: (docContent as string) || '',
           uploaded_at: new Date().toISOString(),
         };
 

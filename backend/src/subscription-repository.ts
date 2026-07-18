@@ -94,7 +94,10 @@ export const createSubscriptionRepository = (
   fetchImpl: typeof fetch = fetch
 ): SubscriptionRepository => {
   if (config.repositoryMode === 'supabase') {
-    return createSupabaseBillingRepository(config, fetchImpl);
+    return createSupabaseBillingRepository({
+      supabaseUrl: config.supabaseUrl!,
+      supabaseServiceRoleKey: config.supabaseServiceRoleKey!,
+    }, fetchImpl);
   }
   if (config.environment === 'production' && !config.allowMemoryRepository) {
     throw new Error(

@@ -1,0 +1,792 @@
+﻿
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.9 [39m[90mC:/Users/User/Desktop/EngineerOS_DENEME_CODEX/8.0[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+node.exe : [90mstderr[2m | src/pages/VocabularyPage.test.tsx
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([90mstderr[2m...ryPage.test.tsx:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ToolsPage.test.tsx
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/ListeningPage.test.tsx[2m > [22m[2mListening route module[2m > [22m[2mimports safely 
+without audio, microphone, TTS, or motion dependencies
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+Not implemented: navigation to another Document
+[90mstderr[2m | src/features/vocabulary/services/vocabulary.database.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-orchestrator/learning-orchestrator.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/listening/listening.audio.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/grammar/grammar.database.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-intelligence/review-queue.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/profile/profile.engine.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/vocabulary/services/vocabulary.selection.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-intelligence/knowledge-capture.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/level-system/content-gating.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/placement/placement.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/listening/listening.stores.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/assessment/assessment.helpers.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/pages/VocabularyPage/VocabularyPageReducer.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/speaking/speaking.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/gamification/gamification.service.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[90mstderr[2m | src/features/learning-orchestrator/lesson-path.engine.test.ts
+[22m[39m[WARN] Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.
+
+[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[2m[90m-[39m[22m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m[33m[39m[32m·[39m
+
+[2m Test Files [22m [1m[32m79 passed[39m[22m[90m (79)[39m
+[2m      Tests [22m [1m[32m480 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (481)[39m
+[2m   Start at [22m 20:24:28
+[2m   Duration [22m 49.26s[2m (transform 2.11s, setup 12.22s, import 7.01s, tests 6.78s, environment 52.82s)[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   33.17 |    26.49 |   30.52 |   33.99 |                   
+ src               |       0 |        0 |       0 |       0 |                   
+  App.tsx          |       0 |      100 |       0 |       0 | 6-7               
+  main.tsx         |       0 |        0 |       0 |       0 | 12-101            
+ src/config        |    55.1 |    41.77 |   52.94 |   56.66 |                   
+  ...ncy.config.ts |       0 |        0 |       0 |       0 | 16-105            
+  ...ent.config.ts |      70 |    57.89 |   72.72 |   72.72 | ...25-141,206-209 
+  ...ags.config.ts |       0 |      100 |       0 |       0 | 10-63             
+  ...ion.config.ts |     100 |      100 |     100 |     100 |                   
+  ...uct.config.ts |     100 |      100 |     100 |     100 |                   
+ ...tracts/backend |   65.05 |    48.27 |   80.55 |   70.37 |                   
+  ai-contract.ts   |   68.96 |       50 |    87.5 |   76.59 | ...91,209-210,219 
+  ...ct.helpers.ts |   67.56 |       50 |   85.71 |   70.96 | ...92,100,106-109 
+  ...ract.types.ts |       0 |        0 |       0 |       0 |                   
+  ...g-contract.ts |   52.38 |     37.5 |   64.28 |   57.89 | ...81,188-197,206 
+  ...h-contract.ts |   80.76 |    64.28 |     100 |      84 | 59,69,78,86       
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ src/core          |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...tent-selection |       0 |        0 |       0 |       0 |                   
+  ...nt.service.ts |       0 |        0 |       0 |       0 | 15-37             
+ src/core/entities |       0 |        0 |       0 |       0 |                   
+  ...ty.helpers.ts |       0 |        0 |       0 |       0 | 9-53              
+  entity.types.ts  |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+ src/core/errors   |       0 |        0 |       0 |       0 |                   
+  app-error.ts     |       0 |        0 |       0 |       0 | 19-34             
+  error-codes.ts   |       0 |        0 |       0 |       0 | 1-10              
+  error.helpers.ts |       0 |        0 |       0 |       0 | 5-65              
+  index.ts         |       0 |      100 |     100 |       0 | 1-3               
+ src/core/events   |   48.83 |       40 |   30.76 |   48.83 |                   
+  event-bus.ts     |   53.33 |     37.5 |    37.5 |   53.33 | 27,37-40,66-95    
+  event-store.ts   |      50 |       50 |      20 |      50 | 9,15-30           
+  event.types.ts   |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |      100 |     100 |       0 | 1-3               
+ src/core/ids      |   33.33 |       20 |      20 |      36 |                   
+  id.service.ts    |      28 |       20 |      20 |   30.43 | ...23,33-34,44-48 
+  id.types.ts      |       0 |        0 |       0 |       0 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ src/core/learning |   73.87 |     70.9 |   72.54 |   76.21 |                   
+  ...nt.service.ts |   94.11 |     87.5 |      80 |   94.11 | 35,64             
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  ...ments.data.ts |     100 |      100 |     100 |     100 |                   
+  ...sions.data.ts |     100 |      100 |     100 |     100 |                   
+  learning.pool.ts |   51.42 |    31.25 |      50 |   54.83 | ...30,50-59,69-70 
+  ...ning.store.ts |   51.13 |    60.52 |   41.17 |   54.21 | ...22-245,358-374 
+  ...ing.streak.ts |   81.81 |    66.66 |     100 |     100 | 12-13             
+  ...ning.types.ts |       0 |        0 |       0 |       0 |                   
+  ...ss.service.ts |     100 |    83.33 |     100 |     100 | 43,101            
+  ...ng.service.ts |     100 |      100 |     100 |     100 |                   
+  ...on.helpers.ts |     100 |      100 |     100 |     100 |                   
+  ...tion.types.ts |       0 |        0 |       0 |       0 |                   
+ .../observability |      50 |    21.87 |      50 |   51.51 |                   
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+  ...ty.service.ts |   52.77 |    21.87 |      50 |   54.83 | ...,45-58,107-138 
+  ...lity.types.ts |       0 |        0 |       0 |       0 |                   
+ ...e/repositories |       0 |        0 |       0 |       0 |                   
+  ...repository.ts |       0 |        0 |       0 |       0 | 12-116            
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+  ...tory.types.ts |       0 |        0 |       0 |       0 |                   
+ src/core/result   |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+  ...lt.helpers.ts |       0 |        0 |       0 |       0 | 4-33              
+  result.ts        |       0 |        0 |       0 |       0 |                   
+ src/core/services |       0 |        0 |       0 |       0 |                   
+  base-service.ts  |       0 |        0 |       0 |       0 | 9-86              
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+  service.types.ts |       0 |        0 |       0 |       0 |                   
+ src/core/time     |       0 |        0 |       0 |       0 |                   
+  clock.ts         |       0 |      100 |       0 |       0 | 1-20              
+  date.helpers.ts  |       0 |        0 |       0 |       0 | 10-51             
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+ ...ore/validation |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |      100 |     100 |       0 | 1-2               
+  ...on.helpers.ts |       0 |        0 |       0 |       0 | 3-82              
+  ...tion.types.ts |       0 |        0 |       0 |       0 |                   
+ src/data/grammar  |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ammar/by-level |      80 |       50 |     100 |     100 |                   
+  a1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  a2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  b1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  b2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  c1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  c2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+ ...ata/vocabulary |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+ ...ulary/by-level |      80 |       50 |     100 |     100 |                   
+  a1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  a2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  b1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  b2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  c1.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+  c2.seed.ts       |      80 |       50 |     100 |     100 | 5                 
+ ...features/admin |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...min/components |       0 |        0 |       0 |       0 |                   
+  AIAnalytics.tsx  |       0 |        0 |       0 |       0 | 12-78             
+ src/features/ai   |   33.62 |     19.6 |   19.35 |   35.16 |                   
+  ...er.service.ts |   11.76 |        0 |       0 |   11.76 | 23-66             
+  ai.config.ts     |     100 |       50 |     100 |     100 | 16-21             
+  ai.helpers.ts    |   28.57 |        0 |       0 |   32.25 | ...29-362,372,375 
+  ...ersistence.ts |    62.5 |    72.72 |   33.33 |   68.18 | 26,37-39,44,51-52 
+  ai.service.ts    |   35.29 |    21.42 |      60 |   35.29 | 20,37-84          
+  ai.store.ts      |   14.54 |     9.09 |    7.69 |   13.46 | ...16,124,150-322 
+  ai.types.ts      |       0 |        0 |       0 |       0 |                   
+  ...y.provider.ts |   39.65 |    27.58 |    42.3 |   41.81 | ...09-431,437-447 
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  ...i.provider.ts |   25.71 |        0 |       0 |   26.86 | ...10,223-231,256 
+ ...tures/ai/hooks |       0 |      100 |       0 |       0 |                   
+  useAIQuery.ts    |       0 |      100 |       0 |       0 | 7-26              
+ ...ures/analytics |   80.81 |    65.13 |   75.26 |   83.33 |                   
+  ...shboard-v2.ts |   93.75 |       70 |    92.3 |   95.89 | 54-55,178         
+  ...lculations.ts |    87.5 |    63.63 |   84.37 |   93.24 | 36,51,76,106,172  
+  ...cs.helpers.ts |      56 |       35 |   41.66 |   54.16 | ...66-69,78,92-93 
+  ...cs.service.ts |      75 |    83.33 |   33.33 |      80 | 64-65,78          
+  ...tics.store.ts |   66.66 |      100 |      50 |      50 | 6                 
+  ...tics.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...-generator.ts |   48.14 |       80 |   77.77 |   48.14 | 187-203           
+  ...s.provider.ts |   44.44 |    33.33 |   33.33 |   44.44 | 24-50             
+  ...cs.service.ts |    85.5 |    73.58 |   93.75 |   90.47 | ...62-164,172-173 
+  ...tics.types.ts |     100 |      100 |     100 |     100 |                   
+ ...res/assessment |   97.74 |    75.71 |   96.29 |    97.5 |                   
+  ...nt.helpers.ts |     100 |    82.14 |     100 |     100 | 208-227           
+  ...nt.service.ts |    96.2 |    71.42 |   94.28 |   95.89 | 45-47,221         
+  ...ment.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ src/features/auth |   37.44 |    32.53 |   39.44 |   37.07 |                   
+  AuthGuard.tsx    |      10 |        0 |       0 |      10 | 11-31             
+  ...yncStatus.tsx |     100 |    88.88 |     100 |     100 | 85                
+  auth.adapter.ts  |   13.97 |     5.26 |    14.7 |   14.28 | ...10-239,250-467 
+  auth.config.ts   |   56.52 |       50 |     100 |   63.15 | 37,44-50          
+  auth.helpers.ts  |   88.88 |    83.33 |     100 |     100 | 4                 
+  auth.service.ts  |   20.83 |    13.79 |   16.66 |   21.27 | ...6,54-59,68-124 
+  auth.store.ts    |    4.25 |        0 |   14.28 |    2.17 | 32-109            
+  auth.types.ts    |       0 |        0 |       0 |       0 |                   
+  backend-auth.ts  |   14.28 |        0 |       0 |   14.28 | 6-14              
+  ...nc.service.ts |   63.69 |    55.76 |   63.41 |   64.74 | ...88-290,319-448 
+  ...sync.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ase.client.ts |   44.44 |        0 |      50 |    37.5 | 10-32             
+  ...base.types.ts |      50 |      100 |       0 |      50 | 55,70             
+ src/features/beta |   57.85 |    55.55 |   52.45 |   58.67 |                   
+  ...csTracker.tsx |      10 |      100 |       0 |   11.11 | 7-22              
+  ...ackWidget.tsx |   82.05 |     62.5 |   73.33 |    86.2 | 58-94,121         
+  ...nboarding.tsx |    6.06 |     5.55 |       0 |    7.14 | 17-184            
+  beta.helpers.ts  |   93.93 |    94.44 |    87.5 |   93.54 | 66,74             
+  beta.service.ts  |   76.92 |      100 |   83.33 |   76.92 | 19-24             
+  beta.store.ts    |   41.66 |      100 |      40 |   36.36 | 32-34,50-55       
+  beta.types.ts    |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...atures/billing |   22.95 |     20.2 |   18.43 |   23.75 |                   
+  ...atusPanel.tsx |     100 |    94.11 |     100 |     100 | 51                
+  ...ementGate.tsx |    12.5 |        0 |       0 |   16.66 | 22-28             
+  ...moryPanel.tsx |       0 |        0 |       0 |       0 | 19-362            
+  ...eSelector.tsx |   13.11 |        0 |       0 |   14.54 | ...99-251,271-323 
+  ...ng.catalog.ts |     100 |      100 |     100 |     100 |                   
+  ...titlements.ts |      52 |    46.51 |      35 |   54.16 | ...79-193,201-236 
+  ...ng.helpers.ts |   91.17 |    73.91 |     100 |    90.9 | 246,371-382       
+  ...ng.service.ts |   13.72 |     9.09 |      20 |   14.58 | ...2-26,30,46-138 
+  billing.store.ts |    5.88 |        0 |   14.28 |    3.03 | 29-100            
+  billing.types.ts |       0 |        0 |       0 |       0 |                   
+  ...ency.store.ts |       0 |        0 |       0 |       0 | 15-37             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  lazy.ts          |       0 |      100 |       0 |       0 | 3-17              
+  ...e.provider.ts |   43.13 |     12.5 |   41.66 |   44.89 | ...02,109,135-162 
+  ...ce.service.ts |       0 |        0 |       0 |       0 | 5-307             
+  ...pace.store.ts |   15.58 |     5.88 |   15.78 |   15.49 | 59,73,84-227      
+ .../billing/hooks |       0 |      100 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...llingQuery.ts |       0 |      100 |       0 |       0 | 5-55              
+ ...ontent-library |     100 |      100 |     100 |     100 |                   
+  ...brary.data.ts |       0 |        0 |       0 |       0 |                   
+  ...ry.service.ts |     100 |      100 |     100 |     100 |                   
+  ...rary.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ening-data.ts |     100 |      100 |     100 |     100 |                   
+  roleplay-data.ts |     100 |      100 |     100 |     100 |                   
+  writing-data.ts  |     100 |      100 |     100 |     100 |                   
+ .../feature-flags |       0 |        0 |       0 |       0 |                   
+  ab-testing.ts    |       0 |        0 |       0 |       0 | 16-75             
+  ...lags.store.ts |       0 |        0 |       0 |       0 | 13-101            
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...s/gamification |   65.94 |    59.25 |   67.44 |   65.62 |                   
+  ...ation-shop.ts |   95.65 |    86.95 |     100 |   94.73 | 229               
+  ...on.helpers.ts |   97.29 |       85 |      90 |   97.14 | 53                
+  ...on.rewards.ts |     100 |      100 |     100 |     100 |                   
+  ...tion.rules.ts |     100 |      100 |     100 |     100 |                   
+  ...on.service.ts |   89.65 |       50 |   81.25 |   89.28 | 75-86             
+  ...tion.store.ts |       0 |        0 |       0 |       0 | 10-62             
+  ...tion.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ak.service.ts |       0 |        0 |       0 |       0 | 1-45              
+ ...atures/grammar |   56.12 |    50.82 |   47.36 |   59.47 |                   
+  ...ar-teacher.ts |   15.38 |        0 |       0 |   15.38 | 30-73             
+  ...mar.engine.ts |   79.16 |    59.25 |   88.88 |   81.81 | 38,96-98          
+  ...r.progress.ts |   85.71 |    71.08 |    86.2 |   88.23 | 44,57,73,176-188  
+  ...repository.ts |   34.88 |    16.66 |   19.04 |   41.17 | ...6,40-46,63-108 
+  ...mar.schema.ts |   88.88 |     87.5 |     100 |   93.75 | 32                
+  grammar.store.ts |   33.33 |      100 |      20 |      20 | 22-25             
+  ...r.transfer.ts |   17.24 |        0 |       0 |   19.23 | ...05-113,121-175 
+  grammar.types.ts |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...mar/components |       0 |        0 |       0 |       0 |                   
+  ...arSidebar.tsx |       0 |        0 |       0 |       0 | 8-93              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...g-intelligence |      77 |       63 |   67.74 |   80.92 |                   
+  ...rySummary.tsx |   14.28 |        0 |       0 |   16.66 | 25-74             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...re.service.ts |     100 |    91.66 |     100 |     100 | 40                
+  ...gence.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ce.helpers.ts |   73.23 |    54.76 |      60 |   80.64 | ...19-121,137,152 
+  ...ce.service.ts |     100 |      100 |     100 |     100 |                   
+  ...ence.store.ts |   14.28 |        0 |    12.5 |   15.78 | 22,34-60          
+  ...ence.types.ts |       0 |        0 |       0 |       0 |                   
+  ...w-priority.ts |     100 |       75 |     100 |     100 | 32                
+  review-queue.ts  |     100 |    57.89 |     100 |     100 | 30-79,109-115     
+ ...g-orchestrator |   82.95 |       53 |   80.28 |   84.43 |                   
+  ...ntryBrief.tsx |       0 |        0 |       0 |       0 | 13-122            
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ator.types.ts |       0 |        0 |       0 |       0 |                   
+  ...th-advisor.ts |   98.55 |    85.71 |     100 |   98.46 | 139               
+  ...ask.engine.ts |   97.36 |    58.33 |   96.66 |   97.29 | 91,242            
+  ...ath.engine.ts |   88.88 |      100 |   71.42 |   94.11 | 84                
+  ...path.types.ts |       0 |        0 |       0 |       0 |                   
+  ...on.service.ts |   69.23 |    42.85 |    62.5 |   72.97 | ...67,71-73,83-84 
+ ...s/level-system |   74.56 |       60 |   63.33 |   78.21 |                   
+  ...entFilter.tsx |      60 |        0 |      20 |      60 | 32-51,75          
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...em.helpers.ts |   83.51 |       75 |   81.81 |    88.6 | ...11,215-216,237 
+  ...stem.types.ts |     100 |      100 |     100 |     100 |                   
+  useSkillLevel.ts |    9.09 |        0 |       0 |      10 | 10-30             
+ ...ures/listening |   19.54 |    13.15 |      25 |   20.58 |                   
+  AudioPlayer.tsx  |    1.41 |        0 |       0 |    1.58 | 24-341            
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ions.store.ts |   43.75 |        0 |   66.66 |   41.37 | 51-54,93-130      
+  ...back.store.ts |   48.14 |    28.57 |      50 |      50 | ...29-132,169-200 
+  ...a.advanced.ts |     100 |      100 |     100 |     100 |                   
+  ...termediate.ts |     100 |      100 |     100 |     100 |                   
+  ...ening.data.ts |     100 |      100 |     100 |     100 |                   
+  ....evaluator.ts |    7.44 |        0 |       0 |    8.04 | ...20-159,167-230 
+  ...ng.helpers.ts |   21.73 |    23.52 |      25 |   22.72 | 3-4,25-81         
+  ...ng.service.ts |    32.5 |     32.5 |    40.9 |   34.21 | 69-153,199-246    
+  ...arter.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ning.store.ts |   16.66 |      100 |       0 |   16.66 | 18-30,39-41       
+  ...ning.types.ts |       0 |        0 |       0 |       0 |                   
+ ...ing/components |       0 |      100 |       0 |       0 |                   
+  ...ngSidebar.tsx |       0 |      100 |       0 |       0 | 6-30              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...s/localization |      80 |       60 |   71.42 |   78.57 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ation.data.ts |     100 |      100 |     100 |     100 |                   
+  ...on.service.ts |     100 |       60 |     100 |     100 | 20                
+  ...tion.store.ts |      40 |      100 |   33.33 |      25 | 14-18             
+  ...tion.types.ts |       0 |        0 |       0 |       0 |                   
+ ...atures/offline |   68.36 |    51.28 |   83.33 |   70.73 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  offline.data.ts  |     100 |      100 |     100 |     100 |                   
+  ...ne.helpers.ts |   84.61 |    66.66 |     100 |      90 | 11                
+  offline.types.ts |       0 |        0 |       0 |       0 |                   
+  sync-queue.ts    |   65.47 |    48.48 |   79.16 |    67.6 | ...08-142,148-149 
+  ...ueue.types.ts |       0 |        0 |       0 |       0 |                   
+ ...res/onboarding |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ding-steps.ts |       0 |        0 |       0 |       0 | 11-90             
+ ...ing/components |       0 |        0 |       0 |       0 |                   
+  ...ingWizard.tsx |       0 |        0 |       0 |       0 | 5-134             
+ ...ures/placement |   73.91 |      100 |   59.09 |   80.48 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ement.data.ts |     100 |      100 |     100 |     100 |                   
+  ...nt.helpers.ts |     100 |      100 |     100 |     100 |                   
+  ...nt.service.ts |     100 |      100 |     100 |     100 |                   
+  ...ment.store.ts |       0 |      100 |       0 |       0 | 17-39             
+  ...ment.types.ts |       0 |        0 |       0 |       0 |                   
+ ...atures/profile |   56.43 |    39.83 |      50 |   56.85 |                   
+  ...encesForm.tsx |       0 |        0 |       0 |       0 | 19-147            
+  ...eferences.tsx |       0 |        0 |       0 |       0 | 11-80             
+  ...rdingGate.tsx |      20 |        0 |       0 |      25 | 7-11              
+  ...ileAvatar.tsx |       0 |        0 |       0 |       0 | 1-38              
+  ...ckpitCard.tsx |       0 |        0 |       0 |       0 | 19-56             
+  SkillRadar.tsx   |      20 |      100 |       0 |      20 | 4-12              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ile.engine.ts |   86.79 |       50 |   83.33 |      88 | 57-58,79,254-258  
+  ...references.ts |   59.37 |    28.57 |      50 |   64.28 | 193,205-214       
+  ...repository.ts |     100 |    68.75 |     100 |     100 | 24-48,56          
+  profile.types.ts |     100 |      100 |     100 |     100 |                   
+  profile.utils.ts |   95.83 |       75 |   93.75 |   95.45 | 85,155            
+  ...ingCockpit.ts |       8 |        0 |       0 |    8.33 | 23-74             
+ ...ile/components |       0 |        0 |       0 |       0 |                   
+  ...leSidebar.tsx |       0 |        0 |       0 |       0 | 9-53              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...atures/reading |   17.79 |     2.59 |   15.55 |      18 |                   
+  ...anslation.tsx |     100 |      100 |     100 |     100 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...stems.data.ts |     100 |      100 |     100 |     100 |                   
+  reading.data.ts  |     100 |      100 |     100 |     100 |                   
+  ...rical.data.ts |     100 |      100 |     100 |     100 |                   
+  ....evaluator.ts |   10.34 |        0 |       0 |   11.11 | ...9,56-74,86-164 
+  ...ng.helpers.ts |    5.55 |        0 |       0 |    6.25 | 6-51              
+  ...g.mep.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ng.service.ts |   20.93 |        0 |   23.07 |      20 | 45-59,72-173      
+  ...arter.data.ts |     100 |      100 |     100 |     100 |                   
+  reading.store.ts |    6.06 |        0 |    6.66 |    6.66 | 51-167            
+  reading.types.ts |       0 |        0 |       0 |       0 |                   
+ ...ing/components |       0 |        0 |       0 |       0 |                   
+  ...ngSidebar.tsx |       0 |        0 |       0 |       0 | 7-47              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...tures/speaking |    62.5 |    52.34 |    55.4 |    62.9 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...-simulator.ts |       0 |        0 |       0 |       0 | 44-296            
+  ...ion-scorer.ts |      92 |    79.41 |   92.85 |      95 | 73-76,101         
+  speaking-mvp.ts  |     100 |       70 |     100 |     100 | 46-50             
+  speaking.data.ts |     100 |      100 |     100 |     100 |                   
+  ....evaluator.ts |   87.09 |    64.28 |     100 |   89.83 | 27,29-33,124      
+  ...ng.helpers.ts |     100 |      100 |     100 |     100 |                   
+  ...ng.service.ts |   28.57 |    16.66 |   46.66 |   30.23 | 49-58,67-125      
+  ...arter.data.ts |     100 |      100 |     100 |     100 |                   
+  ...king.store.ts |   11.11 |        0 |    6.25 |   11.76 | 44-46,68-201      
+  ...king.types.ts |       0 |        0 |       0 |       0 |                   
+ ...ing/components |       0 |        0 |       0 |       0 |                   
+  ...r.stories.tsx |       0 |        0 |       0 |       0 | 17-275            
+  ...Simulator.tsx |       0 |        0 |       0 |       0 | 26-614            
+  ...ngSidebar.tsx |       0 |      100 |       0 |       0 | 6-30              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ src/features/team |   33.58 |       24 |   38.46 |   33.92 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...eaderboard.ts |   97.05 |    81.25 |     100 |   96.55 | 57                
+  team.data.ts     |     100 |      100 |     100 |     100 |                   
+  team.helpers.ts  |     100 |    71.42 |     100 |     100 | 18-35             
+  team.service.ts  |       0 |        0 |       0 |       0 | 30-293            
+  team.store.ts    |       0 |        0 |       0 |       0 | 25-82             
+  team.types.ts    |       0 |        0 |       0 |       0 |                   
+ ...eam/components |       0 |        0 |       0 |       0 |                   
+  ...nseAssign.tsx |       0 |        0 |       0 |       0 | 19-148            
+  ...d.stories.tsx |       0 |        0 |       0 |       0 | 5-169             
+  ...Dashboard.tsx |       0 |        0 |       0 |       0 | 10-17             
+  ...emberList.tsx |       0 |        0 |       0 |       0 | 15-90             
+  TeamStats.tsx    |       0 |        0 |       0 |       0 | 17-58             
+ ...res/vocabulary |   71.11 |    81.81 |   76.19 |   72.72 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  lazy.ts          |       0 |      100 |       0 |       0 | 3-7               
+  ...arketplace.ts |   86.48 |    81.81 |   94.11 |   85.71 | 173,180-184       
+ ...ary/components |       0 |        0 |       0 |       0 |                   
+  ...r.stories.tsx |       0 |        0 |       0 |       0 | 3-187             
+  VocabSidebar.tsx |       0 |        0 |       0 |       0 | 8-128             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...ocabulary/data |   96.07 |     87.5 |      95 |   97.77 |                   
+  ...ulary.data.ts |   81.81 |       50 |      75 |      90 | 26                
+  ...categories.ts |       0 |        0 |       0 |       0 |                   
+  ...on-helpers.ts |     100 |      100 |     100 |     100 |                   
+ ...ion-categories |     100 |      100 |     100 |     100 |                   
+  civil.ts         |     100 |      100 |     100 |     100 |                   
+  electrical.ts    |     100 |      100 |     100 |     100 |                   
+  hse.ts           |     100 |      100 |     100 |     100 |                   
+  index.ts         |     100 |      100 |     100 |     100 |                   
+  mechanical.ts    |     100 |      100 |     100 |     100 |                   
+  ...management.ts |     100 |      100 |     100 |     100 |                   
+  specialized.ts   |     100 |      100 |     100 |     100 |                   
+ ...expansion-data |     100 |      100 |     100 |     100 |                   
+  collocations.ts  |     100 |      100 |     100 |     100 |                   
+  examples.ts      |     100 |      100 |     100 |     100 |                   
+  meanings.ts      |     100 |      100 |     100 |     100 |                   
+ ...abulary/engine |   79.59 |    42.85 |   76.19 |   79.54 |                   
+  ...ary.engine.ts |   35.71 |    38.88 |   42.85 |   38.46 | 37-48,68-70       
+  ....evaluator.ts |     100 |       50 |     100 |     100 | 24                
+  ...ry.helpers.ts |   93.75 |      100 |   85.71 |   93.33 | 25                
+ ...cabulary/hooks |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...ularyQuery.ts |       0 |        0 |       0 |       0 | 5-60              
+ ...ulary/services |   66.23 |    64.49 |   61.84 |   68.18 |                   
+  ...ary.memory.ts |   75.75 |    65.11 |   82.75 |      80 | 45,97-118,143-146 
+  ...ulary.menu.ts |   89.83 |    84.03 |   88.88 |   90.99 | ...70,407,441-445 
+  ...repository.ts |   51.28 |    33.33 |   41.66 |   57.57 | 55,69-113         
+  ...ary.search.ts |   90.24 |       80 |     100 |   94.44 | 74,80             
+  ....selection.ts |     100 |     87.5 |     100 |     100 | 35,50             
+  ...ry.service.ts |   22.33 |    20.31 |   10.52 |   22.68 | ...30-238,253-288 
+ ...ced-repetition |   98.07 |      100 |   93.33 |   97.95 |                   
+  ...-due-today.ts |   97.14 |      100 |    92.3 |   96.87 | 66                
+  ...repetition.ts |     100 |      100 |     100 |     100 |                   
+ ...cabulary/store |   20.51 |        0 |   22.22 |   19.44 |                   
+  ...mory.store.ts |   30.76 |      100 |   28.57 |      25 | 30-45             
+  ...lary.store.ts |   15.38 |        0 |   18.18 |   16.66 | 51-123            
+ ...cabulary/types |   88.88 |     87.5 |     100 |   93.75 |                   
+  ...ary.schema.ts |   88.88 |     87.5 |     100 |   93.75 | 32                
+  ...lary.types.ts |       0 |        0 |       0 |       0 |                   
+ ...res/work-tools |   73.68 |    30.55 |   83.09 |   74.14 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...view-coach.ts |   10.71 |        0 |       0 |   10.71 | 33-77,88-120      
+  ...tools.data.ts |     100 |      100 |     100 |     100 |                   
+  ...anded.data.ts |     100 |      100 |     100 |     100 |                   
+  ...email.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ering.data.ts |     100 |      100 |     100 |     100 |                   
+  ...hrase.data.ts |     100 |      100 |     100 |     100 |                   
+  ...tools.data.ts |     100 |      100 |     100 |     100 |                   
+  ...email.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ering.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ment-seeds.ts |     100 |      100 |     100 |     100 |                   
+  ....mep-seeds.ts |     100 |      100 |     100 |     100 |                   
+  ...site-seeds.ts |     100 |      100 |     100 |     100 |                   
+  ...anded.data.ts |       0 |        0 |       0 |       0 |                   
+  ...hrase.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ls.service.ts |   73.33 |    56.25 |   63.63 |   78.57 | 33-35,46,64,80    
+  ...ools.store.ts |      30 |      100 |   16.66 |   22.22 | 18-26             
+  ...ools.types.ts |       0 |        0 |       0 |       0 |                   
+  ...ools.utils.ts |     100 |      100 |     100 |     100 |                   
+ ...ols/components |       0 |        0 |       0 |       0 |                   
+  ...h.stories.tsx |       0 |        0 |       0 |       0 | 13-207            
+  ...viewCoach.tsx |       0 |        0 |       0 |       0 | 13-180            
+  ToolsSidebar.tsx |       0 |      100 |       0 |       0 | 7-19              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...atures/writing |   38.98 |    21.65 |   33.84 |   39.09 |                   
+  ...delAnswer.tsx |      80 |    71.42 |      50 |      75 | 26                
+  ...eFeedback.tsx |   30.76 |        0 |       0 |   30.76 | 44-119,173        
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...e-analyzer.ts |   95.18 |    80.64 |     100 |   95.77 | 171,195,264       
+  writing.data.ts  |     100 |      100 |     100 |     100 |                   
+  ...esign.data.ts |     100 |      100 |     100 |     100 |                   
+  ...rical.data.ts |     100 |      100 |     100 |     100 |                   
+  ....evaluator.ts |    1.85 |        0 |       0 |    2.12 | 24-59,76-158      
+  ...ng.helpers.ts |       5 |        0 |       0 |    5.88 | 6-52              
+  ...afety.data.ts |     100 |      100 |     100 |     100 |                   
+  ....qaqc.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ports.data.ts |     100 |      100 |     100 |     100 |                   
+  ...ng.service.ts |    9.52 |        0 |    7.14 |      10 | 33-47,60-169      
+  ...arter.data.ts |     100 |      100 |     100 |     100 |                   
+  writing.store.ts |    4.76 |        0 |    5.88 |    5.55 | 48-167            
+  ...task-model.ts |   16.66 |        0 |       0 |      25 | 13-15             
+  writing.types.ts |       0 |        0 |       0 |       0 |                   
+ ...ing/components |       0 |        0 |       0 |       0 |                   
+  ...ngSidebar.tsx |       0 |        0 |       0 |       0 | 7-47              
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ src/pages         |   22.01 |    19.85 |   18.61 |   23.71 |                   
+  AIPage.tsx       |       0 |        0 |       0 |       0 | 15-85             
+  AdminPage.tsx    |       0 |        0 |       0 |       0 | 9-152             
+  ...ogramPage.tsx |       0 |        0 |       0 |       0 | 14-130            
+  BillingPage.tsx  |       0 |        0 |       0 |       0 | 21-281            
+  BusinessPage.tsx |       0 |      100 |       0 |       0 | 13-185            
+  ...culumPage.tsx |       0 |        0 |       0 |       0 | 27-132            
+  ...boardPage.tsx |       0 |        0 |       0 |       0 | 32-148            
+  GrammarPage.tsx  |       0 |        0 |       0 |       0 | 9-53              
+  LegalPage.tsx    |       0 |      100 |       0 |       0 | 9-194             
+  ...eningPage.tsx |    3.61 |        0 |       0 |    4.34 | 29-46,52-360      
+  LoginPage.tsx    |       0 |        0 |       0 |       0 | 12-76             
+  NotFoundPage.tsx |       0 |      100 |       0 |       0 | 5-6               
+  OfflinePage.tsx  |       0 |        0 |       0 |       0 | 14-75             
+  ...ementPage.tsx |       0 |        0 |       0 |       0 | 17-143            
+  PricingPage.tsx  |   84.09 |    78.68 |   95.65 |   85.88 | ...14,117-118,124 
+  ProfilePage.tsx  |       0 |        0 |       0 |       0 | 10-120            
+  ...ToolsPage.tsx |    87.5 |    66.66 |      75 |    87.5 | 46                
+  ReadingPage.tsx  |       0 |        0 |       0 |       0 | 11-150            
+  SpeakingPage.tsx |       0 |        0 |       0 |       0 | 16-296            
+  StartPage.tsx    |       0 |        0 |       0 |       0 | 19-70             
+  ...emberPage.tsx |       0 |        0 |       0 |       0 | 7-99              
+  TeamPage.tsx     |       0 |      100 |       0 |       0 | 3-8               
+  ToolsPage.tsx    |     100 |      100 |     100 |     100 |                   
+  ...ularyPage.tsx |   66.66 |       50 |   66.66 |   66.66 | 67,108-109        
+  ...ToolsPage.tsx |   53.84 |       40 |      40 |   56.45 | ...09-410,443-455 
+  WritingPage.tsx  |       0 |        0 |       0 |       0 | 10-70             
+ src/pages/AIPage  |       0 |        0 |       0 |       0 |                   
+  ...InputForm.tsx |       0 |        0 |       0 |       0 | 30-291            
+  ...eSelector.tsx |       0 |        0 |       0 |       0 | 25-88             
+  ...sultPanel.tsx |       0 |        0 |       0 |       0 | 16-60             
+  MetricsGrid.tsx  |       0 |      100 |       0 |       0 | 15-21             
+  ...atusPanel.tsx |       0 |        0 |       0 |       0 | 16-24             
+  ResultList.tsx   |       0 |      100 |       0 |       0 | 7-21              
+  ...xtSidebar.tsx |       0 |        0 |       0 |       0 | 21-128            
+  ...pacePanel.tsx |       0 |        0 |       0 |       0 | 11-16             
+ ...s/AIPage/hooks |       0 |        0 |       0 |       0 |                   
+  useAIPage.ts     |       0 |        0 |       0 |       0 | 24-250            
+ ...ages/AdminPage |       0 |        0 |       0 |       0 |                   
+  AdminHeader.tsx  |       0 |        0 |       0 |       0 | 11-53             
+  AdminLogin.tsx   |       0 |        0 |       0 |       0 | 14-63             
+  BillingTab.tsx   |       0 |      100 |       0 |       0 | 5-6               
+  StatsGrid.tsx    |       0 |      100 |       0 |       0 | 7-8               
+  SystemTab.tsx    |       0 |        0 |       0 |       0 | 16-54             
+  UsersTab.tsx     |       0 |        0 |       0 |       0 | 22-72             
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...CurriculumPage |       0 |        0 |       0 |       0 |                   
+  ...tionsGrid.tsx |       0 |        0 |       0 |       0 | 17-62             
+  ...umFullTab.tsx |       0 |        0 |       0 |       0 | 26-211            
+  ...MemoryTab.tsx |       0 |        0 |       0 |       0 | 28-155            
+  ...tionBrief.tsx |       0 |        0 |       0 |       0 | 36-213            
+  ...umSidebar.tsx |       0 |        0 |       0 |       0 | 13-29             
+  ...lSelector.tsx |       0 |        0 |       0 |       0 | 19-44             
+  ...mTodayTab.tsx |       0 |        0 |       0 |       0 | 17-165            
+  ...culum-data.ts |       0 |      100 |     100 |       0 | 11-298            
+ .../DashboardPage |       0 |        0 |       0 |       0 |                   
+  DailyGoalBar.tsx |       0 |        0 |       0 |       0 | 4-12              
+  ...dSkeleton.tsx |       0 |      100 |       0 |       0 | 5-29              
+  HeroPanel.tsx    |       0 |        0 |       0 |       0 | 19-171            
+  ...ssCockpit.tsx |       0 |        0 |       0 |       0 | 27-162            
+  ...riorities.tsx |       0 |        0 |       0 |       0 | 15-39             
+  Sparkline.tsx    |       0 |        0 |       0 |       0 | 3-36              
+  getCefrColor.ts  |       0 |        0 |       0 |       0 | 1-6               
+ ...es/GrammarPage |       0 |        0 |       0 |       0 |                   
+  ...marHeader.tsx |       0 |        0 |       0 |       0 | 4-54              
+  ...onContent.tsx |       0 |        0 |       0 |       0 | 62-521            
+  ...p.stories.tsx |       0 |        0 |       0 |       0 | 5-133             
+  ...LessonMap.tsx |       0 |        0 |       0 |       0 | 16-97             
+  ...rNextStep.tsx |       0 |      100 |       0 |       0 | 4-17              
+  ...omponents.tsx |       0 |        0 |       0 |       0 | 8-68              
+  ...ageHelpers.ts |       0 |        0 |       0 |       0 | 13-100            
+  ...viewQueue.tsx |       0 |      100 |       0 |       0 | 10-26             
+ ...mmarPage/hooks |       0 |        0 |       0 |       0 |                   
+  ...rammarPage.ts |       0 |        0 |       0 |       0 | 21-344            
+ ...es/LandingPage |       0 |        0 |       0 |       0 |                   
+  ...omponents.tsx |       0 |        0 |       0 |       0 | 10-137            
+  FAQSection.tsx   |       0 |        0 |       0 |       0 | 6-28              
+  Footer.tsx       |       0 |      100 |       0 |       0 | 4                 
+  HeroSection.tsx  |       0 |        0 |       0 |       0 | 4-140             
+  Navbar.tsx       |       0 |      100 |       0 |       0 | 5                 
+  ...ngSection.tsx |       0 |        0 |       0 |       0 | 4-81              
+  ...owSection.tsx |       0 |      100 |       0 |       0 | 5-14              
+  constants.ts     |       0 |      100 |     100 |       0 | 11-89             
+  index.tsx        |       0 |      100 |       0 |       0 | 12-39             
+ ...ages/LoginPage |       0 |        0 |       0 |       0 |                   
+  ...swordForm.tsx |       0 |        0 |       0 |       0 | 24-74             
+  SSOForm.tsx      |       0 |        0 |       0 |       0 | 12-34             
+  ...inButtons.tsx |       0 |        0 |       0 |       0 | 9-21              
+  TopNavBar.tsx    |       0 |      100 |       0 |       0 | 7-29              
+  constants.tsx    |       0 |        0 |       0 |       0 | 5-47              
+  ...inHandlers.ts |       0 |        0 |       0 |       0 | 10-178            
+ ...OnboardingPage |       0 |        0 |       0 |       0 |                   
+  ...rdingPage.tsx |       0 |        0 |       0 |       0 | 29-362            
+  index.tsx        |       0 |        0 |       0 |       0 |                   
+ ...dingPage/steps |       0 |        0 |       0 |       0 |                   
+  GoalsStep.tsx    |       0 |        0 |       0 |       0 | 11-91             
+  LevelStep.tsx    |       0 |        0 |       0 |       0 | 3-26              
+  PlanStep.tsx     |       0 |        0 |       0 |       0 | 3-38              
+  ProfileStep.tsx  |       0 |        0 |       0 |       0 | 25-121            
+  RoleStep.tsx     |       0 |        0 |       0 |       0 | 24-93             
+ ...es/ProfilePage |    7.73 |     7.53 |    2.63 |    7.57 |                   
+  ...PlanCards.tsx |       0 |        0 |       0 |       0 | 22-152            
+  ...ngSection.tsx |       0 |      100 |       0 |       0 | 26-39             
+  ...atusBadge.tsx |       0 |        0 |       0 |       0 | 5-6               
+  ...pgradeCTA.tsx |       0 |        0 |       0 |       0 | 8-25              
+  ...esSection.tsx |       0 |        0 |       0 |       0 | 29-206            
+  ...ewSection.tsx |       0 |        0 |       0 |       0 | 41-311            
+  ...ageReducer.ts |   89.65 |    85.71 |     100 |   88.88 | 34,88,151         
+  ...tySection.tsx |       0 |        0 |       0 |       0 | 27-283            
+  ...ssSection.tsx |       0 |        0 |       0 |       0 | 25-232            
+  index.ts         |       0 |        0 |       0 |       0 |                   
+  ...rofileEdit.ts |       0 |        0 |       0 |       0 | 11-149            
+  ...rofilePage.ts |       0 |        0 |       0 |       0 | 16-225            
+  ...references.ts |       0 |        0 |       0 |       0 | 9-132             
+ ...s/ProgressPage |       0 |        0 |       0 |       0 |                   
+  ...icsCharts.tsx |       0 |        0 |       0 |       0 | 4-208             
+  ...tsSection.tsx |       0 |        0 |       0 |       0 | 15-154            
+  ...tricCards.tsx |       0 |        0 |       0 |       0 | 4-11              
+  ...icsPanels.tsx |       0 |        0 |       0 |       0 | 4-191             
+  ...planation.tsx |       0 |        0 |       0 |       0 | 11-16             
+  ...eSelector.tsx |       0 |      100 |       0 |       0 | 4-28              
+  ...aimBanner.tsx |       0 |      100 |       0 |       0 | 4-5               
+  ...onContent.tsx |       0 |      100 |       0 |       0 | 21-154            
+  ...onMetrics.tsx |       0 |      100 |       0 |       0 | 4-15              
+  HeroBanner.tsx   |       0 |        0 |       0 |       0 | 12-30             
+  ...edgeGraph.tsx |       0 |        0 |       0 |       0 | 8-136             
+  MistakeLog.tsx   |       0 |        0 |       0 |       0 | 11-126            
+  ...psHelpers.tsx |       0 |        0 |       0 |       0 | 4-101             
+  ...aderboard.tsx |       0 |        0 |       0 |       0 | 6-55              
+  ...tStepsTab.tsx |       0 |        0 |       0 |       0 | 30-139            
+  ...erviewTab.tsx |       0 |        0 |       0 |       0 | 21-118            
+  ...essReport.tsx |       0 |        0 |       0 |       0 | 7-103             
+  QuickStats.tsx   |       0 |      100 |       0 |       0 | 4-48              
+  ...tSessions.tsx |       0 |        0 |       0 |       0 | 5-18              
+  SkillCard.tsx    |       0 |        0 |       0 |       0 | 10-66             
+  SkillSidebar.tsx |       0 |        0 |       0 |       0 | 6-143             
+  TaskGrid.tsx     |       0 |        0 |       0 |       0 | 17-85             
+  index.tsx        |       0 |        0 |       0 |       0 | 5-31              
+  utils.ts         |       0 |        0 |       0 |       0 | 11-151            
+ ...QuickToolsPage |   11.42 |    11.76 |    5.12 |      12 |                   
+  ...sebookTab.tsx |   11.11 |        0 |       0 |   11.11 | 11-64             
+  QuickAITab.tsx   |   37.03 |     37.5 |      25 |      40 | ...52,102,112-139 
+  ...ionaryTab.tsx |    1.44 |        0 |       0 |    1.51 | 19-271            
+ ...es/ReadingPage |       0 |        0 |       0 |       0 |                   
+  ...onResults.tsx |       0 |        0 |       0 |       0 | 28-265            
+  ...ssionCard.tsx |       0 |        0 |       0 |       0 | 28-129            
+  ...Workspace.tsx |       0 |        0 |       0 |       0 | 77-438            
+ ...dingPage/hooks |       0 |        0 |       0 |       0 |                   
+  ...eadingPage.ts |       0 |        0 |       0 |       0 | 29-178            
+ ...s/SpeakingPage |       0 |        0 |       0 |       0 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...age/components |       0 |        0 |       0 |       0 |                   
+  ...ionScores.tsx |       0 |      100 |       0 |       0 | 15-31             
+  ...onMetrics.tsx |       0 |        0 |       0 |       0 | 13-17             
+  ...nSelector.tsx |       0 |        0 |       0 |       0 | 17-36             
+  ...oryFilter.tsx |       0 |        0 |       0 |       0 | 11-32             
+  ...omparison.tsx |       0 |      100 |       0 |       0 | 10-11             
+  ...uteWallet.tsx |       0 |        0 |       0 |       0 | 10-18             
+  ...ticePanel.tsx |       0 |        0 |       0 |       0 | 20-273            
+ ...kingPage/hooks |       0 |        0 |       0 |       0 |                   
+  ...eakingPage.ts |       0 |        0 |       0 |       0 | 20-232            
+ ...VocabularyPage |   55.31 |    70.37 |   33.33 |   55.55 |                   
+  ...rySection.tsx |       0 |        0 |       0 |       0 | 11-85             
+  ...ssMetrics.tsx |       0 |      100 |       0 |       0 | 27-28             
+  ...ageReducer.ts |   88.88 |     82.6 |     100 |   88.88 | 67,107,153        
+  ...yPageUtils.ts |     100 |      100 |     100 |     100 |                   
+  index.ts         |       0 |        0 |       0 |       0 |                   
+ ...age/components |   54.42 |    58.82 |   55.73 |   57.46 |                   
+  ...edHeatmap.tsx |       0 |        0 |       0 |       0 | 8-55              
+  ...tsSection.tsx |    87.5 |     92.3 |   77.77 |   86.66 | 102,141           
+  ...aryHeader.tsx |      75 |    70.58 |    62.5 |      75 | 122-145           
+  WordCard.tsx     |   86.48 |    76.19 |   71.42 |   93.75 | 126,233           
+  ...rdDetails.tsx |      32 |     12.5 |   33.33 |   34.78 | ...,50-72,137-167 
+  ...ardHeader.tsx |     100 |    83.33 |     100 |     100 | 43                
+  ...ardReview.tsx |   63.15 |       50 |   46.15 |   63.15 | ...,56,75,156-169 
+  ...etSection.tsx |      75 |    91.66 |      75 |      75 | 57                
+ ...laryPage/hooks |   74.66 |       64 |   75.55 |   75.35 |                   
+  ...bularyPage.ts |   74.66 |       64 |   75.55 |   75.35 | ...66,374,401-402 
+ ...es/WritingPage |       0 |        0 |       0 |       0 |                   
+  ...onResults.tsx |       0 |        0 |       0 |       0 | 35-285            
+ ...age/components |       0 |        0 |       0 |       0 |                   
+  ...heckpoint.tsx |       0 |        0 |       0 |       0 | 15-84             
+  DraftEditor.tsx  |       0 |        0 |       0 |       0 | 21-227            
+  ...ndicators.tsx |       0 |      100 |       0 |       0 | 10-14             
+  ...ationView.tsx |       0 |        0 |       0 |       0 | 33-72             
+  MissionCard.tsx  |       0 |        0 |       0 |       0 | 25-102            
+  ...onListTab.tsx |       0 |        0 |       0 |       0 | 31-114            
+  ...uidelines.tsx |       0 |        0 |       0 |       0 | 11-58             
+  ...aceHeader.tsx |       0 |      100 |       0 |       0 | 15-59             
+  WorkspaceTab.tsx |       0 |        0 |       0 |       0 | 49-75             
+ ...tingPage/hooks |       0 |        0 |       0 |       0 |                   
+  ...ritingPage.ts |       0 |        0 |       0 |       0 | 33-221            
+ src/providers     |   12.69 |    18.18 |      10 |   14.28 |                   
+  AppProvider.tsx  |       0 |        0 |       0 |       0 | 14-64             
+  ...yProvider.tsx |   66.66 |    66.66 |      50 |   66.66 | 19-23,79          
+  ...yProvider.tsx |       0 |      100 |       0 |       0 | 4-21              
+  ...eProvider.tsx |       0 |        0 |       0 |       0 | 8-22              
+  index.ts         |       0 |      100 |     100 |       0 | 1-3               
+ src/routes        |       0 |        0 |       0 |       0 |                   
+  ...ErrorPage.tsx |       0 |        0 |       0 |       0 | 3-20              
+  router.tsx       |       0 |      100 |       0 |       0 | 10-131            
+ ...red/components |   10.37 |    16.17 |   10.61 |   11.26 |                   
+  ...n.stories.tsx |       0 |      100 |     100 |       0 | 4-50              
+  Button.tsx       |     100 |     87.5 |     100 |     100 | 40                
+  Card.stories.tsx |       0 |      100 |     100 |       0 | 4-26              
+  Card.tsx         |     100 |       50 |     100 |     100 | 17                
+  ...e.stories.tsx |       0 |        0 |       0 |       0 | 3-117             
+  ...ndPalette.tsx |       0 |        0 |       0 |       0 | 33-481            
+  Confetti.tsx     |       0 |        0 |       0 |       0 | 1-76              
+  EmptyState.tsx   |       0 |        0 |       0 |       0 | 12-19             
+  Heatmap.tsx      |       0 |        0 |       0 |       0 | 5-67              
+  ...allPrompt.tsx |       0 |        0 |       0 |       0 | 10-51             
+  LoadingState.tsx |      50 |        0 |       0 |      50 | 10                
+  MetricCard.tsx   |       0 |        0 |       0 |       0 | 23-50             
+  PageHeader.tsx   |     100 |    66.66 |     100 |     100 | 24,36,48-54       
+  PageMetadata.tsx |   63.63 |       40 |     100 |   63.63 | 63-71,75-83       
+  ProgressBar.tsx  |       0 |        0 |       0 |       0 | 20-42             
+  SEO.tsx          |       0 |        0 |       0 |       0 | 12-28             
+  ...ckOverlay.tsx |   83.33 |    55.55 |     100 |     100 | 18-116            
+  SearchInput.tsx  |       0 |        0 |       0 |       0 | 11-86             
+  SectionCard.tsx  |     100 |     87.5 |     100 |     100 | 47                
+  Skeleton.tsx     |    37.5 |        0 |       0 |    37.5 | 9-12,22,30-32     
+  ...e.stories.tsx |       0 |      100 |     100 |       0 | 4-40              
+  StatusBadge.tsx  |     100 |      100 |     100 |     100 |                   
+  ThemeToggle.tsx  |       0 |        0 |       0 |       0 | 4-27              
+  Toast.tsx        |       0 |        0 |       0 |       0 | 13-71             
+  VirtualList.tsx  |       0 |        0 |       0 |       0 | 18-32             
+  XpPopup.tsx      |       0 |        0 |       0 |       0 | 1-40              
+ src/shared/hooks  |       0 |        0 |       0 |       0 |                   
+  ...ickOutside.ts |       0 |        0 |       0 |       0 | 3-21              
+  useClipboard.ts  |       0 |        0 |       0 |       0 | 7-72              
+  ...andPalette.ts |       0 |        0 |       0 |       0 | 3-80              
+  useDebounce.ts   |       0 |        0 |       0 |       0 | 3-38              
+  useEventBus.ts   |       0 |      100 |       0 |       0 | 8-27              
+  ...Validation.ts |       0 |        0 |       0 |       0 | 18-92             
+  ...eolocation.ts |       0 |        0 |       0 |       0 | 12-58             
+  ...niteScroll.ts |       0 |        0 |       0 |       0 | 10-75             
+  ...onObserver.ts |       0 |        0 |       0 |       0 | 10-46             
+  ...dShortcuts.ts |       0 |        0 |       0 |       0 | 8-61              
+  ...calStorage.ts |       0 |        0 |       0 |       0 | 4-74              
+  useLongPress.ts  |       0 |        0 |       0 |       0 | 9-35              
+  useMediaQuery.ts |       0 |        0 |       0 |       0 | 3-24              
+  ...workStatus.ts |       0 |        0 |       0 |       0 | 11-63             
+  usePagination.ts |       0 |        0 |       0 |       0 | 9-62              
+  usePrevious.ts   |       0 |      100 |       0 |       0 | 3-18              
+  useTheme.ts      |       0 |        0 |       0 |       0 | 5-61              
+  useUndoRedo.ts   |       0 |        0 |       0 |       0 | 10-60             
+  useWindowSize.ts |       0 |        0 |       0 |       0 | 8-33              
+ src/shared/layout |       0 |        0 |       0 |       0 |                   
+  AppShell.tsx     |       0 |      100 |       0 |       0 | 11-14             
+  ...avigation.tsx |       0 |        0 |       0 |       0 | 9-33              
+  Navigation.tsx   |       0 |        0 |       0 |       0 | 16-105            
+  PublicLayout.tsx |       0 |        0 |       0 |       0 | 6-116             
+  RightSidebar.tsx |       0 |        0 |       0 |       0 | 5-89              
+  Sidebar.tsx      |       0 |        0 |       0 |       0 | 19-210            
+ ...layout/sidebar |       0 |        0 |       0 |       0 |                   
+  ...umSidebar.tsx |       0 |      100 |       0 |       0 | 5-22              
+  ...rdSidebar.tsx |       0 |      100 |       0 |       0 | 5-61              
+  ...omponents.tsx |       0 |        0 |       0 |       0 | 13-138            
+  SkillSidebar.tsx |       0 |        0 |       0 |       0 | 5-76              
+  ...bar.config.ts |       0 |        0 |       0 |       0 |                   
+ src/shared/lib    |       0 |        0 |       0 |       0 |                   
+  feature-flags.ts |       0 |        0 |       0 |       0 | 23-133            
+ src/shared/logger |   52.63 |       50 |   38.46 |   54.54 |                   
+  index.ts         |   52.63 |       50 |   38.46 |   54.54 | 22,40-55,69-96    
+ ...shared/storage |   62.26 |    64.81 |   73.33 |   64.58 |                   
+  index.ts         |   62.26 |    64.81 |   73.33 |   64.58 | ...71-175,186,199 
+ src/shared/utils  |    5.12 |     7.14 |    5.55 |    4.42 |                   
+  cn.ts            |     100 |      100 |     100 |     100 |                   
+  export.ts        |       0 |        0 |       0 |       0 | 6-55              
+  haptic.ts        |       0 |        0 |       0 |       0 | 9-24              
+  prefetch.ts      |       0 |        0 |       0 |       0 | 1-30              
+  sanitize.ts      |       0 |        0 |       0 |       0 | 3-38              
+  sound.ts         |    14.7 |       25 |     100 |   12.12 | 10-40             
+  web-vitals.ts    |       0 |        0 |       0 |       0 | 12-36             
+ src/store         |       0 |        0 |       0 |       0 |                   
+  app.store.ts     |       0 |        0 |       0 |       0 | 11-17             
+ src/tools         |       0 |        0 |       0 |       0 |                   
+  ...sing-audio.ts |       0 |        0 |       0 |       0 | 8-65              
+-------------------|---------|----------|---------|---------|-------------------

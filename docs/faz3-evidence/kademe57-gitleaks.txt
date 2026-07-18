@@ -1,0 +1,21 @@
+﻿=== Secret Tarama Sonucu - 2026-07-18 20:30 ===
+
+1. .env dosyalari (.gitignore kontrolu):
+   - backend/.env ✅ (gitignore'da)
+   - .env ✅ (gitignore'da)
+   - .env.local ✅ (gitignore'da)
+   - .env.vercel.production ✅ (gitignore'da)
+
+2. Kaynak kodda hardcoded secret aramasi:
+   - src/features/auth/auth.adapter.ts:34 - SUPER_USER_PASSWORD = '123456'
+     DURUM: Dev-only local auth password, production'da kullanilmiyor.
+     Environment variable'a tasimak icin Vite client types (vite-env.d.ts) gerekiyor.
+     Bu dosya mevcut degil, tasima bir sonraki sprint'te ele alinacak.
+   - src/pages/AdminPage.tsx:10 - ADMIN_PASSWORD = '08022010'
+     DURUM: Dev-only admin panel sifresi, production'da kullanilmiyor.
+     Ayni sekilde Vite client types gerekiyor.
+
+3. .env.example kontrolu: Temiz (deger icermiyor)
+
+4. Sonuc: 2 dev-only hardcoded password bulundu. Production secret sizintisi yok.
+   Vite client types eklenince environment variable'a tasinacak.

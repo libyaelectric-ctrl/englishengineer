@@ -21,7 +21,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         response.json(
-          await service.lookup(request.validatedQuery as VocabularyLookupQuery)
+          await service.lookup(request.validatedQuery as unknown as VocabularyLookupQuery)
         );
       } catch (error) {
         next(error);

@@ -3,14 +3,14 @@ import { ApiError } from '../errors.js';
 export const mockText = (operation: string): string =>
   `[Mock AI] ${operation} is running in local fallback mode. Configure a supported backend provider for real AI output.`;
 
-interface ProviderConfig {
+export interface ProviderConfig {
   apiKey: string;
   model: string;
 }
 
 const handleProviderResponse = async (
   response: Response,
-  extractText: (payload: Record<string, unknown>) => string | undefined
+  extractText: (payload: unknown) => string | undefined
 ): Promise<string> => {
   if (!response.ok) {
     const isRateLimited = response.status === 429;
@@ -59,7 +59,10 @@ export const callOpenAI = async (
   );
   return handleProviderResponse(
     response,
-    (p) => p?.choices?.[0]?.message?.content
+    (p) => {
+      const r = p as { choices?: { message?: { content?: string } }[] };
+      return r?.choices?.[0]?.message?.content;
+    }
   );
 };
 
@@ -85,9 +88,10 @@ export const callAnthropic = async (
   });
   return handleProviderResponse(
     response,
-    (p) =>
-      p?.content?.find((item: Record<string, unknown>) => item?.type === 'text')
-        ?.text
+    (p) => {
+      const r = p as { content?: { type?: string; text?: string }[] };
+      return r?.content?.find((item) => item?.type === 'text')?.text;
+    }
   );
 };
 
@@ -119,6 +123,9 @@ export const callGemini = async (
   );
   return handleProviderResponse(
     response,
-    (p) => p?.candidates?.[0]?.content?.parts?.[0]?.text
+    (p) => {
+      const r = p as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
+      return r?.candidates?.[0]?.content?.parts?.[0]?.text;
+    }
   );
 };

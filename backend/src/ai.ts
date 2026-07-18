@@ -12,6 +12,7 @@ import type {
 } from 'express';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import type { AiLedger } from './ai-ledger.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
 
@@ -38,7 +39,7 @@ const checkCostLimits = (userId: string) => {
 const isLimitReached = (planId: string, count: number) =>
   planId === 'free' ? count >= 3 : count >= 300;
 
-const throwLimitError = (planId: string) => {
+const throwLimitError = (planId: string): never => {
   const free = planId === 'free';
   throw new ApiError(
     429,
@@ -56,7 +57,7 @@ const checkRateLimits = async (
     countRecentRequests: (userId: string, planId: string) => Promise<number>;
   },
   billingRepository: SubscriptionRepository | null
-) => {
+): Promise<{ count: number; useTopup: boolean; subscription: SubscriptionSnapshot | null; topupCredits: number }> => {
   checkCostLimits(userId);
   const count = await ledger.countRecentRequests(userId, planId);
   if (!isLimitReached(planId, count))
@@ -70,6 +71,8 @@ const checkRateLimits = async (
     return { count, useTopup: true, subscription, topupCredits };
 
   throwLimitError(planId);
+  // Unreachable — throwLimitError always throws, but TS needs an explicit return path
+  return { count, useTopup: false, subscription: null, topupCredits: 0 };
 };
 
 const decrementTopup = async (
@@ -78,7 +81,7 @@ const decrementTopup = async (
   subscription: SubscriptionSnapshot | null,
   topupCredits: number
 ) => {
-  if (!billingRepository || topupCredits <= 0) return;
+  if (!billingRepository || topupCredits <= 0 || !subscription) return;
   await billingRepository.upsertSubscriptionStatus(userId, {
     ...subscription,
     topupCredits: topupCredits - 1,
@@ -88,9 +91,7 @@ const decrementTopup = async (
 };
 
 const logAiUsage = (
-  ledger: {
-    logSession: (userId: string, session: Record<string, unknown>) => void;
-  },
+  ledger: AiLedger,
   userId: string,
   result: {
     error?: boolean;
@@ -136,10 +137,10 @@ export const registerAIRoutes = (
       validateBody(AiRequestBodySchema),
       async (request: Request, response: Response, next: NextFunction) => {
         try {
-          const body = request.validatedBody;
+          const body = request.validatedBody as Record<string, unknown>;
 
           if (
-            body.operation !== undefined &&
+            body?.operation !== undefined &&
             body.operation !== defaultOperation
           ) {
             throw new ApiError(
@@ -180,7 +181,14 @@ export const registerAIRoutes = (
           }
 
           if (!bypass) {
-            logAiUsage(ledger, userId, result, body, defaultOperation);
+            logAiUsage(ledger, userId, {
+              error: result.error as boolean | undefined,
+              provider: result.provider as string | undefined,
+              durationMs: result.durationMs as number | undefined,
+              text: result.text as string | undefined,
+            }, {
+              modeId: body.modeId as string | undefined,
+            }, defaultOperation);
           }
 
           response.json(result);

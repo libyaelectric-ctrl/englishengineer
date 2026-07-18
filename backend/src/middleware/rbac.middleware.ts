@@ -4,9 +4,10 @@ import type { Request, Response, NextFunction } from 'express';
 export const requireRole = (allowedRoles: string[] = []) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      const userRole = (req.auth as Record<string, unknown>)?.role || 'user';
+      const user = req.auth as { role?: string } | undefined;
+      const userRole = user?.role || 'user';
 
-      if (userRole === 'admin' || allowedRoles.includes(userRole)) {
+      if (userRole === 'admin' || allowedRoles.includes(userRole as string)) {
         return next();
       }
 

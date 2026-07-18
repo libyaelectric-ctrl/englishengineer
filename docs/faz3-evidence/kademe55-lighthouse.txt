@@ -1,0 +1,8 @@
+﻿Lighthouse Skorlari - 2026-07-18 20:26
+
+Performance: 60
+Accessibility: 94
+Best Practices: 96
+SEO: 100
+
+Not: Performance dusuk (567kB ana bundle, 212kB Supabase chunk). Kod-splitting ile iyilestirilebilir.

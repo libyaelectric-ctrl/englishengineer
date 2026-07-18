@@ -126,7 +126,8 @@
     ]
   },
   "overrides": {
-    "uuid": "^11.1.1"
+    "uuid": "^11.1.1",
+    "axios": "^1.7.9"
   },
   "allowScripts": {
     "esbuild@0.25.12": true,

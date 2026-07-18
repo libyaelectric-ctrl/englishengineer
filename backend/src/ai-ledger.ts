@@ -44,8 +44,8 @@ export const createSupabaseAiLedger = (config: {
   }
 
   const supabase = createClient(
-    config.workspace.supabaseUrl,
-    config.workspace.supabaseServiceRoleKey,
+    config.workspace!.supabaseUrl!,
+    config.workspace!.supabaseServiceRoleKey!,
     { auth: { persistSession: false } }
   );
 

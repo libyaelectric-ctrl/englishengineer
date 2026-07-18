@@ -80,13 +80,13 @@ const PLAN_PRICE_CONFIG: Record<string, string> = {
 };
 
 const resolveOrProvisionPriceId = async (
-  config: Record<string, string | null>,
+  config: BillingServiceConfig,
   stripeClient: Stripe,
   planId: string
 ): Promise<string> => {
   const configKey = PLAN_PRICE_CONFIG[planId];
   if (configKey && config[configKey]) {
-    return config[configKey];
+    return config[configKey] as string;
   }
 
   const meta = PLAN_META[planId];
@@ -178,7 +178,7 @@ const resolveOrProvisionTopupPriceId = async (
   return newPrice.id;
 };
 
-interface BillingServiceConfig {
+export interface BillingServiceConfig {
   configured: boolean;
   webhookSecret: string | null;
   [key: string]: string | boolean | null | undefined;
@@ -260,7 +260,7 @@ const processWebhookEvent = async (
   const eventId = event.id;
   if (await repository.hasStripeEventBeenProcessed(eventId))
     return { received: true, duplicate: true, eventId };
-  await dispatchWebhookEvent(repository, event.type, event.data?.object ?? {});
+  await dispatchWebhookEvent(repository, event.type, (event.data?.object ?? {}) as unknown as Record<string, unknown>);
   await repository.markStripeEventProcessed(eventId, {
     type: event.type,
     processedAt: new Date().toISOString(),
