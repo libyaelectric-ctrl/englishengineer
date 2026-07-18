@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { AdminLogin } from './AdminPage/AdminLogin';
+import React, { useState } from 'react';
 import { AdminHeader } from './AdminPage/AdminHeader';
 import { StatsGrid } from './AdminPage/StatsGrid';
 import { UsersTab } from './AdminPage/UsersTab';
 import { BillingTab } from './AdminPage/BillingTab';
 import { SystemTab } from './AdminPage/SystemTab';
-
-const ADMIN_USERNAME = 'ozcaneymen';
-const ADMIN_PASSWORD = '08022010';
-const ADMIN_SESSION_KEY = 'eos_admin_auth';
 
 interface UserRecord {
   id: string;
@@ -92,40 +87,13 @@ const SYSTEM_LOGS = [
 ];
 
 export const AdminPage: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem(ADMIN_SESSION_KEY) === 'true';
-  });
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
   const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
     'users'
   );
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      localStorage.setItem(ADMIN_SESSION_KEY, 'true');
-    } else {
-      localStorage.removeItem(ADMIN_SESSION_KEY);
-    }
-  }, [isAuthenticated]);
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoginError('');
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-    } else {
-      setLoginError('Invalid credentials');
-    }
-  };
-
   const handleLogout = () => {
-    setIsAuthenticated(false);
-    setUsername('');
-    setPassword('');
+    // Logout ish logic removed - admin panel is now accessible via auth guard
   };
 
   const handlePromote = (id: string) => {
@@ -135,19 +103,6 @@ export const AdminPage: React.FC = () => {
       )
     );
   };
-
-  if (!isAuthenticated) {
-    return (
-      <AdminLogin
-        username={username}
-        password={password}
-        loginError={loginError}
-        onUsernameChange={setUsername}
-        onPasswordChange={setPassword}
-        onSubmit={handleLogin}
-      />
-    );
-  }
 
   return (
     <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">

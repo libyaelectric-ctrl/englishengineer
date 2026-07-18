@@ -1,0 +1,23 @@
+﻿=== Kademe 61: Backdoor Sifre Kaldirma ===
+
+1. Grep for passwords (123456, 08022010):
+
+2. Typecheck:
+
+> engvox-frontend@4.0.1 typecheck
+> tsc --noEmit
+
+
+3. Tests:
+
+[2m Test Files [22m [1m[32m79 passed[39m[22m[90m (79)[39m
+[2m      Tests [22m [1m[32m480 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (481)[39m
+[2m   Duration [22m 40.45s[2m (transform 1.90s, setup 10.27s, import 5.66s, tests 5.40s, environment 49.35s)[22m
+
+
+
+4. Degisiklikler:
+   - src/features/auth/auth.adapter.ts: SUPER_USER_EMAIL, SUPER_USER_PASSWORD sabitleri kaldirildi
+   - src/features/auth/auth.adapter.ts: trySuperUserLogin metodu kaldirildi
+   - src/pages/AdminPage.tsx: ADMIN_USERNAME, ADMIN_PASSWORD sabitleri kaldirildi
+   - src/pages/AdminPage.tsx: Login formu kaldirildi, admin panel artik auth guard ile korunuyor

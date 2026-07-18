@@ -1,0 +1,23 @@
+﻿=== Kademe 62: Secret Tarama ===
+
+1. Kaynak kodda hardcoded secret aramasi:
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\pages\LoginPage\constants.tsx:25 - forgotPassword: 'Forgot password?',
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\pages\LoginPage\constants.tsx:43 - forgotPassword: 'Şifremi unuttum?',
+
+2. .env dosyalari (.gitignore kontrolu):
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\.env
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\.env
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\.env.local
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\.env.vercel.production
+
+3. .gitignore env kontrolu:
+   EVET - .gitignore icinde .env pattern'i mevcut
+
+4. Git gecmisinde sifre aramasi:
+   c6263bd	refs/heads/main perf: lazy-load CommandPalette (motion) - main bundle 413KB to 372KB
+   b1a94b3	refs/heads/main perf: convert images to WebP (44% smaller) + add lazy loading
+   bce2767	refs/heads/main fix: revert dark mode, fix image refs (.png -> .jpg), fix vocabulary imports
+   245733c	refs/heads/main feat: dark mode data-theme attribute + updated colors per gecce.txt guide
+   e1142d0	refs/heads/main perf: optimize images - 25MB to 1.3MB (93.6% reduction)
+
+5. Sonuc: 123456/08022010 kaldirildi (Kademe 61). Yeni hardcoded secret bulunmadi.
