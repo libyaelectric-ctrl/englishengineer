@@ -129,51 +129,56 @@ export const ProgressOverviewTab = () => {
 
       <AnalyticsMetricCards analytics={analytics} />
 
-      <SectionCard
-        title="Assessment Profile"
-        subtitle="Engineering communication dimensions derived from existing learning evidence"
-        icon={ShieldCheck}
-        headerActions={
-          <StatusBadge
-            label={analytics.assessmentProfile.trustLabel}
-            tone={
-              analytics.assessmentProfile.hasEnoughData ? 'success' : 'warning'
+      <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
+        <div className="space-y-5">
+          <SectionCard
+            title="Assessment Profile"
+            subtitle="Engineering communication dimensions derived from existing learning evidence"
+            icon={ShieldCheck}
+            headerActions={
+              <StatusBadge
+                label={analytics.assessmentProfile.trustLabel}
+                tone={
+                  analytics.assessmentProfile.hasEnoughData
+                    ? 'success'
+                    : 'warning'
+                }
+              />
             }
+          >
+            <AssessmentProfilePanel profile={analytics.assessmentProfile} />
+          </SectionCard>
+
+          {advancedAnalyticsEntitlement.allowed && (
+            <AnalyticsChartsSection
+              analytics={analytics}
+              activeChart={activeChart}
+              setActiveChart={setActiveChart}
+              chartTabs={chartTabs}
+            />
+          )}
+
+          <RecentSessions sessions={analytics.recentSessions} />
+        </div>
+
+        <div className="h-full">
+          <SkillSidebar
+            skills={SKILLS}
+            eloScores={eloScores}
+            highestSkill={highestSkill}
+            lowestSkill={lowestSkill}
+            totalCEFR={totalCEFR}
+            rank={rank}
+            selectedGraphNode={selectedGraphNode}
+            setSelectedGraphNode={setSelectedGraphNode}
           />
-        }
-      >
-        <AssessmentProfilePanel profile={analytics.assessmentProfile} />
-      </SectionCard>
+        </div>
+      </div>
 
       <KnowledgeGraph
         selectedGraphNode={selectedGraphNode}
         setSelectedGraphNode={setSelectedGraphNode}
       />
-
-      {advancedAnalyticsEntitlement.allowed && (
-        <AnalyticsChartsSection
-          analytics={analytics}
-          activeChart={activeChart}
-          setActiveChart={setActiveChart}
-          chartTabs={chartTabs}
-        />
-      )}
-
-      <RecentSessions sessions={analytics.recentSessions} />
-
-      <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
-        <div>{/* Main content rendered above */}</div>
-        <SkillSidebar
-          skills={SKILLS}
-          eloScores={eloScores}
-          highestSkill={highestSkill}
-          lowestSkill={lowestSkill}
-          totalCEFR={totalCEFR}
-          rank={rank}
-          selectedGraphNode={selectedGraphNode}
-          setSelectedGraphNode={setSelectedGraphNode}
-        />
-      </div>
     </div>
   );
 };
