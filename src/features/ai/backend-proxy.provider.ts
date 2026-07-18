@@ -181,6 +181,26 @@ const resolveBackendResponseText = (data: BackendProxyResponse): string => {
   );
 };
 
+const parseErrorValue = (
+  errorValue: unknown
+): BackendProxyResponse['error'] => {
+  if (
+    !isRecord(errorValue) ||
+    typeof errorValue.code !== 'string' ||
+    typeof errorValue.message !== 'string'
+  ) {
+    return undefined;
+  }
+  return {
+    code: errorValue.code,
+    message: errorValue.message,
+    retryable:
+      typeof errorValue.retryable === 'boolean'
+        ? errorValue.retryable
+        : undefined,
+  };
+};
+
 export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
   if (!isRecord(data)) {
     throw new BackendProxyError(
@@ -199,21 +219,6 @@ export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
     );
   }
 
-  const errorValue = data.error;
-  const error =
-    isRecord(errorValue) &&
-    typeof errorValue.code === 'string' &&
-    typeof errorValue.message === 'string'
-      ? {
-          code: errorValue.code,
-          message: errorValue.message,
-          retryable:
-            typeof errorValue.retryable === 'boolean'
-              ? errorValue.retryable
-              : undefined,
-        }
-      : undefined;
-
   return {
     contractVersion:
       data.contractVersion === CONTRACT_VERSION ? CONTRACT_VERSION : undefined,
@@ -229,9 +234,62 @@ export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
     provider: typeof data.provider === 'string' ? data.provider : undefined,
     mode: data.mode === 'real' || data.mode === 'mock' ? data.mode : undefined,
     mockMode: typeof data.mockMode === 'boolean' ? data.mockMode : undefined,
-    error,
+    error: parseErrorValue(data.error),
   };
 };
+
+const buildSuccessResponse = (
+  data: BackendProxyResponse,
+  operation: AIOperation,
+  requestId: string,
+  status: AIProviderStatus,
+  startedAt: number,
+  retryCount: number
+): AIResponse => {
+  const durationMs = Math.round(performance.now() - startedAt);
+  const isBackendMock = data.mockMode === true || data.mode === 'mock';
+  const responseStatus: AIProviderStatus = isBackendMock
+    ? {
+        mode: 'backend',
+        state: 'mock-fallback',
+        label: 'Mock AI demo through protected connection',
+        detail:
+          'The protected service is connected, but Mock AI demo mode is active.',
+        isConnected: true,
+      }
+    : status;
+  return {
+    text: resolveBackendResponseText(data),
+    providerStatus: responseStatus,
+    structuredResult: data.structuredResult,
+    metadata: {
+      contractVersion: CONTRACT_VERSION,
+      requestId: data.requestId || requestId,
+      operation,
+      durationMs,
+      success: true,
+      retryCount,
+    },
+  };
+};
+
+const buildUnavailableResponse = (
+  operation: AIOperation,
+  requestId: string,
+  status: AIProviderStatus
+): AIResponse => ({
+  text: 'Secure AI feedback is not connected.',
+  providerStatus: status,
+  metadata: {
+    contractVersion: CONTRACT_VERSION,
+    requestId,
+    operation,
+    durationMs: 0,
+    success: false,
+    retryCount: 0,
+    errorCode: 'backend_unavailable',
+  },
+});
 
 export const createBackendProxyProvider = (
   proxyUrl: string | null
@@ -256,19 +314,7 @@ export const createBackendProxyProvider = (
     const requestId = IdService.createId('ai_req');
 
     if (!proxyUrl) {
-      return {
-        text: 'Secure AI feedback is not connected.',
-        providerStatus: status,
-        metadata: {
-          contractVersion: CONTRACT_VERSION,
-          requestId,
-          operation,
-          durationMs: 0,
-          success: false,
-          retryCount: 0,
-          errorCode: 'backend_unavailable',
-        },
-      };
+      return buildUnavailableResponse(operation, requestId, status);
     }
 
     const metadata: AIRequestMetadata = {
@@ -331,31 +377,7 @@ export const createBackendProxyProvider = (
           );
         }
 
-        const durationMs = Math.round(performance.now() - startedAt);
-        const isBackendMock = data.mockMode === true || data.mode === 'mock';
-        const responseStatus: AIProviderStatus = isBackendMock
-          ? {
-              mode: 'backend',
-              state: 'mock-fallback',
-              label: 'Mock AI demo through protected connection',
-              detail:
-                'The protected service is connected, but Mock AI demo mode is active.',
-              isConnected: true,
-            }
-          : status;
-        return {
-          text: resolveBackendResponseText(data),
-          providerStatus: responseStatus,
-          structuredResult: data.structuredResult,
-          metadata: {
-            contractVersion: CONTRACT_VERSION,
-            requestId: data.requestId || requestId,
-            operation,
-            durationMs,
-            success: true,
-            retryCount,
-          },
-        };
+        return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
       } catch (error) {
         window.clearTimeout(timeoutId);
         lastError = mapUnknownError(error);

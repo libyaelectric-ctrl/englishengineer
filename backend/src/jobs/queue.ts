@@ -29,7 +29,7 @@ const createEmailWorker = (): Worker => {
   const worker = new Worker(
     'email-sending',
     async (job) => {
-      const { type, to, data } = job.data as EmailJobData;
+      const { type, to } = job.data as EmailJobData;
       logger.info('Processing email', { worker: 'email', type, to });
       await job.updateProgress(100);
       return { success: true, type, to };
@@ -57,7 +57,7 @@ const createAIWorker = (): Worker => {
   const worker = new Worker(
     'ai-processing',
     async (job) => {
-      const { type, payload } = job.data as AiJobData;
+      const { type } = job.data as AiJobData;
       logger.info('Processing AI job', { worker: 'ai', type });
       await job.updateProgress(50);
       await new Promise((resolve) => setTimeout(resolve, 1000));

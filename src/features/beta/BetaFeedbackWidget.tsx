@@ -53,8 +53,12 @@ export const BetaFeedbackWidget = () => {
       {isOpen && (
         <div
           className="fixed inset-0 z-50 flex items-start lg:items-end justify-end bg-foreground/20 p-3 pt-16 lg:pt-5 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-5 backdrop-blur-[2px] sm:p-5"
+          role="presentation"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) close();
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') close();
           }}
         >
           <div

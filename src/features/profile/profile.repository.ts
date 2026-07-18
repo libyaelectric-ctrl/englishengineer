@@ -32,6 +32,49 @@ const normalizeSkill = (
   };
 };
 
+const mergeProfileDefaults = (
+  stored: UserLearningProfile,
+  initial: UserLearningProfile
+): Omit<UserLearningProfile, 'userId' | 'skills'> => ({
+  ...stored,
+  goals: Array.isArray(stored.goals) ? stored.goals : initial.goals,
+  professionId: stored.professionId ?? initial.professionId,
+  industryId: stored.industryId ?? initial.industryId,
+  communicationGoals: Array.isArray(stored.communicationGoals)
+    ? stored.communicationGoals
+    : initial.communicationGoals,
+  selfReportedCefr: stored.selfReportedCefr ?? initial.selfReportedCefr,
+  learningFocus: Array.isArray(stored.learningFocus)
+    ? stored.learningFocus
+    : initial.learningFocus,
+  selectedPlan: stored.selectedPlan ?? initial.selectedPlan,
+  professionalTrack: stored.professionalTrack ?? initial.professionalTrack,
+  electricalSubdomain:
+    stored.electricalSubdomain ?? initial.electricalSubdomain,
+  experienceLevel: stored.experienceLevel ?? initial.experienceLevel,
+  careerGoal: stored.careerGoal ?? initial.careerGoal,
+  country: stored.country ?? initial.country,
+  timezone: stored.timezone ?? initial.timezone,
+  interfaceLanguage: stored.interfaceLanguage ?? initial.interfaceLanguage,
+  placementCompleted:
+    stored.placementCompleted ?? initial.placementCompleted,
+  placementConfidence:
+    stored.placementConfidence ?? initial.placementConfidence,
+  placementBand: stored.placementBand ?? initial.placementBand,
+  dailyTarget: {
+    minutes: stored.dailyTarget?.minutes ?? initial.dailyTarget.minutes,
+    taskCount:
+      stored.dailyTarget?.taskCount ?? initial.dailyTarget.taskCount,
+  },
+  weeklyTolerance: {
+    allowedMissedDays:
+      stored.weeklyTolerance?.allowedMissedDays ??
+      initial.weeklyTolerance.allowedMissedDays,
+  },
+  onboardingCompleted:
+    stored.onboardingCompleted ?? initial.onboardingCompleted,
+});
+
 export const LearningProfileRepository = {
   getProfile(userId = 'local-user'): UserLearningProfile {
     const initial = getInitialUserLearningProfile(userId);
@@ -39,44 +82,8 @@ export const LearningProfileRepository = {
     if (!stored) return initial;
     return {
       ...initial,
-      ...stored,
+      ...mergeProfileDefaults(stored, initial),
       userId,
-      goals: Array.isArray(stored.goals) ? stored.goals : initial.goals,
-      professionId: stored.professionId ?? initial.professionId,
-      industryId: stored.industryId ?? initial.industryId,
-      communicationGoals: Array.isArray(stored.communicationGoals)
-        ? stored.communicationGoals
-        : initial.communicationGoals,
-      selfReportedCefr: stored.selfReportedCefr ?? initial.selfReportedCefr,
-      learningFocus: Array.isArray(stored.learningFocus)
-        ? stored.learningFocus
-        : initial.learningFocus,
-      selectedPlan: stored.selectedPlan ?? initial.selectedPlan,
-      professionalTrack: stored.professionalTrack ?? initial.professionalTrack,
-      electricalSubdomain:
-        stored.electricalSubdomain ?? initial.electricalSubdomain,
-      experienceLevel: stored.experienceLevel ?? initial.experienceLevel,
-      careerGoal: stored.careerGoal ?? initial.careerGoal,
-      country: stored.country ?? initial.country,
-      timezone: stored.timezone ?? initial.timezone,
-      interfaceLanguage: stored.interfaceLanguage ?? initial.interfaceLanguage,
-      placementCompleted:
-        stored.placementCompleted ?? initial.placementCompleted,
-      placementConfidence:
-        stored.placementConfidence ?? initial.placementConfidence,
-      placementBand: stored.placementBand ?? initial.placementBand,
-      dailyTarget: {
-        minutes: stored.dailyTarget?.minutes ?? initial.dailyTarget.minutes,
-        taskCount:
-          stored.dailyTarget?.taskCount ?? initial.dailyTarget.taskCount,
-      },
-      weeklyTolerance: {
-        allowedMissedDays:
-          stored.weeklyTolerance?.allowedMissedDays ??
-          initial.weeklyTolerance.allowedMissedDays,
-      },
-      onboardingCompleted:
-        stored.onboardingCompleted ?? initial.onboardingCompleted,
       skills: Object.fromEntries(
         SKILL_NAMES.map((skill) => [
           skill,

@@ -20,7 +20,7 @@ const getInitialState = (): SyncQueueState => ({
   syncProgress: 0,
 });
 
-let state = getInitialState();
+const state = getInitialState();
 
 const notifyListeners = () => {
   listeners.forEach((listener) => listener({ ...state }));
@@ -108,7 +108,7 @@ export const SyncQueue = {
         processedIds.push(item.id);
         state.syncProgress = Math.round(((i + 1) / totalItems) * 100);
         notifyListeners();
-      } catch (_error) {
+      } catch {
         item.retries++;
         if (item.retries >= item.maxRetries) {
           processedIds.push(item.id); // Remove after max retries

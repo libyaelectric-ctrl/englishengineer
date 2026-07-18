@@ -117,6 +117,61 @@ const createNativeRewrite = (
   return `The main technical point is: ${cleanPrompt}. A stronger professional version should state the issue, explain the impact, and define the next action with clear engineering evidence.`;
 };
 
+const buildStrengths = (
+  wordCount: number,
+  promptSignals: string[],
+  context: AIRequest['context']
+): string[] => [
+  wordCount >= 20
+    ? 'You provided enough context for a practical engineering response.'
+    : 'Your message is concise and easy to diagnose.',
+  promptSignals.length > 0
+    ? 'You used recognizable technical vocabulary.'
+    : 'The intent is clear enough to convert into professional English.',
+  `Current learning profile shows Level ${context?.level || 1} / ELO ${context?.elo || 1000}.`,
+];
+
+const buildWeaknesses = (
+  wordCount: number,
+  focusArea: string,
+  weakSkills: string[]
+): string[] => [
+  `Priority practice area: ${focusArea}.`,
+  wordCount < 18
+    ? 'Add more context about impact, owner, evidence, or deadline.'
+    : 'Improve sentence control by separating issue, impact, and next action.',
+  weakSkills.length > 0
+    ? `Weak skill signals: ${weakSkills.join(', ')}.`
+    : 'Continue rotating across Reading, Writing, Listening, Speaking, and Vocabulary.',
+];
+
+const buildTechnicalVocabulary = (
+  promptSignals: string[],
+  contextWeakVocab: string[]
+): string[] =>
+  Array.from(
+    new Set([
+      ...promptSignals,
+      ...contextWeakVocab.slice(0, 4),
+      'coordination',
+      'mitigation',
+      'compliance',
+    ])
+  ).slice(0, 8);
+
+const getToneFeedback = (modeId: string): string =>
+  modeId.includes('consultant') || modeId.includes('ncr')
+    ? 'Use a respectful, evidence-led tone. Avoid blame and confirm corrective action clearly.'
+    : 'Use a calm professional tone with clear ownership and dates.';
+
+const getRecommendedNextTask = (
+  operation: AIRequest['operation'],
+  focusArea: string
+): string =>
+  operation === 'generateStudyPlan'
+    ? `Complete a 20 minute plan: 8 minutes ${focusArea}, 7 minutes Vocabulary, 5 minutes speaking summary.`
+    : `Run one ${focusArea} mission, then ask AI Coach to review the result.`;
+
 const createMockCoachResult = (
   request: AIRequest,
   exampleOutput?: string
@@ -126,37 +181,16 @@ const createMockCoachResult = (
     context?.weakSkills.filter((skill) => skill !== 'None') || [];
   const focusArea = context?.recommendedFocus || weakSkills[0] || 'Writing';
   const promptSignals = getPromptSignals(request.prompt);
-  const technicalVocabulary = Array.from(
-    new Set([
-      ...promptSignals,
-      ...(context?.weakVocabulary || []).slice(0, 4),
-      'coordination',
-      'mitigation',
-      'compliance',
-    ])
-  ).slice(0, 8);
+  const technicalVocabulary = buildTechnicalVocabulary(
+    promptSignals,
+    context?.weakVocabulary || []
+  );
   const wordCount = request.prompt.trim().split(/\s+/).filter(Boolean).length;
 
   return {
     summary: `Mock AI demo active. ${request.modeName} reviewed ${wordCount} words using local learning context for ${context?.userName || 'the learner'}.`,
-    strengths: [
-      wordCount >= 20
-        ? 'You provided enough context for a practical engineering response.'
-        : 'Your message is concise and easy to diagnose.',
-      promptSignals.length > 0
-        ? 'You used recognizable technical vocabulary.'
-        : 'The intent is clear enough to convert into professional English.',
-      `Current learning profile shows Level ${context?.level || 1} / ELO ${context?.elo || 1000}.`,
-    ],
-    weaknesses: [
-      `Priority practice area: ${focusArea}.`,
-      wordCount < 18
-        ? 'Add more context about impact, owner, evidence, or deadline.'
-        : 'Improve sentence control by separating issue, impact, and next action.',
-      weakSkills.length > 0
-        ? `Weak skill signals: ${weakSkills.join(', ')}.`
-        : 'Continue rotating across Reading, Writing, Listening, Speaking, and Vocabulary.',
-    ],
+    strengths: buildStrengths(wordCount, promptSignals, context),
+    weaknesses: buildWeaknesses(wordCount, focusArea, weakSkills),
     corrections: [
       'Use "we need to verify" instead of "we need check".',
       'Use "the installation is delayed because..." instead of "installation delayed because...".',
@@ -172,14 +206,8 @@ const createMockCoachResult = (
       'Use past tense for completed site work and future forms for planned actions.',
       'Avoid emotional wording; use evidence, impact, and action.',
     ],
-    toneFeedback:
-      request.modeId.includes('consultant') || request.modeId.includes('ncr')
-        ? 'Use a respectful, evidence-led tone. Avoid blame and confirm corrective action clearly.'
-        : 'Use a calm professional tone with clear ownership and dates.',
-    recommendedNextTask:
-      request.operation === 'generateStudyPlan'
-        ? `Complete a 20 minute plan: 8 minutes ${focusArea}, 7 minutes Vocabulary, 5 minutes speaking summary.`
-        : `Run one ${focusArea} mission, then ask AI Coach to review the result.`,
+    toneFeedback: getToneFeedback(request.modeId),
+    recommendedNextTask: getRecommendedNextTask(request.operation, focusArea),
     estimatedCefrImpact: `Likely impact: stronger ${context?.targetLevel || 'B2'} control if repeated 3 times this week.`,
     cefrEstimate: context?.targetLevel || 'B2',
     engineerEloImpactEstimate:
