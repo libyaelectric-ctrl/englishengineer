@@ -78,11 +78,73 @@ const getUnsafeFrontendEnvKeys = (source: EngVoxEnv | undefined): string[] =>
     /SECRET|PRIVATE|SERVICE_ROLE|STRIPE_SECRET|WEBHOOK_SECRET/i.test(key)
   );
 
+const collectEnvironmentWarnings = (
+  aiProvider: string,
+  hasAiProxyUrl: boolean,
+  authProvider: string,
+  hasSupabaseUrl: boolean,
+  hasSupabaseAnonKey: boolean,
+  hasBillingApiUrl: boolean
+): string[] => {
+  const warnings: string[] = [];
+  if (aiProvider === 'backend' && !hasAiProxyUrl) {
+    warnings.push(
+      'VITE_AI_PROVIDER=backend requires VITE_AI_PROXY_URL. AI will fall back safely.'
+    );
+  }
+  if (authProvider === 'supabase' && (!hasSupabaseUrl || !hasSupabaseAnonKey)) {
+    warnings.push(
+      'VITE_AUTH_PROVIDER=supabase requires VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. Auth will fall back safely.'
+    );
+  }
+  if (!hasBillingApiUrl) {
+    warnings.push(
+      'VITE_BILLING_API_URL is missing or a placeholder. Billing remains in Free plan fallback mode.'
+    );
+  }
+  return warnings;
+};
+
+const collectEnvironmentErrors = (
+  mode: EnvironmentValidationResult['mode'],
+  aiProvider: string,
+  hasAiProxyUrl: boolean,
+  authProvider: string,
+  hasSupabaseUrl: boolean,
+  hasSupabaseAnonKey: boolean,
+  hasBillingApiUrl: boolean,
+  appVersion: string,
+  unsafeFrontendKeys: string[]
+): string[] => {
+  const errors: string[] = [];
+  if (unsafeFrontendKeys.length > 0) {
+    errors.push(
+      `Unsafe secret-like frontend env keys detected: ${unsafeFrontendKeys.join(', ')}`
+    );
+  }
+  if (mode !== 'production') return errors;
+  if (aiProvider !== 'backend' || !hasAiProxyUrl) {
+    errors.push(
+      'Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.'
+    );
+  }
+  if (authProvider !== 'supabase' || !hasSupabaseUrl || !hasSupabaseAnonKey) {
+    errors.push(
+      'Production requires VITE_AUTH_PROVIDER=supabase, VITE_SUPABASE_URL, and VITE_SUPABASE_ANON_KEY.'
+    );
+  }
+  if (!hasBillingApiUrl) {
+    errors.push('Production requires VITE_BILLING_API_URL.');
+  }
+  if (!appVersion) {
+    errors.push('Production requires VITE_APP_VERSION.');
+  }
+  return errors;
+};
+
 export const validateEnvironment = (
   source: EngVoxEnv | undefined = env
 ): EnvironmentValidationResult => {
-  const errors: string[] = [];
-  const warnings: string[] = [];
   const mode = normalizeEnvironmentMode(source?.VITE_ENVIRONMENT_MODE);
   const appVersion = source?.VITE_APP_VERSION || '4.0.1';
   const aiProvider = source?.VITE_AI_PROVIDER || 'mock';
@@ -95,48 +157,13 @@ export const validateEnvironment = (
   const billingMode = hasBillingApiUrl ? 'backend' : 'local-fallback';
   const unsafeFrontendKeys = getUnsafeFrontendEnvKeys(source);
 
-  if (aiProvider === 'backend' && !hasAiProxyUrl) {
-    warnings.push(
-      'VITE_AI_PROVIDER=backend requires VITE_AI_PROXY_URL. AI will fall back safely.'
-    );
-  }
-
-  if (authProvider === 'supabase' && (!hasSupabaseUrl || !hasSupabaseAnonKey)) {
-    warnings.push(
-      'VITE_AUTH_PROVIDER=supabase requires VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY. Auth will fall back safely.'
-    );
-  }
-
-  if (!hasBillingApiUrl) {
-    warnings.push(
-      'VITE_BILLING_API_URL is missing or a placeholder. Billing remains in Free plan fallback mode.'
-    );
-  }
-
-  if (unsafeFrontendKeys.length > 0) {
-    errors.push(
-      `Unsafe secret-like frontend env keys detected: ${unsafeFrontendKeys.join(', ')}`
-    );
-  }
-
-  if (mode === 'production') {
-    if (aiProvider !== 'backend' || !hasAiProxyUrl) {
-      errors.push(
-        'Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.'
-      );
-    }
-    if (authProvider !== 'supabase' || !hasSupabaseUrl || !hasSupabaseAnonKey) {
-      errors.push(
-        'Production requires VITE_AUTH_PROVIDER=supabase, VITE_SUPABASE_URL, and VITE_SUPABASE_ANON_KEY.'
-      );
-    }
-    if (!hasBillingApiUrl) {
-      errors.push('Production requires VITE_BILLING_API_URL.');
-    }
-    if (!appVersion) {
-      errors.push('Production requires VITE_APP_VERSION.');
-    }
-  }
+  const warnings = collectEnvironmentWarnings(
+    aiProvider, hasAiProxyUrl, authProvider, hasSupabaseUrl, hasSupabaseAnonKey, hasBillingApiUrl
+  );
+  const errors = collectEnvironmentErrors(
+    mode, aiProvider, hasAiProxyUrl, authProvider, hasSupabaseUrl, hasSupabaseAnonKey,
+    hasBillingApiUrl, appVersion, unsafeFrontendKeys
+  );
 
   return {
     isProductionReady: errors.length === 0 && warnings.length === 0,

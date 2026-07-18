@@ -11,7 +11,7 @@ import {
   getJsonStructureInstruction,
   getCustomPracticePrompt,
 } from '../prompts/prompt-loader.js';
-import type { AiConfig, AiOperation } from '../../types.js';
+import type { AiConfig } from '../../types.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 

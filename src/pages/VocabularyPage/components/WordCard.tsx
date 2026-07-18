@@ -33,6 +33,43 @@ interface WordCardProps {
   onLearn?: (term: VocabularyTerm) => void;
 }
 
+const StatusContent = ({
+  status,
+  progress,
+  term,
+  mode,
+  onReview,
+  showAnswer,
+}: {
+  status: string;
+  progress?: VocabularyMenuProgress;
+  term: VocabularyTerm;
+  mode: VocabularySetMode;
+  onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
+  showAnswer: boolean;
+}) => (
+  <>
+    {status === 'Learning' && progress && (
+      <LearningReview
+        term={term}
+        progress={progress}
+        mode={mode}
+        onReview={onReview}
+      />
+    )}
+    {status === 'Mastered' && <MasteredBadge />}
+    {status === 'New' && <NewWordHint />}
+    {showAnswer && (
+      <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
+        <p>{repairVocabularyText(term.exampleSentence)}</p>
+        <p className="text-foreground0">
+          {repairVocabularyText(term.turkishExample)}
+        </p>
+      </div>
+    )}
+  </>
+);
+
 export const WordCard = ({
   term,
   progress,
@@ -88,27 +125,14 @@ export const WordCard = ({
             progress={progress}
           />
 
-          {status === 'Learning' && progress && (
-            <LearningReview
-              term={term}
-              progress={progress}
-              mode={mode}
-              onReview={onReview}
-            />
-          )}
-
-          {status === 'Mastered' && <MasteredBadge />}
-
-          {status === 'New' && <NewWordHint />}
-
-          {showAnswer && (
-            <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
-              <p>{repairVocabularyText(term.exampleSentence)}</p>
-              <p className="text-foreground0">
-                {repairVocabularyText(term.turkishExample)}
-              </p>
-            </div>
-          )}
+          <StatusContent
+            status={status}
+            progress={progress}
+            term={term}
+            mode={mode}
+            onReview={onReview}
+            showAnswer={showAnswer}
+          />
 
           <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
             <span className="font-semibold capitalize">

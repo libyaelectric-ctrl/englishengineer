@@ -8,21 +8,24 @@ interface ToggleProps {
   onChange: (checked: boolean) => void;
 }
 
-const Toggle = ({ label, description, checked, onChange }: ToggleProps) => (
-  <label className="flex items-center justify-between gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 cursor-pointer hover:bg-[#faf8ff] transition-colors shadow-sm">
-    <div className="min-w-0">
-      <p className="text-xs font-bold text-foreground uppercase tracking-wider">
-        {label}
-      </p>
-      <p className="text-[10px] text-muted-copy mt-1 font-medium">
-        {description}
-      </p>
-    </div>
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
+const Toggle = ({ label, description, checked, onChange }: ToggleProps) => {
+  const id = `toggle-${label.toLowerCase().replace(/\s+/g, '-')}`;
+  return (
+    <div className="flex items-center justify-between gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 cursor-pointer hover:bg-[#faf8ff] transition-colors shadow-sm">
+      <label htmlFor={id} className="min-w-0 cursor-pointer">
+        <p className="text-xs font-bold text-foreground uppercase tracking-wider">
+          {label}
+        </p>
+        <p className="text-[10px] text-muted-copy mt-1 font-medium">
+          {description}
+        </p>
+      </label>
+      <button
+        id={id}
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
       className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-[4px] border transition-colors cursor-pointer ${
         checked
           ? 'bg-[#0047bb] border-[#0047bb]'
@@ -35,8 +38,9 @@ const Toggle = ({ label, description, checked, onChange }: ToggleProps) => (
         }`}
       />
     </button>
-  </label>
-);
+  </div>
+  );
+};
 
 export const NotificationPreferences = () => {
   const [prefs, setPrefs] = useState({

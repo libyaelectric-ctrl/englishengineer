@@ -190,6 +190,57 @@ export const getVocabularyMenuStatus = (
   state: VocabularyMenuState
 ): VocabularyMenuStatus => state.progress[wordId]?.status ?? 'New';
 
+const buildSearchableStatuses = (
+  progress: VocabularyMenuProgress | undefined,
+  status: VocabularyMenuStatus,
+  now: Date
+): string[] => [
+  status,
+  progress?.isWeak ? 'Weak' : '',
+  progress && isVocabularyForgotten(progress, now) ? 'Forgotten' : '',
+  progress && isVocabularyProgressDue(progress, now) ? 'Due Today' : '',
+];
+
+const matchesQuery = (
+  term: VocabularyTerm,
+  target: string,
+  searchableStatuses: string[]
+): boolean =>
+  !target ||
+  [
+    term.term,
+    term.turkishMeaning,
+    term.cefrLevel,
+    term.domain,
+    term.partOfSpeech,
+    ...term.skillUse,
+    ...searchableStatuses,
+  ].some((value) => normalize(value).includes(target));
+
+const matchesFilter = (value: string, filter?: string): boolean =>
+  !filter || filter === 'All' || normalize(value) === normalize(filter);
+
+const matchesAllFilters = (
+  term: VocabularyTerm,
+  filters: VocabularySearchFilters,
+  searchableStatuses: string[]
+): boolean =>
+  matchesFilter(term.cefrLevel, filters.cefr) &&
+  matchesFilter(term.domain, filters.domain) &&
+  matchesFilter(term.contentDomain, filters.contentDomain) &&
+  matchesFilter(term.lifeContext, filters.lifeContext) &&
+  matchesFilter(term.partOfSpeech, filters.partOfSpeech) &&
+  (!filters.skillUse ||
+    filters.skillUse === 'All' ||
+    term.skillUse.some(
+      (skill) => normalize(skill) === normalize(filters.skillUse ?? '')
+    )) &&
+  (!filters.status ||
+    filters.status === 'All' ||
+    searchableStatuses.some(
+      (item) => normalize(item) === normalize(filters.status ?? '')
+    ));
+
 export const searchVocabularyMenu = (
   terms: VocabularyTerm[],
   query: string,
@@ -206,43 +257,10 @@ export const searchVocabularyMenu = (
   return terms.filter((term) => {
     const progress = state.progress[term.id];
     const status = progress?.status ?? 'New';
-    const searchableStatuses = [
-      status,
-      progress?.isWeak ? 'Weak' : '',
-      progress && isVocabularyForgotten(progress, now) ? 'Forgotten' : '',
-      progress && isVocabularyProgressDue(progress, now) ? 'Due Today' : '',
-    ];
-    const matchesQuery =
-      !target ||
-      [
-        term.term,
-        term.turkishMeaning,
-        term.cefrLevel,
-        term.domain,
-        term.partOfSpeech,
-        ...term.skillUse,
-        ...searchableStatuses,
-      ].some((value) => normalize(value).includes(target));
-    const matchesFilter = (value: string, filter?: string) =>
-      !filter || filter === 'All' || normalize(value) === normalize(filter);
-
+    const searchableStatuses = buildSearchableStatuses(progress, status, now);
     return (
-      matchesQuery &&
-      matchesFilter(term.cefrLevel, filters.cefr) &&
-      matchesFilter(term.domain, filters.domain) &&
-      matchesFilter(term.contentDomain, filters.contentDomain) &&
-      matchesFilter(term.lifeContext, filters.lifeContext) &&
-      matchesFilter(term.partOfSpeech, filters.partOfSpeech) &&
-      (!filters.skillUse ||
-        filters.skillUse === 'All' ||
-        term.skillUse.some(
-          (skill) => normalize(skill) === normalize(filters.skillUse ?? '')
-        )) &&
-      (!filters.status ||
-        filters.status === 'All' ||
-        searchableStatuses.some(
-          (item) => normalize(item) === normalize(filters.status ?? '')
-        ))
+      matchesQuery(term, target, searchableStatuses) &&
+      matchesAllFilters(term, filters, searchableStatuses)
     );
   });
 };

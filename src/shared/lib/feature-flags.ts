@@ -39,11 +39,28 @@ class FeatureFlagService {
     this.flags = { ...DEFAULT_FLAGS, ...initialFlags };
   }
 
+  private isEligible(
+    config: FeatureFlagConfig,
+    context?: { plan?: string; userId?: string },
+    flag?: FeatureFlag
+  ): boolean {
+    if (config.allowedPlans && context?.plan) {
+      if (!config.allowedPlans.includes(context.plan)) return false;
+    }
+    if (config.allowedUsers && context?.userId) {
+      if (!config.allowedUsers.includes(context.userId)) return false;
+    }
+    if (config.percentage !== undefined && context?.userId && flag) {
+      const userPercentage = this.hashString(context.userId + flag) % 100;
+      if (userPercentage >= config.percentage) return false;
+    }
+    return true;
+  }
+
   isEnabled(
     flag: FeatureFlag,
     context?: { plan?: string; userId?: string }
   ): boolean {
-    // Check override first
     const overrideKey = context?.userId ? `${flag}:${context.userId}` : flag;
     if (this.overrides.has(overrideKey)) {
       return this.overrides.get(overrideKey)!;
@@ -51,25 +68,7 @@ class FeatureFlagService {
 
     const config = this.flags[flag];
     if (!config?.enabled) return false;
-
-    // Check plan
-    if (config.allowedPlans && context?.plan) {
-      if (!config.allowedPlans.includes(context.plan)) return false;
-    }
-
-    // Check specific user
-    if (config.allowedUsers && context?.userId) {
-      if (!config.allowedUsers.includes(context.userId)) return false;
-    }
-
-    // Check percentage rollout
-    if (config.percentage !== undefined && context?.userId) {
-      const hash = this.hashString(context.userId + flag);
-      const userPercentage = hash % 100;
-      if (userPercentage >= config.percentage) return false;
-    }
-
-    return true;
+    return this.isEligible(config, context, flag);
   }
 
   setOverride(flag: FeatureFlag, enabled: boolean, userId?: string): void {

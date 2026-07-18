@@ -56,13 +56,14 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-foreground">
+          <label htmlFor="bulk-emails" className="block text-sm font-medium text-foreground">
             Email Addresses
           </label>
           <p className="mt-1 text-xs text-muted-copy">
             Enter one email per line, or separate with commas/semicolons.
           </p>
           <textarea
+            id="bulk-emails"
             value={emailText}
             onChange={(e) => setEmailText(e.target.value)}
             rows={5}
@@ -82,10 +83,11 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-foreground">
+            <label htmlFor="bulk-role" className="block text-sm font-medium text-foreground">
               Role
             </label>
             <select
+              id="bulk-role"
               value={role}
               onChange={(e) =>
                 setRole(e.target.value as Exclude<OrganizationRole, 'admin'>)

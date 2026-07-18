@@ -63,6 +63,42 @@ export const isTaskCompletedToday = (
   today = new Date().toISOString().slice(0, 10)
 ): boolean => completedTaskDates[taskId] === today;
 
+const computeModuleAverages = (
+  recentSessions: LearningState['studySessions']
+): { module: string; score: number }[] => {
+  const moduleScores = new Map<string, number[]>();
+  recentSessions.forEach((session) => {
+    const values = moduleScores.get(session.module) ?? [];
+    values.push(session.score);
+    moduleScores.set(session.module, values);
+  });
+  return [...moduleScores.entries()].map(([module, scores]) => ({
+    module,
+    score: scores.reduce((sum, score) => sum + score, 0) / scores.length,
+  }));
+};
+
+const computeRepeatedMistakes = (
+  mistakes: MistakeLogEntry[]
+): { repeated: string[]; topMistake: string } => {
+  const categoryCounts = mistakes.reduce<Record<string, number>>(
+    (counts, mistake) => {
+      counts[mistake.category] = (counts[mistake.category] ?? 0) + 1;
+      return counts;
+    },
+    {}
+  );
+  const repeated = Object.entries(categoryCounts)
+    .filter(([, count]) => count > 1)
+    .sort((a, b) => b[1] - a[1])
+    .map(([category]) => category)
+    .slice(0, 3);
+  const topMistake =
+    Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ??
+    'No repeated pattern identified';
+  return { repeated, topMistake };
+};
+
 export const buildSevenDayReport = (
   learning: LearningState,
   assessment: AssessmentProfile,
@@ -78,40 +114,28 @@ export const buildSevenDayReport = (
   const recentSessions = learning.studySessions.filter(
     (session) => new Date(session.timestamp).getTime() >= threshold.getTime()
   );
-  const moduleScores = new Map<string, number[]>();
-  recentSessions.forEach((session) => {
-    const values = moduleScores.get(session.module) ?? [];
-    values.push(session.score);
-    moduleScores.set(session.module, values);
-  });
-  const averages = [...moduleScores.entries()].map(([module, scores]) => ({
-    module,
-    score: scores.reduce((sum, score) => sum + score, 0) / scores.length,
-  }));
+
+  const averages = computeModuleAverages(recentSessions);
   const strongest =
     [...averages].sort((a, b) => b.score - a.score)[0]?.module ??
     'Collecting evidence';
   const weakest =
     [...averages].sort((a, b) => a.score - b.score)[0]?.module ??
     'Not enough recent data';
-  const categoryCounts = mistakes.reduce<Record<string, number>>(
-    (counts, mistake) => {
-      counts[mistake.category] = (counts[mistake.category] ?? 0) + 1;
-      return counts;
-    },
-    {}
-  );
-  const repeated = Object.entries(categoryCounts)
-    .filter(([, count]) => count > 1)
-    .sort((a, b) => b[1] - a[1])
-    .map(([category]) => category)
-    .slice(0, 3);
-  const topRepeatedMistake =
-    Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ??
-    'No repeated pattern identified';
+
+  const { repeated, topMistake: topRepeatedMistake } = computeRepeatedMistakes(mistakes);
+
   const completedTasks = Object.values(completedTaskDates).filter(
     (date) => new Date(date).getTime() >= threshold.getTime()
   ).length;
+
+  const getRecommendedPhrase = (): string => {
+    if (careerRole === 'Procurement Engineer') return 'Procurement';
+    if (careerRole === 'Commissioning Engineer') return 'Commissioning';
+    if (careerRole === 'HSE Engineer') return 'HSE';
+    if (careerRole === 'QA/QC Engineer') return 'QA/QC';
+    return 'Coordination';
+  };
 
   return {
     completedTasks,
@@ -134,15 +158,6 @@ export const buildSevenDayReport = (
         : topRepeatedMistake === 'grammar' || topRepeatedMistake === 'article'
           ? 'Explain mistakes'
           : 'More professional',
-    recommendedPhraseCategory:
-      careerRole === 'Procurement Engineer'
-        ? 'Procurement'
-        : careerRole === 'Commissioning Engineer'
-          ? 'Commissioning'
-          : careerRole === 'HSE Engineer'
-            ? 'HSE'
-            : careerRole === 'QA/QC Engineer'
-              ? 'QA/QC'
-              : 'Coordination',
+    recommendedPhraseCategory: getRecommendedPhrase(),
   };
 };
