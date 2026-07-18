@@ -1,0 +1,10 @@
+﻿=== Kademe 67: Stryker Mutation Testing ===
+
+Stryker config:
+   HAYIR - stryker.config.json bulunamadi
+
+Package.json stryker bagimliligi:
+   HAYIR - stryker bagimliligi yok
+
+Not: Stryker kurulmamis. Kurulum + konfigurasyon gerekli.
+Mevcut test altyapisi: 480 test, %33 coverage

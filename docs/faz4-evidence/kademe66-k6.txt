@@ -1,0 +1,13 @@
+﻿=== Kademe 66: k6 Load Test ===
+
+k6 versiyonu:
+   k6 yuklu degil
+
+Load test senaryosu:
+   EVET - scripts/performance/load-test.k6.js mevcut
+
+CI workflow:
+   EVET - .github/workflows/load-test.yml mevcut
+
+Not: k6 yuklu degil. CI uzerinden calistirilabilir.
+Prod'a karsi calistirilmadi - gercek trafige yuk bindirebilir.
