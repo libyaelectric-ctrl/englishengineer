@@ -46,6 +46,8 @@ interface LocalUserProfile extends UserProfile {
   passwordHash?: string;
 }
 
+const USERS_DB_KEY = 'auth_local_users';
+
 export class LocalAuthAdapter implements AuthAdapter {
   constructor(private readonly enabled = true) {}
 
@@ -93,21 +95,62 @@ export class LocalAuthAdapter implements AuthAdapter {
       throw new Error('Password must be at least 6 characters.');
     }
 
-    const existing = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
-    if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
-      if (existing.passwordHash) {
-        const inputHash = await hashPassword(password);
-        if (inputHash !== existing.passwordHash) {
-          throw new Error('Invalid email or password.');
-        }
+    const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
+    let existing = allUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    // Backward compatibility check
+    if (!existing) {
+      const currentUser = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
+      if (
+        currentUser &&
+        currentUser.email.toLowerCase() === email.toLowerCase()
+      ) {
+        existing = currentUser;
+        allUsers.push(currentUser);
+        storage.globalSet(USERS_DB_KEY, allUsers);
       }
-      const updated = {
-        ...existing,
-        displayName,
-        updatedAt: new Date().toISOString(),
-      };
-      storage.globalSet(STORAGE_KEY, updated);
-      return updated;
+    }
+
+    if (!existing) {
+      throw new Error('User does not exist. Please sign up first.');
+    }
+
+    if (existing.passwordHash) {
+      const inputHash = await hashPassword(password);
+      if (inputHash !== existing.passwordHash) {
+        throw new Error('Invalid email or password.');
+      }
+    }
+
+    const updated = {
+      ...existing,
+      displayName,
+      updatedAt: new Date().toISOString(),
+    };
+    storage.globalSet(STORAGE_KEY, updated);
+    return updated;
+  }
+
+  async signUp(
+    displayName: string,
+    email: string,
+    password: string
+  ): Promise<UserProfile> {
+    this.assertEnabled();
+
+    if (!password || password.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
+    }
+
+    const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
+    const existing = allUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    if (existing) {
+      throw new Error('An account with this email address already exists.');
     }
 
     const newUser: LocalUserProfile = {
@@ -124,6 +167,8 @@ export class LocalAuthAdapter implements AuthAdapter {
       updatedAt: new Date().toISOString(),
     };
 
+    allUsers.push(newUser);
+    storage.globalSet(USERS_DB_KEY, allUsers);
     storage.globalSet(STORAGE_KEY, newUser);
     return newUser;
   }
@@ -166,6 +211,15 @@ export class LocalAuthAdapter implements AuthAdapter {
       updatedAt: new Date().toISOString(),
     };
 
+    // Update in users database as well
+    const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
+    const updatedUsers = allUsers.map((u) =>
+      u.email.toLowerCase() === currentUser.email.toLowerCase()
+        ? { ...u, ...updates }
+        : u
+    );
+    storage.globalSet(USERS_DB_KEY, updatedUsers);
+
     storage.globalSet(STORAGE_KEY, updated);
     return updated;
   }
@@ -181,8 +235,23 @@ export class SupabaseReadyAuthAdapter implements AuthAdapter {
     return this.fallbackAdapter.getCurrentUser();
   }
 
-  async login(displayName: string, email: string): Promise<UserProfile> {
-    return this.fallbackAdapter.login(displayName, email);
+  async login(
+    displayName: string,
+    email: string,
+    password?: string
+  ): Promise<UserProfile> {
+    return this.fallbackAdapter.login(displayName, email, password);
+  }
+
+  async signUp(
+    displayName: string,
+    email: string,
+    password: string
+  ): Promise<UserProfile> {
+    if (this.fallbackAdapter.signUp) {
+      return this.fallbackAdapter.signUp(displayName, email, password);
+    }
+    return this.fallbackAdapter.login(displayName, email, password);
   }
 
   async demoLogin(): Promise<UserProfile> {
