@@ -202,8 +202,18 @@ export const useAIStore = create<AIStoreState>((set, get) => ({
         );
       }
 
-      const sessions = buildSessionList(mode, prompt, response, result, get().sessions);
-      const sessionLogs = buildSuccessLogList(mode, response, get().sessionLogs);
+      const sessions = buildSessionList(
+        mode,
+        prompt,
+        response,
+        result,
+        get().sessions
+      );
+      const sessionLogs = buildSuccessLogList(
+        mode,
+        response,
+        get().sessionLogs
+      );
 
       set({
         sessions,

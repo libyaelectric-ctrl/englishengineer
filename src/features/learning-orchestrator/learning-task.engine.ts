@@ -83,11 +83,16 @@ const rankPreferredDomains = (
 const resolveGrammarFocus = async (
   skill: SkillName,
   baseLevel: CefrLevel,
-  selectedGrammar: Awaited<ReturnType<typeof GrammarEngine.selectGrammarForTask>>
+  selectedGrammar: Awaited<
+    ReturnType<typeof GrammarEngine.selectGrammarForTask>
+  >
 ) => {
   if (selectedGrammar.length > 0) return selectedGrammar.slice(0, 2);
   return (
-    await GrammarRepository.getGrammarRulesForUserSkillLevel(skill as LearningDataSkill, baseLevel)
+    await GrammarRepository.getGrammarRulesForUserSkillLevel(
+      skill as LearningDataSkill,
+      baseLevel
+    )
   ).slice(0, 2);
 };
 

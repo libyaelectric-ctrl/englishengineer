@@ -11,8 +11,7 @@ const isLinkHighlighted = (
 ): boolean => {
   if (!selectedGraphNode) return false;
   return (
-    selectedGraphNode.id === link.source ||
-    selectedGraphNode.id === link.target
+    selectedGraphNode.id === link.source || selectedGraphNode.id === link.target
   );
 };
 

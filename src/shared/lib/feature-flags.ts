@@ -68,8 +68,10 @@ class FeatureFlagService {
     flag?: FeatureFlag
   ): boolean {
     if (this.isPlanRestricted(config.allowedPlans, context?.plan)) return false;
-    if (this.isUserRestricted(config.allowedUsers, context?.userId)) return false;
-    if (this.isPercentageExcluded(config.percentage, context?.userId, flag)) return false;
+    if (this.isUserRestricted(config.allowedUsers, context?.userId))
+      return false;
+    if (this.isPercentageExcluded(config.percentage, context?.userId, flag))
+      return false;
     return true;
   }
 

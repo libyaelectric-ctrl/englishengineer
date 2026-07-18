@@ -30,9 +30,13 @@ export interface AiLedger {
   logSession(userId: string, session: AiLedgerSession): Promise<void>;
 }
 
-export const createSupabaseAiLedger = (
-  config: { workspace?: { configured?: boolean; supabaseUrl?: string; supabaseServiceRoleKey?: string } }
-): AiLedger => {
+export const createSupabaseAiLedger = (config: {
+  workspace?: {
+    configured?: boolean;
+    supabaseUrl?: string;
+    supabaseServiceRoleKey?: string;
+  };
+}): AiLedger => {
   if (!config.workspace?.configured) {
     throw new Error(
       'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
@@ -62,7 +66,9 @@ export const createSupabaseAiLedger = (
         }
         return count ?? 0;
       } catch (err: unknown) {
-        logger.error('Ledger count error', { error: err instanceof Error ? err.message : String(err) });
+        logger.error('Ledger count error', {
+          error: err instanceof Error ? err.message : String(err),
+        });
         return 0;
       }
     },
@@ -84,7 +90,9 @@ export const createSupabaseAiLedger = (
           logger.error('Ledger log error', { error: error.message });
         }
       } catch (err: unknown) {
-        logger.error('Ledger log error', { error: err instanceof Error ? err.message : String(err) });
+        logger.error('Ledger log error', {
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
     },
   };
@@ -121,7 +129,9 @@ export const createMemoryAiLedger = (): AiLedger => {
   };
 };
 
-export const createAiLedger = (config: { workspace?: Record<string, unknown> }): AiLedger => {
+export const createAiLedger = (config: {
+  workspace?: Record<string, unknown>;
+}): AiLedger => {
   if (config.workspace?.configured) {
     return createSupabaseAiLedger(config);
   }

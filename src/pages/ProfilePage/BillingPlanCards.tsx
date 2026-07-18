@@ -80,11 +80,7 @@ const DocumentUploadCard = ({
     </div>
     <ProgressBar
       value={
-        isFree
-          ? 0
-          : isPro
-            ? Math.min(100, (uploadedDocsCount / 2) * 100)
-            : 100
+        isFree ? 0 : isPro ? Math.min(100, (uploadedDocsCount / 2) * 100) : 100
       }
       color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
     />
@@ -111,16 +107,12 @@ const VoiceMinutesCard = ({
         🎙️ Monthly Voice Minutes
       </span>
       <span className="font-bold text-foreground">
-        {planId === 'max'
-          ? `${voiceMinutesUsed} / 120 min`
-          : 'Unlimited'}
+        {planId === 'max' ? `${voiceMinutesUsed} / 120 min` : 'Unlimited'}
       </span>
     </div>
     <ProgressBar
       value={
-        planId === 'max'
-          ? Math.min(100, (voiceMinutesUsed / 120) * 100)
-          : 100
+        planId === 'max' ? Math.min(100, (voiceMinutesUsed / 120) * 100) : 100
       }
       color={
         planId !== 'max'

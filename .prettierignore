@@ -8,3 +8,10 @@ public/~$*
 public/engvox-landing.html
 public/~$gvox-landing.html
 public/sample-preview.html
+storybook-static
+eslint-out.json
+eslint-output.json
+eslint_complexity.json
+eslint_output.json
+lint-output.txt
+*.log

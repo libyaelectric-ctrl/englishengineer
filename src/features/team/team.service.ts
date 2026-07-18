@@ -62,8 +62,9 @@ function mapTeamMember(
 ): TeamMember {
   const profile = m.profiles?.[0];
   const fallback = (val: string | undefined, def: string) => val || def;
-  const fallbackNull = (...vals: (string | null | undefined)[]): string | null =>
-    vals.find((v) => v != null && v !== '') as string | null;
+  const fallbackNull = (
+    ...vals: (string | null | undefined)[]
+  ): string | null => vals.find((v) => v != null && v !== '') as string | null;
   return {
     id: m.user_id,
     organizationId: orgId,
@@ -75,17 +76,15 @@ function mapTeamMember(
   };
 }
 
-function mapTeamSummary(
-  s: {
-    user_id: string;
-    cefr_estimate?: string;
-    overall_progress?: number;
-    completed_tasks?: number;
-    skill_summary?: Record<string, number>;
-    mistake_categories?: string[];
-    recommended_tasks?: string[];
-  }
-): TeamProgressSummary {
+function mapTeamSummary(s: {
+  user_id: string;
+  cefr_estimate?: string;
+  overall_progress?: number;
+  completed_tasks?: number;
+  skill_summary?: Record<string, number>;
+  mistake_categories?: string[];
+  recommended_tasks?: string[];
+}): TeamProgressSummary {
   const skills = s.skill_summary || {};
   const safeNum = (v: unknown) => Number(v ?? 0);
   const safeArr = (v: unknown): string[] => (Array.isArray(v) ? v : []);
@@ -148,13 +147,21 @@ class SupabaseTeamProvider implements TeamProvider {
 
     const orgId = await this.fetchOrgId(supabase);
     if (!orgId) {
-      return { ...EMPTY_WORKSPACE, organization: { ...EMPTY_WORKSPACE.organization, createdAt: new Date().toISOString() } };
+      return {
+        ...EMPTY_WORKSPACE,
+        organization: {
+          ...EMPTY_WORKSPACE.organization,
+          createdAt: new Date().toISOString(),
+        },
+      };
     }
 
     const [membersResult, invitesResult, summariesResult] = await Promise.all([
       supabase
         .from('organization_members')
-        .select('user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)')
+        .select(
+          'user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)'
+        )
         .eq('organization_id', orgId),
       supabase
         .from('organization_invitations')
@@ -162,7 +169,9 @@ class SupabaseTeamProvider implements TeamProvider {
         .eq('organization_id', orgId),
       supabase
         .from('team_progress_summaries')
-        .select('user_id, cefr_estimate, overall_progress, completed_tasks, skill_summary, mistake_categories, recommended_tasks')
+        .select(
+          'user_id, cefr_estimate, overall_progress, completed_tasks, skill_summary, mistake_categories, recommended_tasks'
+        )
         .eq('organization_id', orgId),
     ]);
 
@@ -180,15 +189,22 @@ class SupabaseTeamProvider implements TeamProvider {
       },
       members: (membersResult.data || []).map((m) => mapTeamMember(m, orgId)),
       summaries: (summariesResult.data || []).map(mapTeamSummary),
-      invitations: (invitesResult.data || []).map((inv) => mapTeamInvitation(inv, orgId)),
+      invitations: (invitesResult.data || []).map((inv) =>
+        mapTeamInvitation(inv, orgId)
+      ),
     };
   }
 
-  private throwIfError(error: { message: string } | null, entity: string): void {
+  private throwIfError(
+    error: { message: string } | null,
+    entity: string
+  ): void {
     if (error) throw new Error(`Failed to fetch ${entity}: ${error.message}`);
   }
 
-  private async fetchOrgId(supabase: ReturnType<typeof getSupabaseClient> & {}): Promise<string | null> {
+  private async fetchOrgId(
+    supabase: ReturnType<typeof getSupabaseClient> & {}
+  ): Promise<string | null> {
     const { data: membership, error: memError } = await supabase
       .from('organization_members')
       .select('organization_id')
@@ -199,7 +215,9 @@ class SupabaseTeamProvider implements TeamProvider {
       throw new Error(`Failed to fetch team membership: ${memError.message}`);
     }
 
-    return membership ? (membership as { organization_id: string }).organization_id : null;
+    return membership
+      ? (membership as { organization_id: string }).organization_id
+      : null;
   }
 
   async inviteMember(

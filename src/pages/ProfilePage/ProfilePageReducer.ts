@@ -80,8 +80,7 @@ export const editReducer = (
 ): ProfileEditState => {
   if (action.type === 'SET_EDIT_MODE')
     return { ...state, isEditMode: action.value };
-  if (action.type === 'RESET_EDIT')
-    return { ...state, isEditMode: false };
+  if (action.type === 'RESET_EDIT') return { ...state, isEditMode: false };
 
   const field = EDIT_FIELD_MAP[action.type];
   if (field) return { ...state, [field]: action.value };

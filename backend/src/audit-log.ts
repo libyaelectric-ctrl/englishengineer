@@ -20,18 +20,25 @@ interface AuditLogFilters {
 }
 
 const logs: AuditLogEntry[] = [];
-let supabaseRepository: { insert: (record: AuditLogEntry) => void; query: (filters: AuditLogFilters) => Promise<AuditLogEntry[]> } | null = null;
+let supabaseRepository: {
+  insert: (record: AuditLogEntry) => void;
+  query: (filters: AuditLogFilters) => Promise<AuditLogEntry[]>;
+} | null = null;
 
-export const initAuditLog = async (
-  config: { workspace?: Record<string, unknown> }
-): Promise<void> => {
+export const initAuditLog = async (config: {
+  workspace?: Record<string, unknown>;
+}): Promise<void> => {
   const ws = config?.workspace;
-  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) return;
+  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey)
+    return;
   try {
-    const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
+    const { createSupabaseAuditLogRepository } =
+      await import('./supabase-audit-log-repository.js');
     supabaseRepository = createSupabaseAuditLogRepository(ws);
   } catch (error: unknown) {
-    logger.warn('Failed to initialize remote audit repository', { error: error instanceof Error ? error.message : String(error) });
+    logger.warn('Failed to initialize remote audit repository', {
+      error: error instanceof Error ? error.message : String(error),
+    });
     supabaseRepository = null;
   }
 };

@@ -38,7 +38,9 @@ const getReviewIsDue = (progress: GrammarRuleProgress, now: Date): boolean =>
   (progress.nextReviewDate !== null &&
     new Date(progress.nextReviewDate).getTime() <= now.getTime());
 
-const describeStrongWithMissingEvidence = (missingEvidence: GrammarTransferSkill[]): string =>
+const describeStrongWithMissingEvidence = (
+  missingEvidence: GrammarTransferSkill[]
+): string =>
   `The grammar practice is strong, but mastery still needs ${missingEvidence.join(' and ')} transfer evidence.`;
 
 const describeReviewOverdue = (progress: GrammarRuleProgress): string =>
@@ -49,8 +51,10 @@ const describeReviewOverdue = (progress: GrammarRuleProgress): string =>
       : 'The scheduled practice interval has ended, so this rule is ready for another use.';
 
 const describeReviewNotDue = (progress: GrammarRuleProgress): string => {
-  if (progress.reviewStatus === 'New') return 'This is the next named topic in your current-level grammar path.';
-  if (progress.reviewStatus === 'Strong') return 'This rule is strong and does not need urgent review.';
+  if (progress.reviewStatus === 'New')
+    return 'This is the next named topic in your current-level grammar path.';
+  if (progress.reviewStatus === 'Strong')
+    return 'This rule is strong and does not need urgent review.';
   return progress.incorrectUsages > 0
     ? 'A previous mistake keeps this rule in Learning until correct use becomes consistent.'
     : 'This rule needs more correct uses before it can become Strong.';
@@ -62,7 +66,8 @@ export const getGrammarReviewReason = (
 ): string => {
   const missingEvidence = getMissingGrammarTransferEvidence(progress);
   const reviewIsDue = getReviewIsDue(progress, now);
-  const hasStrongPractice = progress.correctUsages >= 3 && progress.strength >= 70;
+  const hasStrongPractice =
+    progress.correctUsages >= 3 && progress.strength >= 70;
 
   if (hasStrongPractice && missingEvidence.length > 0) {
     return describeStrongWithMissingEvidence(missingEvidence);
@@ -223,7 +228,9 @@ export const GrammarProgressService = {
       strength,
       reviewStatus: nextStatus,
       lastUsedAt: now.toISOString(),
-      nextReviewDate: new Date(now.getTime() + reviewDays * DAY_MS).toISOString(),
+      nextReviewDate: new Date(
+        now.getTime() + reviewDays * DAY_MS
+      ).toISOString(),
     });
     if (becameStrong) publishMastery(ruleId, now, result);
     return result;

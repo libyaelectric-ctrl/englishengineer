@@ -1,7 +1,13 @@
 import { validateQuery, VocabularyLookupQuerySchema } from './validation.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
 import type { VocabularyLookupQuery } from '../types.js';
-import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
 export const registerVocabularyRoutes = (
   app: Express,
@@ -14,7 +20,9 @@ export const registerVocabularyRoutes = (
     validateQuery(VocabularyLookupQuerySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(await service.lookup(request.validatedQuery as VocabularyLookupQuery));
+        response.json(
+          await service.lookup(request.validatedQuery as VocabularyLookupQuery)
+        );
       } catch (error) {
         next(error);
       }

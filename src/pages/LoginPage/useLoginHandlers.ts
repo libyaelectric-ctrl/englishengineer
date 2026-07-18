@@ -31,8 +31,8 @@ export const useLoginHandlers = () => {
     (location.state as RouteLocationState | null)?.from?.pathname ||
     '/dashboard';
 
-const isProviderNotEnabled = (msg: string) =>
-  msg.includes('not enabled') || msg.includes('Unsupported provider');
+  const isProviderNotEnabled = (msg: string) =>
+    msg.includes('not enabled') || msg.includes('Unsupported provider');
 
   const handleSocialLogin = async (
     provider: 'google' | 'linkedin' | 'apple'

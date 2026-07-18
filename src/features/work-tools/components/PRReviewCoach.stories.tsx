@@ -76,7 +76,10 @@ const PRReviewCoachDemo = ({
       >
         <div className="space-y-4">
           <div>
-            <label htmlFor="review-comment-input" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="review-comment-input"
+              className="block text-sm font-medium text-foreground"
+            >
               Paste harsh review comment
             </label>
             <p className="mt-1 text-xs text-muted-copy">

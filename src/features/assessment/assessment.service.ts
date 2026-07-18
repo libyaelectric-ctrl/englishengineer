@@ -245,15 +245,11 @@ const buildReadiness = (
 ): AssessmentProfile['readiness'] => ({
   meetings: averageScores(
     [
-      dimensionScores.find(
-        (item) => item.dimensionId === 'meeting_readiness'
-      )?.score,
-      dimensionScores.find(
-        (item) => item.dimensionId === 'speaking_confidence'
-      )?.score,
-    ].filter(
-      (score): score is number => score !== null && score !== undefined
-    )
+      dimensionScores.find((item) => item.dimensionId === 'meeting_readiness')
+        ?.score,
+      dimensionScores.find((item) => item.dimensionId === 'speaking_confidence')
+        ?.score,
+    ].filter((score): score is number => score !== null && score !== undefined)
   ),
   reports:
     dimensionScores.find((item) => item.dimensionId === 'report_writing')

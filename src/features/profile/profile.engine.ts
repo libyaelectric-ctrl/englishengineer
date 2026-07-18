@@ -229,9 +229,21 @@ export const LearningProfileEngine = {
         )
       )[0];
     return [
-      buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand),
-      buildVocabularyMission(memory, profile.skills.vocabulary.cefrBand, vocabularyTerms.length),
-      buildGrammarMission(grammarFocus, profile.skills.grammar.cefrBand, grammarMix),
+      buildSkillMission(
+        weakest.skill,
+        weakest.completedTasks,
+        weakest.cefrBand
+      ),
+      buildVocabularyMission(
+        memory,
+        profile.skills.vocabulary.cefrBand,
+        vocabularyTerms.length
+      ),
+      buildGrammarMission(
+        grammarFocus,
+        profile.skills.grammar.cefrBand,
+        grammarMix
+      ),
     ];
   },
 

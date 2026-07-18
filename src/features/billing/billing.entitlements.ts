@@ -216,9 +216,12 @@ export const getDowngradeImpact = (
     (f) => !targetPlan.features.includes(f)
   );
 
-  const restrictedLimits: DowngradeImpact['restrictedLimits'] = LIMIT_FIELDS.map(
-    (field) => ({ field, from: currentPlan.limits[field], to: targetPlan.limits[field] })
-  ).filter((item) => item.from !== item.to);
+  const restrictedLimits: DowngradeImpact['restrictedLimits'] =
+    LIMIT_FIELDS.map((field) => ({
+      field,
+      from: currentPlan.limits[field],
+      to: targetPlan.limits[field],
+    })).filter((item) => item.from !== item.to);
 
   const targetWorkspaceLimit = getTargetWorkspaceLimit(targetPlanId);
   const requiresDataCleanup = currentWorkspaceCount > targetWorkspaceLimit;

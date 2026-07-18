@@ -39,10 +39,7 @@ const evaluateKeywordAnswer = (
   );
 };
 
-const evaluateShortAnswer = (
-  userAns: string,
-  keywords?: string[]
-): boolean => {
+const evaluateShortAnswer = (userAns: string, keywords?: string[]): boolean => {
   const lower = userAns.toLowerCase();
   if (lower.length <= 5) return false;
   const matched =
@@ -88,7 +85,11 @@ export const ReadingEvaluator = {
   ): ReadingEvaluationResult {
     const { answers, timeSpentMinutes } = submission;
     const detailedAnswers: DetailedAnswerFeedback[] = [];
-    const counts = { comprehension: [0, 0], tech: [0, 0], vocab: [0, 0] } as Record<string, [number, number]>;
+    const counts = {
+      comprehension: [0, 0],
+      tech: [0, 0],
+      vocab: [0, 0],
+    } as Record<string, [number, number]>;
 
     mission.questions.forEach((q) => {
       const userAns = (answers[q.id] || '').trim();

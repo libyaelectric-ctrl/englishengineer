@@ -1,26 +1,42 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const parseColorValues = (color: string) => color.match(/[\d.]+/g)?.map(Number) || [];
-const isTransparent = (channels: number[]) => channels.length >= 4 && channels[3] === 0;
-const allChannelsAbove = (channels: number[], start: number, end: number, threshold: number) =>
-  channels.slice(start, end).every((ch) => ch > threshold);
-const someChannelAbove = (channels: number[], start: number, threshold: number) =>
-  channels.slice(start).some((ch) => ch > threshold);
-const hasBgImage = (bgImg: string, ...patterns: string[]) => bgImg && patterns.some((p) => bgImg.includes(p));
-const noBgImage = (bgImg: string, ...patterns: string[]) => bgImg && !patterns.some((p) => bgImg.includes(p));
+const parseColorValues = (color: string) =>
+  color.match(/[\d.]+/g)?.map(Number) || [];
+const isTransparent = (channels: number[]) =>
+  channels.length >= 4 && channels[3] === 0;
+const allChannelsAbove = (
+  channels: number[],
+  start: number,
+  end: number,
+  threshold: number
+) => channels.slice(start, end).every((ch) => ch > threshold);
+const someChannelAbove = (
+  channels: number[],
+  start: number,
+  threshold: number
+) => channels.slice(start).some((ch) => ch > threshold);
+const hasBgImage = (bgImg: string, ...patterns: string[]) =>
+  bgImg && patterns.some((p) => bgImg.includes(p));
+const noBgImage = (bgImg: string, ...patterns: string[]) =>
+  bgImg && !patterns.some((p) => bgImg.includes(p));
 
 const isLightColor = (element: Element): boolean => {
-  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
-  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251')) return true;
+  const { backgroundColor: color, backgroundImage: bgImg } =
+    getComputedStyle(element);
+  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251'))
+    return true;
   const values = parseColorValues(color);
-  if (color.startsWith('oklab') || color.startsWith('oklch')) return (values[0] || 0) > 0.8;
-  if (color.startsWith('color(srgb')) return allChannelsAbove(values, 0, 3, 0.8);
+  if (color.startsWith('oklab') || color.startsWith('oklch'))
+    return (values[0] || 0) > 0.8;
+  if (color.startsWith('color(srgb'))
+    return allChannelsAbove(values, 0, 3, 0.8);
   if (isTransparent(values)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#141A22');
   return allChannelsAbove(values, 0, 3, 220);
 };
 
 const isNotBlackButton = (element: Element): boolean => {
-  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  const { backgroundColor: color, backgroundImage: bgImg } =
+    getComputedStyle(element);
   if (hasBgImage(bgImg, '#617FD8', '#4D6BC0', 'rgb(')) return true;
   const channels = parseColorValues(color);
   if (isTransparent(channels)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#000');

@@ -338,7 +338,11 @@ export const CloudSyncService = {
     });
 
     const remoteSnapshot = await this.fetchRemoteSnapshot(client, userId);
-    const mergedSnapshot = mergeSnapshots(localSnapshot, remoteSnapshot, userId);
+    const mergedSnapshot = mergeSnapshots(
+      localSnapshot,
+      remoteSnapshot,
+      userId
+    );
 
     const writeError = await this.writeSnapshot(client, userId, mergedSnapshot);
     if (writeError) {
@@ -357,7 +361,10 @@ export const CloudSyncService = {
 
   getEarlyReturnState(): CloudSyncState | null {
     if (!isSupabaseConfigured()) {
-      return this.saveAndReturn({ ...this.getState(), status: 'idle' as const });
+      return this.saveAndReturn({
+        ...this.getState(),
+        status: 'idle' as const,
+      });
     }
     if (!isOnline()) {
       return this.saveAndReturn({
@@ -385,7 +392,10 @@ export const CloudSyncService = {
       .maybeSingle();
 
     if (readError) {
-      logger.w('Cloud sync could not read the remote snapshot.', readError.message);
+      logger.w(
+        'Cloud sync could not read the remote snapshot.',
+        readError.message
+      );
     }
     return extractSnapshot(remoteRow?.snapshot ?? null);
   },
@@ -421,13 +431,15 @@ export const CloudSyncService = {
     const attemptedQueue =
       queue.length > 0
         ? queue.map((item) => ({ ...item, attempts: item.attempts + 1 }))
-        : [{
-            id: IdService.createId('sync'),
-            reason: 'manual-sync' as const,
-            createdAt: new Date().toISOString(),
-            attempts: 1,
-            snapshot: mergedSnapshot,
-          }];
+        : [
+            {
+              id: IdService.createId('sync'),
+              reason: 'manual-sync' as const,
+              createdAt: new Date().toISOString(),
+              attempts: 1,
+              snapshot: mergedSnapshot,
+            },
+          ];
     const failedQueue = attemptedQueue.filter(
       (item) => item.attempts < MAX_SYNC_ATTEMPTS
     );

@@ -50,15 +50,24 @@ interface ParsedDictionaryResult {
 }
 
 const parseDictionaryResponse = (payload: unknown): ParsedDictionaryResult => {
-  const entry: DictionaryEntry | null = Array.isArray(payload) ? payload[0] : null;
+  const entry: DictionaryEntry | null = Array.isArray(payload)
+    ? payload[0]
+    : null;
   const definitions = entry?.meanings
     ?.flatMap((meaning) => meaning?.definitions ?? [])
     .map((item) => item?.definition)
-    .filter((definition): definition is string => typeof definition === 'string' && !!definition.trim())
+    .filter(
+      (definition): definition is string =>
+        typeof definition === 'string' && !!definition.trim()
+    )
     .slice(0, 5);
 
   if (!entry || !definitions?.length) {
-    throw new ApiError(502, 'malformed_vocabulary_response', 'The external dictionary returned an invalid response.');
+    throw new ApiError(
+      502,
+      'malformed_vocabulary_response',
+      'The external dictionary returned an invalid response.'
+    );
   }
 
   const word = typeof entry.word === 'string' ? entry.word : '';
@@ -189,17 +198,29 @@ export const createUpstashVocabularyCache = ({
         signal: controller.signal,
       });
     } catch (err: unknown) {
-      logger.warn('Vocabulary cache set failed', { message: err instanceof Error ? err.message : String(err) });
+      logger.warn('Vocabulary cache set failed', {
+        message: err instanceof Error ? err.message : String(err),
+      });
     } finally {
       clearTimeout(timeoutId);
     }
   },
 });
 
-const translateWithFallback = async (config: VocabularyConfig, fetchImpl: typeof fetch, text: string, targetLang: string): Promise<TranslationResult | null> => {
+const translateWithFallback = async (
+  config: VocabularyConfig,
+  fetchImpl: typeof fetch,
+  text: string,
+  targetLang: string
+): Promise<TranslationResult | null> => {
   try {
-    return (await translateWithLibre(config, fetchImpl, text, targetLang)) ?? (await translateWithMyMemory(config, fetchImpl, text, targetLang));
-  } catch { return null; }
+    return (
+      (await translateWithLibre(config, fetchImpl, text, targetLang)) ??
+      (await translateWithMyMemory(config, fetchImpl, text, targetLang))
+    );
+  } catch {
+    return null;
+  }
 };
 
 export interface VocabularyLookupService {
@@ -220,14 +241,37 @@ export const createVocabularyLookupService = (
     const cached = await cache.get(cacheKey);
     if (cached) return { ...cached, cached: true };
 
-    const response = await fetchWithTimeout(fetchImpl, dictionaryEndpoint(word), { method: 'GET', headers: { Accept: 'application/json' } }, config.timeoutMs);
+    const response = await fetchWithTimeout(
+      fetchImpl,
+      dictionaryEndpoint(word),
+      { method: 'GET', headers: { Accept: 'application/json' } },
+      config.timeoutMs
+    );
     const is404 = response.status === 404;
-    if (!response.ok) throw new ApiError(is404 ? 404 : 502, is404 ? 'vocabulary_not_found' : 'vocabulary_provider_unavailable', is404 ? 'No external dictionary entry was found.' : 'External vocabulary lookup is temporarily unavailable.');
+    if (!response.ok)
+      throw new ApiError(
+        is404 ? 404 : 502,
+        is404 ? 'vocabulary_not_found' : 'vocabulary_provider_unavailable',
+        is404
+          ? 'No external dictionary entry was found.'
+          : 'External vocabulary lookup is temporarily unavailable.'
+      );
 
     const parsed = parseDictionaryResponse(await response.json());
-    const translation = await translateWithFallback(config, fetchImpl, parsed.definitions[0], targetLang);
+    const translation = await translateWithFallback(
+      config,
+      fetchImpl,
+      parsed.definitions[0],
+      targetLang
+    );
 
-    const result: VocabularyLookupResult = { ...parsed, translation: translation?.text ?? null, source: 'Free Dictionary API', translationSource: translation?.source ?? null, cached: false };
+    const result: VocabularyLookupResult = {
+      ...parsed,
+      translation: translation?.text ?? null,
+      source: 'Free Dictionary API',
+      translationSource: translation?.source ?? null,
+      cached: false,
+    };
     await cache.set(cacheKey, result);
     return result;
   },

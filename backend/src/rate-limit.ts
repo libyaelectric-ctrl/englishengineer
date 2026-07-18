@@ -209,7 +209,10 @@ export const createRateLimiter = ({
 
   return (request: Request, response: Response, next: NextFunction): void => {
     const currentTime = now();
-    if (currentTime - lastPruneAt >= pruneIntervalMs || buckets.size >= bucketLimit) {
+    if (
+      currentTime - lastPruneAt >= pruneIntervalMs ||
+      buckets.size >= bucketLimit
+    ) {
       pruneExpired(currentTime);
       lastPruneAt = currentTime;
     }
@@ -223,7 +226,13 @@ export const createRateLimiter = ({
 
     if (bucket.count > max) {
       logRateLimit(scope, identity, bucket.count, max);
-      return next(new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.'));
+      return next(
+        new ApiError(
+          429,
+          'rate_limit_exceeded',
+          'Too many requests. Please try again later.'
+        )
+      );
     }
     next();
   };

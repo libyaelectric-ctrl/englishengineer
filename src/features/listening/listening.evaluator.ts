@@ -31,9 +31,15 @@ const scoreComprehension = (
   return { correct: correctCount, detailed };
 };
 
-const checkAnswer = (userAns: string, correctAnswer: string, type: string): boolean => {
+const checkAnswer = (
+  userAns: string,
+  correctAnswer: string,
+  type: string
+): boolean => {
   if (type === 'multiple_choice') {
-    return userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0);
+    return (
+      userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0)
+    );
   }
   if (type === 'true_false') {
     const cleanedUser = userAns.toLowerCase().trim();
@@ -59,7 +65,8 @@ const scoreKeywords = (
       summary.toLowerCase().includes(mk);
     if (isMatched) matchedCount++;
   });
-  const keywordRatio = missionKeywords.length > 0 ? matchedCount / missionKeywords.length : 1.0;
+  const keywordRatio =
+    missionKeywords.length > 0 ? matchedCount / missionKeywords.length : 1.0;
   return { keywordRatio, matchedCount };
 };
 
@@ -75,11 +82,18 @@ const scoreVocabulary = (
   vocabularyList.forEach((vt) => {
     if (lowerSummary.includes(vt) || lowerKeywords.includes(vt)) matchedCount++;
   });
-  const vocabRatio = vocabularyList.length > 0 ? matchedCount / vocabularyList.length : 1.0;
-  return { vocabRatio, score: Math.round(vocabRatio * 60 + (comprehensionScore / 100) * 40) };
+  const vocabRatio =
+    vocabularyList.length > 0 ? matchedCount / vocabularyList.length : 1.0;
+  return {
+    vocabRatio,
+    score: Math.round(vocabRatio * 60 + (comprehensionScore / 100) * 40),
+  };
 };
 
-const scoreSummary = (wordCount: number, matchedKeywordsCount: number): number => {
+const scoreSummary = (
+  wordCount: number,
+  matchedKeywordsCount: number
+): number => {
   let summaryScore = 0;
   if (wordCount === 0) {
     summaryScore = 0;
@@ -114,24 +128,32 @@ const buildFeedback = (
 
   if (keywordScore >= 80) {
     strengths.push('Highly acute recognition of technical site keywords');
-    keywordFeedback = 'Superb keyword alignment. You captured almost all crucial concepts discussed in the session.';
+    keywordFeedback =
+      'Superb keyword alignment. You captured almost all crucial concepts discussed in the session.';
   } else {
     weaknesses.push('Critical keywords not fully captured from audio track');
-    keywordFeedback = 'Consider reviewing the transcript clues to target specific engineering nomenclature during listening.';
+    keywordFeedback =
+      'Consider reviewing the transcript clues to target specific engineering nomenclature during listening.';
   }
 
   if (vocabRatio >= 1.0) {
-    strengths.push('Demonstrated strong mastery of core technical vocabulary items');
+    strengths.push(
+      'Demonstrated strong mastery of core technical vocabulary items'
+    );
   } else {
     weaknesses.push('Technical glossary terms underutilized in synthesis');
   }
 
   if (wordCount >= 30) {
     strengths.push('Structured and detailed engineering executive summary');
-    summaryFeedback = 'Your summary displays professional clarity and sufficient technical depth to guide downstream workflows.';
+    summaryFeedback =
+      'Your summary displays professional clarity and sufficient technical depth to guide downstream workflows.';
   } else {
-    weaknesses.push('Executive summary is too brief to convey full technical contexts');
-    summaryFeedback = 'Try to elaborate your summaries by documenting specific engineering values, directives, or safety guidelines.';
+    weaknesses.push(
+      'Executive summary is too brief to convey full technical contexts'
+    );
+    summaryFeedback =
+      'Try to elaborate your summaries by documenting specific engineering values, directives, or safety guidelines.';
   }
 
   return { summaryFeedback, keywordFeedback };
@@ -160,18 +182,29 @@ export const ListeningEvaluator = {
       .filter((k) => k.length > 2);
 
     const missionKeywords = mission.keywords.map((k) => k.toLowerCase());
-    const { keywordRatio, matchedCount: matchedKeywordsCount } =
-      scoreKeywords(userKeywordList, missionKeywords, summary);
+    const { keywordRatio, matchedCount: matchedKeywordsCount } = scoreKeywords(
+      userKeywordList,
+      missionKeywords,
+      summary
+    );
     const keywordScore = Math.round(keywordRatio * 100);
 
     const vocabularyList = mission.vocabulary.map((v) => v.term.toLowerCase());
-    const { vocabRatio, score: vocabularyScore } = scoreVocabulary(vocabularyList, summary, userKeywords, comprehensionScore);
+    const { vocabRatio, score: vocabularyScore } = scoreVocabulary(
+      vocabularyList,
+      summary,
+      userKeywords,
+      comprehensionScore
+    );
 
     const wordCount = summary.split(/\s+/).filter(Boolean).length;
     const summaryScore = scoreSummary(wordCount, matchedKeywordsCount);
 
     const finalScore = Math.round(
-      comprehensionScore * 0.4 + keywordScore * 0.2 + vocabularyScore * 0.2 + summaryScore * 0.2
+      comprehensionScore * 0.4 +
+        keywordScore * 0.2 +
+        vocabularyScore * 0.2 +
+        summaryScore * 0.2
     );
 
     const scoringResult = ScoringService.calculateScore({
@@ -184,7 +217,12 @@ export const ListeningEvaluator = {
     const strengths: string[] = [...scoringResult.strengths];
     const weaknesses: string[] = [...scoringResult.weaknesses];
     const { summaryFeedback, keywordFeedback } = buildFeedback(
-      comprehensionScore, keywordScore, vocabRatio, wordCount, strengths, weaknesses
+      comprehensionScore,
+      keywordScore,
+      vocabRatio,
+      wordCount,
+      strengths,
+      weaknesses
     );
 
     const finalWeaknesses = weaknesses.filter((w) => w !== 'None detected');
@@ -200,7 +238,10 @@ export const ListeningEvaluator = {
       coinsEarned: scoringResult.coins,
       eloChange: scoringResult.eloChange,
       strengths: Array.from(new Set(strengths)),
-      weaknesses: finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
+      weaknesses:
+        finalWeaknesses.length > 0
+          ? Array.from(new Set(finalWeaknesses))
+          : ['None detected'],
       feedback: scoringResult.feedback,
       detailedAnswers,
       summaryFeedback,

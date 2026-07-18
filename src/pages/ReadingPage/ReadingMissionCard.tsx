@@ -26,7 +26,11 @@ interface ReadingMissionCardProps {
 }
 
 const cefrBarColor = (level: string) =>
-  level.startsWith('A') ? '#3b82f6' : level.startsWith('B') ? '#f59e0b' : '#10b981';
+  level.startsWith('A')
+    ? '#3b82f6'
+    : level.startsWith('B')
+      ? '#f59e0b'
+      : '#10b981';
 
 const difficultyBadgeClass = (color: string) =>
   color === 'rose'

@@ -99,7 +99,10 @@ export class LocalAuthAdapter implements AuthAdapter {
     if (found) return found;
 
     const currentUser = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
-    if (currentUser && currentUser.email.toLowerCase() === email.toLowerCase()) {
+    if (
+      currentUser &&
+      currentUser.email.toLowerCase() === email.toLowerCase()
+    ) {
       allUsers.push(currentUser);
       storage.globalSet(USERS_DB_KEY, allUsers);
       return currentUser;

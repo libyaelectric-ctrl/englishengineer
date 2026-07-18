@@ -19,7 +19,11 @@ interface DraftEditorProps {
 }
 
 const wordCountColor = (count: number) =>
-  count > 200 ? 'text-green-500' : count > 100 ? 'text-[#0047bb]' : 'text-muted-copy';
+  count > 200
+    ? 'text-green-500'
+    : count > 100
+      ? 'text-[#0047bb]'
+      : 'text-muted-copy';
 
 const charBarColor = (len: number) =>
   len > 1000 ? 'bg-rose-500' : len > 500 ? 'bg-amber-500' : 'bg-emerald-500';

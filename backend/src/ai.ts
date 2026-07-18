@@ -3,7 +3,13 @@ import { createAiLedger } from './ai-ledger.js';
 import { validateBody, AiRequestBodySchema } from './validation.js';
 import { createAIService, AI_CONTRACT_VERSION } from './ai-core/index.js';
 import { checkUserLimits } from './cost-tracker.js';
-import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 
@@ -21,30 +27,47 @@ const isBypassUser = (userId: string) =>
 
 const checkCostLimits = (userId: string) => {
   const limits = checkUserLimits(userId);
-  if (!limits.allowed) throw new ApiError(429, 'user_rate_limit_exceeded', limits.reason ?? 'Rate limit exceeded.');
+  if (!limits.allowed)
+    throw new ApiError(
+      429,
+      'user_rate_limit_exceeded',
+      limits.reason ?? 'Rate limit exceeded.'
+    );
 };
 
-const isLimitReached = (planId: string, count: number) => planId === 'free' ? count >= 3 : count >= 300;
+const isLimitReached = (planId: string, count: number) =>
+  planId === 'free' ? count >= 3 : count >= 300;
 
 const throwLimitError = (planId: string) => {
   const free = planId === 'free';
-  throw new ApiError(429, free ? 'free_ai_coach_limit_exceeded' : 'monthly_ai_credit_limit_exceeded',
-    free ? 'Free plan accounts are limited to 3 AI Coach requests per day. Please upgrade to Pro.' : 'Monthly AI credit limit reached (300/300). Please contact support or upgrade.');
+  throw new ApiError(
+    429,
+    free ? 'free_ai_coach_limit_exceeded' : 'monthly_ai_credit_limit_exceeded',
+    free
+      ? 'Free plan accounts are limited to 3 AI Coach requests per day. Please upgrade to Pro.'
+      : 'Monthly AI credit limit reached (300/300). Please contact support or upgrade.'
+  );
 };
 
 const checkRateLimits = async (
   userId: string,
   planId: string,
-  ledger: { countRecentRequests: (userId: string, planId: string) => Promise<number> },
+  ledger: {
+    countRecentRequests: (userId: string, planId: string) => Promise<number>;
+  },
   billingRepository: SubscriptionRepository | null
 ) => {
   checkCostLimits(userId);
   const count = await ledger.countRecentRequests(userId, planId);
-  if (!isLimitReached(planId, count)) return { count, useTopup: false, subscription: null, topupCredits: 0 };
+  if (!isLimitReached(planId, count))
+    return { count, useTopup: false, subscription: null, topupCredits: 0 };
 
-  const subscription = billingRepository ? await billingRepository.getSubscriptionStatus(userId) : null;
+  const subscription = billingRepository
+    ? await billingRepository.getSubscriptionStatus(userId)
+    : null;
   const topupCredits = subscription?.topupCredits ?? 0;
-  if (topupCredits > 0) return { count, useTopup: true, subscription, topupCredits };
+  if (topupCredits > 0)
+    return { count, useTopup: true, subscription, topupCredits };
 
   throwLimitError(planId);
 };
@@ -65,9 +88,16 @@ const decrementTopup = async (
 };
 
 const logAiUsage = (
-  ledger: { logSession: (userId: string, session: Record<string, unknown>) => void },
+  ledger: {
+    logSession: (userId: string, session: Record<string, unknown>) => void;
+  },
   userId: string,
-  result: { error?: boolean; provider?: string; durationMs?: number; text?: string },
+  result: {
+    error?: boolean;
+    provider?: string;
+    durationMs?: number;
+    text?: string;
+  },
   body: { modeId?: string },
   operation: string
 ) => {
@@ -84,7 +114,12 @@ const logAiUsage = (
 
 export const registerAIRoutes = (
   app: Express,
-  aiService: { complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>> },
+  aiService: {
+    complete: (
+      op: string,
+      body: Record<string, unknown>
+    ) => Promise<Record<string, unknown>>;
+  },
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
   billingRepository: SubscriptionRepository,
@@ -103,8 +138,15 @@ export const registerAIRoutes = (
         try {
           const body = request.validatedBody;
 
-          if (body.operation !== undefined && body.operation !== defaultOperation) {
-            throw new ApiError(400, 'invalid_operation', 'The AI operation must match the requested route.');
+          if (
+            body.operation !== undefined &&
+            body.operation !== defaultOperation
+          ) {
+            throw new ApiError(
+              400,
+              'invalid_operation',
+              'The AI operation must match the requested route.'
+            );
           }
 
           const userId = request.auth?.userId || 'unknown';
@@ -115,7 +157,12 @@ export const registerAIRoutes = (
           let topupCredits = 0;
 
           if (!bypass) {
-            const limits = await checkRateLimits(userId, 'free', ledger, billingRepository);
+            const limits = await checkRateLimits(
+              userId,
+              'free',
+              ledger,
+              billingRepository
+            );
             useTopup = limits.useTopup;
             subscription = limits.subscription;
             topupCredits = limits.topupCredits;
@@ -124,7 +171,12 @@ export const registerAIRoutes = (
           const result = await aiService.complete(defaultOperation, body);
 
           if (useTopup && !bypass) {
-            await decrementTopup(billingRepository, userId, subscription, topupCredits);
+            await decrementTopup(
+              billingRepository,
+              userId,
+              subscription,
+              topupCredits
+            );
           }
 
           if (!bypass) {

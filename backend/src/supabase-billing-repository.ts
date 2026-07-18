@@ -2,9 +2,14 @@ import { createClient } from '@supabase/supabase-js';
 import { logger } from './logger.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 
-const assertConfigured = (config: { supabaseUrl?: string | null; supabaseServiceRoleKey?: string | null }): void => {
+const assertConfigured = (config: {
+  supabaseUrl?: string | null;
+  supabaseServiceRoleKey?: string | null;
+}): void => {
   if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
-    throw new Error('Supabase billing repository requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
+    throw new Error(
+      'Supabase billing repository requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
+    );
   }
 };
 
@@ -52,9 +57,19 @@ const mapSubscriptionSnapshot = (
   source: snapshot.source,
 });
 
-const handleDbError = (error: { message?: string; status?: number; code?: string; details?: string }): Error => {
-  const message = error.message || 'Supabase billing repository request failed.';
-  const dbError = new Error(message) as Error & { status: number; code: string; details: string };
+const handleDbError = (error: {
+  message?: string;
+  status?: number;
+  code?: string;
+  details?: string;
+}): Error => {
+  const message =
+    error.message || 'Supabase billing repository request failed.';
+  const dbError = new Error(message) as Error & {
+    status: number;
+    code: string;
+    details: string;
+  };
   dbError.status = error.status || 500;
   dbError.code = error.code || 'N/A';
   dbError.details = error.details || error.message || 'N/A';
@@ -76,7 +91,11 @@ interface BillingRepository {
 }
 
 export const createSupabaseBillingRepository = (
-  config: { supabaseUrl: string; supabaseServiceRoleKey: string; [key: string]: unknown },
+  config: {
+    supabaseUrl: string;
+    supabaseServiceRoleKey: string;
+    [key: string]: unknown;
+  },
   fetchImpl: typeof fetch = fetch
 ): BillingRepository => {
   assertConfigured(config);
@@ -87,7 +106,8 @@ export const createSupabaseBillingRepository = (
       const h = init.headers;
       if (h instanceof Headers) {
         h.forEach((value, key) => {
-          if (key.toLowerCase() === 'authorization') headersObj['Authorization'] = value;
+          if (key.toLowerCase() === 'authorization')
+            headersObj['Authorization'] = value;
           else if (key.toLowerCase() === 'apikey') headersObj['apikey'] = value;
           else headersObj[key] = value;
         });
@@ -98,9 +118,16 @@ export const createSupabaseBillingRepository = (
     const response = await fetchImpl(url, { ...init, headers: headersObj });
     if (!response.ok) {
       let bodyText = '';
-      try { bodyText = await response.text(); }
-      catch (readErr: unknown) { logger.warn('Billing repo error body', { error: readErr instanceof Error ? readErr.message : String(readErr) }); }
-      const err = new Error(`Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`) as Error & { status: number };
+      try {
+        bodyText = await response.text();
+      } catch (readErr: unknown) {
+        logger.warn('Billing repo error body', {
+          error: readErr instanceof Error ? readErr.message : String(readErr),
+        });
+      }
+      const err = new Error(
+        `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`
+      ) as Error & { status: number };
       err.status = response.status;
       throw err;
     }
@@ -110,7 +137,10 @@ export const createSupabaseBillingRepository = (
   const supabase = createClient(
     config.supabaseUrl,
     config.supabaseServiceRoleKey,
-    { auth: { persistSession: false }, global: { fetch: wrappedFetch as typeof fetch } }
+    {
+      auth: { persistSession: false },
+      global: { fetch: wrappedFetch as typeof fetch },
+    }
   );
 
   return {
