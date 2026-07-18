@@ -33,6 +33,19 @@ export interface AuthAdapter {
 const SUPER_USER_EMAIL = 'catexozcan@gmail.com';
 const SUPER_USER_PASSWORD = '123456';
 
+const hashPassword = async (password: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password + 'engvox_salt_v1');
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+};
+
+interface LocalUserProfile extends UserProfile {
+  passwordHash?: string;
+}
+
 export class LocalAuthAdapter implements AuthAdapter {
   constructor(private readonly enabled = true) {}
 
@@ -76,8 +89,18 @@ export class LocalAuthAdapter implements AuthAdapter {
       return superUser;
     }
 
-    const existing = await this.getCurrentUser();
+    if (!password || password.length < 6) {
+      throw new Error('Password must be at least 6 characters.');
+    }
+
+    const existing = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
     if (existing && existing.email.toLowerCase() === email.toLowerCase()) {
+      if (existing.passwordHash) {
+        const inputHash = await hashPassword(password);
+        if (inputHash !== existing.passwordHash) {
+          throw new Error('Invalid email or password.');
+        }
+      }
       const updated = {
         ...existing,
         displayName,
@@ -87,10 +110,11 @@ export class LocalAuthAdapter implements AuthAdapter {
       return updated;
     }
 
-    const newUser: UserProfile = {
+    const newUser: LocalUserProfile = {
       id: generateId(),
       displayName,
       email,
+      passwordHash: await hashPassword(password),
       role: 'Junior Electrical Engineer',
       engineeringDiscipline: 'Electrical Engineering',
       targetLevel: 'Project Engineer',
