@@ -98,6 +98,69 @@ const withEvidence = (
   };
 };
 
+const buildSkillMission = (
+  skill: SkillName,
+  completedTasks: number,
+  cefrBand: CefrBand
+): DailyMission => {
+  const label = skill.charAt(0).toUpperCase() + skill.slice(1);
+  const lessonNum = getSkillLessonNumber(completedTasks);
+  return {
+    id: `daily_${skill}`,
+    type: 'skill-practice',
+    skill,
+    title: `${label} · Lesson ${lessonNum}`,
+    cefrBand,
+    difficulty: 'current',
+    estimatedMinutes: 10,
+    reason:
+      completedTasks === 0
+        ? `Build the first reliable ${label} baseline.`
+        : `${label} is on lesson ${lessonNum} and has the clearest catch-up opportunity.`,
+    route: ROUTE_BY_SKILL[skill],
+  };
+};
+
+const buildVocabularyMission = (
+  memory: VocabularyMemorySummary,
+  cefrBand: CefrBand,
+  termCount: number
+): DailyMission => {
+  const hasDue = memory.dueToday > 0;
+  return {
+    id: 'daily_vocabulary_review',
+    type: 'vocabulary-review',
+    skill: 'vocabulary',
+    title: hasDue ? 'Vocabulary memory review' : 'Current-level vocabulary set',
+    cefrBand,
+    difficulty: hasDue ? 'review' : 'current',
+    estimatedMinutes: 8,
+    reason: hasDue
+      ? `${memory.dueToday} saved words are due today.`
+      : 'Start building the vocabulary memory bank safely.',
+    route: '/vocabulary',
+    itemCount: hasDue ? Math.min(memory.dueToday, 10) : Math.min(termCount, 10),
+  };
+};
+
+const buildGrammarMission = (
+  grammarFocus: { title: string; structure: string } | undefined,
+  cefrBand: CefrBand,
+  grammarMix: string
+): DailyMission => ({
+  id: 'daily_grammar_focus',
+  type: 'grammar-focus',
+  skill: 'grammar',
+  title: grammarFocus?.title ?? 'Current-level grammar foundation',
+  cefrBand,
+  difficulty: 'current',
+  estimatedMinutes: 7,
+  reason: grammarFocus
+    ? `${grammarMix === 'safe' ? 'Safe review' : 'Stretch practice'}: use ${grammarFocus.structure} in an engineering context.`
+    : 'Build a reliable grammar baseline for technical communication.',
+  route: '/grammar',
+});
+
 export const LearningProfileEngine = {
   buildProfileSnapshot(
     profile: UserLearningProfile,
@@ -165,58 +228,10 @@ export const LearningProfileEngine = {
           grammarMix
         )
       )[0];
-    const skillLabel =
-      weakest.skill.charAt(0).toUpperCase() + weakest.skill.slice(1);
-
     return [
-      {
-        id: `daily_${weakest.skill}`,
-        type: 'skill-practice',
-        skill: weakest.skill,
-        title: `${skillLabel} · Lesson ${getSkillLessonNumber(weakest.completedTasks)}`,
-        cefrBand: weakest.cefrBand,
-        difficulty: 'current',
-        estimatedMinutes: 10,
-        reason:
-          weakest.completedTasks === 0
-            ? `Build the first reliable ${skillLabel} baseline.`
-            : `${skillLabel} is on lesson ${getSkillLessonNumber(weakest.completedTasks)} and has the clearest catch-up opportunity.`,
-        route: ROUTE_BY_SKILL[weakest.skill],
-      },
-      {
-        id: 'daily_vocabulary_review',
-        type: 'vocabulary-review',
-        skill: 'vocabulary',
-        title:
-          memory.dueToday > 0
-            ? 'Vocabulary memory review'
-            : 'Current-level vocabulary set',
-        cefrBand: profile.skills.vocabulary.cefrBand,
-        difficulty: memory.dueToday > 0 ? 'review' : 'current',
-        estimatedMinutes: 8,
-        reason:
-          memory.dueToday > 0
-            ? `${memory.dueToday} saved words are due today.`
-            : 'Start building the vocabulary memory bank safely.',
-        route: '/vocabulary',
-        itemCount:
-          memory.dueToday > 0
-            ? Math.min(memory.dueToday, 10)
-            : Math.min(vocabularyTerms.length, 10),
-      },
-      {
-        id: 'daily_grammar_focus',
-        type: 'grammar-focus',
-        skill: 'grammar',
-        title: grammarFocus?.title ?? 'Current-level grammar foundation',
-        cefrBand: profile.skills.grammar.cefrBand,
-        difficulty: 'current',
-        estimatedMinutes: 7,
-        reason: grammarFocus
-          ? `${grammarMix === 'safe' ? 'Safe review' : 'Stretch practice'}: use ${grammarFocus.structure} in an engineering context.`
-          : 'Build a reliable grammar baseline for technical communication.',
-        route: '/grammar',
-      },
+      buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand),
+      buildVocabularyMission(memory, profile.skills.vocabulary.cefrBand, vocabularyTerms.length),
+      buildGrammarMission(grammarFocus, profile.skills.grammar.cefrBand, grammarMix),
     ];
   },
 

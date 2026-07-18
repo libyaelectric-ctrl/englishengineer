@@ -240,6 +240,36 @@ const buildFeedback = (
   };
 };
 
+const buildReadiness = (
+  dimensionScores: AssessmentDimensionScore[]
+): AssessmentProfile['readiness'] => ({
+  meetings: averageScores(
+    [
+      dimensionScores.find(
+        (item) => item.dimensionId === 'meeting_readiness'
+      )?.score,
+      dimensionScores.find(
+        (item) => item.dimensionId === 'speaking_confidence'
+      )?.score,
+    ].filter(
+      (score): score is number => score !== null && score !== undefined
+    )
+  ),
+  reports:
+    dimensionScores.find((item) => item.dimensionId === 'report_writing')
+      ?.score ?? null,
+  consultantCommunication:
+    dimensionScores.find(
+      (item) => item.dimensionId === 'consultant_communication'
+    )?.score ?? null,
+});
+
+const getTrustLabel = (dataStatus: string): string => {
+  if (dataStatus === 'sufficient') return 'Based on local assessment history';
+  if (dataStatus === 'limited') return 'Limited local assessment data';
+  return 'Not enough assessment data yet';
+};
+
 export const AssessmentService = {
   getProfile(state: LearningState): AssessmentProfile {
     const sourceScores = getSourceScores(state);
@@ -255,6 +285,7 @@ export const AssessmentService = {
         : averageScores(scorable.map((item) => item.score || 0));
     const strongestDimensions = getStrongestDimensions(dimensionScores);
     const weakestDimensions = getWeakestDimensions(dimensionScores);
+    const readiness = buildReadiness(dimensionScores);
 
     return {
       hasEnoughData: dataStatus !== 'insufficient',
@@ -275,33 +306,8 @@ export const AssessmentService = {
               .map((item) => `Practice ${item.label}`)
               .slice(0, 3)
           : ['Complete one Writing mission', 'Complete one Listening mission'],
-      readiness: {
-        meetings: averageScores(
-          [
-            dimensionScores.find(
-              (item) => item.dimensionId === 'meeting_readiness'
-            )?.score,
-            dimensionScores.find(
-              (item) => item.dimensionId === 'speaking_confidence'
-            )?.score,
-          ].filter(
-            (score): score is number => score !== null && score !== undefined
-          )
-        ),
-        reports:
-          dimensionScores.find((item) => item.dimensionId === 'report_writing')
-            ?.score ?? null,
-        consultantCommunication:
-          dimensionScores.find(
-            (item) => item.dimensionId === 'consultant_communication'
-          )?.score ?? null,
-      },
-      trustLabel:
-        dataStatus === 'sufficient'
-          ? 'Based on local assessment history'
-          : dataStatus === 'limited'
-            ? 'Limited local assessment data'
-            : 'Not enough assessment data yet',
+      readiness,
+      trustLabel: getTrustLabel(dataStatus),
       confidenceScore: confidence.score,
       confidenceExplanation: confidence.explanation,
       certificateDisclaimer: CERTIFICATE_DISCLAIMER,

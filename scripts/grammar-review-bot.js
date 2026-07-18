@@ -12,7 +12,6 @@ const PR_NUMBER = process.env.PR_NUMBER;
 const REPOSITORY = process.env.REPOSITORY;
 const PR_TITLE = process.env.PR_TITLE || '';
 const PR_BODY = process.env.PR_BODY || '';
-const COMMIT_SHA = process.env.COMMIT_SHA;
 
 const ENGVOX_URL = 'https://englishengineer.vercel.app';
 

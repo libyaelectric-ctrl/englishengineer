@@ -6,8 +6,24 @@ export const mockText = (operation: string): string =>
 interface ProviderConfig {
   apiKey: string;
   model: string;
-  [key: string]: any;
 }
+
+const handleProviderResponse = async (response: Response, extractText: (payload: Record<string, unknown>) => string | undefined): Promise<string> => {
+  if (!response.ok) {
+    const isRateLimited = response.status === 429;
+    throw new ApiError(
+      isRateLimited ? 429 : 502,
+      isRateLimited ? 'ai_rate_limited' : 'ai_provider_error',
+      isRateLimited ? 'The AI provider rate limit was reached.' : 'The AI provider is currently unavailable.'
+    );
+  }
+  const payload = await response.json();
+  const text = extractText(payload);
+  if (typeof text !== 'string' || !text.trim()) {
+    throw new ApiError(502, 'malformed_ai_response', 'The AI provider returned an invalid response.');
+  }
+  return text.trim();
+};
 
 export const callOpenAI = async (
   config: ProviderConfig,
@@ -16,41 +32,13 @@ export const callOpenAI = async (
   fetchImpl: typeof fetch,
   jsonMode = false
 ): Promise<string> => {
-  const response = await fetchImpl(
-    'https://api.openai.com/v1/chat/completions',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: config.model,
-        messages: [{ role: 'user', content: prompt }],
-        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
-      }),
-      signal,
-    }
-  );
-  if (!response.ok) {
-    throw new ApiError(
-      response.status === 429 ? 429 : 502,
-      response.status === 429 ? 'ai_rate_limited' : 'ai_provider_error',
-      response.status === 429
-        ? 'The AI provider rate limit was reached.'
-        : 'The AI provider is currently unavailable.'
-    );
-  }
-  const payload = await response.json();
-  const text = payload?.choices?.[0]?.message?.content;
-  if (typeof text !== 'string' || !text.trim()) {
-    throw new ApiError(
-      502,
-      'malformed_ai_response',
-      'The AI provider returned an invalid response.'
-    );
-  }
-  return text.trim();
+  const response = await fetchImpl('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${config.apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: config.model, messages: [{ role: 'user', content: prompt }], ...(jsonMode ? { response_format: { type: 'json_object' } } : {}) }),
+    signal,
+  });
+  return handleProviderResponse(response, (p) => p?.choices?.[0]?.message?.content);
 };
 
 export const callAnthropic = async (
@@ -61,39 +49,11 @@ export const callAnthropic = async (
 ): Promise<string> => {
   const response = await fetchImpl('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    headers: {
-      'x-api-key': config.apiKey,
-      'anthropic-version': '2023-06-01',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: config.model,
-      max_tokens: 1600,
-      messages: [{ role: 'user', content: prompt }],
-    }),
+    headers: { 'x-api-key': config.apiKey, 'anthropic-version': '2023-06-01', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ model: config.model, max_tokens: 1600, messages: [{ role: 'user', content: prompt }] }),
     signal,
   });
-  if (!response.ok) {
-    throw new ApiError(
-      response.status === 429 ? 429 : 502,
-      response.status === 429 ? 'ai_rate_limited' : 'ai_provider_error',
-      response.status === 429
-        ? 'The AI provider rate limit was reached.'
-        : 'The AI provider is currently unavailable.'
-    );
-  }
-  const payload = await response.json();
-  const text = payload?.content?.find(
-    (item: any) => item?.type === 'text'
-  )?.text;
-  if (typeof text !== 'string' || !text.trim()) {
-    throw new ApiError(
-      502,
-      'malformed_ai_response',
-      'The AI provider returned an invalid response.'
-    );
-  }
-  return text.trim();
+  return handleProviderResponse(response, (p) => p?.content?.find((item: Record<string, unknown>) => item?.type === 'text')?.text);
 };
 
 export const callGemini = async (
@@ -104,39 +64,14 @@ export const callGemini = async (
   jsonMode = false
 ): Promise<string> => {
   const model = config.model || 'gemini-2.0-flash';
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
-  const response = await fetchImpl(url, {
+  const response = await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-goog-api-key': config.apiKey,
-    },
+    headers: { 'Content-Type': 'application/json', 'x-goog-api-key': config.apiKey },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        maxOutputTokens: 1600,
-        ...(jsonMode ? { responseMimeType: 'application/json' } : {}),
-      },
+      generationConfig: { maxOutputTokens: 1600, ...(jsonMode ? { responseMimeType: 'application/json' } : {}) },
     }),
     signal,
   });
-  if (!response.ok) {
-    throw new ApiError(
-      response.status === 429 ? 429 : 502,
-      response.status === 429 ? 'ai_rate_limited' : 'ai_provider_error',
-      response.status === 429
-        ? 'The AI provider rate limit was reached.'
-        : 'The AI provider is currently unavailable.'
-    );
-  }
-  const payload = await response.json();
-  const text = payload?.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (typeof text !== 'string' || !text.trim()) {
-    throw new ApiError(
-      502,
-      'malformed_ai_response',
-      'The AI provider returned an invalid response.'
-    );
-  }
-  return text.trim();
+  return handleProviderResponse(response, (p) => p?.candidates?.[0]?.content?.parts?.[0]?.text);
 };

@@ -25,6 +25,16 @@ interface ReadingMissionCardProps {
   onLaunch: (id: string) => void;
 }
 
+const cefrBarColor = (level: string) =>
+  level.startsWith('A') ? '#3b82f6' : level.startsWith('B') ? '#f59e0b' : '#10b981';
+
+const difficultyBadgeClass = (color: string) =>
+  color === 'rose'
+    ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+    : color === 'amber'
+      ? 'bg-warning/10 text-warning border-warning/20'
+      : 'bg-success/10 text-success border-success/20';
+
 export function ReadingMissionCard({
   mission: m,
   isCompleted,
@@ -45,13 +55,7 @@ export function ReadingMissionCard({
     >
       <div
         className="absolute top-0 left-0 right-0 h-[3px] rounded-t-[4px]"
-        style={{
-          background: m.cefrLevel.startsWith('A')
-            ? '#3b82f6'
-            : m.cefrLevel.startsWith('B')
-              ? '#f59e0b'
-              : '#10b981',
-        }}
+        style={{ background: cefrBarColor(m.cefrLevel) }}
       />
       <div className="flex flex-col h-full justify-between space-y-4">
         <div className="space-y-3">
@@ -68,13 +72,7 @@ export function ReadingMissionCard({
               )}
             />
             <span
-              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
-                difficultyColor === 'rose'
-                  ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                  : difficultyColor === 'amber'
-                    ? 'bg-warning/10 text-warning border-warning/20'
-                    : 'bg-success/10 text-success border-success/20'
-              }`}
+              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${difficultyBadgeClass(difficultyColor)}`}
             >
               {m.difficulty}
             </span>

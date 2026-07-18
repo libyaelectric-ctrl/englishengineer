@@ -29,7 +29,7 @@ export const readDatabaseSheet = async (filePath, sheetName) => {
   const headers = rows[0].map((value) => String(value ?? '').trim());
   const records = rows
     .slice(1)
-    .map((row, rowIndex) =>
+    .map((row) =>
       Object.fromEntries(
         headers.map((header, columnIndex) => [header, row[columnIndex] ?? null])
       )

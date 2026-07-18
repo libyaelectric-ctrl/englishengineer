@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { auditLog, getAuditLogs, AUDIT_ACTIONS } from '../src/audit-log.js';
 

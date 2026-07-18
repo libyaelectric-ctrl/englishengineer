@@ -4,45 +4,30 @@ interface RetryOptions {
   maxRetries?: number;
   baseDelay?: number;
   maxDelay?: number;
-  shouldRetry?: (error: any) => boolean;
+  shouldRetry?: (error: unknown) => boolean;
 }
+
+const calcDelay = (attempt: number, baseDelay: number, maxDelay: number) =>
+  Math.min(baseDelay * 2 ** attempt + Math.random() * 1000, maxDelay);
+
+const toError = (error: unknown): Error =>
+  error instanceof Error ? error : new Error(String(error));
 
 export const withRetry = async <T>(
   fn: (signal?: AbortSignal) => Promise<T>,
-  options: RetryOptions = {}
+  opts: RetryOptions = {}
 ): Promise<T> => {
-  const {
-    maxRetries = 3,
-    baseDelay = 1000,
-    maxDelay = 30000,
-    shouldRetry = () => true,
-  } = options;
-
+  const { maxRetries = 3, baseDelay = 1000, maxDelay = 30000, shouldRetry = () => true } = opts;
   let lastError: Error | undefined;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
-    } catch (error: any) {
-      lastError = error;
-
-      if (attempt >= maxRetries || !shouldRetry(error)) {
-        throw error;
-      }
-
-      const delay = Math.min(
-        baseDelay * Math.pow(2, attempt) + Math.random() * 1000,
-        maxDelay
-      );
-
-      logger.info('Retry attempt', {
-        attempt: attempt + 1,
-        maxRetries,
-        error: error.message,
-        delayMs: Math.round(delay),
-      });
-
-      await sleep(delay);
+    } catch (error: unknown) {
+      lastError = toError(error);
+      if (!(attempt < maxRetries && shouldRetry(error))) throw error;
+      await sleep(calcDelay(attempt, baseDelay, maxDelay));
+      logger.info('Retry attempt', { attempt: attempt + 1, maxRetries, error: lastError.message });
     }
   }
 
@@ -72,14 +57,15 @@ export const createRetryWrapper = (
     return withRetry(fn, {
       maxRetries,
       baseDelay,
-      shouldRetry: (error: any) => {
-        if (retryableErrors.some((code) => error.code === code)) {
+      shouldRetry: (error: unknown) => {
+        const err = error as Record<string, unknown>;
+        if (retryableErrors.some((code) => err.code === code)) {
           return true;
         }
-        if (error.status && retryableErrors.includes(String(error.status))) {
+        if (err.status && retryableErrors.includes(String(err.status))) {
           return true;
         }
-        if (error.status >= 400 && error.status < 500 && error.status !== 429) {
+        if (typeof err.status === 'number' && err.status >= 400 && err.status < 500 && err.status !== 429) {
           return false;
         }
         return true;

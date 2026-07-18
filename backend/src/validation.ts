@@ -145,7 +145,7 @@ export const validateBody = (schema: ZodSchema) => {
         formatZodError(result.error)
       );
     }
-    (req as any).validatedBody = result.data;
+    req.validatedBody = result.data as Record<string, unknown>;
     next();
   };
 };
@@ -161,7 +161,7 @@ export const validateQuery = (schema: ZodSchema) => {
         formatZodError(result.error)
       );
     }
-    (req as any).validatedQuery = result.data;
+    req.validatedQuery = result.data as Record<string, unknown>;
     next();
   };
 };

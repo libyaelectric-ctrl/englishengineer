@@ -46,17 +46,152 @@ class DemoTeamProvider implements TeamProvider {
   }
 }
 
+function mapTeamMember(
+  m: {
+    user_id: string;
+    role: string;
+    joined_at: string | null;
+    profiles?: {
+      display_name?: string;
+      email?: string;
+      discipline?: string;
+      updated_at?: string;
+    }[];
+  },
+  orgId: string
+): TeamMember {
+  const profile = m.profiles?.[0];
+  const fallback = (val: string | undefined, def: string) => val || def;
+  const fallbackNull = (...vals: (string | null | undefined)[]): string | null =>
+    vals.find((v) => v != null && v !== '') as string | null;
+  return {
+    id: m.user_id,
+    organizationId: orgId,
+    displayName: fallback(profile?.display_name, 'Team Member'),
+    email: fallback(profile?.email, ''),
+    role: m.role as OrganizationRole,
+    discipline: fallback(profile?.discipline, 'Engineering'),
+    lastActiveAt: fallbackNull(profile?.updated_at, m.joined_at),
+  };
+}
+
+function mapTeamSummary(
+  s: {
+    user_id: string;
+    cefr_estimate?: string;
+    overall_progress?: number;
+    completed_tasks?: number;
+    skill_summary?: Record<string, number>;
+    mistake_categories?: string[];
+    recommended_tasks?: string[];
+  }
+): TeamProgressSummary {
+  const skills = s.skill_summary || {};
+  const safeNum = (v: unknown) => Number(v ?? 0);
+  const safeArr = (v: unknown): string[] => (Array.isArray(v) ? v : []);
+  return {
+    memberId: s.user_id,
+    cefrEstimate: s.cefr_estimate || 'Not enough data',
+    overallProgress: safeNum(s.overall_progress),
+    completedTasks: safeNum(s.completed_tasks),
+    skillScores: {
+      reading: safeNum(skills.reading),
+      writing: safeNum(skills.writing),
+      listening: safeNum(skills.listening),
+      speaking: safeNum(skills.speaking),
+      vocabulary: safeNum(skills.vocabulary),
+      grammar: safeNum(skills.grammar),
+    },
+    mistakeCategories: safeArr(s.mistake_categories),
+    recommendedTasks: safeArr(s.recommended_tasks),
+  };
+}
+
+function mapTeamInvitation(
+  inv: {
+    id: string;
+    email: string;
+    role: string;
+    status: string;
+    created_at: string;
+  },
+  orgId: string
+): TeamInvitation {
+  return {
+    id: inv.id,
+    organizationId: orgId,
+    email: inv.email,
+    role: inv.role as Exclude<OrganizationRole, 'admin'>,
+    status: inv.status as 'pending' | 'accepted' | 'cancelled',
+    createdAt: inv.created_at,
+    deliveryStatus: 'backend-confirmed',
+  };
+}
+
+const EMPTY_WORKSPACE: TeamWorkspaceSnapshot = {
+  source: 'backend',
+  organization: {
+    id: 'no-org',
+    name: 'Personal Sandbox (No Team)',
+    createdBy: 'system',
+    createdAt: new Date().toISOString(),
+  },
+  members: [],
+  summaries: [],
+  invitations: [],
+};
+
 class SupabaseTeamProvider implements TeamProvider {
   async getWorkspace(): Promise<TeamWorkspaceSnapshot> {
     const supabase = getSupabaseClient();
     if (!supabase) throw new Error('Supabase client not configured.');
 
-    // 1. Get active user's organization membership
+    const orgId = await this.fetchOrgId(supabase);
+    if (!orgId) {
+      return { ...EMPTY_WORKSPACE, organization: { ...EMPTY_WORKSPACE.organization, createdAt: new Date().toISOString() } };
+    }
+
+    const [membersResult, invitesResult, summariesResult] = await Promise.all([
+      supabase
+        .from('organization_members')
+        .select('user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)')
+        .eq('organization_id', orgId),
+      supabase
+        .from('organization_invitations')
+        .select('id, email, role, status, created_at')
+        .eq('organization_id', orgId),
+      supabase
+        .from('team_progress_summaries')
+        .select('user_id, cefr_estimate, overall_progress, completed_tasks, skill_summary, mistake_categories, recommended_tasks')
+        .eq('organization_id', orgId),
+    ]);
+
+    this.throwIfError(membersResult.error, 'team members');
+    this.throwIfError(invitesResult.error, 'team invitations');
+    this.throwIfError(summariesResult.error, 'team progress summaries');
+
+    return {
+      source: 'backend',
+      organization: {
+        id: orgId,
+        name: 'Unnamed Team',
+        createdBy: '',
+        createdAt: new Date().toISOString(),
+      },
+      members: (membersResult.data || []).map((m) => mapTeamMember(m, orgId)),
+      summaries: (summariesResult.data || []).map(mapTeamSummary),
+      invitations: (invitesResult.data || []).map((inv) => mapTeamInvitation(inv, orgId)),
+    };
+  }
+
+  private throwIfError(error: { message: string } | null, entity: string): void {
+    if (error) throw new Error(`Failed to fetch ${entity}: ${error.message}`);
+  }
+
+  private async fetchOrgId(supabase: ReturnType<typeof getSupabaseClient> & {}): Promise<string | null> {
     const { data: membership, error: memError } = await supabase
       .from('organization_members')
-      .select(
-        'organization_id, role, organizations(name, created_by, created_at)'
-      )
+      .select('organization_id')
       .limit(1)
       .maybeSingle();
 
@@ -64,161 +199,7 @@ class SupabaseTeamProvider implements TeamProvider {
       throw new Error(`Failed to fetch team membership: ${memError.message}`);
     }
 
-    if (!membership) {
-      // If user does not belong to any team, return a simulated empty workspace
-      // associated with their own user or fall back gracefully
-      return {
-        source: 'backend',
-        organization: {
-          id: 'no-org',
-          name: 'Personal Sandbox (No Team)',
-          createdBy: 'system',
-          createdAt: new Date().toISOString(),
-        },
-        members: [],
-        summaries: [],
-        invitations: [],
-      };
-    }
-
-    const orgId = membership.organization_id;
-    const orgRecord = (
-      membership as {
-        organizations?: {
-          name: string;
-          created_by: string;
-          created_at: string;
-        }[];
-      }
-    )?.organizations?.[0];
-
-    // 2. Fetch organization members
-    const { data: members, error: membersError } = await supabase
-      .from('organization_members')
-      .select(
-        'user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)'
-      )
-      .eq('organization_id', orgId);
-
-    if (membersError) {
-      throw new Error(`Failed to fetch team members: ${membersError.message}`);
-    }
-
-    // 3. Fetch organization invitations
-    const { data: invites, error: invitesError } = await supabase
-      .from('organization_invitations')
-      .select('id, email, role, status, created_at')
-      .eq('organization_id', orgId);
-
-    if (invitesError) {
-      throw new Error(
-        `Failed to fetch team invitations: ${invitesError.message}`
-      );
-    }
-
-    // 4. Fetch team progress summaries
-    const { data: summaries, error: summariesError } = await supabase
-      .from('team_progress_summaries')
-      .select(
-        'user_id, cefr_estimate, overall_progress, completed_tasks, skill_summary, mistake_categories, recommended_tasks'
-      )
-      .eq('organization_id', orgId);
-
-    if (summariesError) {
-      throw new Error(
-        `Failed to fetch team progress summaries: ${summariesError.message}`
-      );
-    }
-
-    const mappedMembers: TeamMember[] = (members || []).map(
-      (m: {
-        user_id: string;
-        role: string;
-        joined_at: string | null;
-        profiles?: {
-          display_name?: string;
-          email?: string;
-          discipline?: string;
-          updated_at?: string;
-        }[];
-      }) => {
-        const profile = m.profiles?.[0];
-        return {
-          id: m.user_id,
-          organizationId: orgId,
-          displayName: profile?.display_name || 'Team Member',
-          email: profile?.email || '',
-          role: m.role as OrganizationRole,
-          discipline: profile?.discipline || 'Engineering',
-          lastActiveAt: profile?.updated_at || m.joined_at || null,
-        };
-      }
-    );
-
-    const mappedSummaries: TeamProgressSummary[] = (summaries || []).map(
-      (s: {
-        user_id: string;
-        cefr_estimate?: string;
-        overall_progress?: number;
-        completed_tasks?: number;
-        skill_summary?: Record<string, number>;
-        mistake_categories?: string[];
-        recommended_tasks?: string[];
-      }) => {
-        const skills = s.skill_summary || {};
-        return {
-          memberId: s.user_id,
-          cefrEstimate: s.cefr_estimate || 'Not enough data',
-          overallProgress: Number(s.overall_progress ?? 0),
-          completedTasks: Number(s.completed_tasks ?? 0),
-          skillScores: {
-            reading: Number(skills.reading ?? 0),
-            writing: Number(skills.writing ?? 0),
-            listening: Number(skills.listening ?? 0),
-            speaking: Number(skills.speaking ?? 0),
-            vocabulary: Number(skills.vocabulary ?? 0),
-            grammar: Number(skills.grammar ?? 0),
-          },
-          mistakeCategories: Array.isArray(s.mistake_categories)
-            ? s.mistake_categories
-            : [],
-          recommendedTasks: Array.isArray(s.recommended_tasks)
-            ? s.recommended_tasks
-            : [],
-        };
-      }
-    );
-
-    const mappedInvitations: TeamInvitation[] = (invites || []).map(
-      (inv: {
-        id: string;
-        email: string;
-        role: string;
-        status: string;
-        created_at: string;
-      }) => ({
-        id: inv.id,
-        organizationId: orgId,
-        email: inv.email,
-        role: inv.role as Exclude<OrganizationRole, 'admin'>,
-        status: inv.status as 'pending' | 'accepted' | 'cancelled',
-        createdAt: inv.created_at,
-        deliveryStatus: 'backend-confirmed',
-      })
-    );
-
-    return {
-      source: 'backend',
-      organization: {
-        id: orgId,
-        name: orgRecord?.name || 'Unnamed Team',
-        createdBy: orgRecord?.created_by || '',
-        createdAt: orgRecord?.created_at || new Date().toISOString(),
-      },
-      members: mappedMembers,
-      summaries: mappedSummaries,
-      invitations: mappedInvitations,
-    };
+    return membership ? (membership as { organization_id: string }).organization_id : null;
   }
 
   async inviteMember(
@@ -228,7 +209,6 @@ class SupabaseTeamProvider implements TeamProvider {
     const supabase = getSupabaseClient();
     if (!supabase) throw new Error('Supabase client not configured.');
 
-    // 1. Get organization ID of current user
     const { data: membership, error: memError } = await supabase
       .from('organization_members')
       .select('organization_id')
@@ -243,7 +223,6 @@ class SupabaseTeamProvider implements TeamProvider {
 
     const orgId = membership.organization_id;
 
-    // 2. Insert new invitation row
     const userSession = (await supabase.auth.getUser()).data.user;
     if (!userSession) throw new Error('Not authenticated.');
 

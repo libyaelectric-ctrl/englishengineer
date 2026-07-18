@@ -25,102 +25,70 @@ export interface BillingRepository {
   ): Promise<void>;
 }
 
+const getUserId = (object: WebhookObject): string | null =>
+  object.metadata?.userId || object.client_reference_id || null;
+
+const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObject) => {
+  const meta = object.metadata ?? {};
+  if (meta.type === 'topup') return { topupCredits: (current.topupCredits || 0) + parseInt(meta.credits ?? '50', 10) };
+  return { planId: meta.planId ?? 'pro', status: 'active' as const, currentPeriodEnd: null, cancelAtPeriodEnd: false, stripeCustomerId: object.customer ?? null, stripeSubscriptionId: object.subscription ?? null, topupCredits: current.topupCredits || 0 };
+};
+
+const buildSubscriptionUpdate = (current: SubscriptionSnapshot, object: WebhookObject, currentPeriodEnd: string | null) => ({
+  ...current,
+  planId: object.metadata?.planId || current.planId || 'pro',
+  status: object.status || 'active',
+  currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
+  cancelAtPeriodEnd: typeof object.cancel_at_period_end === 'boolean' ? object.cancel_at_period_end : current.cancelAtPeriodEnd,
+  stripeCustomerId: object.customer || current.stripeCustomerId,
+  stripeSubscriptionId: object.id || current.stripeSubscriptionId,
+  updatedAt: new Date().toISOString(),
+  source: 'stripe_webhook',
+});
+
+const parsePeriodEnd = (object: WebhookObject): string | null => {
+  const sec = object.current_period_end;
+  return typeof sec === 'number' && sec > 0 ? new Date(sec * 1000).toISOString() : null;
+};
+
 export const handleCheckoutCompleted = async (
   repository: BillingRepository,
   object: WebhookObject
 ): Promise<void> => {
-  const userId = object.metadata?.userId || object.client_reference_id;
+  const userId = getUserId(object);
   if (!userId) return;
-
-  if (object.metadata?.type === 'topup') {
-    const credits = parseInt(object.metadata?.credits || '50', 10);
-    const current =
-      (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
-    await repository.upsertSubscriptionStatus(userId, {
-      ...current,
-      topupCredits: (current.topupCredits || 0) + credits,
-      updatedAt: new Date().toISOString(),
-      source: 'stripe_webhook',
-    });
-  } else {
-    const current =
-      (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
-    await repository.upsertSubscriptionStatus(userId, {
-      planId: object.metadata?.planId || 'pro',
-      status: 'active',
-      currentPeriodEnd: null,
-      cancelAtPeriodEnd: false,
-      stripeCustomerId: object.customer || null,
-      stripeSubscriptionId: object.subscription || null,
-      updatedAt: new Date().toISOString(),
-      source: 'stripe_webhook',
-      topupCredits: current.topupCredits || 0,
-    });
-  }
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  await repository.upsertSubscriptionStatus(userId, { ...current, ...buildCheckoutUpdate(current, object), updatedAt: new Date().toISOString(), source: 'stripe_webhook' });
 };
 
 export const handleSubscriptionUpdated = async (
   repository: BillingRepository,
   object: WebhookObject
 ): Promise<void> => {
-  const userId = object.metadata?.userId || object.client_reference_id;
+  const userId = getUserId(object);
   if (!userId) return;
-
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
-  const periodEndSec = object.current_period_end;
-  const currentPeriodEnd =
-    typeof periodEndSec === 'number' && periodEndSec > 0
-      ? new Date(periodEndSec * 1000).toISOString()
-      : null;
-
-  await repository.upsertSubscriptionStatus(userId, {
-    ...current,
-    planId: object.metadata?.planId || current.planId || 'pro',
-    status: object.status || 'active',
-    currentPeriodEnd: currentPeriodEnd || current.currentPeriodEnd,
-    cancelAtPeriodEnd:
-      typeof object.cancel_at_period_end === 'boolean'
-        ? object.cancel_at_period_end
-        : current.cancelAtPeriodEnd,
-    stripeCustomerId: object.customer || current.stripeCustomerId,
-    stripeSubscriptionId: object.id || current.stripeSubscriptionId,
-    updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
-  });
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  await repository.upsertSubscriptionStatus(userId, buildSubscriptionUpdate(current, object, parsePeriodEnd(object)));
 };
 
 export const handlePaymentFailed = async (
   repository: BillingRepository,
   object: WebhookObject
 ): Promise<void> => {
-  const userId = object.metadata?.userId || object.client_reference_id;
+  const userId = getUserId(object);
   if (!userId) return;
 
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
-  await repository.upsertSubscriptionStatus(userId, {
-    ...current,
-    status: 'past_due',
-    updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
-  });
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  await repository.upsertSubscriptionStatus(userId, { ...current, status: 'past_due', updatedAt: new Date().toISOString(), source: 'stripe_webhook' });
 };
 
 export const handleSubscriptionDeleted = async (
   repository: BillingRepository,
   object: WebhookObject
 ): Promise<void> => {
-  const userId = object.metadata?.userId || object.client_reference_id;
+  const userId = getUserId(object);
   if (!userId) return;
 
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
-  await repository.upsertSubscriptionStatus(userId, {
-    ...current,
-    status: 'canceled',
-    cancelAtPeriodEnd: false,
-    updatedAt: new Date().toISOString(),
-    source: 'stripe_webhook',
-  });
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  await repository.upsertSubscriptionStatus(userId, { ...current, status: 'canceled', cancelAtPeriodEnd: false, updatedAt: new Date().toISOString(), source: 'stripe_webhook' });
 };

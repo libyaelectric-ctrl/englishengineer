@@ -39,21 +39,37 @@ class FeatureFlagService {
     this.flags = { ...DEFAULT_FLAGS, ...initialFlags };
   }
 
+  private isPlanRestricted(
+    allowedPlans: string[] | undefined,
+    plan: string | undefined
+  ): boolean {
+    return Boolean(allowedPlans && plan && !allowedPlans.includes(plan));
+  }
+
+  private isUserRestricted(
+    allowedUsers: string[] | undefined,
+    userId: string | undefined
+  ): boolean {
+    return Boolean(allowedUsers && userId && !allowedUsers.includes(userId));
+  }
+
+  private isPercentageExcluded(
+    percentage: number | undefined,
+    userId: string | undefined,
+    flag: FeatureFlag | undefined
+  ): boolean {
+    if (percentage === undefined || !userId || !flag) return false;
+    return this.hashString(userId + flag) % 100 >= percentage;
+  }
+
   private isEligible(
     config: FeatureFlagConfig,
     context?: { plan?: string; userId?: string },
     flag?: FeatureFlag
   ): boolean {
-    if (config.allowedPlans && context?.plan) {
-      if (!config.allowedPlans.includes(context.plan)) return false;
-    }
-    if (config.allowedUsers && context?.userId) {
-      if (!config.allowedUsers.includes(context.userId)) return false;
-    }
-    if (config.percentage !== undefined && context?.userId && flag) {
-      const userPercentage = this.hashString(context.userId + flag) % 100;
-      if (userPercentage >= config.percentage) return false;
-    }
+    if (this.isPlanRestricted(config.allowedPlans, context?.plan)) return false;
+    if (this.isUserRestricted(config.allowedUsers, context?.userId)) return false;
+    if (this.isPercentageExcluded(config.percentage, context?.userId, flag)) return false;
     return true;
   }
 

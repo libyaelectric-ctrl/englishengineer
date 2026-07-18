@@ -39,16 +39,77 @@ const DEMO_SUMMARIES = [
   { memberId: '3', wordsLearned: 180, studyHours: 12, streak: 3, score: 65 },
 ];
 
-const TeamDashboardDemo = ({
-  showDemoWarning,
-}: {
-  showDemoWarning?: boolean;
-}) => {
+const getScoreClassName = (score: number): string => {
+  if (score >= 80) return 'text-success';
+  if (score >= 60) return 'text-warning';
+  return 'text-error';
+};
+
+const StatsGrid = () => {
   const totalWords = DEMO_SUMMARIES.reduce((s, m) => s + m.wordsLearned, 0);
   const avgScore = Math.round(
     DEMO_SUMMARIES.reduce((s, m) => s + m.score, 0) / DEMO_SUMMARIES.length
   );
 
+  return (
+    <div className="grid gap-4 sm:grid-cols-3">
+      <div className="rounded-xl border border-border-soft bg-surface p-4">
+        <p className="text-xs font-medium uppercase text-muted-copy">
+          Team Members
+        </p>
+        <p className="mt-1 text-2xl font-bold text-foreground">
+          {DEMO_MEMBERS.length}
+        </p>
+      </div>
+      <div className="rounded-xl border border-border-soft bg-surface p-4">
+        <p className="text-xs font-medium uppercase text-muted-copy">
+          Total Words Learned
+        </p>
+        <p className="mt-1 text-2xl font-bold text-foreground">
+          {totalWords}
+        </p>
+      </div>
+      <div className="rounded-xl border border-border-soft bg-surface p-4">
+        <p className="text-xs font-medium uppercase text-muted-copy">
+          Average Score
+        </p>
+        <p className="mt-1 text-2xl font-bold text-foreground">{avgScore}%</p>
+      </div>
+    </div>
+  );
+};
+
+const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] }) => {
+  const summary = DEMO_SUMMARIES.find((s) => s.memberId === member.id);
+  const score = summary?.score ?? 0;
+
+  return (
+    <div
+      key={member.id}
+      className="flex items-center justify-between px-4 py-3"
+    >
+      <div>
+        <p className="text-sm font-medium text-foreground">
+          {member.name}
+        </p>
+        <p className="text-xs text-muted-copy">{member.email}</p>
+      </div>
+      <div className="flex items-center gap-4 text-xs text-muted-copy">
+        <span>{summary?.wordsLearned ?? 0} words</span>
+        <span>{summary?.studyHours ?? 0}h</span>
+        <span className={`font-semibold ${getScoreClassName(score)}`}>
+          {score}%
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const TeamDashboardDemo = ({
+  showDemoWarning,
+}: {
+  showDemoWarning?: boolean;
+}) => {
   return (
     <main className="space-y-6 pt-12 sm:pt-0">
       <header className="flex flex-col gap-4 border-b border-border-soft pb-5 sm:flex-row sm:items-end sm:justify-between">
@@ -80,30 +141,7 @@ const TeamDashboardDemo = ({
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-xs font-medium uppercase text-muted-copy">
-            Team Members
-          </p>
-          <p className="mt-1 text-2xl font-bold text-foreground">
-            {DEMO_MEMBERS.length}
-          </p>
-        </div>
-        <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-xs font-medium uppercase text-muted-copy">
-            Total Words Learned
-          </p>
-          <p className="mt-1 text-2xl font-bold text-foreground">
-            {totalWords}
-          </p>
-        </div>
-        <div className="rounded-xl border border-border-soft bg-surface p-4">
-          <p className="text-xs font-medium uppercase text-muted-copy">
-            Average Score
-          </p>
-          <p className="mt-1 text-2xl font-bold text-foreground">{avgScore}%</p>
-        </div>
-      </div>
+      <StatsGrid />
 
       <div className="rounded-xl border border-border-soft bg-surface">
         <div className="border-b border-border-soft px-4 py-3">
@@ -112,39 +150,9 @@ const TeamDashboardDemo = ({
           </h2>
         </div>
         <div className="divide-y divide-border-soft">
-          {DEMO_MEMBERS.map((member) => {
-            const summary = DEMO_SUMMARIES.find(
-              (s) => s.memberId === member.id
-            );
-            return (
-              <div
-                key={member.id}
-                className="flex items-center justify-between px-4 py-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {member.name}
-                  </p>
-                  <p className="text-xs text-muted-copy">{member.email}</p>
-                </div>
-                <div className="flex items-center gap-4 text-xs text-muted-copy">
-                  <span>{summary?.wordsLearned ?? 0} words</span>
-                  <span>{summary?.studyHours ?? 0}h</span>
-                  <span
-                    className={`font-semibold ${
-                      (summary?.score ?? 0) >= 80
-                        ? 'text-success'
-                        : (summary?.score ?? 0) >= 60
-                          ? 'text-warning'
-                          : 'text-error'
-                    }`}
-                  >
-                    {summary?.score ?? 0}%
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+          {DEMO_MEMBERS.map((member) => (
+            <MemberRow key={member.id} member={member} />
+          ))}
         </div>
       </div>
     </main>

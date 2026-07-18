@@ -23,7 +23,7 @@ export const apiMetricsMiddleware = (
   next: NextFunction
 ): void => {
   const start = process.hrtime();
-  const endpoint = `${req.method} ${(req as any).route?.path || req.path}`;
+  const endpoint = `${req.method} ${(req as { route?: { path?: string } }).route?.path || req.path}`;
 
   res.on('finish', () => {
     const diff = process.hrtime(start);

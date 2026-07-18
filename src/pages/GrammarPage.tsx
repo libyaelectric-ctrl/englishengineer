@@ -6,6 +6,16 @@ import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
 import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
 import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
 
+const getSelectedStatus = (
+  progress: ReturnType<typeof useGrammarPage>['selectedProgress']
+) => {
+  if (!progress) return 'New' as const;
+  if (progress.reviewStatus === 'Strong') return 'Mastered' as const;
+  if (progress.correctUsages >= 3 && progress.strength >= 70)
+    return 'Needs Reading/Writing' as const;
+  return 'Practicing' as const;
+};
+
 const GrammarPage = () => {
   const {
     level,
@@ -35,13 +45,7 @@ const GrammarPage = () => {
     quizItems,
   } = useGrammarPage();
 
-  const selectedStatus = selectedProgress
-    ? selectedProgress.reviewStatus === 'Strong'
-      ? ('Mastered' as const)
-      : selectedProgress.correctUsages >= 3 && selectedProgress.strength >= 70
-        ? ('Needs Reading/Writing' as const)
-        : ('Practicing' as const)
-    : ('New' as const);
+  const selectedStatus = getSelectedStatus(selectedProgress);
   const selectedModule = selectedRule
     ? getModuleLabel(selectedRule.grammarCategory)
     : '';

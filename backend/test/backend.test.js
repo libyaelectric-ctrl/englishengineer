@@ -998,7 +998,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
     {
       stripeClient: {
         webhooks: {
-          constructEvent: (body, sig, secret) => {
+          constructEvent: (body, _sig, _secret) => {
             const parsed = JSON.parse(body.toString('utf8'));
             return {
               id: parsed.id,

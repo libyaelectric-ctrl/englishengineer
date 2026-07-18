@@ -1,20 +1,30 @@
 import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
 import type { VocabularyTerm } from './vocabulary.types';
 
+const hasStringField = (obj: Record<string, unknown>, key: string): boolean =>
+  typeof obj[key] === 'string';
+
+const hasArrayField = (obj: Record<string, unknown>, key: string): boolean =>
+  Array.isArray(obj[key]);
+
+const hasValidCefrLevel = (level: unknown): level is string =>
+  typeof level === 'string' && CEFR_LEVELS.includes(level as (typeof CEFR_LEVELS)[number]);
+
+const validateVocabularyTermFields = (
+  term: Record<string, unknown>
+): boolean =>
+  hasStringField(term, 'id') &&
+  hasStringField(term, 'term') &&
+  hasStringField(term, 'normalizedTerm') &&
+  hasStringField(term, 'definition') &&
+  hasStringField(term, 'status') &&
+  hasValidCefrLevel(term.cefrLevel) &&
+  hasArrayField(term, 'grammarFits') &&
+  hasArrayField(term, 'skillUse');
+
 export const isVocabularyTerm = (value: unknown): value is VocabularyTerm => {
   if (!value || typeof value !== 'object') return false;
-  const term = value as Partial<VocabularyTerm>;
-  return (
-    typeof term.id === 'string' &&
-    typeof term.term === 'string' &&
-    typeof term.normalizedTerm === 'string' &&
-    typeof term.cefrLevel === 'string' &&
-    CEFR_LEVELS.includes(term.cefrLevel) &&
-    typeof term.definition === 'string' &&
-    Array.isArray(term.grammarFits) &&
-    Array.isArray(term.skillUse) &&
-    typeof term.status === 'string'
-  );
+  return validateVocabularyTermFields(value as Record<string, unknown>);
 };
 
 export const assertVocabularyTerms = (values: unknown[]): VocabularyTerm[] => {

@@ -1,10 +1,40 @@
-import { useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useAuthStore } from '@/features/auth';
 import {
   LearningProfileRepository,
   type UserLearningProfile,
 } from '@/features/profile';
 import { prefsReducer, type ProfilePrefsState } from './ProfilePageReducer';
+
+const resolveActionValue = <T>(v: React.SetStateAction<T>, current: T): T =>
+  typeof v === 'function' ? (v as (prev: T) => T)(current) : v;
+
+const loadProfileToPrefs = (profile: UserLearningProfile): Omit<ProfilePrefsState, 'saved'> => ({
+  goals: profile.goals || [],
+  minutes: profile.dailyTarget?.minutes || 15,
+  tasks: profile.dailyTarget?.taskCount || 2,
+  missedDays: profile.weeklyTolerance?.allowedMissedDays || 0,
+  expLevel: profile.experienceLevel || '',
+  careerGoal: profile.careerGoal || '',
+});
+
+const buildSavePayload = (
+  userId: string,
+  prefGoals: string[],
+  prefMinutes: number,
+  prefTasks: number,
+  prefMissedDays: number,
+  prefExpLevel: string,
+  prefCareerGoal: string
+) => {
+  LearningProfileRepository.updatePreferences(userId, {
+    goals: prefGoals as unknown as UserLearningProfile['goals'],
+    dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
+    weeklyTolerance: { allowedMissedDays: prefMissedDays },
+    experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
+    careerGoal: prefCareerGoal,
+  });
+};
 
 export const useProfilePreferences = (
   profile: UserLearningProfile | null,
@@ -34,69 +64,33 @@ export const useProfilePreferences = (
   } = prefs;
 
   const setPrefGoals = (v: React.SetStateAction<string[]>) =>
-    dispatchPrefs({
-      type: 'SET_GOALS',
-      value: typeof v === 'function' ? v(prefs.goals) : v,
-    });
+    dispatchPrefs({ type: 'SET_GOALS', value: resolveActionValue(v, prefs.goals) });
   const setPrefMinutes = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({
-      type: 'SET_MINUTES',
-      value: typeof v === 'function' ? v(prefs.minutes) : v,
-    });
+    dispatchPrefs({ type: 'SET_MINUTES', value: resolveActionValue(v, prefs.minutes) });
   const setPrefTasks = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({
-      type: 'SET_TASKS',
-      value: typeof v === 'function' ? v(prefs.tasks) : v,
-    });
+    dispatchPrefs({ type: 'SET_TASKS', value: resolveActionValue(v, prefs.tasks) });
   const setPrefMissedDays = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({
-      type: 'SET_MISSED_DAYS',
-      value: typeof v === 'function' ? v(prefs.missedDays) : v,
-    });
+    dispatchPrefs({ type: 'SET_MISSED_DAYS', value: resolveActionValue(v, prefs.missedDays) });
   const setPrefExpLevel = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({
-      type: 'SET_EXP_LEVEL',
-      value: typeof v === 'function' ? v(prefs.expLevel) : v,
-    });
+    dispatchPrefs({ type: 'SET_EXP_LEVEL', value: resolveActionValue(v, prefs.expLevel) });
   const setPrefCareerGoal = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({
-      type: 'SET_CAREER_GOAL',
-      value: typeof v === 'function' ? v(prefs.careerGoal) : v,
-    });
+    dispatchPrefs({ type: 'SET_CAREER_GOAL', value: resolveActionValue(v, prefs.careerGoal) });
   const setPreferencesSaved = (v: React.SetStateAction<boolean>) =>
-    dispatchPrefs({
-      type: 'SET_SAVED',
-      value: typeof v === 'function' ? v(prefs.saved) : v,
-    });
+    dispatchPrefs({ type: 'SET_SAVED', value: resolveActionValue(v, prefs.saved) });
 
   useEffect(() => {
     if (!profile) return;
-    dispatchPrefs({
-      type: 'LOAD_PROFILE',
-      goals: profile.goals || [],
-      minutes: profile.dailyTarget?.minutes || 15,
-      tasks: profile.dailyTarget?.taskCount || 2,
-      missedDays: profile.weeklyTolerance?.allowedMissedDays || 0,
-      expLevel: profile.experienceLevel || '',
-      careerGoal: profile.careerGoal || '',
-    });
+    const loaded = loadProfileToPrefs(profile);
+    dispatchPrefs({ type: 'LOAD_PROFILE', ...loaded });
   }, [profile]);
 
   const handleSavePreferences = (event: React.FormEvent) => {
     event.preventDefault();
     setPreferencesSaved(false);
     try {
-      LearningProfileRepository.updatePreferences(
+      buildSavePayload(
         currentUser?.id ?? 'local-user',
-        {
-          goals: prefGoals as unknown as UserLearningProfile['goals'],
-          dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
-          weeklyTolerance: { allowedMissedDays: prefMissedDays },
-          experienceLevel:
-            (prefExpLevel as UserLearningProfile['experienceLevel']) ||
-            undefined,
-          careerGoal: prefCareerGoal,
-        }
+        prefGoals, prefMinutes, prefTasks, prefMissedDays, prefExpLevel, prefCareerGoal
       );
       setPreferencesSaved(true);
       setMessage('Learning preferences saved successfully.');

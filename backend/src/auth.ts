@@ -118,7 +118,7 @@ const validateSupabaseToken = async (
 
 export const extractAuthenticatedUser = (
   request: Request
-): AuthenticatedUser | null => (request as any).auth ?? null;
+): AuthenticatedUser | null => request.auth ?? null;
 
 export interface BackendAuthConfig extends AuthConfig {
   environment: RuntimeEnvironment;
@@ -141,26 +141,35 @@ export const createBackendAuth = (
   config: BackendAuthConfig,
   fetchImpl: typeof fetch = fetch
 ): BackendAuth => {
+  const authenticateInternalSecret = (token: string | undefined, request: Request): AuthenticatedUser | null => {
+    if (!secretsMatch(token, config.internalApiSecret)) return null;
+    const userId = request.headers['x-engineeros-user-id'];
+    if (typeof userId !== 'string' || !userId.trim()) {
+      throw new ApiError(400, 'missing_authenticated_user', 'X-EngineerOS-User-Id is required for internal authentication.');
+    }
+    return {
+      userId: userId.trim(),
+      email: typeof request.headers['x-engineeros-user-email'] === 'string' ? request.headers['x-engineeros-user-email'] : undefined,
+      source: 'internal-secret',
+    };
+  };
+
+  const getRequestedUserId = (request: Request): string | undefined => {
+    const raw = request.body?.userId ?? request.query?.userId ?? request.headers['x-engineeros-user-id'];
+    return typeof raw === 'string' && raw.trim() ? raw.trim() : undefined;
+  };
+
+  const authenticateDevBypass = (request: Request): AuthenticatedUser | null => {
+    if (!config.allowInsecureDevAuth || config.environment === 'production') return null;
+    const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
+    return { userId: getRequestedUserId(request) ?? 'engineeros-dev-user', email, source: 'dev-bypass' };
+  };
+
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
-    if (secretsMatch(token, config.internalApiSecret)) {
-      const userId = request.headers['x-engineeros-user-id'];
-      if (typeof userId !== 'string' || !userId.trim()) {
-        throw new ApiError(
-          400,
-          'missing_authenticated_user',
-          'X-EngineerOS-User-Id is required for internal authentication.'
-        );
-      }
-      return {
-        userId: userId.trim(),
-        email:
-          typeof request.headers['x-engineeros-user-email'] === 'string'
-            ? request.headers['x-engineeros-user-email']
-            : undefined,
-        source: 'internal-secret',
-      };
-    }
+
+    const internalUser = authenticateInternalSecret(token, request);
+    if (internalUser) return internalUser;
 
     if (config.supabaseJwtSecret && token) {
       const localUser = await verifyJwtLocally(token, config.supabaseJwtSecret);
@@ -170,29 +179,10 @@ export const createBackendAuth = (
     const supabaseUser = await validateSupabaseToken(config, token, fetchImpl);
     if (supabaseUser) return supabaseUser;
 
-    if (config.allowInsecureDevAuth && config.environment !== 'production') {
-      const requestedUser =
-        request.body?.userId ??
-        request.query?.userId ??
-        request.headers['x-engineeros-user-id'];
-      return {
-        userId:
-          typeof requestedUser === 'string' && requestedUser.trim()
-            ? requestedUser.trim()
-            : 'engineeros-dev-user',
-        email:
-          typeof request.body?.email === 'string'
-            ? request.body.email
-            : undefined,
-        source: 'dev-bypass',
-      };
-    }
+    const devUser = authenticateDevBypass(request);
+    if (devUser) return devUser;
 
-    throw new ApiError(
-      401,
-      'authentication_required',
-      'A valid backend authorization token is required.'
-    );
+    throw new ApiError(401, 'authentication_required', 'A valid backend authorization token is required.');
   };
 
   const requireBackendAuth = async (
@@ -201,7 +191,7 @@ export const createBackendAuth = (
     next: NextFunction
   ): Promise<void> => {
     try {
-      (request as any).auth = await authenticate(request);
+      request.auth = await authenticate(request);
       next();
     } catch (error) {
       next(error);
@@ -214,9 +204,9 @@ export const createBackendAuth = (
     next: NextFunction
   ): Promise<void> => {
     try {
-      (request as any).auth = await authenticate(request);
+      request.auth = await authenticate(request);
     } catch {
-      (request as any).auth = null;
+      request.auth = undefined;
     }
     next();
   };

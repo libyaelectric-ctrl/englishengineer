@@ -1,6 +1,77 @@
 import { Section, Item, Stat, Progress, Action } from './SidebarComponents';
 import type { SidebarConfig } from './sidebar.config';
 
+function renderTabs(title: string, tabs: NonNullable<SidebarConfig['tabs']>) {
+  if (tabs.length === 0) return null;
+  return (
+    <Section title={title}>
+      <div className="space-y-0.5">
+        {tabs.map((tab) => (
+          <Item
+            key={tab.label}
+            label={tab.label}
+            active={tab.active}
+            badge={tab.badge}
+            onClick={tab.onClick}
+          />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderStats(stats: NonNullable<SidebarConfig['stats']>) {
+  if (stats.length === 0) return null;
+  return (
+    <Section title="Stats">
+      {stats.map((stat) => (
+        <Stat
+          key={stat.label}
+          label={stat.label}
+          value={stat.value}
+          color={stat.color}
+        />
+      ))}
+    </Section>
+  );
+}
+
+function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>) {
+  if (bars.length === 0) return null;
+  return (
+    <Section title="Progress">
+      <div className="space-y-2">
+        {bars.map((bar) => (
+          <div key={bar.label}>
+            <div className="flex justify-between text-xs text-muted-copy mb-1">
+              <span>{bar.label}</span>
+              <span>
+                {bar.value}/{bar.max}
+                {bar.showPercent &&
+                  ` (${Math.round((bar.value / bar.max) * 100)}%)`}
+              </span>
+            </div>
+            <Progress value={bar.value} max={bar.max} color={bar.color} />
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function renderActions(actions: NonNullable<SidebarConfig['actions']>) {
+  if (actions.length === 0) return null;
+  return (
+    <Section title="Actions">
+      <div className="space-y-1.5">
+        {actions.map((action) => (
+          <Action key={action.label} {...action} />
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 export function SkillSidebar({ config }: { config: SidebarConfig }) {
   return (
     <>
@@ -21,64 +92,10 @@ export function SkillSidebar({ config }: { config: SidebarConfig }) {
         </div>
       </Section>
 
-      {config.tabs && config.tabs.length > 0 && (
-        <Section title={config.pathLabel}>
-          <div className="space-y-0.5">
-            {config.tabs.map((tab) => (
-              <Item
-                key={tab.label}
-                label={tab.label}
-                active={tab.active}
-                badge={tab.badge}
-                onClick={tab.onClick}
-              />
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {config.stats && config.stats.length > 0 && (
-        <Section title="Stats">
-          {config.stats.map((stat) => (
-            <Stat
-              key={stat.label}
-              label={stat.label}
-              value={stat.value}
-              color={stat.color}
-            />
-          ))}
-        </Section>
-      )}
-
-      {config.progressBars && config.progressBars.length > 0 && (
-        <Section title="Progress">
-          <div className="space-y-2">
-            {config.progressBars.map((bar) => (
-              <div key={bar.label}>
-                <div className="flex justify-between text-xs text-muted-copy mb-1">
-                  <span>{bar.label}</span>
-                  <span>
-                    {bar.value}/{bar.max}
-                    {bar.showPercent &&
-                      ` (${Math.round((bar.value / bar.max) * 100)}%)`}
-                  </span>
-                </div>
-                <Progress value={bar.value} max={bar.max} color={bar.color} />
-              </div>
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {config.actions && config.actions.length > 0 && (
-        <Section title="Actions">
-          <div className="space-y-1.5">
-            {config.actions.map((action) => (
-              <Action key={action.label} {...action} />
-            ))}
-          </div>
-        </Section>
-      )}
+      {config.tabs && renderTabs(config.pathLabel, config.tabs)}
+      {config.stats && renderStats(config.stats)}
+      {config.progressBars && renderProgressBars(config.progressBars)}
+      {config.actions && renderActions(config.actions)}
     </>
   );
 }

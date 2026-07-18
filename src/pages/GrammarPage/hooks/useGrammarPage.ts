@@ -18,6 +18,47 @@ import {
   EMPTY_LEVEL_COUNTS,
 } from '../GrammarPageHelpers';
 
+const buildUnlockedSet = async (all: { id: string }[]) => {
+  const unlocked = new Set<string>();
+  for (const r of all) {
+    const isUnlocked = await GrammarProgressService.isLessonUnlocked(r.id);
+    if (!isUnlocked) break;
+    unlocked.add(r.id);
+  }
+  if (all[0]) unlocked.add(all[0].id);
+  return unlocked;
+};
+
+const buildLevelCounts = (
+  entries: readonly (readonly [CefrLevel, number])[]
+): Record<CefrLevel, number> => {
+  const map = new Map(entries);
+  return CEFR_LEVELS.reduce<Record<CefrLevel, number>>((acc, level) => {
+    acc[level] = map.get(level) ?? 0;
+    return acc;
+  }, {} as Record<CefrLevel, number>);
+};
+
+const buildVocabularyIndex = (
+  terms: Awaited<ReturnType<typeof VocabularyRepository.getVocabularyForUserSkillLevel>>
+) => {
+  const next: Record<string, string> = {};
+  terms.forEach((term) => {
+    [
+      term.id,
+      term.term,
+      term.normalizedTerm,
+      term.grammarDomainAlias,
+      ...term.tags,
+      ...term.grammarFits,
+      ...term.relatedTerms,
+    ].forEach((key) => {
+      if (key) next[normalizeKey(key)] = term.term;
+    });
+  });
+  return next;
+};
+
 export function useGrammarPage() {
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile } = useLearningCockpit(currentUser?.id);
@@ -46,19 +87,7 @@ export function useGrammarPage() {
     void GrammarRepository.getAllRulesSorted().then(async (all) => {
       if (!active) return;
       setRules(all);
-
-      const unlocked = new Set<string>();
-      for (const r of all) {
-        const isUnlocked = await GrammarProgressService.isLessonUnlocked(r.id);
-        if (isUnlocked) {
-          unlocked.add(r.id);
-        } else {
-          break;
-        }
-      }
-      if (all[0]) unlocked.add(all[0].id);
-      setUnlockedIds(unlocked);
-
+      setUnlockedIds(await buildUnlockedSet(all));
       if (!selectedId) {
         const currentActive = all.find(
           (r) => !GrammarProgressService.get(r.id).isPassed
@@ -81,14 +110,7 @@ export function useGrammarPage() {
       })
     ).then((entries) => {
       if (!active) return;
-      setLevelCounts({
-        A1: entries.find(([l]) => l === 'A1')?.[1] ?? 0,
-        A2: entries.find(([l]) => l === 'A2')?.[1] ?? 0,
-        B1: entries.find(([l]) => l === 'B1')?.[1] ?? 0,
-        B2: entries.find(([l]) => l === 'B2')?.[1] ?? 0,
-        C1: entries.find(([l]) => l === 'C1')?.[1] ?? 0,
-        C2: entries.find(([l]) => l === 'C2')?.[1] ?? 0,
-      });
+      setLevelCounts(buildLevelCounts(entries));
     });
     return () => {
       active = false;
@@ -102,21 +124,7 @@ export function useGrammarPage() {
       level
     ).then((terms) => {
       if (!active) return;
-      const next: Record<string, string> = {};
-      terms.forEach((term) => {
-        [
-          term.id,
-          term.term,
-          term.normalizedTerm,
-          term.grammarDomainAlias,
-          ...term.tags,
-          ...term.grammarFits,
-          ...term.relatedTerms,
-        ].forEach((key) => {
-          if (key) next[normalizeKey(key)] = term.term;
-        });
-      });
-      setVocabularyIndex(next);
+      setVocabularyIndex(buildVocabularyIndex(terms));
     });
     return () => {
       active = false;

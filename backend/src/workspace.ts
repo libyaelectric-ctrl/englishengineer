@@ -7,13 +7,13 @@ import {
 } from './validation.js';
 import { createSupabaseWorkspaceRepository } from './workspace-repository.js';
 import type { WorkspaceRepository } from './workspace-repository.js';
-import type { Request, Response, NextFunction } from 'express';
+import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 
 export const createWorkspaceRepository = (
-  config: Record<string, any>,
-  fetchImpl: typeof fetch = fetch
+  config: { workspace?: Record<string, unknown> },
+  _fetchImpl: typeof fetch = fetch
 ): WorkspaceRepository => {
-  return createSupabaseWorkspaceRepository(config.workspace);
+  return createSupabaseWorkspaceRepository(config.workspace as Record<string, unknown>);
 };
 
 const getWorkspaceLimit = (planId: string): number => {
@@ -32,15 +32,14 @@ const getWorkspaceLimit = (planId: string): number => {
 };
 
 export const registerWorkspaceRoutes = (
-  app: any,
-  requireBackendAuth: any,
-  rateLimiter: any,
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  rateLimiter: RequestHandler,
   { repository }: { repository: WorkspaceRepository | null }
 ): void => {
   if (!repository) return;
 
-  const getUserId = (req: Request): string | undefined =>
-    (req as any).auth?.userId;
+  const getUserId = (req: Request): string | undefined => req.auth?.userId;
 
   app.get(
     '/api/workspaces',
@@ -111,7 +110,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { name, planId } = (req as any).validatedBody;
+        const { name, planId } = req.validatedBody as Record<string, unknown>;
 
         const existingCount = await repository.countWorkspaces(userId);
         const limit = getWorkspaceLimit(planId || 'free');
@@ -151,7 +150,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { key, value } = (req as any).validatedBody;
+        const { key, value } = req.validatedBody as Record<string, unknown>;
         if (!key) {
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
@@ -240,7 +239,7 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { docName, docContent } = (req as any).validatedBody;
+        const { docName, docContent } = req.validatedBody as Record<string, unknown>;
         if (!docName) {
           throw new ApiError(
             400,

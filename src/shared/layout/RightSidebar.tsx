@@ -53,19 +53,33 @@ const ProfileSidebar = React.lazy(() =>
   }))
 );
 
+const EXACT_ROUTES: Record<string, React.FC> = {
+  '/dashboard': DashboardSidebar,
+  '/': DashboardSidebar,
+};
+
+const PREFIX_ROUTES: [string, React.FC][] = [
+  ['/vocabulary', VocabSidebar],
+  ['/grammar', GrammarSidebar],
+  ['/reading', ReadingSidebar],
+  ['/writing', WritingSidebar],
+  ['/listening', ListeningSidebar],
+  ['/speaking', SpeakingSidebar],
+  ['/curriculum', CurriculumSidebar],
+  ['/tools', ToolsSidebar],
+  ['/profile', ProfileSidebar],
+  ['/admin', DashboardSidebar],
+  ['/progress', CurriculumSidebar],
+];
+
 function getContent(path: string): React.ReactNode {
-  if (path === '/dashboard' || path === '/') return <DashboardSidebar />;
-  if (path.startsWith('/vocabulary')) return <VocabSidebar />;
-  if (path.startsWith('/grammar')) return <GrammarSidebar />;
-  if (path.startsWith('/reading')) return <ReadingSidebar />;
-  if (path.startsWith('/writing')) return <WritingSidebar />;
-  if (path.startsWith('/listening')) return <ListeningSidebar />;
-  if (path.startsWith('/speaking')) return <SpeakingSidebar />;
-  if (path.startsWith('/curriculum')) return <CurriculumSidebar />;
-  if (path.startsWith('/tools')) return <ToolsSidebar />;
-  if (path.startsWith('/profile')) return <ProfileSidebar />;
-  if (path.startsWith('/admin')) return <DashboardSidebar />;
-  if (path.startsWith('/progress')) return <CurriculumSidebar />;
+  if (EXACT_ROUTES[path]) {
+    return React.createElement(EXACT_ROUTES[path]);
+  }
+  const match = PREFIX_ROUTES.find(([prefix]) => path.startsWith(prefix));
+  if (match) {
+    return React.createElement(match[1]);
+  }
   return <DashboardSidebar />;
 }
 

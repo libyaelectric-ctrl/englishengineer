@@ -62,6 +62,52 @@ export class LocalAuthAdapter implements AuthAdapter {
     return storage.globalGet<UserProfile>(STORAGE_KEY);
   }
 
+  private trySuperUserLogin(
+    email: string,
+    password?: string
+  ): UserProfile | null {
+    if (
+      email.toLowerCase() !== SUPER_USER_EMAIL ||
+      password !== SUPER_USER_PASSWORD
+    ) {
+      return null;
+    }
+    const superUser: UserProfile = {
+      id: 'super_user_catexozcan',
+      displayName: 'Super Admin',
+      email: SUPER_USER_EMAIL,
+      role: 'Super Administrator',
+      engineeringDiscipline: 'All Disciplines',
+      targetLevel: 'Unlimited',
+      location: 'Global Access',
+      avatarInitials: 'SA',
+      isSuperUser: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    storage.globalSet(STORAGE_KEY, superUser);
+    return superUser;
+  }
+
+  private findExistingUser(
+    email: string,
+    allUsers: LocalUserProfile[]
+  ): LocalUserProfile | undefined {
+    const found = allUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+    if (found) return found;
+
+    const currentUser = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
+    if (currentUser && currentUser.email.toLowerCase() === email.toLowerCase()) {
+      allUsers.push(currentUser);
+      storage.globalSet(USERS_DB_KEY, allUsers);
+      return currentUser;
+    }
+
+    return undefined;
+  }
+
   async login(
     displayName: string,
     email: string,
@@ -69,49 +115,15 @@ export class LocalAuthAdapter implements AuthAdapter {
   ): Promise<UserProfile> {
     this.assertEnabled();
 
-    // Super user check
-    if (
-      email.toLowerCase() === SUPER_USER_EMAIL &&
-      password === SUPER_USER_PASSWORD
-    ) {
-      const superUser: UserProfile = {
-        id: 'super_user_catexozcan',
-        displayName: 'Super Admin',
-        email: SUPER_USER_EMAIL,
-        role: 'Super Administrator',
-        engineeringDiscipline: 'All Disciplines',
-        targetLevel: 'Unlimited',
-        location: 'Global Access',
-        avatarInitials: 'SA',
-        isSuperUser: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      storage.globalSet(STORAGE_KEY, superUser);
-      return superUser;
-    }
+    const superUser = this.trySuperUserLogin(email, password);
+    if (superUser) return superUser;
 
     if (!password || password.length < 6) {
       throw new Error('Password must be at least 6 characters.');
     }
 
     const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
-    let existing = allUsers.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
-    );
-
-    // Backward compatibility check
-    if (!existing) {
-      const currentUser = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
-      if (
-        currentUser &&
-        currentUser.email.toLowerCase() === email.toLowerCase()
-      ) {
-        existing = currentUser;
-        allUsers.push(currentUser);
-        storage.globalSet(USERS_DB_KEY, allUsers);
-      }
-    }
+    const existing = this.findExistingUser(email, allUsers);
 
     if (!existing) {
       throw new Error('User does not exist. Please sign up first.');

@@ -20,25 +20,18 @@ interface AuditLogFilters {
 }
 
 const logs: AuditLogEntry[] = [];
-let supabaseRepository: any = null;
+let supabaseRepository: { insert: (record: AuditLogEntry) => void; query: (filters: AuditLogFilters) => Promise<AuditLogEntry[]> } | null = null;
 
 export const initAuditLog = async (
-  config: Record<string, any>
+  config: { workspace?: Record<string, unknown> }
 ): Promise<void> => {
+  const ws = config?.workspace;
+  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) return;
   try {
-    if (
-      config?.workspace?.configured &&
-      config?.workspace?.supabaseUrl &&
-      config?.workspace?.supabaseServiceRoleKey
-    ) {
-      const { createSupabaseAuditLogRepository } =
-        await import('./supabase-audit-log-repository.js');
-      supabaseRepository = createSupabaseAuditLogRepository(config.workspace);
-    }
-  } catch (error: any) {
-    logger.warn('Failed to initialize remote audit repository', {
-      error: error?.message || error,
-    });
+    const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
+    supabaseRepository = createSupabaseAuditLogRepository(ws);
+  } catch (error: unknown) {
+    logger.warn('Failed to initialize remote audit repository', { error: error instanceof Error ? error.message : String(error) });
     supabaseRepository = null;
   }
 };

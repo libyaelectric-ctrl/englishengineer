@@ -1,3 +1,4 @@
+import { SupabaseClient } from '@supabase/supabase-js';
 import { IdService } from '@/core/ids/id.service';
 import { storage } from '@/shared/storage';
 import { logger } from '@/shared/logger';
@@ -315,31 +316,16 @@ export const CloudSyncService = {
   },
 
   async flushQueue(userId: string): Promise<CloudSyncState> {
-    if (!isSupabaseConfigured()) {
-      const state = { ...this.getState(), status: 'idle' as const };
-      saveState(state);
-      return state;
-    }
-
-    if (!isOnline()) {
-      const state = {
-        ...this.getState(),
-        status: 'offline' as const,
-        pendingItems: getQueue().length,
-      };
-      saveState(state);
-      return state;
-    }
+    const earlyReturn = this.getEarlyReturnState();
+    if (earlyReturn) return earlyReturn;
 
     const client = getSupabaseClient();
     if (!client) {
-      const state = {
+      return this.saveAndReturn({
         ...this.getState(),
         status: 'error' as const,
         lastError: 'Supabase client is not configured.',
-      };
-      saveState(state);
-      return state;
+      });
     }
 
     const queue = getQueue();
@@ -351,6 +337,47 @@ export const CloudSyncService = {
       lastError: null,
     });
 
+    const remoteSnapshot = await this.fetchRemoteSnapshot(client, userId);
+    const mergedSnapshot = mergeSnapshots(localSnapshot, remoteSnapshot, userId);
+
+    const writeError = await this.writeSnapshot(client, userId, mergedSnapshot);
+    if (writeError) {
+      return this.handleWriteError(queue, mergedSnapshot, writeError);
+    }
+
+    applyCloudSnapshotLocally(mergedSnapshot, userId);
+    storage.remove(QUEUE_KEY);
+    return this.saveAndReturn({
+      status: 'synced' as const,
+      pendingItems: 0,
+      lastSyncedAt: new Date().toISOString(),
+      lastError: null,
+    });
+  },
+
+  getEarlyReturnState(): CloudSyncState | null {
+    if (!isSupabaseConfigured()) {
+      return this.saveAndReturn({ ...this.getState(), status: 'idle' as const });
+    }
+    if (!isOnline()) {
+      return this.saveAndReturn({
+        ...this.getState(),
+        status: 'offline' as const,
+        pendingItems: getQueue().length,
+      });
+    }
+    return null;
+  },
+
+  saveAndReturn(state: CloudSyncState): CloudSyncState {
+    saveState(state);
+    return state;
+  },
+
+  async fetchRemoteSnapshot(
+    client: SupabaseClient,
+    userId: string
+  ): Promise<CloudProgressSnapshot | null> {
     const { data: remoteRow, error: readError } = await client
       .from('user_progress_snapshots')
       .select('snapshot')
@@ -358,18 +385,16 @@ export const CloudSyncService = {
       .maybeSingle();
 
     if (readError) {
-      logger.w(
-        'Cloud sync could not read the remote snapshot.',
-        readError.message
-      );
+      logger.w('Cloud sync could not read the remote snapshot.', readError.message);
     }
+    return extractSnapshot(remoteRow?.snapshot ?? null);
+  },
 
-    const remoteSnapshot = extractSnapshot(remoteRow?.snapshot ?? null);
-    const mergedSnapshot = mergeSnapshots(
-      localSnapshot,
-      remoteSnapshot,
-      userId
-    );
+  async writeSnapshot(
+    client: SupabaseClient,
+    userId: string,
+    mergedSnapshot: CloudProgressSnapshot
+  ): Promise<{ message: string } | null> {
     const envelope: CloudSnapshotEnvelope = {
       schemaVersion: SNAPSHOT_SCHEMA_VERSION,
       mergedAt: new Date().toISOString(),
@@ -385,46 +410,37 @@ export const CloudSyncService = {
         updated_at: new Date().toISOString(),
       });
 
-    if (writeError) {
-      const attemptedQueue =
-        queue.length > 0
-          ? queue.map((item) => ({ ...item, attempts: item.attempts + 1 }))
-          : [
-              {
-                id: IdService.createId('sync'),
-                reason: 'manual-sync' as const,
-                createdAt: new Date().toISOString(),
-                attempts: 1,
-                snapshot: mergedSnapshot,
-              },
-            ];
-      const failedQueue = attemptedQueue.filter(
-        (item) => item.attempts < MAX_SYNC_ATTEMPTS
-      );
-      const droppedCount = attemptedQueue.length - failedQueue.length;
-      saveQueue(failedQueue);
-      const state = {
-        status: 'error' as const,
-        pendingItems: failedQueue.length,
-        lastSyncedAt: this.getState().lastSyncedAt,
-        lastError:
-          droppedCount > 0
-            ? `${droppedCount} cloud sync item reached ${MAX_SYNC_ATTEMPTS} attempts and was removed. Last error: ${writeError.message}`
-            : writeError.message,
-      };
-      saveState(state);
-      return state;
-    }
+    return writeError ?? null;
+  },
 
-    applyCloudSnapshotLocally(mergedSnapshot, userId);
-    storage.remove(QUEUE_KEY);
-    const state = {
-      status: 'synced' as const,
-      pendingItems: 0,
-      lastSyncedAt: new Date().toISOString(),
-      lastError: null,
-    };
-    saveState(state);
-    return state;
+  handleWriteError(
+    queue: CloudSyncQueueItem[],
+    mergedSnapshot: CloudProgressSnapshot,
+    writeError: { message: string }
+  ): CloudSyncState {
+    const attemptedQueue =
+      queue.length > 0
+        ? queue.map((item) => ({ ...item, attempts: item.attempts + 1 }))
+        : [{
+            id: IdService.createId('sync'),
+            reason: 'manual-sync' as const,
+            createdAt: new Date().toISOString(),
+            attempts: 1,
+            snapshot: mergedSnapshot,
+          }];
+    const failedQueue = attemptedQueue.filter(
+      (item) => item.attempts < MAX_SYNC_ATTEMPTS
+    );
+    const droppedCount = attemptedQueue.length - failedQueue.length;
+    saveQueue(failedQueue);
+    return this.saveAndReturn({
+      status: 'error' as const,
+      pendingItems: failedQueue.length,
+      lastSyncedAt: this.getState().lastSyncedAt,
+      lastError:
+        droppedCount > 0
+          ? `${droppedCount} cloud sync item reached ${MAX_SYNC_ATTEMPTS} attempts and was removed. Last error: ${writeError.message}`
+          : writeError.message,
+    });
   },
 };

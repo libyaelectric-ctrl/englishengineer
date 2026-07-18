@@ -82,7 +82,7 @@ export const createMemorySubscriptionRepository = ({
 };
 
 export const createSubscriptionRepository = (
-  config: Record<string, any>,
+  config: { repositoryMode?: string; environment?: string; allowMemoryRepository?: boolean; eventCacheTtlMs?: number; eventCacheMax?: number; supabaseUrl?: string; supabaseServiceRoleKey?: string },
   fetchImpl: typeof fetch = fetch
 ): SubscriptionRepository => {
   if (config.repositoryMode === 'supabase') {

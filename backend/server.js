@@ -1,7 +1,7 @@
 import { createApp } from './src/app.js';
 import { createBackendConfig } from './src/config.js';
 
-process.on('unhandledRejection', (reason, promise) => {
+process.on('unhandledRejection', (reason, _promise) => {
   console.error('[unhandled-rejection]', reason);
 });
 

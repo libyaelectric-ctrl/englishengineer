@@ -11,46 +11,73 @@ interface QuestionEvalResult {
   category: 'comprehension' | 'tech' | 'vocab';
 }
 
+const evaluateMultipleChoice = (
+  userAns: string,
+  correctAnswer: string
+): boolean =>
+  userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0);
+
+const evaluateTrueFalse = (userAns: string, correctAnswer: string): boolean => {
+  const u = userAns.toLowerCase();
+  const c = correctAnswer.toLowerCase();
+  return (
+    u === c ||
+    (u.startsWith('t') && c.startsWith('t')) ||
+    (u.startsWith('f') && c.startsWith('f'))
+  );
+};
+
+const evaluateKeywordAnswer = (
+  userAns: string,
+  correctAnswer: string,
+  keywords?: string[]
+): boolean => {
+  const lower = userAns.toLowerCase();
+  return (
+    keywords?.some((k) => lower.includes(k.toLowerCase())) ||
+    lower === correctAnswer.toLowerCase()
+  );
+};
+
+const evaluateShortAnswer = (
+  userAns: string,
+  keywords?: string[]
+): boolean => {
+  const lower = userAns.toLowerCase();
+  if (lower.length <= 5) return false;
+  const matched =
+    keywords?.filter((k) => lower.includes(k.toLowerCase())) ?? [];
+  const ratio =
+    keywords && keywords.length > 0 ? matched.length / keywords.length : 1.0;
+  return ratio >= 0.5;
+};
+
 const evaluateQuestion = (
   q: ReadingMission['questions'][number],
   userAns: string
 ): QuestionEvalResult => {
   if (q.type === 'multiple_choice') {
-    const cleanedUser = userAns.toUpperCase().charAt(0);
-    const cleanedCorrect = q.correctAnswer.toUpperCase().charAt(0);
-    return { isCorrect: cleanedUser === cleanedCorrect, category: 'comprehension' };
+    return {
+      isCorrect: evaluateMultipleChoice(userAns, q.correctAnswer),
+      category: 'comprehension',
+    };
   }
-
   if (q.type === 'true_false') {
-    const cleanedUser = userAns.toLowerCase();
-    const cleanedCorrect = q.correctAnswer.toLowerCase();
-    const isCorrect =
-      cleanedUser === cleanedCorrect ||
-      (cleanedUser.startsWith('t') && cleanedCorrect.startsWith('t')) ||
-      (cleanedUser.startsWith('f') && cleanedCorrect.startsWith('f'));
-    return { isCorrect, category: 'comprehension' };
+    return {
+      isCorrect: evaluateTrueFalse(userAns, q.correctAnswer),
+      category: 'comprehension',
+    };
   }
-
   if (q.type === 'keyword_answer') {
-    const cleanedUser = userAns.toLowerCase();
-    const isCorrect =
-      q.keywords?.some((k) => cleanedUser.includes(k.toLowerCase())) ||
-      cleanedUser === q.correctAnswer.toLowerCase();
-    return { isCorrect, category: 'tech' };
+    return {
+      isCorrect: evaluateKeywordAnswer(userAns, q.correctAnswer, q.keywords),
+      category: 'tech',
+    };
   }
-
-  // short_answer
-  const cleanedUser = userAns.toLowerCase();
-  if (cleanedUser.length > 5) {
-    const matchedKeywords =
-      q.keywords?.filter((k) => cleanedUser.includes(k.toLowerCase())) || [];
-    const matchRatio =
-      q.keywords && q.keywords.length > 0
-        ? matchedKeywords.length / q.keywords.length
-        : 1.0;
-    return { isCorrect: matchRatio >= 0.5, category: 'vocab' };
-  }
-  return { isCorrect: false, category: 'vocab' };
+  return {
+    isCorrect: evaluateShortAnswer(userAns, q.keywords),
+    category: 'vocab',
+  };
 };
 
 export const ReadingEvaluator = {
