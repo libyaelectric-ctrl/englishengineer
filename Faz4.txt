@@ -1,4 +1,4 @@
-﻿# Mimo İçin Görev Talimatları — Faz 4 (Usta-Faz4.md)
+# Mimo İçin Görev Talimatları — Faz 4 (Usta-Faz4.md)
 
 Faz 3 (Kademe 51-60) büyük ölçüde gerçek ilerleme sağladı ve önemli bir
 davranış değişikliği görüldü: Mimo artık yapamadığı işleri ("k6 kurulu
@@ -31,7 +31,7 @@ bırakıldı. Bu faz önce onu kapatır.
 
 ## 📋 Faz 4 Kademeleri (61-68)
 
-### [ ] Kademe 61: KRİTİK — Sabit Kodlanmış Backdoor Şifrelerin Kaldırılması
+### [x] Kademe 61: KRİTİK — Sabit Kodlanmış Backdoor Şifrelerin Kaldırılması
 * **Açıklama:** Faz 3'te bulundu, hâlâ düzeltilmedi:
   ```
   src/features/auth/auth.adapter.ts:34
@@ -72,7 +72,7 @@ bırakıldı. Bu faz önce onu kapatır.
 * **Durum:** Beklemede. *(KULLANICI ONAYI ZORUNLU — hem kod değişikliği
   hem olası gerçek hesap bilgisi içerdiği için onaysız ilerleme.)*
 
-### [ ] Kademe 62: Genişletilmiş Secret Taraması — Gerçek Gitleaks + Git Geçmişi
+### [x] Kademe 62: Genişletilmiş Secret Taraması — Gerçek Gitleaks + Git Geçmişi
 * **Açıklama:** Faz 3'teki Kademe 57 aslında `gitleaks` değil, basit bir
   `grep` taraması yapmıştı ve git geçmişini hiç taramamıştı. Şimdi doğru
   aracı kullan.
@@ -84,7 +84,7 @@ bırakıldı. Bu faz önce onu kapatır.
     şekilde dur ve kullanıcıya bildir.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 63: Canlı Sitenin Kademe 27 Sonrası Son Build ile Yeniden Deploy Edilmesi
+### [x] Kademe 63: Canlı Sitenin Kademe 27 Sonrası Son Build ile Yeniden Deploy Edilmesi
 * **Açıklama:** Kademe 55'teki Lighthouse taraması `englishengineer.vercel.app`
   üzerinde Performance **65** ölçtü — ama Kademe 27 (bundle küçültme)
   sonrası local build çok daha küçük. Bu, canlı sitenin güncel build ile
@@ -99,7 +99,7 @@ bırakıldı. Bu faz önce onu kapatır.
     karşılaştır, eşleştiğini göster.
 * **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — canlı deploy.)*
 
-### [ ] Kademe 64: Lighthouse'un Yeniden Ölçülmesi (Kademe 63 Sonrası)
+### [x] Kademe 64: Lighthouse'un Yeniden Ölçülmesi (Kademe 63 Sonrası)
 * **Açıklama:** Kademe 63'ten sonra canlı site güncel haliyle ölçülmeli.
 * **İşlem:** Kademe 55'teki aynı Lighthouse komutunu tekrar çalıştır.
 * **ZORUNLU DOĞRULAMA:**
@@ -110,7 +110,7 @@ bırakıldı. Bu faz önce onu kapatır.
     tespit edip ayrı bir not olarak yaz.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 65: Landing Page A11y — 58 İhlalin Düzeltilmesi
+### [x] Kademe 65: Landing Page A11y — 58 İhlalin Düzeltilmesi
 * **Açıklama:** Kademe 56'da landing page'de axe taramasında 58 ihlal
   bulundu (öncelikle color-contrast). Login/pricing sayfaları geçmişti,
   landing geçmemişti.
@@ -123,7 +123,7 @@ bırakıldı. Bu faz önce onu kapatır.
     Çıktıyı `docs/faz4-evidence/kademe65-a11y.txt`'e kaydet.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 66: k6 Kurulumu ve Staging Üzerinde Gerçek Load Test
+### [x] Kademe 66: k6 Kurulumu ve Staging Üzerinde Gerçek Load Test
 * **Açıklama:** Faz 3'te k6 hiç kurulu değildi, hiç çalıştırılmadı
   (dürüstçe belirtilmişti).
 * **İşlem:** `k6` CLI'yi kur, mevcut `scripts/performance/load-test.k6.js`
@@ -135,7 +135,7 @@ bırakıldı. Bu faz önce onu kapatır.
 * **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — hangi ortama karşı
   çalıştırılacağı netleşmeden başlatma.)*
 
-### [ ] Kademe 67: Stryker Kurulumu ve İlk Mutation Score Ölçümü
+### [x] Kademe 67: Stryker Kurulumu ve İlk Mutation Score Ölçümü
 * **Açıklama:** Faz 3'te Stryker hiç kurulu değildi.
 * **İşlem:** `@stryker-mutator/core` ve ilgili test-runner plugin'ini
   (vitest için `@stryker-mutator/vitest-runner`) kur, `stryker.config.json`
@@ -150,7 +150,7 @@ bırakıldı. Bu faz önce onu kapatır.
     zorunlu değil, bu kademe için tespit yeterli).
 * **Durum:** Beklemede.
 
-### [ ] Kademe 68: Faz 4 Kapanışı — Tam Regresyon + Kanıt Paketi
+### [x] Kademe 68: Faz 4 Kapanışı — Tam Regresyon + Kanıt Paketi
 * **Açıklama:** Faz 4'teki tüm değişikliklerin son kontrolü.
 * **İşlem:** Sırayla çalıştır: `npm install`, `npm run typecheck`,
   `npm run lint`, `npm run test`, `npm run build`,
