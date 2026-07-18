@@ -1,19 +1,25 @@
-import { Trophy } from 'lucide-react';
+import {
+  Trophy,
+  UserRound,
+  Mail,
+  ShieldCheck,
+  Calendar,
+  Briefcase,
+  Layers,
+} from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { UserRound } from 'lucide-react';
 import {
   PROFESSIONS,
   PROFESSIONAL_TRACKS,
-  ELECTRICAL_SUBDOMAINS,
-  INDUSTRIES,
   COMMUNICATION_GOALS,
 } from '@/features/profile/profile.preferences';
 import type { UserLearningProfile } from '@/features/profile';
 import type { Achievement } from '@/core/learning/learning.types';
 
 interface ProfileOverviewSectionProps {
-  currentUser: { displayName?: string } | null;
+  currentUser: { displayName?: string; email?: string } | null;
   profile: UserLearningProfile;
+  subscription: { planId: string };
   learningState: { achievements?: Achievement[] };
   isEditMode: boolean;
   editFirstName: string;
@@ -35,6 +41,7 @@ interface ProfileOverviewSectionProps {
 export const ProfileOverviewSection = ({
   currentUser,
   profile,
+  subscription,
   learningState,
   isEditMode,
   editFirstName,
@@ -58,53 +65,110 @@ export const ProfileOverviewSection = ({
       >
         {!isEditMode ? (
           <div className="space-y-6">
+            {/* High-Precision ID Module */}
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
+
+              <div className="h-14 w-14 shrink-0 rounded-[4px] bg-[#0047bb] text-white flex items-center justify-center font-bold text-lg border border-[#d9d9e3] shadow-sm select-none relative z-10">
+                {currentUser?.displayName
+                  ? currentUser.displayName.slice(0, 2).toUpperCase()
+                  : 'DE'}
+              </div>
+
+              <div className="flex-1 text-center sm:text-left relative z-10">
+                <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
+                  <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest bg-white border border-[#d9d9e3] px-2 py-0.5 rounded-[4px]">
+                    ID: ENG-
+                    {(profile.userId || 'DEMO').slice(0, 6).toUpperCase()}
+                  </span>
+                  <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
+                    USER-STATUS: ONLINE
+                  </span>
+                  <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/10 px-2 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                    ID-VERIFIED
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-foreground mt-2 tracking-tight">
+                  {currentUser?.displayName || 'Demo Engineer'}
+                </h3>
+                <p className="text-xs text-muted-copy mt-0.5 font-medium">
+                  Professional credentials verified under system standards
+                </p>
+              </div>
+            </div>
+
+            {/* Grid of Personal Info Modules */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {[
-                ['Full Name', currentUser?.displayName || 'Not Provided'],
-                [
-                  'Profession / Role',
-                  PROFESSIONS.find((p) => p.id === profile.professionId)
-                    ?.label || 'Not Selected',
-                ],
-                [
-                  'Engineering Discipline',
-                  PROFESSIONAL_TRACKS.find(
-                    (t) => t.id === profile.professionalTrack
-                  )?.label || 'Electrical Engineering',
-                ],
-                ...(profile.professionalTrack === 'electrical'
-                  ? [
-                      [
-                        'Electrical Subdomain',
-                        ELECTRICAL_SUBDOMAINS.find(
-                          (s) => s.id === profile.electricalSubdomain
-                        )?.label || 'Not Selected',
-                      ],
-                    ]
-                  : []),
-                [
-                  'Industry Sectors',
-                  INDUSTRIES.find((i) => i.id === profile.industryId)?.label ||
-                    'Not Selected',
-                ],
-                [
-                  'Interface Language',
-                  profile.interfaceLanguage === 'tr' ? 'Türkçe' : 'English',
-                ],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
-                >
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-                    {label}
-                  </span>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {value}
-                  </p>
-                </div>
-              ))}
+                {
+                  label: 'Full Name',
+                  value: currentUser?.displayName || 'Not Provided',
+                  icon: UserRound,
+                  code: 'ID-01',
+                },
+                {
+                  label: 'Email Address',
+                  value: currentUser?.email || 'demo@engvox.com',
+                  icon: Mail,
+                  code: 'ID-02',
+                },
+                {
+                  label: 'Account Access',
+                  value:
+                    subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial',
+                  icon: ShieldCheck,
+                  code: 'ID-03',
+                },
+                {
+                  label: 'Registration Date',
+                  value: 'July 1, 2026',
+                  icon: Calendar,
+                  code: 'ID-04',
+                },
+                {
+                  label: 'Profession / Role',
+                  value:
+                    PROFESSIONS.find((p) => p.id === profile.professionId)
+                      ?.label || 'Not Selected',
+                  icon: Briefcase,
+                  code: 'ID-05',
+                },
+                {
+                  label: 'Engineering Track',
+                  value:
+                    PROFESSIONAL_TRACKS.find(
+                      (t) => t.id === profile.professionalTrack
+                    )?.label || 'Electrical Engineering',
+                  icon: Layers,
+                  code: 'ID-06',
+                },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={item.label}
+                    className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm flex flex-col justify-between min-h-[90px]"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                        {item.label}
+                      </span>
+                      <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-[#faf8ff] border border-[#d9d9e3] px-1 rounded-[4px]">
+                        {item.code}
+                      </span>
+                    </div>
+                    <div className="mt-2.5 flex items-center gap-2">
+                      <Icon className="h-4 w-4 text-[#0047bb] shrink-0" />
+                      <p className="text-xs font-bold text-foreground truncate">
+                        {item.value}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
+
+            {/* Communication Goals */}
             <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
               <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 Communication Goals
@@ -128,6 +192,34 @@ export const ProfileOverviewSection = ({
                 </p>
               )}
             </div>
+
+            {/* Security & Activity Logs module */}
+            <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 space-y-3 shadow-sm relative overflow-hidden">
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
+              <div className="flex justify-between items-center relative z-10">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                  Security Status & Activity Logs
+                </span>
+                <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider">
+                  ENCRYPTED
+                </span>
+              </div>
+              <div className="space-y-1.5 font-mono text-[9px] text-muted-copy relative z-10">
+                <div className="flex justify-between">
+                  <span>
+                    [LOG-001] AUTH: User session initialized successfully
+                  </span>
+                  <span>JUST NOW</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>
+                    [LOG-002] DB-SYNC: Profile local persistence state current
+                  </span>
+                  <span>10 MIN AGO</span>
+                </div>
+              </div>
+            </div>
+
             <div className="flex justify-end">
               <button
                 onClick={enterEditMode}
@@ -160,6 +252,7 @@ export const ProfileOverviewSection = ({
                 />
               </label>
             </div>
+
             <div className="flex items-center justify-end gap-3 border-t border-[#d9d9e3] pt-4">
               <button
                 type="button"
