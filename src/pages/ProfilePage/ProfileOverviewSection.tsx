@@ -49,7 +49,7 @@ export const ProfileOverviewSection = ({
   return (
     <section
       id="overview"
-      className="animate-in fade-in duration-200 max-h-[calc(100vh-12rem)] overflow-y-auto"
+      className="animate-in fade-in duration-200 space-y-6"
     >
       <SectionCard
         title="Profile Overview"
