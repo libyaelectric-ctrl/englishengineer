@@ -22,14 +22,14 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
     key: 'gamification-leaderboard',
     enabled: false,
     description: 'Team leaderboard for gamification',
-    allowedPlans: ['pro', 'project', 'max', 'exec', 'private', 'team'],
+    allowedPlans: ['pro', 'project', 'exec', 'private', 'team'],
   },
   'advanced-analytics': {
     key: 'advanced-analytics',
     enabled: false,
     description: 'Advanced analytics dashboard',
     rolloutPercentage: 50,
-    allowedPlans: ['max', 'exec', 'private', 'team'],
+    allowedPlans: ['exec', 'private', 'team'],
   },
   'voice-practice-v2': {
     key: 'voice-practice-v2',

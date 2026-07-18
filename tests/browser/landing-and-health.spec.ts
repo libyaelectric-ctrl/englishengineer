@@ -37,7 +37,7 @@ test.describe('Landing page & public routes', () => {
     await expect(page.getByText('Free').first()).toBeVisible();
     await expect(page.getByText('Pro').first()).toBeVisible();
     await expect(page.getByText('Project').first()).toBeVisible();
-    await expect(page.getByText('Max').first()).toBeVisible();
+    await expect(page.getByText('Exec').first()).toBeVisible();
   });
 
   test('login page loads with social login buttons', async ({ page }) => {
