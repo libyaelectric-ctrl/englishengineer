@@ -12,10 +12,10 @@ const FILTERS: Array<{ value: ContentLevelFilter; label: string }> = [
 ];
 
 const accessStyles: Record<ContentAccessLabel, string> = {
-  Current: 'border-primary/20 bg-primary/5 text-primary',
+  Current: 'border-[#0047bb]/20 bg-[#0047bb]/5 text-[#0047bb]',
   Review: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   Preview: 'border-amber-200 bg-amber-50 text-amber-700',
-  Locked: 'border-border-soft bg-surface-hover text-muted-copy',
+  Locked: 'border-[#d9d9e3] bg-[#faf8ff] text-muted-copy',
 };
 
 interface LevelContentFilterProps {
@@ -29,15 +29,15 @@ export const LevelContentFilter = ({
   currentLevel,
   onChange,
 }: LevelContentFilterProps) => (
-  <div className="space-y-2">
-    <div className="rounded-xl border border-border-soft bg-surface p-3 shadow-sm">
+  <div className="space-y-2 font-sans">
+    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <p className="text-xs font-bold uppercase text-muted-copy">
-            Content level
+          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+            Content level configuration
           </p>
-          <p className="mt-1 text-sm font-semibold text-foreground">
-            Current skill level: {currentLevel}
+          <p className="mt-1 text-xs font-bold text-foreground">
+            Current CEFR level: {currentLevel}
           </p>
         </div>
         <div
@@ -50,10 +50,10 @@ export const LevelContentFilter = ({
               type="button"
               onClick={() => onChange(filter.value)}
               aria-pressed={value === filter.value}
-              className={`min-h-10 rounded-[10px] border px-3 py-2 text-xs font-semibold transition-colors ${
+              className={`min-h-9 rounded-[4px] border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-sm ${
                 value === filter.value
-                  ? 'border-sky-300 bg-primary/5 text-primary'
-                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5/60'
+                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
+                  : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]/30'
               }`}
             >
               {filter.label}
@@ -63,7 +63,7 @@ export const LevelContentFilter = ({
       </div>
     </div>
     {value === 'all-levels' && (
-      <p className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+      <p className="rounded-[4px] border border-amber-200 bg-amber-50 p-3.5 text-xs font-medium text-amber-800 leading-relaxed">
         You are viewing all levels. This may include advanced content above your
         current level.
       </p>
@@ -72,14 +72,14 @@ export const LevelContentFilter = ({
 );
 
 export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
-  <span className="inline-flex flex-wrap items-center gap-1">
+  <span className="inline-flex flex-wrap items-center gap-1.5 font-sans">
     <span
-      className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${accessStyles[label]}`}
+      className={`rounded-[4px] border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${accessStyles[label]}`}
     >
       {label}
     </span>
     {label === 'Locked' && (
-      <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-700">
+      <span className="rounded-[4px] border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
         Advanced Preview
       </span>
     )}
@@ -87,11 +87,11 @@ export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
 );
 
 export const EmptyLevelState = ({ skill }: { skill: string }) => (
-  <div className="rounded-xl border border-border-soft bg-surface-hover p-6 text-sm text-foreground">
-    <p className="font-semibold text-foreground">
+  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-6 text-xs text-foreground font-sans">
+    <p className="font-bold text-foreground uppercase tracking-wider">
       No current-level content yet
     </p>
-    <p className="mt-1">
+    <p className="mt-2 leading-relaxed text-muted-copy font-medium">
       No {skill} content is available for this filter. Choose Review Previous,
       Preview Next, or All Levels intentionally.
     </p>
