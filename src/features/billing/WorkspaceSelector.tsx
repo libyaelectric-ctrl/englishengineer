@@ -14,8 +14,7 @@ const PLAN_WORKSPACE_LIMIT: Record<BillingPlanId, number | null> = {
   free: 1,
   pro: 1,
   project: 3,
-  max: null,
-  exec: null,
+  exec: 3,
   private: null,
 };
 

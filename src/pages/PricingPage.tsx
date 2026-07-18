@@ -19,7 +19,7 @@ const isPlanUnavailable = (plan: CommercialPlanPreview) =>
   plan.id === 'exec' || plan.id === 'private';
 
 const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
-  ['free', 'pro', 'project', 'max', 'exec', 'private'].includes(plan.id)
+  ['free', 'pro', 'project', 'exec', 'private'].includes(plan.id)
 );
 
 const getAccessBadge = (id: string): string => {
@@ -30,10 +30,8 @@ const getAccessBadge = (id: string): string => {
       return 'ACCESS-LVL-01';
     case 'project':
       return 'ACCESS-LVL-02';
-    case 'max':
-      return 'ACCESS-LVL-03';
     case 'exec':
-      return 'ACCESS-LVL-04';
+      return 'ACCESS-LVL-03';
     case 'private':
       return 'SECURE-PRIVATE';
     default:
@@ -351,7 +349,7 @@ const PricingPage = () => {
                     Feature
                   </th>
                   {ACTIVE_PLANS.filter((p) =>
-                    ['free', 'pro', 'project', 'max'].includes(p.id)
+                    ['free', 'pro', 'project', 'exec'].includes(p.id)
                   ).map((p) => (
                     <th
                       key={p.id}
@@ -374,7 +372,7 @@ const PricingPage = () => {
                       {key === 'ai' ? 'AI Coach' : key}
                     </td>
                     {ACTIVE_PLANS.filter((p) =>
-                      ['free', 'pro', 'project', 'max'].includes(p.id)
+                      ['free', 'pro', 'project', 'exec'].includes(p.id)
                     ).map((p) => (
                       <td
                         key={p.id}

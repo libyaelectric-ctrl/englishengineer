@@ -50,14 +50,15 @@ describe('billing entitlements', () => {
   });
 
   it('enforces free AI Coach daily limit', () => {
-    expect(canUseAICoach(createFreeSubscription(), 3)).toMatchObject({
+    expect(canUseAICoach(createFreeSubscription(), 1)).toMatchObject({
       allowed: false,
       requiredPlan: 'pro',
     });
   });
 
-  it('allows Pro unlimited AI Coach usage', () => {
-    expect(canUseAICoach(proSubscription, 50).allowed).toBe(true);
+  it('enforces Pro AI Coach daily limit', () => {
+    expect(canUseAICoach(proSubscription, 5).allowed).toBe(true);
+    expect(canUseAICoach(proSubscription, 10).allowed).toBe(false);
   });
 
   it('blocks mission creation for free users', () => {
@@ -67,9 +68,9 @@ describe('billing entitlements', () => {
   it('formats plan limits for display', () => {
     expect(
       getPlanLimitLabel(createFreeSubscription(), 'dailyAICoachRequests')
-    ).toBe('3');
+    ).toBe('1');
     expect(getPlanLimitLabel(proSubscription, 'dailyAICoachRequests')).toBe(
-      'Unlimited'
+      '10'
     );
   });
 

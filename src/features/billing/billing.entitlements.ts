@@ -19,10 +19,10 @@ const PREMIUM_FEATURES: Partial<Record<BillingFeature, BillingPlanId>> = {
   customScenarioGeneration: 'project',
   linkedinOptimization: 'project',
   persistentAIAgent: 'project',
-  realVoiceSpeaking: 'max',
-  pronunciationAnalysis: 'max',
-  voiceMeetingSimulator: 'max',
-  voiceMinuteWallet: 'max',
+  realVoiceSpeaking: 'exec',
+  pronunciationAnalysis: 'exec',
+  voiceMeetingSimulator: 'exec',
+  voiceMinuteWallet: 'exec',
 };
 
 export const isSubscriptionActive = (
@@ -132,7 +132,6 @@ const PLAN_HIERARCHY: BillingPlanId[] = [
   'free',
   'pro',
   'project',
-  'max',
   'exec',
   'private',
 ];
@@ -165,7 +164,7 @@ const LIMIT_FIELDS = [
 
 const getTargetWorkspaceLimit = (targetPlanId: BillingPlanId): number => {
   if (targetPlanId === 'free' || targetPlanId === 'pro') return 1;
-  if (targetPlanId === 'project') return 3;
+  if (targetPlanId === 'project' || targetPlanId === 'exec') return 3;
   return Infinity;
 };
 

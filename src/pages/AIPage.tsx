@@ -27,7 +27,6 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
       )}
 
       {(subscription.planId === 'project' ||
-        subscription.planId === 'max' ||
         subscription.planId === 'exec' ||
         subscription.planId === 'private') && (
         <WorkspacePanel
