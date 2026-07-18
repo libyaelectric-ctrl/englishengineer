@@ -29,13 +29,13 @@ test.describe('Stripe billing integration', () => {
     await expect(page.getByText('Free').first()).toBeVisible();
 
     // Pro plan
-    await expect(page.getByText('$19').first()).toBeVisible();
+    await expect(page.getByText('$29').first()).toBeVisible();
 
     // Project plan
-    await expect(page.getByText('$39').first()).toBeVisible();
-
-    // Max plan
     await expect(page.getByText('$59').first()).toBeVisible();
+
+    // Exec plan
+    await expect(page.getByText('$99').first()).toBeVisible();
   });
 
   test('checkout flow initiates for Pro plan', async ({ page }) => {

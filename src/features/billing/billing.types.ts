@@ -1,10 +1,4 @@
-export type BillingPlanId =
-  | 'free'
-  | 'pro'
-  | 'project'
-  | 'max'
-  | 'exec'
-  | 'private';
+export type BillingPlanId = 'free' | 'pro' | 'project' | 'exec' | 'private';
 
 export type SubscriptionStatus =
   | 'none'

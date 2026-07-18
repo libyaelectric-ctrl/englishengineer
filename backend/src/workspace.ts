@@ -29,8 +29,8 @@ const getWorkspaceLimit = (planId: string): number => {
     case 'pro':
       return 1;
     case 'project':
-      return 3;
     case 'exec':
+      return 3;
     case 'private':
       return Infinity;
     default:

@@ -1,10 +1,4 @@
-export type CommercialPlanId =
-  | 'free'
-  | 'pro'
-  | 'project'
-  | 'max'
-  | 'exec'
-  | 'private';
+export type CommercialPlanId = 'free' | 'pro' | 'project' | 'exec' | 'private';
 
 export interface CommercialPlanPreview {
   id: CommercialPlanId;
@@ -47,10 +41,10 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     notIncluded: 'No full AI allowance or team controls',
     comparison: {
       learning: 'Core modules, controlled access',
-      ai: '3 requests/day',
+      ai: '1 request/day',
       analytics: 'Basic progress',
       team: 'Not included',
-      limits: '5 module attempts and 25 vocabulary reviews/day',
+      limits: '1 attempt and 5 reviews/day',
     },
     ads: 'controlled-sponsor-ready',
     status: 'available-local',
@@ -60,7 +54,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'pro',
     name: 'Pro',
-    price: '$19',
+    price: '$29',
     cadence: 'per month',
     audience: 'For serious professional engineering communication practice.',
     bestFor: 'Career-focused engineers',
@@ -75,10 +69,10 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     notIncluded: 'No project workspaces or persistent memory',
     comparison: {
       learning: 'All individual learning modules',
-      ai: 'Unlimited coach sessions',
+      ai: '10 requests/day',
       analytics: '12-month progress history',
       team: 'Not included',
-      limits: 'Unlimited daily attempts and reviews, 2 doc uploads/month',
+      limits: '10 attempts and 10 reviews/day, 2 doc uploads/month',
     },
     ads: 'none',
     status: 'available-local',
@@ -88,7 +82,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
   {
     id: 'project',
     name: 'Project',
-    price: '$39',
+    price: '$59',
     cadence: 'per month',
     audience: 'For engineers managing complex technical project scopes.',
     bestFor: 'Project leaders & designers',
@@ -116,36 +110,6 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     actionHref: '/checkout?plan=project',
   },
   {
-    id: 'max',
-    name: 'Max',
-    price: '$59',
-    cadence: 'per month',
-    audience:
-      'For engineers needing voice meetings, speech simulation, and unlimited workspaces.',
-    bestFor: 'International meeting presenters & leads',
-    priceReason:
-      'Unlocks real voice speaking, pronunciation analysis, voice simulator, and unlimited uploads.',
-    benefits: [
-      'Unlimited Project Workspaces & uploads',
-      'Real Voice Speaking (mobile mic supported)',
-      'Speech Pronunciation Analysis',
-      'Voice Meeting Simulator',
-      'Voice minute wallet integration',
-    ],
-    notIncluded: 'No dedicated executive mentoring',
-    comparison: {
-      learning: 'All voice and listening modules',
-      ai: 'Speech and audio AI evaluations + custom helper',
-      analytics: 'Voice metrics and flow analytics',
-      team: 'Unlimited workspaces',
-      limits: 'Unlimited uploads, custom voice minutes',
-    },
-    ads: 'none',
-    status: 'available-local',
-    actionLabel: 'Upgrade to Max',
-    actionHref: '/checkout?plan=max',
-  },
-  {
     id: 'exec',
     name: 'Exec',
     price: '$99',
@@ -153,20 +117,22 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     audience:
       'For executives, business development leads and engineering directors.',
     bestFor: 'Directors & executive leads',
-    priceReason: 'Includes dedicated executive mentoring and VIP priorities.',
+    priceReason:
+      'Includes voice meetings, speech simulation and VIP priority coaching.',
     benefits: [
+      'Real Voice Speaking & Pronunciation Analysis',
+      'Voice Meeting Simulator & Minute Wallet',
       'Dedicated executive coaching sessions',
       'VIP priority queue slots',
-      'Offline audio downloads',
-      'All Max tier features included',
+      'All Project tier features included',
     ],
     notIncluded: 'No private dedicated AI proxy server',
     comparison: {
-      learning: 'Executive training and meetings',
-      ai: 'VIP prioritized response times',
-      analytics: 'Executive dashboard reports',
-      team: 'Unlimited workspaces',
-      limits: 'Unlimited uploads, unlimited voice minutes',
+      learning: 'Executive training, voice and meetings',
+      ai: 'VIP prioritized + Speech AI evaluations',
+      analytics: 'Voice metrics and executive dashboard',
+      team: '3 workspaces',
+      limits: 'Unlimited uploads, 300 voice minutes/month',
     },
     ads: 'none',
     status: 'available-local',

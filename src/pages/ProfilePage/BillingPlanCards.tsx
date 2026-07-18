@@ -107,28 +107,28 @@ const VoiceMinutesCard = ({
         🎙️ Monthly Voice Minutes
       </span>
       <span className="font-bold text-foreground">
-        {planId === 'max' ? `${voiceMinutesUsed} / 120 min` : 'Unlimited'}
+        {planId === 'exec' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}
       </span>
     </div>
     <ProgressBar
       value={
-        planId === 'max' ? Math.min(100, (voiceMinutesUsed / 120) * 100) : 100
+        planId === 'exec' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100
       }
       color={
-        planId !== 'max'
+        planId !== 'exec'
           ? 'cyan'
-          : voiceMinutesUsed >= 108
+          : voiceMinutesUsed >= 270
             ? 'rose'
-            : voiceMinutesUsed >= 84
+            : voiceMinutesUsed >= 210
               ? 'amber'
               : 'cyan'
       }
     />
     <p className="text-[10px] text-muted-copy">
-      {planId === 'max'
-        ? voiceMinutesUsed >= 120
-          ? '⚠️ Monthly voice minute quota reached. Upgrade to Exec for unlimited minutes.'
-          : `✓ ${120 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
+      {planId === 'exec'
+        ? voiceMinutesUsed >= 300
+          ? '⚠️ Monthly voice minute quota reached. Upgrade to Private for unlimited minutes.'
+          : `✓ ${300 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
         : '✓ Unlimited voice minutes included in your plan.'}
     </p>
   </div>
@@ -145,9 +145,7 @@ export const BillingPlanCards = ({
   const isPro = subscription.planId === 'pro';
   const isFree = subscription.planId === 'free';
   const isMaxTier =
-    subscription.planId === 'max' ||
-    subscription.planId === 'exec' ||
-    subscription.planId === 'private';
+    subscription.planId === 'exec' || subscription.planId === 'private';
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
