@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/react';
 import { logger } from '@/shared/logger';
 import {
   type EngVoxEnv,
@@ -40,18 +39,21 @@ const getHealthStatus = (
 };
 
 let sentryInitialized = false;
+let sentryModule: typeof import('@sentry/react') | null = null;
 
-const initSentry = () => {
+const initSentry = async () => {
   if (sentryInitialized) return;
   const dsn = env?.VITE_SENTRY_DSN;
   if (!dsn) return;
 
-  Sentry.init({
+  sentryModule = await import('@sentry/react');
+
+  sentryModule.init({
     dsn,
     environment: env?.VITE_ENVIRONMENT_MODE || 'development',
     tracesSampleRate:
       normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE) || 0.1,
-    integrations: [Sentry.browserTracingIntegration()],
+    integrations: [sentryModule.browserTracingIntegration()],
     enabled: Boolean(dsn),
   });
 
@@ -109,8 +111,8 @@ export const ObservabilityService = {
 
   /** Report error to Sentry (if configured) and log locally. */
   logError(error: ErrorReport): void {
-    if (sentryInitialized) {
-      Sentry.captureException(new Error(error.message), {
+    if (sentryInitialized && sentryModule) {
+      sentryModule.captureException(new Error(error.message), {
         tags: { code: error.code },
         extra: error.context,
       });
@@ -129,8 +131,8 @@ export const ObservabilityService = {
     success: boolean;
     context?: Record<string, unknown>;
   }): void {
-    if (sentryInitialized) {
-      Sentry.captureMessage(
+    if (sentryInitialized && sentryModule) {
+      sentryModule.captureMessage(
         `Performance: ${metric.name} ${metric.durationMs}ms ${metric.success ? 'OK' : 'FAILED'}`,
         metric.success ? 'info' : 'warning'
       );

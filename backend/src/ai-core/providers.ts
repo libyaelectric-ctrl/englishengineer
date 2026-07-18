@@ -57,13 +57,10 @@ export const callOpenAI = async (
       signal,
     }
   );
-  return handleProviderResponse(
-    response,
-    (p) => {
-      const r = p as { choices?: { message?: { content?: string } }[] };
-      return r?.choices?.[0]?.message?.content;
-    }
-  );
+  return handleProviderResponse(response, (p) => {
+    const r = p as { choices?: { message?: { content?: string } }[] };
+    return r?.choices?.[0]?.message?.content;
+  });
 };
 
 export const callAnthropic = async (
@@ -86,13 +83,10 @@ export const callAnthropic = async (
     }),
     signal,
   });
-  return handleProviderResponse(
-    response,
-    (p) => {
-      const r = p as { content?: { type?: string; text?: string }[] };
-      return r?.content?.find((item) => item?.type === 'text')?.text;
-    }
-  );
+  return handleProviderResponse(response, (p) => {
+    const r = p as { content?: { type?: string; text?: string }[] };
+    return r?.content?.find((item) => item?.type === 'text')?.text;
+  });
 };
 
 export const callGemini = async (
@@ -121,11 +115,10 @@ export const callGemini = async (
       signal,
     }
   );
-  return handleProviderResponse(
-    response,
-    (p) => {
-      const r = p as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-      return r?.candidates?.[0]?.content?.parts?.[0]?.text;
-    }
-  );
+  return handleProviderResponse(response, (p) => {
+    const r = p as {
+      candidates?: { content?: { parts?: { text?: string }[] } }[];
+    };
+    return r?.candidates?.[0]?.content?.parts?.[0]?.text;
+  });
 };

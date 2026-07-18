@@ -20,9 +20,7 @@ export const createWorkspaceRepository = (
   config: { workspace?: WorkspaceConfig },
   _fetchImpl: typeof fetch = fetch
 ): WorkspaceRepository => {
-  return createSupabaseWorkspaceRepository(
-    config.workspace as WorkspaceConfig
-  );
+  return createSupabaseWorkspaceRepository(config.workspace as WorkspaceConfig);
 };
 
 const getWorkspaceLimit = (planId: string): number => {
@@ -119,7 +117,10 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { name, planId } = req.validatedBody as { name?: string; planId?: string };
+        const { name, planId } = req.validatedBody as {
+          name?: string;
+          planId?: string;
+        };
 
         const existingCount = await repository.countWorkspaces(userId);
         const limit = getWorkspaceLimit(planId || 'free');
@@ -131,7 +132,8 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const workspaceName = (name as string) || `Workspace ${existingCount + 1}`;
+        const workspaceName =
+          (name as string) || `Workspace ${existingCount + 1}`;
         const data = await repository.createWorkspace(
           userId,
           workspaceName,
@@ -159,7 +161,10 @@ export const registerWorkspaceRoutes = (
             'User ID is required.'
           );
         }
-        const { key, value } = req.validatedBody as { key?: string; value?: unknown };
+        const { key, value } = req.validatedBody as {
+          key?: string;
+          value?: unknown;
+        };
         if (!key) {
           throw new ApiError(400, 'invalid_request', 'Memory key is required.');
         }
@@ -176,7 +181,10 @@ export const registerWorkspaceRoutes = (
           );
         }
 
-        const updatedMemory = { ...(existing.memory || {}), [key as string]: value };
+        const updatedMemory = {
+          ...(existing.memory || {}),
+          [key as string]: value,
+        };
         const data = await repository.updateWorkspaceMemory(
           req.params.id as string,
           userId,

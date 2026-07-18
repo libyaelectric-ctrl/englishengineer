@@ -296,14 +296,24 @@ const registerRoutes = (
 
   registerAIRoutes(
     app,
-    createAIService(config.ai, fetchImpl) as unknown as { complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>> },
+    createAIService(config.ai, fetchImpl) as unknown as {
+      complete: (
+        op: string,
+        body: Record<string, unknown>
+      ) => Promise<Record<string, unknown>>;
+    },
     requireBackendAuth,
     aiRateLimiter,
-    billingRepository ?? createSubscriptionRepository({
-      ...config.stripe,
-      supabaseUrl: config.stripe.supabaseUrl ?? undefined,
-      supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
-    }, fetchImpl),
+    billingRepository ??
+      createSubscriptionRepository(
+        {
+          ...config.stripe,
+          supabaseUrl: config.stripe.supabaseUrl ?? undefined,
+          supabaseServiceRoleKey:
+            config.stripe.supabaseServiceRoleKey ?? undefined,
+        },
+        fetchImpl
+      ),
     config as unknown as Record<string, unknown>,
     fetchImpl
   );
@@ -334,11 +344,15 @@ const registerRoutes = (
       stripeClient: stripeClient as unknown as Stripe,
       repository:
         billingRepository ??
-        createSubscriptionRepository({
-          ...config.stripe,
-          supabaseUrl: config.stripe.supabaseUrl ?? undefined,
-          supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
-        }, fetchImpl),
+        createSubscriptionRepository(
+          {
+            ...config.stripe,
+            supabaseUrl: config.stripe.supabaseUrl ?? undefined,
+            supabaseServiceRoleKey:
+              config.stripe.supabaseServiceRoleKey ?? undefined,
+          },
+          fetchImpl
+        ),
     }),
     requireBackendAuth,
     billingRateLimiter,
@@ -350,7 +364,7 @@ const registerRoutes = (
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
       resolvedWorkspaceRepository = createWorkspaceRepository(
-    config as unknown as Record<string, unknown>,
+        config as unknown as Record<string, unknown>
       );
     } catch (err: unknown) {
       logger.warn('Failed to create workspace repository', {
@@ -474,7 +488,9 @@ export const createApp = ({
         Sentry.captureException(
           error instanceof Error ? error : new Error(String(error))
         );
-      const mapped = toErrorResponse(error instanceof Error ? error : new Error(String(error)));
+      const mapped = toErrorResponse(
+        error instanceof Error ? error : new Error(String(error))
+      );
       if (request.i18n && mapped.body?.error?.code) {
         const translated = request.i18n.t(mapped.body.error.code);
         if (translated !== mapped.body.error.code)
