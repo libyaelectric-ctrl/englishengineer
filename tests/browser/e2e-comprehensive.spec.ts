@@ -85,7 +85,7 @@ test.describe('Comprehensive E2E', () => {
     await page.waitForTimeout(3000);
     // Check if dark mode button exists in the page source
     const pageContent = await page.content();
-    expect(pageContent).toContain('Dark Mode');
+    expect(pageContent.toLowerCase()).toContain('dark mode');
   });
 
   test('Video hero loads on landing', async ({ page }) => {

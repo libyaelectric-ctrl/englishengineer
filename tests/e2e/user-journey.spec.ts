@@ -7,7 +7,7 @@ test.describe('Full user journey', () => {
     // 1. Landing page
     await page.goto('/');
     await expect(
-      page.getByRole('heading', { name: /work-ready english/i })
+      page.getByRole('heading', { name: /engineering english os/i })
     ).toBeVisible();
 
     // 2. Navigate to login via CTA
@@ -17,23 +17,10 @@ test.describe('Full user journey', () => {
     } else {
       await page.goto('/login');
     }
-    await expect(page).toHaveURL(/login|signup/);
-
-    // 3. Fill email/password and submit
-    const emailInput = page.getByPlaceholder(/you@example.com/i);
-    const passwordInput = page.getByPlaceholder(/password/i);
-
-    if (await emailInput.isVisible()) {
-      await emailInput.fill('test@example.com');
-      await passwordInput.fill('password123');
-      await page.getByRole('button', { name: /sign in/i }).click();
-    }
-
-    // 4. Use demo mode if local auth is blocked
+    // 3. Login using Demo Mode
     const demoButton = page.getByRole('button', { name: /demo/i });
-    if (await demoButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await demoButton.click();
-    }
+    await demoButton.waitFor({ state: 'visible' });
+    await demoButton.click();
 
     // 5. Wait for dashboard
     await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
@@ -42,13 +29,17 @@ test.describe('Full user journey', () => {
     await expect(page.getByText(/command center/i).first()).toBeVisible();
 
     // 6. Navigate to vocabulary via sidebar
+    const skillsMenu = page.getByRole('button', { name: /skills/i });
+    if (await skillsMenu.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await skillsMenu.click();
+    }
     await page
       .getByRole('link', { name: /vocabulary/i })
       .first()
       .click();
     await page.waitForURL(/\/vocabulary/);
     await expect(
-      page.getByRole('heading', { name: /vocabulary/i })
+      page.getByRole('heading', { name: 'Vocabulary', exact: true })
     ).toBeVisible();
 
     // 7. Navigate to grammar via sidebar

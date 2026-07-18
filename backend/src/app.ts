@@ -237,7 +237,11 @@ const registerRoutes = (
     if (config.supabase?.configured)
       await checkSupabaseHealth(config, checks, health);
     await checkUpstashHealth(config, checks, health);
-    response.json({ ...health, checks });
+    response.json({
+      ...health,
+      checks,
+      stripeConfigured: (checks.stripe as { configured?: boolean })?.configured ?? false,
+    });
   };
 
   v1Router.get('/health', healthHandler);
