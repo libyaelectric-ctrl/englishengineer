@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { StatusBadge } from '@/shared/components/StatusBadge';
 import {
   LearningMemorySummary,
   type UnifiedReviewItem,
