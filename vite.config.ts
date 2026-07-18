@@ -32,6 +32,7 @@ export default defineConfig(() => {
     build: {
       outDir: 'dist',
       sourcemap: 'hidden' as const,
+      chunkSizeWarningLimit: 250,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -41,7 +42,9 @@ export default defineConfig(() => {
             icons: ['lucide-react'],
             animation: ['motion'],
             state: ['zustand'],
-            error: ['react-error-boundary'],
+            query: ['@tanstack/react-query'],
+            sentry: ['@sentry/react'],
+            dompurify: ['isomorphic-dompurify'],
             vocabularyData: [
               './src/features/vocabulary/data/vocabulary.data.ts',
               './src/features/vocabulary/data/vocabulary.data.json',
