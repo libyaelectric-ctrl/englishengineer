@@ -13,8 +13,8 @@ import { READING_MISSIONS } from '@/features/reading';
 import { WRITING_MISSIONS } from '@/features/writing';
 import { LISTENING_MISSIONS } from '@/features/listening';
 import { SPEAKING_MISSIONS } from '@/features/speaking';
-import { loadVocabularyEntries } from '@/features/vocabulary';
-import { VocabularyEntry } from '@/features/vocabulary';
+import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
+import { VocabularyEntry } from '@/features/vocabulary/types/vocabulary.types';
 
 let vocabularyEntries: VocabularyEntry[] = [];
 

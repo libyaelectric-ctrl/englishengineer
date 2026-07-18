@@ -5,7 +5,7 @@ import './index.css';
 import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
-import { loadVocabularyEntries } from '@/features/vocabulary';
+import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
 import { ObservabilityService } from '@/core/observability/observability.service';
 
 // Initialize Sentry error monitoring
@@ -15,11 +15,7 @@ ObservabilityService.init();
 if (typeof window !== 'undefined') {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light');
-    document.documentElement.classList.add('light');
   }
 }
 
@@ -95,7 +91,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 );
 
 // Preload vocabulary data in background (non-blocking)
-loadVocabularyEntries().catch((err) => {
+loadVocabularyEntries().catch((err: unknown) => {
   logger.w('[preload] Vocabulary data preload failed:', err);
 });
 
