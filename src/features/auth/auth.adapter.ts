@@ -30,9 +30,6 @@ export interface AuthAdapter {
   resetPassword?: (email: string) => Promise<void>;
 }
 
-const SUPER_USER_EMAIL = 'catexozcan@gmail.com';
-const SUPER_USER_PASSWORD = '123456';
-
 const hashPassword = async (password: string): Promise<string> => {
   const encoder = new TextEncoder();
   const data = encoder.encode(password + 'engvox_salt_v1');
@@ -60,33 +57,6 @@ export class LocalAuthAdapter implements AuthAdapter {
   async getCurrentUser(): Promise<UserProfile | null> {
     if (!this.enabled) return null;
     return storage.globalGet<UserProfile>(STORAGE_KEY);
-  }
-
-  private trySuperUserLogin(
-    email: string,
-    password?: string
-  ): UserProfile | null {
-    if (
-      email.toLowerCase() !== SUPER_USER_EMAIL ||
-      password !== SUPER_USER_PASSWORD
-    ) {
-      return null;
-    }
-    const superUser: UserProfile = {
-      id: 'super_user_catexozcan',
-      displayName: 'Super Admin',
-      email: SUPER_USER_EMAIL,
-      role: 'Super Administrator',
-      engineeringDiscipline: 'All Disciplines',
-      targetLevel: 'Unlimited',
-      location: 'Global Access',
-      avatarInitials: 'SA',
-      isSuperUser: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    storage.globalSet(STORAGE_KEY, superUser);
-    return superUser;
   }
 
   private findExistingUser(
@@ -117,9 +87,6 @@ export class LocalAuthAdapter implements AuthAdapter {
     password?: string
   ): Promise<UserProfile> {
     this.assertEnabled();
-
-    const superUser = this.trySuperUserLogin(email, password);
-    if (superUser) return superUser;
 
     if (!password || password.length < 6) {
       throw new Error('Password must be at least 6 characters.');
