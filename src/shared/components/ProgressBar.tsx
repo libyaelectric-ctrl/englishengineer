@@ -21,7 +21,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
   value,
   max = 100,
   showValue = false,
-  animated = true,
+  animated: _animated = true,
   color = 'primary',
   className,
   ...props
