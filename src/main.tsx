@@ -15,7 +15,11 @@ ObservabilityService.init();
 if (typeof window !== 'undefined') {
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
     document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.classList.add('light');
   }
 }
 

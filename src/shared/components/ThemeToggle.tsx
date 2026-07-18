@@ -13,13 +13,18 @@ export const ThemeToggle = () => {
 
   useEffect(() => {
     const root = document.documentElement;
+    const theme = dark ? 'dark' : 'light';
+    // data-theme attribute ile dark mode
+    root.setAttribute('data-theme', theme);
+    // Fallback: class-based dark mode da desteklenir
     if (dark) {
       root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
+      root.classList.remove('light');
     } else {
+      root.classList.add('light');
       root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
     }
+    localStorage.setItem('theme', theme);
   }, [dark]);
 
   return (
