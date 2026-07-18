@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 2 * * 1' # Weekly on Monday at 2 AM
   workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target URL for load test'
+        required: false
+        default: 'https://englishengineer.vercel.app'
 
 jobs:
   load-test:
@@ -22,4 +27,4 @@ jobs:
       - name: Run load test
         run: k6 run scripts/performance/load-test.k6.js
         env:
-          API_BASE_URL: https://englishengineer.vercel.app
+          API_BASE_URL: ${{ github.event.inputs.target_url || 'https://englishengineer.vercel.app' }}
