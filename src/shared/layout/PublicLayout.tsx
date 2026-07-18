@@ -33,7 +33,7 @@ export const PublicLayout = () => {
               aria-label="EngVox home"
             >
               <img
-                src="/brand/logo.png"
+                src="/brand/logo.jpg"
                 alt="EngVox"
                 className="h-9 w-9 rounded-lg"
               />

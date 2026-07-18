@@ -12,7 +12,7 @@ export const TopNavBar = () => {
     <nav className="flex items-center justify-between border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl px-4 py-3 sm:px-6">
       <Link to="/" className="flex items-center gap-2.5">
         <img
-          src="/brand/logo.png"
+          src="/brand/logo.jpg"
           alt="EngVox"
           className="h-8 w-8 rounded-[4px] border border-[#d9d9e3]"
         />

@@ -80,7 +80,7 @@ export const Sidebar: React.FC = () => {
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-[#d9d9e3] px-4">
             <div className="flex items-center gap-2.5">
               <img
-                src="/brand/logo.png"
+                src="/brand/logo.jpg"
                 alt="EngVox"
                 className="h-9 w-9 rounded-[4px]"
               />
@@ -110,7 +110,7 @@ export const Sidebar: React.FC = () => {
             {/* Mascot */}
             <div className="mb-4 flex justify-center">
               <img
-                src="/brand/mascot.png"
+                src="/brand/mascot.jpg"
                 alt="EngVox Mascot"
                 className="h-28 w-auto"
               />
