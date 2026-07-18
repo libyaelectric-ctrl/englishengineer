@@ -108,7 +108,7 @@ export const SyncQueue = {
         processedIds.push(item.id);
         state.syncProgress = Math.round(((i + 1) / totalItems) * 100);
         notifyListeners();
-      } catch (error) {
+      } catch (_error) {
         item.retries++;
         if (item.retries >= item.maxRetries) {
           processedIds.push(item.id); // Remove after max retries
