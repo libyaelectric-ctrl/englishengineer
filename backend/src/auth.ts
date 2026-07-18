@@ -74,7 +74,10 @@ const readBearerToken = (request: Request): string | null => {
   return authorization.slice('Bearer '.length).trim() || null;
 };
 
-const secretsMatch = (left: string | null | undefined, right: string | null | undefined): boolean => {
+const secretsMatch = (
+  left: string | null | undefined,
+  right: string | null | undefined
+): boolean => {
   if (!left || !right) return false;
   const leftBuffer = Buffer.from(left);
   const rightBuffer = Buffer.from(right);
@@ -189,7 +192,10 @@ export const createBackendAuth = (
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
 
-    const internalUser = authenticateInternalSecret(token ?? undefined, request);
+    const internalUser = authenticateInternalSecret(
+      token ?? undefined,
+      request
+    );
     if (internalUser) return internalUser;
 
     if (config.supabaseJwtSecret && token) {

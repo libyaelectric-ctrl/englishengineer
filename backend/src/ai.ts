@@ -57,7 +57,12 @@ const checkRateLimits = async (
     countRecentRequests: (userId: string, planId: string) => Promise<number>;
   },
   billingRepository: SubscriptionRepository | null
-): Promise<{ count: number; useTopup: boolean; subscription: SubscriptionSnapshot | null; topupCredits: number }> => {
+): Promise<{
+  count: number;
+  useTopup: boolean;
+  subscription: SubscriptionSnapshot | null;
+  topupCredits: number;
+}> => {
   checkCostLimits(userId);
   const count = await ledger.countRecentRequests(userId, planId);
   if (!isLimitReached(planId, count))
@@ -181,14 +186,20 @@ export const registerAIRoutes = (
           }
 
           if (!bypass) {
-            logAiUsage(ledger, userId, {
-              error: result.error as boolean | undefined,
-              provider: result.provider as string | undefined,
-              durationMs: result.durationMs as number | undefined,
-              text: result.text as string | undefined,
-            }, {
-              modeId: body.modeId as string | undefined,
-            }, defaultOperation);
+            logAiUsage(
+              ledger,
+              userId,
+              {
+                error: result.error as boolean | undefined,
+                provider: result.provider as string | undefined,
+                durationMs: result.durationMs as number | undefined,
+                text: result.text as string | undefined,
+              },
+              {
+                modeId: body.modeId as string | undefined,
+              },
+              defaultOperation
+            );
           }
 
           response.json(result);
