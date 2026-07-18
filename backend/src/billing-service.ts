@@ -12,6 +12,18 @@ import {
 } from './billing-webhook-handlers.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
 
+const dispatchWebhookEvent = async (repository: BillingRepository, eventType: string, object: Record<string, unknown>) => {
+  if (eventType === 'checkout.session.completed') {
+    await handleCheckoutCompleted(repository, object);
+  } else if (eventType === 'customer.subscription.created' || eventType === 'customer.subscription.updated') {
+    await handleSubscriptionUpdated(repository, object);
+  } else if (eventType === 'invoice.payment_failed') {
+    await handlePaymentFailed(repository, object);
+  } else if (eventType === 'customer.subscription.deleted') {
+    await handleSubscriptionDeleted(repository, object);
+  }
+};
+
 interface PlanMeta {
   unitAmount: number;
   nickname: string;
@@ -61,7 +73,7 @@ const PLAN_PRICE_CONFIG: Record<string, string> = {
 };
 
 const resolveOrProvisionPriceId = async (
-  config: Record<string, any>,
+  config: Record<string, string | null>,
   stripeClient: Stripe,
   planId: string
 ): Promise<string> => {
@@ -162,7 +174,7 @@ const resolveOrProvisionTopupPriceId = async (
 interface BillingServiceConfig {
   configured: boolean;
   webhookSecret: string | null;
-  [key: string]: any;
+  [key: string]: string | boolean | null | undefined;
 }
 
 interface CheckoutSessionBody {
@@ -181,6 +193,32 @@ interface TopupCheckoutSessionBody {
   successUrl?: string;
   cancelUrl?: string;
 }
+
+const isValidUserId = (value: unknown): value is string =>
+  typeof value === 'string' && value.trim().length > 0 && !value.startsWith('demo_engineer_');
+
+const resolveSubscription = (sub: SubscriptionSnapshot | null, configured: boolean, hasStripe: boolean): SubscriptionSnapshot => {
+  if (!sub) return emptySubscription();
+  if (!configured || !hasStripe) return sub.planId !== 'free' && sub.status !== 'none' ? sub : emptySubscription();
+  return sub.stripeCustomerId ? sub : emptySubscription();
+};
+
+const verifyStripeSignature = (stripeClient: Stripe, rawBody: Buffer, signature: string | undefined, webhookSecret: string): Stripe.Event => {
+  try {
+    return stripeClient.webhooks.constructEvent(rawBody, requireText(signature, 'Stripe-Signature'), webhookSecret);
+  } catch (err: unknown) {
+    logger.error('Stripe webhook error', { eventId: 'unknown', type: 'unknown', step: 'signature_verification', errorName: err instanceof Error ? err.name : 'unknown', errorMessage: 'Stripe webhook signature verification failed.', supabaseCode: 'N/A', supabaseDetails: 'N/A' }, err instanceof Error ? err : undefined);
+    throw new ApiError(400, 'invalid_webhook_signature', 'Stripe webhook signature verification failed.');
+  }
+};
+
+const processWebhookEvent = async (repository: BillingRepository, event: Stripe.Event) => {
+  const eventId = event.id;
+  if (await repository.hasStripeEventBeenProcessed(eventId)) return { received: true, duplicate: true, eventId };
+  await dispatchWebhookEvent(repository, event.type, event.data?.object ?? {});
+  await repository.markStripeEventProcessed(eventId, { type: event.type, processedAt: new Date().toISOString() });
+  return { received: true, duplicate: false, eventId };
+};
 
 export interface BillingService {
   createCheckoutSession(
@@ -330,137 +368,26 @@ export const createBillingService = ({
     },
 
     async getSubscriptionStatus(userIdValue) {
-      const userId =
-        typeof userIdValue === 'string' && userIdValue.trim()
-          ? userIdValue.trim()
-          : null;
-      if (!userId) {
-        return emptySubscription();
-      }
-      if (userId.startsWith('demo_engineer_')) {
-        return emptySubscription();
-      }
-
-      let subscription: SubscriptionSnapshot | null;
-      try {
-        subscription = await repository.getSubscriptionStatus(userId);
-      } catch (error) {
-        throw new ApiError(
-          503,
-          'BILLING_STATUS_UNAVAILABLE',
-          'Billing status is temporarily unavailable.'
-        );
-      }
-
-      if (!config.configured || !stripeClient) {
-        if (
-          subscription &&
-          subscription.planId !== 'free' &&
-          subscription.status !== 'none'
-        ) {
-          return subscription;
-        }
-        return emptySubscription();
-      }
-
-      if (!subscription || !subscription.stripeCustomerId) {
-        return emptySubscription();
-      }
-
-      return subscription;
+      if (!isValidUserId(userIdValue)) return emptySubscription();
+      const userId = userIdValue.trim();
+      let sub: SubscriptionSnapshot | null;
+      try { sub = await repository.getSubscriptionStatus(userId); }
+      catch { throw new ApiError(503, 'BILLING_STATUS_UNAVAILABLE', 'Billing status is temporarily unavailable.'); }
+      return resolveSubscription(sub, config.configured, !!stripeClient);
     },
 
     async processWebhook(rawBody, signature, onEventDetected) {
       ensureConfigured();
-      if (!config.webhookSecret) {
-        throw new ApiError(
-          503,
-          'stripe_webhook_not_configured',
-          'Stripe webhook verification is not configured.'
-        );
-      }
-      let step = 'signature_verification';
-      let event: Stripe.Event;
-      try {
-        event = stripeClient!.webhooks.constructEvent(
-          rawBody,
-          requireText(signature, 'Stripe-Signature'),
-          config.webhookSecret
-        );
-      } catch (err: any) {
-        logger.error(
-          'Stripe webhook error',
-          {
-            eventId: 'unknown',
-            type: 'unknown',
-            step,
-            errorName: err.name,
-            errorMessage: 'Stripe webhook signature verification failed.',
-            supabaseCode: 'N/A',
-            supabaseDetails: 'N/A',
-          },
-          err
-        );
-        throw new ApiError(
-          400,
-          'invalid_webhook_signature',
-          'Stripe webhook signature verification failed.'
-        );
-      }
+      if (!config.webhookSecret) throw new ApiError(503, 'stripe_webhook_not_configured', 'Stripe webhook verification is not configured.');
 
-      const eventId = event.id;
-      const eventType = event.type;
-
-      if (typeof onEventDetected === 'function') {
-        onEventDetected(step, eventId, eventType);
-      }
+      const event = verifyStripeSignature(stripeClient!, rawBody, signature, config.webhookSecret);
+      if (typeof onEventDetected === 'function') onEventDetected('signature_verification', event.id, event.type);
 
       try {
-        step = 'duplicate_check';
-        if (await repository.hasStripeEventBeenProcessed(eventId)) {
-          return { received: true, duplicate: true, eventId };
-        }
-
-        const object = event.data?.object ?? {};
-        if (eventType === 'checkout.session.completed') {
-          step = 'process_checkout_completed';
-          await handleCheckoutCompleted(repository, object as any);
-        } else if (
-          eventType === 'customer.subscription.created' ||
-          eventType === 'customer.subscription.updated'
-        ) {
-          step = 'process_subscription_created_or_updated';
-          await handleSubscriptionUpdated(repository, object as any);
-        } else if (eventType === 'invoice.payment_failed') {
-          step = 'process_payment_failed';
-          await handlePaymentFailed(repository, object as any);
-        } else if (eventType === 'customer.subscription.deleted') {
-          step = 'process_subscription_deleted';
-          await handleSubscriptionDeleted(repository, object as any);
-        }
-
-        step = 'mark_processed';
-        await repository.markStripeEventProcessed(eventId, {
-          type: eventType,
-          processedAt: new Date().toISOString(),
-        });
-        return { received: true, duplicate: false, eventId };
-      } catch (err: any) {
-        const supabaseCode = err.code || 'N/A';
-        const supabaseDetails = err.details || 'N/A';
-        logger.error(
-          'Stripe webhook error',
-          {
-            eventId,
-            type: eventType,
-            step,
-            errorName: err.name,
-            errorMessage: err.message || 'Unknown error',
-            supabaseCode,
-            supabaseDetails,
-          },
-          err
-        );
+        return await processWebhookEvent(repository, event);
+      } catch (err: unknown) {
+        const e = err as Record<string, unknown>;
+        logger.error('Stripe webhook error', { eventId: event.id, type: event.type, step: 'dispatch', errorName: e.name, errorMessage: e.message || 'Unknown error', supabaseCode: e.code || 'N/A', supabaseDetails: e.details || 'N/A' }, err instanceof Error ? err : undefined);
         throw err;
       }
     },

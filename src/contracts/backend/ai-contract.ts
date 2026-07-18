@@ -194,6 +194,22 @@ export const validateBackendAIRequest = (
   return { valid: errors.length === 0, errors };
 };
 
+const validateSuccessResponse = (
+  payload: Record<string, unknown>,
+  errors: string[]
+): void => {
+  if (payload.structuredResult || hasString(payload, 'text')) return;
+  errors.push('successful AI response requires structuredResult or text');
+};
+
+const validateErrorResponse = (
+  payload: Record<string, unknown>,
+  errors: string[]
+): void => {
+  if (isRecord(payload.error)) return;
+  errors.push('failed AI response requires error');
+};
+
 export const validateBackendAIResponse = (
   payload: unknown,
   contractVersion: string
@@ -208,17 +224,8 @@ export const validateBackendAIResponse = (
   if (!hasBoolean(payload, 'success')) errors.push('success is required');
   if (!isRecord(payload.metadata)) errors.push('metadata is required');
 
-  if (
-    payload.success === true &&
-    !payload.structuredResult &&
-    !hasString(payload, 'text')
-  ) {
-    errors.push('successful AI response requires structuredResult or text');
-  }
-
-  if (payload.success === false && !isRecord(payload.error)) {
-    errors.push('failed AI response requires error');
-  }
+  if (payload.success === true) validateSuccessResponse(payload, errors);
+  if (payload.success === false) validateErrorResponse(payload, errors);
 
   return { valid: errors.length === 0, errors };
 };

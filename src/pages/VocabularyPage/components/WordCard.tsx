@@ -70,6 +70,72 @@ const StatusContent = ({
   </>
 );
 
+const DomainBar = ({
+  term,
+  status,
+}: {
+  term: VocabularyTerm;
+  status: string;
+}) => (
+  <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
+    <span className="font-semibold capitalize">
+      Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
+    </span>
+    <span>{status === 'New' ? 'Ready to learn' : status}</span>
+  </div>
+);
+
+const CardActions = ({
+  mode,
+  status,
+  progress,
+  term,
+  onReview,
+  answer,
+  quizResult,
+  knowThisCheck,
+  setAnswer,
+  setKnowThisCheck,
+  submitQuiz,
+  onLearn,
+  showDetails,
+  setShowDetails,
+}: {
+  mode: VocabularySetMode;
+  status: string;
+  progress?: VocabularyMenuProgress;
+  term: VocabularyTerm;
+  onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
+  answer: string;
+  quizResult: boolean | null;
+  knowThisCheck: boolean;
+  setAnswer: (v: string) => void;
+  setKnowThisCheck: (v: boolean) => void;
+  submitQuiz: (e: FormEvent) => void;
+  onLearn?: (term: VocabularyTerm) => void;
+  showDetails: boolean;
+  setShowDetails: (fn: (v: boolean) => boolean) => void;
+}) => (
+  <>
+    {mode === 'Review' && progress && <ReviewReasonBanner term={term} progress={progress} />}
+    <WordCardDetails term={term} showDetails={showDetails} onToggle={() => setShowDetails((v) => !v)} />
+    {mode === 'Quiz' && status === 'New' && (
+      <QuizForm term={term} answer={answer} quizResult={quizResult} knowThisCheck={knowThisCheck} onAnswerChange={setAnswer} onSetKnowThisCheck={setKnowThisCheck} onSubmit={submitQuiz} onLearn={onLearn} />
+    )}
+    {mode === 'Review' && status !== 'Mastered' && <ReviewActions term={term} onReview={onReview} />}
+  </>
+);
+
+const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
+  const expected = normalizeAnswer(turkishMeaning);
+  const response = normalizeAnswer(answer);
+  const alternatives = expected.split('/').map((item) => item.trim());
+  return alternatives.some((item) => response === item || expected === response);
+};
+
+const getBorderClass = (isWeak?: boolean): string =>
+  isWeak ? 'border-l-rose-500 bg-rose-50/10' : 'border-l-[#0047bb]';
+
 export const WordCard = ({
   term,
   progress,
@@ -88,12 +154,7 @@ export const WordCard = ({
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
     if (!answer.trim() || quizResult !== null) return;
-    const expected = normalizeAnswer(term.turkishMeaning);
-    const response = normalizeAnswer(answer);
-    const correct = expected
-      .split('/')
-      .map((item) => item.trim())
-      .some((item) => response === item || expected === response);
+    const correct = checkQuizAnswer(answer, term.turkishMeaning);
     setQuizResult(correct);
     onReview(term, correct);
   };
@@ -101,11 +162,7 @@ export const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-[4px] border-y border-r border-[#d9d9e3] border-l-2 bg-white/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${
-        progress?.isWeak
-          ? 'border-l-rose-500 bg-rose-50/10'
-          : 'border-l-[#0047bb]'
-      }`}
+      className={`flex h-full flex-col rounded-[4px] border-y border-r border-[#d9d9e3] border-l-2 bg-white/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
       style={{ perspective: '1000px' }}
     >
       <AnimatePresence mode="wait">
@@ -118,63 +175,14 @@ export const WordCard = ({
           className="flex flex-col h-full"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <WordCardHeader
-            term={term}
-            showAnswer={showAnswer}
-            status={status}
-            progress={progress}
-          />
-
-          <StatusContent
-            status={status}
-            progress={progress}
-            term={term}
-            mode={mode}
-            onReview={onReview}
-            showAnswer={showAnswer}
-          />
-
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
-            <span className="font-semibold capitalize">
-              Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
-            </span>
-            <span>{status === 'New' ? 'Ready to learn' : status}</span>
-          </div>
-
-          {mode === 'Review' && progress && (
-            <ReviewReasonBanner term={term} progress={progress} />
-          )}
-
-          <WordCardDetails
-            term={term}
-            showDetails={showDetails}
-            onToggle={() => setShowDetails((v) => !v)}
-          />
-
-          {mode === 'Quiz' && status === 'New' && (
-            <QuizForm
-              term={term}
-              answer={answer}
-              quizResult={quizResult}
-              knowThisCheck={knowThisCheck}
-              onAnswerChange={setAnswer}
-              onSetKnowThisCheck={setKnowThisCheck}
-              onSubmit={submitQuiz}
-              onLearn={onLearn}
-            />
-          )}
-
-          {mode === 'Review' && status !== 'Mastered' && (
-            <ReviewActions term={term} onReview={onReview} />
-          )}
+          <WordCardHeader term={term} showAnswer={showAnswer} status={status} progress={progress} />
+          <StatusContent status={status} progress={progress} term={term} mode={mode} onReview={onReview} showAnswer={showAnswer} />
+          <DomainBar term={term} status={status} />
+          <CardActions mode={mode} status={status} progress={progress} term={term} onReview={onReview} answer={answer} quizResult={quizResult} knowThisCheck={knowThisCheck} setAnswer={setAnswer} setKnowThisCheck={setKnowThisCheck} submitQuiz={submitQuiz} onLearn={onLearn} showDetails={showDetails} setShowDetails={setShowDetails} />
         </motion.div>
       </AnimatePresence>
       {mode !== 'Quiz' && (
-        <button
-          type="button"
-          onClick={() => setIsFlipped((f) => !f)}
-          className="absolute top-3 right-3 text-[10px] font-bold text-primary hover:text-primary-hover transition-colors"
-        >
+        <button type="button" onClick={() => setIsFlipped((f) => !f)} className="absolute top-3 right-3 text-[10px] font-bold text-primary hover:text-primary-hover transition-colors">
           {isFlipped ? 'Front' : 'Flip'}
         </button>
       )}

@@ -31,6 +31,9 @@ export const useLoginHandlers = () => {
     (location.state as RouteLocationState | null)?.from?.pathname ||
     '/dashboard';
 
+const isProviderNotEnabled = (msg: string) =>
+  msg.includes('not enabled') || msg.includes('Unsupported provider');
+
   const handleSocialLogin = async (
     provider: 'google' | 'linkedin' | 'apple'
   ) => {
@@ -47,6 +50,10 @@ export const useLoginHandlers = () => {
       return;
     }
 
+    const capitalizedProvider =
+      provider.charAt(0).toUpperCase() + provider.slice(1);
+    const notEnabledMsg = `${capitalizedProvider} login is not yet enabled. Please use email login or try the demo mode.`;
+
     try {
       setSocialLoading(provider);
       setError(null);
@@ -56,28 +63,15 @@ export const useLoginHandlers = () => {
           redirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      if (authError) {
-        if (
-          authError.message?.includes('not enabled') ||
-          authError.message?.includes('Unsupported provider')
-        ) {
-          setError(
-            `${provider.charAt(0).toUpperCase() + provider.slice(1)} login is not yet enabled. Please use email login or try the demo mode.`
-          );
-        } else {
-          throw authError;
-        }
+      if (authError && isProviderNotEnabled(authError.message ?? '')) {
+        setError(notEnabledMsg);
+      } else if (authError) {
+        throw authError;
       }
     } catch (err: unknown) {
       setSocialLoading(null);
       const msg = getErrorMessage(err, `${provider} sign-in failed.`);
-      if (msg.includes('not enabled') || msg.includes('Unsupported provider')) {
-        setError(
-          `${provider.charAt(0).toUpperCase() + provider.slice(1)} login is not yet enabled. Please use email login or try the demo mode.`
-        );
-      } else {
-        setError(msg);
-      }
+      setError(isProviderNotEnabled(msg) ? notEnabledMsg : msg);
     }
   };
 
@@ -145,8 +139,6 @@ export const useLoginHandlers = () => {
       return;
     }
 
-    const derivedDisplayName = email.trim().split('@')[0] || 'EngVox User';
-
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('Please enter a valid email address.');
       return;
@@ -156,6 +148,8 @@ export const useLoginHandlers = () => {
       setError('Password must be at least 6 characters.');
       return;
     }
+
+    const derivedDisplayName = email.trim().split('@')[0] || 'EngVox User';
 
     try {
       setError(null);

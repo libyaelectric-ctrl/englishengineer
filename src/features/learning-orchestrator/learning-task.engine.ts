@@ -11,6 +11,8 @@ import type {
   SkillName,
   UserLearningProfile,
 } from '@/features/profile/profile.types';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
+import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
 import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
@@ -77,6 +79,47 @@ const rankPreferredDomains = (
       Number(preferredDomains.includes(b.domain)) -
       Number(preferredDomains.includes(a.domain))
   );
+
+const resolveGrammarFocus = async (
+  skill: SkillName,
+  baseLevel: CefrLevel,
+  selectedGrammar: Awaited<ReturnType<typeof GrammarEngine.selectGrammarForTask>>
+) => {
+  if (selectedGrammar.length > 0) return selectedGrammar.slice(0, 2);
+  return (
+    await GrammarRepository.getGrammarRulesForUserSkillLevel(skill as LearningDataSkill, baseLevel)
+  ).slice(0, 2);
+};
+
+const getFocusPriority = (
+  profile: UserLearningProfile,
+  weakWords: number
+): 'vocabulary' | 'grammar' =>
+  profile.skills.vocabulary.weaknessScore + Math.min(30, weakWords * 5) >=
+  profile.skills.grammar.weaknessScore
+    ? 'vocabulary'
+    : 'grammar';
+
+const buildProfileContext = (profile: UserLearningProfile) =>
+  [
+    profile.goals.length > 0 ? `${profile.goals.join(', ')} goals` : '',
+    profile.professionId
+      ? `${profile.professionId.replace(/-/g, ' ')} role`
+      : '',
+  ]
+    .filter(Boolean)
+    .join(' and ');
+
+const buildWhyRecommended = (
+  skill: SkillName,
+  recommended: boolean | undefined,
+  profileContext: string
+) => {
+  const ctxSuffix = profileContext ? ` with ${profileContext}` : '';
+  return recommended
+    ? `${skill} is currently the weakest independent skill profile${profileContext ? `; context is aligned with ${profileContext}` : ''}.`
+    : `Selected manually at the current ${skill} level${ctxSuffix}.`;
+};
 
 export const getTaskLevelAllocation = (
   profile: UserLearningProfile,
@@ -183,32 +226,17 @@ export const LearningTaskEngine = {
         options.domain
       ),
     ]);
-    const grammarFocus =
-      selectedGrammar.length > 0
-        ? selectedGrammar.slice(0, 2)
-        : (
-            await GrammarRepository.getGrammarRulesForUserSkillLevel(
-              skill,
-              baseLevel
-            )
-          ).slice(0, 2);
+    const grammarFocus = await resolveGrammarFocus(
+      skill,
+      baseLevel,
+      selectedGrammar
+    );
     const intelligence = LearningIntelligenceService.load();
     const weakWords = Object.values(
       VocabularyMenuService.getState().progress
     ).filter((word) => word.isWeak).length;
-    const focusPriority =
-      profile.skills.vocabulary.weaknessScore + Math.min(30, weakWords * 5) >=
-      profile.skills.grammar.weaknessScore
-        ? 'vocabulary'
-        : 'grammar';
-    const profileContext = [
-      profile.goals.length > 0 ? `${profile.goals.join(', ')} goals` : '',
-      profile.professionId
-        ? `${profile.professionId.replace(/-/g, ' ')} role`
-        : '',
-    ]
-      .filter(Boolean)
-      .join(' and ');
+    const focusPriority = getFocusPriority(profile, weakWords);
+    const profileContext = buildProfileContext(profile);
 
     return {
       id: `task_${skill}_${safeCefr.replace('+', 'plus')}`,
@@ -218,9 +246,11 @@ export const LearningTaskEngine = {
       safeCefr,
       stretchCefr,
       levelAllocation: getTaskLevelAllocation(profile, skill),
-      whyRecommended: options.recommended
-        ? `${skill} is currently the weakest independent skill profile${profileContext ? `; context is aligned with ${profileContext}` : ''}.`
-        : `Selected manually at the current ${skill} level${profileContext ? ` with ${profileContext}` : ''}.`,
+      whyRecommended: buildWhyRecommended(
+        skill,
+        options.recommended,
+        profileContext
+      ),
       context: CONTEXT_BY_SKILL[skill],
       prompt:
         grammarFocus[0]?.taskPromptTemplate ??

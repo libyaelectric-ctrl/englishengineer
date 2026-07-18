@@ -24,10 +24,7 @@ describe('i18n middleware', () => {
     const middleware = createI18nMiddleware();
     const req = { headers: { 'accept-language': 'tr-TR,tr;q=0.9,en;q=0.8' } };
     const res = {};
-    let called = false;
-    middleware(req, res, () => {
-      called = true;
-    });
+    middleware(req, res, () => {});
 
     assert.equal(req.i18n.lang, 'tr');
     assert.equal(
@@ -40,10 +37,7 @@ describe('i18n middleware', () => {
     const middleware = createI18nMiddleware();
     const req = { headers: { 'accept-language': 'fr-FR,fr;q=0.9' } };
     const res = {};
-    let called = false;
-    middleware(req, res, () => {
-      called = true;
-    });
+    middleware(req, res, () => {});
 
     assert.equal(req.i18n.lang, 'en');
   });

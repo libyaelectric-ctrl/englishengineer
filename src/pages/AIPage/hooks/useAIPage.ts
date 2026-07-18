@@ -28,6 +28,59 @@ export const MODE_REQUIRED_FEATURES: Record<string, string> = {
   cv_optimizer: 'unlimitedAIFeedback',
 };
 
+const isDocumentFile = (name: string): boolean =>
+  name.endsWith('.pdf') || name.endsWith('.docx');
+
+const isUploadBlocked = (
+  planId: string,
+  docLimit: number | 'unlimited',
+  uploadedDocsCount: number
+): string | null => {
+  if (planId === 'free')
+    return 'Free plan accounts do not support document upload. Please upgrade to Pro.';
+  if (docLimit !== 'unlimited' && uploadedDocsCount >= docLimit)
+    return `Monthly document upload limit reached (${docLimit}/${docLimit}). Please upgrade to a higher tier.`;
+  return null;
+};
+
+const incrementDocCount = (
+  current: number,
+  setter: (n: number) => void
+): number => {
+  const next = current + 1;
+  setter(next);
+  localStorage.setItem('uploaded_docs_count', next.toString());
+  return next;
+};
+
+const computeDocLimit = (
+  planId: string
+): number | 'unlimited' => {
+  if (planId === 'free') return 0;
+  if (planId === 'pro') return 2;
+  return 'unlimited';
+};
+
+const computeProviderTone = (
+  state: string
+): 'success' | 'danger' | 'warning' => {
+  if (state === 'backend-configured') return 'success';
+  if (state === 'backend-error') return 'danger';
+  return 'warning';
+};
+
+const computeConnectionValue = (state: string): string => {
+  if (state === 'backend-configured') return 'Backend';
+  if (state === 'backend-error') return 'Unavailable';
+  return 'Mock';
+};
+
+const computeConnectionTrend = (state: string): string => {
+  if (state === 'backend-configured') return 'Protected backend proxy configured';
+  if (state === 'backend-error') return 'Backend request failed safely';
+  return 'Local deterministic fallback';
+};
+
 export function useAIPage() {
   const navigate = useNavigate();
   const learningState = useLearningStore();
@@ -86,12 +139,7 @@ export function useAIPage() {
     }
   };
 
-  const docLimit: number | 'unlimited' =
-    subscription.planId === 'free'
-      ? 0
-      : subscription.planId === 'pro'
-        ? 2
-        : 'unlimited';
+  const docLimit = computeDocLimit(subscription.planId);
   const docLimitLabel =
     docLimit === 'unlimited' ? 'Unlimited' : `${docLimit} documents / month`;
 
@@ -108,49 +156,40 @@ export function useAIPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (subscription.planId === 'free') {
-      setUploadError(
-        'Free plan accounts do not support document upload. Please upgrade to Pro.'
-      );
+    const blockReason = isUploadBlocked(
+      subscription.planId,
+      docLimit,
+      uploadedDocsCount
+    );
+    if (blockReason) {
+      setUploadError(blockReason);
       return;
     }
 
-    if (docLimit !== 'unlimited' && uploadedDocsCount >= docLimit) {
-      setUploadError(
-        `Monthly document upload limit reached (${docLimit}/${docLimit}). Please upgrade to a higher tier.`
+    if (isDocumentFile(file.name)) {
+      setInput(
+        `[Uploaded File: ${file.name}]\n[Parsed Technical Content Summary]\n1. System constraints and electrical safety standards.\n2. Fire alarm interface specification requirements.\n3. Cable tray layout details for Zone 4.\n\nType your query below to analyze this document.`
       );
+      incrementDocCount(uploadedDocsCount, setUploadedDocsCount);
       return;
     }
 
     const reader = new FileReader();
     reader.onload = (e) => {
       const text = e.target?.result as string;
-      if (text) {
-        useWorkspaceStore
-          .getState()
-          .addDocumentToWorkspace(activeWorkspaceId, file.name, text);
-        setInput(`[Uploaded File: ${file.name}]\n\n${text}`);
-        const newCount = uploadedDocsCount + 1;
-        setUploadedDocsCount(newCount);
-        localStorage.setItem('uploaded_docs_count', newCount.toString());
-      }
+      if (!text) return;
+      useWorkspaceStore
+        .getState()
+        .addDocumentToWorkspace(activeWorkspaceId, file.name, text);
+      setInput(`[Uploaded File: ${file.name}]\n\n${text}`);
+      incrementDocCount(uploadedDocsCount, setUploadedDocsCount);
     };
     reader.onerror = () => {
       setUploadError(
         'Could not read file. Please ensure it is a valid text file.'
       );
     };
-
-    if (file.name.endsWith('.pdf') || file.name.endsWith('.docx')) {
-      setInput(
-        `[Uploaded File: ${file.name}]\n[Parsed Technical Content Summary]\n1. System constraints and electrical safety standards.\n2. Fire alarm interface specification requirements.\n3. Cable tray layout details for Zone 4.\n\nType your query below to analyze this document.`
-      );
-      const newCount = uploadedDocsCount + 1;
-      setUploadedDocsCount(newCount);
-      localStorage.setItem('uploaded_docs_count', newCount.toString());
-    } else {
-      reader.readAsText(file);
-    }
+    reader.readAsText(file);
   };
 
   const selectedMode = getCoachModeById(selectedModeId);
@@ -168,24 +207,9 @@ export function useAIPage() {
       new Date(session.timestamp).toDateString() === new Date().toDateString()
   ).length;
   const aiEntitlement = canUseAICoach(subscription, todaysCoachSessions);
-  const providerTone: 'success' | 'danger' | 'warning' =
-    providerStatus.state === 'backend-configured'
-      ? 'success'
-      : providerStatus.state === 'backend-error'
-        ? 'danger'
-        : 'warning';
-  const connectionValue =
-    providerStatus.state === 'backend-configured'
-      ? 'Backend'
-      : providerStatus.state === 'backend-error'
-        ? 'Unavailable'
-        : 'Mock';
-  const connectionTrend =
-    providerStatus.state === 'backend-configured'
-      ? 'Protected backend proxy configured'
-      : providerStatus.state === 'backend-error'
-        ? 'Backend request failed safely'
-        : 'Local deterministic fallback';
+  const providerTone = computeProviderTone(providerStatus.state);
+  const connectionValue = computeConnectionValue(providerStatus.state);
+  const connectionTrend = computeConnectionTrend(providerStatus.state);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

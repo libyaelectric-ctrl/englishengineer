@@ -147,7 +147,7 @@ export const createRateLimiter = ({
 }: RateLimiterConfig): RateLimitMiddleware => {
   if (store) {
     return async (request: Request, response: Response, next: NextFunction) => {
-      const identity = (request as any).auth?.userId || request.ip || 'unknown';
+      const identity = request.auth?.userId || request.ip || 'unknown';
       const key = `engineeros:rate-limit:${scope}:${identity}`;
       try {
         const result = await store.consume(key, windowMs);
@@ -194,18 +194,7 @@ export const createRateLimiter = ({
     if (oldestKey !== undefined) buckets.delete(oldestKey);
   };
 
-  return (request: Request, response: Response, next: NextFunction): void => {
-    const currentTime = now();
-    if (
-      currentTime - lastPruneAt >= pruneIntervalMs ||
-      buckets.size >= bucketLimit
-    ) {
-      pruneExpired(currentTime);
-      lastPruneAt = currentTime;
-    }
-
-    const identity = (request as any).auth?.userId || request.ip || 'unknown';
-    const key = `${scope}:${identity}`;
+  const getOrCreateBucket = (key: string, currentTime: number): RateBucket => {
     let bucket = buckets.get(key);
     if (bucket && bucket.resetAt <= currentTime) {
       buckets.delete(key);
@@ -215,20 +204,26 @@ export const createRateLimiter = ({
       while (buckets.size >= bucketLimit) evictOldest();
       bucket = { count: 0, resetAt: currentTime + windowMs };
     }
+    return bucket;
+  };
+
+  return (request: Request, response: Response, next: NextFunction): void => {
+    const currentTime = now();
+    if (currentTime - lastPruneAt >= pruneIntervalMs || buckets.size >= bucketLimit) {
+      pruneExpired(currentTime);
+      lastPruneAt = currentTime;
+    }
+
+    const identity = request.auth?.userId || request.ip || 'unknown';
+    const key = `${scope}:${identity}`;
+    const bucket = getOrCreateBucket(key, currentTime);
     bucket.count += 1;
     buckets.set(key, bucket);
-
     setRateLimitHeaders(response, max, bucket.count);
 
     if (bucket.count > max) {
       logRateLimit(scope, identity, bucket.count, max);
-      return next(
-        new ApiError(
-          429,
-          'rate_limit_exceeded',
-          'Too many requests. Please try again later.'
-        )
-      );
+      return next(new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.'));
     }
     next();
   };

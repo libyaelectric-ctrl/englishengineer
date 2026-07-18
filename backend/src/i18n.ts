@@ -112,7 +112,7 @@ export interface I18nContext {
 export const createI18nMiddleware = () => {
   return (req: Request, _res: Response, next: NextFunction): void => {
     const lang = parseAcceptLanguage(req.headers['accept-language'] as string);
-    (req as any).i18n = {
+    req.i18n = {
       lang,
       t: (key: string): string =>
         translations[lang]?.[key] ?? translations.en[key] ?? key,

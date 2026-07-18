@@ -61,34 +61,32 @@ type EditAction =
   | { type: 'SET_GOALS'; value: string[] }
   | { type: 'RESET_EDIT' };
 
+const EDIT_FIELD_MAP: Partial<
+  Record<EditAction['type'], keyof ProfileEditState>
+> = {
+  SET_FIRST_NAME: 'firstName',
+  SET_LAST_NAME: 'lastName',
+  SET_PROFESSION: 'profession',
+  SET_TRACK: 'track',
+  SET_SUBDOMAIN: 'subdomain',
+  SET_INDUSTRY: 'industry',
+  SET_LANG: 'lang',
+  SET_GOALS: 'goals',
+};
+
 export const editReducer = (
   state: ProfileEditState,
   action: EditAction
 ): ProfileEditState => {
-  switch (action.type) {
-    case 'SET_EDIT_MODE':
-      return { ...state, isEditMode: action.value };
-    case 'SET_FIRST_NAME':
-      return { ...state, firstName: action.value };
-    case 'SET_LAST_NAME':
-      return { ...state, lastName: action.value };
-    case 'SET_PROFESSION':
-      return { ...state, profession: action.value };
-    case 'SET_TRACK':
-      return { ...state, track: action.value };
-    case 'SET_SUBDOMAIN':
-      return { ...state, subdomain: action.value };
-    case 'SET_INDUSTRY':
-      return { ...state, industry: action.value };
-    case 'SET_LANG':
-      return { ...state, lang: action.value };
-    case 'SET_GOALS':
-      return { ...state, goals: action.value };
-    case 'RESET_EDIT':
-      return { ...state, isEditMode: false };
-    default:
-      return state;
-  }
+  if (action.type === 'SET_EDIT_MODE')
+    return { ...state, isEditMode: action.value };
+  if (action.type === 'RESET_EDIT')
+    return { ...state, isEditMode: false };
+
+  const field = EDIT_FIELD_MAP[action.type];
+  if (field) return { ...state, [field]: action.value };
+
+  return state;
 };
 
 // --- Prefs State ---

@@ -33,42 +33,42 @@ export interface GrammarProgressSummary {
   strong: number;
 }
 
+const getReviewIsDue = (progress: GrammarRuleProgress, now: Date): boolean =>
+  progress.reviewStatus === 'Due' ||
+  (progress.nextReviewDate !== null &&
+    new Date(progress.nextReviewDate).getTime() <= now.getTime());
+
+const describeStrongWithMissingEvidence = (missingEvidence: GrammarTransferSkill[]): string =>
+  `The grammar practice is strong, but mastery still needs ${missingEvidence.join(' and ')} transfer evidence.`;
+
+const describeReviewOverdue = (progress: GrammarRuleProgress): string =>
+  progress.incorrectUsages > progress.correctUsages
+    ? 'Recent mistakes and the scheduled review date make this rule a current priority.'
+    : progress.strength >= 70
+      ? 'A maintenance review is due so this strong rule remains reliable.'
+      : 'The scheduled practice interval has ended, so this rule is ready for another use.';
+
+const describeReviewNotDue = (progress: GrammarRuleProgress): string => {
+  if (progress.reviewStatus === 'New') return 'This is the next named topic in your current-level grammar path.';
+  if (progress.reviewStatus === 'Strong') return 'This rule is strong and does not need urgent review.';
+  return progress.incorrectUsages > 0
+    ? 'A previous mistake keeps this rule in Learning until correct use becomes consistent.'
+    : 'This rule needs more correct uses before it can become Strong.';
+};
+
 export const getGrammarReviewReason = (
   progress: GrammarRuleProgress,
   now = new Date()
 ): string => {
   const missingEvidence = getMissingGrammarTransferEvidence(progress);
-  const reviewIsDue =
-    progress.reviewStatus === 'Due' ||
-    (progress.nextReviewDate !== null &&
-      new Date(progress.nextReviewDate).getTime() <= now.getTime());
+  const reviewIsDue = getReviewIsDue(progress, now);
+  const hasStrongPractice = progress.correctUsages >= 3 && progress.strength >= 70;
 
-  if (
-    progress.correctUsages >= 3 &&
-    progress.strength >= 70 &&
-    missingEvidence.length > 0
-  ) {
-    return `The grammar practice is strong, but mastery still needs ${missingEvidence.join(
-      ' and '
-    )} transfer evidence.`;
+  if (hasStrongPractice && missingEvidence.length > 0) {
+    return describeStrongWithMissingEvidence(missingEvidence);
   }
-  if (reviewIsDue && progress.incorrectUsages > progress.correctUsages) {
-    return 'Recent mistakes and the scheduled review date make this rule a current priority.';
-  }
-  if (reviewIsDue) {
-    return progress.strength >= 70
-      ? 'A maintenance review is due so this strong rule remains reliable.'
-      : 'The scheduled practice interval has ended, so this rule is ready for another use.';
-  }
-  if (progress.reviewStatus === 'New') {
-    return 'This is the next named topic in your current-level grammar path.';
-  }
-  if (progress.reviewStatus === 'Strong') {
-    return 'This rule is strong and does not need urgent review.';
-  }
-  return progress.incorrectUsages > 0
-    ? 'A previous mistake keeps this rule in Learning until correct use becomes consistent.'
-    : 'This rule needs more correct uses before it can become Strong.';
+  if (reviewIsDue) return describeReviewOverdue(progress);
+  return describeReviewNotDue(progress);
 };
 
 const STORAGE_KEY = 'EngVox_grammar_progress';
@@ -210,30 +210,22 @@ export const GrammarProgressService = {
       0,
       Math.min(100, current.strength + (correct ? 25 : -20))
     );
-    const candidate = {
-      ...current,
-      correctUsages,
-      incorrectUsages,
-      strength,
-    };
+    const candidate = { ...current, correctUsages, incorrectUsages, strength };
     const strong = canBecomeStrong(candidate);
     const becameStrong = strong && current.reviewStatus !== 'Strong';
+    const nextStatus = strong ? 'Strong' : 'Learning';
+    const reviewDays = strong ? 14 : correct ? 3 : 1;
     const result = saveOne({
       ...current,
       exposures: current.exposures + 1,
       correctUsages,
       incorrectUsages,
       strength,
-      reviewStatus: strong ? 'Strong' : 'Learning',
+      reviewStatus: nextStatus,
       lastUsedAt: now.toISOString(),
-      nextReviewDate: new Date(
-        now.getTime() + (strong ? 14 : correct ? 3 : 1) * DAY_MS
-      ).toISOString(),
+      nextReviewDate: new Date(now.getTime() + reviewDays * DAY_MS).toISOString(),
     });
-    // Strong'a geçince event bus'a bildir (havuza yazma tetiklenir)
-    if (becameStrong) {
-      publishMastery(ruleId, now, result);
-    }
+    if (becameStrong) publishMastery(ruleId, now, result);
     return result;
   },
   recordSkillEvidence(
@@ -248,18 +240,10 @@ export const GrammarProgressService = {
     const nextEvidence: GrammarSkillEvidence =
       existing && existing.score > score
         ? existing
-        : {
-            skill,
-            missionId,
-            score,
-            demonstratedAt: now.toISOString(),
-          };
+        : { skill, missionId, score, demonstratedAt: now.toISOString() };
     const candidate = {
       ...current,
-      skillEvidence: {
-        ...current.skillEvidence,
-        [skill]: nextEvidence,
-      },
+      skillEvidence: { ...current.skillEvidence, [skill]: nextEvidence },
       lastUsedAt: now.toISOString(),
     };
     const strong = canBecomeStrong(candidate);
@@ -271,9 +255,7 @@ export const GrammarProgressService = {
         ? new Date(now.getTime() + 14 * DAY_MS).toISOString()
         : candidate.nextReviewDate,
     });
-    if (becameStrong) {
-      publishMastery(ruleId, now, result);
-    }
+    if (becameStrong) publishMastery(ruleId, now, result);
     return result;
   },
   reset(): void {

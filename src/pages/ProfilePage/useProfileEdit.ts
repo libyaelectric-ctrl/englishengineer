@@ -16,6 +16,26 @@ const splitDisplayName = (displayName = '') => {
   return { firstName: parts[0] || '', lastName: parts.slice(1).join(' ') };
 };
 
+const buildEditValues = (
+  displayName: string | undefined,
+  profile: UserLearningProfile | null
+) => {
+  const name = splitDisplayName(displayName);
+  if (!profile) {
+    return { ...name, profession: '', track: 'electrical', subdomain: 'low-voltage', industry: '', lang: 'en' as const, goals: [] };
+  }
+  return {
+    firstName: name.firstName,
+    lastName: name.lastName,
+    profession: profile.professionId ?? '',
+    track: profile.professionalTrack ?? 'electrical',
+    subdomain: profile.electricalSubdomain ?? 'low-voltage',
+    industry: profile.industryId ?? '',
+    lang: (profile.interfaceLanguage ?? 'en') as 'en' | 'tr',
+    goals: profile.communicationGoals ?? [],
+  };
+};
+
 export const useProfileEdit = (
   profile: UserLearningProfile | null,
   setMessage: (v: string | null) => void,
@@ -69,18 +89,31 @@ export const useProfileEdit = (
     dispatchEdit({ type: 'SET_GOALS', value: v });
 
   const enterEditMode = () => {
-    const name = splitDisplayName(currentUser?.displayName);
-    setEditFirstName(name.firstName);
-    setEditLastName(name.lastName);
-    setEditProfession(profile?.professionId || '');
-    setEditTrack(profile?.professionalTrack || 'electrical');
-    setEditSubdomain(profile?.electricalSubdomain || 'low-voltage');
-    setEditIndustry(profile?.industryId || '');
-    setEditLang(profile?.interfaceLanguage || 'en');
-    setEditGoals(profile?.communicationGoals || []);
+    const values = buildEditValues(currentUser?.displayName, profile);
+    setEditFirstName(values.firstName);
+    setEditLastName(values.lastName);
+    setEditProfession(values.profession);
+    setEditTrack(values.track);
+    setEditSubdomain(values.subdomain);
+    setEditIndustry(values.industry);
+    setEditLang(values.lang);
+    setEditGoals(values.goals);
     setIsEditMode(true);
     setError(null);
     setMessage(null);
+  };
+
+  const savePreferences = (userId: string) => {
+    LearningProfileRepository.updatePreferences(userId, {
+      professionId: (editProfession as ProfessionId) || null,
+      professionalTrack:
+        (editTrack as UserLearningProfile['professionalTrack']) || undefined,
+      electricalSubdomain:
+        (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
+      industryId: (editIndustry as UserLearningProfile['industryId']) || null,
+      interfaceLanguage: editLang,
+      communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
+    });
   };
 
   const handleSaveProfile = async (event: React.FormEvent) => {
@@ -94,23 +127,7 @@ export const useProfileEdit = (
     try {
       setError(null);
       await updateProfile({ displayName: `${first} ${last}` });
-      LearningProfileRepository.updatePreferences(
-        currentUser?.id ?? 'local-user',
-        {
-          professionId: (editProfession as ProfessionId) || null,
-          professionalTrack:
-            (editTrack as UserLearningProfile['professionalTrack']) ||
-            undefined,
-          electricalSubdomain:
-            (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
-            undefined,
-          industryId:
-            (editIndustry as UserLearningProfile['industryId']) || null,
-          interfaceLanguage: editLang,
-          communicationGoals:
-            editGoals as UserLearningProfile['communicationGoals'],
-        }
-      );
+      savePreferences(currentUser?.id ?? 'local-user');
       if (editLang !== language) setLanguage(editLang);
       setMessage('Profile overview updated successfully.');
       setIsEditMode(false);

@@ -156,6 +156,43 @@ export interface DowngradeImpact {
   warningMessage: string;
 }
 
+const LIMIT_FIELDS = [
+  'dailyAICoachRequests',
+  'moduleAttemptsPerDay',
+  'vocabularyReviewsPerDay',
+  'documentUploadsPerMonth',
+] as const;
+
+const getTargetWorkspaceLimit = (targetPlanId: BillingPlanId): number => {
+  if (targetPlanId === 'free' || targetPlanId === 'pro') return 1;
+  if (targetPlanId === 'project') return 3;
+  return Infinity;
+};
+
+const buildDowngradeWarnings = (
+  lostFeatures: BillingFeature[],
+  restrictedLimits: DowngradeImpact['restrictedLimits'],
+  currentWorkspaceCount: number,
+  targetPlanId: BillingPlanId,
+  targetWorkspaceLimit: number
+): string => {
+  const messages: string[] = [];
+  if (lostFeatures.length > 0) {
+    messages.push(`You will lose access to: ${lostFeatures.join(', ')}.`);
+  }
+  if (restrictedLimits.length > 0) {
+    messages.push(
+      `Some limits will be reduced. Your data will be preserved but access may be restricted.`
+    );
+  }
+  if (currentWorkspaceCount > targetWorkspaceLimit) {
+    messages.push(
+      `You have ${currentWorkspaceCount} workspaces but ${targetPlanId} plan allows ${targetWorkspaceLimit}. Please remove extra workspaces before downgrading.`
+    );
+  }
+  return messages.join(' ');
+};
+
 export const getDowngradeImpact = (
   currentPlanId: BillingPlanId,
   targetPlanId: BillingPlanId,
@@ -179,44 +216,19 @@ export const getDowngradeImpact = (
     (f) => !targetPlan.features.includes(f)
   );
 
-  const restrictedLimits: DowngradeImpact['restrictedLimits'] = [];
-  const limitFields = [
-    'dailyAICoachRequests',
-    'moduleAttemptsPerDay',
-    'vocabularyReviewsPerDay',
-    'documentUploadsPerMonth',
-  ] as const;
+  const restrictedLimits: DowngradeImpact['restrictedLimits'] = LIMIT_FIELDS.map(
+    (field) => ({ field, from: currentPlan.limits[field], to: targetPlan.limits[field] })
+  ).filter((item) => item.from !== item.to);
 
-  for (const field of limitFields) {
-    const fromVal = currentPlan.limits[field];
-    const toVal = targetPlan.limits[field];
-    if (fromVal !== toVal) {
-      restrictedLimits.push({ field, from: fromVal, to: toVal });
-    }
-  }
-
-  const targetWorkspaceLimit =
-    targetPlanId === 'free' || targetPlanId === 'pro'
-      ? 1
-      : targetPlanId === 'project'
-        ? 3
-        : Infinity;
+  const targetWorkspaceLimit = getTargetWorkspaceLimit(targetPlanId);
   const requiresDataCleanup = currentWorkspaceCount > targetWorkspaceLimit;
-
-  const messages: string[] = [];
-  if (lostFeatures.length > 0) {
-    messages.push(`You will lose access to: ${lostFeatures.join(', ')}.`);
-  }
-  if (restrictedLimits.length > 0) {
-    messages.push(
-      `Some limits will be reduced. Your data will be preserved but access may be restricted.`
-    );
-  }
-  if (requiresDataCleanup) {
-    messages.push(
-      `You have ${currentWorkspaceCount} workspaces but ${targetPlanId} plan allows ${targetWorkspaceLimit}. Please remove extra workspaces before downgrading.`
-    );
-  }
+  const warningMessage = buildDowngradeWarnings(
+    lostFeatures,
+    restrictedLimits,
+    currentWorkspaceCount,
+    targetPlanId,
+    targetWorkspaceLimit
+  );
 
   return {
     isDowngrade: true,
@@ -224,7 +236,7 @@ export const getDowngradeImpact = (
     restrictedLimits,
     workspaceCount: currentWorkspaceCount,
     requiresDataCleanup,
-    warningMessage: messages.join(' '),
+    warningMessage,
   };
 };
 

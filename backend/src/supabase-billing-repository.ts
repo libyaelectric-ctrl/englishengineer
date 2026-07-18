@@ -2,11 +2,9 @@ import { createClient } from '@supabase/supabase-js';
 import { logger } from './logger.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
 
-const assertConfigured = (config: Record<string, any>): void => {
+const assertConfigured = (config: { supabaseUrl?: string | null; supabaseServiceRoleKey?: string | null }): void => {
   if (!config.supabaseUrl || !config.supabaseServiceRoleKey) {
-    throw new Error(
-      'Supabase billing repository requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
-    );
+    throw new Error('Supabase billing repository requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
 };
 
@@ -54,13 +52,12 @@ const mapSubscriptionSnapshot = (
   source: snapshot.source,
 });
 
-const handleDbError = (error: any): Error => {
-  const message =
-    error.message || 'Supabase billing repository request failed.';
-  const dbError = new Error(message);
-  (dbError as any).status = error.status || 500;
-  (dbError as any).code = error.code || 'N/A';
-  (dbError as any).details = error.details || error.message || 'N/A';
+const handleDbError = (error: { message?: string; status?: number; code?: string; details?: string }): Error => {
+  const message = error.message || 'Supabase billing repository request failed.';
+  const dbError = new Error(message) as Error & { status: number; code: string; details: string };
+  dbError.status = error.status || 500;
+  dbError.code = error.code || 'N/A';
+  dbError.details = error.details || error.message || 'N/A';
   return dbError;
 };
 
@@ -79,7 +76,7 @@ interface BillingRepository {
 }
 
 export const createSupabaseBillingRepository = (
-  config: Record<string, any>,
+  config: { supabaseUrl: string; supabaseServiceRoleKey: string; [key: string]: unknown },
   fetchImpl: typeof fetch = fetch
 ): BillingRepository => {
   assertConfigured(config);
@@ -87,36 +84,24 @@ export const createSupabaseBillingRepository = (
   const wrappedFetch = async (url: string, init?: RequestInit) => {
     let headersObj: Record<string, string> = {};
     if (init?.headers) {
-      if (typeof (init.headers as any).forEach === 'function') {
-        (init.headers as any).forEach((value: string, key: string) => {
-          if (key.toLowerCase() === 'authorization') {
-            headersObj['Authorization'] = value;
-          } else if (key.toLowerCase() === 'apikey') {
-            headersObj['apikey'] = value;
-          } else {
-            headersObj[key] = value;
-          }
+      const h = init.headers;
+      if (h instanceof Headers) {
+        h.forEach((value, key) => {
+          if (key.toLowerCase() === 'authorization') headersObj['Authorization'] = value;
+          else if (key.toLowerCase() === 'apikey') headersObj['apikey'] = value;
+          else headersObj[key] = value;
         });
       } else {
-        headersObj = { ...(init.headers as Record<string, string>) };
+        headersObj = { ...(h as Record<string, string>) };
       }
     }
-    const newInit = {
-      ...init,
-      headers: headersObj,
-    };
-    const response = await fetchImpl(url, newInit);
+    const response = await fetchImpl(url, { ...init, headers: headersObj });
     if (!response.ok) {
       let bodyText = '';
-      try {
-        bodyText = await response.text();
-      } catch (readErr: any) {
-        logger.warn('Billing repo error body', { error: readErr?.message });
-      }
-      const err = new Error(
-        `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`
-      );
-      (err as any).status = response.status;
+      try { bodyText = await response.text(); }
+      catch (readErr: unknown) { logger.warn('Billing repo error body', { error: readErr instanceof Error ? readErr.message : String(readErr) }); }
+      const err = new Error(`Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`) as Error & { status: number };
+      err.status = response.status;
       throw err;
     }
     return response;
@@ -125,14 +110,7 @@ export const createSupabaseBillingRepository = (
   const supabase = createClient(
     config.supabaseUrl,
     config.supabaseServiceRoleKey,
-    {
-      auth: {
-        persistSession: false,
-      },
-      global: {
-        fetch: wrappedFetch as any,
-      },
-    }
+    { auth: { persistSession: false }, global: { fetch: wrappedFetch as typeof fetch } }
   );
 
   return {

@@ -101,20 +101,24 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   },
 ];
 
+const CEFR_THRESHOLDS: [number, string][] = [
+  [95, 'C2'],
+  [90, 'C1+'],
+  [84, 'C1'],
+  [78, 'C1-'],
+  [73, 'B2+'],
+  [68, 'B2'],
+  [63, 'B2-'],
+  [58, 'B1+'],
+  [52, 'B1'],
+  [46, 'B1-'],
+  [32, 'A2'],
+];
+
 export const mapScoreToCefr = (score: number | null): string | null => {
   if (score === null) return null;
-  if (score >= 95) return 'C2';
-  if (score >= 90) return 'C1+';
-  if (score >= 84) return 'C1';
-  if (score >= 78) return 'C1-';
-  if (score >= 73) return 'B2+';
-  if (score >= 68) return 'B2';
-  if (score >= 63) return 'B2-';
-  if (score >= 58) return 'B1+';
-  if (score >= 52) return 'B1';
-  if (score >= 46) return 'B1-';
-  if (score >= 32) return 'A2';
-  return 'A1';
+  const match = CEFR_THRESHOLDS.find(([threshold]) => score >= threshold);
+  return match ? match[1] : 'A1';
 };
 
 export const getAssessmentConfidence = (

@@ -148,6 +148,39 @@ export const getVocabularyReviewReason = (
   return 'This word is available for an optional confidence check.';
 };
 
+const buildCorrectReviewResult = (
+  current: VocabularyMenuProgress,
+  now: Date
+): VocabularyMenuProgress => {
+  const correctReviews = current.correctReviews + 1;
+  const isMastered = correctReviews >= 3;
+  return {
+    correctReviews,
+    wrongReviews: current.wrongReviews,
+    status: isMastered ? 'Mastered' : 'Learning',
+    isWeak: isMastered ? false : current.isWeak,
+    isForgotten: isMastered ? false : current.isForgotten,
+    lastReviewed: now.toISOString(),
+    nextReviewDate: addDays(now, isMastered ? 7 : correctReviews === 2 ? 3 : 1),
+  };
+};
+
+const buildIncorrectReviewResult = (
+  current: VocabularyMenuProgress,
+  now: Date
+): VocabularyMenuProgress => {
+  const wrongReviews = current.wrongReviews + 1;
+  return {
+    correctReviews: Math.min(current.correctReviews, 2),
+    wrongReviews,
+    status: 'Learning',
+    isWeak: true,
+    isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
+    lastReviewed: now.toISOString(),
+    nextReviewDate: now.toISOString(),
+  };
+};
+
 const getDefaultProgress = (): VocabularyMenuProgress => ({
   correctReviews: 0,
   wrongReviews: 0,
@@ -220,6 +253,22 @@ const matchesQuery = (
 const matchesFilter = (value: string, filter?: string): boolean =>
   !filter || filter === 'All' || normalize(value) === normalize(filter);
 
+const matchesSkillUseFilter = (
+  term: VocabularyTerm,
+  skillUse?: string
+): boolean =>
+  !skillUse ||
+  skillUse === 'All' ||
+  term.skillUse.some((skill) => normalize(skill) === normalize(skillUse));
+
+const matchesStatusFilter = (
+  searchableStatuses: string[],
+  status?: string
+): boolean =>
+  !status ||
+  status === 'All' ||
+  searchableStatuses.some((item) => normalize(item) === normalize(status));
+
 const matchesAllFilters = (
   term: VocabularyTerm,
   filters: VocabularySearchFilters,
@@ -230,16 +279,8 @@ const matchesAllFilters = (
   matchesFilter(term.contentDomain, filters.contentDomain) &&
   matchesFilter(term.lifeContext, filters.lifeContext) &&
   matchesFilter(term.partOfSpeech, filters.partOfSpeech) &&
-  (!filters.skillUse ||
-    filters.skillUse === 'All' ||
-    term.skillUse.some(
-      (skill) => normalize(skill) === normalize(filters.skillUse ?? '')
-    )) &&
-  (!filters.status ||
-    filters.status === 'All' ||
-    searchableStatuses.some(
-      (item) => normalize(item) === normalize(filters.status ?? '')
-    ));
+  matchesSkillUseFilter(term, filters.skillUse) &&
+  matchesStatusFilter(searchableStatuses, filters.status);
 
 export const searchVocabularyMenu = (
   terms: VocabularyTerm[],
@@ -324,43 +365,20 @@ export const VocabularyMenuService = {
   ): VocabularyMenuProgress {
     const state = this.getState();
     const current = state.progress[wordId] ?? getDefaultProgress();
-    let next: VocabularyMenuProgress;
+    const next = isCorrect
+      ? buildCorrectReviewResult(current, now)
+      : buildIncorrectReviewResult(current, now);
 
-    if (isCorrect) {
-      const correctReviews = current.correctReviews + 1;
-      const isMastered = correctReviews >= 3;
-      next = {
-        correctReviews,
-        wrongReviews: current.wrongReviews,
-        status: isMastered ? 'Mastered' : 'Learning',
-        isWeak: isMastered ? false : current.isWeak,
-        isForgotten: isMastered ? false : current.isForgotten,
-        lastReviewed: now.toISOString(),
-        nextReviewDate: addDays(
-          now,
-          isMastered ? 7 : correctReviews === 2 ? 3 : 1
-        ),
-      };
-      // Mastered'a geçince event bus'a bildir (havuza yazma tetiklenir)
-      if (isMastered && current.status !== 'Mastered') {
-        eventBus.publish({
-          id: `vocab-mastered-${wordId}-${Date.now()}`,
-          type: 'vocabulary:mastered',
-          timestamp: now.toISOString(),
-          payload: { termId: wordId, masteredAt: now.toISOString() },
-        });
-      }
-    } else {
-      const wrongReviews = current.wrongReviews + 1;
-      next = {
-        correctReviews: Math.min(current.correctReviews, 2),
-        wrongReviews,
-        status: 'Learning',
-        isWeak: true,
-        isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
-        lastReviewed: now.toISOString(),
-        nextReviewDate: now.toISOString(),
-      };
+    if (isCorrect && next.status === 'Mastered' && current.status !== 'Mastered') {
+      eventBus.publish({
+        id: `vocab-mastered-${wordId}-${Date.now()}`,
+        type: 'vocabulary:mastered',
+        timestamp: now.toISOString(),
+        payload: { termId: wordId, masteredAt: now.toISOString() },
+      });
+    }
+
+    if (!isCorrect) {
       LearningIntelligenceService.addMistake(
         'repeated vocabulary gap',
         wordLabel,

@@ -1,4 +1,3 @@
-const CACHE_NAME = 'engvox-v2';
 const OFFLINE_URL = '/offline.html';
 const STATIC_ASSETS = ['/', '/brand/logo.png', '/manifest.json', OFFLINE_URL];
 

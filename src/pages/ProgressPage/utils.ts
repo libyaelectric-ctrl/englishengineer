@@ -76,19 +76,23 @@ export const CEFR_LEVELS = [
 export const MIN_ELO = 1000;
 export const MAX_ELO = 5000;
 
+const CEFR_THRESHOLDS: [number, string][] = [
+  [1333, 'A1+'],
+  [1666, 'A2'],
+  [2000, 'A2+'],
+  [2333, 'B1'],
+  [2666, 'B1+'],
+  [3000, 'B2'],
+  [3333, 'B2+'],
+  [3666, 'C1'],
+  [4000, 'C1+'],
+  [4333, 'C2'],
+  [4666, 'C2+'],
+];
+
 export const getCEFRBand = (elo: number) => {
-  if (elo < 1333) return 'A1';
-  if (elo < 1666) return 'A1+';
-  if (elo < 2000) return 'A2';
-  if (elo < 2333) return 'A2+';
-  if (elo < 2666) return 'B1';
-  if (elo < 3000) return 'B1+';
-  if (elo < 3333) return 'B2';
-  if (elo < 3666) return 'B2+';
-  if (elo < 4000) return 'C1';
-  if (elo < 4333) return 'C1+';
-  if (elo < 4666) return 'C2';
-  return 'C2+';
+  const match = CEFR_THRESHOLDS.find(([threshold]) => elo < threshold);
+  return match?.[1] ?? 'C2+';
 };
 
 export const getCEFRIndex = (cefr: string) => CEFR_LEVELS.indexOf(cefr);

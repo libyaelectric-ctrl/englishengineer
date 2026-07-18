@@ -1,12 +1,12 @@
 import { requireRole } from './middleware/rbac.middleware.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 import { getAuditLogs } from './audit-log.js';
-import type { Request, Response, NextFunction } from 'express';
+import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 
 export const registerAdminRoutes = (
-  app: any,
-  requireBackendAuth: any,
-  rateLimiter: any
+  app: Express,
+  requireBackendAuth: RequestHandler,
+  rateLimiter: RequestHandler
 ): void => {
   app.get(
     '/api/admin/stats',
@@ -46,10 +46,10 @@ export const registerAdminRoutes = (
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const filters = {
-          userId: (req as any).validatedQuery.userId || undefined,
-          action: (req as any).validatedQuery.action || undefined,
-          since: (req as any).validatedQuery.since || undefined,
-          limit: (req as any).validatedQuery.limit || 50,
+          userId: req.validatedQuery?.userId || undefined,
+          action: req.validatedQuery?.action || undefined,
+          since: req.validatedQuery?.since || undefined,
+          limit: req.validatedQuery?.limit || 50,
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });

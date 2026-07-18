@@ -15,7 +15,62 @@ import type { AiConfig } from '../../types.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
-const readPrompt = (body: Record<string, any>): string => body?.prompt ?? '';
+const isEvaluationOperation = (operation: string, body: AiRequestBody) =>
+  (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(operation) &&
+  body?.context !== undefined;
+
+const isCustomPracticeRequest = (prompt: string) => {
+  const lower = prompt.toLowerCase();
+  return (
+    lower.includes('sana özel') ||
+    lower.includes('kendi hatalarım') ||
+    lower.includes('hatalarımdan') ||
+    lower.includes('my mistakes') ||
+    lower.includes('custom review') ||
+    lower.includes('specialized words')
+  );
+};
+
+const buildPrompt = (prompt: string, body: AiRequestBody, evaluation: boolean): string => {
+  let finalPrompt = prompt;
+  if (evaluation) {
+    finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
+  }
+  if (isCustomPracticeRequest(prompt) && body?.context) {
+    const memoryContextPrompt = getCustomPracticePrompt(body.context);
+    finalPrompt = `${finalPrompt}\n${memoryContextPrompt}\nINSTRUCTION: You must construct custom practice questions, tests, or explanations based on the retrieved user learning memories listed above. Help them review their mistakes and weak terms.`;
+  }
+  return finalPrompt;
+};
+
+const callProvider = async (
+  config: AiConfig,
+  prompt: string,
+  signal: AbortSignal,
+  fetchImpl: typeof fetch,
+  evaluation: boolean
+): Promise<string> => {
+  if (config.provider === 'anthropic') return callAnthropic(config as ProviderConfig, prompt, signal, fetchImpl);
+  if (config.provider === 'gemini') return callGemini(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
+  return callOpenAI(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
+};
+
+const parseEvaluationResponse = (text: string): { structured: Record<string, unknown> | null; responseText: string } => {
+  try {
+    let cleanText = text.trim();
+    if (cleanText.startsWith('```')) {
+      const lines = cleanText.split('\n');
+      if (lines[0].startsWith('```')) lines.shift();
+      if (lines[lines.length - 1] === '```') lines.pop();
+      cleanText = lines.join('\n').trim();
+    }
+    const parsed = JSON.parse(cleanText);
+    return { structured: parsed, responseText: parsed.professionalVersion || parsed.summary || text };
+  } catch (err) {
+    logger.error('Failed to parse AI evaluation structured response', {}, err as Error);
+    return { structured: null, responseText: text };
+  }
+};
 
 const withTimeout = async <T>(
   work: (signal: AbortSignal) => Promise<T>,
@@ -25,8 +80,8 @@ const withTimeout = async <T>(
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await work(controller.signal);
-  } catch (error: any) {
-    if (error?.name === 'AbortError') {
+  } catch (error: unknown) {
+    if (error instanceof Error && error.name === 'AbortError') {
       throw new ApiError(
         504,
         'ai_timeout',
@@ -44,7 +99,7 @@ interface AiResult {
   requestId: string;
   operation: string;
   text: string;
-  structuredResult?: Record<string, any> | null;
+  structuredResult?: Record<string, unknown> | null;
   provider: string;
   mode: 'mock' | 'real';
   mockMode: boolean;
@@ -56,7 +111,7 @@ interface AiRequestBody {
   operation?: string;
   modeId?: string;
   metadata?: { requestId?: string };
-  context?: any;
+  context?: Record<string, unknown>;
 }
 
 export const createAIService = (
@@ -64,7 +119,7 @@ export const createAIService = (
   fetchImpl: typeof fetch = fetch
 ) => ({
   async complete(operation: string, body: AiRequestBody): Promise<AiResult> {
-    const prompt = readPrompt(body as Record<string, any>);
+    const prompt = body?.prompt ?? '';
     const requestId =
       typeof body?.metadata?.requestId === 'string'
         ? body.metadata.requestId
@@ -84,80 +139,21 @@ export const createAIService = (
       };
     }
 
-    const isEvaluation =
-      (
-        [
-          'analyzeProgress',
-          'evaluateEngineeringEnglish',
-          'analyzeText',
-        ] as string[]
-      ).includes(operation) && body?.context !== undefined;
+    const evaluation = isEvaluationOperation(operation, body);
+    const finalPrompt = buildPrompt(prompt, body, evaluation);
 
-    let finalPrompt = prompt;
-    if (isEvaluation) {
-      finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
-    }
+    const text = await withTimeout(
+      (signal) => callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
+      config.timeoutMs
+    );
 
-    const isCustomPracticeRequest =
-      prompt.toLowerCase().includes('sana özel') ||
-      prompt.toLowerCase().includes('kendi hatalarım') ||
-      prompt.toLowerCase().includes('hatalarımdan') ||
-      prompt.toLowerCase().includes('my mistakes') ||
-      prompt.toLowerCase().includes('custom review') ||
-      prompt.toLowerCase().includes('specialized words');
-
-    if (isCustomPracticeRequest && body?.context) {
-      const memoryContextPrompt = getCustomPracticePrompt(body.context);
-      finalPrompt = `${finalPrompt}\n${memoryContextPrompt}\nINSTRUCTION: You must construct custom practice questions, tests, or explanations based on the retrieved user learning memories listed above. Help them review their mistakes and weak terms.`;
-    }
-
-    const text = await withTimeout((signal) => {
-      if (config.provider === 'anthropic') {
-        return callAnthropic(config as any, finalPrompt, signal, fetchImpl);
-      } else if (config.provider === 'gemini') {
-        return callGemini(
-          config as any,
-          finalPrompt,
-          signal,
-          fetchImpl,
-          isEvaluation
-        );
-      }
-      return callOpenAI(
-        config as any,
-        finalPrompt,
-        signal,
-        fetchImpl,
-        isEvaluation
-      );
-    }, config.timeoutMs);
-
-    let structuredResult: Record<string, any> | null = null;
+    let structuredResult: Record<string, unknown> | null = null;
     let responseText = text;
 
-    if (isEvaluation) {
-      try {
-        let cleanText = text.trim();
-        if (cleanText.startsWith('```')) {
-          const lines = cleanText.split('\n');
-          if (lines[0].startsWith('```')) {
-            lines.shift();
-          }
-          if (lines[lines.length - 1] === '```') {
-            lines.pop();
-          }
-          cleanText = lines.join('\n').trim();
-        }
-        const parsed = JSON.parse(cleanText);
-        structuredResult = parsed;
-        responseText = parsed.professionalVersion || parsed.summary || text;
-      } catch (err) {
-        logger.error(
-          'Failed to parse AI evaluation structured response',
-          {},
-          err as Error
-        );
-      }
+    if (evaluation) {
+      const parsed = parseEvaluationResponse(text);
+      structuredResult = parsed.structured;
+      responseText = parsed.responseText;
     }
 
     return {
