@@ -13,36 +13,68 @@ interface CoachResultPanelProps {
   onExportResult: () => void;
 }
 
+const LimitedResponseBanner = ({
+  isLimitedResponse,
+  mode,
+}: {
+  isLimitedResponse: boolean;
+  mode: string;
+}) =>
+  isLimitedResponse && mode === 'backend' ? (
+    <div className="rounded-[4px] border border-warning/30 bg-warning/5 p-4 text-xs font-medium text-warning shadow-sm">
+      <p className="font-bold uppercase tracking-wider">
+        Limited AI response
+      </p>
+      <p className="mt-1">
+        A complete structured result was unavailable. The readable response
+        is shown below.
+      </p>
+    </div>
+  ) : null;
+
+const ConditionalGrammarNotes = ({ notes }: { notes?: string[] }) => {
+  if (!notes || notes.length === 0) return null;
+  return <ResultList title="Grammar Notes" items={notes} tone="warning" />;
+};
+
+const VocabularyTerms = ({ terms }: { terms: string[] }) => (
+  <div className="flex flex-wrap gap-2 mt-3">
+    {terms.map((term) => (
+      <span
+        key={term}
+        className="text-[9px] font-mono bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
+      >
+        {term}
+      </span>
+    ))}
+  </div>
+);
+
 export const CoachResultPanel = ({
   lastResult,
   isLimitedResponse,
   providerStatus,
   onCopyResult,
   onExportResult,
-}: CoachResultPanelProps) => (
-  <SectionCard
-    title="Structured Coach Result"
-    subtitle={
-      providerStatus.state === 'backend-configured'
-        ? 'Secure AI response using the current learning profile'
-        : 'Mock AI demo response using local learning context only'
-    }
-    icon={Cpu}
-    headerActions={
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge
-          label={
-            providerStatus.state === 'backend-configured'
-              ? 'Secure AI response'
-              : 'Mock AI demo response'
-          }
-          tone={
-            providerStatus.state === 'backend-configured'
-              ? 'success'
-              : 'warning'
-          }
-          className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
-        />
+}: CoachResultPanelProps) => {
+  const isBackend = providerStatus.state === 'backend-configured';
+
+  return (
+    <SectionCard
+      title="Structured Coach Result"
+      subtitle={
+        isBackend
+          ? 'Secure AI response using the current learning profile'
+          : 'Mock AI demo response using local learning context only'
+      }
+      icon={Cpu}
+      headerActions={
+        <div className="flex flex-wrap items-center gap-2">
+          <StatusBadge
+            label={isBackend ? 'Secure AI response' : 'Mock AI demo response'}
+            tone={isBackend ? 'success' : 'warning'}
+            className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+          />
         <Button
           type="button"
           variant="outline"
@@ -65,17 +97,7 @@ export const CoachResultPanel = ({
     }
   >
     <div className="space-y-6">
-      {isLimitedResponse && providerStatus.mode === 'backend' && (
-        <div className="rounded-[4px] border border-warning/30 bg-warning/5 p-4 text-xs font-medium text-warning shadow-sm">
-          <p className="font-bold uppercase tracking-wider">
-            Limited AI response
-          </p>
-          <p className="mt-1">
-            A complete structured result was unavailable. The readable response
-            is shown below.
-          </p>
-        </div>
-      )}
+      <LimitedResponseBanner isLimitedResponse={isLimitedResponse} mode={providerStatus.mode} />
       <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-5 shadow-sm">
         <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
           Summary
@@ -137,16 +159,7 @@ export const CoachResultPanel = ({
           <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
             Technical Vocabulary
           </p>
-          <div className="flex flex-wrap gap-2 mt-3">
-            {lastResult.technicalVocabulary.map((term) => (
-              <span
-                key={term}
-                className="text-[9px] font-mono bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
-              >
-                {term}
-              </span>
-            ))}
-          </div>
+          <VocabularyTerms terms={lastResult.technicalVocabulary} />
         </div>
         <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-5 shadow-sm">
           <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
@@ -169,13 +182,8 @@ export const CoachResultPanel = ({
         </div>
       </div>
 
-      {(lastResult.grammarNotes || []).length > 0 && (
-        <ResultList
-          title="Grammar Notes"
-          items={lastResult.grammarNotes || []}
-          tone="warning"
-        />
-      )}
+      <ConditionalGrammarNotes notes={lastResult.grammarNotes} />
     </div>
   </SectionCard>
-);
+  );
+};

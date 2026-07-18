@@ -1,5 +1,32 @@
 import { expect, test, type Page } from '@playwright/test';
 
+const parseColorValues = (color: string) => color.match(/[\d.]+/g)?.map(Number) || [];
+const isTransparent = (channels: number[]) => channels.length >= 4 && channels[3] === 0;
+const allChannelsAbove = (channels: number[], start: number, end: number, threshold: number) =>
+  channels.slice(start, end).every((ch) => ch > threshold);
+const someChannelAbove = (channels: number[], start: number, threshold: number) =>
+  channels.slice(start).some((ch) => ch > threshold);
+const hasBgImage = (bgImg: string, ...patterns: string[]) => bgImg && patterns.some((p) => bgImg.includes(p));
+const noBgImage = (bgImg: string, ...patterns: string[]) => bgImg && !patterns.some((p) => bgImg.includes(p));
+
+const isLightColor = (element: Element): boolean => {
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251')) return true;
+  const values = parseColorValues(color);
+  if (color.startsWith('oklab') || color.startsWith('oklch')) return (values[0] || 0) > 0.8;
+  if (color.startsWith('color(srgb')) return allChannelsAbove(values, 0, 3, 0.8);
+  if (isTransparent(values)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#141A22');
+  return allChannelsAbove(values, 0, 3, 220);
+};
+
+const isNotBlackButton = (element: Element): boolean => {
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  if (hasBgImage(bgImg, '#617FD8', '#4D6BC0', 'rgb(')) return true;
+  const channels = parseColorValues(color);
+  if (isTransparent(channels)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#000');
+  return channels.length < 3 || someChannelAbove(channels, 0, 70);
+};
+
 const demoLogin = async (page: Page) => {
   await page.goto('/login');
   await page.getByRole('button', { name: 'Use Demo Engineer' }).click();
@@ -338,59 +365,13 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     const card = page.locator('main .premium-panel').first();
     await expect(card).toBeVisible();
     await card.hover();
-    const isLightHover = await card.evaluate((element) => {
-      const style = getComputedStyle(element);
-      const color = style.backgroundColor;
-      const bgImg = style.backgroundImage;
-      if (
-        bgImg &&
-        (bgImg.includes('rgba(255, 255, 255') ||
-          bgImg.includes('rgba(248, 249, 251'))
-      ) {
-        return true;
-      }
-      const values = color.match(/[\d.]+/g)?.map(Number) || [];
-      if (color.startsWith('oklab') || color.startsWith('oklch')) {
-        return (values[0] || 0) > 0.8;
-      }
-      if (color.startsWith('color(srgb')) {
-        return values.slice(0, 3).every((channel) => channel > 0.8);
-      }
-      if (values.length >= 4 && values[3] === 0) {
-        return (
-          bgImg && !bgImg.includes('rgba(0, 0, 0') && !bgImg.includes('#141A22')
-        );
-      }
-      return values.slice(0, 3).every((channel) => channel > 220);
-    });
+    const isLightHover = await card.evaluate(isLightColor);
     expect(isLightHover).toBe(true);
 
     const primaryButton = page
       .getByRole('button', { name: /continue mission|start today/i })
       .first();
-    const primaryIsNotBlack = await primaryButton.evaluate((element) => {
-      const style = getComputedStyle(element);
-      const color = style.backgroundColor;
-      const bgImg = style.backgroundImage;
-      if (
-        bgImg &&
-        (bgImg.includes('#617FD8') ||
-          bgImg.includes('#4D6BC0') ||
-          bgImg.includes('rgb('))
-      ) {
-        return true;
-      }
-      const channels = color.match(/[\d.]+/g)?.map(Number) ?? [];
-      if (channels.length >= 4 && channels[3] === 0) {
-        return (
-          bgImg && !bgImg.includes('rgba(0, 0, 0') && !bgImg.includes('#000')
-        );
-      }
-      return (
-        channels.length < 3 ||
-        channels.slice(0, 3).some((channel) => channel > 70)
-      );
-    });
+    const primaryIsNotBlack = await primaryButton.evaluate(isNotBlackButton);
     expect(primaryIsNotBlack).toBe(true);
 
     const rightPanel = page.getByTestId('dashboard-right-panel');

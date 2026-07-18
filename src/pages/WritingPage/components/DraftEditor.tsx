@@ -18,6 +18,20 @@ interface DraftEditorProps {
   userErrors: Record<string, string>;
 }
 
+const wordCountColor = (count: number) =>
+  count > 200 ? 'text-green-500' : count > 100 ? 'text-[#0047bb]' : 'text-muted-copy';
+
+const charBarColor = (len: number) =>
+  len > 1000 ? 'bg-rose-500' : len > 500 ? 'bg-amber-500' : 'bg-emerald-500';
+
+const messageRoleClass = (role: string) =>
+  role === 'assistant'
+    ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
+    : 'bg-foreground text-background ml-auto';
+
+const messageRoleLabel = (role: string) =>
+  role === 'assistant' ? 'AI Coach \u{1F393}' : 'You \u{1F4BB}';
+
 export const DraftEditor = ({
   title,
   description,
@@ -116,7 +130,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
         </label>
 
         <p
-          className={`mt-1 text-right text-xs font-bold ${wordCount > 200 ? 'text-green-500' : wordCount > 100 ? 'text-[#0047bb]' : 'text-muted-copy'}`}
+          className={`mt-1 text-right text-xs font-bold ${wordCountColor(wordCount)}`}
         >
           {wordCount} words
         </p>
@@ -140,7 +154,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             {draft.length > 0 && (
               <div className="w-24 h-1.5 rounded-full bg-[#f3f3fd] border border-[#d9d9e3] overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${draft.length > 1000 ? 'bg-rose-500' : draft.length > 500 ? 'bg-amber-500' : 'bg-emerald-500'}`}
+                  className={`h-full rounded-full transition-all ${charBarColor(draft.length)}`}
                   style={{
                     width: `${Math.min(100, (draft.length / 1200) * 100)}%`,
                   }}
@@ -182,13 +196,11 @@ Tell me what you want to write or paste a sentence you want to improve!`,
                 key={i}
                 className={cn(
                   'flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs leading-relaxed',
-                  msg.role === 'assistant'
-                    ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
-                    : 'bg-foreground text-background ml-auto'
+                  messageRoleClass(msg.role)
                 )}
               >
                 <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
-                  {msg.role === 'assistant' ? 'AI Coach 🎓' : 'You 💻'}
+                  {messageRoleLabel(msg.role)}
                 </p>
                 <p className="whitespace-pre-wrap">{msg.content}</p>
               </div>

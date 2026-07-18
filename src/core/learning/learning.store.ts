@@ -20,54 +20,44 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 const STORAGE_KEY = 'learning_state';
 const MAX_HISTORY_SIZE = 500;
 
+const mergeDefaults = <T extends { id: string }>(
+  existing: T[],
+  defaults: T[]
+): T[] => {
+  const existingIds = new Set(existing.map((item) => item.id));
+  const missing = defaults.filter((item) => !existingIds.has(item.id));
+  return missing.length > 0 ? [...existing, ...missing] : existing;
+};
+
+const ensureArrays = (state: Partial<LearningState>): LearningState => {
+  const safe = <T>(v: T[] | undefined, fallback: T[]): T[] =>
+    Array.isArray(v) ? v : fallback;
+  return {
+    missions: state.missions ?? DEFAULT_MISSIONS,
+    achievements: state.achievements ?? DEFAULT_ACHIEVEMENTS,
+    xp: state.xp ?? 0,
+    level: state.level ?? 1,
+    coins: state.coins ?? 0,
+    elo: state.elo ?? 1000,
+    streak: state.streak ?? 0,
+    lastActivityDate: state.lastActivityDate ?? null,
+    studySessions: safe(state.studySessions, []),
+    scoreHistory: safe(state.scoreHistory, []),
+    xpHistory: safe(state.xpHistory, []),
+    eloHistory: safe(state.eloHistory, []),
+    vocabularyPool: safe(state.vocabularyPool, []),
+    grammarPool: safe(state.grammarPool, []),
+  };
+};
+
 const getInitialState = (): LearningState => {
   const persisted = storage.get<LearningState>(STORAGE_KEY);
   if (persisted) {
-    const existingMissionIds = new Set(persisted.missions.map((m) => m.id));
-    const newMissions = DEFAULT_MISSIONS.filter(
-      (m) => !existingMissionIds.has(m.id)
-    );
-    if (newMissions.length > 0) {
-      persisted.missions = [...persisted.missions, ...newMissions];
-    }
-
-    const existingAchIds = new Set(
-      persisted.achievements?.map((a) => a.id) || []
-    );
-    const newAchievements = DEFAULT_ACHIEVEMENTS.filter(
-      (a) => !existingAchIds.has(a.id)
-    );
-    if (newAchievements.length > 0) {
-      persisted.achievements = [
-        ...(persisted.achievements || []),
-        ...newAchievements,
-      ];
-    }
-    // Ensure arrays always exist (added after initial release)
-    if (!Array.isArray(persisted.vocabularyPool)) persisted.vocabularyPool = [];
-    if (!Array.isArray(persisted.grammarPool)) persisted.grammarPool = [];
-    if (!Array.isArray(persisted.studySessions)) persisted.studySessions = [];
-    if (!Array.isArray(persisted.scoreHistory)) persisted.scoreHistory = [];
-    if (!Array.isArray(persisted.xpHistory)) persisted.xpHistory = [];
-    if (!Array.isArray(persisted.eloHistory)) persisted.eloHistory = [];
-    return persisted;
+    persisted.missions = mergeDefaults(persisted.missions, DEFAULT_MISSIONS);
+    persisted.achievements = mergeDefaults(persisted.achievements ?? [], DEFAULT_ACHIEVEMENTS);
+    return ensureArrays(persisted);
   }
-  return {
-    missions: DEFAULT_MISSIONS,
-    achievements: DEFAULT_ACHIEVEMENTS,
-    xp: 0,
-    level: 1,
-    coins: 0,
-    elo: 1000,
-    streak: 0,
-    lastActivityDate: null,
-    studySessions: [],
-    scoreHistory: [],
-    xpHistory: [],
-    eloHistory: [],
-    vocabularyPool: [],
-    grammarPool: [],
-  };
+  return ensureArrays({});
 };
 
 export interface LearningStoreActions {

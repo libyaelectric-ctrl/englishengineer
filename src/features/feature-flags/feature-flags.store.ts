@@ -18,17 +18,34 @@ const isFlagEligible = (
   key: string
 ): boolean => {
   if (!flagConfig) return false;
-  if (flagConfig.allowedPlans && subscription?.planId) {
-    if (!flagConfig.allowedPlans.includes(subscription.planId)) return false;
-  }
-  if (flagConfig.allowedUsers && currentUser?.id) {
-    if (!flagConfig.allowedUsers.includes(currentUser.id)) return false;
-  }
-  if (flagConfig.rolloutPercentage !== undefined) {
-    const hash = userId ? hashString(userId + key) : Math.random() * 100;
-    if (hash % 100 >= flagConfig.rolloutPercentage) return false;
-  }
+  if (isPlanBlocked(flagConfig, subscription)) return false;
+  if (isUserBlocked(flagConfig, currentUser)) return false;
+  if (isRolloutBlocked(flagConfig, userId, key)) return false;
   return true;
+};
+
+const isPlanBlocked = (
+  flagConfig: (typeof FEATURE_FLAGS)[string],
+  subscription: { planId?: string } | null
+): boolean =>
+  Boolean(flagConfig.allowedPlans && subscription?.planId &&
+    !flagConfig.allowedPlans.includes(subscription.planId));
+
+const isUserBlocked = (
+  flagConfig: (typeof FEATURE_FLAGS)[string],
+  currentUser: { id?: string } | null
+): boolean =>
+  Boolean(flagConfig.allowedUsers && currentUser?.id &&
+    !flagConfig.allowedUsers.includes(currentUser.id));
+
+const isRolloutBlocked = (
+  flagConfig: (typeof FEATURE_FLAGS)[string],
+  userId: string | undefined,
+  key: string
+): boolean => {
+  if (flagConfig.rolloutPercentage === undefined) return false;
+  const hash = userId ? hashString(userId + key) : Math.random() * 100;
+  return hash % 100 >= flagConfig.rolloutPercentage;
 };
 
 export const useFeatureFlagsStore = create<FeatureFlagsState>()(

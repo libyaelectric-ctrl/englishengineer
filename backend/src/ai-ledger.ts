@@ -31,7 +31,7 @@ export interface AiLedger {
 }
 
 export const createSupabaseAiLedger = (
-  config: Record<string, any>
+  config: { workspace?: { configured?: boolean; supabaseUrl?: string; supabaseServiceRoleKey?: string } }
 ): AiLedger => {
   if (!config.workspace?.configured) {
     throw new Error(
@@ -61,8 +61,8 @@ export const createSupabaseAiLedger = (
           return 0;
         }
         return count ?? 0;
-      } catch (err: any) {
-        logger.error('Ledger count error', { error: err.message });
+      } catch (err: unknown) {
+        logger.error('Ledger count error', { error: err instanceof Error ? err.message : String(err) });
         return 0;
       }
     },
@@ -83,8 +83,8 @@ export const createSupabaseAiLedger = (
         if (error) {
           logger.error('Ledger log error', { error: error.message });
         }
-      } catch (err: any) {
-        logger.error('Ledger log error', { error: err.message });
+      } catch (err: unknown) {
+        logger.error('Ledger log error', { error: err instanceof Error ? err.message : String(err) });
       }
     },
   };
@@ -121,7 +121,7 @@ export const createMemoryAiLedger = (): AiLedger => {
   };
 };
 
-export const createAiLedger = (config: Record<string, any>): AiLedger => {
+export const createAiLedger = (config: { workspace?: Record<string, unknown> }): AiLedger => {
   if (config.workspace?.configured) {
     return createSupabaseAiLedger(config);
   }

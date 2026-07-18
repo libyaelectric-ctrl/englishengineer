@@ -32,47 +32,84 @@ const normalizeSkill = (
   };
 };
 
+const mergeDailyTarget = (
+  stored: UserLearningProfile,
+  initial: UserLearningProfile
+) => ({
+  minutes: stored.dailyTarget?.minutes ?? initial.dailyTarget.minutes,
+  taskCount: stored.dailyTarget?.taskCount ?? initial.dailyTarget.taskCount,
+});
+
+const mergeWeeklyTolerance = (
+  stored: UserLearningProfile,
+  initial: UserLearningProfile
+) => ({
+  allowedMissedDays:
+    stored.weeklyTolerance?.allowedMissedDays ??
+    initial.weeklyTolerance.allowedMissedDays,
+});
+
+const pickOrFallback = <T>(value: T | undefined | null, fallback: T): T =>
+  value ?? fallback;
+
+const pickArrayOrFallback = <T>(value: T[] | undefined, fallback: T[]): T[] =>
+  Array.isArray(value) ? value : fallback;
+
 const mergeProfileDefaults = (
   stored: UserLearningProfile,
   initial: UserLearningProfile
 ): Omit<UserLearningProfile, 'userId' | 'skills'> => ({
   ...stored,
-  goals: Array.isArray(stored.goals) ? stored.goals : initial.goals,
-  professionId: stored.professionId ?? initial.professionId,
-  industryId: stored.industryId ?? initial.industryId,
-  communicationGoals: Array.isArray(stored.communicationGoals)
-    ? stored.communicationGoals
-    : initial.communicationGoals,
-  selfReportedCefr: stored.selfReportedCefr ?? initial.selfReportedCefr,
-  learningFocus: Array.isArray(stored.learningFocus)
-    ? stored.learningFocus
-    : initial.learningFocus,
-  selectedPlan: stored.selectedPlan ?? initial.selectedPlan,
-  professionalTrack: stored.professionalTrack ?? initial.professionalTrack,
-  electricalSubdomain:
-    stored.electricalSubdomain ?? initial.electricalSubdomain,
-  experienceLevel: stored.experienceLevel ?? initial.experienceLevel,
-  careerGoal: stored.careerGoal ?? initial.careerGoal,
-  country: stored.country ?? initial.country,
-  timezone: stored.timezone ?? initial.timezone,
-  interfaceLanguage: stored.interfaceLanguage ?? initial.interfaceLanguage,
-  placementCompleted:
-    stored.placementCompleted ?? initial.placementCompleted,
-  placementConfidence:
-    stored.placementConfidence ?? initial.placementConfidence,
-  placementBand: stored.placementBand ?? initial.placementBand,
-  dailyTarget: {
-    minutes: stored.dailyTarget?.minutes ?? initial.dailyTarget.minutes,
-    taskCount:
-      stored.dailyTarget?.taskCount ?? initial.dailyTarget.taskCount,
-  },
-  weeklyTolerance: {
-    allowedMissedDays:
-      stored.weeklyTolerance?.allowedMissedDays ??
-      initial.weeklyTolerance.allowedMissedDays,
-  },
-  onboardingCompleted:
-    stored.onboardingCompleted ?? initial.onboardingCompleted,
+  goals: pickArrayOrFallback(stored.goals, initial.goals),
+  professionId: pickOrFallback(stored.professionId, initial.professionId),
+  industryId: pickOrFallback(stored.industryId, initial.industryId),
+  communicationGoals: pickArrayOrFallback(
+    stored.communicationGoals,
+    initial.communicationGoals
+  ),
+  selfReportedCefr: pickOrFallback(
+    stored.selfReportedCefr,
+    initial.selfReportedCefr
+  ),
+  learningFocus: pickArrayOrFallback(
+    stored.learningFocus,
+    initial.learningFocus
+  ),
+  selectedPlan: pickOrFallback(stored.selectedPlan, initial.selectedPlan),
+  professionalTrack: pickOrFallback(
+    stored.professionalTrack,
+    initial.professionalTrack
+  ),
+  electricalSubdomain: pickOrFallback(
+    stored.electricalSubdomain,
+    initial.electricalSubdomain
+  ),
+  experienceLevel: pickOrFallback(
+    stored.experienceLevel,
+    initial.experienceLevel
+  ),
+  careerGoal: pickOrFallback(stored.careerGoal, initial.careerGoal),
+  country: pickOrFallback(stored.country, initial.country),
+  timezone: pickOrFallback(stored.timezone, initial.timezone),
+  interfaceLanguage: pickOrFallback(
+    stored.interfaceLanguage,
+    initial.interfaceLanguage
+  ),
+  placementCompleted: pickOrFallback(
+    stored.placementCompleted,
+    initial.placementCompleted
+  ),
+  placementConfidence: pickOrFallback(
+    stored.placementConfidence,
+    initial.placementConfidence
+  ),
+  placementBand: pickOrFallback(stored.placementBand, initial.placementBand),
+  dailyTarget: mergeDailyTarget(stored, initial),
+  weeklyTolerance: mergeWeeklyTolerance(stored, initial),
+  onboardingCompleted: pickOrFallback(
+    stored.onboardingCompleted,
+    initial.onboardingCompleted
+  ),
 });
 
 export const LearningProfileRepository = {

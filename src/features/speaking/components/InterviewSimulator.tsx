@@ -208,6 +208,239 @@ const ResultsView = ({
   </div>
 );
 
+const startSpeechRecognition = (
+  w: Record<string, unknown>,
+  setCurrentAnswer: React.Dispatch<React.SetStateAction<string>>,
+  recognitionRef: React.MutableRefObject<unknown>,
+  setIsRecording: (v: boolean) => void
+) => {
+  const SpeechRecognitionConstructor = (w.SpeechRecognition ||
+    w.webkitSpeechRecognition) as new () => {
+    continuous: boolean;
+    interimResults: boolean;
+    lang: string;
+    onresult: ((event: unknown) => void) | null;
+    onerror: (() => void) | null;
+    onend: (() => void) | null;
+    stop: () => void;
+    start: () => void;
+  };
+  const recognition = new SpeechRecognitionConstructor();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+
+  recognition.onresult = (event: unknown) => {
+    const e = event as { results: SpeechRecognitionResultList };
+    const finalTranscript = Array.from({ length: e.results.length }, (_, i) => {
+      const result = e.results[i] as unknown as { isFinal: boolean; item: (index: number) => { transcript: string } };
+      return result.isFinal ? result.item(0).transcript : '';
+    }).join('');
+    if (finalTranscript) {
+      setCurrentAnswer((prev) => prev ? `${prev} ${finalTranscript}` : finalTranscript);
+    }
+  };
+
+  recognition.onerror = () => setIsRecording(false);
+  recognition.onend = () => setIsRecording(false);
+
+  recognitionRef.current = recognition;
+  recognition.start();
+  setIsRecording(true);
+};
+
+const getInterviewTitle = (type: InterviewType) =>
+  type === 'system-design' ? 'System Design' : 'Coding';
+
+const RecordingControls = ({
+  isRecording,
+  isScoring,
+  isTimeUp,
+  toggleRecording,
+}: {
+  isRecording: boolean;
+  isScoring: boolean;
+  isTimeUp: boolean;
+  toggleRecording: () => void;
+}) => (
+  <div className="flex flex-wrap gap-3">
+    <Button
+      variant={isRecording ? 'danger' : 'secondary'}
+      onClick={toggleRecording}
+      disabled={isScoring || isTimeUp}
+      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
+    >
+      {isRecording ? (
+        <>
+          <MicOff className="h-4 w-4" /> Stop Recording
+        </>
+      ) : (
+        <>
+          <Mic className="h-4 w-4" /> Record Answer
+        </>
+      )}
+    </Button>
+
+    {isRecording && (
+      <span className="flex items-center gap-2 text-xs text-rose-600 font-bold uppercase tracking-wider animate-pulse">
+        <span className="h-2.5 w-2.5 rounded-full bg-rose-600 shrink-0" />
+        Recording in progress...
+      </span>
+    )}
+  </div>
+);
+
+const QuestionCard = ({
+  question,
+  isTimeUp,
+}: {
+  question: InterviewQuestion;
+  isTimeUp: boolean;
+}) => (
+  <div
+    className={`rounded-[4px] border p-5 shadow-sm ${
+      isTimeUp
+        ? 'border-rose-500/30 bg-rose-500/5'
+        : 'border-[#0047bb]/25 bg-[#0047bb]/5'
+    }`}
+  >
+    <p className="text-xs font-bold uppercase text-[#0047bb] tracking-wider">
+      {question.difficulty.toUpperCase()} · {question.topics.join(', ')}
+    </p>
+    <p className="mt-2 text-base leading-7 text-foreground font-normal">
+      {question.question}
+    </p>
+  </div>
+);
+
+const SubmitBar = ({
+  isScoring,
+  isLastQuestion,
+  submitAnswer,
+  resetInterview,
+  canSubmit,
+}: {
+  isScoring: boolean;
+  isLastQuestion: boolean;
+  submitAnswer: () => void;
+  resetInterview: () => void;
+  canSubmit: boolean;
+}) => (
+  <div className="flex items-center gap-3 border-t border-[#d9d9e3] pt-4">
+    <Button
+      onClick={submitAnswer}
+      disabled={!canSubmit || isScoring}
+      className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
+    >
+      {isScoring ? 'Scoring...' : isLastQuestion ? 'Submit & Finish' : 'Submit & Next'}
+    </Button>
+    <Button
+      variant="outline"
+      onClick={resetInterview}
+      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+    >
+      <StopCircle className="h-4 w-4" /> End Interview
+    </Button>
+  </div>
+);
+
+const InterviewView = ({
+  session,
+  currentQuestion,
+  currentAnswer,
+  setCurrentAnswer,
+  isRecording,
+  isScoring,
+  timeRemaining,
+  toggleRecording,
+  submitAnswer,
+  resetInterview,
+}: {
+  session: InterviewSession;
+  currentQuestion: InterviewQuestion;
+  currentAnswer: string;
+  setCurrentAnswer: (v: string) => void;
+  isRecording: boolean;
+  isScoring: boolean;
+  timeRemaining: number;
+  toggleRecording: () => void;
+  submitAnswer: () => void;
+  resetInterview: () => void;
+}) => {
+  const progress =
+    (session.currentQuestionIndex / session.questions.length) * 100;
+  const isTimeUp = timeRemaining === 0;
+  const isLastQuestion =
+    session.currentQuestionIndex + 1 === session.questions.length;
+
+  return (
+    <div className="space-y-6 animate-in fade-in">
+      <SectionCard
+        title={`${getInterviewTitle(session.type)} Interview`}
+        subtitle={`Question ${session.currentQuestionIndex + 1} of ${session.questions.length}`}
+        icon={session.type === 'system-design' ? Layers : Code}
+        headerActions={
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-mono text-muted-copy font-bold uppercase">
+              <Clock className="mr-1 inline h-3.5 w-3.5 text-[#0047bb]" />
+              {InterviewSimulatorService.formatTime(timeRemaining)}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={resetInterview}
+              aria-label="Reset interview"
+              className="h-8 w-8 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-5">
+          <ProgressBar value={progress} color="primary" showValue />
+          <QuestionCard question={currentQuestion} isTimeUp={isTimeUp} />
+
+          <div>
+            <label
+              htmlFor="interview-answer"
+              className="block text-sm font-bold text-foreground uppercase tracking-wider"
+            >
+              Your Answer
+            </label>
+            <p className="mt-1 text-xs text-muted-copy font-medium">
+              Type your answer or use voice recording to speak your response.
+            </p>
+            <textarea
+              id="interview-answer"
+              value={currentAnswer}
+              onChange={(e) => setCurrentAnswer(e.target.value)}
+              disabled={isScoring}
+              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
+              placeholder={isTimeUp ? "Time's up! Submit your answer below." : 'Type your answer here, or click the microphone to speak...'}
+            />
+          </div>
+
+          <RecordingControls
+            isRecording={isRecording}
+            isScoring={isScoring}
+            isTimeUp={isTimeUp}
+            toggleRecording={toggleRecording}
+          />
+
+          <SubmitBar
+            isScoring={isScoring}
+            isLastQuestion={isLastQuestion}
+            submitAnswer={submitAnswer}
+            resetInterview={resetInterview}
+            canSubmit={Boolean(currentAnswer.trim()) || isTimeUp}
+          />
+        </div>
+      </SectionCard>
+    </div>
+  );
+};
+
 export const InterviewSimulator = () => {
   const [state, setState] = useState<InterviewState>('select');
   const [session, setSession] = useState<InterviewSession | null>(null);
@@ -268,53 +501,7 @@ export const InterviewSimulator = () => {
       return;
     }
 
-    const SpeechRecognitionConstructor = (w.SpeechRecognition ||
-      w.webkitSpeechRecognition) as new () => {
-      continuous: boolean;
-      interimResults: boolean;
-      lang: string;
-      onresult: ((event: unknown) => void) | null;
-      onerror: (() => void) | null;
-      onend: (() => void) | null;
-      stop: () => void;
-      start: () => void;
-    };
-    const recognition = new SpeechRecognitionConstructor();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
-
-    recognition.onresult = (event: unknown) => {
-      const e = event as { results: SpeechRecognitionResultList };
-      let finalTranscript = '';
-      for (let i = 0; i < e.results.length; i++) {
-        const result = e.results[i] as unknown as {
-          isFinal: boolean;
-          length: number;
-          item: (index: number) => { transcript: string };
-        };
-        if (result.isFinal) {
-          finalTranscript += result.item(0).transcript;
-        }
-      }
-      if (finalTranscript) {
-        setCurrentAnswer((prev) =>
-          prev ? `${prev} ${finalTranscript}` : finalTranscript
-        );
-      }
-    };
-
-    recognition.onerror = () => {
-      setIsRecording(false);
-    };
-
-    recognition.onend = () => {
-      setIsRecording(false);
-    };
-
-    recognitionRef.current = recognition;
-    recognition.start();
-    setIsRecording(true);
+    startSpeechRecognition(w, setCurrentAnswer, recognitionRef, setIsRecording);
   }, [isRecording]);
 
   const submitAnswer = useCallback(async () => {
@@ -379,12 +566,8 @@ export const InterviewSimulator = () => {
         )
       : 0;
 
-  const handleTypeSelect = (type: InterviewType) => {
-    startInterview(type);
-  };
-
   if (state === 'select') {
-    return <SelectView onSelect={handleTypeSelect} />;
+    return <SelectView onSelect={startInterview} />;
   }
 
   if (state === 'results' && session) {
@@ -399,127 +582,19 @@ export const InterviewSimulator = () => {
   }
 
   if (state === 'interview' && currentQuestion && session) {
-    const progress =
-      (session.currentQuestionIndex / session.questions.length) * 100;
-    const isTimeUp = timeRemaining === 0;
-
     return (
-      <div className="space-y-6 animate-in fade-in">
-        <SectionCard
-          title={`${session.type === 'system-design' ? 'System Design' : 'Coding'} Interview`}
-          subtitle={`Question ${session.currentQuestionIndex + 1} of ${session.questions.length}`}
-          icon={session.type === 'system-design' ? Layers : Code}
-          headerActions={
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-mono text-muted-copy font-bold uppercase">
-                <Clock className="mr-1 inline h-3.5 w-3.5 text-[#0047bb]" />
-                {InterviewSimulatorService.formatTime(timeRemaining)}
-              </span>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={resetInterview}
-                aria-label="Reset interview"
-                className="h-8 w-8 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
-              >
-                <RotateCcw className="h-4 w-4" />
-              </Button>
-            </div>
-          }
-        >
-          <div className="space-y-5">
-            <ProgressBar value={progress} color="primary" showValue />
-
-            <div
-              className={`rounded-[4px] border p-5 shadow-sm ${
-                isTimeUp
-                  ? 'border-rose-500/30 bg-rose-500/5'
-                  : 'border-[#0047bb]/25 bg-[#0047bb]/5'
-              }`}
-            >
-              <p className="text-xs font-bold uppercase text-[#0047bb] tracking-wider">
-                {currentQuestion.difficulty.toUpperCase()} ·{' '}
-                {currentQuestion.topics.join(', ')}
-              </p>
-              <p className="mt-2 text-base leading-7 text-foreground font-normal">
-                {currentQuestion.question}
-              </p>
-            </div>
-
-            <div>
-              <label
-                htmlFor="interview-answer"
-                className="block text-sm font-bold text-foreground uppercase tracking-wider"
-              >
-                Your Answer
-              </label>
-              <p className="mt-1 text-xs text-muted-copy font-medium">
-                Type your answer or use voice recording to speak your response.
-              </p>
-              <textarea
-                id="interview-answer"
-                value={currentAnswer}
-                onChange={(e) => setCurrentAnswer(e.target.value)}
-                disabled={isScoring}
-                className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
-                placeholder={
-                  isTimeUp
-                    ? "Time's up! Submit your answer below."
-                    : 'Type your answer here, or click the microphone to speak...'
-                }
-              />
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Button
-                variant={isRecording ? 'danger' : 'secondary'}
-                onClick={toggleRecording}
-                disabled={isScoring || isTimeUp}
-                className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
-              >
-                {isRecording ? (
-                  <>
-                    <MicOff className="h-4 w-4" /> Stop Recording
-                  </>
-                ) : (
-                  <>
-                    <Mic className="h-4 w-4" /> Record Answer
-                  </>
-                )}
-              </Button>
-
-              {isRecording && (
-                <span className="flex items-center gap-2 text-xs text-rose-600 font-bold uppercase tracking-wider animate-pulse">
-                  <span className="h-2.5 w-2.5 rounded-full bg-rose-600 shrink-0" />
-                  Recording in progress...
-                </span>
-              )}
-            </div>
-
-            <div className="flex items-center gap-3 border-t border-[#d9d9e3] pt-4">
-              <Button
-                onClick={submitAnswer}
-                disabled={(!currentAnswer.trim() && !isTimeUp) || isScoring}
-                className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
-              >
-                {isScoring
-                  ? 'Scoring...'
-                  : session.currentQuestionIndex + 1 ===
-                      session.questions.length
-                    ? 'Submit & Finish'
-                    : 'Submit & Next'}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={resetInterview}
-                className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
-              >
-                <StopCircle className="h-4 w-4" /> End Interview
-              </Button>
-            </div>
-          </div>
-        </SectionCard>
-      </div>
+      <InterviewView
+        session={session}
+        currentQuestion={currentQuestion}
+        currentAnswer={currentAnswer}
+        setCurrentAnswer={setCurrentAnswer}
+        isRecording={isRecording}
+        isScoring={isScoring}
+        timeRemaining={timeRemaining}
+        toggleRecording={toggleRecording}
+        submitAnswer={submitAnswer}
+        resetInterview={resetInterview}
+      />
     );
   }
 

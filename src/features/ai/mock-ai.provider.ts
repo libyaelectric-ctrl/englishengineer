@@ -172,54 +172,74 @@ const getRecommendedNextTask = (
     ? `Complete a 20 minute plan: 8 minutes ${focusArea}, 7 minutes Vocabulary, 5 minutes speaking summary.`
     : `Run one ${focusArea} mission, then ask AI Coach to review the result.`;
 
+const MOCK_CORRECTIONS = [
+  'Use "we need to verify" instead of "we need check".',
+  'Use "the installation is delayed because..." instead of "installation delayed because...".',
+  'Add a clear action owner when giving site or meeting updates.',
+];
+
+const MOCK_GRAMMAR_NOTES = [
+  'Check article use before technical nouns such as "the panel", "the inspection", and "the consultant".',
+  'Use past tense for completed site work and future forms for planned actions.',
+  'Avoid emotional wording; use evidence, impact, and action.',
+];
+
+const MOCK_SUGGESTED_ACTIONS = [
+  'Rewrite your input with one issue, one impact, and one action.',
+  'Add three target vocabulary terms from the list above.',
+  'Complete the next weak-skill mission from the dashboard.',
+];
+
+const formatEloImpact = (wordCount: number): string =>
+  wordCount >= 30
+    ? '+8 to +14 Engineer ELO if revised and practiced'
+    : '+3 to +6 Engineer ELO after adding more project context';
+
+const resolveContext = (context: AIRequest['context']) => {
+  if (!context) {
+    return { weakSkills: [], focusArea: 'Writing', userName: 'the learner', targetLevel: 'B2', weakVocabulary: [] };
+  }
+  const weakSkills = context.weakSkills?.filter((s) => s !== 'None') ?? [];
+  const focusArea = context.recommendedFocus || weakSkills[0] || 'Writing';
+  return {
+    weakSkills,
+    focusArea,
+    userName: context.userName || 'the learner',
+    targetLevel: context.targetLevel || 'B2',
+    weakVocabulary: context.weakVocabulary || [],
+  };
+};
+
 const createMockCoachResult = (
   request: AIRequest,
   exampleOutput?: string
 ): AICoachResult => {
-  const context = request.context;
-  const weakSkills =
-    context?.weakSkills.filter((skill) => skill !== 'None') || [];
-  const focusArea = context?.recommendedFocus || weakSkills[0] || 'Writing';
+  const ctx = resolveContext(request.context);
   const promptSignals = getPromptSignals(request.prompt);
   const technicalVocabulary = buildTechnicalVocabulary(
     promptSignals,
-    context?.weakVocabulary || []
+    ctx.weakVocabulary
   );
   const wordCount = request.prompt.trim().split(/\s+/).filter(Boolean).length;
 
   return {
-    summary: `Mock AI demo active. ${request.modeName} reviewed ${wordCount} words using local learning context for ${context?.userName || 'the learner'}.`,
-    strengths: buildStrengths(wordCount, promptSignals, context),
-    weaknesses: buildWeaknesses(wordCount, focusArea, weakSkills),
-    corrections: [
-      'Use "we need to verify" instead of "we need check".',
-      'Use "the installation is delayed because..." instead of "installation delayed because...".',
-      'Add a clear action owner when giving site or meeting updates.',
-    ],
+    summary: `Mock AI demo active. ${request.modeName} reviewed ${wordCount} words using local learning context for ${ctx.userName}.`,
+    strengths: buildStrengths(wordCount, promptSignals, request.context),
+    weaknesses: buildWeaknesses(wordCount, ctx.focusArea, ctx.weakSkills),
+    corrections: MOCK_CORRECTIONS,
     nativeRewrite: createNativeRewrite(request, exampleOutput),
     professionalVersion: createNativeRewrite(request, exampleOutput),
     simplifiedVersion: `Simple version: ${request.prompt.trim().replace(/\s+/g, ' ')}. State the issue, impact, and next action in short sentences.`,
     technicalVocabulary,
     keyVocabulary: technicalVocabulary,
-    grammarNotes: [
-      'Check article use before technical nouns such as "the panel", "the inspection", and "the consultant".',
-      'Use past tense for completed site work and future forms for planned actions.',
-      'Avoid emotional wording; use evidence, impact, and action.',
-    ],
+    grammarNotes: MOCK_GRAMMAR_NOTES,
     toneFeedback: getToneFeedback(request.modeId),
-    recommendedNextTask: getRecommendedNextTask(request.operation, focusArea),
-    estimatedCefrImpact: `Likely impact: stronger ${context?.targetLevel || 'B2'} control if repeated 3 times this week.`,
-    cefrEstimate: context?.targetLevel || 'B2',
-    engineerEloImpactEstimate:
-      wordCount >= 30
-        ? '+8 to +14 Engineer ELO if revised and practiced'
-        : '+3 to +6 Engineer ELO after adding more project context',
-    suggestedActions: [
-      'Rewrite your input with one issue, one impact, and one action.',
-      'Add three target vocabulary terms from the list above.',
-      'Complete the next weak-skill mission from the dashboard.',
-    ],
-    focusArea,
+    recommendedNextTask: getRecommendedNextTask(request.operation, ctx.focusArea),
+    estimatedCefrImpact: `Likely impact: stronger ${ctx.targetLevel} control if repeated 3 times this week.`,
+    cefrEstimate: ctx.targetLevel,
+    engineerEloImpactEstimate: formatEloImpact(wordCount),
+    suggestedActions: MOCK_SUGGESTED_ACTIONS,
+    focusArea: ctx.focusArea,
   };
 };
 

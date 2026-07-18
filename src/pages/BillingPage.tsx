@@ -71,7 +71,7 @@ export const BillingPage = () => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10 font-sans">
+    <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10 font-sans">
       {/* Header */}
       <header className="flex flex-col gap-4 border-b border-[#d9d9e3] pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -125,24 +125,22 @@ export const BillingPage = () => {
             subtitle="Real-time daily usage logs compared against current subscription thresholds"
             icon={ShieldCheck}
           >
-            <div className="space-y-4">
-              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 space-y-6 shadow-sm">
-                <BillingPlanCards
-                  subscription={subscription}
-                  todaysCoachSessions={todaysCoachSessions}
-                  todaysAttempts={
-                    learningState.studySessions.filter(
-                      (s) =>
-                        new Date(s.timestamp).toDateString() ===
-                        new Date().toDateString()
-                    ).length
-                  }
-                  todaysReviews={memory.dueToday}
-                  uploadedDocsCount={0}
-                  voiceMinutesUsed={0}
-                />
-                <BillingUpgradeCTA planId={subscription.planId} />
-              </div>
+            <div className="space-y-6">
+              <BillingPlanCards
+                subscription={subscription}
+                todaysCoachSessions={todaysCoachSessions}
+                todaysAttempts={
+                  learningState.studySessions.filter(
+                    (s) =>
+                      new Date(s.timestamp).toDateString() ===
+                      new Date().toDateString()
+                  ).length
+                }
+                todaysReviews={memory.dueToday}
+                uploadedDocsCount={0}
+                voiceMinutesUsed={0}
+              />
+              <BillingUpgradeCTA planId={subscription.planId} />
             </div>
           </SectionCard>
 
@@ -220,7 +218,7 @@ export const BillingPage = () => {
             <div className="space-y-5">
               {/* Virtual Premium Card mockup */}
               <div className="relative overflow-hidden rounded-[4px] border border-[#0047bb]/30 bg-[#0047bb]/5 p-5 text-[#0047bb] shadow-sm">
-                <div className="absolute right-0 top-0 -mr-6 -mt-6 h-24 w-24 rounded-full bg-[#0047bb]/5" />
+                <div className="absolute right-0 top-0 -mr-6 -mt-6 h-24 w-24 rounded-[4px] bg-[#0047bb]/5" />
                 <div className="flex justify-between items-start mb-8">
                   <CreditCard className="h-8 w-8 text-[#0047bb]" />
                   <span className="rounded-[4px] bg-[#0047bb]/15 border border-[#0047bb]/35 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">

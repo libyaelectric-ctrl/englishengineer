@@ -65,16 +65,19 @@ export const ListeningHelpers = {
    * Gets a letter icon or initials representing the discipline.
    */
   getDisciplineShort(discipline: string): string {
-    if (discipline.includes('Electrical')) return 'EE';
-    if (discipline.includes('Design')) return 'DES';
-    if (discipline.includes('Power')) return 'PWR';
-    if (discipline.includes('Quality')) return 'QA';
-    if (discipline.includes('Operations')) return 'O&M';
-    if (discipline.includes('Field')) return 'FLD';
-    if (discipline.includes('Testing')) return 'TST';
-    if (discipline.includes('Safety')) return 'SFT';
-    if (discipline.includes('Project')) return 'PM';
-    if (discipline.includes('Mechanical')) return 'ME';
-    return 'ENG';
+    const mappings: [string, string][] = [
+      ['Electrical', 'EE'],
+      ['Design', 'DES'],
+      ['Power', 'PWR'],
+      ['Quality', 'QA'],
+      ['Operations', 'O&M'],
+      ['Field', 'FLD'],
+      ['Testing', 'TST'],
+      ['Safety', 'SFT'],
+      ['Project', 'PM'],
+      ['Mechanical', 'ME'],
+    ];
+    const match = mappings.find(([keyword]) => discipline.includes(keyword));
+    return match ? match[1] : 'ENG';
   },
 };

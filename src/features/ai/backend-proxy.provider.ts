@@ -101,18 +101,18 @@ const isRecord = (value: unknown): value is Record<string, unknown> =>
 
 export const isAICoachResult = (value: unknown): value is AICoachResult => {
   if (!isRecord(value)) return false;
-  return (
-    typeof value.summary === 'string' &&
-    Array.isArray(value.strengths) &&
-    Array.isArray(value.weaknesses) &&
-    Array.isArray(value.corrections) &&
-    typeof value.nativeRewrite === 'string' &&
-    Array.isArray(value.technicalVocabulary) &&
-    typeof value.recommendedNextTask === 'string' &&
-    typeof value.estimatedCefrImpact === 'string' &&
-    Array.isArray(value.suggestedActions) &&
-    typeof value.focusArea === 'string'
-  );
+  return [
+    typeof value.summary === 'string',
+    Array.isArray(value.strengths),
+    Array.isArray(value.weaknesses),
+    Array.isArray(value.corrections),
+    typeof value.nativeRewrite === 'string',
+    Array.isArray(value.technicalVocabulary),
+    typeof value.recommendedNextTask === 'string',
+    typeof value.estimatedCefrImpact === 'string',
+    Array.isArray(value.suggestedActions),
+    typeof value.focusArea === 'string',
+  ].every(Boolean);
 };
 
 export const mapHttpError = (status: number): BackendProxyError => {
@@ -201,6 +201,23 @@ const parseErrorValue = (
   };
 };
 
+const safeString = (val: unknown): string | undefined =>
+  typeof val === 'string' ? val : undefined;
+
+const safeMode = (val: unknown): 'real' | 'mock' | undefined =>
+  val === 'real' || val === 'mock' ? val : undefined;
+
+const validateStructuredResult = (data: Record<string, unknown>): void => {
+  const structuredResult = data.structuredResult;
+  if (structuredResult !== undefined && !isAICoachResult(structuredResult)) {
+    throw new BackendProxyError(
+      'backend_malformed_response',
+      'Backend AI structuredResult did not match the v1 contract.',
+      false
+    );
+  }
+};
+
 export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
   if (!isRecord(data)) {
     throw new BackendProxyError(
@@ -210,29 +227,19 @@ export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
     );
   }
 
-  const structuredResult = data.structuredResult;
-  if (structuredResult !== undefined && !isAICoachResult(structuredResult)) {
-    throw new BackendProxyError(
-      'backend_malformed_response',
-      'Backend AI structuredResult did not match the v1 contract.',
-      false
-    );
-  }
+  validateStructuredResult(data);
 
   return {
     contractVersion:
       data.contractVersion === CONTRACT_VERSION ? CONTRACT_VERSION : undefined,
-    requestId: typeof data.requestId === 'string' ? data.requestId : undefined,
-    operation:
-      typeof data.operation === 'string'
-        ? (data.operation as AIOperation)
-        : undefined,
-    structuredResult,
-    text: typeof data.text === 'string' ? data.text : undefined,
-    result: typeof data.result === 'string' ? data.result : undefined,
-    message: typeof data.message === 'string' ? data.message : undefined,
-    provider: typeof data.provider === 'string' ? data.provider : undefined,
-    mode: data.mode === 'real' || data.mode === 'mock' ? data.mode : undefined,
+    requestId: safeString(data.requestId),
+    operation: safeString(data.operation) as AIOperation | undefined,
+    structuredResult: data.structuredResult as unknown as AICoachResult,
+    text: safeString(data.text),
+    result: safeString(data.result),
+    message: safeString(data.message),
+    provider: safeString(data.provider),
+    mode: safeMode(data.mode),
     mockMode: typeof data.mockMode === 'boolean' ? data.mockMode : undefined,
     error: parseErrorValue(data.error),
   };
@@ -306,6 +313,85 @@ export const createBackendProxyProvider = (
     isConnected: Boolean(proxyUrl),
   };
 
+  const executeSingleAttempt = async (
+    proxyUrl: string,
+    operation: AIOperation,
+    requestId: string,
+    payload: BackendProxyPayload
+  ): Promise<BackendProxyResponse> => {
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(
+      () => controller.abort(),
+      DEFAULT_PROXY_TIMEOUT_MS
+    );
+
+    try {
+      const authHeaders = await getBackendAuthHeaders();
+      const response = await fetch(
+        resolveProxyEndpoint(proxyUrl, operation),
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-EngVox-AI-Contract': CONTRACT_VERSION,
+            'X-EngVox-Request-Id': requestId,
+            ...authHeaders,
+          },
+          body: JSON.stringify(payload),
+          signal: controller.signal,
+        }
+      );
+      window.clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw mapHttpError(response.status);
+      }
+
+      const data = parseBackendResponse(await response.json());
+      if (data.error) {
+        throw new BackendProxyError(
+          data.error.code === 'rate_limited'
+            ? 'backend_rate_limited'
+            : 'backend_http_error',
+          data.error.message,
+          data.error.retryable === true
+        );
+      }
+
+      return data;
+    } catch (error) {
+      window.clearTimeout(timeoutId);
+      throw mapUnknownError(error);
+    }
+  };
+
+  const executeWithRetry = async (
+    operation: AIOperation,
+    requestId: string,
+    payload: BackendProxyPayload,
+    startedAt: number
+  ): Promise<AIResponse> => {
+    let retryCount = 0;
+    let lastError: BackendProxyError | null = null;
+
+    while (retryCount <= MAX_RETRIES) {
+      try {
+        const data = await executeSingleAttempt(proxyUrl!, operation, requestId, payload);
+        return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
+      } catch (error) {
+        lastError = error instanceof BackendProxyError ? error : mapUnknownError(error);
+        if (!lastError.retryable || retryCount >= MAX_RETRIES) break;
+        retryCount += 1;
+      }
+    }
+
+    throw new BackendProxyError(
+      lastError?.code || 'backend_unknown_error',
+      lastError?.message || 'Backend AI proxy request failed.',
+      false
+    );
+  };
+
   const callProxy = async (
     operation: AIOperation,
     request: AIRequest
@@ -317,13 +403,6 @@ export const createBackendProxyProvider = (
       return buildUnavailableResponse(operation, requestId, status);
     }
 
-    const metadata: AIRequestMetadata = {
-      contractVersion: CONTRACT_VERSION,
-      requestId,
-      sentAt: new Date().toISOString(),
-      client: 'EngVox-web',
-    };
-
     const payload: BackendProxyPayload = {
       contractVersion: CONTRACT_VERSION,
       operation,
@@ -331,66 +410,15 @@ export const createBackendProxyProvider = (
       modeName: request.modeName,
       prompt: request.prompt,
       context: request.context,
-      metadata,
+      metadata: {
+        contractVersion: CONTRACT_VERSION,
+        requestId,
+        sentAt: new Date().toISOString(),
+        client: 'EngVox-web',
+      },
     };
 
-    let retryCount = 0;
-    let lastError: BackendProxyError | null = null;
-
-    while (retryCount <= MAX_RETRIES) {
-      const controller = new AbortController();
-      const timeoutId = window.setTimeout(
-        () => controller.abort(),
-        DEFAULT_PROXY_TIMEOUT_MS
-      );
-
-      try {
-        const authHeaders = await getBackendAuthHeaders();
-        const response = await fetch(
-          resolveProxyEndpoint(proxyUrl, operation),
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-EngVox-AI-Contract': CONTRACT_VERSION,
-              'X-EngVox-Request-Id': requestId,
-              ...authHeaders,
-            },
-            body: JSON.stringify(payload),
-            signal: controller.signal,
-          }
-        );
-        window.clearTimeout(timeoutId);
-
-        if (!response.ok) {
-          throw mapHttpError(response.status);
-        }
-
-        const data = parseBackendResponse(await response.json());
-        if (data.error) {
-          throw new BackendProxyError(
-            data.error.code === 'rate_limited'
-              ? 'backend_rate_limited'
-              : 'backend_http_error',
-            data.error.message,
-            data.error.retryable === true
-          );
-        }
-
-        return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
-      } catch (error) {
-        window.clearTimeout(timeoutId);
-        lastError = mapUnknownError(error);
-        if (!lastError.retryable || retryCount >= MAX_RETRIES) break;
-        retryCount += 1;
-      }
-    }
-
-    throw new BackendProxyError(
-      lastError?.code || 'backend_unknown_error',
-      lastError?.message || 'Backend AI proxy request failed.',
-      false
-    );
+    return executeWithRetry(operation, requestId, payload, startedAt);
   };
 
   return {

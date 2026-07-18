@@ -124,6 +124,96 @@ const DocumentUploadSection = ({
   </div>
 );
 
+const FormHeaderActions = ({
+  sessions,
+  isLoading,
+  onRegenerate,
+  onClearHistory,
+  onReset,
+}: {
+  sessions: unknown[];
+  isLoading: boolean;
+  onRegenerate: () => void;
+  onClearHistory: () => void;
+  onReset: () => void;
+}) => (
+  <div className="flex flex-wrap gap-1.5">
+    <Button onClick={onRegenerate} variant="outline" className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5" disabled={sessions.length === 0 || isLoading}>
+      Regenerate
+    </Button>
+    <Button onClick={onClearHistory} variant="outline" className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5" disabled={sessions.length === 0}>
+      Clear
+    </Button>
+    <Button onClick={onReset} variant="outline" className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5">
+      Reset
+    </Button>
+  </div>
+);
+
+const ErrorBanner = ({ error }: { error: string }) => (
+  <div className="flex items-center gap-2 rounded-[4px] border border-danger/25 bg-danger/5 px-3 py-2 text-xs font-bold uppercase tracking-wider text-danger shadow-sm">
+    <AlertCircle className="h-3.5 w-3.5" />
+    {error}
+  </div>
+);
+
+const FormActions = ({
+  selectedMode, input, isLoading, allowed,
+}: {
+  selectedMode: AICoachMode | null;
+  input: string;
+  isLoading: boolean;
+  allowed: boolean;
+}) => (
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">Mode: {selectedMode?.name ?? ''}</p>
+    <Button type="submit" className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4" disabled={isLoading || input.trim().length === 0 || !allowed}>
+      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+      {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
+    </Button>
+  </div>
+);
+
+const FormBody = ({
+  selectedModeId,
+  selectedMode,
+  input,
+  aiEntitlement,
+  isLoading,
+  error,
+  docLimit,
+  docLimitLabel,
+  uploadedDocsCount,
+  uploadError,
+  onSetInput,
+  onFileUpload,
+  onNavigate,
+}: {
+  selectedModeId: AICoachModeId;
+  selectedMode: AICoachMode | null;
+  input: string;
+  aiEntitlement: { allowed: boolean; reason: string };
+  isLoading: boolean;
+  error: string | null;
+  docLimit: number | 'unlimited';
+  docLimitLabel: string;
+  uploadedDocsCount: number;
+  uploadError: string | null;
+  onSetInput: (input: string) => void;
+  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onNavigate: (path: string) => void;
+}) => (
+  <>
+    {!aiEntitlement.allowed && <AIEntitlementWarning reason={aiEntitlement.reason} onNavigate={onNavigate} />}
+    {selectedModeId === 'document_analysis_assistant' && (
+      <DocumentUploadSection docLimitLabel={docLimitLabel} uploadedDocsCount={uploadedDocsCount} docLimit={docLimit} uploadError={uploadError} onFileUpload={onFileUpload} allowed={aiEntitlement.allowed} />
+    )}
+    <textarea value={input} onChange={(event) => onSetInput(event.target.value)} disabled={!aiEntitlement.allowed} rows={3} className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] focus:border-[#0047bb] focus:ring-0 shadow-sm" placeholder={selectedMode?.placeholder ?? ''} aria-label="Technical note content input" />
+    {error && <ErrorBanner error={error} />}
+    <FormActions selectedMode={selectedMode} input={input} isLoading={isLoading} allowed={aiEntitlement.allowed} />
+  </>
+);
+
 export const CoachInputForm = ({
   selectedModeId,
   selectedMode,
@@ -150,94 +240,13 @@ export const CoachInputForm = ({
     title={`${selectedMode?.name ?? ''} Input`}
     subtitle="Paste notes, reflections or site messages"
     icon={Terminal}
-    headerActions={
-      <div className="flex flex-wrap gap-1.5">
-        <Button
-          onClick={onRegenerate}
-          variant="outline"
-          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
-          disabled={sessions.length === 0 || isLoading}
-        >
-          Regenerate
-        </Button>
-        <Button
-          onClick={onClearHistory}
-          variant="outline"
-          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
-          disabled={sessions.length === 0}
-        >
-          Clear
-        </Button>
-        <Button
-          onClick={onReset}
-          variant="outline"
-          className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
-        >
-          Reset
-        </Button>
-      </div>
-    }
+    headerActions={<FormHeaderActions sessions={sessions} isLoading={isLoading} onRegenerate={onRegenerate} onClearHistory={onClearHistory} onReset={onReset} />}
   >
     <form onSubmit={onSubmit} className="space-y-4">
       {isModeLocked ? (
-        <PlanLockBanner
-          name={selectedMode?.name ?? ''}
-          isProLocked={requiredFeature === 'unlimitedAIFeedback'}
-          onNavigate={onNavigate}
-        />
+        <PlanLockBanner name={selectedMode?.name ?? ''} isProLocked={requiredFeature === 'unlimitedAIFeedback'} onNavigate={onNavigate} />
       ) : (
-        <>
-          {!aiEntitlement.allowed && (
-            <AIEntitlementWarning
-              reason={aiEntitlement.reason}
-              onNavigate={onNavigate}
-            />
-          )}
-          {selectedModeId === 'document_analysis_assistant' && (
-            <DocumentUploadSection
-              docLimitLabel={docLimitLabel}
-              uploadedDocsCount={uploadedDocsCount}
-              docLimit={docLimit}
-              uploadError={uploadError}
-              onFileUpload={onFileUpload}
-              allowed={aiEntitlement.allowed}
-            />
-          )}
-          <textarea
-            value={input}
-            onChange={(event) => onSetInput(event.target.value)}
-            disabled={!aiEntitlement.allowed}
-            rows={3}
-            className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] focus:border-[#0047bb] focus:ring-0 shadow-sm"
-            placeholder={selectedMode?.placeholder ?? ''}
-            aria-label="Technical note content input"
-          />
-          {error && (
-            <div className="flex items-center gap-2 rounded-[4px] border border-danger/25 bg-danger/5 px-3 py-2 text-xs font-bold uppercase tracking-wider text-danger shadow-sm">
-              <AlertCircle className="h-3.5 w-3.5" />
-              {error}
-            </div>
-          )}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
-              Mode: {selectedMode?.name ?? ''}
-            </p>
-            <Button
-              type="submit"
-              className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
-              disabled={
-                isLoading || input.trim().length === 0 || !aiEntitlement.allowed
-              }
-            >
-              {isLoading ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-              {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
-            </Button>
-          </div>
-        </>
+        <FormBody selectedModeId={selectedModeId} selectedMode={selectedMode} input={input} aiEntitlement={aiEntitlement} isLoading={isLoading} error={error} docLimit={docLimit} docLimitLabel={docLimitLabel} uploadedDocsCount={uploadedDocsCount} uploadError={uploadError} onSetInput={onSetInput} onFileUpload={onFileUpload} onNavigate={onNavigate} />
       )}
     </form>
   </SectionCard>

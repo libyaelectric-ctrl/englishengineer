@@ -33,7 +33,7 @@ export const emptySubscription = (): SubscriptionSnapshot => ({
 });
 
 const getRequestUserId = (request: Request): string | null => {
-  const authUserId = (request as any).auth?.userId;
+  const authUserId = request.auth?.userId;
   if (typeof authUserId === 'string' && authUserId.trim()) {
     return authUserId.trim();
   }
@@ -48,7 +48,7 @@ export const assertUserOwnership = (request: Request): string | null => {
   if (!userId) return null;
   const claimedUserId = request.body?.userId ?? request.query?.userId;
   if (
-    (request as any).auth?.source !== 'dev-bypass' &&
+    request.auth?.source !== 'dev-bypass' &&
     typeof claimedUserId === 'string' &&
     claimedUserId.trim() !== userId
   ) {

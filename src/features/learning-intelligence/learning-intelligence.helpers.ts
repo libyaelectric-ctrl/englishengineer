@@ -99,6 +99,28 @@ const computeRepeatedMistakes = (
   return { repeated, topMistake };
 };
 
+const ROLE_PHRASE_MAP: Record<CareerRole, string> = {
+  'Procurement Engineer': 'Procurement',
+  'Commissioning Engineer': 'Commissioning',
+  'HSE Engineer': 'HSE',
+  'QA/QC Engineer': 'QA/QC',
+  'Electrical Works Chief': 'Coordination',
+  'MEP Coordinator': 'Coordination',
+  'Site Engineer': 'Coordination',
+  'Data Center Engineer': 'Coordination',
+  'Project Manager': 'Coordination',
+};
+
+const getRecommendedPhrase = (careerRole: CareerRole): string =>
+  ROLE_PHRASE_MAP[careerRole] ?? 'Coordination';
+
+const getQuickAIAction = (topMistake: string): string => {
+  if (topMistake === 'tone') return 'More polite';
+  if (topMistake === 'grammar' || topMistake === 'article')
+    return 'Explain mistakes';
+  return 'More professional';
+};
+
 export const buildSevenDayReport = (
   learning: LearningState,
   assessment: AssessmentProfile,
@@ -123,19 +145,12 @@ export const buildSevenDayReport = (
     [...averages].sort((a, b) => a.score - b.score)[0]?.module ??
     'Not enough recent data';
 
-  const { repeated, topMistake: topRepeatedMistake } = computeRepeatedMistakes(mistakes);
+  const { repeated, topMistake: topRepeatedMistake } =
+    computeRepeatedMistakes(mistakes);
 
   const completedTasks = Object.values(completedTaskDates).filter(
     (date) => new Date(date).getTime() >= threshold.getTime()
   ).length;
-
-  const getRecommendedPhrase = (): string => {
-    if (careerRole === 'Procurement Engineer') return 'Procurement';
-    if (careerRole === 'Commissioning Engineer') return 'Commissioning';
-    if (careerRole === 'HSE Engineer') return 'HSE';
-    if (careerRole === 'QA/QC Engineer') return 'QA/QC';
-    return 'Coordination';
-  };
 
   return {
     completedTasks,
@@ -152,12 +167,7 @@ export const buildSevenDayReport = (
     currentLevel,
     topRepeatedMistake,
     recommendedWorkTools: ROLE_RECOMMENDATIONS[careerRole][0],
-    recommendedQuickAIAction:
-      topRepeatedMistake === 'tone'
-        ? 'More polite'
-        : topRepeatedMistake === 'grammar' || topRepeatedMistake === 'article'
-          ? 'Explain mistakes'
-          : 'More professional',
-    recommendedPhraseCategory: getRecommendedPhrase(),
+    recommendedQuickAIAction: getQuickAIAction(topRepeatedMistake),
+    recommendedPhraseCategory: getRecommendedPhrase(careerRole),
   };
 };

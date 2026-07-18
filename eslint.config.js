@@ -14,6 +14,8 @@ export default tseslint.config(
       '.vite',
       'test-results',
       'coverage/**',
+      'storybook-static',
+      'storybook-static/**',
     ],
   },
   {

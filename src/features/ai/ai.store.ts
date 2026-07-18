@@ -59,6 +59,81 @@ const EMPTY_EXAMPLES: Array<{ input: string; output: string }> = [];
 
 const persistedState = getInitialState();
 
+const buildResultOrFallback = (
+  response: Awaited<ReturnType<typeof AIService.run>>,
+  context: ReturnType<typeof buildCoachContext>
+): AICoachResult =>
+  response.structuredResult || {
+    summary: response.text,
+    strengths: ['Coach response completed.'],
+    weaknesses: ['Backend response did not include a structured result.'],
+    corrections: [],
+    nativeRewrite: response.text,
+    technicalVocabulary: [],
+    recommendedNextTask: context.recommendedFocus,
+    estimatedCefrImpact: `Continue toward ${context.targetLevel}.`,
+    suggestedActions: ['Run another coach session with a clearer prompt.'],
+    focusArea: context.recommendedFocus,
+  };
+
+const buildSessionList = (
+  mode: ReturnType<typeof getCoachModeById>,
+  prompt: string,
+  response: Awaited<ReturnType<typeof AIService.run>>,
+  result: AICoachResult,
+  existingSessions: AICoachSession[]
+): AICoachSession[] => {
+  const session: AICoachSession = {
+    id: createCoachSessionId(),
+    modeId: mode.id,
+    modeName: mode.name,
+    input: prompt,
+    result,
+    timestamp: new Date().toISOString(),
+    providerUsed: response.providerStatus,
+  };
+  return [session, ...existingSessions].slice(0, 20);
+};
+
+const buildSuccessLogList = (
+  mode: ReturnType<typeof getCoachModeById>,
+  response: Awaited<ReturnType<typeof AIService.run>>,
+  existingLogs: AISessionLog[]
+): AISessionLog[] => {
+  const sessionLog: AISessionLog = {
+    id: IdService.createId('ai_log'),
+    provider: response.providerStatus.mode,
+    operation: mode.operation,
+    durationMs: response.metadata?.durationMs || 0,
+    success: response.metadata?.success === true,
+    timestamp: new Date().toISOString(),
+    errorMessage:
+      response.metadata?.success === false
+        ? response.providerStatus.detail
+        : undefined,
+    requestId: response.metadata?.requestId,
+  };
+  return [sessionLog, ...existingLogs].slice(0, 50);
+};
+
+const buildErrorLogList = (
+  mode: ReturnType<typeof getCoachModeById>,
+  message: string,
+  existingLogs: AISessionLog[]
+): AISessionLog[] =>
+  [
+    {
+      id: IdService.createId('ai_log'),
+      provider: 'backend' as const,
+      operation: mode.operation,
+      durationMs: 0,
+      success: false,
+      timestamp: new Date().toISOString(),
+      errorMessage: message,
+    },
+    ...existingLogs,
+  ].slice(0, 50);
+
 export const useAIStore = create<AIStoreState>((set, get) => ({
   modes: AI_COACH_MODES,
   selectedModeId: persistedState.selectedModeId,
@@ -119,49 +194,16 @@ export const useAIStore = create<AIStoreState>((set, get) => ({
         context,
       });
 
+      const result = buildResultOrFallback(response, context);
       const isLimitedResponse = !response.structuredResult;
       if (isLimitedResponse && response.providerStatus.mode === 'backend') {
         logger.w(
           'Backend AI response did not include structuredResult; showing raw response.'
         );
       }
-      const result = response.structuredResult || {
-        summary: response.text,
-        strengths: ['Coach response completed.'],
-        weaknesses: ['Backend response did not include a structured result.'],
-        corrections: [],
-        nativeRewrite: response.text,
-        technicalVocabulary: [],
-        recommendedNextTask: context.recommendedFocus,
-        estimatedCefrImpact: `Continue toward ${context.targetLevel}.`,
-        suggestedActions: ['Run another coach session with a clearer prompt.'],
-        focusArea: context.recommendedFocus,
-      };
 
-      const session: AICoachSession = {
-        id: createCoachSessionId(),
-        modeId: mode.id,
-        modeName: mode.name,
-        input: prompt,
-        result,
-        timestamp: new Date().toISOString(),
-        providerUsed: response.providerStatus,
-      };
-      const sessions = [session, ...get().sessions].slice(0, 20);
-      const sessionLog: AISessionLog = {
-        id: IdService.createId('ai_log'),
-        provider: response.providerStatus.mode,
-        operation: mode.operation,
-        durationMs: response.metadata?.durationMs || 0,
-        success: response.metadata?.success === true,
-        timestamp: new Date().toISOString(),
-        errorMessage:
-          response.metadata?.success === false
-            ? response.providerStatus.detail
-            : undefined,
-        requestId: response.metadata?.requestId,
-      };
-      const sessionLogs = [sessionLog, ...get().sessionLogs].slice(0, 50);
+      const sessions = buildSessionList(mode, prompt, response, result, get().sessions);
+      const sessionLogs = buildSuccessLogList(mode, response, get().sessionLogs);
 
       set({
         sessions,
@@ -188,18 +230,8 @@ export const useAIStore = create<AIStoreState>((set, get) => ({
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'AI Coach request failed.';
-      const sessionLogs = [
-        {
-          id: IdService.createId('ai_log'),
-          provider: 'backend' as const,
-          operation: mode.operation,
-          durationMs: 0,
-          success: false,
-          timestamp: new Date().toISOString(),
-          errorMessage: message,
-        },
-        ...get().sessionLogs,
-      ].slice(0, 50);
+      const sessionLogs = buildErrorLogList(mode, message, get().sessionLogs);
+
       set({
         isLoading: false,
         error: message,

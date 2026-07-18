@@ -58,20 +58,19 @@ export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
   }
 };
 
+const VALID_MODES: readonly EnvironmentValidationResult['mode'][] = [
+  'production',
+  'staging',
+  'development',
+  'local',
+];
+
 const normalizeEnvironmentMode = (
   mode: string | undefined
-): EnvironmentValidationResult['mode'] => {
-  if (
-    mode === 'production' ||
-    mode === 'staging' ||
-    mode === 'development' ||
-    mode === 'local'
-  ) {
-    return mode;
-  }
-
-  return 'local';
-};
+): EnvironmentValidationResult['mode'] =>
+  VALID_MODES.includes(mode as EnvironmentValidationResult['mode'])
+    ? (mode as EnvironmentValidationResult['mode'])
+    : 'local';
 
 const getUnsafeFrontendEnvKeys = (source: EngVoxEnv | undefined): string[] =>
   Object.keys(source || {}).filter((key) =>
@@ -142,27 +141,34 @@ const collectEnvironmentErrors = (
   return errors;
 };
 
+const readEnvValues = (source: EngVoxEnv | undefined) => {
+  const v = source ?? {};
+  return {
+    appVersion: v.VITE_APP_VERSION || '4.0.1',
+    aiProvider: v.VITE_AI_PROVIDER || 'mock',
+    authProvider: v.VITE_AUTH_PROVIDER || 'local',
+    hasAiProxyUrl: isConfiguredPublicUrl(v.VITE_AI_PROXY_URL),
+    hasSupabaseUrl: isConfiguredPublicUrl(v.VITE_SUPABASE_URL),
+    hasSupabaseAnonKey: Boolean(v.VITE_SUPABASE_ANON_KEY),
+    hasBillingApiUrl: isConfiguredPublicUrl(v.VITE_BILLING_API_URL),
+    hasStripePublishableKey: Boolean(v.VITE_STRIPE_PUBLISHABLE_KEY),
+  };
+};
+
 export const validateEnvironment = (
   source: EngVoxEnv | undefined = env
 ): EnvironmentValidationResult => {
   const mode = normalizeEnvironmentMode(source?.VITE_ENVIRONMENT_MODE);
-  const appVersion = source?.VITE_APP_VERSION || '4.0.1';
-  const aiProvider = source?.VITE_AI_PROVIDER || 'mock';
-  const authProvider = source?.VITE_AUTH_PROVIDER || 'local';
-  const hasAiProxyUrl = isConfiguredPublicUrl(source?.VITE_AI_PROXY_URL);
-  const hasSupabaseUrl = isConfiguredPublicUrl(source?.VITE_SUPABASE_URL);
-  const hasSupabaseAnonKey = Boolean(source?.VITE_SUPABASE_ANON_KEY);
-  const hasBillingApiUrl = isConfiguredPublicUrl(source?.VITE_BILLING_API_URL);
-  const hasStripePublishableKey = Boolean(source?.VITE_STRIPE_PUBLISHABLE_KEY);
-  const billingMode = hasBillingApiUrl ? 'backend' : 'local-fallback';
+  const cfg = readEnvValues(source);
+  const billingMode = cfg.hasBillingApiUrl ? 'backend' : 'local-fallback';
   const unsafeFrontendKeys = getUnsafeFrontendEnvKeys(source);
 
   const warnings = collectEnvironmentWarnings(
-    aiProvider, hasAiProxyUrl, authProvider, hasSupabaseUrl, hasSupabaseAnonKey, hasBillingApiUrl
+    cfg.aiProvider, cfg.hasAiProxyUrl, cfg.authProvider, cfg.hasSupabaseUrl, cfg.hasSupabaseAnonKey, cfg.hasBillingApiUrl
   );
   const errors = collectEnvironmentErrors(
-    mode, aiProvider, hasAiProxyUrl, authProvider, hasSupabaseUrl, hasSupabaseAnonKey,
-    hasBillingApiUrl, appVersion, unsafeFrontendKeys
+    mode, cfg.aiProvider, cfg.hasAiProxyUrl, cfg.authProvider, cfg.hasSupabaseUrl, cfg.hasSupabaseAnonKey,
+    cfg.hasBillingApiUrl, cfg.appVersion, unsafeFrontendKeys
   );
 
   return {
@@ -171,15 +177,15 @@ export const validateEnvironment = (
     errors,
     warnings,
     safeConfig: {
-      appVersion,
-      aiProvider,
-      authProvider,
+      appVersion: cfg.appVersion,
+      aiProvider: cfg.aiProvider,
+      authProvider: cfg.authProvider,
       billingMode,
-      hasAiProxyUrl,
-      hasSupabaseUrl,
-      hasSupabaseAnonKey,
-      hasBillingApiUrl,
-      hasStripePublishableKey,
+      hasAiProxyUrl: cfg.hasAiProxyUrl,
+      hasSupabaseUrl: cfg.hasSupabaseUrl,
+      hasSupabaseAnonKey: cfg.hasSupabaseAnonKey,
+      hasBillingApiUrl: cfg.hasBillingApiUrl,
+      hasStripePublishableKey: cfg.hasStripePublishableKey,
     },
   };
 };

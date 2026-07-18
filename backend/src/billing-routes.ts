@@ -9,14 +9,14 @@ import {
   BillingPortalBodySchema,
 } from './validation.js';
 import type { BillingService } from './billing-service.js';
-import type { Request, Response, NextFunction } from 'express';
+import type { Express, Request, Response, NextFunction, RequestHandler } from 'express';
 
 export const registerBillingRoutes = (
-  app: any,
+  app: Express,
   billingService: BillingService,
-  requireBackendAuth: any,
-  rateLimiter: any,
-  optionalBackendAuth: any = requireBackendAuth
+  requireBackendAuth: RequestHandler,
+  rateLimiter: RequestHandler,
+  optionalBackendAuth: RequestHandler = requireBackendAuth
 ): void => {
   app.post(
     '/api/billing/create-checkout-session',
@@ -105,7 +105,7 @@ export const registerBillingRoutes = (
     try {
       await optionalBackendAuth(req, res, next);
     } catch {
-      (req as any).auth = null;
+      req.auth = undefined;
       next();
     }
   };
@@ -135,10 +135,10 @@ export const registerBillingRoutes = (
             eventType = parsedBody.type || 'unknown';
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (process.env.NODE_ENV !== 'production') {
           logger.warn('Stripe webhook log parse error', {
-            error: err?.message,
+            error: err instanceof Error ? err.message : String(err),
           });
         }
       }

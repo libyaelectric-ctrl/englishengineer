@@ -20,7 +20,7 @@ const listeningModule = compile(resolve(baseDir, 'listening-data.ts'));
 const roleplayModule = compile(resolve(baseDir, 'roleplay-data.ts'));
 const writingModule = compile(resolve(baseDir, 'writing-data.ts'));
 
-const load = async (code, filePath) => {
+const load = async (code, _filePath) => {
   const moduleUrl = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
   return import(moduleUrl);
 };

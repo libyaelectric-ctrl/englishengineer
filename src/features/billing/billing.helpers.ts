@@ -273,6 +273,10 @@ export const formatRenewalDate = (isoDate: string | null): string => {
   }).format(new Date(isoDate));
 };
 
+const isCancellationPending = (sub: SubscriptionSnapshot) =>
+  sub.cancelAtPeriodEnd &&
+  (sub.status === 'active' || sub.status === 'trialing');
+
 export const getBillingStatusPresentation = (
   subscription: SubscriptionSnapshot,
   providerStatus: BillingProviderStatus
@@ -296,10 +300,7 @@ export const getBillingStatusPresentation = (
   const plan = BILLING_PLANS[subscription.planId];
   const periodValue = formatRenewalDate(subscription.currentPeriodEnd);
 
-  if (
-    subscription.cancelAtPeriodEnd &&
-    (subscription.status === 'active' || subscription.status === 'trialing')
-  ) {
+  if (isCancellationPending(subscription)) {
     return {
       planId: subscription.planId,
       planLabel: plan.name,
