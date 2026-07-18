@@ -1,19 +1,22 @@
-import { type FC } from 'react';
+import { type FC, lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { RightSidebar } from './RightSidebar';
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { useAppStore } from '@/store/app.store';
-import { CommandPalette } from '@/shared/components/CommandPalette';
 import { Menu } from 'lucide-react';
+
+const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 
 export const AppShell: FC = () => {
   const { toggleSidebar } = useAppStore();
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-background text-foreground">
-      <CommandPalette />
+      <Suspense fallback={null}>
+        <CommandPalette />
+      </Suspense>
       {/* Nav1 - Left sidebar */}
       <Sidebar />
 
