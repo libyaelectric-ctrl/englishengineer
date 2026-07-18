@@ -21,48 +21,53 @@ export const MissionSelector = ({
   currentLevel,
   onMissionSelect,
 }: MissionSelectorProps) => (
-  <div>
-    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy mb-2">
-      Select Mission
+  <div className="font-sans">
+    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy mb-3">
+      Select Speaking Mission
     </p>
-    <div className="flex flex-wrap gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-2.5 shadow-sm">
-      {roleplayMissions.map((mission) => (
-        <button
-          key={mission.id}
-          type="button"
-          onClick={() => onMissionSelect(mission.id)}
-          className={`flex min-h-9 items-center gap-2 rounded-[4px] border px-4 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-            selectedMissionId === mission.id
-              ? 'border-[#0047bb] bg-[#0047bb]/10 text-foreground'
-              : 'border-transparent text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
-          }`}
-        >
-          <span>{mission.title}</span>
-          <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/20">
-            {mission.difficulty}
-          </span>
-          <span className="rounded-[4px] bg-[#0047bb]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] border border-[#0047bb]/20">
-            {mission.estimatedMinutes}M
-          </span>
-          {mission.expectedKeywords[0] && (
-            <span className="rounded-[4px] bg-success/10 px-1.5 py-0.5 text-[9px] font-bold text-success border border-success/20">
-              {mission.expectedKeywords[0]}
-            </span>
-          )}
-          <LevelAccessBadge
-            label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
-          />
-          {typeof completedMissions[mission.id] === 'number' && (
-            <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-          )}
-        </button>
-      ))}
-      {roleplayMissions.length === 0 && (
-        <p className="px-3 py-3 text-sm text-muted-copy font-bold uppercase">
-          No current-level content yet. No Speaking roleplay is available for
-          this category and level filter.
-        </p>
-      )}
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {roleplayMissions.map((mission) => {
+        const isSelected = selectedMissionId === mission.id;
+        const isCompleted = typeof completedMissions[mission.id] === 'number';
+        return (
+          <button
+            key={mission.id}
+            type="button"
+            onClick={() => onMissionSelect(mission.id)}
+            className={`w-full text-left p-4 rounded-[4px] border transition-all cursor-pointer shadow-sm flex flex-col justify-between gap-3 min-h-[110px] ${
+              isSelected
+                ? 'border-[#0047bb] bg-[#0047bb]/5'
+                : 'border-[#d9d9e3] bg-white hover:border-[#0047bb]/40 hover:bg-[#faf8ff]'
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2 w-full">
+              <span className="text-xs font-bold text-foreground leading-tight">
+                {mission.title}
+              </span>
+              {isCompleted && (
+                <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
+              )}
+            </div>
+            <div className="flex flex-wrap items-center gap-1.5 mt-auto">
+              <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/10 uppercase tracking-wider">
+                {mission.difficulty}
+              </span>
+              <span className="rounded-[4px] bg-[#0047bb]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] border border-[#0047bb]/10">
+                {mission.estimatedMinutes}M
+              </span>
+              <LevelAccessBadge
+                label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
+              />
+            </div>
+          </button>
+        );
+      })}
     </div>
+    {roleplayMissions.length === 0 && (
+      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-xs font-bold text-muted-copy uppercase tracking-wider text-center shadow-sm">
+        No current-level content yet. No Speaking roleplay is available for this
+        category and level filter.
+      </div>
+    )}
   </div>
 );

@@ -131,7 +131,7 @@ const CurriculumPage = () => {
   ).length;
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10">
+    <div className="mx-auto max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
       <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-[#faf8ff] py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Learning Hub
