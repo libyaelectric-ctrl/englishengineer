@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AIService, AIProviderStatus } from '@/features/ai';
 import { useWorkToolsStore } from '@/features/work-tools';
-import { Button } from '@/shared/components/Button';
 import { PageHeader } from '@/shared/components/PageHeader';
 import { QuickAITab } from '@/pages/QuickToolsPage/QuickAITab';
 import { MeetingPhrasebookTab } from '@/pages/QuickToolsPage/MeetingPhrasebookTab';
@@ -38,15 +37,20 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             ['dictionary', 'Site Dictionary'],
           ] as const
         ).map(([id, label]) => (
-          <Button
+          <button
             key={id}
             role="tab"
+            type="button"
             aria-selected={tab === id}
-            variant={tab === id ? 'primary' : 'ghost'}
             onClick={() => setTab(id)}
+            className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              tab === id
+                ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
+                : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+            }`}
           >
             {label}
-          </Button>
+          </button>
         ))}
       </div>
 
