@@ -240,7 +240,8 @@ const registerRoutes = (
     response.json({
       ...health,
       checks,
-      stripeConfigured: (checks.stripe as { configured?: boolean })?.configured ?? false,
+      stripeConfigured:
+        (checks.stripe as { configured?: boolean })?.configured ?? false,
     });
   };
 
