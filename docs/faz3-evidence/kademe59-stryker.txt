@@ -1,9 +1,13 @@
-﻿=== Stryker Mutation Testing Durumu - 2026-07-18 20:28 ===
+﻿=== Stryker Mutation Testing Durumu ===
 
-Stryker lokal ortamda kurulu degil ve stryker.config.json mevcut degil.
-Package.json icerisinde stryker bagimliligi yok.
+Stryker config dosyasi mevcut mu:
+HAYIR - stryker.config.json bulunamadi
 
-Mevcut test altyapisi: 480 test, %33 coverage
-Hedef: Kritik modullerde >%60 mutation score
+package.json stryker bagimliligi:
+HAYIR - stryker bagimliligi yok
+
+Mevcut test altyapisi:
+  - 480 test, %33 coverage
+  - Hedef: Kritik modullerde >%60 mutation score
 
 Not: Stryker kurulumu + konfigurasyonu bir sonraki sprint'te ele alinmali.
