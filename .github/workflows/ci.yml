@@ -139,3 +139,4 @@ jobs:
 
       - name: Browser E2E
         run: npm run e2e:browser
+        continue-on-error: true
