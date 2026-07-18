@@ -369,7 +369,11 @@ export const VocabularyMenuService = {
       ? buildCorrectReviewResult(current, now)
       : buildIncorrectReviewResult(current, now);
 
-    if (isCorrect && next.status === 'Mastered' && current.status !== 'Mastered') {
+    if (
+      isCorrect &&
+      next.status === 'Mastered' &&
+      current.status !== 'Mastered'
+    ) {
       eventBus.publish({
         id: `vocab-mastered-${wordId}-${Date.now()}`,
         type: 'vocabulary:mastered',

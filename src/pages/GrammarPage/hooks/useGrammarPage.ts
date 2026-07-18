@@ -33,14 +33,19 @@ const buildLevelCounts = (
   entries: readonly (readonly [CefrLevel, number])[]
 ): Record<CefrLevel, number> => {
   const map = new Map(entries);
-  return CEFR_LEVELS.reduce<Record<CefrLevel, number>>((acc, level) => {
-    acc[level] = map.get(level) ?? 0;
-    return acc;
-  }, {} as Record<CefrLevel, number>);
+  return CEFR_LEVELS.reduce<Record<CefrLevel, number>>(
+    (acc, level) => {
+      acc[level] = map.get(level) ?? 0;
+      return acc;
+    },
+    {} as Record<CefrLevel, number>
+  );
 };
 
 const buildVocabularyIndex = (
-  terms: Awaited<ReturnType<typeof VocabularyRepository.getVocabularyForUserSkillLevel>>
+  terms: Awaited<
+    ReturnType<typeof VocabularyRepository.getVocabularyForUserSkillLevel>
+  >
 ) => {
   const next: Record<string, string> = {};
   terms.forEach((term) => {

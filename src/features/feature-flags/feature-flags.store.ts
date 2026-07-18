@@ -28,15 +28,21 @@ const isPlanBlocked = (
   flagConfig: (typeof FEATURE_FLAGS)[string],
   subscription: { planId?: string } | null
 ): boolean =>
-  Boolean(flagConfig.allowedPlans && subscription?.planId &&
-    !flagConfig.allowedPlans.includes(subscription.planId));
+  Boolean(
+    flagConfig.allowedPlans &&
+    subscription?.planId &&
+    !flagConfig.allowedPlans.includes(subscription.planId)
+  );
 
 const isUserBlocked = (
   flagConfig: (typeof FEATURE_FLAGS)[string],
   currentUser: { id?: string } | null
 ): boolean =>
-  Boolean(flagConfig.allowedUsers && currentUser?.id &&
-    !flagConfig.allowedUsers.includes(currentUser.id));
+  Boolean(
+    flagConfig.allowedUsers &&
+    currentUser?.id &&
+    !flagConfig.allowedUsers.includes(currentUser.id)
+  );
 
 const isRolloutBlocked = (
   flagConfig: (typeof FEATURE_FLAGS)[string],
@@ -65,7 +71,13 @@ export const useFeatureFlagsStore = create<FeatureFlagsState>()(
         if (!baseEnabled) return false;
         const { subscription } = useBillingStore.getState();
         const { currentUser } = useAuthStore.getState();
-        return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
+        return isFlagEligible(
+          flagConfig,
+          subscription,
+          currentUser,
+          currentUser?.id,
+          key
+        );
       },
     }),
     {

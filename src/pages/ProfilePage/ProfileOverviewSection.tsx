@@ -84,12 +84,46 @@ const InfoGrid = ({
   subscription: { planId: string };
 }) => {
   const items = [
-    { label: 'Full Name', value: currentUser?.displayName || 'Not Provided', icon: UserRound, code: 'ID-01' },
-    { label: 'Email Address', value: currentUser?.email || 'demo@engvox.com', icon: Mail, code: 'ID-02' },
-    { label: 'Account Access', value: subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial', icon: ShieldCheck, code: 'ID-03' },
-    { label: 'Registration Date', value: 'July 1, 2026', icon: Calendar, code: 'ID-04' },
-    { label: 'Profession / Role', value: PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Not Selected', icon: Briefcase, code: 'ID-05' },
-    { label: 'Engineering Track', value: PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label || 'Electrical Engineering', icon: Layers, code: 'ID-06' },
+    {
+      label: 'Full Name',
+      value: currentUser?.displayName || 'Not Provided',
+      icon: UserRound,
+      code: 'ID-01',
+    },
+    {
+      label: 'Email Address',
+      value: currentUser?.email || 'demo@engvox.com',
+      icon: Mail,
+      code: 'ID-02',
+    },
+    {
+      label: 'Account Access',
+      value: subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial',
+      icon: ShieldCheck,
+      code: 'ID-03',
+    },
+    {
+      label: 'Registration Date',
+      value: 'July 1, 2026',
+      icon: Calendar,
+      code: 'ID-04',
+    },
+    {
+      label: 'Profession / Role',
+      value:
+        PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
+        'Not Selected',
+      icon: Briefcase,
+      code: 'ID-05',
+    },
+    {
+      label: 'Engineering Track',
+      value:
+        PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)
+          ?.label || 'Electrical Engineering',
+      icon: Layers,
+      code: 'ID-06',
+    },
   ];
 
   return (
@@ -97,14 +131,23 @@ const InfoGrid = ({
       {items.map((item) => {
         const Icon = item.icon;
         return (
-          <div key={item.label} className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm flex flex-col justify-between min-h-[90px]">
+          <div
+            key={item.label}
+            className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm flex flex-col justify-between min-h-[90px]"
+          >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">{item.label}</span>
-              <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-[#faf8ff] border border-[#d9d9e3] px-1 rounded-[4px]">{item.code}</span>
+              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                {item.label}
+              </span>
+              <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-[#faf8ff] border border-[#d9d9e3] px-1 rounded-[4px]">
+                {item.code}
+              </span>
             </div>
             <div className="mt-2.5 flex items-center gap-2">
               <Icon className="h-4 w-4 text-[#0047bb] shrink-0" />
-              <p className="text-xs font-bold text-foreground truncate">{item.value}</p>
+              <p className="text-xs font-bold text-foreground truncate">
+                {item.value}
+              </p>
             </div>
           </div>
         );
@@ -113,11 +156,7 @@ const InfoGrid = ({
   );
 };
 
-const CommunicationGoalsSection = ({
-  goals,
-}: {
-  goals?: string[];
-}) => (
+const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
   <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
       Communication Goals
@@ -125,13 +164,18 @@ const CommunicationGoalsSection = ({
     {goals && goals.length > 0 ? (
       <div className="mt-2 flex flex-wrap gap-2">
         {goals.map((gId) => (
-          <span key={gId} className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 px-2.5 py-1 text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+          <span
+            key={gId}
+            className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 px-2.5 py-1 text-[10px] font-bold text-[#0047bb] uppercase tracking-wider"
+          >
             {COMMUNICATION_GOALS.find((g) => g.id === gId)?.label || gId}
           </span>
         ))}
       </div>
     ) : (
-      <p className="mt-2 text-xs text-muted-copy font-medium">No goals set yet.</p>
+      <p className="mt-2 text-xs text-muted-copy font-medium">
+        No goals set yet.
+      </p>
     )}
   </div>
 );
@@ -140,8 +184,12 @@ const SecurityLogsCard = () => (
   <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 space-y-3 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     <div className="flex justify-between items-center relative z-10">
-      <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">Security Status & Activity Logs</span>
-      <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider">ENCRYPTED</span>
+      <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+        Security Status & Activity Logs
+      </span>
+      <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider">
+        ENCRYPTED
+      </span>
     </div>
     <div className="space-y-1.5 font-mono text-[9px] text-muted-copy relative z-10">
       <div className="flex justify-between">
@@ -156,11 +204,7 @@ const SecurityLogsCard = () => (
   </div>
 );
 
-const BadgesSection = ({
-  achievements,
-}: {
-  achievements?: Achievement[];
-}) => {
+const BadgesSection = ({ achievements }: { achievements?: Achievement[] }) => {
   const earnedBadges = (achievements ?? []).filter((a) => a.unlocked);
 
   if (earnedBadges.length === 0) {
@@ -174,10 +218,15 @@ const BadgesSection = ({
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
       {earnedBadges.map((badge) => (
-        <div key={badge.id} className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 text-center space-y-2 shadow-sm animate-in fade-in duration-300">
+        <div
+          key={badge.id}
+          className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 text-center space-y-2 shadow-sm animate-in fade-in duration-300"
+        >
           <Trophy className="h-6 w-6 mx-auto text-[#0047bb]" />
           <p className="text-sm font-bold text-foreground">{badge.title}</p>
-          <p className="text-[10px] text-muted-copy leading-4 font-medium">{badge.description}</p>
+          <p className="text-[10px] text-muted-copy leading-4 font-medium">
+            {badge.description}
+          </p>
           {badge.unlockedAt && (
             <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               {new Date(badge.unlockedAt).toLocaleDateString()}
@@ -205,35 +254,70 @@ export const ProfileOverviewSection = ({
   handleSaveProfile,
 }: ProfileOverviewSectionProps) => {
   return (
-    <section id="overview" className="animate-in fade-in duration-200 space-y-6">
-      <SectionCard title="Profile Overview" subtitle="Your professional and regional classification metadata" icon={UserRound}>
+    <section
+      id="overview"
+      className="animate-in fade-in duration-200 space-y-6"
+    >
+      <SectionCard
+        title="Profile Overview"
+        subtitle="Your professional and regional classification metadata"
+        icon={UserRound}
+      >
         {!isEditMode ? (
           <div className="space-y-6">
             <IdentityCard currentUser={currentUser} profile={profile} />
-            <InfoGrid currentUser={currentUser} profile={profile} subscription={subscription} />
+            <InfoGrid
+              currentUser={currentUser}
+              profile={profile}
+              subscription={subscription}
+            />
             <CommunicationGoalsSection goals={profile.communicationGoals} />
             <SecurityLogsCard />
             <div className="flex justify-end">
-              <button onClick={enterEditMode} className="inline-flex items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] cursor-pointer transition-colors shadow-sm">
+              <button
+                onClick={enterEditMode}
+                className="inline-flex items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] cursor-pointer transition-colors shadow-sm"
+              >
                 Edit Profile
               </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSaveProfile} className="space-y-4 animate-in fade-in duration-200">
+          <form
+            onSubmit={handleSaveProfile}
+            className="space-y-4 animate-in fade-in duration-200"
+          >
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block space-y-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground">
                 First Name
-                <input value={editFirstName} onChange={(e) => setEditFirstName(e.target.value)} className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold" />
+                <input
+                  value={editFirstName}
+                  onChange={(e) => setEditFirstName(e.target.value)}
+                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                />
               </label>
               <label className="block space-y-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground">
                 Last Name
-                <input value={editLastName} onChange={(e) => setEditLastName(e.target.value)} className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold" />
+                <input
+                  value={editLastName}
+                  onChange={(e) => setEditLastName(e.target.value)}
+                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                />
               </label>
             </div>
             <div className="flex items-center justify-end gap-3 border-t border-[#d9d9e3] pt-4">
-              <button type="button" onClick={() => setIsEditMode(false)} className="text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer">Cancel</button>
-              <button type="submit" disabled={isSaving} className="inline-flex items-center gap-1.5 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:opacity-50 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setIsEditMode(false)}
+                className="text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isSaving}
+                className="inline-flex items-center gap-1.5 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:opacity-50 shadow-sm"
+              >
                 {isSaving ? 'Saving...' : 'Save Profile'}
               </button>
             </div>
@@ -241,7 +325,11 @@ export const ProfileOverviewSection = ({
         )}
       </SectionCard>
 
-      <SectionCard title="Earned Badges" subtitle="Achievements unlocked through your progress" icon={Trophy}>
+      <SectionCard
+        title="Earned Badges"
+        subtitle="Achievements unlocked through your progress"
+        icon={Trophy}
+      >
         <BadgesSection achievements={learningState.achievements} />
       </SectionCard>
     </section>

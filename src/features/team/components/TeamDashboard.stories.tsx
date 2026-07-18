@@ -39,13 +39,13 @@ const DEMO_SUMMARIES = [
   { memberId: '3', wordsLearned: 180, studyHours: 12, streak: 3, score: 65 },
 ];
 
-const getScoreClassName = (score: number): string => {
+export const getScoreClassName = (score: number): string => {
   if (score >= 80) return 'text-success';
   if (score >= 60) return 'text-warning';
   return 'text-error';
 };
 
-const StatsGrid = () => {
+export const StatsGrid = () => {
   const totalWords = DEMO_SUMMARIES.reduce((s, m) => s + m.wordsLearned, 0);
   const avgScore = Math.round(
     DEMO_SUMMARIES.reduce((s, m) => s + m.score, 0) / DEMO_SUMMARIES.length
@@ -65,9 +65,7 @@ const StatsGrid = () => {
         <p className="text-xs font-medium uppercase text-muted-copy">
           Total Words Learned
         </p>
-        <p className="mt-1 text-2xl font-bold text-foreground">
-          {totalWords}
-        </p>
+        <p className="mt-1 text-2xl font-bold text-foreground">{totalWords}</p>
       </div>
       <div className="rounded-xl border border-border-soft bg-surface p-4">
         <p className="text-xs font-medium uppercase text-muted-copy">
@@ -79,7 +77,11 @@ const StatsGrid = () => {
   );
 };
 
-const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] }) => {
+export const MemberRow = ({
+  member,
+}: {
+  member: (typeof DEMO_MEMBERS)[number];
+}) => {
   const summary = DEMO_SUMMARIES.find((s) => s.memberId === member.id);
   const score = summary?.score ?? 0;
 
@@ -89,9 +91,7 @@ const MemberRow = ({ member }: { member: (typeof DEMO_MEMBERS)[number] }) => {
       className="flex items-center justify-between px-4 py-3"
     >
       <div>
-        <p className="text-sm font-medium text-foreground">
-          {member.name}
-        </p>
+        <p className="text-sm font-medium text-foreground">{member.name}</p>
         <p className="text-xs text-muted-copy">{member.email}</p>
       </div>
       <div className="flex items-center gap-4 text-xs text-muted-copy">

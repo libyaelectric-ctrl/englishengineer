@@ -39,13 +39,14 @@ const WorkspaceListItem = ({
       aria-selected={isActive}
       onClick={() => onSwitch(ws)}
       className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-xs transition-colors hover:bg-[#faf8ff] cursor-pointer ${
-        isActive
-          ? 'bg-[#0047bb]/5 font-bold text-[#0047bb]'
-          : 'text-foreground'
+        isActive ? 'bg-[#0047bb]/5 font-bold text-[#0047bb]' : 'text-foreground'
       }`}
     >
       <span className="flex items-center gap-2 min-w-0">
-        <FolderOpen className="h-3 w-3 shrink-0 text-muted-copy" aria-hidden="true" />
+        <FolderOpen
+          className="h-3 w-3 shrink-0 text-muted-copy"
+          aria-hidden="true"
+        />
         <span className="truncate">{ws.name}</span>
       </span>
       {!isActive && canDelete && (
@@ -154,9 +155,7 @@ const WorkspaceSummary = ({
 }) => (
   <div className="border-t border-[#d9d9e3] px-3 py-2">
     <p className="text-[10px] text-muted-copy leading-4 font-mono font-medium">
-      <span className="font-bold text-foreground">
-        {activeWorkspace?.name}
-      </span>
+      <span className="font-bold text-foreground">{activeWorkspace?.name}</span>
       {' · '}
       {activeWorkspace?.documents?.length ?? 0} docs
       {' · '}
@@ -226,7 +225,10 @@ const WorkspaceDropdown = ({
             ws={ws}
             isActive={ws.id === activeWorkspaceId}
             canDelete={workspaces.length > 1}
-            onSwitch={(w) => { onSwitch(w); setIsOpen(false); }}
+            onSwitch={(w) => {
+              onSwitch(w);
+              setIsOpen(false);
+            }}
             onDelete={onDelete}
           />
         ))}
@@ -252,9 +254,7 @@ const WorkspaceDropdown = ({
         </div>
       )}
 
-      {!canCreate && limit !== null && (
-        <WorkspaceLimitMessage limit={limit} />
-      )}
+      {!canCreate && limit !== null && <WorkspaceLimitMessage limit={limit} />}
 
       <WorkspaceSummary activeWorkspace={activeWorkspace} />
     </div>
@@ -323,7 +323,10 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
         onClick={() => setIsOpen((v) => !v)}
         className="flex items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] cursor-pointer transition-colors shadow-sm"
       >
-        <FolderOpen className="h-3.5 w-3.5 text-[#0047bb] shrink-0" aria-hidden="true" />
+        <FolderOpen
+          className="h-3.5 w-3.5 text-[#0047bb] shrink-0"
+          aria-hidden="true"
+        />
         <span className="max-w-[140px] truncate">
           {activeWorkspace?.name ?? 'Workspace'}
         </span>

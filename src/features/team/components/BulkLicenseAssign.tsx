@@ -56,7 +56,10 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="bulk-emails" className="block text-sm font-medium text-foreground">
+          <label
+            htmlFor="bulk-emails"
+            className="block text-sm font-medium text-foreground"
+          >
             Email Addresses
           </label>
           <p className="mt-1 text-xs text-muted-copy">
@@ -83,7 +86,10 @@ export const BulkLicenseAssign: FC<BulkLicenseAssignProps> = ({ onResult }) => {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor="bulk-role" className="block text-sm font-medium text-foreground">
+            <label
+              htmlFor="bulk-role"
+              className="block text-sm font-medium text-foreground"
+            >
               Role
             </label>
             <select

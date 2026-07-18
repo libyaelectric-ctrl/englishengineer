@@ -54,7 +54,10 @@ const getInitialState = (): LearningState => {
   const persisted = storage.get<LearningState>(STORAGE_KEY);
   if (persisted) {
     persisted.missions = mergeDefaults(persisted.missions, DEFAULT_MISSIONS);
-    persisted.achievements = mergeDefaults(persisted.achievements ?? [], DEFAULT_ACHIEVEMENTS);
+    persisted.achievements = mergeDefaults(
+      persisted.achievements ?? [],
+      DEFAULT_ACHIEVEMENTS
+    );
     return ensureArrays(persisted);
   }
   return ensureArrays({});

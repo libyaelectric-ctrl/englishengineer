@@ -17,7 +17,12 @@ export const withRetry = async <T>(
   fn: (signal?: AbortSignal) => Promise<T>,
   opts: RetryOptions = {}
 ): Promise<T> => {
-  const { maxRetries = 3, baseDelay = 1000, maxDelay = 30000, shouldRetry = () => true } = opts;
+  const {
+    maxRetries = 3,
+    baseDelay = 1000,
+    maxDelay = 30000,
+    shouldRetry = () => true,
+  } = opts;
   let lastError: Error | undefined;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -27,7 +32,11 @@ export const withRetry = async <T>(
       lastError = toError(error);
       if (!(attempt < maxRetries && shouldRetry(error))) throw error;
       await sleep(calcDelay(attempt, baseDelay, maxDelay));
-      logger.info('Retry attempt', { attempt: attempt + 1, maxRetries, error: lastError.message });
+      logger.info('Retry attempt', {
+        attempt: attempt + 1,
+        maxRetries,
+        error: lastError.message,
+      });
     }
   }
 
@@ -65,7 +74,12 @@ export const createRetryWrapper = (
         if (err.status && retryableErrors.includes(String(err.status))) {
           return true;
         }
-        if (typeof err.status === 'number' && err.status >= 400 && err.status < 500 && err.status !== 429) {
+        if (
+          typeof err.status === 'number' &&
+          err.status >= 400 &&
+          err.status < 500 &&
+          err.status !== 429
+        ) {
           return false;
         }
         return true;

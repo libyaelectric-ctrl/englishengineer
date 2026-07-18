@@ -53,9 +53,7 @@ const incrementDocCount = (
   return next;
 };
 
-const computeDocLimit = (
-  planId: string
-): number | 'unlimited' => {
+const computeDocLimit = (planId: string): number | 'unlimited' => {
   if (planId === 'free') return 0;
   if (planId === 'pro') return 2;
   return 'unlimited';
@@ -76,7 +74,8 @@ const computeConnectionValue = (state: string): string => {
 };
 
 const computeConnectionTrend = (state: string): string => {
-  if (state === 'backend-configured') return 'Protected backend proxy configured';
+  if (state === 'backend-configured')
+    return 'Protected backend proxy configured';
   if (state === 'backend-error') return 'Backend request failed safely';
   return 'Local deterministic fallback';
 };

@@ -182,15 +182,13 @@ const RoleplayTab = () => {
                     Written Roleplay response
                   </label>
                   <p className="mt-1 text-xs leading-5 text-muted-copy font-medium">
-                    This is text-based communication practice, not real
-                    speech or pronunciation scoring.
+                    This is text-based communication practice, not real speech
+                    or pronunciation scoring.
                   </p>
                   <textarea
                     id="written-roleplay-response"
                     value={typedTranscript}
-                    onChange={(event) =>
-                      setTypedTranscript(event.target.value)
-                    }
+                    onChange={(event) => setTypedTranscript(event.target.value)}
                     className="mt-3 min-h-48 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 font-bold placeholder-muted-copy shadow-sm"
                     placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                   />
@@ -247,8 +245,12 @@ const RoleplayTab = () => {
 
 const SpeakingPage = () => {
   const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
-  const { MAX_VOICE_MINUTES, voiceMinutesUsedThisMonth, scoreResult, setScoreResult } =
-    useSpeakingPage();
+  const {
+    MAX_VOICE_MINUTES,
+    voiceMinutesUsedThisMonth,
+    scoreResult,
+    setScoreResult,
+  } = useSpeakingPage();
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">

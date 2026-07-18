@@ -65,42 +65,66 @@ const getConfig = (): {
   return { enabled, mode: enabled ? mode : 'disabled' };
 };
 
-const isAllowedString = (value: unknown, allowed: Set<string>): value is string =>
-  typeof value === 'string' && allowed.has(value);
+const isAllowedString = (
+  value: unknown,
+  allowed: Set<string>
+): value is string => typeof value === 'string' && allowed.has(value);
 
 const MISSION_ID_RE = /^[a-zA-Z0-9:_-]{1,100}$/;
 
-const sanitizeSkill = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+const sanitizeSkill = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
   if (isAllowedString(input.skill, skills)) {
     out.skill = input.skill as ProductAnalyticsMetadata['skill'];
   }
 };
 
-const sanitizeMissionId = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
-  if (typeof input.missionId === 'string' && MISSION_ID_RE.test(input.missionId)) {
+const sanitizeMissionId = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
+  if (
+    typeof input.missionId === 'string' &&
+    MISSION_ID_RE.test(input.missionId)
+  ) {
     out.missionId = input.missionId;
   }
 };
 
-const sanitizePlan = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+const sanitizePlan = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
   if (isAllowedString(input.plan, plans)) {
     out.plan = input.plan as ProductAnalyticsMetadata['plan'];
   }
 };
 
-const sanitizeSubscriptionStatus = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+const sanitizeSubscriptionStatus = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
   if (isAllowedString(input.subscriptionStatus, subscriptionStatuses)) {
-    out.subscriptionStatus = input.subscriptionStatus as ProductAnalyticsMetadata['subscriptionStatus'];
+    out.subscriptionStatus =
+      input.subscriptionStatus as ProductAnalyticsMetadata['subscriptionStatus'];
   }
 };
 
-const sanitizeSource = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+const sanitizeSource = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
   if (isAllowedString(input.source, sources)) {
     out.source = input.source as ProductAnalyticsMetadata['source'];
   }
 };
 
-const sanitizeRating = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+const sanitizeRating = (
+  input: Record<string, unknown>,
+  out: ProductAnalyticsMetadata
+) => {
   if (typeof input.rating === 'number') {
     out.rating = Math.max(1, Math.min(5, Math.round(input.rating)));
   }

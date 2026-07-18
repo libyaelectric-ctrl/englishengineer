@@ -26,9 +26,7 @@ const handleBuiltInShortcut = (
 ) => {
   if (key === 'ctrl+k') {
     e.preventDefault();
-    document
-      .querySelector<HTMLInputElement>('[aria-label*="Search"]')
-      ?.focus();
+    document.querySelector<HTMLInputElement>('[aria-label*="Search"]')?.focus();
     return;
   }
 
@@ -39,7 +37,9 @@ const handleBuiltInShortcut = (
 };
 
 export function useKeyboardShortcuts(shortcuts: ShortcutMap = {}) {
-  const toggleTheme = useAppStore((s) => s.setTheme) as (theme: 'dark' | 'light') => void;
+  const toggleTheme = useAppStore((s) => s.setTheme) as (
+    theme: 'dark' | 'light'
+  ) => void;
   const currentTheme = useAppStore((s) => s.theme);
 
   useEffect(() => {

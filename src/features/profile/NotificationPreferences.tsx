@@ -26,19 +26,19 @@ const Toggle = ({ label, description, checked, onChange }: ToggleProps) => {
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-[4px] border transition-colors cursor-pointer ${
-        checked
-          ? 'bg-[#0047bb] border-[#0047bb]'
-          : 'bg-[#faf8ff] border-[#d9d9e3]'
-      }`}
-    >
-      <span
-        className={`inline-block h-4 w-4 rounded-[2px] bg-white shadow-sm transition-transform ${
-          checked ? 'translate-x-6' : 'translate-x-0.5'
+        className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-[4px] border transition-colors cursor-pointer ${
+          checked
+            ? 'bg-[#0047bb] border-[#0047bb]'
+            : 'bg-[#faf8ff] border-[#d9d9e3]'
         }`}
-      />
-    </button>
-  </div>
+      >
+        <span
+          className={`inline-block h-4 w-4 rounded-[2px] bg-white shadow-sm transition-transform ${
+            checked ? 'translate-x-6' : 'translate-x-0.5'
+          }`}
+        />
+      </button>
+    </div>
   );
 };
 

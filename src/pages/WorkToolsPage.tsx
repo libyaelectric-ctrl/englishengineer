@@ -40,11 +40,14 @@ const TemplateCard = ({
   item: (typeof ENGINEERING_TEMPLATES)[number];
   copiedId: string | null;
   copy: (id: string, text: string) => void;
-  openQuickAI: (sourceId: string, sourceKind: 'engineering-template' | 'email-template', title: string, text: string) => void;
+  openQuickAI: (
+    sourceId: string,
+    sourceKind: 'engineering-template' | 'email-template',
+    title: string,
+    text: string
+  ) => void;
 }) => (
-  <Card
-    className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300"
-  >
+  <Card className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300">
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
       <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
         {item.id.toUpperCase()}
@@ -57,9 +60,7 @@ const TemplateCard = ({
       <h2 className="text-base font-black tracking-tight text-foreground">
         {item.title}
       </h2>
-      <p className="text-xs leading-relaxed text-muted-copy">
-        {item.context}
-      </p>
+      <p className="text-xs leading-relaxed text-muted-copy">{item.context}</p>
     </div>
 
     <div className="space-y-3 font-sans">
@@ -84,9 +85,7 @@ const TemplateCard = ({
 
     <div className="border-t border-border-soft pt-3">
       <p className="text-xs text-muted-copy leading-5">
-        <strong className="text-foreground font-black">
-          Türkçe Açıklama:
-        </strong>{' '}
+        <strong className="text-foreground font-black">Türkçe Açıklama:</strong>{' '}
         {item.turkishExplanation}
       </p>
     </div>
@@ -107,7 +106,12 @@ const TemplateCard = ({
         variant="outline"
         size="sm"
         onClick={() =>
-          openQuickAI(item.id, 'engineering-template', item.title, item.professionalOutput)
+          openQuickAI(
+            item.id,
+            'engineering-template',
+            item.title,
+            item.professionalOutput
+          )
         }
       >
         <Bot className="h-3.5 w-3.5" /> Send to Quick AI
@@ -123,11 +127,14 @@ const EmailCard = ({
 }: {
   item: (typeof EMAIL_TEMPLATES)[number];
   copy: (id: string, text: string) => void;
-  openQuickAI: (sourceId: string, sourceKind: 'engineering-template' | 'email-template', title: string, text: string) => void;
+  openQuickAI: (
+    sourceId: string,
+    sourceKind: 'engineering-template' | 'email-template',
+    title: string,
+    text: string
+  ) => void;
 }) => (
-  <Card
-    className="p-5 space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300"
-  >
+  <Card className="p-5 space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300">
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
       <span className="font-mono text-[9px] uppercase tracking-widest text-secondary font-bold bg-secondary/5 px-2 py-0.5 rounded">
         {item.id.toUpperCase()}
@@ -174,7 +181,12 @@ const EmailCard = ({
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  openQuickAI(item.id, 'email-template', `${item.title} - ${label}`, text)
+                  openQuickAI(
+                    item.id,
+                    'email-template',
+                    `${item.title} - ${label}`,
+                    text
+                  )
                 }
               >
                 <Bot className="h-3.5 w-3.5" /> Send to Quick AI
@@ -187,9 +199,7 @@ const EmailCard = ({
 
     <div className="border-t border-border-soft pt-3">
       <p className="text-xs text-muted-copy leading-5">
-        <strong className="text-foreground font-black">
-          Türkçe Açıklama:
-        </strong>{' '}
+        <strong className="text-foreground font-black">Türkçe Açıklama:</strong>{' '}
         {item.turkishExplanation}
       </p>
     </div>
@@ -223,7 +233,9 @@ const PhraseCard = ({
           onClick={() => toggleFavorite(item.id)}
           aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
         >
-          <Heart className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`} />
+          <Heart
+            className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
+          />
         </Button>
       </div>
     </div>
@@ -274,9 +286,15 @@ const hasEmptyResults = (tab: Tab, counts: Record<string, number>) =>
   EMPTY_MESSAGES[tab] && counts[tab] === 0;
 
 const TabContent = ({
-  tab, templates, emails, phrases,
-  copiedId, copy, openQuickAI,
-  favoritePhraseIds, toggleFavorite,
+  tab,
+  templates,
+  emails,
+  phrases,
+  copiedId,
+  copy,
+  openQuickAI,
+  favoritePhraseIds,
+  toggleFavorite,
 }: {
   tab: Tab;
   templates: typeof ENGINEERING_TEMPLATES;
@@ -284,7 +302,12 @@ const TabContent = ({
   phrases: typeof PHRASE_LIBRARY;
   copiedId: string | null;
   copy: (id: string, text: string) => void;
-  openQuickAI: (sourceId: string, sourceKind: 'engineering-template' | 'email-template', title: string, text: string) => void;
+  openQuickAI: (
+    sourceId: string,
+    sourceKind: 'engineering-template' | 'email-template',
+    title: string,
+    text: string
+  ) => void;
   favoritePhraseIds: string[];
   toggleFavorite: (id: string) => void;
 }) => {
@@ -292,7 +315,13 @@ const TabContent = ({
     return (
       <div className="grid gap-5 xl:grid-cols-2">
         {templates.map((item) => (
-          <TemplateCard key={item.id} item={item} copiedId={copiedId} copy={copy} openQuickAI={openQuickAI} />
+          <TemplateCard
+            key={item.id}
+            item={item}
+            copiedId={copiedId}
+            copy={copy}
+            openQuickAI={openQuickAI}
+          />
         ))}
       </div>
     );
@@ -301,7 +330,12 @@ const TabContent = ({
     return (
       <div className="grid gap-5 xl:grid-cols-2">
         {emails.map((item) => (
-          <EmailCard key={item.id} item={item} copy={copy} openQuickAI={openQuickAI} />
+          <EmailCard
+            key={item.id}
+            item={item}
+            copy={copy}
+            openQuickAI={openQuickAI}
+          />
         ))}
       </div>
     );
@@ -311,9 +345,11 @@ const TabContent = ({
       <div className="grid gap-4 lg:grid-cols-2">
         {phrases.map((item) => (
           <PhraseCard
-            key={item.id} item={item}
+            key={item.id}
+            item={item}
             favorite={favoritePhraseIds.includes(item.id)}
-            toggleFavorite={toggleFavorite} copy={copy}
+            toggleFavorite={toggleFavorite}
+            copy={copy}
           />
         ))}
       </div>
@@ -374,7 +410,11 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
     navigate('/tools?tab=quick');
   };
 
-  const counts = { templates: templates.length, emails: emails.length, phrases: phrases.length };
+  const counts = {
+    templates: templates.length,
+    emails: emails.length,
+    phrases: phrases.length,
+  };
   const showEmpty = hasEmptyResults(tab, counts);
 
   return (
@@ -389,7 +429,11 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Work tool type">
+        <div
+          className="flex flex-wrap gap-2"
+          role="tablist"
+          aria-label="Work tool type"
+        >
           {TAB_ITEMS.map(([id, label, Icon]) => (
             <Button
               key={id}
@@ -417,9 +461,15 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       </div>
 
       <TabContent
-        tab={tab} templates={templates} emails={emails} phrases={phrases}
-        copiedId={copiedId} copy={copy} openQuickAI={openQuickAI}
-        favoritePhraseIds={favoritePhraseIds} toggleFavorite={toggleFavorite}
+        tab={tab}
+        templates={templates}
+        emails={emails}
+        phrases={phrases}
+        copiedId={copiedId}
+        copy={copy}
+        openQuickAI={openQuickAI}
+        favoritePhraseIds={favoritePhraseIds}
+        toggleFavorite={toggleFavorite}
       />
 
       {showEmpty && (

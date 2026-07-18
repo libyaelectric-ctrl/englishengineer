@@ -45,8 +45,8 @@ const SelectView = ({
             System Design
           </h3>
           <p className="mt-2 text-sm text-muted-copy font-normal">
-            Practice designing scalable systems. Cover architecture,
-            trade-offs, and technical decisions.
+            Practice designing scalable systems. Cover architecture, trade-offs,
+            and technical decisions.
           </p>
           <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
             Start practice
@@ -233,11 +233,16 @@ const startSpeechRecognition = (
   recognition.onresult = (event: unknown) => {
     const e = event as { results: SpeechRecognitionResultList };
     const finalTranscript = Array.from({ length: e.results.length }, (_, i) => {
-      const result = e.results[i] as unknown as { isFinal: boolean; item: (index: number) => { transcript: string } };
+      const result = e.results[i] as unknown as {
+        isFinal: boolean;
+        item: (index: number) => { transcript: string };
+      };
       return result.isFinal ? result.item(0).transcript : '';
     }).join('');
     if (finalTranscript) {
-      setCurrentAnswer((prev) => prev ? `${prev} ${finalTranscript}` : finalTranscript);
+      setCurrentAnswer((prev) =>
+        prev ? `${prev} ${finalTranscript}` : finalTranscript
+      );
     }
   };
 
@@ -332,7 +337,11 @@ const SubmitBar = ({
       disabled={!canSubmit || isScoring}
       className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
     >
-      {isScoring ? 'Scoring...' : isLastQuestion ? 'Submit & Finish' : 'Submit & Next'}
+      {isScoring
+        ? 'Scoring...'
+        : isLastQuestion
+          ? 'Submit & Finish'
+          : 'Submit & Next'}
     </Button>
     <Button
       variant="outline"
@@ -417,7 +426,11 @@ const InterviewView = ({
               onChange={(e) => setCurrentAnswer(e.target.value)}
               disabled={isScoring}
               className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
-              placeholder={isTimeUp ? "Time's up! Submit your answer below." : 'Type your answer here, or click the microphone to speak...'}
+              placeholder={
+                isTimeUp
+                  ? "Time's up! Submit your answer below."
+                  : 'Type your answer here, or click the microphone to speak...'
+              }
             />
           </div>
 

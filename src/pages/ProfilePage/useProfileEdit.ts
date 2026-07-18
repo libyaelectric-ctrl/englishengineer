@@ -22,7 +22,15 @@ const buildEditValues = (
 ) => {
   const name = splitDisplayName(displayName);
   if (!profile) {
-    return { ...name, profession: '', track: 'electrical', subdomain: 'low-voltage', industry: '', lang: 'en' as const, goals: [] };
+    return {
+      ...name,
+      profession: '',
+      track: 'electrical',
+      subdomain: 'low-voltage',
+      industry: '',
+      lang: 'en' as const,
+      goals: [],
+    };
   }
   return {
     firstName: name.firstName,
@@ -109,10 +117,12 @@ export const useProfileEdit = (
       professionalTrack:
         (editTrack as UserLearningProfile['professionalTrack']) || undefined,
       electricalSubdomain:
-        (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
+        (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
+        undefined,
       industryId: (editIndustry as UserLearningProfile['industryId']) || null,
       interfaceLanguage: editLang,
-      communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
+      communicationGoals:
+        editGoals as UserLearningProfile['communicationGoals'],
     });
   };
 

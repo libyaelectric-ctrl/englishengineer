@@ -9,7 +9,9 @@ import { prefsReducer, type ProfilePrefsState } from './ProfilePageReducer';
 const resolveActionValue = <T>(v: React.SetStateAction<T>, current: T): T =>
   typeof v === 'function' ? (v as (prev: T) => T)(current) : v;
 
-const loadProfileToPrefs = (profile: UserLearningProfile): Omit<ProfilePrefsState, 'saved'> => ({
+const loadProfileToPrefs = (
+  profile: UserLearningProfile
+): Omit<ProfilePrefsState, 'saved'> => ({
   goals: profile.goals || [],
   minutes: profile.dailyTarget?.minutes || 15,
   tasks: profile.dailyTarget?.taskCount || 2,
@@ -31,7 +33,8 @@ const buildSavePayload = (
     goals: prefGoals as unknown as UserLearningProfile['goals'],
     dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
     weeklyTolerance: { allowedMissedDays: prefMissedDays },
-    experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
+    experienceLevel:
+      (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
     careerGoal: prefCareerGoal,
   });
 };
@@ -64,19 +67,40 @@ export const useProfilePreferences = (
   } = prefs;
 
   const setPrefGoals = (v: React.SetStateAction<string[]>) =>
-    dispatchPrefs({ type: 'SET_GOALS', value: resolveActionValue(v, prefs.goals) });
+    dispatchPrefs({
+      type: 'SET_GOALS',
+      value: resolveActionValue(v, prefs.goals),
+    });
   const setPrefMinutes = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_MINUTES', value: resolveActionValue(v, prefs.minutes) });
+    dispatchPrefs({
+      type: 'SET_MINUTES',
+      value: resolveActionValue(v, prefs.minutes),
+    });
   const setPrefTasks = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_TASKS', value: resolveActionValue(v, prefs.tasks) });
+    dispatchPrefs({
+      type: 'SET_TASKS',
+      value: resolveActionValue(v, prefs.tasks),
+    });
   const setPrefMissedDays = (v: React.SetStateAction<number>) =>
-    dispatchPrefs({ type: 'SET_MISSED_DAYS', value: resolveActionValue(v, prefs.missedDays) });
+    dispatchPrefs({
+      type: 'SET_MISSED_DAYS',
+      value: resolveActionValue(v, prefs.missedDays),
+    });
   const setPrefExpLevel = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({ type: 'SET_EXP_LEVEL', value: resolveActionValue(v, prefs.expLevel) });
+    dispatchPrefs({
+      type: 'SET_EXP_LEVEL',
+      value: resolveActionValue(v, prefs.expLevel),
+    });
   const setPrefCareerGoal = (v: React.SetStateAction<string>) =>
-    dispatchPrefs({ type: 'SET_CAREER_GOAL', value: resolveActionValue(v, prefs.careerGoal) });
+    dispatchPrefs({
+      type: 'SET_CAREER_GOAL',
+      value: resolveActionValue(v, prefs.careerGoal),
+    });
   const setPreferencesSaved = (v: React.SetStateAction<boolean>) =>
-    dispatchPrefs({ type: 'SET_SAVED', value: resolveActionValue(v, prefs.saved) });
+    dispatchPrefs({
+      type: 'SET_SAVED',
+      value: resolveActionValue(v, prefs.saved),
+    });
 
   useEffect(() => {
     if (!profile) return;
@@ -90,7 +114,12 @@ export const useProfilePreferences = (
     try {
       buildSavePayload(
         currentUser?.id ?? 'local-user',
-        prefGoals, prefMinutes, prefTasks, prefMissedDays, prefExpLevel, prefCareerGoal
+        prefGoals,
+        prefMinutes,
+        prefTasks,
+        prefMissedDays,
+        prefExpLevel,
+        prefCareerGoal
       );
       setPreferencesSaved(true);
       setMessage('Learning preferences saved successfully.');
