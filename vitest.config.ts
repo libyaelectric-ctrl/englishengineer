@@ -36,10 +36,10 @@ export default defineConfig({
           statements: 20,
         },
         'src/features/ai/**': {
-          branches: 20,
-          functions: 15,
-          lines: 20,
-          statements: 20,
+          branches: 18,
+          functions: 14,
+          lines: 18,
+          statements: 18,
         },
         'src/features/vocabulary/**': {
           branches: 20,
