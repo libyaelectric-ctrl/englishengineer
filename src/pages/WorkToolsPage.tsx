@@ -94,7 +94,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-xl border border-border-soft bg-surface p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
@@ -120,7 +120,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </Button>
           ))}
         </div>
-        <label className="flex min-h-11 items-center gap-2 rounded-lg border border-border-soft bg-surface-hover px-3 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 md:w-72">
+        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-3 focus-within:border-[#0047bb] md:w-72 shadow-sm font-sans">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search work tools</span>
           <input
@@ -128,7 +128,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search tools"
             aria-label="Search work tools"
-            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-copy"
+            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-copy font-semibold"
           />
         </label>
       </div>
@@ -157,8 +157,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 </p>
               </div>
 
-              <div className="space-y-3">
-                <div className="rounded-lg border border-border-soft bg-surface-hover p-3">
+              <div className="space-y-3 font-sans">
+                <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
                   <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                     [TECHNICAL CONTEXT]
                   </p>
@@ -167,8 +167,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                   </p>
                 </div>
 
-                <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-                  <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+                <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 shadow-sm">
+                  <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                     [ORCHESTRATED PRODUCTION PHRASE]
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-foreground font-semibold">
@@ -250,16 +250,16 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                 ).map(([label, text]) => (
                   <details
                     key={label}
-                    className="rounded-lg border border-border-soft bg-surface-hover open:bg-surface"
+                    className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] open:bg-white shadow-sm"
                   >
                     <summary className="cursor-pointer px-4 py-3 text-xs font-bold text-foreground flex items-center justify-between">
                       <span>[VERSION: {label.toUpperCase()}]</span>
                     </summary>
-                    <div className="space-y-3 border-t border-border-soft p-4 bg-background">
-                      <p className="whitespace-pre-line text-xs leading-relaxed text-foreground font-medium">
+                    <div className="space-y-3 border-t border-[#d9d9e3] p-4 bg-[#faf8ff]">
+                      <p className="whitespace-pre-line text-xs leading-relaxed text-foreground font-semibold">
                         {text}
                       </p>
-                      <div className="flex flex-wrap gap-2 pt-2 border-t border-border-soft">
+                      <div className="flex flex-wrap gap-2 pt-2 border-t border-[#d9d9e3]">
                         <Button
                           variant="secondary"
                           size="sm"
@@ -348,7 +348,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
                     </strong>{' '}
                     {item.usageContext}
                   </p>
-                  <p className="rounded-lg border border-border-soft bg-surface-hover p-3 text-xs italic text-foreground leading-relaxed">
+                  <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs italic text-foreground leading-relaxed shadow-sm font-medium">
                     {item.example}
                   </p>
                 </div>

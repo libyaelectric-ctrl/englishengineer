@@ -76,14 +76,14 @@ export const PRReviewCoach = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-lg border border-border-soft bg-surface-hover p-4 space-y-2">
+          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 space-y-2 shadow-sm">
             <label
               htmlFor="pr-review-input"
-              className="block text-sm font-medium text-foreground animate-in fade-in"
+              className="block text-xs font-bold uppercase tracking-wider text-foreground animate-in fade-in"
             >
               Paste harsh review comment
             </label>
-            <p className="text-[10px] text-muted-copy leading-normal">
+            <p className="text-[10px] text-muted-copy leading-normal font-medium">
               Paste the raw, harsh, or unclear code review comment you want to
               transform into professional English.
             </p>
@@ -91,19 +91,21 @@ export const PRReviewCoach = () => {
               id="pr-review-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-24 w-full resize-y rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+              className="min-h-24 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-[#0047bb] shadow-sm font-semibold"
               placeholder="e.g., This code is terrible. Why did you write it this way? Fix it now."
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] text-muted-copy">Try a sample:</span>
+          <div className="flex flex-wrap items-center gap-2 font-sans">
+            <span className="text-[10px] text-muted-copy font-bold uppercase tracking-wider">
+              Try a sample:
+            </span>
             {SAMPLE_REVIEWS.map((sample, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => handleSample(sample)}
-                className="rounded-md border border-border-soft bg-surface-hover px-2 py-1 text-[10px] text-muted-copy transition-colors hover:border-border-hover hover:text-foreground cursor-pointer"
+                className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-[#0047bb] hover:text-[#0047bb] cursor-pointer font-bold uppercase tracking-wider shadow-sm"
               >
                 Sample {i + 1}
               </button>
@@ -146,8 +148,8 @@ export const PRReviewCoach = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+            <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                 [ORIGINAL HARSH REVIEW]
               </p>
               <p className="mt-2 text-xs text-foreground line-through opacity-60">
@@ -159,7 +161,7 @@ export const PRReviewCoach = () => {
               <ArrowRight className="h-4 w-4 text-muted-copy" />
             </div>
 
-            <div className="rounded-lg border border-success/20 bg-success/5 p-4">
+            <div className="rounded-[4px] border border-success/25 bg-success/5 p-4 shadow-sm">
               <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-success">
                 [ORCHESTRATED PROFESSIONAL VERSION]
               </p>
@@ -169,7 +171,7 @@ export const PRReviewCoach = () => {
             </div>
 
             {result.keyChanges.length > 0 && (
-              <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
+              <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 shadow-sm">
                 <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                   [REFACTORING KEY ACTIONS]
                 </p>

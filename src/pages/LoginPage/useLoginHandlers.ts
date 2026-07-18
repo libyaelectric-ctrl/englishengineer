@@ -140,7 +140,7 @@ export const useLoginHandlers = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) {
+    if (!email.trim() || !password) {
       setError('Please fill in all required fields.');
       return;
     }
@@ -152,14 +152,14 @@ export const useLoginHandlers = () => {
       return;
     }
 
-    if (isSupabaseMode && password.length < 6) {
+    if (password.length < 6) {
       setError('Password must be at least 6 characters.');
       return;
     }
 
     try {
       setError(null);
-      if (isSupabaseMode && isSignUpMode) {
+      if (isSignUpMode) {
         ProductAnalyticsService.track('signup_started', '/login', {
           metadata: { source: 'user' },
         });
@@ -168,11 +168,7 @@ export const useLoginHandlers = () => {
           metadata: { source: 'system' },
         });
       } else {
-        await login(
-          derivedDisplayName,
-          email.trim(),
-          isSupabaseMode ? password : undefined
-        );
+        await login(derivedDisplayName, email.trim(), password);
       }
       navigate(from, { replace: true });
     } catch (err: unknown) {
