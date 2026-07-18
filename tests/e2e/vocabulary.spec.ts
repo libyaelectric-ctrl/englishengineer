@@ -12,7 +12,7 @@ async function navigateToVocabulary(page: import('@playwright/test').Page) {
   await loginAsDemo(page);
   await page.goto('/vocabulary');
   await expect(
-    page.getByRole('heading', { name: /vocabulary/i })
+    page.getByRole('heading', { name: 'Vocabulary', exact: true })
   ).toBeVisible();
 }
 
@@ -21,7 +21,7 @@ test.describe('Vocabulary page loading', () => {
     await navigateToVocabulary(page);
     // Heading
     await expect(
-      page.getByRole('heading', { name: /vocabulary/i })
+      page.getByRole('heading', { name: 'Vocabulary', exact: true })
     ).toBeVisible();
     // Tabs: New, Learned, Mastered
     await expect(page.getByRole('tab', { name: /new/i })).toBeVisible();
@@ -66,7 +66,7 @@ test.describe('Vocabulary search', () => {
     await page.waitForTimeout(500);
     // No crash, page stays intact
     await expect(
-      page.getByRole('heading', { name: /vocabulary/i })
+      page.getByRole('heading', { name: 'Vocabulary', exact: true })
     ).toBeVisible();
   });
 });

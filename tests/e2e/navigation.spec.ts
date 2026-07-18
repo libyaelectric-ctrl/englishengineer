@@ -4,7 +4,7 @@ test.describe('Public route rendering', () => {
   const publicRoutes = [
     { path: '/', headingPattern: /work-ready english|engineering english/i },
     { path: '/pricing', headingPattern: /pricing/i },
-    { path: '/business', headingPattern: /business/i },
+    { path: '/business', headingPattern: /communication readiness/i },
     { path: '/login', headingPattern: /sign in|log in/i },
     { path: '/signup', headingPattern: /sign up|create.*account/i },
   ];
@@ -152,9 +152,10 @@ test.describe('Command palette (Cmd+K)', () => {
   async function loginAsDemo(page: import('@playwright/test').Page) {
     await page.goto('/login');
     await page.getByRole('button', { name: /demo/i }).click();
-    await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
+    await page.waitForURL(/\/dashboard/, {
       timeout: 15000,
     });
+    await page.click('body');
   }
 
   test('Cmd+K opens command palette', async ({ page }) => {

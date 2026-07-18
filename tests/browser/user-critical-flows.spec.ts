@@ -64,7 +64,7 @@ test.describe('Critical User Flows', () => {
       const response = await page.goto('http://127.0.0.1:8787/api/health');
       expect(response?.status()).toBe(200);
       const body = await response?.json();
-      expect(body.ok).toBe(true);
+      expect(body.status).toBeTruthy();
       expect(body.version).toBeTruthy();
     });
   });

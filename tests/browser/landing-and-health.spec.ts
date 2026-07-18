@@ -7,12 +7,12 @@ test.describe('Landing page & public routes', () => {
     await page.goto('/');
     await expect(
       page.getByRole('heading', {
-        name: /work-ready english for international engineering projects/i,
+        name: /engineering english os/i,
       })
     ).toBeVisible();
 
-    // Features section
-    await expect(page.getByText('Features')).toBeVisible();
+    // Features section (Workflow)
+    await expect(page.getByText('Workflow').first()).toBeVisible();
 
     // Pricing section — 3 plans visible
     await expect(page.getByText('Free').first()).toBeVisible();
@@ -31,18 +31,20 @@ test.describe('Landing page & public routes', () => {
 
   test('pricing page loads with all plan tiers', async ({ page }) => {
     await page.goto('/pricing');
-    await expect(page.getByRole('heading', { name: /pricing/i })).toBeVisible();
-    await expect(page.getByText('Free')).toBeVisible();
-    await expect(page.getByText('Pro')).toBeVisible();
-    await expect(page.getByText('Project')).toBeVisible();
-    await expect(page.getByText('Max')).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /access level/i })
+    ).toBeVisible();
+    await expect(page.getByText('Free').first()).toBeVisible();
+    await expect(page.getByText('Pro').first()).toBeVisible();
+    await expect(page.getByText('Project').first()).toBeVisible();
+    await expect(page.getByText('Max').first()).toBeVisible();
   });
 
   test('login page loads with social login buttons', async ({ page }) => {
     await page.goto('/login');
     await expect(
       page
-        .getByRole('heading', { name: /sign in/i })
+        .getByRole('heading', { name: /welcome back/i })
         .or(page.getByText(/log in/i))
     ).toBeVisible();
     // Demo button should be present
@@ -64,7 +66,7 @@ test.describe('Responsive design', () => {
   test('dashboard does not overflow on mobile viewport', async ({ page }) => {
     await page.goto('/login');
     await page.evaluate(() => localStorage.clear());
-    await page.getByRole('button', { name: 'Use Demo Engineer' }).click();
+    await page.getByRole('button', { name: /demo/i }).click();
     await expect(
       page.getByRole('heading', { name: /command center/i })
     ).toBeVisible();

@@ -1,42 +1,35 @@
 import { expect, test, type Page } from '@playwright/test';
 
-const parseColorValues = (color: string) =>
-  color.match(/[\d.]+/g)?.map(Number) || [];
-const isTransparent = (channels: number[]) =>
-  channels.length >= 4 && channels[3] === 0;
-const allChannelsAbove = (
-  channels: number[],
-  start: number,
-  end: number,
-  threshold: number
-) => channels.slice(start, end).every((ch) => ch > threshold);
-const someChannelAbove = (
-  channels: number[],
-  start: number,
-  threshold: number
-) => channels.slice(start).some((ch) => ch > threshold);
-const hasBgImage = (bgImg: string, ...patterns: string[]) =>
-  bgImg && patterns.some((p) => bgImg.includes(p));
-const noBgImage = (bgImg: string, ...patterns: string[]) =>
-  bgImg && !patterns.some((p) => bgImg.includes(p));
-
 const isLightColor = (element: Element): boolean => {
-  const { backgroundColor: color, backgroundImage: bgImg } =
-    getComputedStyle(element);
-  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251'))
-    return true;
+  const parseColorValues = (c: string) => c.match(/[\d.]+/g)?.map(Number) || [];
+  const isTransparent = (ch: number[]) => ch.length >= 4 && ch[3] === 0;
+  const allChannelsAbove = (ch: number[], start: number, end: number, threshold: number) =>
+    ch.slice(start, end).every((val) => val > threshold);
+  const hasBgImage = (b: string, ...patterns: string[]) =>
+    b && patterns.some((p) => b.includes(p));
+  const noBgImage = (b: string, ...patterns: string[]) =>
+    b && !patterns.some((p) => b.includes(p));
+
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251')) return true;
   const values = parseColorValues(color);
-  if (color.startsWith('oklab') || color.startsWith('oklch'))
-    return (values[0] || 0) > 0.8;
-  if (color.startsWith('color(srgb'))
-    return allChannelsAbove(values, 0, 3, 0.8);
+  if (color.startsWith('oklab') || color.startsWith('oklch')) return (values[0] || 0) > 0.8;
+  if (color.startsWith('color(srgb')) return allChannelsAbove(values, 0, 3, 0.8);
   if (isTransparent(values)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#141A22');
   return allChannelsAbove(values, 0, 3, 220);
 };
 
 const isNotBlackButton = (element: Element): boolean => {
-  const { backgroundColor: color, backgroundImage: bgImg } =
-    getComputedStyle(element);
+  const parseColorValues = (c: string) => c.match(/[\d.]+/g)?.map(Number) || [];
+  const isTransparent = (ch: number[]) => ch.length >= 4 && ch[3] === 0;
+  const someChannelAbove = (ch: number[], start: number, threshold: number) =>
+    ch.slice(start).some((val) => val > threshold);
+  const hasBgImage = (b: string, ...patterns: string[]) =>
+    b && patterns.some((p) => b.includes(p));
+  const noBgImage = (b: string, ...patterns: string[]) =>
+    b && !patterns.some((p) => b.includes(p));
+
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
   if (hasBgImage(bgImg, '#617FD8', '#4D6BC0', 'rgb(')) return true;
   const channels = parseColorValues(color);
   if (isTransparent(channels)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#000');
@@ -45,7 +38,7 @@ const isNotBlackButton = (element: Element): boolean => {
 
 const demoLogin = async (page: Page) => {
   await page.goto('/login');
-  await page.getByRole('button', { name: 'Use Demo Engineer' }).click();
+  await page.getByRole('button', { name: /demo/i }).click();
   await expect(
     page.getByRole('heading', { name: /command center/i })
   ).toBeVisible();

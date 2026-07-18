@@ -22,6 +22,7 @@ export const TopNavBar = () => {
         <select
           value={language}
           onChange={(e) => setLanguage(e.target.value as 'en' | 'tr')}
+          aria-label="Select Interface Language"
           className="rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground outline-none cursor-pointer hover:bg-[#0047bb]/5 font-bold uppercase tracking-wider"
         >
           {AVAILABLE_INTERFACE_LANGUAGES.map((l) => (

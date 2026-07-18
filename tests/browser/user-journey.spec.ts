@@ -12,7 +12,7 @@ test.describe('Critical User Journey', () => {
 
   test('landing page shows key sections', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('text=EngineerOS').first()).toBeVisible();
+    await expect(page.locator('text=EngVox').first()).toBeVisible();
     await expect(page.locator('text=Pricing').first()).toBeVisible();
   });
 
@@ -30,8 +30,6 @@ test.describe('Critical User Journey', () => {
 
   test('404 page shows for invalid routes', async ({ page }) => {
     await page.goto('/nonexistent-route-12345');
-    await expect(
-      page.locator('text=404, text=Not Found, text=not found').first()
-    ).toBeVisible();
+    await expect(page.getByText(/404|not found/i).first()).toBeVisible();
   });
 });
