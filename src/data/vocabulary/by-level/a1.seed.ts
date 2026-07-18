@@ -1,5 +1,7 @@
 import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
 
-import data from './a1.seed.json';
-
-export const A1_VOCABULARY_TERMS: VocabularyTerm[] = data as VocabularyTerm[];
+export const loadA1VocabularyTerms = async (): Promise<VocabularyTerm[]> => {
+  const res = await fetch('/data/vocabulary/a1.seed.json');
+  if (!res.ok) throw new Error(`Failed to load A1 vocabulary: ${res.status}`);
+  return res.json() as Promise<VocabularyTerm[]>;
+};
