@@ -286,7 +286,7 @@ const PricingPage = () => {
         />
         <div className="mx-auto max-w-3xl px-4 relative z-10">
           <div className="flex justify-center mb-4">
-            <img src="/brand/mascot.jpg" alt="Mascor" className="h-20 w-auto" />
+            <img src="/brand/mascot.webp" alt="Mascot" loading="lazy" className="h-20 w-auto" />
           </div>
           <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             Pricing Plans & Access Control
