@@ -1,8 +1,14 @@
-﻿Lighthouse Skorlari - 2026-07-18 20:26
+﻿=== Lighthouse CI Skorlari ===
 
-Performance: 60
+Performance: 64
 Accessibility: 94
 Best Practices: 96
 SEO: 100
 
-Not: Performance dusuk (567kB ana bundle, 212kB Supabase chunk). Kod-splitting ile iyilestirilebilir.
+=== Metrikler ===
+FCP: 
+LCP: 
+TBT: 
+CLS: 
+SI: 
+

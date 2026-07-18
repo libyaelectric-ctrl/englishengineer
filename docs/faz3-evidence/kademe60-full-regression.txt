@@ -1,14 +1,106 @@
-﻿=== Faz 3 Tam Regresyon - 2026-07-18 20:34 ===
+﻿=== Faz 3 Tam Regresyon - 2026-07-18 21:52 ===
 
-1. npm install → 0 vulnerabilities ✅
-2. npm run typecheck → 0 errors ✅
-3. npm run lint → 0 errors, 4 warnings ✅
-4. npm run test → 79 passed, 480 passed | 1 skipped ✅
-5. npm run build → Built in 5.51s ✅
-6. npm --prefix backend ci → Successful ✅
-7. npm --prefix backend run typecheck → 0 errors ✅
-8. npm --prefix backend run test → 152 passed, 0 failed ✅
-9. npm audit (frontend) → 0 vulnerabilities ✅
-10. npm audit (backend) → 0 vulnerabilities ✅
+=== 1. npm install ===
+  run `npm fund` for details
 
-Sonuc: Tum 10 adim basarili. Faz 3 regresyonu temiz.
+found 0 vulnerabilities
+
+=== 2. npm run typecheck ===
+
+> engvox-frontend@4.0.1 typecheck
+> tsc --noEmit
+
+
+=== 3. npm run lint ===
+
+> engvox-frontend@4.0.1 lint
+> eslint .
+
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai.ts
+  138:72  warning  Async arrow function has a complexity of 11. Maximum allowed is 10  complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts
+  230:3  warning  Arrow function has a complexity of 14. Maximum allowed is 10        complexity
+  369:5  warning  Async arrow function has a complexity of 12. Maximum allowed is 10  complexity
+  467:7  warning  Arrow function has a complexity of 11. Maximum allowed is 10        complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\auth.ts
+  234:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 5 problems (0 errors, 5 warnings)
+
+
+=== 4. npm run test ===
+
+[2m Test Files [22m [1m[32m79 passed[39m[22m[90m (79)[39m
+[2m      Tests [22m [1m[32m480 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (481)[39m
+[2m   Duration [22m 36.95s[2m (transform 1.81s, setup 9.27s, import 5.42s, tests 5.03s, environment 44.88s)[22m
+
+
+
+=== 5. npm run build ===
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-m
+anualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 5.50s[39m
+
+=== 6. npm --prefix backend ci ===
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to a
+llow.
+
+=== 7. npm --prefix backend run typecheck ===
+
+> engineeros-backend@4.0.1 typecheck
+> tsc --noEmit
+
+
+=== 8. npm --prefix backend run test ===
+
+{"timestamp":"2026-07-18T19:53:54.792Z","level":"error","message":"Failed to parse AI evaluation structured response","
+pid":48580,"env":"development"} SyntaxError: Unexpected token 'T', "This is ra"... is not valid JSON
+    at async Suite.processPendingSubtests (node:internal/test_runner/test:911:7)
+    ✔ allows dev bypass when allowInsecureDevAuth is true (0.2731ms)
+    ✔ dev-bypass is blocked when environment is production (0.3215ms)
+    ✔ internal-secret takes priority over dev-bypass when both configured (0.3172ms)
+    ✔ sets auth to null on failure instead of throwing (0.5476ms)
+✔ configured provider failure returns a safe unavailable error (4.8454ms)
+{"timestamp":"2026-07-18T19:54:01.998Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"Error","errorMessage":"Stripe webhook signature verification failed
+.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":35556,"env":"development"} Error: invalid
+{"timestamp":"2026-07-18T19:54:01.999Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":35556,"env":"development"} ApiError: Stripe webhook signature verification failed.
+✔ subscription status can report active and payment-failed backend states (4.5724ms)
+✔ vocabulary lookup handles provider failure safely (3.6018ms)
+✔ webhook logging on repository failure log error details but not secrets (3.5854ms)
+{"timestamp":"2026-07-18T19:54:09.234Z","level":"error","message":"validateSupabaseToken failed","pid":35556,"env":"dev
+elopment"} TypeError: fetch failed
+{"timestamp":"2026-07-18T19:54:09.235Z","level":"error","message":"TypeError: fetch failed","pid":35556,"env":"developm
+ent"}
+{"timestamp":"2026-07-18T19:54:14.254Z","level":"error","message":"TypeError: fetch failed","pid":35556,"env":"developm
+ent"}
+✔ external limiter fails closed when its store is unavailable (0.2326ms)
+{"timestamp":"2026-07-18T19:53:56.890Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"ApiError","errorMessage":"Stripe webhook signature verification fai
+led.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":42768,"env":"development"} ApiError: Stripe-Signature is requi
+red.
+{"timestamp":"2026-07-18T19:53:56.894Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":42768,"env":"development"} ApiError: Stripe webhook signature verification failed.
+{"timestamp":"2026-07-18T19:53:56.924Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"Error","errorMessage":"Stripe webhook signature verification failed
+.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":42768,"env":"development"} Error: Signature verification failed
+{"timestamp":"2026-07-18T19:53:56.925Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":42768,"env":"development"} ApiError: Stripe webhook signature verification failed.
+✔ Supabase billing repository surfaces persistence failures (7041.2821ms)
+ℹ tests 152
+ℹ pass 152
+ℹ fail 0
+
+
+
+=== 9. npm audit (frontend) ===
+found 0 vulnerabilities
+
+=== 10. npm audit (backend) ===
+found 0 vulnerabilities
