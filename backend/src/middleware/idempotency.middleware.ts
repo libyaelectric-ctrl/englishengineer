@@ -60,7 +60,7 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
       }
 
       const originalJson = res.json.bind(res);
-      res.json = (body: unknown) => {
+      res.json = ((body: unknown) => {
         void Promise.resolve(
           store.set(key, {
             statusCode: res.statusCode,
@@ -78,8 +78,8 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
           }
         }
 
-        return originalJson(body) as Record<string, unknown>;
-      };
+        return originalJson(body);
+      }) as typeof res.json;
 
       next();
     } catch (error) {

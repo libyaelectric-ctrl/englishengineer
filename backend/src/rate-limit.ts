@@ -194,7 +194,7 @@ export const createRateLimiter = ({
     if (oldestKey !== undefined) buckets.delete(oldestKey);
   };
 
-  const getOrCreateBucket = (key: string, currentTime: number): RateBucket => {
+  const getOrCreateBucket = (key: string, currentTime: number): Bucket => {
     let bucket = buckets.get(key);
     if (bucket && bucket.resetAt <= currentTime) {
       buckets.delete(key);

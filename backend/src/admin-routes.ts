@@ -52,10 +52,10 @@ export const registerAdminRoutes = (
     async (req: Request, res: Response, next: NextFunction) => {
       try {
         const filters = {
-          userId: req.validatedQuery?.userId || undefined,
-          action: req.validatedQuery?.action || undefined,
-          since: req.validatedQuery?.since || undefined,
-          limit: req.validatedQuery?.limit || 50,
+          userId: (req.validatedQuery?.userId as string) || undefined,
+          action: (req.validatedQuery?.action as string) || undefined,
+          since: (req.validatedQuery?.since as string) || undefined,
+          limit: (req.validatedQuery?.limit as number) || 50,
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });

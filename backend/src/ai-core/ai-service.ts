@@ -7,6 +7,7 @@ import {
   callAnthropic,
   callGemini,
 } from './providers.js';
+import type { ProviderConfig } from './providers.js';
 import {
   getJsonStructureInstruction,
   getCustomPracticePrompt,

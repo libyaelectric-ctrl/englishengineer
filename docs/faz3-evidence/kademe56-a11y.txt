@@ -1,0 +1,181 @@
+﻿
+Running 6 tests using 2 workers
+
+  x  1 [mobile-safari] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks (2ms)
+  x  3 [mobile-safari] › tests\browser\accessibility.spec.ts:16:3 › Accessibility audit › login page passes axe accessibility checks (1ms)
+  x  4 [mobile-safari] › tests\browser\accessibility.spec.ts:26:3 › Accessibility audit › pricing page passes axe accessibility checks (1ms)
+  x  2 [chromium-desktop] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks (22.1s)
+  ok 5 [chromium-desktop] › tests\browser\accessibility.spec.ts:16:3 › Accessibility audit › login page passes axe accessibility checks (1.4s)
+  ok 6 [chromium-desktop] › tests\browser\accessibility.spec.ts:26:3 › Accessibility audit › pricing page passes axe accessibility checks (1.8s)
+
+
+  1) [chromium-desktop] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 58
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+    +     "help": "Elements must meet minimum color contrast ratio thresholds",
+    +     "helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=playwright",
+    +     "id": "color-contrast",
+    +     "impact": "serious",
+    +     "nodes": Array [
+    +       Object {
+    +         "all": Array [],
+    +         "any": Array [
+    +           Object {
+    +             "data": Object {
+    +               "bgColor": "#faf8ff",
+    +               "contrastRatio": 1.82,
+    +               "expectedContrastRatio": "4.5:1",
+    +               "fgColor": "#babac7",
+    +               "fontSize": "9.0pt (12px)",
+    +               "fontWeight": "normal",
+    +               "messageKey": null,
+    +             },
+    +             "id": "color-contrast",
+    +             "impact": "serious",
+    +             "message": "Element has insufficient color contrast of 1.82 (foreground color: #babac7, background color: #faf8ff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +             "relatedNodes": Array [
+    +               Object {
+    +                 "html": "<footer class=\"border-t border-[#d9d9e3] bg-[#faf8ff] px-6 py-8 md:px-12\">",
+    +                 "target": Array [
+    +                   "footer",
+    +                 ],
+    +               },
+    +             ],
+    +           },
+    +         ],
+    +         "failureSummary": "Fix any of the following:
+    +   Element has insufficient color contrast of 1.82 (foreground color: #babac7, background color: #faf8ff, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1",
+    +         "html": "<a class=\"transition hover:text-black opacity-40\" href=\"/admin\" data-discover=\"true\">Admin</a>",
+    +         "impact": "serious",
+    +         "none": Array [],
+    +         "target": Array [
+    +           ".opacity-40",
+    +         ],
+    +       },
+    +     ],
+    +     "tags": Array [
+    +       "cat.color",
+    +       "wcag2aa",
+    +       "wcag143",
+    +       "TTv5",
+    +       "TT13.c",
+    +       "EN-301-549",
+    +       "EN-9.1.4.3",
+    +       "ACT",
+    +       "RGAAv4",
+    +       "RGAA-3.2.1",
+    +     ],
+    +   },
+    + ]
+
+      11 |       .analyze();
+      12 |
+    > 13 |     expect(results.violations).toEqual([]);
+         |                                ^
+      14 |   });
+      15 |
+      16 |   test('login page passes axe accessibility checks', async ({ page }) => {
+        at C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\tests\browser\accessibility.spec.ts:13:32
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\video-1.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\error-context.md
+
+    attachment #5: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-chromium-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile-safari] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\User\AppData\Local\ms-playwright\webkit-2311\Playwright.exe
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     npx playwright install                                 ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-mobile-safari\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-mobile-safari\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\browser-accessibility-Acce-d8db4-es-axe-accessibility-checks-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile-safari] › tests\browser\accessibility.spec.ts:16:3 › Accessibility audit › login page passes axe accessibility checks 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\User\AppData\Local\ms-playwright\webkit-2311\Playwright.exe
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     npx playwright install                                 ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: test-results\browser-accessibility-Acce-257db-es-axe-accessibility-checks-mobile-safari\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-257db-es-axe-accessibility-checks-mobile-safari\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\browser-accessibility-Acce-257db-es-axe-accessibility-checks-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile-safari] › tests\browser\accessibility.spec.ts:26:3 › Accessibility audit › pricing page passes axe accessibility checks 
+
+    Error: browserType.launch: Executable doesn't exist at C:\Users\User\AppData\Local\ms-playwright\webkit-2311\Playwright.exe
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     npx playwright install                                 ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium-desktop] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:16:3 › Accessibility audit › login page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:26:3 › Accessibility audit › pricing page passes axe accessibility checks 
+  2 passed (31.0s)

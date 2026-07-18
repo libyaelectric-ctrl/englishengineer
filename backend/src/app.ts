@@ -59,7 +59,7 @@ const SECURITY_HEADERS = {
       reportUri: ['/api/csp-report'],
     },
   },
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginResourcePolicy: { policy: 'cross-origin' as const },
   hsts: { maxAge: 31536000, includeSubDomains: true, preload: true },
   referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   crossOriginEmbedderPolicy: false,
@@ -146,12 +146,12 @@ interface CreateAppOpts {
 
 const setupMiddleware = (app: Express, config: BackendConfig) => {
   app.disable('x-powered-by');
-  SECURITY_HEADERS.connectSrc = [
+  SECURITY_HEADERS.contentSecurityPolicy.directives.connectSrc = [
     "'self'",
     config.appOrigin,
     'https://sentry.io',
   ];
-  app.use(helmet(SECURITY_HEADERS));
+  app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
   const allowedOrigins = [
     config.appOrigin,
@@ -296,11 +296,15 @@ const registerRoutes = (
 
   registerAIRoutes(
     app,
-    createAIService(config.ai, fetchImpl),
+    createAIService(config.ai, fetchImpl) as unknown as { complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>> },
     requireBackendAuth,
     aiRateLimiter,
-    billingRepository ?? createSubscriptionRepository(config.stripe, fetchImpl),
-    config,
+    billingRepository ?? createSubscriptionRepository({
+      ...config.stripe,
+      supabaseUrl: config.stripe.supabaseUrl ?? undefined,
+      supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
+    }, fetchImpl),
+    config as unknown as Record<string, unknown>,
     fetchImpl
   );
 
@@ -326,11 +330,15 @@ const registerRoutes = (
   registerBillingRoutes(
     app,
     createBillingService({
-      config: config.stripe as BillingServiceConfig,
+      config: config.stripe as unknown as BillingServiceConfig,
       stripeClient: stripeClient as unknown as Stripe,
       repository:
         billingRepository ??
-        createSubscriptionRepository(config.stripe, fetchImpl),
+        createSubscriptionRepository({
+          ...config.stripe,
+          supabaseUrl: config.stripe.supabaseUrl ?? undefined,
+          supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
+        }, fetchImpl),
     }),
     requireBackendAuth,
     billingRateLimiter,
@@ -342,8 +350,7 @@ const registerRoutes = (
   if (!resolvedWorkspaceRepository && config.workspace?.configured) {
     try {
       resolvedWorkspaceRepository = createWorkspaceRepository(
-        config,
-        fetchImpl
+    config as unknown as Record<string, unknown>,
       );
     } catch (err: unknown) {
       logger.warn('Failed to create workspace repository', {
@@ -373,12 +380,12 @@ const registerRoutes = (
         req.auth?.source === 'internal-secret';
       if (!isAdmin)
         throw new ApiError(403, 'admin_required', 'Admin access required.');
-      const q = req.validatedQuery ?? {};
+      const q = (req.validatedQuery ?? {}) as Record<string, unknown>;
       const filters = {
-        userId: q.userId,
-        action: q.action,
-        since: q.since,
-        limit: q.limit,
+        userId: typeof q.userId === 'string' ? q.userId : undefined,
+        action: typeof q.action === 'string' ? q.action : undefined,
+        since: typeof q.since === 'string' ? q.since : undefined,
+        limit: typeof q.limit === 'number' ? q.limit : undefined,
       };
       res.json({ success: true, data: await getAuditLogs(filters) });
     } catch (error) {
@@ -413,7 +420,7 @@ export const createApp = ({
 }: CreateAppOpts = {}) => {
   if (!config) throw new Error('Backend config is required.');
 
-  initAuditLog(config);
+  initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
 
   const idempotencyStore = createIdempotencyStore(
     config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory',
@@ -467,7 +474,7 @@ export const createApp = ({
         Sentry.captureException(
           error instanceof Error ? error : new Error(String(error))
         );
-      const mapped = toErrorResponse(error);
+      const mapped = toErrorResponse(error instanceof Error ? error : new Error(String(error)));
       if (request.i18n && mapped.body?.error?.code) {
         const translated = request.i18n.t(mapped.body.error.code);
         if (translated !== mapped.body.error.code)
