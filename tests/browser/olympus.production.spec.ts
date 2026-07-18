@@ -3,18 +3,26 @@ import { expect, test, type Page } from '@playwright/test';
 const isLightColor = (element: Element): boolean => {
   const parseColorValues = (c: string) => c.match(/[\d.]+/g)?.map(Number) || [];
   const isTransparent = (ch: number[]) => ch.length >= 4 && ch[3] === 0;
-  const allChannelsAbove = (ch: number[], start: number, end: number, threshold: number) =>
-    ch.slice(start, end).every((val) => val > threshold);
+  const allChannelsAbove = (
+    ch: number[],
+    start: number,
+    end: number,
+    threshold: number
+  ) => ch.slice(start, end).every((val) => val > threshold);
   const hasBgImage = (b: string, ...patterns: string[]) =>
     b && patterns.some((p) => b.includes(p));
   const noBgImage = (b: string, ...patterns: string[]) =>
     b && !patterns.some((p) => b.includes(p));
 
-  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
-  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251')) return true;
+  const { backgroundColor: color, backgroundImage: bgImg } =
+    getComputedStyle(element);
+  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251'))
+    return true;
   const values = parseColorValues(color);
-  if (color.startsWith('oklab') || color.startsWith('oklch')) return (values[0] || 0) > 0.8;
-  if (color.startsWith('color(srgb')) return allChannelsAbove(values, 0, 3, 0.8);
+  if (color.startsWith('oklab') || color.startsWith('oklch'))
+    return (values[0] || 0) > 0.8;
+  if (color.startsWith('color(srgb'))
+    return allChannelsAbove(values, 0, 3, 0.8);
   if (isTransparent(values)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#141A22');
   return allChannelsAbove(values, 0, 3, 220);
 };
@@ -29,7 +37,8 @@ const isNotBlackButton = (element: Element): boolean => {
   const noBgImage = (b: string, ...patterns: string[]) =>
     b && !patterns.some((p) => b.includes(p));
 
-  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  const { backgroundColor: color, backgroundImage: bgImg } =
+    getComputedStyle(element);
   if (hasBgImage(bgImg, '#617FD8', '#4D6BC0', 'rgb(')) return true;
   const channels = parseColorValues(color);
   if (isTransparent(channels)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#000');
