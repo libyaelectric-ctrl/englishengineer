@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: englishengineer
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8080
+      - key: APP_ORIGIN
+        sync: false
+      - key: APP_VERSION
+        value: 4.0.1
+      - key: AI_PROVIDER
+        value: anthropic
+      - key: AI_MODEL
+        value: claude-haiku-4-5
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        value: https://wxabrwzitwsjtpmlvvqe.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_00dqafXox-03M5wM_9elEg_vYnMZhKq
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: RATE_LIMIT_STORE
+        value: upstash
+      - key: UPSTASH_REDIS_REST_URL
+        value: https://maximum-raven-40360.upstash.io
+      - key: UPSTASH_REDIS_REST_TOKEN
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_PRO_MONTHLY
+        sync: false
