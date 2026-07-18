@@ -40,6 +40,31 @@ export const resolveEnvironment = (env: Env): RuntimeEnvironment => {
     : 'development';
 };
 
+const validateModelConfig = (
+  configured: boolean,
+  provider: string,
+  env: Env
+): void => {
+  if (configured && env.AI_MODEL !== undefined && !hasText(env.AI_MODEL)) {
+    throw new Error(
+      'AI_MODEL must not be empty when a real AI provider is selected.'
+    );
+  }
+  if (configured && provider === 'anthropic' && !hasText(env.AI_MODEL)) {
+    throw new Error(
+      'AI_MODEL must not be empty when a real AI provider is selected.'
+    );
+  }
+};
+
+const getFallbackModel = (env: Env, provider: string): string => {
+  const models: Record<string, string> = {
+    gemini: 'gemini-2.0-flash',
+    openai: 'gpt-4.1-mini',
+  };
+  return env.AI_MODEL?.trim() || models[provider] || 'mock';
+};
+
 export const resolveAI = (env: Env): AiConfig => {
   const requested = (env.AI_PROVIDER || 'mock').toLowerCase();
   const provider = SUPPORTED_AI_PROVIDERS.has(requested)
@@ -48,25 +73,11 @@ export const resolveAI = (env: Env): AiConfig => {
   const key = resolveProviderKey(provider, env);
   const configured = provider !== 'mock' && hasText(key);
 
-  if (configured && env.AI_MODEL !== undefined && !hasText(env.AI_MODEL)) {
-    throw new Error(
-      'AI_MODEL must not be empty when a real AI provider is selected.'
-    );
-  }
+  validateModelConfig(configured, provider, env);
 
-  if (configured && provider === 'anthropic' && !hasText(env.AI_MODEL)) {
-    throw new Error(
-      'AI_MODEL must not be empty when a real AI provider is selected.'
-    );
-  }
-
-  const models: Record<string, string> = {
-    gemini: 'gemini-2.0-flash',
-    openai: 'gpt-4.1-mini',
-  };
   return {
     provider,
-    model: env.AI_MODEL?.trim() || models[provider] || 'mock',
+    model: getFallbackModel(env, provider),
     timeoutMs: toPositiveInteger(env.AI_TIMEOUT_MS, 20_000),
     configured,
     apiKey: configured ? key!.trim() : null,
