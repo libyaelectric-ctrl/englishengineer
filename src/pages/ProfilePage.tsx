@@ -108,6 +108,7 @@ const ProfilePage = () => {
         <ProfileOverviewSection
           currentUser={currentUser}
           profile={profile}
+          subscription={subscription}
           learningState={learningState}
           isEditMode={isEditMode}
           editFirstName={editFirstName}

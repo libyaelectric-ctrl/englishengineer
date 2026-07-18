@@ -28,9 +28,8 @@ const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeSection = section || 'today';
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { profile, memory, missions, isLoading } = useLearningCockpit(
-    currentUser?.id
-  );
+  const { profile, memory, missions, isLoading, learningState } =
+    useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const weakestSkill = useMemo(
     () => LearningTaskEngine.getWeakestSkill(profile),
@@ -147,7 +146,11 @@ const CurriculumPage = () => {
       />
 
       {activeSection === 'today' && (
-        <CurriculumTodayTab isLoading={isLoading} missions={missions} />
+        <CurriculumTodayTab
+          isLoading={isLoading}
+          missions={missions}
+          learningState={learningState}
+        />
       )}
 
       {activeSection === 'memory' && (
