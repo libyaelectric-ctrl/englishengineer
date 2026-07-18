@@ -79,7 +79,7 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
         type="button"
         onClick={onToggle}
         aria-expanded={showDetails}
-        className="flex w-full items-center justify-between font-bold text-foreground cursor-pointer"
+        className="flex w-full items-center justify-between font-sans font-bold uppercase tracking-wider text-[10px] text-foreground cursor-pointer"
       >
         Word details
         <ChevronDown
