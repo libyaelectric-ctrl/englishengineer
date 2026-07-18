@@ -39,24 +39,10 @@ jobs:
           vercel-args: '--prod'
           working-directory: ./
 
-  deploy-backend:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Deploy to Railway
-        uses: bervProject/railway-deploy@main
-        with:
-          railway_token: ${{ secrets.RAILWAY_TOKEN }}
-          service: englishengineer
-          working_directory: ./backend
-
   verify:
     name: Verify Deployment
     runs-on: ubuntu-latest
-    needs: [deploy-frontend, deploy-backend]
+    needs: deploy-frontend
     timeout-minutes: 5
     steps:
       - name: Wait for deployment
