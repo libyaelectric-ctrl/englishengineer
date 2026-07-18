@@ -122,12 +122,12 @@ export const createSupabaseAuditLogRepository = (
       }
 
       return (data || []).map((row: Record<string, unknown>) => ({
-        id: row.id,
-        timestamp: row.timestamp,
-        action: row.action,
-        userId: row.user_id,
-        details: row.details ? JSON.parse(row.details as string) : null,
-        severity: row.severity,
+        id: String(row.id),
+        timestamp: String(row.timestamp),
+        action: typeof row.action === 'string' ? row.action : undefined,
+        userId: typeof row.user_id === 'string' ? row.user_id : undefined,
+        details: row.details ? JSON.parse(row.details as string) : undefined,
+        severity: typeof row.severity === 'string' ? row.severity : undefined,
       }));
     } catch (err: unknown) {
       logger.error('Audit log query error', {

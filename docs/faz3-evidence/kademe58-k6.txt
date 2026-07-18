@@ -1,0 +1,10 @@
+﻿=== Load Test Durumu - 2026-07-18 20:28 ===
+
+k6 lokal ortamda kurulu degil. Load test senaryosu mevcut:
+  scripts/performance/load-test.k6.js
+
+CI uzerinden calistirilabilir:
+  .github/workflows/load-test.yml (workflow_dispatch ile manuel tetikleme)
+
+Not: Prod'a karsi calistirilmadi — gercek trafige yuk bindirebilir.
+CI uzerinde staging ortamina karsi calistirilmasi onerilir.
