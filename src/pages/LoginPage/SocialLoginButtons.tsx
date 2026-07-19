@@ -20,7 +20,7 @@ export const SocialLoginButtons = ({
           type="button"
           onClick={() => onSocialLogin(sp.provider)}
           disabled={socialLoading !== null || isApple}
-          className={`flex h-10 w-full items-center justify-center gap-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition-colors disabled:cursor-not-allowed cursor-pointer ${
+          className={`flex h-12 w-full items-center justify-center gap-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition-colors disabled:cursor-not-allowed cursor-pointer ${
             isApple
               ? 'border-[#E9ECEF] bg-[#F8F9FA] text-[#5b5d72] opacity-60 dark:border-[#2a2d35] dark:bg-[#0B0E14]'
               : 'border-[#E9ECEF] bg-white text-[#1c1d22] hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 disabled:opacity-50 dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:hover:bg-[#252830]'
