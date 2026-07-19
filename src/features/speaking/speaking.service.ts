@@ -1,5 +1,6 @@
 import { storage } from '@/shared/storage';
 import { useLearningStore } from '@/core/learning';
+import { eventBus } from '@/core/events/event-bus';
 import { SPEAKING_MISSIONS } from './speaking.data';
 import {
   SpeakingEvaluationResult,
@@ -121,6 +122,17 @@ export const SpeakingService = {
         submission.timeSpentMinutes
       );
     }
+
+    eventBus.publish({
+      id: `speaking-completed-${mission.id}-${Date.now()}`,
+      type: 'speaking:completed',
+      timestamp: new Date().toISOString(),
+      payload: {
+        missionId: mission.id,
+        score: evaluation.finalScore,
+        completedAt: new Date().toISOString(),
+      },
+    });
 
     return evaluation;
   },

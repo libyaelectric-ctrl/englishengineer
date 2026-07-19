@@ -13,7 +13,8 @@ export type AppEvent =
   | AICoachCompletedEvent
   | AICoachFailedEvent
   | VocabularyMasteredEvent
-  | GrammarMasteredEvent;
+  | GrammarMasteredEvent
+  | SpeakingCompletedEvent;
 
 export interface BaseEvent {
   readonly id: string;
