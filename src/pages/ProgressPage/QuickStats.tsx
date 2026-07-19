@@ -52,18 +52,16 @@ export const QuickStats = ({
           color: 'text-emerald-600',
         }]
       : []),
-    ...(grammarErrors !== undefined && grammarErrors > 0
-      ? [{
-          icon: AlertTriangle,
-          label: 'Grammar Errors',
-          value: grammarErrors,
-          color: 'text-amber-600',
-        }]
-      : []),
+    {
+      icon: AlertTriangle,
+      label: 'Grammar Errors',
+      value: grammarErrors ?? 0,
+      color: 'text-amber-600',
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
       {stats.map((stat, i) => (
         <motion.div
           key={stat.label}
