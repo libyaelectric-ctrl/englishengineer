@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { getFeatureFlags, isFeatureEnabled } from './feature-flags';
-import type { FeatureFlag } from './feature-flags';
 
 describe('FeatureFlagService', () => {
   let service: ReturnType<typeof getFeatureFlags>;
