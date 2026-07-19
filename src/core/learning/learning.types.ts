@@ -83,4 +83,6 @@ export interface LearningState {
   vocabularyPool: string[];
   /** Rule IDs of Strong grammar rules — feeds Writing prompt selection */
   grammarPool: string[];
+  /** Mission IDs of completed speaking exercises — feeds Speaking content selection */
+  speakingPool?: string[];
 }

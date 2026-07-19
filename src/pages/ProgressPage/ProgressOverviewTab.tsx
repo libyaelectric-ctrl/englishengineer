@@ -28,6 +28,7 @@ export const ProgressOverviewTab = () => {
   const vocabularyPool =
     useLearningStore((state) => state.vocabularyPool) ?? [];
   const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
+  const speakingPool = useLearningStore((state) => state.speakingPool) ?? [];
 
   const grammarSummary = GrammarProgressService.getSummary();
   const errorPatternSummary = ErrorPatternAnalyzer.getSummary();
@@ -135,7 +136,7 @@ export const ProgressOverviewTab = () => {
         highestSkillLabel={highestSkill.label}
         peakElo={Math.max(...Object.values(eloScores))}
         sessionsCount={learningState?.studySessions?.length || 0}
-        knowledgePoolSize={vocabularyPool.length + grammarPool.length}
+        knowledgePoolSize={vocabularyPool.length + grammarPool.length + speakingPool.length}
         grammarMastered={grammarSummary.strong}
         grammarErrors={errorPatternSummary.totalErrors}
       />
