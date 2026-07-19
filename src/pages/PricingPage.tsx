@@ -278,17 +278,31 @@ const PricingPage = () => {
         description="Choose the EngVox plan that fits your work."
       />
 
-      {/* Theme toggle */}
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          type="button"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy shadow-md transition hover:bg-surface-hover cursor-pointer"
-        >
-          {theme === 'dark' ? <Sun className="h-4.5 w-4.5" /> : <Moon className="h-4.5 w-4.5" />}
-        </button>
-      </div>
+      {/* Fixed top navbar */}
+      <nav className="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-border-soft bg-surface/80 py-3 backdrop-blur-xl">
+        <div className="flex w-full max-w-7xl items-center justify-between px-6">
+          <Link to="/" className="flex items-center gap-2.5">
+            <img src="/brand/logo.webp" alt="EngVox" className="h-8 w-8 rounded-[4px] border border-border-soft" />
+            <span className="text-sm font-bold tracking-tight text-foreground">EngVox</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <Link to="/pricing" className="hidden md:block text-[11px] font-bold uppercase tracking-wider text-muted-copy transition-colors hover:text-foreground">
+              Pricing
+            </Link>
+            <button
+              type="button"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </button>
+            <Link to="/login" className="rounded-[4px] border border-border-soft px-5 py-2.5 text-xs font-bold uppercase text-muted-copy transition hover:bg-surface-hover">
+              Start free
+            </Link>
+          </div>
+        </div>
+      </nav>
 
       <section className="py-10 text-center relative overflow-hidden border-b border-border-soft bg-surface">
         <div
