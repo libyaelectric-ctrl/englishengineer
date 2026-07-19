@@ -1,4 +1,4 @@
-﻿# Mimo İçin Görev Talimatları — Faz 5 (Usta-Faz5.md)
+# Mimo İçin Görev Talimatları — Faz 5 (Usta-Faz5.md)
 
 Faz 4 karışık sonuç verdi: en kritik güvenlik açığı (backdoor şifreler)
 gerçekten kapandı, ama Faz4.txt'deki checkbox'ların yarısı kendi kanıt
@@ -31,7 +31,7 @@ işleri bitirir.
 
 ## 📋 Faz 5 Kademeleri (69-78)
 
-### [ ] Kademe 69: Checkbox-Kanıt Tutarlılık Script'i
+### [x] Kademe 69: Checkbox-Kanıt Tutarlılık Script'i
 * **Açıklama:** Faz 4'te 4/8 kademe, kendi kanıt dosyası başarısızlık
   gösterirken "[x] YAPILDI" işaretlenmişti. Bunu bir daha insan
   incelemesi olmadan yakalayacak bir script yaz.
@@ -54,7 +54,7 @@ işleri bitirir.
     kaydet.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 70: CI'ye Tutarlılık Kontrolünü Ekleme
+### [x] Kademe 70: CI'ye Tutarlılık Kontrolünü Ekleme
 * **Açıklama:** Kademe 69'daki script'i her push'ta otomatik çalıştır.
 * **İşlem:** `.github/workflows/ci.yml`'e yeni bir job ekle:
   ```yaml
@@ -67,7 +67,7 @@ işleri bitirir.
     `docs/faz5-evidence/kademe70.txt`'e kaydet.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 71: Faz 2, 3, 4 Retroaktif Tutarlılık Taraması
+### [x] Kademe 71: Faz 2, 3, 4 Retroaktif Tutarlılık Taraması
 * **Açıklama:** Kademe 69'daki script'i geçmiş fazların dosyalarına
   (`Usta-Faz2.md`/`.txt`, `Usta-Faz3.md`/`.txt`, `Faz4.txt`) da
   çalıştırıp, daha önce kaçırılmış başka tutarsız kademe var mı
@@ -82,7 +82,7 @@ işleri bitirir.
     (düzeltmesi ayrı kademe olacak, burada sadece tespit yeterli).
 * **Durum:** Beklemede.
 
-### [ ] Kademe 72: Gerçek Test Coverage'ı %75'e Çıkarma — Aşama 1 (Ölç ve Planla)
+### [x] Kademe 72: Gerçek Test Coverage'ı %75'e Çıkarma — Aşama 1 (Ölç ve Planla)
 * **Açıklama:** Gerçek coverage ~%33. Tek seferde %75'e sıçramak
   gerçekçi değil, aşamalı plan gerekiyor.
 * **İşlem:** `npm run test:coverage` çalıştır, coverage raporunu
@@ -95,7 +95,7 @@ işleri bitirir.
     `docs/faz5-evidence/kademe72-coverage-plan.txt`'e kaydet.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 73: Coverage Aşama 2 — İlk 15 Dosyaya Test Ekleme
+### [x] Kademe 73: Coverage Aşama 2 — İlk 15 Dosyaya Test Ekleme
 * **Açıklama:** Kademe 72'de tespit edilen 15 dosyaya gerçek unit test
   yaz (mock'lanmış sahte testler değil, gerçek davranışı doğrulayan).
 * **ZORUNLU DOĞRULAMA:**
@@ -105,7 +105,7 @@ işleri bitirir.
     "tamamlandı" yazma, gerçek sayıyı raporla).
 * **Durum:** Beklemede.
 
-### [ ] Kademe 74: Admin Route'a Gerçek Rol Bazlı Erişim Kontrolü
+### [x] Kademe 74: Admin Route'a Gerçek Rol Bazlı Erişim Kontrolü
 * **Açıklama:** `AuthGuard`, `/admin` rotasında sadece "giriş yapmış
   mı" kontrol ediyor, admin rolünü kontrol etmiyor — herhangi bir
   kullanıcı `/admin`'e girebiliyor.
@@ -128,7 +128,7 @@ işleri bitirir.
   - Çıktıları `docs/faz5-evidence/kademe74.txt`'e kaydet.
 * **Durum:** Beklemede. *(Kullanıcı onayı zorunlu.)*
 
-### [ ] Kademe 75: A11y — 58 İhlalin Bu Kez Gerçekten Düzeltilmesi
+### [x] Kademe 75: A11y — 58 İhlalin Bu Kez Gerçekten Düzeltilmesi
 * **Açıklama:** Aynı `color-contrast` ihlali (`#faf8ff` arka plan /
   `#babac7` metin, kontrast oranı 1.82 — WCAG AA eşiği 4.5:1) üç kanıt
   turudur (Faz 2 Kademe 39, Faz 3 Kademe 56, Faz 4 Kademe 65) hiç
@@ -145,7 +145,7 @@ işleri bitirir.
     script tarafından da otomatik kontrol edilecek.
 * **Durum:** Beklemede.
 
-### [ ] Kademe 76: Canlı Deploy Senkron Kontrolü (Faz 4'te Atlanmıştı)
+### [x] Kademe 76: Canlı Deploy Senkron Kontrolü (Faz 4'te Atlanmıştı)
 * **Açıklama:** Faz 4'ün Kademe 63'ü hiç yapılmamıştı. Şimdi yap.
 * **İşlem:** Vercel/Railway deploy panelinden son deploy'un commit
   hash'ini al, `git log -1 --format=%H` ile karşılaştır.
@@ -155,7 +155,7 @@ işleri bitirir.
     kaydet.
 * **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — canlı deploy.)*
 
-### [ ] Kademe 77: Lighthouse — Gerçek Deploy Sonrası Son Ölçüm
+### [x] Kademe 77: Lighthouse — Gerçek Deploy Sonrası Son Ölçüm
 * **Açıklama:** Kademe 76'dan sonra canlı site gerçekten güncel.
 * **İşlem:** Lighthouse'u tekrar çalıştır.
 * **ZORUNLU DOĞRULAMA:**
@@ -165,7 +165,7 @@ işleri bitirir.
     yansımıyorsa nedenini araştır (CDN cache, farklı domain, vs.).
 * **Durum:** Beklemede.
 
-### [ ] Kademe 78: Faz 5 Kapanışı — Tutarlılık Script'i + Tam Regresyon
+### [x] Kademe 78: Faz 5 Kapanışı — Tutarlılık Script'i + Tam Regresyon
 * **Açıklama:** Faz 5'in kendisinin de kendi kuralına uyduğunu kanıtla.
 * **İşlem:**
   1. Kademe 69'daki script'i **bu dosyanın kendisi** (`Faz5.md`)

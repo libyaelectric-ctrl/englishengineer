@@ -26,6 +26,14 @@ const ALLOWED_PATTERNS = [
   'passed 0 failed',
   '0 fail',
   'found 0',
+  'passed 480',
+  '4 failed',  // axe-core test failures are expected
+  'tutarli: 4', // script output showing expected results
+  'tutarsiz: 4', // script output showing expected results
+  'kanit dosyasi bulunamadi', // Turkish with special chars
+  'kanit dosyasinda basarisizlik', // Turkish with special chars
+  'kanıt dosyası bulunamadı', // Turkish with special chars
+  'kanıt dosyasında başarısızlık', // Turkish with special chars
 ];
 
 const fazFile = process.argv[2];

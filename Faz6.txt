@@ -1,0 +1,173 @@
+﻿# Mimo İçin Görev Talimatları — Faz 6 (Usta-Faz6.md)
+
+Faz 5'te güzel bir kazanım oldu: artık checkbox'lar dürüst (script + boş
+bırakma disiplini gerçek). Ama üç iş hâlâ bitmedi, biri de **dördüncü**
+kez aynı şekilde denenip başarısız oldu:
+
+- Kademe 73 (coverage %33→%50) — hiç başlanmadı
+- Kademe 75/56/39 (a11y, landing page) — **4. kez** başarısız
+- Kademe 76 (deploy senkron) — hiç başlanmadı
+
+Bu faz, aynı yaklaşımı beşinci kez tekrarlamak yerine a11y'yi **kökten
+farklı bir yöntemle** çözüyor, ve kalan iki maddeyi daha küçük, kaçış
+payı olmayan adımlara bölüyor.
+
+---
+
+## 🛠️ KURAL (önceki fazlardan devam + yeni kural)
+
+1. Sıralı ilerleme zorunlu.
+2. Her kademenin kanıtı `docs/faz6-evidence/kademeXX.txt`'e kaydedilecek.
+3. Kademe 69'daki tutarlılık script'i (`scripts/verify-evidence-consistency.js`)
+   bu dosya (`Faz6.md`) üzerinde her kademe kapatılmadan önce çalıştırılacak.
+4. **YENİ KURAL — Boş Bırakma Artık Yeterli Değil:** Faz 5'te checkbox'lar
+   dürüstçe boş bırakıldı ama iş de yapılmadı. Bu fazda "yapamadım" demek
+   için de kanıt gerekiyor: bir kademe bitirilemiyorsa, kanıt dosyasında
+   **tam olarak neyi denediğini, nerede takıldığını ve bir sonraki
+   denemede ne farklı yapılması gerektiğini** yazacak. Sadece "hâlâ fail"
+   yazıp geçmek yetmez.
+5. **YENİ KURAL — A11y için "aynı şeyi tekrar deneme yasağı":** Kademe 82
+   (a11y), önceki 4 başarısız denemeden **kök neden analiziyle** başlayacak
+   (bkz. Kademe 82 altındaki zorunlu ilk adım). Doğrudan renk değiştirmeye
+   geçmek yasak.
+6. Kademe 76 (deploy) ve 79 (coverage — çok sayıda dosya değişikliği)
+   için kullanıcı onayı zorunlu.
+
+---
+
+## 📋 Faz 6 Kademeleri (79-85)
+
+### [ ] Kademe 79: Coverage Aşama 2 — Sadece 5 Dosya (Faz 5'in 15 Dosyası Çok Büyüktü)
+* **Açıklama:** Faz 5'teki Kademe 73, "ilk 15 dosyaya test yaz" hedefiyle
+  hiç başlanamadı — muhtemelen kapsam çok büyüktü. Bu kez kapsamı 5'e
+  indir.
+* **İşlem:** Kademe 72'nin (Faz 5) tespit ettiği 0% coverage'lı dosyalar
+  arasından **sadece şu 5'ine** gerçek unit test yaz:
+  `src/core/errors/*.ts` (en kritik 2 dosya), `src/shared/lib/sanitize.ts`,
+  `src/shared/lib/web-vitals.ts`, `src/shared/lib/feature-flags.ts`.
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run test:coverage` çalıştır, bu 5 dosyanın coverage'ının
+    %0'dan **>%70**'e çıktığını dosya bazında göster (genel toplam
+    yüzde değil, bu 5 dosyanın kendi satırları).
+  - Genel toplam coverage yüzdesini de raporla (küçük bir artış
+    beklenir, ~%33'ten ~%36-38'e gibi — abartma).
+  - `docs/faz6-evidence/kademe79.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 80: Coverage Aşama 3 — Sonraki 5 Dosya
+* **Açıklama:** Kademe 79'un aynısı, sıradaki 5 düşük-coverage dosya için.
+* **ZORUNLU DOĞRULAMA:** Aynı format, `docs/faz6-evidence/kademe80.txt`.
+* **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — çok dosya değişiyor.)*
+
+### [ ] Kademe 81: Canlı Deploy Senkron Kontrolü — Bu Kez Adım Adım
+* **Açıklama:** Faz 4 ve 5'te iki kez atlandı. Bu kez daha küçük,
+  kaçınılmaz adımlara bölündü.
+* **İşlem (sırayla, her biri ayrı kanıt satırı):**
+  1. `git log -1 --format=%H` çalıştır → local HEAD commit hash'ini yaz.
+  2. Vercel CLI kuruluysa `vercel ls` veya Vercel dashboard'dan son
+     production deploy'un commit hash'ini bul. Kurulu değilse: Vercel
+     dashboard URL'sini kullanıcıya ver, "şu adrese git, en son
+     production deploy'un commit hash'ini bana yapıştır" diye sor —
+     bu kademe kullanıcı girdisi olmadan otomatik "tamamlandı" olamaz.
+  3. İki hash'i karşılaştır. Farklıysa: `git push` zaten yapılmış mı
+     kontrol et, Vercel'in otomatik deploy tetikleyip tetiklemediğine
+     bak (webhook/entegrasyon sorunu olabilir).
+* **ZORUNLU DOĞRULAMA:**
+  - Local hash + canlı deploy hash'ini yan yana yaz, eşleşiyor mu
+    açıkça belirt. `docs/faz6-evidence/kademe81.txt`'e kaydet.
+* **Durum:** Beklemede. *(Kullanıcı onayı zorunlu.)*
+
+### [ ] Kademe 82: A11y — Kök Neden Analizi (ZORUNLU İLK ADIM, renk değiştirmeden önce)
+* **Açıklama:** 4 kez aynı `color-contrast` hatası (`#faf8ff` arka plan /
+  `#babac7` metin) düzeltilmeye çalışıldı, 4 kez başarısız oldu. Bu,
+  "yanlış yeri düzeltiyoruz" ihtimalini gösteriyor. Doğrudan renk
+  değiştirmeden önce şunları sırayla yap:
+  1. `npx playwright test tests/browser/accessibility.spec.ts --project=chromium-desktop -g "landing"`
+     çalıştır, axe-core'un tam ihlal listesini (sadece "58 violation"
+     değil, her birinin `node.html`, `node.target` (CSS selector) ve
+     `impact` alanlarını) JSON olarak dök.
+  2. Bu selector'ların **gerçekte hangi React bileşenine, hangi Tailwind
+     class'ına veya hangi CSS değişkenine** karşılık geldiğini bul —
+     `grep -rn "faf8ff\|babac7" src` ile başla, ama axe'ın verdiği asıl
+     selector'ı takip et (belki sorun bambaşka bir renk çiftidir, önceki
+     3 deneme yanlış rengi hedeflemiş olabilir).
+  3. Bulunan her selector için gerçek render edilmiş (computed) rengi
+     tarayıcı DevTools mantığıyla doğrula — Tailwind'de bir class
+     override ediliyor olabilir, kaynak kodda görünen renk ile
+     ekrana çıkan renk farklı olabilir.
+* **ZORUNLU DOĞRULAMA:**
+  - Axe'ın tam JSON çıktısını ve tespit edilen gerçek selector/renk
+    eşleşmesini `docs/faz6-evidence/kademe82-root-cause.txt`'e kaydet.
+    Bu kademe kapanmadan Kademe 83'e (asıl düzeltme) geçilmeyecek.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 83: A11y — Kök Nedene Göre Gerçek Düzeltme
+* **Açıklama:** Kademe 82'de bulunan gerçek selector/renk eşleşmesine
+  göre düzelt — tahminle değil, kanıtla.
+* **İşlem:** Tespit edilen CSS değişkenini/class'ı düzelt, WCAG AA
+  eşiğini (4.5:1 normal metin, 3:1 büyük metin/UI bileşeni) hesaplayarak
+  doğrula (bir kontrast hesaplayıcıyla, "koyulaştırdım, oldu sanırım"
+  değil).
+* **ZORUNLU DOĞRULAMA:**
+  - `npx playwright test tests/browser/accessibility.spec.ts` **tüm
+    projelerde** (chromium-desktop + mobile-safari) çalıştır. **0 fail**
+    hedefi — kısmi geçiş (ör. sadece chromium geçti, mobile-safari hâlâ
+    fail) bu kademeyi kapatmaz.
+  - Çıktıyı `docs/faz6-evidence/kademe83.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 84: Frontend Admin Sayfası — Kalan Rol Kontrolü Boşluğu
+* **Açıklama:** Faz 5'te backend admin API'leri gerçekten `requireRole`
+  ile korundu (doğrulandı) ama frontend `/admin` rotası hâlâ sadece
+  `AuthGuard` (giriş yapmış mı) kontrolü yapıyor, rol kontrolü yok.
+  Veri sızmıyor (API 403 döner) ama boş admin sayfası kabuğu herkese
+  görünüyor — küçük ama gereksiz bir bilgi ifşası.
+* **İşlem:** `src/features/auth/` altına `RequireAdminRole.tsx` ekle,
+  kullanıcının profilindeki `role` alanını kontrol etsin (Supabase'den
+  gelen auth state üzerinden), admin değilse `/` veya `/403`'e
+  yönlendirsin. `src/routes/router.tsx`'teki `/admin` rotasını
+  `<AuthGuard><RequireAdminRole>...` şeklinde sarmala.
+* **ZORUNLU DOĞRULAMA:**
+  - Admin olmayan bir kullanıcı ile `/admin`'e gidince yönlendirildiğini
+    gösteren bir test ekle/çalıştır.
+  - `docs/faz6-evidence/kademe84.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 85: Faz 6 Kapanışı — Tutarlılık Script'i + Tam Regresyon
+* **Açıklama:** Bu kez checkbox'lar (bitenler için) gerçekten `[x]`
+  işaretlenecek — Faz 5'teki "hepsini boş bırak" davranışı bu fazda
+  kabul edilmeyecek. Biten kademe `[x]`, bitmeyen `[ ]` kalacak, ortada
+  bir şey yoksa `[~] KISMEN` + kısa not.
+* **İşlem:**
+  1. `node scripts/verify-evidence-consistency.js Faz6.md docs/faz6-evidence`
+     çalıştır.
+  2. Tam regresyon: `npm install`, `npm run typecheck`, `npm run lint`,
+     `npm run test`, `npm run build`, backend `ci`/`typecheck`/`test`,
+     her iki `npm audit`.
+* **ZORUNLU DOĞRULAMA:**
+  - Script çıktısında **en az 3 `[x]` işaretli kademe** olmalı (Faz
+    5'teki "0 işaretli = 0 tutarsız" kaçamağı bu fazda kabul edilmez)
+    ve hepsi tutarlı olmalı.
+  - Regresyon çıktılarının tamamını
+    `docs/faz6-evidence/kademe85-full-regression.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+---
+
+## 🎯 Beklenen Puan Aralığı (Faz 6 Sonunda)
+
+| Alan | Faz 5 Sonu | Faz 6 Hedef |
+|---|---|---|
+| Güvenlik (uygulama) | 80 | 92-95 |
+| Performans / Bundle (canlı) | 45 | 85-90 |
+| Test Altyapısı / Coverage | 62 | 68-72 |
+| A11y | 35 | 90-95 |
+| Süreç Güvenilirliği | yüksek | yüksek (korunacak) |
+| Diğer | 93-96 | 93-96 |
+| **Genel Ortalama** | ~78 | **~87-90** |
+
+Not: Kademe 82-83 (a11y kök neden analizi) bu listenin en kritik
+maddesi — dördüncü kez aynı yöntemle denenip başarısız olmuş bir
+şeyi beşinci kez aynı şekilde denemek anlamsız. Kök neden bulunmadan
+Kademe 83'e geçilmeyecek, bu kural esnetilmeyecek.
+
