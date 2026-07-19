@@ -1,0 +1,17 @@
+=== Kademe 83: A11y Duzeltme ===
+
+Duzeltmeler:
+  1. Footer: bg-[#faf8ff] -> bg-[#f0f0f5] (kontrast arttirildi)
+  2. Footer: opacity-40 -> opacity-70 (opaklik arttirildi)
+  3. Footer: text-muted-copy -> text-foreground (koyu renk)
+  4. Pricing: overflow-x-auto div'e tabIndex={0} role=region eklendi
+
+Test sonuclari (6/6 passed):
+  ok 1 [chromium-desktop] - landing page (2.1s)
+  ok 2 [mobile-safari] - landing page (2.3s)
+  ok 3 [chromium-desktop] - login page (1.4s)
+  ok 4 [mobile-safari] - login page (1.6s)
+  ok 5 [chromium-desktop] - pricing page (1.6s)
+  ok 6 [mobile-safari] - pricing page (2.1s)
+
+  6 passed (9.8s)

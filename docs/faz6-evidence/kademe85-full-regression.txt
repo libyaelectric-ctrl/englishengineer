@@ -1,0 +1,125 @@
+﻿=== Faz 6 Tam Regresyon - 2026-07-19 08:45 ===
+
+=== 1. npm install ===
+
+found 0 vulnerabilities
+
+=== 2. Typecheck ===
+
+> engvox-frontend@4.0.1 typecheck
+> tsc --noEmit
+
+src/core/events/event-bus.test.ts(16,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(27,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(31,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(41,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(42,33): error TS2322: Type '"user.login"' is not assignable to type '"app.started" | "app.error" | "route.changed" | "user.action" | "learning.started" | "learning.completed" | "xp.earned" | "badge.unlocked" | "ai.coach.started" | "ai.coach.completed" | "ai.coach.failed" | "vocabulary:mastered" | "grammar:mastered"'.
+src/core/events/event-bus.test.ts(42,90): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(52,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/shared/lib/feature-flags.test.ts(3,1): error TS6133: 'FeatureFlag' is declared but its value is never read.
+
+=== 3. Lint ===
+
+> engvox-frontend@4.0.1 lint
+> eslint .
+
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai.ts
+  143:72  warning  Async arrow function has a complexity of 11. Maximum allowed is 10  complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts
+  230:3  warning  Arrow function has a complexity of 14. Maximum allowed is 10        complexity
+  383:5  warning  Async arrow function has a complexity of 12. Maximum allowed is 10  complexity
+  481:7  warning  Arrow function has a complexity of 11. Maximum allowed is 10        complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\auth.ts
+  240:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\scripts\optimize-images.mjs
+  2:33  warning  'unlinkSync' is defined but never used  no-unused-vars
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\scripts\verify-evidence-consistency.js
+  11:37  warning  'existsSync' is defined but never used  no-unused-vars
+  12:16  warning  'basename' is defined but never used    no-unused-vars
+  12:26  warning  'extname' is defined but never used     no-unused-vars
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\pages\PricingPage.tsx
+  344:97  error  `tabIndex` should only be declared on interactive elements  jsx-a11y/no-noninteractive-tabindex
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\shared\lib\feature-flags.test.ts
+  3:15  warning  'FeatureFlag' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 11 problems (1 error, 10 warnings)
+
+
+=== 4. Tests ===
+
+[2m Test Files [22m [1m[32m82 passed[39m[22m[90m (82)[39m
+[2m      Tests [22m [1m[32m494 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (495)[39m
+[2m   Duration [22m 44.50s[2m (transform 2.07s, setup 12.03s, import 6.15s, tests 5.48s, environment 54.34s)[22m
+
+
+
+=== 5. Build ===
+src/core/events/event-bus.test.ts(42,90): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/core/events/event-bus.test.ts(52,91): error TS2322: Type '{}' is not assignable to type '{ readonly environment: string; readonly userAgent: string; readonly timestamp: number; } | { readonly error: AppError; } | { readonly from: string; readonly to: string; } | { ...; } | ... 8 more ... | { ...; }'.
+src/shared/lib/feature-flags.test.ts(3,1): error TS6133: 'FeatureFlag' is declared but its value is never read.
+
+=== 6. Backend ===
+
+> engineeros-backend@4.0.1 typecheck
+> tsc --noEmit
+
+
+{"timestamp":"2026-07-19T06:46:54.200Z","level":"error","message":"Failed to parse AI evaluation structured response","
+pid":44556,"env":"development"} SyntaxError: Unexpected token 'T', "This is ra"... is not valid JSON
+    at async Suite.processPendingSubtests (node:internal/test_runner/test:911:7)
+    ✔ allows dev bypass when allowInsecureDevAuth is true (0.2798ms)
+    ✔ dev-bypass is blocked when environment is production (0.3392ms)
+    ✔ internal-secret takes priority over dev-bypass when both configured (0.3098ms)
+    ✔ sets auth to null on failure instead of throwing (0.8437ms)
+✔ configured provider failure returns a safe unavailable error (6.8434ms)
+{"timestamp":"2026-07-19T06:47:00.979Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"Error","errorMessage":"Stripe webhook signature verification failed
+.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":18920,"env":"development"} Error: invalid
+{"timestamp":"2026-07-19T06:47:00.979Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":18920,"env":"development"} ApiError: Stripe webhook signature verification failed.
+✔ subscription status can report active and payment-failed backend states (4.5746ms)
+✔ vocabulary lookup handles provider failure safely (3.403ms)
+✔ webhook logging on repository failure log error details but not secrets (3.2003ms)
+{"timestamp":"2026-07-19T06:47:01.160Z","level":"error","message":"validateSupabaseToken failed","pid":18920,"env":"dev
+elopment"} TypeError: fetch failed
+{"timestamp":"2026-07-19T06:47:06.003Z","level":"error","message":"TypeError: fetch failed","pid":18920,"env":"developm
+ent"}
+✔ external limiter fails closed when its store is unavailable (0.2798ms)
+{"timestamp":"2026-07-19T06:46:55.910Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"ApiError","errorMessage":"Stripe webhook signature verification fai
+led.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":8392,"env":"development"} ApiError: Stripe-Signature is requir
+ed.
+{"timestamp":"2026-07-19T06:46:55.913Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":8392,"env":"development"} ApiError: Stripe webhook signature verification failed.
+{"timestamp":"2026-07-19T06:46:55.938Z","level":"error","message":"Stripe webhook error","eventId":"unknown","type":"un
+known","step":"signature_verification","errorName":"Error","errorMessage":"Stripe webhook signature verification failed
+.","supabaseCode":"N/A","supabaseDetails":"N/A","pid":8392,"env":"development"} Error: Signature verification failed
+{"timestamp":"2026-07-19T06:46:55.938Z","level":"error","message":"Unhandled API error","path":"/api/webhooks/stripe","
+pid":8392,"env":"development"} ApiError: Stripe webhook signature verification failed.
+✔ Supabase billing repository surfaces persistence failures (7025.6805ms)
+ℹ tests 152
+ℹ pass 152
+ℹ fail 0
+
+
+
+=== 7. Audit ===
+found 0 vulnerabilities
+found 0 vulnerabilities
+
+=== 8. Consistency Check ===
+
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Faz6.txt
+Toplam [x] işaretli kademe: 0
+Tutarlı: 0
+Tutarsız: 0
+
+✅ Tüm kademeler tutarlı.
