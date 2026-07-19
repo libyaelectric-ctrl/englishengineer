@@ -37,7 +37,7 @@ export const ReadingEvaluationResults = ({
   <div className="space-y-8 animate-in zoom-in-95 duration-400">
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-4 space-y-6">
-        <div className="flex flex-col items-center space-y-6 rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-center shadow-sm">
+        <div className="flex flex-col items-center space-y-6 rounded-[4px] border border-border-soft bg-surface p-6 text-center shadow-sm">
           <div>
             <h4 className="text-sm font-bold text-muted-copy uppercase tracking-widest font-mono">
               Verification Outcome
@@ -60,7 +60,7 @@ export const ReadingEvaluationResults = ({
           <p className="text-xs text-muted-copy italic px-2 font-medium leading-relaxed">
             &quot;{evaluationResult.feedback}&quot;
           </p>
-          <div className="w-full space-y-4 border-t border-[#d9d9e3] pt-4">
+          <div className="w-full space-y-4 border-t border-border-soft pt-4">
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-medium text-muted-copy">
                 <span>Comprehension Rate</span>
@@ -100,7 +100,7 @@ export const ReadingEvaluationResults = ({
             <span>Scoring Rewards Claimed</span>
           </h5>
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
+            <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block">
                 XP gained
               </span>
@@ -108,7 +108,7 @@ export const ReadingEvaluationResults = ({
                 +{evaluationResult.xpEarned}
               </span>
             </div>
-            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
+            <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <Coins className="h-2.5 w-2.5 text-warning shrink-0" /> COINS
               </span>
@@ -116,7 +116,7 @@ export const ReadingEvaluationResults = ({
                 +{evaluationResult.coinsEarned}
               </span>
             </div>
-            <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-center shadow-sm">
+            <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <TrendingUp className="h-2.5 w-2.5 text-[#0047bb] shrink-0" />{' '}
                 LEVEL PROGRESS
@@ -134,7 +134,7 @@ export const ReadingEvaluationResults = ({
       </div>
 
       <div className="lg:col-span-8 space-y-6">
-        <div className="grid grid-cols-1 gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-5 md:grid-cols-2 shadow-sm">
+        <div className="grid grid-cols-1 gap-4 rounded-[4px] border border-border-soft bg-surface p-5 md:grid-cols-2 shadow-sm">
           <div className="space-y-3">
             <h5 className="text-xs font-bold text-success uppercase tracking-widest font-mono flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 shrink-0" />
@@ -154,7 +154,7 @@ export const ReadingEvaluationResults = ({
               ))}
             </ul>
           </div>
-          <div className="space-y-3 border-t border-[#d9d9e3] pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
+          <div className="space-y-3 border-t border-border-soft pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
             <h5 className="text-xs font-bold text-warning uppercase tracking-widest font-mono flex items-center gap-1.5">
               <AlertTriangle className="h-4 w-4 shrink-0" />
               <span>Development Gaps</span>
@@ -188,7 +188,7 @@ export const ReadingEvaluationResults = ({
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex gap-2.5">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white font-mono text-xs font-bold text-muted-copy">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-border-soft bg-surface font-mono text-xs font-bold text-muted-copy">
                       {idx + 1}
                     </span>
                     <h6 className="mt-0.5 text-xs font-bold leading-tight text-foreground md:text-sm">
@@ -206,7 +206,7 @@ export const ReadingEvaluationResults = ({
                     <span>{item.isCorrect ? 'Correct' : 'Incorrect'}</span>
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-3 md:grid-cols-2">
+                <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-3 md:grid-cols-2">
                   <div>
                     <span className="text-[9px] font-mono text-muted-copy uppercase block">
                       Your Answer
@@ -224,7 +224,7 @@ export const ReadingEvaluationResults = ({
                     </span>
                   </div>
                 </div>
-                <div className="space-y-1 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+                <div className="space-y-1 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
                   <span className="text-[9px] font-bold uppercase text-muted-copy tracking-wider font-mono">
                     Technical Justification
                   </span>
@@ -250,7 +250,7 @@ export const ReadingEvaluationResults = ({
               resetCurrentMission();
               setSelectedWord(null);
             }}
-            className="h-10 rounded-[4px] border-[#d9d9e3] text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
+            className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
           >
             Retry Assessment
           </Button>

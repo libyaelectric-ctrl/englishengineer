@@ -24,7 +24,7 @@ export const MiniStat = ({
   label: string;
   value: string;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">
       {label}
     </p>
@@ -39,7 +39,7 @@ export const DetailRow = ({
   label: string;
   value: string;
 }) => (
-  <div className="flex items-center justify-between border-b border-[#d9d9e3] pb-2 last:border-b-0 last:pb-0">
+  <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase font-bold">{label}</span>
     <span className="text-right font-bold text-foreground">{value}</span>
   </div>
@@ -59,7 +59,7 @@ export const TagList = ({
     return <p className="text-xs text-muted-copy font-medium">{emptyLabel}</p>;
   const classes =
     tone === 'rose'
-      ? 'bg-rose-500/10 text-rose-600 border-rose-500/20'
+      ? 'bg-rose-500/10 text-error border-rose-500/20'
       : 'bg-success/10 text-success border-success/20';
   return (
     <div className="flex flex-wrap gap-2">
@@ -82,7 +82,7 @@ const ReadinessCard = ({
   label: string;
   value: number | null;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
     <div className="flex items-center justify-between text-xs font-medium text-foreground">
       <span>{label}</span>
       <span className="text-[#0047bb] font-bold font-mono">
@@ -170,14 +170,14 @@ export const AssessmentProfilePanel = ({
           </div>
         </div>
         <div className="rounded-[4px] border border-rose-500/20 bg-rose-500/5 p-5 shadow-sm">
-          <p className="text-[10px] font-mono text-rose-600 uppercase tracking-widest font-bold">
+          <p className="text-[10px] font-mono text-error uppercase tracking-widest font-bold">
             Priority Improvement Areas
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             {profile.weakestDimensions.map((d) => (
               <span
                 key={d.dimensionId}
-                className="rounded-[4px] border border-rose-500/20 bg-rose-500/10 px-2 py-1 text-[10px] font-mono uppercase text-rose-600 font-bold"
+                className="rounded-[4px] border border-rose-500/20 bg-rose-500/10 px-2 py-1 text-[10px] font-mono uppercase text-error font-bold"
               >
                 {d.label} {d.score}%
               </span>
@@ -190,7 +190,7 @@ export const AssessmentProfilePanel = ({
         {profile.dimensionScores.map((dimension) => (
           <div
             key={dimension.dimensionId}
-            className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+            className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
           >
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-bold text-foreground">

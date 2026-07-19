@@ -36,7 +36,7 @@ export const AnalyticsChartsSection = ({
             <button
               key={tab.id}
               onClick={() => setActiveChart(tab.id)}
-              className={`px-3 py-1.5 text-[10px] font-sans font-bold rounded-[4px] uppercase tracking-wider transition-all cursor-pointer ${activeChart === tab.id ? 'bg-[#0047bb] text-white border border-[#0047bb]' : 'text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
+              className={`px-3 py-1.5 text-[10px] font-sans font-bold rounded-[4px] uppercase tracking-wider transition-all cursor-pointer ${activeChart === tab.id ? 'bg-[#0047bb] text-white border border-[#0047bb]' : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'}`}
             >
               {tab.label}
             </button>

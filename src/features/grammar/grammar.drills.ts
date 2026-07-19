@@ -1,6 +1,11 @@
 import type { GrammarRule } from './grammar.types';
 
-export type DrillType = 'fill_blank' | 'correction' | 'multiple_choice' | 'reordering' | 'transformation';
+export type DrillType =
+  | 'fill_blank'
+  | 'correction'
+  | 'multiple_choice'
+  | 'reordering'
+  | 'transformation';
 
 export interface DrillQuestion {
   id: string;
@@ -23,12 +28,18 @@ export interface DrillResult {
   xpEarned: number;
 }
 
-const DRILL_GENERATORS: Record<DrillType, (rule: GrammarRule) => DrillQuestion[]> = {
+const DRILL_GENERATORS: Record<
+  DrillType,
+  (rule: GrammarRule) => DrillQuestion[]
+> = {
   fill_blank: (rule) => {
     const questions: DrillQuestion[] = [];
     rule.examples.forEach((ex, i) => {
       const words = ex.english.split(' ');
-      const blankIndex = Math.min(Math.floor(words.length / 2), words.length - 1);
+      const blankIndex = Math.min(
+        Math.floor(words.length / 2),
+        words.length - 1
+      );
       const correct = words[blankIndex];
       words[blankIndex] = '______';
       questions.push({
@@ -64,8 +75,18 @@ const DRILL_GENERATORS: Record<DrillType, (rule: GrammarRule) => DrillQuestion[]
     const questions: DrillQuestion[] = [];
     rule.examples.forEach((ex, i) => {
       const words = ex.english.split(' ');
-      const target = words[Math.min(Math.floor(words.length / 2), words.length - 1)];
-      const wrongOptions = ['is', 'are', 'was', 'were', 'have', 'has', 'will', 'can']
+      const target =
+        words[Math.min(Math.floor(words.length / 2), words.length - 1)];
+      const wrongOptions = [
+        'is',
+        'are',
+        'was',
+        'were',
+        'have',
+        'has',
+        'will',
+        'can',
+      ]
         .filter((w) => w !== target)
         .slice(0, 3);
       const options = [target, ...wrongOptions].sort(() => Math.random() - 0.5);
@@ -129,10 +150,7 @@ export const InteractiveDrillService = {
     return types.flatMap((type) => DRILL_GENERATORS[type]?.(rule) ?? []);
   },
 
-  generateMixedDrills(
-    rules: GrammarRule[],
-    count = 10
-  ): DrillQuestion[] {
+  generateMixedDrills(rules: GrammarRule[], count = 10): DrillQuestion[] {
     const allDrills = rules.flatMap((rule) =>
       this.generateDrills(rule, ['fill_blank', 'multiple_choice', 'correction'])
     );
@@ -140,13 +158,23 @@ export const InteractiveDrillService = {
   },
 
   checkAnswer(question: DrillQuestion, userAnswer: string): boolean {
-    const normalize = (s: string) => s.trim().toLowerCase().replace(/[.,!?;:]/g, '');
+    const normalize = (s: string) =>
+      s
+        .trim()
+        .toLowerCase()
+        .replace(/[.,!?;:]/g, '');
     return normalize(userAnswer) === normalize(question.correctAnswer);
   },
 
-  calculateXP(question: DrillQuestion, isCorrect: boolean, timeSpentMs: number): number {
+  calculateXP(
+    question: DrillQuestion,
+    isCorrect: boolean,
+    timeSpentMs: number
+  ): number {
     if (!isCorrect) return 0;
-    const baseXP = { beginner: 5, intermediate: 10, advanced: 20 }[question.difficulty];
+    const baseXP = { beginner: 5, intermediate: 10, advanced: 20 }[
+      question.difficulty
+    ];
     const speedBonus = timeSpentMs < 5000 ? 5 : timeSpentMs < 10000 ? 2 : 0;
     return baseXP + speedBonus;
   },

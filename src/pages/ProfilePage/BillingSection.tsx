@@ -55,8 +55,8 @@ export const BillingSection = ({
           onOpenPortal={onOpenPortal}
         />
 
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 space-y-6 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#d9d9e3] pb-3">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 space-y-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-border-soft pb-3">
             <div>
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Usage and Quota limits

@@ -231,7 +231,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   }, [totalDurationSeconds, updateAudioProgress]);
 
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 shadow-sm">
+    <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
           <Volume2 className="h-4 w-4 text-[#0047bb]" />
@@ -291,7 +291,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               disabled={isAudioLoading}
               title="Back 10s"
               aria-label="Back 10s"
-              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <SkipBack className="h-4 w-4" />
             </Button>
@@ -302,7 +302,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               disabled={isAudioLoading}
               title="Replay"
               aria-label="Replay"
-              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -327,7 +327,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               disabled={isAudioLoading}
               title="Forward 10s"
               aria-label="Forward 10s"
-              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
+              className="h-10 w-10 p-0 rounded-[4px] cursor-pointer border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center justify-center"
             >
               <SkipForward className="h-4 w-4" />
             </Button>
@@ -342,7 +342,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
                 className={`px-2.5 py-1 text-xs rounded-[4px] transition-colors cursor-pointer border ${
                   playbackSpeed === speed
                     ? 'bg-[#0047bb] text-white border-[#0047bb] font-bold'
-                    : 'bg-white border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                    : 'bg-white border-border-soft text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                 }`}
               >
                 {speed}x

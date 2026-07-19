@@ -33,7 +33,7 @@ export const GrammarLessonMap = ({
   );
 
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white transition-all shadow-sm">
+    <div className="rounded-[4px] border border-border-soft bg-surface transition-all shadow-sm">
       {/* Header bar */}
       <button
         type="button"
@@ -65,7 +65,7 @@ export const GrammarLessonMap = ({
       </button>
 
       {isExpanded && (
-        <div className="border-t border-[#d9d9e3] bg-background/30 p-5">
+        <div className="border-t border-border-soft bg-background/30 p-5">
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {pathGroups.map((group) => {
               const masteredInGroup = group.entries.filter(
@@ -74,13 +74,13 @@ export const GrammarLessonMap = ({
               return (
                 <div
                   key={group.module}
-                  className="flex flex-col rounded-[4px] bg-white border border-[#d9d9e3] p-4 shadow-sm"
+                  className="flex flex-col rounded-[4px] bg-surface border border-border-soft p-4 shadow-sm"
                 >
-                  <div className="mb-3 flex items-center justify-between border-b border-[#d9d9e3] pb-2">
+                  <div className="mb-3 flex items-center justify-between border-b border-border-soft pb-2">
                     <h3 className="text-xs font-bold uppercase tracking-wide text-foreground">
                       {group.module}
                     </h3>
-                    <span className="text-[9px] font-bold text-muted-copy bg-background px-2 py-0.5 rounded-[4px] border border-[#d9d9e3] uppercase tracking-wider">
+                    <span className="text-[9px] font-bold text-muted-copy bg-background px-2 py-0.5 rounded-[4px] border border-border-soft uppercase tracking-wider">
                       {masteredInGroup}/{group.entries.length} Passed
                     </span>
                   </div>
@@ -99,8 +99,8 @@ export const GrammarLessonMap = ({
                             selected
                               ? 'bg-foreground text-background font-bold shadow-sm'
                               : locked
-                                ? 'bg-surface-hover/50 text-muted-copy opacity-50 cursor-not-allowed border border-dashed border-[#d9d9e3]'
-                                : 'hover:bg-[#0047bb]/5 text-foreground hover:text-[#0047bb] border border-[#d9d9e3] hover:border-[#0047bb]/30'
+                                ? 'bg-surface-hover/50 text-muted-copy opacity-50 cursor-not-allowed border border-dashed border-border-soft'
+                                : 'hover:bg-[#0047bb]/5 text-foreground hover:text-[#0047bb] border border-border-soft hover:border-[#0047bb]/30'
                           }`}
                         >
                           <span className="truncate text-xs font-semibold pr-2">

@@ -52,13 +52,13 @@ export function VocabularyHeader({
   onFilterChange,
 }: VocabularyHeaderProps) {
   return (
-    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl py-3 border-b border-[#d9d9e3] -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl py-3 border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Vocabulary
           </h1>
-          <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
         </div>
@@ -81,7 +81,7 @@ export function VocabularyHeader({
               className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeTab === tab
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                  : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
               }`}
             >
               {TAB_LABELS[tab]}
@@ -99,7 +99,7 @@ export function VocabularyHeader({
                 void onSearchSubmit(event);
               }
             }}
-            className="min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
+            className="min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
             placeholder="Search term bank..."
             aria-label="Search vocabulary"
           />
@@ -107,7 +107,7 @@ export function VocabularyHeader({
       </div>
 
       {showFilters && (
-        <div className="mt-3 grid gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-3 sm:grid-cols-2 lg:grid-cols-4 shadow-sm animate-in slide-in-from-top-2 duration-200">
+        <div className="mt-3 grid gap-2 rounded-[4px] border border-border-soft bg-surface p-3 sm:grid-cols-2 lg:grid-cols-4 shadow-sm animate-in slide-in-from-top-2 duration-200">
           {(
             [
               ['cefr', 'CEFR'],
@@ -128,7 +128,7 @@ export function VocabularyHeader({
                 aria-label={`Filter by ${label}`}
                 value={filters[field]}
                 onChange={(event) => onFilterChange(field, event.target.value)}
-                className="mt-1 min-h-8 w-full rounded-[4px] border border-[#d9d9e3] bg-background px-2 text-[11px] font-normal focus:border-[#0047bb] outline-none cursor-pointer"
+                className="mt-1 min-h-8 w-full rounded-[4px] border border-border-soft bg-background px-2 text-[11px] font-normal focus:border-[#0047bb] outline-none cursor-pointer"
               >
                 {(field === 'status'
                   ? [

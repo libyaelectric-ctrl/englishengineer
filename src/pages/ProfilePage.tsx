@@ -18,7 +18,7 @@ const ProfileHeader = ({
   subscription: { planId: string };
   completionPercent: number;
 }) => (
-  <header className="flex flex-col gap-4 border-b border-[#d9d9e3] pb-6">
+  <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -33,7 +33,7 @@ const ProfileHeader = ({
         <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
           {subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial'}
         </span>
-        <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+        <span className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Profile Completion: {completionPercent}%
         </span>
       </div>

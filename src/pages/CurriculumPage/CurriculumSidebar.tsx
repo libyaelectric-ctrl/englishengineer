@@ -23,7 +23,7 @@ export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
           <select
             value={domain}
             onChange={(event) => setDomain(event.target.value)}
-            className="mt-2 min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer focus:border-[#0047bb] focus:ring-0 shadow-sm"
+            className="mt-2 min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-3 text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer focus:border-[#0047bb] focus:ring-0 shadow-sm"
           >
             {DOMAINS.map((item) => (
               <option key={item}>{item}</option>
@@ -48,7 +48,7 @@ export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
         </p>
         <Link
           to="/placement"
-          className="mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm"
+          className="mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm"
         >
           {profile.placementCompleted ? 'Retake placement' : 'Start placement'}
         </Link>

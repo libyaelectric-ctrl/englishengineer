@@ -8,7 +8,7 @@ export const GrammarNextStep = ({
   nextLesson: { id: string; title: string; grammarCategory: string };
   selectRule: (id: string) => void;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
       Next Step
     </p>

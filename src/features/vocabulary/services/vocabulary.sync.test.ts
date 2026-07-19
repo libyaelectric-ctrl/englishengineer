@@ -38,8 +38,12 @@ describe('VocabularySyncService', () => {
     });
 
     it('prefers side with more total reviews', () => {
-      const local = { w1: makeProgress({ correctReviews: 2, wrongReviews: 1 }) };
-      const remote = { w1: makeProgress({ correctReviews: 4, wrongReviews: 0 }) };
+      const local = {
+        w1: makeProgress({ correctReviews: 2, wrongReviews: 1 }),
+      };
+      const remote = {
+        w1: makeProgress({ correctReviews: 4, wrongReviews: 0 }),
+      };
       const merged = VocabularySyncService.mergeProgress(local, remote);
       expect(merged.w1.correctReviews).toBe(4);
     });

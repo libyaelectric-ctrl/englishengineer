@@ -106,8 +106,8 @@ const ListeningPage = () => {
 
   if (!currentMission) {
     return (
-      <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-4 animate-in fade-in duration-300">
-        <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="min-h-screen bg-background pb-16 text-foreground space-y-4 animate-in fade-in duration-300">
+        <div className="sticky top-0 z-40 border-b border-border-soft bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Listening
           </h1>
@@ -125,9 +125,9 @@ const ListeningPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
+    <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Sticky header — clean, full-width */}
-      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Listening
@@ -161,7 +161,7 @@ const ListeningPage = () => {
                   className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
                     categoryFilter === cat
                       ? 'bg-[#0047bb] border-[#0047bb] text-white shadow-sm'
-                      : 'text-muted-copy border-[#d9d9e3] bg-white hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                      : 'text-muted-copy border-border-soft bg-surface hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                   }`}
                 >
                   {cat}
@@ -172,11 +172,11 @@ const ListeningPage = () => {
               {filteredMissions.map((mission) => (
                 <article
                   key={mission.id}
-                  className="group rounded-[4px] border border-[#d9d9e3] bg-white p-5 hover:border-[#0047bb]/30 hover:shadow-md transition-all duration-200"
+                  className="group rounded-[4px] border border-border-soft bg-surface p-5 hover:border-[#0047bb]/30 hover:shadow-md transition-all duration-200"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                         {mission.cefrLevel}
                       </span>
                       <LevelAccessBadge
@@ -214,7 +214,7 @@ const ListeningPage = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <Button
                 variant="outline"
-                className="rounded-[4px] cursor-pointer text-xs h-9 border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+                className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
                 onClick={() => setWorkspaceOpen(false)}
               >
                 Back to tasks
@@ -226,7 +226,7 @@ const ListeningPage = () => {
 
             <AudioPlayer mission={currentMission} />
 
-            <div className="flex items-center gap-3 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+            <div className="flex items-center gap-3 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
               <Gauge className="h-4 w-4 text-[#0047bb] shrink-0" />
               <span className="text-xs font-bold text-foreground uppercase tracking-wider">
                 Playback Speed:
@@ -240,7 +240,7 @@ const ListeningPage = () => {
                     className={`rounded-[4px] px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer border ${
                       playbackSpeed === speed
                         ? 'bg-[#0047bb] text-white border-[#0047bb]'
-                        : 'bg-[#f3f3fd] border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                        : 'bg-[#f3f3fd] border-border-soft text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
                     }`}
                   >
                     {speed}x
@@ -251,7 +251,7 @@ const ListeningPage = () => {
 
             <Button
               variant="outline"
-              className="rounded-[4px] cursor-pointer text-xs h-9 border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+              className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
               onClick={() => setShowTranscript((prev) => !prev)}
             >
               {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
@@ -263,7 +263,7 @@ const ListeningPage = () => {
                 subtitle="Read the transcript, then complete all three response modes"
                 icon={FileText}
               >
-                <div className="whitespace-pre-line rounded-[4px] border border-[#d9d9e3] bg-white p-5 text-sm leading-[1.7] text-foreground font-normal shadow-sm">
+                <div className="whitespace-pre-line rounded-[4px] border border-border-soft bg-surface p-5 text-sm leading-[1.7] text-foreground font-normal shadow-sm">
                   {currentMission.transcript}
                 </div>
               </SectionCard>
@@ -279,7 +279,7 @@ const ListeningPage = () => {
                   {currentMission.questions.map((question, index) => (
                     <fieldset
                       key={question.id}
-                      className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 shadow-sm"
+                      className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 shadow-sm"
                     >
                       <legend className="px-2 text-sm font-bold text-foreground uppercase tracking-wider font-mono">
                         {index + 1}. {question.questionText}
@@ -291,7 +291,7 @@ const ListeningPage = () => {
                             return (
                               <label
                                 key={choice}
-                                className="flex cursor-pointer gap-2.5 rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm text-foreground hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 transition-colors"
+                                className="flex cursor-pointer gap-2.5 rounded-[4px] border border-border-soft bg-surface p-3 text-sm text-foreground hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 transition-colors"
                               >
                                 <input
                                   type="radio"
@@ -313,7 +313,7 @@ const ListeningPage = () => {
                             onChange={(event) =>
                               setAnswer(question.id, event.target.value)
                             }
-                            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none"
+                            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none"
                           >
                             <option value="">Select true or false</option>
                             <option value="true">True</option>
@@ -329,7 +329,7 @@ const ListeningPage = () => {
                               setAnswer(question.id, event.target.value)
                             }
                             placeholder="Complete the missing technical phrase"
-                            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold"
+                            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold"
                           />
                         </label>
                       )}
@@ -345,7 +345,7 @@ const ListeningPage = () => {
                       value={userKeywords}
                       onChange={(event) => setUserKeywords(event.target.value)}
                       placeholder="Separate key words with commas"
-                      className="mt-2 w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy"
+                      className="mt-2 w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy"
                     />
                   </label>
                   <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
@@ -353,7 +353,7 @@ const ListeningPage = () => {
                     <textarea
                       value={summary}
                       onChange={(event) => setSummary(event.target.value)}
-                      className="mt-2 min-h-[160px] w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy leading-relaxed"
+                      className="mt-2 min-h-[160px] w-full resize-y rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy leading-relaxed"
                     />
                   </label>
                   <Button
@@ -372,7 +372,7 @@ const ListeningPage = () => {
                 icon={CheckCircle2}
               >
                 <div className="grid gap-3 sm:grid-cols-3">
-                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
                     <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Final score
                     </p>
@@ -380,7 +380,7 @@ const ListeningPage = () => {
                       <AnimatedScore value={evaluationResult.finalScore} />
                     </p>
                   </div>
-                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
                     <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Comprehension
                     </p>
@@ -390,7 +390,7 @@ const ListeningPage = () => {
                       />
                     </p>
                   </div>
-                  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+                  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
                     <p className="text-xs font-bold text-muted-copy uppercase tracking-wider">
                       Key words
                     </p>
@@ -410,7 +410,7 @@ const ListeningPage = () => {
                 </Button>
                 <Button
                   variant="outline"
-                  className="mt-4 ml-2 rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm"
+                  className="mt-4 ml-2 rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm"
                   onClick={resetCurrentMission}
                 >
                   <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio

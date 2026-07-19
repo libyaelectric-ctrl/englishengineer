@@ -21,7 +21,7 @@ export const MobileBottomNavigation = () => {
   return (
     <nav
       aria-label="Mobile learning navigation"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-[#d9d9e3] bg-surface/90 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 shadow-lg backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-border-soft bg-surface/90 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 shadow-lg backdrop-blur-md lg:hidden"
     >
       <div className="mx-auto grid max-w-lg grid-cols-5 gap-1">
         {ITEMS.map((item) => {

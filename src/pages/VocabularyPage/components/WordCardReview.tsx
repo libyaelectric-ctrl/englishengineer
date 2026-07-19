@@ -127,7 +127,7 @@ export const QuizForm = ({
         value={answer}
         disabled={quizResult !== null}
         onChange={(event) => onAnswerChange(event.target.value)}
-        className="mt-1 min-h-10 w-full rounded-[4px] border border-[#d9d9e3] px-3 font-normal bg-white outline-none focus:border-[#0047bb]"
+        className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb]"
       />
     </label>
     <Button

@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  isLeechWord,
-  type VocabularyMenuProgress,
-} from './vocabulary.menu';
+import { isLeechWord, type VocabularyMenuProgress } from './vocabulary.menu';
 
 const makeProgress = (
   overrides: Partial<VocabularyMenuProgress> = {}

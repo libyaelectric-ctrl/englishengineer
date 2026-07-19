@@ -13,11 +13,11 @@ const variantClasses: Record<ButtonVariant, string> = {
   primary:
     'bg-[#0047bb] text-white hover:bg-[#0047bb]/95 border border-[#0047bb] font-bold uppercase tracking-wider',
   secondary:
-    'bg-white text-foreground border border-[#d9d9e3] hover:bg-[#faf8ff] hover:border-[#0047bb]/30 font-bold uppercase tracking-wider',
+    'bg-white text-foreground border border-border-soft hover:bg-surface-hover hover:border-[#0047bb]/30 font-bold uppercase tracking-wider',
   outline:
-    'border border-[#d9d9e3] bg-transparent text-foreground hover:bg-[#faf8ff] font-bold uppercase tracking-wider',
+    'border border-border-soft bg-transparent text-foreground hover:bg-surface-hover font-bold uppercase tracking-wider',
   ghost:
-    'border border-transparent bg-transparent text-muted-copy hover:bg-[#faf8ff] hover:text-[#0047bb] font-bold uppercase tracking-wider',
+    'border border-transparent bg-transparent text-muted-copy hover:bg-surface-hover hover:text-[#0047bb] font-bold uppercase tracking-wider',
   danger:
     'border border-error/20 bg-error/5 text-error hover:bg-error/10 font-bold uppercase tracking-wider',
   success:

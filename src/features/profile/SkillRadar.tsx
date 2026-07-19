@@ -1,7 +1,7 @@
 import { SKILL_NAMES, type UserLearningProfile } from './profile.types';
 
 export const SkillRadar = ({ profile }: { profile: UserLearningProfile }) => (
-  <div className="relative overflow-hidden rounded-[4px] border border-[#d9d9e3] bg-white p-5 font-sans">
+  <div className="relative overflow-hidden rounded-[4px] border border-border-soft bg-surface p-5 font-sans">
     {/* Technical alignment grid for the background */}
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
 
@@ -12,7 +12,7 @@ export const SkillRadar = ({ profile }: { profile: UserLearningProfile }) => (
         return (
           <div
             key={skill}
-            className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm"
+            className="rounded-[4px] border border-border-soft bg-surface-hover p-3 shadow-sm"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
@@ -22,7 +22,7 @@ export const SkillRadar = ({ profile }: { profile: UserLearningProfile }) => (
                 {item.cefrBand} ({item.elo} ELO)
               </span>
             </div>
-            <div className="mt-2.5 h-2 overflow-hidden border border-[#d9d9e3] bg-white rounded-[0px]">
+            <div className="mt-2.5 h-2 overflow-hidden border border-border-soft bg-surface rounded-[0px]">
               <div
                 className="h-full bg-[#0047bb] transition-all duration-500 rounded-[0px]"
                 style={{ width: `${Math.max(strength, 2)}%` }}
