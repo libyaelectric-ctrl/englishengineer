@@ -42,6 +42,24 @@ export {
 
 export { VocabularyEvaluator } from './engine/vocabulary.evaluator';
 
+export {
+  type ForgettingCurvePoint,
+  type ForgettingCurveData,
+  calculateRetention,
+  estimateStability,
+  generateForgettingCurve,
+  generateMultiWordCurves,
+  getRetentionColor,
+  getRetentionLabel,
+} from './engine/vocabulary.forgetting-curve';
+
+export {
+  type PrioritizedWord,
+  calculateWordPriority,
+  prioritizeWords,
+  getSessionPriorityLabel,
+} from './engine/vocabulary.session-optimizer';
+
 export { VocabularyService } from './services/vocabulary.service';
 
 export { useVocabularyStore } from './store/vocabulary.store';
@@ -51,6 +69,18 @@ export {
   filterMyVocabulary,
   VocabularyMemoryService,
 } from './services/vocabulary.memory';
+
+export {
+  type VocabularySyncState,
+  type SyncConflict,
+  VocabularySyncService,
+} from './services/vocabulary.sync';
+
+export {
+  type ReviewReminderSettings,
+  type ReviewReminderStatus,
+  ReviewReminderService,
+} from './services/vocabulary.reminder';
 
 export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
 
@@ -85,6 +115,7 @@ export {
   repairVocabularyText,
   isVocabularyProgressDue,
   isVocabularyForgotten,
+  isLeechWord,
   getVocabularyReviewReason,
   getVocabularyMenuStatus,
   searchVocabularyMenu,
