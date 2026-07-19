@@ -11,18 +11,7 @@ import { ObservabilityService } from '@/core/observability/observability.service
 // Initialize Sentry error monitoring
 ObservabilityService.init();
 
-// Initialize theme from store (auto-detects time-based theme)
-import { useAppStore } from './store/app.store';
-if (typeof window !== 'undefined') {
-  const store = useAppStore.getState();
-  const effectiveTheme = store.theme;
-  document.documentElement.setAttribute('data-theme', effectiveTheme);
-  if (effectiveTheme === 'dark') {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.add('light');
-  }
-}
+// Theme is handled by ThemeProvider — no manual DOM manipulation here
 
 logger.i('EngVox Kernel Booting...');
 

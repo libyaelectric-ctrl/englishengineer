@@ -3,7 +3,7 @@ import { AnimatedCard, SectionIntro } from './AnimatedComponents';
 
 export function WorkflowSection() {
   return (
-    <section className="border-t border-[#E9ECEF] bg-[#F8F9FA] bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] px-6 py-12 md:px-12 md:py-20 dark:bg-[#0B0E14] dark:border-[#2a2d35]">
+    <section className="border-t border-border-soft bg-background bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] px-6 py-12 md:px-12 md:py-20">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Workflow"
@@ -12,7 +12,7 @@ export function WorkflowSection() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {WORKFLOW.map((item, index) => (
             <AnimatedCard key={item.title} delay={index * 60} className="p-4">
-              <div className="relative z-10 overflow-hidden rounded-[4px] border border-[#E9ECEF] bg-[#111] dark:border-[#2a2d35] dark:bg-[#1C1F26]">
+              <div className="relative z-10 overflow-hidden rounded-[4px] border border-border-soft bg-[#111]">
                 <img
                   src={item.image}
                   alt=""
@@ -20,13 +20,13 @@ export function WorkflowSection() {
                 />
               </div>
               <div className="relative z-10 pt-4">
-                <div className="text-[9px] font-bold uppercase tracking-wider text-[#1c1d22]/40 dark:text-[#949BA4]">
+                <div className="text-[9px] font-bold uppercase tracking-wider text-foreground/40">
                   {item.kicker}
                 </div>
-                <h3 className="mt-2 text-base font-bold tracking-tight text-[#1c1d22] dark:text-[#E2E4E7]">
+                <h3 className="mt-2 text-base font-bold tracking-tight text-foreground">
                   {item.title}
                 </h3>
-                <p className="mt-2 text-xs leading-relaxed text-[#5b5d72] dark:text-[#949BA4]">
+                <p className="mt-2 text-xs leading-relaxed text-muted-copy">
                   {item.desc}
                 </p>
               </div>
