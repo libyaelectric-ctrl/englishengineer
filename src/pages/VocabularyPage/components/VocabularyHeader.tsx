@@ -137,6 +137,7 @@ export function VocabularyHeader({
                       'Learning',
                       'Mastered',
                       'Weak',
+                      'Leech',
                       'Forgotten',
                       'Due Today',
                     ]
