@@ -14,6 +14,7 @@ export interface VocabularyMenuProgress {
   status: VocabularyMenuStatus;
   isWeak: boolean;
   isForgotten: boolean;
+  isLeech: boolean;
   lastReviewed: string;
   nextReviewDate: string;
 }
@@ -41,6 +42,7 @@ export interface VocabularyMenuSummary {
   mastered: number;
   weak: number;
   forgotten: number;
+  leeches: number;
   dueToday: number;
 }
 
@@ -160,6 +162,7 @@ const buildCorrectReviewResult = (
     status: isMastered ? 'Mastered' : 'Learning',
     isWeak: isMastered ? false : current.isWeak,
     isForgotten: isMastered ? false : current.isForgotten,
+    isLeech: isMastered ? false : current.isLeech,
     lastReviewed: now.toISOString(),
     nextReviewDate: addDays(now, isMastered ? 7 : correctReviews === 2 ? 3 : 1),
   };
@@ -170,15 +173,26 @@ const buildIncorrectReviewResult = (
   now: Date
 ): VocabularyMenuProgress => {
   const wrongReviews = current.wrongReviews + 1;
-  return {
+  const tentative: VocabularyMenuProgress = {
     correctReviews: Math.min(current.correctReviews, 2),
     wrongReviews,
     status: 'Learning',
     isWeak: true,
     isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
+    isLeech: current.isLeech,
     lastReviewed: now.toISOString(),
     nextReviewDate: now.toISOString(),
   };
+  return { ...tentative, isLeech: isLeechWord(tentative) };
+};
+
+const LEECH_THRESHOLD = 3;
+const LEECH_WRONG_RATIO = 0.6;
+
+export const isLeechWord = (progress: VocabularyMenuProgress): boolean => {
+  const totalReviews = progress.correctReviews + progress.wrongReviews;
+  if (totalReviews < LEECH_THRESHOLD) return false;
+  return progress.wrongReviews / totalReviews >= LEECH_WRONG_RATIO;
 };
 
 const getDefaultProgress = (): VocabularyMenuProgress => ({
@@ -187,6 +201,7 @@ const getDefaultProgress = (): VocabularyMenuProgress => ({
   status: 'New',
   isWeak: false,
   isForgotten: false,
+  isLeech: false,
   lastReviewed: '',
   nextReviewDate: '',
 });
@@ -206,6 +221,7 @@ const normalizeState = (
           ...progress,
           wrongReviews: progress.wrongReviews ?? 0,
           isForgotten: progress.isForgotten ?? false,
+          isLeech: progress.isLeech ?? false,
         },
       ])
     ),
@@ -230,6 +246,7 @@ const buildSearchableStatuses = (
 ): string[] => [
   status,
   progress?.isWeak ? 'Weak' : '',
+  progress?.isLeech ? 'Leech' : '',
   progress && isVocabularyForgotten(progress, now) ? 'Forgotten' : '',
   progress && isVocabularyProgressDue(progress, now) ? 'Due Today' : '',
 ];
@@ -336,6 +353,7 @@ export const VocabularyMenuService = {
       weak: progress.filter((word) => word.isWeak).length,
       forgotten: progress.filter((word) => isVocabularyForgotten(word, now))
         .length,
+      leeches: progress.filter((word) => word.isLeech).length,
       dueToday: progress.filter((word) => isVocabularyProgressDue(word, now))
         .length,
     };
