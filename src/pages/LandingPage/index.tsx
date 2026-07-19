@@ -37,7 +37,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <main className="min-h-screen overflow-hidden bg-[#faf8ff] text-[#111] antialiased dark:bg-[#0B0E14] dark:text-[#E2E4E7]">
+    <main className="min-h-screen overflow-hidden bg-[#F8F9FA] text-[#1c1d22] antialiased dark:bg-[#0B0E14] dark:text-[#E2E4E7]">
       <PageMetadata
         title="EngVox - Engineering English Training"
         description="AI-powered English training for engineers."

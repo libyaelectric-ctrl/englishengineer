@@ -1,33 +1,33 @@
 @import 'tailwindcss';
 
 :root {
-  /* Precision Engineering OS Light Theme */
-  --background: #faf8ff;
+  /* Precision Engineering OS Light Theme — gnndz.txt kurallari */
+  --background: #F8F9FA;
   --foreground: #1c1d22;
 
   --color-primary: #0047bb;
   --color-primary-hover: #003bb3;
-  --color-primary-foreground: #faf8ff;
+  --color-primary-foreground: #ffffff;
 
   --color-surface: #ffffff;
-  --color-surface-hover: #faf8ff;
+  --color-surface-hover: #F1F3F5;
   --color-soft: rgba(0, 71, 187, 0.04);
-  --color-border-soft: #d9d9e3;
-  --color-border-hover: #b0b0c5;
+  --color-border-soft: #E9ECEF;
+  --color-border-hover: #DEE2E6;
   --color-muted-copy: #5b5d72;
   --color-focus: rgba(0, 71, 187, 0.1);
   --color-success: #16a34a;
   --color-warning: #ea580c;
   --color-error: #dc2626;
 
-  /* Sidebar-specific colors for 3-column distinction */
-  --color-sidebar-bg: #f3f3fd;
-  --color-sidebar-border: #d9d9e3;
-  --color-sidebar-inner-border: #e9e9f9;
+  /* Sidebar — net ayrim icin biraz daha acik */
+  --color-sidebar-bg: #FFFFFF;
+  --color-sidebar-border: #E9ECEF;
+  --color-sidebar-inner-border: #F1F3F5;
 
-  --color-engineer-950: #f3f3fd;
-  --color-engineer-900: #e9e9f9;
-  --color-engineer-800: #d9d9e3;
+  --color-engineer-950: #F1F3F5;
+  --color-engineer-900: #E9ECEF;
+  --color-engineer-800: #DEE2E6;
   --color-engineer-700: #8f93a9;
   --color-engineer-cyan: #0047bb;
 
@@ -244,6 +244,7 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-card) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .premium-panel {
@@ -255,9 +256,10 @@
   }
 
   .premium-surface {
-    background: var(--background);
+    background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-card) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .premium-surface {
@@ -354,11 +356,12 @@
   }
 
   .public-card {
-    background: rgba(248, 249, 250, 0.8);
+    background: #ffffff;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border-soft);
+    border: 1px solid #E9ECEF;
     border-radius: var(--radius-card);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .public-card {
@@ -592,25 +595,34 @@
   animation: statusPulse 2s ease-in-out infinite;
 }
 
-/* === DARK MODE — Landing & Login page overrides (gceci.txt) === */
+/* === DARK MODE — Landing & Login page overrides (gceci.txt + gnndz.txt) === */
+.dark .bg-\[\#F8F9FA\] { background-color: #0B0E14 !important; }
 .dark .bg-\[\#faf8ff\] { background-color: #0B0E14 !important; }
-.dark .bg-\[\#f0f0f5\] { background-color: #0B0E14 !important; }
 .dark .bg-white { background-color: #1C1F26 !important; }
+.dark .bg-white\/80 { background-color: rgba(11, 14, 20, 0.8) !important; }
 .dark .bg-white\/60 { background-color: rgba(28, 31, 38, 0.6) !important; }
 .dark .bg-white\/68 { background-color: rgba(28, 31, 38, 0.68) !important; }
 .dark .bg-white\/55 { background-color: rgba(28, 31, 38, 0.55) !important; }
+.dark .text-\[\#1c1d22\] { color: #E2E4E7 !important; }
 .dark .text-\[\#111\] { color: #E2E4E7 !important; }
+.dark .text-\[\#1c1d22\]\/70 { color: #949BA4 !important; }
+.dark .text-\[\#1c1d22\]\/60 { color: #949BA4 !important; }
+.dark .text-\[\#1c1d22\]\/40 { color: #949BA4 !important; }
 .dark .text-black\/70 { color: #949BA4 !important; }
 .dark .text-black\/60 { color: #949BA4 !important; }
 .dark .text-black\/40 { color: #949BA4 !important; }
+.dark .text-\[\#5b5d72\] { color: #949BA4 !important; }
+.dark .border-\[\#E9ECEF\] { border-color: #2a2d35 !important; }
 .dark .border-\[\#d9d9e3\] { border-color: #2a2d35 !important; }
+.dark .hover\:bg-\[\#F1F3F5\]:hover { background-color: rgba(255, 255, 255, 0.04) !important; }
 .dark .hover\:bg-black\/\[0\.04\]:hover { background-color: rgba(255, 255, 255, 0.04) !important; }
 .dark .hover\:bg-black\/\[0\.04\]:hover { color: #E2E4E7 !important; }
 .dark .hover\:text-black:hover { color: #E2E4E7 !important; }
+.dark .hover\:text-\[\#1c1d22\]:hover { color: #E2E4E7 !important; }
 .dark a[class*="text-black"]:hover { color: #E2E4E7 !important; }
+.dark .border-t-\[\#E9ECEF\] { border-top-color: #2a2d35 !important; }
 .dark .border-t-\[\#d9d9e3\] { border-top-color: #2a2d35 !important; }
 .dark .bg-\[\#111\] { background-color: #1C1F26 !important; }
-.dark [data-theme='dark'] .bg-\[\#faf8ff\] { background-color: #0B0E14 !important; }
 
 /* Dark mode focus ring fix */
 .dark *:focus-visible {

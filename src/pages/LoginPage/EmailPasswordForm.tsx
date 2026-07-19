@@ -37,16 +37,16 @@ export const EmailPasswordForm = ({
   <>
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
-        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-foreground dark:text-[#E2E4E7]">
+        <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-[#1c1d22] dark:text-[#E2E4E7]">
           {copy.emailLabel}
         </label>
         <div className="relative">
-          <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy dark:text-[#949BA4]" />
+          <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5b5d72] dark:text-[#949BA4]" />
           <input
             type="email"
             value={email}
             onChange={(e) => onEmailChange(e.target.value)}
-            className="h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:focus:border-[#3b82f6] dark:focus:ring-[#3b82f6]/10"
+            className="h-10 w-full rounded-[4px] border border-[#E9ECEF] bg-white pl-10 pr-4 text-sm text-[#1c1d22] placeholder:text-[#5b5d72]/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:focus:border-[#3b82f6] dark:focus:ring-[#3b82f6]/10"
             placeholder="you@example.com"
           />
         </div>
@@ -54,25 +54,25 @@ export const EmailPasswordForm = ({
 
       <div>
         <div className="flex items-center justify-between">
-          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-foreground dark:text-[#E2E4E7]">
+          <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-wider text-[#1c1d22] dark:text-[#E2E4E7]">
             {copy.passwordLabel}
           </label>
           {!isSignUpMode && (
             <button
               type="button"
-              className="text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors dark:text-[#949BA4] dark:hover:text-[#3b82f6]"
+              className="text-[10px] font-bold uppercase tracking-wider text-[#5b5d72] hover:text-[#0047bb] cursor-pointer transition-colors dark:text-[#949BA4] dark:hover:text-[#3b82f6]"
             >
               {copy.forgotPassword}
             </button>
           )}
         </div>
         <div className="relative">
-          <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy dark:text-[#949BA4]" />
+          <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#5b5d72] dark:text-[#949BA4]" />
           <input
             type="password"
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
-            className="h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white pl-10 pr-4 text-sm text-foreground placeholder:text-muted-copy/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:focus:border-[#3b82f6] dark:focus:ring-[#3b82f6]/10"
+            className="h-10 w-full rounded-[4px] border border-[#E9ECEF] bg-white pl-10 pr-4 text-sm text-[#1c1d22] placeholder:text-[#5b5d72]/50 outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/10 transition-colors font-bold shadow-sm dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:focus:border-[#3b82f6] dark:focus:ring-[#3b82f6]/10"
             placeholder="••••••••"
           />
         </div>
@@ -96,7 +96,7 @@ export const EmailPasswordForm = ({
       <button
         type="button"
         onClick={onShowSsoForm}
-        className="w-full text-center text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors pt-2 dark:text-[#949BA4] dark:hover:text-[#3b82f6]"
+        className="w-full text-center text-xs font-bold uppercase tracking-wider text-[#5b5d72] hover:text-[#0047bb] cursor-pointer transition-colors pt-2 dark:text-[#949BA4] dark:hover:text-[#3b82f6]"
       >
         Sign in with Single Sign-On (SSO)
       </button>
