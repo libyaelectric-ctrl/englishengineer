@@ -35,3 +35,33 @@ export {
   type ChatMessage,
   type TeacherResponse,
 } from './grammar-teacher';
+
+export {
+  type DifficultyLevel,
+  type DifficultyAssessment,
+  AdaptiveDifficultyEngine,
+} from './grammar.adaptive-difficulty';
+
+export {
+  type ErrorCategory,
+  type ErrorPatternEntry,
+  type ErrorPatternSummary,
+  ErrorPatternAnalyzer,
+} from './grammar.error-patterns';
+
+export {
+  type BridgeResult,
+  GrammarVocabularyBridge,
+} from './grammar.bridge';
+
+export {
+  type DrillType,
+  type DrillQuestion,
+  type DrillResult,
+  InteractiveDrillService,
+} from './grammar.drills';
+
+export {
+  type GrammarDashboardData,
+  GrammarDashboardService,
+} from './grammar.dashboard';
