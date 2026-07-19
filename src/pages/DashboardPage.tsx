@@ -39,10 +39,19 @@ const SKILL_META: Record<
 };
 
 const getCompetencyLabel = (score: number) => {
-  if (score >= 80) return { text: 'High Competency', color: 'text-green-500' };
-  if (score >= 60) return { text: 'Good Progress', color: 'text-blue-500' };
-  if (score >= 40) return { text: 'Developing', color: 'text-amber-500' };
-  return { text: 'Beginner', color: 'text-rose-500' };
+  if (score >= 80)
+    return {
+      text: 'High Competency',
+      color: 'text-success dark:text-success',
+    };
+  if (score >= 60)
+    return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
+  if (score >= 40)
+    return {
+      text: 'Developing',
+      color: 'text-warning dark:text-warning',
+    };
+  return { text: 'Beginner', color: 'text-error dark:text-error' };
 };
 
 const DashboardPage = () => {
@@ -147,7 +156,7 @@ const DashboardPage = () => {
 
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
-      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Dashboard
         </h1>

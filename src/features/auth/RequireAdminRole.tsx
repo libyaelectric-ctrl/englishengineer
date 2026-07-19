@@ -6,13 +6,16 @@ interface RequireAdminRoleProps {
   children: React.ReactNode;
 }
 
-export const RequireAdminRole: React.FC<RequireAdminRoleProps> = ({ children }) => {
+export const RequireAdminRole: React.FC<RequireAdminRoleProps> = ({
+  children,
+}) => {
   const { currentUser } = useAuthStore();
   const location = useLocation();
 
-  const isAdmin = currentUser?.role === 'admin' || 
-                  currentUser?.role === 'Super Administrator' ||
-                  currentUser?.isSuperUser === true;
+  const isAdmin =
+    currentUser?.role === 'admin' ||
+    currentUser?.role === 'Super Administrator' ||
+    currentUser?.isSuperUser === true;
 
   if (!isAdmin) {
     return <Navigate to="/" state={{ from: location }} replace />;

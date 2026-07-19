@@ -11,17 +11,40 @@ describe('MetricCard', () => {
   });
 
   it('renders with trend', () => {
-    render(<MetricCard label="Revenue" value="$1000" icon={Activity} trend="+12%" trendDirection="up" />);
+    render(
+      <MetricCard
+        label="Revenue"
+        value="$1000"
+        icon={Activity}
+        trend="+12%"
+        trendDirection="up"
+      />
+    );
     expect(screen.getByText('+12%')).toBeInTheDocument();
   });
 
   it('renders with trend down', () => {
-    render(<MetricCard label="Errors" value="5" icon={Activity} trend="-3%" trendDirection="down" />);
+    render(
+      <MetricCard
+        label="Errors"
+        value="5"
+        icon={Activity}
+        trend="-3%"
+        trendDirection="down"
+      />
+    );
     expect(screen.getByText('-3%')).toBeInTheDocument();
   });
 
   it('applies status color', () => {
-    render(<MetricCard label="Test" value="1" icon={Activity} statusColor="success" />);
+    render(
+      <MetricCard
+        label="Test"
+        value="1"
+        icon={Activity}
+        statusColor="success"
+      />
+    );
     const card = screen.getByText('Test').closest('[class*="group"]');
     expect(card).toBeInTheDocument();
   });

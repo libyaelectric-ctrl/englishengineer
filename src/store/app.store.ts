@@ -20,7 +20,8 @@ export const useAppStore = create<AppState>((set) => ({
   userOverride: storage.get<boolean>('themeOverride') ?? false,
   theme: (() => {
     if (storage.get<boolean>('themeOverride')) {
-      return (storage.get<'dark' | 'light'>('themeManual') || getAutoTheme()) as 'dark' | 'light';
+      return (storage.get<'dark' | 'light'>('themeManual') ||
+        getAutoTheme()) as 'dark' | 'light';
     }
     return getAutoTheme();
   })(),

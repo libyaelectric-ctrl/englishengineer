@@ -112,10 +112,7 @@ const LoginPage = () => {
               Terms
             </Link>{' '}
             and{' '}
-            <Link
-              to="/legal/privacy"
-              className="underline hover:text-primary"
-            >
+            <Link to="/legal/privacy" className="underline hover:text-primary">
               Privacy Policy
             </Link>
             .
