@@ -13,8 +13,8 @@ export const Card: FC<CardProps> = ({
 }) => (
   <div
     className={cn(
-      'rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm',
-      hoverEffect && 'transition-colors hover:border-[#0047bb]/30',
+      'rounded-[4px] border border-border-soft bg-surface shadow-sm',
+      hoverEffect && 'transition-colors hover:border-primary/30',
       className
     )}
     {...props}

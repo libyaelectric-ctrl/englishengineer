@@ -18,7 +18,11 @@ describe('date.helpers', () => {
 
   it('formatDate with custom options', () => {
     const date = new Date('2026-01-15');
-    const result = formatDate(date, { year: 'numeric', month: 'long', day: 'numeric' });
+    const result = formatDate(date, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
     expect(result).toContain('January');
     expect(result).toContain('15');
   });

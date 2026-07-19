@@ -5,7 +5,9 @@ import { Button } from './Button';
 describe('Button', () => {
   it('renders with text', () => {
     render(<Button>Click me</Button>);
-    expect(screen.getByRole('button', { name: /click me/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /click me/i })
+    ).toBeInTheDocument();
   });
 
   it('renders with primary variant by default', () => {

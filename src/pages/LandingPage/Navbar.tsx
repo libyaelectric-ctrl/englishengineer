@@ -20,7 +20,10 @@ export function Navbar() {
           </span>
         </Link>
         <div className="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-wider text-muted-copy md:flex">
-          <Link to="/pricing" className="transition-colors hover:text-foreground">
+          <Link
+            to="/pricing"
+            className="transition-colors hover:text-foreground"
+          >
             Pricing
           </Link>
         </div>
@@ -28,10 +31,16 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={
+              theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            }
             className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
           >
-            {theme === 'dark' ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+            {theme === 'dark' ? (
+              <Moon className="h-4.5 w-4.5" />
+            ) : (
+              <Sun className="h-4.5 w-4.5" />
+            )}
           </button>
           <Link
             to="/login"

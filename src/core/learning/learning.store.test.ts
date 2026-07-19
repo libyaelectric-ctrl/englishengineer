@@ -26,7 +26,13 @@ describe('learning.store', () => {
 
   it('can reset state', () => {
     useLearningStore.setState({ xp: 500, level: 5 });
-    useLearningStore.setState({ xp: 0, level: 1, streak: 0, missions: [], achievements: [] });
+    useLearningStore.setState({
+      xp: 0,
+      level: 1,
+      streak: 0,
+      missions: [],
+      achievements: [],
+    });
     const state = useLearningStore.getState();
     expect(state.xp).toBe(0);
     expect(state.level).toBe(1);
