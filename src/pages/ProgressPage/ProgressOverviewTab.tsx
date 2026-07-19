@@ -9,6 +9,7 @@ import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
+import { GrammarProgressService, ErrorPatternAnalyzer } from '@/features/grammar';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { AnalyticsMetricCards } from './AnalyticsMetricCards';
@@ -24,6 +25,9 @@ export const ProgressOverviewTab = () => {
   const vocabularyPool =
     useLearningStore((state) => state.vocabularyPool) ?? [];
   const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
+
+  const grammarSummary = GrammarProgressService.getSummary();
+  const errorPatternSummary = ErrorPatternAnalyzer.getSummary();
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(
     null
   );
@@ -68,30 +72,34 @@ export const ProgressOverviewTab = () => {
       return {
         label: 'Grandmaster',
         icon: '👑',
-        color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+        color:
+          'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40',
       };
     if (elo >= 3500)
       return {
         label: 'Diamond',
         icon: '💎',
-        color: 'text-cyan-600 bg-cyan-50 border-cyan-200',
+        color:
+          'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/40',
       };
     if (elo >= 2500)
       return {
         label: 'Platinum',
         icon: '🏆',
-        color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+        color:
+          'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/40',
       };
     if (elo >= 1500)
       return {
         label: 'Gold',
         icon: '🥇',
-        color: 'text-amber-600 bg-amber-50 border-amber-200',
+        color:
+          'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800/40',
       };
     return {
       label: 'Silver',
       icon: '🥈',
-      color: 'text-slate-600 bg-slate-50 border-slate-200',
+      color: 'text-muted-copy bg-surface-hover border-border-soft',
     };
   };
 
@@ -125,6 +133,8 @@ export const ProgressOverviewTab = () => {
         peakElo={Math.max(...Object.values(eloScores))}
         sessionsCount={learningState?.studySessions?.length || 0}
         knowledgePoolSize={vocabularyPool.length + grammarPool.length}
+        grammarMastered={grammarSummary.strong}
+        grammarErrors={errorPatternSummary.totalErrors}
       />
 
       <AnalyticsMetricCards analytics={analytics} />

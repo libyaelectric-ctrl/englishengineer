@@ -17,7 +17,7 @@ export const RecentSessions = ({
         {sessions.map((session) => (
           <div
             key={`${session.timestamp}-${session.module}`}
-            className="flex items-center justify-between rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+            className="flex items-center justify-between rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
           >
             <div>
               <p className="text-sm font-bold text-foreground">

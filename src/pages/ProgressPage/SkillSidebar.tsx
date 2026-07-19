@@ -31,8 +31,8 @@ export const SkillSidebar = ({
 }) => {
   return (
     <aside className="relative">
-      <div className="xl:sticky xl:top-16 space-y-0 border border-[#d9d9e3] bg-white rounded-[4px] shadow-sm overflow-hidden animate-in fade-in duration-300">
-        <div className="px-4 pt-3 pb-2 border-b border-[#d9d9e3]">
+      <div className="xl:sticky xl:top-16 space-y-0 border border-border-soft bg-surface rounded-[4px] shadow-sm overflow-hidden animate-in fade-in duration-300">
+        <div className="px-4 pt-3 pb-2 border-b border-border-soft">
           <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
             <Layers className="h-3 w-3" /> Skill Progress
           </h3>
@@ -48,7 +48,7 @@ export const SkillSidebar = ({
           ))}
         </div>
 
-        <div className="px-4 pt-3 pb-2 border-t border-[#d9d9e3]">
+        <div className="px-4 pt-3 pb-2 border-t border-border-soft">
           <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
             <Brain className="h-3 w-3" /> Summary
           </h3>
@@ -63,8 +63,8 @@ export const SkillSidebar = ({
           </div>
           <div className="flex items-center justify-between text-xs font-medium">
             <span className="text-muted-copy">Weakest</span>
-            <span className="font-bold text-rose-600 flex items-center gap-1">
-              <lowestSkill.icon className="h-3 w-3 text-rose-600" />{' '}
+            <span className="font-bold text-error flex items-center gap-1">
+              <lowestSkill.icon className="h-3 w-3 text-error" />{' '}
               {lowestSkill.label}
             </span>
           </div>
@@ -80,7 +80,7 @@ export const SkillSidebar = ({
           </div>
         </div>
 
-        <div className="px-4 pt-3 pb-2 border-t border-[#d9d9e3]">
+        <div className="px-4 pt-3 pb-2 border-t border-border-soft">
           <div className="flex items-center justify-between">
             <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
               <Network className="h-3 w-3" /> Inspector
@@ -106,7 +106,7 @@ export const SkillSidebar = ({
                 <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[10px] font-bold text-[#0047bb] border border-[#0047bb]/25 uppercase">
                   {selectedGraphNode.type}
                 </span>
-                <span className="text-[10px] font-bold text-foreground px-1.5 py-0.5 rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3]">
+                <span className="text-[10px] font-bold text-foreground px-1.5 py-0.5 rounded-[4px] bg-surface-hover border border-border-soft">
                   {selectedGraphNode.status}
                 </span>
               </div>
@@ -118,14 +118,14 @@ export const SkillSidebar = ({
                   {selectedGraphNode.description}
                 </p>
               </div>
-              <div className="bg-[#faf8ff] rounded-[4px] p-2.5 border border-[#d9d9e3] shadow-sm">
+              <div className="bg-surface-hover rounded-[4px] p-2.5 border border-border-soft shadow-sm">
                 <div className="flex justify-between text-[10px] font-bold mb-1">
                   <span className="text-muted-copy uppercase">Strength</span>
                   <span className="text-foreground">
                     {selectedGraphNode.strength}%
                   </span>
                 </div>
-                <div className="h-1.5 w-full rounded-[4px] bg-[#d9d9e3]">
+                <div className="h-1.5 w-full rounded-[4px] bg-border-soft">
                   <div
                     className="h-full rounded-[4px] bg-[#0047bb]"
                     style={{ width: `${selectedGraphNode.strength}%` }}
@@ -134,7 +134,7 @@ export const SkillSidebar = ({
               </div>
               {selectedGraphNode.relatedVocab &&
                 selectedGraphNode.relatedVocab.length > 0 && (
-                  <div className="border-t border-[#d9d9e3] pt-2">
+                  <div className="border-t border-border-soft pt-2">
                     <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-1.5">
                       Related Words
                     </h4>
@@ -142,7 +142,7 @@ export const SkillSidebar = ({
                       {selectedGraphNode.relatedVocab.map((word) => (
                         <span
                           key={word}
-                          className="rounded-[4px] bg-white border border-[#d9d9e3] px-1.5 py-0.5 text-[10px] font-bold text-foreground"
+                          className="rounded-[4px] bg-surface border border-border-soft px-1.5 py-0.5 text-[10px] font-bold text-foreground"
                         >
                           {word}
                         </span>
@@ -152,7 +152,7 @@ export const SkillSidebar = ({
                 )}
             </motion.div>
           ) : (
-            <div className="text-center py-5 rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff]">
+            <div className="text-center py-5 rounded-[4px] border border-dashed border-border-soft bg-surface-hover">
               <Network className="h-5 w-5 text-muted-copy mx-auto mb-1.5 opacity-40" />
               <p className="text-[11px] text-muted-copy font-bold uppercase tracking-wider">
                 Select a node on the graph
