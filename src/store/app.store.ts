@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { storage } from '@/shared/storage';
 
-const THEME_VERSION = 2; // Bump to reset stale localStorage theme
-
 function getAutoTheme(): 'dark' | 'light' {
   const hour = new Date().getHours();
   return hour >= 18 || hour < 6 ? 'dark' : 'light';
@@ -11,28 +9,30 @@ function getAutoTheme(): 'dark' | 'light' {
 interface AppState {
   isSidebarOpen: boolean;
   theme: 'dark' | 'light';
+  userOverride: boolean;
   toggleSidebar: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
+  resetToAuto: () => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   isSidebarOpen: false,
+  userOverride: storage.get<boolean>('themeOverride') ?? false,
   theme: (() => {
-    // Reset stale theme from old auto-switch sessions
-    const savedVersion = storage.get<number>('themeVersion');
-    if (savedVersion !== THEME_VERSION) {
-      storage.set('themeVersion', THEME_VERSION);
-      storage.set('theme', getAutoTheme());
-      return getAutoTheme();
+    if (storage.get<boolean>('themeOverride')) {
+      return (storage.get<'dark' | 'light'>('themeManual') || getAutoTheme()) as 'dark' | 'light';
     }
-    const saved = storage.get<'dark' | 'light'>('theme');
-    if (saved) return saved;
     return getAutoTheme();
   })(),
   toggleSidebar: () => set((s) => ({ isSidebarOpen: !s.isSidebarOpen })),
   setTheme: (theme: 'dark' | 'light') => {
-    storage.set('theme', theme);
-    storage.set('themeVersion', THEME_VERSION);
-    set({ theme });
+    storage.set('themeManual', theme);
+    storage.set('themeOverride', true);
+    set({ theme, userOverride: true });
+  },
+  resetToAuto: () => {
+    storage.set('themeOverride', false);
+    storage.remove('themeManual');
+    set({ theme: getAutoTheme(), userOverride: false });
   },
 }));

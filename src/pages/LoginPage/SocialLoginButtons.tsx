@@ -20,14 +20,14 @@ export const SocialLoginButtons = ({
           type="button"
           onClick={() => onSocialLogin(sp.provider)}
           disabled={socialLoading !== null || isApple}
-          className={`flex h-12 w-full items-center justify-center gap-3 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition-colors disabled:cursor-not-allowed cursor-pointer ${
+          className={`flex h-12 w-full items-center justify-center gap-3 rounded-[4px] border border-border-soft text-xs font-bold uppercase tracking-wider transition-colors disabled:cursor-not-allowed cursor-pointer ${
             isApple
-              ? 'border-[#E9ECEF] bg-[#F8F9FA] text-[#5b5d72] opacity-60 dark:border-[#2a2d35] dark:bg-[#0B0E14]'
-              : 'border-[#E9ECEF] bg-white text-[#1c1d22] hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 disabled:opacity-50 dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#E2E4E7] dark:hover:bg-[#252830]'
+              ? 'bg-background text-muted-copy opacity-60'
+              : 'bg-surface text-foreground hover:bg-surface-hover disabled:opacity-50'
           }`}
         >
           {socialLoading === sp.provider ? (
-            <span className="h-4 w-4 animate-spin rounded-full border-2 border-[#1c1d22] border-t-transparent dark:border-[#E2E4E7]" />
+            <span className="h-4 w-4 animate-spin rounded-full border-2 border-foreground border-t-transparent" />
           ) : (
             sp.icon
           )}
@@ -42,10 +42,10 @@ export const SocialLoginButtons = ({
 
     <div className="relative">
       <div className="absolute inset-0 flex items-center">
-        <div className="w-full border-t border-[#E9ECEF] dark:border-[#2a2d35]" />
+        <div className="w-full border-t border-border-soft" />
       </div>
       <div className="relative flex justify-center text-[10px]">
-        <span className="bg-[#F8F9FA] px-3 text-[#5b5d72] font-bold uppercase tracking-wider dark:bg-[#0B0E14] dark:text-[#949BA4]">
+        <span className="bg-background px-3 text-muted-copy font-bold uppercase tracking-wider">
           {orContinueWith}
         </span>
       </div>

@@ -102,9 +102,9 @@ export function AnimatedCard({
       onMouseMove={handleMouseMove}
       className={`group relative overflow-hidden rounded-[4px] transition-colors duration-300 ${className}`}
       style={{
-        background: dark ? '#111111' : '#ffffff',
-        border: dark ? '1px solid #111111' : '1px solid #E9ECEF',
-        color: dark ? '#ffffff' : '#1c1d22',
+        background: dark ? 'var(--color-surface)' : 'var(--color-surface)',
+        border: dark ? '1px solid var(--color-border-soft)' : '1px solid var(--color-border-soft)',
+        color: dark ? 'var(--color-foreground)' : 'var(--color-foreground)',
         boxShadow: dark ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05)',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
@@ -143,14 +143,14 @@ export function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-[4px] border border-[#E9ECEF] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#5b5d72] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#949BA4] dark:shadow-none">
+      <span className="inline-flex rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
         {eyebrow}
       </span>
-      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#1c1d22] md:text-5xl dark:text-[#E2E4E7]">
+      <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-[#5b5d72] dark:text-[#949BA4]">
+        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">
           {desc}
         </p>
       ) : null}
