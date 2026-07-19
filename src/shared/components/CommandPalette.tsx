@@ -268,10 +268,13 @@ export const CommandPalette: React.FC = () => {
     [isOpen, getFrequency]
   );
 
-  const isDark = document.documentElement.classList.contains('dark');
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
   const toggleTheme = () => {
-    document.documentElement.classList.toggle('dark', !isDark);
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    document.documentElement.classList.toggle('light', newTheme === 'light');
+    localStorage.setItem('theme', newTheme);
   };
 
   const filtered = useMemo(() => {
@@ -434,7 +437,7 @@ export const CommandPalette: React.FC = () => {
                   aria-label="Toggle theme"
                   title="Toggle dark/light mode"
                 >
-                  {isDark ? (
+                  {currentTheme === 'dark' ? (
                     <Sun className="h-4 w-4" />
                   ) : (
                     <Moon className="h-4 w-4" />

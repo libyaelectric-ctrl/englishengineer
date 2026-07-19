@@ -1,34 +1,42 @@
-import { useState, useEffect } from 'react';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Monitor } from 'lucide-react';
+import { useAppStore } from '@/store/app.store';
 
 export const ThemeToggle = () => {
-  const [dark, setDark] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return (
-      localStorage.getItem('theme') === 'dark' ||
-      (!localStorage.getItem('theme') &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
-    );
-  });
+  const theme = useAppStore((s) => s.theme);
+  const autoTheme = useAppStore((s) => s.autoTheme);
+  const setTheme = useAppStore((s) => s.setTheme);
+  const setAutoTheme = useAppStore((s) => s.setAutoTheme);
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
+  const cycleTheme = () => {
+    if (autoTheme) {
+      setAutoTheme(false);
+      setTheme('light');
+    } else if (theme === 'light') {
+      setTheme('dark');
     } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+      setAutoTheme(true);
     }
-  }, [dark]);
+  };
+
+  const getIcon = () => {
+    if (autoTheme) return <Monitor className="h-4 w-4" />;
+    if (theme === 'dark') return <Sun className="h-4 w-4" />;
+    return <Moon className="h-4 w-4" />;
+  };
+
+  const getLabel = () => {
+    if (autoTheme) return 'Auto (based on time)';
+    if (theme === 'dark') return 'Switch to light mode';
+    return 'Switch to dark mode';
+  };
 
   return (
     <button
-      onClick={() => setDark(!dark)}
+      onClick={cycleTheme}
       className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:bg-surface-hover transition-colors"
-      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={getLabel()}
     >
-      {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {getIcon()}
     </button>
   );
 };

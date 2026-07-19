@@ -142,14 +142,14 @@ export function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+      <span className="inline-flex rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy dark:border-[#2a2d35] dark:bg-[#1C1F26]">
         {eyebrow}
       </span>
-      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#111] md:text-5xl">
+      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#111] md:text-5xl dark:text-[#E2E4E7]">
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">
+        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy dark:text-[#949BA4]">
           {desc}
         </p>
       ) : null}
