@@ -1,0 +1,66 @@
+﻿=== Kademe 91: Final Quality Gate ===
+
+1. Typecheck:
+
+> engvox-frontend@4.0.1 typecheck
+> tsc --noEmit
+
+src/shared/components/Button.test.tsx(24,25): error TS2304: Cannot find name 'vi'.
+
+2. Lint:
+
+> engvox-frontend@4.0.1 lint
+> eslint .
+
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai.ts
+  143:72  warning  Async arrow function has a complexity of 11. Maximum allowed is 10  complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts
+  230:3  warning  Arrow function has a complexity of 14. Maximum allowed is 10        complexity
+  383:5  warning  Async arrow function has a complexity of 12. Maximum allowed is 10  complexity
+  481:7  warning  Arrow function has a complexity of 11. Maximum allowed is 10        complexity
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\auth.ts
+  240:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\scripts\optimize-images.mjs
+  2:33  warning  'unlinkSync' is defined but never used  no-unused-vars
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\scripts\verify-evidence-consistency.js
+  11:37  warning  'existsSync' is defined but never used  no-unused-vars
+  12:16  warning  'basename' is defined but never used    no-unused-vars
+  12:26  warning  'extname' is defined but never used     no-unused-vars
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\pages\PricingPage.tsx
+  344:97  error  `tabIndex` should only be declared on interactive elements  jsx-a11y/no-noninteractive-tabindex
+
+C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\shared\utils\cn.test.ts
+  10:22  error  Unexpected constant truthiness on the left-hand side of a `&&` expression  no-constant-binary-expression
+
+✖ 11 problems (2 errors, 9 warnings)
+
+
+3. Tests:
+
+> vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude '.mimocode/**' --exclude 'tests/**'
+[2m Test Files [22m [1m[32m96 passed[39m[22m[90m (96)[39m
+[2m      Tests [22m [1m[32m554 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (555)[39m
+[2m   Duration [22m 57.52s[2m (transform 2.42s, setup 15.21s, import 7.26s, tests 7.31s, environment 71.62s)[22m
+
+
+
+4. Build:
+> tsc --noEmit && vite build --configLoader runner
+
+src/shared/components/Button.test.tsx(24,25): error TS2304: Cannot find name 'vi'.
+
+5. Backend:
+
+> engineeros-backend@4.0.1 typecheck
+> tsc --noEmit
+
+
+6. Audit:
+found 0 vulnerabilities
+found 0 vulnerabilities
