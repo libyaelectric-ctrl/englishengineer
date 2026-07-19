@@ -7,6 +7,8 @@ import {
   repairVocabularyText,
   type VocabularyTerm,
 } from '@/features/vocabulary';
+import { PronunciationButton } from './PronunciationButton';
+import { SentencePanel } from './SentencePanel';
 
 interface WordCardDetailsProps {
   term: VocabularyTerm;
@@ -88,6 +90,9 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
       </button>
       {showDetails && (
         <>
+          <div className="mt-3 flex items-center gap-3">
+            <PronunciationButton word={term.term} />
+          </div>
           <dl className="mt-3 grid gap-2 sm:grid-cols-2">
             <div>
               <dt className="font-bold">Part of speech</dt>
@@ -126,6 +131,11 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
               <dd>{term.relatedTerms.join(', ') || 'Not specified'}</dd>
             </div>
           </dl>
+          <SentencePanel
+            word={term.term}
+            partOfSpeech={term.partOfSpeech}
+            meaning={term.turkishMeaning}
+          />
 
           {/* AI Vocab Tutor Chat */}
           <div className="mt-4 border-t border-[#d9d9e3] pt-4">

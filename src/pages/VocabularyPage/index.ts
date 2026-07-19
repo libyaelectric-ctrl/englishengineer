@@ -4,3 +4,7 @@ export { MasteredHeatmap } from './components/MasteredHeatmap';
 export { VocabularyHeader } from './components/VocabularyHeader';
 export { SearchResultsSection } from './components/SearchResultsSection';
 export { WordSetSection } from './components/WordSetSection';
+export { BadgePanel } from './components/BadgePanel';
+export { PronunciationButton } from './components/PronunciationButton';
+export { SentencePanel } from './components/SentencePanel';
+export { CsvPanel } from './components/CsvPanel';
