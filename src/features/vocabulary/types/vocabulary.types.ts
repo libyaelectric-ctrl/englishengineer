@@ -37,6 +37,7 @@ export type VocabularyWordStatus =
   | 'New'
   | 'Learning'
   | 'Weak'
+  | 'Leech'
   | 'Review Today'
   | 'Mastered';
 

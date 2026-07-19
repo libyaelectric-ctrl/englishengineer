@@ -33,6 +33,7 @@ describe('Vocabulary menu progress', () => {
       mastered: 0,
       weak: 0,
       forgotten: 0,
+      leeches: 0,
       dueToday: 0,
     });
   });
@@ -68,8 +69,10 @@ describe('Vocabulary menu progress', () => {
     expect(progress.status).toBe('Learning');
     expect(progress.isWeak).toBe(true);
     expect(progress.isForgotten).toBe(true);
+    expect(progress.isLeech).toBe(true);
     expect(summary.weak).toBe(1);
     expect(summary.forgotten).toBe(1);
+    expect(summary.leeches).toBe(1);
     expect(summary.dueToday).toBe(1);
   });
 
