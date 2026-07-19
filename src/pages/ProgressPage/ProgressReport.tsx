@@ -35,7 +35,7 @@ export const ProgressReport = ({
       ].map(([label, value]) => (
         <div
           key={label}
-          className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+          className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
         >
           <dt className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {label}
@@ -55,7 +55,7 @@ export const ProgressReport = ({
       </p>
     </div>
     <div className="grid gap-3 sm:grid-cols-3">
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Work Tools
         </p>
@@ -63,7 +63,7 @@ export const ProgressReport = ({
           {report.recommendedWorkTools}
         </p>
       </div>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Quick AI
         </p>
@@ -71,7 +71,7 @@ export const ProgressReport = ({
           {report.recommendedQuickAIAction}
         </p>
       </div>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Phrase category
         </p>
@@ -105,7 +105,7 @@ export const ProgressReport = ({
           '/progress/next-steps'
         );
       }}
-      className="w-full h-10 border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-2"
+      className="w-full h-10 border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-2"
     >
       Mark report reviewed
     </Button>

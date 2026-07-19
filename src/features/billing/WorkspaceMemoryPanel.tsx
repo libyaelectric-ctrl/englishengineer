@@ -28,7 +28,7 @@ const MemoryEntryItem = ({
   onStartEdit,
   onDelete,
 }: MemoryEntryItemProps) => (
-  <li className="flex items-start gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2 shadow-sm">
+  <li className="flex items-start gap-2 rounded-[4px] border border-border-soft bg-surface-hover p-2 shadow-sm">
     {isEditing ? (
       <div className="flex flex-1 flex-col gap-1.5">
         <p className="text-[10px] font-bold text-foreground">{keyName}</p>
@@ -38,7 +38,7 @@ const MemoryEntryItem = ({
           onChange={(e) => setEditValue(e.target.value)}
           rows={2}
           aria-label={`Edit memory for ${keyName}`}
-          className="w-full resize-none rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm"
+          className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm"
         />
         <div className="flex gap-1">
           <button
@@ -51,7 +51,7 @@ const MemoryEntryItem = ({
           <button
             type="button"
             onClick={onCancel}
-            className="flex items-center gap-1 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] px-2.5 py-1 text-[10px] font-bold text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover px-2.5 py-1 text-[10px] font-bold text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
           >
             <X className="h-3 w-3" /> Cancel
           </button>
@@ -73,7 +73,7 @@ const MemoryEntryItem = ({
               type="button"
               onClick={onStartEdit}
               aria-label={`Edit ${keyName}`}
-              className="rounded-[4px] p-1 text-muted-copy hover:text-[#0047bb] hover:bg-[#faf8ff] transition-colors border border-transparent hover:border-[#d9d9e3] cursor-pointer"
+              className="rounded-[4px] p-1 text-muted-copy hover:text-[#0047bb] hover:bg-surface-hover transition-colors border border-transparent hover:border-border-soft cursor-pointer"
             >
               <Edit2 className="h-3 w-3" />
             </button>
@@ -120,7 +120,7 @@ const AddMemoryForm = ({
       value={newKey}
       onChange={(e) => setNewKey(e.target.value)}
       aria-label="Memory entry key"
-      className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+      className="w-full rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
     />
     <label className="block">
       <span className="sr-only">Memory entry value</span>
@@ -130,7 +130,7 @@ const AddMemoryForm = ({
         value={newValue}
         onChange={(e) => setNewValue(e.target.value)}
         rows={2}
-        className="w-full resize-none rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+        className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
       />
     </label>
     {keyError && (
@@ -150,7 +150,7 @@ const AddMemoryForm = ({
       <button
         type="button"
         onClick={onCancel}
-        className="rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
+        className="rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-foreground cursor-pointer shadow-sm"
       >
         Cancel
       </button>
@@ -197,7 +197,7 @@ const WorkspaceMemoryContent = ({
 }) => (
   <>
     {entries.length === 0 && !addingNew && (
-      <div className="rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] px-4 py-5 text-center shadow-sm">
+      <div className="rounded-[4px] border border-dashed border-border-soft bg-surface-hover px-4 py-5 text-center shadow-sm">
         <p className="text-[10px] text-muted-copy font-medium">
           No memory entries yet. Add project context, standards, or team info.
         </p>
@@ -234,7 +234,7 @@ const WorkspaceMemoryContent = ({
       />
     )}
     {!hasProjectAccess && entries.length > 0 && (
-      <div className="mt-3 rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3] p-2.5 text-center shadow-sm">
+      <div className="mt-3 rounded-[4px] bg-surface-hover border border-border-soft p-2.5 text-center shadow-sm">
         <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
           Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to
           edit details.
@@ -312,8 +312,8 @@ export const WorkspaceMemoryPanel = ({
   };
 
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-3 border-b border-[#d9d9e3] pb-2">
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+      <div className="flex items-center justify-between mb-3 border-b border-border-soft pb-2">
         <div className="flex items-center gap-2">
           <Brain className="h-3.5 w-3.5 text-[#0047bb]" aria-hidden="true" />
           <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">
@@ -333,7 +333,7 @@ export const WorkspaceMemoryPanel = ({
               setAddingNew(true);
               setKeyError(null);
             }}
-            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 border border-[#d9d9e3] bg-white cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 border border-border-soft bg-surface cursor-pointer shadow-sm"
             aria-label="Add memory entry"
           >
             <Plus className="h-3 w-3 text-muted-copy" aria-hidden="true" /> Add

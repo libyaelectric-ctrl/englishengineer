@@ -76,7 +76,7 @@ export const MissionListTab = ({
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
-                <tr className="border-b border-[#d9d9e3]">
+                <tr className="border-b border-border-soft">
                   <th className="py-2 text-left font-bold text-muted-copy uppercase tracking-wider">
                     Date
                   </th>
@@ -92,7 +92,7 @@ export const MissionListTab = ({
                 {writingHistory.map((entry, i) => (
                   <tr
                     key={i}
-                    className="border-b border-[#d9d9e3] last:border-0"
+                    className="border-b border-border-soft last:border-0"
                   >
                     <td className="py-2 text-foreground">{entry.date}</td>
                     <td className="py-2 text-foreground font-mono font-bold">
@@ -120,7 +120,7 @@ export const MissionListTab = ({
           />
         ))}
         {visibleMissions.length === 0 && (
-          <div className="col-span-full rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-sm text-muted-copy">
+          <div className="col-span-full rounded-[4px] border border-border-soft bg-surface p-6 text-sm text-muted-copy">
             No current-level content yet. No Writing missions are available for
             this filter.
           </div>

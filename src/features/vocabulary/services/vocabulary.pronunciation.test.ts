@@ -21,7 +21,13 @@ describe('PronunciationService', () => {
 
   describe('getPronunciation', () => {
     it('returns correct word and source structure', () => {
-      const result = { word: 'hello', audioUrl: '', phonetic: null, source: 'browser-tts' as const, cached: false };
+      const result = {
+        word: 'hello',
+        audioUrl: '',
+        phonetic: null,
+        source: 'browser-tts' as const,
+        cached: false,
+      };
       expect(result.word).toBe('hello');
       expect(result.source).toBe('browser-tts');
     });

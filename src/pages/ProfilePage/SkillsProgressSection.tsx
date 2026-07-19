@@ -58,7 +58,7 @@ export const SkillsProgressSection = ({
             return (
               <article
                 key={skill}
-                className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 relative shadow-sm"
+                className="rounded-[4px] border border-border-soft bg-surface p-4 relative shadow-sm"
               >
                 <div className="flex justify-between items-start">
                   <p className="text-xs font-bold uppercase tracking-wider text-foreground capitalize">
@@ -157,7 +157,7 @@ export const SkillsProgressSection = ({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
+              className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm"
             >
               <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 {label}
@@ -170,7 +170,7 @@ export const SkillsProgressSection = ({
         </div>
 
         {/* Vocabulary Progress */}
-        <div className="mt-6 rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+        <div className="mt-6 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
           <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
             Vocabulary Mastery
           </span>
@@ -223,7 +223,7 @@ export const SkillsProgressSection = ({
             Mistake Log Summary
           </span>
           {mistakeLog.length === 0 ? (
-            <p className="mt-2 rounded-[4px] border border-dashed border-[#d9d9e3] bg-[#faf8ff] p-4 text-center text-xs text-muted-copy font-medium shadow-sm">
+            <p className="mt-2 rounded-[4px] border border-dashed border-border-soft bg-surface-hover p-4 text-center text-xs text-muted-copy font-medium shadow-sm">
               No mistakes recorded yet.
             </p>
           ) : (
@@ -231,7 +231,7 @@ export const SkillsProgressSection = ({
               {mistakeLog.slice(0, 2).map((m) => (
                 <div
                   key={m.id}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-xs shadow-sm"
+                  className="rounded-[4px] border border-border-soft bg-surface p-3 text-xs shadow-sm"
                 >
                   <div className="flex justify-between items-center">
                     <span className="font-mono text-[9px] text-muted-copy uppercase font-bold">
@@ -256,12 +256,12 @@ export const SkillsProgressSection = ({
         </div>
 
         {/* Heatmap & Analytics CTA */}
-        <div className="mt-6 flex flex-col gap-4 border-t border-[#d9d9e3] pt-4">
+        <div className="mt-6 flex flex-col gap-4 border-t border-border-soft pt-4">
           <Heatmap />
           <div className="flex justify-end mt-2">
             <Link
               to="/progress/overview"
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-4 text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors cursor-pointer shadow-sm"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors cursor-pointer shadow-sm"
             >
               View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
             </Link>

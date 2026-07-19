@@ -61,7 +61,7 @@ export const CorrectionCheckpoint = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') onSelectRule(alert);
               }}
-              className="group relative cursor-pointer space-y-3 rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm transition-all hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5"
+              className="group relative cursor-pointer space-y-3 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm transition-all hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5"
             >
               <div className="flex items-start gap-2.5 text-xs">
                 <AlertTriangle
@@ -71,7 +71,7 @@ export const CorrectionCheckpoint = ({
                   {alert.text}
                 </p>
               </div>
-              <div className="flex items-center justify-between gap-2 border-t border-[#d9d9e3] pt-2.5">
+              <div className="flex items-center justify-between gap-2 border-t border-border-soft pt-2.5">
                 <span className="text-[10px] font-mono text-muted-copy font-bold">
                   "{alert.original}" →{' '}
                   <span className="text-emerald-400 font-bold font-mono">
@@ -93,11 +93,11 @@ export const CorrectionCheckpoint = ({
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t border-[#d9d9e3] pt-4">
+      <div className="flex items-center justify-between border-t border-border-soft pt-4">
         <Button
           variant="outline"
           onClick={onReset}
-          className="h-10 rounded-[4px] border-[#d9d9e3] text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer shadow-sm"
+          className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer shadow-sm"
         >
           Reset Sandbox
         </Button>

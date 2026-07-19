@@ -19,7 +19,11 @@ export interface GrammarDashboardData {
   }>;
   errorPatternSummary: {
     totalErrors: number;
-    topCategories: Array<{ category: ErrorCategory; count: number; percentage: number }>;
+    topCategories: Array<{
+      category: ErrorCategory;
+      count: number;
+      percentage: number;
+    }>;
   };
   weeklyActivity: Array<{
     date: string;
@@ -36,22 +40,29 @@ export interface GrammarDashboardData {
 }
 
 const CATEGORY_MAP: Record<string, string> = {
-  'tense': 'Tenses',
-  'conditionals': 'Conditionals',
-  'passive': 'Passive Voice',
-  'articles': 'Articles',
-  'prepositions': 'Prepositions',
-  'comparisons': 'Comparisons',
-  'relative': 'Relative Clauses',
-  'modals': 'Modal Verbs',
-  'gerunds': 'Gerunds & Infinitives',
-  'other': 'Other',
+  tense: 'Tenses',
+  conditionals: 'Conditionals',
+  passive: 'Passive Voice',
+  articles: 'Articles',
+  prepositions: 'Prepositions',
+  comparisons: 'Comparisons',
+  relative: 'Relative Clauses',
+  modals: 'Modal Verbs',
+  gerunds: 'Gerunds & Infinitives',
+  other: 'Other',
 };
 
 export const GrammarDashboardService = {
   buildDashboard(
     allProgress: Record<string, GrammarRuleProgress>,
-    errorSummary: { totalErrors: number; topCategories: Array<{ category: ErrorCategory; count: number; percentage: number }> },
+    errorSummary: {
+      totalErrors: number;
+      topCategories: Array<{
+        category: ErrorCategory;
+        count: number;
+        percentage: number;
+      }>;
+    },
     getRuleCategory: (ruleId: string) => string
   ): GrammarDashboardData {
     const values = Object.values(allProgress);
@@ -68,13 +79,17 @@ export const GrammarDashboardService = {
       categoryMap.get(cat)!.push(p);
     });
 
-    const categoryBreakdown = [...categoryMap.entries()].map(([category, rules]) => ({
-      category,
-      total: rules.length,
-      mastered: rules.filter((r) => r.reviewStatus === 'Strong').length,
-      learning: rules.filter((r) => r.reviewStatus === 'Learning').length,
-      strength: Math.round(rules.reduce((sum, r) => sum + r.strength, 0) / rules.length),
-    }));
+    const categoryBreakdown = [...categoryMap.entries()].map(
+      ([category, rules]) => ({
+        category,
+        total: rules.length,
+        mastered: rules.filter((r) => r.reviewStatus === 'Strong').length,
+        learning: rules.filter((r) => r.reviewStatus === 'Learning').length,
+        strength: Math.round(
+          rules.reduce((sum, r) => sum + r.strength, 0) / rules.length
+        ),
+      })
+    );
 
     const readingEvidence = values.filter(
       (p) => p.skillEvidence.reading && p.skillEvidence.reading.score >= 80
@@ -97,7 +112,8 @@ export const GrammarDashboardService = {
         learning,
         due,
         newRules,
-        masteryPercentage: values.length > 0 ? Math.round((mastered / values.length) * 100) : 0,
+        masteryPercentage:
+          values.length > 0 ? Math.round((mastered / values.length) * 100) : 0,
       },
       categoryBreakdown,
       errorPatternSummary: errorSummary,
@@ -124,18 +140,24 @@ export const GrammarDashboardService = {
       .sort((a, b) => a.strength - b.strength);
 
     if (weakCategories.length > 0) {
-      recs.push(`Focus on weak areas: ${weakCategories.map((c) => c.category).join(', ')}.`);
+      recs.push(
+        `Focus on weak areas: ${weakCategories.map((c) => c.category).join(', ')}.`
+      );
     }
 
     if (topErrorCategories.length > 0) {
       const top = topErrorCategories[0];
-      recs.push(`Most errors in ${top.category} (${top.percentage}%). Review related rules.`);
+      recs.push(
+        `Most errors in ${top.category} (${top.percentage}%). Review related rules.`
+      );
     }
 
     if (mastered === 0 && total > 0) {
       recs.push('Start with basic rules to build a strong foundation.');
     } else if (mastered / total > 0.8) {
-      recs.push('Excellent progress! Focus on transfer evidence for remaining rules.');
+      recs.push(
+        'Excellent progress! Focus on transfer evidence for remaining rules.'
+      );
     }
 
     if (recs.length === 0) {

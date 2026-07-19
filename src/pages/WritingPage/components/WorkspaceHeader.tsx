@@ -20,7 +20,7 @@ export const WorkspaceHeader = ({
   onBack,
   onMove,
 }: WorkspaceHeaderProps) => (
-  <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 md:flex-row md:items-center md:justify-between shadow-sm">
+  <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between shadow-sm">
     <button
       onClick={onBack}
       className="flex items-center gap-2 text-xs font-bold text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
@@ -35,7 +35,7 @@ export const WorkspaceHeader = ({
       >
         Level: {cefrLevel}
       </span>
-      <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-[#d9d9e3] flex items-center gap-1.5 font-bold">
+      <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
         <Clock className="h-3.5 w-3.5 text-[#0047bb]" />
         <span>Elapsed: {WritingHelpers.formatTime(timeSpentSeconds)}</span>
       </span>

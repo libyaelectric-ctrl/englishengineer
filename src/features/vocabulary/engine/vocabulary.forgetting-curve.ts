@@ -17,7 +17,10 @@ export const calculateRetention = (
   stability: number
 ): number => {
   if (stability <= 0) return 0;
-  return Math.max(0, Math.min(100, Math.round(100 * Math.exp(-daysSinceReview / stability))));
+  return Math.max(
+    0,
+    Math.min(100, Math.round(100 * Math.exp(-daysSinceReview / stability)))
+  );
 };
 
 export const estimateStability = (

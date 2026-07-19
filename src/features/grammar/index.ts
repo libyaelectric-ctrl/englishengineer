@@ -49,10 +49,7 @@ export {
   ErrorPatternAnalyzer,
 } from './grammar.error-patterns';
 
-export {
-  type BridgeResult,
-  GrammarVocabularyBridge,
-} from './grammar.bridge';
+export { type BridgeResult, GrammarVocabularyBridge } from './grammar.bridge';
 
 export {
   type DrillType,

@@ -1,5 +1,13 @@
 import { motion } from 'motion/react';
-import { Target, TrendingUp, Zap, Clock, Layers, BookOpen, AlertTriangle } from 'lucide-react';
+import {
+  Target,
+  TrendingUp,
+  Zap,
+  Clock,
+  Layers,
+  BookOpen,
+  AlertTriangle,
+} from 'lucide-react';
 
 export const QuickStats = ({
   totalElo,
@@ -45,12 +53,14 @@ export const QuickStats = ({
       color: 'text-[#0047bb]',
     },
     ...(grammarMastered !== undefined
-      ? [{
-          icon: BookOpen,
-          label: 'Grammar Mastered',
-          value: grammarMastered,
-          color: 'text-emerald-600',
-        }]
+      ? [
+          {
+            icon: BookOpen,
+            label: 'Grammar Mastered',
+            value: grammarMastered,
+            color: 'text-emerald-600',
+          },
+        ]
       : []),
     {
       icon: AlertTriangle,

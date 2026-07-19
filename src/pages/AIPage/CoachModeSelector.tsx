@@ -47,7 +47,7 @@ export const CoachModeSelector = ({
               className={`text-left px-3 py-2 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
                 isActive
                   ? 'bg-[#0047bb]/10 border-[#0047bb]/40 text-[#0047bb]'
-                  : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]'
               }`}
             >
               <span className="flex items-center gap-1.5">
@@ -86,7 +86,7 @@ export const CoachModeSelector = ({
               key={template.id}
               type="button"
               onClick={() => onSetInput(template.prompt)}
-              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-left text-xs font-bold uppercase tracking-wider transition-all hover:border-[#0047bb] hover:bg-[#faf8ff] cursor-pointer shadow-sm"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-left text-xs font-bold uppercase tracking-wider transition-all hover:border-[#0047bb] hover:bg-surface-hover cursor-pointer shadow-sm"
             >
               {template.title}
             </button>

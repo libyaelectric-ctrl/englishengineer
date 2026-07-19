@@ -105,7 +105,7 @@ const PlacementPage = () => {
         </header>
 
         <div className="p-5 sm:p-7 font-sans">
-          <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+          <span className="rounded-[4px] border border-border-soft bg-background px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {question.domain} · {question.band}
           </span>
           <h2 className="mt-5 text-sm font-bold text-foreground">
@@ -117,7 +117,7 @@ const PlacementPage = () => {
                 key={choice}
                 type="button"
                 onClick={() => answer(question.id, choiceIndex)}
-                className={`min-h-12 rounded-[4px] border border-[#d9d9e3] px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer ${
+                className={`min-h-12 rounded-[4px] border border-border-soft px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer ${
                   answers[question.id] === choiceIndex
                     ? 'border-[#0047bb]/40 bg-[#0047bb]/10 text-foreground'
                     : 'bg-white text-muted-copy hover:border-[#0047bb]'
@@ -129,11 +129,11 @@ const PlacementPage = () => {
           </div>
         </div>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-[#d9d9e3] bg-[#faf8ff] p-4 sm:px-7">
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-background p-4 sm:px-7">
           <Button
             variant="ghost"
             onClick={currentIndex === 0 ? continueAtA1 : previous}
-            className="rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm min-h-9 px-4"
+            className="rounded-[4px] border border-border-soft bg-surface hover:bg-background text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm min-h-9 px-4"
           >
             <ArrowLeft className="h-4 w-4" />
             {currentIndex === 0 ? 'Start at A1' : 'Previous'}

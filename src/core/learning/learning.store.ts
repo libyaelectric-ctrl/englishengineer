@@ -47,6 +47,7 @@ const ensureArrays = (state: Partial<LearningState>): LearningState => {
     eloHistory: safe(state.eloHistory, []),
     vocabularyPool: safe(state.vocabularyPool, []),
     grammarPool: safe(state.grammarPool, []),
+    speakingPool: safe(state.speakingPool, []),
   };
 };
 
@@ -370,6 +371,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>(
         eloHistory: [],
         vocabularyPool: [],
         grammarPool: [],
+        speakingPool: [],
       });
       storage.set(STORAGE_KEY, { ...get() });
     },

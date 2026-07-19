@@ -2,8 +2,20 @@ import { describe, expect, it } from 'vitest';
 import { VocabularyCsvService, type CsvWord } from './vocabulary.csv';
 
 const sampleWords: CsvWord[] = [
-  { term: 'review', turkishMeaning: 'gözden geçirmek', cefrLevel: 'B1', domain: 'professional', exampleSentence: 'Please review the document.' },
-  { term: 'approve', turkishMeaning: 'onaylamak', cefrLevel: 'B1', domain: 'professional', exampleSentence: 'The manager approved the request.' },
+  {
+    term: 'review',
+    turkishMeaning: 'gözden geçirmek',
+    cefrLevel: 'B1',
+    domain: 'professional',
+    exampleSentence: 'Please review the document.',
+  },
+  {
+    term: 'approve',
+    turkishMeaning: 'onaylamak',
+    cefrLevel: 'B1',
+    domain: 'professional',
+    exampleSentence: 'The manager approved the request.',
+  },
 ];
 
 describe('VocabularyCsvService', () => {
@@ -17,7 +29,13 @@ describe('VocabularyCsvService', () => {
 
     it('handles commas in values', () => {
       const words: CsvWord[] = [
-        { term: 'test', turkishMeaning: 'test, kontrol', cefrLevel: 'A1', domain: 'general', exampleSentence: '' },
+        {
+          term: 'test',
+          turkishMeaning: 'test, kontrol',
+          cefrLevel: 'A1',
+          domain: 'general',
+          exampleSentence: '',
+        },
       ];
       const csv = VocabularyCsvService.exportToCsv(words);
       expect(csv).toContain('"test, kontrol"');
@@ -25,7 +43,13 @@ describe('VocabularyCsvService', () => {
 
     it('handles quotes in values', () => {
       const words: CsvWord[] = [
-        { term: 'test', turkishMeaning: 'say "hello"', cefrLevel: 'A1', domain: 'general', exampleSentence: '' },
+        {
+          term: 'test',
+          turkishMeaning: 'say "hello"',
+          cefrLevel: 'A1',
+          domain: 'general',
+          exampleSentence: '',
+        },
       ];
       const csv = VocabularyCsvService.exportToCsv(words);
       expect(csv).toContain('"say ""hello"""');
@@ -46,7 +70,8 @@ describe('VocabularyCsvService', () => {
     });
 
     it('handles quoted values with commas', () => {
-      const csv = 'term,turkishMeaning,cefrLevel,domain,exampleSentence\n"test","test, kontrol","A1","general",""';
+      const csv =
+        'term,turkishMeaning,cefrLevel,domain,exampleSentence\n"test","test, kontrol","A1","general",""';
       const parsed = VocabularyCsvService.parseCsv(csv);
       expect(parsed[0].turkishMeaning).toBe('test, kontrol');
     });
@@ -61,7 +86,15 @@ describe('VocabularyCsvService', () => {
     });
 
     it('rejects empty terms', () => {
-      const words: CsvWord[] = [{ term: '', turkishMeaning: 'test', cefrLevel: 'A1', domain: 'general', exampleSentence: '' }];
+      const words: CsvWord[] = [
+        {
+          term: '',
+          turkishMeaning: 'test',
+          cefrLevel: 'A1',
+          domain: 'general',
+          exampleSentence: '',
+        },
+      ];
       const result = VocabularyCsvService.validateImport(words);
       expect(result.imported).toBe(0);
       expect(result.skipped).toBe(1);
@@ -69,7 +102,15 @@ describe('VocabularyCsvService', () => {
     });
 
     it('rejects invalid CEFR level', () => {
-      const words: CsvWord[] = [{ term: 'test', turkishMeaning: 'test', cefrLevel: 'X1', domain: 'general', exampleSentence: '' }];
+      const words: CsvWord[] = [
+        {
+          term: 'test',
+          turkishMeaning: 'test',
+          cefrLevel: 'X1',
+          domain: 'general',
+          exampleSentence: '',
+        },
+      ];
       const result = VocabularyCsvService.validateImport(words);
       expect(result.imported).toBe(0);
       expect(result.skipped).toBe(1);

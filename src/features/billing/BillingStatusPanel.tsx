@@ -57,7 +57,7 @@ export const BillingStatusPanel = ({
           based on the last known verified state.
         </div>
       )}
-      <div className="flex flex-col gap-3 rounded-[4px] border border-[#d9d9e3] bg-white p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">
+      <div className="flex flex-col gap-3 rounded-[4px] border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             Current plan
@@ -81,7 +81,7 @@ export const BillingStatusPanel = ({
       </div>
 
       <dl className="space-y-3 text-xs">
-        <div className="flex flex-col gap-1 border-b border-[#d9d9e3]/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex flex-col gap-1 border-b border-border-soft/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
             Subscription status
           </dt>
@@ -89,7 +89,7 @@ export const BillingStatusPanel = ({
             {presentation.statusLabel}
           </dd>
         </div>
-        <div className="flex flex-col gap-1 border-b border-[#d9d9e3]/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex flex-col gap-1 border-b border-border-soft/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
             Entitlement status
           </dt>
@@ -101,7 +101,7 @@ export const BillingStatusPanel = ({
             />
           </dd>
         </div>
-        <div className="flex flex-col gap-1 border-b border-[#d9d9e3]/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+        <div className="flex flex-col gap-1 border-b border-border-soft/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
             {presentation.periodLabel}
           </dt>
@@ -156,7 +156,7 @@ export const BillingStatusPanel = ({
           variant="outline"
           onClick={onOpenPortal}
           disabled={isLoading || !canOpenPortal}
-          className="text-xs border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[#0047bb] font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
+          className="text-xs border border-border-soft bg-surface hover:bg-surface-hover text-[#0047bb] font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
         >
           <ExternalLink className="h-3.5 w-3.5" /> Manage Subscription
         </Button>

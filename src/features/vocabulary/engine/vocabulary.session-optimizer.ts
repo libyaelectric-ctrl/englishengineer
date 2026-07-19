@@ -1,5 +1,9 @@
 import type { VocabularyMenuProgress } from '../services/vocabulary.menu';
-import { isLeechWord, isVocabularyForgotten, isVocabularyProgressDue } from '../services/vocabulary.menu';
+import {
+  isLeechWord,
+  isVocabularyForgotten,
+  isVocabularyProgressDue,
+} from '../services/vocabulary.menu';
 
 export interface PrioritizedWord {
   wordId: string;
@@ -61,7 +65,9 @@ export const prioritizeWords = (
   return limit ? prioritized.slice(0, limit) : prioritized;
 };
 
-export const getSessionPriorityLabel = (reason: PrioritizedWord['reason']): string => {
+export const getSessionPriorityLabel = (
+  reason: PrioritizedWord['reason']
+): string => {
   switch (reason) {
     case 'leech':
       return 'Spaced recovery — this word keeps slipping; review it first.';

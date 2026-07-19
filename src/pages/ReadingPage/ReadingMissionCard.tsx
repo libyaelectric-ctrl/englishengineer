@@ -53,8 +53,8 @@ export function ReadingMissionCard({
   return (
     <div
       id={`reading-card-${m.id}`}
-      className={`group relative rounded-[4px] border bg-white p-5 transition-all duration-200 hover:border-[#0047bb]/30 hover:shadow-md ${
-        isCompleted ? 'border-success/20' : 'border-[#d9d9e3]'
+      className={`group relative rounded-[4px] border bg-surface p-5 transition-all duration-200 hover:border-[#0047bb]/30 hover:shadow-md ${
+        isCompleted ? 'border-success/20' : 'border-border-soft'
       }`}
     >
       <div
@@ -106,9 +106,9 @@ export function ReadingMissionCard({
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-[#d9d9e3]">
+        <div className="flex items-center justify-between pt-4 border-t border-border-soft">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-bold font-mono bg-[#f3f3fd] border border-[#d9d9e3] text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
+            <span className="text-[9px] font-bold font-mono bg-[#f3f3fd] border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {m.discipline}
             </span>
           </div>
@@ -129,7 +129,7 @@ export function ReadingMissionCard({
               onClick={() => onLaunch(m.id)}
               className={`h-8 px-3.5 rounded-[4px] font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors ${
                 isCompleted
-                  ? 'border border-[#d9d9e3] bg-white text-foreground hover:bg-[#0047bb]/5'
+                  ? 'border border-border-soft bg-surface text-foreground hover:bg-[#0047bb]/5'
                   : 'bg-[#0047bb] hover:bg-[#0047bb]/90 text-white border border-[#0047bb]'
               }`}
             >

@@ -44,13 +44,13 @@ export const SkillEntryBrief = ({
 
   if (!recommendation) {
     return (
-      <div className="h-24 animate-pulse rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff]" />
+      <div className="h-24 animate-pulse rounded-[4px] border border-border-soft bg-surface-hover" />
     );
   }
 
   if (compact) {
     return (
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3.5 mb-2 text-left shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface-hover p-3.5 mb-2 text-left shadow-sm">
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
             {recommendation.targetCefr}
@@ -58,7 +58,7 @@ export const SkillEntryBrief = ({
           <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
             Lesson {recommendation.lessonNumber}
           </span>
-          <span className="rounded-[4px] border border-[#d9d9e3] bg-white px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
             {recommendation.estimatedMinutes}m
           </span>
         </div>
@@ -81,10 +81,10 @@ export const SkillEntryBrief = ({
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
               System recommendation
             </p>
-            <span className="rounded-[4px] border border-[#0047bb]/25 bg-white px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <span className="rounded-[4px] border border-[#0047bb]/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
               {recommendation.targetCefr}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-[4px] border border-[#0047bb]/25 bg-white px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <span className="inline-flex items-center gap-1 rounded-[4px] border border-[#0047bb]/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
               <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
               {recommendation.lessonNumber}
             </span>
@@ -121,7 +121,7 @@ export const SkillEntryBrief = ({
               {Object.values(recommendation.explanation).map((line) => (
                 <p
                   key={line}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-2 leading-5 text-xs font-medium shadow-sm"
+                  className="rounded-[4px] border border-border-soft bg-surface p-2 leading-5 text-xs font-medium shadow-sm"
                 >
                   {line}
                 </p>
@@ -131,7 +131,7 @@ export const SkillEntryBrief = ({
         </div>
         <a
           href="/curriculum"
-          className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white px-4 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-[#faf8ff] cursor-pointer shadow-sm"
+          className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover cursor-pointer shadow-sm"
         >
           Manual change <ArrowRight className="h-4 w-4" />
         </a>

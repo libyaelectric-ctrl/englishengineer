@@ -178,7 +178,7 @@ What questions do you have about this passage?`,
   return (
     <div className="space-y-6">
       {/* Header Bar */}
-      <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 md:flex-row md:items-center md:justify-between shadow-sm">
+      <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between shadow-sm">
         <button
           onClick={handleBackToMissions}
           className="flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
@@ -193,7 +193,7 @@ What questions do you have about this passage?`,
           >
             Level: {currentMission.cefrLevel}
           </span>
-          <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-[#d9d9e3] flex items-center gap-1.5 font-bold">
+          <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
             <Clock className="h-3.5 w-3.5 text-[#0047bb]" />
             <span>Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}</span>
           </span>
@@ -246,12 +246,12 @@ What questions do you have about this passage?`,
               subtitle="Active Document Reading - Click underlined technical terms to expand system glossary"
               icon={BookOpen}
               headerActions={
-                <span className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                   {currentMission.discipline}
                 </span>
               }
             >
-              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 text-sm font-normal leading-[1.8] text-foreground md:text-base whitespace-pre-line">
+              <div className="rounded-[4px] border border-border-soft bg-surface p-5 text-sm font-normal leading-[1.8] text-foreground md:text-base whitespace-pre-line">
                 {renderPassage(
                   currentMission.passageText,
                   currentMission.vocabulary
@@ -259,7 +259,7 @@ What questions do you have about this passage?`,
               </div>
             </SectionCard>
 
-            <div className="space-y-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-5 shadow-sm">
+            <div className="space-y-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 shadow-sm">
               <h5 className="text-xs font-bold uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
                 <Info className="h-4 w-4 text-[#0047bb]" />
                 <span>
@@ -299,11 +299,11 @@ What questions do you have about this passage?`,
             </div>
 
             {/* AI Reading Companion */}
-            <div className="space-y-3 rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+            <div className="space-y-3 rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
               <h5 className="text-xs font-bold uppercase text-foreground tracking-wider flex items-center gap-1.5">
                 <span>AI Reading Companion 🎓</span>
               </h5>
-              <div className="flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-[#d9d9e3] bg-background p-2.5">
+              <div className="flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-border-soft bg-background p-2.5">
                 {messages.map((msg, i) => (
                   <div
                     key={i}
@@ -339,7 +339,7 @@ What questions do you have about this passage?`,
                   }}
                   disabled={isTalking}
                   placeholder="Ask a question about the text..."
-                  className="flex-1 rounded-[4px] border border-[#d9d9e3] bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
+                  className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
                 />
                 <Button
                   onClick={handleSendChat}
@@ -363,10 +363,10 @@ What questions do you have about this passage?`,
                 {currentMission.questions.map((q, idx) => (
                   <div
                     key={q.id}
-                    className="space-y-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 shadow-sm"
+                    className="space-y-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 shadow-sm"
                   >
                     <div className="flex gap-2.5">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white font-mono text-xs font-bold text-muted-copy">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-border-soft bg-surface font-mono text-xs font-bold text-muted-copy">
                         {idx + 1}
                       </span>
                       <h5 className="text-sm font-bold leading-tight text-foreground">
@@ -390,7 +390,7 @@ What questions do you have about this passage?`,
                               className={`w-full text-left p-3 rounded-[4px] border transition-all text-xs font-bold flex items-center justify-between cursor-pointer ${
                                 isSelected
                                   ? 'border-[#0047bb] bg-[#0047bb] text-white'
-                                  : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-foreground'
+                                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-foreground'
                               }`}
                             >
                               <span>{choice}</span>
@@ -417,7 +417,7 @@ What questions do you have about this passage?`,
                                   ? option === 'true'
                                     ? 'border-success bg-success/10 text-success font-bold'
                                     : 'border-rose-500 bg-rose-500/10 text-rose-700 font-bold'
-                                  : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]/20 hover:bg-[#0047bb]/5 hover:text-foreground'
+                                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/20 hover:bg-[#0047bb]/5 hover:text-foreground'
                               }`}
                             >
                               {option}
@@ -441,7 +441,7 @@ What questions do you have about this passage?`,
                                 ? 'Enter precise number or code standard...'
                                 : 'Draft technical explanation...'
                             }
-                            className="w-full rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-xs text-foreground placeholder-muted-copy focus:border-[#0047bb] focus:outline-none focus:ring-2 focus:ring-[#0047bb]/10 font-bold"
+                            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-[#0047bb] focus:outline-none focus:ring-2 focus:ring-[#0047bb]/10 font-bold"
                           />
                         </label>
                         {q.type === 'short_answer' && (
@@ -462,11 +462,11 @@ What questions do you have about this passage?`,
                   </div>
                 ))}
 
-                <div className="flex items-center justify-between border-t border-[#d9d9e3] pt-4">
+                <div className="flex items-center justify-between border-t border-border-soft pt-4">
                   <Button
                     variant="outline"
                     onClick={resetCurrentMission}
-                    className="h-10 rounded-[4px] border-[#d9d9e3] text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
+                    className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
                   >
                     Reset Form
                   </Button>

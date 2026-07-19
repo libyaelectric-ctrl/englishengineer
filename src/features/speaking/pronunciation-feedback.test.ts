@@ -107,20 +107,26 @@ describe('PronunciationFeedbackEngine', () => {
 
   describe('detectTurkishAccentPatterns', () => {
     it('detects th pattern', () => {
-      const tips = PronunciationFeedbackEngine.detectTurkishAccentPatterns('think this');
+      const tips =
+        PronunciationFeedbackEngine.detectTurkishAccentPatterns('think this');
       expect(tips.length).toBeGreaterThanOrEqual(0);
     });
 
     it('detects r pattern', () => {
-      const tips = PronunciationFeedbackEngine.detectTurkishAccentPatterns('red car');
+      const tips =
+        PronunciationFeedbackEngine.detectTurkishAccentPatterns('red car');
       expect(tips.some((t) => t.toLowerCase().includes('r'))).toBe(true);
     });
   });
 
   describe('getPhonemeTip', () => {
     it('returns tips for known phonemes', () => {
-      expect(PronunciationFeedbackEngine.getPhonemeTip('θ').toLowerCase()).toContain('tongue');
-      expect(PronunciationFeedbackEngine.getPhonemeTip('æ').toLowerCase()).toContain('vowel');
+      expect(
+        PronunciationFeedbackEngine.getPhonemeTip('θ').toLowerCase()
+      ).toContain('tongue');
+      expect(
+        PronunciationFeedbackEngine.getPhonemeTip('æ').toLowerCase()
+      ).toContain('vowel');
     });
 
     it('returns default tip for unknown phoneme', () => {

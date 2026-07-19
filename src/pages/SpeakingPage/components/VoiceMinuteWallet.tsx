@@ -16,7 +16,7 @@ export const VoiceMinuteWallet = ({
   const isWarning = voiceMinutesUsedThisMonth >= 96;
 
   return (
-    <div className="flex items-center gap-4 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] px-4 py-3 shadow-sm">
+    <div className="flex items-center gap-4 rounded-[4px] border border-border-soft bg-[#f3f3fd] px-4 py-3 shadow-sm">
       <Mic className="h-4 w-4 shrink-0 text-[#0047bb]" />
       <div className="flex-1 min-w-0">
         <div className="flex justify-between text-xs mb-1">

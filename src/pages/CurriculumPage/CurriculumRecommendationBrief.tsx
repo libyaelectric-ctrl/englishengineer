@@ -47,13 +47,13 @@ export const CurriculumRecommendationBrief = ({
       icon={ICON_MAP[selectedMeta.icon] || ICON_MAP.BookOpen}
     >
       {recommendationLoading || !recommendation ? (
-        <div className="h-72 animate-pulse rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff]" />
+        <div className="h-72 animate-pulse rounded-[4px] border border-border-soft bg-surface-hover" />
       ) : (
         <div className="space-y-6">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Card
               hoverEffect={false}
-              className="p-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
               <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 Target CEFR
@@ -64,7 +64,7 @@ export const CurriculumRecommendationBrief = ({
             </Card>
             <Card
               hoverEffect={false}
-              className="p-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
               <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 Safe / Stretch
@@ -75,7 +75,7 @@ export const CurriculumRecommendationBrief = ({
             </Card>
             <Card
               hoverEffect={false}
-              className="p-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
               <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 Effort
@@ -86,7 +86,7 @@ export const CurriculumRecommendationBrief = ({
             </Card>
             <Card
               hoverEffect={false}
-              className="p-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
               <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 AI required
@@ -97,7 +97,7 @@ export const CurriculumRecommendationBrief = ({
             </Card>
           </div>
 
-          <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm animate-in fade-in duration-300">
+          <div className="rounded-[4px] border border-primary/25 bg-[#0047bb]/5 p-4 shadow-sm animate-in fade-in duration-300">
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
               Why recommended
             </p>
@@ -106,8 +106,8 @@ export const CurriculumRecommendationBrief = ({
             </p>
           </div>
 
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#d9d9e3] pb-2">
+          <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border-soft pb-2">
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Lesson {recommendation.lessonNumber}
               </p>
@@ -121,7 +121,7 @@ export const CurriculumRecommendationBrief = ({
               {Object.values(recommendation.explanation).map((line) => (
                 <p
                   key={line}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs leading-5 text-muted-copy font-medium shadow-sm"
+                  className="rounded-[4px] border border-border-soft bg-surface-hover p-3 text-xs leading-5 text-muted-copy font-medium shadow-sm"
                 >
                   {line}
                 </p>
@@ -139,7 +139,7 @@ export const CurriculumRecommendationBrief = ({
                   recommendation.vocabularyFocus.map(({ term, bucket }) => (
                     <span
                       key={term.id}
-                      className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-1 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm"
+                      className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm"
                     >
                       {term.term} · {bucket}
                     </span>
@@ -161,7 +161,7 @@ export const CurriculumRecommendationBrief = ({
                   recommendation.grammarFocus.map((rule) => (
                     <p
                       key={rule.id}
-                      className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm"
+                      className="rounded-[4px] border border-border-soft bg-surface p-3 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm"
                     >
                       {rule.title} · {rule.cefrLevel}
                     </p>
@@ -192,7 +192,7 @@ export const CurriculumRecommendationBrief = ({
             </div>
           </div>
 
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
             <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
               Expected answer
             </p>

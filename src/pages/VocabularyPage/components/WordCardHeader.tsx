@@ -32,7 +32,7 @@ export const WordCardHeader = ({
       <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
         LVL-<span>{term.cefrLevel}</span>
       </span>
-      <span className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+      <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
         {status}
       </span>
       {progress?.isWeak && (

@@ -50,13 +50,14 @@ export const GrammarVocabularyBridge = {
     allRules: GrammarRule[]
   ): GrammarRule[] {
     const normalizedTags = vocabularyTags.map((t) => t.toLowerCase());
-    return allRules.filter((rule) =>
-      rule.linkedVocabularyTags.some((tag) =>
-        normalizedTags.includes(tag.toLowerCase())
-      ) ||
-      rule.grammarFits.some((fit) =>
-        normalizedTags.includes(fit.toLowerCase())
-      )
+    return allRules.filter(
+      (rule) =>
+        rule.linkedVocabularyTags.some((tag) =>
+          normalizedTags.includes(tag.toLowerCase())
+        ) ||
+        rule.grammarFits.some((fit) =>
+          normalizedTags.includes(fit.toLowerCase())
+        )
     );
   },
 

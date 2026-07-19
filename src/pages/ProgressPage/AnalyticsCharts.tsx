@@ -4,7 +4,7 @@ import type { AnalyticsTimelinePoint } from '@/features/analytics';
 export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
   const maxValue = Math.max(...values, 1);
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+    <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
       <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
         Weekly Activity
       </p>
@@ -33,7 +33,7 @@ export const StudyHeatmap = ({
 }: {
   values: Array<{ date: string; count: number }>;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
     <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
       Study Heatmap
     </p>
@@ -42,14 +42,14 @@ export const StudyHeatmap = ({
         <div
           key={item.date}
           title={`${item.date}: ${item.count} sessions`}
-          className={`aspect-square rounded-[4px] border border-[#d9d9e3] ${
+          className={`aspect-square rounded-[4px] border border-border-soft ${
             item.count >= 3
               ? 'bg-success'
               : item.count === 2
                 ? 'bg-[#0047bb]'
                 : item.count === 1
                   ? 'bg-[#0047bb]/40'
-                  : 'bg-[#faf8ff]'
+                  : 'bg-surface-hover'
           }`}
         />
       ))}
@@ -79,7 +79,7 @@ export const SkillRadar = ({
   const polygon = points.map((point) => `${point.x},${point.y}`).join(' ');
 
   return (
-    <div className="overflow-x-auto rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+    <div className="overflow-x-auto rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
       <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
         Skill Radar
       </p>
@@ -145,7 +145,7 @@ export const TimelinePanel = ({
         .map((point) => (
           <div
             key={`${point.date}-${point.label}-${point.value}`}
-            className="flex items-center justify-between rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
+            className="flex items-center justify-between rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm"
           >
             <div>
               <p className="text-xs font-bold text-foreground">{point.label}</p>
@@ -191,7 +191,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
     .join(' ');
 
   return (
-    <div className="relative overflow-x-auto rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+    <div className="relative overflow-x-auto rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="w-full h-44 overflow-visible"

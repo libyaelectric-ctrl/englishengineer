@@ -64,7 +64,7 @@ const TemplateCard = ({
     </div>
 
     <div className="space-y-3 font-sans">
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-background p-3 shadow-sm">
         <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
           [TECHNICAL CONTEXT]
         </p>
@@ -160,16 +160,16 @@ const EmailCard = ({
       ).map(([label, text]) => (
         <details
           key={label}
-          className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] open:bg-white shadow-sm"
+          className="rounded-[4px] border border-border-soft bg-background open:bg-white shadow-sm"
         >
           <summary className="cursor-pointer px-4 py-3 text-xs font-bold text-foreground flex items-center justify-between">
             <span>[VERSION: {label.toUpperCase()}]</span>
           </summary>
-          <div className="space-y-3 border-t border-[#d9d9e3] p-4 bg-[#faf8ff]">
+          <div className="space-y-3 border-t border-border-soft p-4 bg-background">
             <p className="whitespace-pre-line text-xs leading-relaxed text-foreground font-semibold">
               {text}
             </p>
-            <div className="flex flex-wrap gap-2 pt-2 border-t border-[#d9d9e3]">
+            <div className="flex flex-wrap gap-2 pt-2 border-t border-border-soft">
               <Button
                 variant="secondary"
                 size="sm"
@@ -253,7 +253,7 @@ const PhraseCard = ({
         <strong className="text-foreground font-black">Target Usage:</strong>{' '}
         {item.usageContext}
       </p>
-      <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs italic text-foreground leading-relaxed shadow-sm font-medium">
+      <p className="rounded-[4px] border border-border-soft bg-background p-3 text-xs italic text-foreground leading-relaxed shadow-sm font-medium">
         {item.example}
       </p>
     </div>
@@ -428,7 +428,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
@@ -444,7 +444,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 tab === id
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                  : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -452,7 +452,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </button>
           ))}
         </div>
-        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-3 focus-within:border-[#0047bb] md:w-72 shadow-sm font-sans">
+        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-background px-3 focus-within:border-[#0047bb] md:w-72 shadow-sm font-sans">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search work tools</span>
           <input

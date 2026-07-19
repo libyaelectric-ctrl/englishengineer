@@ -27,7 +27,7 @@ export const SkillCard = ({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="group rounded-[4px] border border-border-soft bg-surface p-4 hover:border-[#0047bb]/30 transition-all shadow-sm"
+      className="group rounded-[4px] border border-border-soft bg-surface p-4 hover:border-primary/30 transition-all shadow-sm"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">

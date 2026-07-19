@@ -11,7 +11,7 @@ import { useLearningStore } from './learning.store';
 const STORAGE_KEY = 'learning_state';
 
 const syncPoolToSupabase = (
-  contentType: 'vocabulary' | 'grammar',
+  contentType: 'vocabulary' | 'grammar' | 'speaking',
   contentId: string
 ) => {
   if (!isSupabaseConfigured()) return;
@@ -59,6 +59,19 @@ export const addToGrammarPool = (ruleId: string) => {
   syncPoolToSupabase('grammar', ruleId);
 };
 
+export const addToSpeakingPool = (missionId: string) => {
+  const current = useLearningStore.getState().speakingPool ?? [];
+  if (current.includes(missionId)) return;
+  const updated = [...current, missionId];
+  useLearningStore.setState({ speakingPool: updated });
+  storage.set(STORAGE_KEY, {
+    ...useLearningStore.getState(),
+    speakingPool: updated,
+  });
+  logger.i(`[SpeakingPool] +1 mission → pool size: ${updated.length}`);
+  syncPoolToSupabase('speaking', missionId);
+};
+
 // Event bus → Pool bağlantısı
 eventBus.subscribe('vocabulary:mastered', (event) => {
   const termId = (event.payload as { termId: string }).termId;
@@ -68,4 +81,9 @@ eventBus.subscribe('vocabulary:mastered', (event) => {
 eventBus.subscribe('grammar:mastered', (event) => {
   const ruleId = (event.payload as { ruleId: string }).ruleId;
   addToGrammarPool(ruleId);
+});
+
+eventBus.subscribe('speaking:completed', (event) => {
+  const missionId = (event.payload as { missionId: string }).missionId;
+  addToSpeakingPool(missionId);
 });
