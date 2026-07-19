@@ -1,0 +1,7 @@
+MADDE 2 — cn.test.ts Lint Hatası Düzeltildi
+=============================================
+Dosya: src/shared/utils/cn.test.ts:10
+Değişiklik: `false && 'bar'` yerine `const isActive = false; isActive && 'bar'` kullanıldı.
+
+Doğrulama: npm run lint → 0 error, 0 warning
+           npm run test → cn.test.ts geçiyor

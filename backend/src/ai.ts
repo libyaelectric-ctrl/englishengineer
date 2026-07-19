@@ -134,6 +134,46 @@ export const registerAIRoutes = (
 ): void => {
   const ledger = createAiLedger(config);
 
+  const validateOperation = (
+    body: Record<string, unknown>,
+    defaultOp: string
+  ) => {
+    if (body?.operation !== undefined && body.operation !== defaultOp) {
+      throw new ApiError(
+        400,
+        'invalid_operation',
+        'The AI operation must match the requested route.'
+      );
+    }
+  };
+
+  const resolveRateLimits = async (userId: string, bypass: boolean) => {
+    if (bypass) return { useTopup: false, subscription: null, topupCredits: 0 };
+    return checkRateLimits(userId, 'free', ledger, billingRepository);
+  };
+
+  const logUsage = (
+    userId: string,
+    bypass: boolean,
+    result: Record<string, unknown>,
+    body: Record<string, unknown>,
+    operation: string
+  ) => {
+    if (bypass) return;
+    logAiUsage(
+      ledger,
+      userId,
+      {
+        error: result.error as boolean | undefined,
+        provider: result.provider as string | undefined,
+        durationMs: result.durationMs as number | undefined,
+        text: result.text as string | undefined,
+      },
+      { modeId: body.modeId as string | undefined },
+      operation
+    );
+  };
+
   Object.entries(AI_ROUTES).forEach(([path, defaultOperation]) => {
     app.post(
       path,
@@ -143,37 +183,13 @@ export const registerAIRoutes = (
       async (request: Request, response: Response, next: NextFunction) => {
         try {
           const body = request.validatedBody as Record<string, unknown>;
-
-          if (
-            body?.operation !== undefined &&
-            body.operation !== defaultOperation
-          ) {
-            throw new ApiError(
-              400,
-              'invalid_operation',
-              'The AI operation must match the requested route.'
-            );
-          }
+          validateOperation(body, defaultOperation);
 
           const userId = request.auth?.userId || 'unknown';
           const bypass = isBypassUser(userId);
 
-          let useTopup = false;
-          let subscription: SubscriptionSnapshot | null = null;
-          let topupCredits = 0;
-
-          if (!bypass) {
-            const limits = await checkRateLimits(
-              userId,
-              'free',
-              ledger,
-              billingRepository
-            );
-            useTopup = limits.useTopup;
-            subscription = limits.subscription;
-            topupCredits = limits.topupCredits;
-          }
-
+          const { useTopup, subscription, topupCredits } =
+            await resolveRateLimits(userId, bypass);
           const result = await aiService.complete(defaultOperation, body);
 
           if (useTopup && !bypass) {
@@ -184,24 +200,7 @@ export const registerAIRoutes = (
               topupCredits
             );
           }
-
-          if (!bypass) {
-            logAiUsage(
-              ledger,
-              userId,
-              {
-                error: result.error as boolean | undefined,
-                provider: result.provider as string | undefined,
-                durationMs: result.durationMs as number | undefined,
-                text: result.text as string | undefined,
-              },
-              {
-                modeId: body.modeId as string | undefined,
-              },
-              defaultOperation
-            );
-          }
-
+          logUsage(userId, bypass, result, body, defaultOperation);
           response.json(result);
         } catch (error) {
           next(error);

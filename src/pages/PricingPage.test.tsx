@@ -48,7 +48,8 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByRole('link', { name: 'Start free' })).toHaveAttribute(
+    const startFreeLinks = screen.getAllByRole('link', { name: 'Start free' });
+    expect(startFreeLinks[startFreeLinks.length - 1]).toHaveAttribute(
       'href',
       '/start'
     );

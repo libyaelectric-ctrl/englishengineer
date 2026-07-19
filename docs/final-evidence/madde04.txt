@@ -1,0 +1,10 @@
+MADDE 4 — Dahili Süreç Dosyalarının Ayıklanması
+=================================================
+Taşınan dosya:
+- Faz7.txt → docs/internal-process/Faz7.txt
+
+Not: Faz3.txt, Faz4.txt, Faz5.txt, Faz6.txt, Usta-Faz2.txt, Usta.md
+kök dizinde mevcut değildi (önceki adımlarda zaten taşınmış/silinmişti).
+
+Doğrulama: docs/internal-process/ içinde Faz7.txt mevcut,
+           kök dizinde artık yok.

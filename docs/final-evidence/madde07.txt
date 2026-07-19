@@ -1,0 +1,22 @@
+MADDE 7 — Test Coverage Ölçümü ve Raporlanması
+===============================================
+Ölçüm tarihi: 2026-07-19
+
+Coverage Sonuçları (v8 provider):
+- Statements: 34.4%
+- Branches:   27.62%
+- Functions:  31.64%
+- Lines:      35.27%
+
+Threshold Durumu (vitest.config.ts):
+- Global:     branches 25%, functions 28%, lines 32%, statements 32% → TUTUYOR
+- billing/**: branches 20%, functions 15%, lines 20%, statements 20%
+  → branches %19.73 ile %20 threshold'unun altında (20% threshold'a çok yakın)
+
+En düşük coverage'lı alanlar:
+1. src/pages/ — sayfa bileşenlerinin çoğu mock ile test ediliyor
+2. src/features/offline/ — offline sync düşük coverage
+3. src/features/listening/ — bazı modüller test edilmemiş
+
+Not: %75 threshold'u vitest.config.ts'de tanımlı değil. Mevcut global
+threshold %25-32 aralığındadır. Coverage iyileştirmesi bir sonraki tur için.

@@ -219,6 +219,104 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   app.use(createI18nMiddleware());
 };
 
+const createAllRateLimiters = (
+  config: BackendConfig,
+  rateLimitStore: UpstashRateLimitStore | null
+) => ({
+  ai: createRateLimiter({
+    windowMs: config.ai.rateLimitWindowMs,
+    max: config.ai.rateLimitMax,
+    scope: 'ai',
+    store: rateLimitStore,
+  }),
+  billing: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'billing',
+    store: rateLimitStore,
+  }),
+  vocabulary: createRateLimiter({
+    windowMs: config.vocabulary.rateLimitWindowMs,
+    max: config.vocabulary.rateLimitMax,
+    scope: 'vocabulary',
+    store: rateLimitStore,
+  }),
+  workspace: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max,
+    scope: 'workspace',
+    store: rateLimitStore,
+  }),
+  global: createRateLimiter({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.max * 2,
+    scope: 'global',
+    store: rateLimitStore,
+  }),
+});
+
+const resolveWorkspaceRepo = (
+  workspaceRepository: WorkspaceRepository | null | undefined,
+  config: BackendConfig
+): WorkspaceRepository | null => {
+  if (workspaceRepository) return workspaceRepository;
+  if (!config.workspace?.configured) return null;
+  try {
+    return createWorkspaceRepository(
+      config as unknown as Record<string, unknown>
+    );
+  } catch (err: unknown) {
+    logger.warn('Failed to create workspace repository', {
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return null;
+  }
+};
+
+const parseAuditLogsFilters = (req: Request) => {
+  const q = (req.validatedQuery ?? {}) as Record<string, unknown>;
+  return {
+    userId: typeof q.userId === 'string' ? q.userId : undefined,
+    action: typeof q.action === 'string' ? q.action : undefined,
+    since: typeof q.since === 'string' ? q.since : undefined,
+    limit: typeof q.limit === 'number' ? q.limit : undefined,
+  };
+};
+
+const applyI18nTranslation = (
+  request: Request,
+  mapped: ReturnType<typeof toErrorResponse>
+) => {
+  if (!request.i18n || !mapped.body?.error?.code) return;
+  const translated = request.i18n.t(mapped.body.error.code);
+  if (translated !== mapped.body.error.code)
+    mapped.body.error.message = translated;
+};
+
+const handleApiError =
+  (config: BackendConfig) =>
+  (
+    error: unknown,
+    request: Request,
+    response: Response,
+    _next: NextFunction
+  ) => {
+    logger.error(
+      'Unhandled API error',
+      { path: request.path },
+      error instanceof Error ? error : undefined
+    );
+    if (config.sentry?.dsn)
+      Sentry.captureException(
+        error instanceof Error ? error : new Error(String(error))
+      );
+    const mapped = toErrorResponse(
+      error instanceof Error ? error : new Error(String(error))
+    );
+    applyI18nTranslation(request, mapped);
+    response.status(mapped.status).json(mapped.body);
+  };
+
 const registerRoutes = (
   app: Express,
   config: BackendConfig,
@@ -269,30 +367,7 @@ const registerRoutes = (
     fetchImpl
   );
   const { requireBackendAuth, optionalBackendAuth } = backendAuth;
-  const aiRateLimiter = createRateLimiter({
-    windowMs: config.ai.rateLimitWindowMs,
-    max: config.ai.rateLimitMax,
-    scope: 'ai',
-    store: rateLimitStore,
-  });
-  const billingRateLimiter = createRateLimiter({
-    windowMs: config.rateLimit.windowMs,
-    max: config.rateLimit.max,
-    scope: 'billing',
-    store: rateLimitStore,
-  });
-  const vocabularyRateLimiter = createRateLimiter({
-    windowMs: config.vocabulary.rateLimitWindowMs,
-    max: config.vocabulary.rateLimitMax,
-    scope: 'vocabulary',
-    store: rateLimitStore,
-  });
-  const workspaceRateLimiter = createRateLimiter({
-    windowMs: config.rateLimit.windowMs,
-    max: config.rateLimit.max,
-    scope: 'workspace',
-    store: rateLimitStore,
-  });
+  const limiters = createAllRateLimiters(config, rateLimitStore);
 
   registerAIRoutes(
     app,
@@ -303,7 +378,7 @@ const registerRoutes = (
       ) => Promise<Record<string, unknown>>;
     },
     requireBackendAuth,
-    aiRateLimiter,
+    limiters.ai,
     billingRepository ??
       createSubscriptionRepository(
         {
@@ -334,7 +409,7 @@ const registerRoutes = (
       fetchImpl,
       vocabCache as VocabularyCache
     ),
-    vocabularyRateLimiter
+    limiters.vocabulary
   );
 
   registerBillingRoutes(
@@ -355,24 +430,15 @@ const registerRoutes = (
         ),
     }),
     requireBackendAuth,
-    billingRateLimiter,
+    limiters.billing,
     optionalBackendAuth
   );
 
-  let resolvedWorkspaceRepository: WorkspaceRepository | null =
-    workspaceRepository ?? null;
-  if (!resolvedWorkspaceRepository && config.workspace?.configured) {
-    try {
-      resolvedWorkspaceRepository = createWorkspaceRepository(
-        config as unknown as Record<string, unknown>
-      );
-    } catch (err: unknown) {
-      logger.warn('Failed to create workspace repository', {
-        error: err instanceof Error ? err.message : String(err),
-      });
-    }
-  }
-  registerWorkspaceRoutes(app, requireBackendAuth, workspaceRateLimiter, {
+  const resolvedWorkspaceRepository = resolveWorkspaceRepo(
+    workspaceRepository,
+    config
+  );
+  registerWorkspaceRoutes(app, requireBackendAuth, limiters.workspace, {
     repository: resolvedWorkspaceRepository,
   });
 
@@ -394,13 +460,7 @@ const registerRoutes = (
         req.auth?.source === 'internal-secret';
       if (!isAdmin)
         throw new ApiError(403, 'admin_required', 'Admin access required.');
-      const q = (req.validatedQuery ?? {}) as Record<string, unknown>;
-      const filters = {
-        userId: typeof q.userId === 'string' ? q.userId : undefined,
-        action: typeof q.action === 'string' ? q.action : undefined,
-        since: typeof q.since === 'string' ? q.since : undefined,
-        limit: typeof q.limit === 'number' ? q.limit : undefined,
-      };
+      const filters = parseAuditLogsFilters(req);
       res.json({ success: true, data: await getAuditLogs(filters) });
     } catch (error) {
       next(error);
@@ -414,14 +474,8 @@ const registerRoutes = (
     auditLogsHandler
   );
 
-  const globalRateLimiter = createRateLimiter({
-    windowMs: config.rateLimit.windowMs,
-    max: config.rateLimit.max * 2,
-    scope: 'global',
-    store: rateLimitStore,
-  });
-  app.use('/api', globalRateLimiter);
-  registerAdminRoutes(app, requireBackendAuth, globalRateLimiter);
+  app.use('/api', limiters.global);
+  registerAdminRoutes(app, requireBackendAuth, limiters.global);
 };
 
 export const createApp = ({
@@ -472,33 +526,7 @@ export const createApp = ({
   app.use((_request: Request, _response: Response, next: NextFunction) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });
-  app.use(
-    (
-      error: unknown,
-      request: Request,
-      response: Response,
-      _next: NextFunction
-    ) => {
-      logger.error(
-        'Unhandled API error',
-        { path: request.path },
-        error instanceof Error ? error : undefined
-      );
-      if (config.sentry?.dsn)
-        Sentry.captureException(
-          error instanceof Error ? error : new Error(String(error))
-        );
-      const mapped = toErrorResponse(
-        error instanceof Error ? error : new Error(String(error))
-      );
-      if (request.i18n && mapped.body?.error?.code) {
-        const translated = request.i18n.t(mapped.body.error.code);
-        if (translated !== mapped.body.error.code)
-          mapped.body.error.message = translated;
-      }
-      response.status(mapped.status).json(mapped.body);
-    }
-  );
+  app.use(handleApiError(config));
 
   return app;
 };
