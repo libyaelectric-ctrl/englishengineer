@@ -4,7 +4,10 @@ import { ErrorCode } from './error-codes';
 
 describe('AppError', () => {
   it('creates error with required params', () => {
-    const error = new AppError({ code: ErrorCode.UNKNOWN, message: 'Test error' });
+    const error = new AppError({
+      code: ErrorCode.UNKNOWN,
+      message: 'Test error',
+    });
     expect(error).toBeInstanceOf(Error);
     expect(error).toBeInstanceOf(AppError);
     expect(error.code).toBe(ErrorCode.UNKNOWN);
@@ -46,7 +49,11 @@ describe('AppError', () => {
 
   it('handles cause in toJSON', () => {
     const cause = new Error('underlying');
-    const error = new AppError({ code: ErrorCode.AI, message: 'AI failed', cause });
+    const error = new AppError({
+      code: ErrorCode.AI,
+      message: 'AI failed',
+      cause,
+    });
     const json = error.toJSON();
     expect(json.cause).toBe('underlying');
   });

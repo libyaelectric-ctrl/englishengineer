@@ -1,6 +1,0 @@
-"gündüz modu çok düz ve her şey birbirine giriyor. Lütfen şu derinlik ayarlarını uygula:
-
-Ana arka planı (body background) saf beyaz yerine #F8F9FA yap.
-İçerik kartlarının (.card, .vocabulary-box) arka planını saf beyaz (#FFFFFF) tut ama altına box-shadow: 0 4px 12px rgba(0,0,0,0.05); gibi çok hafif bir gölge ekle.
-Kartların kenarlarına çok ince bir border ekle: border: 1px solid #E9ECEF;.
-Yan menü (Sidebar) ile ana içerik arasına net bir dikey çizgi veya hafif bir renk farkı koy ki alanlar birbirinden ayrılsın."

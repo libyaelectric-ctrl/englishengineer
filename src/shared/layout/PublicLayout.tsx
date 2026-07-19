@@ -1,7 +1,8 @@
 import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useState } from 'react';
 import { cn } from '@/shared/utils/cn';
+import { useAppStore } from '@/store/app.store';
 
 const links = [
   { label: 'Features', href: '/#features' },
@@ -13,6 +14,8 @@ export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isLanding = location.pathname === '/';
+  const theme = useAppStore((s) => s.theme);
+  const setTheme = useAppStore((s) => s.setTheme);
 
   return (
     <div className="public-shell min-h-screen bg-transparent text-foreground">
@@ -76,6 +79,22 @@ export const PublicLayout = () => {
               )}
             </nav>
             <div className="hidden items-center gap-2 md:flex">
+              <button
+                type="button"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
+                aria-label={
+                  theme === 'dark'
+                    ? 'Switch to light mode'
+                    : 'Switch to dark mode'
+                }
+              >
+                {theme === 'dark' ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+              </button>
               <Link
                 to="/login"
                 className="inline-flex min-h-10 items-center rounded-[10px] px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"

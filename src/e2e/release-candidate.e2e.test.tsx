@@ -14,9 +14,7 @@ import { ReadingService } from '@/features/reading';
 import { WritingService } from '@/features/writing';
 import { ListeningService } from '@/features/listening';
 import { SpeakingService } from '@/features/speaking';
-import {
-  VocabularyService,
-} from '@/features/vocabulary';
+import { VocabularyService } from '@/features/vocabulary';
 import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
 import { AssessmentService } from '@/features/assessment';
 import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';

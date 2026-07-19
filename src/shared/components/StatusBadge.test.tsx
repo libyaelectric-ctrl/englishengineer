@@ -15,7 +15,9 @@ describe('StatusBadge', () => {
   });
 
   it('renders with success tone', () => {
-    const { container } = render(<StatusBadge label="Success" tone="success" />);
+    const { container } = render(
+      <StatusBadge label="Success" tone="success" />
+    );
     const badge = container.querySelector('span');
     expect(badge?.className).toContain('text-success');
   });
@@ -27,7 +29,9 @@ describe('StatusBadge', () => {
   });
 
   it('applies custom className', () => {
-    const { container } = render(<StatusBadge label="Test" className="custom-class" />);
+    const { container } = render(
+      <StatusBadge label="Test" className="custom-class" />
+    );
     const badge = container.querySelector('span');
     expect(badge?.className).toContain('custom-class');
   });

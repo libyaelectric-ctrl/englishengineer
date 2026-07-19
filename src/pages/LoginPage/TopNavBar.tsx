@@ -20,16 +20,24 @@ export const TopNavBar = () => {
           alt="EngVox"
           className="h-8 w-8 rounded-[4px] border border-border-soft"
         />
-        <span className="text-sm font-bold tracking-tight text-foreground">EngVox</span>
+        <span className="text-sm font-bold tracking-tight text-foreground">
+          EngVox
+        </span>
       </Link>
       <div className="flex items-center gap-3">
         <button
           type="button"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={
+            theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+          }
           className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
         >
-          {theme === 'dark' ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
+          {theme === 'dark' ? (
+            <Moon className="h-4.5 w-4.5" />
+          ) : (
+            <Sun className="h-4.5 w-4.5" />
+          )}
         </button>
         <select
           value={language}

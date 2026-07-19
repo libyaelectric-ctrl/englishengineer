@@ -2,7 +2,7 @@
 
 :root {
   /* Precision Engineering OS Light Theme — gnndz.txt kurallari */
-  --background: #F8F9FA;
+  --background: #f8f9fa;
   --foreground: #1c1d22;
 
   --color-primary: #0047bb;
@@ -10,10 +10,10 @@
   --color-primary-foreground: #ffffff;
 
   --color-surface: #ffffff;
-  --color-surface-hover: #F1F3F5;
+  --color-surface-hover: #f1f3f5;
   --color-soft: rgba(0, 71, 187, 0.04);
-  --color-border-soft: #E9ECEF;
-  --color-border-hover: #DEE2E6;
+  --color-border-soft: #e9ecef;
+  --color-border-hover: #dee2e6;
   --color-muted-copy: #5b5d72;
   --color-focus: rgba(0, 71, 187, 0.1);
   --color-success: #16a34a;
@@ -21,13 +21,13 @@
   --color-error: #dc2626;
 
   /* Sidebar — net ayrim icin biraz daha acik */
-  --color-sidebar-bg: #FFFFFF;
-  --color-sidebar-border: #E9ECEF;
-  --color-sidebar-inner-border: #F1F3F5;
+  --color-sidebar-bg: #ffffff;
+  --color-sidebar-border: #e9ecef;
+  --color-sidebar-inner-border: #f1f3f5;
 
-  --color-engineer-950: #F1F3F5;
-  --color-engineer-900: #E9ECEF;
-  --color-engineer-800: #DEE2E6;
+  --color-engineer-950: #f1f3f5;
+  --color-engineer-900: #e9ecef;
+  --color-engineer-800: #dee2e6;
   --color-engineer-700: #8f93a9;
   --color-engineer-cyan: #0047bb;
 
@@ -42,33 +42,36 @@
 /* Dark Mode - gceci.txt kurallarina gore: body #0B0E14, kartlar #1C1F26, metin #E2E4E7/#949BA4 */
 .dark,
 [data-theme='dark'] {
-  --background: #0B0E14;
-  --foreground: #E2E4E7;
-  --surface: #1C1F26;
-  --card-bg: #1C1F26;
+  --background: #0b0e14;
+  --foreground: #e2e4e7;
+  --surface: #1c1f26;
+  --card-bg: #1c1f26;
 
   --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
-  --color-primary-foreground: #0B0E14;
+  --color-primary-foreground: #0b0e14;
 
-  --color-surface: #1C1F26;
+  --color-surface: #1c1f26;
   --color-surface-hover: #252830;
   --color-soft: rgba(59, 130, 246, 0.08);
   --color-border-soft: #2a2d35;
   --color-border-hover: #3a3d45;
-  --color-muted-copy: #949BA4;
+  --color-muted-copy: #949ba4;
   --color-focus: rgba(59, 130, 246, 0.15);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 
-  --color-engineer-950: #07090D;
-  --color-engineer-900: #0B0E14;
-  --color-engineer-800: #1C1F26;
+  --color-engineer-950: #07090d;
+  --color-engineer-900: #0b0e14;
+  --color-engineer-800: #1c1f26;
   --color-engineer-700: #2a2d35;
   --color-engineer-cyan: #3b82f6;
 
-  --surface: #1C1F26;
+  --surface: #1c1f26;
+  --color-sidebar-bg: #1c1f26;
+  --color-sidebar-border: #2a2d35;
+  --color-sidebar-inner-border: #252830;
 }
 
 @theme {
@@ -244,7 +247,9 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-card) !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .premium-panel {
@@ -259,7 +264,9 @@
     background: var(--color-surface);
     border: 1px solid var(--color-border-soft);
     border-radius: var(--radius-card) !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .premium-surface {
@@ -359,9 +366,11 @@
     background: #ffffff;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid #E9ECEF;
+    border: 1px solid #e9ecef;
     border-radius: var(--radius-card);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 4px 12px rgba(0, 0, 0, 0.05);
   }
 
   .dark .public-card {
@@ -430,11 +439,44 @@
 
 /* === DARK MODE COLOR OVERRIDES — gceci.txt === */
 .dark {
-  --color-card-bg: #1C1F26;
-  --color-input-bg: #1C1F26;
+  --color-card-bg: #1c1f26;
+  --color-input-bg: #1c1f26;
   --color-badge-bg: rgba(59, 130, 246, 0.12);
-  --color-text-inverse: #0B0E14;
+  --color-text-inverse: #0b0e14;
   --color-shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* === DARK MODE — Hardcoded white/light background neutralization === */
+/* Converts components using hardcoded Tailwind/hex whites into surface color */
+.dark .bg-white {
+  background-color: var(--color-surface) !important;
+}
+.dark .bg-\[\#faf8ff\] {
+  background-color: var(--color-surface-hover) !important;
+}
+.dark .bg-\[\#f3f3fd\] {
+  background-color: var(--color-surface-hover) !important;
+}
+.dark .border-\[\#d9d9e3\] {
+  border-color: var(--color-border-soft) !important;
+}
+.dark .border-\[\#0047bb\]\/25 {
+  border-color: rgba(59, 130, 246, 0.25) !important;
+}
+.dark .text-\[\#0047bb\] {
+  color: var(--color-primary) !important;
+}
+.dark .bg-\[\#0047bb\]\/5 {
+  background-color: rgba(59, 130, 246, 0.08) !important;
+}
+.dark .bg-\[\#0047bb\]\/10 {
+  background-color: rgba(59, 130, 246, 0.12) !important;
+}
+.dark .bg-\[\#0047bb\]\/15 {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+}
+.dark .stroke-\[\#d9d9e3\] {
+  stroke: var(--color-border-soft) !important;
 }
 
 /* === MICRO-INTERACTIONS === */
