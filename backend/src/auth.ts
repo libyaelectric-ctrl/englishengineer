@@ -237,7 +237,7 @@ export const createBackendAuth = (
     try {
       request.auth = await authenticate(request);
     } catch {
-      request.auth = null as any;
+      request.auth = undefined;
     }
     next();
   };

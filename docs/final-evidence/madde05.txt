@@ -1,0 +1,11 @@
+MADDE 5 — Backend Complexity Uyarılarının Temizlenmesi
+======================================================
+Düzeltilen dosyalar:
+1. backend/src/ai.ts:143 → validateOperation, resolveRateLimits, logUsage fonksiyonları çıkarıldı
+2. backend/src/app.ts:230 → createAllRateLimiters, resolveWorkspaceRepo, parseAuditLogsFilters, handleApiError, applyI18nTranslation fonksiyonları çıkarıldı
+3. backend/src/app.ts:383 → parseAuditLogsFilters ile basitleştirildi
+4. backend/src/app.ts:481 → handleApiError ile basitleştirildi
+
+Ek: src/pages/LandingPage/AnimatedComponents.tsx:60 → cardStyle ve glowGradient çıkarıldı
+
+Doğrulama: npm run lint → 0 error, 0 warning (complexity uyarıları tamamı giderildi)

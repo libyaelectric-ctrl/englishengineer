@@ -1,0 +1,19 @@
+MADDE 3 — Repo Hijyeni
+=======================
+Kaldırılan dosyalar (git rm ile):
+- VC Checklist.docx
+- pricing_matrix.xlsx
+- gece.png
+- gceci.txt
+- ~$konsol.txt
+
+.gitignore'a eklenenler:
+- *.docx
+- *.xlsx
+- ~$*
+- gece.png
+
+Not: gecce.txt zaten mevcut değildi.
+.gitignore'a *.zip zaten mevcuttu.
+
+Doğrulama: kök dizinde bu dosyalar artık yok.

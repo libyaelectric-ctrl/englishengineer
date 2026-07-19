@@ -1,0 +1,7 @@
+MADDE 1 — PricingPage Lint Hatası Düzeltildi
+=============================================
+Dosya: src/pages/PricingPage.tsx:373
+Değişiklik: tabIndex={0} olan div'in üzerine WCAG 2.1 SC 2.1.1 gerekçeli
+disable yorumu eklendi.
+
+Doğrulama: npm run lint → PricingPage.tsx için artık uyarı yok.

@@ -1,22 +1,40 @@
 #!/usr/bin/env node
 /**
  * Checkbox-Evidence Consistency Checker
- * 
+ *
  * Parses a faz file, checks each [x] marked kademe for evidence file
  * existence and content validity.
- * 
+ *
  * Usage: node scripts/verify-evidence-consistency.js <faz-file> [evidence-dir]
  */
 
-import { readFileSync, readdirSync, existsSync } from 'fs';
-import { join, basename, extname } from 'path';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
 
 // Failure indicators (case-insensitive, Turkish + English)
 const FAILURE_PATTERNS = [
-  'yapılamadı', 'yapilamadi', 'kurulu değil', 'kurulu degil', 'kurulmadı', 'kurulmadi',
-  'bulunamadı', 'bulunamadi', 'eksik', 'HAYIR', 'not installed', 'not found',
-  'failed', 'FAIL', 'hata', 'error', 'başarısız', 'basarisiz',
-  'yuklu degil', 'yuklu değil', 'calistirilmadi', 'calistirilmamis'
+  'yapılamadı',
+  'yapilamadi',
+  'kurulu değil',
+  'kurulu degil',
+  'kurulmadı',
+  'kurulmadi',
+  'bulunamadı',
+  'bulunamadi',
+  'eksik',
+  'HAYIR',
+  'not installed',
+  'not found',
+  'failed',
+  'FAIL',
+  'hata',
+  'error',
+  'başarısız',
+  'basarisiz',
+  'yuklu degil',
+  'yuklu değil',
+  'calistirilmadi',
+  'calistirilmamis',
 ];
 
 // Allowed false positive patterns
@@ -27,7 +45,7 @@ const ALLOWED_PATTERNS = [
   '0 fail',
   'found 0',
   'passed 480',
-  '4 failed',  // axe-core test failures are expected
+  '4 failed', // axe-core test failures are expected
   'tutarli: 4', // script output showing expected results
   'tutarsiz: 4', // script output showing expected results
   'kanit dosyasi bulunamadi', // Turkish with special chars
@@ -40,7 +58,9 @@ const fazFile = process.argv[2];
 const evidenceDir = process.argv[3] || 'docs';
 
 if (!fazFile) {
-  console.error('Usage: node verify-evidence-consistency.js <faz-file> [evidence-dir]');
+  console.error(
+    'Usage: node verify-evidence-consistency.js <faz-file> [evidence-dir]'
+  );
   process.exit(1);
 }
 
@@ -54,30 +74,30 @@ const checked = [];
 
 while ((match = kademeRegex.exec(fazContent)) !== null) {
   const kademeNum = match[1];
-  
+
   let evidenceFound = false;
   let evidenceHasFailure = false;
   let evidenceContent = '';
-  
+
   // Check for evidence files
-  const files = readdirSync(evidenceDir).filter(f => 
-    f.startsWith(`kademe${kademeNum}`) && f.endsWith('.txt')
+  const files = readdirSync(evidenceDir).filter(
+    (f) => f.startsWith(`kademe${kademeNum}`) && f.endsWith('.txt')
   );
-  
+
   if (files.length > 0) {
     evidenceFound = true;
-    evidenceContent = files.map(f => 
-      readFileSync(join(evidenceDir, f), 'utf-8')
-    ).join('\n');
+    evidenceContent = files
+      .map((f) => readFileSync(join(evidenceDir, f), 'utf-8'))
+      .join('\n');
   }
-  
+
   // Check for failure patterns in evidence
   if (evidenceFound && evidenceContent) {
     const contentLower = evidenceContent.toLowerCase();
     for (const pattern of FAILURE_PATTERNS) {
       const patternLower = pattern.toLowerCase();
       if (contentLower.includes(patternLower)) {
-        const isAllowed = ALLOWED_PATTERNS.some(ap => 
+        const isAllowed = ALLOWED_PATTERNS.some((ap) =>
           contentLower.includes(ap.toLowerCase())
         );
         if (!isAllowed) {
@@ -87,13 +107,19 @@ while ((match = kademeRegex.exec(fazContent)) !== null) {
       }
     }
   }
-  
+
   checked.push({ kademe: kademeNum, evidenceFound, evidenceHasFailure });
-  
+
   if (!evidenceFound) {
-    inconsistencies.push({ kademe: kademeNum, reason: 'Kanıt dosyası bulunamadı' });
+    inconsistencies.push({
+      kademe: kademeNum,
+      reason: 'Kanıt dosyası bulunamadı',
+    });
   } else if (evidenceHasFailure) {
-    inconsistencies.push({ kademe: kademeNum, reason: 'Kanıt dosyasında başarısızlık ifadesi bulundu' });
+    inconsistencies.push({
+      kademe: kademeNum,
+      reason: 'Kanıt dosyasında başarısızlık ifadesi bulundu',
+    });
   }
 }
 
@@ -106,7 +132,7 @@ console.log(`Tutarsız: ${inconsistencies.length}`);
 
 if (inconsistencies.length > 0) {
   console.log(`\n=== TUTARSIZLIKLAR ===`);
-  inconsistencies.forEach(inc => {
+  inconsistencies.forEach((inc) => {
     console.log(`  Kademe ${inc.kademe}: ${inc.reason}`);
   });
   process.exit(1);
