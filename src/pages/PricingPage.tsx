@@ -341,7 +341,7 @@ const PricingPage = () => {
       <section className="py-12 bg-white border-t border-b border-[#d9d9e3]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-lg font-bold text-foreground">Compare plans</h2>
-          <div className="mt-4 overflow-x-auto rounded-[4px] border border-[#d9d9e3] shadow-sm">
+          <div className="mt-4 overflow-x-auto rounded-[4px] border border-[#d9d9e3] shadow-sm" tabIndex={0} role="region" aria-label="Plan comparison table">
             <table className="w-full min-w-[600px] border-collapse bg-white text-left text-xs">
               <thead className="bg-[#f3f3fd]">
                 <tr>

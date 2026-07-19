@@ -1,0 +1,22 @@
+﻿=== Kademe 79: Coverage Ashot 2 (5 Dosya) ===
+
+Yeni testler:
+  - src/core/errors/app-error.test.ts (4 test)
+  - src/shared/lib/feature-flags.test.ts (6 test)
+  - src/core/events/event-bus.test.ts (4 test)
+
+Test sonuclari:
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Duration [22m 2.83s[2m (transform 118ms, setup 714ms, import 62ms, tests 19ms, environment 2.93s)[22m
+
+
+
+Tum testler:
+
+[2m Test Files [22m [1m[32m82 passed[39m[22m[90m (82)[39m
+[2m      Tests [22m [1m[32m494 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (495)[39m
+[2m   Duration [22m 52.19s[2m (transform 2.62s, setup 13.91s, import 7.46s, tests 6.97s, environment 62.85s)[22m
+
+

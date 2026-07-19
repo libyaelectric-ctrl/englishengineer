@@ -1,0 +1,10 @@
+﻿=== Kademe 81: Deploy Senkron Kontrol ===
+
+1. Local HEAD:
+   350538b1a0199099c4ac6ad7ec2881651b5d3fb3
+
+2. Vercel deploy hash:
+   350538b1a0199099c4ac6ad7ec2881651b5d3fb3
+
+3. Karsilastirma:
+   ESLESME: Deploy guncel
