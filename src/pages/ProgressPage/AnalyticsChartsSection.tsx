@@ -31,7 +31,7 @@ export const AnalyticsChartsSection = ({
       subtitle="Derived from existing learning, vocabulary, achievement, and AI Coach state"
       icon={BarChart3}
       headerActions={
-        <div className="flex flex-wrap gap-1 rounded-[4px] border border-[#d9d9e3] bg-white p-1 shadow-sm">
+        <div className="flex flex-wrap gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
           {chartTabs.map((tab) => (
             <button
               key={tab.id}
@@ -76,7 +76,7 @@ export const AnalyticsChartsSection = ({
               {analytics.skillRadar.map((skill) => (
                 <div
                   key={skill.module}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+                  className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-bold text-foreground">

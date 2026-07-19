@@ -28,7 +28,7 @@ export const HeroBanner = ({
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="relative overflow-hidden rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+    <div className="relative overflow-hidden rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
       <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-[#0047bb]/5 rounded-full blur-3xl" />
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
@@ -72,7 +72,7 @@ export const HeroBanner = ({
             >
               {rank.icon} {rank.label}
             </span>
-            <span className="inline-flex items-center rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-xs font-bold text-foreground">
+            <span className="inline-flex items-center rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-xs font-bold text-foreground">
               CEFR {totalCEFR}
             </span>
           </div>
@@ -88,7 +88,7 @@ export const HeroBanner = ({
             <span className="text-[10px] font-bold text-muted-copy">
               {totalCEFR}
             </span>
-            <div className="flex-1 h-1.5 rounded-[4px] bg-[#d9d9e3] overflow-hidden">
+            <div className="flex-1 h-1.5 rounded-[4px] bg-border-soft overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{

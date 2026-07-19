@@ -27,12 +27,12 @@ export const SkillCard = ({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.4 }}
-      className="group rounded-[4px] border border-[#d9d9e3] bg-white p-4 hover:border-[#0047bb]/30 transition-all shadow-sm"
+      className="group rounded-[4px] border border-border-soft bg-surface p-4 hover:border-[#0047bb]/30 transition-all shadow-sm"
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
           <div
-            className={`flex h-9 w-9 items-center justify-center rounded-[4px] border border-[#d9d9e3] ${skill.bgLight} ${skill.textDark}`}
+            className={`flex h-9 w-9 items-center justify-center rounded-[4px] border border-border-soft ${skill.bgLight} ${skill.textDark}`}
           >
             <Icon className="h-4 w-4" />
           </div>
@@ -49,7 +49,7 @@ export const SkillCard = ({
           </div>
         </div>
       </div>
-      <div className="relative h-2 w-full overflow-hidden rounded-[4px] bg-[#d9d9e3]">
+      <div className="relative h-2 w-full overflow-hidden rounded-[4px] bg-border-soft">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${percentage}%` }}
@@ -66,7 +66,7 @@ export const SkillCard = ({
           <div
             key={level}
             className={`h-1 flex-1 rounded-[4px] transition-colors duration-300 ${
-              i <= cefrIdx ? 'bg-[#0047bb]' : 'bg-[#d9d9e3]'
+              i <= cefrIdx ? 'bg-[#0047bb]' : 'bg-border-soft'
             }`}
             title={level}
           />

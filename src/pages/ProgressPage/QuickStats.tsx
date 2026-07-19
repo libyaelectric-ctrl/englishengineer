@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Target, TrendingUp, Zap, Clock, Layers } from 'lucide-react';
+import { Target, TrendingUp, Zap, Clock, Layers, BookOpen, AlertTriangle } from 'lucide-react';
 
 export const QuickStats = ({
   totalElo,
@@ -7,12 +7,16 @@ export const QuickStats = ({
   peakElo,
   sessionsCount,
   knowledgePoolSize,
+  grammarMastered,
+  grammarErrors,
 }: {
   totalElo: number;
   highestSkillLabel: string;
   peakElo: number;
   sessionsCount: number;
   knowledgePoolSize: number;
+  grammarMastered?: number;
+  grammarErrors?: number;
 }) => {
   const stats = [
     {
@@ -40,6 +44,22 @@ export const QuickStats = ({
       value: knowledgePoolSize,
       color: 'text-[#0047bb]',
     },
+    ...(grammarMastered !== undefined
+      ? [{
+          icon: BookOpen,
+          label: 'Grammar Mastered',
+          value: grammarMastered,
+          color: 'text-emerald-600',
+        }]
+      : []),
+    ...(grammarErrors !== undefined && grammarErrors > 0
+      ? [{
+          icon: AlertTriangle,
+          label: 'Grammar Errors',
+          value: grammarErrors,
+          color: 'text-amber-600',
+        }]
+      : []),
   ];
 
   return (
@@ -50,7 +70,7 @@ export const QuickStats = ({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 + i * 0.08 }}
-          className="rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm"
+          className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm"
         >
           <div className="flex items-center gap-1.5 mb-1">
             <stat.icon className="h-3 w-3 text-muted-copy" />
