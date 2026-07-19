@@ -1,0 +1,24 @@
+﻿=== Kademe 87: Frontend Component Testleri ===
+
+Yeni component testleri:
+  - Button.test.tsx (5 test)
+  - StatusBadge.test.tsx (5 test)
+  - MetricCard.test.tsx (4 test)
+  - LoadingState.test.tsx (3 test)
+  - EmptyState.test.tsx (2 test)
+
+Test sonuclari:
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m   Duration [22m 4.79s[2m (transform 150ms, setup 1.14s, import 290ms, tests 302ms, environment 5.10s)[22m
+
+
+
+Tum testler:
+
+[2m Test Files [22m [1m[32m96 passed[39m[22m[90m (96)[39m
+[2m      Tests [22m [1m[32m554 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (555)[39m
+[2m   Duration [22m 68.15s[2m (transform 2.91s, setup 18.36s, import 8.47s, tests 7.41s, environment 85.21s)[22m
+
+

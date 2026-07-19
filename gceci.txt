@@ -1,0 +1,6 @@
+"gece modunda (Dark Mode) kartların içindeki beyaz arka planlar çok parlıyor. Lütfen şu düzenlemeleri yap:
+
+.card, .vocabulary-box veya benzeri tüm kutuların background-color değerini #1C1F26 yap.
+Bu kutuların içindeki tüm siyah metinleri (color: #000) #E2E4E7 veya #949BA4 (ikincil metinler için) ile değiştir.
+Ana arka planı (body veya main-container) #0B0E14 olarak ayarla.
+Sayfadaki tüm beyaz (#ffffff) alanları bu yeni koyu tonlara uyarla, hiçbir büyük beyaz blok kalmasın. Landing sayfasında da Login Sayfasındada gece modunu bu kurallara göre aktif et"
