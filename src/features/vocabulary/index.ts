@@ -82,6 +82,30 @@ export {
   ReviewReminderService,
 } from './services/vocabulary.reminder';
 
+export {
+  type VocabularyBadge,
+  type VocabularyStats,
+  type BadgeUnlockResult,
+  VocabularyBadgeService,
+} from './services/vocabulary.badges';
+
+export {
+  type SentenceExample,
+  type GenerateSentencesResult,
+  SentenceGeneratorService,
+} from './services/vocabulary.sentences';
+
+export {
+  type PronunciationResult,
+  PronunciationService,
+} from './services/vocabulary.pronunciation';
+
+export {
+  type CsvWord,
+  type ImportResult,
+  VocabularyCsvService,
+} from './services/vocabulary.csv';
+
 export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
 
 export {
