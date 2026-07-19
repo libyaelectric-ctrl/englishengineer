@@ -32,7 +32,7 @@ export function PricingSection() {
   return (
     <section
       id="pricing"
-      className="border-t border-[#d9d9e3] bg-[#faf8ff] px-6 py-12 md:px-12 md:py-20 dark:bg-[#0B0E14] dark:border-[#2a2d35]"
+      className="border-t border-[#E9ECEF] bg-[#F8F9FA] px-6 py-12 md:px-12 md:py-20 dark:bg-[#0B0E14] dark:border-[#2a2d35]"
     >
       <div className="mx-auto max-w-7xl">
         <SectionIntro
@@ -57,20 +57,20 @@ export function PricingSection() {
                       {plan.name}
                     </h3>
                     {plan.primary ? (
-                      <span className="rounded-[4px] bg-[#0047bb]/20 border border-[#0047bb] px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider animate-pulse dark:bg-[#3b82f6]/20 dark:border-[#3b82f6] dark:text-[#3b82f6]">
+                      <span className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/30 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider animate-pulse dark:bg-[#3b82f6]/20 dark:border-[#3b82f6] dark:text-[#3b82f6]">
                         Recommended
                       </span>
                     ) : null}
                   </div>
                   <div className="relative z-10 mt-5">
-                    <span className="text-4xl font-black tracking-tight dark:text-[#E2E4E7]">
+                    <span className="text-4xl font-black tracking-tight text-[#1c1d22] dark:text-[#E2E4E7]">
                       {plan.price}
                     </span>
                     <span
                       className={
                         plan.primary
                           ? 'ml-1.5 text-xs text-white/50 font-mono'
-                          : 'ml-1.5 text-xs text-black/40 font-mono dark:text-[#949BA4]'
+                          : 'ml-1.5 text-xs text-[#1c1d22]/40 font-mono dark:text-[#949BA4]'
                       }
                     >
                       {plan.period}
@@ -83,7 +83,7 @@ export function PricingSection() {
                         className={
                           plan.primary
                             ? 'flex items-center gap-2 text-xs text-white/80'
-                            : 'flex items-center gap-2 text-xs text-black/70 dark:text-[#949BA4]'
+                            : 'flex items-center gap-2 text-xs text-[#1c1d22]/70 dark:text-[#949BA4]'
                         }
                       >
                         <span
@@ -99,7 +99,7 @@ export function PricingSection() {
                   className={
                     plan.primary
                       ? 'relative z-10 w-full rounded-[4px] bg-[#0047bb] px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-[#0047bb]/90 dark:bg-[#3b82f6] dark:hover:bg-[#3b82f6]/90'
-                      : 'relative z-10 w-full rounded-[4px] border border-black/10 px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-black/60 transition hover:bg-black/[0.04] hover:text-black dark:border-[#2a2d35] dark:text-[#949BA4] dark:hover:bg-[#252830] dark:hover:text-[#E2E4E7]'
+                      : 'relative z-10 w-full rounded-[4px] border border-[#E9ECEF] px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-[#5b5d72] transition hover:bg-[#F1F3F5] hover:text-[#1c1d22] dark:border-[#2a2d35] dark:text-[#949BA4] dark:hover:bg-[#252830] dark:hover:text-[#E2E4E7]'
                   }
                 >
                   {plan.cta}

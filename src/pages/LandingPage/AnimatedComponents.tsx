@@ -102,9 +102,10 @@ export function AnimatedCard({
       onMouseMove={handleMouseMove}
       className={`group relative overflow-hidden rounded-[4px] transition-colors duration-300 ${className}`}
       style={{
-        background: dark ? '#111111' : 'rgba(255,255,255,0.6)',
-        border: dark ? '1px solid #111111' : '1px solid #d9d9e3',
-        color: dark ? '#ffffff' : '#111111',
+        background: dark ? '#111111' : '#ffffff',
+        border: dark ? '1px solid #111111' : '1px solid #E9ECEF',
+        color: dark ? '#ffffff' : '#1c1d22',
+        boxShadow: dark ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05)',
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
         transition: `opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, background-color 250ms ease, border-color 250ms ease`,
@@ -142,14 +143,14 @@ export function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-[4px] border border-[#d9d9e3] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy dark:border-[#2a2d35] dark:bg-[#1C1F26]">
+      <span className="inline-flex rounded-[4px] border border-[#E9ECEF] bg-white px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#5b5d72] shadow-[0_1px_2px_rgba(0,0,0,0.03)] dark:border-[#2a2d35] dark:bg-[#1C1F26] dark:text-[#949BA4] dark:shadow-none">
         {eyebrow}
       </span>
-      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#111] md:text-5xl dark:text-[#E2E4E7]">
+      <h2 className="mt-5 text-3xl font-bold tracking-tight text-[#1c1d22] md:text-5xl dark:text-[#E2E4E7]">
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy dark:text-[#949BA4]">
+        <p className="mt-4 max-w-xl text-sm leading-6 text-[#5b5d72] dark:text-[#949BA4]">
           {desc}
         </p>
       ) : null}
