@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppShell } from '@/shared/layout/AppShell';
 import { lazy, Suspense } from 'react';
 import { AuthGuard } from '@/features/auth/AuthGuard';
+import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { LoadingState } from '@/shared/components/LoadingState';
 import { OnboardingGate } from '@/features/profile';
 import { RouteErrorPage } from './RouteErrorPage';
@@ -95,9 +96,11 @@ export const router = createBrowserRouter([
     path: '/admin',
     element: (
       <AuthGuard>
-        <Suspense fallback={<LoadingState />}>
-          <Admin />
-        </Suspense>
+        <RequireAdminRole>
+          <Suspense fallback={<LoadingState />}>
+            <Admin />
+          </Suspense>
+        </RequireAdminRole>
       </AuthGuard>
     ),
   },
