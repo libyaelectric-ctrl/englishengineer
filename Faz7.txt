@@ -1,0 +1,112 @@
+﻿# Mimo İçin Görev Talimatları — Faz 7 (Usta-Faz7.md)
+
+Faz 6 başarılı oldu: a11y testleri 6/6 geçti, 535 test mevcut, tüm
+kanıtlar tutarlı. Şimdi kalite iyileştirmelerine ve son dokunuşlara
+odaklanıyoruz.
+
+---
+
+## 🛠️ KURAL (önceki fazlardan devam)
+
+1. Sıralı ilerleme zorunlu.
+2. Her kademenin kanıtı `docs/faz7-evidence/kademeXX.txt`'e kaydedilecek.
+3. Tutarlılık script'i bu dosya üzerinde çalıştırılacak.
+4. Tüm değişiklikler test edilmeden commit edilmeyecek.
+
+---
+
+## 📋 Faz 7 Kademeleri (86-92)
+
+### [ ] Kademe 86: Backend Test Coverage Artırımı
+* **Açıklama:** Backend'deki önemli modüllere unit test ekle.
+* **İşlem:** `backend/src/` altındaki test eksik modüllere test yaz:
+  - `config-builders.ts` - Config oluşturma fonksiyonları
+  - `billing-helpers.ts` - Billing yardımcı fonksiyonlar
+  - `vocabulary-service.ts` - Vocabulary lookup servisi
+* **ZORUNLU DOĞRULAMA:**
+  - `npm --prefix backend run test` → tüm testler geçmeli
+  - `docs/faz7-evidence/kademe86.txt`'e sonuçları kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 87: Frontend Component Testleri
+* **Açıklama:** Önemli React bileşenlerine test ekle.
+* **İşlem:** Şu bileşenlere test yaz:
+  - `Button.tsx` - Temel buton davranışları
+  - `Card.tsx` - Kart render etme
+  - `SectionCard.tsx` - Bölüm kartı
+  - `ProgressBar.tsx` - İlerleme çubuğu
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run test` → tüm testler geçmeli
+  - `docs/faz7-evidence/kademe87.txt`'e sonuçları kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 88: Performance Monitoring Ekleme
+* **Açıklama:** Production'da performans izleme için web-vitals entegrasyonu.
+* **İşlem:**
+  - `web-vitals` kütüphanesini ekle (zaten mevcut olabilir)
+  - Core Web Vitals (FCP, LCP, CLS, FID) metriklerini logla
+  - Sentry performance monitoring entegrasyonu
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run build` başarılı
+  - `npm run test` başarılı
+  - `docs/faz7-evidence/kademe88.txt`'e değişiklikleri kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 89: Error Boundary İyileştirmesi
+* **Açıklama:** Hata yakalama ve raporlama mekanizmasını güçlendir.
+* **İşlem:**
+  - Tüm sayfalarda ErrorBoundary kullanıldığından emin ol
+  - Hata mesajlarını kullanıcı dostu yap
+  - Sentry'ye hata bağlamı ekle
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run test` başarılı
+  - `docs/faz7-evidence/kademe89.txt`'e değişiklikleri kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 90: Documentation Güncellemesi
+* **Açıklama:** README ve iç dokümantasyonu güncelle.
+* **İşlem:**
+  - README.md'yi güncel tut (versiyon, özellikler, kurulum)
+  - API dokümantasyonunu güncelle
+  - CHANGELOG ekle
+* **ZORUNLU DOĞRULAMA:**
+  - `docs/faz7-evidence/kademe90.txt`'e değişiklikleri kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 91: Final Quality Gate
+* **Açıklama:** Tüm kalite kontrollerinden geç.
+* **İşlem:**
+  - `npm run typecheck` → 0 hata
+  - `npm run lint` → 0 uyarı
+  - `npm run test` → tüm testler başarılı
+  - `npm run build` → başarılı
+  - `npm audit` → 0 açık
+* **ZORUNLU DOĞRULAMA:**
+  - Tüm çıktıları `docs/faz7-evidence/kademe91.txt`'e kaydet
+* **Durum:** Beklemede.
+
+### [ ] Kademe 92: Faz 7 Kapanışı — Tam Regresyon + Deploy
+* **Açıklama:** Son regresyon ve deploy.
+* **İşlem:**
+  - Tüm kademeleri kontrol et
+  - `git commit` ve `git push`
+  - `npx vercel --prod` ile deploy et
+  - Canlı siteyi doğrula
+* **ZORUNLU DOĞRULAMA:**
+  - Deploy başarılı olmalı
+  - Canlı site 200 OK dönmeli
+  - `docs/faz7-evidence/kademe92.txt`'e sonuçları kaydet
+* **Durum:** Beklemede.
+
+---
+
+## 🎯 Beklenen Puan Aralığı (Faz 7 Sonunda)
+
+| Alan | Faz 6 Sonu | Faz 7 Hedef |
+|------|-----------|-------------|
+| Test Kapsamı | 535 test | 560+ test |
+| Backend Test | 152 pass | 165+ pass |
+| Performans | 67-72 | 70-75 |
+| Güvenlik | Yüksek | Yüksek |
+| A11y | 6/6 test | 6/6 test |
+| **Genel Kalite** | **Yüksek** | **Çok Yüksek** |
