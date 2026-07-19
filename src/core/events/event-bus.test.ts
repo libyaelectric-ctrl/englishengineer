@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { eventBus } from './event-bus';
-import type { AppEvent } from './event.types';
+import type { AppEvent, AppStartedEvent, LearningStartedEvent } from './event.types';
 
 describe('EventBus', () => {
   beforeEach(() => {
@@ -13,7 +13,8 @@ describe('EventBus', () => {
       received.push(event);
     });
 
-    eventBus.publish({ id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: {} });
+    const event: AppStartedEvent = { id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: { environment: 'test', userAgent: 'test', timestamp: Date.now() } };
+    eventBus.publish(event);
     expect(received).toHaveLength(1);
     expect(received[0].type).toBe('app.started');
   });
@@ -24,11 +25,12 @@ describe('EventBus', () => {
       received.push(event);
     });
 
-    eventBus.publish({ id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: {} });
+    const event: AppStartedEvent = { id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: { environment: 'test', userAgent: 'test', timestamp: Date.now() } };
+    eventBus.publish(event);
     expect(received).toHaveLength(1);
 
     token.unsubscribe();
-    eventBus.publish({ id: '2', type: 'app.started', timestamp: new Date().toISOString(), payload: {} });
+    eventBus.publish({ ...event, id: '2' });
     expect(received).toHaveLength(1);
   });
 
@@ -38,8 +40,10 @@ describe('EventBus', () => {
       received.push(event);
     });
 
-    eventBus.publish({ id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: {} });
-    eventBus.publish({ id: '2', type: 'user.login', timestamp: new Date().toISOString(), payload: {} });
+    const event1: AppStartedEvent = { id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: { environment: 'test', userAgent: 'test', timestamp: Date.now() } };
+    const event2: LearningStartedEvent = { id: '2', type: 'learning.started', timestamp: new Date().toISOString(), payload: { module: 'vocabulary', topicId: 'A1' } };
+    eventBus.publish(event1);
+    eventBus.publish(event2);
     expect(received).toHaveLength(2);
   });
 
@@ -49,7 +53,8 @@ describe('EventBus', () => {
     eventBus.subscribeAll((event) => received.push(event));
 
     eventBus.clearAllListeners();
-    eventBus.publish({ id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: {} });
+    const event: AppStartedEvent = { id: '1', type: 'app.started', timestamp: new Date().toISOString(), payload: { environment: 'test', userAgent: 'test', timestamp: Date.now() } };
+    eventBus.publish(event);
     expect(received).toHaveLength(0);
   });
 });
