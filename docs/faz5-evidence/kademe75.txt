@@ -1,0 +1,22 @@
+﻿=== Kademe 75: A11y Testleri ===
+
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\browser-accessibility-Acce-30d61-es-axe-accessibility-checks-mobile-safari\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4 failed
+    [chromium-desktop] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:5:3 › Accessibility audit › landing page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:16:3 › Accessibility audit › login page passes axe accessibility checks 
+    [mobile-safari] › tests\browser\accessibility.spec.ts:26:3 › Accessibility audit › pricing page passes axe accessibility checks 
+  2 passed (15.5s)

@@ -1,0 +1,65 @@
+﻿=== Kademe 71: Retroaktif Tutarlik Taramasi ===
+
+Faz 2 taramasi:
+
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Usta-Faz2.txt
+Toplam [x] işaretli kademe: 24
+Tutarlı: 0
+Tutarsız: 24
+
+=== TUTARSIZLIKLAR ===
+  Kademe 27: Kanıt dosyası bulunamadı
+  Kademe 28: Kanıt dosyası bulunamadı
+  Kademe 29: Kanıt dosyası bulunamadı
+  Kademe 30: Kanıt dosyası bulunamadı
+  Kademe 31: Kanıt dosyası bulunamadı
+  Kademe 32: Kanıt dosyası bulunamadı
+  Kademe 33: Kanıt dosyası bulunamadı
+  Kademe 34: Kanıt dosyası bulunamadı
+  Kademe 35: Kanıt dosyası bulunamadı
+  Kademe 36: Kanıt dosyası bulunamadı
+  Kademe 37: Kanıt dosyası bulunamadı
+  Kademe 38: Kanıt dosyası bulunamadı
+  Kademe 39: Kanıt dosyası bulunamadı
+  Kademe 40: Kanıt dosyası bulunamadı
+  Kademe 41: Kanıt dosyası bulunamadı
+  Kademe 42: Kanıt dosyası bulunamadı
+  Kademe 43: Kanıt dosyası bulunamadı
+  Kademe 44: Kanıt dosyası bulunamadı
+  Kademe 45: Kanıt dosyası bulunamadı
+  Kademe 46: Kanıt dosyası bulunamadı
+  Kademe 47: Kanıt dosyası bulunamadı
+  Kademe 48: Kanıt dosyası bulunamadı
+  Kademe 49: Kanıt dosyası bulunamadı
+  Kademe 50: Kanıt dosyası bulunamadı
+
+Faz 3 taramasi:
+
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Faz3.txt
+Toplam [x] işaretli kademe: 10
+Tutarlı: 4
+Tutarsız: 6
+
+=== TUTARSIZLIKLAR ===
+  Kademe 51: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 54: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 56: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 57: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 58: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 59: Kanıt dosyasında başarısızlık ifadesi bulundu
+
+Faz 4 taramasi:
+
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Faz4.txt
+Toplam [x] işaretli kademe: 8
+Tutarlı: 4
+Tutarsız: 4
+
+=== TUTARSIZLIKLAR ===
+  Kademe 63: Kanıt dosyası bulunamadı
+  Kademe 65: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 66: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 67: Kanıt dosyasında başarısızlık ifadesi bulundu

@@ -1,0 +1,19 @@
+﻿=== Kademe 70: CI Evidence Consistency Check ===
+
+CI workflow degisikligi:
+
+  
+>       - name: Evidence Consistency Check
+          run: node scripts/verify-evidence-consistency.js Faz5.txt docs/faz5-evidence
+
+
+
+Lokal calistirma:
+
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Faz5.txt
+Toplam [x] işaretli kademe: 0
+Tutarlı: 0
+Tutarsız: 0
+
+✅ Tüm kademeler tutarlı.
