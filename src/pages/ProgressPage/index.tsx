@@ -13,9 +13,9 @@ const ProgressPage = () => {
   const activeTab = section === 'next-steps' ? 'next-steps' : 'overview';
 
   return (
-    <div className="min-h-screen bg-[#faf8ff] pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
+    <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Fixed Header with Tabs */}
-      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-[#faf8ff] py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-foreground">Progress Hub</h1>
@@ -23,7 +23,7 @@ const ProgressPage = () => {
               Analytics, milestones, and next steps.
             </p>
           </div>
-          <div className="flex gap-1 rounded-[4px] border border-[#d9d9e3] bg-white p-1 shadow-sm">
+          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
