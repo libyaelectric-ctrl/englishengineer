@@ -282,22 +282,42 @@ const PricingPage = () => {
       <nav className="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-border-soft bg-surface/80 py-3 backdrop-blur-xl">
         <div className="flex w-full max-w-7xl items-center justify-between px-6">
           <Link to="/" className="flex items-center gap-2.5">
-            <img src="/brand/logo.webp" alt="EngVox" className="h-8 w-8 rounded-[4px] border border-border-soft" />
-            <span className="text-sm font-bold tracking-tight text-foreground">EngVox</span>
+            <img
+              src="/brand/logo.webp"
+              alt="EngVox"
+              className="h-8 w-8 rounded-[4px] border border-border-soft"
+            />
+            <span className="text-sm font-bold tracking-tight text-foreground">
+              EngVox
+            </span>
           </Link>
           <div className="flex items-center gap-3">
-            <Link to="/pricing" className="hidden md:block text-[11px] font-bold uppercase tracking-wider text-muted-copy transition-colors hover:text-foreground">
+            <Link
+              to="/pricing"
+              className="hidden md:block text-[11px] font-bold uppercase tracking-wider text-muted-copy transition-colors hover:text-foreground"
+            >
               Pricing
             </Link>
             <button
               type="button"
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={
+                theme === 'dark'
+                  ? 'Switch to light mode'
+                  : 'Switch to dark mode'
+              }
               className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </button>
-            <Link to="/login" className="rounded-[4px] border border-border-soft px-5 py-2.5 text-xs font-bold uppercase text-muted-copy transition hover:bg-surface-hover">
+            <Link
+              to="/login"
+              className="rounded-[4px] border border-border-soft px-5 py-2.5 text-xs font-bold uppercase text-muted-copy transition hover:bg-surface-hover"
+            >
               Start free
             </Link>
           </div>
@@ -315,7 +335,12 @@ const PricingPage = () => {
         />
         <div className="mx-auto max-w-3xl px-4 relative z-10">
           <div className="flex justify-center mb-4">
-            <img src="/brand/mascot.webp" alt="Mascot" loading="lazy" className="h-20 w-auto" />
+            <img
+              src="/brand/mascot.webp"
+              alt="Mascot"
+              loading="lazy"
+              className="h-20 w-auto"
+            />
           </div>
           <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
             Pricing Plans & Access Control
@@ -370,7 +395,14 @@ const PricingPage = () => {
       <section className="py-12 bg-surface border-t border-b border-border-soft">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-lg font-bold text-foreground">Compare plans</h2>
-          <div className="mt-4 overflow-x-auto rounded-[4px] border border-border-soft shadow-sm" tabIndex={0} role="region" aria-label="Plan comparison table">
+          {/* WCAG 2.1 SC 2.1.1: scrollable region needs keyboard focus for users who cannot use a mouse to scroll horizontally */}
+          {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
+          <div
+            className="mt-4 overflow-x-auto rounded-[4px] border border-border-soft shadow-sm"
+            tabIndex={0}
+            role="region"
+            aria-label="Plan comparison table"
+          >
             <table className="w-full min-w-[600px] border-collapse bg-surface text-left text-xs">
               <thead className="bg-[#f3f3fd]">
                 <tr>
@@ -415,6 +447,7 @@ const PricingPage = () => {
               </tbody>
             </table>
           </div>
+          {/* eslint-enable jsx-a11y/no-noninteractive-tabindex */}
 
           {/* Enterprise section */}
           <div

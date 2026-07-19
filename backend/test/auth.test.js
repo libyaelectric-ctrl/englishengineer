@@ -148,13 +148,13 @@ describe('createBackendAuth', () => {
   });
 
   describe('optionalBackendAuth', () => {
-    it('sets auth to null on failure instead of throwing', async () => {
+    it('sets auth to undefined on failure instead of throwing', async () => {
       const config = {};
       const { optionalBackendAuth } = createBackendAuth(config);
       const req = createMockRequest({}, {});
       const next = () => {};
       await optionalBackendAuth(req, {}, next);
-      assert.equal(req.auth, null);
+      assert.equal(req.auth, undefined);
     });
 
     it('authenticates when valid token provided', async () => {

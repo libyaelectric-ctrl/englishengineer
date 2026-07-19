@@ -96,28 +96,32 @@ export function AnimatedCard({
     []
   );
 
+  const cardStyle: React.CSSProperties = {
+    background: 'var(--color-surface)',
+    border: '1px solid var(--color-border-soft)',
+    color: 'var(--color-foreground)',
+    boxShadow: dark
+      ? 'none'
+      : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05)',
+    opacity: isVisible ? 1 : 0,
+    transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
+    transition: `opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, background-color 250ms ease, border-color 250ms ease`,
+  };
+
+  const glowGradient = dark
+    ? 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.10), transparent 62%)'
+    : 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(17,17,17,0.045), transparent 62%)';
+
   return (
     <div
       ref={setRefs}
       onMouseMove={handleMouseMove}
       className={`group relative overflow-hidden rounded-[4px] transition-colors duration-300 ${className}`}
-      style={{
-        background: dark ? 'var(--color-surface)' : 'var(--color-surface)',
-        border: dark ? '1px solid var(--color-border-soft)' : '1px solid var(--color-border-soft)',
-        color: dark ? 'var(--color-foreground)' : 'var(--color-foreground)',
-        boxShadow: dark ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05)',
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
-        transition: `opacity 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 720ms cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, background-color 250ms ease, border-color 250ms ease`,
-      }}
+      style={cardStyle}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background: dark
-            ? 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.10), transparent 62%)'
-            : 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(17,17,17,0.045), transparent 62%)',
-        }}
+        style={{ background: glowGradient }}
       />
       {children}
     </div>
