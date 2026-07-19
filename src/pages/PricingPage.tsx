@@ -1,4 +1,4 @@
-import { Check, MinusCircle, ShieldAlert, Moon, Sun } from 'lucide-react';
+import { Check, MinusCircle, ShieldAlert } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -9,7 +9,6 @@ import {
 } from '@/features/billing';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { useAuthStore } from '@/features/auth';
-import { useAppStore } from '@/store/app.store';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
 
@@ -44,8 +43,6 @@ const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, initialize: initializeAuth } = useAuthStore();
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
 
   useEffect(() => {
     void initializeAuth();
@@ -135,7 +132,7 @@ const PricingPage = () => {
   }) => (
     <Link
       to={currentUser ? '/dashboard' : '/start'}
-      className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
+      className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-xs font-bold uppercase tracking-wider hover:bg-[#faf8ff] transition-all cursor-pointer shadow-sm text-foreground"
     >
       {currentUser ? 'Go to dashboard' : 'Start free'}
     </Link>
@@ -165,20 +162,20 @@ const PricingPage = () => {
   }) => (
     <article
       key={plan.id}
-      className={`relative flex flex-col rounded-[4px] border p-6 bg-surface ${
+      className={`relative flex flex-col rounded-[4px] border p-6 bg-white ${
         isPlanCardHighlighted(plan.id)
-          ? 'border-primary/50 shadow-md'
-          : 'border-border-soft shadow-sm'
+          ? 'border-[#0047bb]/50 shadow-md'
+          : 'border-[#d9d9e3] shadow-sm'
       }`}
     >
       {plan.id === 'pro' && (
-        <div className="absolute -top-3 left-4 rounded-[4px] bg-primary px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary-foreground shadow-sm">
+        <div className="absolute -top-3 left-4 rounded-[4px] bg-[#0047bb] px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
           Recommended
         </div>
       )}
       <div className="flex items-start justify-between">
         <p className="text-sm font-bold text-foreground">{plan.name}</p>
-        <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+        <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
           {getAccessBadge(plan.id)}
         </span>
       </div>
@@ -191,7 +188,7 @@ const PricingPage = () => {
       <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed font-medium">
         {plan.audience}
       </p>
-      <div className="mt-3 rounded-[4px] border border-border-soft bg-background p-3 shadow-sm">
+      <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 shadow-sm">
         <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
           Best for
         </p>
@@ -208,12 +205,12 @@ const PricingPage = () => {
             key={b}
             className="flex gap-2 text-xs text-muted-copy font-medium"
           >
-            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0047bb]" />
             {b}
           </li>
         ))}
       </ul>
-      <div className="mt-3 flex gap-2 border-t border-border-soft pt-3 text-[10px] text-muted-copy font-medium">
+      <div className="mt-3 flex gap-2 border-t border-[#d9d9e3] pt-3 text-[10px] text-muted-copy font-medium">
         <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
         {plan.notIncluded}
       </div>
@@ -255,10 +252,10 @@ const PricingPage = () => {
       disabled={disabled}
       className={`mt-6 flex h-10 w-full items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
         isPlanUnavailable(plan)
-          ? 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-50'
+          ? 'border border-[#d9d9e3] bg-white text-muted-copy cursor-not-allowed opacity-50'
           : isCurrent
             ? 'border border-success/20 bg-success/10 text-success cursor-not-allowed'
-            : 'bg-primary text-primary-foreground hover:bg-primary-hover'
+            : 'bg-[#0047bb] text-white hover:bg-[#0047bb]/95'
       }`}
     >
       {isPlanUnavailable(plan)
@@ -272,38 +269,18 @@ const PricingPage = () => {
   );
 
   return (
-    <main className="bg-background text-foreground min-h-screen relative z-10 pb-16">
+    <main className="bg-[#faf8ff] text-foreground min-h-screen relative z-10 pb-16">
       <PageMetadata
         title="Pricing"
         description="Choose the EngVox plan that fits your work."
       />
 
-      {/* Header with toggle */}
-      <div className="flex items-center justify-between border-b border-border-soft bg-surface/80 backdrop-blur-xl px-4 py-3 sm:px-6">
-        <Link to="/" className="flex items-center gap-2.5">
-          <img
-            src="/brand/logo.webp"
-            alt="EngVox"
-            className="h-8 w-8 rounded-[4px] border border-border-soft"
-          />
-          <span className="text-sm font-bold tracking-tight text-foreground">EngVox</span>
-        </Link>
-        <button
-          type="button"
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
-        >
-          {theme === 'dark' ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5" />}
-        </button>
-      </div>
-
-      <section className="py-10 text-center relative overflow-hidden border-b border-border-soft bg-surface">
+      <section className="py-10 text-center relative overflow-hidden border-b border-[#d9d9e3] bg-white">
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
             backgroundImage:
-              'linear-gradient(var(--color-primary) 1px, transparent 1px), linear-gradient(90deg, var(--color-primary) 1px, transparent 1px)',
+              'linear-gradient(#0047bb 1px, transparent 1px), linear-gradient(90deg, #0047bb 1px, transparent 1px)',
             backgroundSize: '20px 20px',
           }}
         />
@@ -311,7 +288,7 @@ const PricingPage = () => {
           <div className="flex justify-center mb-4">
             <img src="/brand/mascot.webp" alt="Mascot" loading="lazy" className="h-20 w-auto" />
           </div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             Pricing Plans & Access Control
           </p>
           <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl tracking-tight text-foreground">
@@ -361,14 +338,14 @@ const PricingPage = () => {
       </section>
 
       {/* Comparison table */}
-      <section className="py-12 bg-surface border-t border-b border-border-soft">
+      <section className="py-12 bg-white border-t border-b border-[#d9d9e3]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <h2 className="text-lg font-bold text-foreground">Compare plans</h2>
-          <div className="mt-4 overflow-x-auto rounded-[4px] border border-border-soft shadow-sm" tabIndex={0} role="region" aria-label="Plan comparison table">
-            <table className="w-full min-w-[600px] border-collapse bg-surface text-left text-xs">
-              <thead className="bg-background">
+          <div className="mt-4 overflow-x-auto rounded-[4px] border border-[#d9d9e3] shadow-sm" tabIndex={0} role="region" aria-label="Plan comparison table">
+            <table className="w-full min-w-[600px] border-collapse bg-white text-left text-xs">
+              <thead className="bg-[#f3f3fd]">
                 <tr>
-                  <th className="border-b border-border-soft p-3 text-xs font-bold uppercase tracking-wider text-foreground">
+                  <th className="border-b border-[#d9d9e3] p-3 text-xs font-bold uppercase tracking-wider text-foreground">
                     Feature
                   </th>
                   {ACTIVE_PLANS.filter((p) =>
@@ -376,7 +353,7 @@ const PricingPage = () => {
                   ).map((p) => (
                     <th
                       key={p.id}
-                      className="border-b border-border-soft p-3 text-xs font-bold uppercase tracking-wider text-foreground text-center"
+                      className="border-b border-[#d9d9e3] p-3 text-xs font-bold uppercase tracking-wider text-foreground text-center"
                     >
                       {p.name}
                     </th>
@@ -389,7 +366,7 @@ const PricingPage = () => {
                 ).map((key) => (
                   <tr
                     key={key}
-                    className="border-b border-border-soft/60 last:border-0 hover:bg-background transition-colors"
+                    className="border-b border-[#d9d9e3]/60 last:border-0 hover:bg-[#faf8ff] transition-colors"
                   >
                     <td className="p-3 font-bold text-foreground capitalize">
                       {key === 'ai' ? 'AI Coach' : key}
@@ -412,7 +389,7 @@ const PricingPage = () => {
 
           {/* Enterprise section */}
           <div
-            className="mt-8 rounded-[4px] border border-border-soft bg-background p-6 shadow-sm relative overflow-hidden"
+            className="mt-8 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-6 shadow-sm relative overflow-hidden"
             style={{
               backgroundImage:
                 'linear-gradient(rgba(0, 71, 187, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 71, 187, 0.03) 1px, transparent 1px)',
@@ -420,7 +397,7 @@ const PricingPage = () => {
             }}
           >
             <div className="flex items-center gap-3 relative z-10">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-primary text-primary-foreground text-xs font-bold uppercase tracking-wider font-mono shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-[#0047bb] text-white text-xs font-bold uppercase tracking-wider font-mono shadow-sm">
                 EP
               </div>
               <div>
@@ -433,10 +410,10 @@ const PricingPage = () => {
               </div>
             </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2 relative z-10">
-              <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-bold text-foreground">Exec</p>
-                  <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                  <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
                     ACCESS-LVL-04
                   </span>
                 </div>
@@ -447,10 +424,10 @@ const PricingPage = () => {
                   VIP coaching, priority support, offline audio
                 </p>
               </div>
-              <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+              <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-bold text-foreground">Private</p>
-                  <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                  <span className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
                     SECURE-PRIVATE
                   </span>
                 </div>
