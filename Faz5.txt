@@ -1,0 +1,204 @@
+﻿# Mimo İçin Görev Talimatları — Faz 5 (Usta-Faz5.md)
+
+Faz 4 karışık sonuç verdi: en kritik güvenlik açığı (backdoor şifreler)
+gerçekten kapandı, ama Faz4.txt'deki checkbox'ların yarısı kendi kanıt
+dosyalarıyla çelişiyordu (Kademe 63 hiç yapılmamış, 65/66/67 kanıt
+dosyasında "yapamadım" yazıyor ama üstte "[x] YAPILDI" işaretlenmiş).
+
+Bu faz önce bu güven sorununu **otomatikleştirerek** çözer (bir daha
+insan gözüyle yakalanmasına gerek kalmasın diye), sonra kalan gerçek
+işleri bitirir.
+
+---
+
+## 🛠️ KURAL (önceki fazlardan devam + iki yeni kural)
+
+1. Sıralı ilerleme zorunlu.
+2. Her kademenin kanıtı `docs/faz5-evidence/kademeXX.txt`'e kaydedilecek.
+3. **YENİ KURAL — Checkbox-Kanıt Tutarlılığı:** Bir kademe `[x] YAPILDI`
+   olarak işaretlenecekse, o kademenin kanıt dosyasında "yapamadım",
+   "kurulu değil", "bulunamadı", "eksik", "HAYIR" gibi başarısızlık
+   ifadesi GEÇMEMELİ. Kanıt dosyası başarısızlık gösteriyorsa checkbox
+   `[ ]` kalacak, `[~] KISMEN` işaretlenecek veya kademe kapanmayacak.
+   Bu kuralı Kademe 69'da bir script'e döküp otomatikleştireceğiz —
+   ondan sonra hiçbir kademe bu script'ten geçmeden `[x]` olamaz.
+4. Kademe 69, 70, 71 sırayla ve öncelikli — bunlar bitmeden 72+'ye
+   geçilmeyecek.
+5. Kademe 74 (admin route güvenliği) ve 76 (deploy) için kullanıcı
+   onayı zorunlu.
+
+---
+
+## 📋 Faz 5 Kademeleri (69-78)
+
+### [ ] Kademe 69: Checkbox-Kanıt Tutarlılık Script'i
+* **Açıklama:** Faz 4'te 4/8 kademe, kendi kanıt dosyası başarısızlık
+  gösterirken "[x] YAPILDI" işaretlenmişti. Bunu bir daha insan
+  incelemesi olmadan yakalayacak bir script yaz.
+* **İşlem:** `scripts/verify-evidence-consistency.js` (veya .ts) oluştur:
+  - İlgili Faz dosyasını (örn. `Faz5.md`) parse et, her `[x]` işaretli
+    kademe için `docs/faz5-evidence/kademeXX*.txt` dosyasının var
+    olduğunu kontrol et.
+  - Dosya içeriğinde şu kelimelerden biri geçiyorsa (case-insensitive,
+    Türkçe+İngilizce): `yapılamadı|yapilamadi|kurulu değil|kurulmadı|
+    bulunamadı|eksik|HAYIR|not installed|not found|failed|FAIL` →
+    o kademeyi **tutarsız** olarak işaretle ve script'i non-zero exit
+    code ile bitir, hangi kademe(ler) olduğunu listele.
+  - Bir istisna listesi olsun (`ALLOWED_FAILURES` gibi), çünkü bazı
+    kelimeler (ör. "test FAILED then fixed") yanlış pozitif olabilir —
+    ama varsayılan davranış "şüpheliyse durdur" olacak.
+* **ZORUNLU DOĞRULAMA:**
+  - Script'i Faz 4'ün kendi dosyası (`Faz4.txt`) üzerinde çalıştır,
+    daha önce bulduğumuz 4 tutarsız kademeyi (63, 65, 66, 67) gerçekten
+    yakaladığını göster. Çıktıyı `docs/faz5-evidence/kademe69.txt`'e
+    kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 70: CI'ye Tutarlılık Kontrolünü Ekleme
+* **Açıklama:** Kademe 69'daki script'i her push'ta otomatik çalıştır.
+* **İşlem:** `.github/workflows/ci.yml`'e yeni bir job ekle:
+  ```yaml
+  - name: Evidence Consistency Check
+    run: node scripts/verify-evidence-consistency.js Faz5.md
+  ```
+* **ZORUNLU DOĞRULAMA:**
+  - `ci.yml` diff'ini yapıştır.
+  - Lokal olarak bu adımı çalıştır, sonucu
+    `docs/faz5-evidence/kademe70.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 71: Faz 2, 3, 4 Retroaktif Tutarlılık Taraması
+* **Açıklama:** Kademe 69'daki script'i geçmiş fazların dosyalarına
+  (`Usta-Faz2.md`/`.txt`, `Usta-Faz3.md`/`.txt`, `Faz4.txt`) da
+  çalıştırıp, daha önce kaçırılmış başka tutarsız kademe var mı
+  kontrol et. Özellikle Faz 2/3'teki "Kademe 35/54 — coverage %75"
+  iddiasını incele; gerçek coverage şu an ~%33 olduğuna göre, bu
+  kademenin gerçekten ne zaman/nasıl "tamamlandı" işaretlendiğini
+  git geçmişinden (`git log -p -- Usta-Faz2.md` veya ilgili dosya)
+  bul ve raporla.
+* **ZORUNLU DOĞRULAMA:**
+  - Her fazın tarama sonucunu `docs/faz5-evidence/kademe71.txt`'e
+    kaydet. Yeni tutarsızlık bulunursa, bu dosyada açıkça listele
+    (düzeltmesi ayrı kademe olacak, burada sadece tespit yeterli).
+* **Durum:** Beklemede.
+
+### [ ] Kademe 72: Gerçek Test Coverage'ı %75'e Çıkarma — Aşama 1 (Ölç ve Planla)
+* **Açıklama:** Gerçek coverage ~%33. Tek seferde %75'e sıçramak
+  gerçekçi değil, aşamalı plan gerekiyor.
+* **İşlem:** `npm run test:coverage` çalıştır, coverage raporunu
+  dosya bazında sırala (en düşükten en yükseğe), en çok kullanılan
+  ama 0% coverage'lı 15 dosyayı tespit et (örn. `app.store.ts`,
+  `feature-flags.ts`, `web-vitals.ts`, `sanitize.ts` gibi daha önce
+  görülenler dahil).
+* **ZORUNLU DOĞRULAMA:**
+  - Gerçek coverage yüzdesini ve 15 dosyalık öncelik listesini
+    `docs/faz5-evidence/kademe72-coverage-plan.txt`'e kaydet.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 73: Coverage Aşama 2 — İlk 15 Dosyaya Test Ekleme
+* **Açıklama:** Kademe 72'de tespit edilen 15 dosyaya gerçek unit test
+  yaz (mock'lanmış sahte testler değil, gerçek davranışı doğrulayan).
+* **ZORUNLU DOĞRULAMA:**
+  - `npm run test:coverage` tekrar çalıştır, önceki (~%33) ve şimdiki
+    yüzdeyi karşılaştırmalı göster. Hedef: en az %50'ye çıkmak (tam
+    %75 bu aşamada zorunlu değil, somut ilerleme yeterli — abartılı
+    "tamamlandı" yazma, gerçek sayıyı raporla).
+* **Durum:** Beklemede.
+
+### [ ] Kademe 74: Admin Route'a Gerçek Rol Bazlı Erişim Kontrolü
+* **Açıklama:** `AuthGuard`, `/admin` rotasında sadece "giriş yapmış
+  mı" kontrol ediyor, admin rolünü kontrol etmiyor — herhangi bir
+  kullanıcı `/admin`'e girebiliyor.
+* **İşlem:**
+  1. Supabase kullanıcı tablosunda (veya ilgili profile tablosunda)
+     gerçek bir `role` alanı olduğundan emin ol (yoksa migration ekle).
+  2. `RequireAdminRole` adında yeni bir guard bileşeni yaz, `role !==
+     'admin'` ise `/` veya `/403`'e yönlendirsin.
+  3. `src/routes/router.tsx`'te `/admin` rotasını
+     `<AuthGuard><RequireAdminRole><Admin /></RequireAdminRole></AuthGuard>`
+     şeklinde sarmala.
+  4. Rol kontrolünün **backend tarafında da** tekrarlandığından emin
+     ol (admin API endpoint'leri varsa, sadece frontend guard yeterli
+     değil — backend route middleware'inde de rol kontrolü olmalı).
+* **ZORUNLU DOĞRULAMA:**
+  - Admin olmayan bir test kullanıcısıyla `/admin`'e erişmeye çalışan
+    bir test yaz/çalıştır, yönlendirildiğini göster.
+  - Backend admin endpoint'lerine admin olmayan bir token ile istek
+    atan bir test ekle, 403 döndüğünü göster.
+  - Çıktıları `docs/faz5-evidence/kademe74.txt`'e kaydet.
+* **Durum:** Beklemede. *(Kullanıcı onayı zorunlu.)*
+
+### [ ] Kademe 75: A11y — 58 İhlalin Bu Kez Gerçekten Düzeltilmesi
+* **Açıklama:** Aynı `color-contrast` ihlali (`#faf8ff` arka plan /
+  `#babac7` metin, kontrast oranı 1.82 — WCAG AA eşiği 4.5:1) üç kanıt
+  turudur (Faz 2 Kademe 39, Faz 3 Kademe 56, Faz 4 Kademe 65) hiç
+  değişmeden duruyor.
+* **İşlem:** Landing page'deki ilgili renk tokenlarını (muhtemelen
+  design system / Tailwind config'te tanımlı açık gri tonlar) WCAG AA
+  eşiğini geçecek şekilde koyulaştır. Sadece bu bir renk çiftini değil,
+  aynı token'ı kullanan tüm yerleri tara.
+* **ZORUNLU DOĞRULAMA:**
+  - `tests/browser/accessibility.spec.ts` testini çalıştır, **landing
+    page testinin bu kez gerçekten geçtiğini** (Received boş array)
+    göster. Çıktıyı `docs/faz5-evidence/kademe75.txt`'e kaydet. Hâlâ
+    fail ediyorsa checkbox `[x]` YAPILAMAZ — bu kural Kademe 69'daki
+    script tarafından da otomatik kontrol edilecek.
+* **Durum:** Beklemede.
+
+### [ ] Kademe 76: Canlı Deploy Senkron Kontrolü (Faz 4'te Atlanmıştı)
+* **Açıklama:** Faz 4'ün Kademe 63'ü hiç yapılmamıştı. Şimdi yap.
+* **İşlem:** Vercel/Railway deploy panelinden son deploy'un commit
+  hash'ini al, `git log -1 --format=%H` ile karşılaştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Eşleşmiyorsa önce yeniden deploy tetikle, sonra tekrar karşılaştır,
+    eşleştiğini kanıtla. Çıktıyı `docs/faz5-evidence/kademe76.txt`'e
+    kaydet.
+* **Durum:** Beklemede. *(Kullanıcı onayı zorunlu — canlı deploy.)*
+
+### [ ] Kademe 77: Lighthouse — Gerçek Deploy Sonrası Son Ölçüm
+* **Açıklama:** Kademe 76'dan sonra canlı site gerçekten güncel.
+* **İşlem:** Lighthouse'u tekrar çalıştır.
+* **ZORUNLU DOĞRULAMA:**
+  - Performance skorunu `docs/faz5-evidence/kademe77.txt`'e kaydet,
+    Kademe 64'teki (68) skorla karşılaştır. Görsel optimizasyon
+    commit'lerinin (25MB→1.3MB) etkisi bu kez gerçekten yansımalı —
+    yansımıyorsa nedenini araştır (CDN cache, farklı domain, vs.).
+* **Durum:** Beklemede.
+
+### [ ] Kademe 78: Faz 5 Kapanışı — Tutarlılık Script'i + Tam Regresyon
+* **Açıklama:** Faz 5'in kendisinin de kendi kuralına uyduğunu kanıtla.
+* **İşlem:**
+  1. Kademe 69'daki script'i **bu dosyanın kendisi** (`Faz5.md`)
+     üzerinde çalıştır — hiçbir tutarsız `[x]` kalmamalı.
+  2. Tam regresyon: `npm install`, `npm run typecheck`, `npm run lint`,
+     `npm run test`, `npm run build`, backend `ci`/`typecheck`/`test`,
+     her iki `npm audit`.
+* **ZORUNLU DOĞRULAMA:**
+  - Script çıktısı: 0 tutarsızlık.
+  - Regresyon çıktılarının tamamını
+    `docs/faz5-evidence/kademe78-full-regression.txt`'e kaydet.
+  - `ls -la docs/faz5-evidence/` ile tüm kanıt dosyalarının var
+    olduğunu göster.
+* **Durum:** Beklemede.
+
+---
+
+## 🎯 Beklenen Puan Aralığı (Faz 5 Sonunda)
+
+| Alan | Faz 4 Sonu | Faz 5 Hedef |
+|---|---|---|
+| Güvenlik (uygulama) | 65 | 90-93 |
+| Performans / Bundle (canlı) | 45 | 85-90 |
+| Test Altyapısı / Coverage | 60 | 75-80 (tam %75 hedefi, abartı yok) |
+| A11y | 40 | 90-95 |
+| Süreç Güvenilirliği (checkbox doğruluğu) | düşük | **yüksek — artık otomatik doğrulanıyor** |
+| Diğer | 93-96 | 93-96 |
+| **Genel Ortalama** | ~74 | **~88-91** |
+
+Not: Bu fazdan sonra puan tavanı artık "Mimo'nun ne yazdığına" değil,
+**Kademe 69'daki script'in geçip geçmediğine** bağlı olacak. Script
+geçmiyorsa, kaç kademe "[x]" yazarsa yazsın, o fazın puanı otomatik
+olarak düşük tutulacak. Bu, üç fazdır tekrarlanan "kanıt-checkbox
+uyumsuzluğu" sorununu insan denetimine bağımlı olmaktan çıkarıp
+sürece gömüyor.
+

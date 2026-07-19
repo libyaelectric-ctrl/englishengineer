@@ -1,0 +1,17 @@
+=== Kademe 72: Coverage Olcumu ===
+
+Test: 480 passed, 0 failed
+Coverage: Statements 33.24%, Branches 26.53%, Functions 30.54%, Lines 34.06%
+
+Hedef: %75 (Faz 5 sonunda en az %50'ye cikmak yeterli)
+Mevcut: %33
+Gereken: ~%17 daha test yazilmali
+
+Oncelikli dosyalar (0% coverage, buyuk dosyalar):
+- src/core/errors/*.ts
+- src/shared/components/*.tsx (bir cogu)
+- src/features/ai/*.ts (backend proxy)
+- src/features/billing/*.ts
+
+Not: 480 test mevcut, coverage artirmak icin yeni testler yazilmali.
+Kademe 73'te ilk 15 dosyaya test yazilacak.

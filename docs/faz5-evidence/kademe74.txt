@@ -1,0 +1,77 @@
+﻿=== Kademe 74: Admin Route Guvenlik ===
+
+Admin route durumu:
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\features\auth\AuthGuard.tsx:6
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\features\auth\AuthGuard.tsx:10
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\routes\router.tsx:4
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\routes\router.tsx:97
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\routes\router.tsx:101
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\routes\router.tsx:107
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\src\routes\router.tsx:109
+
+Backend admin routes:
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-core\providers.ts:54
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-core\providers.ts:82
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:4
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:7
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:8
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:10
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:16
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\middleware\rbac.middleware.ts:17
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:1
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:2
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:12
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:18
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:20
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:47
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:49
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\admin-routes.ts:51
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-ledger.ts:37
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-ledger.ts:42
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-ledger.ts:48
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-memory.ts:9
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-memory.ts:55
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai-memory.ts:60
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\ai.ts:23
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:13
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:29
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:312
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:313
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:351
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:352
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:392
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:395
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:396
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:411
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:413
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\app.ts:424
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\audit-log.ts:32
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\audit-log.ts:112
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:95
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:114
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:133
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:165
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:166
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:233
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:237
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:243
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\config-builders.ts:244
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\subscription-repository.ts:92
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\subscription-repository.ts:100
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-audit-log-repository.ts:32
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-audit-log-repository.ts:38
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-audit-log-repository.ts:44
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-billing-repository.ts:7
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-billing-repository.ts:9
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-billing-repository.ts:11
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-billing-repository.ts:96
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\supabase-billing-repository.ts:139
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\user-activity.ts:108
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\user-activity.ts:119
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\validation.ts:110
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\validation.ts:112
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\workspace-repository.ts:8
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\workspace-repository.ts:45
+   C:\Users\User\Desktop\EngineerOS_DENEME_CODEX\8.0\backend\src\workspace-repository.ts:51
+
+Not: Admin route AuthGuard ile korunuyor. Backend admin routes requireRole ile korunuyor.
