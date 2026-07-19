@@ -39,3 +39,10 @@ export {
   type PronunciationScoreResult,
   PronunciationScorer,
 } from './pronunciation-scorer';
+
+export {
+  type PhonemeDetail,
+  type PronunciationFeedback,
+  type PronunciationMap,
+  PronunciationFeedbackEngine,
+} from './pronunciation-feedback';

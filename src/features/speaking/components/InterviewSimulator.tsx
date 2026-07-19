@@ -38,7 +38,7 @@ const SelectView = ({
         <button
           type="button"
           onClick={() => onSelect('system-design')}
-          className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
         >
           <Layers className="h-8 w-8 text-[#0047bb]" />
           <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
@@ -57,7 +57,7 @@ const SelectView = ({
         <button
           type="button"
           onClick={() => onSelect('coding')}
-          className="group rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
         >
           <Code className="h-8 w-8 text-[#0047bb]" />
           <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
@@ -119,7 +119,7 @@ const ResultsView = ({
         {scores.map((score, i) => (
           <div
             key={i}
-            className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+            className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -142,7 +142,7 @@ const ResultsView = ({
                 {score.overall}
               </span>
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 border-t border-[#d9d9e3] pt-3">
+            <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 border-t border-border-soft pt-3">
               {[
                 ['Technical', score.technicalAccuracy],
                 ['Clarity', score.clarity],
@@ -151,7 +151,7 @@ const ResultsView = ({
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-[#d9d9e3]"
+                  className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-border-soft"
                 >
                   <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
                     {label}
@@ -166,7 +166,7 @@ const ResultsView = ({
               &quot;{score.feedback}&quot;
             </p>
             {score.strengths.length > 0 && (
-              <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+              <div className="mt-3 border-t border-border-soft pt-3">
                 <p className="text-[10px] font-bold uppercase text-success tracking-wider">
                   Strengths
                 </p>
@@ -184,7 +184,7 @@ const ResultsView = ({
               </div>
             )}
             {score.improvements.length > 0 && (
-              <div className="mt-3 border-t border-[#d9d9e3] pt-3">
+              <div className="mt-3 border-t border-border-soft pt-3">
                 <p className="text-[10px] font-bold uppercase text-warning tracking-wider">
                   Improvements
                 </p>
@@ -273,7 +273,7 @@ const RecordingControls = ({
       variant={isRecording ? 'danger' : 'secondary'}
       onClick={toggleRecording}
       disabled={isScoring || isTimeUp}
-      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-[#d9d9e3] text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
+      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-border-soft text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
     >
       {isRecording ? (
         <>
@@ -331,7 +331,7 @@ const SubmitBar = ({
   resetInterview: () => void;
   canSubmit: boolean;
 }) => (
-  <div className="flex items-center gap-3 border-t border-[#d9d9e3] pt-4">
+  <div className="flex items-center gap-3 border-t border-border-soft pt-4">
     <Button
       onClick={submitAnswer}
       disabled={!canSubmit || isScoring}
@@ -346,7 +346,7 @@ const SubmitBar = ({
     <Button
       variant="outline"
       onClick={resetInterview}
-      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
     >
       <StopCircle className="h-4 w-4" /> End Interview
     </Button>
@@ -399,7 +399,7 @@ const InterviewView = ({
               size="icon"
               onClick={resetInterview}
               aria-label="Reset interview"
-              className="h-8 w-8 rounded-[4px] cursor-pointer border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+              className="h-8 w-8 rounded-[4px] cursor-pointer border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -425,7 +425,7 @@ const InterviewView = ({
               value={currentAnswer}
               onChange={(e) => setCurrentAnswer(e.target.value)}
               disabled={isScoring}
-              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
+              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
               placeholder={
                 isTimeUp
                   ? "Time's up! Submit your answer below."
