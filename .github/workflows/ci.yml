@@ -37,6 +37,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Evidence Consistency Check
+        run: node scripts/verify-evidence-consistency.js Faz5.txt docs/faz5-evidence
+        continue-on-error: true
+
   test:
     name: Tests
     runs-on: ubuntu-latest

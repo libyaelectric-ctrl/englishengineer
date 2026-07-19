@@ -1,0 +1,12 @@
+﻿
+=== Checkbox-Kanıt Tutarlılık Kontrolü ===
+Dosya: Faz4.txt
+Toplam [x] işaretli kademe: 8
+Tutarlı: 4
+Tutarsız: 4
+
+=== TUTARSIZLIKLAR ===
+  Kademe 63: Kanıt dosyası bulunamadı
+  Kademe 65: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 66: Kanıt dosyasında başarısızlık ifadesi bulundu
+  Kademe 67: Kanıt dosyasında başarısızlık ifadesi bulundu
