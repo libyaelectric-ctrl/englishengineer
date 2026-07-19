@@ -9,42 +9,22 @@ function getAutoTheme(): 'dark' | 'light' {
 interface AppState {
   isSidebarOpen: boolean;
   theme: 'dark' | 'light';
-  autoTheme: boolean;
   toggleSidebar: () => void;
   setTheme: (theme: 'dark' | 'light') => void;
-  setAutoTheme: (auto: boolean) => void;
-  applyAutoTheme: () => void;
 }
 
-export const useAppStore = create<AppState>((set, get) => ({
+export const useAppStore = create<AppState>((set) => ({
   isSidebarOpen: false,
-  autoTheme: storage.get<boolean>('autoTheme') ?? true,
+  // If user never clicked toggle → use time-based auto theme.
+  // If they did → use their saved choice.
   theme: (() => {
-    const auto = storage.get<boolean>('autoTheme') ?? true;
-    if (auto) return getAutoTheme();
-    return (storage.get<'dark' | 'light'>('theme') || 'light') as 'dark' | 'light';
+    const saved = storage.get<'dark' | 'light'>('theme');
+    if (saved) return saved;
+    return getAutoTheme();
   })(),
   toggleSidebar: () => set((s) => ({ isSidebarOpen: !s.isSidebarOpen })),
   setTheme: (theme: 'dark' | 'light') => {
     storage.set('theme', theme);
-    storage.set('autoTheme', false);
-    set({ theme, autoTheme: false });
-  },
-  setAutoTheme: (auto: boolean) => {
-    storage.set('autoTheme', auto);
-    if (auto) {
-      const detected = getAutoTheme();
-      storage.set('theme', detected);
-      set({ autoTheme: auto, theme: detected });
-    } else {
-      set({ autoTheme: auto });
-    }
-  },
-  applyAutoTheme: () => {
-    if (get().autoTheme) {
-      const detected = getAutoTheme();
-      storage.set('theme', detected);
-      set({ theme: detected });
-    }
+    set({ theme });
   },
 }));
