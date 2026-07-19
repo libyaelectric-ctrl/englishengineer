@@ -37,7 +37,7 @@ export const ReviewPriorities = ({
             key={item.id}
             type="button"
             onClick={() => navigate('/curriculum#review')}
-            className="rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 cursor-pointer shadow-sm hover:shadow-md"
+            className="rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 cursor-pointer shadow-sm hover:shadow-md"
           >
             <StatusBadge
               label={index === 0 ? 'Start here' : `Priority ${index + 1}`}

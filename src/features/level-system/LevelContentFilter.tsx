@@ -15,7 +15,7 @@ const accessStyles: Record<ContentAccessLabel, string> = {
   Current: 'border-[#0047bb]/20 bg-[#0047bb]/5 text-[#0047bb]',
   Review: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   Preview: 'border-amber-200 bg-amber-50 text-amber-700',
-  Locked: 'border-[#d9d9e3] bg-[#faf8ff] text-muted-copy',
+  Locked: 'border-border-soft bg-surface-hover text-muted-copy',
 };
 
 interface LevelContentFilterProps {
@@ -30,7 +30,7 @@ export const LevelContentFilter = ({
   onChange,
 }: LevelContentFilterProps) => (
   <div className="space-y-2 font-sans">
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
@@ -53,7 +53,7 @@ export const LevelContentFilter = ({
               className={`min-h-9 rounded-[4px] border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-sm ${
                 value === filter.value
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]/30'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/30'
               }`}
             >
               {filter.label}
@@ -87,7 +87,7 @@ export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
 );
 
 export const EmptyLevelState = ({ skill }: { skill: string }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-6 text-xs text-foreground font-sans">
+  <div className="rounded-[4px] border border-border-soft bg-surface-hover p-6 text-xs text-foreground font-sans">
     <p className="font-bold text-foreground uppercase tracking-wider">
       No current-level content yet
     </p>

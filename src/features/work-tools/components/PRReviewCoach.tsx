@@ -76,7 +76,7 @@ export const PRReviewCoach = () => {
         </div>
 
         <div className="space-y-4">
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 space-y-2 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 space-y-2 shadow-sm">
             <label
               htmlFor="pr-review-input"
               className="block text-xs font-bold uppercase tracking-wider text-foreground animate-in fade-in"
@@ -91,7 +91,7 @@ export const PRReviewCoach = () => {
               id="pr-review-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-24 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+              className="min-h-24 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-[#0047bb] shadow-sm font-semibold"
               placeholder="e.g., This code is terrible. Why did you write it this way? Fix it now."
             />
           </div>
@@ -105,7 +105,7 @@ export const PRReviewCoach = () => {
                 key={i}
                 type="button"
                 onClick={() => handleSample(sample)}
-                className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-[#0047bb] hover:text-[#0047bb] cursor-pointer font-bold uppercase tracking-wider shadow-sm"
+                className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-[#0047bb] hover:text-[#0047bb] cursor-pointer font-bold uppercase tracking-wider shadow-sm"
               >
                 Sample {i + 1}
               </button>
@@ -171,7 +171,7 @@ export const PRReviewCoach = () => {
             </div>
 
             {result.keyChanges.length > 0 && (
-              <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 shadow-sm">
+              <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
                 <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                   [REFACTORING KEY ACTIONS]
                 </p>

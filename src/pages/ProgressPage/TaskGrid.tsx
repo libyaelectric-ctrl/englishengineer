@@ -65,7 +65,7 @@ export const TaskGrid = ({
                       );
                     }
                   }}
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition cursor-pointer ${completed ? 'border-success bg-success/10 text-success shadow-sm' : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb] hover:bg-[#0047bb]/5 shadow-sm'}`}
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition cursor-pointer ${completed ? 'border-success bg-success/10 text-success shadow-sm' : 'border-border-soft bg-surface text-muted-copy hover:border-primary hover:bg-primary/5 shadow-sm'}`}
                   aria-label={
                     completed ? 'Mark task incomplete' : 'Mark task complete'
                   }
@@ -83,7 +83,7 @@ export const TaskGrid = ({
                 <Button
                   variant="secondary"
                   onClick={() => navigate(task.route)}
-                  className="h-9 px-4 border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center"
+                  className="h-9 px-4 border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center"
                 >
                   Open task
                 </Button>

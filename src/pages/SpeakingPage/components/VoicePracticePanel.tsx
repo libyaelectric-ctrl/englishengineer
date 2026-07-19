@@ -50,7 +50,7 @@ const VoiceWorkspace = ({
   recordedAudio: string | null;
   waveformBars: number[];
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-5 flex flex-col items-center justify-center min-h-32 relative overflow-hidden shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 flex flex-col items-center justify-center min-h-32 relative overflow-hidden shadow-sm">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     {isRecording ? (
       <div className="flex flex-col items-center gap-3 w-full relative z-10">
@@ -158,7 +158,7 @@ const VoiceControls = ({
       <Button
         variant="secondary"
         onClick={onResetRecording}
-        className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+        className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
       >
         <RotateCcw className="h-4 w-4" /> Restart
       </Button>
@@ -173,7 +173,7 @@ const PhonemeCard = ({
 }) => {
   const isAccurate = item.score >= 90;
   return (
-    <div className="rounded-[4px] bg-white border border-[#d9d9e3] p-3 text-center shadow-sm flex flex-col justify-between">
+    <div className="rounded-[4px] bg-surface border border-border-soft p-3 text-center shadow-sm flex flex-col justify-between">
       <div>
         <p className="text-xs font-bold text-foreground">{item.word}</p>
         <p className="text-[10px] font-mono text-muted-copy font-medium mt-1">
@@ -235,7 +235,7 @@ export const VoicePracticePanel = ({
       />
 
       {recordedAudio && typedTranscript && (
-        <div className="rounded-[4px] bg-[#f3f3fd] border border-[#d9d9e3] p-3.5 space-y-1 shadow-sm">
+        <div className="rounded-[4px] bg-[#f3f3fd] border border-border-soft p-3.5 space-y-1 shadow-sm">
           <p className="text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
             Loopback Speech Transcription
           </p>
@@ -246,8 +246,8 @@ export const VoicePracticePanel = ({
       )}
 
       {pronunciationScore && (
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 space-y-4 shadow-sm">
-          <div className="flex items-center justify-between border-b border-[#d9d9e3] pb-3">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 space-y-4 shadow-sm">
+          <div className="flex items-center justify-between border-b border-border-soft pb-3">
             <div>
               <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
                 PRON-EVAL

@@ -46,7 +46,7 @@ export const CurriculumSkillSelector = ({
               className={`rounded-[4px] border p-4 text-left transition-all cursor-pointer shadow-sm ${
                 selectedSkill === skill
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
-                  : 'border-[#d9d9e3] bg-white hover:border-[#0047bb]'
+                  : 'border-border-soft bg-surface hover:border-[#0047bb]'
               }`}
             >
               <div className="flex items-center justify-between gap-2">

@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { Sparkles, ChevronDown } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
-import { SentenceGeneratorService, type SentenceExample } from '@/features/vocabulary';
+import {
+  SentenceGeneratorService,
+  type SentenceExample,
+} from '@/features/vocabulary';
 
 interface SentencePanelProps {
   word: string;
@@ -22,12 +25,21 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   advanced: 'bg-rose-100 text-rose-700',
 };
 
-export function SentencePanel({ word, partOfSpeech, meaning }: SentencePanelProps) {
+export function SentencePanel({
+  word,
+  partOfSpeech,
+  meaning,
+}: SentencePanelProps) {
   const [sentences, setSentences] = useState<SentenceExample[]>([]);
   const [expanded, setExpanded] = useState(false);
 
   const generate = () => {
-    const result = SentenceGeneratorService.generateForWord(word, partOfSpeech, meaning, 4);
+    const result = SentenceGeneratorService.generateForWord(
+      word,
+      partOfSpeech,
+      meaning,
+      4
+    );
     setSentences(result);
     setExpanded(true);
   };
@@ -36,7 +48,9 @@ export function SentencePanel({ word, partOfSpeech, meaning }: SentencePanelProp
     <div className="mt-3 rounded-[4px] border border-border-soft bg-surface p-3">
       <button
         type="button"
-        onClick={() => (sentences.length > 0 ? setExpanded(!expanded) : generate())}
+        onClick={() =>
+          sentences.length > 0 ? setExpanded(!expanded) : generate()
+        }
         className="flex w-full items-center justify-between text-xs font-bold text-foreground cursor-pointer"
       >
         <span className="flex items-center gap-1.5">
@@ -55,7 +69,7 @@ export function SentencePanel({ word, partOfSpeech, meaning }: SentencePanelProp
           {sentences.map((s, i) => (
             <div
               key={i}
-              className="rounded-[4px] border border-border-soft bg-white p-2.5"
+              className="rounded-[4px] border border-border-soft bg-surface p-2.5"
             >
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[9px] font-bold text-muted-copy">
@@ -67,8 +81,12 @@ export function SentencePanel({ word, partOfSpeech, meaning }: SentencePanelProp
                   {s.difficulty}
                 </span>
               </div>
-              <p className="text-xs font-medium text-foreground">{s.sentence}</p>
-              <p className="mt-1 text-[10px] text-muted-copy">{s.translation}</p>
+              <p className="text-xs font-medium text-foreground">
+                {s.sentence}
+              </p>
+              <p className="mt-1 text-[10px] text-muted-copy">
+                {s.translation}
+              </p>
             </div>
           ))}
           <Button

@@ -160,7 +160,7 @@ export const CurriculumFullTab = ({
 
           {/* Precision Engineering Roadmap List */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 border-b border-[#d9d9e3] pb-3">
+            <div className="flex items-center gap-2 border-b border-border-soft pb-3">
               <Map className="h-5 w-5 text-[#0047bb]" />
               <div>
                 <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
@@ -177,13 +177,13 @@ export const CurriculumFullTab = ({
               {MODULES.map((mod) => (
                 <div
                   key={mod.id}
-                  className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm relative overflow-hidden"
+                  className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm relative overflow-hidden"
                 >
                   {/* Technical background Grid for OS feel */}
                   <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
 
                   {/* Header */}
-                  <div className="relative z-10 flex items-start justify-between gap-3 border-b border-[#d9d9e3] pb-4">
+                  <div className="relative z-10 flex items-start justify-between gap-3 border-b border-border-soft pb-4">
                     <div>
                       <span className="font-mono text-[10px] font-bold text-[#0047bb] uppercase tracking-wider bg-[#0047bb]/5 px-2 py-0.5 rounded-[4px] border border-[#0047bb]/10">
                         {mod.id} // LEVEL MODULE
@@ -214,19 +214,19 @@ export const CurriculumFullTab = ({
                           className={`relative flex items-start gap-4 p-3.5 rounded-[4px] border transition-colors ${
                             isActive
                               ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
-                              : 'border-[#d9d9e3]/60 bg-[#f3f3fd]'
+                              : 'border-border-soft/60 bg-[#f3f3fd]'
                           }`}
                         >
                           {/* Dot / Icon Connector */}
                           <div className="absolute -left-[27px] top-[14px] flex items-center justify-center">
                             {isCompleted && (
-                              <CheckCircle2 className="h-[14px] w-[14px] text-success bg-white rounded-full" />
+                              <CheckCircle2 className="h-[14px] w-[14px] text-success bg-surface rounded-full" />
                             )}
                             {isActive && (
-                              <PlayCircle className="h-[14px] w-[14px] text-[#0047bb] bg-white rounded-full animate-pulse" />
+                              <PlayCircle className="h-[14px] w-[14px] text-[#0047bb] bg-surface rounded-full animate-pulse" />
                             )}
                             {isLocked && (
-                              <Circle className="h-[14px] w-[14px] text-muted-copy bg-white rounded-full" />
+                              <Circle className="h-[14px] w-[14px] text-muted-copy bg-surface rounded-full" />
                             )}
                           </div>
 
@@ -236,7 +236,7 @@ export const CurriculumFullTab = ({
                                 {lessonIdStr}
                               </span>
                               {isActive && (
-                                <span className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 px-1.5 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                                <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
                                   ACTIVE TARGET
                                 </span>
                               )}

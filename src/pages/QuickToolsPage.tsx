@@ -27,7 +27,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div
-        className="flex flex-wrap gap-2 rounded-[4px] border border-[#d9d9e3] bg-white p-3 shadow-sm font-sans"
+        className="flex flex-wrap gap-2 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm font-sans"
         role="tablist"
       >
         {(
@@ -46,7 +46,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
               tab === id
                 ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
             {label}

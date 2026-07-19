@@ -62,7 +62,12 @@ export const SentenceGeneratorService = {
       const template = templates[i % templates.length];
 
       const sentence = template.replace(/\{word\}/g, word);
-      const translation = this.generateTranslation(sentence, word, meaning, context);
+      const translation = this.generateTranslation(
+        sentence,
+        word,
+        meaning,
+        context
+      );
 
       if (!usedContexts.has(context)) {
         usedContexts.add(context);
@@ -110,7 +115,12 @@ export const SentenceGeneratorService = {
   ): GenerateSentencesResult[] {
     return words.map((w) => ({
       word: w.word,
-      sentences: this.generateForWord(w.word, w.partOfSpeech, w.meaning, sentencesPerWord),
+      sentences: this.generateForWord(
+        w.word,
+        w.partOfSpeech,
+        w.meaning,
+        sentencesPerWord
+      ),
       generatedAt: new Date().toISOString(),
     }));
   },

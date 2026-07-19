@@ -37,7 +37,7 @@ export const ProfileAvatar = ({ name, size = 'md' }: ProfileAvatarProps) => {
   const colorClass = COLORS[hashName(name) % COLORS.length];
   return (
     <div
-      className={`${SIZE_CLASSES[size]} ${colorClass} flex items-center justify-center rounded-[4px] border border-[#d9d9e3] font-bold text-white select-none shrink-0 shadow-sm`}
+      className={`${SIZE_CLASSES[size]} ${colorClass} flex items-center justify-center rounded-[4px] border border-border-soft font-bold text-white select-none shrink-0 shadow-sm`}
       aria-label={name}
     >
       {getInitials(name)}

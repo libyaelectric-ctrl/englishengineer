@@ -14,7 +14,7 @@ export const StyleGuidelines = ({
   selectedRule,
   onSelectRule,
 }: StyleGuidelinesProps) => (
-  <div className="space-y-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-5 shadow-sm">
+  <div className="space-y-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 shadow-sm">
     <h5 className="text-xs font-bold uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
       <Info className="h-4 w-4 text-[#0047bb]" />
       <span>
@@ -59,7 +59,7 @@ export const StyleGuidelines = ({
                 className={`text-[9px] font-mono px-2.5 py-1 rounded-[4px] border transition-all cursor-pointer uppercase font-bold tracking-wider ${
                   isFixed
                     ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    : 'border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-foreground'
+                    : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-foreground'
                 }`}
               >
                 {c.type.toUpperCase()}: {c.original}

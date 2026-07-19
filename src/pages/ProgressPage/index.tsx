@@ -33,7 +33,7 @@ const ProgressPage = () => {
                 className={`px-4 py-1.5 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                   activeTab === tab.id
                     ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                    : 'text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                    : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
                 }`}
               >
                 {tab.label}

@@ -18,7 +18,7 @@ export const AssessmentExplanation = ({
       Assessment explanation
     </h2>
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Why this score
         </p>
@@ -26,7 +26,7 @@ export const AssessmentExplanation = ({
           {assessment.confidenceExplanation}
         </p>
       </div>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           What improved
         </p>
@@ -35,7 +35,7 @@ export const AssessmentExplanation = ({
             'Not enough assessment data yet.'}
         </p>
       </div>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           What is weak
         </p>
@@ -44,7 +44,7 @@ export const AssessmentExplanation = ({
             'Not enough assessment data yet.'}
         </p>
       </div>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           What to do next
         </p>

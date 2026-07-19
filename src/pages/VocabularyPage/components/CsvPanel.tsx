@@ -1,8 +1,18 @@
 import { useRef, useState } from 'react';
-import { Download, Upload, FileText, CheckCircle2, XCircle } from 'lucide-react';
+import {
+  Download,
+  Upload,
+  FileText,
+  CheckCircle2,
+  XCircle,
+} from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { VocabularyCsvService, type CsvWord, type ImportResult } from '@/features/vocabulary';
+import {
+  VocabularyCsvService,
+  type CsvWord,
+  type ImportResult,
+} from '@/features/vocabulary';
 
 interface CsvPanelProps {
   words: CsvWord[];
@@ -84,11 +94,15 @@ export function CsvPanel({ words, onImport }: CsvPanelProps) {
             ) : (
               <XCircle className="h-4 w-4 text-amber-500" />
             )}
-            <span className="text-xs font-bold text-foreground">Import Result</span>
+            <span className="text-xs font-bold text-foreground">
+              Import Result
+            </span>
           </div>
           <div className="space-y-1 text-[10px] text-muted-copy">
             <p>Total rows: {importResult.totalRows}</p>
-            <p className="text-emerald-600 font-bold">Imported: {importResult.imported}</p>
+            <p className="text-emerald-600 font-bold">
+              Imported: {importResult.imported}
+            </p>
             {importResult.skipped > 0 && (
               <p className="text-amber-600">Skipped: {importResult.skipped}</p>
             )}
@@ -96,7 +110,9 @@ export function CsvPanel({ words, onImport }: CsvPanelProps) {
           {importResult.errors.length > 0 && (
             <div className="mt-2 space-y-1">
               {importResult.errors.slice(0, 5).map((err, i) => (
-                <p key={i} className="text-[9px] text-rose-600">{err}</p>
+                <p key={i} className="text-[9px] text-rose-600">
+                  {err}
+                </p>
               ))}
               {importResult.errors.length > 5 && (
                 <p className="text-[9px] text-muted-copy">

@@ -99,7 +99,7 @@ export const SiteDictionaryTab = () => {
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-[#d9d9e3] bg-white px-4 focus-within:border-[#0047bb] shadow-sm">
+        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 focus-within:border-[#0047bb] shadow-sm">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search site dictionary</span>
           <input
@@ -155,21 +155,21 @@ export const SiteDictionaryTab = () => {
               placeholder="Term (e.g. Grounding grid)"
               value={newTerm}
               onChange={(e) => setNewTerm(e.target.value)}
-              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Turkish Meaning (e.g. Topraklama ağı)"
               value={newMeaning}
               onChange={(e) => setNewMeaning(e.target.value)}
-              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Category (e.g. electrical, civil)"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
           </div>
 
@@ -179,14 +179,14 @@ export const SiteDictionaryTab = () => {
               value={newExplanation}
               onChange={(e) => setNewExplanation(e.target.value)}
               rows={2}
-              className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
               value={newExample}
               onChange={(e) => setNewExample(e.target.value)}
-              className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input
@@ -194,14 +194,14 @@ export const SiteDictionaryTab = () => {
                 placeholder="Common Wrong Usage (e.g. ground grid)"
                 value={newWrongUsage}
                 onChange={(e) => setNewWrongUsage(e.target.value)}
-                className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
               />
               <input
                 type="text"
                 placeholder="Related Terms (comma-separated)"
                 value={newRelated}
                 onChange={(e) => setNewRelated(e.target.value)}
-                className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
               />
             </div>
           </div>
@@ -217,7 +217,7 @@ export const SiteDictionaryTab = () => {
               type="button"
               variant="outline"
               onClick={() => setIsAddingTerm(false)}
-              className="h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm"
+              className="h-9 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm"
             >
               Cancel
             </Button>
@@ -238,11 +238,11 @@ export const SiteDictionaryTab = () => {
           return (
             <Card
               key={item.id}
-              className="p-5 space-y-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+              className="p-5 space-y-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
               hoverEffect={false}
             >
               <div>
-                <div className="flex items-start justify-between border-b border-[#d9d9e3] pb-2">
+                <div className="flex items-start justify-between border-b border-border-soft pb-2">
                   <div>
                     <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                       {item.category}
@@ -267,7 +267,7 @@ export const SiteDictionaryTab = () => {
                     )}
                     <Button
                       variant="ghost"
-                      className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-[#faf8ff]"
+                      className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-surface-hover"
                       onClick={() => toggleFavorite(item.id)}
                       aria-label={
                         favorite ? 'Remove favorite' : 'Save favorite'
@@ -283,7 +283,7 @@ export const SiteDictionaryTab = () => {
                   <p className="text-xs leading-5 text-muted-copy font-medium">
                     {item.technicalExplanation}
                   </p>
-                  <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs text-foreground font-medium shadow-sm">
+                  <p className="rounded-[4px] border border-border-soft bg-surface-hover p-3 text-xs text-foreground font-medium shadow-sm">
                     <strong className="text-foreground">Site:</strong>{' '}
                     {item.siteExample}
                   </p>

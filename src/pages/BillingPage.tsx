@@ -73,7 +73,7 @@ export const BillingPage = () => {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10 font-sans">
       {/* Header */}
-      <header className="flex flex-col gap-4 border-b border-[#d9d9e3] pb-6">
+      <header className="flex flex-col gap-4 border-b border-border-soft pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -86,7 +86,7 @@ export const BillingPage = () => {
           <button
             onClick={() => currentUser?.id && refreshBilling(currentUser.id)}
             disabled={isBillingLoading}
-            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] transition-all cursor-pointer shadow-sm disabled:opacity-50"
+            className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:opacity-50"
           >
             <RefreshCw
               className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`}
@@ -150,10 +150,10 @@ export const BillingPage = () => {
             subtitle="Historical transaction ledger and secure receipt download operations"
             icon={Download}
           >
-            <div className="rounded-[4px] border border-[#d9d9e3] bg-white overflow-hidden shadow-sm">
+            <div className="rounded-[4px] border border-border-soft bg-surface overflow-hidden shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-[#d9d9e3] bg-[#faf8ff]">
+                  <tr className="border-b border-border-soft bg-background">
                     <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                       Invoice ID
                     </th>
@@ -175,7 +175,7 @@ export const BillingPage = () => {
                   {MOCK_INVOICES.map((inv) => (
                     <tr
                       key={inv.id}
-                      className="hover:bg-[#faf8ff] transition-colors"
+                      className="hover:bg-background transition-colors"
                     >
                       <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
                         {inv.id}
@@ -194,7 +194,7 @@ export const BillingPage = () => {
                       <td className="px-4 py-3 text-right">
                         <button
                           type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-[#d9d9e3] bg-white text-muted-copy hover:border-[#0047bb] hover:text-[#0047bb] transition-all cursor-pointer shadow-sm"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-[#0047bb] hover:text-[#0047bb] transition-all cursor-pointer shadow-sm"
                           aria-label="Download receipt"
                         >
                           <Download className="h-4 w-4" />
@@ -256,7 +256,7 @@ export const BillingPage = () => {
                     type="text"
                     value={cardName}
                     onChange={(e) => setCardName(e.target.value)}
-                    className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
+                    className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
                     required
                   />
                 </label>
@@ -268,7 +268,7 @@ export const BillingPage = () => {
                       type="text"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold font-mono"
+                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold font-mono"
                       required
                     />
                   </label>
@@ -279,7 +279,7 @@ export const BillingPage = () => {
                       placeholder="MM/YY"
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
+                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
                       required
                     />
                   </label>

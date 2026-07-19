@@ -21,11 +21,11 @@ export const MeetingPhrasebookTab = () => {
         return (
           <Card
             key={item.id}
-            className="p-5 space-y-4 rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm flex flex-col justify-between"
+            className="p-5 space-y-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             hoverEffect={false}
           >
             <div>
-              <div className="flex items-start justify-between gap-3 border-b border-[#d9d9e3] pb-2">
+              <div className="flex items-start justify-between gap-3 border-b border-border-soft pb-2">
                 <div>
                   <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                     {item.category}
@@ -36,7 +36,7 @@ export const MeetingPhrasebookTab = () => {
                 </div>
                 <Button
                   variant="ghost"
-                  className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-[#faf8ff]"
+                  className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-surface-hover"
                   onClick={() => toggleFavorite(item.id)}
                   aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
                 >
@@ -54,7 +54,7 @@ export const MeetingPhrasebookTab = () => {
                   <strong className="text-foreground font-bold">Use:</strong>{' '}
                   {item.whenToUse}
                 </p>
-                <p className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-3 text-xs italic text-foreground font-medium shadow-sm">
+                <p className="rounded-[4px] border border-border-soft bg-surface-hover p-3 text-xs italic text-foreground font-medium shadow-sm">
                   {item.example}
                 </p>
               </div>
@@ -62,7 +62,7 @@ export const MeetingPhrasebookTab = () => {
             <Button
               variant="secondary"
               onClick={() => copy(item.phrase)}
-              className="mt-4 h-9 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1.5"
+              className="mt-4 h-9 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1.5"
             >
               <Clipboard className="h-4 w-4 text-muted-copy" /> Copy
             </Button>

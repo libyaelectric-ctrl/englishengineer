@@ -53,7 +53,7 @@ export const UserContextSidebar = ({
           ].map(([label, value]) => (
             <div
               key={label}
-              className="flex items-center justify-between border-b border-[#d9d9e3]/60 pb-1.5"
+              className="flex items-center justify-between border-b border-border-soft/60 pb-1.5"
             >
               <span className="text-muted-copy font-mono text-[9px] font-bold uppercase tracking-wider">
                 {label}
@@ -102,7 +102,7 @@ export const UserContextSidebar = ({
             {lastResult.suggestedActions.map((action) => (
               <div
                 key={action}
-                className="flex gap-2 rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2 text-xs text-foreground shadow-sm font-medium"
+                className="flex gap-2 rounded-[4px] border border-border-soft bg-surface-hover p-2 text-xs text-foreground shadow-sm font-medium"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0 mt-0.5" />
                 <span>{action}</span>
@@ -127,7 +127,7 @@ export const UserContextSidebar = ({
           {sessions.slice(0, 5).map((session) => (
             <div
               key={session.id}
-              className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-2.5 shadow-sm"
+              className="rounded-[4px] border border-border-soft bg-surface-hover p-2.5 shadow-sm"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] font-bold text-foreground">
@@ -151,7 +151,7 @@ export const UserContextSidebar = ({
         </div>
       </SectionCard>
 
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
         <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
           Integration Notice
         </p>

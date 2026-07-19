@@ -94,7 +94,7 @@ const DocumentUploadSection = ({
   onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   allowed: boolean;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-4 space-y-3 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 space-y-3 shadow-sm">
     <label
       htmlFor="technical-document-upload"
       className="block text-xs font-bold uppercase tracking-wider text-foreground"
@@ -108,9 +108,9 @@ const DocumentUploadSection = ({
         accept=".txt,.pdf,.docx"
         onChange={onFileUpload}
         disabled={!allowed}
-        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-[#d9d9e3] file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-[#0047bb] hover:file:bg-[#faf8ff] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-[#0047bb] hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
-      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-white border border-[#d9d9e3] px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-surface border border-border-soft px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
         {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
         uploads used this month
       </span>
@@ -141,7 +141,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onRegenerate}
       variant="outline"
-      className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
       disabled={sessions.length === 0 || isLoading}
     >
       Regenerate
@@ -149,7 +149,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onClearHistory}
       variant="outline"
-      className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
       disabled={sessions.length === 0}
     >
       Clear
@@ -157,7 +157,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onReset}
       variant="outline"
-      className="h-7 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
     >
       Reset
     </Button>
@@ -252,7 +252,7 @@ const FormBody = ({
       onChange={(event) => onSetInput(event.target.value)}
       disabled={!aiEntitlement.allowed}
       rows={3}
-      className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] focus:border-[#0047bb] focus:ring-0 shadow-sm"
+      className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-border-soft bg-surface-hover focus:border-[#0047bb] focus:ring-0 shadow-sm"
       placeholder={selectedMode?.placeholder ?? ''}
       aria-label="Technical note content input"
     />

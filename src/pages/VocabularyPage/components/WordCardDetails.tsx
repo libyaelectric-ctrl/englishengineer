@@ -76,7 +76,7 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
   };
 
   return (
-    <div className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-3 text-xs text-muted-copy shadow-sm">
+    <div className="mt-3 rounded-[4px] border border-border-soft bg-surface/60 p-3 text-xs text-muted-copy shadow-sm">
       <button
         type="button"
         onClick={onToggle}
@@ -138,11 +138,11 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
           />
 
           {/* AI Vocab Tutor Chat */}
-          <div className="mt-4 border-t border-[#d9d9e3] pt-4">
+          <div className="mt-4 border-t border-border-soft pt-4">
             <h4 className="text-xs font-black uppercase tracking-wide text-foreground">
               AI Vocabulary Teacher
             </h4>
-            <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-[#d9d9e3] bg-background p-2.5">
+            <div className="mt-2 flex max-h-60 min-h-24 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-border-soft bg-background p-2.5">
               {messages.map((msg, i) => (
                 <div
                   key={i}
@@ -178,7 +178,7 @@ Would you like to practice? Write a sentence in English using "${term.term}" or 
                 }}
                 disabled={isTalking}
                 placeholder="Type your sentence, translation, or question..."
-                className="flex-1 rounded-[4px] border border-[#d9d9e3] bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
+                className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
               />
               <Button
                 onClick={handleSend}

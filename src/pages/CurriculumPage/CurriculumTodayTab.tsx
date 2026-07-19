@@ -37,11 +37,11 @@ export const CurriculumTodayTab = ({
     >
       <div className="font-sans relative space-y-6">
         {/* Daily Mission Briefing Header / System Status Panel */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm relative overflow-hidden">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm relative overflow-hidden">
           {/* Grid pattern background */}
           <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
 
-          <div className="relative z-10 flex flex-wrap items-start justify-between gap-4 border-b border-[#d9d9e3] pb-4">
+          <div className="relative z-10 flex flex-wrap items-start justify-between gap-4 border-b border-border-soft pb-4">
             <div>
               <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
                 {dayIndexStr} // SYSTEM BRIEFING
@@ -66,8 +66,8 @@ export const CurriculumTodayTab = ({
 
           <div className="relative z-10 mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Daily Streak Box nested using #f3f3fd */}
-            <div className="rounded-[4px] border border-[#d9d9e3]/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
-              <span className="rounded-[4px] bg-white border border-[#d9d9e3] p-1.5 text-[#0047bb] shrink-0 shadow-sm">
+            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
+              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-[#0047bb] shrink-0 shadow-sm">
                 <Flame className="h-4 w-4" />
               </span>
               <div>
@@ -81,8 +81,8 @@ export const CurriculumTodayTab = ({
             </div>
 
             {/* Daily Intensity Box */}
-            <div className="rounded-[4px] border border-[#d9d9e3]/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
-              <span className="rounded-[4px] bg-white border border-[#d9d9e3] p-1.5 text-[#0047bb] shrink-0 shadow-sm">
+            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
+              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-[#0047bb] shrink-0 shadow-sm">
                 <Bolt className="h-4 w-4" />
               </span>
               <div>
@@ -96,12 +96,12 @@ export const CurriculumTodayTab = ({
             </div>
 
             {/* Daily Progress loading bar */}
-            <div className="rounded-[4px] border border-[#d9d9e3]/60 bg-[#f3f3fd] p-3.5 flex flex-col justify-between">
+            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex flex-col justify-between">
               <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-wider text-muted-copy">
                 <span>Mission progress</span>
                 <span>{displayProgressPercent}%</span>
               </div>
-              <div className="w-full bg-[#d9d9e3] h-2.5 border border-[#d9d9e3] mt-2 relative overflow-hidden rounded-[0px]">
+              <div className="w-full bg-[#d9d9e3] h-2.5 border border-border-soft mt-2 relative overflow-hidden rounded-[0px]">
                 <div
                   className="bg-[#0047bb] h-full transition-all duration-500 rounded-[0px]"
                   style={{ width: `${displayProgressPercent}%` }}
@@ -117,7 +117,7 @@ export const CurriculumTodayTab = ({
             ? [0, 1, 2].map((item) => (
                 <div
                   key={item}
-                  className="h-44 animate-pulse rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff]"
+                  className="h-44 animate-pulse rounded-[4px] border border-border-soft bg-surface-hover"
                 />
               ))
             : missions.map((mission, index) => {
@@ -128,8 +128,8 @@ export const CurriculumTodayTab = ({
                     key={mission.id}
                     className={`flex min-h-44 flex-col rounded-[4px] border p-5 shadow-sm transition-all hover:border-[#0047bb]/40 ${
                       isActive
-                        ? 'border-y border-r border-[#d9d9e3] border-l-[3px] border-l-[#0047bb] bg-white'
-                        : 'border-[#d9d9e3] bg-white'
+                        ? 'border-y border-r border-border-soft border-l-[3px] border-l-[#0047bb] bg-surface'
+                        : 'border-border-soft bg-surface'
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -138,7 +138,7 @@ export const CurriculumTodayTab = ({
                           {taskIdStr}
                         </span>
                         {isActive && (
-                          <span className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 px-1 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                          <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
                             ACTIVE
                           </span>
                         )}
@@ -160,7 +160,7 @@ export const CurriculumTodayTab = ({
                       className={`mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm gap-1.5 border transition-all ${
                         isActive
                           ? 'bg-[#0047bb] hover:bg-[#0047bb]/90 border-[#0047bb] text-white'
-                          : 'bg-white hover:bg-[#faf8ff] border-[#d9d9e3] text-[#0047bb]'
+                          : 'bg-surface hover:bg-surface-hover border-border-soft text-[#0047bb]'
                       }`}
                       onClick={() => navigate(mission.route)}
                     >

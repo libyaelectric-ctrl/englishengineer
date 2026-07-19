@@ -26,7 +26,9 @@ export const ReviewReminderService = {
   getSettings(): ReviewReminderSettings {
     try {
       const stored = localStorage.getItem(REMINDER_STORAGE_KEY);
-      return stored ? { ...defaultSettings(), ...JSON.parse(stored) } : defaultSettings();
+      return stored
+        ? { ...defaultSettings(), ...JSON.parse(stored) }
+        : defaultSettings();
     } catch {
       return defaultSettings();
     }
@@ -87,7 +89,11 @@ export const ReviewReminderService = {
     const [hours, minutes] = timeOfDay.split(':').map(Number);
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
-    return currentHour === hours && currentMinute >= minutes && currentMinute < minutes + 15;
+    return (
+      currentHour === hours &&
+      currentMinute >= minutes &&
+      currentMinute < minutes + 15
+    );
   },
 
   shouldShowBanner(
@@ -100,10 +106,7 @@ export const ReviewReminderService = {
     return lastNotifiedDate !== today;
   },
 
-  getReminderMessage(
-    dueCount: number,
-    streak: number
-  ): string {
+  getReminderMessage(dueCount: number, streak: number): string {
     if (dueCount === 0) return 'All reviews complete! Great work.';
     if (streak > 7) {
       return `${dueCount} words due today — keep your ${streak}-day streak alive!`;

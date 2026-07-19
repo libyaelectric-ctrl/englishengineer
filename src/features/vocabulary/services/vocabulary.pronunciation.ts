@@ -22,7 +22,9 @@ export const PronunciationService = {
     try {
       const stored = localStorage.getItem(CACHE_KEY);
       if (stored) {
-        const entries = JSON.parse(stored) as Array<[string, { word: string; timestamp: number }]>;
+        const entries = JSON.parse(stored) as Array<
+          [string, { word: string; timestamp: number }]
+        >;
         entries.forEach(([key, val]) => {
           this.cache.set(key, { ...val, audioBlob: new Blob() });
         });
@@ -43,9 +45,10 @@ export const PronunciationService = {
     utterance.pitch = 1;
 
     const voices = speechSynthesis.getVoices();
-    const englishVoice = voices.find(
-      (v) => v.lang.startsWith('en') && v.name.includes('Google')
-    ) ?? voices.find((v) => v.lang.startsWith('en'));
+    const englishVoice =
+      voices.find(
+        (v) => v.lang.startsWith('en') && v.name.includes('Google')
+      ) ?? voices.find((v) => v.lang.startsWith('en'));
 
     if (englishVoice) utterance.voice = englishVoice;
 

@@ -220,7 +220,9 @@ export const VocabularyBadgeService = {
     nextBadge: VocabularyBadge | null;
   } {
     const badges = this.checkAndUnlock(stats);
-    const unlocked = badges.filter((b) => b.newlyUnlocked || b.badge.unlockedAt).length;
+    const unlocked = badges.filter(
+      (b) => b.newlyUnlocked || b.badge.unlockedAt
+    ).length;
     const nextBadge = badges.find((b) => !b.badge.unlockedAt)?.badge ?? null;
     return { unlocked, total: badges.length, nextBadge };
   },

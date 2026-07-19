@@ -22,7 +22,7 @@ export const CareerRoleSelector = ({
       id="career-role"
       value={careerRole}
       onChange={(event) => onRoleChange(event.target.value)}
-      className="mt-4 min-h-10 w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/20 md:max-w-md cursor-pointer font-bold uppercase tracking-wider shadow-sm"
+      className="mt-4 min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-3 text-xs text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 md:max-w-md cursor-pointer font-bold uppercase tracking-wider shadow-sm"
     >
       {CAREER_ROLES.map((role) => (
         <option key={role}>{role}</option>

@@ -9,7 +9,10 @@ import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
-import { GrammarProgressService, ErrorPatternAnalyzer } from '@/features/grammar';
+import {
+  GrammarProgressService,
+  ErrorPatternAnalyzer,
+} from '@/features/grammar';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { AnalyticsMetricCards } from './AnalyticsMetricCards';

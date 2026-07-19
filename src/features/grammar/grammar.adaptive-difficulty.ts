@@ -1,6 +1,10 @@
 import type { GrammarRuleProgress } from './grammar.progress';
 
-export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced' | 'challenge';
+export type DifficultyLevel =
+  | 'beginner'
+  | 'intermediate'
+  | 'advanced'
+  | 'challenge';
 
 export interface DifficultyAssessment {
   ruleId: string;
@@ -18,9 +22,11 @@ export const AdaptiveDifficultyEngine = {
     ruleId: string,
     progress: GrammarRuleProgress
   ): DifficultyAssessment {
-    const accuracy = progress.correctUsages + progress.incorrectUsages > 0
-      ? progress.correctUsages / (progress.correctUsages + progress.incorrectUsages)
-      : 0.5;
+    const accuracy =
+      progress.correctUsages + progress.incorrectUsages > 0
+        ? progress.correctUsages /
+          (progress.correctUsages + progress.incorrectUsages)
+        : 0.5;
 
     const strengthScore = progress.strength / 100;
     const exposureScore = Math.min(1, progress.exposures / 20);
@@ -53,7 +59,8 @@ export const AdaptiveDifficultyEngine = {
         ruleId,
         suggestedDifficulty: 'intermediate',
         confidence: compositeScore,
-        reasoning: 'Building foundation — intermediate complexity is appropriate.',
+        reasoning:
+          'Building foundation — intermediate complexity is appropriate.',
       };
     }
 
@@ -96,10 +103,14 @@ export const AdaptiveDifficultyEngine = {
 
   getDifficultyMultiplier(level: DifficultyLevel): number {
     switch (level) {
-      case 'beginner': return 1.0;
-      case 'intermediate': return 1.5;
-      case 'advanced': return 2.0;
-      case 'challenge': return 3.0;
+      case 'beginner':
+        return 1.0;
+      case 'intermediate':
+        return 1.5;
+      case 'advanced':
+        return 2.0;
+      case 'challenge':
+        return 3.0;
     }
   },
 };

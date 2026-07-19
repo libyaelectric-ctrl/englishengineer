@@ -77,7 +77,7 @@ export const CoachResultPanel = ({
             type="button"
             variant="outline"
             onClick={onCopyResult}
-            className="h-8 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-3 inline-flex items-center justify-center"
+            className="h-8 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-3 inline-flex items-center justify-center"
           >
             <Clipboard className="h-3.5 w-3.5 text-muted-copy" />
             Copy
@@ -86,7 +86,7 @@ export const CoachResultPanel = ({
             type="button"
             variant="outline"
             onClick={onExportResult}
-            className="h-8 rounded-[4px] border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-3 inline-flex items-center justify-center"
+            className="h-8 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-3 inline-flex items-center justify-center"
           >
             <Download className="h-3.5 w-3.5 text-muted-copy" />
             Export
@@ -117,7 +117,7 @@ export const CoachResultPanel = ({
               {lastResult.professionalVersion || lastResult.nativeRewrite}
             </p>
           </div>
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-5 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 shadow-sm">
             <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Simplified Version
             </p>
@@ -146,7 +146,7 @@ export const CoachResultPanel = ({
           tone="warning"
         />
 
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-5 shadow-sm">
+        <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 shadow-sm">
           <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
             Native Rewrite
           </p>
@@ -156,13 +156,13 @@ export const CoachResultPanel = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-5 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 shadow-sm">
             <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Technical Vocabulary
             </p>
             <VocabularyTerms terms={lastResult.technicalVocabulary} />
           </div>
-          <div className="rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] p-5 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 shadow-sm">
             <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Tone & Next Task
             </p>

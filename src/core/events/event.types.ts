@@ -132,6 +132,15 @@ export interface GrammarMasteredEvent extends BaseEvent {
   };
 }
 
+export interface SpeakingCompletedEvent extends BaseEvent {
+  readonly type: 'speaking:completed';
+  readonly payload: {
+    readonly missionId: string;
+    readonly score: number;
+    readonly completedAt: string;
+  };
+}
+
 export type EventSubscriptionToken = {
   readonly unsubscribe: () => void;
 };

@@ -112,8 +112,8 @@ export const KnowledgeGraph = ({
   setSelectedGraphNode: (node: GraphNode | null) => void;
 }) => {
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white shadow-sm overflow-hidden animate-in fade-in duration-300">
-      <div className="px-5 pt-4 pb-3 border-b border-[#d9d9e3]">
+    <div className="rounded-[4px] border border-border-soft bg-surface shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div className="px-5 pt-4 pb-3 border-b border-border-soft">
         <div className="flex items-center gap-2">
           <Network className="h-4 w-4 text-[#0047bb]" />
           <h3 className="text-sm font-bold text-foreground">Knowledge Graph</h3>
@@ -122,7 +122,7 @@ export const KnowledgeGraph = ({
           Click nodes to explore connections.
         </p>
       </div>
-      <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-[#faf8ff] select-none">
+      <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-surface-hover select-none">
         <svg viewBox="0 0 800 500" className="h-full w-full">
           {GRAPH_LINKS.map((link, idx) => (
             <GraphLink
@@ -143,7 +143,7 @@ export const KnowledgeGraph = ({
         </svg>
         {!selectedGraphNode && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <p className="bg-white/80 backdrop-blur-sm px-3 py-1.5 rounded-[4px] border border-[#d9d9e3] text-xs font-bold text-muted-copy animate-pulse uppercase tracking-wider shadow-sm">
+            <p className="bg-surface/80 backdrop-blur-sm px-3 py-1.5 rounded-[4px] border border-border-soft text-xs font-bold text-muted-copy animate-pulse uppercase tracking-wider shadow-sm">
               Click a node to explore
             </p>
           </div>

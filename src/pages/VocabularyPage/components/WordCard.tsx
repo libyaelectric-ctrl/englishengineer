@@ -181,7 +181,7 @@ export const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-[4px] border-y border-r border-[#d9d9e3] border-l-2 bg-white/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
+      className={`flex h-full flex-col rounded-[4px] border-y border-r border-border-soft border-l-2 bg-surface/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
       style={{ perspective: '1000px' }}
     >
       <AnimatePresence mode="wait">

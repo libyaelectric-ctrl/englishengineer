@@ -127,7 +127,7 @@ const RoleplayTab = () => {
                 </p>
               </div>
 
-              <div className="flex items-start gap-2.5 mt-3 rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-3 shadow-sm">
+              <div className="flex items-start gap-2.5 mt-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-3 shadow-sm">
                 <FileText className="h-4 w-4 text-muted-copy shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
@@ -142,7 +142,7 @@ const RoleplayTab = () => {
                 </div>
               </div>
 
-              <div className="mt-5 flex gap-3 border-b border-[#d9d9e3] pb-2">
+              <div className="mt-5 flex gap-3 border-b border-border-soft pb-2">
                 <button
                   type="button"
                   onClick={() => setResponseMode('written')}
@@ -189,7 +189,7 @@ const RoleplayTab = () => {
                     id="written-roleplay-response"
                     value={typedTranscript}
                     onChange={(event) => setTypedTranscript(event.target.value)}
-                    className="mt-3 min-h-48 w-full resize-y rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 font-bold placeholder-muted-copy shadow-sm"
+                    className="mt-3 min-h-48 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 font-bold placeholder-muted-copy shadow-sm"
                     placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
@@ -203,7 +203,7 @@ const RoleplayTab = () => {
                     <Button
                       variant="secondary"
                       onClick={resetMission}
-                      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-[#d9d9e3] hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+                      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
                     >
                       <RotateCcw className="h-4 w-4" /> Reset response
                     </Button>
@@ -254,7 +254,7 @@ const SpeakingPage = () => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-40 border-b border-[#d9d9e3] bg-[#faf8ff] py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
+      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Speaking
@@ -271,7 +271,7 @@ const SpeakingPage = () => {
           aria-selected={speakingTab === 'roleplay'}
           variant={speakingTab === 'roleplay' ? 'primary' : 'ghost'}
           onClick={() => setSpeakingTab('roleplay')}
-          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-[#d9d9e3] bg-white hover:bg-[#0047bb]/5"
+          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
         >
           <MessageSquareText className="h-4 w-4" />
           Roleplay
@@ -281,7 +281,7 @@ const SpeakingPage = () => {
           aria-selected={speakingTab === 'interview'}
           variant={speakingTab === 'interview' ? 'primary' : 'ghost'}
           onClick={() => setSpeakingTab('interview')}
-          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-[#d9d9e3] bg-white hover:bg-[#0047bb]/5"
+          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
         >
           <Trophy className="h-4 w-4" />
           Interview Simulator

@@ -14,7 +14,7 @@ export const MissionList = ({
       return (
         <div
           key={mission.template.id}
-          className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm"
+          className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm"
         >
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div>
@@ -32,7 +32,7 @@ export const MissionList = ({
               className={`text-[10px] font-mono uppercase border px-2 py-1 rounded-[4px] self-start font-bold ${
                 mission.isCompleted
                   ? 'bg-success/10 text-success border-success/20'
-                  : 'border-[#d9d9e3] bg-[#faf8ff] text-muted-copy'
+                  : 'border-border-soft bg-surface-hover text-muted-copy'
               }`}
             >
               {mission.isCompleted
@@ -63,7 +63,7 @@ export const DetailRow = ({
   label: string;
   value: string;
 }) => (
-  <div className="flex items-center justify-between border-b border-[#d9d9e3] pb-2 last:border-b-0 last:pb-0">
+  <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase font-bold">{label}</span>
     <span className="font-bold text-foreground">{value}</span>
   </div>
@@ -76,7 +76,7 @@ export const MiniStat = ({
   label: string;
   value: string;
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">
       {label}
     </p>
@@ -100,7 +100,7 @@ export const FeedList = ({
     {items.map((item) => (
       <div
         key={item.id}
-        className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm"
+        className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
       >
         <p className="text-sm font-bold text-foreground">{item.title}</p>
         <p className="text-xs text-muted-copy mt-1 font-medium">

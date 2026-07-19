@@ -25,38 +25,49 @@ export interface ErrorPatternSummary {
   totalErrors: number;
   byCategory: Record<ErrorCategory, number>;
   weakestCategory: ErrorCategory | null;
-  topCategories: Array<{ category: ErrorCategory; count: number; percentage: number }>;
+  topCategories: Array<{
+    category: ErrorCategory;
+    count: number;
+    percentage: number;
+  }>;
   recommendations: string[];
 }
 
 const STORAGE_KEY = 'EngVox_grammar_error_patterns';
 
 const CATEGORY_LABELS: Record<ErrorCategory, string> = {
-  'tense': 'Tense Usage',
-  'preposition': 'Prepositions',
-  'article': 'Articles (a/an/the)',
+  tense: 'Tense Usage',
+  preposition: 'Prepositions',
+  article: 'Articles (a/an/the)',
   'subject-verb-agreement': 'Subject-Verb Agreement',
   'word-order': 'Word Order',
-  'pronoun': 'Pronouns',
-  'plural': 'Plurals',
-  'comparison': 'Comparisons',
-  'conditionals': 'Conditionals',
+  pronoun: 'Pronouns',
+  plural: 'Plurals',
+  comparison: 'Comparisons',
+  conditionals: 'Conditionals',
   'passive-voice': 'Passive Voice',
-  'other': 'Other',
+  other: 'Other',
 };
 
 const RECOMMENDATIONS: Record<ErrorCategory, string> = {
-  'tense': 'Review present/past/future tense forms. Practice timeline exercises.',
-  'preposition': 'Focus on common preposition combinations. Read English texts actively.',
-  'article': 'Practice a/an/the usage rules. Pay attention to countable/uncountable nouns.',
-  'subject-verb-agreement': 'Review singular/plural verb forms. Check subject before verb.',
+  tense: 'Review present/past/future tense forms. Practice timeline exercises.',
+  preposition:
+    'Focus on common preposition combinations. Read English texts actively.',
+  article:
+    'Practice a/an/the usage rules. Pay attention to countable/uncountable nouns.',
+  'subject-verb-agreement':
+    'Review singular/plural verb forms. Check subject before verb.',
   'word-order': 'Practice basic SVO structure. Review adverb placement rules.',
-  'pronoun': 'Review pronoun-antecedent agreement. Practice relative pronouns.',
-  'plural': 'Review regular/irregular plural forms. Practice countable noun rules.',
-  'comparison': 'Review comparative/superlative forms. Practice than/as...as structures.',
-  'conditionals': 'Review zero/first/second/third conditional forms and their meanings.',
-  'passive-voice': 'Review passive form (be + past participle). Practice active-passive conversion.',
-  'other': 'Continue practicing grammar rules systematically.',
+  pronoun: 'Review pronoun-antecedent agreement. Practice relative pronouns.',
+  plural:
+    'Review regular/irregular plural forms. Practice countable noun rules.',
+  comparison:
+    'Review comparative/superlative forms. Practice than/as...as structures.',
+  conditionals:
+    'Review zero/first/second/third conditional forms and their meanings.',
+  'passive-voice':
+    'Review passive form (be + past participle). Practice active-passive conversion.',
+  other: 'Continue practicing grammar rules systematically.',
 };
 
 const normalize = (id: string): string =>
@@ -130,7 +141,8 @@ export const ErrorPatternAnalyzer = {
       .map(([category, count]) => ({
         category: category as ErrorCategory,
         count,
-        percentage: totalErrors > 0 ? Math.round((count / totalErrors) * 100) : 0,
+        percentage:
+          totalErrors > 0 ? Math.round((count / totalErrors) * 100) : 0,
       }))
       .sort((a, b) => b.count - a.count)
       .filter((c) => c.count > 0);
@@ -140,7 +152,13 @@ export const ErrorPatternAnalyzer = {
       .slice(0, 3)
       .map((c) => RECOMMENDATIONS[c.category]);
 
-    return { totalErrors, byCategory, weakestCategory, topCategories, recommendations };
+    return {
+      totalErrors,
+      byCategory,
+      weakestCategory,
+      topCategories,
+      recommendations,
+    };
   },
 
   getWeakAreasForPool(): string[] {

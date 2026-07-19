@@ -71,7 +71,7 @@ export const EvaluationView = ({
           {currentMission.expectedStructure.map((point, i) => (
             <div
               key={i}
-              className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-3 text-sm text-foreground shadow-sm font-normal"
+              className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-3 text-sm text-foreground shadow-sm font-normal"
             >
               {point}
             </div>

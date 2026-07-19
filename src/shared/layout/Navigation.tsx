@@ -81,7 +81,7 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
               />
             </button>
             {isOpen && 'children' in item && (
-              <div className="ml-4 space-y-0.5 border-l border-[#d9d9e3] pl-3">
+              <div className="ml-4 space-y-0.5 border-l border-border-soft pl-3">
                 {item.children.map((child) => (
                   <NavLink
                     key={child.label}

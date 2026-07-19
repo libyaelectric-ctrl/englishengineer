@@ -29,7 +29,7 @@ export const HeroPanel = React.memo(
     onStartLesson,
   }: HeroPanelProps) => (
     <>
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
+      <div className="rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
         <div className="flex items-center gap-4 w-full">
           <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 text-[#0047bb] font-black text-xl shadow-sm">
             {summary.averageScore}
@@ -54,19 +54,19 @@ export const HeroPanel = React.memo(
                 </span>
               </div>
             </div>
-            <div className="h-2 rounded-[4px] bg-surface-hover overflow-hidden border border-[#d9d9e3]">
+            <div className="h-2 rounded-[4px] bg-surface-hover overflow-hidden border border-border-soft">
               <div
                 className="h-full rounded-[4px] bg-[#0047bb] transition-all duration-1000 relative"
                 style={{ width: `${summary.averageScore}%` }}
               >
-                <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                <div className="absolute inset-0 bg-surface/20 animate-pulse"></div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <header className="premium-panel overflow-hidden p-6 sm:p-8 bg-[#faf8ff] bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] border border-[#d9d9e3] rounded-[4px] shadow-sm hover:shadow-md transition-all duration-300 animate-on-scroll">
+      <header className="premium-panel overflow-hidden p-6 sm:p-8 bg-surface-hover bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] border border-border-soft rounded-[4px] shadow-sm hover:shadow-md transition-all duration-300 animate-on-scroll">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
             <div className="flex flex-wrap gap-2">
@@ -130,7 +130,7 @@ export const HeroPanel = React.memo(
         >
           <div
             data-testid="dashboard-summary-score"
-            className="min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 shadow-sm"
+            className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
             <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
               COMPETENCY INDEX
@@ -141,7 +141,7 @@ export const HeroPanel = React.memo(
           </div>
           <div
             data-testid="dashboard-summary-elo"
-            className="min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 shadow-sm"
+            className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
             <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider mb-1">
               TARGET LEVEL
@@ -154,7 +154,7 @@ export const HeroPanel = React.memo(
           </div>
           <div
             data-testid="dashboard-summary-done"
-            className="min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 shadow-sm"
+            className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
             <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
               COMPLETION RATE

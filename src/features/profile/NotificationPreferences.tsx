@@ -11,7 +11,7 @@ interface ToggleProps {
 const Toggle = ({ label, description, checked, onChange }: ToggleProps) => {
   const id = `toggle-${label.toLowerCase().replace(/\s+/g, '-')}`;
   return (
-    <div className="flex items-center justify-between gap-4 rounded-[4px] border border-[#d9d9e3] bg-white p-4 cursor-pointer hover:bg-[#faf8ff] transition-colors shadow-sm">
+    <div className="flex items-center justify-between gap-4 rounded-[4px] border border-border-soft bg-surface p-4 cursor-pointer hover:bg-surface-hover transition-colors shadow-sm">
       <label htmlFor={id} className="min-w-0 cursor-pointer">
         <p className="text-xs font-bold text-foreground uppercase tracking-wider">
           {label}
@@ -29,11 +29,11 @@ const Toggle = ({ label, description, checked, onChange }: ToggleProps) => {
         className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-[4px] border transition-colors cursor-pointer ${
           checked
             ? 'bg-[#0047bb] border-[#0047bb]'
-            : 'bg-[#faf8ff] border-[#d9d9e3]'
+            : 'bg-surface-hover border-border-soft'
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 rounded-[2px] bg-white shadow-sm transition-transform ${
+          className={`inline-block h-4 w-4 rounded-[2px] bg-surface shadow-sm transition-transform ${
             checked ? 'translate-x-6' : 'translate-x-0.5'
           }`}
         />

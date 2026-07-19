@@ -49,8 +49,8 @@ export const SecuritySection = ({
     >
       <div className="space-y-6 relative z-10">
         {/* Cloud Sync section */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
-          <div className="flex justify-between items-center border-b border-[#d9d9e3] pb-2 mb-4">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
+          <div className="flex justify-between items-center border-b border-border-soft pb-2 mb-4">
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb] flex items-center gap-1.5">
               <Shield className="h-4 w-4" /> Cloud Synced Records
             </span>
@@ -64,8 +64,8 @@ export const SecuritySection = ({
         </div>
 
         {/* Change Password Configuration Card */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm space-y-4">
-          <div className="flex items-center gap-1.5 border-b border-[#d9d9e3] pb-2">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
+          <div className="flex items-center gap-1.5 border-b border-border-soft pb-2">
             <Key className="h-4 w-4 text-[#0047bb]" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">
               Credential Management
@@ -82,7 +82,7 @@ export const SecuritySection = ({
                   type="password"
                   disabled
                   placeholder="••••••••••••"
-                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] pl-9 pr-3 py-2 text-xs text-foreground outline-none font-bold shadow-sm"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface-hover pl-9 pr-3 py-2 text-xs text-foreground outline-none font-bold shadow-sm"
                 />
                 <Lock className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-copy" />
               </div>
@@ -96,7 +96,7 @@ export const SecuritySection = ({
                   type="password"
                   disabled
                   placeholder="Configure new credential"
-                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-[#faf8ff] pl-9 pr-3 py-2 text-xs text-foreground outline-none font-bold shadow-sm"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface-hover pl-9 pr-3 py-2 text-xs text-foreground outline-none font-bold shadow-sm"
                 />
                 <Lock className="absolute left-3 top-2.5 h-3.5 w-3.5 text-muted-copy" />
               </div>
@@ -106,7 +106,7 @@ export const SecuritySection = ({
             <Button
               variant="outline"
               disabled
-              className="text-[10px] min-h-9 border border-[#d9d9e3] bg-white text-muted-copy font-bold uppercase tracking-wider rounded-[4px] cursor-not-allowed shadow-sm"
+              className="text-[10px] min-h-9 border border-border-soft bg-surface text-muted-copy font-bold uppercase tracking-wider rounded-[4px] cursor-not-allowed shadow-sm"
             >
               Update Password
             </Button>
@@ -114,7 +114,7 @@ export const SecuritySection = ({
         </div>
 
         {/* Two-Factor Authentication (2FA) Module */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground block">
               Multi-Factor Authentication (MFA)
@@ -131,7 +131,7 @@ export const SecuritySection = ({
             <Button
               variant="outline"
               disabled
-              className="text-[10px] min-h-9 border border-[#d9d9e3] bg-white text-muted-copy font-bold uppercase tracking-wider rounded-[4px] cursor-not-allowed shadow-sm"
+              className="text-[10px] min-h-9 border border-border-soft bg-surface text-muted-copy font-bold uppercase tracking-wider rounded-[4px] cursor-not-allowed shadow-sm"
             >
               Configure 2FA
             </Button>
@@ -139,13 +139,13 @@ export const SecuritySection = ({
         </div>
 
         {/* Active Session Audit Log */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm space-y-4">
-          <div className="flex justify-between items-center border-b border-[#d9d9e3] pb-2">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
+          <div className="flex justify-between items-center border-b border-border-soft pb-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
               <History className="h-4 w-4 text-[#0047bb]" /> Session Access
               History
             </span>
-            <span className="rounded-[4px] bg-[#f3f3fd] border border-[#d9d9e3]/60 px-2 py-0.5 text-[8px] font-mono font-bold text-muted-copy uppercase tracking-wider">
+            <span className="rounded-[4px] bg-[#f3f3fd] border border-border-soft/60 px-2 py-0.5 text-[8px] font-mono font-bold text-muted-copy uppercase tracking-wider">
               TOTAL: 1 ACTIVE
             </span>
           </div>
@@ -164,7 +164,7 @@ export const SecuritySection = ({
                 <span>Session ID: SES-4820a2e0e0129</span>
               </div>
               <div className="text-right">
-                <span className="rounded-[4px] bg-[#faf8ff] border border-[#d9d9e3] px-1.5 py-0.5 text-[8px] font-bold text-foreground uppercase tracking-wider block">
+                <span className="rounded-[4px] bg-surface-hover border border-border-soft px-1.5 py-0.5 text-[8px] font-bold text-foreground uppercase tracking-wider block">
                   IP-VERIFIED
                 </span>
                 <span className="block mt-0.5 text-[8px]">ACTIVE NOW</span>
@@ -174,7 +174,7 @@ export const SecuritySection = ({
         </div>
 
         {/* Local Data backup controls */}
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-5 shadow-sm">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
           <span className="text-[10px] font-bold uppercase tracking-wider text-foreground block mb-2">
             Local Backups Archive
           </span>
@@ -186,7 +186,7 @@ export const SecuritySection = ({
             type="button"
             variant="outline"
             onClick={exportLocalData}
-            className="text-xs min-h-9 border border-[#d9d9e3] bg-white hover:bg-[#faf8ff] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+            className="text-xs min-h-9 border border-border-soft bg-surface hover:bg-surface-hover text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
           >
             <Download className="h-3.5 w-3.5 mr-1" /> Export local data
           </Button>
@@ -214,7 +214,7 @@ export const SecuritySection = ({
               </Button>
 
               {showClearConfirmation && (
-                <div className="mt-4 rounded-[4px] border border-rose-500/25 bg-white p-4 shadow-sm animate-in fade-in duration-300">
+                <div className="mt-4 rounded-[4px] border border-rose-500/25 bg-surface p-4 shadow-sm animate-in fade-in duration-300">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-rose-600 block">
                     Type CLEAR to remove local progress from this browser.
                     <input
@@ -222,7 +222,7 @@ export const SecuritySection = ({
                       onChange={(event) =>
                         setClearConfirmation(event.target.value.toUpperCase())
                       }
-                      className="mt-2 min-h-10 w-full rounded-[4px] border border-rose-500/25 bg-white px-3 text-xs text-foreground outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/10 font-bold shadow-sm"
+                      className="mt-2 min-h-10 w-full rounded-[4px] border border-rose-500/25 bg-surface px-3 text-xs text-foreground outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/10 font-bold shadow-sm"
                     />
                   </label>
                   <Button
@@ -258,13 +258,13 @@ export const SecuritySection = ({
             type="button"
             variant="outline"
             onClick={() => setShowClearConfirmation((val) => !val)}
-            className="text-xs min-h-9 border border-warning/40 bg-white text-warning hover:bg-warning/5 font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+            className="text-xs min-h-9 border border-warning/40 bg-surface text-warning hover:bg-warning/5 font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
           >
             <Trash2 className="h-3.5 w-3.5 mr-1" /> Reset Progress
           </Button>
 
           {showClearConfirmation && (
-            <div className="mt-4 rounded-[4px] border border-warning/30 bg-white p-4 shadow-sm animate-in fade-in duration-300">
+            <div className="mt-4 rounded-[4px] border border-warning/30 bg-surface p-4 shadow-sm animate-in fade-in duration-300">
               <label className="text-[10px] font-bold uppercase tracking-wider text-warning block">
                 Type CLEAR to reset all learning progress.
                 <input
@@ -272,7 +272,7 @@ export const SecuritySection = ({
                   onChange={(event) =>
                     setClearConfirmation(event.target.value.toUpperCase())
                   }
-                  className="mt-2 min-h-10 w-full rounded-[4px] border border-warning/30 bg-white px-3 text-xs text-foreground outline-none focus:border-warning focus:ring-1 focus:ring-warning/10 font-bold shadow-sm"
+                  className="mt-2 min-h-10 w-full rounded-[4px] border border-warning/30 bg-surface px-3 text-xs text-foreground outline-none focus:border-warning focus:ring-1 focus:ring-warning/10 font-bold shadow-sm"
                 />
               </label>
               <Button

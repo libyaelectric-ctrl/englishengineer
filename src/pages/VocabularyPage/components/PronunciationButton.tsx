@@ -7,7 +7,10 @@ interface PronunciationButtonProps {
   className?: string;
 }
 
-export function PronunciationButton({ word, className = '' }: PronunciationButtonProps) {
+export function PronunciationButton({
+  word,
+  className = '',
+}: PronunciationButtonProps) {
   const [playing, setPlaying] = useState(false);
   const phonetic = PronunciationService.getPhonetic(word);
 
@@ -39,7 +42,9 @@ export function PronunciationButton({ word, className = '' }: PronunciationButto
         )}
       </button>
       {phonetic && (
-        <span className="text-[10px] font-mono text-muted-copy">{phonetic}</span>
+        <span className="text-[10px] font-mono text-muted-copy">
+          {phonetic}
+        </span>
       )}
     </div>
   );

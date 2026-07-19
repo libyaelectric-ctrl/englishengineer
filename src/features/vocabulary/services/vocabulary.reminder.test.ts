@@ -51,21 +51,29 @@ describe('ReviewReminderService', () => {
 
   describe('shouldShowBanner', () => {
     it('returns true when there are due words and not yet notified today', () => {
-      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-18')).toBe(true);
+      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-18')).toBe(
+        true
+      );
     });
 
     it('returns false when no due words', () => {
-      expect(ReviewReminderService.shouldShowBanner(0, '2026-07-18')).toBe(false);
+      expect(ReviewReminderService.shouldShowBanner(0, '2026-07-18')).toBe(
+        false
+      );
     });
 
     it('returns false when already notified today', () => {
-      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-19')).toBe(false);
+      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-19')).toBe(
+        false
+      );
     });
   });
 
   describe('getReminderMessage', () => {
     it('returns completion message when no due words', () => {
-      expect(ReviewReminderService.getReminderMessage(0, 5)).toBe('All reviews complete! Great work.');
+      expect(ReviewReminderService.getReminderMessage(0, 5)).toBe(
+        'All reviews complete! Great work.'
+      );
     });
 
     it('returns streak message for long streaks', () => {

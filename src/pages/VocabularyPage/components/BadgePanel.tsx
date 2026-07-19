@@ -90,7 +90,9 @@ function BadgeCard({
       }`}
     >
       <span className="text-2xl">{unlocked ? badge.icon : '🔒'}</span>
-      <span className="text-[10px] font-bold text-foreground">{badge.name}</span>
+      <span className="text-[10px] font-bold text-foreground">
+        {badge.name}
+      </span>
       <span className="text-[9px] text-muted-copy">{badge.description}</span>
       {unlocked ? (
         <CheckCircle2 className="h-3 w-3 text-emerald-500" />

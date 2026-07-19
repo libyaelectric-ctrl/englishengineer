@@ -45,16 +45,16 @@ const IdentityCard = ({
   currentUser: { displayName?: string } | null;
   profile: { userId?: string };
 }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
+  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
-    <div className="h-14 w-14 shrink-0 rounded-[4px] bg-[#0047bb] text-white flex items-center justify-center font-bold text-lg border border-[#d9d9e3] shadow-sm select-none relative z-10">
+    <div className="h-14 w-14 shrink-0 rounded-[4px] bg-[#0047bb] text-white flex items-center justify-center font-bold text-lg border border-border-soft shadow-sm select-none relative z-10">
       {currentUser?.displayName
         ? currentUser.displayName.slice(0, 2).toUpperCase()
         : 'DE'}
     </div>
     <div className="flex-1 text-center sm:text-left relative z-10">
       <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
-        <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest bg-white border border-[#d9d9e3] px-2 py-0.5 rounded-[4px]">
+        <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest bg-surface border border-border-soft px-2 py-0.5 rounded-[4px]">
           ID: ENG-{(profile.userId || 'DEMO').slice(0, 6).toUpperCase()}
         </span>
         <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
@@ -133,13 +133,13 @@ const InfoGrid = ({
         return (
           <div
             key={item.label}
-            className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm flex flex-col justify-between min-h-[90px]"
+            className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm flex flex-col justify-between min-h-[90px]"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
                 {item.label}
               </span>
-              <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-[#faf8ff] border border-[#d9d9e3] px-1 rounded-[4px]">
+              <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-surface-hover border border-border-soft px-1 rounded-[4px]">
                 {item.code}
               </span>
             </div>
@@ -157,7 +157,7 @@ const InfoGrid = ({
 };
 
 const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
       Communication Goals
     </span>
@@ -181,7 +181,7 @@ const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
 );
 
 const SecurityLogsCard = () => (
-  <div className="rounded-[4px] border border-[#d9d9e3] bg-[#f3f3fd] p-4 space-y-3 shadow-sm relative overflow-hidden">
+  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 space-y-3 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     <div className="flex justify-between items-center relative z-10">
       <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
@@ -276,7 +276,7 @@ export const ProfileOverviewSection = ({
             <div className="flex justify-end">
               <button
                 onClick={enterEditMode}
-                className="inline-flex items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-[#faf8ff] cursor-pointer transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover cursor-pointer transition-colors shadow-sm"
               >
                 Edit Profile
               </button>
@@ -293,7 +293,7 @@ export const ProfileOverviewSection = ({
                 <input
                   value={editFirstName}
                   onChange={(e) => setEditFirstName(e.target.value)}
-                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
                 />
               </label>
               <label className="block space-y-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground">
@@ -301,11 +301,11 @@ export const ProfileOverviewSection = ({
                 <input
                   value={editLastName}
                   onChange={(e) => setEditLastName(e.target.value)}
-                  className="w-full rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
                 />
               </label>
             </div>
-            <div className="flex items-center justify-end gap-3 border-t border-[#d9d9e3] pt-4">
+            <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4">
               <button
                 type="button"
                 onClick={() => setIsEditMode(false)}

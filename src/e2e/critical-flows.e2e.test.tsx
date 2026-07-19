@@ -20,9 +20,9 @@ describe('Critical flow: Landing → Navigation', () => {
 
   it('displays pricing section with all plans', () => {
     renderWithRouter(<LandingPage />);
-    expect(screen.getAllByText('Free').length).toBeGreaterThan(0);
-    expect(screen.getByText('$19')).toBeInTheDocument();
-    expect(screen.getByText('$39')).toBeInTheDocument();
+    expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
+    expect(screen.getByText('$29')).toBeInTheDocument();
+    expect(screen.getByText('$59')).toBeInTheDocument();
   });
 
   it('shows 6 skill features on landing', () => {
@@ -69,6 +69,6 @@ describe('Critical flow: Pricing page', () => {
   it('renders pricing page with plan cards', async () => {
     const { default: PricingPage } = await import('@/pages/PricingPage');
     renderWithRouter(<PricingPage />, ['/pricing']);
-    expect(screen.getByText(/Pricing/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Pricing/i).length).toBeGreaterThan(0);
   });
 });

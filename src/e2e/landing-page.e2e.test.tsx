@@ -37,10 +37,10 @@ describe('Landing page E2E', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getAllByText('Free').length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
     expect(screen.getByText('$0')).toBeInTheDocument();
-    expect(screen.getByText('$19')).toBeInTheDocument();
-    expect(screen.getByText('$39')).toBeInTheDocument();
+    expect(screen.getByText('$29')).toBeInTheDocument();
+    expect(screen.getByText('$59')).toBeInTheDocument();
   });
 
   it('FAQ items are clickable', async () => {

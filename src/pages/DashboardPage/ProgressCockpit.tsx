@@ -54,10 +54,10 @@ export const ProgressCockpit = React.memo(
                 key={skill}
                 type="button"
                 onClick={() => navigate(meta.route)}
-                className="group min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
+                className="group min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-[4px] border border-[#d9d9e3] bg-surface-hover p-1.5 text-[#0047bb] group-hover:bg-[#0047bb] group-hover:text-white transition-colors">
+                  <span className="rounded-[4px] border border-border-soft bg-surface-hover p-1.5 text-[#0047bb] group-hover:bg-[#0047bb] group-hover:text-white transition-colors">
                     <Icon className="h-4 w-4" />
                   </span>
                   <div className="text-right">
@@ -126,7 +126,7 @@ export const ProgressCockpit = React.memo(
                   </div>
 
                   {/* Global Progress */}
-                  <div className="space-y-1.5 border-t border-[#d9d9e3]/50 pt-2.5">
+                  <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
                     <div className="flex justify-between items-center px-1">
                       <span className="text-[9px] font-medium text-muted-copy">
                         Global Progress (A1 - C2+)

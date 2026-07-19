@@ -68,7 +68,7 @@ const LessonHeader = ({
   selectedRule: Rule;
   selectedStatus: string;
 }) => (
-  <div className="min-w-0 rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+  <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
       <div className="min-w-0">
         <p className="text-[11px] font-bold uppercase tracking-wide text-[#0047bb]">
@@ -85,7 +85,7 @@ const LessonHeader = ({
         </p>
       </div>
       <span
-        className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${selectedStatus === 'Mastered' ? 'border-success/30 bg-success/5 text-success' : selectedStatus === 'Needs Reading/Writing' ? 'border-warning/30 bg-warning/5 text-warning' : selectedStatus === 'Practicing' ? 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]' : 'border-[#d9d9e3] bg-[#f3f3fd] text-muted-copy'}`}
+        className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${selectedStatus === 'Mastered' ? 'border-success/30 bg-success/5 text-success' : selectedStatus === 'Needs Reading/Writing' ? 'border-warning/30 bg-warning/5 text-warning' : selectedStatus === 'Practicing' ? 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]' : 'border-border-soft bg-[#f3f3fd] text-muted-copy'}`}
       >
         {selectedStatus}
       </span>
@@ -115,7 +115,7 @@ const StatsGrid = ({
     ).map(([label, value]) => (
       <div
         key={label}
-        className="rounded-[4px] border border-[#d9d9e3] bg-white px-3 py-2 text-center shadow-sm"
+        className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-center shadow-sm"
       >
         <p className="text-base font-bold text-foreground">{value}</p>
         <p className="text-[10px] font-bold uppercase text-muted-copy">
@@ -134,7 +134,7 @@ const MasteryBar = ({
   const missing = getMissingGrammarTransferEvidence(selectedProgress);
 
   return (
-    <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex flex-wrap items-center gap-4">
         <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
           Mastery
@@ -192,12 +192,12 @@ const ChatPanel = ({
   setChatInput: (v: string) => void;
   handleSend: () => void;
 }) => (
-  <div className="rounded-[4px] border border-[#0047bb]/25 bg-white p-4 shadow-sm">
+  <div className="rounded-[4px] border border-[#0047bb]/25 bg-surface p-4 shadow-sm">
     <SectionHeading
       title="AI Grammar Teacher"
       subtitle="Practice, translate, and chat with your bilingual engineering English tutor"
     />
-    <div className="mt-3 flex max-h-80 min-h-40 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-[#d9d9e3] bg-background p-3">
+    <div className="mt-3 flex max-h-80 min-h-40 flex-col gap-2.5 overflow-y-auto rounded-[4px] border border-border-soft bg-background p-3">
       {messages.map((msg, i) => (
         <div
           key={i}
@@ -235,7 +235,7 @@ const ChatPanel = ({
           }}
           disabled={isTalking}
           placeholder="Type your reply, translation effort, or question..."
-          className="w-full rounded-[4px] border border-[#d9d9e3] bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb]"
+          className="w-full rounded-[4px] border border-border-soft bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb]"
         />
       </label>
       <Button
@@ -281,7 +281,7 @@ const QuizPanel = ({
                 onClick={() =>
                   setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))
                 }
-                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-[#d9d9e3] bg-white opacity-60') : selected ? 'border-[#0047bb] bg-[#0047bb] text-white' : 'border-[#d9d9e3] bg-white text-foreground hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5'}`}
+                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-[#0047bb] bg-[#0047bb] text-white' : 'border-border-soft bg-surface text-foreground hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5'}`}
               >
                 <span className="mr-1.5 font-black">{letter}.</span>
                 {choice}
@@ -393,7 +393,7 @@ export const GrammarLessonContent = ({
       />
 
       {linkedVocabulary.length > 0 && (
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
           <SectionHeading title="Words You Will Use Today" />
           <div className="mt-2 flex flex-wrap gap-1.5">
             {linkedVocabulary.map((item) => (
@@ -408,12 +408,12 @@ export const GrammarLessonContent = ({
         </div>
       )}
 
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <SectionHeading title="Teacher Explanation" />
         <p className="mt-2 text-xs leading-relaxed">
           {compact(selectedRule.explanation, selectedRule.definition)}
         </p>
-        <p className="mt-2 rounded-[4px] border border-[#d9d9e3] bg-background p-3 text-xs leading-relaxed text-muted-copy">
+        <p className="mt-2 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
           Turkish speaker note: {selectedRule.turkishExplanation}
         </p>
       </div>
@@ -440,7 +440,7 @@ export const GrammarLessonContent = ({
         </div>
       </div>
 
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <SectionHeading
           title="Examples"
           subtitle="Read the pattern before you try to produce it."
@@ -449,7 +449,7 @@ export const GrammarLessonContent = ({
           {selectedRule.examples.map((example, index) => (
             <div
               key={`${example.english}-${index}`}
-              className="rounded-[4px] border border-[#d9d9e3] bg-background p-3"
+              className="rounded-[4px] border border-border-soft bg-background p-3"
             >
               <p className="break-words text-xs font-bold">{example.english}</p>
               <p className="mt-0.5 break-words text-[11px] text-muted-copy">
@@ -474,7 +474,7 @@ export const GrammarLessonContent = ({
                 selectedRule.commonMistakes}
             </p>
           </div>
-          <div className="rounded-[4px] border border-success/30 bg-white p-3 shadow-sm">
+          <div className="rounded-[4px] border border-success/30 bg-surface p-3 shadow-sm">
             <p className="text-[11px] font-bold uppercase text-success">
               Better
             </p>
@@ -493,7 +493,7 @@ export const GrammarLessonContent = ({
         handleSend={handleSend}
       />
 
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <SectionHeading title="Practice & Evaluation" />
         <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <Button onClick={() => recordUsage(true)} className="rounded-[4px]">
@@ -525,7 +525,7 @@ export const GrammarLessonContent = ({
           </Button>
         </div>
         {hintOpen && (
-          <p className="mt-3 rounded-[4px] border border-[#d9d9e3] bg-background p-3 text-xs leading-relaxed text-muted-copy">
+          <p className="mt-3 rounded-[4px] border border-border-soft bg-background p-3 text-xs leading-relaxed text-muted-copy">
             {getGrammarReviewReason(selectedProgress)}
           </p>
         )}
@@ -539,7 +539,7 @@ export const GrammarLessonContent = ({
       </div>
 
       {linkedVocabulary.length > 0 && (
-        <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-4 shadow-sm">
+        <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
           <SectionHeading
             title="Use It in Skills"
             subtitle="Use this lesson in Reading and Writing to prove mastery."
@@ -548,7 +548,7 @@ export const GrammarLessonContent = ({
             {selectedRule.skillUse.includes('reading') && (
               <Link
                 to="/reading"
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
+                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
               >
                 <FileText className="h-3 w-3" /> Reading
               </Link>
@@ -556,7 +556,7 @@ export const GrammarLessonContent = ({
             {selectedRule.skillUse.includes('writing') && (
               <Link
                 to="/writing"
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-[#d9d9e3] bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
+                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
               >
                 <PenLine className="h-3 w-3" /> Writing
               </Link>

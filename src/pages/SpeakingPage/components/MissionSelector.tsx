@@ -37,7 +37,7 @@ export const MissionSelector = ({
             className={`w-full text-left p-4 rounded-[4px] border transition-all cursor-pointer shadow-sm flex flex-col justify-between gap-3 min-h-[110px] ${
               isSelected
                 ? 'border-[#0047bb] bg-[#0047bb]/5'
-                : 'border-[#d9d9e3] bg-white hover:border-[#0047bb]/40 hover:bg-[#faf8ff]'
+                : 'border-border-soft bg-surface hover:border-[#0047bb]/40 hover:bg-surface-hover'
             }`}
           >
             <div className="flex items-start justify-between gap-2 w-full">
@@ -64,7 +64,7 @@ export const MissionSelector = ({
       })}
     </div>
     {roleplayMissions.length === 0 && (
-      <div className="rounded-[4px] border border-[#d9d9e3] bg-white p-6 text-xs font-bold text-muted-copy uppercase tracking-wider text-center shadow-sm">
+      <div className="rounded-[4px] border border-border-soft bg-surface p-6 text-xs font-bold text-muted-copy uppercase tracking-wider text-center shadow-sm">
         No current-level content yet. No Speaking roleplay is available for this
         category and level filter.
       </div>
