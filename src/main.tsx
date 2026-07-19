@@ -11,11 +11,16 @@ import { ObservabilityService } from '@/core/observability/observability.service
 // Initialize Sentry error monitoring
 ObservabilityService.init();
 
-// Initialize dark mode from localStorage
+// Initialize theme from store (auto-detects time-based theme)
+import { useAppStore } from './store/app.store';
 if (typeof window !== 'undefined') {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
+  const store = useAppStore.getState();
+  const effectiveTheme = store.theme;
+  document.documentElement.setAttribute('data-theme', effectiveTheme);
+  if (effectiveTheme === 'dark') {
     document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.add('light');
   }
 }
 

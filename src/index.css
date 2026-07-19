@@ -39,32 +39,36 @@
   --radius-dialog: 4px;
 }
 
-.dark {
-  /* Precision Engineering OS Dark Theme */
-  --background: #0b0b14;
-  --foreground: #faf8ff;
-  --surface: #161625;
+/* Dark Mode - gceci.txt kurallarina gore: body #0B0E14, kartlar #1C1F26, metin #E2E4E7/#949BA4 */
+.dark,
+[data-theme='dark'] {
+  --background: #0B0E14;
+  --foreground: #E2E4E7;
+  --surface: #1C1F26;
+  --card-bg: #1C1F26;
 
   --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
-  --color-primary-foreground: #0b0b14;
+  --color-primary-foreground: #0B0E14;
 
-  --color-surface: #161625;
-  --color-surface-hover: #202035;
-  --color-soft: rgba(59, 130, 246, 0.05);
-  --color-border-soft: #2c2c3e;
-  --color-border-hover: #404058;
-  --color-muted-copy: #8f93a9;
+  --color-surface: #1C1F26;
+  --color-surface-hover: #252830;
+  --color-soft: rgba(59, 130, 246, 0.08);
+  --color-border-soft: #2a2d35;
+  --color-border-hover: #3a3d45;
+  --color-muted-copy: #949BA4;
   --color-focus: rgba(59, 130, 246, 0.15);
-  --color-success: #16a34a;
-  --color-warning: #ea580c;
-  --color-error: #dc2626;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 
-  --color-engineer-950: #05050a;
-  --color-engineer-900: #0b0b14;
-  --color-engineer-800: #161625;
-  --color-engineer-700: #2c2c3e;
+  --color-engineer-950: #07090D;
+  --color-engineer-900: #0B0E14;
+  --color-engineer-800: #1C1F26;
+  --color-engineer-700: #2a2d35;
   --color-engineer-cyan: #3b82f6;
+
+  --surface: #1C1F26;
 }
 
 @theme {
@@ -421,13 +425,13 @@
   animation: aurora-fade-in 140ms ease-out both;
 }
 
-/* === DARK MODE COLOR OVERRIDES === */
+/* === DARK MODE COLOR OVERRIDES — gceci.txt === */
 .dark {
-  --color-card-bg: rgba(48, 49, 52, 0.8);
-  --color-input-bg: #2a2d30;
-  --color-badge-bg: rgba(138, 180, 248, 0.12);
-  --color-text-inverse: #202124;
-  --color-shadow: rgba(0, 0, 0, 0.4);
+  --color-card-bg: #1C1F26;
+  --color-input-bg: #1C1F26;
+  --color-badge-bg: rgba(59, 130, 246, 0.12);
+  --color-text-inverse: #0B0E14;
+  --color-shadow: rgba(0, 0, 0, 0.5);
 }
 
 /* === MICRO-INTERACTIONS === */
@@ -586,4 +590,29 @@
 }
 .status-pulse {
   animation: statusPulse 2s ease-in-out infinite;
+}
+
+/* === DARK MODE — Landing & Login page overrides (gceci.txt) === */
+.dark .bg-\[\#faf8ff\] { background-color: #0B0E14 !important; }
+.dark .bg-\[\#f0f0f5\] { background-color: #0B0E14 !important; }
+.dark .bg-white { background-color: #1C1F26 !important; }
+.dark .bg-white\/60 { background-color: rgba(28, 31, 38, 0.6) !important; }
+.dark .bg-white\/68 { background-color: rgba(28, 31, 38, 0.68) !important; }
+.dark .bg-white\/55 { background-color: rgba(28, 31, 38, 0.55) !important; }
+.dark .text-\[\#111\] { color: #E2E4E7 !important; }
+.dark .text-black\/70 { color: #949BA4 !important; }
+.dark .text-black\/60 { color: #949BA4 !important; }
+.dark .text-black\/40 { color: #949BA4 !important; }
+.dark .border-\[\#d9d9e3\] { border-color: #2a2d35 !important; }
+.dark .hover\:bg-black\/\[0\.04\]:hover { background-color: rgba(255, 255, 255, 0.04) !important; }
+.dark .hover\:bg-black\/\[0\.04\]:hover { color: #E2E4E7 !important; }
+.dark .hover\:text-black:hover { color: #E2E4E7 !important; }
+.dark a[class*="text-black"]:hover { color: #E2E4E7 !important; }
+.dark .border-t-\[\#d9d9e3\] { border-top-color: #2a2d35 !important; }
+.dark .bg-\[\#111\] { background-color: #1C1F26 !important; }
+.dark [data-theme='dark'] .bg-\[\#faf8ff\] { background-color: #0B0E14 !important; }
+
+/* Dark mode focus ring fix */
+.dark *:focus-visible {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
 }

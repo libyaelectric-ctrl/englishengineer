@@ -7,6 +7,8 @@ interface ThemeProviderProps {
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const theme = useAppStore((state) => state.theme);
+  const autoTheme = useAppStore((state) => state.autoTheme);
+  const applyAutoTheme = useAppStore((state) => state.applyAutoTheme);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -18,6 +20,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       root.classList.remove('dark');
     }
   }, [theme]);
+
+  // Auto-switch every 60 seconds when autoTheme is enabled
+  useEffect(() => {
+    if (!autoTheme) return;
+    const interval = window.setInterval(() => {
+      applyAutoTheme();
+    }, 60_000);
+    return () => window.clearInterval(interval);
+  }, [autoTheme, applyAutoTheme]);
 
   return <>{children}</>;
 };
