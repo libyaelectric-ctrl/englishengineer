@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { BookMarked } from 'lucide-react';
+import { BookMarked, ArrowRight } from 'lucide-react';
 import type {
   VocabularyTerm,
   VocabularyMenuStatus,
@@ -113,11 +113,12 @@ export function WordSetSection({
               </Button>
             )}
             <Button
-              variant="outline"
-              className="rounded-[4px]"
+              variant="primary"
+              className="rounded-[4px] gap-1.5"
               onClick={onLoadNextBatch}
             >
               Next 9-word batch
+              <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>

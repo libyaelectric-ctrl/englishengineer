@@ -98,7 +98,7 @@ export function AnimatedCard({
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--color-surface)',
-    border: '1px solid var(--color-border-soft)',
+    border: '1px solid rgba(0, 71, 187, 0.18)',
     color: 'var(--color-foreground)',
     boxShadow: dark
       ? 'none'
