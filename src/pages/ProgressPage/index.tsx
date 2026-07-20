@@ -15,31 +15,29 @@ const ProgressPage = () => {
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
       {/* Fixed Header with Tabs */}
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Progress Hub</h1>
-            <p className="text-xs text-muted-copy font-medium mt-0.5">
-              Analytics, milestones, and next steps.
-            </p>
-          </div>
-          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
-            {TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() =>
-                  navigate(`/progress/${tab.id}`, { replace: true })
-                }
-                className={`px-4 py-1.5 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
-                  activeTab === tab.id
-                    ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                    : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex min-w-0 items-baseline gap-2">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
+            Progress Hub
+          </h1>
+          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
+            Analytics, milestones, and next steps.
+          </p>
+        </div>
+        <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => navigate(`/progress/${tab.id}`, { replace: true })}
+              className={`px-4 py-1.5 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                activeTab === tab.id
+                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 

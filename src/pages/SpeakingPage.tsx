@@ -254,14 +254,14 @@ const SpeakingPage = () => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3.5 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 font-sans">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="flex min-w-0 items-baseline gap-2">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
             Speaking
-            <span className="ml-2 text-sm font-bold text-muted-copy uppercase tracking-wider">
-              {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth} min remaining
-            </span>
           </h1>
+          <span className="text-[11px] font-medium text-muted-copy leading-tight">
+            {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth} min remaining
+          </span>
         </div>
       </div>
 
