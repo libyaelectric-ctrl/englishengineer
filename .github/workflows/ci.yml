@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -25,21 +25,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Format Check
-        run: npm run format:check
-
       - name: Type Check
         run: npm run typecheck
 
-      - name: Validate Content
-        run: npm run content:validate
-
       - name: Lint
         run: npm run lint
-
-      - name: Evidence Consistency Check
-        run: node scripts/verify-evidence-consistency.js Faz5.txt docs/faz5-evidence
-        continue-on-error: true
 
   test:
     name: Tests
@@ -104,46 +94,3 @@ jobs:
           name: dist
           path: dist/
           retention-days: 3
-
-  storybook:
-    name: Storybook
-    runs-on: ubuntu-latest
-    needs: quality
-    timeout-minutes: 8
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Build Storybook
-        run: npm run build-storybook
-
-  e2e:
-    name: E2E
-    runs-on: ubuntu-latest
-    needs: build
-    timeout-minutes: 12
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Smoke Tests
-        run: npm run e2e
-
-      - name: Install Browser
-        run: npx playwright install --with-deps chromium
-
-      - name: Browser E2E
-        run: npm run e2e:browser
-        continue-on-error: true

@@ -26,6 +26,21 @@ uygulanabilirler. Öncelik sırası önerisi (etki/risk dengesine göre):
 7. `07-design-system-refresh.md` — görsel kimlik (isteğe bağlı/subjektif)
 8. `08-bus-factor-onboarding-docs.md` — dokümantasyon eklemesi
 
+### Öğrenme motoru (kişisel öğrenme kuralları) denetimi — ikinci tur
+
+9. `09-unify-vocabulary-scheduling.md` — **kritik**: kelime tekrar sisteminde
+   iki ayrı, birbirinden habersiz "ne zaman tekrar edilsin" hesabı var
+   (gerçek SM-2 motoru vs. sabit kurallı menü servisi). Önce bunu düzelt.
+10. `10-resolve-learning-path-advisor.md` — yazılmış ama hiçbir yere
+    bağlanmamış bir haftalık plan motoru için karar (bağla ya da kaldır).
+11. `11-unify-cefr-type.md` — aynı CEFR sabiti üç yerde ayrı ayrı tanımlı,
+    tek kaynağa indir.
+12. `12-centralize-proficiency-thresholds.md` — seviye/zorluk eşiklerini
+    ortak bir modülde topla, magic number'ları merkezi hale getir.
+
+Öncelik: 09 > 11 > 10 > 12 (09 kullanıcının doğrudan gördüğü bir tutarsızlığı
+düzeltiyor, en yüksek etkiye sahip).
+
 ## Genel kural (her prompt için geçerli)
 
 Her prompt, ajana şunu hatırlatır: değişiklikten sonra
