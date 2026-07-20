@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EngineerOS — Personal Development Pool Network</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
+  .header { text-align: center; padding: 32px 16px 16px; }
+  .header h1 { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header p { color: #94a3b8; font-size: 13px; margin-top: 6px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 0 24px 48px; }
+  
+  /* SVG Network */
+  .network-svg { width: 100%; height: 700px; }
+  .node-rect { rx: 8; ry: 8; stroke-width: 2; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3)); }
+  .node-text { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 11px; font-weight: 700; fill: white; text-anchor: middle; }
+  .node-sub { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 9px; fill: #cbd5e1; text-anchor: middle; }
+  .arrow { stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+  .arrow-label { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 9px; fill: #94a3b8; text-anchor: middle; }
+  .flow-label { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 8px; fill: #64748b; text-anchor: middle; }
+  
+  /* Legend */
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 24px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #94a3b8; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+  
+  /* Cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 32px; }
+  .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 20px; }
+  .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card h3 .icon { font-size: 18px; }
+  .flow-list { list-style: none; }
+  .flow-list li { padding: 6px 0; border-bottom: 1px solid #1e293b; font-size: 12px; color: #cbd5e1; display: flex; justify-content: space-between; }
+  .flow-list li:last-child { border-bottom: none; }
+  .flow-list .from { color: #60a5fa; font-weight: 600; }
+  .flow-list .to { color: #a78bfa; font-weight: 600; }
+  .flow-list .ratio { color: #34d399; font-weight: 700; font-size: 11px; }
+  
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 24px; }
+  .stat { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat .value { font-size: 24px; font-weight: 800; }
+  .stat .label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>EngineerOS — Personal Development Pool Network</h1>
+  <p>Kişisel Gelişim Havuzları ve Veri Akış Diyagramı</p>
+</div>
+
+<div class="container">
+  <!-- Network SVG -->
+  <svg class="network-svg" viewBox="0 0 1400 700">
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+      </marker>
+      <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
+      </marker>
+      <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+      </marker>
+      <marker id="arrowPurple" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6"/>
+      </marker>
+      <marker id="arrowAmber" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+      </marker>
+    </defs>
+
+    <!-- === SOURCE NODES (Left) === -->
+    <!-- Vocabulary Feature -->
+    <rect x="20" y="80" width="180" height="60" class="node-rect" fill="#1e40af" stroke="#3b82f6"/>
+    <text x="110" y="105" class="node-text">Vocabulary Feature</text>
+    <text x="110" y="122" class="node-sub">5000 terms · SM-2 SRS</text>
+
+    <!-- Grammar Feature -->
+    <rect x="20" y="200" width="180" height="60" class="node-rect" fill="#7c3aed" stroke="#8b5cf6"/>
+    <text x="110" y="225" class="node-text">Grammar Feature</text>
+    <text x="110" y="242" class="node-sub">360 rules · Adaptive</text>
+
+    <!-- Speaking Feature -->
+    <rect x="20" y="320" width="180" height="60" class="node-rect" fill="#be185d" stroke="#ec4899"/>
+    <text x="110" y="345" class="node-text">Speaking Feature</text>
+    <text x="110" y="362" class="node-sub">10 scenarios · Pronunciation</text>
+
+    <!-- Reading Feature -->
+    <rect x="20" y="440" width="180" height="60" class="node-rect" fill="#0891b2" stroke="#06b6d4"/>
+    <text x="110" y="465" class="node-text">Reading Feature</text>
+    <text x="110" y="482" class="node-sub">Comprehension tasks</text>
+
+    <!-- Writing Feature -->
+    <rect x="20" y="560" width="180" height="60" class="node-rect" fill="#059669" stroke="#10b981"/>
+    <text x="110" y="585" class="node-text">Writing Feature</text>
+    <text x="110" y="602" class="node-sub">Production tasks</text>
+
+    <!-- === EVENT BUS (Center-Left) === -->
+    <rect x="300" y="180" width="160" height="200" class="node-rect" fill="#1e293b" stroke="#f59e0b" stroke-dasharray="5,3"/>
+    <text x="380" y="220" class="node-text" fill="#f59e0b">Event Bus</text>
+    <text x="380" y="240" class="node-sub">vocabulary:mastered</text>
+    <text x="380" y="255" class="node-sub">grammar:mastered</text>
+    <text x="380" y="270" class="node-sub">speaking:completed</text>
+    <text x="380" y="290" class="node-sub" fill="#f59e0b">eventBus.publish()</text>
+    <text x="380" y="310" class="node-sub">→ addToPool()</text>
+    <text x="380" y="330" class="node-sub">→ Supabase sync</text>
+
+    <!-- === POOL NODES (Center) === -->
+    <!-- Vocabulary Pool -->
+    <rect x="560" y="60" width="200" height="70" class="node-rect" fill="#1e3a5f" stroke="#3b82f6"/>
+    <text x="660" y="88" class="node-text" fill="#60a5fa">Vocabulary Pool</text>
+    <text x="660" y="108" class="node-sub">vocabularyPool[]</text>
+    <text x="660" y="122" class="node-sub" fill="#34d399">Supabase synced</text>
+
+    <!-- Grammar Pool -->
+    <rect x="560" y="200" width="200" height="70" class="node-rect" fill="#2e1065" stroke="#8b5cf6"/>
+    <text x="660" y="228" class="node-text" fill="#a78bfa">Grammar Pool</text>
+    <text x="660" y="248" class="node-sub">grammarPool[]</text>
+    <text x="660" y="262" class="node-sub" fill="#34d399">Supabase synced</text>
+
+    <!-- Speaking Pool -->
+    <rect x="560" y="340" width="200" height="70" class="node-rect" fill="#4c0519" stroke="#ec4899"/>
+    <text x="660" y="368" class="node-text" fill="#f472b6">Speaking Pool</text>
+    <text x="660" y="388" class="node-sub">speakingPool[]</text>
+    <text x="660" y="402" class="node-sub" fill="#34d399">Supabase synced</text>
+
+    <!-- Error Patterns -->
+    <rect x="560" y="480" width="200" height="60" class="node-rect" fill="#451a03" stroke="#f59e0b"/>
+    <text x="660" y="505" class="node-text" fill="#fbbf24">Error Patterns</text>
+    <text x="660" y="522" class="node-sub">grammar:error-recorded</text>
+
+    <!-- === COMBINED POOL (Center-Right) === -->
+    <rect x="860" y="150" width="200" height="120" class="node-rect" fill="#0c4a6e" stroke="#0ea5e9"/>
+    <text x="960" y="185" class="node-text" fill="#38bdf8">Knowledge Pool</text>
+    <text x="960" y="205" class="node-sub">vocab + grammar + speaking</text>
+    <text x="960" y="225" class="node-sub" fill="#34d399">targetRatio: 75%</text>
+    <text x="960" y="245" class="node-sub">sortContentByPoolRatio()</text>
+    <text x="960" y="260" class="node-sub">scoreContentByPoolRatio()</text>
+
+    <!-- === CONSUMER NODES (Right) === -->
+    <!-- Reading Missions -->
+    <rect x="1160" y="80" width="200" height="60" class="node-rect" fill="#0891b2" stroke="#06b6d4"/>
+    <text x="1260" y="105" class="node-text">Reading Missions</text>
+    <text x="1260" y="122" class="node-sub">Pool-aware content selection</text>
+
+    <!-- Writing Missions -->
+    <rect x="1160" y="200" width="200" height="60" class="node-rect" fill="#059669" stroke="#10b981"/>
+    <text x="1260" y="225" class="node-text">Writing Missions</text>
+    <text x="1260" y="242" class="node-sub">Pool-aware content selection</text>
+
+    <!-- Progress Overview -->
+    <rect x="1160" y="340" width="200" height="70" class="node-rect" fill="#1e293b" stroke="#e2e8f0"/>
+    <text x="1260" y="368" class="node-text" fill="#e2e8f0">Progress Overview</text>
+    <text x="1260" y="388" class="node-sub">QuickStats: pool sizes</text>
+    <text x="1260" y="402" class="node-sub">Grammar Mastered / Errors</text>
+
+    <!-- Adaptive Difficulty -->
+    <rect x="1160" y="480" width="200" height="60" class="node-rect" fill="#2e1065" stroke="#8b5cf6"/>
+    <text x="1260" y="505" class="node-text" fill="#a78bfa">Adaptive Difficulty</text>
+    <text x="1260" y="522" class="node-sub">Error patterns → easier content</text>
+
+    <!-- === ARROWS === -->
+    <!-- Source → Event Bus -->
+    <line x1="200" y1="110" x2="298" y2="230" class="arrow" stroke="#f59e0b"/>
+    <line x1="200" y1="230" x2="298" y2="260" class="arrow" stroke="#f59e0b"/>
+    <line x1="200" y1="350" x2="298" y2="290" class="arrow" stroke="#f59e0b"/>
+
+    <!-- Event Bus → Pools -->
+    <line x1="460" y1="220" x2="558" y2="95" class="arrow" stroke="#3b82f6"/>
+    <line x1="460" y1="260" x2="558" y2="235" class="arrow" stroke="#8b5cf6"/>
+    <line x1="460" y1="300" x2="558" y2="375" class="arrow" stroke="#ec4899"/>
+
+    <!-- Pools → Knowledge Pool -->
+    <line x1="760" y1="95" x2="858" y2="190" class="arrow" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
+    <line x1="760" y1="235" x2="858" y2="220" class="arrow" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
+    <line x1="760" y1="375" x2="858" y2="250" class="arrow" stroke="#22c55e" marker-end="url(#arrowGreen)"/>
+
+    <!-- Knowledge Pool → Consumers -->
+    <line x1="1060" y1="190" x2="1158" y2="110" class="arrow" stroke="#06b6d4" marker-end="url(#arrowBlue)"/>
+    <line x1="1060" y1="220" x2="1158" y2="230" class="arrow" stroke="#10b981" marker-end="url(#arrowGreen)"/>
+    <line x1="1060" y1="250" x2="1158" y2="375" class="arrow" stroke="#e2e8f0" marker-end="url(#arrowhead)"/>
+
+    <!-- Error Patterns → Adaptive -->
+    <line x1="760" y1="510" x2="1158" y2="510" class="arrow" stroke="#f59e0b" marker-end="url(#arrowAmber)"/>
+
+    <!-- Grammar Bridge → Vocabulary Pool -->
+    <path d="M 660 270 Q 660 170 560 95" class="arrow" stroke="#8b5cf6" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
+    <text x="580" y="175" class="flow-label" fill="#a78bfa">linkedVocab Tags</text>
+
+    <!-- Flow Labels -->
+    <text x="250" y="160" class="arrow-label">vocabulary:mastered</text>
+    <text x="250" y="255" class="arrow-label">grammar:mastered</text>
+    <text x="250" y="340" class="arrow-label">speaking:completed</text>
+
+    <text x="500" y="140" class="arrow-label" fill="#3b82f6">addToVocabularyPool()</text>
+    <text x="500" y="250" class="arrow-label" fill="#8b5cf6">addToGrammarPool()</text>
+    <text x="500" y="355" class="arrow-label" fill="#ec4899">addToSpeakingPool()</text>
+
+    <text x="810" y="140" class="arrow-label" fill="#22c55e">Merge + Supabase</text>
+    <text x="1110" y="140" class="arrow-label" fill="#06b6d4">75% target</text>
+    <text x="1110" y="215" class="arrow-label" fill="#10b981">75% target</text>
+  </svg>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div> Vocabulary</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div> Grammar</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ec4899"></div> Speaking</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div> Event Bus</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0ea5e9"></div> Knowledge Pool</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Data Flow</div>
+  </div>
+
+  <!-- Detailed Flow Cards -->
+  <div class="cards">
+    <!-- Vocabulary Pool -->
+    <div class="card">
+      <h3><span class="icon">📚</span> Vocabulary Pool Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">vocabulary:mastered</span> → <span class="to">addToVocabularyPool()</span></li>
+        <li><span class="from">Grammar Bridge</span> → <span class="to">addToVocabularyPool()</span></li>
+        <li><span class="from">Pool</span> → <span class="to">sortContentByPoolRatio()</span></li>
+        <li><span class="from">Pool</span> → <span class="to">Progress Overview</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Hedef: %75 bilinen kelime oranı ile içerik öner</p>
+    </div>
+
+    <!-- Grammar Pool -->
+    <div class="card">
+      <h3><span class="icon">📝</span> Grammar Pool Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">grammar:mastered</span> → <span class="to">addToGrammarPool()</span></li>
+        <li><span class="from">Pool</span> → <span class="to">sortContentByPoolRatio()</span></li>
+        <li><span class="from">Pool</span> → <span class="to">Progress Overview</span></li>
+        <li><span class="from">linkedVocabTags</span> → <span class="to">vocabularyPool</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Grammar bridge ile vocabularyPool'a veri akışı</p>
+    </div>
+
+    <!-- Speaking Pool -->
+    <div class="card">
+      <h3><span class="icon">🎤</span> Speaking Pool Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">speaking:completed</span> → <span class="to">addToSpeakingPool()</span></li>
+        <li><span class="from">Pool</span> → <span class="to">Progress Overview</span></li>
+        <li><span class="from">Pool</span> → <span class="to">Speaking Mission Sort</span></li>
+        <li><span class="from">Pronunciation</span> → <span class="to">Feedback Engine</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Tamamlanan görevler speakingPool'a eklenir</p>
+    </div>
+
+    <!-- Error Patterns -->
+    <div class="card">
+      <h3><span class="icon">⚠️</span> Error Pattern Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">Grammar mistakes</span> → <span class="to">ErrorPatternAnalyzer</span></li>
+        <li><span class="from">Patterns</span> → <span class="to">Progress Overview</span></li>
+        <li><span class="from">Patterns</span> → <span class="to">Adaptive Difficulty</span></li>
+        <li><span class="from">Weak areas</span> → <span class="to">Pool Recommendations</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Hata türleri → kolay içerik önerisi</p>
+    </div>
+
+    <!-- Content Selection -->
+    <div class="card">
+      <h3><span class="icon">🎯</span> Content Selection Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">Pool</span> → <span class="to">scoreContentByPoolRatio()</span></li>
+        <li><span class="from">Score</span> → <span class="to">1 - |ratio - 0.75|</span></li>
+        <li><span class="from">Sorted</span> → <span class="to">Reading/Writing tasks</span></li>
+        <li><span class="from">Target</span> → <span class="to">%75 bilinen kelime</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Kullanıcının bildiği kelimelerle dolu görevleri tercih et</p>
+    </div>
+
+    <!-- Progress Dashboard -->
+    <div class="card">
+      <h3><span class="icon">📊</span> Progress Dashboard Flow</h3>
+      <ul class="flow-list">
+        <li><span class="from">vocabularyPool</span> → <span class="to">Knowledge Pool size</span></li>
+        <li><span class="from">grammarPool</span> → <span class="to">Knowledge Pool size</span></li>
+        <li><span class="from">speakingPool</span> → <span class="to">Knowledge Pool size</span></li>
+        <li><span class="from">ErrorPatterns</span> → <span class="to">Grammar Errors count</span></li>
+      </ul>
+      <p style="margin-top:8px;font-size:10px;color:#64748b">Progress Overview'da 7 QuickStats metriği</p>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="value" style="color:#3b82f6">3</div><div class="label">Pool Types</div></div>
+    <div class="stat"><div class="value" style="color:#22c55e">5</div><div class="label">Event Types</div></div>
+    <div class="stat"><div class="value" style="color:#f59e0b">75%</div><div class="label">Target Ratio</div></div>
+    <div class="stat"><div class="value" style="color:#8b5cf6">2</div><div class="label">Consumers</div></div>
+    <div class="stat"><div class="value" style="color:#ec4899">5</div><div class="label">Features</div></div>
+    <div class="stat"><div class="value" style="color:#0ea5e9">92K</div><div class="label">Lines of Code</div></div>
+  </div>
+</div>
+</body>
+</html>
