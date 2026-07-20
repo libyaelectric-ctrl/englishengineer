@@ -13,6 +13,8 @@ The current product is local-first and beta-ready. Production AI, cloud sync, an
 
 Product ownership and author attribution: **Özcan ERENSAYIN**.
 
+> **Katkıda bulunmak veya geliştirme ortamı kurmak istiyorsanız önce [docs/ONBOARDING.md](docs/ONBOARDING.md) dosyasına bakın.**
+
 See [ENGINEEROS_ROADMAP.md](ENGINEEROS_ROADMAP.md) for the official v2.0 to v4.0 development roadmap.
 
 ## Current Milestone
