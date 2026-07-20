@@ -156,8 +156,8 @@ const DashboardPage = () => {
 
   return (
     <div className="mx-auto max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
-      <div className="sticky top-0 z-40 border-b border-border-soft bg-background/80 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <h1 className="text-base font-bold tracking-tight text-foreground">
           Dashboard
         </h1>
       </div>

@@ -52,17 +52,17 @@ export function VocabularyHeader({
   onFilterChange,
 }: VocabularyHeaderProps) {
   return (
-    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl py-3 border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex items-center justify-between">
+    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="flex h-16 shrink-0 items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
             Vocabulary
           </h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
         </div>
-        <div className="hidden text-xs text-muted-copy lg:block font-bold">
+        <div className="hidden text-[11px] font-medium text-muted-copy lg:block">
           {allLevelsLoaded
             ? 'All 5,000 canonical terms are available'
             : `${vocabularyLevel} learning terms loaded`}

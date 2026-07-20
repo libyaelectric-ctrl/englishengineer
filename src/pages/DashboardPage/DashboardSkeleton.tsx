@@ -4,8 +4,8 @@ import { Skeleton } from '@/shared/components/Skeleton';
 
 export const DashboardSkeleton = () => (
   <div className="mx-auto max-w-4xl space-y-6 pb-8">
-    <div className="sticky top-0 z-40 border-b border-border-soft bg-background py-3 shadow-sm -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <Skeleton className="h-7 w-40" />
+    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <Skeleton className="h-5 w-40" />
     </div>
     <div className="space-y-6">
       <div className="rounded-card border border-border-soft bg-surface/50 p-4 shadow-sm">

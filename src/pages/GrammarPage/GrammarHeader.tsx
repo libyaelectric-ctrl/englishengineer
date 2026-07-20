@@ -12,10 +12,10 @@ export const GrammarHeader = ({
   query: string;
   setQuery: (q: string) => void;
 }) => (
-  <header className="sticky top-0 z-20 -mx-4 border-b border-border-soft bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-    <div className="flex items-center justify-between">
+  <header className="sticky top-0 z-40 -mx-4 border-b border-border-soft bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="flex h-10 items-center justify-between">
       <div className="flex items-center gap-3">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+        <h1 className="text-base font-bold tracking-tight text-foreground">
           Grammar
         </h1>
         <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
