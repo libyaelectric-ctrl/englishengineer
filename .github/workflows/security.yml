@@ -23,12 +23,11 @@ jobs:
 
       - run: npm ci
 
-      - name: Run audit
-        run: npm audit --audit-level=moderate
-        continue-on-error: true
+      - name: Run audit (high/critical blocking)
+        run: npm audit --audit-level=high
 
-      - name: Audit with audit-ci
-        run: npx audit-ci --moderate
+      - name: Run audit (moderate advisory)
+        run: npm audit --audit-level=moderate
         continue-on-error: true
 
   dependency-review:
