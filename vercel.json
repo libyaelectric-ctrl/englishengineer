@@ -10,6 +10,13 @@
     {
       "source": "/((?!api|assets|brand|_next|favicon.ico|robots.txt).*)",
       "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "englishengineer"
+      }
     }
   ],
   "headers": [
@@ -41,5 +48,10 @@
       ]
     }
   ],
-  "framework": "vite"
+  "services": {
+    "englishengineer": {
+      "root": "backend",
+      "entrypoint": "src/app.ts"
+    }
+  }
 }
