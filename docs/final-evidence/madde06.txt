@@ -1,8 +1,0 @@
-MADDE 6 — Kalan Küçük Uyarıların Temizlenmesi
-===============================================
-Düzeltilen dosyalar:
-1. backend/src/auth.ts:240 → `null as any` → `undefined` (AuthenticatedUser | undefined tipine uygun)
-2. scripts/optimize-images.mjs:2 → kullanılmayan unlinkSync import'u kaldırıldı
-3. scripts/verify-evidence-consistency.js:11-12 → kullanılmayan existsSync, basename, extname import'ları kaldırıldı
-
-Doğrulama: npm run lint → 0 error, 0 warning

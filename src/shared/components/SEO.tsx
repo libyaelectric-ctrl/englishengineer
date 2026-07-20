@@ -12,7 +12,7 @@ interface SEOProps {
 const DEFAULT_TITLE = 'EngineerOS - Engineering English Training';
 const DEFAULT_DESCRIPTION =
   'Master engineering English with AI-powered learning, vocabulary building, and professional communication practice.';
-const DEFAULT_IMAGE = '/brand/og-image.png';
+const DEFAULT_IMAGE = '/brand/logo.webp';
 
 export const SEO: React.FC<SEOProps> = ({
   title,

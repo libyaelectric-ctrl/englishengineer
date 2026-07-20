@@ -13,7 +13,7 @@ const BackgroundLayers = ({ scrollShift }: { scrollShift: number }) => (
     <div
       className="absolute inset-0 bg-cover bg-center"
       style={{
-        backgroundImage: "url('/agentic/org-arc.png')",
+        backgroundImage: "url('/agentic/org-arc.webp')",
         opacity: 0.2,
         transform: `translate3d(0, ${scrollShift}px, 0) scale(1.04)`,
       }}
@@ -42,7 +42,7 @@ const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
         muted
         playsInline
         className="aspect-[16/10] w-full object-cover"
-        poster="/agentic/arc.png"
+        poster="/agentic/arc.webp"
       >
         <source src="/agentic-hero.mp4" type="video/mp4" />
       </video>
