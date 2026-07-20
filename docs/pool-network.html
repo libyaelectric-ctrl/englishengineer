@@ -155,7 +155,7 @@
     <rect x="1160" y="340" width="200" height="70" class="node-rect" fill="#1e293b" stroke="#e2e8f0"/>
     <text x="1260" y="368" class="node-text" fill="#e2e8f0">Progress Overview</text>
     <text x="1260" y="388" class="node-sub">QuickStats: pool sizes</text>
-    <text x="1260" y="402" class="node-sub">Grammar Mastered / Errors</text>
+    <text x="1260" y="402" class="node-sub">Grammar Mastered / Errors / Advanced</text>
 
     <!-- Adaptive Difficulty -->
     <rect x="1160" y="480" width="200" height="60" class="node-rect" fill="#2e1065" stroke="#8b5cf6"/>
@@ -185,6 +185,10 @@
 
     <!-- Error Patterns → Adaptive -->
     <line x1="760" y1="510" x2="1158" y2="510" class="arrow" stroke="#f59e0b" marker-end="url(#arrowAmber)"/>
+
+    <!-- Adaptive Difficulty → Progress Overview -->
+    <line x1="1260" y1="480" x2="1260" y2="412" class="arrow" stroke="#8b5cf6" marker-end="url(#arrowPurple)"/>
+    <text x="1280" y="450" class="flow-label" fill="#a78bfa">Advanced Rules count</text>
 
     <!-- Grammar Bridge → Vocabulary Pool -->
     <path d="M 660 270 Q 660 170 560 95" class="arrow" stroke="#8b5cf6" stroke-dasharray="4,3" marker-end="url(#arrowPurple)"/>
