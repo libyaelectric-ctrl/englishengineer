@@ -22,7 +22,7 @@ export function Navbar() {
         <div className="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-wider text-muted-copy md:flex">
           <Link
             to="/pricing"
-            className="transition-colors hover:text-foreground"
+            className="rounded-[4px] border border-[#0047bb]/40 bg-[#0047bb]/5 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[#0047bb] transition hover:bg-[#0047bb]/10 hover:border-[#0047bb]/60"
           >
             Pricing
           </Link>
