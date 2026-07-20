@@ -16,7 +16,7 @@ This document identifies, assesses, and tracks project risks with mitigation str
 | R006    | Performance degradation | Medium   | Medium     | Medium | Open       |
 | R007    | Vendor lock-in          | High     | High       | High   | Open       |
 | R008    | Regulatory changes      | Medium   | Low        | Low    | Monitoring |
-| R009    | Key person dependency   | Medium   | Medium     | Medium | Open       |
+| R009    | Key person dependency   | Medium   | Medium     | Medium | Mitigated  |
 | R010    | Technical debt          | Medium   | High       | High   | Open       |
 
 ## Detailed Risk Analysis
@@ -168,6 +168,7 @@ This document identifies, assesses, and tracks project risks with mitigation str
 - Document architecture decisions
 - Cross-train team members
 - Knowledge sharing sessions
+- Added docs/ONBOARDING.md covering architecture map, setup, and critical-path guidance
 
 **Contingency:**
 
