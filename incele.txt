@@ -1,0 +1,100 @@
+﻿# EnglishEngineer / EngineerOS — Detaylı Kod İnceleme Raporu
+
+Repo: `libyaelectric-ctrl/englishengineer`
+İnceleme yöntemi: repo klonlandı, bağımlılıklar kuruldu, `tsc`, `eslint`, `vitest` çalıştırıldı, `build` alındı, tüm remote branch'ler (13 adet) main ile karşılaştırıldı. Aşağıdaki tüm bulgular gerçek komut çıktılarına dayanıyor.
+
+---
+
+## 1. Branch Haritası — Önemli Tespit
+
+Repo'da **aktif geliştirme branch'i yok** — main dışındaki her şey ölü ya da otomatik oluşturulmuş:
+
+| Branch | Durum |
+|---|---|
+| `main` | Tek gerçek branch, 414 commit, HEAD |
+| `design/engineeros-v2` | main'in **390 commit gerisinde**, terk edilmiş eski snapshot |
+| `release/v1.0.0-rc1` | main'in **364 commit gerisinde**, terk edilmiş |
+| `railway/code-change-DAROUD` | main'in **344 commit gerisinde**; tek commit'i artık var olmayan `backend/railway.json` dosyasını düzeltiyor (main'de config `railway.toml`'a taşınmış) → **tamamen ölü** |
+| `railway/fix-deploy-062e71` | Aynı durum, aynı ölü dosyayı hedefliyor → **ölü** |
+| 15× `dependabot/*` | Her biri tek bağımlılık bump'ı, main'e hiç merge edilmemiş, **açık PR birikintisi** |
+
+Yani "her branch'i puanla" isteğine dürüst cevap: puanlanacak tek canlı kod tabanı **main**. Diğerleri kod kalitesi değil, **repo hijyeni** sorunu.
+
+---
+
+## 2. Main Branch — Objektif Ölçümler
+
+```
+npx tsc --noEmit        → 0 hata, temiz
+npx eslint .              → 0 hata/uyarı
+npx vitest run            → 674 geçti / 2 FAIL / 1 skip (677 test, 111 dosya)
+npm run build              → başarılı, ama 5 chunk 250KB üzeri (en büyük: index-D447yV7i.js 380KB, sentry 360KB)
+```
+
+728 ts/tsx dosya, temiz katmanlı mimari (`core/`, `features/`, `pages/`, `shared/`), `any` kullanımı **0**, `@ts-ignore` **0**, `console.log` **0**, `TODO/FIXME` **0**. Bu disiplin gerçek — ama aynı zamanda "her şey mükemmel görünsün" diye elle temizlenmiş bir izlenim de veriyor (git log'da "chore: deep cleanup", "chore: cleanup project" gibi tekrarlayan temizlik commit'leri var).
+
+### 🔴 Bulunan somut buglar
+
+**1) Dinleme (Listening) modülünde ses dosyaları tamamen kırık.**
+
+`ed0ca25` commit'inde ("convert audio to mp3") tüm ses dosyaları `.wav`'dan `.mp3`'e çevrilmiş, ama veri katmanı güncellenmemiş:
+
+```
+src/features/listening/listening.starter.data.ts     → audioUrl: '.../listening_a1_safe_room.wav'
+src/features/listening/listening.data.advanced.ts     → aynı sorun
+src/features/listening/listening.data.intermediate.ts → aynı sorun
+```
+
+13 audioUrl referansının **13'ü de** `.wav` diyor, `public/audio/` klasöründe ise 0 `.wav`, 13 `.mp3` var. Sonuç: **Listening özelliğinin tamamı prod'da çalışmıyor** — tarayıcı 404 alır. Bunu 2 test zaten yakalamış ama testler CI'da hiç çalışmıyor olabilir (bkz. madde 2).
+
+**2) CI pipeline'ı her push'ta kırılıyor — 2 ayrı iş (job) garanti fail veriyor.**
+
+- `.github/workflows/ci.yml` → "Backend Tests" step'i `npm run backend:test`'i çalıştırıyor → bu da `npm --prefix backend test` demek → ama `backend/package.json` içinde **`test` script'i yok** (`dev`, `start`, `typecheck` var, o kadar). `continue-on-error` da yok. → **her CI çalışması kırmızı**.
+- Aynı workflow'da `storybook` job'u `npm run build-storybook` çalıştırıyor, ama en son commit (`df053ea`) Storybook'u tamamen kaldırmış ve `package.json`'da böyle bir script yok → **bu job da garanti fail**.
+
+Yani README'de iddia edilen *"Full quality gate automation... unit tests, browser E2E, build"* fiilen doğrulanamıyor durumda; CI kırmızı yanıp söndüğü için ekip muhtemelen "hep kırmızı, önemsemeyelim" moduna girmiş olabilir — bu tehlikeli bir alışkanlık.
+
+**3) Backend'in gerçek test suite'i yok.**
+
+README "Separate backend dependency lock and Node test suite" diyor ama `backend/` içinde tek bir `*.test.*` dosyası yok, `devDependencies`'te test runner yok. Yaklaşık 5800 satırlık backend (auth, billing/Stripe, AI proxy, Supabase repository'leri) **sıfır otomatik test** ile çalışıyor. Frontend tarafındaki disiplinli test kültürü backend'e hiç yansımamış.
+
+### 🟡 Fazlalık / şişkinlik
+
+- Root'ta birden fazla deploy hedefi tanımlı (Vercel + Railway + Render + Docker) — 4 farklı deploy path'i bakım yükü demektir, hangisinin "gerçek" prod olduğu belirsiz.
+- README ~14KB, aşırı pazarlama diliyle yazılmış ("v2.5 tanıttı", "v2.6 üretim doğrulama sprint'i", "Project Titan", "Project Olympus" gibi kod adları) — teknik dokümandan çok yatırımcı sunumu gibi. Aynı bilgi 3-4 kez farklı versiyon paragraflarında tekrarlanıyor.
+- `dist` build çıktısında 5 chunk 250KB sınırını aşıyor (`index`, `sentry`, `supabase`, `router`, `animation`) — code-splitting kısmen var ama yetersiz.
+- 15 açık dependabot PR'ı birikmiş, bazıları major sürüm atlıyor (TypeScript → 7.0.2, Vite → 8.1.4) ve main'e **hiç merge edilmemiş**; buna rağmen main'de zaten manuel olarak `typescript-7.0.2`'ye bump yapılmış commit var — yani biri dependabot'u bypass edip PR review olmadan direkt main'e major sürüm push'lamış.
+
+### 🟢 Güçlü yanlar
+
+- Katmanlı mimari gerçekten temiz: `core/` (entities, repositories, result/error tipleri), `features/` (30+ bağımsız modül), `contracts/backend` ile frontend-backend arayüz sözleşmesi ayrılmış.
+- 674/677 test geçiyor, typecheck ve lint sıfır hata — nadiren görülen bir disiplin seviyesi.
+- Backend config katmanı (`config-builders.ts`, `config-helpers.ts`) env değişkenlerini merkezi ve tip-güvenli şekilde çözümlüyor; sızıntı/hardcoded secret bulunamadı.
+- Offline-first, mock-AI-provider gibi tasarım kararları dürüst: prod olmayan özellikler açıkça "mock" etiketli.
+
+---
+
+## 3. Branch Puanlama
+
+| Branch | Puan (10 üzerinden) | Gerekçe |
+|---|---|---|
+| **main** | **7/10** | Kod kalitesi yüksek, ama CI kırık, backend testsiz, listening özelliği bozuk — "üretime hazır" iddiası ile gerçek durum arasında fark var |
+| `design/engineeros-v2` | 2/10 | 390 commit geride, artık geçersiz kod; sadece arşiv değeri |
+| `release/v1.0.0-rc1` | 2/10 | 364 commit geride, aynı şekilde terk edilmiş |
+| `railway/code-change-DAROUD` | 0/10 | Var olmayan dosyayı hedefliyor, tamamen ölü |
+| `railway/fix-deploy-062e71` | 0/10 | Aynı, ölü |
+| dependabot/* (15 adet) | N/A | Puanlanacak kod değil, sadece bekleyen bağımlılık güncellemeleri |
+
+---
+
+## 4. Öncelik Sırasına Göre Öneriler
+
+1. **Acil — Listening ses yollarını düzeltin.** `listening.starter.data.ts`, `listening.data.advanced.ts`, `listening.data.intermediate.ts` içindeki 13 `audioUrl`'ü `.wav`'dan `.mp3`'e çevirin. Tek satırlık `sed` işlemi, ama şu an canlı bir özelliği tamamen kırıyor.
+2. **Acil — CI'ı gerçekten yeşile çekin.** Ya `backend/package.json`'a bir `test` script'i (en azından Node'un yerleşik `node --test`'i) ekleyin ya da `ci.yml`'deki "Backend Tests" adımını kaldırın/`continue-on-error` yapın. `storybook` job'unu tamamen silin — bağımlılık zaten kaldırılmış.
+3. **Backend için gerçek test suite'i yazın.** 5800 satırlık, ödeme (Stripe) ve auth içeren bir katmanın sıfır testle üretime çıkması risklidir; en azından `billing-webhook-handlers.ts` ve `auth.ts` için kritik-yol testleri şart.
+4. **Ölü branch'leri temizleyin.** `railway/code-change-DAROUD`, `railway/fix-deploy-062e71`, `design/engineeros-v2`, `release/v1.0.0-rc1` silinmeli veya arşivlenmeli; repoyu karıştıran gürültüden başka bir şey değiller.
+5. **Dependabot birikintisini eritin.** 15 açık PR var; en azından minor/patch olanları (helmet, stripe, eslint vb.) hızlıca merge edin, major olanları (TypeScript 7, Vite 8) ayrı bir sprint'te değerlendirin — ve bundan sonra major bump'ları PR review'dan geçirmeden main'e direkt push etmeyin.
+6. **README'yi sadeleştirin.** "Project Titan", "Project Olympus" gibi pazarlama dili ve tekrarlayan versiyon geçmişi teknik dokümantasyonun okunabilirliğini düşürüyor; gerçek durum (CI kırık, backend testsiz) ile iddialar (*"Full quality gate automation"*) arasındaki farkı kapatın.
+7. **Bundle boyutunu optimize edin.** `sentry`, `supabase`, `router`, `animation` chunk'ları için dinamik import / manualChunks stratejisi uygulayın; şu an 5 chunk 250KB üstünde.
+8. **Deploy hedeflerini tekleştirin.** Vercel + Railway + Render + Docker aynı anda tanımlı — hangisi gerçek prod, açık değil; birini seçip diğerlerini kaldırmak bakım yükünü azaltır.
+

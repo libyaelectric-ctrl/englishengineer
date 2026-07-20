@@ -45,7 +45,7 @@ describe('listening audio runtime', () => {
 
   it('resolves every mission audio path to a shipped WAV asset', () => {
     LISTENING_MISSIONS.forEach((mission) => {
-      expect(mission.audioUrl.endsWith('.wav')).toBe(true);
+      expect(mission.audioUrl.endsWith('.mp3')).toBe(true);
       expect(mission.fallbackAudioUrl).toBeUndefined();
 
       const audioPath = path.join(
