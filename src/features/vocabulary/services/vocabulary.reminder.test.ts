@@ -63,9 +63,9 @@ describe('ReviewReminderService', () => {
     });
 
     it('returns false when already notified today', () => {
-      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-19')).toBe(
-        false
-      );
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      expect(ReviewReminderService.shouldShowBanner(3, todayStr)).toBe(false);
     });
   });
 

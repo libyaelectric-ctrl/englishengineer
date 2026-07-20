@@ -12,6 +12,7 @@ import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
 import {
   GrammarProgressService,
   ErrorPatternAnalyzer,
+  AdaptiveDifficultyEngine,
 } from '@/features/grammar';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
@@ -32,6 +33,17 @@ export const ProgressOverviewTab = () => {
 
   const grammarSummary = GrammarProgressService.getSummary();
   const errorPatternSummary = ErrorPatternAnalyzer.getSummary();
+
+  const grammarProgress = GrammarProgressService.getAll();
+  const difficultyBreakdown = Object.values(grammarProgress).map((p) =>
+    AdaptiveDifficultyEngine.assessDifficulty(p.ruleId, p)
+  );
+  const difficultyStats = {
+    beginner: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'beginner').length,
+    intermediate: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'intermediate').length,
+    advanced: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'advanced').length,
+    challenge: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'challenge').length,
+  };
   const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(
     null
   );
@@ -139,6 +151,7 @@ export const ProgressOverviewTab = () => {
         knowledgePoolSize={vocabularyPool.length + grammarPool.length + speakingPool.length}
         grammarMastered={grammarSummary.strong}
         grammarErrors={errorPatternSummary.totalErrors}
+        advancedRules={difficultyStats.advanced + difficultyStats.challenge}
       />
 
       <AnalyticsMetricCards analytics={analytics} />
