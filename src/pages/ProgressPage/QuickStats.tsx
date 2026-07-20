@@ -7,6 +7,7 @@ import {
   Layers,
   BookOpen,
   AlertTriangle,
+  Brain,
 } from 'lucide-react';
 
 export const QuickStats = ({
@@ -17,6 +18,7 @@ export const QuickStats = ({
   knowledgePoolSize,
   grammarMastered,
   grammarErrors,
+  advancedRules,
 }: {
   totalElo: number;
   highestSkillLabel: string;
@@ -25,6 +27,7 @@ export const QuickStats = ({
   knowledgePoolSize: number;
   grammarMastered?: number;
   grammarErrors?: number;
+  advancedRules?: number;
 }) => {
   const stats = [
     {
@@ -68,10 +71,20 @@ export const QuickStats = ({
       value: grammarErrors ?? 0,
       color: 'text-amber-600',
     },
+    ...(advancedRules !== undefined && advancedRules > 0
+      ? [
+          {
+            icon: Brain,
+            label: 'Advanced Rules',
+            value: advancedRules,
+            color: 'text-violet-600',
+          },
+        ]
+      : []),
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3">
       {stats.map((stat, i) => (
         <motion.div
           key={stat.label}
