@@ -47,6 +47,7 @@ interface VocabularyStoreActions {
   onQuizCorrect: (wordId: string) => void;
   onQuizIncorrect: (wordId: string) => void;
   onStrugglingQuizCorrect: (wordId: string) => void;
+  onStrugglingQuizIncorrect: (wordId: string) => void;
 }
 
 const getA1Entries = (): VocabularyEntry[] =>
@@ -197,6 +198,15 @@ export const useVocabularyStore = create<
       const current = state.wordProgress[wordId];
       if (!current || current.status !== 'struggling') return state;
       const updated = VocabularyProgressService.onStrugglingQuizCorrect(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  onStrugglingQuizIncorrect: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId];
+      if (!current || current.status !== 'struggling') return state;
+      const updated = VocabularyProgressService.onStrugglingQuizIncorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },

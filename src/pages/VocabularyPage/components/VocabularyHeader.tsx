@@ -15,7 +15,6 @@ const TAB_LABELS = {
 
 interface VocabularyHeaderProps {
   vocabularyLevel: string;
-  allLevelsLoaded: boolean;
   activeTab: VocabularyMenuStatus;
   searchInput: string;
   showFilters: boolean;
@@ -36,7 +35,6 @@ export { TABS, TAB_LABELS };
 
 export function VocabularyHeader({
   vocabularyLevel,
-  allLevelsLoaded,
   activeTab,
   searchInput,
   showFilters,
@@ -53,25 +51,12 @@ export function VocabularyHeader({
   onFilterChange,
 }: VocabularyHeaderProps) {
   return (
-    <div className="sticky top-0 z-40 flex flex-col bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex h-16 shrink-0 items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Vocabulary
-          </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
-            {vocabularyLevel}
-          </span>
-        </div>
-        <div className="hidden text-[11px] font-medium text-muted-copy lg:block">
-          {allLevelsLoaded
-            ? 'All 5,000 canonical terms are available'
-            : `${vocabularyLevel} learning terms loaded`}
-        </div>
-      </div>
+    <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <div className="flex h-12 shrink-0 items-center gap-3">
+        <h1 className="shrink-0 text-sm font-bold tracking-tight text-foreground">Vocabulary</h1>
+        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[8px] font-bold uppercase text-[#0047bb]">{vocabularyLevel}</span>
 
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-        <div className="flex flex-1 gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+        <div className="flex flex-1 gap-1 overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab}
@@ -79,18 +64,19 @@ export function VocabularyHeader({
               type="button"
               aria-selected={activeTab === tab}
               onClick={() => chooseTab(tab)}
-              className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`shrink-0 rounded-[4px] border px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeTab === tab
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                  : 'border-border-soft text-muted-copy hover:text-foreground'
               }`}
             >
               {TAB_LABELS[tab]}
             </button>
           ))}
         </div>
-        <label className="relative flex-1 sm:max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
+
+        <label className="relative shrink-0 w-40 sm:w-48">
+          <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
           <input
             value={searchInput}
             onChange={(event) => onSearchInputChange(event.target.value)}
@@ -100,74 +86,45 @@ export function VocabularyHeader({
                 void onSearchSubmit(event);
               }
             }}
-            className="min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
-            placeholder="Search term bank..."
+            className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-7 pr-2 text-xs outline-none focus:border-[#0047bb]/50 text-foreground"
+            placeholder="Search..."
             aria-label="Search vocabulary"
           />
         </label>
       </div>
 
       {showFilters && (
-        <div className="mt-3 grid gap-2 rounded-[4px] border border-border-soft bg-surface p-3 sm:grid-cols-2 lg:grid-cols-4 shadow-sm animate-in slide-in-from-top-2 duration-200">
+        <div className="py-2 flex flex-wrap gap-1.5">
           {(
             [
               ['cefr', 'CEFR'],
               ['domain', 'Domain'],
-              ['contentDomain', 'Content domain'],
-              ['lifeContext', 'Life context'],
-              ['partOfSpeech', 'Part of speech'],
-              ['skillUse', 'Skill use'],
               ['status', 'Status'],
             ] as Array<[keyof VocabularySearchFilters, string]>
           ).map(([field, label]) => (
-            <label
+            <select
               key={field}
-              className="text-[10px] font-bold text-muted-copy uppercase tracking-wider"
+              aria-label={`Filter by ${label}`}
+              value={filters[field]}
+              onChange={(event) => onFilterChange(field, event.target.value)}
+              className="min-h-7 rounded-[4px] border border-border-soft bg-surface px-2 text-[10px] font-medium focus:border-[#0047bb] outline-none cursor-pointer"
             >
-              {label}
-              <select
-                aria-label={`Filter by ${label}`}
-                value={filters[field]}
-                onChange={(event) => onFilterChange(field, event.target.value)}
-                className="mt-1 min-h-8 w-full rounded-[4px] border border-border-soft bg-background px-2 text-[11px] font-normal focus:border-[#0047bb] outline-none cursor-pointer"
-              >
-                {(field === 'status'
-                  ? [
-                      'All',
-                      'New',
-                      'Learning',
-                      'Mastered',
-                      'Weak',
-                      'Leech',
-                      'Forgotten',
-                      'Due Today',
-                    ]
-                  : filterOptions(field)
-                ).map((option) => (
-                  <option key={option}>{option}</option>
-                ))}
-              </select>
-            </label>
+              {(field === 'status'
+                ? ['All', 'New', 'Learned', 'Mastered', 'Struggling']
+                : filterOptions(field)
+              ).map((option) => (
+                <option key={option}>{option}</option>
+              ))}
+            </select>
           ))}
         </div>
       )}
 
-      {searchError && (
-        <p className="mt-2 text-xs font-semibold text-rose-700">
-          {searchError}
-        </p>
-      )}
-      {isSearchLoading && (
-        <p
-          role="status"
-          className="mt-2 text-[10px] font-bold text-[#0047bb] animate-pulse"
-        >
-          Checking all 5,000 canonical terms…
-        </p>
-      )}
+      {searchError && <p className="py-1 text-[10px] text-rose-600">{searchError}</p>}
+      {isSearchLoading && <p className="py-1 text-[10px] text-[#0047bb] animate-pulse">Searching...</p>}
       {hasSearched && searchResults.length > 0 && (
-        <p className="mt-2 text-[10px] text-muted-copy font-mono uppercase">
-          {searchResults.length} of {allSearchResults.length} results found
+        <p className="py-1 text-[10px] text-muted-copy">
+          {searchResults.length}/{allSearchResults.length} results
         </p>
       )}
     </div>
