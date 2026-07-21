@@ -1,55 +1,46 @@
 import { describe, expect, it } from 'vitest';
 import { VocabularyProgressService, type WordProgress } from '../services/vocabulary.progress';
 
-const createProgress = (overrides: Partial<WordProgress> = {}): WordProgress => ({
-  wordId: 'test-word',
-  status: 'new',
-  failCount: 0,
-  correctCount: 0,
-  lastPracticedAt: null,
-  masteredAt: null,
-  ...overrides,
-});
-
 describe('VocabularyProgressService', () => {
-  it('New → Learning (otomatik görüntüleme)', () => {
-    const progress = createProgress();
-    const result = VocabularyProgressService.transitionOnView(progress);
-    expect(result.status).toBe('learning');
-    expect(result.lastPracticedAt).toBeTruthy();
+  it('Yeni kelime ekle → new status', () => {
+    const word = VocabularyProgressService.addWord('hello');
+    expect(word.status).toBe('new');
+    expect(word.usedCount).toBe(0);
   });
 
-  it('Learning → Learned (1 doğru cevap)', () => {
-    const progress = createProgress({ status: 'learning', correctCount: 0 });
-    const result = VocabularyProgressService.transitionOnCorrect(progress);
+  it('New → Learned (tek kullanımda)', () => {
+    const word = VocabularyProgressService.addWord('hello');
+    const result = VocabularyProgressService.onWordUsed(word);
     expect(result.status).toBe('learned');
-    expect(result.correctCount).toBe(1);
+    expect(result.usedCount).toBe(1);
   });
 
-  it('Learned → Mastered (3 doğru + 7 gün hatasız)', () => {
-    const eightDaysAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString();
-    const progress = createProgress({
-      status: 'learned',
-      correctCount: 2,
-      failCount: 0,
-      lastPracticedAt: eightDaysAgo,
-    });
-    const result = VocabularyProgressService.transitionOnCorrect(progress);
+  it('Learned → Mastered (2. kullanımda)', () => {
+    const word: WordProgress = {
+      wordId: 'hello', status: 'learned', failCount: 0, usedCount: 1,
+      lastPracticedAt: new Date().toISOString(), masteredAt: null,
+    };
+    const result = VocabularyProgressService.onWordUsed(word);
     expect(result.status).toBe('mastered');
-    expect(result.correctCount).toBe(3);
+    expect(result.usedCount).toBe(2);
     expect(result.masteredAt).toBeTruthy();
   });
 
-  it('Learned → Learning (yanlış cevap gerilemesi)', () => {
-    const progress = createProgress({ status: 'learned', failCount: 0 });
-    const result = VocabularyProgressService.transitionOnIncorrect(progress);
-    expect(result.status).toBe('learning');
-    expect(result.failCount).toBe(1);
+  it('Mastered → havuzdan çıkar', () => {
+    const word: WordProgress = {
+      wordId: 'hello', status: 'mastered', failCount: 0, usedCount: 2,
+      lastPracticedAt: new Date().toISOString(), masteredAt: new Date().toISOString(),
+    };
+    const result = VocabularyProgressService.removeFromPool(word);
+    expect(result.status).toBe('mastered');
   });
 
   it('5 yanlış → Struggling', () => {
-    const progress = createProgress({ status: 'learning', failCount: 4 });
-    const result = VocabularyProgressService.transitionOnIncorrect(progress);
+    const word: WordProgress = {
+      wordId: 'hello', status: 'new', failCount: 4, usedCount: 0,
+      lastPracticedAt: null, masteredAt: null,
+    };
+    const result = VocabularyProgressService.onIncorrect(word);
     expect(result.status).toBe('struggling');
     expect(result.failCount).toBe(5);
   });

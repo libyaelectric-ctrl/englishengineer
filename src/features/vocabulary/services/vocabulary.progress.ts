@@ -1,88 +1,69 @@
-export type WordStatus = 'new' | 'learning' | 'learned' | 'mastered' | 'struggling';
+export type WordStatus = 'new' | 'learned' | 'mastered' | 'struggling';
 
 export interface WordProgress {
   wordId: string;
   status: WordStatus;
   failCount: number;
-  correctCount: number;
+  usedCount: number;
   lastPracticedAt: string | null;
   masteredAt: string | null;
 }
 
-const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-
 export const VocabularyProgressService = {
-  transitionOnView(current: WordProgress): WordProgress {
-    if (current.status === 'new') {
-      return { ...current, status: 'learning', lastPracticedAt: new Date().toISOString() };
-    }
-    return { ...current, lastPracticedAt: new Date().toISOString() };
+  addWord(wordId: string): WordProgress {
+    return {
+      wordId,
+      status: 'new',
+      failCount: 0,
+      usedCount: 0,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
   },
 
-  transitionOnCorrect(current: WordProgress): WordProgress {
+  onWordUsed(current: WordProgress): WordProgress {
     const now = new Date().toISOString();
-    const newCorrect = current.correctCount + 1;
+    const newUsed = current.usedCount + 1;
 
-    if (newCorrect >= 3) {
-      const lastPracticed = current.lastPracticedAt ? new Date(current.lastPracticedAt).getTime() : 0;
-      const sevenDaysAgo = Date.now() - SEVEN_DAYS_MS;
-      const noRecentFails = current.failCount === 0 || lastPracticed < sevenDaysAgo;
-
-      if (noRecentFails || current.status === 'mastered') {
-        return {
-          ...current,
-          status: 'mastered',
-          correctCount: newCorrect,
-          masteredAt: now,
-          lastPracticedAt: now,
-        };
-      }
-    }
-
-    if (newCorrect >= 1 && current.status !== 'mastered') {
+    if (current.status === 'new') {
       return {
         ...current,
         status: 'learned',
-        correctCount: newCorrect,
+        usedCount: newUsed,
         lastPracticedAt: now,
       };
     }
 
-    return { ...current, correctCount: newCorrect, lastPracticedAt: now };
+    if (current.status === 'learned' && newUsed >= 2) {
+      return {
+        ...current,
+        status: 'mastered',
+        usedCount: newUsed,
+        masteredAt: now,
+        lastPracticedAt: now,
+      };
+    }
+
+    return { ...current, usedCount: newUsed, lastPracticedAt: now };
   },
 
-  transitionOnIncorrect(current: WordProgress): WordProgress {
+  onIncorrect(current: WordProgress): WordProgress {
     const newFail = current.failCount + 1;
     const now = new Date().toISOString();
 
-    let newStatus: WordStatus = current.status;
-
-    if (current.status === 'learned' || current.status === 'mastered') {
-      newStatus = 'learning';
-    }
-
     if (newFail >= 5) {
-      newStatus = 'struggling';
+      return { ...current, status: 'struggling', failCount: newFail, lastPracticedAt: now };
     }
 
-    return {
-      ...current,
-      status: newStatus,
-      failCount: newFail,
-      lastPracticedAt: now,
-    };
+    return { ...current, failCount: newFail, lastPracticedAt: now };
   },
 
-  resetFailCount(current: WordProgress): WordProgress {
-    if (current.status === 'struggling') {
-      return { ...current, failCount: 0, status: 'learning' };
-    }
-    return { ...current, failCount: 0 };
+  removeFromPool(current: WordProgress): WordProgress {
+    return { ...current, status: 'mastered', masteredAt: new Date().toISOString() };
   },
 
   getStatusColor(status: WordStatus): string {
     switch (status) {
-      case 'learning': return 'yellow';
       case 'learned': return 'green';
       case 'mastered': return 'gold';
       case 'struggling': return 'red';

@@ -14,7 +14,6 @@ import {
 interface VocabularyStats {
   total: number;
   newCount: number;
-  learning: number;
   learned: number;
   mastered: number;
   struggling: number;
@@ -62,7 +61,7 @@ export const useVocabularyStore = create<
   summary: VocabularyService.getSummary(),
   isSubmitting: false,
   wordProgress: {},
-  stats: { total: 0, newCount: 0, learning: 0, learned: 0, mastered: 0, struggling: 0 },
+  stats: { total: 0, newCount: 0, learned: 0, mastered: 0, struggling: 0 },
 
   initializeStore: () => {
     const state: VocabularyState = VocabularyService.getState();
@@ -149,32 +148,18 @@ export const useVocabularyStore = create<
 
   markWordViewed: (wordId: string) => {
     set((state) => {
-      const current = state.wordProgress[wordId] || {
-        wordId,
-        status: 'new' as const,
-        failCount: 0,
-        correctCount: 0,
-        lastPracticedAt: null,
-        masteredAt: null,
-      };
-      const updated = VocabularyProgressService.transitionOnView(current);
-      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+      if (state.wordProgress[wordId]) return state;
+      const word = VocabularyProgressService.addWord(wordId);
+      return { wordProgress: { ...state.wordProgress, [wordId]: word } };
     });
   },
 
   updateWordProgress: (wordId: string, result: 'correct' | 'incorrect') => {
     set((state) => {
-      const current = state.wordProgress[wordId] || {
-        wordId,
-        status: 'new' as const,
-        failCount: 0,
-        correctCount: 0,
-        lastPracticedAt: null,
-        masteredAt: null,
-      };
+      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
       const updated = result === 'correct'
-        ? VocabularyProgressService.transitionOnCorrect(current)
-        : VocabularyProgressService.transitionOnIncorrect(current);
+        ? VocabularyProgressService.onWordUsed(current)
+        : VocabularyProgressService.onIncorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
@@ -186,7 +171,6 @@ export const useVocabularyStore = create<
         stats: {
           total: progress.length,
           newCount: progress.filter((p) => p.status === 'new').length,
-          learning: progress.filter((p) => p.status === 'learning').length,
           learned: progress.filter((p) => p.status === 'learned').length,
           mastered: progress.filter((p) => p.status === 'mastered').length,
           struggling: progress.filter((p) => p.status === 'struggling').length,
