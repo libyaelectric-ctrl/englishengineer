@@ -637,6 +637,22 @@
   animation: statusPulse 2s ease-in-out infinite;
 }
 
+/* Mascot floating animation */
+@keyframes mascotFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+  75% {
+    transform: translateY(3px) rotate(-1deg);
+  }
+}
+.mascot-float {
+  animation: mascotFloat 3s ease-in-out infinite;
+}
+
 /* Dark mode focus ring fix */
 .dark *:focus-visible {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
