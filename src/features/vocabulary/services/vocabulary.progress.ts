@@ -3,63 +3,98 @@ export type WordStatus = 'new' | 'learned' | 'mastered' | 'struggling';
 export interface WordProgress {
   wordId: string;
   status: WordStatus;
-  failCount: number;
-  usedCount: number;
+  score: number;
+  quizCount: number;
+  lastQuizAt: string | null;
   lastPracticedAt: string | null;
   masteredAt: string | null;
 }
+
+export const MASTERY_SCORE = 3;
+export const QUIZ_THRESHOLD = 500;
+export const STRUGGLING_THRESHOLD = 2;
 
 export const VocabularyProgressService = {
   addWord(wordId: string): WordProgress {
     return {
       wordId,
       status: 'new',
-      failCount: 0,
-      usedCount: 0,
+      score: 0,
+      quizCount: 0,
+      lastQuizAt: null,
       lastPracticedAt: null,
       masteredAt: null,
     };
   },
 
-  onWordUsed(current: WordProgress): WordProgress {
+  markAsLearned(current: WordProgress): WordProgress {
+    return {
+      ...current,
+      status: 'learned',
+      lastPracticedAt: new Date().toISOString(),
+    };
+  },
+
+  onQuizCorrect(current: WordProgress): WordProgress {
     const now = new Date().toISOString();
-    const newUsed = current.usedCount + 1;
+    const newScore = current.score + 1;
 
-    if (current.status === 'new') {
-      return {
-        ...current,
-        status: 'learned',
-        usedCount: newUsed,
-        lastPracticedAt: now,
-      };
-    }
-
-    if (current.status === 'learned' && newUsed >= 2) {
+    if (newScore >= MASTERY_SCORE) {
       return {
         ...current,
         status: 'mastered',
-        usedCount: newUsed,
+        score: newScore,
+        quizCount: current.quizCount + 1,
         masteredAt: now,
+        lastQuizAt: now,
         lastPracticedAt: now,
       };
     }
 
-    return { ...current, usedCount: newUsed, lastPracticedAt: now };
+    return {
+      ...current,
+      score: newScore,
+      quizCount: current.quizCount + 1,
+      lastQuizAt: now,
+      lastPracticedAt: now,
+    };
   },
 
-  onIncorrect(current: WordProgress): WordProgress {
-    const newFail = current.failCount + 1;
+  onQuizIncorrect(current: WordProgress): WordProgress {
     const now = new Date().toISOString();
+    const newScore = Math.max(0, current.score - 1);
 
-    if (newFail >= 5) {
-      return { ...current, status: 'struggling', failCount: newFail, lastPracticedAt: now };
+    if (current.score <= STRUGGLING_THRESHOLD && current.status === 'learned') {
+      return {
+        ...current,
+        status: 'struggling',
+        score: newScore,
+        quizCount: current.quizCount + 1,
+        lastQuizAt: now,
+        lastPracticedAt: now,
+      };
     }
 
-    return { ...current, failCount: newFail, lastPracticedAt: now };
+    return {
+      ...current,
+      score: newScore,
+      quizCount: current.quizCount + 1,
+      lastQuizAt: now,
+      lastPracticedAt: now,
+    };
   },
 
-  removeFromPool(current: WordProgress): WordProgress {
-    return { ...current, status: 'mastered', masteredAt: new Date().toISOString() };
+  onStrugglingQuizCorrect(current: WordProgress): WordProgress {
+    return {
+      ...current,
+      status: 'learned',
+      score: 1,
+      lastPracticedAt: new Date().toISOString(),
+    };
+  },
+
+  isQuizReady(learnedCount: number): boolean {
+    return learnedCount >= QUIZ_THRESHOLD;
   },
 
   getStatusColor(status: WordStatus): string {
