@@ -47,17 +47,17 @@
   --surface: #1c1f26;
   --card-bg: #1c1f26;
 
-  --color-primary: #3b82f6;
-  --color-primary-hover: #60a5fa;
+  --color-primary: #4d8bf5;
+  --color-primary-hover: #6ba0f7;
   --color-primary-foreground: #0b0e14;
 
   --color-surface: #1c1f26;
   --color-surface-hover: #252830;
-  --color-soft: rgba(59, 130, 246, 0.08);
+  --color-soft: rgba(77, 139, 245, 0.08);
   --color-border-soft: #2a2d35;
   --color-border-hover: #3a3d45;
   --color-muted-copy: #949ba4;
-  --color-focus: rgba(59, 130, 246, 0.15);
+  --color-focus: rgba(77, 139, 245, 0.15);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -66,7 +66,7 @@
   --color-engineer-900: #0b0e14;
   --color-engineer-800: #1c1f26;
   --color-engineer-700: #2a2d35;
-  --color-engineer-cyan: #3b82f6;
+  --color-engineer-cyan: #4d8bf5;
 
   --surface: #1c1f26;
   --color-sidebar-bg: #1c1f26;

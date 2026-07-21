@@ -8,11 +8,13 @@ EngineerOS uses a consistent design system built with Tailwind CSS, React compon
 
 ### Primary Colors
 
+The primary color palette uses a distinctive deep engineering blue (`#0047bb`) that differentiates EngineerOS from generic SaaS platforms. This color was chosen to reflect the engineering/construction domain identity.
+
 | Color         | Hex       | Usage                         |
 | ------------- | --------- | ----------------------------- |
-| Primary       | `#3B82F6` | Buttons, links, active states |
-| Primary Dark  | `#1D4ED8` | Hover states                  |
-| Primary Light | `#93C5FD` | Backgrounds, accents          |
+| Primary       | `#0047bb` | Buttons, links, active states |
+| Primary Dark  | `#003bb3` | Hover states                  |
+| Primary Light | `#4d8bf5` | Backgrounds, accents (dark mode) |
 
 ### Neutral Colors
 
@@ -28,10 +30,10 @@ EngineerOS uses a consistent design system built with Tailwind CSS, React compon
 
 | Color   | Hex       | Usage                       |
 | ------- | --------- | --------------------------- |
-| Success | `#10B981` | Success messages, completed |
-| Warning | `#F59E0B` | Warnings, pending           |
-| Error   | `#EF4444` | Errors, destructive actions |
-| Info    | `#3B82F6` | Informational messages      |
+| Success | `#16a34a` | Success messages, completed |
+| Warning | `#ea580c` | Warnings, pending           |
+| Error   | `#dc2626` | Errors, destructive actions |
+| Info    | `#0047bb` | Informational messages      |
 
 ## Typography
 
