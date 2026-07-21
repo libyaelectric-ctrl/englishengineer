@@ -643,14 +643,14 @@
     transform: translateY(0) rotate(0deg);
   }
   25% {
-    transform: translateY(-6px) rotate(1deg);
+    transform: translateY(-15px) rotate(3deg);
   }
   75% {
-    transform: translateY(3px) rotate(-1deg);
+    transform: translateY(5px) rotate(-3deg);
   }
 }
 .mascot-float {
-  animation: mascotFloat 3s ease-in-out infinite;
+  animation: mascotFloat 2s ease-in-out infinite;
 }
 
 /* Dark mode focus ring fix */

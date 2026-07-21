@@ -112,7 +112,7 @@ export const Sidebar: React.FC = () => {
               <img
                 src="/brand/mascot.webp"
                 alt="EngVox Mascot"
-                className="h-28 w-auto"
+                className="mascot-float h-28 w-auto"
               />
             </div>
             <Navigation

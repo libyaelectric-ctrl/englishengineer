@@ -31,7 +31,7 @@ const LoginPage = () => {
             <img
               src="/brand/mascot.webp"
               alt="EngVox Mascot"
-              className="mascot-float mx-auto mb-3 h-14 w-14 rounded-[4px] border border-border-soft bg-background object-contain shadow-sm"
+              className="mascot-float mx-auto mb-3 h-28 w-auto rounded-[4px] border border-border-soft bg-background object-contain shadow-sm"
             />
             <h1 className="text-sm font-bold uppercase tracking-widest text-foreground font-mono">
               {h.isSignUpMode ? copy.signupTitle : copy.loginTitle}
