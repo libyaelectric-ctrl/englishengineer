@@ -13,9 +13,9 @@ export const initRedisCache = (url?: string, token?: string): void => {
   redisUrl = url ?? null;
   redisToken = token ?? null;
   if (redisUrl) {
-    logger.i('[RedisCache] Upstash Redis configured');
+    logger.info('[RedisCache] Upstash Redis configured');
   } else {
-    logger.w('[RedisCache] No Redis URL — using in-memory cache');
+    logger.warn('[RedisCache] No Redis URL — using in-memory cache');
   }
 };
 
