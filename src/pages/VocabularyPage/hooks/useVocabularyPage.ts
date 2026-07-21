@@ -27,6 +27,7 @@ import {
   type VocabularySearchFilters,
   type VocabularyTerm,
 } from '@/features/vocabulary';
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 import {
   dataReducer,
   uiReducer,
@@ -231,6 +232,7 @@ export function useVocabularyPage() {
       new Date(),
       repairVocabularyText(term.term)
     );
+    useVocabularyStore.getState().updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) playSound('ding');
     useLearningStore
       .getState()
@@ -272,6 +274,7 @@ export function useVocabularyPage() {
 
   const learnWord = (term: VocabularyTerm) => {
     VocabularyMenuService.startLearning(term.id, new Date());
+    useVocabularyStore.getState().markWordViewed(term.id);
     playSound('success');
     useLearningStore.getState().completeGenericPractice('Vocabulary', 100, 0.5);
     dispatchData({
