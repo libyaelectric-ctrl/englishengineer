@@ -61,6 +61,14 @@ This document tracks known technical debt items that should be addressed in futu
 **Effort:** Resolved
 **Action:** All `any` types have been removed from backend code. Backend uses strict TypeScript.
 
+### TD-016: CEFR Type Unification (Not Needed)
+
+**Files:** `level-system.types.ts`, `profile.types.ts`
+**Issue:** CefrBand and CefrLevel appear duplicated
+**Impact:** None - intentionally different types
+**Effort:** N/A
+**Action:** CefrBand includes + variants (A1+, A2+, etc.) while CefrLevel is basic CEFR levels. They serve different purposes and should NOT be merged.
+
 ### TD-008: Add API Documentation
 
 **Issue:** Missing OpenAPI/Swagger docs
