@@ -19,7 +19,7 @@ const getSelectedStatus = (
   return 'Practicing' as const;
 };
 
-const GRAMMAR_QUIZ_THRESHOLD = 500;
+const GRAMMAR_QUIZ_THRESHOLD = 36;
 
 const GrammarPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
