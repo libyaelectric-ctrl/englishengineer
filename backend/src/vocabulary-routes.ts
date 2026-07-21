@@ -22,7 +22,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const query = request.validatedQuery as unknown as VocabularyLookupQuery;
-        const cacheKey = `vocab:${query.word}:${query.lang ?? 'en'}`;
+        const cacheKey = `vocab:${query.word}`;
         const result = await getOrSet(
           cacheKey,
           21600,

@@ -16,7 +16,7 @@ export const toErrorResponse = (error: unknown): ErrorResponse => {
     return {
       success: false,
       error: {
-        code: error.errorCode,
+        code: error.code,
         message: error.message,
       },
     };
@@ -54,7 +54,7 @@ export const createErrorHandler = (config: BackendConfig) =>
 
     const mapped = toErrorResponse(error);
     const statusCode =
-      error instanceof ApiError ? error.statusCode : 500;
+      error instanceof ApiError ? error.status : 500;
 
     response.status(statusCode).json(mapped);
   };
