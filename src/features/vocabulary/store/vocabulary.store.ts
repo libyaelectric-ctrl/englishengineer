@@ -43,6 +43,10 @@ interface VocabularyStoreActions {
   updateWordProgress: (wordId: string, result: 'correct' | 'incorrect') => void;
   fetchVocabularyStats: () => void;
   markWordViewed: (wordId: string) => void;
+  markWordAsLearned: (wordId: string) => void;
+  onQuizCorrect: (wordId: string) => void;
+  onQuizIncorrect: (wordId: string) => void;
+  onStrugglingQuizCorrect: (wordId: string) => void;
 }
 
 const getA1Entries = (): VocabularyEntry[] =>
@@ -158,8 +162,41 @@ export const useVocabularyStore = create<
     set((state) => {
       const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
       const updated = result === 'correct'
-        ? VocabularyProgressService.onWordUsed(current)
-        : VocabularyProgressService.onIncorrect(current);
+        ? VocabularyProgressService.onQuizCorrect(current)
+        : VocabularyProgressService.onQuizIncorrect(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  markWordAsLearned: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated = VocabularyProgressService.markAsLearned(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  onQuizCorrect: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated = VocabularyProgressService.onQuizCorrect(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  onQuizIncorrect: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated = VocabularyProgressService.onQuizIncorrect(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  onStrugglingQuizCorrect: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId];
+      if (!current || current.status !== 'struggling') return state;
+      const updated = VocabularyProgressService.onStrugglingQuizCorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
