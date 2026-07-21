@@ -52,11 +52,11 @@ export function VocabularyHeader({
 }: VocabularyHeaderProps) {
   return (
     <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex h-12 shrink-0 items-center gap-3">
-        <h1 className="shrink-0 text-sm font-bold tracking-tight text-foreground">Vocabulary</h1>
-        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[8px] font-bold uppercase text-[#0047bb]">{vocabularyLevel}</span>
+      <div className="flex h-16 shrink-0 items-center gap-3">
+        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">Vocabulary</h1>
+        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">{vocabularyLevel}</span>
 
-        <div className="flex flex-1 gap-1 overflow-x-auto">
+        <div className="flex flex-1 gap-1.5 overflow-x-auto">
           {TABS.map((tab) => (
             <button
               key={tab}
@@ -64,7 +64,7 @@ export function VocabularyHeader({
               type="button"
               aria-selected={activeTab === tab}
               onClick={() => chooseTab(tab)}
-              className={`shrink-0 rounded-[4px] border px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`shrink-0 rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 activeTab === tab
                   ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
                   : 'border-border-soft text-muted-copy hover:text-foreground'

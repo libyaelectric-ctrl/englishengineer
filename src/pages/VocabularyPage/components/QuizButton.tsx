@@ -15,23 +15,22 @@ export const QuizButton = ({ onOpenQuiz, onOpenStrugglingQuiz }: QuizButtonProps
   const learnedWords = Object.values(wordProgress).filter((w) => w.status === 'learned');
 
   return (
-    <div className="space-y-3">
+    <div className="flex items-center gap-2">
       {canStartQuiz ? (
         <button
           onClick={onOpenQuiz}
-          className="flex w-full items-center justify-center gap-2 rounded-[4px] bg-primary px-4 py-3 text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
+          className="flex items-center gap-1.5 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
         >
-          <Zap className="h-4 w-4" />
-          Start Quiz ({learnedWords.length} words)
+          <Zap className="h-3 w-3" />
+          Quiz ({learnedWords.length})
         </button>
       ) : (
-        <div className="rounded-[4px] border border-border-soft bg-surface p-4 text-center">
-          <Lock className="mx-auto mb-2 h-5 w-5 text-muted-copy" />
-          <p className="text-xs font-bold text-foreground">Quiz Locked</p>
-          <p className="mt-1 text-[10px] text-muted-copy">
-            {learnedCount}/{QUIZ_THRESHOLD} kelime öğrenildi
-          </p>
-          <div className="mt-2 h-1.5 rounded-full bg-border-soft overflow-hidden">
+        <div className="flex items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5">
+          <Lock className="h-3 w-3 text-muted-copy" />
+          <span className="text-[10px] font-bold text-muted-copy">
+            Quiz {learnedCount}/{QUIZ_THRESHOLD}
+          </span>
+          <div className="h-1 w-16 rounded-full bg-border-soft overflow-hidden">
             <div
               className="h-full bg-primary transition-all"
               style={{ width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%` }}
@@ -43,9 +42,9 @@ export const QuizButton = ({ onOpenQuiz, onOpenStrugglingQuiz }: QuizButtonProps
       {strugglingCount > 0 && (
         <button
           onClick={onOpenStrugglingQuiz}
-          className="flex w-full items-center justify-center gap-2 rounded-[4px] border border-red-300 bg-red-50 px-4 py-2 text-xs font-bold uppercase text-red-700 transition hover:bg-red-100"
+          className="flex items-center gap-1 rounded-[4px] border border-red-300 bg-red-50 px-2.5 py-1 text-[10px] font-bold text-red-700 transition hover:bg-red-100"
         >
-          Struggling Quiz ({strugglingCount})
+          Struggling ({strugglingCount})
         </button>
       )}
     </div>
