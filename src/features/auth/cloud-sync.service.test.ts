@@ -10,6 +10,7 @@ import {
   mergeJsonValues,
   mergeSnapshots,
 } from './cloud-sync.service';
+import { resolveConflict, setConflictResolver, createTimestampResolver } from './conflict-resolver';
 import { CloudProgressSnapshot } from './cloud-sync.types';
 
 const createSnapshot = (
@@ -145,5 +146,63 @@ describe('CloudSyncStatusPanel', () => {
 
     expect(screen.getByText('Sync queued')).toBeVisible();
     expect(screen.getByText(/queued for cloud synchronization/i)).toBeVisible();
+  });
+});
+
+describe('timestamp-based merge', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    setConflictResolver(createTimestampResolver());
+  });
+
+  it('keeps local data when remote is null', () => {
+    const local = { xp: 100, _lastUpdated: '2026-07-21T12:00:00.000Z' };
+    const result = mergeJsonValues(local, null);
+    expect(result).toEqual(local);
+  });
+
+  it('uses remote when local is null', () => {
+    const remote = { xp: 200, _lastUpdated: '2026-07-21T12:00:00.000Z' };
+    const result = mergeJsonValues(null, remote);
+    expect(result).toEqual(remote);
+  });
+
+  it('prefers local when local timestamp is newer', () => {
+    const local = { xp: 100, _lastUpdated: '2026-07-21T12:00:00.000Z' };
+    const remote = { xp: 200, _lastUpdated: '2026-07-21T11:00:00.000Z' };
+    const result = mergeJsonValues(local, remote);
+    expect(result).toEqual(local);
+  });
+
+  it('prefers remote when remote timestamp is newer', () => {
+    const local = { xp: 100, _lastUpdated: '2026-07-21T11:00:00.000Z' };
+    const remote = { xp: 200, _lastUpdated: '2026-07-21T12:00:00.000Z' };
+    const result = mergeJsonValues(local, remote);
+    expect(result).toEqual(remote);
+  });
+
+  it('prefers remote when timestamps are equal', () => {
+    const ts = '2026-07-21T12:00:00.000Z';
+    const local = { xp: 100, _lastUpdated: ts };
+    const remote = { xp: 200, _lastUpdated: ts };
+    const result = mergeJsonValues(local, remote);
+    expect(result).toEqual(remote);
+  });
+
+  it('conflict resolver is called during timestamp merge', () => {
+    let resolverCalled = false;
+    setConflictResolver({
+      resolve: () => {
+        resolverCalled = true;
+        return 'local';
+      },
+    });
+
+    const local = { xp: 100, _lastUpdated: '2026-07-21T12:00:00.000Z' };
+    const remote = { xp: 200, _lastUpdated: '2026-07-21T11:00:00.000Z' };
+    mergeJsonValues(local, remote);
+
+    expect(resolverCalled).toBe(true);
+    setConflictResolver(createTimestampResolver());
   });
 });
