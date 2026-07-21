@@ -1,4 +1,6 @@
 import { LearningState, MissionModule } from '@/core/learning';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import {
   CEFR_LEVELS,
   CefrLevel,
@@ -183,7 +185,7 @@ export const getSkillProgress = (
   skill: SkillKey
 ): SkillLevelProgress => {
   const progress = profile.skills.find((item) => item.skill === skill);
-  if (!progress) throw new Error(`Missing level progress for ${skill}`);
+  if (!progress) throw new AppError({ code: ErrorCode.VALIDATION, message: `Missing level progress for ${skill}` });
   return progress;
 };
 

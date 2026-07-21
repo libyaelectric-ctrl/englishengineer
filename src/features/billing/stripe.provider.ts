@@ -5,6 +5,8 @@ import {
   SubscriptionSnapshot,
 } from './billing.types';
 import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 
 interface BillingBackendErrorResponse {
   error?: string | { code?: string; message?: string };
@@ -81,7 +83,7 @@ const postJson = async <TResponse, TBody extends object>(
   });
 
   if (!response.ok) {
-    throw new Error(await parseErrorMessage(response));
+    throw new AppError({ code: ErrorCode.NETWORK, message: await parseErrorMessage(response) });
   }
 
   return response.json() as Promise<TResponse>;
@@ -96,7 +98,7 @@ const getJson = async <TResponse>(
   });
 
   if (!response.ok) {
-    throw new Error(await parseErrorMessage(response));
+    throw new AppError({ code: ErrorCode.NETWORK, message: await parseErrorMessage(response) });
   }
 
   return response.json() as Promise<TResponse>;
@@ -117,9 +119,10 @@ export class StripeBillingProvider {
   ): Promise<BillingRedirectResponse> {
     const authHeaders = await getBackendAuthHeaders(request.userId);
     if (!authHeaders.Authorization) {
-      throw new Error(
-        'Please sign in with your account before upgrading to Pro.'
-      );
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Please sign in with your account before upgrading to Pro.',
+      });
     }
 
     return postJson<BillingRedirectResponse, BillingSessionRequest>(
@@ -134,9 +137,10 @@ export class StripeBillingProvider {
   ): Promise<BillingRedirectResponse> {
     const authHeaders = await getBackendAuthHeaders(request.userId);
     if (!authHeaders.Authorization) {
-      throw new Error(
-        'Please sign in with your account before opening the customer portal.'
-      );
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Please sign in with your account before opening the customer portal.',
+      });
     }
 
     return postJson<BillingRedirectResponse, BillingPortalRequest>(
@@ -154,9 +158,10 @@ export class StripeBillingProvider {
   ): Promise<BillingRedirectResponse> {
     const authHeaders = await getBackendAuthHeaders(request.userId);
     if (!authHeaders.Authorization) {
-      throw new Error(
-        'Please sign in with your account before purchasing credits.'
-      );
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Please sign in with your account before purchasing credits.',
+      });
     }
 
     return postJson<

@@ -1,4 +1,6 @@
 import { storage } from '@/shared/storage';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import {
   createFreeSubscription,
   getBillingApiUrl,
@@ -74,9 +76,10 @@ export const BillingService = {
   ): Promise<void> {
     const provider = getProvider();
     if (!provider) {
-      throw new Error(
-        'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable Stripe Checkout.'
-      );
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable Stripe Checkout.',
+      });
     }
 
     try {
@@ -91,16 +94,17 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new Error('Billing service is temporarily unavailable.');
+      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
     }
   },
 
   async openCustomerPortal(userId: string): Promise<void> {
     const provider = getProvider();
     if (!provider) {
-      throw new Error(
-        'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable the customer portal.'
-      );
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable the customer portal.',
+      });
     }
 
     try {
@@ -112,16 +116,17 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new Error('Billing service is temporarily unavailable.');
+      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
     }
   },
 
   async startTopupCheckout(userId: string, email: string): Promise<void> {
     const provider = getProvider();
     if (!provider) {
-      throw new Error(
-        'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable top-up purchase.'
-      );
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable top-up purchase.',
+      });
     }
 
     try {
@@ -135,7 +140,7 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new Error('Billing service is temporarily unavailable.');
+      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
     }
   },
 };
