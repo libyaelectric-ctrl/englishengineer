@@ -67,19 +67,13 @@ const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
 
 const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
   <div className="max-w-4xl space-y-6">
-    <div className="flex items-center gap-4" style={heroFadeStyle(heroVisible, '0ms')}>
-      <img
-        src="/brand/mascot.webp"
-        alt="EngVox Mascot"
-        className="mascot-float h-28 w-auto rounded-[4px] border border-border-soft bg-surface object-contain shadow-sm"
-      />
-      <span
-        className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy backdrop-blur"
-      >
-        <Sparkles className="h-3.5 w-3.5 text-primary" />
-        AI English operating system for engineers
-      </span>
-    </div>
+    <span
+      className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy backdrop-blur"
+      style={heroFadeStyle(heroVisible, '0ms')}
+    >
+      <Sparkles className="h-3.5 w-3.5 text-primary" />
+      AI English operating system for engineers
+    </span>
     <h1
       className="max-w-4xl text-2xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl lg:text-6xl"
       style={heroFadeStyle(heroVisible, '80ms')}
