@@ -1,58 +1,71 @@
 import { describe, expect, it } from 'vitest';
-import { VocabularyProgressService, type WordProgress, MASTERY_SCORE } from '../services/vocabulary.progress';
+import { VocabularyProgressService, type WordProgress, MASTERY_REQUIRED_CORRECT } from '../services/vocabulary.progress';
 
 describe('VocabularyProgressService', () => {
-  it('Yeni kelime ekle → new status', () => {
+  it('1. New → Learning (otomatik看到)', () => {
     const word = VocabularyProgressService.addWord('hello');
-    expect(word.status).toBe('new');
-    expect(word.score).toBe(0);
-  });
-
-  it('New → Learned (kişi biliyorum derse)', () => {
-    const word = VocabularyProgressService.addWord('hello');
-    const result = VocabularyProgressService.markAsLearned(word);
-    expect(result.status).toBe('learned');
+    const result = VocabularyProgressService.onView(word);
+    expect(result.status).toBe('learning');
     expect(result.lastPracticedAt).toBeTruthy();
   });
 
-  it('Learned → Mastered (3 quiz doğru)', () => {
+  it('2. Learning → Learned (1 doğru cevap)', () => {
     let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.markAsLearned(word);
+    word = VocabularyProgressService.onView(word);
+    const result = VocabularyProgressService.onQuizCorrect(word);
+    expect(result.status).toBe('learned');
+    expect(result.correctCount).toBe(1);
+  });
 
-    for (let i = 0; i < MASTERY_SCORE; i++) {
+  it('3. Learned → Mastered (3 doğru)', () => {
+    let word: WordProgress = VocabularyProgressService.addWord('hello');
+    word = VocabularyProgressService.onView(word);
+
+    for (let i = 0; i < MASTERY_REQUIRED_CORRECT; i++) {
       word = VocabularyProgressService.onQuizCorrect(word);
     }
 
     expect(word.status).toBe('mastered');
-    expect(word.score).toBe(MASTERY_SCORE);
+    expect(word.correctCount).toBe(MASTERY_REQUIRED_CORRECT);
     expect(word.masteredAt).toBeTruthy();
   });
 
-  it('Learned → Struggling (2 quiz yanlış)', () => {
+  it('4. Learned → Struggling (yanlış cevap)', () => {
     let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.markAsLearned(word);
-
-    for (let i = 0; i <= 1; i++) {
-      word = VocabularyProgressService.onQuizIncorrect(word);
-    }
-
-    expect(word.status).toBe('struggling');
+    word = VocabularyProgressService.onView(word);
+    word = VocabularyProgressService.onQuizCorrect(word);
+    const result = VocabularyProgressService.onQuizIncorrect(word);
+    expect(result.status).toBe('struggling');
   });
 
-  it('Struggling → Learned (struggling quiz doğru)', () => {
+  it('5. Struggling → Learned (doğru cevap)', () => {
     let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.markAsLearned(word);
-    word = VocabularyProgressService.onQuizIncorrect(word);
+    word = VocabularyProgressService.onView(word);
+    word = VocabularyProgressService.onQuizCorrect(word);
     word = VocabularyProgressService.onQuizIncorrect(word);
     expect(word.status).toBe('struggling');
 
     const result = VocabularyProgressService.onStrugglingQuizCorrect(word);
     expect(result.status).toBe('learned');
-    expect(result.score).toBe(1);
+    expect(result.correctCount).toBe(1);
   });
 
-  it('500 learned olmadan quiz hazır değil', () => {
+  it('6. Mastered → Learned (yanlış cevap)', () => {
+    let word: WordProgress = VocabularyProgressService.addWord('hello');
+    word = VocabularyProgressService.onView(word);
+    for (let i = 0; i < 3; i++) word = VocabularyProgressService.onQuizCorrect(word);
+    expect(word.status).toBe('mastered');
+
+    const result = VocabularyProgressService.onQuizIncorrect(word);
+    expect(result.status).toBe('learned');
+    expect(result.correctCount).toBe(2);
+  });
+
+  it('7. 500 kuralı öncesi quiz pasif', () => {
     expect(VocabularyProgressService.isQuizReady(499)).toBe(false);
+  });
+
+  it('8. 500 kuralı sonrası quiz aktif', () => {
     expect(VocabularyProgressService.isQuizReady(500)).toBe(true);
   });
 });
