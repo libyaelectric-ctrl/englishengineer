@@ -1,4 +1,6 @@
 import { storage } from '@/shared/storage';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 import { eventBus } from '@/core/events/event-bus';
 import { SPEAKING_MISSIONS } from './speaking.data';
@@ -67,9 +69,10 @@ export const SpeakingService = {
   submitSubmission(submission: SpeakingSubmission): SpeakingEvaluationResult {
     const mission = this.getMissionById(submission.missionId);
     if (!mission) {
-      throw new Error(
-        `Speaking mission with ID "${submission.missionId}" not found.`
-      );
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: `Speaking mission with ID "${submission.missionId}" not found.`,
+      });
     }
 
     const evaluation = SpeakingEvaluator.evaluate(mission, submission);

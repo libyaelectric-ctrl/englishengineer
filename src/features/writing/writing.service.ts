@@ -1,4 +1,6 @@
 import { storage } from '@/shared/storage';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import { WRITING_MISSIONS } from './writing.data';
 import {
   WritingMission,
@@ -79,9 +81,10 @@ export const WritingService = {
   submitSubmission(submission: WritingSubmission): WritingEvaluationResult {
     const mission = this.getMissionById(submission.missionId);
     if (!mission) {
-      throw new Error(
-        `Writing mission with ID "${submission.missionId}" not found.`
-      );
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: `Writing mission with ID "${submission.missionId}" not found.`,
+      });
     }
 
     // 1. Evaluate submission using rule-based evaluator

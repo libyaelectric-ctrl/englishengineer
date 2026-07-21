@@ -16,6 +16,7 @@ import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
 import { initRedisCache } from './cache/redis-cache.service.js';
+import { getPoolConfig } from './cache/connection-pool.js';
 import {
   createVocabularyLookupService,
   createUpstashVocabularyCache,
@@ -504,6 +505,14 @@ export const createApp = ({
     config.rateLimit?.upstashUrl ?? undefined,
     config.rateLimit?.upstashToken ?? undefined
   );
+
+  const poolConfig = getPoolConfig({
+    maxConnections: config.environment === 'production' ? 20 : 5,
+  });
+  logger.info('[Pool] Connection pool initialized', {
+    max: poolConfig.maxConnections,
+    timeout: poolConfig.connectionTimeoutMs,
+  });
 
   initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
 
