@@ -25,6 +25,7 @@ export const AI_ROUTES: Record<string, string> = {
 
 const isBypassUser = (userId: string): boolean => {
   if (process.env.NODE_ENV === 'production') return false;
+  if (process.env.ALLOW_INSECURE_DEV_AUTH !== 'true') return false;
   return userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
 };
 
