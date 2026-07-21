@@ -3,6 +3,7 @@ import { createAiLedger } from './ai-ledger.js';
 import { validateBody, AiRequestBodySchema } from './validation.js';
 import { createAIService, AI_CONTRACT_VERSION } from './ai-core/index.js';
 import { checkUserLimits } from './cost-tracker.js';
+import { getOrSet } from './cache/redis-cache.service.js';
 import type {
   Express,
   Request,
@@ -193,7 +194,13 @@ export const registerAIRoutes = (
 
           const { useTopup, subscription, topupCredits } =
             await resolveRateLimits(userId, bypass);
-          const result = await aiService.complete(defaultOperation, body);
+
+          const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
+          const result = await getOrSet(
+            cacheKey,
+            3600,
+            () => aiService.complete(defaultOperation, body)
+          );
 
           if (useTopup && !bypass) {
             await decrementTopup(

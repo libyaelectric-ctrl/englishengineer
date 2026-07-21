@@ -1,4 +1,5 @@
 import { validateQuery, VocabularyLookupQuerySchema } from './validation.js';
+import { getOrSet } from './cache/redis-cache.service.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
 import type { VocabularyLookupQuery } from '../types.js';
 import type {
@@ -20,11 +21,14 @@ export const registerVocabularyRoutes = (
     validateQuery(VocabularyLookupQuerySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        response.json(
-          await service.lookup(
-            request.validatedQuery as unknown as VocabularyLookupQuery
-          )
+        const query = request.validatedQuery as unknown as VocabularyLookupQuery;
+        const cacheKey = `vocab:${query.word}:${query.lang ?? 'en'}`;
+        const result = await getOrSet(
+          cacheKey,
+          21600,
+          () => service.lookup(query)
         );
+        response.json(result);
       } catch (error) {
         next(error);
       }
