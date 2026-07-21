@@ -1,4 +1,6 @@
 import { storage } from '@/shared/storage';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import { LISTENING_MISSIONS } from './listening.data';
 import {
   ListeningMission,
@@ -93,9 +95,10 @@ export const ListeningService = {
   submitSubmission(submission: ListeningSubmission): ListeningEvaluationResult {
     const mission = this.getMissionById(submission.missionId);
     if (!mission) {
-      throw new Error(
-        `Listening mission with ID "${submission.missionId}" not found.`
-      );
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: `Listening mission with ID "${submission.missionId}" not found.`,
+      });
     }
 
     // 1. Evaluate submission using rule-based evaluator

@@ -1,4 +1,6 @@
 import { storage } from '@/shared/storage';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import { READING_MISSIONS } from './reading.data';
 import {
   ReadingMission,
@@ -94,9 +96,10 @@ export const ReadingService = {
   ): ReadingEvaluationResult {
     const mission = this.getMissionById(submission.missionId);
     if (!mission) {
-      throw new Error(
-        `Reading mission with ID "${submission.missionId}" not found.`
-      );
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: `Reading mission with ID "${submission.missionId}" not found.`,
+      });
     }
 
     // 1. Evaluate submission using rule-based evaluator
