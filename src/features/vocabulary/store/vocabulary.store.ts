@@ -152,9 +152,9 @@ export const useVocabularyStore = create<
 
   markWordViewed: (wordId: string) => {
     set((state) => {
-      if (state.wordProgress[wordId]) return state;
-      const word = VocabularyProgressService.addWord(wordId);
-      return { wordProgress: { ...state.wordProgress, [wordId]: word } };
+      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated = VocabularyProgressService.onView(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
 
@@ -171,7 +171,7 @@ export const useVocabularyStore = create<
   markWordAsLearned: (wordId: string) => {
     set((state) => {
       const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
-      const updated = VocabularyProgressService.markAsLearned(current);
+      const updated = VocabularyProgressService.onQuizCorrect({ ...current, status: 'learning' });
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
