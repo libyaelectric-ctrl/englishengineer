@@ -105,16 +105,8 @@ export const Sidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mascot + Navigation */}
+          {/* Navigation */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">
-            {/* Mascot */}
-            <div className="mb-4 flex justify-center">
-              <img
-                src="/brand/mascot.webp"
-                alt="EngVox Mascot"
-                className="mascot-float h-28 w-auto"
-              />
-            </div>
             <Navigation
               onItemClick={() => {
                 if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();

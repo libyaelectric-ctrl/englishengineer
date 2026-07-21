@@ -12,14 +12,18 @@ export const Mascot = ({ size = 80, className = '' }: MascotProps) => {
       alt="EngVox Mascot"
       className={`cursor-pointer drop-shadow-lg ${className}`}
       style={{ width: size, height: size }}
-      animate={{ y: [0, -15, 0] }}
+      animate={{
+        y: [0, -12, -4, -14, -2, 0],
+        x: [0, 3, -2, 4, -1, 0],
+        rotate: [0, 2, -1, 3, -2, 0],
+      }}
       transition={{
-        duration: 2,
+        duration: 4,
         repeat: Infinity,
         ease: 'easeInOut',
       }}
-      whileHover={{ rotate: 20, scale: 1.1 }}
-      whileTap={{ scale: 0.85 }}
+      whileHover={{ scale: 1.15, rotate: 15 }}
+      whileTap={{ scale: 0.9 }}
     />
   );
 };
