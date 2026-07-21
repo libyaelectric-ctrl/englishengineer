@@ -71,7 +71,7 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       <img
         src="/brand/mascot.webp"
         alt="EngVox Mascot"
-        className="h-16 w-16 rounded-[4px] border border-border-soft bg-surface object-contain shadow-sm"
+        className="mascot-float h-16 w-16 rounded-[4px] border border-border-soft bg-surface object-contain shadow-sm"
       />
       <span
         className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy backdrop-blur"
