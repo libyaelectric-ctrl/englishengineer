@@ -67,19 +67,19 @@ export const FEATURES: Array<{
 
 export const WORKFLOW = [
   {
-    image: '/agentic/define.jpg',
+    image: '/agentic/define.webp',
     kicker: '01 / Define',
     title: 'Profile the engineering context',
     desc: 'Discipline, CEFR level, project role and communication goal are translated into a focused practice path.',
   },
   {
-    image: '/agentic/compose.jpg',
+    image: '/agentic/compose.webp',
     kicker: '02 / Compose',
     title: 'Practice in realistic project scenes',
     desc: 'The interface frames writing, speaking, reading and listening tasks around actual site communication.',
   },
   {
-    image: '/agentic/deploy.jpg',
+    image: '/agentic/deploy.webp',
     kicker: '03 / Improve',
     title: 'Turn feedback into the next action',
     desc: 'AI review, mistake memory and analytics keep the learner moving from attempt to measurable progress.',
