@@ -28,11 +28,6 @@ const LoginPage = () => {
       <div className="flex flex-1 items-center justify-center p-6 relative z-10">
         <div className="w-full max-w-md rounded-[4px] border border-border-soft bg-surface p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <div className="text-center">
-            <img
-              src="/brand/mascot.webp"
-              alt="EngVox Mascot"
-              className="mascot-float mx-auto mb-3 h-28 w-auto rounded-[4px] border border-border-soft bg-background object-contain shadow-sm"
-            />
             <h1 className="text-sm font-bold uppercase tracking-widest text-foreground font-mono">
               {h.isSignUpMode ? copy.signupTitle : copy.loginTitle}
             </h1>
