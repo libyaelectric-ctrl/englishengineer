@@ -71,17 +71,12 @@ const StatusContent = ({
 );
 
 const DomainBar = ({
-  term,
   status,
 }: {
-  term: VocabularyTerm;
   status: string;
 }) => (
-  <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-border-soft pt-3 text-xs text-foreground0">
-    <span className="font-semibold capitalize">
-      Domain: {repairVocabularyText(term.domain).replace(/-/g, ' ')}
-    </span>
-    <span>{status === 'New' ? 'Ready to learn' : status}</span>
+  <div className="mt-4 border-t border-border-soft pt-3 text-xs text-foreground0">
+    <span>{status}</span>
   </div>
 );
 
@@ -153,7 +148,7 @@ const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
 };
 
 const getBorderClass = (isWeak?: boolean): string =>
-  isWeak ? 'border-l-rose-500 bg-rose-50/10' : 'border-l-[#0047bb]';
+  isWeak ? 'border-2 border-rose-400' : 'border-2 border-[#0047bb]';
 
 export const WordCard = ({
   term,
@@ -181,7 +176,7 @@ export const WordCard = ({
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-[4px] border-y border-r border-border-soft border-l-2 bg-surface/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
+      className={`flex h-full flex-col rounded-[4px] bg-surface/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
       style={{ perspective: '1000px' }}
     >
       <AnimatePresence mode="wait">
@@ -208,7 +203,7 @@ export const WordCard = ({
             onReview={onReview}
             showAnswer={showAnswer}
           />
-          <DomainBar term={term} status={status} />
+          <DomainBar status={status} />
           <CardActions
             mode={mode}
             status={status}
