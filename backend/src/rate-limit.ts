@@ -105,20 +105,24 @@ export const createRateLimitStore = (
 ): UpstashRateLimitStore | null => {
   if (config.storeMode === 'memory') {
     if (process.env.NODE_ENV === 'production') {
-      logger.error(
-        'CRITICAL: Rate-limit store is "memory" in PRODUCTION. Rate limits are NOT shared across instances and reset on restart. Configure UPSTASH_URL and UPSTASH_TOKEN immediately.'
-      );
-    } else {
-      logger.warn(
-        'Rate-limit store is set to "memory". Rate limits will reset on server restart and are not shared across instances. Configure Upstash for production.'
+      throw new Error(
+        'CRITICAL: Rate-limit store cannot be "memory" in PRODUCTION. Configure UPSTASH_URL and UPSTASH_TOKEN.'
       );
     }
+    logger.warn(
+      'Rate-limit store is "memory". Rate limits reset on restart and are not shared across instances.'
+    );
     return null;
   }
   if (config.storeMode === 'upstash') {
     if (!config.upstashUrl || !config.upstashToken) {
+      if (process.env.NODE_ENV === 'production') {
+        throw new Error(
+          'Rate-limit store mode is "upstash" but UPSTASH_URL or UPSTASH_TOKEN is missing. Cannot start without rate-limit store in production.'
+        );
+      }
       logger.warn(
-        'Rate-limit store mode is "upstash" but UPSTASH_URL or UPSTASH_TOKEN is missing. Falling back to in-memory rate-limit store. Rate limits will reset on restart.'
+        'Rate-limit store mode is "upstash" but credentials missing. Falling back to in-memory.'
       );
       return null;
     }
