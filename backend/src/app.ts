@@ -15,6 +15,7 @@ import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
 import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
+import { initRedisCache } from './cache/redis-cache.service.js';
 import {
   createVocabularyLookupService,
   createUpstashVocabularyCache,
@@ -498,6 +499,11 @@ export const createApp = ({
   rateLimitStore = createRateLimitStore(config!.rateLimit, fetchImpl),
 }: CreateAppOpts = {}) => {
   if (!config) throw new Error('Backend config is required.');
+
+  initRedisCache(
+    config.rateLimit?.upstashUrl ?? undefined,
+    config.rateLimit?.upstashToken ?? undefined
+  );
 
   initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
 
