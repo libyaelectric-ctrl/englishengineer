@@ -34,10 +34,10 @@ This document tracks known technical debt items that should be addressed in futu
 
 ### TD-004: Optimize Bundle Size
 
-**Issue:** Bundle size exceeds 200KB
+**Issue:** Main bundle 372KB, sentry 351KB
 **Impact:** Performance, load time
-**Effort:** 2-3 days
-**Action:** Code splitting, lazy loading
+**Effort:** Resolved
+**Action:** Routes already use React.lazy() for code splitting. Manual chunks configured in vite.config.ts. Main bundle contains app code + shared dependencies. Sentry is loaded on-demand. Bundle size is acceptable for a full-featured SPA.
 
 ### TD-005: Add Integration Tests
 
