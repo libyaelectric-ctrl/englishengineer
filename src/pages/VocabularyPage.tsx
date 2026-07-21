@@ -1,15 +1,29 @@
+import { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
 import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
 import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
 import { WordSetSection } from './VocabularyPage/components/WordSetSection';
+import { QuizButton } from './VocabularyPage/components/QuizButton';
+import { QuizModal } from './VocabularyPage/components/QuizModal';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
 const VocabularyPage = () => {
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [strugglingQuizOpen, setStrugglingQuizOpen] = useState(false);
+  const wordProgress = useVocabularyStore((s) => s.wordProgress);
+
+  const learnedWords = Object.values(wordProgress)
+    .filter((w) => w.status === 'learned')
+    .map((w) => ({ id: w.wordId, term: w.wordId, turkishMeaning: w.wordId }));
+
+  const strugglingWords = Object.values(wordProgress)
+    .filter((w) => w.status === 'struggling')
+    .map((w) => ({ id: w.wordId, term: w.wordId, turkishMeaning: w.wordId }));
   const {
     vocabularyLevel,
-    allLevelsLoaded,
     loadError,
     terms,
     menuState,
@@ -18,7 +32,6 @@ const VocabularyPage = () => {
     allSearchResults,
     activeTab,
     mode,
-    learningDomain,
     showFilters,
     showAddForm,
     customDraft,
@@ -39,15 +52,12 @@ const VocabularyPage = () => {
     filterOptions,
     dispatchUI,
     dispatchSearch,
-    dispatchData,
-    selectSet,
   } = useVocabularyPage();
 
   return (
     <div className="animate-in fade-in duration-300 relative">
       <VocabularyHeader
         vocabularyLevel={vocabularyLevel}
-        allLevelsLoaded={allLevelsLoaded}
         activeTab={activeTab}
         searchInput={searchInput}
         showFilters={showFilters}
@@ -72,6 +82,23 @@ const VocabularyPage = () => {
       />
 
       <div className="pt-4 space-y-4 pb-20">
+        <QuizButton
+          onOpenQuiz={() => setQuizOpen(true)}
+          onOpenStrugglingQuiz={() => setStrugglingQuizOpen(true)}
+        />
+
+        <QuizModal
+          isOpen={quizOpen}
+          onClose={() => setQuizOpen(false)}
+          words={learnedWords.slice(0, 10)}
+        />
+        <QuizModal
+          isOpen={strugglingQuizOpen}
+          onClose={() => setStrugglingQuizOpen(false)}
+          words={strugglingWords.slice(0, 10)}
+          isStrugglingQuiz
+        />
+
         <SearchResultsSection
           hasSearched={hasSearched}
           searchResults={searchResults}
@@ -95,8 +122,6 @@ const VocabularyPage = () => {
         <WordSetSection
           activeTab={activeTab}
           vocabularyProfile={vocabularyProfile}
-          learningDomain={learningDomain}
-          filterOptions={filterOptions}
           loadError={loadError}
           terms={terms}
           wordSet={wordSet}
@@ -104,13 +129,6 @@ const VocabularyPage = () => {
           menuState={menuState}
           onReview={reviewWord}
           onLearn={learnWord}
-          onDomainChange={(domain) => {
-            dispatchUI({ type: 'SET_LEARNING_DOMAIN', domain });
-            dispatchData({
-              type: 'SET_WORD_SET_IDS',
-              wordSetIds: selectSet(activeTab, menuState, domain),
-            });
-          }}
           onExportCSV={exportCSV}
           onLoadNextBatch={loadNextBatch}
         />

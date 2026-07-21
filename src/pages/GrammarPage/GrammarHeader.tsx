@@ -12,48 +12,37 @@ export const GrammarHeader = ({
   query: string;
   setQuery: (q: string) => void;
 }) => (
-  <header className="sticky top-0 z-40 -mx-4 border-b border-border-soft bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-    <div className="flex h-10 items-center justify-between">
-      <div className="flex items-center gap-3">
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          Grammar
-        </h1>
-        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
-          {level}
-        </span>
-      </div>
-      <div className="hidden text-xs text-muted-copy lg:block font-bold">
-        Learn grammar by building real engineering sentences
-      </div>
-    </div>
+  <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="flex h-12 shrink-0 items-center gap-3">
+      <h1 className="shrink-0 text-sm font-bold tracking-tight text-foreground">Grammar</h1>
+      <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[8px] font-bold uppercase text-[#0047bb]">{level}</span>
 
-    <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <div className="flex flex-1 gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+      <div className="flex flex-1 gap-1 overflow-x-auto">
         {CEFR_LEVELS.map((cefrLevel) => (
           <button
             key={cefrLevel}
             type="button"
-            className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+            onClick={() => setQuery(cefrLevel)}
+            className={`shrink-0 rounded-[4px] border px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
               cefrLevel === level
                 ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                : 'border-border-soft text-muted-copy hover:text-foreground'
             }`}
           >
-            <span>{cefrLevel}</span>
-            <span className="text-[10px] opacity-60">
-              {levelCounts[cefrLevel]}
-            </span>
+            {cefrLevel}
+            <span className="ml-0.5 text-[8px] opacity-50">{levelCounts[cefrLevel]}</span>
           </button>
         ))}
       </div>
-      <label htmlFor="grammar-search" className="relative flex-1 sm:max-w-xs">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
+
+      <label htmlFor="grammar-search" className="relative shrink-0 w-40 sm:w-48">
+        <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
         <input
           id="grammar-search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-10 text-sm outline-none focus:border-[#0047bb]/50 focus:ring-2 focus:ring-[#0047bb]/10 font-medium text-foreground"
-          placeholder="Search grammar concepts..."
+          className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-7 pr-2 text-xs outline-none focus:border-[#0047bb]/50 text-foreground"
+          placeholder="Search..."
         />
       </label>
     </div>

@@ -4,7 +4,6 @@ import type {
   VocabularyTerm,
   VocabularyMenuStatus,
   VocabularyMenuState,
-  VocabularySearchFilters,
 } from '@/features/vocabulary';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -14,8 +13,6 @@ import { TAB_LABELS } from './VocabularyHeader';
 interface WordSetSectionProps {
   activeTab: VocabularyMenuStatus;
   vocabularyProfile: { cefrBand: string };
-  learningDomain: string;
-  filterOptions: (field: keyof VocabularySearchFilters) => string[];
   loadError: string | null;
   terms: VocabularyTerm[];
   wordSet: VocabularyTerm[];
@@ -23,7 +20,6 @@ interface WordSetSectionProps {
   menuState: VocabularyMenuState;
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
   onLearn: (term: VocabularyTerm) => void;
-  onDomainChange: (domain: string) => void;
   onExportCSV: () => void;
   onLoadNextBatch: () => void;
 }
@@ -31,8 +27,6 @@ interface WordSetSectionProps {
 export function WordSetSection({
   activeTab,
   vocabularyProfile,
-  learningDomain,
-  filterOptions,
   loadError,
   terms,
   wordSet,
@@ -40,29 +34,15 @@ export function WordSetSection({
   menuState,
   onReview,
   onLearn,
-  onDomainChange,
   onExportCSV,
   onLoadNextBatch,
 }: WordSetSectionProps) {
   return (
     <SectionCard
-      title={`${TAB_LABELS[activeTab]} 9-word set`}
-      subtitle={`Selected by ${vocabularyProfile.cefrBand}, vocabulary skill use, memory state, and canonical order`}
+      title={`${TAB_LABELS[activeTab]} 15-word set`}
+      subtitle={`CEFR: ${vocabularyProfile.cefrBand}`}
       icon={BookMarked}
-      headerActions={
-        <div className="flex flex-wrap items-center gap-1">
-          <select
-            aria-label="Learning set domain"
-            value={learningDomain}
-            onChange={(event) => onDomainChange(event.target.value)}
-            className="min-h-8 rounded-[4px] border border-border-soft bg-surface px-2 text-xs font-semibold text-foreground cursor-pointer outline-none focus:border-[#0047bb]"
-          >
-            {filterOptions('domain').map((item) => (
-              <option key={item}>{item}</option>
-            ))}
-          </select>
-        </div>
-      }
+      headerActions={null}
     >
       {loadError && (
         <p className="rounded-[4px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
@@ -117,7 +97,7 @@ export function WordSetSection({
               className="rounded-[4px] gap-1.5"
               onClick={onLoadNextBatch}
             >
-              Next 9-word batch
+              Next 15-word batch
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
