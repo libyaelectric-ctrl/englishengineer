@@ -104,9 +104,15 @@ export const createRateLimitStore = (
   fetchImpl: typeof fetch = fetch
 ): UpstashRateLimitStore | null => {
   if (config.storeMode === 'memory') {
-    logger.warn(
-      'Rate-limit store is set to "memory". Rate limits will reset on server restart and are not shared across instances. Configure Upstash for production.'
-    );
+    if (process.env.NODE_ENV === 'production') {
+      logger.error(
+        'CRITICAL: Rate-limit store is "memory" in PRODUCTION. Rate limits are NOT shared across instances and reset on restart. Configure UPSTASH_URL and UPSTASH_TOKEN immediately.'
+      );
+    } else {
+      logger.warn(
+        'Rate-limit store is set to "memory". Rate limits will reset on server restart and are not shared across instances. Configure Upstash for production.'
+      );
+    }
     return null;
   }
   if (config.storeMode === 'upstash') {

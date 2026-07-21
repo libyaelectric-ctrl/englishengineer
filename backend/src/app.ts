@@ -145,9 +145,14 @@ interface CreateAppOpts {
 }
 
 const setupMiddleware = (app: Express, config: BackendConfig) => {
-  if (config.environment === 'production' && !config.appOrigin) {
-    throw new Error(
-      'APP_ORIGIN is required in production. Refusing to start without a configured origin.'
+  if (!config.appOrigin) {
+    if (config.environment === 'production') {
+      throw new Error(
+        'APP_ORIGIN is required in production. Refusing to start without a configured origin.'
+      );
+    }
+    logger.warn(
+      'APP_ORIGIN is not set. CORS will allow all origins in development mode. Set APP_ORIGIN for production.'
     );
   }
 
