@@ -5,11 +5,12 @@ import type {
   VocabularyMenuStatus,
 } from '@/features/vocabulary';
 
-const TABS = ['New', 'Learning', 'Mastered'] as const;
+const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
   New: 'New',
-  Learning: 'Learned',
+  Learned: 'Learned',
   Mastered: 'Mastered',
+  Struggling: 'Struggling',
 };
 
 interface VocabularyHeaderProps {
