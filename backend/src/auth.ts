@@ -178,12 +178,11 @@ export const createBackendAuth = (
   const authenticateDevBypass = (
     request: Request
   ): AuthenticatedUser | null => {
-    if (
-      !config.allowInsecureDevAuth ||
-      config.environment === 'production' ||
-      process.env.NODE_ENV === 'production'
-    )
+    if (config.environment === 'production' || process.env.NODE_ENV === 'production') {
+      logger.warn('Dev auth bypass attempted in production — blocked');
       return null;
+    }
+    if (!config.allowInsecureDevAuth) return null;
     const email =
       typeof request.body?.email === 'string' ? request.body.email : undefined;
     return {
