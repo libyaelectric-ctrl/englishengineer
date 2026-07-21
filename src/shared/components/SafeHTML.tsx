@@ -1,0 +1,28 @@
+import DOMPurify from 'isomorphic-dompurify';
+
+interface SafeHTMLProps {
+  html: string;
+  className?: string;
+  allowedTags?: string[];
+  allowedAttributes?: string[];
+}
+
+export const SafeHTML = ({
+  html,
+  className,
+  allowedTags,
+  allowedAttributes,
+}: SafeHTMLProps) => {
+  const config: DOMPurify.Config = {};
+  if (allowedTags) config.ALLOWED_TAGS = allowedTags;
+  if (allowedAttributes) config.ALLOWED_ATTR = allowedAttributes;
+
+  const clean = DOMPurify.sanitize(html, config);
+
+  return (
+    <div
+      className={className}
+      dangerouslySetInnerHTML={{ __html: clean }}
+    />
+  );
+};

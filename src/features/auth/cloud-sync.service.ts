@@ -12,6 +12,7 @@ import {
   SyncableStateKey,
 } from './cloud-sync.types';
 import { JsonObject, JsonValue } from './supabase.types';
+import { resolveConflict, type ConflictInfo } from './conflict-resolver';
 
 const QUEUE_KEY = 'cloud_sync_queue';
 const STATE_KEY = 'cloud_sync_state';
@@ -117,16 +118,17 @@ export const mergeArrays = (
   });
 };
 
+const getTimestamp = (obj: JsonObject): string | null => {
+  const ts = obj._lastUpdated;
+  return typeof ts === 'string' ? ts : null;
+};
+
 export const mergeJsonValues = (
   local: JsonValue | null,
   remote: JsonValue | null
 ): JsonValue | null => {
-  if (local === null) {
-    return remote;
-  }
-  if (remote === null) {
-    return local;
-  }
+  if (local === null) return remote;
+  if (remote === null) return local;
   if (typeof local === 'number' && typeof remote === 'number') {
     return Math.max(local, remote);
   }
@@ -134,6 +136,24 @@ export const mergeJsonValues = (
     return mergeArrays(local, remote);
   }
   if (isJsonObject(local) && isJsonObject(remote)) {
+    const localTs = getTimestamp(local);
+    const remoteTs = getTimestamp(remote);
+
+    if (localTs || remoteTs) {
+      const conflict: ConflictInfo = {
+        key: '_merged',
+        localValue: local,
+        remoteValue: remote,
+        localTimestamp: localTs,
+        remoteTimestamp: remoteTs,
+      };
+      const resolution = resolveConflict(conflict);
+
+      if (resolution === 'local') return local;
+      if (resolution === 'remote') return remote;
+      return null;
+    }
+
     const merged: JsonObject = { ...remote, ...local };
     const keys = new Set([...Object.keys(remote), ...Object.keys(local)]);
     keys.forEach((key) => {
@@ -262,19 +282,27 @@ export const applyCloudSnapshotLocally = (
   }
 };
 
-const createSnapshot = (userId: string | null): CloudProgressSnapshot => ({
-  schemaVersion: SNAPSHOT_SCHEMA_VERSION,
-  userId,
-  capturedAt: new Date().toISOString(),
-  source: 'local-first',
-  data: SYNCABLE_KEYS.reduce<Record<SyncableStateKey, JsonValue | null>>(
-    (acc, key) => {
-      acc[key] = readSyncableData(key, userId);
-      return acc;
-    },
-    createEmptySnapshotData()
-  ),
-});
+const createSnapshot = (userId: string | null): CloudProgressSnapshot => {
+  const now = new Date().toISOString();
+  return {
+    schemaVersion: SNAPSHOT_SCHEMA_VERSION,
+    userId,
+    capturedAt: now,
+    source: 'local-first',
+    data: SYNCABLE_KEYS.reduce<Record<SyncableStateKey, JsonValue | null>>(
+      (acc, key) => {
+        const value = readSyncableData(key, userId);
+        if (isJsonObject(value)) {
+          acc[key] = { ...value, _lastUpdated: now };
+        } else {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      createEmptySnapshotData()
+    ),
+  };
+};
 
 export const CloudSyncService = {
   subscribe(listener: (state: CloudSyncState) => void): () => void {
