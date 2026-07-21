@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { isVocabularyResponseCorrect } from '../engine/vocabulary.helpers';
 import { VocabularyService } from '../services/vocabulary.service';
+import { VocabularyProgressService, type WordProgress } from '../services/vocabulary.progress';
 import {
   VocabularyAnswer,
   VocabularyEntry,
@@ -9,6 +10,15 @@ import {
   VocabularyState,
   VocabularyTrainingMode,
 } from '../types/vocabulary.types';
+
+interface VocabularyStats {
+  total: number;
+  newCount: number;
+  learning: number;
+  learned: number;
+  mastered: number;
+  struggling: number;
+}
 
 interface VocabularyStoreState {
   entries: VocabularyEntry[];
@@ -20,6 +30,8 @@ interface VocabularyStoreState {
   history: VocabularyHistoryEntry[];
   summary: ReturnType<typeof VocabularyService.getSummary>;
   isSubmitting: boolean;
+  wordProgress: Record<string, WordProgress>;
+  stats: VocabularyStats;
 }
 
 interface VocabularyStoreActions {
@@ -29,6 +41,9 @@ interface VocabularyStoreActions {
   loadReviewSession: (allowedEntries?: VocabularyEntry[]) => void;
   submitReview: () => VocabularyEvaluationResult;
   resetVocabularyProgress: () => void;
+  updateWordProgress: (wordId: string, result: 'correct' | 'incorrect') => void;
+  fetchVocabularyStats: () => void;
+  markWordViewed: (wordId: string) => void;
 }
 
 const getA1Entries = (): VocabularyEntry[] =>
@@ -46,6 +61,8 @@ export const useVocabularyStore = create<
   history: [],
   summary: VocabularyService.getSummary(),
   isSubmitting: false,
+  wordProgress: {},
+  stats: { total: 0, newCount: 0, learning: 0, learned: 0, mastered: 0, struggling: 0 },
 
   initializeStore: () => {
     const state: VocabularyState = VocabularyService.getState();
@@ -127,6 +144,54 @@ export const useVocabularyStore = create<
       evaluationResult: null,
       history: [],
       summary: VocabularyService.getSummary(),
+    });
+  },
+
+  markWordViewed: (wordId: string) => {
+    set((state) => {
+      const current = state.wordProgress[wordId] || {
+        wordId,
+        status: 'new' as const,
+        failCount: 0,
+        correctCount: 0,
+        lastPracticedAt: null,
+        masteredAt: null,
+      };
+      const updated = VocabularyProgressService.transitionOnView(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  updateWordProgress: (wordId: string, result: 'correct' | 'incorrect') => {
+    set((state) => {
+      const current = state.wordProgress[wordId] || {
+        wordId,
+        status: 'new' as const,
+        failCount: 0,
+        correctCount: 0,
+        lastPracticedAt: null,
+        masteredAt: null,
+      };
+      const updated = result === 'correct'
+        ? VocabularyProgressService.transitionOnCorrect(current)
+        : VocabularyProgressService.transitionOnIncorrect(current);
+      return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
+    });
+  },
+
+  fetchVocabularyStats: () => {
+    set((state) => {
+      const progress = Object.values(state.wordProgress);
+      return {
+        stats: {
+          total: progress.length,
+          newCount: progress.filter((p) => p.status === 'new').length,
+          learning: progress.filter((p) => p.status === 'learning').length,
+          learned: progress.filter((p) => p.status === 'learned').length,
+          mastered: progress.filter((p) => p.status === 'mastered').length,
+          struggling: progress.filter((p) => p.status === 'struggling').length,
+        },
+      };
     });
   },
 }));
