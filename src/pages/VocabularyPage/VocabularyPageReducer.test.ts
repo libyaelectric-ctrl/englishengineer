@@ -107,9 +107,9 @@ describe('VocabularyPage uiReducer', () => {
   it('CHOOSE_TAB sets activeTab and resets batchOffset', () => {
     const result = uiReducer(
       { ...initialUi, batchOffset: 10 },
-      { type: 'CHOOSE_TAB', status: 'Learning' }
+      { type: 'CHOOSE_TAB', status: 'Learned' }
     );
-    expect(result.activeTab).toBe('Learning');
+    expect(result.activeTab).toBe('Learned');
     expect(result.mode).toBe('View');
     expect(result.batchOffset).toBe(0);
   });

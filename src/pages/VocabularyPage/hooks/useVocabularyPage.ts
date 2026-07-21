@@ -243,7 +243,7 @@ export function useVocabularyPage() {
     setTimeout(() => {
       const currentState = VocabularyMenuService.getState();
       const nextStatus =
-        isCorrect && prevStatus === 'New' ? 'Learning' : activeTab;
+        isCorrect && prevStatus === 'New' ? 'Learned' : activeTab;
       const nextSet = selectVocabularyLearningSet(terms, currentState, {
         cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
         skillUse: 'vocabulary',
@@ -302,7 +302,7 @@ export function useVocabularyPage() {
     const newWordIds = selectSet('New', menuState).slice(0, 8);
     const reviewIds = [
       ...dueTerms.map((term) => term.id),
-      ...selectSet('Learning', menuState),
+      ...selectSet('Learned', menuState),
     ]
       .filter((id, index, values) => values.indexOf(id) === index)
       .slice(0, 2);
