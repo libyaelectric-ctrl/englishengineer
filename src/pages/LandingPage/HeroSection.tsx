@@ -14,11 +14,11 @@ const BackgroundLayers = ({ scrollShift }: { scrollShift: number }) => (
       className="absolute inset-0 bg-cover bg-center"
       style={{
         backgroundImage: "url('/agentic/org-arc.webp')",
-        opacity: 0.2,
+        opacity: 0.35,
         transform: `translate3d(0, ${scrollShift}px, 0) scale(1.04)`,
       }}
     />
-    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,249,250,0.1)_0%,rgba(248,249,250,0.2)_34%,rgba(248,249,250,0.9)_88%)] dark:bg-[linear-gradient(180deg,rgba(11,14,20,0.1)_0%,rgba(11,14,20,0.2)_34%,rgba(11,14,20,0.9)_88%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(248,249,250,0.05)_0%,rgba(248,249,250,0.15)_34%,rgba(248,249,250,0.85)_88%)] dark:bg-[linear-gradient(180deg,rgba(11,14,20,0.05)_0%,rgba(11,14,20,0.15)_34%,rgba(11,14,20,0.85)_88%)]" />
     <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" />
   </>
 );
