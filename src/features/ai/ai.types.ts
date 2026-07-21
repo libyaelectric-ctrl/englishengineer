@@ -161,6 +161,11 @@ export interface AISessionLog {
   requestId?: string;
 }
 
+export interface MockExample {
+  input: string;
+  output: string;
+}
+
 export interface AIProvider {
   getStatus: () => AIProviderStatus;
   analyzeText: (request: AIRequest) => Promise<AIResponse>;
