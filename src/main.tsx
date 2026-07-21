@@ -89,6 +89,12 @@ loadVocabularyEntries().catch((err: unknown) => {
   logger.w('[preload] Vocabulary data preload failed:', err);
 });
 
+// Migrate large data sets from localStorage to IndexedDB
+import { indexedDBStorage } from '@/shared/storage/indexed-db.service';
+indexedDBStorage.migrateAll().catch((err: unknown) => {
+  logger.w('[IndexedDB] Migration failed:', err);
+});
+
 // Register service worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
