@@ -59,8 +59,6 @@ const EXACT_ROUTES: Record<string, React.FC> = {
 };
 
 const PREFIX_ROUTES: [string, React.FC][] = [
-  ['/vocabulary', VocabSidebar],
-  ['/grammar', GrammarSidebar],
   ['/reading', ReadingSidebar],
   ['/writing', WritingSidebar],
   ['/listening', ListeningSidebar],
