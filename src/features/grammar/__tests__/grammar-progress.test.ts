@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { GrammarProgressService, type RuleProgress } from '../services/grammar.progress';
+import { GrammarProgressService } from '../services/grammar.progress';
 
 describe('GrammarProgressService', () => {
   it('New → Learning (otomatik看到)', () => {
