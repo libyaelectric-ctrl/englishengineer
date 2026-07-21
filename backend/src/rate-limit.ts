@@ -103,11 +103,22 @@ export const createRateLimitStore = (
   config: RateLimitStoreConfig,
   fetchImpl: typeof fetch = fetch
 ): UpstashRateLimitStore | null => {
-  if (config.storeMode === 'memory') return null;
+  if (config.storeMode === 'memory') {
+    logger.warn(
+      'Rate-limit store is set to "memory". Rate limits will reset on server restart and are not shared across instances. Configure Upstash for production.'
+    );
+    return null;
+  }
   if (config.storeMode === 'upstash') {
+    if (!config.upstashUrl || !config.upstashToken) {
+      logger.warn(
+        'Rate-limit store mode is "upstash" but UPSTASH_URL or UPSTASH_TOKEN is missing. Falling back to in-memory rate-limit store. Rate limits will reset on restart.'
+      );
+      return null;
+    }
     return createUpstashRateLimitStore({
-      url: config.upstashUrl!,
-      token: config.upstashToken!,
+      url: config.upstashUrl,
+      token: config.upstashToken,
       timeoutMs: config.storeTimeoutMs,
       fetchImpl,
     });

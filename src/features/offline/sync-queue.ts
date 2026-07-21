@@ -1,4 +1,5 @@
 import { storage } from '@/shared/storage';
+import { logger } from '@/shared/logger';
 import type {
   SyncQueueItem,
   SyncQueueState,
@@ -6,8 +7,10 @@ import type {
 } from './sync-queue.types';
 
 const STORAGE_KEY = 'sync_queue';
+const DEAD_LETTER_KEY = 'sync_dead_letter_queue';
 const MAX_RETRIES = 3;
 const SYNC_INTERVAL_MS = 5000;
+const SYNC_API_TIMEOUT_MS = 15_000;
 
 let listeners: SyncQueueListener[] = [];
 let syncTimer: ReturnType<typeof setInterval> | null = null;
@@ -28,6 +31,69 @@ const notifyListeners = () => {
 
 const persistState = () => {
   storage.set(STORAGE_KEY, state.items);
+};
+
+const moveToDeadLetter = (item: SyncQueueItem): void => {
+  const deadLetter =
+    storage.get<SyncQueueItem[]>(DEAD_LETTER_KEY) || [];
+  deadLetter.push({ ...item, timestamp: new Date().toISOString() });
+  storage.set(DEAD_LETTER_KEY, deadLetter);
+  logger.w(`[SyncQueue] Item ${item.id} moved to dead letter queue after ${item.retries} retries.`);
+};
+
+const getDeadLetterItems = (): SyncQueueItem[] =>
+  storage.get<SyncQueueItem[]>(DEAD_LETTER_KEY) || [];
+
+const clearDeadLetter = (): void => {
+  storage.set(DEAD_LETTER_KEY, []);
+};
+
+const getSyncEndpoint = (): string => {
+  const raw =
+    (import.meta as unknown as { env?: Record<string, string> }).env
+      ?.VITE_AI_PROXY_URL || '';
+  if (!raw) return '';
+  const base = raw.replace(/\/+$/, '');
+  return `${base}/api/v1/sync`;
+};
+
+const postSyncItem = async (item: SyncQueueItem): Promise<void> => {
+  const endpoint = getSyncEndpoint();
+  if (!endpoint) {
+    console.warn(
+      'Sync API not configured (VITE_AI_PROXY_URL missing). Skipping network sync for item:',
+      item.id
+    );
+    return;
+  }
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), SYNC_API_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: item.action,
+        payload: item.payload,
+        itemId: item.id,
+        timestamp: item.timestamp,
+      }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Sync API responded with status ${response.status}`);
+    }
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error('Sync API request timed out');
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 };
 
 export const SyncQueue = {
@@ -58,7 +124,6 @@ export const SyncQueue = {
     persistState();
     notifyListeners();
 
-    // Start sync if online
     if (state.isOnline && !state.isSyncing) {
       this.processQueue();
     }
@@ -102,24 +167,22 @@ export const SyncQueue = {
       const item = state.items[i];
 
       try {
-        // Simulate sync processing - in real app, this would call an API
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
+        await postSyncItem(item);
         processedIds.push(item.id);
-        state.syncProgress = Math.round(((i + 1) / totalItems) * 100);
-        notifyListeners();
       } catch {
-        item.retries++;
+        item.retries += 1;
         if (item.retries >= item.maxRetries) {
-          processedIds.push(item.id); // Remove after max retries
+          moveToDeadLetter(item);
+          processedIds.push(item.id);
         }
       }
 
-      // Check if still online
+      state.syncProgress = Math.round(((i + 1) / totalItems) * 100);
+      notifyListeners();
+
       if (!state.isOnline) break;
     }
 
-    // Remove processed items
     state.items = state.items.filter((item) => !processedIds.includes(item.id));
     state.isSyncing = false;
     state.lastSyncAt = new Date().toISOString();
@@ -136,7 +199,6 @@ export const SyncQueue = {
       }
     }, SYNC_INTERVAL_MS);
 
-    // Listen for online/offline events
     if (typeof window !== 'undefined') {
       window.addEventListener('online', () => this.setOnline(true));
       window.addEventListener('offline', () => this.setOnline(false));
@@ -157,4 +219,7 @@ export const SyncQueue = {
   isItemPending(id: string): boolean {
     return state.items.some((item) => item.id === id);
   },
+
+  getDeadLetterItems,
+  clearDeadLetter,
 };
