@@ -5,17 +5,17 @@
   --background: #f8f9fa;
   --foreground: #1c1d22;
 
-  --color-primary: #0047bb;
-  --color-primary-hover: #003bb3;
+  --color-primary: #0066ff;
+  --color-primary-hover: #0052cc;
   --color-primary-foreground: #ffffff;
 
   --color-surface: #ffffff;
   --color-surface-hover: #f1f3f5;
-  --color-soft: rgba(0, 71, 187, 0.04);
+  --color-soft: rgba(0, 102, 255, 0.06);
   --color-border-soft: #e9ecef;
   --color-border-hover: #dee2e6;
   --color-muted-copy: #5b5d72;
-  --color-focus: rgba(0, 71, 187, 0.1);
+  --color-focus: rgba(0, 102, 255, 0.12);
   --color-success: #16a34a;
   --color-warning: #ea580c;
   --color-error: #dc2626;
@@ -29,7 +29,7 @@
   --color-engineer-900: #e9ecef;
   --color-engineer-800: #dee2e6;
   --color-engineer-700: #8f93a9;
-  --color-engineer-cyan: #0047bb;
+  --color-engineer-cyan: #0066ff;
 
   --surface: #ffffff;
 
@@ -47,17 +47,17 @@
   --surface: #1c1f26;
   --card-bg: #1c1f26;
 
-  --color-primary: #4d8bf5;
-  --color-primary-hover: #6ba0f7;
+  --color-primary: #3388ff;
+  --color-primary-hover: #5599ff;
   --color-primary-foreground: #0b0e14;
 
   --color-surface: #1c1f26;
   --color-surface-hover: #252830;
-  --color-soft: rgba(77, 139, 245, 0.08);
+  --color-soft: rgba(51, 136, 255, 0.1);
   --color-border-soft: #2a2d35;
   --color-border-hover: #3a3d45;
   --color-muted-copy: #949ba4;
-  --color-focus: rgba(77, 139, 245, 0.15);
+  --color-focus: rgba(51, 136, 255, 0.18);
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -66,7 +66,7 @@
   --color-engineer-900: #0b0e14;
   --color-engineer-800: #1c1f26;
   --color-engineer-700: #2a2d35;
-  --color-engineer-cyan: #4d8bf5;
+  --color-engineer-cyan: #3388ff;
 
   --surface: #1c1f26;
   --color-sidebar-bg: #1c1f26;
