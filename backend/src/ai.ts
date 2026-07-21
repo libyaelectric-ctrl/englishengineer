@@ -23,8 +23,10 @@ export const AI_ROUTES: Record<string, string> = {
   '/api/ai/roleplay': 'generatePractice',
 };
 
-const isBypassUser = (userId: string) =>
-  userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
+const isBypassUser = (userId: string): boolean => {
+  if (process.env.NODE_ENV === 'production') return false;
+  return userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
+};
 
 const checkCostLimits = (userId: string) => {
   const limits = checkUserLimits(userId);

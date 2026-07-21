@@ -145,6 +145,12 @@ interface CreateAppOpts {
 }
 
 const setupMiddleware = (app: Express, config: BackendConfig) => {
+  if (config.environment === 'production' && !config.appOrigin) {
+    throw new Error(
+      'APP_ORIGIN is required in production. Refusing to start without a configured origin.'
+    );
+  }
+
   app.disable('x-powered-by');
   SECURITY_HEADERS.contentSecurityPolicy.directives.connectSrc = [
     "'self'",

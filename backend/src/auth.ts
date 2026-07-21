@@ -178,7 +178,11 @@ export const createBackendAuth = (
   const authenticateDevBypass = (
     request: Request
   ): AuthenticatedUser | null => {
-    if (!config.allowInsecureDevAuth || config.environment === 'production')
+    if (
+      !config.allowInsecureDevAuth ||
+      config.environment === 'production' ||
+      process.env.NODE_ENV === 'production'
+    )
       return null;
     const email =
       typeof request.body?.email === 'string' ? request.body.email : undefined;
