@@ -60,9 +60,8 @@ const getSyncEndpoint = (): string => {
 const postSyncItem = async (item: SyncQueueItem): Promise<void> => {
   const endpoint = getSyncEndpoint();
   if (!endpoint) {
-    console.warn(
-      'Sync API not configured (VITE_AI_PROXY_URL missing). Skipping network sync for item:',
-      item.id
+    logger.w(
+      `Sync API not configured (VITE_AI_PROXY_URL missing). Skipping network sync for item: ${item.id}`
     );
     return;
   }
