@@ -1,7 +1,7 @@
 import { Search, Zap, Lock, Info } from 'lucide-react';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 
-const GRAMMAR_QUIZ_THRESHOLD = 36;
+const GRAMMAR_QUIZ_THRESHOLD = 50;
 
 export const GrammarHeader = ({
   level,
