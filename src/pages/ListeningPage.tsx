@@ -68,7 +68,7 @@ const ListeningPage = () => {
         <div className="max-w-md w-full rounded-[4px] border-2 border-[#0047bb] bg-surface p-8 text-center space-y-4">
           <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
           <h2 className="text-lg font-bold text-foreground">Listening Locked</h2>
-          <p className="text-xs text-muted-copy leading-relaxed">Complete 50 readings and 50 writings to unlock Listening.</p>
+          <p className="text-xs text-muted-copy leading-relaxed">Complete {READING_THRESHOLD} readings and {WRITING_THRESHOLD} writings to unlock Listening.</p>
           <div className="space-y-2 text-[10px]">
             <div className="flex justify-between text-muted-copy"><span>Reading</span><span className="font-bold text-foreground">{readingDone}/50</span></div>
             <div className="h-1.5 rounded-full bg-border-soft overflow-hidden"><div className="h-full bg-[#0047bb]" style={{ width: `${Math.min((readingDone / READING_THRESHOLD) * 100, 100)}%` }} /></div>
