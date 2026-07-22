@@ -67,13 +67,9 @@ const GrammarPage = () => {
         levelCounts={levelCounts}
         query={query}
         setQuery={setQuery}
+        canAccessWriting={canAccessWriting}
+        grammarLearned={grammarLearned}
       />
-
-      {!canAccessWriting && (
-        <div className="mx-4 rounded-[4px] border border-amber-300 bg-amber-50 p-3 text-xs text-amber-700">
-          Learn 500 grammar rules and 500 vocabulary words to unlock Reading &amp; Writing modules.
-        </div>
-      )}
 
       <main className="mt-6 space-y-5">
         <GrammarLessonMap

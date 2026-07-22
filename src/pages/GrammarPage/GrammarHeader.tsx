@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react';
+import { Search, Lock } from 'lucide-react';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 
 export const GrammarHeader = ({
@@ -6,11 +6,15 @@ export const GrammarHeader = ({
   levelCounts,
   query,
   setQuery,
+  canAccessWriting = true,
+  grammarLearned = 0,
 }: {
   level: string;
   levelCounts: Record<CefrLevel, number>;
   query: string;
   setQuery: (q: string) => void;
+  canAccessWriting?: boolean;
+  grammarLearned?: number;
 }) => (
   <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
     <div className="flex h-16 shrink-0 items-center gap-3">
@@ -34,6 +38,15 @@ export const GrammarHeader = ({
           </button>
         ))}
       </div>
+
+      {!canAccessWriting && (
+        <div className="flex shrink-0 items-center gap-1.5 rounded-[4px] border border-amber-300 bg-amber-50 px-2.5 py-1">
+          <Lock className="h-3 w-3 text-amber-600" />
+          <span className="text-[9px] font-bold text-amber-700">
+            Reading/Writing locked — {grammarLearned}/36 rules learned
+          </span>
+        </div>
+      )}
 
       <label htmlFor="grammar-search" className="relative shrink-0 w-40 sm:w-48">
         <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
