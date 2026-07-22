@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Sparkles,
   Volume2,
   Bot,
-  Plus,
-  Check,
   X,
-  ExternalLink,
   Zap,
 } from 'lucide-react';
 import { useWorkToolsStore } from '@/features/work-tools';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
 interface EngineeringTermSpec {
   id: string;
@@ -90,10 +86,8 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
 ];
 
 export const SidebarMascotBar: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const { sendToQuickAI } = useWorkToolsStore();
-  const { wordProgress } = useVocabularyStore();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [termIdx, setTermIdx] = useState(0);
@@ -101,7 +95,6 @@ export const SidebarMascotBar: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [addedSuccess, setAddedSuccess] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const currentTerm = RICH_ENGINEERING_TERMS[termIdx];
