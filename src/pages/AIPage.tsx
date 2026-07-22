@@ -17,11 +17,11 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   const h = useAIPage();
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300 font-sans pt-12 sm:pt-0">
+    <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
       {!embedded && (
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <h1 className="text-base font-bold tracking-tight text-foreground">
-            AI Coach
+            AI Copilot Studio
           </h1>
         </div>
       )}
@@ -36,24 +36,24 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         />
       )}
 
-      <ProviderStatusPanel
-        providerStatus={h.providerStatus}
-        providerTone={h.providerTone}
-        subscription={subscription}
-        buyError={h.buyError}
-        isBuyingCredits={h.isBuyingCredits}
-        onBuyCredits={h.handleBuyCredits}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2 space-y-3">
+          <ProviderStatusPanel
+            providerStatus={h.providerStatus}
+            providerTone={h.providerTone}
+            subscription={subscription}
+            buyError={h.buyError}
+            isBuyingCredits={h.isBuyingCredits}
+            onBuyCredits={h.handleBuyCredits}
+          />
 
-      <MetricsGrid
-        usage={h.usage}
-        coachContext={h.coachContext}
-        connectionValue={h.connectionValue}
-        connectionTrend={h.connectionTrend}
-      />
+          <MetricsGrid
+            usage={h.usage}
+            coachContext={h.coachContext}
+            connectionValue={h.connectionValue}
+            connectionTrend={h.connectionTrend}
+          />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
           <CoachModeSelector
             modes={h.modes}
             selectedModeId={h.selectedModeId}

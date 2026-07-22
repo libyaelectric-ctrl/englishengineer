@@ -18,7 +18,7 @@ export const MetricsGrid = ({
   connectionValue,
   connectionTrend,
 }: MetricsGridProps) => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
     <MetricCard
       label="Coach Sessions"
       value={`${usage.totalSessions}`}
