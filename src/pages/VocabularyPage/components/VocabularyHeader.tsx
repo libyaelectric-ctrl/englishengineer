@@ -9,10 +9,11 @@ import type {
   VocabularyMenuStatus,
 } from '@/features/vocabulary';
 
-const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
+const TABS = ['New', 'Learning', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
   New: 'New',
-  Learned: 'Learned',
+  Learning: 'Learning',
+  Learned: 'Learning',
   Mastered: 'Mastered',
   Struggling: 'Struggling',
 };
@@ -170,7 +171,7 @@ export function VocabularyHeader({
       {isSearchLoading && <p className="py-1 text-[10px] text-[#0047bb] animate-pulse">Searching...</p>}
       {hasSearched && searchResults.length > 0 && (
         <p className="py-1 text-[10px] text-muted-copy">
-          {searchResults.length}/{allSearchResults.length} results
+          Showing {searchResults.length} of {allSearchResults.length} results found
         </p>
       )}
 
