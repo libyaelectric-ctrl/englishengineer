@@ -9,11 +9,11 @@ import type {
   VocabularyMenuStatus,
 } from '@/features/vocabulary';
 
-const TABS = ['New', 'Learning', 'Mastered', 'Struggling'] as const;
+const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
   New: 'New',
-  Learning: 'Learning',
-  Learned: 'Learning',
+  Learned: 'Learned',
+  Learning: 'Learned',
   Mastered: 'Mastered',
   Struggling: 'Struggling',
 };
