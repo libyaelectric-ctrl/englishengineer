@@ -29,8 +29,8 @@ import { SectionCard } from '@/shared/components/SectionCard';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
 
-const READING_THRESHOLD = 50;
-const WRITING_THRESHOLD = 50;
+const READING_THRESHOLD = 5;
+const WRITING_THRESHOLD = 5;
 
 const AnimatedScore = ({ value }: { value: number }) => {
   const [display, setDisplay] = useState(0);
