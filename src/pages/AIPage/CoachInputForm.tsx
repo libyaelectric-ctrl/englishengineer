@@ -288,11 +288,14 @@ export const CoachInputForm = ({
   onFileUpload,
   onNavigate,
 }: CoachInputFormProps) => (
-  <SectionCard
-    title={`${selectedMode?.name ?? ''} Input`}
-    subtitle="Paste notes, reflections or site messages"
-    icon={Terminal}
-    headerActions={
+  <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3.5 shadow-sm space-y-3 font-sans">
+    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border-soft/60">
+      <div className="flex items-center gap-2">
+        <Terminal className="h-4 w-4 text-[#0047bb]" />
+        <span className="text-xs font-bold uppercase tracking-wider text-foreground">
+          {selectedMode?.name ?? 'Copilot'} Prompt Input
+        </span>
+      </div>
       <FormHeaderActions
         sessions={sessions}
         isLoading={isLoading}
@@ -300,9 +303,9 @@ export const CoachInputForm = ({
         onClearHistory={onClearHistory}
         onReset={onReset}
       />
-    }
-  >
-    <form onSubmit={onSubmit} className="space-y-4">
+    </div>
+
+    <form onSubmit={onSubmit} className="space-y-3">
       {isModeLocked ? (
         <PlanLockBanner
           name={selectedMode?.name ?? ''}
@@ -327,5 +330,5 @@ export const CoachInputForm = ({
         />
       )}
     </form>
-  </SectionCard>
+  </div>
 );

@@ -22,6 +22,9 @@ export const WordCardHeader = ({
       <h3 className="text-xl font-bold text-foreground">
         {repairVocabularyText(term.term)}
       </h3>
+      <p className="text-[10px] text-muted-copy uppercase tracking-wider font-mono font-semibold">
+        Domain: {term.domain}
+      </p>
       {showAnswer && (
         <p className="mt-1 font-bold text-[#0047bb]">
           {repairVocabularyText(term.turkishMeaning)}

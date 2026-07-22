@@ -148,7 +148,7 @@ const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
 };
 
 const getBorderClass = (isWeak?: boolean): string =>
-  isWeak ? 'border-2 border-rose-400' : 'border-2 border-[#0047bb]';
+  isWeak ? 'border border-rose-400/50' : 'border border-[#0047bb]/25 hover:border-[#0047bb]/50';
 
 export const WordCard = ({
   term,
