@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AIService, AIProviderStatus } from '@/features/ai';
 import { useWorkToolsStore } from '@/features/work-tools';
 import { PageHeader } from '@/shared/components/PageHeader';
@@ -14,6 +14,12 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const [status, setStatus] = useState<AIProviderStatus>(() =>
     AIService.getStatus([])
   );
+
+  useEffect(() => {
+    if (quickAIDraft) {
+      setTab('ai');
+    }
+  }, [quickAIDraft]);
 
   return (
     <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">

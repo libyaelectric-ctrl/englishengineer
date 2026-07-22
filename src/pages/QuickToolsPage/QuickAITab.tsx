@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Bot, Check, Clipboard, Send, WifiOff } from 'lucide-react';
 import { AIService, AIProviderStatus } from '@/features/ai';
 import { BetaService } from '@/features/beta';
@@ -27,6 +27,13 @@ export const QuickAITab = ({
   const [result, setResult] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+
+  // Sync draft input when initialDraft prop changes (e.g. from Mascot Quick AI button)
+  useEffect(() => {
+    if (initialDraft) {
+      setInput(initialDraft);
+    }
+  }, [initialDraft]);
 
   const runAction = async (label: string, instruction: string) => {
     if (!input.trim()) return;
