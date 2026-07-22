@@ -21,7 +21,7 @@ export const MeetingPhrasebookTab = () => {
         return (
           <Card
             key={item.id}
-            className="p-5 space-y-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
+            className="p-5 space-y-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all flex flex-col justify-between"
             hoverEffect={false}
           >
             <div>
