@@ -31,7 +31,31 @@ export const SkillSidebar = ({
 }) => {
   return (
     <aside className="relative">
-      <div className="xl:sticky xl:top-16 space-y-0 border border-border-soft bg-surface rounded-[4px] shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+            <span className="text-amber-500">🔥</span> 7 Day Active Streak
+          </div>
+          <span className="text-[10px] font-bold text-[#0047bb] bg-[#0047bb]/10 px-2 py-0.5 rounded-full">
+            Top 10% Active
+          </span>
+        </div>
+        <div className="space-y-1">
+          <div className="flex justify-between text-[11px] font-semibold text-muted-copy">
+            <span>Today's Target</span>
+            <span className="text-foreground font-bold">25 / 30 mins (83%)</span>
+          </div>
+          <div className="h-2 w-full rounded-full bg-border-soft overflow-hidden">
+            <div className="h-full rounded-full bg-[#0047bb]" style={{ width: '83%' }} />
+          </div>
+        </div>
+        <div className="pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-medium text-muted-copy">
+          <span>⚡ Weekly Focus:</span>
+          <span className="font-bold text-foreground">Technical PRs & Reports</span>
+        </div>
+      </div>
+
+      <div className="xl:sticky xl:top-16 space-y-0 border border-[#0047bb]/25 bg-surface/80 rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-300">
         <div className="px-4 pt-3 pb-2 border-b border-border-soft">
           <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
             <Layers className="h-3 w-3" /> Skill Progress
