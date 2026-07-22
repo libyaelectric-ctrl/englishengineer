@@ -17,7 +17,6 @@ import {
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { AnalyticsMetricCards } from './AnalyticsMetricCards';
-import { KnowledgeGraph } from './KnowledgeGraph';
 import { AnalyticsChartsSection } from './AnalyticsChartsSection';
 import { RecentSessions } from './RecentSessions';
 import { SkillSidebar } from './SkillSidebar';
@@ -44,9 +43,6 @@ export const ProgressOverviewTab = () => {
     advanced: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'advanced').length,
     challenge: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'challenge').length,
   };
-  const [selectedGraphNode, setSelectedGraphNode] = useState<GraphNode | null>(
-    null
-  );
 
   const calculateSkillElo = (skillId: string) => {
     const skillProfile =
@@ -140,7 +136,7 @@ export const ProgressOverviewTab = () => {
   ];
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in duration-300">
       <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
 
       <QuickStats
@@ -156,8 +152,8 @@ export const ProgressOverviewTab = () => {
 
       <AnalyticsMetricCards analytics={analytics} />
 
-      <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
-        <div className="space-y-4">
+      <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
+        <div className="space-y-6">
           <SectionCard
             title="Assessment Profile"
             subtitle="Engineering communication dimensions derived from existing learning evidence"
@@ -196,16 +192,11 @@ export const ProgressOverviewTab = () => {
             lowestSkill={lowestSkill}
             totalCEFR={totalCEFR}
             rank={rank}
-            selectedGraphNode={selectedGraphNode}
-            setSelectedGraphNode={setSelectedGraphNode}
+            selectedGraphNode={null}
+            setSelectedGraphNode={() => {}}
           />
         </div>
       </div>
-
-      <KnowledgeGraph
-        selectedGraphNode={selectedGraphNode}
-        setSelectedGraphNode={setSelectedGraphNode}
-      />
     </div>
   );
 };
