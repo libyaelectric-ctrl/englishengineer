@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
 import { useLearningCockpit } from '@/features/profile';
 import { useLearningStore } from '@/core/learning';
-import type { GraphNode } from '@/pages/CurriculumPage/curriculum-data';
+
 import { useBillingStore, canViewAdvancedAnalytics } from '@/features/billing';
 import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { SectionCard } from '@/shared/components/SectionCard';
