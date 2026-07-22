@@ -6,8 +6,6 @@ import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
 import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
 import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
 import { useGrammarStore } from '@/features/grammar/store/grammar.store';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { QUIZ_THRESHOLD as VOCAB_QUIZ_THRESHOLD } from '@/features/vocabulary/services/vocabulary.progress';
 
 const getSelectedStatus = (
   progress: ReturnType<typeof useGrammarPage>['selectedProgress']
@@ -19,14 +17,9 @@ const getSelectedStatus = (
   return 'Practicing' as const;
 };
 
-const GRAMMAR_QUIZ_THRESHOLD = 36;
-
 const GrammarPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
-  const vocabStats = useVocabularyStore((s) => s.stats);
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
-  const vocabLearned = vocabStats.learned + vocabStats.mastered;
-  const canAccessWriting = grammarLearned >= GRAMMAR_QUIZ_THRESHOLD && vocabLearned >= VOCAB_QUIZ_THRESHOLD;
   const {
     level,
     rules,
@@ -67,8 +60,9 @@ const GrammarPage = () => {
         levelCounts={levelCounts}
         query={query}
         setQuery={setQuery}
-        canAccessWriting={canAccessWriting}
         grammarLearned={grammarLearned}
+        grammarMastered={grammarStats.mastered}
+        onOpenQuiz={() => {}}
       />
 
       <main className="mt-6 space-y-5">
