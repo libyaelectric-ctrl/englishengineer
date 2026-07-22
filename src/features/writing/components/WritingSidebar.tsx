@@ -1,48 +1,58 @@
-import { useWritingStore } from '@/features/writing';
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
-import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
+import { BarChart3, Filter, ArrowUpDown } from 'lucide-react';
 
 export function WritingSidebar() {
-  const { missions, completedMissions, selectedMissionId } = useWritingStore();
-  const done = Object.keys(completedMissions).length;
-  const selectedMission =
-    missions.find((m) => m.id === selectedMissionId) ?? missions[0];
-  const selectedMissionIndex = selectedMission
-    ? missions.findIndex((m) => m.id === selectedMission.id)
-    : -1;
-
-  const config: SidebarConfig = {
-    header: <SkillEntryBrief skill="writing" compact={true} />,
-    skill: 'writing',
-    pathLabel: 'Your writing path',
-    pathDescription:
-      'Draft professional responses and master technical writing.',
-    currentLevel: selectedMission?.cefrLevel,
-    totalItems: missions.length,
-    progressBars: [
-      {
-        label: 'Completed',
-        value: done,
-        max: missions.length,
-        color: '#f97316',
-      },
-    ],
-    actions: [],
-    custom: selectedMission ? (
-      <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
-        <p className="text-[10px] font-bold text-primary mb-1">
-          SCENARIO {selectedMissionIndex + 1} OF {missions.length}
-        </p>
-        <p className="text-sm font-bold text-foreground">
-          {selectedMission.title}
-        </p>
-        <p className="text-[10px] text-muted-copy mt-1 truncate">
-          {selectedMission.discipline}
-        </p>
+  return (
+    <aside className="w-64 space-y-4 p-4">
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Filter className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Filter</span>
+        </div>
+        <div className="space-y-1">
+          {['All', 'Draft', 'Submitted', 'Graded'].map((f) => (
+            <button
+              key={f}
+              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
-    ) : undefined,
-  };
 
-  return <SkillSidebar config={config} />;
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <ArrowUpDown className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Sort</span>
+        </div>
+        <div className="space-y-1">
+          {['Duration', 'Difficulty'].map((s) => (
+            <button
+              key={s}
+              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <BarChart3 className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Progress</span>
+        </div>
+        <div className="space-y-2 text-[10px]">
+          <div className="flex justify-between text-muted-copy">
+            <span>Submissions</span>
+            <span className="font-bold text-foreground">0</span>
+          </div>
+          <div className="flex justify-between text-muted-copy">
+            <span>Avg Score</span>
+            <span className="font-bold text-foreground">0%</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
 }
