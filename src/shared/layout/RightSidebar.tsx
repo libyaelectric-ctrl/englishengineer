@@ -12,6 +12,16 @@ const CurriculumSidebar = React.lazy(() =>
     default: m.CurriculumSidebar,
   }))
 );
+const VocabSidebar = React.lazy(() =>
+  import('@/features/vocabulary/components/VocabSidebar').then((m) => ({
+    default: m.VocabSidebar,
+  }))
+);
+const GrammarSidebar = React.lazy(() =>
+  import('@/features/grammar/components/GrammarSidebar').then((m) => ({
+    default: m.GrammarSidebar,
+  }))
+);
 const ReadingSidebar = React.lazy(() =>
   import('@/features/reading/components/ReadingSidebar').then((m) => ({
     default: m.ReadingSidebar,
@@ -49,6 +59,8 @@ const EXACT_ROUTES: Record<string, React.FC> = {
 };
 
 const PREFIX_ROUTES: [string, React.FC][] = [
+  ['/vocabulary', VocabSidebar],
+  ['/grammar', GrammarSidebar],
   ['/reading', ReadingSidebar],
   ['/writing', WritingSidebar],
   ['/listening', ListeningSidebar],
