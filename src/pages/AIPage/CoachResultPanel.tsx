@@ -1,5 +1,5 @@
 import { Clipboard, Cpu, Download } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import type { AICoachResult, AIProviderStatus } from '@/features/ai';
