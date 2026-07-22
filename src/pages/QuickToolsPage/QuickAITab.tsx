@@ -56,7 +56,7 @@ export const QuickAITab = ({
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
       <Card
-        className="p-5 space-y-5 rounded-[4px] border border-border-soft bg-surface shadow-sm"
+        className="p-5 space-y-5 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all"
         hoverEffect={false}
       >
         <div className="flex items-start justify-between gap-4">
@@ -119,7 +119,7 @@ export const QuickAITab = ({
         </div>
       </Card>
       <Card
-        className="p-5 space-y-4 rounded-[4px] border border-border-soft bg-surface shadow-sm"
+        className="p-5 space-y-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all"
         hoverEffect={false}
       >
         <h2 className="text-base font-bold text-foreground">Result</h2>
