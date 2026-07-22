@@ -238,6 +238,28 @@ export const AssessmentProfilePanel = ({
           </div>
         ))}
       </div>
+
+      <div className="rounded-xl border border-[#0047bb]/30 bg-[#0047bb]/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-[#0047bb]/10 px-2.5 py-1 text-[#0047bb] font-bold text-[10px] uppercase tracking-wider">
+            ⚡ Quick Workout
+          </div>
+          <div>
+            <p className="text-xs font-bold text-foreground">
+              Priority Focus: Speaking Fluency & Technical Register
+            </p>
+            <p className="text-[11px] text-muted-copy font-medium">
+              Targeted 3-minute practice mission to boost your lowest dimension score.
+            </p>
+          </div>
+        </div>
+        <a
+          href="/speaking"
+          className="shrink-0 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors cursor-pointer"
+        >
+          🚀 Start 3-min Workout
+        </a>
+      </div>
     </div>
   );
 };
