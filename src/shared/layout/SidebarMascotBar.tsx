@@ -8,6 +8,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useWorkToolsStore } from '@/features/work-tools';
+import { playNaturalTTS } from '@/shared/utils/sound';
 
 interface EngineeringTermSpec {
   id: string;
@@ -85,15 +86,12 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
   },
 ];
 
-import { playNaturalTTS } from '@/shared/utils/sound';
-
 export const SidebarMascotBar: React.FC = () => {
   const navigate = useNavigate();
   const { sendToQuickAI } = useWorkToolsStore();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [termIdx, setTermIdx] = useState(0);
-  const [isHappy, setIsHappy] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -178,9 +176,7 @@ export const SidebarMascotBar: React.FC = () => {
 
   const handleNextTerm = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsHappy(true);
     setTermIdx((prev) => (prev + 1) % RICH_ENGINEERING_TERMS.length);
-    setTimeout(() => setIsHappy(false), 1500);
   };
 
   return (
@@ -215,45 +211,48 @@ export const SidebarMascotBar: React.FC = () => {
           {/* Mascot Info & Dynamic Term */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-foreground truncate flex items-center gap-1">
-                EngVox Mascot <Sparkles className="h-3 w-3 text-[#0047bb] animate-pulse" />
+              <span className="font-mono text-[9px] font-extrabold uppercase tracking-wider text-[#0047bb] bg-[#0047bb]/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+                <Sparkles className="h-2.5 w-2.5 text-[#0047bb]" /> {currentTerm.code}
               </span>
-              <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb] bg-[#0047bb]/10 px-1.5 py-0.5 rounded">
-                {isHappy ? '🎉 JOY' : 'CAD BOT'}
+              <span className="text-[9px] font-bold text-muted-copy">
+                {currentTerm.domain}
               </span>
             </div>
 
-            <div className="mt-1 flex items-center justify-between gap-1">
-              <span className="text-[10px] font-mono font-extrabold text-[#0047bb] truncate">
-                {currentTerm.term}
-              </span>
-              <button
-                type="button"
-                onClick={(e) => handleSpeak(currentTerm.term, e)}
-                title="Pronounce term"
-                className={`p-1 rounded text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/10 transition-colors ${
-                  isPlayingAudio ? 'text-[#0047bb] animate-pulse' : ''
-                }`}
-              >
-                <Volume2 className="h-3 w-3" />
-              </button>
-            </div>
+            <h4 className="mt-1 font-mono text-xs font-black text-foreground truncate tracking-tight">
+              {currentTerm.term}
+            </h4>
 
-            <p className="text-[10px] font-medium text-muted-copy truncate">
+            <p className="text-[10px] font-bold text-muted-copy truncate">
               {currentTerm.turkishMeaning}
             </p>
           </div>
         </div>
 
-        {/* Quick Action Footer Bar */}
+        {/* High-Utility Direct Action Footer */}
         <div className="mt-2.5 pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-bold">
-          <span className="text-muted-copy flex items-center gap-1">
-            <Zap className="h-3 w-3 text-amber-500" /> Tap for CAD Spec
-          </span>
+          <button
+            type="button"
+            onClick={(e) => handleSpeak(currentTerm.term, e)}
+            className={`inline-flex items-center gap-1 text-muted-copy hover:text-[#0047bb] transition-colors ${
+              isPlayingAudio ? 'text-[#0047bb] font-black animate-pulse' : ''
+            }`}
+          >
+            <Volume2 className="h-3 w-3" /> Listen
+          </button>
+
+          <button
+            type="button"
+            onClick={handleSendToAI}
+            className="inline-flex items-center gap-1 text-[#0047bb] hover:text-[#003896] transition-colors"
+          >
+            <Bot className="h-3 w-3" /> Quick AI
+          </button>
+
           <button
             type="button"
             onClick={handleNextTerm}
-            className="text-[#0047bb] hover:underline"
+            className="text-muted-copy hover:text-foreground transition-colors"
           >
             Next ↻
           </button>
