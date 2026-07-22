@@ -113,7 +113,7 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       {FEATURES.map((feature) => (
         <div
           key={feature.title}
-          className="rounded-[4px] border border-border-soft bg-surface py-8 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] transition-all duration-300 hover:border-border-hover hover:shadow-md"
+          className="rounded-[4px] border-2 border-[#0047bb] bg-surface py-8 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-md"
         >
           <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-background">
             <feature.icon className="h-3.5 w-3.5 text-foreground/60" />

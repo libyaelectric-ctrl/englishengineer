@@ -12,7 +12,7 @@ export function WorkflowSection() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {WORKFLOW.map((item, index) => (
             <AnimatedCard key={item.title} delay={index * 60} className="p-4">
-              <div className="relative z-10 overflow-hidden rounded-[4px] border border-border-soft bg-[#111]">
+              <div className="relative z-10 overflow-hidden rounded-[4px] border-2 border-[#0047bb] bg-[#111]">
                 <img
                   src={item.image}
                   alt=""
