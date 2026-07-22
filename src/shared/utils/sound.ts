@@ -70,3 +70,83 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
   }
 };
 
+export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return null;
+
+  // 1. Google US/UK English (Natural/High Quality)
+  const googleVoice = voices.find(
+    (v) => (v.name.includes('Google') || v.name.includes('Natural')) && v.lang.startsWith('en')
+  );
+  if (googleVoice) return googleVoice;
+
+  // 2. Microsoft Natural / Online English (e.g. Jenny, Aria, Guy, Christopher)
+  const msNatural = voices.find(
+    (v) => (v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Neural')) && v.lang.startsWith('en')
+  );
+  if (msNatural) return msNatural;
+
+  // 3. Apple Samantha / Daniel / Karen / Siri
+  const appleVoice = voices.find(
+    (v) => (v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen') || v.name.includes('Siri')) && v.lang.startsWith('en')
+  );
+  if (appleVoice) return appleVoice;
+
+  // 4. Any US or UK English voice
+  const enVoice = voices.find((v) => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en'));
+  return enVoice || null;
+};
+
+export const playNaturalTTS = (
+  text: string,
+  options?: {
+    onStart?: () => void;
+    onEnd?: () => void;
+    onError?: () => void;
+    pitch?: number;
+    rate?: number;
+    voiceName?: string;
+  }
+) => {
+  if (getSoundMuted()) return;
+  if (!('speechSynthesis' in window)) return;
+
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = options?.rate ?? 0.92;
+  utterance.pitch = options?.pitch ?? 1.02;
+
+  const setVoiceAndSpeak = () => {
+    const voices = window.speechSynthesis.getVoices();
+    let selectedVoice: SpeechSynthesisVoice | null = null;
+
+    if (options?.voiceName) {
+      selectedVoice = voices.find((v) => v.name === options.voiceName) || null;
+    }
+    if (!selectedVoice) {
+      selectedVoice = getBestNaturalVoice();
+    }
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    if (options?.onStart) utterance.onstart = options.onStart;
+    if (options?.onEnd) utterance.onend = options.onEnd;
+    if (options?.onError) utterance.onerror = options.onError;
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length > 0) {
+    setVoiceAndSpeak();
+  } else {
+    window.speechSynthesis.onvoiceschanged = () => {
+      window.speechSynthesis.onvoiceschanged = null;
+      setVoiceAndSpeak();
+    };
+    setVoiceAndSpeak();
+  }
+};
+
+
