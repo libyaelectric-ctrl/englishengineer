@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { RightSidebar } from './RightSidebar';
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
+import { MascotWidget } from '@/shared/components/EngVoxMascot';
 import { MobileBottomNavigation } from './MobileBottomNavigation';
 import { useAppStore } from '@/store/app.store';
 import { Menu } from 'lucide-react';
@@ -34,6 +35,7 @@ export const AppShell: FC = () => {
           <Outlet />
         </main>
         <BetaFeedbackWidget />
+        <MascotWidget />
         <MobileBottomNavigation />
       </div>
 
