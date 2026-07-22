@@ -22,7 +22,7 @@ export function Navbar() {
         <div className="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-wider text-muted-copy md:flex">
           <Link
             to="/pricing"
-            className="rounded-[4px] border border-[#0047bb]/40 bg-[#0047bb]/5 px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[#0047bb] transition hover:bg-[#0047bb]/10 hover:border-[#0047bb]/60"
+            className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-foreground transition hover:bg-surface-hover"
           >
             Pricing
           </Link>
@@ -44,7 +44,7 @@ export function Navbar() {
           </button>
           <Link
             to="/login"
-            className="rounded-[4px] border border-border-soft px-5 py-2.5 text-xs font-bold uppercase text-muted-copy transition hover:bg-surface-hover"
+            className="rounded-[4px] border-2 border-[#0047bb] px-5 py-2.5 text-xs font-bold uppercase text-foreground transition hover:bg-surface-hover"
           >
             Start free
           </Link>

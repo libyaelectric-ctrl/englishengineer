@@ -103,7 +103,7 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       </a>
       <a
         href="#pricing"
-        className="inline-flex min-h-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface px-6 text-xs font-bold uppercase tracking-wider text-foreground/70 backdrop-blur transition hover:bg-surface-hover"
+        className="inline-flex min-h-10 items-center justify-center rounded-[4px] border-2 border-[#0047bb] bg-surface px-6 text-xs font-bold uppercase tracking-wider text-foreground backdrop-blur transition hover:bg-surface-hover"
       >
         View Schema
       </a>
