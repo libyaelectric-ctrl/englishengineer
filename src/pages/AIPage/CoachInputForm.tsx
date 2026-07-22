@@ -1,6 +1,6 @@
 import { FormEvent } from 'react';
 import { AlertCircle, Lock, RefreshCw, Send, Terminal } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
 import type { AICoachModeId, AICoachMode } from '@/features/ai';
 
