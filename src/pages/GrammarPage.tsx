@@ -20,6 +20,7 @@ const getSelectedStatus = (
 const GrammarPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
+  const grammarStruggling = grammarStats.struggling;
   const {
     level,
     rules,
@@ -62,7 +63,9 @@ const GrammarPage = () => {
         setQuery={setQuery}
         grammarLearned={grammarLearned}
         grammarMastered={grammarStats.mastered}
+        grammarStruggling={grammarStruggling}
         onOpenQuiz={() => {}}
+        onOpenStrugglingQuiz={() => {}}
       />
 
       <main className="mt-6 space-y-5">
