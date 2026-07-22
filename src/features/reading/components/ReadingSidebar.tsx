@@ -1,48 +1,77 @@
+import { BarChart3, Filter, ArrowUpDown } from 'lucide-react';
 import { useReadingStore } from '@/features/reading';
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
-import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
 
 export function ReadingSidebar() {
-  const { missions, completedMissions, selectedMissionId } = useReadingStore();
+  const { missions, completedMissions } = useReadingStore();
   const done = Object.keys(completedMissions).length;
-  const selectedMission =
-    missions.find((m) => m.id === selectedMissionId) ?? missions[0];
-  const selectedMissionIndex = selectedMission
-    ? missions.findIndex((m) => m.id === selectedMission.id)
-    : -1;
+  const total = missions.length;
+  const avgScore = done > 0
+    ? Math.round(
+        Object.values(completedMissions).reduce((a, b) => a + b, 0) / done
+      )
+    : 0;
 
-  const config: SidebarConfig = {
-    header: <SkillEntryBrief skill="reading" compact={true} />,
-    skill: 'reading',
-    pathLabel: 'Your reading path',
-    pathDescription:
-      'Read professional documentation and answer comprehension questions.',
-    currentLevel: selectedMission?.cefrLevel,
-    totalItems: missions.length,
-    progressBars: [
-      {
-        label: 'Completed',
-        value: done,
-        max: missions.length,
-        color: '#10b981',
-      },
-    ],
-    actions: [],
-    custom: selectedMission ? (
-      <div className="rounded-lg bg-surface-hover p-3 border border-border-soft">
-        <p className="text-[10px] font-bold text-primary mb-1">
-          SCENARIO {selectedMissionIndex + 1} OF {missions.length}
-        </p>
-        <p className="text-sm font-bold text-foreground">
-          {selectedMission.title}
-        </p>
-        <p className="text-[10px] text-muted-copy mt-1 truncate">
-          {selectedMission.discipline}
-        </p>
+  return (
+    <aside className="w-64 space-y-4 p-4">
+      {/* Filtreleme */}
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <Filter className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Filter</span>
+        </div>
+        <div className="space-y-1">
+          {['All', 'Unread', 'Read', 'Difficult'].map((f) => (
+            <button
+              key={f}
+              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+            >
+              {f}
+            </button>
+          ))}
+        </div>
       </div>
-    ) : undefined,
-  };
 
-  return <SkillSidebar config={config} />;
+      {/* Sıralama */}
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <ArrowUpDown className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Sort</span>
+        </div>
+        <div className="space-y-1">
+          {['Duration', 'Level', 'Score'].map((s) => (
+            <button
+              key={s}
+              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+            >
+              {s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* İlerleme Raporu */}
+      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <BarChart3 className="h-3 w-3 text-[#0047bb]" />
+          <span className="text-[10px] font-bold uppercase text-foreground">Progress</span>
+        </div>
+        <div className="space-y-2 text-[10px]">
+          <div className="flex justify-between text-muted-copy">
+            <span>Read</span>
+            <span className="font-bold text-foreground">{done}/{total}</span>
+          </div>
+          <div className="h-1 rounded-full bg-border-soft overflow-hidden">
+            <div
+              className="h-full bg-[#0047bb] transition-all"
+              style={{ width: `${total > 0 ? (done / total) * 100 : 0}%` }}
+            />
+          </div>
+          <div className="flex justify-between text-muted-copy">
+            <span>Avg Score</span>
+            <span className="font-bold text-foreground">{avgScore}%</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
 }
