@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { BookOpen, FileText, GraduationCap } from 'lucide-react';
+import { BookOpen, FileText, GraduationCap, Lock } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { Button } from '@/shared/components/Button';
@@ -8,8 +8,58 @@ import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
 import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';
 import { ReaderView } from './ReadingPage/components/ReaderView';
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import { useGrammarStore } from '@/features/grammar/store/grammar.store';
+
+const VOCAB_THRESHOLD = 500;
+const GRAMMAR_THRESHOLD = 50;
 
 const ReadingPage = () => {
+  const vocabStats = useVocabularyStore((s) => s.stats);
+  const grammarStats = useGrammarStore((s) => s.stats);
+  const vocabLearned = vocabStats.learned + vocabStats.mastered;
+  const grammarLearned = grammarStats.learned + grammarStats.mastered;
+  const canAccess = vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
+
+  if (!canAccess) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <div className="max-w-md w-full rounded-[4px] border-2 border-[#0047bb] bg-surface p-8 text-center space-y-4">
+          <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
+          <h2 className="text-lg font-bold text-foreground">Reading Locked</h2>
+          <p className="text-xs text-muted-copy leading-relaxed">
+            You need to learn 500 vocabulary words and 50 grammar rules before accessing Reading.
+            <br />(Progress at 75% your current level and 25% the next level.)
+          </p>
+          <div className="space-y-2 text-[10px]">
+            <div className="flex justify-between text-muted-copy">
+              <span>Vocabulary</span>
+              <span className="font-bold text-foreground">{vocabLearned}/500</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
+              <div className="h-full bg-[#0047bb] transition-all" style={{ width: `${Math.min((vocabLearned / VOCAB_THRESHOLD) * 100, 100)}%` }} />
+            </div>
+            <div className="flex justify-between text-muted-copy">
+              <span>Grammar</span>
+              <span className="font-bold text-foreground">{grammarLearned}/50</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
+              <div className="h-full bg-[#0047bb] transition-all" style={{ width: `${Math.min((grammarLearned / GRAMMAR_THRESHOLD) * 100, 100)}%` }} />
+            </div>
+          </div>
+          <div className="flex gap-2 justify-center pt-2">
+            <Link to="/vocabulary" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover">
+              Go to Vocabulary
+            </Link>
+            <Link to="/grammar" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover">
+              Go to Grammar
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const {
     missions,
     answers,
