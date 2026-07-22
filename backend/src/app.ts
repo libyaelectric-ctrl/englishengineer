@@ -11,6 +11,12 @@ import { createAIService, registerAIRoutes } from './ai.js';
 import { createBillingService, createStripeClient } from './billing-service.js';
 import { registerBillingRoutes } from './billing-routes.js';
 import { registerAdminRoutes } from './admin-routes.js';
+import { registerProgressRoutes } from './progress-routes.js';
+import { registerReadingRoutes } from './reading-routes.js';
+import { registerWritingRoutes } from './writing-routes.js';
+import { registerListeningRoutes } from './listening-routes.js';
+import { registerSpeakingRoutes } from './speaking-routes.js';
+import { registerGrammarRoutes } from './grammar-routes.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
 import { createBackendAuth } from './auth.js';
@@ -489,6 +495,13 @@ const registerRoutes = (
 
   app.use('/api', limiters.global);
   registerAdminRoutes(app, requireBackendAuth, limiters.global);
+
+  registerProgressRoutes(app);
+  registerReadingRoutes(app);
+  registerWritingRoutes(app);
+  registerListeningRoutes(app);
+  registerSpeakingRoutes(app);
+  registerGrammarRoutes(app);
 };
 
 export const createApp = ({
