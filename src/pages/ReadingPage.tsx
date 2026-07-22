@@ -7,6 +7,7 @@ import { EmptyLevelState, LevelContentFilter } from '@/features/level-system';
 import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
 import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';
+import { ReaderView } from './ReadingPage/components/ReaderView';
 
 const ReadingPage = () => {
   const {
@@ -167,8 +168,14 @@ const ReadingPage = () => {
       )}
 
       {/* 2. ACTIVE ASSESSMENT WORKSPACE TAB VIEW */}
-      {activeTab === 'workspace' && (
-        <ReadingWorkspace
+      {activeTab === 'workspace' && currentMission && (
+        <>
+          <ReaderView
+            title={currentMission.title}
+            content={currentMission.passageText}
+            onWordClick={(word) => addClickedVocab(word)}
+          />
+          <ReadingWorkspace
           currentMission={currentMission}
           currentMissionIndex={currentMissionIndex}
           visibleMissions={visibleMissions}
@@ -186,6 +193,7 @@ const ReadingPage = () => {
           handleBackToMissions={handleBackToMissions}
           moveMission={moveMission}
         />
+        </>
       )}
     </div>
   );
