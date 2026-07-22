@@ -85,6 +85,8 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
   },
 ];
 
+import { playNaturalTTS } from '@/shared/utils/sound';
+
 export const SidebarMascotBar: React.FC = () => {
   const navigate = useNavigate();
   const { sendToQuickAI } = useWorkToolsStore();
@@ -96,8 +98,28 @@ export const SidebarMascotBar: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
+  const [speechRate, setSpeechRate] = useState<number>(0.92);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const currentTerm = RICH_ENGINEERING_TERMS[termIdx];
+
+  // Load available natural voices
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+    const updateVoices = () => {
+      const voices = window.speechSynthesis.getVoices().filter((v) => v.lang.startsWith('en'));
+      setAvailableVoices(voices);
+      if (voices.length > 0 && !selectedVoiceName) {
+        // Pick best natural voice by default
+        const best = voices.find((v) => v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Online')) || voices[0];
+        if (best) setSelectedVoiceName(best.name);
+      }
+    };
+    updateVoices();
+    window.speechSynthesis.onvoiceschanged = updateVoices;
+  }, [selectedVoiceName]);
 
   // 3D Cursor tilt sensitivity
   useEffect(() => {
@@ -132,15 +154,14 @@ export const SidebarMascotBar: React.FC = () => {
 
   const handleSpeak = (text: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 0.9;
     setIsPlayingAudio(true);
-    utterance.onend = () => setIsPlayingAudio(false);
-    utterance.onerror = () => setIsPlayingAudio(false);
-    window.speechSynthesis.speak(utterance);
+    playNaturalTTS(text, {
+      voiceName: selectedVoiceName,
+      rate: speechRate,
+      onStart: () => setIsPlayingAudio(true),
+      onEnd: () => setIsPlayingAudio(false),
+      onError: () => setIsPlayingAudio(false),
+    });
   };
 
   const handleSendToAI = (e: React.MouseEvent) => {
@@ -279,13 +300,47 @@ export const SidebarMascotBar: React.FC = () => {
                 </p>
               </div>
 
-              <div className="rounded-lg border border-border-soft bg-surface p-3 space-y-1">
-                <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
-                  Technical CAD Definition
-                </p>
-                <p className="text-xs text-foreground font-medium leading-relaxed">
-                  {currentTerm.definition}
-                </p>
+              <div className="rounded-lg border border border-[#0047bb]/20 bg-surface p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+                    Audio Engine & Voice Options
+                  </p>
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-muted-copy">
+                    Speed:
+                    {[0.8, 0.95, 1.1].map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setSpeechRate(r)}
+                        className={`px-1.5 py-0.5 rounded text-[9px] cursor-pointer transition-colors ${
+                          speechRate === r
+                            ? 'bg-[#0047bb] text-white font-black'
+                            : 'bg-surface-hover hover:bg-border-soft text-foreground'
+                        }`}
+                      >
+                        {r}x
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {availableVoices.length > 0 ? (
+                  <select
+                    value={selectedVoiceName}
+                    onChange={(e) => setSelectedVoiceName(e.target.value)}
+                    className="w-full rounded-md border border-border-soft bg-surface px-2.5 py-1.5 text-xs text-foreground font-medium focus:border-[#0047bb] focus:outline-none"
+                  >
+                    {availableVoices.map((v) => (
+                      <option key={v.name} value={v.name}>
+                        {v.name} ({v.lang})
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-[10px] text-muted-copy italic">
+                    Using system English Speech Engine
+                  </p>
+                )}
               </div>
 
               <div className="rounded-lg border border-border-soft bg-surface-hover p-3 space-y-1">
