@@ -13,7 +13,7 @@ const ProgressPage = () => {
   const activeTab = section === 'next-steps' ? 'next-steps' : 'overview';
 
   return (
-    <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
+    <div className="bg-background pb-16 text-foreground space-y-4 animate-in fade-in duration-300">
       {/* Fixed Header with Tabs */}
       <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex min-w-0 items-baseline gap-2">
