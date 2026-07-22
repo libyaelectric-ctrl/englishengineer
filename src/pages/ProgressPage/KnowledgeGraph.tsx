@@ -122,8 +122,8 @@ export const KnowledgeGraph = ({
           Click nodes to explore connections.
         </p>
       </div>
-      <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full bg-surface-hover select-none">
-        <svg viewBox="0 0 800 500" className="h-full w-full">
+      <div className="relative w-full bg-surface-hover select-none overflow-hidden" style={{ maxHeight: '400px' }}>
+        <svg viewBox="0 0 800 500" className="w-full" style={{ height: '350px' }}>
           {GRAPH_LINKS.map((link, idx) => (
             <GraphLink
               key={idx}

@@ -140,7 +140,7 @@ export const ProgressOverviewTab = () => {
   ];
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-300">
+    <div className="space-y-4 animate-in fade-in duration-300">
       <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
 
       <QuickStats
@@ -157,7 +157,7 @@ export const ProgressOverviewTab = () => {
       <AnalyticsMetricCards analytics={analytics} />
 
       <div className="grid gap-5 xl:grid-cols-[1fr_320px]">
-        <div className="space-y-5">
+        <div className="space-y-4">
           <SectionCard
             title="Assessment Profile"
             subtitle="Engineering communication dimensions derived from existing learning evidence"
