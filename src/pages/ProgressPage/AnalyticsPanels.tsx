@@ -100,97 +100,126 @@ export const AssessmentProfilePanel = ({
 }: {
   profile: AssessmentProfile;
 }) => {
-  if (!profile.hasEnoughData) {
-    return (
-      <div className="rounded-[4px] border border-warning/20 bg-warning/5 p-5 shadow-sm">
-        <p className="text-sm font-bold text-warning uppercase tracking-wider">
-          Not enough assessment data yet.
-        </p>
-        <p className="mt-2 text-xs leading-relaxed text-warning/80 font-medium">
-          Complete Reading, Writing, Listening, Speaking, or Vocabulary missions
-          to build a reliable engineering communication profile.
-        </p>
-      </div>
-    );
-  }
+  const isPending = !profile.hasEnoughData;
+
+  const defaultDimensions = [
+    { label: 'Technical Accuracy', evidence: 'Measures accuracy of engineering terms & units across site reports.' },
+    { label: 'Reading Comprehension', evidence: 'Measures speed and precision in technical specifications & specifications.' },
+    { label: 'Professional Writing', evidence: 'Evaluates email clarity, tone, and formal structure in engineering logs.' },
+    { label: 'Listening Retention', evidence: 'Tracks retention of oral site instructions & safety briefings.' },
+    { label: 'Speaking Fluency', evidence: 'Assesses pronunciation, vocabulary choice, and confidence in meetings.' },
+    { label: 'Grammar & Syntax', evidence: 'Evaluates passive voice, conditionals, and complex sentence structures.' },
+  ];
+
+  const dimensionsToDisplay = isPending
+    ? defaultDimensions.map((d) => ({
+        dimensionId: d.label.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+        label: d.label,
+        score: null,
+        evidence: d.evidence,
+      }))
+    : profile.dimensionScores;
 
   return (
     <div className="space-y-6">
+      {isPending && (
+        <div className="rounded-xl border border-[#0047bb]/30 bg-[#0047bb]/5 p-5 shadow-sm">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold text-[#0047bb] uppercase tracking-wider">
+                Engineering Assessment Profile — Initializing Baseline
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-copy font-medium">
+                Complete practice missions across Reading, Writing, Listening, Speaking, or Vocabulary to build your verified engineering communication rating.
+              </p>
+            </div>
+            <a
+              href="/vocabulary"
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors"
+            >
+              Start Diagnostic
+            </a>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <MiniStat label="Overall" value={`${profile.overallScore ?? 0}%`} />
+        <MiniStat label="Overall" value={isPending ? 'Baseline' : `${profile.overallScore ?? 0}%`} />
         <MiniStat
           label="Engineer CEFR"
-          value={profile.engineerCefr || 'Pending'}
+          value={profile.engineerCefr || 'A2-B1 Baseline'}
         />
         <MiniStat
           label="Internal progress index"
-          value={`${profile.engineerElo}`}
+          value={`${profile.engineerElo ?? 1000}`}
         />
-        <MiniStat label="Confidence" value={`${profile.confidenceScore}%`} />
+        <MiniStat label="Confidence" value={isPending ? 'Initial' : `${profile.confidenceScore}%`} />
       </div>
 
-      <div className="rounded-[4px] border border-[#0047bb]/20 bg-[#0047bb]/5 p-4 shadow-sm">
+      <div className="rounded-xl border border-[#0047bb]/20 bg-surface/80 p-4 shadow-sm">
         <p className="text-xs font-bold text-[#0047bb]">
-          {profile.certificateDisclaimer}
+          {profile.certificateDisclaimer || 'Engineering Communication Standards & CEFR Mapping'}
         </p>
-        <p className="mt-2 text-xs leading-relaxed text-[#0047bb]/80 font-medium">
-          {profile.confidenceExplanation}
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-copy font-medium">
+          {profile.confidenceExplanation || 'Scores update dynamically as you complete practice sessions across site communication modules.'}
         </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <ReadinessCard
           label="Meeting Readiness"
-          value={profile.readiness.meetings}
+          value={profile.readiness?.meetings ?? null}
         />
         <ReadinessCard
           label="Report Readiness"
-          value={profile.readiness.reports}
+          value={profile.readiness?.reports ?? null}
         />
         <ReadinessCard
           label="Consultant Readiness"
-          value={profile.readiness.consultantCommunication}
+          value={profile.readiness?.consultantCommunication ?? null}
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-[4px] border border-success/20 bg-success/5 p-5 shadow-sm">
-          <p className="text-[10px] font-mono text-success uppercase tracking-widest font-bold">
-            Strongest Dimensions
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {profile.strongestDimensions.map((d) => (
-              <span
-                key={d.dimensionId}
-                className="rounded-[4px] border border-success/20 bg-success/10 px-2 py-1 text-[10px] font-mono uppercase text-success font-bold"
-              >
-                {d.label} {d.score}%
-              </span>
-            ))}
+      {!isPending && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="rounded-xl border border-success/20 bg-success/5 p-5 shadow-sm">
+            <p className="text-[10px] font-mono text-success uppercase tracking-widest font-bold">
+              Strongest Dimensions
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {profile.strongestDimensions.map((d) => (
+                <span
+                  key={d.dimensionId}
+                  className="rounded-lg border border-success/20 bg-success/10 px-2.5 py-1 text-[10px] font-mono uppercase text-success font-bold"
+                >
+                  {d.label} {d.score}%
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-5 shadow-sm">
+            <p className="text-[10px] font-mono text-error uppercase tracking-widest font-bold">
+              Priority Improvement Areas
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {profile.weakestDimensions.map((d) => (
+                <span
+                  key={d.dimensionId}
+                  className="rounded-lg border border-rose-500/20 bg-rose-500/10 px-2.5 py-1 text-[10px] font-mono uppercase text-error font-bold"
+                >
+                  {d.label} {d.score}%
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="rounded-[4px] border border-rose-500/20 bg-rose-500/5 p-5 shadow-sm">
-          <p className="text-[10px] font-mono text-error uppercase tracking-widest font-bold">
-            Priority Improvement Areas
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {profile.weakestDimensions.map((d) => (
-              <span
-                key={d.dimensionId}
-                className="rounded-[4px] border border-rose-500/20 bg-rose-500/10 px-2 py-1 text-[10px] font-mono uppercase text-error font-bold"
-              >
-                {d.label} {d.score}%
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {profile.dimensionScores.map((dimension) => (
+        {dimensionsToDisplay.map((dimension) => (
           <div
             key={dimension.dimensionId}
-            className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
+            className="rounded-xl border border-[#0047bb]/20 bg-surface p-4 shadow-sm hover:border-[#0047bb]/40 transition-colors"
           >
             <div className="flex items-center justify-between gap-3">
               <p className="text-xs font-bold text-foreground">
