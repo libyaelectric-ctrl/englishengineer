@@ -30,13 +30,16 @@ export const selectVocabularyLearningSet = (
   const currentLevel = getBaseCefrLevel(options.cefrBand);
   const stretchLevel = getBaseCefrLevel(getNextCefrBand(options.cefrBand));
   const now = options.now ?? new Date();
-  const eligible = terms.filter(
-    (term) =>
-      term.status === 'approved' &&
-      term.skillUse.includes(options.skillUse) &&
-      (!options.domain || term.domain === options.domain) &&
-      getVocabularyMenuStatus(term.id, state) === options.status
-  );
+  const eligible = terms.filter((term) => {
+    if (term.status !== 'approved') return false;
+    if (!term.skillUse.includes(options.skillUse)) return false;
+    if (options.domain && term.domain !== options.domain) return false;
+    const termStatus = getVocabularyMenuStatus(term.id, state);
+    if (options.status === 'Learned' || options.status === 'Learning') {
+      return termStatus === 'Learned' || termStatus === 'Learning';
+    }
+    return termStatus === options.status;
+  });
   const due = eligible.filter((term) => {
     const progress = state.progress[term.id];
     return progress ? isVocabularyProgressDue(progress, now) : false;
