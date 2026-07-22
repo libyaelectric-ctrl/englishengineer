@@ -6,7 +6,7 @@ import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const CANONICAL_VOCABULARY_TOTAL = 5000;
 
-export type VocabularyMenuStatus = 'New' | 'Learned' | 'Mastered' | 'Struggling';
+export type VocabularyMenuStatus = 'New' | 'Learning' | 'Mastered' | 'Struggling';
 
 export interface VocabularyMenuProgress {
   correctReviews: number;
@@ -144,7 +144,7 @@ export const getVocabularyReviewReason = (
       ? 'A maintenance review is due to keep this mastered word available in long-term memory.'
       : 'The current spaced-review interval has ended, so this word is ready for another recall check.';
   }
-  if (progress.status === 'Learned') {
+  if (progress.status === 'Learning') {
     return 'This word is still building reliable recall before it can move to Mastered.';
   }
   return 'This word is available for an optional confidence check.';
@@ -159,7 +159,7 @@ const buildCorrectReviewResult = (
   return {
     correctReviews,
     wrongReviews: current.wrongReviews,
-    status: isMastered ? 'Mastered' : 'Learned',
+    status: isMastered ? 'Mastered' : 'Learning',
     isWeak: isMastered ? false : current.isWeak,
     isForgotten: isMastered ? false : current.isForgotten,
     isLeech: isMastered ? false : current.isLeech,
@@ -176,7 +176,7 @@ const buildIncorrectReviewResult = (
   const tentative: VocabularyMenuProgress = {
     correctReviews: Math.min(current.correctReviews, 2),
     wrongReviews,
-    status: 'Learned',
+    status: 'Learning',
     isWeak: true,
     isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
     isLeech: current.isLeech,
@@ -339,7 +339,7 @@ export const VocabularyMenuService = {
   ): VocabularyMenuSummary {
     const progress = Object.values((state ?? this.getState()).progress);
     const learning = progress.filter(
-      (word) => word.status === 'Learned'
+      (word) => word.status === 'Learning'
     ).length;
     const mastered = progress.filter(
       (word) => word.status === 'Mastered'
@@ -364,7 +364,7 @@ export const VocabularyMenuService = {
     const current = state.progress[wordId] ?? getDefaultProgress();
     const next: VocabularyMenuProgress = {
       ...current,
-      status: 'Learned',
+      status: 'Learning',
       lastReviewed: now.toISOString(),
       nextReviewDate: now.toISOString(),
     };
