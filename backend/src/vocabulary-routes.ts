@@ -33,12 +33,12 @@ export const registerVocabularyRoutes = (
       try {
         const query = request.validatedQuery as unknown as VocabularyLookupQuery;
         const cacheKey = `vocab:${query.word}`;
-        const result = await getOrSet(
+        const { value: result, fromCache } = await getOrSet(
           cacheKey,
           21600,
           () => service.lookup(query)
         );
-        response.json(result);
+        response.json({ ...result, cached: fromCache });
       } catch (error) {
         next(error);
       }

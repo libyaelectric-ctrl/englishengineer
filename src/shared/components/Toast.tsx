@@ -34,15 +34,23 @@ export const ToastContainer = () => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   useEffect(() => {
+    const timeouts = new Map<number, ReturnType<typeof setTimeout>>();
+
     const handler = (toast: Toast) => {
       setToasts((prev) => [...prev, toast]);
-      setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-      }, 4000);
+      timeouts.set(
+        toast.id,
+        setTimeout(() => {
+          setToasts((prev) => prev.filter((t) => t.id !== toast.id));
+          timeouts.delete(toast.id);
+        }, 4000)
+      );
     };
     listeners.push(handler);
     return () => {
       listeners = listeners.filter((l) => l !== handler);
+      timeouts.forEach((t) => clearTimeout(t));
+      timeouts.clear();
     };
   }, []);
 

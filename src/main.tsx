@@ -42,18 +42,24 @@ if (typeof window !== 'undefined') {
     document.querySelectorAll('.animate-on-scroll').forEach((el) => {
       observer.observe(el);
     });
-    // Watch for new elements
-    domObserver.observe(document.body, { childList: true, subtree: true });
+    // Watch for new elements (scoped to main content, not full body)
+    const mainContent = document.getElementById('root');
+    if (mainContent) {
+      domObserver.observe(mainContent, { childList: true, subtree: true });
+    }
 
-    // Mouse tracking for card hover effects
+    // Mouse tracking for card hover effects (throttled via rAF)
+    let mouseFrame = 0;
     document.addEventListener('mousemove', (e) => {
-      document.querySelectorAll('.card-interactive').forEach((card) => {
-        const el = card as HTMLElement;
-        const rect = el.getBoundingClientRect();
+      window.cancelAnimationFrame(mouseFrame);
+      mouseFrame = window.requestAnimationFrame(() => {
+        const target = (e.target as HTMLElement).closest('.card-interactive') as HTMLElement | null;
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
-        el.style.setProperty('--mouse-x', `${x}%`);
-        el.style.setProperty('--mouse-y', `${y}%`);
+        target.style.setProperty('--mouse-x', `${x}%`);
+        target.style.setProperty('--mouse-y', `${y}%`);
       });
     });
   });

@@ -14,6 +14,7 @@ const SYNC_API_TIMEOUT_MS = 15_000;
 
 let listeners: SyncQueueListener[] = [];
 let syncTimer: ReturnType<typeof setInterval> | null = null;
+let cleanupOnlineHandlers: (() => void) | null = null;
 
 const getInitialState = (): SyncQueueState => ({
   items: storage.get<SyncQueueItem[]>(STORAGE_KEY) || [],
@@ -199,8 +200,14 @@ export const SyncQueue = {
     }, SYNC_INTERVAL_MS);
 
     if (typeof window !== 'undefined') {
-      window.addEventListener('online', () => this.setOnline(true));
-      window.addEventListener('offline', () => this.setOnline(false));
+      const handleOnline = () => this.setOnline(true);
+      const handleOffline = () => this.setOnline(false);
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+      cleanupOnlineHandlers = () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
     }
   },
 
@@ -208,6 +215,10 @@ export const SyncQueue = {
     if (syncTimer) {
       clearInterval(syncTimer);
       syncTimer = null;
+    }
+    if (cleanupOnlineHandlers) {
+      cleanupOnlineHandlers();
+      cleanupOnlineHandlers = null;
     }
   },
 

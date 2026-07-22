@@ -57,15 +57,20 @@ const redisSet = async (key: string, value: string, ttlSeconds: number): Promise
   }
 };
 
+export interface CacheResult<T> {
+  value: T;
+  fromCache: boolean;
+}
+
 export const getOrSet = async <T>(
   key: string,
   ttlSeconds: number,
   fetcher: () => Promise<T>
-): Promise<T> => {
+): Promise<CacheResult<T>> => {
   const cached = await redisGet(key);
   if (cached) {
     try {
-      return JSON.parse(cached) as T;
+      return { value: JSON.parse(cached) as T, fromCache: true };
     } catch {
       // fall through
     }
@@ -73,7 +78,7 @@ export const getOrSet = async <T>(
 
   const memEntry = memoryCache.get(key) as CacheEntry<T> | undefined;
   if (memEntry && memEntry.expiresAt > Date.now()) {
-    return memEntry.value;
+    return { value: memEntry.value, fromCache: true };
   }
 
   const value = await fetcher();
@@ -86,5 +91,5 @@ export const getOrSet = async <T>(
     expiresAt: Date.now() + ttlSeconds * 1000,
   });
 
-  return value;
+  return { value, fromCache: false };
 };

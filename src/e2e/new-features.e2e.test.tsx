@@ -1,9 +1,11 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import WorkToolsPage from '@/pages/WorkToolsPage';
 import SpeakingPage from '@/pages/SpeakingPage';
 import TeamPage from '@/pages/TeamPage';
+import { useReadingStore } from '@/features/reading';
+import { useWritingStore } from '@/features/writing/writing.store';
 
 const renderWithRouter = (
   component: React.ReactElement,
@@ -110,6 +112,13 @@ describe('New Feature E2E: PR Review Coach on WorkTools', () => {
 });
 
 describe('New Feature E2E: Interview Simulator on Speaking', () => {
+  beforeEach(() => {
+    const completedMissions: Record<string, number> = {};
+    for (let i = 0; i < 6; i++) completedMissions[`mission_${i}`] = 80;
+    useReadingStore.setState({ completedMissions });
+    useWritingStore.setState({ completedMissions });
+  });
+
   it('Speaking page renders with Interview Simulator tab', () => {
     renderWithRouter(<SpeakingPage />, ['/speaking']);
     expect(screen.getByText(/Interview Simulator/i)).toBeInTheDocument();
