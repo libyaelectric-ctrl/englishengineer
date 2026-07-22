@@ -84,11 +84,32 @@ const LessonHeader = ({
           )}
         </p>
       </div>
-      <span
-        className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${selectedStatus === 'Mastered' ? 'border-success/30 bg-success/5 text-success' : selectedStatus === 'Needs Reading/Writing' ? 'border-warning/30 bg-warning/5 text-warning' : selectedStatus === 'Practicing' ? 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]' : 'border-border-soft bg-[#f3f3fd] text-muted-copy'}`}
-      >
-        {selectedStatus}
-      </span>
+      <div className="flex items-center gap-2">
+        <span
+          className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${
+            selectedStatus === 'Mastered'
+              ? 'border-yellow-400/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700'
+              : selectedStatus === 'Learned'
+                ? 'border-green-400/40 bg-green-50 dark:bg-green-900/20 text-green-700'
+                : selectedStatus === 'Learning'
+                  ? 'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600'
+                  : selectedStatus === 'Struggling'
+                    ? 'border-red-400/40 bg-red-50 dark:bg-red-900/20 text-red-700'
+                    : 'border-border-soft bg-[#f3f3fd] text-muted-copy'
+          }`}
+        >
+          {selectedStatus === 'Mastered' && '⭐ '}{selectedStatus}
+        </span>
+        {selectedStatus === 'Learning' && (
+          <span className="text-[9px] text-muted-copy">1 correct → Learned</span>
+        )}
+        {selectedStatus === 'Learned' && (
+          <span className="text-[9px] text-muted-copy">3 correct → Mastered</span>
+        )}
+        {selectedStatus === 'Struggling' && (
+          <span className="text-[9px] text-red-500">Review this rule!</span>
+        )}
+      </div>
     </div>
   </div>
 );
@@ -564,6 +585,13 @@ export const GrammarLessonContent = ({
           </div>
         </div>
       )}
+
+      <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-[10px] text-muted-copy">
+        {selectedStatus === 'New' && 'This rule is new. Start practicing to move to Practicing.'}
+        {selectedStatus === 'Practicing' && 'Used correctly 1+ times. Keep going to Master.'}
+        {selectedStatus === 'Mastered' && 'Congrats! You have mastered this rule.'}
+        {selectedStatus === 'Needs Reading/Writing' && 'Apply this rule in Reading and Writing exercises.'}
+      </div>
     </>
   );
 };
