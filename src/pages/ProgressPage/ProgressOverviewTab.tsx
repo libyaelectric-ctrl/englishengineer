@@ -18,7 +18,7 @@ import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { AnalyticsMetricCards } from './AnalyticsMetricCards';
 import { AnalyticsChartsSection } from './AnalyticsChartsSection';
-import { RecentSessions } from './RecentSessions';
+
 import { SkillSidebar } from './SkillSidebar';
 import { SKILLS, MIN_ELO, MAX_ELO, getCEFRBand } from './utils';
 
@@ -181,7 +181,7 @@ export const ProgressOverviewTab = () => {
             />
           )}
 
-          <RecentSessions sessions={analytics.recentSessions} />
+
         </div>
 
         <div className="h-full">

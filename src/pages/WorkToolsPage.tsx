@@ -428,7 +428,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
