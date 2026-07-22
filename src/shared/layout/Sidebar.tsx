@@ -14,6 +14,7 @@ import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { cn } from '@/shared/utils/cn';
 import { Navigation } from './Navigation';
+import { SidebarMascotBar } from './SidebarMascotBar';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 
 export const Sidebar: React.FC = () => {
@@ -104,6 +105,9 @@ export const Sidebar: React.FC = () => {
               </button>
             </div>
           </div>
+
+          {/* Mascot Bar right under EngVox Logo Header */}
+          <SidebarMascotBar />
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">

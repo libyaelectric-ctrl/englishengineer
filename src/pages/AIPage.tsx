@@ -8,7 +8,7 @@ import { CoachInputForm } from './AIPage/CoachInputForm';
 import { CoachResultPanel } from './AIPage/CoachResultPanel';
 import { UserContextSidebar } from './AIPage/UserContextSidebar';
 
-import { EngVoxMascot } from '@/shared/components/EngVoxMascot';
+
 
 interface AIPageProps {
   embedded?: boolean;
@@ -21,8 +21,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
   return (
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
       {!embedded && (
-        <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-3 border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <EngVoxMascot size="custom" customWidth={50} customHeight={50} pageContext="ai" mode="thinking" />
+        <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <h1 className="text-base font-bold tracking-tight text-foreground">
             AI Copilot Studio
           </h1>
