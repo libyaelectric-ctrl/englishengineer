@@ -64,7 +64,7 @@ const GrammarPage = () => {
         grammarLearned={grammarLearned}
         grammarMastered={grammarStats.mastered}
         grammarStruggling={grammarStruggling}
-        onOpenQuiz={() => {}}
+        onOpenQuiz={() => setQuizOpen(true)}
         onOpenStrugglingQuiz={() => {}}
       />
 
