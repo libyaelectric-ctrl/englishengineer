@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Sparkles, Bot, BookOpen, Wrench, Award, ShieldCheck } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
+import { Sparkles, Bot, BookOpen, Wrench, Award } from 'lucide-react';
 
 const DYNAMIC_TERMS = [
   'GROUNDING GRID // EE-042',
@@ -51,7 +51,6 @@ const PAGE_CONTEXT_HINTS: Record<
 
 export const SidebarMascotBar: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [termIdx, setTermIdx] = useState(0);
