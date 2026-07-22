@@ -5,7 +5,6 @@ import {
   Volume2,
   Bot,
   X,
-  Zap,
 } from 'lucide-react';
 import { useWorkToolsStore } from '@/features/work-tools';
 import { playNaturalTTS } from '@/shared/utils/sound';
@@ -172,6 +171,7 @@ export const SidebarMascotBar: React.FC = () => {
     });
     setShowModal(false);
     navigate('/tools/quick');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNextTerm = (e: React.MouseEvent) => {
@@ -264,18 +264,18 @@ export const SidebarMascotBar: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/20 backdrop-blur-sm animate-in fade-in duration-200">
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-2xl border border-[#0047bb]/30 bg-surface/95 p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
+            className="w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl border border-[#0047bb]/30 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
           >
             <div className="flex items-start justify-between border-b border-border-soft pb-3">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0047bb]/10 text-[#0047bb]">
-                  <Zap className="h-5 w-5" />
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0047bb]/10 text-[#0047bb]">
+                  <Sparkles className="h-4 w-4" />
                 </div>
-                <div>
-                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+                <div className="min-w-0">
+                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
                     [{currentTerm.code}] // {currentTerm.domain}
                   </span>
-                  <h3 className="text-base font-black text-foreground">
+                  <h3 className="text-sm sm:text-base font-black text-foreground truncate">
                     {currentTerm.term}
                   </h3>
                 </div>
@@ -299,13 +299,14 @@ export const SidebarMascotBar: React.FC = () => {
                 </p>
               </div>
 
-              <div className="rounded-lg border border border-[#0047bb]/20 bg-surface p-3 space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
-                    Audio Engine & Voice Options
+              {/* Responsive Audio Engine & Speed Control Box */}
+              <div className="rounded-lg border border-[#0047bb]/20 bg-surface p-3 space-y-2.5 max-w-full overflow-hidden">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider shrink-0">
+                    Voice & Audio Speed
                   </p>
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-muted-copy">
-                    Speed:
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-muted-copy shrink-0">
+                    <span>Speed:</span>
                     {[0.8, 0.95, 1.1].map((r) => (
                       <button
                         key={r}
@@ -327,10 +328,10 @@ export const SidebarMascotBar: React.FC = () => {
                   <select
                     value={selectedVoiceName}
                     onChange={(e) => setSelectedVoiceName(e.target.value)}
-                    className="w-full rounded-md border border-border-soft bg-surface px-2.5 py-1.5 text-xs text-foreground font-medium focus:border-[#0047bb] focus:outline-none"
+                    className="w-full truncate rounded-md border border-border-soft bg-surface px-2.5 py-1.5 text-xs text-foreground font-medium focus:border-[#0047bb] focus:outline-none"
                   >
                     {availableVoices.map((v) => (
-                      <option key={v.name} value={v.name}>
+                      <option key={v.name} value={v.name} className="truncate">
                         {v.name} ({v.lang})
                       </option>
                     ))}
