@@ -1,4 +1,30 @@
+const SOUND_MUTED_KEY = 'engvox_sound_muted';
+
+export const getSoundMuted = (): boolean => {
+  try {
+    return localStorage.getItem(SOUND_MUTED_KEY) === 'true';
+  } catch {
+    return false;
+  }
+};
+
+export const setSoundMuted = (muted: boolean): void => {
+  try {
+    localStorage.setItem(SOUND_MUTED_KEY, muted ? 'true' : 'false');
+    window.dispatchEvent(new CustomEvent('engvox_sound_toggle', { detail: { muted } }));
+  } catch {
+    // Ignore storage errors
+  }
+};
+
+export const toggleSoundMuted = (): boolean => {
+  const next = !getSoundMuted();
+  setSoundMuted(next);
+  return next;
+};
+
 export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
+  if (getSoundMuted()) return;
   try {
     // Check if AudioContext is supported
     const AudioContextClass =
@@ -43,3 +69,4 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
     // Silently ignore audio playback failures
   }
 };
+

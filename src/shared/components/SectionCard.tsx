@@ -23,7 +23,7 @@ export const SectionCard: FC<SectionCardProps> = ({
 }) => {
   return (
     <Card className={cn('flex h-full flex-col p-5', className)} {...props}>
-      <div className="mb-4 flex items-start justify-between gap-4 border-b border-border-soft pb-4">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-soft pb-4">
         <div className="flex items-center gap-3">
           {Icon && (
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface-hover text-foreground">

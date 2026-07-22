@@ -31,12 +31,16 @@ export const AnalyticsChartsSection = ({
       subtitle="Derived from existing learning, vocabulary, achievement, and AI Coach state"
       icon={BarChart3}
       headerActions={
-        <div className="flex flex-wrap gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
+        <div className="flex flex-wrap sm:flex-nowrap gap-1 rounded-lg border border-[#0047bb]/25 bg-surface p-1 shadow-sm max-w-full overflow-x-auto">
           {chartTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveChart(tab.id)}
-              className={`px-3 py-1.5 text-[10px] font-sans font-bold rounded-[4px] uppercase tracking-wider transition-all cursor-pointer ${activeChart === tab.id ? 'bg-[#0047bb] text-white border border-[#0047bb]' : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'}`}
+              className={`shrink-0 px-2.5 py-1 text-[10px] font-sans font-bold rounded-md uppercase tracking-wider whitespace-nowrap transition-all cursor-pointer ${
+                activeChart === tab.id
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+              }`}
             >
               {tab.label}
             </button>

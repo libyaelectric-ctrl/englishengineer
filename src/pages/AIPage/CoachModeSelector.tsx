@@ -44,10 +44,10 @@ export const CoachModeSelector = ({
             <button
               key={mode.id}
               onClick={() => onSetMode(mode.id)}
-              className={`text-left px-3 py-2 rounded-[4px] border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+              className={`text-left px-3.5 py-2 rounded-lg border text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
                 isActive
-                  ? 'bg-[#0047bb]/10 border-[#0047bb]/40 text-[#0047bb]'
-                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]'
+                  ? 'bg-[#0047bb]/10 border-[#0047bb]/50 text-[#0047bb]'
+                  : 'border-[#0047bb]/20 bg-surface text-muted-copy hover:border-[#0047bb]/50 hover:text-foreground'
               }`}
             >
               <span className="flex items-center gap-1.5">
@@ -86,7 +86,7 @@ export const CoachModeSelector = ({
               key={template.id}
               type="button"
               onClick={() => onSetInput(template.prompt)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-left text-xs font-bold uppercase tracking-wider transition-all hover:border-[#0047bb] hover:bg-surface-hover cursor-pointer shadow-sm"
+              className="rounded-lg border border-[#0047bb]/20 bg-surface px-3 py-2 text-left text-xs font-bold uppercase tracking-wider transition-all hover:border-[#0047bb]/50 hover:bg-surface-hover cursor-pointer shadow-sm"
             >
               {template.title}
             </button>

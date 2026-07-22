@@ -343,7 +343,7 @@ export function useVocabularyPage() {
   };
 
   const loadNextBatch = () => {
-    const nextOffset = batchOffset + 9;
+    const nextOffset = batchOffset + 15;
     const nextIds = selectSet(activeTab, menuState, learningDomain, nextOffset);
     const resolvedOffset = nextIds.length > 0 ? nextOffset : 0;
     dispatchUI({ type: 'SET_BATCH_OFFSET', offset: resolvedOffset });
