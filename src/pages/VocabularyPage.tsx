@@ -5,7 +5,6 @@ import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
 import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
 import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
 import { WordSetSection } from './VocabularyPage/components/WordSetSection';
-import { QuizButton } from './VocabularyPage/components/QuizButton';
 import { QuizModal } from './VocabularyPage/components/QuizModal';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
@@ -79,13 +78,11 @@ const VocabularyPage = () => {
             filters: { ...filters, [field]: value },
           })
         }
+        onOpenQuiz={() => setQuizOpen(true)}
+        onOpenStrugglingQuiz={() => setStrugglingQuizOpen(true)}
       />
 
       <div className="pt-4 space-y-4 pb-20">
-        <QuizButton
-          onOpenQuiz={() => setQuizOpen(true)}
-          onOpenStrugglingQuiz={() => setStrugglingQuizOpen(true)}
-        />
 
         <QuizModal
           isOpen={quizOpen}
