@@ -40,11 +40,17 @@ export const GrammarHeader = ({
       </div>
 
       {!canAccessWriting && (
-        <div className="flex shrink-0 items-center gap-1.5 rounded-[4px] border border-amber-300 bg-amber-50 px-2.5 py-1">
+        <div className="flex shrink-0 items-center gap-2 rounded-[4px] border border-amber-300 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5">
           <Lock className="h-3 w-3 text-amber-600" />
-          <span className="text-[9px] font-bold text-amber-700">
-            Reading/Writing locked — {grammarLearned}/36 rules learned
+          <span className="text-[10px] font-bold text-amber-700">
+            Locked — Learn {36 - grammarLearned} more rules
           </span>
+          <div className="h-1 w-20 rounded-full bg-amber-200 overflow-hidden">
+            <div
+              className="h-full bg-amber-500 transition-all"
+              style={{ width: `${Math.min((grammarLearned / 36) * 100, 100)}%` }}
+            />
+          </div>
         </div>
       )}
 
