@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Sparkles, X, ChevronUp, BookOpen, Bot, Award, Wrench, Volume2, ShieldCheck, Heart } from 'lucide-react';
+import { Sparkles, X, ChevronUp, BookOpen, Bot, Award, Wrench, ShieldCheck } from 'lucide-react';
 import './mascot.css';
 
 export interface MascotCompanionProps {
