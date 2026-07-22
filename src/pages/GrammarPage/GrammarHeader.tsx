@@ -10,7 +10,9 @@ export const GrammarHeader = ({
   setQuery,
   grammarLearned = 0,
   grammarMastered = 0,
+  grammarStruggling = 0,
   onOpenQuiz,
+  onOpenStrugglingQuiz,
 }: {
   level: string;
   levelCounts: Record<CefrLevel, number>;
@@ -18,7 +20,9 @@ export const GrammarHeader = ({
   setQuery: (q: string) => void;
   grammarLearned?: number;
   grammarMastered?: number;
+  grammarStruggling?: number;
   onOpenQuiz?: () => void;
+  onOpenStrugglingQuiz?: () => void;
 }) => {
   const totalActive = grammarLearned + grammarMastered;
   const canStartQuiz = totalActive >= GRAMMAR_QUIZ_THRESHOLD;
@@ -81,6 +85,15 @@ export const GrammarHeader = ({
               />
             </div>
           </div>
+        )}
+
+        {grammarStruggling > 0 && onOpenStrugglingQuiz && (
+          <button
+            onClick={onOpenStrugglingQuiz}
+            className="flex items-center gap-1 rounded-[4px] border border-red-300 bg-red-50 px-2.5 py-1 text-[10px] font-bold text-red-700 transition hover:bg-red-100"
+          >
+            Struggling ({grammarStruggling})
+          </button>
         )}
 
         <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-copy">
