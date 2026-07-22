@@ -10,6 +10,8 @@ const links = [
   { label: 'Teams', href: '/business' },
 ];
 
+import { EngVoxMascotCompanion } from '@/shared/components/EngVoxMascot';
+
 export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -189,6 +191,7 @@ export const PublicLayout = () => {
       <div id="public-content" tabIndex={-1}>
         <Outlet />
       </div>
+      <EngVoxMascotCompanion />
     </div>
   );
 };
