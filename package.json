@@ -19,7 +19,7 @@
     "depcruise:graph": "depcruise src backend --config .dependency-cruiser.mjs --output-type dot | dot -T svg > dependency-graph.svg",
     "e2e": "vitest run src/e2e --configLoader runner",
     "e2e:browser": "playwright test",
-    "backend:install": "npm --prefix backend ci",
+    "backend:install": "npm --prefix backend install --no-audit",
     "backend:test": "npm --prefix backend test",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
