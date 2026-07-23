@@ -504,7 +504,10 @@ const registerRoutes = (
     if (!req.path.startsWith('/v1')) {
       _res.setHeader('Deprecation', 'true');
       _res.setHeader('Sunset', '2026-12-31');
-      _res.setHeader('Link', '</api/v1' + req.path + '>; rel="successor-version"');
+      _res.setHeader(
+        'Link',
+        '</api/v1' + req.path + '>; rel="successor-version"'
+      );
     }
     next();
   });

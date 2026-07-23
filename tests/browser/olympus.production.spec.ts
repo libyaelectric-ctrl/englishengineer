@@ -290,11 +290,10 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     ).toBeVisible();
     await expect(page.getByText(/mistake log/i)).toBeVisible();
 
-    await page.goto('/beta-program');
+    await page.goto('/dashboard');
     await expect(
-      page.getByRole('heading', { name: /closed beta program/i })
+      page.getByRole('heading', { name: /dashboard/i })
     ).toBeVisible();
-    await expect(page.getByText(/\$0-\$5 \/ month/i)).toBeVisible();
 
     await page.getByLabel(/open closed beta feedback/i).click();
     await expect(page.getByText(/closed beta feedback/i)).toBeVisible();

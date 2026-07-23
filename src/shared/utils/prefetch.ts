@@ -17,7 +17,6 @@ export const prefetchRoute = (path: string) => {
     '/admin': () => import('@/pages/AdminPage'),
     '/curriculum': () => import('@/pages/CurriculumPage'),
     '/tools': () => import('@/pages/ToolsPage'),
-    '/beta-program': () => import('@/pages/BetaProgramPage'),
     '/offline': () => import('@/pages/OfflinePage'),
     '/team': () => import('@/pages/TeamPage'),
     '/placement': () => import('@/pages/PlacementPage'),
