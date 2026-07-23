@@ -17,7 +17,7 @@ export interface WordProgress {
 }
 
 export const MASTERY_REQUIRED_CORRECT = 3;
-export const QUIZ_THRESHOLD = 36;
+export const QUIZ_THRESHOLD = 500;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
