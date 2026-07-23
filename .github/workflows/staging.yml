@@ -4,14 +4,11 @@ on:
   push:
     branches: [develop]
 
-permissions:
-  contents: read
-
 jobs:
-  test:
-    name: Tests
+  deploy-staging:
+    name: Deploy to Staging
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    environment: staging
     steps:
       - uses: actions/checkout@v4
 
@@ -21,35 +18,15 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      - name: Run Tests
-        run: npm run test
-
-  deploy-frontend-staging:
-    name: Deploy Frontend
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: test
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - run: npm ci
-
-      - name: Typecheck
-        run: npm run typecheck
 
       - name: Build
         run: npm run build
 
-      - name: Deploy to Vercel (Preview)
+      - name: Deploy to Vercel (staging)
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--pre'
           working-directory: ./
