@@ -46,14 +46,16 @@ const initSentry = async () => {
   const dsn = env?.VITE_SENTRY_DSN;
   if (!dsn) return;
 
+  // Import only core Sentry — no tracing, no replay, no browser extensions
   sentryModule = await import('@sentry/react');
 
   sentryModule.init({
     dsn,
     environment: env?.VITE_ENVIRONMENT_MODE || 'development',
-    tracesSampleRate:
-      normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE) || 0.1,
-    integrations: [sentryModule.browserTracingIntegration()],
+    tracesSampleRate: 0, // Disable performance tracing to reduce bundle
+    replaysSessionSampleRate: 0, // Disable replay
+    replaysOnErrorSampleRate: 0, // Disable replay on error
+    integrations: [], // No auto-instrumentation
     enabled: Boolean(dsn),
   });
 
