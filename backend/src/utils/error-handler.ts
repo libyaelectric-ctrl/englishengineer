@@ -44,8 +44,14 @@ export const toErrorResponse = (error: unknown): ErrorResponse => {
   };
 };
 
-export const createErrorHandler = (config: BackendConfig) =>
-  (error: unknown, request: Request, response: Response, _next: NextFunction): void => {
+export const createErrorHandler =
+  (config: BackendConfig) =>
+  (
+    error: unknown,
+    request: Request,
+    response: Response,
+    _next: NextFunction
+  ): void => {
     logger.error(
       'Unhandled API error',
       { path: request.path },
@@ -53,8 +59,7 @@ export const createErrorHandler = (config: BackendConfig) =>
     );
 
     const mapped = toErrorResponse(error);
-    const statusCode =
-      error instanceof ApiError ? error.status : 500;
+    const statusCode = error instanceof ApiError ? error.status : 500;
 
     response.status(statusCode).json(mapped);
   };

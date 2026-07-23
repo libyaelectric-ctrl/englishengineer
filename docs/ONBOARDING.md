@@ -111,6 +111,7 @@ Proje [Conventional Commits](https://www.conventionalcommits.org/) kullanır:
 Geçerli type'lar: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `style`, `perf`, `ci`, `build`, `revert`
 
 Örnekler:
+
 - `feat(vocabulary): add spaced repetition algorithm`
 - `fix(auth): resolve JWT token refresh race condition`
 
@@ -139,19 +140,19 @@ Bu alanlarda değişiklik yaparken dikkatli olun:
 
 ## 5. Dokümantasyon Haritası
 
-| Dosya | Amaç |
-|-------|------|
-| `README.md` | Proje genel bakış, kurulum |
-| `CONTRIBUTING.md` | Katkı rehberi, kod standartları |
-| `docs/ONBOARDING.md` | Bu belge |
-| `docs/RISK_REGISTER.md` | Risk listesi ve mitigasyonlar |
-| `docs/TECH_DEBT.md` | Teknik borç takibi |
-| `docs/DESIGN_SYSTEM.md` | Görsel tasarım sistemi |
-| `docs/PRODUCT.md` | Ürün bilgileri, pricing |
-| `docs/DATA_MODEL.md` | Veritabanı şeması |
-| `docs/DEPLOYMENT.md` | Deploy rehberi |
-| `docs/TESTING_STRATEGY.md` | Test stratejisi |
-| `docs/adr/` | Mimari Karar Kayıtları |
+| Dosya                      | Amaç                            |
+| -------------------------- | ------------------------------- |
+| `README.md`                | Proje genel bakış, kurulum      |
+| `CONTRIBUTING.md`          | Katkı rehberi, kod standartları |
+| `docs/ONBOARDING.md`       | Bu belge                        |
+| `docs/RISK_REGISTER.md`    | Risk listesi ve mitigasyonlar   |
+| `docs/TECH_DEBT.md`        | Teknik borç takibi              |
+| `docs/DESIGN_SYSTEM.md`    | Görsel tasarım sistemi          |
+| `docs/PRODUCT.md`          | Ürün bilgileri, pricing         |
+| `docs/DATA_MODEL.md`       | Veritabanı şeması               |
+| `docs/DEPLOYMENT.md`       | Deploy rehberi                  |
+| `docs/TESTING_STRATEGY.md` | Test stratejisi                 |
+| `docs/adr/`                | Mimari Karar Kayıtları          |
 
 ### Sıkça Sorulan Sorular
 

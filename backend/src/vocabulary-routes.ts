@@ -31,7 +31,8 @@ export const registerVocabularyRoutes = (
     validateQuery(VocabularyLookupQuerySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const query = request.validatedQuery as unknown as VocabularyLookupQuery;
+        const query =
+          request.validatedQuery as unknown as VocabularyLookupQuery;
         const cacheKey = `vocab:${query.word}`;
         const { value: result, fromCache } = await getOrSet(
           cacheKey,
@@ -50,13 +51,18 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id;
         const { result } = request.body as { result: 'correct' | 'incorrect' };
 
         if (result !== 'correct' && result !== 'incorrect') {
-          throw new ApiError(400, 'invalid_result', 'result must be "correct" or "incorrect"');
+          throw new ApiError(
+            400,
+            'invalid_result',
+            'result must be "correct" or "incorrect"'
+          );
         }
 
         const now = new Date().toISOString();
@@ -66,7 +72,10 @@ export const registerVocabularyRoutes = (
           wordId,
           result,
           updatedAt: now,
-          message: result === 'correct' ? 'Well done! Keep going.' : 'No worries, you will get it next time.',
+          message:
+            result === 'correct'
+              ? 'Well done! Keep going.'
+              : 'No worries, you will get it next time.',
         });
       } catch (error) {
         next(error);
@@ -79,7 +88,8 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           total: 0,

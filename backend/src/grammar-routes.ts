@@ -1,10 +1,5 @@
 import { ApiError } from './errors.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-} from 'express';
+import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerGrammarRoutes = (app: Express): void => {
   app.post(
@@ -12,13 +7,18 @@ export const registerGrammarRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const ruleId = request.params.id;
         const { result } = request.body as { result: 'correct' | 'incorrect' };
 
         if (result !== 'correct' && result !== 'incorrect') {
-          throw new ApiError(400, 'invalid_result', 'result must be "correct" or "incorrect"');
+          throw new ApiError(
+            400,
+            'invalid_result',
+            'result must be "correct" or "incorrect"'
+          );
         }
 
         response.json({
@@ -38,7 +38,8 @@ export const registerGrammarRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           total: 0,
@@ -59,7 +60,8 @@ export const registerGrammarRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           vocabularyLearnedCount: 0,
