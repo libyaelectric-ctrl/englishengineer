@@ -1,4 +1,5 @@
 import { Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { FEATURES, STATS } from './constants';
 
 const heroFadeStyle = (visible: boolean, delay: string) => ({
@@ -25,7 +26,7 @@ const BackgroundLayers = ({ scrollShift }: { scrollShift: number }) => (
 
 const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
   <div
-    className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md transition-all duration-300 backdrop-blur-xl"
+    className="rounded-2xl border border-border-soft bg-surface p-4 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-md transition-all duration-300 backdrop-blur-xl"
     style={{
       opacity: heroVisible ? 1 : 0,
       transform: heroVisible
@@ -35,7 +36,7 @@ const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
         'opacity 900ms cubic-bezier(0.16,1,0.3,1) 420ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 420ms',
     }}
   >
-    <div className="overflow-hidden rounded-[4px] border border-border-soft bg-[#111]">
+    <div className="overflow-hidden rounded-xl border border-border-soft bg-[#111]">
       <video
         autoPlay
         loop
@@ -51,12 +52,12 @@ const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
       {STATS.map((stat) => (
         <div
           key={stat.label}
-          className="rounded-[4px] border border-border-soft bg-background p-2.5"
+          className="rounded-xl border border-border-soft bg-background p-2.5"
         >
           <div className="text-xl font-bold tracking-tight text-foreground">
             {stat.value}
           </div>
-          <div className="mt-0.5 text-[9px] font-medium uppercase text-foreground/40">
+          <div className="mt-0.5 text-[11px] font-semibold uppercase text-muted-copy">
             {stat.label}
           </div>
         </div>
@@ -68,7 +69,7 @@ const VideoPanel = ({ heroVisible }: { heroVisible: boolean }) => (
 const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
   <div className="max-w-4xl space-y-6">
     <span
-      className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-copy backdrop-blur"
+      className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur"
       style={heroFadeStyle(heroVisible, '0ms')}
     >
       <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -81,7 +82,7 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       Engineering English OS for project teams.
     </h1>
     <p
-      className="max-w-xl text-xs leading-5 text-muted-copy"
+      className="max-w-xl text-xs leading-5 text-muted-copy font-medium"
       style={heroFadeStyle(heroVisible, '220ms')}
     >
       EngVox turns writing, speaking, listening and reading into an orchestrated
@@ -95,15 +96,15 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
         transition: 'opacity 820ms ease-out 300ms',
       }}
     >
-      <a
-        href="/login"
-        className="inline-flex min-h-10 items-center justify-center rounded-[4px] bg-primary px-6 text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
+      <Link
+        to="/login"
+        className="inline-flex min-h-10 items-center justify-center rounded-xl bg-primary px-6 text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover shadow-md cursor-pointer"
       >
         Initialize Core
-      </a>
+      </Link>
       <a
         href="#pricing"
-        className="inline-flex min-h-10 items-center justify-center rounded-[4px] border-2 border-[#0047bb] bg-surface px-6 text-xs font-bold uppercase tracking-wider text-foreground backdrop-blur transition hover:bg-surface-hover"
+        className="inline-flex min-h-10 items-center justify-center rounded-xl border border-border-soft bg-surface px-6 text-xs font-bold uppercase tracking-wider text-foreground backdrop-blur transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer"
       >
         View Schema
       </a>
@@ -113,15 +114,15 @@ const HeroContent = ({ heroVisible }: { heroVisible: boolean }) => (
       {FEATURES.map((feature) => (
         <div
           key={feature.title}
-          className="rounded-[4px] border-2 border-[#0047bb] bg-surface py-8 px-6 shadow-[0_1px_3px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-md"
+          className="rounded-2xl border border-border-soft bg-surface py-6 px-5 shadow-sm transition-all duration-300 hover:shadow-md hover:border-primary/40"
         >
-          <div className="mb-3 flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-background">
-            <feature.icon className="h-3.5 w-3.5 text-foreground/60" />
+          <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg border border-border-soft bg-background">
+            <feature.icon className="h-4 w-4 text-primary" />
           </div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
             {feature.title}
           </h3>
-          <p className="mt-2 text-[10px] leading-relaxed text-muted-copy">
+          <p className="mt-2 text-[11px] leading-relaxed text-muted-copy font-medium">
             {feature.desc}
           </p>
         </div>

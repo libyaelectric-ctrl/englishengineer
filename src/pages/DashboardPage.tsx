@@ -148,7 +148,7 @@ const DashboardPage = () => {
     [navigate, primaryMission, focusMeta]
   );
 
-  const isLoading = !currentUser || !profile;
+  const isLoading = !profile;
   if (isLoading) return <DashboardSkeleton />;
 
   const focusLessonNumber = LessonPathEngine.getSkillProgress(
