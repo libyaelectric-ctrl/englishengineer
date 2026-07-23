@@ -54,22 +54,27 @@ export const useLearningCockpit = (userId?: string | null) => {
   useEffect(() => {
     let active = true;
     const load = async () => {
-      const nextMemory =
-        await LearningProfileEngine.getVocabularyMemorySummary();
-      const nextMissions = await LearningProfileEngine.generateDailyMissions(
-        profile,
-        nextMemory
-      );
-      if (!active) return;
-      setMemory(nextMemory);
-      setMissions(nextMissions);
-      setIsLoading(false);
+      try {
+        const nextMemory =
+          await LearningProfileEngine.getVocabularyMemorySummary();
+        const nextMissions = await LearningProfileEngine.generateDailyMissions(
+          profile,
+          nextMemory
+        );
+        if (!active) return;
+        setMemory(nextMemory);
+        setMissions(nextMissions);
+      } catch {
+        // Fallback gracefully on storage error
+      } finally {
+        if (active) setIsLoading(false);
+      }
     };
     void load();
     return () => {
       active = false;
     };
-  }, [profile]);
+  }, [userId, learningState.lastActivityDate, learningState.xp]);
 
   return { profile, memory, missions, isLoading, learningState };
 };
