@@ -61,8 +61,6 @@ export default defineConfig(() => {
             }
             if (id.includes('/data/') || id.includes('seed'))
               return 'seed-data';
-            if (id.includes('/core/')) return 'core';
-            if (id.includes('/shared/')) return 'shared';
           },
         },
       },
