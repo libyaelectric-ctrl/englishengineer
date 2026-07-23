@@ -40,7 +40,10 @@ export const EngVoxStorageManager = {
     return this.getState()[key];
   },
 
-  set<K extends keyof EngVoxClientState>(key: K, value: EngVoxClientState[K]): void {
+  set<K extends keyof EngVoxClientState>(
+    key: K,
+    value: EngVoxClientState[K]
+  ): void {
     this.updateState({ [key]: value });
   },
 

@@ -2,14 +2,15 @@ import { useState, useEffect } from 'react';
 import { Search, Zap, Lock, Info, Volume2, VolumeX } from 'lucide-react';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { VocabularyProgressService, QUIZ_THRESHOLD } from '@/features/vocabulary/services/vocabulary.progress';
+import {
+  VocabularyProgressService,
+  QUIZ_THRESHOLD,
+} from '@/features/vocabulary/services/vocabulary.progress';
 import type {
   VocabularySearchFilters,
   VocabularyTerm,
   VocabularyMenuStatus,
 } from '@/features/vocabulary';
-
-
 
 const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
@@ -65,7 +66,9 @@ export function VocabularyHeader({
   const learnedCount = stats.learned;
   const strugglingCount = stats.struggling;
   const canStartQuiz = VocabularyProgressService.isQuizReady(learnedCount);
-  const learnedWords = Object.values(wordProgress).filter((w) => w.status === 'learned');
+  const learnedWords = Object.values(wordProgress).filter(
+    (w) => w.status === 'learned'
+  );
 
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
 
@@ -77,7 +80,8 @@ export function VocabularyHeader({
       }
     };
     window.addEventListener('engvox_sound_toggle', handleToggle);
-    return () => window.removeEventListener('engvox_sound_toggle', handleToggle);
+    return () =>
+      window.removeEventListener('engvox_sound_toggle', handleToggle);
   }, []);
 
   const handleSoundToggle = () => {
@@ -88,8 +92,12 @@ export function VocabularyHeader({
   return (
     <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <div className="flex h-16 shrink-0 items-center gap-3">
-        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">Vocabulary</h1>
-        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">{vocabularyLevel}</span>
+        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">
+          Vocabulary
+        </h1>
+        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          {vocabularyLevel}
+        </span>
 
         <div className="flex flex-1 gap-1.5 overflow-x-auto">
           {TABS.map((tab) => (
@@ -113,15 +121,21 @@ export function VocabularyHeader({
         <button
           type="button"
           onClick={handleSoundToggle}
-          title={isSoundMuted ? "Unmute card sounds" : "Mute card sounds"}
+          title={isSoundMuted ? 'Unmute card sounds' : 'Mute card sounds'}
           className={`shrink-0 flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
             isSoundMuted
               ? 'border-rose-300 bg-rose-50 dark:bg-rose-950/30 text-rose-600'
               : 'border-[#0047bb]/30 bg-[#0047bb]/5 text-[#0047bb] hover:bg-[#0047bb]/10'
           }`}
         >
-          {isSoundMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
-          <span className="hidden sm:inline">{isSoundMuted ? 'Muted' : 'Sound'}</span>
+          {isSoundMuted ? (
+            <VolumeX className="h-3.5 w-3.5" />
+          ) : (
+            <Volume2 className="h-3.5 w-3.5" />
+          )}
+          <span className="hidden sm:inline">
+            {isSoundMuted ? 'Muted' : 'Sound'}
+          </span>
         </button>
 
         <label className="relative shrink-0 w-36 sm:w-48">
@@ -169,11 +183,18 @@ export function VocabularyHeader({
         </div>
       )}
 
-      {searchError && <p className="py-1 text-[10px] text-rose-600">{searchError}</p>}
-      {isSearchLoading && <p className="py-1 text-[10px] text-[#0047bb] animate-pulse">Searching...</p>}
+      {searchError && (
+        <p className="py-1 text-[10px] text-rose-600">{searchError}</p>
+      )}
+      {isSearchLoading && (
+        <p className="py-1 text-[10px] text-[#0047bb] animate-pulse">
+          Searching...
+        </p>
+      )}
       {hasSearched && searchResults.length > 0 && (
         <p className="py-1 text-[10px] text-muted-copy">
-          Showing {searchResults.length} of {allSearchResults.length} results found
+          Showing {searchResults.length} of {allSearchResults.length} results
+          found
         </p>
       )}
 
@@ -195,7 +216,9 @@ export function VocabularyHeader({
             <div className="h-1 w-20 rounded-full bg-amber-200 overflow-hidden">
               <div
                 className="h-full bg-amber-500 transition-all"
-                style={{ width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%`,
+                }}
               />
             </div>
           </div>

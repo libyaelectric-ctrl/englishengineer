@@ -43,15 +43,22 @@ export const SkillSidebar = ({
         <div className="space-y-1">
           <div className="flex justify-between text-[11px] font-semibold text-muted-copy">
             <span>Today's Target</span>
-            <span className="text-foreground font-bold">25 / 30 mins (83%)</span>
+            <span className="text-foreground font-bold">
+              25 / 30 mins (83%)
+            </span>
           </div>
           <div className="h-2 w-full rounded-full bg-border-soft overflow-hidden">
-            <div className="h-full rounded-full bg-[#0047bb]" style={{ width: '83%' }} />
+            <div
+              className="h-full rounded-full bg-[#0047bb]"
+              style={{ width: '83%' }}
+            />
           </div>
         </div>
         <div className="pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-medium text-muted-copy">
           <span>⚡ Weekly Focus:</span>
-          <span className="font-bold text-foreground">Technical PRs & Reports</span>
+          <span className="font-bold text-foreground">
+            Technical PRs & Reports
+          </span>
         </div>
       </div>
 

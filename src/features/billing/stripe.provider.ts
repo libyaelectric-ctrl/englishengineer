@@ -83,7 +83,10 @@ const postJson = async <TResponse, TBody extends object>(
   });
 
   if (!response.ok) {
-    throw new AppError({ code: ErrorCode.NETWORK, message: await parseErrorMessage(response) });
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message: await parseErrorMessage(response),
+    });
   }
 
   return response.json() as Promise<TResponse>;
@@ -98,7 +101,10 @@ const getJson = async <TResponse>(
   });
 
   if (!response.ok) {
-    throw new AppError({ code: ErrorCode.NETWORK, message: await parseErrorMessage(response) });
+    throw new AppError({
+      code: ErrorCode.NETWORK,
+      message: await parseErrorMessage(response),
+    });
   }
 
   return response.json() as Promise<TResponse>;
@@ -139,7 +145,8 @@ export class StripeBillingProvider {
     if (!authHeaders.Authorization) {
       throw new AppError({
         code: ErrorCode.AUTH,
-        message: 'Please sign in with your account before opening the customer portal.',
+        message:
+          'Please sign in with your account before opening the customer portal.',
       });
     }
 

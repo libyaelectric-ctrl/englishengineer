@@ -53,7 +53,9 @@ if (typeof window !== 'undefined') {
     document.addEventListener('mousemove', (e) => {
       window.cancelAnimationFrame(mouseFrame);
       mouseFrame = window.requestAnimationFrame(() => {
-        const target = (e.target as HTMLElement).closest('.card-interactive') as HTMLElement | null;
+        const target = (e.target as HTMLElement).closest(
+          '.card-interactive'
+        ) as HTMLElement | null;
         if (!target) return;
         const rect = target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;

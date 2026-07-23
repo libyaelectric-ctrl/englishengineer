@@ -6,7 +6,12 @@ import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const CANONICAL_VOCABULARY_TOTAL = 5000;
 
-export type VocabularyMenuStatus = 'New' | 'Learning' | 'Learned' | 'Mastered' | 'Struggling';
+export type VocabularyMenuStatus =
+  | 'New'
+  | 'Learning'
+  | 'Learned'
+  | 'Mastered'
+  | 'Struggling';
 
 export interface VocabularyMenuProgress {
   correctReviews: number;

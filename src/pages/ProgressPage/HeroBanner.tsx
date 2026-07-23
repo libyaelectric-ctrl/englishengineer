@@ -108,7 +108,9 @@ export const HeroBanner = ({
           <div className="mt-2.5 flex items-center justify-between text-[10px] font-medium text-muted-copy">
             <span className="flex items-center gap-1">
               <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Learning Velocity: <strong>+180 ELO/week</strong></span>
+              <span>
+                Learning Velocity: <strong>+180 ELO/week</strong>
+              </span>
             </span>
             <span className="font-bold text-[#0047bb]">
               ⏱️ Est. ~3.8 weeks to C1 Target

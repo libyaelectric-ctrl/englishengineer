@@ -1,7 +1,8 @@
 import { useBilling } from './useBilling';
 
 export const useSubscription = () => {
-  const { subscription, isLoading, error, upgrade, manageSubscription } = useBilling();
+  const { subscription, isLoading, error, upgrade, manageSubscription } =
+    useBilling();
 
   const isActive = subscription?.status === 'active';
   const isFree = !subscription || subscription.planId === 'free';

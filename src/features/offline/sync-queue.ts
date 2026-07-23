@@ -35,11 +35,12 @@ const persistState = () => {
 };
 
 const moveToDeadLetter = (item: SyncQueueItem): void => {
-  const deadLetter =
-    storage.get<SyncQueueItem[]>(DEAD_LETTER_KEY) || [];
+  const deadLetter = storage.get<SyncQueueItem[]>(DEAD_LETTER_KEY) || [];
   deadLetter.push({ ...item, timestamp: new Date().toISOString() });
   storage.set(DEAD_LETTER_KEY, deadLetter);
-  logger.w(`[SyncQueue] Item ${item.id} moved to dead letter queue after ${item.retries} retries.`);
+  logger.w(
+    `[SyncQueue] Item ${item.id} moved to dead letter queue after ${item.retries} retries.`
+  );
 };
 
 const getDeadLetterItems = (): SyncQueueItem[] =>

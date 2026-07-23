@@ -98,13 +98,18 @@ const LessonHeader = ({
                     : 'border-border-soft bg-[#f3f3fd] text-muted-copy'
           }`}
         >
-          {selectedStatus === 'Mastered' && '⭐ '}{selectedStatus}
+          {selectedStatus === 'Mastered' && '⭐ '}
+          {selectedStatus}
         </span>
         {selectedStatus === 'Learning' && (
-          <span className="text-[9px] text-muted-copy">1 correct → Learned</span>
+          <span className="text-[9px] text-muted-copy">
+            1 correct → Learned
+          </span>
         )}
         {selectedStatus === 'Learned' && (
-          <span className="text-[9px] text-muted-copy">3 correct → Mastered</span>
+          <span className="text-[9px] text-muted-copy">
+            3 correct → Mastered
+          </span>
         )}
         {selectedStatus === 'Struggling' && (
           <span className="text-[9px] text-red-500">Review this rule!</span>
@@ -587,10 +592,14 @@ export const GrammarLessonContent = ({
       )}
 
       <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-[10px] text-muted-copy">
-        {selectedStatus === 'New' && 'This rule is new. Start practicing to move to Practicing.'}
-        {selectedStatus === 'Practicing' && 'Used correctly 1+ times. Keep going to Master.'}
-        {selectedStatus === 'Mastered' && 'Congrats! You have mastered this rule.'}
-        {selectedStatus === 'Needs Reading/Writing' && 'Apply this rule in Reading and Writing exercises.'}
+        {selectedStatus === 'New' &&
+          'This rule is new. Start practicing to move to Practicing.'}
+        {selectedStatus === 'Practicing' &&
+          'Used correctly 1+ times. Keep going to Master.'}
+        {selectedStatus === 'Mastered' &&
+          'Congrats! You have mastered this rule.'}
+        {selectedStatus === 'Needs Reading/Writing' &&
+          'Apply this rule in Reading and Writing exercises.'}
       </div>
     </>
   );

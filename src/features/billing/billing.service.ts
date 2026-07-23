@@ -78,7 +78,8 @@ export const BillingService = {
     if (!provider) {
       throw new AppError({
         code: ErrorCode.NETWORK,
-        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable Stripe Checkout.',
+        message:
+          'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable Stripe Checkout.',
       });
     }
 
@@ -94,7 +95,10 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing service is temporarily unavailable.',
+      });
     }
   },
 
@@ -103,7 +107,8 @@ export const BillingService = {
     if (!provider) {
       throw new AppError({
         code: ErrorCode.NETWORK,
-        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable the customer portal.',
+        message:
+          'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable the customer portal.',
       });
     }
 
@@ -116,7 +121,10 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing service is temporarily unavailable.',
+      });
     }
   },
 
@@ -125,7 +133,8 @@ export const BillingService = {
     if (!provider) {
       throw new AppError({
         code: ErrorCode.NETWORK,
-        message: 'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable top-up purchase.',
+        message:
+          'Billing backend is not connected. Configure VITE_BILLING_API_URL to enable top-up purchase.',
       });
     }
 
@@ -140,7 +149,10 @@ export const BillingService = {
       window.location.assign(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
-      throw new AppError({ code: ErrorCode.NETWORK, message: 'Billing service is temporarily unavailable.' });
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: 'Billing service is temporarily unavailable.',
+      });
     }
   },
 };

@@ -6,7 +6,9 @@ export function WritingSidebar() {
       <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <Filter className="h-3 w-3 text-[#0047bb]" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Filter</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">
+            Filter
+          </span>
         </div>
         <div className="space-y-1">
           {['All', 'Draft', 'Submitted', 'Graded'].map((f) => (
@@ -23,7 +25,9 @@ export function WritingSidebar() {
       <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <ArrowUpDown className="h-3 w-3 text-[#0047bb]" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Sort</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">
+            Sort
+          </span>
         </div>
         <div className="space-y-1">
           {['Duration', 'Difficulty'].map((s) => (
@@ -40,7 +44,9 @@ export function WritingSidebar() {
       <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
           <BarChart3 className="h-3 w-3 text-[#0047bb]" />
-          <span className="text-[10px] font-bold uppercase text-foreground">Progress</span>
+          <span className="text-[10px] font-bold uppercase text-foreground">
+            Progress
+          </span>
         </div>
         <div className="space-y-2 text-[10px]">
           <div className="flex justify-between text-muted-copy">
