@@ -5,11 +5,10 @@ import './index.css';
 import { logger } from './shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
-import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
 import { ObservabilityService } from '@/core/observability/observability.service';
 
-// Initialize Sentry error monitoring
-ObservabilityService.init();
+// Defer Sentry init to after first paint for faster initial load
+requestIdleCallback(() => ObservabilityService.init());
 
 // Theme is handled by ThemeProvider — no manual DOM manipulation here
 
@@ -92,9 +91,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
 );
 
-// Preload vocabulary data in background (non-blocking)
-loadVocabularyEntries().catch((err: unknown) => {
-  logger.w('[preload] Vocabulary data preload failed:', err);
+// Preload vocabulary data in background (non-blocking, lazy loaded)
+requestIdleCallback(async () => {
+  try {
+    const { loadVocabularyEntries } = await import('./features/vocabulary/data/vocabulary.data');
+    await loadVocabularyEntries();
+  } catch (err: unknown) {
+    logger.w('[preload] Vocabulary data preload failed:', err);
+  }
 });
 
 // Migrate large data sets from localStorage to IndexedDB
