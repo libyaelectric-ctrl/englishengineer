@@ -25,6 +25,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Security Audit
+        run: node scripts/security-audit.mjs
+
       - name: Type Check
         run: npm run typecheck
 
