@@ -35,20 +35,21 @@ export default defineConfig(() => {
       chunkSizeWarningLimit: 250,
       rollupOptions: {
         output: {
-          manualChunks: {
-            react: ['react', 'react-dom'],
-            router: ['react-router-dom'],
-            supabase: ['@supabase/supabase-js'],
-            icons: ['lucide-react'],
-            animation: ['motion'],
-            state: ['zustand'],
-            query: ['@tanstack/react-query'],
-            sentry: ['@sentry/react'],
-            sanitize: ['isomorphic-dompurify'],
-            vocabularyData: [
-              './src/features/vocabulary/data/vocabulary.data.ts',
-              './src/features/vocabulary/data/vocabulary.data.json',
-            ],
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              if (id.includes('react-dom')) return 'vendor-react-dom';
+              if (id.includes('react-router')) return 'vendor-router';
+              if (id.includes('@supabase')) return 'vendor-supabase';
+              if (id.includes('@sentry')) return 'vendor-sentry';
+              if (id.includes('@tanstack')) return 'vendor-query';
+              if (id.includes('motion') || id.includes('framer')) return 'vendor-motion';
+              if (id.includes('zustand')) return 'vendor-state';
+              if (id.includes('lucide')) return 'vendor-icons';
+              if (id.includes('isomorphic-dompurify')) return 'vendor-sanitize';
+              return 'vendor-misc';
+            }
+            if (id.includes('/core/')) return 'core';
+            if (id.includes('/shared/')) return 'shared';
           },
         },
       },
