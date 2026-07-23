@@ -49,8 +49,17 @@ export default defineConfig(() => {
               if (id.includes('isomorphic-dompurify')) return 'vendor-sanitize';
               return 'vendor-misc';
             }
-            if (id.includes('/data/') || id.includes('seed'))
-              return 'seed-data';
+            if (id.includes('/data/vocabulary/by-level/')) {
+              const match = id.match(/by-level\/([a-c][1-2])\.seed/i);
+              if (match) return `vocab-seed-${match[1].toLowerCase()}`;
+              return 'vocab-seed';
+            }
+            if (id.includes('/data/grammar/by-level/')) {
+              const match = id.match(/by-level\/([a-c][1-2])\.seed/i);
+              if (match) return `grammar-seed-${match[1].toLowerCase()}`;
+              return 'grammar-seed';
+            }
+            if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
             if (id.includes('/core/')) return 'core';
             if (id.includes('/shared/')) return 'shared';
           },
