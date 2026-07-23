@@ -25,6 +25,14 @@ export default {
       from: { path: '^backend/' },
       to: { path: '^src/' },
     },
+    {
+      name: 'no-feature-to-feature-imports',
+      comment:
+        'Features must not import from other features. Use core/shared for cross-feature communication.',
+      severity: 'error',
+      from: { path: '^src/features/[^/]+/' },
+      to: { path: '^src/features/[^/]+/(?!index)' },
+    },
   ],
   options: {
     doNotFollow: {
