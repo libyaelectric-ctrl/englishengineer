@@ -11,7 +11,9 @@ export const getSoundMuted = (): boolean => {
 export const setSoundMuted = (muted: boolean): void => {
   try {
     localStorage.setItem(SOUND_MUTED_KEY, muted ? 'true' : 'false');
-    window.dispatchEvent(new CustomEvent('engvox_sound_toggle', { detail: { muted } }));
+    window.dispatchEvent(
+      new CustomEvent('engvox_sound_toggle', { detail: { muted } })
+    );
   } catch {
     // Ignore storage errors
   }
@@ -77,24 +79,37 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
 
   // 1. Google US/UK English (Natural/High Quality)
   const googleVoice = voices.find(
-    (v) => (v.name.includes('Google') || v.name.includes('Natural')) && v.lang.startsWith('en')
+    (v) =>
+      (v.name.includes('Google') || v.name.includes('Natural')) &&
+      v.lang.startsWith('en')
   );
   if (googleVoice) return googleVoice;
 
   // 2. Microsoft Natural / Online English (e.g. Jenny, Aria, Guy, Christopher)
   const msNatural = voices.find(
-    (v) => (v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Neural')) && v.lang.startsWith('en')
+    (v) =>
+      (v.name.includes('Online') ||
+        v.name.includes('Natural') ||
+        v.name.includes('Neural')) &&
+      v.lang.startsWith('en')
   );
   if (msNatural) return msNatural;
 
   // 3. Apple Samantha / Daniel / Karen / Siri
   const appleVoice = voices.find(
-    (v) => (v.name.includes('Samantha') || v.name.includes('Daniel') || v.name.includes('Karen') || v.name.includes('Siri')) && v.lang.startsWith('en')
+    (v) =>
+      (v.name.includes('Samantha') ||
+        v.name.includes('Daniel') ||
+        v.name.includes('Karen') ||
+        v.name.includes('Siri')) &&
+      v.lang.startsWith('en')
   );
   if (appleVoice) return appleVoice;
 
   // 4. Any US or UK English voice
-  const enVoice = voices.find((v) => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en'));
+  const enVoice = voices.find(
+    (v) => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en')
+  );
   return enVoice || null;
 };
 
@@ -148,5 +163,3 @@ export const playNaturalTTS = (
     setVoiceAndSpeak();
   }
 };
-
-

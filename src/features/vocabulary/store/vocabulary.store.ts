@@ -1,7 +1,10 @@
 import { create } from 'zustand';
 import { isVocabularyResponseCorrect } from '../engine/vocabulary.helpers';
 import { VocabularyService } from '../services/vocabulary.service';
-import { VocabularyProgressService, type WordProgress } from '../services/vocabulary.progress';
+import {
+  VocabularyProgressService,
+  type WordProgress,
+} from '../services/vocabulary.progress';
 import {
   VocabularyAnswer,
   VocabularyEntry,
@@ -153,7 +156,8 @@ export const useVocabularyStore = create<
 
   markWordViewed: (wordId: string) => {
     set((state) => {
-      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const current =
+        state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
       const updated = VocabularyProgressService.onView(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
@@ -161,25 +165,32 @@ export const useVocabularyStore = create<
 
   updateWordProgress: (wordId: string, result: 'correct' | 'incorrect') => {
     set((state) => {
-      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
-      const updated = result === 'correct'
-        ? VocabularyProgressService.onQuizCorrect(current)
-        : VocabularyProgressService.onQuizIncorrect(current);
+      const current =
+        state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated =
+        result === 'correct'
+          ? VocabularyProgressService.onQuizCorrect(current)
+          : VocabularyProgressService.onQuizIncorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
 
   markWordAsLearned: (wordId: string) => {
     set((state) => {
-      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
-      const updated = VocabularyProgressService.onQuizCorrect({ ...current, status: 'learning' });
+      const current =
+        state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const updated = VocabularyProgressService.onQuizCorrect({
+        ...current,
+        status: 'learning',
+      });
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
 
   onQuizCorrect: (wordId: string) => {
     set((state) => {
-      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const current =
+        state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
       const updated = VocabularyProgressService.onQuizCorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
@@ -187,7 +198,8 @@ export const useVocabularyStore = create<
 
   onQuizIncorrect: (wordId: string) => {
     set((state) => {
-      const current = state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
+      const current =
+        state.wordProgress[wordId] || VocabularyProgressService.addWord(wordId);
       const updated = VocabularyProgressService.onQuizIncorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
@@ -197,7 +209,8 @@ export const useVocabularyStore = create<
     set((state) => {
       const current = state.wordProgress[wordId];
       if (!current || current.status !== 'struggling') return state;
-      const updated = VocabularyProgressService.onStrugglingQuizCorrect(current);
+      const updated =
+        VocabularyProgressService.onStrugglingQuizCorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },
@@ -206,7 +219,8 @@ export const useVocabularyStore = create<
     set((state) => {
       const current = state.wordProgress[wordId];
       if (!current || current.status !== 'struggling') return state;
-      const updated = VocabularyProgressService.onStrugglingQuizIncorrect(current);
+      const updated =
+        VocabularyProgressService.onStrugglingQuizIncorrect(current);
       return { wordProgress: { ...state.wordProgress, [wordId]: updated } };
     });
   },

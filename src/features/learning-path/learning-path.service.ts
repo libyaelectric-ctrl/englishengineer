@@ -1,4 +1,10 @@
-export type SkillLevel = 'vocabulary' | 'grammar' | 'writing' | 'reading' | 'speaking' | 'listening';
+export type SkillLevel =
+  | 'vocabulary'
+  | 'grammar'
+  | 'writing'
+  | 'reading'
+  | 'speaking'
+  | 'listening';
 
 export interface SkillProgress {
   skill: SkillLevel;
@@ -61,23 +67,33 @@ export const LEARNING_PATH_RULES: Record<SkillLevel, LearningPathRule> = {
 };
 
 export const LearningPathService = {
-  isSkillUnlocked(skill: SkillLevel, allProgress: Record<SkillLevel, SkillProgress>): boolean {
+  isSkillUnlocked(
+    skill: SkillLevel,
+    allProgress: Record<SkillLevel, SkillProgress>
+  ): boolean {
     const rule = LEARNING_PATH_RULES[skill];
     if (rule.prerequisites.length === 0) return true;
 
     return rule.prerequisites.every((prereq) => {
       const prereqProgress = allProgress[prereq];
-      return prereqProgress && prereqProgress.masteredCount >= rule.requiredMastered;
+      return (
+        prereqProgress && prereqProgress.masteredCount >= rule.requiredMastered
+      );
     });
   },
 
-  getAvailableSkills(allProgress: Record<SkillLevel, SkillProgress>): SkillLevel[] {
+  getAvailableSkills(
+    allProgress: Record<SkillLevel, SkillProgress>
+  ): SkillLevel[] {
     return (Object.keys(LEARNING_PATH_RULES) as SkillLevel[]).filter((skill) =>
       this.isSkillUnlocked(skill, allProgress)
     );
   },
 
-  getContentLevel(skill: SkillLevel, progress: SkillProgress): { ownLevel: number; upperLevel: number } {
+  getContentLevel(
+    skill: SkillLevel,
+    progress: SkillProgress
+  ): { ownLevel: number; upperLevel: number } {
     const rule = LEARNING_PATH_RULES[skill];
     const totalWords = progress.masteredCount + progress.learnedCount;
     const baseLevel = Math.floor(totalWords / 100);

@@ -30,8 +30,12 @@ export const GrammarHeader = ({
   return (
     <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
       <header className="flex h-16 shrink-0 items-center gap-3">
-        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">Grammar</h1>
-        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">{level}</span>
+        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">
+          Grammar
+        </h1>
+        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          {level}
+        </span>
 
         <div className="flex flex-1 gap-1.5 overflow-x-auto">
           {CEFR_LEVELS.map((cefrLevel) => (
@@ -46,12 +50,17 @@ export const GrammarHeader = ({
               }`}
             >
               {cefrLevel}
-              <span className="ml-0.5 text-[8px] opacity-50">{levelCounts[cefrLevel]}</span>
+              <span className="ml-0.5 text-[8px] opacity-50">
+                {levelCounts[cefrLevel]}
+              </span>
             </button>
           ))}
         </div>
 
-        <label htmlFor="grammar-search" className="relative shrink-0 w-40 sm:w-48">
+        <label
+          htmlFor="grammar-search"
+          className="relative shrink-0 w-40 sm:w-48"
+        >
           <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
           <input
             id="grammar-search"
@@ -81,7 +90,9 @@ export const GrammarHeader = ({
             <div className="h-1 w-20 rounded-full bg-amber-200 overflow-hidden">
               <div
                 className="h-full bg-amber-500 transition-all"
-                style={{ width: `${Math.min((totalActive / GRAMMAR_QUIZ_THRESHOLD) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min((totalActive / GRAMMAR_QUIZ_THRESHOLD) * 100, 100)}%`,
+                }}
               />
             </div>
           </div>

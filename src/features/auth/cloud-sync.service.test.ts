@@ -10,7 +10,10 @@ import {
   mergeJsonValues,
   mergeSnapshots,
 } from './cloud-sync.service';
-import { setConflictResolver, createTimestampResolver } from './conflict-resolver';
+import {
+  setConflictResolver,
+  createTimestampResolver,
+} from './conflict-resolver';
 import { CloudProgressSnapshot } from './cloud-sync.types';
 
 const createSnapshot = (

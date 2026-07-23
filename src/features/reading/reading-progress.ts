@@ -30,9 +30,12 @@ export const ReadingProgressService = {
 
   getProgressColor(status: ReadingStatus): string {
     switch (status) {
-      case 'read': return 'green';
-      case 'completed': return 'gold';
-      default: return 'gray';
+      case 'read':
+        return 'green';
+      case 'completed':
+        return 'gold';
+      default:
+        return 'gray';
     }
   },
 };

@@ -61,10 +61,7 @@ export { type IdPrefix, IdService } from './ids';
 
 export { clock, formatDate, formatRelativeTime } from './time';
 
-export {
-  type ValidationError,
-  type ValidationResult,
-} from './validation';
+export { type ValidationError, type ValidationResult } from './validation';
 
 export {
   type MissionModule,

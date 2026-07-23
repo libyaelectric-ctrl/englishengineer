@@ -2,13 +2,19 @@ import { describe, expect, it } from 'vitest';
 
 describe('Listening Progress', () => {
   it('1. Feed: level-based content ratio', () => {
-    const items = Array.from({ length: 10 }, (_, i) => ({ level: i < 7 ? 'B1' : 'B2' }));
+    const items = Array.from({ length: 10 }, (_, i) => ({
+      level: i < 7 ? 'B1' : 'B2',
+    }));
     expect(items.filter((i) => i.level === 'B1').length).toBe(7);
     expect(items.filter((i) => i.level === 'B2').length).toBe(3);
   });
 
   it('2. Progress save: score and status update', () => {
-    const progress = { status: 'listened' as const, score: 85, timesListened: 1 };
+    const progress = {
+      status: 'listened' as const,
+      score: 85,
+      timesListened: 1,
+    };
     expect(progress.status).toBe('listened');
     expect(progress.score).toBe(85);
   });
@@ -29,7 +35,9 @@ describe('Listening Progress', () => {
   });
 
   it('5. Content ratio: 75% current, 25% next', () => {
-    const items = Array.from({ length: 10 }, (_, i) => ({ level: i < 7 ? 'B1' : 'B2' }));
+    const items = Array.from({ length: 10 }, (_, i) => ({
+      level: i < 7 ? 'B1' : 'B2',
+    }));
     expect(items.filter((i) => i.level === 'B1').length).toBe(7);
     expect(items.filter((i) => i.level === 'B2').length).toBe(3);
   });

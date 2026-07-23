@@ -232,7 +232,9 @@ export function useVocabularyPage() {
       new Date(),
       repairVocabularyText(term.term)
     );
-    useVocabularyStore.getState().updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
+    useVocabularyStore
+      .getState()
+      .updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) playSound('ding');
     useLearningStore
       .getState()

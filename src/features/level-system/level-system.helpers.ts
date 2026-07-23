@@ -185,7 +185,11 @@ export const getSkillProgress = (
   skill: SkillKey
 ): SkillLevelProgress => {
   const progress = profile.skills.find((item) => item.skill === skill);
-  if (!progress) throw new AppError({ code: ErrorCode.VALIDATION, message: `Missing level progress for ${skill}` });
+  if (!progress)
+    throw new AppError({
+      code: ErrorCode.VALIDATION,
+      message: `Missing level progress for ${skill}`,
+    });
   return progress;
 };
 
