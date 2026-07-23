@@ -127,6 +127,79 @@ export const swaggerSpec = {
         },
       },
     },
+    '/api/vocabulary/{id}/progress': {
+      post: {
+        tags: ['Vocabulary'],
+        summary: 'Update vocabulary word progress',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['result'],
+                properties: {
+                  result: { type: 'string', enum: ['correct', 'incorrect'] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Progress updated' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/progress/overview': {
+      get: {
+        tags: ['Progress'],
+        summary: 'Get user progress overview',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Progress summary' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/speaking/prompts': {
+      get: {
+        tags: ['Speaking'],
+        summary: 'Get speaking prompts',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Speaking prompts list' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/speaking/submit': {
+      post: {
+        tags: ['Speaking'],
+        summary: 'Submit speaking response',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Speaking evaluation' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/admin/stats': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Get admin dashboard stats',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Admin statistics' },
+          401: { description: 'Unauthorized' },
+          403: { description: 'Forbidden' },
+        },
+      },
+    },
   },
   components: {
     securitySchemes: {
