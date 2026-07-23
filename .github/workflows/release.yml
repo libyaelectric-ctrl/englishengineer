@@ -30,7 +30,7 @@ jobs:
           body: |
             ## Changes
             ${{ steps.changelog.outputs.changes }}
-            
+
             ## Deployment
             - Frontend: https://englishengineer.vercel.app
             - Backend: https://englishengineer-production.up.railway.app

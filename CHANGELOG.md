@@ -3,6 +3,7 @@
 ## [4.1.0] - 2025-07-23
 
 ### Added
+
 - Frontend contract layer for API response type safety
 - Cross-feature event handlers (vocabulary → learning, speaking → gamification)
 - ServiceRegistry for dependency injection
@@ -20,12 +21,14 @@
 - Swagger API docs for missing endpoints
 
 ### Fixed
+
 - Memory leaks in main.tsx, Toast, sync-queue
 - Accessibility warnings (jsx-a11y) in 4 files
 - Navigation config test updated for Team entry
 - Bundle splitting circular dependency (core/shared)
 
 ### Changed
+
 - VocabSidebar polling interval: 1s → 5s
 - Sentry init: immediate → requestIdleCallback
 - Vocabulary data: static import → lazy import
@@ -33,6 +36,7 @@
 - Bundle budget: 500KB → JS 2MB / CSS 200KB
 
 ### Removed
+
 - 2,500+ lines of dead code (hooks, components, utilities)
 - Redundant deploy workflow (Vercel auto-deploys)
 - Unused EngVoxMascot directory
@@ -42,6 +46,7 @@
 ## [4.0.1] - 2025-07-01
 
 ### Added
+
 - Express API with health endpoints
 - Server-side AI provider adapters
 - Stripe billing integration
@@ -50,5 +55,6 @@
 - Offline learning mode
 
 ### Fixed
+
 - Initial release stability issues
 - Audio file format conversion (WAV → MP3)
