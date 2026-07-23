@@ -2,6 +2,19 @@ import { useState } from 'react';
 import { Mic, Volume2, CheckCircle } from 'lucide-react';
 import { AudioPlayer } from './AudioPlayer';
 
+interface SpeechRecognitionEvent {
+  results: Array<{ 0: { transcript: string } }>;
+}
+
+interface SpeechRecognitionInstance {
+  lang: string;
+  continuous: boolean;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
 interface ListenerViewProps {
   title: string;
   transcript: string;
@@ -23,12 +36,13 @@ export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewPro
 
   const startDictation = () => {
     if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
-    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    const recognition = new SpeechRecognition();
+    const Ctor = (window as Record<string, unknown>).webkitSpeechRecognition
+      ?? (window as Record<string, unknown>).SpeechRecognition;
+    const recognition = new (Ctor as new () => SpeechRecognitionInstance)();
     recognition.lang = 'en-US';
     recognition.continuous = true;
-    recognition.onresult = (event: any) => {
-      const text = Array.from(event.results).map((r: any) => r[0].transcript).join(' ');
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const text = event.results.map((r) => r[0].transcript).join(' ');
       setDictationText(text);
     };
     recognition.onend = () => setIsRecording(false);

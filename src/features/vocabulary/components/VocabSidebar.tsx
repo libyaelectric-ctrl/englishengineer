@@ -72,7 +72,7 @@ export function VocabSidebar() {
   useEffect(() => {
     const id = setInterval(
       () => setV(VocabularyMenuService.getSummary()),
-      1000
+      5000
     );
     return () => clearInterval(id);
   }, []);

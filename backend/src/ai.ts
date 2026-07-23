@@ -196,7 +196,7 @@ export const registerAIRoutes = (
             await resolveRateLimits(userId, bypass);
 
           const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
-          const result = await getOrSet(
+          const { value: result } = await getOrSet(
             cacheKey,
             3600,
             () => aiService.complete(defaultOperation, body)

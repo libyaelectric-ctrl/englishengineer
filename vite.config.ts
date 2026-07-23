@@ -44,7 +44,7 @@ export default defineConfig(() => {
             state: ['zustand'],
             query: ['@tanstack/react-query'],
             sentry: ['@sentry/react'],
-            ai: ['isomorphic-dompurify'],
+            sanitize: ['isomorphic-dompurify'],
             vocabularyData: [
               './src/features/vocabulary/data/vocabulary.data.ts',
               './src/features/vocabulary/data/vocabulary.data.json',
