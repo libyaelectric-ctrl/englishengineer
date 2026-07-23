@@ -101,7 +101,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
   it('6. listening audio missions point to shipped audio', () => {
     const mission = ListeningService.getMissions()[0];
 
-    expect(mission.audioUrl).toMatch(/^\/audio\/.+\.wav$/);
+    expect(mission.audioUrl).toMatch(/^\/audio\/.+\.mp3$/);
     expect(mission.audioDurationSeconds).toBeGreaterThan(0);
   });
 

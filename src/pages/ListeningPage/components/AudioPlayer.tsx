@@ -36,7 +36,11 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
 
   const togglePlay = () => {
     if (!audioRef.current) return;
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
     setIsPlaying(!isPlaying);
   };
 
@@ -49,7 +53,9 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
 
   return (
     <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 space-y-3">
-      <audio ref={audioRef} src={audioUrl} preload="metadata" />
+      <audio ref={audioRef} src={audioUrl} preload="metadata">
+        <track kind="captions" label="English" />
+      </audio>
       <div className="flex items-center gap-3">
         <button onClick={() => seek(-10)} className="text-muted-copy hover:text-foreground"><SkipBack className="h-4 w-4" /></button>
         <button onClick={togglePlay} className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">

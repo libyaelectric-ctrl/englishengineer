@@ -64,9 +64,17 @@ export const QuizModal = ({ isOpen, onClose, words, isStrugglingQuiz = false }: 
     const correct = answer === currentWord.turkishMeaning;
 
     if (isStrugglingQuiz) {
-      correct ? onStrugglingQuizCorrect(currentWord.id) : onStrugglingQuizIncorrect(currentWord.id);
+      if (correct) {
+        onStrugglingQuizCorrect(currentWord.id);
+      } else {
+        onStrugglingQuizIncorrect(currentWord.id);
+      }
     } else {
-      correct ? onQuizCorrect(currentWord.id) : onQuizIncorrect(currentWord.id);
+      if (correct) {
+        onQuizCorrect(currentWord.id);
+      } else {
+        onQuizIncorrect(currentWord.id);
+      }
     }
 
     setResults([...results, { wordId: currentWord.id, correct }]);
