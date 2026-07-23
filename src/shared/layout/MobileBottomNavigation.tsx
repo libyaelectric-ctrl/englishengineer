@@ -32,16 +32,23 @@ export const MobileBottomNavigation = () => {
               to={item.href}
               className={({ isActive }) =>
                 cn(
-                  'flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-[4px] px-1 text-[9px] font-bold text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground border border-transparent',
+                  'relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[4px] px-1 text-[9px] font-bold text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground border border-transparent',
                   isActive &&
                     'bg-[#0047bb]/10 text-[#0047bb] border-[#0047bb]/25'
                 )
               }
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className="max-w-full truncate">
-                {translations[item.label] ?? item.label}
-              </span>
+              {({ isActive }) => (
+                <>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="max-w-full truncate">
+                    {translations[item.label] ?? item.label}
+                  </span>
+                  {isActive && (
+                    <span className="h-1 w-4 bg-[#0047bb] rounded-full shadow-[0_0_8px_#0047bb] animate-in fade-in duration-200 mt-0.5" />
+                  )}
+                </>
+              )}
             </NavLink>
           );
         })}

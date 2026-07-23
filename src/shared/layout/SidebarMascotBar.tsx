@@ -184,7 +184,15 @@ export const SidebarMascotBar: React.FC = () => {
       {/* Main Left Sidebar Mascot Bar */}
       <div
         ref={containerRef}
+        role="button"
+        tabIndex={0}
         onClick={() => setShowModal(true)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setShowModal(true);
+          }
+        }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className="mx-3 my-2.5 rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3 shadow-sm hover:border-[#0047bb]/50 hover:shadow-md transition-all cursor-pointer"
@@ -202,7 +210,7 @@ export const SidebarMascotBar: React.FC = () => {
             <img
               src="/brand/mascot-hq.webp"
               alt="EngVox Mascot"
-              className="h-full w-full object-cover scale-110 -translate-y-0.5"
+              className="h-full w-full object-cover scale-110 -translate-y-0.5 [filter:drop-shadow(0_0_6px_rgba(0,71,187,0.35))]"
             />
             <div className="absolute top-1 left-1.5 h-1.5 w-1.5 rounded-full bg-emerald-400 opacity-80 blur-[1px] animate-pulse" />
             <div className="absolute top-3 left-3 h-1.5 w-1.5 rounded-full bg-emerald-400 opacity-90 blur-[2px]" />
@@ -263,7 +271,9 @@ export const SidebarMascotBar: React.FC = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/20 backdrop-blur-sm animate-in fade-in duration-200">
           <div
-            onClick={(e) => e.stopPropagation()}
+            ref={(el) => {
+              if (el) el.addEventListener('click', (e) => e.stopPropagation());
+            }}
             className="w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl border border-[#0047bb]/30 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
           >
             <div className="flex items-start justify-between border-b border-border-soft pb-3">

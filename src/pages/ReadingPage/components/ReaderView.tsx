@@ -73,7 +73,15 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
         {words.map((word, i) => (
           <span
             key={i}
+            role={onWordClick ? 'button' : undefined}
+            tabIndex={onWordClick ? 0 : undefined}
             onClick={() => onWordClick?.(word)}
+            onKeyDown={(e) => {
+              if (onWordClick && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onWordClick(word);
+              }
+            }}
             className={`cursor-pointer hover:bg-[#0047bb]/10 transition ${
               onWordClick ? 'border-b border-[#0047bb]/30 text-[#0047bb]' : ''
             }`}
