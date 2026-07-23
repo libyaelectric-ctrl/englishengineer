@@ -25,6 +25,8 @@ import { DailyGoalBar } from './DashboardPage/DailyGoalBar';
 import { HeroPanel } from './DashboardPage/HeroPanel';
 import { ProgressCockpit } from './DashboardPage/ProgressCockpit';
 import { ReviewPriorities } from './DashboardPage/ReviewPriorities';
+import { SkillRadarChart } from './DashboardPage/SkillRadarChart';
+import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
 
 const SKILL_META: Record<
   SkillName,
@@ -162,6 +164,7 @@ const DashboardPage = () => {
         </h1>
       </div>
       <div className="space-y-6">
+        <StreakFlameWidget streakDays={7} freezeAvailable={true} />
         <DailyGoalBar />
         <HeroPanel
           userName={userName}
@@ -174,13 +177,16 @@ const DashboardPage = () => {
           focusLessonNumber={focusLessonNumber}
           onStartLesson={handleStartLesson}
         />
+        <div className="grid gap-6 md:grid-cols-2">
+          <SkillRadarChart profile={profile} />
+          <ReviewPriorities reviewPriorities={reviewPriorities} />
+        </div>
         <ProgressCockpit
           skillNames={SKILL_NAMES}
           skillMeta={SKILL_META}
           profile={profile}
           skillSparklineData={skillSparklineData}
         />
-        <ReviewPriorities reviewPriorities={reviewPriorities} />
       </div>
     </div>
   );

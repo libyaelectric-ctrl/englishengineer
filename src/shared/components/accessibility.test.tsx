@@ -13,13 +13,17 @@ const renderWithRouter = (component: React.ReactElement) =>
 describe('Component Accessibility', () => {
   describe('SearchInput', () => {
     it('has an accessible label via placeholder', () => {
-      renderWithRouter(<SearchInput onSearch={() => {}} placeholder="Search vocabulary" />);
+      renderWithRouter(
+        <SearchInput onSearch={() => {}} placeholder="Search vocabulary" />
+      );
       const input = screen.getByRole('textbox', { name: /search vocabulary/i });
       expect(input).toBeInTheDocument();
     });
 
     it('input is focusable and not hidden from screen readers', () => {
-      renderWithRouter(<SearchInput onSearch={() => {}} placeholder="Search" />);
+      renderWithRouter(
+        <SearchInput onSearch={() => {}} placeholder="Search" />
+      );
       const input = screen.getByRole('textbox');
       expect(input).toHaveAttribute('aria-label', 'Search');
       expect(input).not.toHaveAttribute('tabindex', '-1');
@@ -54,7 +58,9 @@ describe('Component Accessibility', () => {
           description="Create your first document to get started"
         />
       );
-      const heading = screen.getByRole('heading', { name: /no documents found/i });
+      const heading = screen.getByRole('heading', {
+        name: /no documents found/i,
+      });
       expect(heading).toBeInTheDocument();
     });
 

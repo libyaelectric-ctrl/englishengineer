@@ -90,7 +90,7 @@ export const RightSidebar: React.FC = () => {
     <aside
       className={cn(
         'hidden h-screen w-64 shrink-0 flex-col border-l border-border-hover bg-surface overflow-y-auto custom-scrollbar',
-        content ? 'lg:flex' : 'lg:hidden'
+        content ? 'xl:flex' : 'xl:hidden'
       )}
     >
       <Suspense fallback={null}>{content}</Suspense>
