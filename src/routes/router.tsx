@@ -82,14 +82,6 @@ export const router = createBrowserRouter([
           ),
         })
       ),
-      {
-        path: '*',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <NotFound />
-          </Suspense>
-        ),
-      },
     ],
   },
   {
@@ -300,14 +292,6 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: '*',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <NotFound />
-          </Suspense>
-        ),
-      },
     ],
   },
   {
@@ -323,6 +307,14 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingState />}>
         <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: '*',
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <NotFound />
       </Suspense>
     ),
   },
