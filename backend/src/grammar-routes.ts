@@ -1,9 +1,11 @@
 import { ApiError } from './errors.js';
+import { validateBody, ProgressBodySchema } from './validation.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerGrammarRoutes = (app: Express): void => {
   app.post(
     '/api/grammar/:id/progress',
+    validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -11,15 +13,7 @@ export const registerGrammarRoutes = (app: Express): void => {
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const ruleId = request.params.id;
-        const { result } = request.body as { result: 'correct' | 'incorrect' };
-
-        if (result !== 'correct' && result !== 'incorrect') {
-          throw new ApiError(
-            400,
-            'invalid_result',
-            'result must be "correct" or "incorrect"'
-          );
-        }
+        const { result } = request.validatedBody as { result: 'correct' | 'incorrect' };
 
         response.json({
           success: true,

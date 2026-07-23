@@ -1,4 +1,5 @@
 import { ApiError } from './errors.js';
+import { validateBody, ListeningScoreBodySchema } from './validation.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerListeningRoutes = (app: Express): void => {
@@ -22,6 +23,7 @@ export const registerListeningRoutes = (app: Express): void => {
 
   app.post(
     '/api/listening/:id/progress',
+    validateBody(ListeningScoreBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -29,7 +31,7 @@ export const registerListeningRoutes = (app: Express): void => {
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const contentId = request.params.id;
-        const { score } = request.body as { score?: number };
+        const { score } = request.validatedBody as { score?: number };
 
         response.json({
           success: true,

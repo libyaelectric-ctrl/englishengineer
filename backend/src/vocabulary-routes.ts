@@ -1,4 +1,4 @@
-import { validateQuery, VocabularyLookupQuerySchema } from './validation.js';
+import { validateQuery, validateBody, VocabularyLookupQuerySchema, ProgressBodySchema } from './validation.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
@@ -48,6 +48,7 @@ export const registerVocabularyRoutes = (
 
   app.post(
     '/api/vocabulary/:id/progress',
+    validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -55,15 +56,7 @@ export const registerVocabularyRoutes = (
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id;
-        const { result } = request.body as { result: 'correct' | 'incorrect' };
-
-        if (result !== 'correct' && result !== 'incorrect') {
-          throw new ApiError(
-            400,
-            'invalid_result',
-            'result must be "correct" or "incorrect"'
-          );
-        }
+        const { result } = request.validatedBody as { result: 'correct' | 'incorrect' };
 
         const now = new Date().toISOString();
 
