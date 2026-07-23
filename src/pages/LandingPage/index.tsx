@@ -10,13 +10,15 @@ import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
 
 const LandingPage = () => {
-  const [heroVisible, setHeroVisible] = useState(false);
+  const [heroVisible] = useState(true);
   const [scrollShift, setScrollShift] = useState(0);
 
   useEffect(() => {
-    ProductAnalyticsService.track('screen_viewed', 'landing');
-    const timer = window.setTimeout(() => setHeroVisible(true), 120);
-    return () => window.clearTimeout(timer);
+    try {
+      ProductAnalyticsService.track('screen_viewed', 'landing');
+    } catch {
+      // Ignore analytics error
+    }
   }, []);
 
   useEffect(() => {

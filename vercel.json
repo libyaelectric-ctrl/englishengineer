@@ -8,7 +8,7 @@
   ],
   "rewrites": [
     {
-      "source": "/((?!api|assets|brand|_next|favicon.ico|robots.txt).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ],

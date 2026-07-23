@@ -98,10 +98,10 @@ export function AnimatedCard({
 
   const cardStyle: React.CSSProperties = {
     background: 'var(--color-surface)',
-    border: '2px solid rgba(0, 71, 187, 0.45)',
+    border: '1px solid var(--color-border-soft)',
     color: 'var(--color-foreground)',
     boxShadow: dark
-      ? 'none'
+      ? '0 8px 30px rgba(0, 0, 0, 0.12)'
       : '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.05)',
     opacity: isVisible ? 1 : 0,
     transform: isVisible ? 'translateY(0)' : 'translateY(28px)',
@@ -109,14 +109,14 @@ export function AnimatedCard({
   };
 
   const glowGradient = dark
-    ? 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.10), transparent 62%)'
-    : 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(17,17,17,0.045), transparent 62%)';
+    ? 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99,102,241,0.15), transparent 62%)'
+    : 'radial-gradient(440px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(79,70,229,0.08), transparent 62%)';
 
   return (
     <div
       ref={setRefs}
       onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden rounded-[4px] transition-colors duration-300 ${className}`}
+      className={`group relative overflow-hidden rounded-2xl transition-all duration-300 hover:border-primary/40 ${className}`}
       style={cardStyle}
     >
       <div
@@ -147,14 +147,14 @@ export function SectionIntro({
           : 'mb-12 max-w-3xl'
       }
     >
-      <span className="inline-flex rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-muted-copy shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      <span className="inline-flex rounded-lg border border-border-soft bg-surface px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-primary shadow-sm">
         {eyebrow}
       </span>
       <h2 className="mt-5 text-3xl font-bold tracking-tight text-foreground md:text-5xl">
         {title}
       </h2>
       {desc ? (
-        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy">
+        <p className="mt-4 max-w-xl text-sm leading-6 text-muted-copy font-medium">
           {desc}
         </p>
       ) : null}

@@ -12,7 +12,11 @@ export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    initialize();
+    void initialize();
+    const safetyTimer = window.setTimeout(() => {
+      useAuthStore.setState({ isLoading: false });
+    }, 2500);
+    return () => window.clearTimeout(safetyTimer);
   }, [initialize]);
 
   if (isLoading) {

@@ -40,7 +40,7 @@ export function PricingSection() {
                         {plan.name}
                       </h3>
                       {isPrimary ? (
-                        <span className="rounded-[4px] bg-primary/10 border border-primary px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider animate-pulse">
+                        <span className="rounded-full bg-primary/10 border border-primary px-2.5 py-0.5 text-[11px] font-semibold text-primary uppercase tracking-wider">
                           Recommended
                         </span>
                       ) : null}
@@ -54,7 +54,7 @@ export function PricingSection() {
                       <span
                         className={
                           isPrimary
-                            ? 'ml-1.5 text-xs text-white/50 font-mono'
+                            ? 'ml-1.5 text-xs text-foreground/60 font-mono'
                             : 'ml-1.5 text-xs text-foreground/40 font-mono'
                         }
                       >
@@ -65,11 +65,7 @@ export function PricingSection() {
                     </div>
 
                     {/* Audience */}
-                    <p
-                      className={`relative z-10 mt-3 text-[11px] leading-relaxed ${
-                        isPrimary ? 'text-white/60' : 'text-muted-copy'
-                      }`}
-                    >
+                    <p className="relative z-10 mt-3 text-[11px] font-medium leading-relaxed text-muted-copy">
                       {plan.audience}
                     </p>
 
@@ -78,17 +74,9 @@ export function PricingSection() {
                       {plan.benefits.map((benefit) => (
                         <li
                           key={benefit}
-                          className={
-                            isPrimary
-                              ? 'flex items-start gap-2 text-xs text-white/80'
-                              : 'flex items-start gap-2 text-xs text-foreground/70'
-                          }
+                          className="flex items-start gap-2 text-xs font-medium text-foreground/80"
                         >
-                          <CheckCircle2
-                            className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${
-                              isPrimary ? 'text-white/60' : 'text-primary'
-                            }`}
-                          />
+                          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
                           <span>{benefit}</span>
                         </li>
                       ))}
@@ -100,8 +88,8 @@ export function PricingSection() {
                     to="/pricing"
                     className={
                       isPrimary
-                        ? 'relative z-10 w-full rounded-[4px] bg-primary px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover'
-                        : 'relative z-10 w-full rounded-[4px] border border-border-soft px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-muted-copy transition hover:bg-surface-hover hover:text-foreground'
+                        ? 'relative z-10 w-full rounded-xl bg-primary px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover shadow-md cursor-pointer'
+                        : 'relative z-10 w-full rounded-xl border border-border-soft px-4 py-2.5 text-center text-xs font-bold uppercase tracking-wider text-muted-copy transition hover:bg-surface-hover hover:text-foreground cursor-pointer'
                     }
                   >
                     {plan.actionLabel}

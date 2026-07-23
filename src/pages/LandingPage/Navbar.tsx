@@ -22,7 +22,7 @@ export function Navbar() {
         <div className="hidden items-center gap-7 text-[11px] font-bold uppercase tracking-wider text-muted-copy md:flex">
           <Link
             to="/pricing"
-            className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-foreground transition hover:bg-surface-hover"
+            className="rounded-xl border border-border-soft px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-foreground transition hover:bg-surface-hover hover:border-primary/40"
           >
             Pricing
           </Link>
@@ -34,7 +34,7 @@ export function Navbar() {
             title={
               theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
             }
-            className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
           >
             {theme === 'dark' ? (
               <Moon className="h-4.5 w-4.5" />
@@ -44,7 +44,7 @@ export function Navbar() {
           </button>
           <Link
             to="/login"
-            className="rounded-[4px] border-2 border-[#0047bb] px-5 py-2.5 text-xs font-bold uppercase text-foreground transition hover:bg-surface-hover"
+            className="rounded-xl bg-primary px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover shadow-sm"
           >
             Start free
           </Link>
