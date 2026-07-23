@@ -1,3 +1,4 @@
+import React from 'react';
 import { type LucideIcon } from 'lucide-react';
 import { Button } from './Button';
 
@@ -9,7 +10,7 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export const EmptyState = ({
+export const EmptyState = React.memo(({
   icon: Icon,
   title,
   description,
@@ -26,4 +27,5 @@ export const EmptyState = ({
       <Button onClick={onAction}>{actionLabel}</Button>
     )}
   </div>
-);
+));
+EmptyState.displayName = 'EmptyState';

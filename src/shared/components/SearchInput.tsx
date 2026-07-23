@@ -8,7 +8,7 @@ interface SearchInputProps {
   debounceMs?: number;
 }
 
-export const SearchInput: React.FC<SearchInputProps> = ({
+export const SearchInput: React.FC<SearchInputProps> = React.memo(({
   placeholder = 'Search...',
   onSearch,
   onClear,
@@ -68,7 +68,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       )}
     </div>
   );
-};
+});
+SearchInput.displayName = 'SearchInput';
 
 // Hook for search with debounce
 export const useSearch = (initialValue = '') => {
