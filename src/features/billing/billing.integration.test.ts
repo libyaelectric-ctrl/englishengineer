@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useBillingStore } from './billing.store';
-import { useAuthStore } from '../auth';
 
 // Mock the auth store
 vi.mock('../auth', () => ({
@@ -15,7 +14,7 @@ describe('Billing Integration', () => {
   beforeEach(() => {
     // Reset stores
     useBillingStore.setState({
-      subscription: null,
+      subscription: undefined,
       isLoading: false,
       error: null,
     });
@@ -32,6 +31,10 @@ describe('Billing Integration', () => {
         planId: 'pro',
         status: 'active',
         currentPeriodEnd: new Date().toISOString(),
+        cancelAtPeriodEnd: false,
+        stripeCustomerId: 'cus_test',
+        stripeSubscriptionId: 'sub_test',
+        updatedAt: new Date().toISOString(),
       },
     });
 
