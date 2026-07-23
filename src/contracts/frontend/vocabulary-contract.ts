@@ -12,7 +12,9 @@ export interface VocabularyLookupResponse {
   cached: boolean;
 }
 
-export const isVocabularyLookupResponse = (data: unknown): data is VocabularyLookupResponse =>
+export const isVocabularyLookupResponse = (
+  data: unknown
+): data is VocabularyLookupResponse =>
   typeof data === 'object' &&
   data !== null &&
   'word' in data &&

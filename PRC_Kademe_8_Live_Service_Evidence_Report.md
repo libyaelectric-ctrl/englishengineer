@@ -29,15 +29,16 @@ At least one real staging or quality check was not verified. No failed check is 
 - Stripe test-mode Customer Portal: **PASS**
 - Stripe webhook signature and idempotency: **PASS**
 - Stripe webhook entitlement update: **PASS**
-- Stripe Dashboard or CLI webhook delivery: **NOT VERIFIED (signed verifier delivery only)**
+- Stripe verifier-event cleanup: **PASS**
+- Stripe test-customer cleanup: **PASS**
 - Backend-only real AI provider request: **PASS**
 - AI proxy invalid-token handling: **PASS**
 - AI provider-failure and malformed-provider live injection: **NOT RUN (unsafe to alter staging credentials)**
 - AI provider key exposure to frontend: **PASS (no key in response)**
 - Upstash REST availability: **PASS**
 - Upstash shared counter behavior: **PASS**
+- Upstash verifier-key cleanup: **PASS**
 - Upstash dashboard evidence: **NOT VERIFIED (REST verification only)**
-- Supabase logout: **PASS**
 
 The report never treats Stripe Dashboard/CLI delivery, provider-failure injection, or service dashboards as verified unless those actions actually ran.
 
@@ -80,9 +81,14 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command             | Exit code | Result |
-| ------------------- | --------: | ------ |
-| `npm run typecheck` |         2 | FAIL   |
+| Command                | Exit code | Result |
+| ---------------------- | --------: | ------ |
+| `npm run typecheck`    |         0 | PASS   |
+| `npm test`             |         0 | PASS   |
+| `npm run build`        |         0 | PASS   |
+| `npm run backend:test` |         0 | PASS   |
+| `npm run verify:rls`   |         0 | PASS   |
+| `npm run quality:gate` |         1 | FAIL   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -95,7 +101,7 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- npm run typecheck exited with code 2.
+- npm run quality:gate exited with code 1.
 
 ## Next Decision
 

@@ -1,7 +1,4 @@
-export {
-  type HealthCheckResult,
-  isHealthCheckResult,
-} from './health-contract';
+export { type HealthCheckResult, isHealthCheckResult } from './health-contract';
 
 export {
   type VocabularyLookupResponse,

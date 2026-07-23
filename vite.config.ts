@@ -40,7 +40,6 @@ export default defineConfig(() => {
               if (id.includes('react-dom')) return 'vendor-react-dom';
               if (id.includes('react-router')) return 'vendor-router';
               if (id.includes('@supabase')) return 'vendor-supabase';
-              if (id.includes('@sentry')) return 'vendor-sentry';
               if (id.includes('@tanstack')) return 'vendor-query';
               if (id.includes('motion') || id.includes('framer'))
                 return 'vendor-motion';

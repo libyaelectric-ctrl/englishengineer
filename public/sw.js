@@ -17,9 +17,13 @@ self.addEventListener('install', (event) => {
 // Activate: clean old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    caches
+      .keys()
+      .then((keys) =>
+        Promise.all(
+          keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+        )
+      )
   );
   self.clients.claim();
 });
@@ -31,14 +35,16 @@ self.addEventListener('fetch', (event) => {
 
   // Network-first for API calls
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request).catch(() => caches.match(request))
-    );
+    event.respondWith(fetch(request).catch(() => caches.match(request)));
     return;
   }
 
   // Stale-while-revalidate for static assets
-  if (request.destination === 'style' || request.destination === 'script' || request.destination === 'image') {
+  if (
+    request.destination === 'style' ||
+    request.destination === 'script' ||
+    request.destination === 'image'
+  ) {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) =>
         cache.match(request).then((cached) => {
@@ -54,7 +60,5 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML (navigation)
-  event.respondWith(
-    fetch(request).catch(() => caches.match(request))
-  );
+  event.respondWith(fetch(request).catch(() => caches.match(request)));
 });
