@@ -162,49 +162,47 @@ export const ProgressOverviewTab = () => {
 
       <AnalyticsMetricCards analytics={analytics} />
 
-      <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
-        <div className="space-y-6">
-          <SectionCard
-            title="Assessment Profile"
-            subtitle="Engineering communication dimensions derived from existing learning evidence"
-            icon={ShieldCheck}
-            headerActions={
-              <StatusBadge
-                label={analytics.assessmentProfile.trustLabel}
-                tone={
-                  analytics.assessmentProfile.hasEnoughData
-                    ? 'success'
-                    : 'warning'
-                }
-              />
-            }
-          >
-            <AssessmentProfilePanel profile={analytics.assessmentProfile} />
-          </SectionCard>
-
-          {advancedAnalyticsEntitlement.allowed && (
-            <AnalyticsChartsSection
-              analytics={analytics}
-              activeChart={activeChart}
-              setActiveChart={setActiveChart}
-              chartTabs={chartTabs}
+      {/* Top Section: Assessment Profile + Skill Sidebar (Balanced) */}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <SectionCard
+          title="Assessment Profile"
+          subtitle="Engineering communication dimensions derived from existing learning evidence"
+          icon={ShieldCheck}
+          headerActions={
+            <StatusBadge
+              label={analytics.assessmentProfile.trustLabel}
+              tone={
+                analytics.assessmentProfile.hasEnoughData
+                  ? 'success'
+                  : 'warning'
+              }
             />
-          )}
-        </div>
+          }
+        >
+          <AssessmentProfilePanel profile={analytics.assessmentProfile} />
+        </SectionCard>
 
-        <div className="h-full">
-          <SkillSidebar
-            skills={SKILLS}
-            eloScores={eloScores}
-            highestSkill={highestSkill}
-            lowestSkill={lowestSkill}
-            totalCEFR={totalCEFR}
-            rank={rank}
-            selectedGraphNode={null}
-            setSelectedGraphNode={() => {}}
-          />
-        </div>
+        <SkillSidebar
+          skills={SKILLS}
+          eloScores={eloScores}
+          highestSkill={highestSkill}
+          lowestSkill={lowestSkill}
+          totalCEFR={totalCEFR}
+          rank={rank}
+          selectedGraphNode={null}
+          setSelectedGraphNode={() => {}}
+        />
       </div>
+
+      {/* Bottom Section: Charts (Full Width) */}
+      {advancedAnalyticsEntitlement.allowed && (
+        <AnalyticsChartsSection
+          analytics={analytics}
+          activeChart={activeChart}
+          setActiveChart={setActiveChart}
+          chartTabs={chartTabs}
+        />
+      )}
     </div>
   );
 };
