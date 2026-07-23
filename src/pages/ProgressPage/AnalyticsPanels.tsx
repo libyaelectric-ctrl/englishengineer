@@ -103,12 +103,36 @@ export const AssessmentProfilePanel = ({
   const isPending = !profile.hasEnoughData;
 
   const defaultDimensions = [
-    { label: 'Technical Accuracy', evidence: 'Measures accuracy of engineering terms & units across site reports.' },
-    { label: 'Reading Comprehension', evidence: 'Measures speed and precision in technical specifications & specifications.' },
-    { label: 'Professional Writing', evidence: 'Evaluates email clarity, tone, and formal structure in engineering logs.' },
-    { label: 'Listening Retention', evidence: 'Tracks retention of oral site instructions & safety briefings.' },
-    { label: 'Speaking Fluency', evidence: 'Assesses pronunciation, vocabulary choice, and confidence in meetings.' },
-    { label: 'Grammar & Syntax', evidence: 'Evaluates passive voice, conditionals, and complex sentence structures.' },
+    {
+      label: 'Technical Accuracy',
+      evidence:
+        'Measures accuracy of engineering terms & units across site reports.',
+    },
+    {
+      label: 'Reading Comprehension',
+      evidence:
+        'Measures speed and precision in technical specifications & specifications.',
+    },
+    {
+      label: 'Professional Writing',
+      evidence:
+        'Evaluates email clarity, tone, and formal structure in engineering logs.',
+    },
+    {
+      label: 'Listening Retention',
+      evidence:
+        'Tracks retention of oral site instructions & safety briefings.',
+    },
+    {
+      label: 'Speaking Fluency',
+      evidence:
+        'Assesses pronunciation, vocabulary choice, and confidence in meetings.',
+    },
+    {
+      label: 'Grammar & Syntax',
+      evidence:
+        'Evaluates passive voice, conditionals, and complex sentence structures.',
+    },
   ];
 
   const dimensionsToDisplay = isPending
@@ -130,7 +154,9 @@ export const AssessmentProfilePanel = ({
                 Engineering Assessment Profile — Initializing Baseline
               </p>
               <p className="mt-1 text-xs leading-relaxed text-muted-copy font-medium">
-                Complete practice missions across Reading, Writing, Listening, Speaking, or Vocabulary to build your verified engineering communication rating.
+                Complete practice missions across Reading, Writing, Listening,
+                Speaking, or Vocabulary to build your verified engineering
+                communication rating.
               </p>
             </div>
             <a
@@ -144,7 +170,10 @@ export const AssessmentProfilePanel = ({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <MiniStat label="Overall" value={isPending ? 'Baseline' : `${profile.overallScore ?? 0}%`} />
+        <MiniStat
+          label="Overall"
+          value={isPending ? 'Baseline' : `${profile.overallScore ?? 0}%`}
+        />
         <MiniStat
           label="Engineer CEFR"
           value={profile.engineerCefr || 'A2-B1 Baseline'}
@@ -153,15 +182,20 @@ export const AssessmentProfilePanel = ({
           label="Internal progress index"
           value={`${profile.engineerElo ?? 1000}`}
         />
-        <MiniStat label="Confidence" value={isPending ? 'Initial' : `${profile.confidenceScore}%`} />
+        <MiniStat
+          label="Confidence"
+          value={isPending ? 'Initial' : `${profile.confidenceScore}%`}
+        />
       </div>
 
       <div className="rounded-xl border border-[#0047bb]/20 bg-surface/80 p-4 shadow-sm">
         <p className="text-xs font-bold text-[#0047bb]">
-          {profile.certificateDisclaimer || 'Engineering Communication Standards & CEFR Mapping'}
+          {profile.certificateDisclaimer ||
+            'Engineering Communication Standards & CEFR Mapping'}
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-muted-copy font-medium">
-          {profile.confidenceExplanation || 'Scores update dynamically as you complete practice sessions across site communication modules.'}
+          {profile.confidenceExplanation ||
+            'Scores update dynamically as you complete practice sessions across site communication modules.'}
         </p>
       </div>
 
@@ -249,7 +283,8 @@ export const AssessmentProfilePanel = ({
               Priority Focus: Speaking Fluency & Technical Register
             </p>
             <p className="text-[11px] text-muted-copy font-medium">
-              Targeted 3-minute practice mission to boost your lowest dimension score.
+              Targeted 3-minute practice mission to boost your lowest dimension
+              score.
             </p>
           </div>
         </div>

@@ -14,7 +14,9 @@ test.describe('User registration and onboarding', () => {
 test.describe('Listening lesson flow', () => {
   test('user can access listening lessons', async ({ page }) => {
     await page.goto('/');
-    const listeningLink = page.getByRole('link', { name: /listening|dinleme/i });
+    const listeningLink = page.getByRole('link', {
+      name: /listening|dinleme/i,
+    });
     if (await listeningLink.isVisible()) {
       await listeningLink.click();
       await expect(page.locator('body')).toBeVisible();
@@ -25,7 +27,9 @@ test.describe('Listening lesson flow', () => {
 test.describe('Billing page', () => {
   test('user can access billing/pricing page', async ({ page }) => {
     await page.goto('/');
-    const billingLink = page.getByRole('link', { name: /pricing|billing|pro/i });
+    const billingLink = page.getByRole('link', {
+      name: /pricing|billing|pro/i,
+    });
     if (await billingLink.isVisible()) {
       await billingLink.click();
       await expect(page.locator('body')).toBeVisible();

@@ -40,7 +40,9 @@ export function PronunciationFeedbackPanel({
   return (
     <div className="rounded-[4px] border border-border-soft bg-surface p-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-foreground">Pronunciation Feedback</h3>
+        <h3 className="text-xs font-bold text-foreground">
+          Pronunciation Feedback
+        </h3>
         <button
           type="button"
           onClick={() => (result ? setExpanded(!expanded) : analyze())}
@@ -56,13 +58,19 @@ export function PronunciationFeedbackPanel({
           <div className="flex items-center gap-3">
             <div
               className="flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white"
-              style={{ background: PronunciationFeedbackEngine.getAccentColor(result.overallScore) }}
+              style={{
+                background: PronunciationFeedbackEngine.getAccentColor(
+                  result.overallScore
+                ),
+              }}
             >
               {result.overallScore}
             </div>
             <div>
               <p className="text-xs font-bold text-foreground">
-                {PronunciationFeedbackEngine.getAccentLabel(result.overallScore)}
+                {PronunciationFeedbackEngine.getAccentLabel(
+                  result.overallScore
+                )}
               </p>
               <p className="text-[10px] text-muted-copy">
                 {result.feedbacks.length} words analyzed
@@ -117,8 +125,12 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
     <div className="rounded-[4px] border border-border-soft bg-white p-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-foreground">{feedback.word}</span>
-          <span className="text-[9px] font-mono text-muted-copy">{feedback.ipa}</span>
+          <span className="text-xs font-bold text-foreground">
+            {feedback.word}
+          </span>
+          <span className="text-[9px] font-mono text-muted-copy">
+            {feedback.ipa}
+          </span>
           <span
             className={`rounded px-1.5 py-0.5 text-[8px] font-bold ${
               feedback.overallAccuracy >= 80
@@ -136,12 +148,16 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
           onClick={() => setShowDetails(!showDetails)}
           className="text-muted-copy cursor-pointer"
         >
-          <ChevronDown className={`h-3 w-3 transition-transform ${showDetails ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`h-3 w-3 transition-transform ${showDetails ? 'rotate-180' : ''}`}
+          />
         </button>
       </div>
 
       {feedback.problemArea && (
-        <div className={`mt-1 inline-flex rounded border px-1.5 py-0.5 text-[8px] font-bold ${ACCENT_COLORS[feedback.problemArea] ?? ''}`}>
+        <div
+          className={`mt-1 inline-flex rounded border px-1.5 py-0.5 text-[8px] font-bold ${ACCENT_COLORS[feedback.problemArea] ?? ''}`}
+        >
           {feedback.problemArea}
         </div>
       )}

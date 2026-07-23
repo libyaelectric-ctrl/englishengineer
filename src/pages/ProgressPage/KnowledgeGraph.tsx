@@ -73,9 +73,13 @@ const GraphNodeElement = ({
 
   // Split label into lines for clean multi-line display if label is long
   const words = node.label.split(' ');
-  const lines = words.length > 2
-    ? [words.slice(0, Math.ceil(words.length / 2)).join(' '), words.slice(Math.ceil(words.length / 2)).join(' ')]
-    : [node.label];
+  const lines =
+    words.length > 2
+      ? [
+          words.slice(0, Math.ceil(words.length / 2)).join(' '),
+          words.slice(Math.ceil(words.length / 2)).join(' '),
+        ]
+      : [node.label];
 
   return (
     <g
@@ -128,15 +132,23 @@ export const KnowledgeGraph = ({
         <div>
           <div className="flex items-center gap-2">
             <Network className="h-4 w-4 text-[#0047bb]" />
-            <h3 className="text-sm font-bold text-foreground">Knowledge Graph</h3>
+            <h3 className="text-sm font-bold text-foreground">
+              Knowledge Graph
+            </h3>
           </div>
           <p className="text-[11px] text-muted-copy mt-0.5 font-medium">
             Click nodes to explore connections and target skills.
           </p>
         </div>
       </div>
-      <div className="relative w-full bg-surface-hover/30 select-none overflow-hidden" style={{ minHeight: '340px', maxHeight: '440px' }}>
-        <svg viewBox="0 0 800 460" className="w-full h-auto max-h-[420px] mx-auto">
+      <div
+        className="relative w-full bg-surface-hover/30 select-none overflow-hidden"
+        style={{ minHeight: '340px', maxHeight: '440px' }}
+      >
+        <svg
+          viewBox="0 0 800 460"
+          className="w-full h-auto max-h-[420px] mx-auto"
+        >
           {GRAPH_LINKS.map((link, idx) => (
             <GraphLink
               key={idx}

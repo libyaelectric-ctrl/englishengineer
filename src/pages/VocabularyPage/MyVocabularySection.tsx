@@ -10,11 +10,34 @@ interface MyVocabularySectionProps {
 
 const COL_COUNT = 3;
 
-const STATUS_STYLES: Record<string, { bg: string; text: string; label: string; emoji: string }> = {
-  new: { bg: 'bg-gray-100 dark:bg-gray-800', text: 'text-gray-600 dark:text-gray-400', label: 'New', emoji: '' },
-  learned: { bg: 'bg-green-100 dark:bg-green-900/30', text: 'text-green-700 dark:text-green-400', label: 'Learned', emoji: '' },
-  mastered: { bg: 'bg-yellow-100 dark:bg-yellow-900/30', text: 'text-yellow-700 dark:text-yellow-400', label: 'Mastered', emoji: '⭐' },
-  struggling: { bg: 'bg-red-100 dark:bg-red-900/30', text: 'text-red-700 dark:text-red-400', label: 'Struggling', emoji: '🔴' },
+const STATUS_STYLES: Record<
+  string,
+  { bg: string; text: string; label: string; emoji: string }
+> = {
+  new: {
+    bg: 'bg-gray-100 dark:bg-gray-800',
+    text: 'text-gray-600 dark:text-gray-400',
+    label: 'New',
+    emoji: '',
+  },
+  learned: {
+    bg: 'bg-green-100 dark:bg-green-900/30',
+    text: 'text-green-700 dark:text-green-400',
+    label: 'Learned',
+    emoji: '',
+  },
+  mastered: {
+    bg: 'bg-yellow-100 dark:bg-yellow-900/30',
+    text: 'text-yellow-700 dark:text-yellow-400',
+    label: 'Mastered',
+    emoji: '⭐',
+  },
+  struggling: {
+    bg: 'bg-red-100 dark:bg-red-900/30',
+    text: 'text-red-700 dark:text-red-400',
+    label: 'Struggling',
+    emoji: '🔴',
+  },
 };
 
 const WordCard = ({
@@ -28,17 +51,23 @@ const WordCard = ({
 }) => {
   const s = STATUS_STYLES[status || 'new'] || STATUS_STYLES.new;
   return (
-    <div className={`rounded-[4px] border p-4 shadow-sm hover:shadow-md transition-all duration-300 ${status === 'struggling' ? 'border-red-300 dark:border-red-700' : 'border-border-soft bg-surface'}`}>
+    <div
+      className={`rounded-[4px] border p-4 shadow-sm hover:shadow-md transition-all duration-300 ${status === 'struggling' ? 'border-red-300 dark:border-red-700' : 'border-border-soft bg-surface'}`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <p className="text-sm font-bold text-foreground">{word.term}</p>
-            <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${s.bg} ${s.text}`}>
+            <span
+              className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold ${s.bg} ${s.text}`}
+            >
               {s.emoji} {s.label}
             </span>
           </div>
           {word.turkishMeaning && (
-            <p className="mt-1 text-xs text-muted-copy">{word.turkishMeaning}</p>
+            <p className="mt-1 text-xs text-muted-copy">
+              {word.turkishMeaning}
+            </p>
           )}
         </div>
         <button
@@ -46,8 +75,18 @@ const WordCard = ({
           className="text-muted-copy hover:text-error transition-colors cursor-pointer"
           aria-label="Archive word"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+            />
           </svg>
         </button>
       </div>

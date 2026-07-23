@@ -8,8 +8,8 @@ This document contains the automated test coverage metrics for the EngineerOS pr
 
 ## 2. Global Coverage Summary
 
-| Metric         | Current Value | Target Threshold | Status  |
-| :------------- | :------------ | :--------------- | :------ |
+| Metric         | Current Value | Target Threshold | Status          |
+| :------------- | :------------ | :--------------- | :-------------- |
 | **Lines**      | ~10%          | 60%              | ❌ Below target |
 | **Functions**  | ~5%           | 60%              | ❌ Below target |
 | **Statements** | ~10%          | 60%              | ❌ Below target |

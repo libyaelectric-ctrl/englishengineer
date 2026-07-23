@@ -25,15 +25,26 @@ const shuffleArray = <T,>(arr: T[]): T[] => {
   return a;
 };
 
-export const QuizModal = ({ isOpen, onClose, words, isStrugglingQuiz = false }: QuizModalProps) => {
+export const QuizModal = ({
+  isOpen,
+  onClose,
+  words,
+  isStrugglingQuiz = false,
+}: QuizModalProps) => {
   const [shuffledWords, setShuffledWords] = useState<QuizWord[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [results, setResults] = useState<{ wordId: string; correct: boolean }[]>([]);
+  const [results, setResults] = useState<
+    { wordId: string; correct: boolean }[]
+  >([]);
   const [showResult, setShowResult] = useState(false);
 
-  const { onQuizCorrect, onQuizIncorrect, onStrugglingQuizCorrect, onStrugglingQuizIncorrect } =
-    useVocabularyStore();
+  const {
+    onQuizCorrect,
+    onQuizIncorrect,
+    onStrugglingQuizCorrect,
+    onStrugglingQuizIncorrect,
+  } = useVocabularyStore();
 
   useEffect(() => {
     if (isOpen && words.length > 0) {
@@ -120,7 +131,9 @@ export const QuizModal = ({ isOpen, onClose, words, isStrugglingQuiz = false }: 
             <div className="text-center space-y-4">
               <Trophy className="mx-auto h-12 w-12 text-yellow-500" />
               <h2 className="text-lg font-bold text-foreground">
-                {isStrugglingQuiz ? 'Struggling Quiz Complete!' : 'Quiz Complete!'}
+                {isStrugglingQuiz
+                  ? 'Struggling Quiz Complete!'
+                  : 'Quiz Complete!'}
               </h2>
               <div className="flex justify-center gap-6 text-sm">
                 <span className="flex items-center gap-1 text-green-600">
@@ -151,13 +164,20 @@ export const QuizModal = ({ isOpen, onClose, words, isStrugglingQuiz = false }: 
                 <span className="text-xs font-medium text-muted-copy">
                   {currentIndex + 1} / {shuffledWords.length}
                 </span>
-                <button onClick={onClose} className="text-muted-copy hover:text-foreground">
+                <button
+                  onClick={onClose}
+                  className="text-muted-copy hover:text-foreground"
+                >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              <p className="text-base font-bold text-foreground mb-1">{currentWord?.term}</p>
-              <p className="text-xs text-muted-copy mb-4">What is the meaning of this word?</p>
+              <p className="text-base font-bold text-foreground mb-1">
+                {currentWord?.term}
+              </p>
+              <p className="text-xs text-muted-copy mb-4">
+                What is the meaning of this word?
+              </p>
 
               <div className="space-y-2">
                 {options.map((option) => (
@@ -181,7 +201,9 @@ export const QuizModal = ({ isOpen, onClose, words, isStrugglingQuiz = false }: 
               <div className="mt-4 h-1 rounded-full bg-border-soft overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all"
-                  style={{ width: `${((currentIndex + 1) / shuffledWords.length) * 100}%` }}
+                  style={{
+                    width: `${((currentIndex + 1) / shuffledWords.length) * 100}%`,
+                  }}
                 />
               </div>
             </>

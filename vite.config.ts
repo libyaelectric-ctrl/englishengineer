@@ -42,13 +42,15 @@ export default defineConfig(() => {
               if (id.includes('@supabase')) return 'vendor-supabase';
               if (id.includes('@sentry')) return 'vendor-sentry';
               if (id.includes('@tanstack')) return 'vendor-query';
-              if (id.includes('motion') || id.includes('framer')) return 'vendor-motion';
+              if (id.includes('motion') || id.includes('framer'))
+                return 'vendor-motion';
               if (id.includes('zustand')) return 'vendor-state';
               if (id.includes('lucide')) return 'vendor-icons';
               if (id.includes('isomorphic-dompurify')) return 'vendor-sanitize';
               return 'vendor-misc';
             }
-            if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
+            if (id.includes('/data/') || id.includes('seed'))
+              return 'seed-data';
             if (id.includes('/core/')) return 'core';
             if (id.includes('/shared/')) return 'shared';
           },

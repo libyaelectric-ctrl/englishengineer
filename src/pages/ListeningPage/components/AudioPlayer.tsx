@@ -19,11 +19,17 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const onTime = () => { setCurrentTime(audio.currentTime); onTimeUpdate?.(audio.currentTime); };
+    const onTime = () => {
+      setCurrentTime(audio.currentTime);
+      onTimeUpdate?.(audio.currentTime);
+    };
     const onDur = () => setDuration(audio.duration);
     audio.addEventListener('timeupdate', onTime);
     audio.addEventListener('loadedmetadata', onDur);
-    return () => { audio.removeEventListener('timeupdate', onTime); audio.removeEventListener('loadedmetadata', onDur); };
+    return () => {
+      audio.removeEventListener('timeupdate', onTime);
+      audio.removeEventListener('loadedmetadata', onDur);
+    };
   }, [onTimeUpdate]);
 
   useEffect(() => {
@@ -46,10 +52,14 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
 
   const seek = (delta: number) => {
     if (!audioRef.current) return;
-    audioRef.current.currentTime = Math.max(0, Math.min(duration, audioRef.current.currentTime + delta));
+    audioRef.current.currentTime = Math.max(
+      0,
+      Math.min(duration, audioRef.current.currentTime + delta)
+    );
   };
 
-  const formatTime = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+  const formatTime = (s: number) =>
+    `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
   return (
     <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 space-y-3">
@@ -57,23 +67,66 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
         <track kind="captions" label="English" />
       </audio>
       <div className="flex items-center gap-3">
-        <button onClick={() => seek(-10)} className="text-muted-copy hover:text-foreground"><SkipBack className="h-4 w-4" /></button>
-        <button onClick={togglePlay} className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        <button
+          onClick={() => seek(-10)}
+          className="text-muted-copy hover:text-foreground"
+        >
+          <SkipBack className="h-4 w-4" />
         </button>
-        <button onClick={() => seek(10)} className="text-muted-copy hover:text-foreground"><SkipForward className="h-4 w-4" /></button>
-        <span className="text-[10px] font-mono text-muted-copy">{formatTime(currentTime)} / {formatTime(duration)}</span>
+        <button
+          onClick={togglePlay}
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground"
+        >
+          {isPlaying ? (
+            <Pause className="h-4 w-4" />
+          ) : (
+            <Play className="h-4 w-4" />
+          )}
+        </button>
+        <button
+          onClick={() => seek(10)}
+          className="text-muted-copy hover:text-foreground"
+        >
+          <SkipForward className="h-4 w-4" />
+        </button>
+        <span className="text-[10px] font-mono text-muted-copy">
+          {formatTime(currentTime)} / {formatTime(duration)}
+        </span>
       </div>
-      <input type="range" min={0} max={duration || 1} value={currentTime} onChange={(e) => { if (audioRef.current) audioRef.current.currentTime = Number(e.target.value); }} className="w-full h-1 accent-primary" />
+      <input
+        type="range"
+        min={0}
+        max={duration || 1}
+        value={currentTime}
+        onChange={(e) => {
+          if (audioRef.current)
+            audioRef.current.currentTime = Number(e.target.value);
+        }}
+        className="w-full h-1 accent-primary"
+      />
       <div className="flex items-center justify-between">
         <div className="flex gap-1">
           {SPEEDS.map((s) => (
-            <button key={s} onClick={() => setSpeed(s)} className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${speed === s ? 'bg-primary text-primary-foreground' : 'text-muted-copy hover:text-foreground'}`}>{s}x</button>
+            <button
+              key={s}
+              onClick={() => setSpeed(s)}
+              className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${speed === s ? 'bg-primary text-primary-foreground' : 'text-muted-copy hover:text-foreground'}`}
+            >
+              {s}x
+            </button>
           ))}
         </div>
         <div className="flex items-center gap-1">
           <Volume2 className="h-3 w-3 text-muted-copy" />
-          <input type="range" min={0} max={1} step={0.1} value={volume} onChange={(e) => setVolume(Number(e.target.value))} className="w-16 h-1 accent-primary" />
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.1}
+            value={volume}
+            onChange={(e) => setVolume(Number(e.target.value))}
+            className="w-16 h-1 accent-primary"
+          />
         </div>
       </div>
     </div>

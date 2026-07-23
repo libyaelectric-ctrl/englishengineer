@@ -43,7 +43,9 @@ const DEFAULT_OVERVIEW: OverviewData = {
   weeklyGoal: { target: 15, completed: 0 },
 };
 
-export const useProgressStore = create<ProgressStoreState & ProgressStoreActions>((set) => ({
+export const useProgressStore = create<
+  ProgressStoreState & ProgressStoreActions
+>((set) => ({
   overview: null,
   isLoading: false,
   fetchOverview: () => {

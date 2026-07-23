@@ -14,7 +14,12 @@ export interface WritingSubmission {
 }
 
 const WORD_TARGETS: Record<string, number> = {
-  A1: 100, A2: 150, B1: 200, B2: 250, C1: 300, C2: 350,
+  A1: 100,
+  A2: 150,
+  B1: 200,
+  B2: 250,
+  C1: 300,
+  C2: 350,
 };
 
 export const WritingProgressService = {

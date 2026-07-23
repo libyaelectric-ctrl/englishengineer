@@ -9,8 +9,6 @@ import { SSOForm } from './LoginPage/SSOForm';
 import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
 import { useLoginHandlers } from './LoginPage/useLoginHandlers';
 
-
-
 const LoginPage = () => {
   const h = useLoginHandlers();
   const language = useLocalizationStore((state) => state.language);

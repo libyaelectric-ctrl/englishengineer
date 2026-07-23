@@ -1,4 +1,9 @@
-export type WordStatus = 'new' | 'learning' | 'learned' | 'mastered' | 'struggling';
+export type WordStatus =
+  | 'new'
+  | 'learning'
+  | 'learned'
+  | 'mastered'
+  | 'struggling';
 
 export interface WordProgress {
   wordId: string;
@@ -32,7 +37,11 @@ export const VocabularyProgressService = {
 
   onView(current: WordProgress): WordProgress {
     if (current.status === 'new') {
-      return { ...current, status: 'learning', lastPracticedAt: new Date().toISOString() };
+      return {
+        ...current,
+        status: 'learning',
+        lastPracticedAt: new Date().toISOString(),
+      };
     }
     return current;
   },
@@ -45,7 +54,10 @@ export const VocabularyProgressService = {
       ? current.quizDates
       : [...current.quizDates, today];
 
-    if (newCorrect >= MASTERY_REQUIRED_CORRECT && current.status !== 'mastered') {
+    if (
+      newCorrect >= MASTERY_REQUIRED_CORRECT &&
+      current.status !== 'mastered'
+    ) {
       return {
         ...current,
         status: 'mastered',
@@ -58,12 +70,20 @@ export const VocabularyProgressService = {
     }
 
     if (current.status === 'mastered') {
-      return { ...current, correctCount: newCorrect, quizDates: newDates, lastQuizAt: now };
+      return {
+        ...current,
+        correctCount: newCorrect,
+        quizDates: newDates,
+        lastQuizAt: now,
+      };
     }
 
     return {
       ...current,
-      status: current.status === 'new' || current.status === 'learning' ? 'learned' : current.status,
+      status:
+        current.status === 'new' || current.status === 'learning'
+          ? 'learned'
+          : current.status,
       correctCount: newCorrect,
       quizDates: newDates,
       lastQuizAt: now,
@@ -120,11 +140,16 @@ export const VocabularyProgressService = {
 
   getStatusColor(status: WordStatus): string {
     switch (status) {
-      case 'learning': return 'yellow';
-      case 'learned': return 'green';
-      case 'mastered': return 'gold';
-      case 'struggling': return 'red';
-      default: return 'gray';
+      case 'learning':
+        return 'yellow';
+      case 'learned':
+        return 'green';
+      case 'mastered':
+        return 'gold';
+      case 'struggling':
+        return 'red';
+      default:
+        return 'gray';
     }
   },
 };

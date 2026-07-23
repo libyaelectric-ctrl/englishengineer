@@ -25,7 +25,14 @@ describe('Progress Overview', () => {
   });
 
   it('3. Card render: 6 modules', () => {
-    const modules = ['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'];
+    const modules = [
+      'vocabulary',
+      'grammar',
+      'reading',
+      'writing',
+      'listening',
+      'speaking',
+    ];
     expect(modules.length).toBe(6);
   });
 

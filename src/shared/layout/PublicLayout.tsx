@@ -10,8 +10,6 @@ const links = [
   { label: 'Teams', href: '/business' },
 ];
 
-
-
 export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();

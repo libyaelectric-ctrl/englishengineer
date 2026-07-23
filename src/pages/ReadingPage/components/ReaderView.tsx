@@ -14,7 +14,11 @@ const TTS_BUTTONS = [
   { label: '1.25x', rate: 1.25 },
 ];
 
-export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => {
+export const ReaderView = ({
+  title,
+  content,
+  onWordClick,
+}: ReaderViewProps) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [selectedRate, setSelectedRate] = useState(1);
 
@@ -57,7 +61,9 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
             ))}
           </div>
           <button
-            onClick={() => isSpeaking ? stopSpeaking() : speak(content, selectedRate)}
+            onClick={() =>
+              isSpeaking ? stopSpeaking() : speak(content, selectedRate)
+            }
             className="flex items-center gap-1 rounded-[4px] border border-border-soft px-2.5 py-1 text-[10px] font-bold text-foreground transition hover:bg-surface-hover"
           >
             <Volume2 className="h-3 w-3" />

@@ -83,7 +83,6 @@ const VocabularyPage = () => {
       />
 
       <div className="pt-4 space-y-4 pb-20">
-
         <QuizModal
           isOpen={quizOpen}
           onClose={() => setQuizOpen(false)}

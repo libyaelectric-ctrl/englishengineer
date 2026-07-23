@@ -8,8 +8,6 @@ import { CoachInputForm } from './AIPage/CoachInputForm';
 import { CoachResultPanel } from './AIPage/CoachResultPanel';
 import { UserContextSidebar } from './AIPage/UserContextSidebar';
 
-
-
 interface AIPageProps {
   embedded?: boolean;
 }

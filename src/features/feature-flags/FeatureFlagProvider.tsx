@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+} from 'react';
 
 interface FeatureFlags {
   [key: string]: boolean;
@@ -36,7 +42,9 @@ const saveFlags = (flags: FeatureFlags): void => {
   }
 };
 
-export const FeatureFlagProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const FeatureFlagProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [flags, setFlags] = useState<FeatureFlags>(loadFlags);
 
   useEffect(() => {

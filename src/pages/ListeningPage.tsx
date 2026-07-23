@@ -60,24 +60,64 @@ const ListeningPage = () => {
   const writingStore = useWritingStore();
   const readingDone = Object.keys(readingStore.completedMissions || {}).length;
   const writingDone = Object.keys(writingStore.completedMissions || {}).length;
-  const canAccess = readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
+  const canAccess =
+    readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
 
   if (!canAccess) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="max-w-md w-full rounded-[4px] border-2 border-[#0047bb] bg-surface p-8 text-center space-y-4">
           <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
-          <h2 className="text-lg font-bold text-foreground">Listening Locked</h2>
-          <p className="text-xs text-muted-copy leading-relaxed">Complete {READING_THRESHOLD} readings and {WRITING_THRESHOLD} writings to unlock Listening.</p>
+          <h2 className="text-lg font-bold text-foreground">
+            Listening Locked
+          </h2>
+          <p className="text-xs text-muted-copy leading-relaxed">
+            Complete {READING_THRESHOLD} readings and {WRITING_THRESHOLD}{' '}
+            writings to unlock Listening.
+          </p>
           <div className="space-y-2 text-[10px]">
-            <div className="flex justify-between text-muted-copy"><span>Reading</span><span className="font-bold text-foreground">{readingDone}/{READING_THRESHOLD}</span></div>
-            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden"><div className="h-full bg-[#0047bb]" style={{ width: `${Math.min((readingDone / READING_THRESHOLD) * 100, 100)}%` }} /></div>
-            <div className="flex justify-between text-muted-copy"><span>Writing</span><span className="font-bold text-foreground">{writingDone}/{WRITING_THRESHOLD}</span></div>
-            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden"><div className="h-full bg-[#0047bb]" style={{ width: `${Math.min((writingDone / WRITING_THRESHOLD) * 100, 100)}%` }} /></div>
+            <div className="flex justify-between text-muted-copy">
+              <span>Reading</span>
+              <span className="font-bold text-foreground">
+                {readingDone}/{READING_THRESHOLD}
+              </span>
+            </div>
+            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
+              <div
+                className="h-full bg-[#0047bb]"
+                style={{
+                  width: `${Math.min((readingDone / READING_THRESHOLD) * 100, 100)}%`,
+                }}
+              />
+            </div>
+            <div className="flex justify-between text-muted-copy">
+              <span>Writing</span>
+              <span className="font-bold text-foreground">
+                {writingDone}/{WRITING_THRESHOLD}
+              </span>
+            </div>
+            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
+              <div
+                className="h-full bg-[#0047bb]"
+                style={{
+                  width: `${Math.min((writingDone / WRITING_THRESHOLD) * 100, 100)}%`,
+                }}
+              />
+            </div>
           </div>
           <div className="flex gap-2 justify-center pt-2">
-            <Link to="/reading" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover">Go to Reading</Link>
-            <Link to="/writing" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover">Go to Writing</Link>
+            <Link
+              to="/reading"
+              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover"
+            >
+              Go to Reading
+            </Link>
+            <Link
+              to="/writing"
+              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover"
+            >
+              Go to Writing
+            </Link>
           </div>
         </div>
       </div>

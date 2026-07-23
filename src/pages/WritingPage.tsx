@@ -17,7 +17,8 @@ const WritingPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
   const vocabLearned = vocabStats.learned + vocabStats.mastered;
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
-  const canAccess = vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
+  const canAccess =
+    vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
 
   if (!canAccess) {
     return (
@@ -26,29 +27,50 @@ const WritingPage = () => {
           <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
           <h2 className="text-lg font-bold text-foreground">Writing Locked</h2>
           <p className="text-xs text-muted-copy leading-relaxed">
-            You need to learn 500 vocabulary words and 50 grammar rules before accessing Writing.
+            You need to learn 500 vocabulary words and 50 grammar rules before
+            accessing Writing.
           </p>
           <div className="space-y-2 text-[10px]">
             <div className="flex justify-between text-muted-copy">
               <span>Vocabulary</span>
-              <span className="font-bold text-foreground">{vocabLearned}/500</span>
+              <span className="font-bold text-foreground">
+                {vocabLearned}/500
+              </span>
             </div>
             <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-              <div className="h-full bg-[#0047bb] transition-all" style={{ width: `${Math.min((vocabLearned / VOCAB_THRESHOLD) * 100, 100)}%` }} />
+              <div
+                className="h-full bg-[#0047bb] transition-all"
+                style={{
+                  width: `${Math.min((vocabLearned / VOCAB_THRESHOLD) * 100, 100)}%`,
+                }}
+              />
             </div>
             <div className="flex justify-between text-muted-copy">
               <span>Grammar</span>
-              <span className="font-bold text-foreground">{grammarLearned}/50</span>
+              <span className="font-bold text-foreground">
+                {grammarLearned}/50
+              </span>
             </div>
             <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-              <div className="h-full bg-[#0047bb] transition-all" style={{ width: `${Math.min((grammarLearned / GRAMMAR_THRESHOLD) * 100, 100)}%` }} />
+              <div
+                className="h-full bg-[#0047bb] transition-all"
+                style={{
+                  width: `${Math.min((grammarLearned / GRAMMAR_THRESHOLD) * 100, 100)}%`,
+                }}
+              />
             </div>
           </div>
           <div className="flex gap-2 justify-center pt-2">
-            <Link to="/vocabulary" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover">
+            <Link
+              to="/vocabulary"
+              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
+            >
               Go to Vocabulary
             </Link>
-            <Link to="/grammar" className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover">
+            <Link
+              to="/grammar"
+              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
+            >
               Go to Grammar
             </Link>
           </div>

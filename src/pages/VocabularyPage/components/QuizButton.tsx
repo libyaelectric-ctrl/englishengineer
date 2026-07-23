@@ -1,18 +1,26 @@
 import { Zap, Lock, Info } from 'lucide-react';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { VocabularyProgressService, QUIZ_THRESHOLD } from '@/features/vocabulary/services/vocabulary.progress';
+import {
+  VocabularyProgressService,
+  QUIZ_THRESHOLD,
+} from '@/features/vocabulary/services/vocabulary.progress';
 
 interface QuizButtonProps {
   onOpenQuiz: () => void;
   onOpenStrugglingQuiz: () => void;
 }
 
-export const QuizButton = ({ onOpenQuiz, onOpenStrugglingQuiz }: QuizButtonProps) => {
+export const QuizButton = ({
+  onOpenQuiz,
+  onOpenStrugglingQuiz,
+}: QuizButtonProps) => {
   const { wordProgress, stats } = useVocabularyStore();
   const learnedCount = stats.learned;
   const strugglingCount = stats.struggling;
   const canStartQuiz = VocabularyProgressService.isQuizReady(learnedCount);
-  const learnedWords = Object.values(wordProgress).filter((w) => w.status === 'learned');
+  const learnedWords = Object.values(wordProgress).filter(
+    (w) => w.status === 'learned'
+  );
 
   return (
     <div className="sticky top-16 z-30 bg-background/90 backdrop-blur-sm border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 py-2">
@@ -34,7 +42,9 @@ export const QuizButton = ({ onOpenQuiz, onOpenStrugglingQuiz }: QuizButtonProps
             <div className="h-1 w-16 rounded-full bg-amber-200 overflow-hidden">
               <div
                 className="h-full bg-amber-500 transition-all"
-                style={{ width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%`,
+                }}
               />
             </div>
           </div>

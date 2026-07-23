@@ -7,18 +7,20 @@ interface SkeletonProps {
   variant?: string;
 }
 
-export const Skeleton = React.memo(({ className = '', count = 1 }: SkeletonProps) => {
-  return (
-    <>
-      {Array.from({ length: count }).map((_, i) => (
-        <div
-          key={i}
-          className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
-        />
-      ))}
-    </>
-  );
-});
+export const Skeleton = React.memo(
+  ({ className = '', count = 1 }: SkeletonProps) => {
+    return (
+      <>
+        {Array.from({ length: count }).map((_, i) => (
+          <div
+            key={i}
+            className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
+          />
+        ))}
+      </>
+    );
+  }
+);
 Skeleton.displayName = 'Skeleton';
 
 export const SkeletonCard = () => (

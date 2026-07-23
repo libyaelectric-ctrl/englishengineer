@@ -145,7 +145,11 @@ const EMPTY_WORKSPACE: TeamWorkspaceSnapshot = {
 class SupabaseTeamProvider implements TeamProvider {
   async getWorkspace(): Promise<TeamWorkspaceSnapshot> {
     const supabase = getSupabaseClient();
-    if (!supabase) throw new AppError({ code: ErrorCode.AUTH, message: 'Supabase client not configured.' });
+    if (!supabase)
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Supabase client not configured.',
+      });
 
     const orgId = await this.fetchOrgId(supabase);
     if (!orgId) {
@@ -201,7 +205,11 @@ class SupabaseTeamProvider implements TeamProvider {
     error: { message: string } | null,
     entity: string
   ): void {
-    if (error) throw new AppError({ code: ErrorCode.NETWORK, message: `Failed to fetch ${entity}: ${error.message}` });
+    if (error)
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: `Failed to fetch ${entity}: ${error.message}`,
+      });
   }
 
   private async fetchOrgId(
@@ -214,7 +222,10 @@ class SupabaseTeamProvider implements TeamProvider {
       .maybeSingle();
 
     if (memError) {
-      throw new AppError({ code: ErrorCode.NETWORK, message: `Failed to fetch team membership: ${memError.message}` });
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: `Failed to fetch team membership: ${memError.message}`,
+      });
     }
 
     return membership
@@ -227,7 +238,11 @@ class SupabaseTeamProvider implements TeamProvider {
     role: Exclude<OrganizationRole, 'admin'>
   ): Promise<TeamInvitation> {
     const supabase = getSupabaseClient();
-    if (!supabase) throw new AppError({ code: ErrorCode.AUTH, message: 'Supabase client not configured.' });
+    if (!supabase)
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Supabase client not configured.',
+      });
 
     const { data: membership, error: memError } = await supabase
       .from('organization_members')
@@ -238,14 +253,19 @@ class SupabaseTeamProvider implements TeamProvider {
     if (memError || !membership) {
       throw new AppError({
         code: ErrorCode.AUTH,
-        message: 'You do not belong to an organization and cannot invite members.',
+        message:
+          'You do not belong to an organization and cannot invite members.',
       });
     }
 
     const orgId = membership.organization_id;
 
     const userSession = (await supabase.auth.getUser()).data.user;
-    if (!userSession) throw new AppError({ code: ErrorCode.AUTH, message: 'Not authenticated.' });
+    if (!userSession)
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Not authenticated.',
+      });
 
     const { data: invite, error: inviteError } = await supabase
       .from('organization_invitations')
@@ -260,7 +280,10 @@ class SupabaseTeamProvider implements TeamProvider {
       .single();
 
     if (inviteError) {
-      throw new AppError({ code: ErrorCode.NETWORK, message: `Failed to create invitation: ${inviteError.message}` });
+      throw new AppError({
+        code: ErrorCode.NETWORK,
+        message: `Failed to create invitation: ${inviteError.message}`,
+      });
     }
 
     return {

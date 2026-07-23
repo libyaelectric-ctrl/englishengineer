@@ -123,7 +123,9 @@ describe('AIService', () => {
           rewriteText: vi.fn().mockResolvedValue(mockBackendResponse),
           analyzeText: vi.fn().mockResolvedValue(mockBackendResponse),
           generatePractice: vi.fn().mockResolvedValue(mockBackendResponse),
-          evaluateEngineeringEnglish: vi.fn().mockResolvedValue(mockBackendResponse),
+          evaluateEngineeringEnglish: vi
+            .fn()
+            .mockResolvedValue(mockBackendResponse),
           generateStudyPlan: vi.fn().mockResolvedValue(mockBackendResponse),
           analyzeProgress: vi.fn().mockResolvedValue(mockBackendResponse),
         })),

@@ -70,11 +70,7 @@ const StatusContent = ({
   </>
 );
 
-const DomainBar = ({
-  status,
-}: {
-  status: string;
-}) => (
+const DomainBar = ({ status }: { status: string }) => (
   <div className="mt-4 border-t border-border-soft pt-3 text-xs text-foreground0">
     <span>{status}</span>
   </div>
@@ -148,7 +144,9 @@ const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
 };
 
 const getBorderClass = (isWeak?: boolean): string =>
-  isWeak ? 'border border-rose-400/50' : 'border border-[#0047bb]/25 hover:border-[#0047bb]/50';
+  isWeak
+    ? 'border border-rose-400/50'
+    : 'border border-[#0047bb]/25 hover:border-[#0047bb]/50';
 
 export const WordCard = ({
   term,

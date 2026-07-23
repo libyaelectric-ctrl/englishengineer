@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { ReadingProgressService, type ReadingProgress } from '../reading-progress';
+import {
+  ReadingProgressService,
+  type ReadingProgress,
+} from '../reading-progress';
 
 describe('ReadingProgressService', () => {
-  const createProgress = (overrides: Partial<ReadingProgress> = {}): ReadingProgress => ({
+  const createProgress = (
+    overrides: Partial<ReadingProgress> = {}
+  ): ReadingProgress => ({
     contentId: 'article-1',
     status: 'new',
     score: 0,

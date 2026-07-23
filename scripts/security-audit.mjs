@@ -15,7 +15,10 @@ const PATTERNS = [
   { name: 'NPM Token', regex: /npm_[a-zA-Z0-9]{36}/ },
   { name: 'Slack Token', regex: /xox[baprs]-[a-zA-Z0-9-]+/ },
   { name: 'Stripe Secret Key', regex: /sk_live_[a-zA-Z0-9]+/ },
-  { name: 'Generic API Key', regex: /api[_-]?key[_=:]\s*['"][a-zA-Z0-9]{20,}['"]/i },
+  {
+    name: 'Generic API Key',
+    regex: /api[_-]?key[_=:]\s*['"][a-zA-Z0-9]{20,}['"]/i,
+  },
 ];
 
 const SCAN_DIRS = ['src', 'backend/src', 'scripts'];
@@ -25,7 +28,8 @@ function scanDir(dir, findings) {
   try {
     const entries = readdirSync(dir);
     for (const entry of entries) {
-      if (entry === 'node_modules' || entry === '.git' || entry === 'dist') continue;
+      if (entry === 'node_modules' || entry === '.git' || entry === 'dist')
+        continue;
 
       const fullPath = join(dir, entry);
       const stat = statSync(fullPath);
@@ -41,7 +45,11 @@ function scanDir(dir, findings) {
           for (const { name, regex } of PATTERNS) {
             const matches = content.match(regex);
             if (matches) {
-              findings.push({ file: fullPath, secret: name, match: matches[0].slice(0, 20) + '...' });
+              findings.push({
+                file: fullPath,
+                secret: name,
+                match: matches[0].slice(0, 20) + '...',
+              });
             }
           }
         } catch {

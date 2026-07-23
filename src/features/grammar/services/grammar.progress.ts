@@ -1,4 +1,9 @@
-export type RuleStatus = 'new' | 'learning' | 'learned' | 'mastered' | 'struggling';
+export type RuleStatus =
+  | 'new'
+  | 'learning'
+  | 'learned'
+  | 'mastered'
+  | 'struggling';
 
 export interface RuleProgress {
   ruleId: string;
@@ -30,7 +35,11 @@ export const GrammarProgressService = {
 
   onView(current: RuleProgress): RuleProgress {
     if (current.status === 'new') {
-      return { ...current, status: 'learning', lastPracticedAt: new Date().toISOString() };
+      return {
+        ...current,
+        status: 'learning',
+        lastPracticedAt: new Date().toISOString(),
+      };
     }
     return current;
   },
@@ -56,7 +65,10 @@ export const GrammarProgressService = {
 
     return {
       ...current,
-      status: current.status === 'new' || current.status === 'learning' ? 'learned' : current.status,
+      status:
+        current.status === 'new' || current.status === 'learning'
+          ? 'learned'
+          : current.status,
       correctCount: newCorrect,
       quizDates: newDates,
       lastPracticedAt: now,
@@ -66,16 +78,35 @@ export const GrammarProgressService = {
   onQuizIncorrect(current: RuleProgress): RuleProgress {
     const now = new Date().toISOString();
     if (current.status === 'mastered') {
-      return { ...current, status: 'learned', correctCount: Math.max(0, current.correctCount - 1), failCount: current.failCount + 1, lastPracticedAt: now };
+      return {
+        ...current,
+        status: 'learned',
+        correctCount: Math.max(0, current.correctCount - 1),
+        failCount: current.failCount + 1,
+        lastPracticedAt: now,
+      };
     }
     if (current.failCount + 1 >= 5) {
-      return { ...current, status: 'struggling', failCount: current.failCount + 1, lastPracticedAt: now };
+      return {
+        ...current,
+        status: 'struggling',
+        failCount: current.failCount + 1,
+        lastPracticedAt: now,
+      };
     }
-    return { ...current, failCount: current.failCount + 1, lastPracticedAt: now };
+    return {
+      ...current,
+      failCount: current.failCount + 1,
+      lastPracticedAt: now,
+    };
   },
 
   onStrugglingQuizCorrect(current: RuleProgress): RuleProgress {
-    return { ...current, status: 'learning', lastPracticedAt: new Date().toISOString() };
+    return {
+      ...current,
+      status: 'learning',
+      lastPracticedAt: new Date().toISOString(),
+    };
   },
 
   isQuizReady(learnedCount: number): boolean {
@@ -84,11 +115,16 @@ export const GrammarProgressService = {
 
   getStatusColor(status: RuleStatus): string {
     switch (status) {
-      case 'learning': return 'yellow';
-      case 'learned': return 'green';
-      case 'mastered': return 'gold';
-      case 'struggling': return 'red';
-      default: return 'gray';
+      case 'learning':
+        return 'yellow';
+      case 'learned':
+        return 'green';
+      case 'mastered':
+        return 'gold';
+      case 'struggling':
+        return 'red';
+      default:
+        return 'gray';
     }
   },
 };

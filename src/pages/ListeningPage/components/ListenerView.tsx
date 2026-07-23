@@ -21,7 +21,11 @@ interface ListenerViewProps {
   onWordClick?: (word: string) => void;
 }
 
-export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewProps) => {
+export const ListenerView = ({
+  title,
+  transcript,
+  onWordClick,
+}: ListenerViewProps) => {
   const [dictationText, setDictationText] = useState('');
   const [dictationResult, setDictationResult] = useState<number | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -30,14 +34,18 @@ export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewPro
     const original = transcript.toLowerCase().trim();
     const attempt = dictationText.toLowerCase().trim();
     const words = original.split(/\s+/);
-    const matched = attempt.split(/\s+/).filter((w) => words.includes(w)).length;
+    const matched = attempt
+      .split(/\s+/)
+      .filter((w) => words.includes(w)).length;
     setDictationResult(Math.round((matched / words.length) * 100));
   };
 
   const startDictation = () => {
-    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) return;
-    const Ctor = (window as Record<string, unknown>).webkitSpeechRecognition
-      ?? (window as Record<string, unknown>).SpeechRecognition;
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window))
+      return;
+    const Ctor =
+      (window as Record<string, unknown>).webkitSpeechRecognition ??
+      (window as Record<string, unknown>).SpeechRecognition;
     const recognition = new (Ctor as new () => SpeechRecognitionInstance)();
     recognition.lang = 'en-US';
     recognition.continuous = true;
@@ -58,7 +66,10 @@ export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewPro
 
       <AudioPlayer />
 
-      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-6" style={{ fontSize: '18px', lineHeight: '1.8', maxWidth: '720px' }}>
+      <div
+        className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-6"
+        style={{ fontSize: '18px', lineHeight: '1.8', maxWidth: '720px' }}
+      >
         {words.map((word, i) => (
           <span
             key={i}
@@ -79,18 +90,34 @@ export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewPro
       </div>
 
       <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 space-y-3">
-        <p className="text-[10px] font-bold uppercase text-muted-copy">Dictation Practice</p>
-        <textarea value={dictationText} onChange={(e) => setDictationText(e.target.value)} placeholder="Type what you heard..." className="w-full rounded-[4px] border border-border-soft bg-background p-3 text-sm outline-none focus:border-[#0047bb]/50" rows={3} />
+        <p className="text-[10px] font-bold uppercase text-muted-copy">
+          Dictation Practice
+        </p>
+        <textarea
+          value={dictationText}
+          onChange={(e) => setDictationText(e.target.value)}
+          placeholder="Type what you heard..."
+          className="w-full rounded-[4px] border border-border-soft bg-background p-3 text-sm outline-none focus:border-[#0047bb]/50"
+          rows={3}
+        />
         <div className="flex gap-2">
-          <button onClick={startDictation} className={`flex items-center gap-1 rounded-[4px] px-3 py-1.5 text-[10px] font-bold ${isRecording ? 'bg-red-500 text-white' : 'border border-border-soft text-foreground hover:bg-surface-hover'}`}>
+          <button
+            onClick={startDictation}
+            className={`flex items-center gap-1 rounded-[4px] px-3 py-1.5 text-[10px] font-bold ${isRecording ? 'bg-red-500 text-white' : 'border border-border-soft text-foreground hover:bg-surface-hover'}`}
+          >
             <Mic className="h-3 w-3" /> {isRecording ? 'Recording...' : 'Speak'}
           </button>
-          <button onClick={checkDictation} className="flex items-center gap-1 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold text-primary-foreground">
+          <button
+            onClick={checkDictation}
+            className="flex items-center gap-1 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold text-primary-foreground"
+          >
             <CheckCircle className="h-3 w-3" /> Check
           </button>
         </div>
         {dictationResult !== null && (
-          <p className="text-xs font-bold text-foreground">Accuracy: {dictationResult}%</p>
+          <p className="text-xs font-bold text-foreground">
+            Accuracy: {dictationResult}%
+          </p>
         )}
       </div>
 

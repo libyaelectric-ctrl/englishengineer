@@ -40,7 +40,13 @@ export const getVariant = (experimentName: string, userId: string): Variant => {
   return variant;
 };
 
-export const useABTest = (experimentName: string, userId: string = 'anonymous'): { variant: Variant } => {
-  const variant = useMemo(() => getVariant(experimentName, userId), [experimentName, userId]);
+export const useABTest = (
+  experimentName: string,
+  userId: string = 'anonymous'
+): { variant: Variant } => {
+  const variant = useMemo(
+    () => getVariant(experimentName, userId),
+    [experimentName, userId]
+  );
   return { variant };
 };

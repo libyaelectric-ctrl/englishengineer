@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Sparkles,
-  Volume2,
-  Bot,
-  X,
-} from 'lucide-react';
+import { Sparkles, Volume2, Bot, X } from 'lucide-react';
 import { useWorkToolsStore } from '@/features/work-tools';
 import { playNaturalTTS } from '@/shared/utils/sound';
 
@@ -25,8 +20,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'GROUNDING GRID',
     code: 'DRG-EE-042',
     turkishMeaning: 'Topraklama Ağı / Izgarası',
-    definition: 'A network of interconnected bare conductors buried in earth to provide safe dissipation of fault currents.',
-    sampleSentence: 'The substation grounding grid resistance measured below 0.5 ohms during testing.',
+    definition:
+      'A network of interconnected bare conductors buried in earth to provide safe dissipation of fault currents.',
+    sampleSentence:
+      'The substation grounding grid resistance measured below 0.5 ohms during testing.',
     domain: 'Electrical Power',
   },
   {
@@ -34,8 +31,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'SINGLE LINE DIAGRAM',
     code: 'SLD-PWR-101',
     turkishMeaning: 'Tek Hat Şeması',
-    definition: 'A simplified notation for representing a three-phase power system using single line symbols.',
-    sampleSentence: 'Verify the transformer protection relays against the updated Single Line Diagram.',
+    definition:
+      'A simplified notation for representing a three-phase power system using single line symbols.',
+    sampleSentence:
+      'Verify the transformer protection relays against the updated Single Line Diagram.',
     domain: 'Electrical',
   },
   {
@@ -43,8 +42,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'PLC LADDER LOGIC',
     code: 'CTRL-PLC-88',
     turkishMeaning: 'PLC Merdiven Mantığı Programı',
-    definition: 'A graphical programming language used to develop software for programmable logic controllers.',
-    sampleSentence: 'The automation engineer refactored the ladder logic to reduce cycle time.',
+    definition:
+      'A graphical programming language used to develop software for programmable logic controllers.',
+    sampleSentence:
+      'The automation engineer refactored the ladder logic to reduce cycle time.',
     domain: 'Automation',
   },
   {
@@ -52,8 +53,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'FINITE ELEMENT ANALYSIS',
     code: 'FEA-STR-309',
     turkishMeaning: 'Sonlu Elemanlar Analizi (FEA)',
-    definition: 'A computerized method for predicting how a product reacts to real-world forces and heat.',
-    sampleSentence: 'FEA stress simulation confirmed structural safety under maximum wind loading.',
+    definition:
+      'A computerized method for predicting how a product reacts to real-world forces and heat.',
+    sampleSentence:
+      'FEA stress simulation confirmed structural safety under maximum wind loading.',
     domain: 'Structural',
   },
   {
@@ -61,8 +64,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'TURBINE PITCH CONTROL',
     code: 'MEC-WIND-07',
     turkishMeaning: 'Rüzgar Türbini Kanat Açı Kontrolü',
-    definition: 'Mechanism to rotate wind turbine blades to optimize power generation and limit excessive aerodynamic forces.',
-    sampleSentence: 'The pitch control system feathered the blades during high gale warnings.',
+    definition:
+      'Mechanism to rotate wind turbine blades to optimize power generation and limit excessive aerodynamic forces.',
+    sampleSentence:
+      'The pitch control system feathered the blades during high gale warnings.',
     domain: 'Mechanical',
   },
   {
@@ -70,8 +75,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'SUBSTATION BUSBAR',
     code: 'HV-SUB-500',
     turkishMeaning: 'Trafo Merkezi Bara Sistemi',
-    definition: 'A thick strip of copper or aluminum that conducts electricity within a switchboard or substation.',
-    sampleSentence: 'Infrared thermography revealed hot spots along the main 138kV busbar connections.',
+    definition:
+      'A thick strip of copper or aluminum that conducts electricity within a switchboard or substation.',
+    sampleSentence:
+      'Infrared thermography revealed hot spots along the main 138kV busbar connections.',
     domain: 'High Voltage',
   },
   {
@@ -79,8 +86,10 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
     term: 'BMS HVAC CONTROLLER',
     code: 'MEP-HVAC-12',
     turkishMeaning: 'Bina Yönetim Sistemli İklimlendirme Kontrolörü',
-    definition: 'Centralized control system for heating, ventilation, and air-conditioning units across facilities.',
-    sampleSentence: 'The BMS controller automatically modulated damper actuators to meet airflow setpoints.',
+    definition:
+      'Centralized control system for heating, ventilation, and air-conditioning units across facilities.',
+    sampleSentence:
+      'The BMS controller automatically modulated damper actuators to meet airflow setpoints.',
     domain: 'MEP',
   },
 ];
@@ -95,7 +104,9 @@ export const SidebarMascotBar: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
-  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [availableVoices, setAvailableVoices] = useState<
+    SpeechSynthesisVoice[]
+  >([]);
   const [selectedVoiceName, setSelectedVoiceName] = useState<string>('');
   const [speechRate, setSpeechRate] = useState<number>(0.92);
 
@@ -106,11 +117,19 @@ export const SidebarMascotBar: React.FC = () => {
   useEffect(() => {
     if (!('speechSynthesis' in window)) return;
     const updateVoices = () => {
-      const voices = window.speechSynthesis.getVoices().filter((v) => v.lang.startsWith('en'));
+      const voices = window.speechSynthesis
+        .getVoices()
+        .filter((v) => v.lang.startsWith('en'));
       setAvailableVoices(voices);
       if (voices.length > 0 && !selectedVoiceName) {
         // Pick best natural voice by default
-        const best = voices.find((v) => v.name.includes('Natural') || v.name.includes('Google') || v.name.includes('Online')) || voices[0];
+        const best =
+          voices.find(
+            (v) =>
+              v.name.includes('Natural') ||
+              v.name.includes('Google') ||
+              v.name.includes('Online')
+          ) || voices[0];
         if (best) setSelectedVoiceName(best.name);
       }
     };
@@ -220,7 +239,8 @@ export const SidebarMascotBar: React.FC = () => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <span className="font-mono text-[9px] font-extrabold uppercase tracking-wider text-[#0047bb] bg-[#0047bb]/10 px-1.5 py-0.5 rounded flex items-center gap-1">
-                <Sparkles className="h-2.5 w-2.5 text-[#0047bb]" /> {currentTerm.code}
+                <Sparkles className="h-2.5 w-2.5 text-[#0047bb]" />{' '}
+                {currentTerm.code}
               </span>
               <span className="text-[9px] font-bold text-muted-copy">
                 {currentTerm.domain}

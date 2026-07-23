@@ -52,7 +52,10 @@ export class LocalAuthAdapter implements AuthAdapter {
 
   private assertEnabled(): void {
     if (!this.enabled) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'Secure authentication is not configured.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Secure authentication is not configured.',
+      });
     }
   }
 
@@ -91,20 +94,29 @@ export class LocalAuthAdapter implements AuthAdapter {
     this.assertEnabled();
 
     if (!password || password.length < 6) {
-      throw new AppError({ code: ErrorCode.VALIDATION, message: 'Password must be at least 6 characters.' });
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: 'Password must be at least 6 characters.',
+      });
     }
 
     const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
     const existing = this.findExistingUser(email, allUsers);
 
     if (!existing) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'User does not exist. Please sign up first.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'User does not exist. Please sign up first.',
+      });
     }
 
     if (existing.passwordHash) {
       const inputHash = await hashPassword(password);
       if (inputHash !== existing.passwordHash) {
-        throw new AppError({ code: ErrorCode.AUTH, message: 'Invalid email or password.' });
+        throw new AppError({
+          code: ErrorCode.AUTH,
+          message: 'Invalid email or password.',
+        });
       }
     }
 
@@ -125,7 +137,10 @@ export class LocalAuthAdapter implements AuthAdapter {
     this.assertEnabled();
 
     if (!password || password.length < 6) {
-      throw new AppError({ code: ErrorCode.VALIDATION, message: 'Password must be at least 6 characters.' });
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: 'Password must be at least 6 characters.',
+      });
     }
 
     const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
@@ -134,7 +149,10 @@ export class LocalAuthAdapter implements AuthAdapter {
     );
 
     if (existing) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'An account with this email address already exists.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'An account with this email address already exists.',
+      });
     }
 
     const newUser: LocalUserProfile = {
@@ -183,7 +201,10 @@ export class LocalAuthAdapter implements AuthAdapter {
     this.assertEnabled();
     const currentUser = await this.getCurrentUser();
     if (!currentUser) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'No authenticated user found' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'No authenticated user found',
+      });
     }
 
     const updated: UserProfile = {
@@ -264,7 +285,10 @@ export class SupabaseAuthAdapter implements AuthAdapter {
 
   constructor(client = getSupabaseClient()) {
     if (!client) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'Supabase client is not configured.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Supabase client is not configured.',
+      });
     }
     this.client = client;
   }
@@ -289,7 +313,10 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     password?: string
   ): Promise<UserProfile> {
     if (!password) {
-      throw new AppError({ code: ErrorCode.VALIDATION, message: 'Password is required when Supabase auth is active.' });
+      throw new AppError({
+        code: ErrorCode.VALIDATION,
+        message: 'Password is required when Supabase auth is active.',
+      });
     }
 
     const { data, error } = await this.client.auth.signInWithPassword({
@@ -297,7 +324,10 @@ export class SupabaseAuthAdapter implements AuthAdapter {
       password,
     });
     if (error || !data.user?.email) {
-      throw new AppError({ code: ErrorCode.AUTH, message: error?.message || 'Supabase sign in failed.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: error?.message || 'Supabase sign in failed.',
+      });
     }
 
     const fallbackProfile = this.toUserProfile(
@@ -326,7 +356,10 @@ export class SupabaseAuthAdapter implements AuthAdapter {
       },
     });
     if (error || !data.user?.email) {
-      throw new AppError({ code: ErrorCode.AUTH, message: error?.message || 'Supabase sign up failed.' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: error?.message || 'Supabase sign up failed.',
+      });
     }
 
     const fallbackProfile = this.toUserProfile(
@@ -340,7 +373,8 @@ export class SupabaseAuthAdapter implements AuthAdapter {
   async demoLogin(): Promise<UserProfile> {
     throw new AppError({
       code: ErrorCode.AUTH,
-      message: 'Demo login is local-only. Switch VITE_AUTH_PROVIDER to local for demo mode.',
+      message:
+        'Demo login is local-only. Switch VITE_AUTH_PROVIDER to local for demo mode.',
     });
   }
 
@@ -351,7 +385,10 @@ export class SupabaseAuthAdapter implements AuthAdapter {
   async updateProfile(updates: Partial<UserProfile>): Promise<UserProfile> {
     const currentUser = await this.getCurrentUser();
     if (!currentUser) {
-      throw new AppError({ code: ErrorCode.AUTH, message: 'No authenticated Supabase user found' });
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'No authenticated Supabase user found',
+      });
     }
 
     const displayName = updates.displayName || currentUser.displayName;

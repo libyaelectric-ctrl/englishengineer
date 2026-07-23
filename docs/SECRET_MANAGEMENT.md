@@ -6,22 +6,22 @@ This document outlines how API keys and secrets are managed in production, and t
 
 ## Current Secrets
 
-| Secret | Service | Location |
-|--------|---------|----------|
-| `SUPABASE_URL` | Supabase | Railway env |
-| `SUPABASE_ANON_KEY` | Supabase | Railway env |
-| `SUPABASE_JWT_SECRET` | Supabase | Railway env |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase | Railway env |
-| `STRIPE_SECRET_KEY` | Stripe | Railway env |
-| `STRIPE_WEBHOOK_SECRET` | Stripe | Railway env |
-| `STRIPE_PRICE_PRO_MONTHLY` | Stripe | Railway env |
-| `OPENAI_API_KEY` | OpenAI | Railway env |
-| `ANTHROPIC_API_KEY` | Anthropic | Railway env |
-| `GEMINI_API_KEY` | Google AI | Railway env |
-| `UPSTASH_URL` | Upstash Redis | Railway env |
-| `UPSTASH_TOKEN` | Upstash Redis | Railway env |
-| `INTERNAL_API_SECRET` | Backend internal | Railway env |
-| `VITE_AI_PROXY_URL` | Backend proxy | Vercel env |
+| Secret                      | Service          | Location    |
+| --------------------------- | ---------------- | ----------- |
+| `SUPABASE_URL`              | Supabase         | Railway env |
+| `SUPABASE_ANON_KEY`         | Supabase         | Railway env |
+| `SUPABASE_JWT_SECRET`       | Supabase         | Railway env |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase         | Railway env |
+| `STRIPE_SECRET_KEY`         | Stripe           | Railway env |
+| `STRIPE_WEBHOOK_SECRET`     | Stripe           | Railway env |
+| `STRIPE_PRICE_PRO_MONTHLY`  | Stripe           | Railway env |
+| `OPENAI_API_KEY`            | OpenAI           | Railway env |
+| `ANTHROPIC_API_KEY`         | Anthropic        | Railway env |
+| `GEMINI_API_KEY`            | Google AI        | Railway env |
+| `UPSTASH_URL`               | Upstash Redis    | Railway env |
+| `UPSTASH_TOKEN`             | Upstash Redis    | Railway env |
+| `INTERNAL_API_SECRET`       | Backend internal | Railway env |
+| `VITE_AI_PROXY_URL`         | Backend proxy    | Vercel env  |
 
 ## Storage Principles
 
@@ -32,35 +32,40 @@ This document outlines how API keys and secrets are managed in production, and t
 
 ## Rotation Schedule
 
-| Secret | Rotation Frequency | Method |
-|--------|-------------------|--------|
-| Stripe keys | On compromise or quarterly | Stripe Dashboard → Developers → API Keys |
-| Supabase keys | On compromise or annually | Supabase Dashboard → Settings → API |
-| OpenAI/Anthropic | On compromise or quarterly | Provider dashboard → API Keys |
-| Upstash | On compromise | Upstash Dashboard → Tokens |
-| INTERNAL_API_SECRET | On any personnel change | Regenerate in Railway env |
+| Secret              | Rotation Frequency         | Method                                   |
+| ------------------- | -------------------------- | ---------------------------------------- |
+| Stripe keys         | On compromise or quarterly | Stripe Dashboard → Developers → API Keys |
+| Supabase keys       | On compromise or annually  | Supabase Dashboard → Settings → API      |
+| OpenAI/Anthropic    | On compromise or quarterly | Provider dashboard → API Keys            |
+| Upstash             | On compromise              | Upstash Dashboard → Tokens               |
+| INTERNAL_API_SECRET | On any personnel change    | Regenerate in Railway env                |
 
 ## Rotation Procedure
 
 ### Step 1: Generate New Key
+
 - Log into the provider dashboard
 - Create a new API key (keep old one active temporarily)
 
 ### Step 2: Update Environment
+
 - Update the env var in Railway (backend) and Vercel (frontend)
 - Railway: Settings → Variables → Edit
 - Vercel: Project Settings → Environment Variables → Edit
 
 ### Step 3: Redeploy
+
 - Railway auto-redeploys on env change
 - Vercel: trigger redeploy if needed
 
 ### Step 4: Verify
+
 - Check `/api/health` endpoint
 - Run integration tests locally with new key
 - Monitor error logs for 15 minutes
 
 ### Step 5: Revoke Old Key
+
 - Delete the old key from the provider dashboard
 - Confirm no errors appear in logs
 

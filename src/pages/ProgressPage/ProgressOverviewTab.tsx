@@ -38,10 +38,18 @@ export const ProgressOverviewTab = () => {
     AdaptiveDifficultyEngine.assessDifficulty(p.ruleId, p)
   );
   const difficultyStats = {
-    beginner: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'beginner').length,
-    intermediate: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'intermediate').length,
-    advanced: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'advanced').length,
-    challenge: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'challenge').length,
+    beginner: difficultyBreakdown.filter(
+      (d) => d.suggestedDifficulty === 'beginner'
+    ).length,
+    intermediate: difficultyBreakdown.filter(
+      (d) => d.suggestedDifficulty === 'intermediate'
+    ).length,
+    advanced: difficultyBreakdown.filter(
+      (d) => d.suggestedDifficulty === 'advanced'
+    ).length,
+    challenge: difficultyBreakdown.filter(
+      (d) => d.suggestedDifficulty === 'challenge'
+    ).length,
   };
 
   const calculateSkillElo = (skillId: string) => {
@@ -144,7 +152,9 @@ export const ProgressOverviewTab = () => {
         highestSkillLabel={highestSkill.label}
         peakElo={Math.max(...Object.values(eloScores))}
         sessionsCount={learningState?.studySessions?.length || 0}
-        knowledgePoolSize={vocabularyPool.length + grammarPool.length + speakingPool.length}
+        knowledgePoolSize={
+          vocabularyPool.length + grammarPool.length + speakingPool.length
+        }
         grammarMastered={grammarSummary.strong}
         grammarErrors={errorPatternSummary.totalErrors}
         advancedRules={difficultyStats.advanced + difficultyStats.challenge}
@@ -180,8 +190,6 @@ export const ProgressOverviewTab = () => {
               chartTabs={chartTabs}
             />
           )}
-
-
         </div>
 
         <div className="h-full">

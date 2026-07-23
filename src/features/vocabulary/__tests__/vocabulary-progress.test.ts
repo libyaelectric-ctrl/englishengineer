@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { VocabularyProgressService, type WordProgress, MASTERY_REQUIRED_CORRECT } from '../services/vocabulary.progress';
+import {
+  VocabularyProgressService,
+  type WordProgress,
+  MASTERY_REQUIRED_CORRECT,
+} from '../services/vocabulary.progress';
 
 describe('VocabularyProgressService', () => {
   it('1. New → Learning (otomatik看到)', () => {
@@ -53,7 +57,8 @@ describe('VocabularyProgressService', () => {
   it('6. Mastered → Learned (yanlış cevap)', () => {
     let word: WordProgress = VocabularyProgressService.addWord('hello');
     word = VocabularyProgressService.onView(word);
-    for (let i = 0; i < 3; i++) word = VocabularyProgressService.onQuizCorrect(word);
+    for (let i = 0; i < 3; i++)
+      word = VocabularyProgressService.onQuizCorrect(word);
     expect(word.status).toBe('mastered');
 
     const result = VocabularyProgressService.onQuizIncorrect(word);

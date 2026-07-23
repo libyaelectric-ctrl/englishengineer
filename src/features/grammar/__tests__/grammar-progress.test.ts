@@ -19,7 +19,8 @@ describe('GrammarProgressService', () => {
   it('Learned → Mastered (3 doğru)', () => {
     let rule = GrammarProgressService.addRule('past-simple');
     rule = GrammarProgressService.onView(rule);
-    for (let i = 0; i < 3; i++) rule = GrammarProgressService.onQuizCorrect(rule);
+    for (let i = 0; i < 3; i++)
+      rule = GrammarProgressService.onQuizCorrect(rule);
     expect(rule.status).toBe('mastered');
     expect(rule.masteredAt).toBeTruthy();
   });
@@ -27,7 +28,8 @@ describe('GrammarProgressService', () => {
   it('Mastered → Learned (yanlış cevap)', () => {
     let rule = GrammarProgressService.addRule('past-simple');
     rule = GrammarProgressService.onView(rule);
-    for (let i = 0; i < 3; i++) rule = GrammarProgressService.onQuizCorrect(rule);
+    for (let i = 0; i < 3; i++)
+      rule = GrammarProgressService.onQuizCorrect(rule);
     expect(rule.status).toBe('mastered');
     const result = GrammarProgressService.onQuizIncorrect(rule);
     expect(result.status).toBe('learned');
@@ -36,7 +38,8 @@ describe('GrammarProgressService', () => {
   it('Struggling → Learning (doğru cevap)', () => {
     let rule = GrammarProgressService.addRule('past-simple');
     rule = GrammarProgressService.onView(rule);
-    for (let i = 0; i < 5; i++) rule = GrammarProgressService.onQuizIncorrect(rule);
+    for (let i = 0; i < 5; i++)
+      rule = GrammarProgressService.onQuizIncorrect(rule);
     expect(rule.status).toBe('struggling');
     const result = GrammarProgressService.onStrugglingQuizCorrect(rule);
     expect(result.status).toBe('learning');
