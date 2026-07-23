@@ -349,14 +349,18 @@ const registerRoutes = (
   app.use('/api/v1', v1Router);
 
   const healthHandler = async (_request: Request, response: Response) => {
+    const startTime = Date.now();
     const health = toPublicHealth(config);
     const checks: Record<string, unknown> = { ...health.checks };
     if (config.supabase?.configured)
       await checkSupabaseHealth(config, checks, health);
     await checkUpstashHealth(config, checks, health);
+    const responseTime = Date.now() - startTime;
     response.json({
       ...health,
       checks,
+      responseTimeMs: responseTime,
+      timestamp: new Date().toISOString(),
       stripeConfigured:
         (checks.stripe as { configured?: boolean })?.configured ?? false,
     });
@@ -494,6 +498,17 @@ const registerRoutes = (
   );
 
   app.use('/api', limiters.global);
+
+  // Deprecation headers for legacy /api routes
+  app.use('/api', (req: Request, _res: Response, next: NextFunction) => {
+    if (!req.path.startsWith('/v1')) {
+      _res.setHeader('Deprecation', 'true');
+      _res.setHeader('Sunset', '2026-12-31');
+      _res.setHeader('Link', '</api/v1' + req.path + '>; rel="successor-version"');
+    }
+    next();
+  });
+
   registerAdminRoutes(app, requireBackendAuth, limiters.global);
 
   registerProgressRoutes(app);
