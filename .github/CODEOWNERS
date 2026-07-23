@@ -1,0 +1,10 @@
+# Default code owner
+* @libyaelectric-ctrl
+
+# Security-sensitive files require explicit review
+backend/.env* @libyaelectric-ctrl
+.env* @libyaelectric-ctrl
+.github/workflows/ @libyaelectric-ctrl
+src/core/auth/ @libyaelectric-ctrl
+src/features/auth/ @libyaelectric-ctrl
+src/features/billing/ @libyaelectric-ctrl
