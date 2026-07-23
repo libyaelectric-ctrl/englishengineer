@@ -32,7 +32,7 @@ export default defineConfig(() => {
     build: {
       outDir: 'dist',
       sourcemap: 'hidden' as const,
-      chunkSizeWarningLimit: 250,
+      chunkSizeWarningLimit: 3500,
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -48,6 +48,7 @@ export default defineConfig(() => {
               if (id.includes('isomorphic-dompurify')) return 'vendor-sanitize';
               return 'vendor-misc';
             }
+            if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
             if (id.includes('/core/')) return 'core';
             if (id.includes('/shared/')) return 'shared';
           },
