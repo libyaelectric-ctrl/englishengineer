@@ -60,7 +60,7 @@ const BetaProgramPage = () => {
           </p>
         </Card>
       </div>
-      <div className="grid gap-5 xl:grid-cols-[1fr_360px]">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
         <Card className="space-y-5" hoverEffect={false}>
           <div className="flex items-center gap-3">
             <BarChart3 className="h-5 w-5 text-primary" />
