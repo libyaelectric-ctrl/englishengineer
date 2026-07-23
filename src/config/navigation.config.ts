@@ -25,7 +25,6 @@ import {
   PenTool,
   Settings,
   Shield,
-  Sparkles,
   Target,
   Trophy,
   User,
@@ -59,7 +58,6 @@ export const PROFILE_NAV_ITEMS = [
   { label: 'Overview', href: '/profile/overview', icon: User },
   { label: 'Preferences', href: '/profile/preferences', icon: Settings },
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
-  { label: 'Beta Program', href: '/beta-program', icon: Sparkles },
 ] as const;
 
 export const PROGRESS_NAV_ITEMS = [

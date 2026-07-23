@@ -54,7 +54,7 @@ const VocabularyPage = () => {
   } = useVocabularyPage();
 
   return (
-    <div className="animate-in fade-in duration-300 relative">
+    <div className="mx-auto max-w-5xl space-y-6 animate-in fade-in duration-300 relative pb-8">
       <VocabularyHeader
         vocabularyLevel={vocabularyLevel}
         activeTab={activeTab}
