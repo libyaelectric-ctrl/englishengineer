@@ -4,75 +4,33 @@ import { useVocabularyStore } from './store/vocabulary.store';
 describe('Vocabulary Integration', () => {
   beforeEach(() => {
     useVocabularyStore.setState({
-      entries: [],
-      selectedEntry: null,
-      isLoading: false,
-      error: null,
+      mode: 'flashcards',
+      responses: {},
+      isSubmitting: false,
     });
   });
 
-  it('initializes with empty entries', () => {
+  it('initializes with flashcards mode', () => {
     const state = useVocabularyStore.getState();
-    expect(state.entries).toEqual([]);
-    expect(state.selectedEntry).toBeNull();
+    expect(state.mode).toBe('flashcards');
+    expect(state.responses).toEqual({});
+    expect(state.isSubmitting).toBe(false);
   });
 
-  it('can add entries', () => {
-    const newEntry = {
-      id: 'word-1',
-      term: 'panel',
-      definition: 'Electrical control board',
-      language: 'en',
-      createdAt: new Date().toISOString(),
-    };
-
-    useVocabularyStore.setState({
-      entries: [newEntry],
-    });
-
-    expect(useVocabularyStore.getState().entries).toHaveLength(1);
-    expect(useVocabularyStore.getState().entries[0].term).toBe('panel');
+  it('can set training mode', () => {
+    useVocabularyStore.getState().setMode('multiple_choice');
+    expect(useVocabularyStore.getState().mode).toBe('multiple_choice');
   });
 
-  it('can select an entry', () => {
-    const entry = {
-      id: 'word-1',
-      term: 'circuit',
-      definition: 'Electrical pathway',
-      language: 'en',
-      createdAt: new Date().toISOString(),
-    };
-
-    useVocabularyStore.setState({
-      entries: [entry],
-      selectedEntry: entry,
-    });
-
-    expect(useVocabularyStore.getState().selectedEntry?.term).toBe('circuit');
+  it('can set word response', () => {
+    useVocabularyStore.getState().setResponse('word-1', 'transformer');
+    expect(useVocabularyStore.getState().responses['word-1']).toBe('transformer');
   });
 
-  it('can clear selected entry', () => {
-    useVocabularyStore.setState({
-      selectedEntry: { id: 'word-1', term: 'test' } as any,
-    });
-
-    useVocabularyStore.setState({ selectedEntry: null });
-    expect(useVocabularyStore.getState().selectedEntry).toBeNull();
-  });
-
-  it('handles loading state', () => {
-    useVocabularyStore.setState({ isLoading: true });
-    expect(useVocabularyStore.getState().isLoading).toBe(true);
-
-    useVocabularyStore.setState({ isLoading: false });
-    expect(useVocabularyStore.getState().isLoading).toBe(false);
-  });
-
-  it('handles error state', () => {
-    useVocabularyStore.setState({ error: 'Network error' });
-    expect(useVocabularyStore.getState().error).toBe('Network error');
-
-    useVocabularyStore.setState({ error: null });
-    expect(useVocabularyStore.getState().error).toBeNull();
+  it('calculates vocabulary stats', () => {
+    useVocabularyStore.getState().fetchVocabularyStats();
+    const stats = useVocabularyStore.getState().stats;
+    expect(stats).toBeDefined();
+    expect(typeof stats.total).toBe('number');
   });
 });
