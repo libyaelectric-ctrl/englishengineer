@@ -66,6 +66,7 @@ node scripts/security-audit.mjs  # Check for exposed secrets
 ## Commit Messages
 
 Use conventional commits:
+
 - `feat:` — new feature
 - `fix:` — bug fix
 - `perf:` — performance improvement

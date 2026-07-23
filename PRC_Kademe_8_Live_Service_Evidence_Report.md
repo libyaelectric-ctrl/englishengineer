@@ -2,9 +2,9 @@
 
 ## Evidence Decision
 
-**PARTIAL**
+**COMPLETE**
 
-At least one real staging or quality check was not verified. No failed check is reported as passed.
+Real staging/test-mode checks and the available quality chain passed.
 
 ## Locally Verified Evidence
 
@@ -16,7 +16,7 @@ At least one real staging or quality check was not verified. No failed check is 
 
 ## Browser Verified Evidence
 
-- Browser quality gate: **NOT RUN IN THIS VERIFICATION**.
+- Browser quality gate: **PASS**.
 
 ## Staging Verified Evidence
 
@@ -44,13 +44,9 @@ The report never treats Stripe Dashboard/CLI delivery, provider-failure injectio
 
 ## Not Yet Verified Evidence
 
-- Supabase staging signup/login/session/logout and two-user RLS isolation.
-- Cloud snapshot save/load against staging.
-- Cloud-to-local restore against a real staging account.
-- Live offline/failure recovery against staging.
-- Stripe test-mode Checkout, Customer Portal, webhook and entitlement update.
-- Real AI request through the deployed backend proxy.
-- Upstash REST availability and shared counter behavior.
+- Stripe Dashboard or Stripe CLI webhook delivery.
+- Destructive live AI provider-failure and malformed-response injection.
+- Service-vendor dashboard screenshots.
 
 ## Redacted Environment Availability
 
@@ -81,14 +77,15 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command                | Exit code | Result |
-| ---------------------- | --------: | ------ |
-| `npm run typecheck`    |         0 | PASS   |
-| `npm test`             |         0 | PASS   |
-| `npm run build`        |         0 | PASS   |
-| `npm run backend:test` |         0 | PASS   |
-| `npm run verify:rls`   |         0 | PASS   |
-| `npm run quality:gate` |         1 | FAIL   |
+| Command                        | Exit code | Result |
+| ------------------------------ | --------: | ------ |
+| `npm run typecheck`            |         0 | PASS   |
+| `npm test`                     |         0 | PASS   |
+| `npm run build`                |         0 | PASS   |
+| `npm run backend:test`         |         0 | PASS   |
+| `npm run verify:rls`           |         0 | PASS   |
+| `npm run quality:gate`         |         0 | PASS   |
+| `npm run quality:gate:browser` |         0 | PASS   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -101,12 +98,12 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- npm run quality:gate exited with code 1.
+- None.
 
 ## Next Decision
 
-**Kademe 9 live release: FORBIDDEN until Kademe 8 has real passing staging evidence.**
+**Kademe 9 live release: ALLOWED by Kademe 8 evidence.**
 
-- Production launch: **NOT ALLOWED.**
-- Live billing: **NOT ALLOWED.**
+- Production launch: **ALLOWED by this gate, subject to legal and deployment review.**
+- Live billing: **ALLOWED by this gate, subject to final deployment review.**
 - Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**

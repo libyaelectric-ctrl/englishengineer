@@ -5,6 +5,7 @@ Base URL: `https://englishengineer-production.up.railway.app`
 ## Authentication
 
 All protected endpoints require a Bearer token:
+
 ```
 Authorization: Bearer <supabase_access_token>
 ```
@@ -12,10 +13,13 @@ Authorization: Bearer <supabase_access_token>
 ## Endpoints
 
 ### Health Check
+
 ```
 GET /api/health
 ```
+
 **Response:**
+
 ```json
 {
   "ok": true,
@@ -30,6 +34,7 @@ GET /api/health
 ```
 
 ### AI Coach
+
 ```
 POST /api/ai/coach
 Authorization: Bearer <token>
@@ -40,13 +45,17 @@ Content-Type: application/json
   "operation": "analyzeProgress"
 }
 ```
+
 **Operations:** `analyzeProgress`, `evaluateEngineeringEnglish`, `analyzeText`, `generatePractice`
 
 ### Vocabulary Lookup
+
 ```
 GET /api/vocabulary/lookup?word=panel&targetLang=tr
 ```
+
 **Response:**
+
 ```json
 {
   "word": "panel",
@@ -59,6 +68,7 @@ GET /api/vocabulary/lookup?word=panel&targetLang=tr
 ```
 
 ### Billing
+
 ```
 POST /api/billing/create-checkout-session
 Authorization: Bearer <token>
@@ -73,12 +83,14 @@ Content-Type: application/json
 ```
 
 ### Progress Overview
+
 ```
 GET /api/progress/overview
 Authorization: Bearer <token>
 ```
 
 ### Speaking
+
 ```
 GET /api/speaking/prompts
 POST /api/speaking/submit
@@ -93,11 +105,11 @@ GET /api/speaking/stats
 
 ## Error Codes
 
-| Code | Description |
-|------|-------------|
-| 400 | Invalid request body or parameters |
-| 401 | Authentication required |
-| 403 | Insufficient permissions |
-| 429 | Rate limit exceeded |
-| 500 | Internal server error |
-| 503 | Service unavailable |
+| Code | Description                        |
+| ---- | ---------------------------------- |
+| 400  | Invalid request body or parameters |
+| 401  | Authentication required            |
+| 403  | Insufficient permissions           |
+| 429  | Rate limit exceeded                |
+| 500  | Internal server error              |
+| 503  | Service unavailable                |
