@@ -92,13 +92,24 @@ jobs:
 
       - name: Check bundle size
         run: |
-          MAIN_SIZE=$(du -sb dist/assets/*.js | sort -rn | head -1 | awk '{print $1}')
-          LIMIT=500000
-          if [ "$MAIN_SIZE" -gt "$LIMIT" ]; then
-            echo "Main bundle too large: ${MAIN_SIZE} bytes (limit: ${LIMIT})"
-            exit 1
+          echo "=== Bundle Size Budget ==="
+          JS_SIZE=$(du -sb dist/assets/*.js | awk '{s+=$1}END{print s}')
+          CSS_SIZE=$(du -sb dist/assets/*.css | awk '{s+=$1}END{print s}')
+          JS_LIMIT=2000000
+          CSS_LIMIT=200000
+          echo "JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
+          echo "CSS: ${CSS_SIZE} bytes (limit: ${CSS_LIMIT})"
+          FAIL=0
+          if [ "${JS_SIZE:-0}" -gt "$JS_LIMIT" ]; then
+            echo "FAIL: JS bundle too large"
+            FAIL=1
           fi
-          echo "Bundle size OK: ${MAIN_SIZE} bytes"
+          if [ "${CSS_SIZE:-0}" -gt "$CSS_LIMIT" ]; then
+            echo "FAIL: CSS bundle too large"
+            FAIL=1
+          fi
+          if [ "$FAIL" -eq 1 ]; then exit 1; fi
+          echo "Bundle size OK"
 
       - name: Upload Build
         uses: actions/upload-artifact@v4
