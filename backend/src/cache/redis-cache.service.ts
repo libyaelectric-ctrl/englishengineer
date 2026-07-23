@@ -39,7 +39,11 @@ const redisGet = async (key: string): Promise<string | null> => {
   }
 };
 
-const redisSet = async (key: string, value: string, ttlSeconds: number): Promise<boolean> => {
+const redisSet = async (
+  key: string,
+  value: string,
+  ttlSeconds: number
+): Promise<boolean> => {
   if (!redisUrl || !redisToken) return false;
   try {
     const response = await fetch(redisUrl, {

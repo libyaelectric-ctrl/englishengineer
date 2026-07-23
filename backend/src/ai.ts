@@ -27,7 +27,9 @@ export const AI_ROUTES: Record<string, string> = {
 const isBypassUser = (userId: string): boolean => {
   if (process.env.NODE_ENV === 'production') return false;
   if (process.env.ALLOW_INSECURE_DEV_AUTH !== 'true') return false;
-  return userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
+  return (
+    userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_')
+  );
 };
 
 const checkCostLimits = (userId: string) => {
@@ -196,10 +198,8 @@ export const registerAIRoutes = (
             await resolveRateLimits(userId, bypass);
 
           const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
-          const { value: result } = await getOrSet(
-            cacheKey,
-            3600,
-            () => aiService.complete(defaultOperation, body)
+          const { value: result } = await getOrSet(cacheKey, 3600, () =>
+            aiService.complete(defaultOperation, body)
           );
 
           if (useTopup && !bypass) {
