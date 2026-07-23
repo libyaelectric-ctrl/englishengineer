@@ -13,24 +13,45 @@ process.on('uncaughtException', (error) => {
 const config = createBackendConfig();
 const app = createApp({ config });
 
+let isShuttingDown = false;
+
 const server = app.listen(config.port, () => {
   console.info(
     `EngineerOS backend ${config.version} listening on port ${config.port}`
   );
 });
 
-// Graceful shutdown handling
+// Track active connections for graceful drain
+let activeConnections = 0;
+server.on('connection', (conn) => {
+  activeConnections++;
+  conn.on('close', () => activeConnections--);
+});
+
 const shutdown = (signal) => {
+  if (isShuttingDown) return;
+  isShuttingDown = true;
+
   console.info(`Received ${signal}. Starting graceful shutdown...`);
+  console.info(`Active connections: ${activeConnections}`);
+
+  // Stop accepting new connections
   server.close(() => {
-    console.info('Http server closed cleanly.');
+    console.info('Http server closed. No active connections remaining.');
     process.exit(0);
   });
 
-  setTimeout(() => {
-    console.error('Graceful shutdown timeout exceeded. Force exiting...');
+  // Force exit after timeout
+  const forceExit = setTimeout(() => {
+    console.error(`Graceful shutdown timeout (10s) exceeded. ${activeConnections} connections still active. Force exiting...`);
     process.exit(1);
   }, 10000);
+
+  // Allow clean exit if no connections
+  if (activeConnections === 0) {
+    clearTimeout(forceExit);
+    process.exit(0);
+  }
 };
 
 process.on('SIGTERM', () => shutdown('SIGTERM'));
