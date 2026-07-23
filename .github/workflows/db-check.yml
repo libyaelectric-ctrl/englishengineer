@@ -1,0 +1,34 @@
+name: Database Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'supabase/**'
+      - 'backend/src/**/*.ts'
+
+jobs:
+  validate-supabase:
+    name: Validate Supabase Config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check RLS policies
+        run: node scripts/verify-supabase-rls.mjs
+
+      - name: Check migrations
+        run: |
+          if [ -d "supabase/migrations" ]; then
+            echo "Migrations directory exists"
+            ls supabase/migrations/
+          else
+            echo "No migrations directory found"
+          fi
