@@ -127,6 +127,23 @@ export const AdminAuditLogsQuerySchema = z.object({
 
 type ZodSchema = z.ZodTypeAny;
 
+// --- Progress Schemas ---
+
+export const ProgressBodySchema = z.object({
+  result: z.enum(['correct', 'incorrect'], {
+    errorMap: () => ({ message: 'result must be "correct" or "incorrect"' }),
+  }),
+});
+
+export const ListeningScoreBodySchema = z.object({
+  score: z.number().int().min(0).max(100).optional(),
+});
+
+export const SpeakingSubmitBodySchema = z.object({
+  missionId: z.string().min(1).max(100).optional(),
+  audioUrl: z.string().url().optional(),
+});
+
 const formatZodError = (error: z.ZodError) => {
   return error.issues.map((i) => ({
     path: i.path.join('.'),
