@@ -6,6 +6,7 @@ import {
   type UserLearningProfile,
   getEloBandRange,
 } from '@/features/profile';
+import { useFeatureFlag } from '@/features/feature-flags';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Sparkline } from './Sparkline';
@@ -32,11 +33,12 @@ export const ProgressCockpit = React.memo(
     skillSparklineData,
   }: ProgressCockpitProps) => {
     const navigate = useNavigate();
+    const advancedAnalytics = useFeatureFlag('advanced-analytics');
 
     return (
       <SectionCard
         title="Progress Cockpit"
-        subtitle={`${skillNames.length} skills tracked — Detailed ELO, CEFR, and Global progression`}
+        subtitle={`${skillNames.length} skills tracked — Detailed ELO, CEFR, and Global progression${advancedAnalytics ? ' (Advanced)' : ''}`}
         icon={Target}
         className="animate-on-scroll"
       >
