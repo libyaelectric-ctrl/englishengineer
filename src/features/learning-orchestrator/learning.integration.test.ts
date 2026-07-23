@@ -38,19 +38,14 @@ describe('Learning Integration', () => {
   });
 
   it('can manage vocabulary pool', () => {
-    const pool = [
-      { id: 'word-1', term: 'panel', status: 'new' },
-      { id: 'word-2', term: 'circuit', status: 'learning' },
-    ];
+    const pool = ['panel', 'circuit'];
 
     useLearningStore.setState({ vocabularyPool: pool });
     expect(useLearningStore.getState().vocabularyPool).toHaveLength(2);
   });
 
   it('can manage grammar pool', () => {
-    const pool = [
-      { id: 'rule-1', rule: 'present perfect', status: 'new' },
-    ];
+    const pool = ['present perfect'];
 
     useLearningStore.setState({ grammarPool: pool });
     expect(useLearningStore.getState().grammarPool).toHaveLength(1);
