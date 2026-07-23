@@ -40,12 +40,18 @@ const getAccessBadge = (id: string): string => {
   }
 };
 
+import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
+
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, initialize: initializeAuth } = useAuthStore();
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
+
+  const [isAnnual, setIsAnnual] = useState(true);
+  const [teamSeats, setTeamSeats] = useState(5);
+  const [quoteModalOpen, setQuoteModalOpen] = useState(false);
 
   useEffect(() => {
     void initializeAuth();
@@ -348,10 +354,74 @@ const PricingPage = () => {
           <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl tracking-tight text-foreground">
             Choose your access level.
           </h1>
-          <p className="mt-3 text-xs text-muted-copy max-w-xl mx-auto font-medium">
-            AI-powered communication training for engineers on international
-            projects.
-          </p>
+          {/* Annual / Monthly Toggle Switch */}
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <span
+              className={`text-xs font-bold ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Monthly Billing
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsAnnual(!isAnnual)}
+              className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
+            >
+              <span
+                className={`inline-block h-5 w-5 transform rounded-full bg-white transition duration-200 ease-in-out ${
+                  isAnnual ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+            <span
+              className={`text-xs font-bold ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Annual Billing{' '}
+              <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-extrabold text-success border border-success/20">
+                SAVE 20%
+              </span>
+            </span>
+          </div>
+
+          {/* Interactive Team Seats Calculator */}
+          <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left shadow-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-foreground uppercase tracking-wider">
+                Interactive Team Calculator
+              </span>
+              <span className="text-xs font-extrabold text-primary">
+                {teamSeats} Engineer Seats (${teamSeats * (isAnnual ? 15 : 19)}
+                /mo)
+              </span>
+            </div>
+            <input
+              type="range"
+              min="2"
+              max="50"
+              value={teamSeats}
+              onChange={(e) => setTeamSeats(Number(e.target.value))}
+              className="w-full mt-2 accent-primary cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] font-bold text-muted-copy mt-1">
+              <span>2 Seats</span>
+              <span>25 Seats</span>
+              <span>50+ Seats (Enterprise)</span>
+            </div>
+            <div className="mt-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setQuoteModalOpen(true)}
+                className="text-xs font-bold text-primary hover:underline cursor-pointer"
+              >
+                Need custom Enterprise SSO or 50+ seats? Request Custom Quote
+                &rarr;
+              </button>
+            </div>
+          </div>
+
+          <EnterpriseQuoteModal
+            isOpen={quoteModalOpen}
+            onClose={() => setQuoteModalOpen(false)}
+          />
 
           {billingReadiness !== 'ready' && subscription?.planId !== 'pro' && (
             <div className="mx-auto mt-6 flex w-fit items-start gap-2 rounded-[4px] border border-warning/20 bg-warning/5 px-4 py-2.5 text-xs text-warning">
