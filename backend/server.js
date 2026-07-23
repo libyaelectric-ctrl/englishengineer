@@ -43,7 +43,9 @@ const shutdown = (signal) => {
 
   // Force exit after timeout
   const forceExit = setTimeout(() => {
-    console.error(`Graceful shutdown timeout (10s) exceeded. ${activeConnections} connections still active. Force exiting...`);
+    console.error(
+      `Graceful shutdown timeout (10s) exceeded. ${activeConnections} connections still active. Force exiting...`
+    );
     process.exit(1);
   }, 10000);
 

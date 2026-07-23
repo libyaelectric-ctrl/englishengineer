@@ -22,7 +22,6 @@ const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const Progress = lazy(() => import('@/pages/ProgressPage'));
-const BetaProgram = lazy(() => import('@/pages/BetaProgramPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
 const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
@@ -262,11 +261,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'beta-program',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <BetaProgram />
-          </Suspense>
-        ),
+        element: <Navigate to="/dashboard" replace />,
       },
       {
         path: 'offline',

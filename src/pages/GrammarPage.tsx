@@ -55,7 +55,7 @@ const GrammarPage = () => {
     : '';
 
   return (
-    <div className="min-h-screen bg-background pb-16 text-foreground">
+    <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground">
       <GrammarHeader
         level={level}
         levelCounts={levelCounts}
