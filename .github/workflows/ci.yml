@@ -34,6 +34,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Architecture Check
+        run: npx depcruise src --config .dependency-cruiser.mjs
+
   test:
     name: Tests
     runs-on: ubuntu-latest
