@@ -51,7 +51,6 @@ jobs:
 
       - name: Test Coverage
         run: npm run test:coverage
-        continue-on-error: true
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v4
@@ -87,6 +86,16 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Check bundle size
+        run: |
+          MAIN_SIZE=$(du -sb dist/assets/*.js | sort -rn | head -1 | awk '{print $1}')
+          LIMIT=500000
+          if [ "$MAIN_SIZE" -gt "$LIMIT" ]; then
+            echo "Main bundle too large: ${MAIN_SIZE} bytes (limit: ${LIMIT})"
+            exit 1
+          fi
+          echo "Bundle size OK: ${MAIN_SIZE} bytes"
 
       - name: Upload Build
         uses: actions/upload-artifact@v4
