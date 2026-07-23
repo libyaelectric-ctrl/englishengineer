@@ -60,7 +60,19 @@ export const ListenerView = ({ title, transcript, onWordClick }: ListenerViewPro
 
       <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-6" style={{ fontSize: '18px', lineHeight: '1.8', maxWidth: '720px' }}>
         {words.map((word, i) => (
-          <span key={i} onClick={() => onWordClick?.(word)} className={`cursor-pointer hover:bg-[#0047bb]/10 transition ${onWordClick ? 'border-b border-[#0047bb]/30 text-[#0047bb]' : ''}`}>
+          <span
+            key={i}
+            role={onWordClick ? 'button' : undefined}
+            tabIndex={onWordClick ? 0 : undefined}
+            onClick={() => onWordClick?.(word)}
+            onKeyDown={(e) => {
+              if (onWordClick && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                onWordClick(word);
+              }
+            }}
+            className={`cursor-pointer hover:bg-[#0047bb]/10 transition ${onWordClick ? 'border-b border-[#0047bb]/30 text-[#0047bb]' : ''}`}
+          >
             {word}{' '}
           </span>
         ))}
