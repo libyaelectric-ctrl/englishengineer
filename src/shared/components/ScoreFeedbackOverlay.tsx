@@ -1,3 +1,4 @@
+import React from 'react';
 import { Award, Zap, Coins, TrendingUp } from 'lucide-react';
 import { Button } from './Button';
 import { ScoreResult } from '@/core/learning';
@@ -9,7 +10,7 @@ interface ScoreFeedbackOverlayProps {
   actionText?: string;
 }
 
-export const ScoreFeedbackOverlay = ({
+export const ScoreFeedbackOverlay = React.memo(({
   result,
   onClose,
   onAction,
@@ -122,4 +123,5 @@ export const ScoreFeedbackOverlay = ({
       </div>
     </div>
   );
-};
+});
+ScoreFeedbackOverlay.displayName = 'ScoreFeedbackOverlay';
