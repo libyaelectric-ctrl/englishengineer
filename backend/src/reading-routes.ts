@@ -1,10 +1,5 @@
 import { ApiError } from './errors.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-} from 'express';
+import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerReadingRoutes = (app: Express): void => {
   app.get(
@@ -12,7 +7,8 @@ export const registerReadingRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const limit = Number(request.query.limit) || 10;
         const offset = Number(request.query.offset) || 0;
@@ -35,7 +31,8 @@ export const registerReadingRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const contentId = request.params.id;
         const { score } = request.body as { score?: number };
@@ -58,7 +55,8 @@ export const registerReadingRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId)
+          throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           totalRead: 0,
