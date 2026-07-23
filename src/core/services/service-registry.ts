@@ -29,7 +29,7 @@ export const ServiceRegistry = {
       throw new Error(`Service "${name}" not registered`);
     }
 
-    const instance = factory();
+    const instance = factory() as T;
     instances.set(name, instance);
     return instance;
   },
