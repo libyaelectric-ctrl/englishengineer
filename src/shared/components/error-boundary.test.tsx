@@ -63,7 +63,9 @@ describe('PageErrorBoundary', () => {
       </PageErrorBoundary>
     );
 
-    expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /try again/i })
+    ).toBeInTheDocument();
 
     console.error = consoleSpy;
   });
@@ -78,7 +80,9 @@ describe('PageErrorBoundary', () => {
       </PageErrorBoundary>
     );
 
-    expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /go back/i })
+    ).toBeInTheDocument();
 
     console.error = consoleSpy;
   });

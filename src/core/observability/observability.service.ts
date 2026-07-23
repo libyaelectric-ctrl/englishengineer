@@ -39,27 +39,27 @@ const getHealthStatus = (
 };
 
 let sentryInitialized = false;
-let sentryModule: typeof import('@sentry/react') | null = null;
+let sentryModule: any = null;
 
 const initSentry = async () => {
   if (sentryInitialized) return;
   const dsn = env?.VITE_SENTRY_DSN;
   if (!dsn) return;
 
-  // Import only core Sentry — no tracing, no replay, no browser extensions
-  sentryModule = await import('@sentry/react');
-
-  sentryModule.init({
-    dsn,
-    environment: env?.VITE_ENVIRONMENT_MODE || 'development',
-    tracesSampleRate: 0, // Disable performance tracing to reduce bundle
-    replaysSessionSampleRate: 0, // Disable replay
-    replaysOnErrorSampleRate: 0, // Disable replay on error
-    integrations: [], // No auto-instrumentation
-    enabled: Boolean(dsn),
-  });
-
-  sentryInitialized = true;
+  try {
+    const Sentry = await import('@sentry/react');
+    Sentry.init({
+      dsn,
+      environment: env?.VITE_ENVIRONMENT_MODE || 'development',
+      tracesSampleRate: normalizeSampleRate(
+        env?.VITE_ERROR_MONITORING_SAMPLE_RATE
+      ),
+    });
+    sentryModule = Sentry;
+    sentryInitialized = true;
+  } catch (err) {
+    logger.e('[Observability] Failed to initialize Sentry', err);
+  }
 };
 
 export const ObservabilityService = {
@@ -113,10 +113,9 @@ export const ObservabilityService = {
 
   /** Report error to Sentry (if configured) and log locally. */
   logError(error: ErrorReport): void {
-    if (sentryInitialized && sentryModule) {
-      sentryModule.captureException(new Error(error.message), {
-        tags: { code: error.code },
-        extra: error.context,
+    if (sentryInitialized) {
+      import('./sentry-lite').then(({ reportError }) => {
+        reportError(new Error(error.message));
       });
     }
     logger.e(

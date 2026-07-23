@@ -44,7 +44,9 @@ export const PageErrorBoundary: React.FC<PageErrorBoundaryProps> = ({
   pageName,
 }) => (
   <ErrorBoundary
-    FallbackComponent={(props) => <PageFallback {...props} pageName={pageName} />}
+    FallbackComponent={(props) => (
+      <PageFallback {...props} pageName={pageName} />
+    )}
     onReset={() => window.location.reload()}
   >
     {children}
