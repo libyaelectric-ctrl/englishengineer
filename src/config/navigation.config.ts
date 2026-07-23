@@ -14,6 +14,7 @@ import {
   BrainCircuit,
   BriefcaseBusiness,
   Calendar,
+  Compass,
   Headphones,
   Home,
   Languages,
@@ -24,9 +25,11 @@ import {
   PenTool,
   Settings,
   Shield,
+  Sparkles,
   Target,
   Trophy,
   User,
+  Users,
   WandSparkles,
 } from 'lucide-react';
 
@@ -43,6 +46,7 @@ export const LEARNING_HUB_NAV_ITEMS = [
   { label: 'Today', href: '/curriculum/today', icon: Calendar },
   { label: 'Curriculum', href: '/curriculum/full', icon: Library },
   { label: 'Learning Memory', href: '/curriculum/memory', icon: BarChart3 },
+  { label: 'Placement Test', href: '/placement', icon: Compass },
 ] as const;
 
 export const TOOLS_NAV_ITEMS = [
@@ -55,6 +59,7 @@ export const PROFILE_NAV_ITEMS = [
   { label: 'Overview', href: '/profile/overview', icon: User },
   { label: 'Preferences', href: '/profile/preferences', icon: Settings },
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
+  { label: 'Beta Program', href: '/beta-program', icon: Sparkles },
 ] as const;
 
 export const PROGRESS_NAV_ITEMS = [
@@ -78,6 +83,7 @@ export const NAV_ITEMS = [
     icon: BriefcaseBusiness,
     children: TOOLS_NAV_ITEMS,
   },
+  { label: 'Team', href: '/team', icon: Users },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;
 

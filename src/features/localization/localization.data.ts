@@ -176,6 +176,9 @@ export const NAVIGATION_TRANSLATIONS: Record<
     Grammar: 'Dil Bilgisi',
     Tools: 'İş Araçları',
     Profile: 'Profil',
+    Team: 'Takım & Şirket',
+    'Placement Test': 'Seviye Sınavı',
+    'Beta Program': 'Beta & Topluluk',
     'Admin Panel': 'Yönetim Paneli',
   },
 };

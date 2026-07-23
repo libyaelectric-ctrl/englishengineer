@@ -33,10 +33,10 @@
 
   --surface: #ffffff;
 
-  --radius-button: 4px;
-  --radius-input: 4px;
-  --radius-card: 4px;
-  --radius-dialog: 4px;
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-card: 12px;
+  --radius-dialog: 16px;
 }
 
 /* Dark Mode - gceci.txt kurallarina gore: body #0B0E14, kartlar #1C1F26, metin #E2E4E7/#949BA4 */
@@ -104,16 +104,16 @@
   --color-engineer-cyan: var(--color-engineer-cyan);
 
   --radius-xs: 4px;
-  --radius-sm: 4px;
-  --radius-md: 4px;
-  --radius-lg: 4px;
-  --radius-xl: 4px;
-  --radius-2xl: 4px;
-  --radius-3xl: 4px;
-  --radius-card: 4px;
-  --radius-button: 4px;
-  --radius-input: 4px;
-  --radius-dialog: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-card: 12px;
+  --radius-button: 8px;
+  --radius-input: 8px;
+  --radius-dialog: 16px;
 }
 
 @layer base {
