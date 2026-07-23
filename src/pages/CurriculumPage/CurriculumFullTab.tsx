@@ -138,7 +138,7 @@ export const CurriculumFullTab = ({
   const currentLessonNumber = recommendation?.lessonNumber ?? 1;
 
   return (
-    <>
+    <div className="space-y-6 font-sans">
       <CurriculumSkillSelector
         selectedSkill={selectedSkill}
         weakestSkill={weakestSkill}
@@ -147,128 +147,126 @@ export const CurriculumFullTab = ({
         setDomain={setDomain}
       />
 
+      {/* Top Brief + Control Sidebar (balanced height) */}
       <div
         id="gate-progress"
-        className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px] font-sans"
+        className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"
       >
-        <div className="space-y-6">
-          <CurriculumRecommendationBrief
-            selectedMeta={selectedMeta}
-            recommendation={recommendation}
-            recommendationLoading={recommendationLoading}
-          />
-
-          {/* Precision Engineering Roadmap List */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 border-b border-border-soft pb-3">
-              <Map className="h-5 w-5 text-[#0047bb]" />
-              <div>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                  Precision Engineering Roadmap
-                </h2>
-                <p className="text-xs text-muted-copy font-medium mt-0.5">
-                  Complete roadmap modules mapped to your current CEFR learning
-                  sequence
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6 relative">
-              {MODULES.map((mod) => (
-                <div
-                  key={mod.id}
-                  className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm relative overflow-hidden"
-                >
-                  {/* Technical background Grid for OS feel */}
-                  <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
-
-                  {/* Header */}
-                  <div className="relative z-10 flex items-start justify-between gap-3 border-b border-border-soft pb-4">
-                    <div>
-                      <span className="font-mono text-[10px] font-bold text-[#0047bb] uppercase tracking-wider bg-[#0047bb]/5 px-2 py-0.5 rounded-[4px] border border-[#0047bb]/10">
-                        {mod.id} // LEVEL MODULE
-                      </span>
-                      <h3 className="text-sm font-bold text-foreground mt-2 tracking-tight">
-                        {mod.title}
-                      </h3>
-                      <p className="text-xs text-muted-copy mt-1 font-medium leading-relaxed">
-                        {mod.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Lessons list with connector line */}
-                  <div className="relative mt-5 pl-7 space-y-4">
-                    {/* Vertical Connector Line */}
-                    <div className="absolute left-2 top-3 bottom-3 w-[1px] bg-[#d9d9e3]" />
-
-                    {mod.lessons.map((lesson) => {
-                      const isCompleted = lesson.num < currentLessonNumber;
-                      const isActive = lesson.num === currentLessonNumber;
-                      const isLocked = lesson.num > currentLessonNumber;
-                      const lessonIdStr = `MOD-01.${lesson.num < 10 ? '0' : ''}${lesson.num}`;
-
-                      return (
-                        <div
-                          key={lesson.num}
-                          className={`relative flex items-start gap-4 p-3.5 rounded-[4px] border transition-colors ${
-                            isActive
-                              ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
-                              : 'border-border-soft/60 bg-[#f3f3fd]'
-                          }`}
-                        >
-                          {/* Dot / Icon Connector */}
-                          <div className="absolute -left-[27px] top-[14px] flex items-center justify-center">
-                            {isCompleted && (
-                              <CheckCircle2 className="h-[14px] w-[14px] text-success bg-surface rounded-full" />
-                            )}
-                            {isActive && (
-                              <PlayCircle className="h-[14px] w-[14px] text-[#0047bb] bg-surface rounded-full animate-pulse" />
-                            )}
-                            {isLocked && (
-                              <Circle className="h-[14px] w-[14px] text-muted-copy bg-surface rounded-full" />
-                            )}
-                          </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
-                                {lessonIdStr}
-                              </span>
-                              {isActive && (
-                                <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
-                                  ACTIVE TARGET
-                                </span>
-                              )}
-                              {isCompleted && (
-                                <span className="rounded-[4px] bg-success/10 border border-success/25 px-1.5 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
-                                  SYNCED
-                                </span>
-                              )}
-                            </div>
-                            <h4 className="text-xs font-bold text-foreground mt-1.5 leading-snug">
-                              {lesson.title}
-                            </h4>
-                            <p className="text-xs text-muted-copy leading-relaxed mt-1 font-medium">
-                              {lesson.goal}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
+        <CurriculumRecommendationBrief
+          selectedMeta={selectedMeta}
+          recommendation={recommendation}
+          recommendationLoading={recommendationLoading}
+        />
         <CurriculumSidebar
           domain={domain}
           setDomain={setDomain}
           profile={profile}
         />
       </div>
-    </>
+
+      {/* Precision Engineering Roadmap List (full width) */}
+      <div className="space-y-3 pt-2">
+        <div className="flex items-center gap-2 border-b border-border-soft pb-3">
+          <Map className="h-5 w-5 text-[#0047bb]" />
+          <div>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
+              Precision Engineering Roadmap
+            </h2>
+            <p className="text-xs text-muted-copy font-medium mt-0.5">
+              Complete roadmap modules mapped to your current CEFR learning
+              sequence
+            </p>
+          </div>
+        </div>
+
+        <div className="space-y-6 relative">
+          {MODULES.map((mod) => (
+            <div
+              key={mod.id}
+              className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm relative overflow-hidden"
+            >
+              {/* Technical background Grid for OS feel */}
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
+
+              {/* Header */}
+              <div className="relative z-10 flex items-start justify-between gap-3 border-b border-border-soft pb-4">
+                <div>
+                  <span className="font-mono text-[10px] font-bold text-[#0047bb] uppercase tracking-wider bg-[#0047bb]/5 px-2 py-0.5 rounded-[4px] border border-[#0047bb]/10">
+                    {mod.id} // LEVEL MODULE
+                  </span>
+                  <h3 className="text-sm font-bold text-foreground mt-2 tracking-tight">
+                    {mod.title}
+                  </h3>
+                  <p className="text-xs text-muted-copy mt-1 font-medium leading-relaxed">
+                    {mod.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Lessons list with connector line */}
+              <div className="relative mt-5 pl-7 space-y-4">
+                {/* Vertical Connector Line */}
+                <div className="absolute left-2 top-3 bottom-3 w-[1px] bg-[#d9d9e3]" />
+
+                {mod.lessons.map((lesson) => {
+                  const isCompleted = lesson.num < currentLessonNumber;
+                  const isActive = lesson.num === currentLessonNumber;
+                  const isLocked = lesson.num > currentLessonNumber;
+                  const lessonIdStr = `MOD-01.${lesson.num < 10 ? '0' : ''}${lesson.num}`;
+
+                  return (
+                    <div
+                      key={lesson.num}
+                      className={`relative flex items-start gap-4 p-3.5 rounded-[4px] border transition-colors ${
+                        isActive
+                          ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
+                          : 'border-border-soft/60 bg-[#f3f3fd]'
+                      }`}
+                    >
+                      {/* Dot / Icon Connector */}
+                      <div className="absolute -left-[27px] top-[14px] flex items-center justify-center">
+                        {isCompleted && (
+                          <CheckCircle2 className="h-[14px] w-[14px] text-success bg-surface rounded-full" />
+                        )}
+                        {isActive && (
+                          <PlayCircle className="h-[14px] w-[14px] text-[#0047bb] bg-surface rounded-full animate-pulse" />
+                        )}
+                        {isLocked && (
+                          <Circle className="h-[14px] w-[14px] text-muted-copy bg-surface rounded-full" />
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+                            {lessonIdStr}
+                          </span>
+                          {isActive && (
+                            <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                              ACTIVE TARGET
+                            </span>
+                          )}
+                          {isCompleted && (
+                            <span className="rounded-[4px] bg-success/10 border border-success/25 px-1.5 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
+                              SYNCED
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="text-xs font-bold text-foreground mt-1.5 leading-snug">
+                          {lesson.title}
+                        </h4>
+                        <p className="text-xs text-muted-copy leading-relaxed mt-1 font-medium">
+                          {lesson.goal}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
