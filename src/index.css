@@ -12,8 +12,8 @@
   --color-surface: #ffffff;
   --color-surface-hover: #f1f3f5;
   --color-soft: rgba(0, 102, 255, 0.06);
-  --color-border-soft: #e9ecef;
-  --color-border-hover: #dee2e6;
+  --color-border-soft: rgba(0, 102, 255, 0.18);
+  --color-border-hover: rgba(0, 102, 255, 0.35);
   --color-muted-copy: #5b5d72;
   --color-focus: rgba(0, 102, 255, 0.12);
   --color-success: #16a34a;
@@ -22,7 +22,7 @@
 
   /* Sidebar — net ayrim icin biraz daha acik */
   --color-sidebar-bg: #ffffff;
-  --color-sidebar-border: #e9ecef;
+  --color-sidebar-border: rgba(0, 102, 255, 0.18);
   --color-sidebar-inner-border: #f1f3f5;
 
   --color-engineer-950: #f1f3f5;
@@ -54,8 +54,8 @@
   --color-surface: #1c1f26;
   --color-surface-hover: #252830;
   --color-soft: rgba(51, 136, 255, 0.1);
-  --color-border-soft: #2a2d35;
-  --color-border-hover: #3a3d45;
+  --color-border-soft: rgba(51, 136, 255, 0.24);
+  --color-border-hover: rgba(51, 136, 255, 0.45);
   --color-muted-copy: #949ba4;
   --color-focus: rgba(51, 136, 255, 0.18);
   --color-success: #22c55e;
@@ -65,13 +65,13 @@
   --color-engineer-950: #07090d;
   --color-engineer-900: #0b0e14;
   --color-engineer-800: #1c1f26;
-  --color-engineer-700: #2a2d35;
+  --color-engineer-700: rgba(51, 136, 255, 0.24);
   --color-engineer-cyan: #3388ff;
 
   --surface: #1c1f26;
   --color-sidebar-bg: #1c1f26;
-  --color-sidebar-border: #2a2d35;
-  --color-sidebar-inner-border: #252830;
+  --color-sidebar-border: rgba(51, 136, 255, 0.24);
+  --color-sidebar-inner-border: rgba(51, 136, 255, 0.15);
 }
 
 @theme {
@@ -640,4 +640,37 @@
 /* Dark mode focus ring fix */
 .dark *:focus-visible {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Unified Vibrant Steel Blue Borders - Ortak Dil */
+.border,
+.border-t,
+.border-b,
+.border-l,
+.border-r,
+.border-border-soft,
+.border-white\/10,
+.border-slate-800,
+.border-slate-700,
+.border-slate-200,
+.border-neutral-800,
+.border-neutral-200,
+.border-border-soft\/60,
+.border-border-soft\/45,
+.border-\[\#0047bb\]\/25,
+.border-\[\#0047bb\]\/20,
+.border-\[\#0047bb\]\/10,
+.border-\[\#0047bb\]\/40,
+.border-\[\#0047bb\] {
+  border-color: var(--color-border-soft) !important;
+}
+
+/* Hover States for Interactive Cards and Buttons */
+.hover\:border-\[\#0047bb\]\/50:hover,
+.hover\:border-primary\/30:hover,
+.hover\:border-primary:hover,
+.hover\:border-border-hover:hover,
+.hover\:border-slate-700:hover,
+.hover\:border-slate-300:hover {
+  border-color: var(--color-border-hover) !important;
 }
