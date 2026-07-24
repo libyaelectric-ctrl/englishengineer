@@ -90,8 +90,8 @@ export function VocabularyHeader({
   };
 
   return (
-    <div className="sticky top-0 z-30 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
+      <div className="flex w-full flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">
             Vocabulary
