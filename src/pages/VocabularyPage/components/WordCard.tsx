@@ -94,12 +94,6 @@ const StatusContent = ({
   );
 };
 
-const DomainBar = ({ status }: { status: string }) => (
-  <div className="mt-4 border-t border-border-soft pt-3 text-xs text-foreground0">
-    <span>{status}</span>
-  </div>
-);
-
 const CardActions = ({
   mode,
   status,
@@ -243,7 +237,6 @@ export const WordCard = ({
             showAnswer={showAnswer}
             onLearn={onLearn}
           />
-          <DomainBar status={status} />
           <CardActions
             mode={mode}
             status={status}

@@ -43,7 +43,13 @@ export function WordSetSection({
       title={`${TAB_LABELS[activeTab]} 15-word set`}
       subtitle={`CEFR: ${vocabularyProfile.cefrBand}`}
       icon={BookMarked}
-      headerActions={null}
+      headerActions={
+        activeTab === 'New' ? (
+          <p className="text-[10px] text-muted-copy font-medium">
+            Click "I Know This" or test meaning to move to Learned
+          </p>
+        ) : null
+      }
     >
       {loadError && (
         <p className="rounded-[4px] border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">

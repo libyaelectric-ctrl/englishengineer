@@ -33,11 +33,7 @@ export const MasteredBadge = () => (
   </div>
 );
 
-export const NewWordHint = () => (
-  <p className="mt-3 text-xs font-semibold text-muted-copy">
-    Click 'I Know This' or test meaning to move to Learned
-  </p>
-);
+export const NewWordHint = () => null;
 
 export const ReviewReasonBanner = ({
   term: _term,
