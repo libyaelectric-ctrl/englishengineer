@@ -144,42 +144,45 @@ const WritingPage = () => {
   return (
     <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
       {/* Writing sticky header */}
-      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Writing
-          </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
-            ENG-W{currentLevel.replace(/[^0-9]/g, '') || currentLevel}
-          </span>
-        </div>
-        {activeTab === 'missions' && (
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setSubTab('missions')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                subTab === 'missions'
-                  ? 'bg-[#0047bb] text-white shadow-sm'
-                  : 'bg-surface border border-border-soft text-muted-copy hover:text-foreground'
-              }`}
-            >
-              Practice Missions
-            </button>
-            <button
-              type="button"
-              onClick={() => setSubTab('field-docs')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                subTab === 'field-docs'
-                  ? 'bg-[#0047bb] text-white shadow-sm'
-                  : 'bg-surface border border-border-soft text-muted-copy hover:text-foreground'
-              }`}
-            >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span>1. Field Docs (RFI / NCR / EOT)</span>
-            </button>
+      <div className="sticky top-0 z-30 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <h1 className="text-base font-bold tracking-tight text-foreground">
+              Writing
+            </h1>
+            <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+              ENG-W{currentLevel.replace(/[^0-9]/g, '') || currentLevel}
+            </span>
           </div>
-        )}
+
+          {activeTab === 'missions' && (
+            <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm">
+              <button
+                type="button"
+                onClick={() => setSubTab('missions')}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  subTab === 'missions'
+                    ? 'bg-[#0047bb] text-white shadow-sm'
+                    : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                }`}
+              >
+                Practice Missions
+              </button>
+              <button
+                type="button"
+                onClick={() => setSubTab('field-docs')}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                  subTab === 'field-docs'
+                    ? 'bg-[#0047bb] text-white shadow-sm'
+                    : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                }`}
+              >
+                <ShieldCheck className="h-3.5 w-3.5" />
+                <span>Field Docs (RFI / NCR / EOT)</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Top statistics panel */}

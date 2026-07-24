@@ -329,48 +329,67 @@ const SpeakingPage = () => {
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
-      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex min-w-0 items-baseline gap-2">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Speaking
-          </h1>
-          <span className="text-[11px] font-medium text-muted-copy leading-tight">
-            {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth} min remaining
-          </span>
-        </div>
-      </div>
+      {/* Speaking sticky header */}
+      <div className="sticky top-0 z-30 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex min-w-0 items-baseline gap-2">
+            <h1 className="text-base font-bold tracking-tight text-foreground">
+              Speaking
+            </h1>
+            <span className="text-[11px] font-medium text-muted-copy leading-tight">
+              {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth} min remaining
+            </span>
+          </div>
 
-      <div className="flex gap-2" role="tablist" aria-label="Speaking mode">
-        <Button
-          role="tab"
-          aria-selected={speakingTab === 'roleplay'}
-          variant={speakingTab === 'roleplay' ? 'primary' : 'ghost'}
-          onClick={() => setSpeakingTab('roleplay')}
-          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
-        >
-          <MessageSquareText className="h-4 w-4" />
-          Roleplay
-        </Button>
-        <Button
-          role="tab"
-          aria-selected={speakingTab === 'interview'}
-          variant={speakingTab === 'interview' ? 'primary' : 'ghost'}
-          onClick={() => setSpeakingTab('interview')}
-          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
-        >
-          <Trophy className="h-4 w-4" />
-          Interview Simulator
-        </Button>
-        <Button
-          role="tab"
-          aria-selected={speakingTab === 'defense'}
-          variant={speakingTab === 'defense' ? 'primary' : 'ghost'}
-          onClick={() => setSpeakingTab('defense')}
-          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
-        >
-          <ShieldCheck className="h-4 w-4" />
-          2. Defense Simulators (6-10)
-        </Button>
+          <div
+            className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm"
+            role="tablist"
+            aria-label="Speaking mode"
+          >
+            <button
+              role="tab"
+              type="button"
+              aria-selected={speakingTab === 'roleplay'}
+              onClick={() => setSpeakingTab('roleplay')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                speakingTab === 'roleplay'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+              }`}
+            >
+              <MessageSquareText className="h-3.5 w-3.5" />
+              <span>Roleplay</span>
+            </button>
+            <button
+              role="tab"
+              type="button"
+              aria-selected={speakingTab === 'interview'}
+              onClick={() => setSpeakingTab('interview')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                speakingTab === 'interview'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+              }`}
+            >
+              <Trophy className="h-3.5 w-3.5" />
+              <span>Interview Simulator</span>
+            </button>
+            <button
+              role="tab"
+              type="button"
+              aria-selected={speakingTab === 'defense'}
+              onClick={() => setSpeakingTab('defense')}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                speakingTab === 'defense'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+              }`}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>Defense Simulators</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       {speakingTab === 'interview' ? (
