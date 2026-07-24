@@ -198,9 +198,10 @@ export function VocabularyHeader({
               type="button"
               onClick={onOpenSearch}
               title="Search vocabulary"
-              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-[4px] transition-all cursor-pointer text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]"
+              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-2 sm:py-1 text-[11px] sm:text-[10px] font-bold rounded-[4px] transition-all cursor-pointer text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]"
             >
-              <Search className="h-3 w-3" />
+              <Search className="h-4 w-4 sm:h-3 sm:w-3" />
+              <span className="hidden sm:inline">Search</span>
             </button>
           </div>
         </div>
