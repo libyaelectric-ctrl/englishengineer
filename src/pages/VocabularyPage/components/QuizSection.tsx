@@ -87,12 +87,12 @@ export const QuizSection = ({ learnedCount, learnedWords }: QuizSectionProps) =>
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="rounded-[4px] border border-border-soft bg-surface/60 p-4 mb-4">
+    <div className="rounded-[4px] border-2 border-primary/30 bg-primary/5 p-4 mb-6">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-foreground">
-          🏆 Mastered Quiz
+        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+          <span className="text-lg">🏆</span> Mastered Quiz
         </h3>
-        <span className="text-[10px] text-muted-copy">
+        <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[10px] font-bold text-muted-copy">
           {learnedCount}/100 words
         </span>
       </div>
