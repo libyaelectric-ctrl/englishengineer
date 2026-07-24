@@ -11,6 +11,7 @@ import { assertVocabularyTerms } from '../types/vocabulary.schema';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
 const levelCache = new Map<CefrLevel, VocabularyTerm[]>();
+const pendingLevelLoads = new Map<CefrLevel, Promise<VocabularyTerm[]>>();
 const VOCABULARY_LEVEL_COUNTS: Record<CefrLevel, number> = {
   A1: 263,
   A2: 667,
@@ -23,9 +24,18 @@ const VOCABULARY_LEVEL_COUNTS: Record<CefrLevel, number> = {
 const loadLevel = async (level: CefrLevel): Promise<VocabularyTerm[]> => {
   const cached = levelCache.get(level);
   if (cached) return cached;
-  const terms = assertVocabularyTerms(await loadVocabularyByLevel(level));
-  levelCache.set(level, terms);
-  return terms;
+  const pending = pendingLevelLoads.get(level);
+  if (pending) return pending;
+
+  const load = loadVocabularyByLevel(level)
+    .then(assertVocabularyTerms)
+    .then((terms) => {
+      levelCache.set(level, terms);
+      return terms;
+    })
+    .finally(() => pendingLevelLoads.delete(level));
+  pendingLevelLoads.set(level, load);
+  return load;
 };
 
 const loadAll = async (): Promise<VocabularyTerm[]> =>
@@ -118,5 +128,6 @@ export const VocabularyRepository = {
 
   clearCache(): void {
     levelCache.clear();
+    pendingLevelLoads.clear();
   },
 };

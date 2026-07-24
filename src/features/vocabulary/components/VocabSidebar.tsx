@@ -1,6 +1,9 @@
-import { useState, useEffect } from 'react';
-import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
-import { useLearningStore } from '@/core/learning';
+import { useEffect, useState } from 'react';
+import {
+  type VocabularyMenuState,
+  VocabularyMenuService,
+} from '@/features/vocabulary/services/vocabulary.menu';
+import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
@@ -15,8 +18,8 @@ const VOCAB_LEVELS = [
 ];
 
 function getVocabLevel(mastered: number): string {
-  for (const lvl of VOCAB_LEVELS) {
-    if (mastered <= lvl.max) return lvl.id;
+  for (const level of VOCAB_LEVELS) {
+    if (mastered <= level.max) return level.id;
   }
   return 'C2';
 }
@@ -25,34 +28,34 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
   const currentLevel = getVocabLevel(mastered);
   return (
     <div className="grid grid-cols-3 gap-2">
-      {VOCAB_LEVELS.map((lvl, index) => {
-        const isActive = lvl.id === currentLevel;
-        const isCompleted = mastered >= lvl.max;
-        const prevMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
-        const bracketTotal = lvl.max - prevMax;
+      {VOCAB_LEVELS.map((level, index) => {
+        const isActive = level.id === currentLevel;
+        const isCompleted = mastered >= level.max;
+        const previousMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
+        const bracketTotal = level.max - previousMax;
         const bracketProgress = Math.max(
           0,
-          Math.min(bracketTotal, mastered - prevMax)
+          Math.min(bracketTotal, mastered - previousMax)
         );
         const percent = (bracketProgress / bracketTotal) * 100;
         return (
           <div
-            key={lvl.id}
-            className={`flex flex-col p-2 rounded-lg border transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}
+            key={level.id}
+            className={`flex flex-col rounded-lg border p-2 transition-all ${isActive ? 'border-primary bg-primary/5 shadow-sm' : isCompleted ? 'border-success/30 bg-success/5' : 'border-border-soft bg-surface-hover/50'}`}
           >
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <span
                 className={`text-xs font-bold ${isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground'}`}
               >
-                {lvl.id}
+                {level.id}
               </span>
-              <span className="text-[10px] text-muted-copy font-medium">
-                {lvl.max}
+              <span className="text-[10px] font-medium text-muted-copy">
+                {level.max}
               </span>
             </div>
-            <div className="h-1.5 w-full bg-border-soft rounded-full overflow-hidden relative">
+            <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
               <div
-                className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isActive ? 'bg-primary' : isCompleted ? 'bg-success' : 'bg-foreground/30'}`}
+                className={`absolute left-0 top-0 h-full rounded-full transition-all duration-500 ${isActive ? 'bg-primary' : isCompleted ? 'bg-success' : 'bg-foreground/30'}`}
                 style={{ width: `${percent}%` }}
               />
             </div>
@@ -65,55 +68,76 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
 
 const log = (_page: string, _action: string, _details: string) => {};
 
+const getStatusCount = (
+  state: VocabularyMenuState,
+  status: 'Learning' | 'Learned' | 'Mastered' | 'Struggling'
+): number =>
+  Object.values(state.progress).filter((word) => word.status === status).length;
+
 export function VocabSidebar() {
-  const [v, setV] = useState(() => VocabularyMenuService.getSummary());
-  const vocabularyPool = useLearningStore((s) => s.vocabularyPool);
+  const [menuState, setMenuState] = useState(() =>
+    VocabularyMenuService.getState()
+  );
+  const summary = VocabularyMenuService.getSummary(menuState);
+  const learned = getStatusCount(menuState, 'Learned');
+  const struggling = getStatusCount(menuState, 'Struggling');
 
   useEffect(() => {
-    const id = setInterval(
-      () => setV(VocabularyMenuService.getSummary()),
-      5000
-    );
-    return () => clearInterval(id);
+    const syncVocabularySummary = (event: Event) => {
+      const { detail } = event as CustomEvent<{ key: string }>;
+      if (detail.key === 'EngVox_vocabulary_menu') {
+        setMenuState(VocabularyMenuService.getState());
+      }
+    };
+    window.addEventListener(STORAGE_CHANGE_EVENT, syncVocabularySummary);
+    return () =>
+      window.removeEventListener(
+        STORAGE_CHANGE_EVENT,
+        syncVocabularySummary
+      );
   }, []);
 
   const config: SidebarConfig = {
     header: <SkillEntryBrief skill="vocabulary" compact={true} />,
     skill: 'vocabulary',
-    pathLabel: `Vocabulary · N:${v.newWords} L:${v.learning} M:${v.mastered} W:${v.weak}`,
+    pathLabel: `Vocabulary · L:${learned} M:${summary.mastered} S:${struggling}`,
     pathDescription: 'Learn and review engineering vocabulary.',
-    currentLevel: getVocabLevel(v.mastered),
-    totalItems: v.total,
+    currentLevel: getVocabLevel(summary.mastered),
+    totalItems: summary.total,
     stats: [
-      { label: 'New', value: v.newWords, color: 'text-blue-500' },
-      { label: 'Learning', value: v.learning, color: 'text-amber-500' },
-      { label: 'Mastered', value: v.mastered, color: 'text-green-500' },
-      { label: 'Weak', value: v.weak, color: 'text-red-500' },
-      { label: 'Forgotten', value: v.forgotten, color: 'text-orange-500' },
-      { label: 'Due Today', value: v.dueToday, color: 'text-purple-500' },
-      { label: 'In Pool', value: vocabularyPool.length, color: 'text-primary' },
+      { label: 'New', value: summary.newWords, color: 'text-blue-500' },
+      { label: 'Learning', value: summary.learning, color: 'text-amber-500' },
+      { label: 'Learned', value: learned, color: 'text-cyan-500' },
+      { label: 'Mastered', value: summary.mastered, color: 'text-green-500' },
+      { label: 'Struggling', value: struggling, color: 'text-red-500' },
+      { label: 'Due Today', value: summary.dueToday, color: 'text-purple-500' },
     ],
     progressBars: [
       {
         label: 'Total Mastery',
-        value: v.mastered,
-        max: v.total,
+        value: summary.mastered,
+        max: summary.total,
         color: '#3b82f6',
       },
-      { label: 'Learning', value: v.learning, max: v.total, color: '#06b6d4' },
+      {
+        label: 'Learned',
+        value: learned,
+        max: summary.total,
+        color: '#06b6d4',
+      },
     ],
     actions: [
       {
-        icon: '⏰',
-        label: `Review ${v.dueToday} due words`,
+        icon: 'Review',
+        label: `Review ${summary.dueToday} due words`,
         onClick: () => {
-          log('/vocabulary', 'review', `${v.dueToday} due`);
+          log('/vocabulary', 'review', `${summary.dueToday} due`);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
         variant: 'warning',
       },
       {
-        icon: '➕',
+        icon: 'Add',
         label: 'Add custom word',
         onClick: () => {
           document
@@ -122,7 +146,7 @@ export function VocabSidebar() {
         },
       },
     ],
-    custom: <VocabLevelGrid mastered={v.mastered} />,
+    custom: <VocabLevelGrid mastered={summary.mastered} />,
   };
 
   return <SkillSidebar config={config} />;

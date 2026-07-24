@@ -46,6 +46,11 @@ type DataAction =
   | { type: 'SET_LOAD_ERROR'; error: string }
   | { type: 'SET_MENU_STATE'; menuState: VocabularyMenuState }
   | { type: 'SET_WORD_SET_IDS'; wordSetIds: string[] }
+  | {
+      type: 'SYNC_MENU_STATE';
+      menuState: VocabularyMenuState;
+      wordSetIds: string[];
+    }
   | { type: 'LOAD_ALL_LEVELS'; terms: VocabularyDataState['terms'] };
 
 export const dataReducer = (
@@ -61,6 +66,12 @@ export const dataReducer = (
       return { ...state, menuState: action.menuState };
     case 'SET_WORD_SET_IDS':
       return { ...state, wordSetIds: action.wordSetIds };
+    case 'SYNC_MENU_STATE':
+      return {
+        ...state,
+        menuState: action.menuState,
+        wordSetIds: action.wordSetIds,
+      };
     case 'LOAD_ALL_LEVELS':
       return { ...state, terms: action.terms, allLevelsLoaded: true };
     default:

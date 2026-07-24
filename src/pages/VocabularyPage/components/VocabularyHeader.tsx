@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Search, Volume2, VolumeX } from 'lucide-react';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 import type {
+  VocabularyMenuState,
+  VocabularyMenuStatus,
   VocabularySearchFilters,
   VocabularyTerm,
-  VocabularyMenuStatus,
 } from '@/features/vocabulary';
-
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
 const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
@@ -37,9 +36,8 @@ interface VocabularyHeaderProps {
     field: keyof VocabularySearchFilters,
     value: string
   ) => void;
-  onOpenQuiz?: () => void;
-  onOpenStrugglingQuiz?: () => void;
   onOpenSearch?: () => void;
+  menuState: VocabularyMenuState;
 }
 
 export { TABS, TAB_LABELS };
@@ -57,8 +55,8 @@ const SoundToggle = ({
     title={isMuted ? 'Unmute card sounds' : 'Mute card sounds'}
     className={`flex items-center gap-1 rounded-[4px] border px-2 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
       isMuted
-        ? 'border-rose-300 bg-rose-50 dark:bg-rose-950/30 text-rose-600'
-        : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:bg-surface-hover'
+        ? 'border-rose-300 bg-rose-50 text-rose-600 dark:bg-rose-950/30'
+        : 'border-border-soft bg-surface text-muted-copy hover:bg-surface-hover hover:text-foreground'
     }`}
   >
     {isMuted ? (
@@ -76,45 +74,27 @@ export function VocabularyHeader({
   searchResults,
   allSearchResults,
   chooseTab,
-  onOpenQuiz,
-  onOpenStrugglingQuiz,
   onOpenSearch,
+  menuState,
 }: VocabularyHeaderProps) {
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
-  const wordProgress = useVocabularyStore((s) => s.wordProgress);
-
-  const learnedCount = Object.values(wordProgress).filter(
-    (w) => w.status === 'learned'
-  ).length;
-  const strugglingCount = Object.values(wordProgress).filter(
-    (w) => w.status === 'struggling'
-  ).length;
-  const masteredCount = Object.values(wordProgress).filter(
-    (w) => w.status === 'mastered'
+  const masteredCount = Object.values(menuState.progress).filter(
+    (word) => word.status === 'Mastered'
   ).length;
 
   useEffect(() => {
-    const handleToggle = (e: Event) => {
-      const customEvent = e as CustomEvent<{ muted: boolean }>;
-      if (customEvent.detail) {
-        setIsSoundMuted(customEvent.detail.muted);
-      }
+    const handleToggle = (event: Event) => {
+      const customEvent = event as CustomEvent<{ muted: boolean }>;
+      if (customEvent.detail) setIsSoundMuted(customEvent.detail.muted);
     };
     window.addEventListener('engvox_sound_toggle', handleToggle);
     return () =>
       window.removeEventListener('engvox_sound_toggle', handleToggle);
   }, []);
 
-  const handleSoundToggle = () => {
-    const next = toggleSoundMuted();
-    setIsSoundMuted(next);
-  };
-
-  const canStartQuiz = learnedCount >= 100;
-
   return (
     <>
-      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
+      <div className="sticky top-0 z-30 mb-6 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Vocabulary
@@ -122,13 +102,16 @@ export function VocabularyHeader({
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
-          <SoundToggle isMuted={isSoundMuted} onToggle={handleSoundToggle} />
+          <SoundToggle
+            isMuted={isSoundMuted}
+            onToggle={() => setIsSoundMuted(toggleSoundMuted())}
+          />
           <div
-            className="hidden xl:flex items-center gap-2 rounded-[4px] border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400"
+            className="hidden items-center gap-2 rounded-[4px] border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 xl:flex dark:text-emerald-400"
             title="200 Mastered words required to unlock Reading & Writing skills"
           >
-            <span>🏆 Goal: {masteredCount}/200</span>
-            <div className="w-16 h-1.5 rounded-full bg-emerald-200 dark:bg-emerald-950 overflow-hidden">
+            <span>Goal: {masteredCount}/200</span>
+            <div className="h-1.5 w-16 overflow-hidden rounded-full bg-emerald-200 dark:bg-emerald-950">
               <div
                 className="h-full bg-emerald-500 transition-all duration-500"
                 style={{
@@ -140,42 +123,6 @@ export function VocabularyHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          {strugglingCount > 0 && (
-            <button
-              type="button"
-              onClick={onOpenStrugglingQuiz}
-              title="Struggling words review"
-              className="flex items-center gap-1.5 rounded-[4px] border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all uppercase tracking-wider"
-            >
-              ⚠️ Struggling ({strugglingCount})
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => {
-              if (!canStartQuiz) {
-                alert(
-                  `At least 100 words in Learned pool are required to start Mastered Quiz (Current: ${learnedCount}/100).`
-                );
-                return;
-              }
-              onOpenQuiz?.();
-            }}
-            title={
-              canStartQuiz
-                ? 'Start Mastered Quiz'
-                : `Need 100 learned words (Current: ${learnedCount}/100)`
-            }
-            className={`flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              canStartQuiz
-                ? 'border-amber-400/50 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
-                : 'border-border-soft bg-surface text-muted-copy opacity-75'
-            }`}
-          >
-            🏆 Quiz ({learnedCount}/100)
-          </button>
-
           <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
             {TABS.map((tab) => (
               <button
@@ -184,21 +131,20 @@ export function VocabularyHeader({
                 type="button"
                 aria-selected={activeTab === tab}
                 onClick={() => chooseTab(tab)}
-                className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                className={`rounded-[4px] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   activeTab === tab
-                    ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                    ? 'border border-[#0047bb] bg-[#0047bb] text-white'
                     : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
                 }`}
               >
                 {TAB_LABELS[tab]}
               </button>
             ))}
-            {/* Search button at the end of tabs */}
             <button
               type="button"
               onClick={onOpenSearch}
               title="Search vocabulary"
-              className="flex items-center gap-1.5 px-3 py-1.5 sm:px-2 sm:py-1 text-[11px] sm:text-[10px] font-bold rounded-[4px] transition-all cursor-pointer text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]"
+              className="flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-[11px] font-bold text-muted-copy transition-all hover:bg-primary/5 hover:text-[#0047bb] sm:px-2 sm:py-1 sm:text-[10px]"
             >
               <Search className="h-4 w-4 sm:h-3 sm:w-3" />
               <span className="hidden sm:inline">Search</span>
@@ -208,7 +154,7 @@ export function VocabularyHeader({
       </div>
 
       {hasSearched && searchResults && searchResults.length > 0 && (
-        <p className="pb-3 text-[10px] text-muted-copy font-medium">
+        <p className="pb-3 text-[10px] font-medium text-muted-copy">
           Showing {searchResults.length} of{' '}
           {allSearchResults?.length || searchResults.length} results found
         </p>

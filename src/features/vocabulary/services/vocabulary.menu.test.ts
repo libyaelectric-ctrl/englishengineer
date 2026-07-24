@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 import {
   CANONICAL_VOCABULARY_TOTAL,
@@ -49,6 +49,39 @@ describe('Vocabulary menu progress', () => {
     const mastered = VocabularyMenuService.reviewWord(term.id, true, now);
     expect(mastered.status).toBe('Mastered');
     expect(mastered.correctReviews).toBe(3);
+  });
+
+  it('applies learned quiz outcomes in one storage transaction', () => {
+    const now = new Date('2026-07-25T10:00:00.000Z');
+    const correctId = 'vocab_architecture_a1_0001';
+    const wrongId = 'vocab_architecture_a1_0002';
+    const skippedId = 'vocab_architecture_a1_0003';
+    [correctId, wrongId, skippedId].forEach((wordId) =>
+      VocabularyMenuService.startLearning(wordId, now)
+    );
+    const saveState = vi.spyOn(VocabularyMenuService, 'saveState');
+
+    VocabularyMenuService.completeLearnedQuiz(
+      {
+        masteredWordIds: [correctId],
+        strugglingWordIds: [wrongId, correctId],
+      },
+      now
+    );
+
+    const progress = VocabularyMenuService.getState().progress;
+    expect(saveState).toHaveBeenCalledTimes(1);
+    expect(progress[correctId]).toMatchObject({
+      status: 'Mastered',
+      correctReviews: 3,
+      isWeak: false,
+    });
+    expect(progress[wrongId]).toMatchObject({
+      status: 'Struggling',
+      wrongReviews: 1,
+      isWeak: true,
+    });
+    expect(progress[skippedId].status).toBe('Learned');
   });
 
   it('marks a wrong review Weak, due immediately, and Forgotten after three failures', () => {

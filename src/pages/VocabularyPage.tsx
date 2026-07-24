@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
@@ -8,28 +7,8 @@ import { WordSetSection } from './VocabularyPage/components/WordSetSection';
 import { QuizSection } from './VocabularyPage/components/QuizSection';
 import { SearchModal } from './VocabularyPage/components/SearchModal';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { VocabularyRepository } from '@/features/vocabulary';
 
 const VocabularyPage = () => {
-  const wordProgress = useVocabularyStore((s) => s.wordProgress);
-
-  const getTermData = (wordId: string) => {
-    const term = VocabularyRepository.getVocabularyTermById(wordId);
-    return {
-      id: wordId,
-      term: term?.term || wordId,
-      turkishMeaning: term?.turkishMeaning || wordId,
-    };
-  };
-
-  const learnedWords = Object.values(wordProgress)
-    .filter((w) => w.status === 'learned')
-    .map((w) => getTermData(w.wordId));
-
-  const strugglingWords = Object.values(wordProgress)
-    .filter((w) => w.status === 'struggling')
-    .map((w) => getTermData(w.wordId));
   const {
     vocabularyLevel,
     loadError,
@@ -91,9 +70,8 @@ const VocabularyPage = () => {
             filters: { ...filters, [field]: value },
           })
         }
-        onOpenQuiz={() => setQuizOpen(true)}
-        onOpenStrugglingQuiz={() => {}}
         onOpenSearch={openSearchModal}
+        menuState={menuState}
       />
 
       <div className="pt-4 space-y-4 pb-20">
@@ -133,8 +111,7 @@ const VocabularyPage = () => {
 
         {activeTab === 'Learned' && (
           <QuizSection
-            learnedCount={learnedWords.length}
-            learnedWords={learnedWords.map((w) => ({ id: w.id, term: w.term, turkishMeaning: w.turkishMeaning }))}
+            menuState={menuState}
           />
         )}
 
