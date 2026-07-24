@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Search, Zap, Lock, Info, Volume2, VolumeX } from 'lucide-react';
+import { Search, Volume2, VolumeX } from 'lucide-react';
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import {
-  VocabularyProgressService,
-  QUIZ_THRESHOLD,
-} from '@/features/vocabulary/services/vocabulary.progress';
 import type {
   VocabularySearchFilters,
   VocabularyTerm,
@@ -25,20 +20,23 @@ interface VocabularyHeaderProps {
   vocabularyLevel: string;
   activeTab: VocabularyMenuStatus;
   searchInput: string;
-  showFilters: boolean;
-  filters: VocabularySearchFilters;
-  isSearchLoading: boolean;
-  searchError: string | null;
-  hasSearched: boolean;
-  searchResults: VocabularyTerm[];
-  allSearchResults: VocabularyTerm[];
-  filterOptions: (field: keyof VocabularySearchFilters) => string[];
+  showFilters?: boolean;
+  filters?: VocabularySearchFilters;
+  isSearchLoading?: boolean;
+  searchError?: string | null;
+  hasSearched?: boolean;
+  searchResults?: VocabularyTerm[];
+  allSearchResults?: VocabularyTerm[];
+  filterOptions?: (field: keyof VocabularySearchFilters) => string[];
   chooseTab: (tab: VocabularyMenuStatus) => void;
   onSearchInputChange: (input: string) => void;
   onSearchSubmit: (event: React.FormEvent) => Promise<void>;
-  onFilterChange: (field: keyof VocabularySearchFilters, value: string) => void;
-  onOpenQuiz: () => void;
-  onOpenStrugglingQuiz: () => void;
+  onFilterChange?: (
+    field: keyof VocabularySearchFilters,
+    value: string
+  ) => void;
+  onOpenQuiz?: () => void;
+  onOpenStrugglingQuiz?: () => void;
 }
 
 export { TABS, TAB_LABELS };
@@ -47,29 +45,13 @@ export function VocabularyHeader({
   vocabularyLevel,
   activeTab,
   searchInput,
-  showFilters,
-  filters,
-  isSearchLoading,
-  searchError,
   hasSearched,
   searchResults,
   allSearchResults,
-  filterOptions,
   chooseTab,
   onSearchInputChange,
   onSearchSubmit,
-  onFilterChange,
-  onOpenQuiz,
-  onOpenStrugglingQuiz,
 }: VocabularyHeaderProps) {
-  const { wordProgress, stats } = useVocabularyStore();
-  const learnedCount = stats.learned;
-  const strugglingCount = stats.struggling;
-  const canStartQuiz = VocabularyProgressService.isQuizReady(learnedCount);
-  const learnedWords = Object.values(wordProgress).filter(
-    (w) => w.status === 'learned'
-  );
-
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
 
   useEffect(() => {
@@ -90,8 +72,8 @@ export function VocabularyHeader({
   };
 
   return (
-    <div className="space-y-2 mb-6">
-      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-2">
+    <>
+      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Vocabulary
@@ -153,88 +135,13 @@ export function VocabularyHeader({
           ))}
         </div>
       </div>
-      {showFilters && (
-        <div className="py-2 flex flex-wrap gap-1.5">
-          {(
-            [
-              ['cefr', 'CEFR'],
-              ['domain', 'Domain'],
-              ['status', 'Status'],
-            ] as Array<[keyof VocabularySearchFilters, string]>
-          ).map(([field, label]) => (
-            <select
-              key={field}
-              aria-label={`Filter by ${label}`}
-              value={filters[field]}
-              onChange={(event) => onFilterChange(field, event.target.value)}
-              className="min-h-7 rounded-[4px] border border-border-soft bg-surface px-2 text-[10px] font-medium focus:border-[#0047bb] outline-none cursor-pointer"
-            >
-              {(field === 'status'
-                ? ['All', 'New', 'Learned', 'Mastered', 'Struggling']
-                : filterOptions(field)
-              ).map((option) => (
-                <option key={option}>{option}</option>
-              ))}
-            </select>
-          ))}
-        </div>
-      )}
 
-      {searchError && (
-        <p className="py-1 text-[10px] text-rose-600">{searchError}</p>
-      )}
-      {isSearchLoading && (
-        <p className="py-1 text-[10px] text-[#0047bb] animate-pulse">
-          Searching...
+      {hasSearched && searchResults && searchResults.length > 0 && (
+        <p className="pb-3 text-[10px] text-muted-copy font-medium">
+          Showing {searchResults.length} of{' '}
+          {allSearchResults?.length || searchResults.length} results found
         </p>
       )}
-      {hasSearched && searchResults.length > 0 && (
-        <p className="py-1 text-[10px] text-muted-copy">
-          Showing {searchResults.length} of {allSearchResults.length} results
-          found
-        </p>
-      )}
-
-      <div className="flex items-center gap-3 py-2 border-t border-border-soft mt-1">
-        {canStartQuiz ? (
-          <button
-            onClick={onOpenQuiz}
-            className="flex items-center gap-1.5 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground transition hover:bg-primary-hover"
-          >
-            <Zap className="h-3 w-3" />
-            Quiz ({learnedWords.length})
-          </button>
-        ) : (
-          <div className="flex items-center gap-2 rounded-[4px] border border-amber-300 bg-amber-50 dark:bg-amber-900/20 px-3 py-1.5">
-            <Lock className="h-3 w-3 text-amber-600" />
-            <span className="text-[10px] font-bold text-amber-700">
-              Locked — Learn {QUIZ_THRESHOLD - learnedCount} more
-            </span>
-            <div className="h-1 w-20 rounded-full bg-amber-200 overflow-hidden">
-              <div
-                className="h-full bg-amber-500 transition-all"
-                style={{
-                  width: `${Math.min((learnedCount / QUIZ_THRESHOLD) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-        )}
-
-        {strugglingCount > 0 && (
-          <button
-            onClick={onOpenStrugglingQuiz}
-            className="flex items-center gap-1 rounded-[4px] border border-red-300 bg-red-50 px-2.5 py-1 text-[10px] font-bold text-red-700 transition hover:bg-red-100"
-          >
-            Struggling ({strugglingCount})
-          </button>
-        )}
-
-        <div className="ml-auto flex items-center gap-1.5 text-[10px] text-muted-copy">
-          <Info className="h-3 w-3" />
-          {learnedCount}/{QUIZ_THRESHOLD} learned
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
