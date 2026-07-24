@@ -5,23 +5,31 @@ import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
 import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
 import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
 import { WordSetSection } from './VocabularyPage/components/WordSetSection';
-import { QuizModal } from './VocabularyPage/components/QuizModal';
+import { QuizSection } from './VocabularyPage/components/QuizSection';
 import { SearchModal } from './VocabularyPage/components/SearchModal';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import { VocabularyRepository } from '@/features/vocabulary';
 
 const VocabularyPage = () => {
-  const [quizOpen, setQuizOpen] = useState(false);
-  const [strugglingQuizOpen, setStrugglingQuizOpen] = useState(false);
   const wordProgress = useVocabularyStore((s) => s.wordProgress);
+
+  const getTermData = (wordId: string) => {
+    const term = VocabularyRepository.getVocabularyTermById(wordId);
+    return {
+      id: wordId,
+      term: term?.term || wordId,
+      turkishMeaning: term?.turkishMeaning || wordId,
+    };
+  };
 
   const learnedWords = Object.values(wordProgress)
     .filter((w) => w.status === 'learned')
-    .map((w) => ({ id: w.wordId, term: w.wordId, turkishMeaning: w.wordId }));
+    .map((w) => getTermData(w.wordId));
 
   const strugglingWords = Object.values(wordProgress)
     .filter((w) => w.status === 'struggling')
-    .map((w) => ({ id: w.wordId, term: w.wordId, turkishMeaning: w.wordId }));
+    .map((w) => getTermData(w.wordId));
   const {
     vocabularyLevel,
     loadError,
@@ -84,23 +92,11 @@ const VocabularyPage = () => {
           })
         }
         onOpenQuiz={() => setQuizOpen(true)}
-        onOpenStrugglingQuiz={() => setStrugglingQuizOpen(true)}
+        onOpenStrugglingQuiz={() => {}}
         onOpenSearch={openSearchModal}
       />
 
       <div className="pt-4 space-y-4 pb-20">
-        <QuizModal
-          isOpen={quizOpen}
-          onClose={() => setQuizOpen(false)}
-          words={learnedWords.slice(0, 10)}
-        />
-        <QuizModal
-          isOpen={strugglingQuizOpen}
-          onClose={() => setStrugglingQuizOpen(false)}
-          words={strugglingWords.slice(0, 10)}
-          isStrugglingQuiz
-        />
-
         <SearchModal
           isOpen={showSearchModal}
           onClose={closeSearchModal}
@@ -134,6 +130,13 @@ const VocabularyPage = () => {
           }
           onAddCustomWord={addCustomWord}
         />
+
+        {activeTab === 'Learned' && (
+          <QuizSection
+            learnedCount={learnedWords.length}
+            learnedWords={learnedWords.map((w) => ({ id: w.id, term: w.term, turkishMeaning: w.turkishMeaning }))}
+          />
+        )}
 
         <WordSetSection
           activeTab={activeTab}
