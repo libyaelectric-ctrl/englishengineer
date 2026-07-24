@@ -138,7 +138,7 @@ export function VocabularyHeader({
     setIsSoundMuted(next);
   };
 
-  const canStartQuiz = learnedCount >= 4;
+  const canStartQuiz = learnedCount >= 100;
 
   return (
     <>
@@ -150,11 +150,6 @@ export function VocabularyHeader({
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
-          <SearchInput
-            value={searchInput}
-            onChange={onSearchInputChange}
-            onSubmit={onSearchSubmit}
-          />
           <SoundToggle isMuted={isSoundMuted} onToggle={handleSoundToggle} />
           <div
             className="hidden xl:flex items-center gap-2 rounded-[4px] border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600 dark:text-emerald-400"
@@ -177,10 +172,10 @@ export function VocabularyHeader({
             <button
               type="button"
               onClick={onOpenStrugglingQuiz}
-              title="Zayıf kelimeleri tekrar et"
+              title="Struggling words review"
               className="flex items-center gap-1.5 rounded-[4px] border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all uppercase tracking-wider"
             >
-              ⚠️ Zayıf ({strugglingCount})
+              ⚠️ Struggling ({strugglingCount})
             </button>
           )}
 
@@ -189,7 +184,7 @@ export function VocabularyHeader({
             onClick={() => {
               if (!canStartQuiz) {
                 alert(
-                  `At least 4 words in Learned pool are required to start Mastered Quiz (Current: ${learnedCount}/4).`
+                  `At least 100 words in Learned pool are required to start Mastered Quiz (Current: ${learnedCount}/100).`
                 );
                 return;
               }
@@ -197,8 +192,8 @@ export function VocabularyHeader({
             }}
             title={
               canStartQuiz
-                ? 'Learned kelimelerden Quiz Başlat'
-                : `En az 4 learned kelime gerekli (Mevcut: ${learnedCount}/4)`
+                ? 'Start Mastered Quiz'
+                : `Need 100 learned words (Current: ${learnedCount}/100)`
             }
             className={`flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
               canStartQuiz
@@ -206,7 +201,7 @@ export function VocabularyHeader({
                 : 'border-border-soft bg-surface text-muted-copy opacity-75'
             }`}
           >
-            🏆 Quiz ({learnedCount}/4)
+            🏆 Quiz ({learnedCount}/100)
           </button>
 
           <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
@@ -228,6 +223,15 @@ export function VocabularyHeader({
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Search bar below tabs */}
+      <div className="mb-4">
+        <SearchInput
+          value={searchInput}
+          onChange={onSearchInputChange}
+          onSubmit={onSearchSubmit}
+        />
       </div>
 
       {hasSearched && searchResults && searchResults.length > 0 && (
