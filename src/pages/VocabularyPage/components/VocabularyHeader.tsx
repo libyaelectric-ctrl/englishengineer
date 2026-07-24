@@ -52,7 +52,7 @@ const SearchInput = ({
   onChange: (v: string) => void;
   onSubmit: (e: React.FormEvent) => Promise<void>;
 }) => (
-  <label className="relative hidden w-36 sm:w-44 md:block">
+  <label className="relative w-full max-w-xs">
     <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
     <input
       value={value}
