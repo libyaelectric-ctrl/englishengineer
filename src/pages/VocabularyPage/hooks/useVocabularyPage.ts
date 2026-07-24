@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { useLearningStore } from '@/core/learning';
 import { playSound } from '@/shared/utils/sound';
+import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 import { useAuthStore } from '@/features/auth';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
@@ -222,6 +223,31 @@ export function useVocabularyPage() {
       wordSetIds: selectSet(status, menuState),
     });
   };
+
+  useEffect(() => {
+    const syncVocabularyProgress = (event: Event) => {
+      const { detail } = event as CustomEvent<{ key: string }>;
+      if (detail.key !== 'EngVox_vocabulary_menu') return;
+      const nextMenuState = VocabularyMenuService.getState();
+      dispatchData({
+        type: 'SYNC_MENU_STATE',
+        menuState: nextMenuState,
+        wordSetIds: selectSet(
+          activeTab,
+          nextMenuState,
+          learningDomain,
+          batchOffset
+        ),
+      });
+    };
+
+    window.addEventListener(STORAGE_CHANGE_EVENT, syncVocabularyProgress);
+    return () =>
+      window.removeEventListener(
+        STORAGE_CHANGE_EVENT,
+        syncVocabularyProgress
+      );
+  }, [activeTab, batchOffset, learningDomain, selectSet]);
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
     const prevStatus =

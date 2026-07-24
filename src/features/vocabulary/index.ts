@@ -136,6 +136,7 @@ export {
   type VocabularyMenuSummary,
   type AddMyVocabularyInput,
   type VocabularySearchFilters,
+  type LearnedQuizCompletion,
   repairVocabularyText,
   isVocabularyProgressDue,
   isVocabularyForgotten,

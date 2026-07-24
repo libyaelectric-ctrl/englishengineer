@@ -84,6 +84,49 @@ describe('VocabularyPage menu', () => {
     expect(screen.getAllByText('height').length).toBeGreaterThan(0);
   }, 10_000);
 
+  it('keeps the Learned Quiz locked until 100 words are learned', async () => {
+    await renderLoadedPage();
+    fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+
+    expect(screen.getByRole('button', { name: 'Start Quiz' })).toBeDisabled();
+    expect(
+      screen.getByText('Learn at least 100 words to unlock the quiz.')
+    ).toBeInTheDocument();
+  }, 10_000);
+
+  it('moves quiz answers through the learned pools in one completed quiz', async () => {
+    const terms = await VocabularyRepository.getVocabularyByLevel('A1');
+    terms.slice(0, 100).forEach((term) =>
+      VocabularyMenuService.startLearning(term.id)
+    );
+    render(<VocabularyPage />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+
+    fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
+    const firstInput = await screen.findByLabelText('Question 1 / 10');
+    const question = firstInput.parentElement;
+    const termLabel = question?.querySelector('p')?.textContent;
+    const selectedTerm = terms.find((term) => term.term === termLabel);
+    expect(selectedTerm).toBeDefined();
+
+    fireEvent.change(firstInput, {
+      target: { value: selectedTerm?.turkishMeaning },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Finish Quiz' }));
+
+    await screen.findByText('Quiz Complete');
+    const statuses = Object.values(VocabularyMenuService.getState().progress);
+    expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(
+      1
+    );
+    expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(
+      0
+    );
+    expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(
+      99
+    );
+  }, 10_000);
+
   it('searches vocabulary via modal and finds results', async () => {
     await renderLoadedPage();
     await openSearchModal();
