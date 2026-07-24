@@ -35,11 +35,6 @@ export const registerWritingRoutes = (app: Express): void => {
         if (!userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { promptId, content } = request.validatedBody as {
-          promptId?: string;
-          content?: string;
-        };
-
         response.json({
           success: true,
           id: 'mock-id',

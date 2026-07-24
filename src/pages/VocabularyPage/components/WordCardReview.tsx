@@ -16,52 +16,26 @@ interface LearningReviewProps {
 }
 
 export const LearningReview = ({
-  term,
-  progress,
-  mode,
-  onReview,
+  term: _term,
+  progress: _progress,
+  mode: _mode,
+  onReview: _onReview,
 }: LearningReviewProps) => (
-  <div className="mt-3 space-y-2">
-    <div className="flex items-center gap-2">
-      <span className="text-sm tracking-widest text-[#0047bb]">
-        {'●'.repeat(Math.min(progress.correctReviews, 5))}
-        {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
-      </span>
-      <span className="text-xs font-semibold text-muted-copy">
-        Learned Listesinde — Mastered Quiz Bekliyor
-      </span>
-    </div>
-    {mode !== 'Review' && (
-      <div className="grid grid-cols-2 gap-2">
-        <Button
-          variant="success"
-          className="px-3 rounded-[4px]"
-          onClick={() => onReview(term, true)}
-        >
-          <CheckCircle2 className="h-4 w-4" /> Hatırladım
-        </Button>
-        <Button
-          variant="danger"
-          className="px-3 rounded-[4px]"
-          onClick={() => onReview(term, false)}
-        >
-          <XCircle className="h-4 w-4" /> Tekrar Et
-        </Button>
-      </div>
-    )}
+  <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 text-xs font-bold text-[#0047bb]">
+    <CheckCircle2 className="h-4 w-4" /> Learned (In Master Quiz Pool)
   </div>
 );
 
 export const MasteredBadge = () => (
   <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 uppercase tracking-wider">
     <span>🏆</span>
-    Reading & Writing havuzuna eklendi
+    Mastered (Added to Skill Pool)
   </div>
 );
 
 export const NewWordHint = () => (
   <p className="mt-3 text-xs font-semibold text-muted-copy">
-    1-Tık ile Learned'a ekleyin veya anlamını test edin
+    Click 'I Know This' or test meaning to move to Learned
   </p>
 );
 
@@ -73,7 +47,7 @@ export const ReviewReasonBanner = ({
   progress: VocabularyMenuProgress;
 }) => (
   <div className="mt-3 rounded-[4px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950">
-    <span className="font-black">Neden Tekrar Ediliyor: </span>
+    <span className="font-black">Review Reason: </span>
     {getVocabularyReviewReason(progress)}
   </div>
 );
@@ -105,21 +79,21 @@ export const QuizForm = ({
       className="w-full rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold"
       onClick={() => onLearn?.(term)}
     >
-      <CheckCircle2 className="h-4 w-4 mr-1.5" /> Biliyorum — Learned'a Ekle
+      <CheckCircle2 className="h-4 w-4 mr-1.5" /> I Know This
     </Button>
     <div className="relative pt-1 text-center">
       <span className="text-[10px] text-muted-copy uppercase tracking-wider font-semibold">
-        veya Anlamını Test Et
+        or Test Meaning
       </span>
     </div>
     <label className="block text-xs font-bold text-foreground">
-      Türkçe anlamı
+      Turkish meaning
       <input
         value={answer}
         disabled={quizResult !== null}
         onChange={(event) => onAnswerChange(event.target.value)}
         className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb]"
-        placeholder="Anlamını yazın..."
+        placeholder="Type Turkish meaning..."
       />
     </label>
     <Button
@@ -128,15 +102,15 @@ export const QuizForm = ({
       className="w-full rounded-[4px]"
       disabled={!answer.trim()}
     >
-      Cevabı Kontrol Et
+      Check Answer
     </Button>
     {quizResult !== null && (
       <p
         className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}
       >
         {quizResult
-          ? 'Doğru — Learned listesine eklendi.'
-          : 'Yanlış — Zayıf Kelimelere eklendi.'}
+          ? 'Correct — Moved to Learned pool.'
+          : 'Incorrect — Added to Weak Words.'}
       </p>
     )}
   </form>
@@ -155,7 +129,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
       aria-label={`Mark ${term.term} remembered`}
       onClick={() => onReview(term, true)}
     >
-      <CheckCircle2 className="h-4 w-4" /> Hatırladım
+      <CheckCircle2 className="h-4 w-4" /> Remembered
     </Button>
     <Button
       variant="danger"
@@ -163,7 +137,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
       aria-label={`Review ${term.term} again`}
       onClick={() => onReview(term, false)}
     >
-      <XCircle className="h-4 w-4" /> Tekrar Et
+      <XCircle className="h-4 w-4" /> Review Again
     </Button>
   </div>
 );

@@ -48,7 +48,7 @@ try {
   } else {
     log.success('No vulnerabilities found');
   }
-} catch (e) {
+} catch {
   log.error('Audit failed');
   exitCode = 1;
 }
@@ -70,7 +70,7 @@ try {
   } else {
     log.success('All packages are up to date');
   }
-} catch (e) {
+} catch {
   log.info('No outdated packages or check failed');
 }
 
@@ -110,7 +110,7 @@ try {
   } else {
     log.warn(`${licenseIssues} packages with forbidden licenses`);
   }
-} catch (e) {
+} catch {
   log.info('License check completed');
 }
 
@@ -129,7 +129,7 @@ try {
   } else {
     log.success('Dependency count is reasonable');
   }
-} catch (e) {
+} catch {
   log.warn('Could not check bundle size');
 }
 

@@ -48,16 +48,18 @@ const StatusContent = ({
   mode: VocabularySetMode;
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
   showAnswer: boolean;
-}) => (
-  <>
-    {(status === 'Learning' || status === 'learned') && mode === 'Quiz' && (
-      <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-        <CheckCircle2 className="h-4 w-4" /> Learned Listesine Eklendi
-      </div>
-    )}
-    {(status === 'Learning' || status === 'learned') &&
-      mode !== 'Quiz' &&
-      progress && (
+}) => {
+  const isLearned = status === 'Learning' || status === 'learned';
+  const isQuizMode = mode === 'Quiz';
+
+  return (
+    <>
+      {isLearned && isQuizMode && (
+        <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+          <CheckCircle2 className="h-4 w-4" /> Learned Listesine Eklendi
+        </div>
+      )}
+      {isLearned && !isQuizMode && progress && (
         <LearningReview
           term={term}
           progress={progress}
@@ -65,18 +67,19 @@ const StatusContent = ({
           onReview={onReview}
         />
       )}
-    {status === 'Mastered' && <MasteredBadge />}
-    {status === 'New' && <NewWordHint />}
-    {showAnswer && (
-      <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
-        <p>{repairVocabularyText(term.exampleSentence)}</p>
-        <p className="text-foreground0">
-          {repairVocabularyText(term.turkishExample)}
-        </p>
-      </div>
-    )}
-  </>
-);
+      {status === 'Mastered' && <MasteredBadge />}
+      {status === 'New' && <NewWordHint />}
+      {showAnswer && (
+        <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
+          <p>{repairVocabularyText(term.exampleSentence)}</p>
+          <p className="text-foreground0">
+            {repairVocabularyText(term.turkishExample)}
+          </p>
+        </div>
+      )}
+    </>
+  );
+};
 
 const DomainBar = ({ status }: { status: string }) => (
   <div className="mt-4 border-t border-border-soft pt-3 text-xs text-foreground0">
