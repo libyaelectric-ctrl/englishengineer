@@ -41,10 +41,10 @@ describe('Vocabulary menu progress', () => {
   it('masters only on the third correct review', () => {
     const now = new Date('2026-06-29T10:00:00.000Z');
     expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe(
-      'Learning'
+      'Learned'
     );
     expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe(
-      'Learning'
+      'Learned'
     );
     const mastered = VocabularyMenuService.reviewWord(term.id, true, now);
     expect(mastered.status).toBe('Mastered');
@@ -66,7 +66,7 @@ describe('Vocabulary menu progress', () => {
       CANONICAL_VOCABULARY_TOTAL,
       now
     );
-    expect(progress.status).toBe('Learning');
+    expect(progress.status).toBe('Struggling');
     expect(progress.isWeak).toBe(true);
     expect(progress.isForgotten).toBe(true);
     expect(progress.isLeech).toBe(true);

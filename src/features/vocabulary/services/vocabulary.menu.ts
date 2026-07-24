@@ -164,7 +164,7 @@ const buildCorrectReviewResult = (
   return {
     correctReviews,
     wrongReviews: current.wrongReviews,
-    status: isMastered ? 'Mastered' : 'Learning',
+    status: isMastered ? 'Mastered' : 'Learned',
     isWeak: isMastered ? false : current.isWeak,
     isForgotten: isMastered ? false : current.isForgotten,
     isLeech: isMastered ? false : current.isLeech,
@@ -181,7 +181,7 @@ const buildIncorrectReviewResult = (
   const tentative: VocabularyMenuProgress = {
     correctReviews: Math.min(current.correctReviews, 2),
     wrongReviews,
-    status: 'Learning',
+    status: 'Struggling',
     isWeak: true,
     isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
     isLeech: current.isLeech,
@@ -369,7 +369,7 @@ export const VocabularyMenuService = {
     const current = state.progress[wordId] ?? getDefaultProgress();
     const next: VocabularyMenuProgress = {
       ...current,
-      status: 'Learning',
+      status: 'Learned',
       lastReviewed: now.toISOString(),
       nextReviewDate: now.toISOString(),
     };
