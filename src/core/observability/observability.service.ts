@@ -39,27 +39,10 @@ const getHealthStatus = (
 };
 
 let sentryInitialized = false;
-let sentryModule: any = null;
 
 const initSentry = async () => {
   if (sentryInitialized) return;
-  const dsn = env?.VITE_SENTRY_DSN;
-  if (!dsn) return;
-
-  try {
-    const Sentry = await import('@sentry/react');
-    Sentry.init({
-      dsn,
-      environment: env?.VITE_ENVIRONMENT_MODE || 'development',
-      tracesSampleRate: normalizeSampleRate(
-        env?.VITE_ERROR_MONITORING_SAMPLE_RATE
-      ),
-    });
-    sentryModule = Sentry;
-    sentryInitialized = true;
-  } catch (err) {
-    logger.e('[Observability] Failed to initialize Sentry', err);
-  }
+  sentryInitialized = true;
 };
 
 export const ObservabilityService = {
@@ -111,13 +94,8 @@ export const ObservabilityService = {
     initSentry();
   },
 
-  /** Report error to Sentry (if configured) and log locally. */
+  /** Report error and log locally. */
   logError(error: ErrorReport): void {
-    if (sentryInitialized) {
-      import('./sentry-lite').then(({ reportError }) => {
-        reportError(new Error(error.message));
-      });
-    }
     logger.e(
       `[Observability] Error: ${error.code}`,
       error.message,
@@ -132,12 +110,6 @@ export const ObservabilityService = {
     success: boolean;
     context?: Record<string, unknown>;
   }): void {
-    if (sentryInitialized && sentryModule) {
-      sentryModule.captureMessage(
-        `Performance: ${metric.name} ${metric.durationMs}ms ${metric.success ? 'OK' : 'FAILED'}`,
-        metric.success ? 'info' : 'warning'
-      );
-    }
     logger.i(
       `[Observability] Performance: ${metric.name} took ${metric.durationMs}ms`,
       metric.success ? 'OK' : 'FAILED',

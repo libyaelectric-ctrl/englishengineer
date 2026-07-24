@@ -13,7 +13,9 @@ export const registerGrammarRoutes = (app: Express): void => {
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const ruleId = request.params.id;
-        const { result } = request.validatedBody as { result: 'correct' | 'incorrect' };
+        const { result } = request.validatedBody as {
+          result: 'correct' | 'incorrect';
+        };
 
         response.json({
           success: true,

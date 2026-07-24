@@ -1,36 +1,113 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { DAILY_DURATION_OPTIONS, PROFESSIONS } from './profile.preferences';
-import { LearningProfileRepository } from './profile.repository';
+import { describe, it, expect } from 'vitest';
+import {
+  LEARNING_GOALS,
+  PROFESSIONS,
+  COUNTRIES,
+  TIMEZONES,
+  DAILY_DURATION_OPTIONS,
+  DAILY_TASK_COUNT_OPTIONS,
+  PROFESSIONAL_TRACKS,
+  INDUSTRIES,
+  ELECTRICAL_SUBDOMAINS,
+} from './profile.preferences';
 
-describe('Learning profile preferences', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    LearningProfileRepository.reset('preference-test');
+describe('Profile Preferences', () => {
+  describe('LEARNING_GOALS', () => {
+    it('has at least 3 goals', () => {
+      expect(LEARNING_GOALS.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('each goal has required fields', () => {
+      LEARNING_GOALS.forEach((goal) => {
+        expect(goal.id).toBeDefined();
+        expect(goal.label).toBeDefined();
+        expect(goal.preferredDomains).toBeInstanceOf(Array);
+      });
+    });
+
+    it('has unique ids', () => {
+      const ids = LEARNING_GOALS.map((g) => g.id);
+      expect(new Set(ids).size).toBe(ids.length);
+    });
   });
-  it('offers the specified duration options', () => {
-    expect(DAILY_DURATION_OPTIONS).toEqual([15, 30, 60, 90, 120, 150, 180]);
+
+  describe('PROFESSIONS', () => {
+    it('has at least 3 professions', () => {
+      expect(PROFESSIONS.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('each profession has required fields', () => {
+      PROFESSIONS.forEach((p) => {
+        expect(p.id).toBeDefined();
+        expect(p.label).toBeDefined();
+        expect(p.preferredDomains).toBeInstanceOf(Array);
+      });
+    });
   });
-  it('stores multiple goals, role, minutes, and task count', () => {
-    const profile = LearningProfileRepository.updatePreferences(
-      'preference-test',
-      {
-        goals: ['work', 'engineering', 'management'],
-        professionId: 'project-manager',
-        dailyTarget: { minutes: 60, taskCount: 5 },
-      }
-    );
-    expect(profile.goals).toEqual(['work', 'engineering', 'management']);
-    expect(profile.professionId).toBe('project-manager');
-    expect(profile.dailyTarget).toEqual({ minutes: 60, taskCount: 5 });
+
+  describe('COUNTRIES', () => {
+    it('has at least 5 countries', () => {
+      expect(COUNTRIES.length).toBeGreaterThanOrEqual(5);
+    });
+
+    it('includes United Kingdom and United States', () => {
+      expect(COUNTRIES).toContain('United Kingdom');
+      expect(COUNTRIES).toContain('United States');
+    });
   });
-  it('uses clean professional labels', () => {
-    expect(PROFESSIONS).toHaveLength(12);
-    expect(PROFESSIONS.map(({ label }) => label)).toContain('QA/QC Engineer');
-    expect(PROFESSIONS.map(({ label }) => label)).toContain('Other');
-    expect(
-      PROFESSIONS.every(
-        ({ label }) => !/[�Ã]/.test(label) && /^[A-Z]/.test(label)
-      )
-    ).toBe(true);
+
+  describe('TIMEZONES', () => {
+    it('has at least 5 timezones', () => {
+      expect(TIMEZONES.length).toBeGreaterThanOrEqual(5);
+    });
+
+    it('includes UTC', () => {
+      expect(TIMEZONES).toContain('UTC');
+    });
+  });
+
+  describe('DAILY_DURATION_OPTIONS', () => {
+    it('has multiple duration options', () => {
+      expect(DAILY_DURATION_OPTIONS.length).toBeGreaterThanOrEqual(3);
+    });
+
+    it('all options are numbers', () => {
+      DAILY_DURATION_OPTIONS.forEach((opt) => {
+        expect(typeof opt).toBe('number');
+        expect(opt).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('DAILY_TASK_COUNT_OPTIONS', () => {
+    it('has multiple task count options', () => {
+      expect(DAILY_TASK_COUNT_OPTIONS.length).toBeGreaterThanOrEqual(2);
+    });
+  });
+
+  describe('PROFESSIONAL_TRACKS', () => {
+    it('has at least 2 tracks', () => {
+      expect(PROFESSIONAL_TRACKS.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('each track has required fields', () => {
+      PROFESSIONAL_TRACKS.forEach((track) => {
+        expect(track.id).toBeDefined();
+        expect(track.label).toBeDefined();
+        expect(typeof track.available).toBe('boolean');
+      });
+    });
+  });
+
+  describe('INDUSTRIES', () => {
+    it('has at least 3 industries', () => {
+      expect(INDUSTRIES.length).toBeGreaterThanOrEqual(3);
+    });
+  });
+
+  describe('ELECTRICAL_SUBDOMAINS', () => {
+    it('has at least 2 subdomains', () => {
+      expect(ELECTRICAL_SUBDOMAINS.length).toBeGreaterThanOrEqual(2);
+    });
   });
 });

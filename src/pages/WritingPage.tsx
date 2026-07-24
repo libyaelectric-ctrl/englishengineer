@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, FileCheck, Layers, Lock } from 'lucide-react';
+import { FileText, FileCheck, Layers, Lock, ShieldCheck } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { LevelContentFilter, EmptyLevelState } from '@/features/level-system';
 import { useWritingPage } from './WritingPage/hooks/useWritingPage';
 import { MissionListTab } from './WritingPage/components/MissionListTab';
 import { WorkspaceTab } from './WritingPage/components/WorkspaceTab';
+import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 import { useGrammarStore } from '@/features/grammar/store/grammar.store';
 
@@ -13,6 +15,7 @@ const VOCAB_THRESHOLD = 500;
 const GRAMMAR_THRESHOLD = 50;
 
 const WritingPage = () => {
+  const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
   const vocabStats = useVocabularyStore((s) => s.stats);
   const grammarStats = useGrammarStore((s) => s.stats);
   const vocabLearned = vocabStats.learned + vocabStats.mastered;
@@ -150,13 +153,37 @@ const WritingPage = () => {
             ENG-W{currentLevel.replace(/[^0-9]/g, '') || currentLevel}
           </span>
         </div>
-        <div className="hidden text-[11px] font-medium text-muted-copy lg:block">
-          {finishedCount}/{missions.length} completed
-        </div>
+        {activeTab === 'missions' && (
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSubTab('missions')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                subTab === 'missions'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'bg-surface border border-border-soft text-muted-copy hover:text-foreground'
+              }`}
+            >
+              Practice Missions
+            </button>
+            <button
+              type="button"
+              onClick={() => setSubTab('field-docs')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                subTab === 'field-docs'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'bg-surface border border-border-soft text-muted-copy hover:text-foreground'
+              }`}
+            >
+              <ShieldCheck className="h-3.5 w-3.5" />
+              <span>1. Field Docs (RFI / NCR / EOT)</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Top statistics panel */}
-      {activeTab === 'missions' && (
+      {activeTab === 'missions' && subTab === 'missions' && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <MetricCard
             label="Drafting Practice"
@@ -186,7 +213,7 @@ const WritingPage = () => {
       )}
 
       {/* 1. MISSIONS TAB VIEW */}
-      {activeTab === 'missions' && (
+      {activeTab === 'missions' && subTab === 'missions' && (
         <MissionListTab
           levelFilter={levelFilter}
           currentLevel={currentLevel}
@@ -198,6 +225,11 @@ const WritingPage = () => {
           resetAllWritingProgress={resetAllWritingProgress}
           handleLaunchMission={handleLaunchMission}
         />
+      )}
+
+      {/* 2. FIELD DOCUMENTS ASSISTANT VIEW (1. 📝 RFI & NCR Saha Mektubu Yazarı) */}
+      {activeTab === 'missions' && subTab === 'field-docs' && (
+        <FieldDocAssistant />
       )}
 
       {/* 2. ACTIVE ASSESSMENT WORKSPACE TAB VIEW */}

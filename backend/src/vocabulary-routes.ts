@@ -1,4 +1,9 @@
-import { validateQuery, validateBody, VocabularyLookupQuerySchema, ProgressBodySchema } from './validation.js';
+import {
+  validateQuery,
+  validateBody,
+  VocabularyLookupQuerySchema,
+  ProgressBodySchema,
+} from './validation.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
@@ -10,15 +15,6 @@ import type {
   NextFunction,
   RequestHandler,
 } from 'express';
-
-interface WordProgressRow {
-  word_id: string;
-  status: string;
-  fail_count: number;
-  correct_count: number;
-  last_practiced_at: string | null;
-  mastered_at: string | null;
-}
 
 export const registerVocabularyRoutes = (
   app: Express,
@@ -56,7 +52,9 @@ export const registerVocabularyRoutes = (
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id;
-        const { result } = request.validatedBody as { result: 'correct' | 'incorrect' };
+        const { result } = request.validatedBody as {
+          result: 'correct' | 'incorrect';
+        };
 
         const now = new Date().toISOString();
 

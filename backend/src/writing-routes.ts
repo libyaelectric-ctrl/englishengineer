@@ -33,7 +33,7 @@ export const registerWritingRoutes = (app: Express): void => {
         if (!userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { promptId, content } = request.body as {
+        const { promptId: _promptId, content: _content } = request.body as {
           promptId?: string;
           content?: string;
         };

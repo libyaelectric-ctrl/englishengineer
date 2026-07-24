@@ -104,13 +104,12 @@ describe('PricingPage', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/Billing service is unavailable/i)).toBeNull();
-      expect(screen.queryByText(/Billing service is not verified/i)).toBeNull();
     });
 
     fetchSpy.mockRestore();
   });
 
-  it('failed health check shows the warning', async () => {
+  it('failed health check disables checkout buttons', async () => {
     vi.mocked(useAuthStore).mockReturnValue({
       currentUser: null,
       initialize: vi.fn(),
@@ -134,7 +133,12 @@ describe('PricingPage', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/Billing service is unavailable/i)).toBeVisible();
+      const checkoutButtons = screen.getAllByRole('button', {
+        name: /upgrade/i,
+      });
+      checkoutButtons.forEach((btn) => {
+        expect(btn).toBeDisabled();
+      });
     });
 
     fetchSpy.mockRestore();

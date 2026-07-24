@@ -11,10 +11,6 @@ import { AUTH_CONFIG } from '@/features/auth/auth.config';
 import { useAuthStore } from '@/features/auth';
 import { useLearningStore } from '@/core/learning';
 import { Button } from '@/shared/components/Button';
-import {
-  AVAILABLE_INTERFACE_LANGUAGES,
-  useLocalizationStore,
-} from '@/features/localization';
 
 const StartPage = () => {
   const navigate = useNavigate();
@@ -22,8 +18,6 @@ const StartPage = () => {
     useAuthStore();
   const accountAvailable = providerMode === 'supabase';
   const liteAvailable = AUTH_CONFIG.localAuthAllowed;
-  const language = useLocalizationStore((state) => state.language);
-  const setLanguage = useLocalizationStore((state) => state.setLanguage);
 
   useEffect(() => {
     void initialize();
@@ -57,22 +51,6 @@ const StartPage = () => {
               account when Supabase authentication is configured.
             </p>
           </div>
-          <label className="text-xs font-bold text-foreground">
-            Language
-            <select
-              value={language}
-              onChange={(event) =>
-                setLanguage(event.target.value as 'en' | 'tr')
-              }
-              className="mt-1 min-h-10 rounded-input border border-border-soft bg-surface px-3 py-2 text-xs font-semibold text-foreground outline-none focus:border-border-hover"
-            >
-              {AVAILABLE_INTERFACE_LANGUAGES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
-          </label>
         </div>
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">

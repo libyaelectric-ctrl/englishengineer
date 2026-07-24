@@ -24,7 +24,9 @@ describe('Vocabulary Integration', () => {
 
   it('can set word response', () => {
     useVocabularyStore.getState().setResponse('word-1', 'transformer');
-    expect(useVocabularyStore.getState().responses['word-1']).toBe('transformer');
+    expect(useVocabularyStore.getState().responses['word-1']).toBe(
+      'transformer'
+    );
   });
 
   it('calculates vocabulary stats', () => {

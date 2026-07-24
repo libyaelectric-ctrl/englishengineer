@@ -32,7 +32,9 @@ describe('Architecture Rules', () => {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
             if (imp.startsWith('@/pages/')) {
-              violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from pages`);
+              violations.push(
+                `${fullPath.replace(SRC_DIR, '.')} imports from pages`
+              );
             }
           }
         }
@@ -56,16 +58,23 @@ describe('Architecture Rules', () => {
       for (const file of files) {
         const imports = getImportsFromFile(file);
         for (const imp of imports) {
-          if (imp.startsWith('@/features/') && !imp.includes(`@/features/${feature}`)) {
+          if (
+            imp.startsWith('@/features/') &&
+            !imp.includes(`@/features/${feature}`)
+          ) {
             const otherFeature = imp.replace('@/features/', '').split('/')[0];
-            violations.push(`${file.replace(SRC_DIR, '.')} imports from ${otherFeature}`);
+            violations.push(
+              `${file.replace(SRC_DIR, '.')} imports from ${otherFeature}`
+            );
           }
         }
       }
     }
 
     // Document violations but don't fail — these are known technical debt
-    console.log(`\n[Architecture] Feature-to-feature import violations: ${violations.length}`);
+    console.log(
+      `\n[Architecture] Feature-to-feature import violations: ${violations.length}`
+    );
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     // Expect violations to be documented and decreasing over time
@@ -86,7 +95,9 @@ describe('Architecture Rules', () => {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
             if (imp.startsWith('@/core/') || imp.startsWith('@/features/')) {
-              violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`);
+              violations.push(
+                `${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`
+              );
             }
           }
         }
@@ -95,7 +106,9 @@ describe('Architecture Rules', () => {
 
     checkDir(sharedPath);
 
-    console.log(`\n[Architecture] Shared-to-core/features violations: ${violations.length}`);
+    console.log(
+      `\n[Architecture] Shared-to-core/features violations: ${violations.length}`
+    );
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     expect(violations.length).toBeLessThan(20);

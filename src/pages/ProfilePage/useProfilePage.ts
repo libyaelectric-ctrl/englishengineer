@@ -9,6 +9,7 @@ import { useLearningCockpit } from '@/features/profile';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { storage } from '@/shared/storage';
+import { PRODUCT_VERSION } from '@/config/product.config';
 import { uiReducer, type ProfileUIState } from './ProfilePageReducer';
 import { useProfileEdit } from './useProfileEdit';
 import { useProfilePreferences } from './useProfilePreferences';
@@ -160,7 +161,7 @@ export const useProfilePage = () => {
   const exportLocalData = () => {
     const payload = {
       product: 'EngVox',
-      version: '4.0.1',
+      version: PRODUCT_VERSION,
       exportedAt: new Date().toISOString(),
       scope: 'Local EngVox data stored on this device',
       data: storage.exportAll(),

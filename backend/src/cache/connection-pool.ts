@@ -13,7 +13,6 @@ const DEFAULT_POOL_CONFIG: PoolConfig = {
 };
 
 let activeConnections = 0;
-let lastPruneAt = Date.now();
 
 export const getPoolConfig = (overrides?: Partial<PoolConfig>): PoolConfig => ({
   ...DEFAULT_POOL_CONFIG,

@@ -5,8 +5,9 @@ import { PageHeader } from '@/shared/components/PageHeader';
 import { QuickAITab } from '@/pages/QuickToolsPage/QuickAITab';
 import { MeetingPhrasebookTab } from '@/pages/QuickToolsPage/MeetingPhrasebookTab';
 import { SiteDictionaryTab } from '@/pages/QuickToolsPage/SiteDictionaryTab';
+import { PdfSpecExtractor } from '@/features/tools/PdfSpecExtractor';
 
-type QuickTab = 'ai' | 'meeting' | 'dictionary';
+type QuickTab = 'ai' | 'meeting' | 'dictionary' | 'pdf-spec';
 
 const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const { quickAIDraft } = useWorkToolsStore();
@@ -26,7 +27,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {!embedded && (
         <PageHeader
           title="Quick Tools"
-          description="Fast meeting language, site terminology and provider-controlled AI rewriting."
+          description="Fast meeting language, site terminology, PDF spec flashcards and AI rewriting."
           badgeText={status.label}
           badgeColor={status.isConnected ? 'emerald' : 'amber'}
         />
@@ -41,6 +42,7 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             ['ai', 'Quick AI'],
             ['meeting', 'Meeting Phrasebook'],
             ['dictionary', 'Site Dictionary'],
+            ['pdf-spec', '21. 📄 PDF Spec Extractor'],
           ] as const
         ).map(([id, label]) => (
           <button
@@ -71,6 +73,8 @@ const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {tab === 'meeting' && <MeetingPhrasebookTab />}
 
       {tab === 'dictionary' && <SiteDictionaryTab />}
+
+      {tab === 'pdf-spec' && <PdfSpecExtractor />}
     </div>
   );
 };
