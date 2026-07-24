@@ -25,7 +25,9 @@ export const toggleSoundMuted = (): boolean => {
   return next;
 };
 
-export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
+export const playSound = (
+  type: 'pop' | 'ding' | 'success' | 'error' | 'flip'
+) => {
   if (getSoundMuted()) return;
   try {
     // Check if AudioContext is supported
@@ -42,7 +44,15 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error') => {
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
 
-    if (type === 'pop') {
+    if (type === 'flip') {
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.04);
+      gainNode.gain.setValueAtTime(0.04, ctx.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.04);
+    } else if (type === 'pop') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(400, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.05);
