@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { CheckCircle2 } from 'lucide-react';
 import {
   repairVocabularyText,
   type VocabularyMenuProgress,
@@ -49,14 +50,21 @@ const StatusContent = ({
   showAnswer: boolean;
 }) => (
   <>
-    {status === 'Learning' && progress && (
-      <LearningReview
-        term={term}
-        progress={progress}
-        mode={mode}
-        onReview={onReview}
-      />
+    {(status === 'Learning' || status === 'learned') && mode === 'Quiz' && (
+      <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+        <CheckCircle2 className="h-4 w-4" /> Learned Listesine Eklendi
+      </div>
     )}
+    {(status === 'Learning' || status === 'learned') &&
+      mode !== 'Quiz' &&
+      progress && (
+        <LearningReview
+          term={term}
+          progress={progress}
+          mode={mode}
+          onReview={onReview}
+        />
+      )}
     {status === 'Mastered' && <MasteredBadge />}
     {status === 'New' && <NewWordHint />}
     {showAnswer && (

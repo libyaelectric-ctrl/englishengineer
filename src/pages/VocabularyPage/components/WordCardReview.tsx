@@ -28,7 +28,7 @@ export const LearningReview = ({
         {'○'.repeat(Math.max(0, 5 - Math.min(progress.correctReviews, 5)))}
       </span>
       <span className="text-xs font-semibold text-muted-copy">
-        {progress.correctReviews} correct → Mastered
+        Learned Listesinde — Mastered Quiz Bekliyor
       </span>
     </div>
     {mode !== 'Review' && (
@@ -38,14 +38,14 @@ export const LearningReview = ({
           className="px-3 rounded-[4px]"
           onClick={() => onReview(term, true)}
         >
-          <CheckCircle2 className="h-4 w-4" /> Remembered
+          <CheckCircle2 className="h-4 w-4" /> Hatırladım
         </Button>
         <Button
           variant="danger"
           className="px-3 rounded-[4px]"
           onClick={() => onReview(term, false)}
         >
-          <XCircle className="h-4 w-4" /> Review again
+          <XCircle className="h-4 w-4" /> Tekrar Et
         </Button>
       </div>
     )}
@@ -61,7 +61,7 @@ export const MasteredBadge = () => (
 
 export const NewWordHint = () => (
   <p className="mt-3 text-xs font-semibold text-muted-copy">
-    1 correct answer → moves to Learning
+    1-Tık ile Learned'a ekleyin veya anlamını test edin
   </p>
 );
 
@@ -73,7 +73,7 @@ export const ReviewReasonBanner = ({
   progress: VocabularyMenuProgress;
 }) => (
   <div className="mt-3 rounded-[4px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950">
-    <span className="font-black">Why review now: </span>
+    <span className="font-black">Neden Tekrar Ediliyor: </span>
     {getVocabularyReviewReason(progress)}
   </div>
 );
@@ -155,7 +155,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
       aria-label={`Mark ${term.term} remembered`}
       onClick={() => onReview(term, true)}
     >
-      <CheckCircle2 className="h-4 w-4" /> Remembered
+      <CheckCircle2 className="h-4 w-4" /> Hatırladım
     </Button>
     <Button
       variant="danger"
@@ -163,7 +163,7 @@ export const ReviewActions = ({ term, onReview }: ReviewActionsProps) => (
       aria-label={`Review ${term.term} again`}
       onClick={() => onReview(term, false)}
     >
-      <XCircle className="h-4 w-4" /> Review again
+      <XCircle className="h-4 w-4" /> Tekrar Et
     </Button>
   </div>
 );
