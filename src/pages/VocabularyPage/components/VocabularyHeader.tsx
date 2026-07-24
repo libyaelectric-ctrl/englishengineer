@@ -32,43 +32,17 @@ interface VocabularyHeaderProps {
   filterOptions?: (field: keyof VocabularySearchFilters) => string[];
   chooseTab: (tab: VocabularyMenuStatus) => void;
   onSearchInputChange: (input: string) => void;
-  onSearchSubmit: (event: React.FormEvent) => Promise<void>;
+  onSearchSubmit: (query: string) => Promise<void>;
   onFilterChange?: (
     field: keyof VocabularySearchFilters,
     value: string
   ) => void;
   onOpenQuiz?: () => void;
   onOpenStrugglingQuiz?: () => void;
+  onOpenSearch?: () => void;
 }
 
 export { TABS, TAB_LABELS };
-
-const SearchInput = ({
-  value,
-  onChange,
-  onSubmit,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
-}) => (
-  <label className="relative w-full max-w-xs">
-    <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
-    <input
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          void onSubmit(e);
-        }
-      }}
-      className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-8 pr-2 text-xs outline-none focus:border-[#0047bb] text-foreground"
-      placeholder="Search..."
-      aria-label="Search vocabulary"
-    />
-  </label>
-);
 
 const SoundToggle = ({
   isMuted,
@@ -98,15 +72,13 @@ const SoundToggle = ({
 export function VocabularyHeader({
   vocabularyLevel,
   activeTab,
-  searchInput,
   hasSearched,
   searchResults,
   allSearchResults,
   chooseTab,
-  onSearchInputChange,
-  onSearchSubmit,
   onOpenQuiz,
   onOpenStrugglingQuiz,
+  onOpenSearch,
 }: VocabularyHeaderProps) {
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
   const wordProgress = useVocabularyStore((s) => s.wordProgress);
@@ -221,17 +193,17 @@ export function VocabularyHeader({
                 {TAB_LABELS[tab]}
               </button>
             ))}
+            {/* Search button at the end of tabs */}
+            <button
+              type="button"
+              onClick={onOpenSearch}
+              title="Search vocabulary"
+              className="flex items-center gap-1 px-2 py-1 text-[10px] font-bold rounded-[4px] transition-all cursor-pointer text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]"
+            >
+              <Search className="h-3 w-3" />
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Search bar below tabs */}
-      <div className="mb-4">
-        <SearchInput
-          value={searchInput}
-          onChange={onSearchInputChange}
-          onSubmit={onSearchSubmit}
-        />
       </div>
 
       {hasSearched && searchResults && searchResults.length > 0 && (

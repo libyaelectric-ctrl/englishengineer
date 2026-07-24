@@ -17,7 +17,6 @@ export const WordCardHeader = ({
   term,
   showAnswer,
   status,
-  progress,
 }: WordCardHeaderProps) => (
   <div className="flex flex-wrap items-start justify-between gap-3">
     <div>

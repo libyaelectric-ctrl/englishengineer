@@ -39,6 +39,12 @@ describe('VocabularyPage menu', () => {
     );
   };
 
+  const openSearchModal = async () => {
+    const searchButton = screen.getByRole('button', { name: /search/i });
+    fireEvent.click(searchButton);
+    await screen.findByLabelText('Search vocabulary');
+  };
+
   it('opens on New tab with cards visible', async () => {
     await renderLoadedPage();
     expect(screen.getByRole('tab', { name: 'New' })).toHaveAttribute(
@@ -78,8 +84,9 @@ describe('VocabularyPage menu', () => {
     expect(screen.getAllByText('height').length).toBeGreaterThan(0);
   }, 10_000);
 
-  it('searches vocabulary and finds results', async () => {
+  it('searches vocabulary via modal and finds results', async () => {
     await renderLoadedPage();
+    await openSearchModal();
     const input = screen.getByLabelText('Search vocabulary');
 
     fireEvent.change(input, { target: { value: `y\u00fckseklik` } });
@@ -91,6 +98,7 @@ describe('VocabularyPage menu', () => {
 
   it('adds an unknown term only to My Vocabulary', async () => {
     await renderLoadedPage();
+    await openSearchModal();
     const input = screen.getByLabelText('Search vocabulary');
     fireEvent.change(input, {
       target: { value: 'fluxuator' },
