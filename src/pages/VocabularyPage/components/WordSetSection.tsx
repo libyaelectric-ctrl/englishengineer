@@ -40,7 +40,7 @@ export function WordSetSection({
 }: WordSetSectionProps) {
   return (
     <SectionCard
-      title={`${TAB_LABELS[activeTab]} 15-word set`}
+      title={`${TAB_LABELS[activeTab]} set`}
       subtitle={`CEFR: ${vocabularyProfile.cefrBand}`}
       icon={BookMarked}
       headerActions={
@@ -108,7 +108,7 @@ export function WordSetSection({
               className="rounded-[4px] gap-1.5"
               onClick={onLoadNextBatch}
             >
-              Next 15-word batch
+              Next
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>
