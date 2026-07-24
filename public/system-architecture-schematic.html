@@ -3,13 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      EngineerOS V4 - Hiyerarşik Beceri ve Havuz Ağacı (Master Tree
-      Architecture)
-    </title>
+    <title>EngineerOS V4 - Gerçek Görsel Ağaç Mimarisi (Visual SVG Tree)</title>
     <style>
       :root {
-        --bg: #070a12;
+        --bg: #070a13;
         --surface: #0f172a;
         --surface-hover: #1e293b;
         --border: #334155;
@@ -43,16 +40,12 @@
         line-height: 1.5;
         padding: 2rem 1rem;
         min-height: 100vh;
-      }
-
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
+        overflow-x: auto;
       }
 
       header {
         text-align: center;
-        margin-bottom: 3rem;
+        margin-bottom: 2.5rem;
         border-bottom: 1px solid var(--border);
         padding-bottom: 2rem;
       }
@@ -92,94 +85,115 @@
       p.subtitle {
         color: var(--text-muted);
         font-size: 1rem;
-        max-width: 850px;
+      }
+
+      /* VISUAL SVG TREE CONTAINER */
+      .tree-viewport {
+        position: relative;
+        min-width: 1300px;
+        padding: 2rem;
         margin: 0 auto;
       }
 
-      /* TREE ARCHITECTURE STYLING */
-      .tree-container {
+      svg.tree-svg-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .tree-branch-line {
+        fill: none;
+        stroke: #38bdf8;
+        stroke-width: 2.5;
+        stroke-dasharray: 6;
+        animation: treeDash 25s linear infinite;
+      }
+
+      .tree-branch-line.purple {
+        stroke: #a855f7;
+      }
+      .tree-branch-line.green {
+        stroke: #10b981;
+      }
+      .tree-branch-line.gold {
+        stroke: #f59e0b;
+      }
+      .tree-branch-line.red {
+        stroke: #ef4444;
+      }
+
+      @keyframes treeDash {
+        to {
+          stroke-dashoffset: -1000;
+        }
+      }
+
+      /* ORGANIZATIONAL HIERARCHY TREE LAYOUT */
+      .tree-wrapper {
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: 3.5rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .tree-row {
+        display: flex;
+        justify-content: center;
         gap: 2.5rem;
-        position: relative;
-        margin-bottom: 4rem;
-      }
-
-      .tree-level {
-        display: flex;
-        justify-content: center;
-        gap: 2rem;
         width: 100%;
         position: relative;
-        flex-wrap: wrap;
       }
 
-      .tree-level-title {
-        width: 100%;
-        text-align: center;
-        font-size: 0.8rem;
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
-        color: var(--text-muted);
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.75rem;
-      }
-
-      .tree-level-title::before,
-      .tree-level-title::after {
-        content: '';
-        height: 1px;
-        width: 100px;
-        background: var(--border);
-      }
-
-      .tree-node {
+      /* CARD NODES */
+      .tree-card {
         background: var(--surface);
         border: 2px solid var(--border);
         border-radius: 14px;
         padding: 1.25rem;
         width: 280px;
         position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
       }
 
-      .tree-node:hover {
-        transform: translateY(-5px);
+      .tree-card:hover {
+        transform: translateY(-6px) scale(1.02);
         border-color: var(--primary-light);
-        box-shadow: 0 15px 35px rgba(0, 82, 255, 0.3);
+        box-shadow: 0 20px 40px rgba(0, 82, 255, 0.35);
       }
 
-      .tree-node.root-node {
+      .tree-card.root-card {
         border-color: var(--primary);
-        background: linear-gradient(135deg, rgba(0, 82, 255, 0.2), #0f172a);
+        background: linear-gradient(135deg, rgba(0, 82, 255, 0.25), #0f172a);
         width: 340px;
       }
 
-      .tree-node.gate-node {
+      .tree-card.gate-card {
         border-color: var(--purple);
-        background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), #0f172a);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), #0f172a);
         width: 320px;
       }
 
-      .tree-node.bad-node {
+      .tree-card.bad-card {
         border-color: var(--danger);
-        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), #0f172a);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), #0f172a);
       }
 
-      .node-badge {
-        display: inline-block;
+      .card-badge {
         font-size: 0.65rem;
         font-weight: 900;
         padding: 0.2rem 0.6rem;
         border-radius: 9999px;
         text-transform: uppercase;
         margin-bottom: 0.5rem;
+        display: inline-block;
       }
 
       .badge-blue {
@@ -213,67 +227,50 @@
         border: 1px solid #ef4444;
       }
 
-      .node-header {
+      .card-title {
         font-size: 1rem;
         font-weight: 800;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.4rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
       }
 
-      .node-desc {
+      .card-desc {
         font-size: 0.8rem;
         color: var(--text-muted);
         margin-bottom: 0.75rem;
       }
 
-      .node-rules {
-        background: rgba(0, 0, 0, 0.3);
+      .card-box {
+        background: rgba(0, 0, 0, 0.35);
         border-radius: 8px;
         padding: 0.6rem;
         font-size: 0.75rem;
         border-left: 3px solid var(--primary-light);
       }
 
-      .node-rules.green {
+      .card-box.green {
         border-left-color: var(--success);
       }
-      .node-rules.purple {
+      .card-box.purple {
         border-left-color: var(--purple);
       }
-      .node-rules.gold {
+      .card-box.gold {
         border-left-color: var(--warning);
       }
-      .node-rules.red {
+      .card-box.red {
         border-left-color: var(--danger);
       }
 
-      .rule-item {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        margin-bottom: 0.25rem;
-      }
-
-      .rule-item:last-child {
-        margin-bottom: 0;
-      }
-
-      /* CONNECTING BRANCH LINES */
-      .branch-line {
-        position: absolute;
-        background: var(--border);
-        z-index: 1;
-      }
-
-      /* MATRIX SUMMARY TABLE */
-      .summary-card {
+      /* SUMMARY MATRIX */
+      .matrix-section {
+        max-width: 1200px;
+        margin: 3rem auto 0;
         background: var(--surface);
         border: 1px solid var(--border);
         border-radius: 16px;
         padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       table {
@@ -295,24 +292,6 @@
         text-transform: uppercase;
         font-size: 0.7rem;
         letter-spacing: 0.08em;
-        background: rgba(255, 255, 255, 0.02);
-      }
-
-      .status-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-weight: 800;
-        font-size: 0.75rem;
-        color: #34d399;
-      }
-
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #10b981;
-        box-shadow: 0 0 8px #10b981;
       }
 
       footer {
@@ -328,328 +307,282 @@
   <body>
     <div class="container">
       <header>
-        <div class="logo-badge">
-          🌳 Master Skill Hierarchy & Dependency Tree
-        </div>
-        <h1>EngineerOS Tüm Becerilerin Ağaçsal Bağlantı Mimarisi</h1>
+        <div class="logo-badge">🌳 Visual SVG Tree Layout</div>
+        <h1>EngineerOS Görsel Ağaç Mimarisi (Visual Family-Tree)</h1>
         <p class="subtitle">
-          Veri nereden doğuyor, kişisel havuzlarda nasıl işleniyor, beceri
-          kilitleri nasıl açılıyor ve üst modüllere nasıl aktarılıyor?
+          Kök Sistemden başlayıp dallara ayrılan gerçek SVG bağlantı çizgili
+          hiyerarşik ağaç gösterimi.
         </p>
       </header>
 
-      <!-- MASTER TREE CONTAINER -->
-      <div class="tree-container">
-        <!-- LEVEL 0: ROOT -->
-        <div class="tree-level">
-          <div class="tree-level-title">SEVİYE 0: KÖK MOTOR (SYSTEM CORE)</div>
-          <div class="tree-node root-node">
-            <span class="node-badge badge-blue">Kök Sistem (Root)</span>
-            <div class="node-header">⚡ EngineerOS Core Architecture</div>
-            <div class="node-desc">
-              Auth, Profile, Persistence (LocalStorage & Supabase RLS Cloud
-              Sync).
-            </div>
-            <div class="node-rules">
-              <div class="rule-item">
-                ➔ Tüm verileri izole eder ve senkronize eder.
+      <!-- TREE VIEWPORT WITH SVG CONNECTIONS -->
+      <div class="tree-viewport" id="viewport">
+        <svg class="tree-svg-canvas" id="svgCanvas"></svg>
+
+        <div class="tree-wrapper">
+          <!-- ROW 0: ROOT -->
+          <div class="tree-row">
+            <div class="tree-card root-card" id="node_root">
+              <span class="card-badge badge-blue">Kök Sistem (Level 0)</span>
+              <div class="card-title">⚡ EngineerOS Core Engine</div>
+              <div class="card-desc">
+                Auth, Profile & Cloud Sync (LocalStorage + Supabase RLS).
+              </div>
+              <div class="card-box">
+                ➔ Tüm alt dalları besleyen ana kök motor.
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- LEVEL 1: KNOWLEDGE SEEDS -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 1: HAM VERİ DEPOLARI (KNOWLEDGE SEED ENGINES)
-          </div>
+          <!-- ROW 1: KNOWLEDGE SEEDS -->
+          <div class="tree-row">
+            <div class="tree-card" id="node_vocab_seed">
+              <span class="card-badge badge-blue">Ham Depo (Level 1)</span>
+              <div class="card-title">📚 Vocab Seed Engine</div>
+              <div class="card-desc">1200+ Mühendislik terimi (A1-C2).</div>
+              <div class="card-box">➔ Seviye süzgeciyle kelime besler.</div>
+            </div>
 
-          <div class="tree-node">
-            <span class="node-badge badge-blue">Vocab Engine</span>
-            <div class="node-header">📚 Technical Vocab Bank</div>
-            <div class="node-desc">
-              1200+ Mühendislik terimi (In-situ, Load-bearing vb.).
+            <div class="tree-card" id="node_grammar_seed">
+              <span class="card-badge badge-blue">Ham Depo (Level 1)</span>
+              <div class="card-title">📘 Grammar Seed Engine</div>
+              <div class="card-desc">120+ Saha dilbilgisi kuralı.</div>
+              <div class="card-box">➔ Dilbilgisi modülünü besler.</div>
             </div>
-            <div class="node-rules">
-              <div class="rule-item">➔ CEFR seviyelerine (A1-C2) ayrılır.</div>
-            </div>
-          </div>
 
-          <div class="tree-node">
-            <span class="node-badge badge-blue">Grammar Engine</span>
-            <div class="node-header">📘 Technical Grammar Bank</div>
-            <div class="node-desc">
-              120+ Saha İngilizcesi dilbilgisi kuralı.
-            </div>
-            <div class="node-rules">
-              <div class="rule-item">➔ Cümle kalıpları ve kural anlatımı.</div>
+            <div class="tree-card" id="node_placement">
+              <span class="card-badge badge-blue">Test Motoru (Level 1)</span>
+              <div class="card-title">🎯 Placement Level Test</div>
+              <div class="card-desc">CEFR Seviye tespit sınavı.</div>
+              <div class="card-box">➔ Başlangıç seviyesini atar.</div>
             </div>
           </div>
 
-          <div class="tree-node">
-            <span class="node-badge badge-blue">Level Assessment</span>
-            <div class="node-header">🎯 Placement Level Test</div>
-            <div class="node-desc">
-              Kullanıcının başlangıç seviyesini (CEFR) belirler.
-            </div>
-            <div class="node-rules">
-              <div class="rule-item">
-                ➔ Doğru seviye kelimelerini New havuzuna besler.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LEVEL 2: PERSONAL POOLS STATE MACHINE -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 2: KİŞİSEL HAVUZ DURUM MAKİNESİ (PERSONAL POOLS)
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-green">1. Adım Havuzu</span>
-            <div class="node-header">✨ 2.1 NEW Pool</div>
-            <div class="node-desc">
-              Kullanıcının henüz çalışmadığı yeni kelimeler.
-            </div>
-            <div class="node-rules green">
-              <div class="rule-item">
+          <!-- ROW 2: PERSONAL POOLS -->
+          <div class="tree-row">
+            <div class="tree-card" id="node_pool_new">
+              <span class="card-badge badge-green"
+                >1. Adım Havuzu (Level 2)</span
+              >
+              <div class="card-title">✨ NEW Pool</div>
+              <div class="card-desc">Henüz çalışılmamış yeni kelimeler.</div>
+              <div class="card-box green">
                 ➔ 1-TIK "Biliyorum" ➔ <strong>Learned</strong>
               </div>
-              <div class="rule-item" style="color: var(--danger)">
-                ➔ Test Yanlış ➔ <strong>Struggling</strong>
+            </div>
+
+            <div class="tree-card" id="node_pool_learned">
+              <span class="card-badge badge-green">Quiz Havuzu (Level 2)</span>
+              <div class="card-title">📖 LEARNED Pool</div>
+              <div class="card-desc">Öğrenilmiş kelimeler (Quiz Pool).</div>
+              <div class="card-box gold">
+                ➔ Mastered Quiz ➔ <strong>Mastered</strong>
+              </div>
+            </div>
+
+            <div class="tree-card" id="node_pool_mastered">
+              <span class="card-badge badge-gold">Hakimiyet (Level 2)</span>
+              <div class="card-title">🏆 MASTERED Pool</div>
+              <div class="card-desc">Quizle kanıtlanmış tam hakimiyet.</div>
+              <div class="card-box purple">➔ Kilit Motoruna Aktarılır.</div>
+            </div>
+
+            <div class="tree-card bad-card" id="node_pool_struggling">
+              <span class="card-badge badge-red">Hata Havuzu (Level 2)</span>
+              <div class="card-title">⚠️ STRUGGLING Pool</div>
+              <div class="card-desc">Yanlış yapılan zayıf kelimeler.</div>
+              <div class="card-box green">
+                ➔ Kurtarma Quizi ➔ <strong>Learned</strong>
               </div>
             </div>
           </div>
 
-          <div class="tree-node">
-            <span class="node-badge badge-green">2. Adım (Quiz Pool)</span>
-            <div class="node-header">📖 2.2 LEARNED Pool</div>
-            <div class="node-desc">
-              Öğrenilmiş kelimeler (Quiz Havuzunu Oluşturur).
-            </div>
-            <div class="node-rules gold">
-              <div class="rule-item">
-                ➔ Mastered Quiz (1 Doğru) ➔ <strong>Mastered</strong>
+          <!-- ROW 3: UNLOCK GATING ENGINE -->
+          <div class="tree-row">
+            <div class="tree-card gate-card" id="node_gate1">
+              <span class="card-badge badge-purple"
+                >Kilit Kapısı (Level 3)</span
+              >
+              <div class="card-title">🔐 GATING ENGINE (200 / 10)</div>
+              <div class="card-desc">
+                Reading & Writing modüllerini açan eşik.
               </div>
-              <div class="rule-item" style="color: var(--danger)">
-                ➔ Quiz Yanlış ➔ <strong>Struggling</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-gold">3. Adım (Kilit Sayacı)</span>
-            <div class="node-header">🏆 2.3 MASTERED Pool</div>
-            <div class="node-desc">
-              Quizle kanıtlanmış tam hakimiyet kelimeleri.
-            </div>
-            <div class="node-rules purple">
-              <div class="rule-item">
-                ➔ Kilit Açım Motoruna (Gating Engine) Beslenir.
+              <div class="card-box purple">
+                • Vocab >= 200 (Learned+Mastered)<br />
+                • Grammar >= 10 (Learned+Mastered)
               </div>
             </div>
           </div>
 
-          <div class="tree-node bad-node">
-            <span class="node-badge badge-red">Kurtarma Havuzu</span>
-            <div class="node-header">⚠️ 2.4 STRUGGLING Pool</div>
-            <div class="node-desc">
-              Yanlış yapılan tüm kelimeler & Mistake Log.
+          <!-- ROW 4: CORE APPLIED SKILLS -->
+          <div class="tree-row">
+            <div class="tree-card" id="node_reading">
+              <span class="card-badge badge-cyan">Teknik Okuma (Level 4)</span>
+              <div class="card-title">📑 READING SKILL</div>
+              <div class="card-desc">RFI, NCR, Şartname Okuma.</div>
+              <div class="card-box green">➔ 5 Görev ➔ Speaking Açar.</div>
             </div>
-            <div class="node-rules green">
-              <div class="rule-item">
-                ➔ Kurtarma Quizi Doğru ➔ <strong>Learned</strong>'a Döner.
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- LEVEL 3: UNLOCK GATING ENGINE 1 -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 3: İLK KİLİT MANTIK KAPISI (FIRST GATING ENGINE)
-          </div>
-
-          <div class="tree-node gate-node">
-            <span class="node-badge badge-purple">Kilit Şartı (200 / 10)</span>
-            <div class="node-header">🔐 UNLOCK GATING ENGINE 1</div>
-            <div class="node-desc">
-              Reading & Writing modüllerini açan eşik motoru.
-            </div>
-            <div class="node-rules purple">
-              <div class="rule-item">
-                • <strong>Vocabulary:</strong> >= 200 (Learned + Mastered)
-              </div>
-              <div class="rule-item">
-                • <strong>Grammar:</strong> >= 10 (Learned + Mastered)
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LEVEL 4: UNLOCKED CORE SKILLS -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 4: AÇILAN TEMEL UYGULAMA BECERİLERİ (CORE APPLIED SKILLS)
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-cyan">Teknik Okuma</span>
-            <div class="node-header">📑 4.1 READING SKILL</div>
-            <div class="node-desc">
-              RFI, NCR, İhale Şartnamesi okuma ve terim çıkarma.
-            </div>
-            <div class="node-rules green">
-              <div class="rule-item">
-                ➔ 5 Görev Tamamlama ➔ Speaking/Listening Açar.
-              </div>
+            <div class="tree-card" id="node_writing">
+              <span class="card-badge badge-cyan">Teknik Yazma (Level 4)</span>
+              <div class="card-title">✍️ WRITING SKILL</div>
+              <div class="card-desc">Saha Mektubu, Email & Rapor.</div>
+              <div class="card-box green">➔ 5 Görev ➔ Listening Açar.</div>
             </div>
           </div>
 
-          <div class="tree-node">
-            <span class="node-badge badge-cyan">Teknik Yazma</span>
-            <div class="node-header">✍️ 4.2 WRITING SKILL</div>
-            <div class="node-desc">
-              Saha Mektubu, RFI Yanıtı ve İlerleme Raporu Yazma.
+          <!-- ROW 5: ADVANCED APPLIED SKILLS -->
+          <div class="tree-row">
+            <div class="tree-card" id="node_speaking">
+              <span class="card-badge badge-purple">AI Konuşma (Level 5)</span>
+              <div class="card-title">🎙️ SPEAKING SKILL</div>
+              <div class="card-desc">AI Mülakat & Proje Defansı.</div>
+              <div class="card-box purple">➔ Akıcılık ve Telaffuz Analizi.</div>
             </div>
-            <div class="node-rules green">
-              <div class="rule-item">
-                ➔ 5 Görev Tamamlama ➔ Speaking/Listening Açar.
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- LEVEL 5: ADVANCED SKILLS -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 5: İLERİ SEVİYE UYGULAMALI BECERİLER (ADVANCED SKILLS)
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-purple">AI Konuşma</span>
-            <div class="node-header">🎙️ 5.1 SPEAKING SKILL</div>
-            <div class="node-desc">
-              AI Mülakat Simülatörü, Proje Defansı ve Sözlü Sunum.
-            </div>
-            <div class="node-rules purple">
-              <div class="rule-item">➔ Akıcılık ve Telaffuz Analizi.</div>
-            </div>
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-purple">Saha Dinleme</span>
-            <div class="node-header">🎧 5.2 LISTENING SKILL</div>
-            <div class="node-desc">
-              Saha Telsiz Ses Kayıtları ve Şantiye Dinleme Pratiği.
-            </div>
-            <div class="node-rules purple">
-              <div class="rule-item">➔ Gürültülü Saha Ses Kaydı Çözümleme.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- LEVEL 6: AUXILIARY TOOLS & ANALYTICS -->
-        <div class="tree-level">
-          <div class="tree-level-title">
-            SEVİYE 6: YARDIMCI ARAÇLAR VE ANALİTİK (AUXILIARY & ANALYTICS)
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-blue">Yardımcı Araçlar</span>
-            <div class="node-header">🛠️ 6.1 TOOLS MODULE</div>
-            <div class="node-desc">
-              AI Terim Sözlüğü, Proje Not Defteri ve PDF Aktarımı.
-            </div>
-          </div>
-
-          <div class="tree-node">
-            <span class="node-badge badge-gold">Performans</span>
-            <div class="node-header">📊 6.2 PROGRESS & ANALYTICS</div>
-            <div class="node-desc">
-              CEFR Seviye Radarı, Isı Haritası ve Öğrenme Hızı.
+            <div class="tree-card" id="node_listening">
+              <span class="card-badge badge-purple"
+                >Saha Dinleme (Level 5)</span
+              >
+              <div class="card-title">🎧 LISTENING SKILL</div>
+              <div class="card-desc">Saha Telsiz Ses Kayıtları.</div>
+              <div class="card-box purple">➔ Şantiye Ses Çözümleme.</div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- SUMMARY TABLE -->
-      <div class="summary-card">
+      <!-- HİYERARŞİ TEŞHİS MATRİSİ -->
+      <div class="matrix-section">
         <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem">
-          📋 Ağaç Hiyerarşisi Bağlantı ve Kilit Özeti
+          🩺 Görsel Ağaç Bağlantı Teşhisi
         </h2>
         <table>
           <thead>
             <tr>
-              <th>Hiyerarşik Seviye</th>
-              <th>Bileşen / Modül</th>
-              <th>Bağlı Olduğu Üst Düğüm (Parent)</th>
-              <th>Girdi / Çıktı Şartı</th>
+              <th>Üst Düğüm (Parent)</th>
+              <th>Alt Düğüm (Child)</th>
+              <th>Veri / Mantık Akış Türü</th>
               <th>Durum</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Seviye 1</td>
-              <td><strong>Seed Engines</strong></td>
-              <td>Seviye 0 (Core System)</td>
-              <td>1200+ Kelime & 120+ Kural Ham Depo</td>
-              <td>
-                <span class="status-badge"
-                  ><span class="dot"></span> Aktif</span
-                >
-              </td>
+              <td>Root Core Engine</td>
+              <td>Vocab & Grammar Seeds</td>
+              <td>Ham Depo Yükleme ve Seviye Süzgeci</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
             </tr>
             <tr>
-              <td>Seviye 2</td>
-              <td><strong>Personal Pools</strong></td>
-              <td>Seed Engines & User Actions</td>
-              <td>1-Tık Learn (New ➔ Learned) & Mastered Quiz</td>
-              <td>
-                <span class="status-badge"
-                  ><span class="dot"></span> Aktif</span
-                >
-              </td>
+              <td>Vocab Seed</td>
+              <td>NEW Pool</td>
+              <td>A1-C2 Kelimelerin New HavuzunaBeslenmesi</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
             </tr>
             <tr>
-              <td>Seviye 3</td>
-              <td><strong>Unlock Gating Engine 1</strong></td>
-              <td>Mastered Pool & Grammar Learned</td>
-              <td>Vocab >= 200 & Grammar >= 10</td>
-              <td>
-                <span class="status-badge"
-                  ><span class="dot"></span> Aktif (200/10)</span
-                >
-              </td>
+              <td>NEW Pool</td>
+              <td>LEARNED Pool</td>
+              <td>1-TIK "Biliyorum" Buton Otomasyonu</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
             </tr>
             <tr>
-              <td>Seviye 4</td>
-              <td><strong>Reading & Writing</strong></td>
-              <td>Gating Engine 1</td>
-              <td>200 Vocab / 10 Grammar Aşıldığında Açılır</td>
-              <td>
-                <span class="status-badge"
-                  ><span class="dot"></span> Aktif</span
-                >
-              </td>
+              <td>LEARNED Pool</td>
+              <td>MASTERED Pool</td>
+              <td>Mastered Quiz Engine (1 Doğru Cevap)</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
             </tr>
             <tr>
-              <td>Seviye 5</td>
-              <td><strong>Speaking & Listening</strong></td>
-              <td>Reading & Writing (5'er Görev)</td>
-              <td>5 Reading + 5 Writing Görevi Tamamlandığında Açılır</td>
-              <td>
-                <span class="status-badge"
-                  ><span class="dot"></span> Aktif</span
-                >
-              </td>
+              <td>MASTERED Pool</td>
+              <td>GATING ENGINE (200/10)</td>
+              <td>200 Kelime & 10 Kural Eşik Kontrolü</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
+            </tr>
+            <tr>
+              <td>GATING ENGINE</td>
+              <td>Reading & Writing</td>
+              <td>Kilit Açılımı ve Modül Aktivasyonu</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
+            </tr>
+            <tr>
+              <td>Reading & Writing</td>
+              <td>Speaking & Listening</td>
+              <td>5'er Görev Tamamlama İleri Seviye Kilit Açımı</td>
+              <td><strong style="color: var(--success)">✓ Bağlı</strong></td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <footer>EngineerOS V4.0.1 • Hiyerarşik Ağaç Şema Motoru • 2026</footer>
+      <footer>
+        EngineerOS V4.0.1 • Gerçek Görsel SVG Ağaç Mimarisi • 2026
+      </footer>
     </div>
+
+    <!-- SCRIPT FOR DRAWING DYNAMIC SVG BRANCH CONNECTOR PATHS -->
+    <script>
+      const connections = [
+        { from: 'node_root', to: 'node_vocab_seed', color: 'blue' },
+        { from: 'node_root', to: 'node_grammar_seed', color: 'blue' },
+        { from: 'node_root', to: 'node_placement', color: 'blue' },
+
+        { from: 'node_vocab_seed', to: 'node_pool_new', color: 'green' },
+        { from: 'node_placement', to: 'node_pool_new', color: 'green' },
+
+        { from: 'node_pool_new', to: 'node_pool_learned', color: 'green' },
+        { from: 'node_pool_new', to: 'node_pool_struggling', color: 'red' },
+
+        { from: 'node_pool_learned', to: 'node_pool_mastered', color: 'gold' },
+        { from: 'node_pool_learned', to: 'node_pool_struggling', color: 'red' },
+
+        { from: 'node_pool_mastered', to: 'node_gate1', color: 'purple' },
+        { from: 'node_grammar_seed', to: 'node_gate1', color: 'purple' },
+
+        { from: 'node_gate1', to: 'node_reading', color: 'cyan' },
+        { from: 'node_gate1', to: 'node_writing', color: 'cyan' },
+
+        { from: 'node_reading', to: 'node_speaking', color: 'purple' },
+        { from: 'node_writing', to: 'node_speaking', color: 'purple' },
+        { from: 'node_reading', to: 'node_listening', color: 'purple' },
+        { from: 'node_writing', to: 'node_listening', color: 'purple' },
+      ];
+
+      function drawTreeBranches() {
+        const svg = document.getElementById('svgCanvas');
+        const viewport = document.getElementById('viewport');
+        const viewRect = viewport.getBoundingClientRect();
+
+        let pathsHtml = '';
+
+        connections.forEach((conn) => {
+          const fromEl = document.getElementById(conn.from);
+          const toEl = document.getElementById(conn.to);
+
+          if (!fromEl || !toEl) return;
+
+          const fromRect = fromEl.getBoundingClientRect();
+          const toRect = toEl.getBoundingClientRect();
+
+          // Calculate positions relative to viewport
+          const startX = fromRect.left + fromRect.width / 2 - viewRect.left;
+          const startY = fromRect.bottom - viewRect.top;
+          const endX = toRect.left + toRect.width / 2 - viewRect.left;
+          const endY = toRect.top - viewRect.top;
+
+          // Smooth Bezier Curve Path
+          const controlY1 = startY + (endY - startY) / 2;
+          const controlY2 = startY + (endY - startY) / 2;
+
+          const d = `M ${startX} ${startY} C ${startX} ${controlY1}, ${endX} ${controlY2}, ${endX} ${endY}`;
+
+          pathsHtml += `<path class="tree-branch-line ${conn.color}" d="${d}" />`;
+        });
+
+        svg.innerHTML = pathsHtml;
+      }
+
+      // INITIAL DRAW AND ON RESIZE
+      window.addEventListener('load', drawTreeBranches);
+      window.addEventListener('resize', drawTreeBranches);
+    </script>
   </body>
 </html>
