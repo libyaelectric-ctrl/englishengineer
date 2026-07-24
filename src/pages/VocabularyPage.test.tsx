@@ -50,9 +50,6 @@ describe('VocabularyPage menu', () => {
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     expect(within(firstCard).getByText('height')).toBeInTheDocument();
     expect(within(firstCard).getByText('A1')).toBeInTheDocument();
-    expect(
-      within(firstCard).getByText(/domain: architecture/i)
-    ).toBeInTheDocument();
   }, 10_000);
 
   it('moves a new word to Learned with 1 click', async () => {

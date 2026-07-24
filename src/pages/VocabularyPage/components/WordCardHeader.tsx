@@ -24,9 +24,6 @@ export const WordCardHeader = ({
       <h3 className="text-xl font-bold text-foreground">
         {repairVocabularyText(term.term)}
       </h3>
-      <p className="text-[10px] text-muted-copy uppercase tracking-wider font-mono font-semibold">
-        Domain: {term.domain}
-      </p>
       {showAnswer && (
         <p className="mt-1 font-bold text-[#0047bb]">
           {repairVocabularyText(term.turkishMeaning)}
@@ -37,15 +34,17 @@ export const WordCardHeader = ({
       <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
         LVL-<span>{term.cefrLevel}</span>
       </span>
-      <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-        {status}
-      </span>
+      {status !== 'new' && (
+        <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+          {status}
+        </span>
+      )}
       <button
         type="button"
-        onClick={() => PronunciationService.speak(term.turkishMeaning)}
+        onClick={() => PronunciationService.speak(term.term)}
         className="flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground cursor-pointer"
         aria-label={`Listen to ${term.term}`}
-        title="Listen to Turkish translation"
+        title="Listen to pronunciation"
       >
         <Volume2 className="h-3.5 w-3.5" />
       </button>

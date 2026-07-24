@@ -95,7 +95,16 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
   );
   if (googleVoice) return googleVoice;
 
-  // 2. Microsoft Natural / Online English (e.g. Jenny, Aria, Guy, Christopher)
+  // 2. Microsoft Natural Female
+  const msNaturalFemale = voices.find(
+    (v) =>
+      (v.name.includes('Natural') || v.name.includes('Neural')) &&
+      v.lang.startsWith('tr') &&
+      v.name.toLowerCase().includes('female')
+  );
+  if (msNaturalFemale) return msNaturalFemale;
+
+  // 3. Microsoft Natural (any)
   const msNatural = voices.find(
     (v) =>
       (v.name.includes('Online') ||
@@ -105,18 +114,21 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
   );
   if (msNatural) return msNatural;
 
-  // 3. Apple Samantha / Daniel / Karen / Siri
-  const appleVoice = voices.find(
+  // 4. Apple female voices
+  const appleFemaleVoice = voices.find(
     (v) =>
-      (v.name.includes('Samantha') ||
-        v.name.includes('Daniel') ||
-        v.name.includes('Karen') ||
-        v.name.includes('Siri')) &&
+      (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Victoria')) &&
       v.lang.startsWith('en')
+  );
+  if (appleFemaleVoice) return appleFemaleVoice;
+
+  // 6. Apple Siri
+  const appleVoice = voices.find(
+    (v) => v.name.includes('Siri') && v.lang.startsWith('en')
   );
   if (appleVoice) return appleVoice;
 
-  // 4. Any US or UK English voice
+  // 7. Any English voice
   const enVoice = voices.find(
     (v) => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en')
   );
