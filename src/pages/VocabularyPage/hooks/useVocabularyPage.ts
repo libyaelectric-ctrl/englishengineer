@@ -5,6 +5,7 @@ import {
   useMemo,
   useRef,
   useReducer,
+  useState,
 } from 'react';
 import { useLearningStore } from '@/core/learning';
 import { playSound } from '@/shared/utils/sound';
@@ -411,6 +412,11 @@ export function useVocabularyPage() {
       window.removeEventListener('addCustomWord', handleAddCustomWord);
   }, []);
 
+  const [showSearchModal, setShowSearchModal] = useState(false);
+
+  const openSearchModal = () => setShowSearchModal(true);
+  const closeSearchModal = () => setShowSearchModal(false);
+
   return {
     vocabularyLevel,
     allLevelsLoaded,
@@ -445,5 +451,8 @@ export function useVocabularyPage() {
     dispatchSearch,
     dispatchData,
     selectSet,
+    showSearchModal,
+    openSearchModal,
+    closeSearchModal,
   };
 }

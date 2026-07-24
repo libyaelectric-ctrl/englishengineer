@@ -39,7 +39,7 @@ export const QuizModal = ({
   >([]);
   const [showResult, setShowResult] = useState(false);
 
-  const { onQuizCorrect, onQuizIncorrect, moveToLearned, keepStruggling } =
+  const { onQuizCorrect, onQuizIncorrect, moveToNew, moveToLearned } =
     useVocabularyStore();
 
   useEffect(() => {
@@ -72,9 +72,9 @@ export const QuizModal = ({
 
     if (isStrugglingQuiz) {
       if (correct) {
-        onStrugglingQuizCorrect(currentWord.id);
+        moveToLearned(currentWord.id);
       } else {
-        onStrugglingQuizIncorrect(currentWord.id);
+        moveToNew(currentWord.id);
       }
     } else {
       if (correct) {
