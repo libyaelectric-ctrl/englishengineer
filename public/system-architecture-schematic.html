@@ -1,26 +1,23 @@
 <!doctype html>
-<html lang="tr" class="dark">
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      EngineerOS (EngVox V4) - İnteraktif Sistem Akış Şeması ve Havuz Mimarisi
-    </title>
+    <title>EngineerOS V4 - Ağsal Sistem Akış Şeması (Network Node Graph)</title>
     <style>
       :root {
-        --bg: #090d16;
-        --surface: #111827;
-        --surface-hover: #1f2937;
-        --surface-border: #1f2937;
-        --primary: #0047bb;
-        --primary-light: #3b82f6;
-        --accent: #60a5fa;
+        --bg-dark: #050811;
+        --panel-bg: rgba(13, 19, 33, 0.85);
+        --border-color: rgba(255, 255, 255, 0.1);
+        --primary: #0052ff;
+        --primary-glow: #3b82f6;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
         --purple: #8b5cf6;
-        --text: #f3f4f6;
-        --text-muted: #9ca3af;
+        --cyan: #06b6d4;
+        --text-main: #f8fafc;
+        --text-sub: #94a3b8;
       }
 
       * {
@@ -34,760 +31,899 @@
           'Segoe UI',
           Roboto,
           sans-serif;
+        user-select: none;
       }
 
       body {
-        background-color: var(--bg);
-        color: var(--text);
-        line-height: 1.5;
-        padding: 2rem 1rem;
-        overflow-x: hidden;
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
       }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-      }
-
+      /* TOP BAR */
       header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        border-bottom: 1px solid var(--surface-border);
-        padding-bottom: 2rem;
-        position: relative;
-      }
-
-      .logo-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        background: rgba(0, 71, 187, 0.15);
-        border: 1px solid var(--primary);
-        color: #60a5fa;
-        font-size: 0.75rem;
-        font-weight: 800;
-        padding: 0.4rem 1rem;
-        border-radius: 9999px;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 1rem;
-        box-shadow: 0 0 15px rgba(0, 71, 187, 0.3);
-      }
-
-      h1 {
-        font-size: 2.5rem;
-        font-weight: 900;
-        letter-spacing: -0.03em;
-        margin-bottom: 0.5rem;
-        background: linear-gradient(
-          135deg,
-          #ffffff 0%,
-          #93c5fd 50%,
-          #3b82f6 100%
-        );
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-
-      p.subtitle {
-        color: var(--text-muted);
-        font-size: 1rem;
-        max-width: 800px;
-        margin: 0 auto;
-      }
-
-      .control-bar {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1.5rem;
-        flex-wrap: wrap;
-      }
-
-      .btn {
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        color: var(--text);
-        padding: 0.6rem 1.2rem;
-        border-radius: 6px;
-        font-size: 0.85rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
+        height: 64px;
+        background: var(--panel-bg);
+        border-bottom: 1px solid var(--border-color);
+        backdrop-filter: blur(16px);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-      }
-
-      .btn:hover,
-      .btn.active {
-        background: var(--primary);
-        border-color: var(--primary-light);
-        color: #fff;
-        box-shadow: 0 0 12px rgba(0, 71, 187, 0.4);
-      }
-
-      /* DIAGRAM CANVAS */
-      .schematic-viewport {
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        border-radius: 16px;
-        padding: 2rem;
-        position: relative;
-        margin-bottom: 2.5rem;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        overflow-x: auto;
-      }
-
-      .diagram-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-        min-width: 1000px;
-        position: relative;
-        z-index: 2;
-      }
-
-      /* SVG CONNECTORS OVERLAY */
-      .svg-connectors {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-      }
-
-      .connector-line {
-        stroke: #3b82f6;
-        stroke-width: 2.5;
-        fill: none;
-        stroke-dasharray: 6;
-        animation: dash 30s linear infinite;
-      }
-
-      .connector-line.danger {
-        stroke: var(--danger);
-      }
-      .connector-line.success {
-        stroke: var(--success);
-      }
-      .connector-line.purple {
-        stroke: var(--purple);
-      }
-
-      @keyframes dash {
-        to {
-          stroke-dashoffset: -1000;
-        }
-      }
-
-      /* NODE CARDS */
-      .node-card {
-        background: #0f172a;
-        border: 2px solid #1e293b;
-        border-radius: 12px;
-        padding: 1.25rem;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-      }
-
-      .node-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--primary-light);
-        box-shadow: 0 8px 25px rgba(0, 71, 187, 0.3);
-      }
-
-      .node-card.active-pool {
-        border-color: var(--success);
-        background: #064e3b20;
-      }
-
-      .node-card.danger-pool {
-        border-color: var(--danger);
-        background: #7f1d1d20;
-      }
-
-      .node-header {
-        display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.75rem;
+        padding: 0 1.5rem;
+        z-index: 20;
       }
 
-      .node-title {
-        font-size: 1rem;
-        font-weight: 800;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .node-badge {
-        font-size: 0.65rem;
-        font-weight: 900;
-        padding: 0.2rem 0.6rem;
-        border-radius: 9999px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .badge-blue {
-        background: rgba(59, 130, 246, 0.2);
-        color: #60a5fa;
-        border: 1px solid #3b82f6;
-      }
-      .badge-green {
-        background: rgba(16, 185, 129, 0.2);
-        color: #34d399;
-        border: 1px solid #10b981;
-      }
-      .badge-gold {
-        background: rgba(245, 158, 11, 0.2);
-        color: #fbbf24;
-        border: 1px solid #f59e0b;
-      }
-      .badge-red {
-        background: rgba(239, 68, 68, 0.2);
-        color: #f87171;
-        border: 1px solid #ef4444;
-      }
-      .badge-purple {
-        background: rgba(139, 92, 246, 0.2);
-        color: #c084fc;
-        border: 1px solid #8b5cf6;
-      }
-
-      .node-body {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        margin-bottom: 1rem;
-      }
-
-      .rule-box {
-        background: #172033;
-        border-left: 3px solid var(--primary);
-        padding: 0.5rem 0.75rem;
-        border-radius: 0 6px 6px 0;
-        font-size: 0.75rem;
-        margin-top: 0.5rem;
-      }
-
-      .rule-box.green {
-        border-left-color: var(--success);
-      }
-      .rule-box.red {
-        border-left-color: var(--danger);
-      }
-      .rule-box.gold {
-        border-left-color: var(--warning);
-      }
-
-      .rule-title {
-        font-weight: 800;
-        color: var(--text);
-        margin-bottom: 0.2rem;
-      }
-
-      /* DIAGNOSTIC MATRIX TABLE */
-      .section-title {
-        font-size: 1.5rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
+      .brand {
         display: flex;
         align-items: center;
         gap: 0.75rem;
       }
 
-      .matrix-card {
-        background: var(--surface);
-        border: 1px solid var(--surface-border);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin-bottom: 2.5rem;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.85rem;
-      }
-
-      th,
-      td {
-        padding: 1rem;
-        border-bottom: 1px solid var(--surface-border);
-        text-align: left;
-      }
-
-      th {
-        color: var(--text-muted);
-        font-weight: 700;
-        text-transform: uppercase;
+      .brand-badge {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 82, 255, 0.2),
+          rgba(139, 92, 246, 0.2)
+        );
+        border: 1px solid var(--primary-glow);
+        color: #60a5fa;
         font-size: 0.7rem;
-        letter-spacing: 0.08em;
-        background: #0f172a;
+        font-weight: 800;
+        padding: 0.25rem 0.6rem;
+        border-radius: 9999px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
       }
 
-      tr:hover td {
-        background: var(--surface-hover);
+      .brand-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #ffffff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
 
-      .status-pill {
-        display: inline-flex;
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-sub);
+        padding: 0.45rem 0.9rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
         align-items: center;
         gap: 0.4rem;
-        font-weight: 800;
+      }
+
+      .btn:hover,
+      .btn.active {
+        background: var(--primary);
+        border-color: var(--primary-glow);
+        color: #fff;
+        box-shadow: 0 0 15px rgba(0, 82, 255, 0.4);
+      }
+
+      /* MAIN CONTAINER */
+      .viewport-container {
+        flex: 1;
+        position: relative;
+        width: 100%;
+        height: calc(100vh - 64px);
+      }
+
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        cursor: grab;
+      }
+
+      canvas:active {
+        cursor: grabbing;
+      }
+
+      /* FLOATING LEGEND PANEL */
+      .legend-panel {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem;
+        backdrop-filter: blur(12px);
+        z-index: 10;
+        width: 240px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .legend-title {
         font-size: 0.75rem;
-        padding: 0.25rem 0.75rem;
-        border-radius: 9999px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-sub);
+        margin-bottom: 0.75rem;
       }
 
-      .pill-green {
-        background: rgba(16, 185, 129, 0.15);
-        color: #34d399;
-        border: 1px solid #10b981;
-      }
-      .pill-blue {
-        background: rgba(59, 130, 246, 0.15);
-        color: #60a5fa;
-        border: 1px solid #3b82f6;
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
       }
 
-      .dot {
-        width: 8px;
-        height: 8px;
+      .legend-color {
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
-        background: currentColor;
         box-shadow: 0 0 8px currentColor;
       }
 
-      /* MODAL */
-      .modal-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(8px);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-        padding: 1rem;
-      }
-
-      .modal-card {
-        background: var(--surface);
-        border: 1px solid var(--primary);
-        border-radius: 16px;
-        max-width: 600px;
-        width: 100%;
-        padding: 2rem;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-        position: relative;
-      }
-
-      .close-btn {
+      /* FLOATING NODE INSPECTOR PANEL */
+      .inspector-panel {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        background: transparent;
-        border: none;
-        color: var(--text-muted);
-        font-size: 1.5rem;
-        cursor: pointer;
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.5rem;
+        backdrop-filter: blur(16px);
+        z-index: 10;
+        width: 360px;
+        max-height: calc(100% - 2rem);
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        display: none;
       }
 
-      .close-btn:hover {
+      .inspector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .inspector-title {
+        font-size: 1.1rem;
+        font-weight: 800;
         color: #fff;
       }
 
-      footer {
-        text-align: center;
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        border-top: 1px solid var(--surface-border);
-        padding-top: 2rem;
+      .inspector-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 0.2rem 0.6rem;
+        border-radius: 9999px;
+        text-transform: uppercase;
+      }
+
+      .inspector-section {
+        margin-bottom: 1rem;
+      }
+
+      .inspector-section-title {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--text-sub);
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.05em;
+      }
+
+      .inspector-desc {
+        font-size: 0.8rem;
+        color: #cbd5e1;
+        line-height: 1.5;
+      }
+
+      .connection-list {
+        list-style: none;
+        font-size: 0.75rem;
+      }
+
+      .connection-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.4rem 0.6rem;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 6px;
+        margin-bottom: 0.35rem;
+      }
+
+      .close-inspector {
+        background: transparent;
+        border: none;
+        color: var(--text-sub);
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      .close-inspector:hover {
+        color: #fff;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <header>
-        <div class="logo-badge">
-          ⚡ EngineerOS V4.0.1 - Live System Interactive Flow Engine
+    <!-- TOP NAVIGATION HEADER -->
+    <header>
+      <div class="brand">
+        <div class="brand-badge">⚡ Network Topology Visualizer</div>
+        <div class="brand-title">
+          EngineerOS - Tüm Becerilerin & Havuzların Ağsal Bağlantı Şeması
         </div>
-        <h1>Kişisel Havuzlar & Veri Akış Mimarisi</h1>
-        <p class="subtitle">
-          Veri nereden nereye akıyor? Ne zaman ne tetikleniyor? Nereye
-          aktarılmıyor? Kırık/dökük durum teşhisi.
-        </p>
+      </div>
+      <div class="controls">
+        <button class="btn active" id="btnAll" onclick="filterGraph('all')">
+          🌐 Tüm Ağ
+        </button>
+        <button class="btn" id="btnVocab" onclick="filterGraph('vocab')">
+          📚 Kelime & Quiz Akışı
+        </button>
+        <button class="btn" id="btnSkills" onclick="filterGraph('skills')">
+          🔐 Kilitli Beceriler (200/10)
+        </button>
+        <button class="btn" id="btnReset" onclick="resetView()">
+          🔄 Görünümü Sıfırla
+        </button>
+      </div>
+    </header>
 
-        <div class="control-bar">
-          <button class="btn active" onclick="highlightFlow('all')">
-            🌐 Tüm Akışı Göster
-          </button>
-          <button class="btn" onclick="highlightFlow('vocab')">
-            📚 Kelime Havuz Akışı (1-Tık Learn & Quiz)
-          </button>
-          <button class="btn" onclick="highlightFlow('gating')">
-            🔐 Beceri Kilitleri (200 Vocab / 10 Grammar)
-          </button>
-          <button class="btn" onclick="highlightFlow('diagnostics')">
-            🩺 Kırık / Dökük Teşhis Matrisi
-          </button>
-        </div>
-      </header>
+    <!-- CANVAS GRAPH VIEWPORT -->
+    <div class="viewport-container">
+      <canvas id="graphCanvas"></canvas>
 
-      <!-- INTERACTIVE SCHEMATIC VIEWPORT -->
-      <div class="schematic-viewport" id="viewport">
-        <div class="diagram-grid">
-          <!-- ADIM 1: GİRDİ VERİ KUTULARI -->
-          <div class="node-card" onclick="openNodeModal('seed')">
-            <div class="node-header">
-              <div class="node-title"><span>📥</span> Veri Kaynağı</div>
-              <span class="node-badge badge-blue">Seed Engine</span>
-            </div>
-            <div class="node-body">
-              1200+ Mühendislik Kelimesi (A1-C2) & 120+ Dilbilgisi Kuralı.
-              Seviyeye göre süzülür.
-            </div>
-            <div class="rule-box">
-              <div class="rule-title">Süzgeç Mantığı:</div>
-              Seviye testi sonucu aktif seviye kelimeleri süzülür.
-            </div>
-          </div>
-
-          <!-- ADIM 2: NEW POOL -->
-          <div class="node-card" onclick="openNodeModal('new')">
-            <div class="node-header">
-              <div class="node-title"><span>✨</span> 1. NEW Havuzu</div>
-              <span class="node-badge badge-blue">Henüz Görülmedi</span>
-            </div>
-            <div class="node-body">
-              Kullanıcının karşılaştığı henüz öğrenilmemiş ham kelimeler havuzu.
-            </div>
-            <div class="rule-box green">
-              <div class="rule-title">1-TIK AKIŞI (Direkt):</div>
-              "Biliyorum" ➔ <strong>Learned</strong>'a aktarılır.
-            </div>
-            <div class="rule-box red">
-              <div class="rule-title">Test Başarısızlığı:</div>
-              Yanlış Anlam ➔ <strong>Struggling</strong>'e aktarılır.
-            </div>
-          </div>
-
-          <!-- ADIM 3: LEARNED POOL (QUIZ HAVUZU) -->
-          <div class="node-card active-pool" onclick="openNodeModal('learned')">
-            <div class="node-header">
-              <div class="node-title"><span>📖</span> 2. LEARNED Havuzu</div>
-              <span class="node-badge badge-green">Aktif Quiz Pool</span>
-            </div>
-            <div class="node-body">
-              Öğrenilmiş kelimeler havuzu. Bu havuz
-              <strong>Mastered Quiz Sistemini</strong> besler.
-            </div>
-            <div class="rule-box gold">
-              <div class="rule-title">Mastered Quiz Şartı:</div>
-              Learned Quizde 1 Doğru ➔ <strong>Mastered</strong> olur.
-            </div>
-            <div class="rule-box red">
-              <div class="rule-title">Quiz Yanlışı:</div>
-              Yanlış ➔ <strong>Struggling</strong>'e düşer.
-            </div>
-          </div>
-
-          <!-- ADIM 4: MASTERED POOL -->
+      <!-- LEGEND -->
+      <div class="legend-panel">
+        <div class="legend-title">Ağ Elemanları Renk Kodları</div>
+        <div class="legend-item">
           <div
-            class="node-card active-pool"
-            onclick="openNodeModal('mastered')"
-          >
-            <div class="node-header">
-              <div class="node-title"><span>🏆</span> 3. MASTERED Havuzu</div>
-              <span class="node-badge badge-gold">Tam Hakimiyet</span>
-            </div>
-            <div class="node-body">
-              Quiz ile kanıtlanmış kelimeler. Kilit açımları için sayılan ana
-              sayı.
-            </div>
-            <div class="rule-box green">
-              <div class="rule-title">Kilit Aktarımı:</div>
-              Reading & Writing modüllerine aktarılır.
-            </div>
-          </div>
+            class="legend-color"
+            style="background: #3b82f6; color: #3b82f6"
+          ></div>
+          <span>Veri Deposu & Seed Engines</span>
         </div>
-
-        <!-- İKİNCİ SIRA: KİLİT VE MODÜL AKIŞLARI -->
-        <div style="margin-top: 2rem" class="diagram-grid">
-          <!-- STRUGGLING / WEAK WORDS -->
+        <div class="legend-item">
           <div
-            class="node-card danger-pool"
-            onclick="openNodeModal('struggling')"
-          >
-            <div class="node-header">
-              <div class="node-title"><span>⚠️</span> 4. STRUGGLING Havuzu</div>
-              <span class="node-badge badge-red">Zayıf Kelimeler</span>
-            </div>
-            <div class="node-body">
-              Hata yapılan tüm kelimeler. Spaced Repetition tekrar
-              algoritmasıyla temizlenir.
-            </div>
-            <div class="rule-box green">
-              <div class="rule-title">Kurtarma Akışı:</div>
-              Kurtarma quizi doğru ➔ <strong>Learned</strong>'a geri döner.
-            </div>
-          </div>
-
-          <!-- GATING THRESHOLD NODE -->
-          <div class="node-card" onclick="openNodeModal('gating')">
-            <div class="node-header">
-              <div class="node-title"><span>🔐</span> Kilit Mantık Motoru</div>
-              <span class="node-badge badge-purple">200 / 10 Eşiği</span>
-            </div>
-            <div class="node-body">
-              • Vocab >= 200 (Learned+Mastered)<br />
-              • Grammar >= 10 (Learned+Mastered)
-            </div>
-            <div class="rule-box gold">
-              <div class="rule-title">Koşul Gerçekleşince:</div>
-              Reading & Writing kilitleri kalkar.
-            </div>
-          </div>
-
-          <!-- UNLOCKED READ/WRITE -->
-          <div class="node-card" onclick="openNodeModal('readwrite')">
-            <div class="node-header">
-              <div class="node-title"><span>📑</span> Reading & Writing</div>
-              <span class="node-badge badge-green">Kilit Açık</span>
-            </div>
-            <div class="node-body">
-              Teknik RFI, NCR, İhale Şartnamesi okuma ve saha mektubu
-              oluşturucu.
-            </div>
-            <div class="rule-box">
-              <div class="rule-title">İleri Kilit Açımı:</div>
-              5 Görev ➔ Speaking & Listening açar.
-            </div>
-          </div>
-
-          <!-- UNLOCKED SPEAK/LISTEN -->
-          <div class="node-card" onclick="openNodeModal('speaklisten')">
-            <div class="node-header">
-              <div class="node-title"><span>🎙️</span> Speaking & Listening</div>
-              <span class="node-badge badge-purple">Üst Seviye</span>
-            </div>
-            <div class="node-body">
-              AI Mülakat Simülatörü, Proje Defansı ve Saha Ses Kayıtları Modülü.
-            </div>
-            <div class="rule-box green">
-              <div class="rule-title">Sonuç:</div>
-              Profesyonel Saha İngilizcesi Yetkinliği.
-            </div>
-          </div>
+            class="legend-color"
+            style="background: #10b981; color: #10b981"
+          ></div>
+          <span>Kişisel Havuzlar (New, Learned, Mastered)</span>
+        </div>
+        <div class="legend-item">
+          <div
+            class="legend-color"
+            style="background: #ef4444; color: #ef4444"
+          ></div>
+          <span>Zayıf Kelimeler & Hata Defteri</span>
+        </div>
+        <div class="legend-item">
+          <div
+            class="legend-color"
+            style="background: #f59e0b; color: #f59e0b"
+          ></div>
+          <span>Ana Beceriler (Reading, Writing vb.)</span>
+        </div>
+        <div class="legend-item">
+          <div
+            class="legend-color"
+            style="background: #8b5cf6; color: #8b5cf6"
+          ></div>
+          <span>Kilit Mantık Motorları & Veritabanı</span>
         </div>
       </div>
 
-      <!-- KIRIK / DÖKÜK TEŞHİS VE AKIŞ MATRİSİ -->
-      <div class="matrix-card">
-        <div class="section-title">
-          <span>🩺</span> Şematik Akış Teşhis Matrisi (Kırık/Dökük İncelemesi)
+      <!-- INSPECTOR PANEL -->
+      <div class="inspector-panel" id="inspector">
+        <div class="inspector-header">
+          <div class="inspector-title" id="nodeTitle">Düğüm Seçilmedi</div>
+          <button class="close-inspector" onclick="closeInspector()">
+            &times;
+          </button>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Akış Noktası</th>
-              <th>Nereden Nereye Akıyor?</th>
-              <th>Nereye Gitmiyor? (Yasaklı / Sınır)</th>
-              <th>Ne Olursa Ne Olur? (Tetikleyici)</th>
-              <th>Teşhis & Durum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>1-Tık Learn</strong></td>
-              <td><code>New</code> ➔ <code>Learned</code></td>
-              <td>Doğrudan <code>Mastered</code>'a gitmez (Quiz şarttır).</td>
-              <td>
-                "Biliyorum" butonuna 1 tık basılınca anında Learned havuzuna
-                girer.
-              </td>
-              <td>
-                <span class="status-pill pill-green"
-                  ><span class="dot"></span> %100 Çalışıyor</span
-                >
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Mastered Quiz Engine</strong></td>
-              <td><code>Learned</code> ➔ <code>Mastered</code></td>
-              <td>Doğrudan <code>New</code> havuzuna dönmez.</td>
-              <td>
-                Learned kelimeler quizde doğru bilinirse 🏆 Mastered olur.
-              </td>
-              <td>
-                <span class="status-pill pill-green"
-                  ><span class="dot"></span> %100 Çalışıyor</span
-                >
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Zayıf Kelime Düşüşü</strong></td>
-              <td><code>Learned/New</code> ➔ <code>Struggling</code></td>
-              <td>Hatalı kelime <code>Mastered</code> havuzunda kalamaz.</td>
-              <td>
-                Quizde yanlış yapılınca anında Struggling & Weak Words'e düşer.
-              </td>
-              <td>
-                <span class="status-pill pill-green"
-                  ><span class="dot"></span> %100 Çalışıyor</span
-                >
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Beceri Kilit Eşikleri</strong></td>
-              <td>
-                <code>Vocab (200) + Grammar (10)</code> ➔
-                <code>Reading/Writing</code>
-              </td>
-              <td>Eşik dolmadan Reading/Writing modülüne erişilemez.</td>
-              <td>Sayılara ulaşılınca Reading ve Writing kilitleri kalkar.</td>
-              <td>
-                <span class="status-pill pill-green"
-                  ><span class="dot"></span> %100 Çalışıyor</span
-                >
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Veri Saklama & RLS</strong></td>
-              <td><code>Zustand Store</code> ➔ <code>Supabase DB</code></td>
-              <td>Başka kullanıcının verisiyle karışamaz (RLS korumalı).</td>
-              <td>
-                Çevrimdışı iken LocalStorage, çevrimiçi iken Supabase ile
-                senkronize olur.
-              </td>
-              <td>
-                <span class="status-pill pill-blue"
-                  ><span class="dot"></span> Güvenli & Aktif</span
-                >
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Kırık/Dökük Kod Analizi</strong></td>
-              <td>817 Vitest Testi + TypeScript Typecheck</td>
-              <td>Sıfır <code>any</code> uyarısı, sıfır test patlaması.</td>
-              <td>
-                Bütün kalite zinciri komutları geçmiştir (<code
-                  >ALL COMMANDS PASSED</code
-                >).
-              </td>
-              <td>
-                <span class="status-pill pill-green"
-                  ><span class="dot"></span> TAM SAĞLIKLI</span
-                >
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">Açıklama ve Rolü</div>
+          <div class="inspector-desc" id="nodeDesc">
+            Haritada bir düğüme tıklayarak detaylı akış kurallarını inceleyin.
+          </div>
+        </div>
 
-      <footer>
-        EngineerOS V4.0.1 • Şematik Sistem Akış Motoru • Tüm Hakları Saklıdır
-      </footer>
-    </div>
+        <div class="inspector-section">
+          <div class="inspector-section-title">
+            Girdi Bağlantıları (Nereden Geliyor?)
+          </div>
+          <div class="connection-list" id="nodeInputs"></div>
+        </div>
 
-    <!-- MODAL FOR DETAILED NODE VIEW -->
-    <div class="modal-backdrop" id="modalBackdrop">
-      <div class="modal-card">
-        <button class="close-btn" onclick="closeModal()">&times;</button>
-        <h2
-          style="font-size: 1.4rem; font-weight: 800; margin-bottom: 1rem"
-          id="modalTitle"
-        >
-          Node Detayı
-        </h2>
-        <p
-          style="
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            leading-height: 1.6;
-          "
-          id="modalBody"
-        >
-          Detaylar...
-        </p>
+        <div class="inspector-section">
+          <div class="inspector-section-title">
+            Çıktı Bağlantıları (Nereye Gidiyor?)
+          </div>
+          <div class="connection-list" id="nodeOutputs"></div>
+        </div>
+
+        <div class="inspector-section">
+          <div class="inspector-section-title">
+            Özel Mantık Kuralı / Kısıtlar
+          </div>
+          <div class="inspector-desc" id="nodeRule">-</div>
+        </div>
       </div>
     </div>
 
     <script>
-      const nodeDetails = {
-        seed: {
-          title: '📥 Seed Engine (Ham Veri Deposu)',
-          body: "Sistemde yer alan 1200'den fazla teknik mühendislik kelimesi (In-situ, Substructure, Reinforcement, Load-bearing vb.) ve 120+ teknik dilbilgisi kuralı bu depoda tutulur. Kullanıcının seviyesine (A1-C2) göre süzülerek NEW havuzuna aktarılır.",
+      // NETWORK NODES DEFINITION
+      const nodes = [
+        // DATA ENGINES (BLUE)
+        {
+          id: 'seed_vocab',
+          label: 'Vocab Bank Engine',
+          group: 'engine',
+          color: '#3b82f6',
+          x: 150,
+          y: 200,
+          radius: 24,
+          desc: '1200+ Mühendislik terimi (A1-C2). Level Süzgeciyle ham kelime sağlar.',
         },
-        new: {
-          title: '✨ 1. NEW Havuzu (Yeni Kelimeler)',
-          body: "Henüz kullanıcı tarafından çalışılmamış kelimelerdir. Kart üzerindeki 'Biliyorum — Learned'a Ekle' butonuna 1-TIK ile tıklandığında kelime ara diyaloglar olmadan anında LEARNED havuzuna geçer. Eğer kullanıcı Türkçe anlam testini dener ve yanlış yaparsa kelime doğrudan STRUGGLING havuzuna aktarılır.",
+        {
+          id: 'seed_grammar',
+          label: 'Grammar Bank Engine',
+          group: 'engine',
+          color: '#3b82f6',
+          x: 150,
+          y: 450,
+          radius: 24,
+          desc: '120+ Teknik İngilizce dilbilgisi kuralı.',
         },
-        learned: {
-          title: '📖 2. LEARNED Havuzu (Öğrenilen Kelimeler)',
-          body: "Kullanıcının 'Öğrendim/Biliyorum' dediği tüm kelimeler burada toplanır. Bu havuz MASTERED QUIZ sisteminin ana kaynak havuzudur. Kullanıcı Learned kelimeler için Quiz başlattığında ve doğru yanıt verdiğinde kelimeler MASTERED seviyesine yükseltilir.",
+        {
+          id: 'placement',
+          label: 'Placement Level Test',
+          group: 'engine',
+          color: '#3b82f6',
+          x: 150,
+          y: 325,
+          radius: 22,
+          desc: 'Kullanıcının CEFR seviyesini belirler.',
         },
-        mastered: {
-          title: '🏆 3. MASTERED Havuzu (Tam Hakimiyet)',
-          body: 'Quiz ile tam hakimiyet kanıtlanmış kelimelerdir. Reading, Writing ve Speaking kilitlerinin açılması için sayılan ana puan budur. Mastered olan kelimeler kullanıcı isteği dışında tekrar zayıf kelimelere düşmez.',
-        },
-        struggling: {
-          title: '⚠️ 4. STRUGGLING Havuzu (Zayıf Kelimeler)',
-          body: 'Quizlerde veya pratik kartlarında yanlış cevaplanan kelimelerin toplandığı otomatik kurtarma havuzudur. Süreli aralıklı tekrar (Spaced Repetition) mantığıyla kullanıcıya tekrar sorulur. Mini-quiz doğru tamamlandığında kelime Learned havuzuna geri aktarılır.',
-        },
-        gating: {
-          title: '🔐 Kilit Mantık Motoru (Skill Unlock)',
-          body: 'Sistemdeki kilitli becerilerin açılması için belirlenen eşikler: Vocabulary için 200 kelime, Grammar için 10 kuraldır (Learned + Mastered toplamı). Bu sayılara ulaşıldığında Reading ve Writing modüllerinin kilitleri otomatik olarak yeşile döner.',
-        },
-        readwrite: {
-          title: '📑 Reading & Writing Modülleri',
-          body: '200 kelime ve 10 kural eşiği aşıldığında erişime açılır. Kullanıcı burada saha mektubu (NCR, RFI) yazar, teknik ihale şartnamesi okur. Burada tamamlanan 5 görev Speaking & Listening modüllerini açar.',
-        },
-        speaklisten: {
-          title: '🎙️ Speaking & Listening Modülleri',
-          body: "Reading ve Writing'de 5'er görev tamamlandığında açılan en üst seviye pratik modülüdür. AI Mülakat Simülatörü ve Teknik Defans modülleri aktifleşir.",
-        },
-      };
 
-      function openNodeModal(key) {
-        const detail = nodeDetails[key];
-        if (!detail) return;
-        document.getElementById('modalTitle').innerText = detail.title;
-        document.getElementById('modalBody').innerText = detail.body;
-        document.getElementById('modalBackdrop').style.display = 'flex';
+        // PERSONAL POOLS (GREEN / RED)
+        {
+          id: 'pool_new',
+          label: 'NEW Pool',
+          group: 'pool',
+          color: '#10b981',
+          x: 380,
+          y: 200,
+          radius: 28,
+          desc: 'Görülmemiş yeni kelimeler havuzu.',
+        },
+        {
+          id: 'pool_learned',
+          label: 'LEARNED Pool',
+          group: 'pool',
+          color: '#10b981',
+          x: 600,
+          y: 200,
+          radius: 32,
+          desc: '1-Tık "Biliyorum" ile aktarılan ve Quiz Havuzunu oluşturan alan.',
+        },
+        {
+          id: 'pool_mastered',
+          label: 'MASTERED Pool 🏆',
+          group: 'pool',
+          color: '#f59e0b',
+          x: 820,
+          y: 200,
+          radius: 36,
+          desc: 'Quizle kanıtlanmış tam hakimiyet kelimeleri. Kilit sayılarını belirler.',
+        },
+        {
+          id: 'pool_struggling',
+          label: 'STRUGGLING Pool ⚠️',
+          group: 'pool_bad',
+          color: '#ef4444',
+          x: 490,
+          y: 360,
+          radius: 28,
+          desc: 'Quizde/pratikte yanlış yapılan zayıf kelimeler havuzu.',
+        },
+        {
+          id: 'mistake_log',
+          label: 'MISTAKE LOG 📝',
+          group: 'pool_bad',
+          color: '#ef4444',
+          x: 490,
+          y: 480,
+          radius: 24,
+          desc: 'Geçmiş tüm hataların analiz kaydı.',
+        },
+
+        // SKILL MODULES (GOLD)
+        {
+          id: 'mod_vocab',
+          label: 'VOCABULARY Module',
+          group: 'skill',
+          color: '#3b82f6',
+          x: 380,
+          y: 70,
+          radius: 26,
+          desc: 'Kelime Kartları ve Alıştırmalar.',
+        },
+        {
+          id: 'mod_grammar',
+          label: 'GRAMMAR Module',
+          group: 'skill',
+          color: '#3b82f6',
+          x: 380,
+          y: 580,
+          radius: 26,
+          desc: 'Grammar Kuralları ve Alıştırma.',
+        },
+
+        // GATING ENGINE (PURPLE)
+        {
+          id: 'gating_engine',
+          label: 'UNLOCK GATING ENGINE 🔐',
+          group: 'gating',
+          color: '#8b5cf6',
+          x: 820,
+          y: 400,
+          radius: 38,
+          desc: 'Vocab >= 200 & Grammar >= 10 kilit kontrol motoru.',
+        },
+
+        // UNLOCKED SKILLS (CYAN / GOLD)
+        {
+          id: 'mod_reading',
+          label: 'READING Module 📑',
+          group: 'skill',
+          color: '#06b6d4',
+          x: 1080,
+          y: 250,
+          radius: 30,
+          desc: 'RFI, NCR, İhale Şartnamesi Okuma.',
+        },
+        {
+          id: 'mod_writing',
+          label: 'WRITING Module ✍️',
+          group: 'skill',
+          color: '#06b6d4',
+          x: 1080,
+          y: 400,
+          radius: 30,
+          desc: 'Saha Mektubu, Email ve Raporlama.',
+        },
+        {
+          id: 'mod_speaking',
+          label: 'SPEAKING Module 🎙️',
+          group: 'skill',
+          color: '#8b5cf6',
+          x: 1300,
+          y: 250,
+          radius: 32,
+          desc: 'AI Mülakat Simülatörü ve Proje Defansı.',
+        },
+        {
+          id: 'mod_listening',
+          label: 'LISTENING Module 🎧',
+          group: 'skill',
+          color: '#8b5cf6',
+          x: 1300,
+          y: 400,
+          radius: 32,
+          desc: 'Saha Telsiz Ses Kayıtları.',
+        },
+
+        // PERSISTENCE (GRAY)
+        {
+          id: 'zustand_store',
+          label: 'Zustand Local Store',
+          group: 'system',
+          color: '#64748b',
+          x: 600,
+          y: 650,
+          radius: 24,
+          desc: 'Anlık UI durumu ve hızlı tarayıcı hafızası.',
+        },
+        {
+          id: 'supabase_db',
+          label: 'Supabase Cloud DB ☁️',
+          group: 'system',
+          color: '#64748b',
+          x: 820,
+          y: 650,
+          radius: 28,
+          desc: 'RLS korumalı bulut veritabanı.',
+        },
+      ];
+
+      // LINKS DEFINITION
+      const links = [
+        // ENGINE TO POOLS
+        {
+          source: 'seed_vocab',
+          target: 'pool_new',
+          label: 'Level Süzgeci',
+          color: '#3b82f6',
+        },
+        {
+          source: 'seed_grammar',
+          target: 'mod_grammar',
+          label: 'Kural Yükleme',
+          color: '#3b82f6',
+        },
+        {
+          source: 'placement',
+          target: 'pool_new',
+          label: 'Seviye Belirleme',
+          color: '#3b82f6',
+        },
+
+        // POOL TRANSITIONS
+        {
+          source: 'pool_new',
+          target: 'pool_learned',
+          label: '1-TIK "Biliyorum"',
+          color: '#10b981',
+          animated: true,
+        },
+        {
+          source: 'pool_new',
+          target: 'pool_struggling',
+          label: 'Test Yanlış',
+          color: '#ef4444',
+        },
+        {
+          source: 'pool_learned',
+          target: 'pool_mastered',
+          label: 'Quiz (1 Doğru)',
+          color: '#f59e0b',
+          animated: true,
+        },
+        {
+          source: 'pool_learned',
+          target: 'pool_struggling',
+          label: 'Quiz Yanlış',
+          color: '#ef4444',
+        },
+        {
+          source: 'pool_struggling',
+          target: 'pool_learned',
+          label: 'Kurtarma Quizi',
+          color: '#10b981',
+        },
+        {
+          source: 'pool_struggling',
+          target: 'mistake_log',
+          label: 'Hata Kaydı',
+          color: '#ef4444',
+        },
+
+        // GATING CONNECTIONS
+        {
+          source: 'pool_mastered',
+          target: 'gating_engine',
+          label: 'Vocab >= 200',
+          color: '#8b5cf6',
+          animated: true,
+        },
+        {
+          source: 'mod_grammar',
+          target: 'gating_engine',
+          label: 'Grammar >= 10',
+          color: '#8b5cf6',
+          animated: true,
+        },
+
+        {
+          source: 'gating_engine',
+          target: 'mod_reading',
+          label: 'Kilit Açıldı',
+          color: '#06b6d4',
+          animated: true,
+        },
+        {
+          source: 'gating_engine',
+          target: 'mod_writing',
+          label: 'Kilit Açıldı',
+          color: '#06b6d4',
+          animated: true,
+        },
+
+        {
+          source: 'mod_reading',
+          target: 'mod_speaking',
+          label: '5 Görev',
+          color: '#8b5cf6',
+        },
+        {
+          source: 'mod_writing',
+          target: 'mod_speaking',
+          label: '5 Görev',
+          color: '#8b5cf6',
+        },
+        {
+          source: 'mod_reading',
+          target: 'mod_listening',
+          label: '5 Görev',
+          color: '#8b5cf6',
+        },
+        {
+          source: 'mod_writing',
+          target: 'mod_listening',
+          label: '5 Görev',
+          color: '#8b5cf6',
+        },
+
+        // PERSISTENCE
+        {
+          source: 'pool_learned',
+          target: 'zustand_store',
+          label: 'Local Persist',
+          color: '#64748b',
+        },
+        {
+          source: 'pool_mastered',
+          target: 'zustand_store',
+          label: 'Local Persist',
+          color: '#64748b',
+        },
+        {
+          source: 'zustand_store',
+          target: 'supabase_db',
+          label: 'Cloud Sync (RLS)',
+          color: '#64748b',
+        },
+      ];
+
+      // CANVAS & INTERACTION SETUP
+      const canvas = document.getElementById('graphCanvas');
+      const ctx = canvas.getContext('2d');
+
+      let width = (canvas.width = canvas.offsetWidth);
+      let height = (canvas.height = canvas.offsetHeight);
+
+      let transform = { x: 0, y: 0, scale: 1 };
+      let isDragging = false;
+      let dragStart = { x: 0, y: 0 };
+      let selectedNode = null;
+      let activeFilter = 'all';
+
+      let animOffset = 0;
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = canvas.offsetWidth;
+        height = canvas.height = canvas.offsetHeight;
+      });
+
+      // DRAW LOOP
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.save();
+        ctx.translate(transform.x, transform.y);
+        ctx.scale(transform.scale, transform.scale);
+
+        animOffset += 0.5;
+
+        // DRAW LINKS
+        links.forEach((link) => {
+          const sourceNode = nodes.find((n) => n.id === link.source);
+          const targetNode = nodes.find((n) => n.id === link.target);
+
+          if (!sourceNode || !targetNode) return;
+
+          // FILTER CHECK
+          if (
+            activeFilter === 'vocab' &&
+            ![
+              'pool_new',
+              'pool_learned',
+              'pool_mastered',
+              'pool_struggling',
+            ].includes(sourceNode.id) &&
+            ![
+              'pool_new',
+              'pool_learned',
+              'pool_mastered',
+              'pool_struggling',
+            ].includes(targetNode.id)
+          ) {
+            return;
+          }
+
+          ctx.beginPath();
+          ctx.moveTo(sourceNode.x, sourceNode.y);
+
+          // CURVED LINES
+          const midX = (sourceNode.x + targetNode.x) / 2;
+          const midY = (sourceNode.y + targetNode.y) / 2 - 15;
+          ctx.quadraticCurveTo(midX, midY, targetNode.x, targetNode.y);
+
+          ctx.strokeStyle = link.color;
+          ctx.lineWidth =
+            selectedNode &&
+            (selectedNode.id === sourceNode.id ||
+              selectedNode.id === targetNode.id)
+              ? 3.5
+              : 1.5;
+          ctx.globalAlpha =
+            selectedNode &&
+            !(
+              selectedNode.id === sourceNode.id ||
+              selectedNode.id === targetNode.id
+            )
+              ? 0.2
+              : 0.75;
+          ctx.stroke();
+
+          // LINK LABEL
+          ctx.font = '10px system-ui';
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillText(link.label, midX - 15, midY - 5);
+
+          // ANIMATED PARTICLES ON ACTIVE LINES
+          if (link.animated) {
+            const p = (animOffset % 100) / 100;
+            const px =
+              (1 - p) * (1 - p) * sourceNode.x +
+              2 * (1 - p) * p * midX +
+              p * p * targetNode.x;
+            const py =
+              (1 - p) * (1 - p) * sourceNode.y +
+              2 * (1 - p) * p * midY +
+              p * p * targetNode.y;
+
+            ctx.beginPath();
+            ctx.arc(px, py, 4, 0, Math.PI * 2);
+            ctx.fillStyle = link.color;
+            ctx.shadowColor = link.color;
+            ctx.shadowBlur = 10;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          }
+        });
+
+        // DRAW NODES
+        nodes.forEach((node) => {
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
+
+          ctx.fillStyle = node.color;
+          ctx.shadowColor = node.color;
+          ctx.shadowBlur = selectedNode?.id === node.id ? 25 : 10;
+          ctx.globalAlpha =
+            selectedNode && selectedNode.id !== node.id ? 0.3 : 1;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = selectedNode?.id === node.id ? 3 : 1.5;
+          ctx.stroke();
+
+          // NODE LABEL
+          ctx.font = 'bold 12px system-ui';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText(node.label, node.x, node.y + node.radius + 16);
+        });
+
+        ctx.restore();
+        requestAnimationFrame(draw);
       }
 
-      function closeModal() {
-        document.getElementById('modalBackdrop').style.display = 'none';
-      }
+      // CANVAS INTERACTIONS
+      canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragStart = { x: e.clientX - transform.x, y: e.clientY - transform.y };
 
-      function highlightFlow(type) {
-        document
-          .querySelectorAll('.control-bar .btn')
-          .forEach((b) => b.classList.remove('active'));
-        event.target.classList.add('active');
+        const rect = canvas.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - transform.x) / transform.scale;
+        const mouseY = (e.clientY - rect.top - transform.y) / transform.scale;
 
-        if (type === 'vocab') {
-          alert(
-            '📚 Kelime Akışı: NEW (1-Tık) ➔ LEARNED (Quiz) ➔ MASTERED. Yanlış cevap durumunda ➔ STRUGGLING.'
-          );
-        } else if (type === 'gating') {
-          alert(
-            '🔐 Kilit Akışı: Vocab (200) + Grammar (10) ➔ Reading & Writing Açılır. 5 Görev ➔ Speaking & Listening Açılır.'
-          );
-        } else if (type === 'diagnostics') {
-          document
-            .querySelector('.matrix-card')
-            .scrollIntoView({ behavior: 'smooth' });
+        const clicked = nodes.find(
+          (n) => Math.hypot(n.x - mouseX, n.y - mouseY) <= n.radius
+        );
+        if (clicked) {
+          selectedNode = clicked;
+          openInspector(clicked);
         }
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        transform.x = e.clientX - dragStart.x;
+        transform.y = e.clientY - dragStart.y;
+      });
+
+      canvas.addEventListener('mouseup', () => (isDragging = false));
+
+      canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const zoom = e.deltaY < 0 ? 1.1 : 0.9;
+        transform.scale *= zoom;
+      });
+
+      // INSPECTOR PANEL LOGIC
+      function openInspector(node) {
+        document.getElementById('inspector').style.display = 'block';
+        document.getElementById('nodeTitle').innerText = node.label;
+        document.getElementById('nodeDesc').innerText = node.desc;
+
+        const inputs = links
+          .filter((l) => l.target === node.id)
+          .map(
+            (l) =>
+              `<li class="connection-item"><span>← ${nodes.find((n) => n.id === l.source).label}</span><span style="color:${l.color}">${l.label}</span></li>`
+          )
+          .join('');
+        const outputs = links
+          .filter((l) => l.source === node.id)
+          .map(
+            (l) =>
+              `<li class="connection-item"><span>→ ${nodes.find((n) => n.id === l.target).label}</span><span style="color:${l.color}">${l.label}</span></li>`
+          )
+          .join('');
+
+        document.getElementById('nodeInputs').innerHTML =
+          inputs ||
+          '<span style="color:var(--text-sub)">Girdi yok (Başlangıç Düğümü)</span>';
+        document.getElementById('nodeOutputs').innerHTML =
+          outputs ||
+          '<span style="color:var(--text-sub)">Çıktı yok (Uç Düğüm)</span>';
+        document.getElementById('nodeRule').innerText =
+          `Düğüm Grubu: ${node.group.toUpperCase()}`;
       }
+
+      function closeInspector() {
+        document.getElementById('inspector').style.display = 'none';
+        selectedNode = null;
+      }
+
+      function filterGraph(type) {
+        activeFilter = type;
+        document
+          .querySelectorAll('.controls .btn')
+          .forEach((b) => b.classList.remove('active'));
+        if (type === 'all')
+          document.getElementById('btnAll').classList.add('active');
+        if (type === 'vocab')
+          document.getElementById('btnVocab').classList.add('active');
+        if (type === 'skills')
+          document.getElementById('btnSkills').classList.add('active');
+      }
+
+      function resetView() {
+        transform = { x: 0, y: 0, scale: 1 };
+        selectedNode = null;
+        closeInspector();
+        filterGraph('all');
+      }
+
+      // INITIALIZE
+      draw();
     </script>
   </body>
 </html>
