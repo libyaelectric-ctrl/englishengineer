@@ -449,6 +449,25 @@
               <div class="card-box purple">➔ Şantiye Ses Çözümleme.</div>
             </div>
           </div>
+
+          <!-- ROW 6: AUXILIARY & ANALYTICS -->
+          <div class="tree-row">
+            <div class="tree-card" id="node_tools">
+              <span class="card-badge badge-blue"
+                >Yardımcı Araçlar (Level 6)</span
+              >
+              <div class="card-title">🛠️ TOOLS MODULE</div>
+              <div class="card-desc">AI Terim Sözlüğü, Proje Not Defteri.</div>
+              <div class="card-box">➔ Hızlı Terim Arama & PDF İhracı.</div>
+            </div>
+
+            <div class="tree-card" id="node_progress">
+              <span class="card-badge badge-gold">Analitik (Level 6)</span>
+              <div class="card-title">📊 PROGRESS & ANALYTICS</div>
+              <div class="card-desc">CEFR Radarı & Isı Haritası.</div>
+              <div class="card-box gold">➔ Anlık İlerleme Analizi.</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -549,6 +568,10 @@
         { from: 'node_writing', to: 'node_speaking', color: 'purple' },
         { from: 'node_reading', to: 'node_listening', color: 'purple' },
         { from: 'node_writing', to: 'node_listening', color: 'purple' },
+
+        { from: 'node_root', to: 'node_tools', color: 'blue' },
+        { from: 'node_root', to: 'node_progress', color: 'blue' },
+        { from: 'node_pool_mastered', to: 'node_progress', color: 'gold' },
       ];
 
       function drawTreeBranches() {
