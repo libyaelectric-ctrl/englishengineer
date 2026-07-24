@@ -276,7 +276,6 @@ export function useVocabularyPage() {
 
   const learnWord = (term: VocabularyTerm) => {
     VocabularyMenuService.startLearning(term.id, new Date());
-    useVocabularyStore.getState().markWordViewed(term.id);
     useVocabularyStore.getState().markWordAsLearned(term.id);
     playSound('success');
     useLearningStore.getState().completeGenericPractice('Vocabulary', 100, 0.5);
