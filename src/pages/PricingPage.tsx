@@ -24,21 +24,30 @@ const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
   ['free', 'pro', 'project', 'exec', 'private'].includes(plan.id)
 );
 
-const getAccessBadge = (id: string): string => {
-  switch (id) {
-    case 'free':
-      return 'ACCESS-LVL-00';
-    case 'pro':
-      return 'ACCESS-LVL-01';
-    case 'project':
-      return 'ACCESS-LVL-02';
-    case 'exec':
-      return 'ACCESS-LVL-03';
-    case 'private':
-      return 'SECURE-PRIVATE';
-    default:
-      return 'ACCESS-LVL-01';
-  }
+const ACCESS_BADGES: Record<string, string> = {
+  free: 'ACCESS-LVL-00',
+  pro: 'ACCESS-LVL-01',
+  project: 'ACCESS-LVL-02',
+  exec: 'ACCESS-LVL-03',
+  private: 'SECURE-PRIVATE',
+};
+
+const getAccessBadge = (id: string): string =>
+  ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
+
+const ANNUAL_PRICES: Record<string, string> = {
+  pro: '$23',
+  project: '$47',
+  exec: '$79',
+  private: '$799',
+};
+
+const MONTHLY_PRICES: Record<string, string> = {
+  free: '$0',
+  pro: '$29',
+  project: '$59',
+  exec: '$99',
+  private: '$999',
 };
 
 const getCalculatedPrice = (
@@ -46,11 +55,103 @@ const getCalculatedPrice = (
   isAnnual: boolean
 ): string => {
   if (plan.id === 'free') return '$0';
-  if (plan.id === 'pro') return isAnnual ? '$23' : '$29';
-  if (plan.id === 'project') return isAnnual ? '$47' : '$59';
-  if (plan.id === 'exec') return isAnnual ? '$79' : '$99';
-  if (plan.id === 'private') return isAnnual ? '$799' : '$999';
-  return plan.price;
+  const prices = isAnnual ? ANNUAL_PRICES : MONTHLY_PRICES;
+  return prices[plan.id] ?? plan.price;
+};
+
+const FreePlanButton = ({
+  currentUser,
+}: {
+  currentUser: { id: string } | null;
+}) => (
+  <Link
+    to={currentUser ? '/dashboard' : '/start'}
+    className="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
+  >
+    {currentUser ? 'Go to dashboard' : 'Start free'}
+  </Link>
+);
+
+const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
+
+const PLAN_BADGES: Record<
+  string,
+  { icon: typeof Sparkles; label: string; color: string }
+> = {
+  pro: { icon: Sparkles, label: 'Recommended', color: 'bg-primary' },
+  project: {
+    icon: Building2,
+    label: 'Engineering Teams',
+    color: 'bg-blue-600',
+  },
+};
+
+const getPlanActionLabel = ({
+  planId,
+  isCurrent,
+  inProgress,
+  isUnavailable,
+}: {
+  planId: string;
+  isCurrent: boolean;
+  inProgress: boolean;
+  isUnavailable: boolean;
+}): string => {
+  if (isUnavailable) return 'Contact Sales';
+  if (isCurrent) return 'Current plan';
+  if (inProgress) return 'Loading...';
+  const plan = COMMERCIAL_PLAN_CATALOG.find((p) => p.id === planId);
+  return `Upgrade to ${plan?.name ?? planId}`;
+};
+
+const getPlanActionStyle = ({
+  isUnavailable,
+  isCurrent,
+}: {
+  isUnavailable: boolean;
+  isCurrent: boolean;
+}): string => {
+  if (isUnavailable) {
+    return 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-60';
+  }
+  if (isCurrent) {
+    return 'border border-success/30 bg-success/10 text-success cursor-not-allowed';
+  }
+  return 'bg-primary text-white hover:bg-primary-hover';
+};
+
+const PlanAction = ({
+  plan,
+  isCurrent,
+  inProgress,
+  disabled,
+  onClick,
+}: {
+  plan: CommercialPlanPreview;
+  isCurrent: boolean;
+  inProgress: boolean;
+  disabled: boolean;
+  onClick: () => void;
+}) => {
+  const unavailable = isPlanUnavailable(plan);
+  const label = getPlanActionLabel({
+    planId: plan.id,
+    isCurrent,
+    inProgress,
+    isUnavailable: unavailable,
+  });
+  const style = getPlanActionStyle({ isUnavailable: unavailable, isCurrent });
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`flex h-10 w-full items-center justify-center rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md ${style}`}
+    >
+      {label}
+    </button>
+  );
 };
 
 const PricingPage = () => {
@@ -97,11 +198,7 @@ const PricingPage = () => {
         if (!res.ok) throw new Error();
         const h = await res.json();
         if (!mounted) return;
-        if (h?.stripeConfigured) {
-          setBillingReadiness('ready');
-        } else {
-          setBillingReadiness('unavailable');
-        }
+        setBillingReadiness(h?.stripeConfigured ? 'ready' : 'unavailable');
       } catch {
         if (!mounted) return;
         setBillingReadiness('unavailable');
@@ -136,176 +233,10 @@ const PricingPage = () => {
     }
   };
 
-  const FreePlanButton = ({
-    currentUser,
-  }: {
-    currentUser: { id: string } | null;
-  }) => (
-    <Link
-      to={currentUser ? '/dashboard' : '/start'}
-      className="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
-    >
-      {currentUser ? 'Go to dashboard' : 'Start free'}
-    </Link>
-  );
-
-  const isPlanCardHighlighted = (planId: string) =>
-    planId === 'pro' || planId === 'project';
-
-  const PlanCard = ({
-    plan,
-    subscription,
-    billingEnabled,
-    isCheckoutLoading,
-    checkoutPlanId,
-    isBillingHealthLoading,
-    currentUser,
-    isAnnual,
-    onCheckout,
-  }: {
-    plan: CommercialPlanPreview;
-    subscription: { planId: string } | null;
-    billingEnabled: boolean;
-    isCheckoutLoading: boolean;
-    checkoutPlanId: string | null;
-    isBillingHealthLoading: boolean;
-    currentUser: { id: string } | null;
-    isAnnual: boolean;
-    onCheckout: (planId: BillingPlanId) => void;
-  }) => (
-    <article
-      key={plan.id}
-      className={`relative flex flex-col justify-between rounded-2xl border p-5 bg-surface/90 backdrop-blur-xl transition-all duration-300 hover:border-border-hover shadow-lg ${
-        isPlanCardHighlighted(plan.id)
-          ? 'border-primary/60 ring-2 ring-primary/20'
-          : 'border-border-soft'
-      }`}
-    >
-      {plan.id === 'pro' && (
-        <div className="absolute -top-3 left-4 rounded-full bg-primary px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1">
-          <Sparkles className="h-3 w-3" /> Recommended
-        </div>
-      )}
-      {plan.id === 'project' && (
-        <div className="absolute -top-3 left-4 rounded-full bg-blue-600 px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1">
-          <Building2 className="h-3 w-3" /> Engineering Teams
-        </div>
-      )}
-
-      <div>
-        <div className="flex items-start justify-between">
-          <h3 className="text-base font-extrabold text-foreground">
-            {plan.name}
-          </h3>
-          <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-            {getAccessBadge(plan.id)}
-          </span>
-        </div>
-
-        <div className="mt-3">
-          <span className="text-3xl font-extrabold tracking-tight text-foreground">
-            {getCalculatedPrice(plan, isAnnual)}
-          </span>
-          <span className="ml-1 text-[11px] font-bold text-muted-copy uppercase tracking-wider">
-            {plan.id === 'free'
-              ? '/ permanent'
-              : isAnnual
-                ? '/ mo (billed yearly)'
-                : '/ month'}
-          </span>
-        </div>
-
-        <p className="mt-2.5 text-xs text-muted-copy leading-relaxed font-medium min-h-[2.5rem]">
-          {plan.audience}
-        </p>
-
-        <div className="mt-3 rounded-xl border border-border-soft bg-background p-2.5 shadow-inner">
-          <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
-            Target Audience:
-          </p>
-          <p className="mt-0.5 text-xs font-bold text-foreground">
-            {plan.bestFor}
-          </p>
-        </div>
-
-        <div className="mt-4 border-t border-border-soft pt-3">
-          <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-2">
-            Key Included Features:
-          </p>
-          <ul className="space-y-2">
-            {plan.benefits.map((b) => (
-              <li
-                key={b}
-                className="flex items-start gap-2 text-xs text-foreground font-medium"
-              >
-                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-5 pt-3 border-t border-border-soft">
-        <div className="flex items-start gap-2 text-[10px] text-muted-copy font-medium mb-3">
-          <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
-          <span>{plan.notIncluded}</span>
-        </div>
-
-        {plan.id === 'free' ? (
-          <FreePlanButton currentUser={currentUser} />
-        ) : (
-          <PlanAction
-            plan={plan}
-            isCurrent={subscription?.planId === plan.id}
-            inProgress={isCheckoutLoading && checkoutPlanId === plan.id}
-            disabled={
-              !billingEnabled ||
-              (isCheckoutLoading && checkoutPlanId === plan.id) ||
-              isBillingHealthLoading ||
-              isPlanUnavailable(plan)
-            }
-            onClick={() => onCheckout(plan.id)}
-          />
-        )}
-      </div>
-    </article>
-  );
-
-  const PlanAction = ({
-    plan,
-    isCurrent,
-    inProgress,
-    disabled,
-    onClick,
-  }: {
-    plan: CommercialPlanPreview;
-    isCurrent: boolean;
-    inProgress: boolean;
-    disabled: boolean;
-    onClick: () => void;
-  }) => (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex h-10 w-full items-center justify-center rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md ${
-        isPlanUnavailable(plan)
-          ? 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-60'
-          : isCurrent
-            ? 'border border-success/30 bg-success/10 text-success cursor-not-allowed'
-            : 'bg-primary text-white hover:bg-primary-hover'
-      }`}
-    >
-      {isPlanUnavailable(plan)
-        ? 'Contact Sales'
-        : isCurrent
-          ? 'Current plan'
-          : inProgress
-            ? 'Loading...'
-            : `Upgrade to ${plan.name}`}
-    </button>
-  );
+  const billingCycleLabel = (planId: string) => {
+    if (planId === 'free') return '/ permanent';
+    return isAnnual ? '/ mo (billed yearly)' : '/ month';
+  };
 
   return (
     <main className="bg-background text-foreground min-h-screen relative z-10 pb-20 selection:bg-primary selection:text-primary-foreground">
@@ -314,10 +245,8 @@ const PricingPage = () => {
         description="Choose the EngVox access level calibrated for your engineering role."
       />
 
-      {/* Fixed top navbar */}
       <Navbar />
 
-      {/* 5-Tier Plans Grid Side-by-Side */}
       <section className="pt-24 pb-12 px-4 sm:px-6">
         {checkoutError && (
           <p
@@ -328,24 +257,110 @@ const PricingPage = () => {
           </p>
         )}
         <div className="mx-auto max-w-[1400px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
-          {ACTIVE_PLANS.map((plan) => (
-            <PlanCard
-              key={plan.id}
-              plan={plan}
-              subscription={subscription}
-              billingEnabled={billingEnabled}
-              isCheckoutLoading={isCheckoutLoading}
-              checkoutPlanId={checkoutPlanId}
-              isBillingHealthLoading={isBillingHealthLoading}
-              currentUser={currentUser}
-              isAnnual={isAnnual}
-              onCheckout={(id) => void handleCheckout(id)}
-            />
-          ))}
+          {ACTIVE_PLANS.map((plan) => {
+            const isHighlighted = HIGHLIGHTED_PLANS.has(plan.id);
+            const badge = PLAN_BADGES[plan.id];
+            const isCurrent = subscription?.planId === plan.id;
+            const isThisLoading =
+              isCheckoutLoading && checkoutPlanId === plan.id;
+            const unavailable = isPlanUnavailable(plan);
+
+            return (
+              <article
+                key={plan.id}
+                className={`relative flex flex-col justify-between rounded-2xl border p-5 bg-surface/90 backdrop-blur-xl transition-all duration-300 hover:border-border-hover shadow-lg ${
+                  isHighlighted
+                    ? 'border-primary/60 ring-2 ring-primary/20'
+                    : 'border-border-soft'
+                }`}
+              >
+                {badge && (
+                  <div
+                    className={`absolute -top-3 left-4 rounded-full ${badge.color} px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
+                  >
+                    <badge.icon className="h-3 w-3" /> {badge.label}
+                  </div>
+                )}
+
+                <div>
+                  <div className="flex items-start justify-between">
+                    <h3 className="text-base font-extrabold text-foreground">
+                      {plan.name}
+                    </h3>
+                    <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                      {getAccessBadge(plan.id)}
+                    </span>
+                  </div>
+
+                  <div className="mt-3">
+                    <span className="text-3xl font-extrabold tracking-tight text-foreground">
+                      {getCalculatedPrice(plan, isAnnual)}
+                    </span>
+                    <span className="ml-1 text-[11px] font-bold text-muted-copy uppercase tracking-wider">
+                      {billingCycleLabel(plan.id)}
+                    </span>
+                  </div>
+
+                  <p className="mt-2.5 text-xs text-muted-copy leading-relaxed font-medium min-h-[2.5rem]">
+                    {plan.audience}
+                  </p>
+
+                  <div className="mt-3 rounded-xl border border-border-soft bg-background p-2.5 shadow-inner">
+                    <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                      Target Audience:
+                    </p>
+                    <p className="mt-0.5 text-xs font-bold text-foreground">
+                      {plan.bestFor}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 border-t border-border-soft pt-3">
+                    <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-2">
+                      Key Included Features:
+                    </p>
+                    <ul className="space-y-2">
+                      {plan.benefits.map((b) => (
+                        <li
+                          key={b}
+                          className="flex items-start gap-2 text-xs text-foreground font-medium"
+                        >
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="mt-5 pt-3 border-t border-border-soft">
+                  <div className="flex items-start gap-2 text-[10px] text-muted-copy font-medium mb-3">
+                    <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
+                    <span>{plan.notIncluded}</span>
+                  </div>
+
+                  {plan.id === 'free' ? (
+                    <FreePlanButton currentUser={currentUser} />
+                  ) : (
+                    <PlanAction
+                      plan={plan}
+                      isCurrent={isCurrent}
+                      inProgress={isThisLoading}
+                      disabled={
+                        !billingEnabled ||
+                        isThisLoading ||
+                        isBillingHealthLoading ||
+                        unavailable
+                      }
+                      onClick={() => void handleCheckout(plan.id)}
+                    />
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
 
-      {/* Interactive Team Seats & Enterprise Section */}
       <section className="py-10 px-4 sm:px-6">
         <div className="mx-auto max-w-5xl rounded-2xl border border-primary/30 bg-primary/5 p-6 shadow-xl space-y-4">
           <div className="flex items-center justify-between flex-wrap gap-2">
@@ -405,7 +420,6 @@ const PricingPage = () => {
         />
       </section>
 
-      {/* Compare Plans Detailed Feature Matrix (Clean - No Mascot) */}
       <section className="py-12 bg-surface/80 border-t border-b border-border-soft backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
           <div className="text-center mb-8 space-y-2">
@@ -472,7 +486,6 @@ const PricingPage = () => {
         </div>
       </section>
 
-      {/* 📌 Annual / Monthly Billing Switch (Placed at the bottom as requested) */}
       <section className="py-12 text-center bg-background border-t border-border-soft">
         <div className="mx-auto max-w-xl px-4 space-y-4">
           <h3 className="text-base font-extrabold text-foreground">

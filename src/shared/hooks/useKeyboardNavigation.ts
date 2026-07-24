@@ -1,47 +1,32 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const SHORTCUT_MAP: Record<string, string> = {
+  '1': '/dashboard',
+  '2': '/vocabulary',
+  '3': '/curriculum/today',
+  '4': '/tools/work',
+  '5': '/team',
+  '6': '/profile/overview',
+};
+
+const isInputFocused = (target: EventTarget | null): boolean => {
+  const tag = (target as HTMLElement)?.tagName?.toLowerCase();
+  return ['input', 'textarea', 'select'].includes(tag);
+};
+
 export const useKeyboardNavigation = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Check Cmd or Ctrl modifier
       if (!e.metaKey && !e.ctrlKey) return;
-      if (
-        ['input', 'textarea', 'select'].includes(
-          (e.target as HTMLElement)?.tagName?.toLowerCase()
-        )
-      )
-        return;
+      if (isInputFocused(e.target)) return;
 
-      switch (e.key) {
-        case '1':
-          e.preventDefault();
-          navigate('/dashboard');
-          break;
-        case '2':
-          e.preventDefault();
-          navigate('/vocabulary');
-          break;
-        case '3':
-          e.preventDefault();
-          navigate('/curriculum/today');
-          break;
-        case '4':
-          e.preventDefault();
-          navigate('/tools/work');
-          break;
-        case '5':
-          e.preventDefault();
-          navigate('/team');
-          break;
-        case '6':
-          e.preventDefault();
-          navigate('/profile/overview');
-          break;
-        default:
-          break;
+      const path = SHORTCUT_MAP[e.key];
+      if (path) {
+        e.preventDefault();
+        navigate(path);
       }
     };
 

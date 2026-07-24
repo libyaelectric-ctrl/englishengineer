@@ -123,12 +123,35 @@ const getTimestamp = (obj: JsonObject): string | null => {
   return typeof ts === 'string' ? ts : null;
 };
 
-export const mergeJsonValues = (
-  local: JsonValue | null,
-  remote: JsonValue | null
+const resolveTimestampConflict = (
+  local: JsonObject,
+  remote: JsonObject,
+  localTs: string | null,
+  remoteTs: string | null
 ): JsonValue | null => {
-  if (local === null) return remote;
-  if (remote === null) return local;
+  const conflict: ConflictInfo = {
+    key: '_merged',
+    localValue: local,
+    remoteValue: remote,
+    localTimestamp: localTs,
+    remoteTimestamp: remoteTs,
+  };
+  const resolution = resolveConflict(conflict);
+  if (resolution === 'local') return local;
+  if (resolution === 'remote') return remote;
+  return null;
+};
+
+const mergeObjects = (local: JsonObject, remote: JsonObject): JsonObject => {
+  const merged: JsonObject = { ...remote, ...local };
+  const keys = new Set([...Object.keys(remote), ...Object.keys(local)]);
+  keys.forEach((key) => {
+    merged[key] = mergeJsonValues(local[key] ?? null, remote[key] ?? null);
+  });
+  return merged;
+};
+
+const mergeByType = (local: JsonValue, remote: JsonValue): JsonValue | null => {
   if (typeof local === 'number' && typeof remote === 'number') {
     return Math.max(local, remote);
   }
@@ -136,32 +159,29 @@ export const mergeJsonValues = (
     return mergeArrays(local, remote);
   }
   if (isJsonObject(local) && isJsonObject(remote)) {
-    const localTs = getTimestamp(local);
-    const remoteTs = getTimestamp(remote);
-
-    if (localTs || remoteTs) {
-      const conflict: ConflictInfo = {
-        key: '_merged',
-        localValue: local,
-        remoteValue: remote,
-        localTimestamp: localTs,
-        remoteTimestamp: remoteTs,
-      };
-      const resolution = resolveConflict(conflict);
-
-      if (resolution === 'local') return local;
-      if (resolution === 'remote') return remote;
-      return null;
-    }
-
-    const merged: JsonObject = { ...remote, ...local };
-    const keys = new Set([...Object.keys(remote), ...Object.keys(local)]);
-    keys.forEach((key) => {
-      merged[key] = mergeJsonValues(local[key] ?? null, remote[key] ?? null);
-    });
-    return merged;
+    return mergeObjectsWithTimestamp(local, remote);
   }
   return local;
+};
+
+const mergeObjectsWithTimestamp = (
+  local: JsonObject,
+  remote: JsonObject
+): JsonValue => {
+  const localTs = getTimestamp(local);
+  const remoteTs = getTimestamp(remote);
+  if (localTs || remoteTs) {
+    return resolveTimestampConflict(local, remote, localTs, remoteTs);
+  }
+  return mergeObjects(local, remote);
+};
+
+export const mergeJsonValues = (
+  local: JsonValue | null,
+  remote: JsonValue | null
+): JsonValue | null => {
+  if (local === null || remote === null) return local ?? remote;
+  return mergeByType(local, remote);
 };
 
 const isCloudProgressSnapshot = (
@@ -257,6 +277,23 @@ const readSyncableData = (
   return Object.keys(grouped).length > 0 ? grouped : null;
 };
 
+const writeSyncableKey = (
+  key: SyncableStateKey,
+  value: JsonValue,
+  userId: string
+): void => {
+  const keys = getStorageKeys(key, userId);
+  if (keys.length === 1) {
+    storage.set(keys[0], value);
+    return;
+  }
+  if (!isJsonObject(value)) return;
+  keys.forEach((storageKey) => {
+    const storedValue = value[storageKey];
+    if (storedValue !== undefined) storage.set(storageKey, storedValue);
+  });
+};
+
 export const applyCloudSnapshotLocally = (
   snapshot: CloudProgressSnapshot,
   userId: string
@@ -265,17 +302,7 @@ export const applyCloudSnapshotLocally = (
   try {
     SYNCABLE_KEYS.forEach((key) => {
       const value = snapshot.data[key] ?? null;
-      if (value === null) return;
-      const keys = getStorageKeys(key, userId);
-      if (keys.length === 1) {
-        storage.set(keys[0], value);
-        return;
-      }
-      if (!isJsonObject(value)) return;
-      keys.forEach((storageKey) => {
-        const storedValue = value[storageKey];
-        if (storedValue !== undefined) storage.set(storageKey, storedValue);
-      });
+      if (value !== null) writeSyncableKey(key, value, userId);
     });
   } finally {
     isApplyingRemoteSnapshot = false;
@@ -302,6 +329,34 @@ const createSnapshot = (userId: string | null): CloudProgressSnapshot => {
       createEmptySnapshotData()
     ),
   };
+};
+
+const buildAttemptedQueue = (
+  queue: CloudSyncQueueItem[],
+  mergedSnapshot: CloudProgressSnapshot
+): CloudSyncQueueItem[] => {
+  if (queue.length > 0) {
+    return queue.map((item) => ({ ...item, attempts: item.attempts + 1 }));
+  }
+  return [
+    {
+      id: IdService.createId('sync'),
+      reason: 'manual-sync' as const,
+      createdAt: new Date().toISOString(),
+      attempts: 1,
+      snapshot: mergedSnapshot,
+    },
+  ];
+};
+
+const buildWriteErrorMessage = (
+  droppedCount: number,
+  writeError: { message: string }
+): string => {
+  if (droppedCount > 0) {
+    return `${droppedCount} cloud sync item reached ${MAX_SYNC_ATTEMPTS} attempts and was removed. Last error: ${writeError.message}`;
+  }
+  return writeError.message;
 };
 
 export const CloudSyncService = {
@@ -356,6 +411,13 @@ export const CloudSyncService = {
       });
     }
 
+    return this.performSync(client, userId);
+  },
+
+  async performSync(
+    client: SupabaseClient,
+    userId: string
+  ): Promise<CloudSyncState> {
     const queue = getQueue();
     const localSnapshot = queue.at(-1)?.snapshot || createSnapshot(userId);
     saveState({
@@ -456,18 +518,7 @@ export const CloudSyncService = {
     mergedSnapshot: CloudProgressSnapshot,
     writeError: { message: string }
   ): CloudSyncState {
-    const attemptedQueue =
-      queue.length > 0
-        ? queue.map((item) => ({ ...item, attempts: item.attempts + 1 }))
-        : [
-            {
-              id: IdService.createId('sync'),
-              reason: 'manual-sync' as const,
-              createdAt: new Date().toISOString(),
-              attempts: 1,
-              snapshot: mergedSnapshot,
-            },
-          ];
+    const attemptedQueue = buildAttemptedQueue(queue, mergedSnapshot);
     const failedQueue = attemptedQueue.filter(
       (item) => item.attempts < MAX_SYNC_ATTEMPTS
     );
@@ -477,10 +528,7 @@ export const CloudSyncService = {
       status: 'error' as const,
       pendingItems: failedQueue.length,
       lastSyncedAt: this.getState().lastSyncedAt,
-      lastError:
-        droppedCount > 0
-          ? `${droppedCount} cloud sync item reached ${MAX_SYNC_ATTEMPTS} attempts and was removed. Last error: ${writeError.message}`
-          : writeError.message,
+      lastError: buildWriteErrorMessage(droppedCount, writeError),
     });
   },
 };

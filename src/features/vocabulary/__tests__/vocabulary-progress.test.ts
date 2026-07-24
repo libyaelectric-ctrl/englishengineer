@@ -66,11 +66,11 @@ describe('VocabularyProgressService', () => {
     expect(result.correctCount).toBe(2);
   });
 
-  it('7. 500 kuralı öncesi quiz pasif', () => {
-    expect(VocabularyProgressService.isQuizReady(499)).toBe(false);
+  it('7. 200 kuralı öncesi quiz pasif', () => {
+    expect(VocabularyProgressService.isQuizReady(199)).toBe(false);
   });
 
-  it('8. 500 kuralı sonrası quiz aktif', () => {
-    expect(VocabularyProgressService.isQuizReady(500)).toBe(true);
+  it('8. 200 kuralı sonrası quiz aktif', () => {
+    expect(VocabularyProgressService.isQuizReady(200)).toBe(true);
   });
 });

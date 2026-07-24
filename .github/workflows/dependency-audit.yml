@@ -23,10 +23,14 @@ jobs:
 
       - run: npm ci
 
-      - name: NPM Audit
+      - name: Custom Audit Script
+        run: node scripts/dependency-audit.mjs
+
+      - name: Backend Audit
         run: |
-          echo "=== NPM Security Audit ==="
-          npm audit --audit-level=high || true
+          cd backend
+          npm ci
+          npm audit --audit-level=high
 
       - name: Check for Critical Vulnerabilities
         run: |

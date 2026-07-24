@@ -59,6 +59,30 @@ type QuizItem = {
   correct: number;
 };
 
+const STATUS_BADGE_STYLES: Record<string, string> = {
+  Mastered:
+    'border-yellow-400/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700',
+  Learned:
+    'border-green-400/40 bg-green-50 dark:bg-green-900/20 text-green-700',
+  Learning:
+    'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600',
+  Struggling: 'border-red-400/40 bg-red-50 dark:bg-red-900/20 text-red-700',
+};
+const DEFAULT_BADGE_STYLE = 'border-border-soft bg-[#f3f3fd] text-muted-copy';
+
+const STATUS_HINTS: Record<string, { text: string; className?: string }> = {
+  Learning: { text: '1 correct → Learned' },
+  Learned: { text: '3 correct → Mastered' },
+  Struggling: { text: 'Review this rule!', className: 'text-red-500' },
+};
+
+const STATUS_MESSAGES: Record<string, string> = {
+  New: 'This rule is new. Start practicing to move to Practicing.',
+  Practicing: 'Used correctly 1+ times. Keep going to Master.',
+  Mastered: 'Congrats! You have mastered this rule.',
+  'Needs Reading/Writing': 'Apply this rule in Reading and Writing exercises.',
+};
+
 const LessonHeader = ({
   selectedModule,
   selectedRule,
@@ -67,57 +91,46 @@ const LessonHeader = ({
   selectedModule: string;
   selectedRule: Rule;
   selectedStatus: string;
-}) => (
-  <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-      <div className="min-w-0">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#0047bb]">
-          {selectedModule}
-        </p>
-        <h2 className="mt-0.5 break-words text-base font-bold">
-          {selectedRule.ruleTitle || selectedRule.title}
-        </h2>
-        <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-          {compact(
-            selectedRule.engineeringUseCase,
-            selectedRule.languageFunction
+}) => {
+  const badgeStyle = STATUS_BADGE_STYLES[selectedStatus] ?? DEFAULT_BADGE_STYLE;
+  const hint = STATUS_HINTS[selectedStatus];
+
+  return (
+    <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#0047bb]">
+            {selectedModule}
+          </p>
+          <h2 className="mt-0.5 break-words text-base font-bold">
+            {selectedRule.ruleTitle || selectedRule.title}
+          </h2>
+          <p className="mt-1 text-xs leading-relaxed text-muted-copy">
+            {compact(
+              selectedRule.engineeringUseCase,
+              selectedRule.languageFunction
+            )}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span
+            className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${badgeStyle}`}
+          >
+            {selectedStatus === 'Mastered' && '⭐ '}
+            {selectedStatus}
+          </span>
+          {hint && (
+            <span
+              className={`text-[9px] ${hint.className ?? 'text-muted-copy'}`}
+            >
+              {hint.text}
+            </span>
           )}
-        </p>
-      </div>
-      <div className="flex items-center gap-2">
-        <span
-          className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold px-3 py-1 text-[10px] uppercase tracking-wider ${
-            selectedStatus === 'Mastered'
-              ? 'border-yellow-400/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700'
-              : selectedStatus === 'Learned'
-                ? 'border-green-400/40 bg-green-50 dark:bg-green-900/20 text-green-700'
-                : selectedStatus === 'Learning'
-                  ? 'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600'
-                  : selectedStatus === 'Struggling'
-                    ? 'border-red-400/40 bg-red-50 dark:bg-red-900/20 text-red-700'
-                    : 'border-border-soft bg-[#f3f3fd] text-muted-copy'
-          }`}
-        >
-          {selectedStatus === 'Mastered' && '⭐ '}
-          {selectedStatus}
-        </span>
-        {selectedStatus === 'Learning' && (
-          <span className="text-[9px] text-muted-copy">
-            1 correct → Learned
-          </span>
-        )}
-        {selectedStatus === 'Learned' && (
-          <span className="text-[9px] text-muted-copy">
-            3 correct → Mastered
-          </span>
-        )}
-        {selectedStatus === 'Struggling' && (
-          <span className="text-[9px] text-red-500">Review this rule!</span>
-        )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const StatsGrid = ({
   rules,
@@ -320,6 +333,74 @@ const QuizPanel = ({
   </div>
 );
 
+const LinkedVocabularySection = ({
+  linkedVocabulary,
+}: {
+  linkedVocabulary: { tag: string; term: string }[];
+}) => {
+  if (linkedVocabulary.length === 0) return null;
+  return (
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+      <SectionHeading title="Words You Will Use Today" />
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {linkedVocabulary.map((item) => (
+          <span
+            key={`${item.tag}-${item.term}`}
+            className="rounded-[4px] border border-success/30 bg-success/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success"
+          >
+            {item.term}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const SkillLinksSection = ({ skillUse }: { skillUse: string[] }) => {
+  if (skillUse.length === 0) return null;
+  const SKILL_LINKS: Record<
+    string,
+    { to: string; icon: typeof FileText; label: string }
+  > = {
+    reading: { to: '/reading', icon: FileText, label: 'Reading' },
+    writing: { to: '/writing', icon: PenLine, label: 'Writing' },
+  };
+  return (
+    <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+      <SectionHeading
+        title="Use It in Skills"
+        subtitle="Use this lesson in Reading and Writing to prove mastery."
+      />
+      <div className="mt-2 flex flex-wrap gap-2">
+        {skillUse.map((skill) => {
+          const link = SKILL_LINKS[skill];
+          if (!link) return null;
+          const Icon = link.icon;
+          return (
+            <Link
+              key={skill}
+              to={link.to}
+              className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
+            >
+              <Icon className="h-3 w-3" /> {link.label}
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const StatusMessage = ({ selectedStatus }: { selectedStatus: string }) => {
+  const message = STATUS_MESSAGES[selectedStatus];
+  if (!message) return null;
+  return (
+    <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-[10px] text-muted-copy">
+      {message}
+    </div>
+  );
+};
+
 export const GrammarLessonContent = ({
   selectedRule,
   selectedProgress,
@@ -418,21 +499,7 @@ export const GrammarLessonContent = ({
         body={`Practice how to "${selectedRule.languageFunction.toLowerCase()}" in an engineering context: "${selectedRule.engineeringUseCase}" using the structure "${selectedRule.structure}".`}
       />
 
-      {linkedVocabulary.length > 0 && (
-        <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-          <SectionHeading title="Words You Will Use Today" />
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {linkedVocabulary.map((item) => (
-              <span
-                key={`${item.tag}-${item.term}`}
-                className="rounded-[4px] border border-success/30 bg-success/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success"
-              >
-                {item.term}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      <LinkedVocabularySection linkedVocabulary={linkedVocabulary} />
 
       <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
         <SectionHeading title="Teacher Explanation" />
@@ -564,43 +631,9 @@ export const GrammarLessonContent = ({
         )}
       </div>
 
-      {linkedVocabulary.length > 0 && (
-        <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-          <SectionHeading
-            title="Use It in Skills"
-            subtitle="Use this lesson in Reading and Writing to prove mastery."
-          />
-          <div className="mt-2 flex flex-wrap gap-2">
-            {selectedRule.skillUse.includes('reading') && (
-              <Link
-                to="/reading"
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
-              >
-                <FileText className="h-3 w-3" /> Reading
-              </Link>
-            )}
-            {selectedRule.skillUse.includes('writing') && (
-              <Link
-                to="/writing"
-                className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
-              >
-                <PenLine className="h-3 w-3" /> Writing
-              </Link>
-            )}
-          </div>
-        </div>
-      )}
+      <SkillLinksSection skillUse={selectedRule.skillUse} />
 
-      <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-[10px] text-muted-copy">
-        {selectedStatus === 'New' &&
-          'This rule is new. Start practicing to move to Practicing.'}
-        {selectedStatus === 'Practicing' &&
-          'Used correctly 1+ times. Keep going to Master.'}
-        {selectedStatus === 'Mastered' &&
-          'Congrats! You have mastered this rule.'}
-        {selectedStatus === 'Needs Reading/Writing' &&
-          'Apply this rule in Reading and Writing exercises.'}
-      </div>
+      <StatusMessage selectedStatus={selectedStatus} />
     </>
   );
 };

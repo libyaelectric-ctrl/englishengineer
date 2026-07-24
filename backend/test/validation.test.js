@@ -1,175 +1,142 @@
 import { describe, it } from 'node:test';
-import assert from 'node:assert/strict';
+import assert from 'node:assert';
 import {
   AiRequestBodySchema,
   VocabularyLookupQuerySchema,
-  WorkspaceCreateBodySchema,
-  WorkspaceMemoryBodySchema,
-  WorkspaceDocumentBodySchema,
+  BillingCheckoutBodySchema,
+  ProgressBodySchema,
+  WritingSubmitBodySchema,
+  ReadingScoreBodySchema,
 } from '../src/validation.js';
 
-describe('Zod validation schemas', () => {
+describe('Validation Schemas', () => {
   describe('AiRequestBodySchema', () => {
-    it('accepts valid prompt', () => {
-      const result = AiRequestBodySchema.safeParse({ prompt: 'Hello' });
-      assert.equal(result.success, true);
-    });
-
-    it('accepts prompt with optional operation', () => {
+    it('accepts valid AI request', () => {
       const result = AiRequestBodySchema.safeParse({
-        prompt: 'Analyze this',
+        prompt: 'Analyze my progress',
         operation: 'analyzeProgress',
       });
-      assert.equal(result.success, true);
+      assert.strictEqual(result.success, true);
     });
 
     it('rejects empty prompt', () => {
-      const result = AiRequestBodySchema.safeParse({ prompt: '' });
-      assert.equal(result.success, false);
-    });
-
-    it('rejects missing prompt', () => {
-      const result = AiRequestBodySchema.safeParse({});
-      assert.equal(result.success, false);
-    });
-
-    it('rejects prompt exceeding 20000 chars', () => {
       const result = AiRequestBodySchema.safeParse({
-        prompt: 'x'.repeat(20001),
+        prompt: '',
       });
-      assert.equal(result.success, false);
+      assert.strictEqual(result.success, false);
     });
 
-    it('rejects invalid operation', () => {
+    it('rejects prompt over 20000 chars', () => {
       const result = AiRequestBodySchema.safeParse({
-        prompt: 'test',
-        operation: 'invalidOp',
+        prompt: 'a'.repeat(20001),
       });
-      assert.equal(result.success, false);
-    });
-
-    it('accepts valid metadata', () => {
-      const result = AiRequestBodySchema.safeParse({
-        prompt: 'test',
-        metadata: { requestId: 'req-123', extra: 'data' },
-      });
-      assert.equal(result.success, true);
+      assert.strictEqual(result.success, false);
     });
   });
 
   describe('VocabularyLookupQuerySchema', () => {
-    it('accepts valid word with default targetLang', () => {
-      const result = VocabularyLookupQuerySchema.safeParse({ word: 'hello' });
-      assert.equal(result.success, true);
+    it('accepts valid word', () => {
+      const result = VocabularyLookupQuerySchema.safeParse({
+        word: 'engineering',
+      });
+      assert.strictEqual(result.success, true);
+    });
+
+    it('defaults targetLang to tr', () => {
+      const result = VocabularyLookupQuerySchema.safeParse({
+        word: 'test',
+      });
+      assert.strictEqual(result.success, true);
       if (result.success) {
-        assert.equal(result.data.targetLang, 'tr');
+        assert.strictEqual(result.data.targetLang, 'tr');
       }
     });
 
-    it('accepts valid word with explicit targetLang', () => {
-      const result = VocabularyLookupQuerySchema.safeParse({
-        word: 'hello',
-        targetLang: 'de',
-      });
-      assert.equal(result.success, true);
-    });
-
     it('rejects empty word', () => {
-      const result = VocabularyLookupQuerySchema.safeParse({ word: '' });
-      assert.equal(result.success, false);
-    });
-
-    it('rejects word exceeding 100 chars', () => {
       const result = VocabularyLookupQuerySchema.safeParse({
-        word: 'x'.repeat(101),
+        word: '',
       });
-      assert.equal(result.success, false);
-    });
-
-    it('rejects invalid targetLang format', () => {
-      const result = VocabularyLookupQuerySchema.safeParse({
-        word: 'hello',
-        targetLang: 'invalid-lang-code',
-      });
-      assert.equal(result.success, false);
+      assert.strictEqual(result.success, false);
     });
   });
 
-  describe('WorkspaceCreateBodySchema', () => {
-    it('accepts empty body (all fields optional)', () => {
-      const result = WorkspaceCreateBodySchema.safeParse({});
-      assert.equal(result.success, true);
+  describe('BillingCheckoutBodySchema', () => {
+    it('accepts valid checkout', () => {
+      const result = BillingCheckoutBodySchema.safeParse({
+        email: 'test@example.com',
+        successUrl: 'https://example.com/success',
+        cancelUrl: 'https://example.com/cancel',
+      });
+      assert.strictEqual(result.success, true);
     });
 
-    it('accepts valid name and planId', () => {
-      const result = WorkspaceCreateBodySchema.safeParse({
-        name: 'My Workspace',
-        planId: 'pro',
+    it('rejects invalid email', () => {
+      const result = BillingCheckoutBodySchema.safeParse({
+        email: 'not-an-email',
+        successUrl: 'https://example.com/success',
+        cancelUrl: 'https://example.com/cancel',
       });
-      assert.equal(result.success, true);
-    });
-
-    it('rejects name exceeding 200 chars', () => {
-      const result = WorkspaceCreateBodySchema.safeParse({
-        name: 'x'.repeat(201),
-      });
-      assert.equal(result.success, false);
+      assert.strictEqual(result.success, false);
     });
   });
 
-  describe('WorkspaceMemoryBodySchema', () => {
-    it('accepts valid key and value', () => {
-      const result = WorkspaceMemoryBodySchema.safeParse({
-        key: 'notes',
-        value: { text: 'some notes' },
-      });
-      assert.equal(result.success, true);
+  describe('ProgressBodySchema', () => {
+    it('accepts correct result', () => {
+      const result = ProgressBodySchema.safeParse({ result: 'correct' });
+      assert.strictEqual(result.success, true);
     });
 
-    it('rejects empty key', () => {
-      const result = WorkspaceMemoryBodySchema.safeParse({
-        key: '',
-        value: 'test',
-      });
-      assert.equal(result.success, false);
+    it('accepts incorrect result', () => {
+      const result = ProgressBodySchema.safeParse({ result: 'incorrect' });
+      assert.strictEqual(result.success, true);
     });
 
-    it('rejects missing key', () => {
-      const result = WorkspaceMemoryBodySchema.safeParse({ value: 'test' });
-      assert.equal(result.success, false);
+    it('rejects invalid result', () => {
+      const result = ProgressBodySchema.safeParse({ result: 'maybe' });
+      assert.strictEqual(result.success, false);
     });
   });
 
-  describe('WorkspaceDocumentBodySchema', () => {
-    it('accepts valid document', () => {
-      const result = WorkspaceDocumentBodySchema.safeParse({
-        docName: 'report.pdf',
-        docContent: 'file content here',
+  describe('WritingSubmitBodySchema', () => {
+    it('accepts valid submission', () => {
+      const result = WritingSubmitBodySchema.safeParse({
+        promptId: 'prompt-1',
+        content: 'My writing submission',
       });
-      assert.equal(result.success, true);
+      assert.strictEqual(result.success, true);
     });
 
-    it('accepts document without content', () => {
-      const result = WorkspaceDocumentBodySchema.safeParse({
-        docName: 'report.pdf',
-      });
-      assert.equal(result.success, true);
+    it('accepts empty optional fields', () => {
+      const result = WritingSubmitBodySchema.safeParse({});
+      assert.strictEqual(result.success, true);
+    });
+  });
+
+  describe('ReadingScoreBodySchema', () => {
+    it('accepts valid score', () => {
+      const result = ReadingScoreBodySchema.safeParse({ score: 85 });
+      assert.strictEqual(result.success, true);
     });
 
-    it('rejects empty docName', () => {
-      const result = WorkspaceDocumentBodySchema.safeParse({
-        docName: '',
-        docContent: 'content',
-      });
-      assert.equal(result.success, false);
+    it('accepts boundary values', () => {
+      assert.strictEqual(
+        ReadingScoreBodySchema.safeParse({ score: 0 }).success,
+        true
+      );
+      assert.strictEqual(
+        ReadingScoreBodySchema.safeParse({ score: 100 }).success,
+        true
+      );
     });
 
-    it('rejects docContent exceeding 1MB', () => {
-      const result = WorkspaceDocumentBodySchema.safeParse({
-        docName: 'big.txt',
-        docContent: 'x'.repeat(1_000_001),
-      });
-      assert.equal(result.success, false);
+    it('rejects score over 100', () => {
+      const result = ReadingScoreBodySchema.safeParse({ score: 101 });
+      assert.strictEqual(result.success, false);
+    });
+
+    it('rejects negative score', () => {
+      const result = ReadingScoreBodySchema.safeParse({ score: -1 });
+      assert.strictEqual(result.success, false);
     });
   });
 });

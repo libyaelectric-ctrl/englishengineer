@@ -93,55 +93,50 @@ export const QuizForm = ({
   term,
   answer,
   quizResult,
-  knowThisCheck,
+  knowThisCheck: _knowThisCheck,
   onAnswerChange,
-  onSetKnowThisCheck,
+  onSetKnowThisCheck: _onSetKnowThisCheck,
   onSubmit,
   onLearn,
 }: QuizFormProps) => (
   <form onSubmit={onSubmit} className="mt-4 space-y-2">
     <Button
       type="button"
-      className="w-full rounded-[4px]"
+      className="w-full rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold"
       onClick={() => onLearn?.(term)}
     >
-      <CheckCircle2 className="h-4 w-4" /> Learn this word
+      <CheckCircle2 className="h-4 w-4 mr-1.5" /> Biliyorum — Learned'a Ekle
     </Button>
-    <Button
-      type="button"
-      variant="outline"
-      className="w-full rounded-[4px]"
-      onClick={() => onSetKnowThisCheck(true)}
-    >
-      I Know This — Take Mini Quiz
-    </Button>
-    <p
-      style={{ display: knowThisCheck ? undefined : 'none' }}
-      className="text-xs font-semibold text-[#0047bb]"
-    >
-      Use the mini quiz if you want to check recall before saving.
-    </p>
-    <label className="text-xs font-bold text-foreground">
-      Turkish meaning
+    <div className="relative pt-1 text-center">
+      <span className="text-[10px] text-muted-copy uppercase tracking-wider font-semibold">
+        veya Anlamını Test Et
+      </span>
+    </div>
+    <label className="block text-xs font-bold text-foreground">
+      Türkçe anlamı
       <input
         value={answer}
         disabled={quizResult !== null}
         onChange={(event) => onAnswerChange(event.target.value)}
         className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb]"
+        placeholder="Anlamını yazın..."
       />
     </label>
     <Button
       type="submit"
+      variant="outline"
       className="w-full rounded-[4px]"
       disabled={!answer.trim()}
     >
-      Check answer
+      Cevabı Kontrol Et
     </Button>
     {quizResult !== null && (
       <p
-        className={`text-sm font-bold ${quizResult ? 'text-emerald-700' : 'text-rose-700'}`}
+        className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}
       >
-        {quizResult ? 'Correct review recorded.' : 'Added to Weak Words.'}
+        {quizResult
+          ? 'Doğru — Learned listesine eklendi.'
+          : 'Yanlış — Zayıf Kelimelere eklendi.'}
       </p>
     )}
   </form>

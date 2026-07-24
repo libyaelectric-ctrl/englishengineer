@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="tr" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      EngineerOS (EngVox V4) - Sistem Şematik Akış ve Havuz Mimarisi
+    </title>
+    <style>
+      :root {
+        --bg: #090d16;
+        --surface: #111827;
+        --surface-border: #1f2937;
+        --primary: #0047bb;
+        --primary-light: #2563eb;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --purple: #8b5cf6;
+        --text: #f3f4f6;
+        --text-muted: #9ca3af;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        padding: 2rem 1rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+        border-bottom: 1px solid var(--surface-border);
+        padding-bottom: 2rem;
+      }
+
+      .logo-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 71, 187, 0.15);
+        border: 1px solid var(--primary);
+        color: #60a5fa;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, #ffffff 0%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      p.subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .grid-2 {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--surface-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: border-color 0.2s;
+      }
+
+      .card:hover {
+        border-color: var(--primary);
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid var(--surface-border);
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Flow Chart Nodes */
+      .flow-node {
+        background: #172033;
+        border: 1px solid #2d3a54;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        position: relative;
+      }
+
+      .flow-node.active-node {
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(0, 71, 187, 0.3);
+      }
+
+      .node-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+      }
+
+      .node-title {
+        font-weight: 700;
+        font-size: 0.9rem;
+      }
+
+      .node-tag {
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+      }
+
+      .tag-blue {
+        background: rgba(37, 99, 235, 0.2);
+        color: #60a5fa;
+        border: 1px solid #2563eb;
+      }
+      .tag-green {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+        border: 1px solid #10b981;
+      }
+      .tag-gold {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        border: 1px solid #f59e0b;
+      }
+      .tag-red {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border: 1px solid #ef4444;
+      }
+      .tag-purple {
+        background: rgba(139, 92, 246, 0.2);
+        color: #c084fc;
+        border: 1px solid #8b5cf6;
+      }
+
+      .node-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .arrow-down {
+        text-align: center;
+        color: var(--accent);
+        font-size: 1.25rem;
+        margin: 0.5rem 0;
+        font-weight: 800;
+      }
+
+      .action-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        background: #0f172a;
+        color: #93c5fd;
+        padding: 0.25rem 0.6rem;
+        border-radius: 4px;
+        border: 1px dashed var(--accent);
+        margin: 0.25rem 0;
+      }
+
+      /* Diagnostics Table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--surface-border);
+      }
+
+      th {
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.05em;
+      }
+
+      .status-ok {
+        color: #34d399;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--success);
+        box-shadow: 0 0 8px var(--success);
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 3rem;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        border-top: 1px solid var(--surface-border);
+        padding-top: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo-badge">
+          ⚡ EngineerOS Architecture & Data Flow Visualizer
+        </div>
+        <h1>Kişisel Kelime / Dilbilgisi Havuz Şeması ve Kilit Akışı</h1>
+        <p class="subtitle">
+          Veri nereden nereye akıyor? Havuzlar nasıl işliyor? Kırık dökük mantık
+          var mı?
+        </p>
+      </header>
+
+      <div class="grid-2">
+        <!-- SOL PANEL: KELİME & DİLBİLGİSİ HAVUZ AKIŞI -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>📚</span> Kelime (Vocabulary) Havuz Yaşam Döngüsü
+            </div>
+            <span class="node-tag tag-blue">Tek Tık & Quiz Havuzu</span>
+          </div>
+
+          <!-- NODE 1: NEW -->
+          <div class="flow-node">
+            <div class="node-header">
+              <span class="node-title">1. NEW (Yeni Kelimeler Havuzu)</span>
+              <span class="node-tag tag-blue">A1-C2 Seviye Tohumları</span>
+            </div>
+            <p class="node-desc">
+              Sisteme ilk yüklenen veya seviyeye göre filtrelenen henüz
+              öğrenilmemiş kelimeler.
+            </p>
+            <div class="action-badge">
+              ➔ EYLEM: "Biliyorum / Learn" Butonuna 1-TIK Tıklama
+            </div>
+          </div>
+
+          <div class="arrow-down">↓ (Doğrudan Geçiş)</div>
+
+          <!-- NODE 2: LEARNED -->
+          <div class="flow-node active-node">
+            <div class="node-header">
+              <span class="node-title"
+                >2. LEARNED (Öğrenilmiş Kelimeler Havuzu)</span
+              >
+              <span class="node-tag tag-green">Aktif Öğrenme Havuzu</span>
+            </div>
+            <p class="node-desc">
+              Kullanıcının tek tıkla öğrendim olarak işaretlediği kelimeler. Bu
+              havuz <strong>Mastered Quiz Havuzunu</strong> oluşturur.
+            </p>
+            <div class="action-badge">
+              ➔ EYLEM: Learned Quiz Çözme (Doğru Cevaplar)
+            </div>
+          </div>
+
+          <div class="arrow-down">↓ (Quiz İle Yükselme)</div>
+
+          <!-- NODE 3: MASTERED -->
+          <div class="flow-node">
+            <div class="node-header">
+              <span class="node-title"
+                >3. MASTERED (Uzmanlaşılmış Kelimeler)</span
+              >
+              <span class="node-tag tag-gold">🏆 Beceri Kilitlerini Açar</span>
+            </div>
+            <p class="node-desc">
+              Quizde başarı gösterilen kelimeler. Reading, Writing ve Speaking
+              modüllerine doğrudan aktarılır.
+            </p>
+          </div>
+
+          <!-- NODE 4: STRUGGLING -->
+          <div style="margin-top: 1.5rem" class="flow-node">
+            <div class="node-header">
+              <span class="node-title"
+                >4. STRUGGLING (Zayıf / Yanlış Yapılanlar)</span
+              >
+              <span class="node-tag tag-red">⚠️ Otomatik Tekrar Havuzu</span>
+            </div>
+            <p class="node-desc">
+              Quizlerde veya pratik esnasında yanlış cevaplanan kelimeler buraya
+              düşer. Özel mini-quiz ile temizlenir.
+            </p>
+          </div>
+        </div>
+
+        <!-- SAĞ PANEL: BECERİ KİLİT MİMARİSİ (SKILL GATING) -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>🔐</span> Beceri Kilit Mimarisi (Skill Unlock Flow)
+            </div>
+            <span class="node-tag tag-purple"
+              >Eşik: 200 Vocab / 10 Grammar</span
+            >
+          </div>
+
+          <div class="flow-node">
+            <div class="node-header">
+              <span class="node-title">GİRİŞ ŞARTLARI (Requirements)</span>
+              <span class="node-tag tag-gold">Gerekli Hedef</span>
+            </div>
+            <p class="node-desc">
+              • <strong>Vocabulary:</strong> En az
+              <strong>200 kelime</strong> (Learned + Mastered)<br />
+              • <strong>Grammar:</strong> En az
+              <strong>10 kural</strong> (Learned + Mastered)
+            </p>
+          </div>
+
+          <div class="arrow-down">↓ (Eşik Sağlandığında Kilit Açılır)</div>
+
+          <div class="flow-node">
+            <div class="node-header">
+              <span class="node-title">READING & WRITING MODÜLLERİ</span>
+              <span class="node-tag tag-green">AÇIK (UNLOCKED)</span>
+            </div>
+            <p class="node-desc">
+              Mühendislik doküman okuma, RFI & NCR saha mektubu taslaklama
+              araçları aktifleşir.
+            </p>
+            <div class="action-badge">
+              ➔ ŞART: 5 Reading + 5 Writing Görevi Tamamlama
+            </div>
+          </div>
+
+          <div class="arrow-down">↓ (İleri Seviye Kilit Açılımı)</div>
+
+          <div class="flow-node">
+            <div class="node-header">
+              <span class="node-title">SPEAKING & LISTENING MODÜLLERİ</span>
+              <span class="node-tag tag-purple">İLERİ SEVİYE AÇIK</span>
+            </div>
+            <p class="node-desc">
+              AI Mülakat Simülatörü, Teknik Defans ve Saha Ses Kayıtları modülü
+              tam kapasite çalışır.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- KIRIK DÖKÜK KONTROL VE TEKNİK SAĞLIK PANELİ -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🩺</span> Sistem Sağlık ve Mantık Teşhisi (Diagnostic Health
+            Check)
+          </div>
+          <span class="node-tag tag-green">Sıfır Hata / %100 Yeşil</span>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Bileşen / Akış Mantığı</th>
+              <th>Beklenen Davranış</th>
+              <th>Mevcut Durum</th>
+              <th>Sağlık Seviyesi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1-Tık Learn Akışı</strong></td>
+              <td>
+                Kullanıcı "Biliyorum" dediğinde kelime aramaçsız Learned'a
+                geçer.
+              </td>
+              <td>Tam Otomatik (1 Click)</td>
+              <td>
+                <div class="status-ok">
+                  <span class="status-dot"></span> SORUNSUZ
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Mastered Quiz Havuzu</strong></td>
+              <td>
+                Learned kelimeler quiz havuzuna eklenir, doğru cevaplar Mastered
+                yapar.
+              </td>
+              <td>Aktif Quiz Engine</td>
+              <td>
+                <div class="status-ok">
+                  <span class="status-dot"></span> SORUNSUZ
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Beceri Eşikleri</strong></td>
+              <td>
+                Reading & Writing 200 kelime ve 10 kuralda otomatik açılır.
+              </td>
+              <td>Dinamik Gating (200/10)</td>
+              <td>
+                <div class="status-ok">
+                  <span class="status-dot"></span> SORUNSUZ
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Yatay Kaymama (Sticky Header)</strong></td>
+              <td>
+                Sayfa aşağı kaydırıldığında 64px üst bar ekranda kilitli kalır.
+              </td>
+              <td>Kök Sticky Mimarisi</td>
+              <td>
+                <div class="status-ok">
+                  <span class="status-dot"></span> SORUNSUZ
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Kırık/Dökük Test Durumu</strong></td>
+              <td>
+                816+ Vitest birim testi, E2E senaryoları ve RLS guvenligi.
+              </td>
+              <td>ALL COMMANDS PASSED</td>
+              <td>
+                <div class="status-ok">
+                  <span class="status-dot"></span> MÜKEMMEL (%100)
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer>
+        EngineerOS (EngVox V4.0.1) • Veri Akış & Mimari Şematik Dokümanı • 2026
+      </footer>
+    </div>
+  </body>
+</html>

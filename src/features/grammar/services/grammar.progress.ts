@@ -16,7 +16,7 @@ export interface RuleProgress {
 }
 
 const MASTERY_REQUIRED = 3;
-const QUIZ_THRESHOLD = 50;
+const QUIZ_THRESHOLD = 10;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 

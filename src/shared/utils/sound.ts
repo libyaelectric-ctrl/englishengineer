@@ -113,6 +113,17 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
   return enVoice || null;
 };
 
+const findVoice = (
+  voices: SpeechSynthesisVoice[],
+  voiceName?: string
+): SpeechSynthesisVoice | null => {
+  if (voiceName) {
+    const named = voices.find((v) => v.name === voiceName);
+    if (named) return named;
+  }
+  return getBestNaturalVoice();
+};
+
 export const playNaturalTTS = (
   text: string,
   options?: {
@@ -135,17 +146,9 @@ export const playNaturalTTS = (
 
   const setVoiceAndSpeak = () => {
     const voices = window.speechSynthesis.getVoices();
-    let selectedVoice: SpeechSynthesisVoice | null = null;
+    const selectedVoice = findVoice(voices, options?.voiceName);
 
-    if (options?.voiceName) {
-      selectedVoice = voices.find((v) => v.name === options.voiceName) || null;
-    }
-    if (!selectedVoice) {
-      selectedVoice = getBestNaturalVoice();
-    }
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-    }
+    if (selectedVoice) utterance.voice = selectedVoice;
     if (options?.onStart) utterance.onstart = options.onStart;
     if (options?.onEnd) utterance.onend = options.onEnd;
     if (options?.onError) utterance.onerror = options.onError;

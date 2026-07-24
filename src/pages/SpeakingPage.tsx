@@ -1,15 +1,14 @@
 import { lazy, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   FileText,
   Mic,
   RotateCcw,
   MessageSquareText,
   Trophy,
-  Lock,
   ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
+import { SkillLockedState } from '@/shared/components/SkillLockedState';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
@@ -18,9 +17,6 @@ import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
 import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
-
-const READING_THRESHOLD = 5;
-const WRITING_THRESHOLD = 5;
 
 const InterviewSimulator = lazy(() =>
   import('@/features/speaking/components/InterviewSimulator').then((m) => ({
@@ -38,6 +34,9 @@ import {
   ScoreComparison,
   useSpeakingPage,
 } from './SpeakingPage/index';
+
+const READING_THRESHOLD = 5;
+const WRITING_THRESHOLD = 5;
 
 type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
@@ -252,6 +251,32 @@ const RoleplayTab = () => {
   );
 };
 
+const TAB_CONFIG: Record<
+  SpeakingTab,
+  { label: string; icon: typeof MessageSquareText; Component: React.FC }
+> = {
+  roleplay: {
+    label: 'Roleplay',
+    icon: MessageSquareText,
+    Component: RoleplayTab,
+  },
+  interview: {
+    label: 'Interview Simulator',
+    icon: Trophy,
+    Component: InterviewSimulator,
+  },
+  defense: {
+    label: 'Defense Simulators',
+    icon: ShieldCheck,
+    Component: DefenseSimulator,
+  },
+};
+
+const SpeakingTabContent = ({ tab }: { tab: SpeakingTab }) => {
+  const { Component } = TAB_CONFIG[tab];
+  return <Component />;
+};
+
 const SpeakingPage = () => {
   const readingStore = useReadingStore();
   const writingStore = useWritingStore();
@@ -262,60 +287,13 @@ const SpeakingPage = () => {
 
   if (!canAccess) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6">
-        <div className="max-w-md w-full rounded-[4px] border-2 border-[#0047bb] bg-surface p-8 text-center space-y-4">
-          <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
-          <h2 className="text-lg font-bold text-foreground">Speaking Locked</h2>
-          <p className="text-xs text-muted-copy leading-relaxed">
-            Complete {READING_THRESHOLD} readings and {WRITING_THRESHOLD}{' '}
-            writings to unlock Speaking.
-          </p>
-          <div className="space-y-2 text-[10px]">
-            <div className="flex justify-between text-muted-copy">
-              <span>Reading</span>
-              <span className="font-bold text-foreground">
-                {readingDone}/{READING_THRESHOLD}
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-              <div
-                className="h-full bg-[#0047bb]"
-                style={{
-                  width: `${Math.min((readingDone / READING_THRESHOLD) * 100, 100)}%`,
-                }}
-              />
-            </div>
-            <div className="flex justify-between text-muted-copy">
-              <span>Writing</span>
-              <span className="font-bold text-foreground">
-                {writingDone}/{WRITING_THRESHOLD}
-              </span>
-            </div>
-            <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-              <div
-                className="h-full bg-[#0047bb]"
-                style={{
-                  width: `${Math.min((writingDone / WRITING_THRESHOLD) * 100, 100)}%`,
-                }}
-              />
-            </div>
-          </div>
-          <div className="flex gap-2 justify-center pt-2">
-            <Link
-              to="/reading"
-              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover"
-            >
-              Go to Reading
-            </Link>
-            <Link
-              to="/writing"
-              className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground hover:bg-surface-hover"
-            >
-              Go to Writing
-            </Link>
-          </div>
-        </div>
-      </div>
+      <SkillLockedState
+        skillName="Speaking"
+        readingDone={readingDone}
+        writingDone={writingDone}
+        readingThreshold={READING_THRESHOLD}
+        writingThreshold={WRITING_THRESHOLD}
+      />
     );
   }
 
@@ -330,75 +308,50 @@ const SpeakingPage = () => {
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">
       {/* Speaking sticky header */}
-      <div className="sticky top-0 z-30 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex min-w-0 items-baseline gap-2">
-            <h1 className="text-base font-bold tracking-tight text-foreground">
-              Speaking
-            </h1>
-            <span className="text-[11px] font-medium text-muted-copy leading-tight">
-              {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth} min remaining
-            </span>
-          </div>
+      <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
+        <div className="flex items-center gap-3">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
+            Speaking
+          </h1>
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT
+          </span>
+          <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
+            AI interview simulation & technical defense practice.
+          </p>
+        </div>
 
-          <div
-            className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm"
-            role="tablist"
-            aria-label="Speaking mode"
-          >
+        <div
+          className="flex items-center gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto"
+          role="tablist"
+          aria-label="Speaking mode"
+        >
+          {(
+            Object.entries(TAB_CONFIG) as [
+              SpeakingTab,
+              (typeof TAB_CONFIG)[SpeakingTab],
+            ][]
+          ).map(([key, { label, icon: Icon }]) => (
             <button
+              key={key}
               role="tab"
               type="button"
-              aria-selected={speakingTab === 'roleplay'}
-              onClick={() => setSpeakingTab('roleplay')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                speakingTab === 'roleplay'
-                  ? 'bg-[#0047bb] text-white shadow-sm'
-                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
+              aria-selected={speakingTab === key}
+              onClick={() => setSpeakingTab(key)}
+              className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                speakingTab === key
+                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
               }`}
             >
-              <MessageSquareText className="h-3.5 w-3.5" />
-              <span>Roleplay</span>
+              <Icon className="h-3 w-3" />
+              <span>{label}</span>
             </button>
-            <button
-              role="tab"
-              type="button"
-              aria-selected={speakingTab === 'interview'}
-              onClick={() => setSpeakingTab('interview')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                speakingTab === 'interview'
-                  ? 'bg-[#0047bb] text-white shadow-sm'
-                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
-              }`}
-            >
-              <Trophy className="h-3.5 w-3.5" />
-              <span>Interview Simulator</span>
-            </button>
-            <button
-              role="tab"
-              type="button"
-              aria-selected={speakingTab === 'defense'}
-              onClick={() => setSpeakingTab('defense')}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                speakingTab === 'defense'
-                  ? 'bg-[#0047bb] text-white shadow-sm'
-                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
-              }`}
-            >
-              <ShieldCheck className="h-3.5 w-3.5" />
-              <span>Defense Simulators</span>
-            </button>
-          </div>
+          ))}
         </div>
       </div>
 
-      {speakingTab === 'interview' ? (
-        <InterviewSimulator />
-      ) : speakingTab === 'defense' ? (
-        <DefenseSimulator />
-      ) : (
-        <RoleplayTab />
-      )}
+      <SpeakingTabContent tab={speakingTab} />
 
       <ScoreFeedbackOverlay
         result={scoreResult}

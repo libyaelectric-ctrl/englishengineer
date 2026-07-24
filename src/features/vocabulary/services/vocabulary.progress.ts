@@ -17,7 +17,7 @@ export interface WordProgress {
 }
 
 export const MASTERY_REQUIRED_CORRECT = 3;
-export const QUIZ_THRESHOLD = 500;
+export const QUIZ_THRESHOLD = 200;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
@@ -55,7 +55,8 @@ export const VocabularyProgressService = {
       : [...current.quizDates, today];
 
     if (
-      newCorrect >= MASTERY_REQUIRED_CORRECT &&
+      (newCorrect >= MASTERY_REQUIRED_CORRECT ||
+        current.status === 'learned') &&
       current.status !== 'mastered'
     ) {
       return {

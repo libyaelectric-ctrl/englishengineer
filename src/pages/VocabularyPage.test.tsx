@@ -53,11 +53,16 @@ describe('VocabularyPage menu', () => {
     expect(
       within(firstCard).getByText(/domain: architecture/i)
     ).toBeInTheDocument();
-    fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
-      target: { value: `y\u00fckseklik` },
-    });
+    fireEvent.change(
+      within(firstCard).getByLabelText(/Turkish meaning|Türkçe anlamı/i),
+      {
+        target: { value: `y\u00fckseklik` },
+      }
+    );
     fireEvent.click(
-      within(firstCard).getByRole('button', { name: 'Check answer' })
+      within(firstCard).getByRole('button', {
+        name: /Check answer|Cevabı Kontrol Et/i,
+      })
     );
     expect(within(firstCard).getByText(`y\u00fckseklik`)).toBeInTheDocument();
     expect(
@@ -73,7 +78,7 @@ describe('VocabularyPage menu', () => {
     await startTenWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     fireEvent.click(
-      within(firstCard).getByRole('button', { name: 'Learn this word' })
+      within(firstCard).getByRole('button', { name: /Biliyorum/i })
     );
     expect(
       Object.values(VocabularyMenuService.getState().progress)[0]
@@ -87,33 +92,22 @@ describe('VocabularyPage menu', () => {
     await renderLoadedPage();
     await startTenWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
-    fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
+    fireEvent.change(within(firstCard).getByLabelText('Türkçe anlamı'), {
       target: { value: 'yanlis' },
     });
     fireEvent.click(
-      within(firstCard).getByRole('button', { name: 'Check answer' })
+      within(firstCard).getByRole('button', { name: /Cevabı Kontrol Et/i })
     );
 
     expect(screen.getAllByText('Weak').length).toBeGreaterThan(0);
   }, 10_000);
 
-  it('requires the mini quiz after I Know This before moving to Learning', async () => {
+  it('moves a new word directly to Learned with 1 click', async () => {
     await renderLoadedPage();
     await startTenWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
     fireEvent.click(
-      within(firstCard).getByRole('button', { name: /I Know This/i })
-    );
-    const quizText = await within(firstCard).findByText(
-      /check recall before saving/i
-    );
-    expect(quizText).toBeInTheDocument();
-    expect(VocabularyMenuService.getState().progress).toEqual({});
-    fireEvent.change(within(firstCard).getByLabelText('Turkish meaning'), {
-      target: { value: 'yükseklik' },
-    });
-    fireEvent.click(
-      within(firstCard).getByRole('button', { name: 'Check answer' })
+      within(firstCard).getByRole('button', { name: /Biliyorum/i })
     );
     expect(
       Object.values(VocabularyMenuService.getState().progress)[0]?.status
@@ -131,7 +125,7 @@ describe('VocabularyPage menu', () => {
     ).toBeInTheDocument();
 
     const learnButtons = screen.getAllByRole('button', {
-      name: /Learn this word/i,
+      name: /Biliyorum|Learn this word/i,
     });
     fireEvent.click(learnButtons[0]);
     expect(
