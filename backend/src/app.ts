@@ -53,9 +53,12 @@ const SECURITY_HEADERS = {
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'"],
+      connectSrc: [
+        "'self'",
+        'https://englishengineer-production.up.railway.app',
+      ],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -522,6 +525,52 @@ const registerRoutes = (
   registerGrammarRoutes(app);
 };
 
+const initConnectionPool = (config: BackendConfig) => {
+  const poolConfig = getPoolConfig({
+    maxConnections: config.environment === 'production' ? 20 : 5,
+  });
+  logger.info('[Pool] Connection pool initialized', {
+    max: poolConfig.maxConnections,
+    timeout: poolConfig.connectionTimeoutMs,
+  });
+};
+
+const initIdempotency = (config: BackendConfig, fetchImpl: typeof fetch) => {
+  const storeType =
+    config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory';
+  const store = createIdempotencyStore(
+    storeType,
+    config as unknown as {
+      rateLimit?: {
+        upstashUrl?: string;
+        upstashToken?: string;
+        storeTimeoutMs?: number;
+      };
+    },
+    fetchImpl
+  );
+  setGlobalIdempotencyStore(store);
+};
+
+const initSentryIfConfigured = (config: BackendConfig) => {
+  if (!config.sentry?.dsn) return;
+  Sentry.init({
+    dsn: config.sentry.dsn,
+    environment: config.sentry.environment,
+    tracesSampleRate: config.sentry.tracesSampleRate,
+  });
+};
+
+const registerNotFoundAndErrorHandlers = (
+  app: Express,
+  config: BackendConfig
+) => {
+  app.use((_request: Request, _response: Response, next: NextFunction) => {
+    next(new ApiError(404, 'route_not_found', 'Route not found.'));
+  });
+  app.use(handleApiError(config));
+};
+
 export const createApp = ({
   config,
   fetchImpl = fetch,
@@ -536,37 +585,10 @@ export const createApp = ({
     config.rateLimit?.upstashUrl ?? undefined,
     config.rateLimit?.upstashToken ?? undefined
   );
-
-  const poolConfig = getPoolConfig({
-    maxConnections: config.environment === 'production' ? 20 : 5,
-  });
-  logger.info('[Pool] Connection pool initialized', {
-    max: poolConfig.maxConnections,
-    timeout: poolConfig.connectionTimeoutMs,
-  });
-
+  initConnectionPool(config);
   initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
-
-  const idempotencyStore = createIdempotencyStore(
-    config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory',
-    config as unknown as {
-      rateLimit?: {
-        upstashUrl?: string;
-        upstashToken?: string;
-        storeTimeoutMs?: number;
-      };
-    },
-    fetchImpl
-  );
-  setGlobalIdempotencyStore(idempotencyStore);
-
-  if (config.sentry?.dsn) {
-    Sentry.init({
-      dsn: config.sentry.dsn,
-      environment: config.sentry.environment,
-      tracesSampleRate: config.sentry.tracesSampleRate,
-    });
-  }
+  initIdempotency(config, fetchImpl);
+  initSentryIfConfigured(config);
 
   const app = express();
   setupMiddleware(app, config);
@@ -579,11 +601,7 @@ export const createApp = ({
     workspaceRepository,
     rateLimitStore
   );
-
-  app.use((_request: Request, _response: Response, next: NextFunction) => {
-    next(new ApiError(404, 'route_not_found', 'Route not found.'));
-  });
-  app.use(handleApiError(config));
+  registerNotFoundAndErrorHandlers(app, config);
 
   return app;
 };

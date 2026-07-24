@@ -144,6 +144,17 @@ export const SpeakingSubmitBodySchema = z.object({
   audioUrl: z.string().url().optional(),
 });
 
+// --- Writing Schemas ---
+
+export const WritingSubmitBodySchema = z.object({
+  promptId: z.string().min(1).max(100).optional(),
+  content: z.string().min(1).max(50_000).optional(),
+});
+
+export const ReadingScoreBodySchema = z.object({
+  score: z.number().int().min(0).max(100),
+});
+
 const formatZodError = (error: z.ZodError) => {
   return error.issues.map((i) => ({
     path: i.path.join('.'),
