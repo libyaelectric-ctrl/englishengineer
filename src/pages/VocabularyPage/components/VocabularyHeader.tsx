@@ -83,6 +83,8 @@ export function VocabularyHeader({
     setIsSoundMuted(next);
   };
 
+  const canStartQuiz = learnedCount >= 4;
+
   return (
     <>
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
@@ -90,7 +92,7 @@ export function VocabularyHeader({
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Vocabulary
           </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
             {vocabularyLevel}
           </span>
           <label className="relative hidden w-36 sm:w-44 md:block">
@@ -127,7 +129,6 @@ export function VocabularyHeader({
           </button>
         </div>
 
-        {/* Tabs & Quiz Actions on Right */}
         <div className="flex items-center gap-2">
           {strugglingCount > 0 && (
             <button
@@ -143,21 +144,21 @@ export function VocabularyHeader({
           <button
             type="button"
             onClick={() => {
-              if (learnedCount < 4) {
+              if (!canStartQuiz) {
                 alert(
-                  `Mastered Quiz başlatmak için en az 4 kelimeyi 'Biliyorum' olarak ekleyin (Mevcut: ${learnedCount}/4).`
+                  `At least 4 words in Learned pool are required to start Mastered Quiz (Current: ${learnedCount}/4).`
                 );
                 return;
               }
               onOpenQuiz?.();
             }}
             title={
-              learnedCount < 4
-                ? `En az 4 learned kelime gerekli (Mevcut: ${learnedCount}/4)`
-                : 'Learned kelimelerden Quiz Başlat'
+              canStartQuiz
+                ? 'Learned kelimelerden Quiz Başlat'
+                : `En az 4 learned kelime gerekli (Mevcut: ${learnedCount}/4)`
             }
             className={`flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
-              learnedCount >= 4
+              canStartQuiz
                 ? 'border-amber-400/50 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
                 : 'border-border-soft bg-surface text-muted-copy opacity-75'
             }`}
