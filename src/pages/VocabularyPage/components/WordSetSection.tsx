@@ -8,6 +8,7 @@ import type {
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { WordCard } from './WordCard';
+import { LearnedCard } from './LearnedCard';
 import { TAB_LABELS } from './VocabularyHeader';
 
 interface WordSetSectionProps {
@@ -60,9 +61,9 @@ export function WordSetSection({
       )}
       {wordSet.length > 0 && (
         <div className="space-y-5">
-          <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          <div className={`grid gap-4 ${activeTab === 'Learned' ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6' : 'lg:grid-cols-2 xl:grid-cols-3'}`}>
             <AnimatePresence mode="popLayout">
-              {wordSet.map((term) => (
+              {wordSet.map((term, index) => (
                 <motion.div
                   key={term.id}
                   layout
@@ -71,13 +72,17 @@ export function WordSetSection({
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <WordCard
-                    term={term}
-                    progress={menuState.progress[term.id]}
-                    mode={mode}
-                    onReview={onReview}
-                    onLearn={onLearn}
-                  />
+                  {activeTab === 'Learned' ? (
+                    <LearnedCard term={term} index={index} />
+                  ) : (
+                    <WordCard
+                      term={term}
+                      progress={menuState.progress[term.id]}
+                      mode={mode}
+                      onReview={onReview}
+                      onLearn={onLearn}
+                    />
+                  )}
                 </motion.div>
               ))}
             </AnimatePresence>
