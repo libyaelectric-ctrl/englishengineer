@@ -16,7 +16,7 @@ export const AppShell: FC = () => {
   useKeyboardNavigation();
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-background text-foreground">
+    <div className="relative flex h-screen w-screen overflow-hidden bg-background text-foreground">
       <Suspense fallback={null}>
         <CommandPalette />
       </Suspense>
@@ -24,7 +24,7 @@ export const AppShell: FC = () => {
       <Sidebar />
 
       {/* Main content */}
-      <div className="relative z-10 flex h-screen min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="relative flex h-full min-w-0 flex-1 flex-col overflow-hidden">
         <BetaAnalyticsTracker />
         <button
           onClick={toggleSidebar}
@@ -33,7 +33,7 @@ export const AppShell: FC = () => {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <main className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8">
+        <main className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8 max-w-full">
           <div className="pt-2">
             <Breadcrumbs />
           </div>

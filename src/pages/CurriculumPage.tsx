@@ -130,8 +130,8 @@ const CurriculumPage = () => {
   ).length;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
-      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
         <h1 className="text-base font-bold tracking-tight text-foreground">
           Learning Hub
         </h1>
