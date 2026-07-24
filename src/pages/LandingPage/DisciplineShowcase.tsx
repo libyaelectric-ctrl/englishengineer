@@ -14,11 +14,11 @@ import { AnimatedSection, SectionIntro } from './AnimatedComponents';
 const DISCIPLINES = [
   {
     id: 'electrical',
-    title: 'MEP & Electrical',
+    title: 'Mechanical & Electrical',
     icon: Zap,
-    badge: 'High Voltage & Substation',
+    badge: 'HVAC, Piping & Electrical',
     description:
-      'Master technical English for HV/LV switchgear commissioning, transformer testing, load calculations, and site safety talks.',
+      'Master technical English for HVAC commissioning, piping & pressure testing, switchgear, load calculations, and site safety talks.',
     scenarios: [
       'Substation Inspection & Lockout/Tagout (LOTO)',
       'Single Line Diagram (SLD) Clarifications',
@@ -91,7 +91,10 @@ export function DisciplineShowcase() {
     DISCIPLINES.find((d) => d.id === activeTab) || DISCIPLINES[0];
 
   return (
-    <section className="border-t border-border-soft bg-background/50 px-6 py-16 md:px-12 md:py-24">
+    <section
+      id="disciplines"
+      className="border-t border-border-soft bg-background/50 px-6 py-16 md:px-12 md:py-24"
+    >
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Specialized Tracks"

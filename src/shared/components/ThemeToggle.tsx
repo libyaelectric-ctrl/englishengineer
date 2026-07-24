@@ -7,16 +7,18 @@ export const ThemeToggle = () => {
 
   return (
     <button
+      type="button"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="flex h-8 w-8 items-center justify-center rounded-lg border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:bg-surface-hover transition-colors"
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-soft bg-background/80 text-foreground transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer shadow-sm"
       aria-label={
         theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
       }
     >
       {theme === 'dark' ? (
-        <Sun className="h-4 w-4" />
+        <Sun className="h-4.5 w-4.5 text-warning" />
       ) : (
-        <Moon className="h-4 w-4" />
+        <Moon className="h-4.5 w-4.5 text-primary" />
       )}
     </button>
   );

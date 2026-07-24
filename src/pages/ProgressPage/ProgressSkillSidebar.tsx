@@ -1,0 +1,197 @@
+import { motion } from 'motion/react';
+import { Brain, Layers, Network, type LucideIcon } from 'lucide-react';
+import { type GraphNode } from '@/pages/CurriculumPage/curriculum-data';
+import { SkillCard } from './SkillCard';
+
+export const SkillSidebar = ({
+  skills,
+  eloScores,
+  highestSkill,
+  lowestSkill,
+  totalCEFR,
+  rank,
+  selectedGraphNode,
+  setSelectedGraphNode,
+}: {
+  skills: Array<{
+    id: string;
+    label: string;
+    icon: LucideIcon;
+    color: string;
+    bgLight: string;
+    textDark: string;
+  }>;
+  eloScores: Record<string, number>;
+  highestSkill: { label: string; icon: LucideIcon };
+  lowestSkill: { label: string; icon: LucideIcon };
+  totalCEFR: string;
+  rank: { icon: string; label: string; color: string };
+  selectedGraphNode: GraphNode | null;
+  setSelectedGraphNode: (node: GraphNode | null) => void;
+}) => {
+  return (
+    <aside className="relative">
+      <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+            <span className="text-amber-500">🔥</span> 7 Day Active Streak
+          </div>
+          <span className="text-[10px] font-bold text-[#0047bb] bg-[#0047bb]/10 px-2 py-0.5 rounded-full">
+            Top 10% Active
+          </span>
+        </div>
+        <div className="space-y-1">
+          <div className="flex justify-between text-[11px] font-semibold text-muted-copy">
+            <span>Today's Target</span>
+            <span className="text-foreground font-bold">
+              25 / 30 mins (83%)
+            </span>
+          </div>
+          <div className="h-2 w-full rounded-full bg-border-soft overflow-hidden">
+            <div
+              className="h-full rounded-full bg-[#0047bb]"
+              style={{ width: '83%' }}
+            />
+          </div>
+        </div>
+        <div className="pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-medium text-muted-copy">
+          <span>⚡ Weekly Focus:</span>
+          <span className="font-bold text-foreground">
+            Technical PRs & Reports
+          </span>
+        </div>
+      </div>
+
+      <div className="xl:sticky xl:top-16 space-y-0 border border-[#0047bb]/25 bg-surface/80 rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-300">
+        <div className="px-4 pt-3 pb-2 border-b border-border-soft">
+          <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+            <Layers className="h-3 w-3" /> Skill Progress
+          </h3>
+        </div>
+        <div className="p-3 space-y-2">
+          {skills.map((skill, index) => (
+            <SkillCard
+              key={skill.id}
+              skill={skill}
+              elo={eloScores[skill.id]}
+              index={index}
+            />
+          ))}
+        </div>
+
+        <div className="px-4 pt-3 pb-2 border-t border-border-soft">
+          <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+            <Brain className="h-3 w-3" /> Summary
+          </h3>
+        </div>
+        <div className="px-4 pb-3 space-y-1.5">
+          <div className="flex items-center justify-between text-xs font-medium">
+            <span className="text-muted-copy">Strongest</span>
+            <span className="font-bold text-success flex items-center gap-1">
+              <highestSkill.icon className="h-3 w-3 text-success" />{' '}
+              {highestSkill.label}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs font-medium">
+            <span className="text-muted-copy">Weakest</span>
+            <span className="font-bold text-error flex items-center gap-1">
+              <lowestSkill.icon className="h-3 w-3 text-error" />{' '}
+              {lowestSkill.label}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs font-medium">
+            <span className="text-muted-copy">CEFR</span>
+            <span className="font-bold text-foreground">{totalCEFR}</span>
+          </div>
+          <div className="flex items-center justify-between text-xs font-medium">
+            <span className="text-muted-copy">Rank</span>
+            <span className="font-bold text-foreground">
+              {rank.icon} {rank.label}
+            </span>
+          </div>
+        </div>
+
+        <div className="px-4 pt-3 pb-2 border-t border-border-soft">
+          <div className="flex items-center justify-between">
+            <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
+              <Network className="h-3 w-3" /> Inspector
+            </h3>
+            {selectedGraphNode && (
+              <button
+                onClick={() => setSelectedGraphNode(null)}
+                className="text-[10px] font-bold uppercase text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="px-4 pb-4">
+          {selectedGraphNode ? (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="space-y-2.5"
+            >
+              <div className="flex items-center gap-1.5">
+                <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[10px] font-bold text-[#0047bb] border border-[#0047bb]/25 uppercase">
+                  {selectedGraphNode.type}
+                </span>
+                <span className="text-[10px] font-bold text-foreground px-1.5 py-0.5 rounded-[4px] bg-surface-hover border border-border-soft">
+                  {selectedGraphNode.status}
+                </span>
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-foreground">
+                  {selectedGraphNode.label}
+                </h4>
+                <p className="mt-0.5 text-[11px] text-muted-copy leading-4 font-medium">
+                  {selectedGraphNode.description}
+                </p>
+              </div>
+              <div className="bg-surface-hover rounded-[4px] p-2.5 border border-border-soft shadow-sm">
+                <div className="flex justify-between text-[10px] font-bold mb-1">
+                  <span className="text-muted-copy uppercase">Strength</span>
+                  <span className="text-foreground">
+                    {selectedGraphNode.strength}%
+                  </span>
+                </div>
+                <div className="h-1.5 w-full rounded-[4px] bg-border-soft">
+                  <div
+                    className="h-full rounded-[4px] bg-[#0047bb]"
+                    style={{ width: `${selectedGraphNode.strength}%` }}
+                  />
+                </div>
+              </div>
+              {selectedGraphNode.relatedVocab &&
+                selectedGraphNode.relatedVocab.length > 0 && (
+                  <div className="border-t border-border-soft pt-2">
+                    <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-1.5">
+                      Related Words
+                    </h4>
+                    <div className="flex flex-wrap gap-1">
+                      {selectedGraphNode.relatedVocab.map((word) => (
+                        <span
+                          key={word}
+                          className="rounded-[4px] bg-surface border border-border-soft px-1.5 py-0.5 text-[10px] font-bold text-foreground"
+                        >
+                          {word}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+            </motion.div>
+          ) : (
+            <div className="text-center py-5 rounded-[4px] border border-dashed border-border-soft bg-surface-hover">
+              <Network className="h-5 w-5 text-muted-copy mx-auto mb-1.5 opacity-40" />
+              <p className="text-[11px] text-muted-copy font-bold uppercase tracking-wider">
+                Select a node on the graph
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </aside>
+  );
+};

@@ -4,8 +4,6 @@ import {
   DAILY_TASK_COUNT_OPTIONS,
   TIMEZONES,
 } from '@/features/profile/profile.preferences';
-import type { InterfaceLanguage } from '@/features/profile/profile.types';
-import { AVAILABLE_INTERFACE_LANGUAGES } from '@/features/localization';
 
 type ProfileStepProps = {
   minutes: number;
@@ -16,10 +14,7 @@ type ProfileStepProps = {
   setCountry: (s: string) => void;
   timezone: string;
   setTimezone: (s: string) => void;
-  interfaceLanguage: InterfaceLanguage;
-  setInterfaceLanguage: (l: InterfaceLanguage) => void;
   initialTimezone: string;
-  setGlobalLanguage: (l: InterfaceLanguage) => void;
 };
 
 export const ProfileStep = ({
@@ -31,10 +26,7 @@ export const ProfileStep = ({
   setCountry,
   timezone,
   setTimezone,
-  interfaceLanguage,
-  setInterfaceLanguage,
   initialTimezone,
-  setGlobalLanguage,
 }: ProfileStepProps) => (
   <section>
     <h2 className="text-xl font-medium">Set a realistic daily rhythm</h2>
@@ -104,28 +96,6 @@ export const ProfileStep = ({
         </select>
         <span className="mt-1 block text-xs text-muted-copy">
           Detected: {initialTimezone}. You can correct it here.
-        </span>
-      </label>
-      <label className="text-sm font-medium text-foreground sm:col-span-2">
-        Interface language
-        <select
-          value={interfaceLanguage}
-          onChange={(event) => {
-            const language = event.target.value as InterfaceLanguage;
-            setInterfaceLanguage(language);
-            setGlobalLanguage(language);
-          }}
-          className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
-        >
-          {AVAILABLE_INTERFACE_LANGUAGES.map((language) => (
-            <option key={language.id} value={language.id}>
-              {language.label}
-            </option>
-          ))}
-        </select>
-        <span className="mt-1 block text-xs text-muted-copy">
-          Arabic, Spanish, French and Portuguese are prepared for future
-          language packs.
         </span>
       </label>
     </div>
