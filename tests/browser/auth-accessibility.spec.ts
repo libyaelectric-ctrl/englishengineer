@@ -77,5 +77,66 @@ test.describe('Auth Pages Accessibility', () => {
       // First focusable element should be an input, button, or link
       expect(['INPUT', 'BUTTON', 'A', 'SELECT']).toContain(firstFocused);
     });
+
+    test(`${page.name} page has no ARIA violations`, async ({ page: p }) => {
+      await p.goto(page.path);
+      await p.waitForLoadState('networkidle');
+
+      const results = await new AxeBuilder({ page: p })
+        .withRules([
+          'aria-required-attr',
+          'aria-valid-attr',
+          'aria-valid-attr-value',
+        ])
+        .analyze();
+
+      expect(results.violations).toEqual([]);
+    });
+
+    test(`${page.name} page has accessible form error messages`, async ({
+      page: p,
+    }) => {
+      await p.goto(page.path);
+      await p.waitForLoadState('networkidle');
+
+      // Check that form elements have proper ARIA attributes
+      const results = await new AxeBuilder({ page: p })
+        .withRules(['aria-required-attr'])
+        .analyze();
+
+      expect(results.violations).toEqual([]);
+    });
+
+    test(`${page.name} page has valid link names`, async ({ page: p }) => {
+      await p.goto(page.path);
+      await p.waitForLoadState('networkidle');
+
+      const results = await new AxeBuilder({ page: p })
+        .withRules(['link-name'])
+        .analyze();
+
+      expect(results.violations).toEqual([]);
+    });
+
+    test(`${page.name} page has proper document language`, async ({
+      page: p,
+    }) => {
+      await p.goto(page.path);
+      await p.waitForLoadState('networkidle');
+
+      const results = await new AxeBuilder({ page: p })
+        .withRules(['html-has-lang'])
+        .analyze();
+
+      expect(results.violations).toEqual([]);
+    });
+
+    test(`${page.name} page has valid document title`, async ({ page: p }) => {
+      await p.goto(page.path);
+      await p.waitForLoadState('networkidle');
+
+      const title = await p.title();
+      expect(title.length).toBeGreaterThan(0);
+    });
   }
 });

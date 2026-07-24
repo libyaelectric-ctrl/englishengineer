@@ -1,105 +1,107 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { eventBus } from './event-bus';
-import type {
-  AppEvent,
-  AppStartedEvent,
-  LearningStartedEvent,
-} from './event.types';
 
 describe('EventBus', () => {
-  beforeEach(() => {
-    eventBus.clearAllListeners();
-  });
+  it('publishes and subscribes to events', () => {
+    const handler = vi.fn();
+    const token = eventBus.subscribe('app.started', handler);
 
-  it('subscribes and receives events', () => {
-    const received: AppEvent[] = [];
-    eventBus.subscribe('app.started', (event) => {
-      received.push(event);
-    });
-
-    const event: AppStartedEvent = {
-      id: '1',
+    eventBus.publish({
+      id: 'test-1',
       type: 'app.started',
       timestamp: new Date().toISOString(),
       payload: {
         environment: 'test',
-        userAgent: 'test',
-        timestamp: Date.now(),
+        userAgent: 'vitest',
+        timestamp: 1234567890,
       },
-    };
-    eventBus.publish(event);
-    expect(received).toHaveLength(1);
-    expect(received[0].type).toBe('app.started');
-  });
-
-  it('unsubscribe stops receiving events', () => {
-    const received: AppEvent[] = [];
-    const token = eventBus.subscribe('app.started', (event) => {
-      received.push(event);
     });
 
-    const event: AppStartedEvent = {
-      id: '1',
-      type: 'app.started',
-      timestamp: new Date().toISOString(),
-      payload: {
-        environment: 'test',
-        userAgent: 'test',
-        timestamp: Date.now(),
-      },
-    };
-    eventBus.publish(event);
-    expect(received).toHaveLength(1);
+    expect(handler).toHaveBeenCalledOnce();
+    token.unsubscribe();
+  });
+
+  it('unsubscribes correctly', () => {
+    const handler = vi.fn();
+    const token = eventBus.subscribe('app.started', handler);
 
     token.unsubscribe();
-    eventBus.publish({ ...event, id: '2' });
-    expect(received).toHaveLength(1);
-  });
 
-  it('wildcard subscribers receive all events', () => {
-    const received: AppEvent[] = [];
-    eventBus.subscribeAll((event) => {
-      received.push(event);
+    eventBus.publish({
+      id: 'test-2',
+      type: 'app.started',
+      timestamp: new Date().toISOString(),
+      payload: {
+        environment: 'test',
+        userAgent: 'vitest',
+        timestamp: 1234567890,
+      },
     });
 
-    const event1: AppStartedEvent = {
-      id: '1',
-      type: 'app.started',
-      timestamp: new Date().toISOString(),
-      payload: {
-        environment: 'test',
-        userAgent: 'test',
-        timestamp: Date.now(),
-      },
-    };
-    const event2: LearningStartedEvent = {
-      id: '2',
-      type: 'learning.started',
-      timestamp: new Date().toISOString(),
-      payload: { module: 'vocabulary', topicId: 'A1' },
-    };
-    eventBus.publish(event1);
-    eventBus.publish(event2);
-    expect(received).toHaveLength(2);
+    expect(handler).not.toHaveBeenCalled();
   });
 
-  it('clearAllListeners removes all subscribers', () => {
-    const received: AppEvent[] = [];
-    eventBus.subscribe('app.started', (event) => received.push(event));
-    eventBus.subscribeAll((event) => received.push(event));
+  it('supports multiple subscribers', () => {
+    const handler1 = vi.fn();
+    const handler2 = vi.fn();
+    const token1 = eventBus.subscribe('app.started', handler1);
+    const token2 = eventBus.subscribe('app.started', handler2);
 
-    eventBus.clearAllListeners();
-    const event: AppStartedEvent = {
-      id: '1',
+    eventBus.publish({
+      id: 'test-3',
       type: 'app.started',
       timestamp: new Date().toISOString(),
       payload: {
         environment: 'test',
-        userAgent: 'test',
-        timestamp: Date.now(),
+        userAgent: 'vitest',
+        timestamp: 1234567890,
       },
-    };
-    eventBus.publish(event);
-    expect(received).toHaveLength(0);
+    });
+
+    expect(handler1).toHaveBeenCalledOnce();
+    expect(handler2).toHaveBeenCalledOnce();
+
+    token1.unsubscribe();
+    token2.unsubscribe();
+  });
+
+  it('supports wildcard subscribers', () => {
+    const handler = vi.fn();
+    const token = eventBus.subscribeAll(handler);
+
+    eventBus.publish({
+      id: 'test-4',
+      type: 'app.started',
+      timestamp: new Date().toISOString(),
+      payload: {
+        environment: 'test',
+        userAgent: 'vitest',
+        timestamp: 1234567890,
+      },
+    });
+
+    expect(handler).toHaveBeenCalledOnce();
+    token.unsubscribe();
+  });
+
+  it('clears all listeners', () => {
+    const handler = vi.fn();
+    eventBus.subscribe('app.started', handler);
+    eventBus.subscribeAll(handler);
+
+    eventBus.clearAllListeners();
+
+    eventBus.publish({
+      id: 'test-5',
+      type: 'app.started',
+      timestamp: new Date().toISOString(),
+      payload: {
+        environment: 'test',
+        userAgent: 'vitest',
+        timestamp: 1234567890,
+      },
+    });
+
+    expect(handler).not.toHaveBeenCalled();
   });
 });

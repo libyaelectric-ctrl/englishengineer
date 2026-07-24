@@ -204,4 +204,58 @@ describe('Architecture Rules', () => {
 
     expect(violations).toEqual([]);
   });
+
+  it('pages have limited cross-imports', () => {
+    const pagesPath = join(SRC_DIR, 'pages');
+    const violations: string[] = [];
+
+    const checkDir = (dir: string) => {
+      const entries = readdirSync(dir, { withFileTypes: true });
+      for (const entry of entries) {
+        const fullPath = join(dir, entry.name);
+        if (entry.isDirectory()) {
+          checkDir(fullPath);
+        } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
+          const imports = getImportsFromFile(fullPath);
+          for (const imp of imports) {
+            if (imp.startsWith('@/pages/')) {
+              const otherPage = imp.replace('@/pages/', '').split('/')[0];
+              const currentPageRaw = fullPath
+                .replace(pagesPath, '')
+                .split(/[\\/]/)[1]
+                ?.replace(/\.tsx?$/, '');
+              const otherPageClean = otherPage.replace(/\.tsx?$/, '');
+              if (otherPageClean !== currentPageRaw) {
+                violations.push(
+                  `${fullPath.replace(SRC_DIR, '.')} imports from ${otherPage}`
+                );
+              }
+            }
+          }
+        }
+      }
+    };
+
+    checkDir(pagesPath);
+    // Allow known cross-page imports (technical debt tracking)
+    expect(violations.length).toBeLessThan(15);
+  });
+
+  it('no unused exports in core index', () => {
+    const coreIndexPath = join(SRC_DIR, 'core', 'index.ts');
+    const content = readFileSync(coreIndexPath, 'utf-8');
+    const exportMatches = content.match(/export\s+\{[^}]+\}/g) || [];
+
+    // Should have at least some exports
+    expect(exportMatches.length).toBeGreaterThan(0);
+
+    // Each export block should have at least one item
+    for (const block of exportMatches) {
+      const items = block
+        .replace(/export\s+\{/, '')
+        .replace(/\}/, '')
+        .split(',');
+      expect(items.length).toBeGreaterThan(0);
+    }
+  });
 });

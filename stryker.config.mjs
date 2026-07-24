@@ -27,6 +27,7 @@ const config = {
     'src/core/ids/id.service.ts',
     'src/core/learning/spaced-repetition.helpers.ts',
     'src/core/events/event-bus.ts',
+    'src/core/learning/learning.store.ts',
     'src/features/vocabulary/vocabulary.helpers.ts',
     'src/features/vocabulary/vocabulary.spaced-repetition.ts',
     'src/features/vocabulary/services/vocabulary.progress.ts',
@@ -51,6 +52,9 @@ const config = {
     'src/features/writing/writing.service.ts',
     'src/features/reading/reading.service.ts',
     'src/features/listening/listening.service.ts',
+    'src/features/analytics/analytics.service.ts',
+    'src/features/team/team.service.ts',
+    'src/features/level-system/content-gating.ts',
   ],
   ignorePatterns: [
     '**/*.test.ts',
