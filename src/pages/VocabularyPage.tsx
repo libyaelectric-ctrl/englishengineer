@@ -6,6 +6,7 @@ import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
 import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
 import { WordSetSection } from './VocabularyPage/components/WordSetSection';
 import { QuizModal } from './VocabularyPage/components/QuizModal';
+import { SearchModal } from './VocabularyPage/components/SearchModal';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
@@ -46,11 +47,13 @@ const VocabularyPage = () => {
     learnWord,
     exportCSV,
     loadNextBatch,
-    runSearch,
     addCustomWord,
     filterOptions,
     dispatchUI,
     dispatchSearch,
+    showSearchModal,
+    openSearchModal,
+    closeSearchModal,
   } = useVocabularyPage();
 
   return (
@@ -71,7 +74,9 @@ const VocabularyPage = () => {
         onSearchInputChange={(input) =>
           dispatchSearch({ type: 'SET_SEARCH_INPUT', input })
         }
-        onSearchSubmit={runSearch}
+        onSearchSubmit={async (query: string) => {
+          dispatchSearch({ type: 'RUN_SEARCH', query });
+        }}
         onFilterChange={(field, value) =>
           dispatchSearch({
             type: 'COMMIT_FILTERS',
@@ -80,6 +85,7 @@ const VocabularyPage = () => {
         }
         onOpenQuiz={() => setQuizOpen(true)}
         onOpenStrugglingQuiz={() => setStrugglingQuizOpen(true)}
+        onOpenSearch={openSearchModal}
       />
 
       <div className="pt-4 space-y-4 pb-20">
@@ -93,6 +99,20 @@ const VocabularyPage = () => {
           onClose={() => setStrugglingQuizOpen(false)}
           words={strugglingWords.slice(0, 10)}
           isStrugglingQuiz
+        />
+
+        <SearchModal
+          isOpen={showSearchModal}
+          onClose={closeSearchModal}
+          onSearch={async (query: string) => {
+            dispatchSearch({ type: 'RUN_SEARCH', query });
+          }}
+          searchInput={searchInput}
+          onSearchInputChange={(input) =>
+            dispatchSearch({ type: 'SET_SEARCH_INPUT', input })
+          }
+          searchResults={searchResults}
+          hasSearched={hasSearched}
         />
 
         <SearchResultsSection
