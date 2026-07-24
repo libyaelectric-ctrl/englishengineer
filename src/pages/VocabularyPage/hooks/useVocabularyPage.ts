@@ -331,17 +331,17 @@ export function useVocabularyPage() {
       skill: 'vocabulary',
       source: 'user',
     });
-    const newWordIds = selectSet('New', menuState).slice(0, 8);
+    const newWordIds = selectSet('New', menuState).slice(0, 15);
     const reviewIds = [
       ...dueTerms.map((term) => term.id),
       ...selectSet('Learned', menuState),
     ]
       .filter((id, index, values) => values.indexOf(id) === index)
-      .slice(0, 2);
+      .slice(0, 0);
     dispatchUI({ type: 'START_SESSION' });
     dispatchData({
       type: 'SET_WORD_SET_IDS',
-      wordSetIds: [...newWordIds, ...reviewIds].slice(0, 10),
+      wordSetIds: [...newWordIds, ...reviewIds].slice(0, 15),
     });
   }, [menuState, selectSet, dueTerms]);
 
