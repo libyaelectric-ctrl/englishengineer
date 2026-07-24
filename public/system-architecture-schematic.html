@@ -1,23 +1,27 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EngineerOS V4 - Ağsal Sistem Akış Şeması (Network Node Graph)</title>
+    <title>
+      EngineerOS V4 - Hiyerarşik Beceri ve Havuz Ağacı (Master Tree
+      Architecture)
+    </title>
     <style>
       :root {
-        --bg-dark: #050811;
-        --panel-bg: rgba(13, 19, 33, 0.85);
-        --border-color: rgba(255, 255, 255, 0.1);
+        --bg: #070a12;
+        --surface: #0f172a;
+        --surface-hover: #1e293b;
+        --border: #334155;
         --primary: #0052ff;
-        --primary-glow: #3b82f6;
+        --primary-light: #60a5fa;
         --success: #10b981;
         --warning: #f59e0b;
         --danger: #ef4444;
-        --purple: #8b5cf6;
+        --purple: #a855f7;
         --cyan: #06b6d4;
-        --text-main: #f8fafc;
-        --text-sub: #94a3b8;
+        --text: #f8fafc;
+        --text-muted: #94a3b8;
       }
 
       * {
@@ -31,899 +35,621 @@
           'Segoe UI',
           Roboto,
           sans-serif;
-        user-select: none;
       }
 
       body {
-        background-color: var(--bg-dark);
-        color: var(--text-main);
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        padding: 2rem 1rem;
+        min-height: 100vh;
       }
 
-      /* TOP BAR */
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
       header {
-        height: 64px;
-        background: var(--panel-bg);
-        border-bottom: 1px solid var(--border-color);
-        backdrop-filter: blur(16px);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 1.5rem;
-        z-index: 20;
+        text-align: center;
+        margin-bottom: 3rem;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 2rem;
       }
 
-      .brand {
-        display: flex;
+      .logo-badge {
+        display: inline-flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 0.5rem;
+        background: rgba(0, 82, 255, 0.15);
+        border: 1px solid var(--primary);
+        color: #60a5fa;
+        font-size: 0.75rem;
+        font-weight: 800;
+        padding: 0.4rem 1rem;
+        border-radius: 9999px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        box-shadow: 0 0 20px rgba(0, 82, 255, 0.3);
       }
 
-      .brand-badge {
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.5rem;
         background: linear-gradient(
           135deg,
-          rgba(0, 82, 255, 0.2),
-          rgba(139, 92, 246, 0.2)
+          #ffffff 0%,
+          #93c5fd 50%,
+          #a855f7 100%
         );
-        border: 1px solid var(--primary-glow);
-        color: #60a5fa;
-        font-size: 0.7rem;
-        font-weight: 800;
-        padding: 0.25rem 0.6rem;
-        border-radius: 9999px;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      .brand-title {
-        font-size: 1.1rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-        background: linear-gradient(135deg, #ffffff, #94a3b8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
 
-      .controls {
+      p.subtitle {
+        color: var(--text-muted);
+        font-size: 1rem;
+        max-width: 850px;
+        margin: 0 auto;
+      }
+
+      /* TREE ARCHITECTURE STYLING */
+      .tree-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2.5rem;
+        position: relative;
+        margin-bottom: 4rem;
+      }
+
+      .tree-level {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        width: 100%;
+        position: relative;
+        flex-wrap: wrap;
+      }
+
+      .tree-level-title {
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 0.75rem;
       }
 
-      .btn {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid var(--border-color);
-        color: var(--text-sub);
-        padding: 0.45rem 0.9rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
+      .tree-level-title::before,
+      .tree-level-title::after {
+        content: '';
+        height: 1px;
+        width: 100px;
+        background: var(--border);
       }
 
-      .btn:hover,
-      .btn.active {
-        background: var(--primary);
-        border-color: var(--primary-glow);
-        color: #fff;
-        box-shadow: 0 0 15px rgba(0, 82, 255, 0.4);
-      }
-
-      /* MAIN CONTAINER */
-      .viewport-container {
-        flex: 1;
+      .tree-node {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        padding: 1.25rem;
+        width: 280px;
         position: relative;
-        width: 100%;
-        height: calc(100vh - 64px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
       }
 
-      canvas {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        cursor: grab;
+      .tree-node:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-light);
+        box-shadow: 0 15px 35px rgba(0, 82, 255, 0.3);
       }
 
-      canvas:active {
-        cursor: grabbing;
+      .tree-node.root-node {
+        border-color: var(--primary);
+        background: linear-gradient(135deg, rgba(0, 82, 255, 0.2), #0f172a);
+        width: 340px;
       }
 
-      /* FLOATING LEGEND PANEL */
-      .legend-panel {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        background: var(--panel-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem;
-        backdrop-filter: blur(12px);
-        z-index: 10;
-        width: 240px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      .tree-node.gate-node {
+        border-color: var(--purple);
+        background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), #0f172a);
+        width: 320px;
       }
 
-      .legend-title {
-        font-size: 0.75rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--text-sub);
-        margin-bottom: 0.75rem;
+      .tree-node.bad-node {
+        border-color: var(--danger);
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), #0f172a);
       }
 
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-      }
-
-      .legend-color {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        box-shadow: 0 0 8px currentColor;
-      }
-
-      /* FLOATING NODE INSPECTOR PANEL */
-      .inspector-panel {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        background: var(--panel-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 1.5rem;
-        backdrop-filter: blur(16px);
-        z-index: 10;
-        width: 360px;
-        max-height: calc(100% - 2rem);
-        overflow-y: auto;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-        display: none;
-      }
-
-      .inspector-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid var(--border-color);
-      }
-
-      .inspector-title {
-        font-size: 1.1rem;
-        font-weight: 800;
-        color: #fff;
-      }
-
-      .inspector-tag {
+      .node-badge {
+        display: inline-block;
         font-size: 0.65rem;
-        font-weight: 800;
+        font-weight: 900;
         padding: 0.2rem 0.6rem;
         border-radius: 9999px;
         text-transform: uppercase;
+        margin-bottom: 0.5rem;
       }
 
-      .inspector-section {
-        margin-bottom: 1rem;
+      .badge-blue {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+        border: 1px solid #3b82f6;
+      }
+      .badge-green {
+        background: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+        border: 1px solid #10b981;
+      }
+      .badge-gold {
+        background: rgba(245, 158, 11, 0.2);
+        color: #fbbf24;
+        border: 1px solid #f59e0b;
+      }
+      .badge-purple {
+        background: rgba(168, 85, 247, 0.2);
+        color: #c084fc;
+        border: 1px solid #a855f7;
+      }
+      .badge-cyan {
+        background: rgba(6, 182, 212, 0.2);
+        color: #22d3ee;
+        border: 1px solid #06b6d4;
+      }
+      .badge-red {
+        background: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+        border: 1px solid #ef4444;
       }
 
-      .inspector-section-title {
-        font-size: 0.7rem;
+      .node-header {
+        font-size: 1rem;
         font-weight: 800;
-        text-transform: uppercase;
-        color: var(--text-sub);
-        margin-bottom: 0.4rem;
-        letter-spacing: 0.05em;
-      }
-
-      .inspector-desc {
-        font-size: 0.8rem;
-        color: #cbd5e1;
-        line-height: 1.5;
-      }
-
-      .connection-list {
-        list-style: none;
-        font-size: 0.75rem;
-      }
-
-      .connection-item {
+        margin-bottom: 0.5rem;
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 0.4rem 0.6rem;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 6px;
-        margin-bottom: 0.35rem;
+        gap: 0.5rem;
       }
 
-      .close-inspector {
-        background: transparent;
-        border: none;
-        color: var(--text-sub);
-        font-size: 1.2rem;
-        cursor: pointer;
+      .node-desc {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-bottom: 0.75rem;
       }
 
-      .close-inspector:hover {
-        color: #fff;
+      .node-rules {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 0.6rem;
+        font-size: 0.75rem;
+        border-left: 3px solid var(--primary-light);
+      }
+
+      .node-rules.green {
+        border-left-color: var(--success);
+      }
+      .node-rules.purple {
+        border-left-color: var(--purple);
+      }
+      .node-rules.gold {
+        border-left-color: var(--warning);
+      }
+      .node-rules.red {
+        border-left-color: var(--danger);
+      }
+
+      .rule-item {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .rule-item:last-child {
+        margin-bottom: 0;
+      }
+
+      /* CONNECTING BRANCH LINES */
+      .branch-line {
+        position: absolute;
+        background: var(--border);
+        z-index: 1;
+      }
+
+      /* MATRIX SUMMARY TABLE */
+      .summary-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      th {
+        color: var(--text-muted);
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-weight: 800;
+        font-size: 0.75rem;
+        color: #34d399;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 8px #10b981;
+      }
+
+      footer {
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        border-top: 1px solid var(--border);
+        padding-top: 2rem;
+        margin-top: 4rem;
       }
     </style>
   </head>
   <body>
-    <!-- TOP NAVIGATION HEADER -->
-    <header>
-      <div class="brand">
-        <div class="brand-badge">⚡ Network Topology Visualizer</div>
-        <div class="brand-title">
-          EngineerOS - Tüm Becerilerin & Havuzların Ağsal Bağlantı Şeması
+    <div class="container">
+      <header>
+        <div class="logo-badge">
+          🌳 Master Skill Hierarchy & Dependency Tree
         </div>
-      </div>
-      <div class="controls">
-        <button class="btn active" id="btnAll" onclick="filterGraph('all')">
-          🌐 Tüm Ağ
-        </button>
-        <button class="btn" id="btnVocab" onclick="filterGraph('vocab')">
-          📚 Kelime & Quiz Akışı
-        </button>
-        <button class="btn" id="btnSkills" onclick="filterGraph('skills')">
-          🔐 Kilitli Beceriler (200/10)
-        </button>
-        <button class="btn" id="btnReset" onclick="resetView()">
-          🔄 Görünümü Sıfırla
-        </button>
-      </div>
-    </header>
+        <h1>EngineerOS Tüm Becerilerin Ağaçsal Bağlantı Mimarisi</h1>
+        <p class="subtitle">
+          Veri nereden doğuyor, kişisel havuzlarda nasıl işleniyor, beceri
+          kilitleri nasıl açılıyor ve üst modüllere nasıl aktarılıyor?
+        </p>
+      </header>
 
-    <!-- CANVAS GRAPH VIEWPORT -->
-    <div class="viewport-container">
-      <canvas id="graphCanvas"></canvas>
-
-      <!-- LEGEND -->
-      <div class="legend-panel">
-        <div class="legend-title">Ağ Elemanları Renk Kodları</div>
-        <div class="legend-item">
-          <div
-            class="legend-color"
-            style="background: #3b82f6; color: #3b82f6"
-          ></div>
-          <span>Veri Deposu & Seed Engines</span>
-        </div>
-        <div class="legend-item">
-          <div
-            class="legend-color"
-            style="background: #10b981; color: #10b981"
-          ></div>
-          <span>Kişisel Havuzlar (New, Learned, Mastered)</span>
-        </div>
-        <div class="legend-item">
-          <div
-            class="legend-color"
-            style="background: #ef4444; color: #ef4444"
-          ></div>
-          <span>Zayıf Kelimeler & Hata Defteri</span>
-        </div>
-        <div class="legend-item">
-          <div
-            class="legend-color"
-            style="background: #f59e0b; color: #f59e0b"
-          ></div>
-          <span>Ana Beceriler (Reading, Writing vb.)</span>
-        </div>
-        <div class="legend-item">
-          <div
-            class="legend-color"
-            style="background: #8b5cf6; color: #8b5cf6"
-          ></div>
-          <span>Kilit Mantık Motorları & Veritabanı</span>
-        </div>
-      </div>
-
-      <!-- INSPECTOR PANEL -->
-      <div class="inspector-panel" id="inspector">
-        <div class="inspector-header">
-          <div class="inspector-title" id="nodeTitle">Düğüm Seçilmedi</div>
-          <button class="close-inspector" onclick="closeInspector()">
-            &times;
-          </button>
-        </div>
-
-        <div class="inspector-section">
-          <div class="inspector-section-title">Açıklama ve Rolü</div>
-          <div class="inspector-desc" id="nodeDesc">
-            Haritada bir düğüme tıklayarak detaylı akış kurallarını inceleyin.
+      <!-- MASTER TREE CONTAINER -->
+      <div class="tree-container">
+        <!-- LEVEL 0: ROOT -->
+        <div class="tree-level">
+          <div class="tree-level-title">SEVİYE 0: KÖK MOTOR (SYSTEM CORE)</div>
+          <div class="tree-node root-node">
+            <span class="node-badge badge-blue">Kök Sistem (Root)</span>
+            <div class="node-header">⚡ EngineerOS Core Architecture</div>
+            <div class="node-desc">
+              Auth, Profile, Persistence (LocalStorage & Supabase RLS Cloud
+              Sync).
+            </div>
+            <div class="node-rules">
+              <div class="rule-item">
+                ➔ Tüm verileri izole eder ve senkronize eder.
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="inspector-section">
-          <div class="inspector-section-title">
-            Girdi Bağlantıları (Nereden Geliyor?)
+        <!-- LEVEL 1: KNOWLEDGE SEEDS -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 1: HAM VERİ DEPOLARI (KNOWLEDGE SEED ENGINES)
           </div>
-          <div class="connection-list" id="nodeInputs"></div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-blue">Vocab Engine</span>
+            <div class="node-header">📚 Technical Vocab Bank</div>
+            <div class="node-desc">
+              1200+ Mühendislik terimi (In-situ, Load-bearing vb.).
+            </div>
+            <div class="node-rules">
+              <div class="rule-item">➔ CEFR seviyelerine (A1-C2) ayrılır.</div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-blue">Grammar Engine</span>
+            <div class="node-header">📘 Technical Grammar Bank</div>
+            <div class="node-desc">
+              120+ Saha İngilizcesi dilbilgisi kuralı.
+            </div>
+            <div class="node-rules">
+              <div class="rule-item">➔ Cümle kalıpları ve kural anlatımı.</div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-blue">Level Assessment</span>
+            <div class="node-header">🎯 Placement Level Test</div>
+            <div class="node-desc">
+              Kullanıcının başlangıç seviyesini (CEFR) belirler.
+            </div>
+            <div class="node-rules">
+              <div class="rule-item">
+                ➔ Doğru seviye kelimelerini New havuzuna besler.
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="inspector-section">
-          <div class="inspector-section-title">
-            Çıktı Bağlantıları (Nereye Gidiyor?)
+        <!-- LEVEL 2: PERSONAL POOLS STATE MACHINE -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 2: KİŞİSEL HAVUZ DURUM MAKİNESİ (PERSONAL POOLS)
           </div>
-          <div class="connection-list" id="nodeOutputs"></div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-green">1. Adım Havuzu</span>
+            <div class="node-header">✨ 2.1 NEW Pool</div>
+            <div class="node-desc">
+              Kullanıcının henüz çalışmadığı yeni kelimeler.
+            </div>
+            <div class="node-rules green">
+              <div class="rule-item">
+                ➔ 1-TIK "Biliyorum" ➔ <strong>Learned</strong>
+              </div>
+              <div class="rule-item" style="color: var(--danger)">
+                ➔ Test Yanlış ➔ <strong>Struggling</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-green">2. Adım (Quiz Pool)</span>
+            <div class="node-header">📖 2.2 LEARNED Pool</div>
+            <div class="node-desc">
+              Öğrenilmiş kelimeler (Quiz Havuzunu Oluşturur).
+            </div>
+            <div class="node-rules gold">
+              <div class="rule-item">
+                ➔ Mastered Quiz (1 Doğru) ➔ <strong>Mastered</strong>
+              </div>
+              <div class="rule-item" style="color: var(--danger)">
+                ➔ Quiz Yanlış ➔ <strong>Struggling</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-gold">3. Adım (Kilit Sayacı)</span>
+            <div class="node-header">🏆 2.3 MASTERED Pool</div>
+            <div class="node-desc">
+              Quizle kanıtlanmış tam hakimiyet kelimeleri.
+            </div>
+            <div class="node-rules purple">
+              <div class="rule-item">
+                ➔ Kilit Açım Motoruna (Gating Engine) Beslenir.
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node bad-node">
+            <span class="node-badge badge-red">Kurtarma Havuzu</span>
+            <div class="node-header">⚠️ 2.4 STRUGGLING Pool</div>
+            <div class="node-desc">
+              Yanlış yapılan tüm kelimeler & Mistake Log.
+            </div>
+            <div class="node-rules green">
+              <div class="rule-item">
+                ➔ Kurtarma Quizi Doğru ➔ <strong>Learned</strong>'a Döner.
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="inspector-section">
-          <div class="inspector-section-title">
-            Özel Mantık Kuralı / Kısıtlar
+        <!-- LEVEL 3: UNLOCK GATING ENGINE 1 -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 3: İLK KİLİT MANTIK KAPISI (FIRST GATING ENGINE)
           </div>
-          <div class="inspector-desc" id="nodeRule">-</div>
+
+          <div class="tree-node gate-node">
+            <span class="node-badge badge-purple">Kilit Şartı (200 / 10)</span>
+            <div class="node-header">🔐 UNLOCK GATING ENGINE 1</div>
+            <div class="node-desc">
+              Reading & Writing modüllerini açan eşik motoru.
+            </div>
+            <div class="node-rules purple">
+              <div class="rule-item">
+                • <strong>Vocabulary:</strong> >= 200 (Learned + Mastered)
+              </div>
+              <div class="rule-item">
+                • <strong>Grammar:</strong> >= 10 (Learned + Mastered)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 4: UNLOCKED CORE SKILLS -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 4: AÇILAN TEMEL UYGULAMA BECERİLERİ (CORE APPLIED SKILLS)
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-cyan">Teknik Okuma</span>
+            <div class="node-header">📑 4.1 READING SKILL</div>
+            <div class="node-desc">
+              RFI, NCR, İhale Şartnamesi okuma ve terim çıkarma.
+            </div>
+            <div class="node-rules green">
+              <div class="rule-item">
+                ➔ 5 Görev Tamamlama ➔ Speaking/Listening Açar.
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-cyan">Teknik Yazma</span>
+            <div class="node-header">✍️ 4.2 WRITING SKILL</div>
+            <div class="node-desc">
+              Saha Mektubu, RFI Yanıtı ve İlerleme Raporu Yazma.
+            </div>
+            <div class="node-rules green">
+              <div class="rule-item">
+                ➔ 5 Görev Tamamlama ➔ Speaking/Listening Açar.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 5: ADVANCED SKILLS -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 5: İLERİ SEVİYE UYGULAMALI BECERİLER (ADVANCED SKILLS)
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-purple">AI Konuşma</span>
+            <div class="node-header">🎙️ 5.1 SPEAKING SKILL</div>
+            <div class="node-desc">
+              AI Mülakat Simülatörü, Proje Defansı ve Sözlü Sunum.
+            </div>
+            <div class="node-rules purple">
+              <div class="rule-item">➔ Akıcılık ve Telaffuz Analizi.</div>
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-purple">Saha Dinleme</span>
+            <div class="node-header">🎧 5.2 LISTENING SKILL</div>
+            <div class="node-desc">
+              Saha Telsiz Ses Kayıtları ve Şantiye Dinleme Pratiği.
+            </div>
+            <div class="node-rules purple">
+              <div class="rule-item">➔ Gürültülü Saha Ses Kaydı Çözümleme.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 6: AUXILIARY TOOLS & ANALYTICS -->
+        <div class="tree-level">
+          <div class="tree-level-title">
+            SEVİYE 6: YARDIMCI ARAÇLAR VE ANALİTİK (AUXILIARY & ANALYTICS)
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-blue">Yardımcı Araçlar</span>
+            <div class="node-header">🛠️ 6.1 TOOLS MODULE</div>
+            <div class="node-desc">
+              AI Terim Sözlüğü, Proje Not Defteri ve PDF Aktarımı.
+            </div>
+          </div>
+
+          <div class="tree-node">
+            <span class="node-badge badge-gold">Performans</span>
+            <div class="node-header">📊 6.2 PROGRESS & ANALYTICS</div>
+            <div class="node-desc">
+              CEFR Seviye Radarı, Isı Haritası ve Öğrenme Hızı.
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- SUMMARY TABLE -->
+      <div class="summary-card">
+        <h2 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 1rem">
+          📋 Ağaç Hiyerarşisi Bağlantı ve Kilit Özeti
+        </h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Hiyerarşik Seviye</th>
+              <th>Bileşen / Modül</th>
+              <th>Bağlı Olduğu Üst Düğüm (Parent)</th>
+              <th>Girdi / Çıktı Şartı</th>
+              <th>Durum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Seviye 1</td>
+              <td><strong>Seed Engines</strong></td>
+              <td>Seviye 0 (Core System)</td>
+              <td>1200+ Kelime & 120+ Kural Ham Depo</td>
+              <td>
+                <span class="status-badge"
+                  ><span class="dot"></span> Aktif</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Seviye 2</td>
+              <td><strong>Personal Pools</strong></td>
+              <td>Seed Engines & User Actions</td>
+              <td>1-Tık Learn (New ➔ Learned) & Mastered Quiz</td>
+              <td>
+                <span class="status-badge"
+                  ><span class="dot"></span> Aktif</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Seviye 3</td>
+              <td><strong>Unlock Gating Engine 1</strong></td>
+              <td>Mastered Pool & Grammar Learned</td>
+              <td>Vocab >= 200 & Grammar >= 10</td>
+              <td>
+                <span class="status-badge"
+                  ><span class="dot"></span> Aktif (200/10)</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Seviye 4</td>
+              <td><strong>Reading & Writing</strong></td>
+              <td>Gating Engine 1</td>
+              <td>200 Vocab / 10 Grammar Aşıldığında Açılır</td>
+              <td>
+                <span class="status-badge"
+                  ><span class="dot"></span> Aktif</span
+                >
+              </td>
+            </tr>
+            <tr>
+              <td>Seviye 5</td>
+              <td><strong>Speaking & Listening</strong></td>
+              <td>Reading & Writing (5'er Görev)</td>
+              <td>5 Reading + 5 Writing Görevi Tamamlandığında Açılır</td>
+              <td>
+                <span class="status-badge"
+                  ><span class="dot"></span> Aktif</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <footer>EngineerOS V4.0.1 • Hiyerarşik Ağaç Şema Motoru • 2026</footer>
     </div>
-
-    <script>
-      // NETWORK NODES DEFINITION
-      const nodes = [
-        // DATA ENGINES (BLUE)
-        {
-          id: 'seed_vocab',
-          label: 'Vocab Bank Engine',
-          group: 'engine',
-          color: '#3b82f6',
-          x: 150,
-          y: 200,
-          radius: 24,
-          desc: '1200+ Mühendislik terimi (A1-C2). Level Süzgeciyle ham kelime sağlar.',
-        },
-        {
-          id: 'seed_grammar',
-          label: 'Grammar Bank Engine',
-          group: 'engine',
-          color: '#3b82f6',
-          x: 150,
-          y: 450,
-          radius: 24,
-          desc: '120+ Teknik İngilizce dilbilgisi kuralı.',
-        },
-        {
-          id: 'placement',
-          label: 'Placement Level Test',
-          group: 'engine',
-          color: '#3b82f6',
-          x: 150,
-          y: 325,
-          radius: 22,
-          desc: 'Kullanıcının CEFR seviyesini belirler.',
-        },
-
-        // PERSONAL POOLS (GREEN / RED)
-        {
-          id: 'pool_new',
-          label: 'NEW Pool',
-          group: 'pool',
-          color: '#10b981',
-          x: 380,
-          y: 200,
-          radius: 28,
-          desc: 'Görülmemiş yeni kelimeler havuzu.',
-        },
-        {
-          id: 'pool_learned',
-          label: 'LEARNED Pool',
-          group: 'pool',
-          color: '#10b981',
-          x: 600,
-          y: 200,
-          radius: 32,
-          desc: '1-Tık "Biliyorum" ile aktarılan ve Quiz Havuzunu oluşturan alan.',
-        },
-        {
-          id: 'pool_mastered',
-          label: 'MASTERED Pool 🏆',
-          group: 'pool',
-          color: '#f59e0b',
-          x: 820,
-          y: 200,
-          radius: 36,
-          desc: 'Quizle kanıtlanmış tam hakimiyet kelimeleri. Kilit sayılarını belirler.',
-        },
-        {
-          id: 'pool_struggling',
-          label: 'STRUGGLING Pool ⚠️',
-          group: 'pool_bad',
-          color: '#ef4444',
-          x: 490,
-          y: 360,
-          radius: 28,
-          desc: 'Quizde/pratikte yanlış yapılan zayıf kelimeler havuzu.',
-        },
-        {
-          id: 'mistake_log',
-          label: 'MISTAKE LOG 📝',
-          group: 'pool_bad',
-          color: '#ef4444',
-          x: 490,
-          y: 480,
-          radius: 24,
-          desc: 'Geçmiş tüm hataların analiz kaydı.',
-        },
-
-        // SKILL MODULES (GOLD)
-        {
-          id: 'mod_vocab',
-          label: 'VOCABULARY Module',
-          group: 'skill',
-          color: '#3b82f6',
-          x: 380,
-          y: 70,
-          radius: 26,
-          desc: 'Kelime Kartları ve Alıştırmalar.',
-        },
-        {
-          id: 'mod_grammar',
-          label: 'GRAMMAR Module',
-          group: 'skill',
-          color: '#3b82f6',
-          x: 380,
-          y: 580,
-          radius: 26,
-          desc: 'Grammar Kuralları ve Alıştırma.',
-        },
-
-        // GATING ENGINE (PURPLE)
-        {
-          id: 'gating_engine',
-          label: 'UNLOCK GATING ENGINE 🔐',
-          group: 'gating',
-          color: '#8b5cf6',
-          x: 820,
-          y: 400,
-          radius: 38,
-          desc: 'Vocab >= 200 & Grammar >= 10 kilit kontrol motoru.',
-        },
-
-        // UNLOCKED SKILLS (CYAN / GOLD)
-        {
-          id: 'mod_reading',
-          label: 'READING Module 📑',
-          group: 'skill',
-          color: '#06b6d4',
-          x: 1080,
-          y: 250,
-          radius: 30,
-          desc: 'RFI, NCR, İhale Şartnamesi Okuma.',
-        },
-        {
-          id: 'mod_writing',
-          label: 'WRITING Module ✍️',
-          group: 'skill',
-          color: '#06b6d4',
-          x: 1080,
-          y: 400,
-          radius: 30,
-          desc: 'Saha Mektubu, Email ve Raporlama.',
-        },
-        {
-          id: 'mod_speaking',
-          label: 'SPEAKING Module 🎙️',
-          group: 'skill',
-          color: '#8b5cf6',
-          x: 1300,
-          y: 250,
-          radius: 32,
-          desc: 'AI Mülakat Simülatörü ve Proje Defansı.',
-        },
-        {
-          id: 'mod_listening',
-          label: 'LISTENING Module 🎧',
-          group: 'skill',
-          color: '#8b5cf6',
-          x: 1300,
-          y: 400,
-          radius: 32,
-          desc: 'Saha Telsiz Ses Kayıtları.',
-        },
-
-        // PERSISTENCE (GRAY)
-        {
-          id: 'zustand_store',
-          label: 'Zustand Local Store',
-          group: 'system',
-          color: '#64748b',
-          x: 600,
-          y: 650,
-          radius: 24,
-          desc: 'Anlık UI durumu ve hızlı tarayıcı hafızası.',
-        },
-        {
-          id: 'supabase_db',
-          label: 'Supabase Cloud DB ☁️',
-          group: 'system',
-          color: '#64748b',
-          x: 820,
-          y: 650,
-          radius: 28,
-          desc: 'RLS korumalı bulut veritabanı.',
-        },
-      ];
-
-      // LINKS DEFINITION
-      const links = [
-        // ENGINE TO POOLS
-        {
-          source: 'seed_vocab',
-          target: 'pool_new',
-          label: 'Level Süzgeci',
-          color: '#3b82f6',
-        },
-        {
-          source: 'seed_grammar',
-          target: 'mod_grammar',
-          label: 'Kural Yükleme',
-          color: '#3b82f6',
-        },
-        {
-          source: 'placement',
-          target: 'pool_new',
-          label: 'Seviye Belirleme',
-          color: '#3b82f6',
-        },
-
-        // POOL TRANSITIONS
-        {
-          source: 'pool_new',
-          target: 'pool_learned',
-          label: '1-TIK "Biliyorum"',
-          color: '#10b981',
-          animated: true,
-        },
-        {
-          source: 'pool_new',
-          target: 'pool_struggling',
-          label: 'Test Yanlış',
-          color: '#ef4444',
-        },
-        {
-          source: 'pool_learned',
-          target: 'pool_mastered',
-          label: 'Quiz (1 Doğru)',
-          color: '#f59e0b',
-          animated: true,
-        },
-        {
-          source: 'pool_learned',
-          target: 'pool_struggling',
-          label: 'Quiz Yanlış',
-          color: '#ef4444',
-        },
-        {
-          source: 'pool_struggling',
-          target: 'pool_learned',
-          label: 'Kurtarma Quizi',
-          color: '#10b981',
-        },
-        {
-          source: 'pool_struggling',
-          target: 'mistake_log',
-          label: 'Hata Kaydı',
-          color: '#ef4444',
-        },
-
-        // GATING CONNECTIONS
-        {
-          source: 'pool_mastered',
-          target: 'gating_engine',
-          label: 'Vocab >= 200',
-          color: '#8b5cf6',
-          animated: true,
-        },
-        {
-          source: 'mod_grammar',
-          target: 'gating_engine',
-          label: 'Grammar >= 10',
-          color: '#8b5cf6',
-          animated: true,
-        },
-
-        {
-          source: 'gating_engine',
-          target: 'mod_reading',
-          label: 'Kilit Açıldı',
-          color: '#06b6d4',
-          animated: true,
-        },
-        {
-          source: 'gating_engine',
-          target: 'mod_writing',
-          label: 'Kilit Açıldı',
-          color: '#06b6d4',
-          animated: true,
-        },
-
-        {
-          source: 'mod_reading',
-          target: 'mod_speaking',
-          label: '5 Görev',
-          color: '#8b5cf6',
-        },
-        {
-          source: 'mod_writing',
-          target: 'mod_speaking',
-          label: '5 Görev',
-          color: '#8b5cf6',
-        },
-        {
-          source: 'mod_reading',
-          target: 'mod_listening',
-          label: '5 Görev',
-          color: '#8b5cf6',
-        },
-        {
-          source: 'mod_writing',
-          target: 'mod_listening',
-          label: '5 Görev',
-          color: '#8b5cf6',
-        },
-
-        // PERSISTENCE
-        {
-          source: 'pool_learned',
-          target: 'zustand_store',
-          label: 'Local Persist',
-          color: '#64748b',
-        },
-        {
-          source: 'pool_mastered',
-          target: 'zustand_store',
-          label: 'Local Persist',
-          color: '#64748b',
-        },
-        {
-          source: 'zustand_store',
-          target: 'supabase_db',
-          label: 'Cloud Sync (RLS)',
-          color: '#64748b',
-        },
-      ];
-
-      // CANVAS & INTERACTION SETUP
-      const canvas = document.getElementById('graphCanvas');
-      const ctx = canvas.getContext('2d');
-
-      let width = (canvas.width = canvas.offsetWidth);
-      let height = (canvas.height = canvas.offsetHeight);
-
-      let transform = { x: 0, y: 0, scale: 1 };
-      let isDragging = false;
-      let dragStart = { x: 0, y: 0 };
-      let selectedNode = null;
-      let activeFilter = 'all';
-
-      let animOffset = 0;
-
-      window.addEventListener('resize', () => {
-        width = canvas.width = canvas.offsetWidth;
-        height = canvas.height = canvas.offsetHeight;
-      });
-
-      // DRAW LOOP
-      function draw() {
-        ctx.clearRect(0, 0, width, height);
-
-        ctx.save();
-        ctx.translate(transform.x, transform.y);
-        ctx.scale(transform.scale, transform.scale);
-
-        animOffset += 0.5;
-
-        // DRAW LINKS
-        links.forEach((link) => {
-          const sourceNode = nodes.find((n) => n.id === link.source);
-          const targetNode = nodes.find((n) => n.id === link.target);
-
-          if (!sourceNode || !targetNode) return;
-
-          // FILTER CHECK
-          if (
-            activeFilter === 'vocab' &&
-            ![
-              'pool_new',
-              'pool_learned',
-              'pool_mastered',
-              'pool_struggling',
-            ].includes(sourceNode.id) &&
-            ![
-              'pool_new',
-              'pool_learned',
-              'pool_mastered',
-              'pool_struggling',
-            ].includes(targetNode.id)
-          ) {
-            return;
-          }
-
-          ctx.beginPath();
-          ctx.moveTo(sourceNode.x, sourceNode.y);
-
-          // CURVED LINES
-          const midX = (sourceNode.x + targetNode.x) / 2;
-          const midY = (sourceNode.y + targetNode.y) / 2 - 15;
-          ctx.quadraticCurveTo(midX, midY, targetNode.x, targetNode.y);
-
-          ctx.strokeStyle = link.color;
-          ctx.lineWidth =
-            selectedNode &&
-            (selectedNode.id === sourceNode.id ||
-              selectedNode.id === targetNode.id)
-              ? 3.5
-              : 1.5;
-          ctx.globalAlpha =
-            selectedNode &&
-            !(
-              selectedNode.id === sourceNode.id ||
-              selectedNode.id === targetNode.id
-            )
-              ? 0.2
-              : 0.75;
-          ctx.stroke();
-
-          // LINK LABEL
-          ctx.font = '10px system-ui';
-          ctx.fillStyle = '#94a3b8';
-          ctx.fillText(link.label, midX - 15, midY - 5);
-
-          // ANIMATED PARTICLES ON ACTIVE LINES
-          if (link.animated) {
-            const p = (animOffset % 100) / 100;
-            const px =
-              (1 - p) * (1 - p) * sourceNode.x +
-              2 * (1 - p) * p * midX +
-              p * p * targetNode.x;
-            const py =
-              (1 - p) * (1 - p) * sourceNode.y +
-              2 * (1 - p) * p * midY +
-              p * p * targetNode.y;
-
-            ctx.beginPath();
-            ctx.arc(px, py, 4, 0, Math.PI * 2);
-            ctx.fillStyle = link.color;
-            ctx.shadowColor = link.color;
-            ctx.shadowBlur = 10;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-          }
-        });
-
-        // DRAW NODES
-        nodes.forEach((node) => {
-          ctx.beginPath();
-          ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-
-          ctx.fillStyle = node.color;
-          ctx.shadowColor = node.color;
-          ctx.shadowBlur = selectedNode?.id === node.id ? 25 : 10;
-          ctx.globalAlpha =
-            selectedNode && selectedNode.id !== node.id ? 0.3 : 1;
-          ctx.fill();
-          ctx.shadowBlur = 0;
-
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = selectedNode?.id === node.id ? 3 : 1.5;
-          ctx.stroke();
-
-          // NODE LABEL
-          ctx.font = 'bold 12px system-ui';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.fillText(node.label, node.x, node.y + node.radius + 16);
-        });
-
-        ctx.restore();
-        requestAnimationFrame(draw);
-      }
-
-      // CANVAS INTERACTIONS
-      canvas.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        dragStart = { x: e.clientX - transform.x, y: e.clientY - transform.y };
-
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = (e.clientX - rect.left - transform.x) / transform.scale;
-        const mouseY = (e.clientY - rect.top - transform.y) / transform.scale;
-
-        const clicked = nodes.find(
-          (n) => Math.hypot(n.x - mouseX, n.y - mouseY) <= n.radius
-        );
-        if (clicked) {
-          selectedNode = clicked;
-          openInspector(clicked);
-        }
-      });
-
-      canvas.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        transform.x = e.clientX - dragStart.x;
-        transform.y = e.clientY - dragStart.y;
-      });
-
-      canvas.addEventListener('mouseup', () => (isDragging = false));
-
-      canvas.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const zoom = e.deltaY < 0 ? 1.1 : 0.9;
-        transform.scale *= zoom;
-      });
-
-      // INSPECTOR PANEL LOGIC
-      function openInspector(node) {
-        document.getElementById('inspector').style.display = 'block';
-        document.getElementById('nodeTitle').innerText = node.label;
-        document.getElementById('nodeDesc').innerText = node.desc;
-
-        const inputs = links
-          .filter((l) => l.target === node.id)
-          .map(
-            (l) =>
-              `<li class="connection-item"><span>← ${nodes.find((n) => n.id === l.source).label}</span><span style="color:${l.color}">${l.label}</span></li>`
-          )
-          .join('');
-        const outputs = links
-          .filter((l) => l.source === node.id)
-          .map(
-            (l) =>
-              `<li class="connection-item"><span>→ ${nodes.find((n) => n.id === l.target).label}</span><span style="color:${l.color}">${l.label}</span></li>`
-          )
-          .join('');
-
-        document.getElementById('nodeInputs').innerHTML =
-          inputs ||
-          '<span style="color:var(--text-sub)">Girdi yok (Başlangıç Düğümü)</span>';
-        document.getElementById('nodeOutputs').innerHTML =
-          outputs ||
-          '<span style="color:var(--text-sub)">Çıktı yok (Uç Düğüm)</span>';
-        document.getElementById('nodeRule').innerText =
-          `Düğüm Grubu: ${node.group.toUpperCase()}`;
-      }
-
-      function closeInspector() {
-        document.getElementById('inspector').style.display = 'none';
-        selectedNode = null;
-      }
-
-      function filterGraph(type) {
-        activeFilter = type;
-        document
-          .querySelectorAll('.controls .btn')
-          .forEach((b) => b.classList.remove('active'));
-        if (type === 'all')
-          document.getElementById('btnAll').classList.add('active');
-        if (type === 'vocab')
-          document.getElementById('btnVocab').classList.add('active');
-        if (type === 'skills')
-          document.getElementById('btnSkills').classList.add('active');
-      }
-
-      function resetView() {
-        transform = { x: 0, y: 0, scale: 1 };
-        selectedNode = null;
-        closeInspector();
-        filterGraph('all');
-      }
-
-      // INITIALIZE
-      draw();
-    </script>
   </body>
 </html>
