@@ -18,6 +18,8 @@ export interface WordProgress {
 
 export const MASTERY_REQUIRED_CORRECT = 3;
 export const QUIZ_THRESHOLD = 200;
+export const STRUGGLING_THRESHOLD = 2;
+export const MASTERED_DROP_THRESHOLD = 3;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
@@ -94,13 +96,31 @@ export const VocabularyProgressService = {
 
   onQuizIncorrect(current: WordProgress): WordProgress {
     const now = new Date().toISOString();
+    const newFailCount = current.failCount + 1;
 
     if (current.status === 'mastered') {
+      if (newFailCount >= MASTERED_DROP_THRESHOLD) {
+        return {
+          ...current,
+          status: 'learned',
+          correctCount: Math.max(0, current.correctCount - 1),
+          failCount: newFailCount,
+          lastQuizAt: now,
+          lastPracticedAt: now,
+        };
+      }
       return {
         ...current,
-        status: 'learned',
-        correctCount: Math.max(0, current.correctCount - 1),
-        failCount: current.failCount + 1,
+        failCount: newFailCount,
+        lastQuizAt: now,
+      };
+    }
+
+    if (newFailCount >= STRUGGLING_THRESHOLD) {
+      return {
+        ...current,
+        status: 'struggling',
+        failCount: newFailCount,
         lastQuizAt: now,
         lastPracticedAt: now,
       };
@@ -108,8 +128,7 @@ export const VocabularyProgressService = {
 
     return {
       ...current,
-      status: 'struggling',
-      failCount: current.failCount + 1,
+      failCount: newFailCount,
       lastQuizAt: now,
       lastPracticedAt: now,
     };
