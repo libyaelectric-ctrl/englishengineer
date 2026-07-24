@@ -14,6 +14,8 @@ export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isLanding = location.pathname === '/';
+  const isPricing = location.pathname === '/pricing';
+  const hideNav = isLanding || isPricing;
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
 
@@ -26,8 +28,8 @@ export const PublicLayout = () => {
         Skip to content
       </a>
 
-      {/* Hide nav on landing page - landing has its own glass morphism nav */}
-      {!isLanding && (
+      {/* Hide nav on landing and pricing pages - they have their own glass morphism nav */}
+      {!hideNav && (
         <header className="sticky top-0 z-50 border-b border-border-soft bg-background/95 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <Link

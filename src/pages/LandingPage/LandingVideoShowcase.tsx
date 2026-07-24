@@ -1,5 +1,14 @@
 import { useState, useRef } from 'react';
-import { Play, Pause, Sparkles, Volume2, VolumeX, Maximize2, ShieldCheck, Zap } from 'lucide-react';
+import {
+  Play,
+  Pause,
+  Sparkles,
+  Volume2,
+  VolumeX,
+  Maximize2,
+  ShieldCheck,
+  Zap,
+} from 'lucide-react';
 import { AnimatedSection, SectionIntro } from './AnimatedComponents';
 
 export function LandingVideoShowcase() {
@@ -82,6 +91,12 @@ export function LandingVideoShowcase() {
               poster="/agentic/arc.webp"
             >
               <source src="/agentic-hero.mp4" type="video/mp4" />
+              <track
+                kind="captions"
+                src="/captions/engvox-demo.vtt"
+                srcLang="en"
+                label="English"
+              />
             </video>
 
             {/* Video Controls Overlay */}
@@ -93,7 +108,11 @@ export function LandingVideoShowcase() {
                   className="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition cursor-pointer text-white"
                   title={isPlaying ? 'Pause' : 'Play'}
                 >
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  {isPlaying ? (
+                    <Pause className="h-4 w-4" />
+                  ) : (
+                    <Play className="h-4 w-4" />
+                  )}
                 </button>
 
                 <button
@@ -102,7 +121,11 @@ export function LandingVideoShowcase() {
                   className="rounded-lg bg-white/20 p-2 hover:bg-white/30 transition cursor-pointer text-white"
                   title={isMuted ? 'Unmute' : 'Mute'}
                 >
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  {isMuted ? (
+                    <VolumeX className="h-4 w-4" />
+                  ) : (
+                    <Volume2 className="h-4 w-4" />
+                  )}
                 </button>
 
                 <span className="text-xs font-mono font-semibold text-white/80 hidden sm:inline">

@@ -7,7 +7,6 @@ import type {
   CommunicationGoal,
   ElectricalSubdomain,
   IndustryId,
-  InterfaceLanguage,
   ProfessionId,
   ProfessionalTrack,
   SelfReportedCefr,
@@ -16,10 +15,6 @@ import type {
 } from '@/features/profile/profile.types';
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { PlacementService } from '@/features/placement';
-import {
-  LocalizationService,
-  useLocalizationStore,
-} from '@/features/localization';
 import { ProfileStep } from './steps/ProfileStep';
 import { RoleStep } from './steps/RoleStep';
 import { GoalsStep } from './steps/GoalsStep';
@@ -53,7 +48,6 @@ const buildSavePayload = (overrides: {
   careerGoal: string;
   country: string;
   timezone: string;
-  interfaceLanguage: InterfaceLanguage;
   minutes: number;
   taskCount: number;
 }) => ({
@@ -70,7 +64,6 @@ const buildSavePayload = (overrides: {
   careerGoal: overrides.careerGoal,
   country: overrides.country,
   timezone: overrides.timezone,
-  interfaceLanguage: overrides.interfaceLanguage,
   dailyTarget: { minutes: overrides.minutes, taskCount: overrides.taskCount },
 });
 
@@ -84,10 +77,7 @@ const StepContent = ({
   setCountry,
   timezone,
   setTimezone,
-  interfaceLanguage,
-  setInterfaceLanguage,
   initialTimezone,
-  setGlobalLanguage,
   professionalTrack,
   setProfessionalTrack,
   electricalSubdomain,
@@ -114,10 +104,7 @@ const StepContent = ({
   setCountry: React.Dispatch<React.SetStateAction<string>>;
   timezone: string;
   setTimezone: React.Dispatch<React.SetStateAction<string>>;
-  interfaceLanguage: InterfaceLanguage;
-  setInterfaceLanguage: React.Dispatch<React.SetStateAction<InterfaceLanguage>>;
   initialTimezone: string;
-  setGlobalLanguage: (l: InterfaceLanguage) => void;
   professionalTrack: ProfessionalTrack;
   setProfessionalTrack: React.Dispatch<React.SetStateAction<ProfessionalTrack>>;
   electricalSubdomain: ElectricalSubdomain;
@@ -152,10 +139,7 @@ const StepContent = ({
         setCountry={setCountry}
         timezone={timezone}
         setTimezone={setTimezone}
-        interfaceLanguage={interfaceLanguage}
-        setInterfaceLanguage={setInterfaceLanguage}
         initialTimezone={initialTimezone}
-        setGlobalLanguage={setGlobalLanguage}
       />
     );
   }
@@ -168,7 +152,6 @@ const StepContent = ({
         setElectricalSubdomain={setElectricalSubdomain}
         industryId={industryId}
         setIndustryId={setIndustryId}
-        interfaceLanguage={interfaceLanguage}
       />
     );
   }
@@ -249,7 +232,6 @@ const OnboardingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const setGlobalLanguage = useLocalizationStore((state) => state.setLanguage);
   const userId = currentUser?.id ?? 'local-user';
   const initial = useMemo(
     () => LearningProfileRepository.getProfile(userId),
@@ -280,9 +262,6 @@ const OnboardingPage = () => {
   const [careerGoal, setCareerGoal] = useState(initial.careerGoal);
   const [country, setCountry] = useState(initial.country);
   const [timezone, setTimezone] = useState(initial.timezone);
-  const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(
-    initial.interfaceLanguage
-  );
   const isLiteMode =
     new URLSearchParams(location.search).get('mode') === 'lite';
 
@@ -299,7 +278,6 @@ const OnboardingPage = () => {
         careerGoal,
         country,
         timezone,
-        interfaceLanguage,
         minutes,
         taskCount,
       }),
@@ -347,10 +325,7 @@ const OnboardingPage = () => {
                 Personal setup
               </p>
               <h1 className="text-xl font-medium text-foreground sm:text-2xl">
-                {LocalizationService.translate(
-                  'onboarding.title',
-                  interfaceLanguage
-                )}
+                Personal setup
               </h1>
             </div>
           </div>
@@ -390,10 +365,7 @@ const OnboardingPage = () => {
             setCountry={setCountry}
             timezone={timezone}
             setTimezone={setTimezone}
-            interfaceLanguage={interfaceLanguage}
-            setInterfaceLanguage={setInterfaceLanguage}
             initialTimezone={initial.timezone}
-            setGlobalLanguage={setGlobalLanguage}
             professionalTrack={professionalTrack}
             setProfessionalTrack={setProfessionalTrack}
             electricalSubdomain={electricalSubdomain}

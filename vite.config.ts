@@ -7,6 +7,37 @@ import { visualizer } from 'rollup-plugin-visualizer';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
+const VENDOR_CHUNKS: [string, string][] = [
+  ['react-dom', 'vendor-react-dom'],
+  ['react-router', 'vendor-router'],
+  ['@supabase', 'vendor-supabase'],
+  ['@tanstack', 'vendor-query'],
+  ['motion', 'vendor-motion'],
+  ['framer', 'vendor-motion'],
+  ['zustand', 'vendor-state'],
+  ['lucide', 'vendor-icons'],
+  ['isomorphic-dompurify', 'vendor-sanitize'],
+  ['rxjs', 'vendor-rxjs'],
+  ['zod', 'vendor-zod'],
+  ['es-toolkit', 'vendor-utils'],
+  ['date-fns', 'vendor-utils'],
+  ['@sentry', 'vendor-sentry'],
+];
+
+function getVendorChunk(id: string): string | undefined {
+  for (const [pattern, chunk] of VENDOR_CHUNKS) {
+    if (id.includes(pattern)) return chunk;
+  }
+  return 'vendor-misc';
+}
+
+function getDataChunk(id: string): string | undefined {
+  const levelMatch = id.match(/by-level\/([a-c][1-2])\.seed/i);
+  if (!levelMatch) return undefined;
+  const prefix = id.includes('vocabulary') ? 'vocab' : 'grammar';
+  return `${prefix}-seed-${levelMatch[1].toLowerCase()}`;
+}
+
 export default defineConfig(() => {
   return {
     plugins: [
@@ -36,28 +67,9 @@ export default defineConfig(() => {
       rollupOptions: {
         output: {
           manualChunks(id) {
-            if (id.includes('node_modules')) {
-              if (id.includes('react-dom')) return 'vendor-react-dom';
-              if (id.includes('react-router')) return 'vendor-router';
-              if (id.includes('@supabase')) return 'vendor-supabase';
-              if (id.includes('@tanstack')) return 'vendor-query';
-              if (id.includes('motion') || id.includes('framer'))
-                return 'vendor-motion';
-              if (id.includes('zustand')) return 'vendor-state';
-              if (id.includes('lucide')) return 'vendor-icons';
-              if (id.includes('isomorphic-dompurify')) return 'vendor-sanitize';
-              return 'vendor-misc';
-            }
-            if (id.includes('/data/vocabulary/by-level/')) {
-              const match = id.match(/by-level\/([a-c][1-2])\.seed/i);
-              if (match) return `vocab-seed-${match[1].toLowerCase()}`;
-              return 'vocab-seed';
-            }
-            if (id.includes('/data/grammar/by-level/')) {
-              const match = id.match(/by-level\/([a-c][1-2])\.seed/i);
-              if (match) return `grammar-seed-${match[1].toLowerCase()}`;
-              return 'grammar-seed';
-            }
+            if (id.includes('node_modules')) return getVendorChunk(id);
+            if (id.includes('/data/') && id.includes('by-level/'))
+              return getDataChunk(id) ?? 'seed-data';
             if (id.includes('/data/') || id.includes('seed'))
               return 'seed-data';
           },

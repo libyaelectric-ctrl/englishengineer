@@ -7,6 +7,7 @@ import {
   MessageSquareText,
   Trophy,
   Lock,
+  ShieldCheck,
 } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -16,6 +17,7 @@ import { LevelContentFilter } from '@/features/level-system';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
+import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
 
 const READING_THRESHOLD = 5;
 const WRITING_THRESHOLD = 5;
@@ -37,7 +39,7 @@ import {
   useSpeakingPage,
 } from './SpeakingPage/index';
 
-type SpeakingTab = 'roleplay' | 'interview';
+type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
 const RoleplayTab = () => {
   const {
@@ -359,9 +361,25 @@ const SpeakingPage = () => {
           <Trophy className="h-4 w-4" />
           Interview Simulator
         </Button>
+        <Button
+          role="tab"
+          aria-selected={speakingTab === 'defense'}
+          variant={speakingTab === 'defense' ? 'primary' : 'ghost'}
+          onClick={() => setSpeakingTab('defense')}
+          className="rounded-[4px] cursor-pointer font-bold uppercase tracking-wider text-[10px] h-9 border border-border-soft bg-surface hover:bg-[#0047bb]/5"
+        >
+          <ShieldCheck className="h-4 w-4" />
+          2. Defense Simulators (6-10)
+        </Button>
       </div>
 
-      {speakingTab === 'interview' ? <InterviewSimulator /> : <RoleplayTab />}
+      {speakingTab === 'interview' ? (
+        <InterviewSimulator />
+      ) : speakingTab === 'defense' ? (
+        <DefenseSimulator />
+      ) : (
+        <RoleplayTab />
+      )}
 
       <ScoreFeedbackOverlay
         result={scoreResult}

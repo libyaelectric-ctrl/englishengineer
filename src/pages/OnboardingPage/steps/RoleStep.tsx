@@ -6,10 +6,8 @@ import {
 import type {
   ElectricalSubdomain,
   IndustryId,
-  InterfaceLanguage,
   ProfessionalTrack,
 } from '@/features/profile/profile.types';
-import { LocalizationService } from '@/features/localization';
 
 type RoleStepProps = {
   professionalTrack: ProfessionalTrack;
@@ -18,7 +16,6 @@ type RoleStepProps = {
   setElectricalSubdomain: (e: ElectricalSubdomain) => void;
   industryId: IndustryId | '';
   setIndustryId: (id: IndustryId | '') => void;
-  interfaceLanguage: InterfaceLanguage;
 };
 
 export const RoleStep = ({
@@ -28,22 +25,15 @@ export const RoleStep = ({
   setElectricalSubdomain,
   industryId,
   setIndustryId,
-  interfaceLanguage,
 }: RoleStepProps) => (
   <section>
     <h2 className="text-xl font-medium">Tell us where you work</h2>
     <p className="mt-2 text-sm text-muted-copy">
-      {LocalizationService.translate(
-        'onboarding.roleContext',
-        interfaceLanguage
-      )}
+      This helps us tailor scenarios to your engineering discipline.
     </p>
     <div className="mt-6 grid gap-4 sm:grid-cols-2">
       <label className="text-sm font-medium sm:col-span-2">
-        {LocalizationService.translate(
-          'onboarding.professionalTrack',
-          interfaceLanguage
-        )}
+        Professional track
         <select
           value={professionalTrack}
           onChange={(event) =>
@@ -60,10 +50,7 @@ export const RoleStep = ({
         </select>
       </label>
       <label className="text-sm font-medium">
-        {LocalizationService.translate(
-          'onboarding.electricalFocus',
-          interfaceLanguage
-        )}
+        Electrical focus area
         <select
           value={electricalSubdomain}
           onChange={(event) =>
@@ -79,10 +66,7 @@ export const RoleStep = ({
         </select>
       </label>
       <label className="text-sm font-medium">
-        {LocalizationService.translate(
-          'onboarding.industry',
-          interfaceLanguage
-        )}
+        Industry
         <select
           value={industryId}
           onChange={(event) => setIndustryId(event.target.value as IndustryId)}

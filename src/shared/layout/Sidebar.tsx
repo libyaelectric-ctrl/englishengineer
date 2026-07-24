@@ -14,8 +14,8 @@ import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { cn } from '@/shared/utils/cn';
 import { Navigation } from './Navigation';
-import { SidebarMascotBar } from './SidebarMascotBar';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 export const Sidebar: React.FC = () => {
   const { isSidebarOpen, toggleSidebar } = useAppStore();
@@ -89,8 +89,8 @@ export const Sidebar: React.FC = () => {
                 <span className="text-lg font-bold leading-tight text-foreground">
                   EngVox
                 </span>
-                <span className="text-[10px] font-medium text-muted-copy leading-tight">
-                  V.4.0.1
+                <span className="text-[10px] font-bold text-primary leading-tight font-mono">
+                  V.{PRODUCT_VERSION}
                 </span>
               </div>
             </div>
@@ -106,9 +106,6 @@ export const Sidebar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mascot Bar right under EngVox Logo Header */}
-          <SidebarMascotBar />
-
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">
             <Navigation
@@ -118,7 +115,7 @@ export const Sidebar: React.FC = () => {
             />
           </div>
 
-          {/* User Info + Alarm + Billing */}
+          {/* User Info + Billing */}
           {currentUser && (
             <div className="shrink-0 border-t border-border-soft p-4 space-y-2.5">
               {/* Billing Hub Trigger */}

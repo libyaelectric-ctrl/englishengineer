@@ -1,4 +1,4 @@
-import { Check, MinusCircle, ShieldAlert, Moon, Sun } from 'lucide-react';
+import { Check, MinusCircle, Sparkles, Building2, Zap } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -9,9 +9,10 @@ import {
 } from '@/features/billing';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { useAuthStore } from '@/features/auth';
-import { useAppStore } from '@/store/app.store';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
+import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
+import { Navbar } from '@/pages/LandingPage/Navbar';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
@@ -40,16 +41,24 @@ const getAccessBadge = (id: string): string => {
   }
 };
 
-import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
+const getCalculatedPrice = (
+  plan: CommercialPlanPreview,
+  isAnnual: boolean
+): string => {
+  if (plan.id === 'free') return '$0';
+  if (plan.id === 'pro') return isAnnual ? '$23' : '$29';
+  if (plan.id === 'project') return isAnnual ? '$47' : '$59';
+  if (plan.id === 'exec') return isAnnual ? '$79' : '$99';
+  if (plan.id === 'private') return isAnnual ? '$799' : '$999';
+  return plan.price;
+};
 
 const PricingPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, initialize: initializeAuth } = useAuthStore();
-  const theme = useAppStore((s) => s.theme);
-  const setTheme = useAppStore((s) => s.setTheme);
 
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(false);
   const [teamSeats, setTeamSeats] = useState(5);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
 
@@ -68,9 +77,6 @@ const PricingPage = () => {
   const [billingReadiness, setBillingReadiness] = useState<
     'loading' | 'ready' | 'unavailable'
   >('loading');
-  const [billingBanner, setBillingBanner] = useState(
-    'Checking billing status...'
-  );
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [checkoutPlanId, setCheckoutPlanId] = useState<BillingPlanId | null>(
     null
@@ -80,7 +86,6 @@ const PricingPage = () => {
   useEffect(() => {
     if (!billingApiUrl) {
       setBillingReadiness('unavailable');
-      setBillingBanner('Billing service is not configured.');
       return;
     }
     let mounted = true;
@@ -94,15 +99,12 @@ const PricingPage = () => {
         if (!mounted) return;
         if (h?.stripeConfigured) {
           setBillingReadiness('ready');
-          setBillingBanner('Secure checkout available.');
         } else {
           setBillingReadiness('unavailable');
-          setBillingBanner('Billing service is not verified.');
         }
       } catch {
         if (!mounted) return;
         setBillingReadiness('unavailable');
-        setBillingBanner('Billing service is unavailable.');
       }
     };
     void check();
@@ -141,7 +143,7 @@ const PricingPage = () => {
   }) => (
     <Link
       to={currentUser ? '/dashboard' : '/start'}
-      className="mt-6 flex h-10 w-full items-center justify-center rounded-[4px] border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
+      className="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
     >
       {currentUser ? 'Go to dashboard' : 'Start free'}
     </Link>
@@ -158,6 +160,7 @@ const PricingPage = () => {
     checkoutPlanId,
     isBillingHealthLoading,
     currentUser,
+    isAnnual,
     onCheckout,
   }: {
     plan: CommercialPlanPreview;
@@ -167,78 +170,105 @@ const PricingPage = () => {
     checkoutPlanId: string | null;
     isBillingHealthLoading: boolean;
     currentUser: { id: string } | null;
+    isAnnual: boolean;
     onCheckout: (planId: BillingPlanId) => void;
   }) => (
     <article
       key={plan.id}
-      className={`relative flex flex-col rounded-[4px] border p-6 bg-surface ${
+      className={`relative flex flex-col justify-between rounded-2xl border p-5 bg-surface/90 backdrop-blur-xl transition-all duration-300 hover:border-border-hover shadow-lg ${
         isPlanCardHighlighted(plan.id)
-          ? 'border-primary/50 shadow-md'
-          : 'border-border-soft shadow-sm'
+          ? 'border-primary/60 ring-2 ring-primary/20'
+          : 'border-border-soft'
       }`}
     >
       {plan.id === 'pro' && (
-        <div className="absolute -top-3 left-4 rounded-[4px] bg-primary px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
-          Recommended
+        <div className="absolute -top-3 left-4 rounded-full bg-primary px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1">
+          <Sparkles className="h-3 w-3" /> Recommended
         </div>
       )}
-      <div className="flex items-start justify-between">
-        <p className="text-sm font-bold text-foreground">{plan.name}</p>
-        <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-          {getAccessBadge(plan.id)}
-        </span>
-      </div>
-      <p className="mt-4 text-3xl font-extrabold tracking-tight text-foreground">
-        {plan.price}
-      </p>
-      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-        {plan.cadence}
-      </p>
-      <p className="mt-3 min-h-[3rem] text-xs text-muted-copy leading-relaxed font-medium">
-        {plan.audience}
-      </p>
-      <div className="mt-3 rounded-[4px] border border-border-soft bg-background p-3 shadow-sm">
-        <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-          Best for
-        </p>
-        <p className="mt-0.5 text-xs font-bold text-foreground">
-          {plan.bestFor}
-        </p>
-      </div>
-      <p className="mt-4 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
-        Included
-      </p>
-      <ul className="mt-2 flex-1 space-y-2">
-        {plan.benefits.map((b) => (
-          <li
-            key={b}
-            className="flex gap-2 text-xs text-muted-copy font-medium"
-          >
-            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-            {b}
-          </li>
-        ))}
-      </ul>
-      <div className="mt-3 flex gap-2 border-t border-border-soft pt-3 text-[10px] text-muted-copy font-medium">
-        <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
-        {plan.notIncluded}
-      </div>
-      {plan.id === 'free' ? (
-        <FreePlanButton currentUser={currentUser} />
-      ) : (
-        <PlanAction
-          plan={plan}
-          isCurrent={subscription?.planId === plan.id}
-          inProgress={isCheckoutLoading && checkoutPlanId === plan.id}
-          disabled={
-            !billingEnabled ||
-            (isCheckoutLoading && checkoutPlanId === plan.id) ||
-            isBillingHealthLoading ||
-            isPlanUnavailable(plan)
-          }
-          onClick={() => onCheckout(plan.id)}
-        />
+      {plan.id === 'project' && (
+        <div className="absolute -top-3 left-4 rounded-full bg-blue-600 px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1">
+          <Building2 className="h-3 w-3" /> Engineering Teams
+        </div>
       )}
+
+      <div>
+        <div className="flex items-start justify-between">
+          <h3 className="text-base font-extrabold text-foreground">
+            {plan.name}
+          </h3>
+          <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+            {getAccessBadge(plan.id)}
+          </span>
+        </div>
+
+        <div className="mt-3">
+          <span className="text-3xl font-extrabold tracking-tight text-foreground">
+            {getCalculatedPrice(plan, isAnnual)}
+          </span>
+          <span className="ml-1 text-[11px] font-bold text-muted-copy uppercase tracking-wider">
+            {plan.id === 'free'
+              ? '/ permanent'
+              : isAnnual
+                ? '/ mo (billed yearly)'
+                : '/ month'}
+          </span>
+        </div>
+
+        <p className="mt-2.5 text-xs text-muted-copy leading-relaxed font-medium min-h-[2.5rem]">
+          {plan.audience}
+        </p>
+
+        <div className="mt-3 rounded-xl border border-border-soft bg-background p-2.5 shadow-inner">
+          <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+            Target Audience:
+          </p>
+          <p className="mt-0.5 text-xs font-bold text-foreground">
+            {plan.bestFor}
+          </p>
+        </div>
+
+        <div className="mt-4 border-t border-border-soft pt-3">
+          <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-2">
+            Key Included Features:
+          </p>
+          <ul className="space-y-2">
+            {plan.benefits.map((b) => (
+              <li
+                key={b}
+                className="flex items-start gap-2 text-xs text-foreground font-medium"
+              >
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-5 pt-3 border-t border-border-soft">
+        <div className="flex items-start gap-2 text-[10px] text-muted-copy font-medium mb-3">
+          <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
+          <span>{plan.notIncluded}</span>
+        </div>
+
+        {plan.id === 'free' ? (
+          <FreePlanButton currentUser={currentUser} />
+        ) : (
+          <PlanAction
+            plan={plan}
+            isCurrent={subscription?.planId === plan.id}
+            inProgress={isCheckoutLoading && checkoutPlanId === plan.id}
+            disabled={
+              !billingEnabled ||
+              (isCheckoutLoading && checkoutPlanId === plan.id) ||
+              isBillingHealthLoading ||
+              isPlanUnavailable(plan)
+            }
+            onClick={() => onCheckout(plan.id)}
+          />
+        )}
+      </div>
     </article>
   );
 
@@ -259,16 +289,16 @@ const PricingPage = () => {
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`mt-6 flex h-10 w-full items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
+      className={`flex h-10 w-full items-center justify-center rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md ${
         isPlanUnavailable(plan)
-          ? 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-50'
+          ? 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-60'
           : isCurrent
-            ? 'border border-success/20 bg-success/10 text-success cursor-not-allowed'
-            : 'bg-primary text-white hover:bg-primary/95'
+            ? 'border border-success/30 bg-success/10 text-success cursor-not-allowed'
+            : 'bg-primary text-white hover:bg-primary-hover'
       }`}
     >
       {isPlanUnavailable(plan)
-        ? 'Coming soon'
+        ? 'Contact Sales'
         : isCurrent
           ? 'Current plan'
           : inProgress
@@ -278,173 +308,26 @@ const PricingPage = () => {
   );
 
   return (
-    <main className="bg-background text-foreground min-h-screen relative z-10 pb-16">
+    <main className="bg-background text-foreground min-h-screen relative z-10 pb-20 selection:bg-primary selection:text-primary-foreground">
       <PageMetadata
-        title="Pricing"
-        description="Choose the EngVox plan that fits your work."
+        title="Pricing Plans & Access Control"
+        description="Choose the EngVox access level calibrated for your engineering role."
       />
 
       {/* Fixed top navbar */}
-      <nav className="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-border-soft bg-surface/80 py-3 backdrop-blur-xl">
-        <div className="flex w-full max-w-7xl items-center justify-between px-6">
-          <Link to="/" className="flex items-center gap-2.5">
-            <img
-              src="/brand/logo.webp"
-              alt="EngVox"
-              className="h-8 w-8 rounded-[4px] border border-border-soft"
-            />
-            <span className="text-sm font-bold tracking-tight text-foreground">
-              EngVox
-            </span>
-          </Link>
-          <div className="flex items-center gap-3">
-            <Link
-              to="/pricing"
-              className="hidden md:block text-[11px] font-bold uppercase tracking-wider text-muted-copy transition-colors hover:text-foreground"
-            >
-              Pricing
-            </Link>
-            <button
-              type="button"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              title={
-                theme === 'dark'
-                  ? 'Switch to light mode'
-                  : 'Switch to dark mode'
-              }
-              className="flex h-10 w-10 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition hover:bg-surface-hover cursor-pointer"
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-            </button>
-            <Link
-              to="/login"
-              className="rounded-[4px] border border-border-soft px-5 py-2.5 text-xs font-bold uppercase text-muted-copy transition hover:bg-surface-hover"
-            >
-              Start free
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
-      <section className="py-10 text-center relative overflow-hidden border-b border-border-soft bg-surface">
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage:
-              'linear-gradient(#0047bb 1px, transparent 1px), linear-gradient(90deg, #0047bb 1px, transparent 1px)',
-            backgroundSize: '20px 20px',
-          }}
-        />
-        <div className="mx-auto max-w-3xl px-4 relative z-10">
-          <div className="flex justify-center mb-4">
-            <img
-              src="/brand/mascot.webp"
-              alt="Mascot"
-              loading="lazy"
-              className="h-20 w-auto"
-            />
-          </div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
-            Pricing Plans & Access Control
+      {/* 5-Tier Plans Grid Side-by-Side */}
+      <section className="pt-24 pb-12 px-4 sm:px-6">
+        {checkoutError && (
+          <p
+            className="mx-auto mb-4 max-w-xl rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs text-rose-500 font-bold uppercase tracking-wider text-center"
+            role="alert"
+          >
+            {checkoutError}
           </p>
-          <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl tracking-tight text-foreground">
-            Choose your access level.
-          </h1>
-          {/* Annual / Monthly Toggle Switch */}
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <span
-              className={`text-xs font-bold ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Monthly Billing
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsAnnual(!isAnnual)}
-              className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
-            >
-              <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white transition duration-200 ease-in-out ${
-                  isAnnual ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
-            <span
-              className={`text-xs font-bold ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Annual Billing{' '}
-              <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-extrabold text-success border border-success/20">
-                SAVE 20%
-              </span>
-            </span>
-          </div>
-
-          {/* Interactive Team Seats Calculator */}
-          <div className="mx-auto mt-6 max-w-lg rounded-2xl border border-primary/20 bg-primary/5 p-4 text-left shadow-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-foreground uppercase tracking-wider">
-                Interactive Team Calculator
-              </span>
-              <span className="text-xs font-extrabold text-primary">
-                {teamSeats} Engineer Seats (${teamSeats * (isAnnual ? 15 : 19)}
-                /mo)
-              </span>
-            </div>
-            <input
-              type="range"
-              min="2"
-              max="50"
-              value={teamSeats}
-              onChange={(e) => setTeamSeats(Number(e.target.value))}
-              className="w-full mt-2 accent-primary cursor-pointer"
-            />
-            <div className="flex justify-between text-[10px] font-bold text-muted-copy mt-1">
-              <span>2 Seats</span>
-              <span>25 Seats</span>
-              <span>50+ Seats (Enterprise)</span>
-            </div>
-            <div className="mt-3 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setQuoteModalOpen(true)}
-                className="text-xs font-bold text-primary hover:underline cursor-pointer"
-              >
-                Need custom Enterprise SSO or 50+ seats? Request Custom Quote
-                &rarr;
-              </button>
-            </div>
-          </div>
-
-          <EnterpriseQuoteModal
-            isOpen={quoteModalOpen}
-            onClose={() => setQuoteModalOpen(false)}
-          />
-
-          {billingReadiness !== 'ready' && subscription?.planId !== 'pro' && (
-            <div className="mx-auto mt-6 flex w-fit items-start gap-2 rounded-[4px] border border-warning/20 bg-warning/5 px-4 py-2.5 text-xs text-warning">
-              <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              <span className="font-bold uppercase tracking-wider text-[10px]">
-                {billingBanner}
-              </span>
-            </div>
-          )}
-          {checkoutError && (
-            <p
-              className="mx-auto mt-3 max-w-xl rounded-[4px] border border-error/20 bg-error/5 px-4 py-2.5 text-xs text-error font-bold uppercase tracking-wider"
-              role="alert"
-            >
-              {checkoutError}
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* Plans grid */}
-      <section className="py-16">
-        <div className="mx-auto grid max-w-5xl gap-4 px-4 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
+        )}
+        <div className="mx-auto max-w-[1400px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
           {ACTIVE_PLANS.map((plan) => (
             <PlanCard
               key={plan.id}
@@ -455,36 +338,106 @@ const PricingPage = () => {
               checkoutPlanId={checkoutPlanId}
               isBillingHealthLoading={isBillingHealthLoading}
               currentUser={currentUser}
+              isAnnual={isAnnual}
               onCheckout={(id) => void handleCheckout(id)}
             />
           ))}
         </div>
       </section>
 
-      {/* Comparison table */}
-      <section className="py-12 bg-surface border-t border-b border-border-soft">
+      {/* Interactive Team Seats & Enterprise Section */}
+      <section className="py-10 px-4 sm:px-6">
+        <div className="mx-auto max-w-5xl rounded-2xl border border-primary/30 bg-primary/5 p-6 shadow-xl space-y-4">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <h2 className="text-sm font-extrabold text-foreground uppercase tracking-wider flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-primary" />
+                Interactive Team Seat Calculator
+              </h2>
+              <p className="text-xs text-muted-copy mt-0.5">
+                Bulk licensing for site engineering teams, QA/QC departments,
+                and MEP contractors.
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-lg font-black text-primary">
+                {teamSeats} Engineer Seats
+              </span>
+              <span className="block text-xs font-bold text-muted-copy">
+                (${teamSeats * (isAnnual ? 15 : 19)} / month total)
+              </span>
+            </div>
+          </div>
+
+          <input
+            type="range"
+            min="2"
+            max="50"
+            value={teamSeats}
+            onChange={(e) => setTeamSeats(Number(e.target.value))}
+            className="w-full h-2 rounded-lg accent-primary cursor-pointer"
+          />
+
+          <div className="flex justify-between text-[10px] font-bold text-muted-copy">
+            <span>2 Seats ($30/mo)</span>
+            <span>25 Seats ($375/mo)</span>
+            <span>50+ Seats (Custom Enterprise)</span>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-primary/20 flex-wrap gap-2">
+            <span className="text-xs text-muted-copy font-medium">
+              Need custom SSO, dedicated servers, or 50+ seats?
+            </span>
+            <button
+              type="button"
+              onClick={() => setQuoteModalOpen(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary-hover transition cursor-pointer shadow-sm"
+            >
+              <span>Request Custom Enterprise Quote</span>
+              <Zap className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
+
+        <EnterpriseQuoteModal
+          isOpen={quoteModalOpen}
+          onClose={() => setQuoteModalOpen(false)}
+        />
+      </section>
+
+      {/* Compare Plans Detailed Feature Matrix (Clean - No Mascot) */}
+      <section className="py-12 bg-surface/80 border-t border-b border-border-soft backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <h2 className="text-lg font-bold text-foreground">Compare plans</h2>
-          {/* WCAG 2.1 SC 2.1.1: scrollable region needs keyboard focus for users who cannot use a mouse to scroll horizontally */}
+          <div className="text-center mb-8 space-y-2">
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest font-mono">
+              Comprehensive Feature Matrix
+            </span>
+            <h2 className="text-2xl font-extrabold text-foreground">
+              Compare All Plan Capabilities
+            </h2>
+            <p className="text-xs text-muted-copy font-medium max-w-lg mx-auto">
+              Detailed breakdown of AI allowances, voice meeting modules, team
+              seats, and security standards.
+            </p>
+          </div>
+
           {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
           <div
-            className="mt-4 overflow-x-auto rounded-[4px] border border-border-soft shadow-sm"
+            className="overflow-x-auto rounded-2xl border border-border-soft shadow-xl bg-background"
             tabIndex={0}
             role="region"
             aria-label="Plan comparison table"
           >
-            <table className="w-full min-w-[600px] border-collapse bg-surface text-left text-xs">
-              <thead className="bg-[#f3f3fd]">
+            <table className="w-full min-w-[700px] border-collapse text-left text-xs">
+              <thead className="bg-surface border-b border-border-soft">
                 <tr>
-                  <th className="border-b border-border-soft p-3 text-xs font-bold uppercase tracking-wider text-foreground">
-                    Feature
+                  <th className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground">
+                    Capabilities & Limits
                   </th>
-                  {ACTIVE_PLANS.filter((p) =>
-                    ['free', 'pro', 'project', 'exec'].includes(p.id)
-                  ).map((p) => (
+                  {ACTIVE_PLANS.map((p) => (
                     <th
                       key={p.id}
-                      className="border-b border-border-soft p-3 text-xs font-bold uppercase tracking-wider text-foreground text-center"
+                      className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground text-center"
                     >
                       {p.name}
                     </th>
@@ -497,17 +450,15 @@ const PricingPage = () => {
                 ).map((key) => (
                   <tr
                     key={key}
-                    className="border-b border-border-soft/60 last:border-0 hover:bg-background transition-colors"
+                    className="border-b border-border-soft/60 last:border-0 hover:bg-surface/50 transition-colors"
                   >
-                    <td className="p-3 font-bold text-foreground capitalize">
-                      {key === 'ai' ? 'AI Coach' : key}
+                    <td className="p-4 font-bold text-foreground capitalize">
+                      {key === 'ai' ? 'AI Voice & Writing Coach' : key}
                     </td>
-                    {ACTIVE_PLANS.filter((p) =>
-                      ['free', 'pro', 'project', 'exec'].includes(p.id)
-                    ).map((p) => (
+                    {ACTIVE_PLANS.map((p) => (
                       <td
                         key={p.id}
-                        className="p-3 text-center text-muted-copy font-medium"
+                        className="p-4 text-center text-muted-copy font-medium"
                       >
                         {p.comparison[key]}
                       </td>
@@ -518,63 +469,49 @@ const PricingPage = () => {
             </table>
           </div>
           {/* eslint-enable jsx-a11y/no-noninteractive-tabindex */}
+        </div>
+      </section>
 
-          {/* Enterprise section */}
-          <div
-            className="mt-8 rounded-[4px] border border-border-soft bg-background p-6 shadow-sm relative overflow-hidden"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(0, 71, 187, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 71, 187, 0.03) 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
-            }}
-          >
-            <div className="flex items-center gap-3 relative z-10">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[4px] bg-primary text-white text-xs font-bold uppercase tracking-wider font-mono shadow-sm">
-                EP
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-foreground">
-                  Enterprise & Private
-                </h3>
-                <p className="text-xs text-muted-copy font-medium">
-                  For large teams and government contractors
-                </p>
-              </div>
-            </div>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2 relative z-10">
-              <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-foreground">Exec</p>
-                  <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-                    ACCESS-LVL-04
-                  </span>
-                </div>
-                <p className="mt-2 text-xs font-extrabold tracking-tight text-foreground">
-                  $99/mo
-                </p>
-                <p className="mt-1.5 text-xs text-muted-copy font-medium leading-relaxed">
-                  VIP coaching, priority support, offline audio
-                </p>
-              </div>
-              <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-foreground">Private</p>
-                  <span className="rounded-[4px] border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-                    SECURE-PRIVATE
-                  </span>
-                </div>
-                <p className="mt-2 text-xs font-extrabold tracking-tight text-foreground">
-                  $999/mo
-                </p>
-                <p className="mt-1.5 text-xs text-muted-copy font-medium leading-relaxed">
-                  Dedicated server, zero-data retention, custom security
-                </p>
-              </div>
-            </div>
-            <p className="mt-4 text-xs text-muted-copy font-medium relative z-10">
-              Contact us for enterprise deployment and custom requirements.
-            </p>
+      {/* 📌 Annual / Monthly Billing Switch (Placed at the bottom as requested) */}
+      <section className="py-12 text-center bg-background border-t border-border-soft">
+        <div className="mx-auto max-w-xl px-4 space-y-4">
+          <h3 className="text-base font-extrabold text-foreground">
+            Select Your Billing Cycle
+          </h3>
+
+          <div className="inline-flex items-center justify-center gap-4 rounded-2xl border border-border-soft bg-surface p-4 shadow-xl">
+            <span
+              className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Monthly Billing
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setIsAnnual(!isAnnual)}
+              className="relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
+            >
+              <span
+                className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
+                  isAnnual ? 'translate-x-6' : 'translate-x-0'
+                }`}
+              />
+            </button>
+
+            <span
+              className={`text-xs font-bold transition-colors ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Annual Billing{' '}
+              <span className="ml-1 rounded-full bg-success/20 px-2.5 py-0.5 text-[10px] font-extrabold text-success border border-success/30">
+                SAVE 20%
+              </span>
+            </span>
           </div>
+
+          <p className="text-[11px] text-muted-copy font-medium">
+            Switch anytime between monthly and annual billing. VAT & local taxes
+            included where applicable.
+          </p>
         </div>
       </section>
     </main>

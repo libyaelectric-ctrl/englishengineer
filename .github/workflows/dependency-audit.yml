@@ -1,0 +1,45 @@
+name: Dependency Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Her Pazartesi 06:00
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: NPM Audit
+        run: |
+          echo "=== NPM Security Audit ==="
+          npm audit --audit-level=high || true
+
+      - name: Check for Critical Vulnerabilities
+        run: |
+          CRITICAL=$(npm audit --json 2>/dev/null | grep -o '"critical":[0-9]*' | head -1 | cut -d: -f2)
+          HIGH=$(npm audit --json 2>/dev/null | grep -o '"high":[0-9]*' | head -1 | cut -d: -f2)
+          echo "Critical: ${CRITICAL:-0}"
+          echo "High: ${HIGH:-0}"
+          if [ "${CRITICAL:-0}" -gt 0 ] || [ "${HIGH:-0}" -gt 2 ]; then
+            echo "::error::Critical or too many high vulnerabilities found"
+            exit 1
+          fi
+
+      - name: License Check
+        run: |
+          echo "=== License Check ==="
+          npx license-checker --failOn GPL-3.0 --failOn AGPL-3.0 || true

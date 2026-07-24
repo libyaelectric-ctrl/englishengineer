@@ -3,7 +3,7 @@ import { AnimatedCard, SectionIntro } from './AnimatedComponents';
 
 export function WorkflowSection() {
   return (
-    <section className="border-t border-border-soft bg-background bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] px-6 py-12 md:px-12 md:py-20">
+    <section className="border-t border-border-soft bg-background/20 backdrop-blur-sm bg-[linear-gradient(to_right,#8080800b_1px,transparent_1px),linear-gradient(to_bottom,#8080800b_1px,transparent_1px)] bg-[size:24px_24px] px-6 py-12 md:px-12 md:py-20">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Workflow"
@@ -11,7 +11,11 @@ export function WorkflowSection() {
         />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {WORKFLOW.map((item, index) => (
-            <AnimatedCard key={item.title} delay={index * 60} className="p-4">
+            <AnimatedCard
+              key={item.title}
+              delay={index * 60}
+              className="p-4 bg-surface/85 backdrop-blur-xl border border-border-soft/80 shadow-xl rounded-2xl"
+            >
               <div className="relative z-10 overflow-hidden rounded-xl border border-border-soft bg-[#111]">
                 <img
                   src={item.image}

@@ -1,0 +1,49 @@
+name: Health Check
+
+on:
+  schedule:
+    - cron: '*/30 * * * *' # Her 30 dakikada bir
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Production Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check Backend Health
+        run: |
+          echo "Checking backend health..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-production.up.railway.app/api/health)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "FAIL: Backend health check returned $RESPONSE"
+            exit 1
+          fi
+          echo "Backend healthy (HTTP $RESPONSE)"
+
+      - name: Check Frontend
+        run: |
+          echo "Checking frontend..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "FAIL: Frontend returned $RESPONSE"
+            exit 1
+          fi
+          echo "Frontend healthy (HTTP $RESPONSE)"
+
+      - name: Check API Docs
+        run: |
+          echo "Checking API docs..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer-production.up.railway.app/api-docs)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "WARN: API docs returned $RESPONSE"
+          else
+            echo "API docs accessible"
+          fi
+
+      - name: Report Status
+        if: failure()
+        run: |
+          echo "::error::Production health check failed!"
+          echo "Backend: https://englishengineer-production.up.railway.app/api/health"
+          echo "Frontend: https://englishengineer.vercel.app"

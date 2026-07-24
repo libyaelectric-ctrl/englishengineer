@@ -64,10 +64,14 @@ export const EnterpriseQuoteModal: React.FC<EnterpriseQuoteModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1">
+              <label
+                htmlFor="work-email"
+                className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1"
+              >
                 Work Email
               </label>
               <input
+                id="work-email"
                 type="email"
                 required
                 value={email}
@@ -78,10 +82,14 @@ export const EnterpriseQuoteModal: React.FC<EnterpriseQuoteModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1">
+              <label
+                htmlFor="company-name"
+                className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1"
+              >
                 Company Name
               </label>
               <input
+                id="company-name"
                 type="text"
                 required
                 value={company}
@@ -92,10 +100,14 @@ export const EnterpriseQuoteModal: React.FC<EnterpriseQuoteModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1">
+              <label
+                htmlFor="team-size"
+                className="block text-xs font-bold uppercase tracking-wider text-muted-copy mb-1"
+              >
                 Engineering Team Size: {teamSize} Seats
               </label>
               <input
+                id="team-size"
                 type="range"
                 min="10"
                 max="250"

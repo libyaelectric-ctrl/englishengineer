@@ -9,21 +9,6 @@ const ALL_PAGES = [
   { name: 'Business', path: '/business', title: /EngVox/ },
 ];
 
-const AUTH_PAGES = [
-  { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Profile', path: '/profile/overview' },
-  { name: 'Vocabulary', path: '/vocabulary' },
-  { name: 'Grammar', path: '/grammar' },
-  { name: 'Reading', path: '/reading' },
-  { name: 'Writing', path: '/writing' },
-  { name: 'Listening', path: '/listening' },
-  { name: 'Speaking', path: '/speaking' },
-  { name: 'Progress', path: '/progress/overview' },
-  { name: 'Billing', path: '/billing' },
-  { name: 'Tools', path: '/tools/work' },
-  { name: 'Curriculum', path: '/curriculum/today' },
-];
-
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
 // ─── WCAG 2.1 AA Compliance ───
@@ -309,6 +294,58 @@ test.describe('Screen Reader Support', () => {
 
     const results = await new AxeBuilder({ page })
       .withRules(['region'])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+});
+
+// ─── Form Accessibility ───
+
+test.describe('Form Accessibility', () => {
+  test('login form inputs have labels', async ({ page }) => {
+    await page.goto('/login');
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['label'])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
+  test('form error messages are accessible', async ({ page }) => {
+    await page.goto('/login');
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['aria-required-attr', 'aria-valid-attr'])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+});
+
+// ─── Color and Contrast ───
+
+test.describe('Color and Contrast', () => {
+  test('landing page meets color contrast requirements', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['color-contrast'])
+      .analyze();
+
+    expect(results.violations).toEqual([]);
+  });
+
+  test('pricing page meets color contrast requirements', async ({ page }) => {
+    await page.goto('/pricing');
+    await page.waitForLoadState('networkidle');
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['color-contrast'])
       .analyze();
 
     expect(results.violations).toEqual([]);

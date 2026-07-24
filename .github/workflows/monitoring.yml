@@ -1,0 +1,63 @@
+name: Monitoring Report
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # Her Pazartesi 08:00
+  workflow_dispatch:
+
+jobs:
+  report:
+    name: Weekly Monitoring Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Bundle Size Report
+        run: |
+          npm run build
+          echo "## Bundle Size Report" > report.md
+          echo "" >> report.md
+          echo "| File | Size |" >> report.md
+          echo "|------|------|" >> report.md
+          du -sh dist/assets/*.js | while read size file; do
+            echo "| $(basename $file) | $size |" >> report.md
+          done
+          du -sh dist/assets/*.css | while read size file; do
+            echo "| $(basename $file) | $size |" >> report.md
+          done
+
+      - name: Test Summary
+        run: |
+          echo "" >> report.md
+          echo "## Test Summary" >> report.md
+          echo "" >> report.md
+          npm test -- --reporter=json > test-results.json 2>&1 || true
+          if [ -f test-results.json ]; then
+            echo "Tests completed. See test-results.json for details." >> report.md
+          fi
+
+      - name: Security Audit
+        run: |
+          echo "" >> report.md
+          echo "## Security Audit" >> report.md
+          echo "" >> report.md
+          npm audit --json > audit-results.json 2>&1 || true
+          if [ -f audit-results.json ]; then
+            VULNS=$(cat audit-results.json | grep -o '"total":\s*[0-9]' | head -1)
+            echo "Vulnerabilities: $VULNS" >> report.md
+          fi
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-report
+          path: report.md
+          retention-days: 30
