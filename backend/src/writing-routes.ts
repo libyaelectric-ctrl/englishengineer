@@ -1,4 +1,5 @@
 import { ApiError } from './errors.js';
+import { validateBody, WritingSubmitBodySchema } from './validation.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerWritingRoutes = (app: Express): void => {
@@ -27,13 +28,14 @@ export const registerWritingRoutes = (app: Express): void => {
 
   app.post(
     '/api/writing/submit',
+    validateBody(WritingSubmitBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
         if (!userId)
           throw new ApiError(401, 'authentication_required', 'Auth required');
 
-        const { promptId: _promptId, content: _content } = request.body as {
+        const { promptId, content } = request.validatedBody as {
           promptId?: string;
           content?: string;
         };

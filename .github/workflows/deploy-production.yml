@@ -1,0 +1,151 @@
+name: Deploy to Production
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., v4.0.1)'
+        required: true
+        type: string
+
+jobs:
+  pre-deploy:
+    name: Pre-deploy Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Type Check
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Bundle Size Check
+        run: |
+          JS_SIZE=$(du -sb dist/assets/*.js | awk '{s+=$1}END{print s}')
+          JS_LIMIT=2000000
+          if [ "${JS_SIZE:-0}" -gt "$JS_LIMIT" ]; then
+            echo "::error::Bundle size exceeds limit"
+            exit 1
+          fi
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: pre-deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Vercel (Staging)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./
+
+  health-check-staging:
+    name: Staging Health Check
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Check Staging Health
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" ${{ vars.STAGING_URL }}/api/health)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "::error::Staging health check failed"
+            exit 1
+          fi
+
+  deploy-production:
+    name: Deploy to Production
+    needs: health-check-staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Vercel (Production)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
+  post-deploy:
+    name: Post-deploy Verification
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Check Production Health
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://englishengineer.vercel.app/api/health)
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "::error::Production health check failed"
+            exit 1
+          fi
+
+      - name: Create Release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: '${{ github.ref_name }}',
+              name: 'Release ${{ github.ref_name }}',
+              body: 'Production deployment successful',
+              draft: false,
+              prerelease: false
+            })

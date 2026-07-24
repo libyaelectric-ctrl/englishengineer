@@ -1,5 +1,5 @@
 import { ApiError } from './errors.js';
-import { validateBody, ListeningScoreBodySchema } from './validation.js';
+import { validateBody, ReadingScoreBodySchema } from './validation.js';
 import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerReadingRoutes = (app: Express): void => {
@@ -29,7 +29,7 @@ export const registerReadingRoutes = (app: Express): void => {
 
   app.post(
     '/api/reading/:id/progress',
-    validateBody(ListeningScoreBodySchema),
+    validateBody(ReadingScoreBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
