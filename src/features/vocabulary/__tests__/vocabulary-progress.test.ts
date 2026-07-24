@@ -2,100 +2,132 @@ import { describe, expect, it } from 'vitest';
 import {
   VocabularyProgressService,
   type WordProgress,
-  MASTERY_REQUIRED_CORRECT,
-  STRUGGLING_THRESHOLD,
-  MASTERED_DROP_THRESHOLD,
+  MASTERY_QUIZ_MIN_WORDS,
+  READING_WRITING_UNLOCK_THRESHOLD,
 } from '../services/vocabulary.progress';
 
 describe('VocabularyProgressService', () => {
-  it('1. New → Learning (otomatik看到)', () => {
+  it('addWord creates new word with status new', () => {
     const word = VocabularyProgressService.addWord('hello');
-    const result = VocabularyProgressService.onView(word);
-    expect(result.status).toBe('learning');
+    expect(word.status).toBe('new');
+    expect(word.failCount).toBe(0);
+    expect(word.masteredAt).toBeNull();
+  });
+
+  it('markAsLearned transitions new to learned', () => {
+    const word = VocabularyProgressService.addWord('hello');
+    const result = VocabularyProgressService.markAsLearned(word);
+    expect(result.status).toBe('learned');
     expect(result.lastPracticedAt).toBeTruthy();
   });
 
-  it('2. Learning → Learned (1 doğru cevap)', () => {
-    let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.onView(word);
+  it('markAsLearned does not change non-new words', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'learned',
+      failCount: 0,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.markAsLearned(word);
+    expect(result.status).toBe('learned');
+  });
+
+  it('onQuizCorrect transitions learned to mastered', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'learned',
+      failCount: 0,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
     const result = VocabularyProgressService.onQuizCorrect(word);
+    expect(result.status).toBe('mastered');
+    expect(result.masteredAt).toBeTruthy();
+  });
+
+  it('onQuizCorrect does not change non-learned words', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'new',
+      failCount: 0,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.onQuizCorrect(word);
+    expect(result.status).toBe('new');
+  });
+
+  it('onQuizIncorrect transitions learned to struggling', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'learned',
+      failCount: 0,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.onQuizIncorrect(word);
+    expect(result.status).toBe('struggling');
+    expect(result.failCount).toBe(1);
+  });
+
+  it('moveToNew transitions struggling to new', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'struggling',
+      failCount: 2,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.moveToNew(word);
+    expect(result.status).toBe('new');
+    expect(result.failCount).toBe(0);
+  });
+
+  it('moveToLearned transitions struggling to learned', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'struggling',
+      failCount: 2,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.moveToLearned(word);
     expect(result.status).toBe('learned');
-    expect(result.correctCount).toBe(1);
+    expect(result.lastPracticedAt).toBeTruthy();
   });
 
-  it('3. Learned → Mastered (3 doğru)', () => {
-    let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.onView(word);
-
-    for (let i = 0; i < MASTERY_REQUIRED_CORRECT; i++) {
-      word = VocabularyProgressService.onQuizCorrect(word);
-    }
-
-    expect(word.status).toBe('mastered');
-    expect(word.correctCount).toBe(MASTERY_REQUIRED_CORRECT);
-    expect(word.masteredAt).toBeTruthy();
+  it('keepStruggling keeps struggling status', () => {
+    const word: WordProgress = {
+      wordId: 'hello',
+      status: 'struggling',
+      failCount: 2,
+      lastPracticedAt: null,
+      masteredAt: null,
+    };
+    const result = VocabularyProgressService.keepStruggling(word);
+    expect(result.status).toBe('struggling');
   });
 
-  it('4. Learned → Struggling (2 yanlış cevap)', () => {
-    let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.onView(word);
-    word = VocabularyProgressService.onQuizCorrect(word);
-
-    const result1 = VocabularyProgressService.onQuizIncorrect(word);
-    expect(result1.status).toBe('learned');
-    expect(result1.failCount).toBe(1);
-
-    const result2 = VocabularyProgressService.onQuizIncorrect(result1);
-    expect(result2.status).toBe('struggling');
-    expect(result2.failCount).toBe(STRUGGLING_THRESHOLD);
+  it('canStartQuiz requires 100 learned words', () => {
+    expect(VocabularyProgressService.canStartQuiz(99)).toBe(false);
+    expect(VocabularyProgressService.canStartQuiz(100)).toBe(true);
+    expect(VocabularyProgressService.canStartQuiz(200)).toBe(true);
   });
 
-  it('5. Struggling → Learned (doğru cevap)', () => {
-    let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.onView(word);
-    word = VocabularyProgressService.onQuizCorrect(word);
-    word = VocabularyProgressService.onQuizIncorrect(word);
-    word = VocabularyProgressService.onQuizIncorrect(word);
-    expect(word.status).toBe('struggling');
-
-    const result = VocabularyProgressService.onStrugglingQuizCorrect(word);
-    expect(result.status).toBe('learned');
-    expect(result.correctCount).toBe(1);
+  it('getQuizPoolSize limits to 100', () => {
+    expect(VocabularyProgressService.getQuizPoolSize(50)).toBe(50);
+    expect(VocabularyProgressService.getQuizPoolSize(100)).toBe(100);
+    expect(VocabularyProgressService.getQuizPoolSize(200)).toBe(100);
   });
 
-  it('6. Mastered → Learned (3 yanlış cevap)', () => {
-    let word: WordProgress = VocabularyProgressService.addWord('hello');
-    word = VocabularyProgressService.onView(word);
-    for (let i = 0; i < 3; i++)
-      word = VocabularyProgressService.onQuizCorrect(word);
-    expect(word.status).toBe('mastered');
-
-    const result1 = VocabularyProgressService.onQuizIncorrect(word);
-    expect(result1.status).toBe('mastered');
-    expect(result1.failCount).toBe(1);
-
-    const result2 = VocabularyProgressService.onQuizIncorrect(result1);
-    expect(result2.status).toBe('mastered');
-    expect(result2.failCount).toBe(2);
-
-    const result3 = VocabularyProgressService.onQuizIncorrect(result2);
-    expect(result3.status).toBe('learned');
-    expect(result3.failCount).toBe(MASTERED_DROP_THRESHOLD);
+  it('canAccessReadingWriting requires 200 mastered', () => {
+    expect(VocabularyProgressService.canAccessReadingWriting(199)).toBe(false);
+    expect(VocabularyProgressService.canAccessReadingWriting(200)).toBe(true);
   });
 
-  it('7. 200 kuralı öncesi quiz pasif', () => {
-    expect(VocabularyProgressService.isQuizReady(199)).toBe(false);
-  });
-
-  it('8. 200 kuralı sonrası quiz aktif', () => {
-    expect(VocabularyProgressService.isQuizReady(200)).toBe(true);
-  });
-
-  it('9. Struggling eşiği doğru çalışıyor', () => {
-    expect(STRUGGLING_THRESHOLD).toBe(2);
-  });
-
-  it('10. Mastered drop eşiği doğru çalışıyor', () => {
-    expect(MASTERED_DROP_THRESHOLD).toBe(3);
+  it('constants are correct', () => {
+    expect(MASTERY_QUIZ_MIN_WORDS).toBe(100);
+    expect(READING_WRITING_UNLOCK_THRESHOLD).toBe(200);
   });
 });

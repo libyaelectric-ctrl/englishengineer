@@ -1,6 +1,5 @@
 export type WordStatus =
   | 'new'
-  | 'learning'
   | 'learned'
   | 'mastered'
   | 'struggling';
@@ -8,18 +7,13 @@ export type WordStatus =
 export interface WordProgress {
   wordId: string;
   status: WordStatus;
-  correctCount: number;
   failCount: number;
-  quizDates: string[];
-  lastQuizAt: string | null;
   lastPracticedAt: string | null;
   masteredAt: string | null;
 }
 
-export const MASTERY_REQUIRED_CORRECT = 3;
-export const QUIZ_THRESHOLD = 200;
-export const STRUGGLING_THRESHOLD = 2;
-export const MASTERED_DROP_THRESHOLD = 3;
+export const MASTERY_QUIZ_MIN_WORDS = 100;
+export const READING_WRITING_UNLOCK_THRESHOLD = 200;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
@@ -28,113 +22,14 @@ export const VocabularyProgressService = {
     return {
       wordId,
       status: 'new',
-      correctCount: 0,
       failCount: 0,
-      quizDates: [],
-      lastQuizAt: null,
       lastPracticedAt: null,
       masteredAt: null,
     };
   },
 
-  onView(current: WordProgress): WordProgress {
-    if (current.status === 'new') {
-      return {
-        ...current,
-        status: 'learning',
-        lastPracticedAt: new Date().toISOString(),
-      };
-    }
-    return current;
-  },
-
-  onQuizCorrect(current: WordProgress): WordProgress {
-    const now = new Date().toISOString();
-    const today = getTodayKey();
-    const newCorrect = current.correctCount + 1;
-    const newDates = current.quizDates.includes(today)
-      ? current.quizDates
-      : [...current.quizDates, today];
-
-    if (
-      (newCorrect >= MASTERY_REQUIRED_CORRECT ||
-        current.status === 'learned') &&
-      current.status !== 'mastered'
-    ) {
-      return {
-        ...current,
-        status: 'mastered',
-        correctCount: newCorrect,
-        quizDates: newDates,
-        masteredAt: now,
-        lastQuizAt: now,
-        lastPracticedAt: now,
-      };
-    }
-
-    if (current.status === 'mastered') {
-      return {
-        ...current,
-        correctCount: newCorrect,
-        quizDates: newDates,
-        lastQuizAt: now,
-      };
-    }
-
-    return {
-      ...current,
-      status:
-        current.status === 'new' || current.status === 'learning'
-          ? 'learned'
-          : current.status,
-      correctCount: newCorrect,
-      quizDates: newDates,
-      lastQuizAt: now,
-      lastPracticedAt: now,
-    };
-  },
-
-  onQuizIncorrect(current: WordProgress): WordProgress {
-    const now = new Date().toISOString();
-    const newFailCount = current.failCount + 1;
-
-    if (current.status === 'mastered') {
-      if (newFailCount >= MASTERED_DROP_THRESHOLD) {
-        return {
-          ...current,
-          status: 'learned',
-          correctCount: Math.max(0, current.correctCount - 1),
-          failCount: newFailCount,
-          lastQuizAt: now,
-          lastPracticedAt: now,
-        };
-      }
-      return {
-        ...current,
-        failCount: newFailCount,
-        lastQuizAt: now,
-      };
-    }
-
-    if (newFailCount >= STRUGGLING_THRESHOLD) {
-      return {
-        ...current,
-        status: 'struggling',
-        failCount: newFailCount,
-        lastQuizAt: now,
-        lastPracticedAt: now,
-      };
-    }
-
-    return {
-      ...current,
-      failCount: newFailCount,
-      lastQuizAt: now,
-      lastPracticedAt: now,
-    };
-  },
-
-  onStrugglingQuizCorrect(current: WordProgress): WordProgress {
+  markAsLearned(current: WordProgress): WordProgress {
+    if (current.status !== 'new') return current;
     return {
       ...current,
       status: 'learned',
@@ -142,34 +37,78 @@ export const VocabularyProgressService = {
     };
   },
 
-  onStrugglingQuizIncorrect(current: WordProgress): WordProgress {
+  onQuizCorrect(current: WordProgress): WordProgress {
+    if (current.status !== 'learned') return current;
     return {
       ...current,
+      status: 'mastered',
+      masteredAt: new Date().toISOString(),
+      lastPracticedAt: new Date().toISOString(),
+    };
+  },
+
+  onQuizIncorrect(current: WordProgress): WordProgress {
+    if (current.status !== 'learned') return current;
+    return {
+      ...current,
+      status: 'struggling',
       failCount: current.failCount + 1,
       lastPracticedAt: new Date().toISOString(),
     };
   },
 
-  isQuizReady(learnedCount: number): boolean {
-    return learnedCount >= QUIZ_THRESHOLD;
+  moveToNew(current: WordProgress): WordProgress {
+    if (current.status !== 'struggling') return current;
+    return {
+      ...current,
+      status: 'new',
+      failCount: 0,
+      lastPracticedAt: null,
+    };
   },
 
-  getUniqueQuizDays(quizDates: string[]): number {
-    return new Set(quizDates).size;
+  moveToLearned(current: WordProgress): WordProgress {
+    if (current.status !== 'struggling') return current;
+    return {
+      ...current,
+      status: 'learned',
+      lastPracticedAt: new Date().toISOString(),
+    };
+  },
+
+  keepStruggling(current: WordProgress): WordProgress {
+    if (current.status !== 'struggling') return current;
+    return current;
+  },
+
+  canStartQuiz(learnedCount: number): boolean {
+    return learnedCount >= MASTERY_QUIZ_MIN_WORDS;
+  },
+
+  getQuizPoolSize(totalLearned: number): number {
+    return Math.min(totalLearned, 100);
+  },
+
+  canAccessReadingWriting(masteredCount: number): boolean {
+    return masteredCount >= READING_WRITING_UNLOCK_THRESHOLD;
+  },
+
+  getStatusLabel(status: WordStatus): string {
+    switch (status) {
+      case 'new': return 'New';
+      case 'learned': return 'Learned';
+      case 'mastered': return 'Mastered';
+      case 'struggling': return 'Struggling';
+      default: return 'Unknown';
+    }
   },
 
   getStatusColor(status: WordStatus): string {
     switch (status) {
-      case 'learning':
-        return 'yellow';
-      case 'learned':
-        return 'green';
-      case 'mastered':
-        return 'gold';
-      case 'struggling':
-        return 'red';
-      default:
-        return 'gray';
+      case 'learned': return 'green';
+      case 'mastered': return 'gold';
+      case 'struggling': return 'red';
+      default: return 'gray';
     }
   },
 };
