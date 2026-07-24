@@ -201,16 +201,18 @@ const ListeningPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-16 text-foreground space-y-6 animate-in fade-in duration-300">
-      {/* Sticky header — clean, full-width */}
-      <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          Listening
-        </h1>
-        <span className="text-[11px] font-medium text-muted-copy leading-tight">
-          Mission{' '}
-          {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}/
-          {visibleMissions.length}
-        </span>
+      {/* Sticky header — clean, rigid */}
+      <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-base font-bold tracking-tight text-foreground">
+            Listening
+          </h1>
+          <span className="text-[11px] font-medium text-muted-copy leading-tight">
+            Mission{' '}
+            {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}/
+            {visibleMissions.length}
+          </span>
+        </div>
       </div>
       <div className="space-y-6 pt-4">
         <LevelContentFilter
