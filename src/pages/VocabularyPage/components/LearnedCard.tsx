@@ -69,9 +69,20 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
             <span className="text-[10px] font-bold text-muted-copy min-w-[24px]">
               #{index + 1}
             </span>
-            <span className="text-sm font-semibold text-foreground truncate">
+            <span className="text-sm font-semibold text-foreground truncate flex-1">
               {repairVocabularyText(term.term)}
             </span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                PronunciationService.speak(term.turkishMeaning);
+              }}
+              className="flex h-6 w-6 items-center justify-center rounded text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              aria-label={`Listen to ${term.term}`}
+            >
+              <Volume2 className="h-3.5 w-3.5" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
