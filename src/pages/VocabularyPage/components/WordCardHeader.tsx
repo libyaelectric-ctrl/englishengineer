@@ -1,9 +1,10 @@
+import { Volume2 } from 'lucide-react';
 import {
   repairVocabularyText,
+  PronunciationService,
   type VocabularyMenuProgress,
   type VocabularyTerm,
 } from '@/features/vocabulary';
-import { PronunciationButton } from './PronunciationButton';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;
@@ -39,17 +40,15 @@ export const WordCardHeader = ({
       <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
         {status}
       </span>
-      <PronunciationButton word={term.term} />
-      {progress?.isWeak && (
-        <span className="rounded-[4px] border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9px] font-bold text-rose-700 uppercase tracking-wider">
-          Weak
-        </span>
-      )}
-      {progress?.isForgotten && (
-        <span className="rounded-[4px] border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold text-amber-700 uppercase tracking-wider">
-          Forgotten
-        </span>
-      )}
+      <button
+        type="button"
+        onClick={() => PronunciationService.speak(term.turkishMeaning)}
+        className="flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground cursor-pointer"
+        aria-label={`Listen to ${term.term}`}
+        title="Listen to Turkish translation"
+      >
+        <Volume2 className="h-3.5 w-3.5" />
+      </button>
     </div>
   </div>
 );
