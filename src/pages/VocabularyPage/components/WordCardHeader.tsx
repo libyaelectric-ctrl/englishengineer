@@ -3,6 +3,7 @@ import {
   type VocabularyMenuProgress,
   type VocabularyTerm,
 } from '@/features/vocabulary';
+import { PronunciationButton } from './PronunciationButton';
 
 interface WordCardHeaderProps {
   term: VocabularyTerm;
@@ -31,13 +32,14 @@ export const WordCardHeader = ({
         </p>
       )}
     </div>
-    <div className="flex flex-wrap justify-end gap-1.5">
+    <div className="flex flex-wrap items-center justify-end gap-1.5">
       <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
         LVL-<span>{term.cefrLevel}</span>
       </span>
       <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
         {status}
       </span>
+      <PronunciationButton word={term.term} />
       {progress?.isWeak && (
         <span className="rounded-[4px] border border-rose-200 bg-rose-50 px-2 py-0.5 text-[9px] font-bold text-rose-700 uppercase tracking-wider">
           Weak
