@@ -159,6 +159,8 @@ const getBorderClass = (isWeak?: boolean): string =>
     ? 'border border-rose-400/50'
     : 'border border-[#0047bb]/25 hover:border-[#0047bb]/50';
 
+import { playSound } from '@/shared/utils/sound';
+
 export const WordCard = ({
   term,
   progress,
@@ -174,12 +176,27 @@ export const WordCard = ({
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
 
+  const handleLearnClick = (t: VocabularyTerm) => {
+    playSound('ding');
+    onLearn?.(t);
+  };
+
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
     if (!answer.trim() || quizResult !== null) return;
     const correct = checkQuizAnswer(answer, term.turkishMeaning);
     setQuizResult(correct);
+    if (correct) {
+      playSound('success');
+    } else {
+      playSound('error');
+    }
     onReview(term, correct);
+  };
+
+  const handleToggleDetails = (fn: (v: boolean) => boolean) => {
+    playSound('flip');
+    setShowDetails(fn);
   };
 
   return (
@@ -225,9 +242,9 @@ export const WordCard = ({
             setAnswer={setAnswer}
             setKnowThisCheck={setKnowThisCheck}
             submitQuiz={submitQuiz}
-            onLearn={onLearn}
+            onLearn={handleLearnClick}
             showDetails={showDetails}
-            setShowDetails={setShowDetails}
+            setShowDetails={handleToggleDetails}
           />
         </motion.div>
       </AnimatePresence>
