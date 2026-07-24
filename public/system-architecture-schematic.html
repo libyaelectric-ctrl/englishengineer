@@ -533,6 +533,11 @@
 
         { from: 'node_pool_learned', to: 'node_pool_mastered', color: 'gold' },
         { from: 'node_pool_learned', to: 'node_pool_struggling', color: 'red' },
+        {
+          from: 'node_pool_struggling',
+          to: 'node_pool_learned',
+          color: 'green',
+        },
 
         { from: 'node_pool_mastered', to: 'node_gate1', color: 'purple' },
         { from: 'node_grammar_seed', to: 'node_gate1', color: 'purple' },
