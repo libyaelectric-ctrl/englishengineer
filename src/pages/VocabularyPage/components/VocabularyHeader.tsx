@@ -90,16 +90,19 @@ export function VocabularyHeader({
   };
 
   return (
-    <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border-soft -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="flex h-16 shrink-0 items-center gap-3">
-        <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">
-          Vocabulary
-        </h1>
-        <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
-          {vocabularyLevel}
-        </span>
+    <div className="sticky top-0 z-30 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <h1 className="shrink-0 text-base font-bold tracking-tight text-foreground">
+            Vocabulary
+          </h1>
+          <span className="shrink-0 rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            {vocabularyLevel}
+          </span>
+        </div>
 
-        <div className="flex flex-1 gap-1.5 overflow-x-auto">
+        {/* Rigid Symmetrical Tab Bar */}
+        <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm">
           {TABS.map((tab) => (
             <button
               key={tab}
@@ -107,10 +110,10 @@ export function VocabularyHeader({
               type="button"
               aria-selected={activeTab === tab}
               onClick={() => chooseTab(tab)}
-              className={`shrink-0 rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              className={`shrink-0 rounded-lg px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === tab
-                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-border-soft text-muted-copy hover:text-foreground'
+                  ? 'bg-[#0047bb] text-white shadow-sm'
+                  : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
               }`}
             >
               {TAB_LABELS[tab]}
@@ -118,42 +121,44 @@ export function VocabularyHeader({
           ))}
         </div>
 
-        <button
-          type="button"
-          onClick={handleSoundToggle}
-          title={isSoundMuted ? 'Unmute card sounds' : 'Mute card sounds'}
-          className={`shrink-0 flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
-            isSoundMuted
-              ? 'border-rose-300 bg-rose-50 dark:bg-rose-950/30 text-rose-600'
-              : 'border-[#0047bb]/30 bg-[#0047bb]/5 text-[#0047bb] hover:bg-[#0047bb]/10'
-          }`}
-        >
-          {isSoundMuted ? (
-            <VolumeX className="h-3.5 w-3.5" />
-          ) : (
-            <Volume2 className="h-3.5 w-3.5" />
-          )}
-          <span className="hidden sm:inline">
-            {isSoundMuted ? 'Muted' : 'Sound'}
-          </span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleSoundToggle}
+            title={isSoundMuted ? 'Unmute card sounds' : 'Mute card sounds'}
+            className={`shrink-0 flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors cursor-pointer ${
+              isSoundMuted
+                ? 'border-rose-300 bg-rose-50 dark:bg-rose-950/30 text-rose-600'
+                : 'border-border-soft bg-surface text-muted-copy hover:text-foreground hover:bg-surface-hover'
+            }`}
+          >
+            {isSoundMuted ? (
+              <VolumeX className="h-3.5 w-3.5" />
+            ) : (
+              <Volume2 className="h-3.5 w-3.5" />
+            )}
+            <span className="hidden sm:inline">
+              {isSoundMuted ? 'Muted' : 'Sound'}
+            </span>
+          </button>
 
-        <label className="relative shrink-0 w-36 sm:w-48">
-          <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
-          <input
-            value={searchInput}
-            onChange={(event) => onSearchInputChange(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                void onSearchSubmit(event);
-              }
-            }}
-            className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-7 pr-2 text-xs outline-none focus:border-[#0047bb]/50 text-foreground"
-            placeholder="Search..."
-            aria-label="Search vocabulary"
-          />
-        </label>
+          <label className="relative shrink-0 w-36 sm:w-44">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-copy" />
+            <input
+              value={searchInput}
+              onChange={(event) => onSearchInputChange(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  void onSearchSubmit(event);
+                }
+              }}
+              className="min-h-8 w-full rounded-lg border border-border-soft bg-surface pl-8 pr-2 text-xs outline-none focus:border-[#0047bb] text-foreground"
+              placeholder="Search..."
+              aria-label="Search vocabulary"
+            />
+          </label>
+        </div>
       </div>
 
       {showFilters && (
