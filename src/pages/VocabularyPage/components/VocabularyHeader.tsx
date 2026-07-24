@@ -7,6 +7,8 @@ import type {
   VocabularyMenuStatus,
 } from '@/features/vocabulary';
 
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+
 const TABS = ['New', 'Learned', 'Mastered', 'Struggling'] as const;
 const TAB_LABELS = {
   New: 'New',
@@ -51,8 +53,18 @@ export function VocabularyHeader({
   chooseTab,
   onSearchInputChange,
   onSearchSubmit,
+  onOpenQuiz,
+  onOpenStrugglingQuiz,
 }: VocabularyHeaderProps) {
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
+  const wordProgress = useVocabularyStore((s) => s.wordProgress);
+
+  const learnedCount = Object.values(wordProgress).filter(
+    (w) => w.status === 'learned'
+  ).length;
+  const strugglingCount = Object.values(wordProgress).filter(
+    (w) => w.status === 'struggling'
+  ).length;
 
   useEffect(() => {
     const handleToggle = (e: Event) => {
@@ -115,24 +127,62 @@ export function VocabularyHeader({
           </button>
         </div>
 
-        {/* Tabs on Right */}
-        <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
-          {TABS.map((tab) => (
+        {/* Tabs & Quiz Actions on Right */}
+        <div className="flex items-center gap-2">
+          {strugglingCount > 0 && (
             <button
-              key={tab}
-              role="tab"
               type="button"
-              aria-selected={activeTab === tab}
-              onClick={() => chooseTab(tab)}
-              className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
-                activeTab === tab
-                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
-              }`}
+              onClick={onOpenStrugglingQuiz}
+              title="Zayıf kelimeleri tekrar et"
+              className="flex items-center gap-1.5 rounded-[4px] border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all uppercase tracking-wider"
             >
-              {TAB_LABELS[tab]}
+              ⚠️ Zayıf ({strugglingCount})
             </button>
-          ))}
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              if (learnedCount < 4) {
+                alert(
+                  `Mastered Quiz başlatmak için en az 4 kelimeyi 'Biliyorum' olarak ekleyin (Mevcut: ${learnedCount}/4).`
+                );
+                return;
+              }
+              onOpenQuiz?.();
+            }}
+            title={
+              learnedCount < 4
+                ? `En az 4 learned kelime gerekli (Mevcut: ${learnedCount}/4)`
+                : 'Learned kelimelerden Quiz Başlat'
+            }
+            className={`flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              learnedCount >= 4
+                ? 'border-amber-400/50 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
+                : 'border-border-soft bg-surface text-muted-copy opacity-75'
+            }`}
+          >
+            🏆 Quiz ({learnedCount}/4)
+          </button>
+
+          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                role="tab"
+                type="button"
+                aria-selected={activeTab === tab}
+                onClick={() => chooseTab(tab)}
+                className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                  activeTab === tab
+                    ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                    : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+                }`}
+              >
+                {TAB_LABELS[tab]}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 

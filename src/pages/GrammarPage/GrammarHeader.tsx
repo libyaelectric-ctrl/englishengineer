@@ -6,13 +6,16 @@ export const GrammarHeader = ({
   levelCounts,
   query,
   setQuery,
+  grammarLearned,
+  grammarStruggling,
+  onOpenQuiz,
+  onOpenStrugglingQuiz,
 }: {
   level: string;
   levelCounts: Record<CefrLevel, number>;
   query: string;
   setQuery: (q: string) => void;
   grammarLearned?: number;
-  grammarMastered?: number;
   grammarStruggling?: number;
   onOpenQuiz?: () => void;
   onOpenStrugglingQuiz?: () => void;
@@ -41,25 +44,63 @@ export const GrammarHeader = ({
         </label>
       </div>
 
-      {/* Level Switcher Tabs (Identical to ProgressPage) */}
-      <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto">
-        {CEFR_LEVELS.map((cefrLevel) => (
+      {/* Level Switcher Tabs & Quiz Actions */}
+      <div className="flex items-center gap-2">
+        {(grammarStruggling ?? 0) > 0 && (
           <button
-            key={cefrLevel}
             type="button"
-            onClick={() => setQuery(cefrLevel)}
-            className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
-              cefrLevel === level
-                ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
-            }`}
+            onClick={onOpenStrugglingQuiz}
+            title="Zayıf kuralları tekrar et"
+            className="flex items-center gap-1.5 rounded-[4px] border border-rose-400/40 bg-rose-500/10 px-2.5 py-1 text-[10px] font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-500/20 cursor-pointer transition-all uppercase tracking-wider"
           >
-            {cefrLevel}
-            <span className="ml-1 text-[8px] opacity-60">
-              {levelCounts[cefrLevel]}
-            </span>
+            ⚠️ Zayıf ({grammarStruggling})
           </button>
-        ))}
+        )}
+
+        <button
+          type="button"
+          onClick={() => {
+            if ((grammarLearned ?? 0) < 2) {
+              alert(
+                `Grammar Quiz başlatmak için en az 2 kuralı tamamlayın (Mevcut: ${grammarLearned ?? 0}/2).`
+              );
+              return;
+            }
+            onOpenQuiz?.();
+          }}
+          title={
+            (grammarLearned ?? 0) < 2
+              ? `En az 2 öğrenilmiş kural gerekli (Mevcut: ${grammarLearned ?? 0}/2)`
+              : 'Grammar Quiz Başlat'
+          }
+          className={`flex items-center gap-1 rounded-[4px] border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            (grammarLearned ?? 0) >= 2
+              ? 'border-amber-400/50 bg-amber-500/10 text-amber-600 dark:text-amber-400 hover:bg-amber-500/20'
+              : 'border-border-soft bg-surface text-muted-copy opacity-75'
+          }`}
+        >
+          🏆 Quiz ({grammarLearned ?? 0}/2)
+        </button>
+
+        <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto">
+          {CEFR_LEVELS.map((cefrLevel) => (
+            <button
+              key={cefrLevel}
+              type="button"
+              onClick={() => setQuery(cefrLevel)}
+              className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                cefrLevel === level
+                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+              }`}
+            >
+              {cefrLevel}
+              <span className="ml-1 text-[8px] opacity-60">
+                {levelCounts[cefrLevel]}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

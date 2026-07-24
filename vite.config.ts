@@ -22,6 +22,8 @@ const VENDOR_CHUNKS: [string, string][] = [
   ['es-toolkit', 'vendor-utils'],
   ['date-fns', 'vendor-utils'],
   ['@sentry', 'vendor-sentry'],
+  ['clsx', 'vendor-utils'],
+  ['tailwind', 'vendor-utils'],
 ];
 
 function getVendorChunk(id: string): string | undefined {
@@ -64,6 +66,8 @@ export default defineConfig(() => {
       outDir: 'dist',
       sourcemap: 'hidden' as const,
       chunkSizeWarningLimit: 3500,
+      target: 'es2020',
+      minify: 'esbuild' as const,
       rollupOptions: {
         output: {
           manualChunks(id) {
