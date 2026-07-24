@@ -69,6 +69,11 @@ export interface VocabularySearchFilters {
   status?: string;
 }
 
+export interface LearnedQuizCompletion {
+  masteredWordIds: string[];
+  strugglingWordIds: string[];
+}
+
 const STORAGE_KEY = 'EngVox_vocabulary_menu';
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -419,6 +424,66 @@ export const VocabularyMenuService = {
       progress: { ...state.progress, [wordId]: next },
     });
     return next;
+  },
+
+  completeLearnedQuiz(
+    completion: LearnedQuizCompletion,
+    now = new Date()
+  ): VocabularyMenuState {
+    const state = this.getState();
+    const masteredIds = new Set(completion.masteredWordIds);
+    const strugglingIds = new Set(
+      completion.strugglingWordIds.filter((wordId) => !masteredIds.has(wordId))
+    );
+    const updatedProgress = { ...state.progress };
+    const newlyMastered: string[] = [];
+
+    masteredIds.forEach((wordId) => {
+      const current = state.progress[wordId];
+      if (!current || current.status !== 'Learned') return;
+      updatedProgress[wordId] = {
+        ...current,
+        correctReviews: Math.max(3, current.correctReviews + 1),
+        status: 'Mastered',
+        isWeak: false,
+        isForgotten: false,
+        isLeech: false,
+        lastReviewed: now.toISOString(),
+        nextReviewDate: addDays(now, 7),
+      };
+      newlyMastered.push(wordId);
+    });
+
+    strugglingIds.forEach((wordId) => {
+      const current = state.progress[wordId];
+      if (!current || current.status !== 'Learned') return;
+      const wrongReviews = current.wrongReviews + 1;
+      const next: VocabularyMenuProgress = {
+        ...current,
+        correctReviews: Math.min(current.correctReviews, 2),
+        wrongReviews,
+        status: 'Struggling',
+        isWeak: true,
+        isForgotten: wrongReviews >= 3,
+        lastReviewed: now.toISOString(),
+        nextReviewDate: now.toISOString(),
+      };
+      updatedProgress[wordId] = { ...next, isLeech: isLeechWord(next) };
+    });
+
+    const nextState = { ...state, progress: updatedProgress };
+    this.saveState(nextState);
+
+    newlyMastered.forEach((wordId) => {
+      eventBus.publish({
+        id: `vocab-mastered-${wordId}-${Date.now()}`,
+        type: 'vocabulary:mastered',
+        timestamp: now.toISOString(),
+        payload: { termId: wordId, masteredAt: now.toISOString() },
+      });
+    });
+
+    return nextState;
   },
 
   addToMyVocabulary(

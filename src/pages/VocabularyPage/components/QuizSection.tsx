@@ -1,226 +1,269 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle, XCircle, Trophy, ArrowRight } from 'lucide-react';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { repairVocabularyText } from '@/features/vocabulary';
-
-interface QuizWord {
-  id: string;
-  term: string;
-  turkishMeaning: string;
-}
+import {
+  FormEvent,
+  KeyboardEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Award, CheckCircle2, LoaderCircle } from 'lucide-react';
+import { SectionCard } from '@/shared/components/SectionCard';
+import {
+  repairVocabularyText,
+  type VocabularyMenuState,
+  type VocabularyTerm,
+  VocabularyMenuService,
+  VocabularyRepository,
+} from '@/features/vocabulary';
+import {
+  isTurkishQuizAnswerCorrect,
+  LEARNED_QUIZ_MINIMUM,
+  LEARNED_QUIZ_SIZE,
+  selectRandomQuizItems,
+} from '@/features/vocabulary/services/learned-quiz';
 
 interface QuizSectionProps {
-  learnedCount: number;
-  learnedWords: QuizWord[];
+  menuState: VocabularyMenuState;
 }
 
-const shuffleArray = <T,>(arr: T[]): T[] => {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
+interface QuizResult {
+  mastered: string[];
+  struggling: string[];
+  kept: string[];
+}
 
-export const QuizSection = ({ learnedCount, learnedWords }: QuizSectionProps) => {
-  const [quizActive, setQuizActive] = useState(false);
-  const [quizWords, setQuizWords] = useState<QuizWord[]>([]);
+const learnedWordIds = (menuState: VocabularyMenuState): string[] =>
+  Object.entries(menuState.progress)
+    .filter(([, progress]) => progress.status === 'Learned')
+    .map(([wordId]) => wordId);
+
+export const QuizSection = ({ menuState }: QuizSectionProps) => {
+  const [quizWords, setQuizWords] = useState<VocabularyTerm[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [showResults, setShowResults] = useState(false);
-  const [results, setResults] = useState<{
-    mastered: string[];
-    struggling: string[];
-    kept: string[];
-  } | null>(null);
+  const [isStarting, setIsStarting] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [result, setResult] = useState<QuizResult | null>(null);
+  const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const finishButtonRef = useRef<HTMLButtonElement | null>(null);
+  const learnedIds = learnedWordIds(menuState);
+  const canStartQuiz = learnedIds.length >= LEARNED_QUIZ_MINIMUM;
+  const isRunning = quizWords.length > 0 && !result;
 
-  const { onQuizCorrect, onQuizIncorrect } = useVocabularyStore();
+  useEffect(() => {
+    if (isRunning) inputRefs.current[0]?.focus();
+  }, [isRunning]);
 
-  const canStartQuiz = learnedCount >= 100;
+  const startQuiz = async () => {
+    if (!canStartQuiz) return;
+    setIsStarting(true);
+    setLoadError(null);
 
-  const startQuiz = () => {
-    const shuffled = shuffleArray(learnedWords).slice(0, 10);
-    setQuizWords(shuffled);
-    setAnswers({});
-    setShowResults(false);
-    setResults(null);
-    setQuizActive(true);
+    try {
+      const selectedIds = selectRandomQuizItems(learnedIds);
+      const selectedTerms = await Promise.all(
+        selectedIds.map((wordId) =>
+          VocabularyRepository.getVocabularyTermById(wordId)
+        )
+      );
+      const words = selectedTerms.filter(
+        (term): term is VocabularyTerm => Boolean(term)
+      );
+
+      if (words.length !== LEARNED_QUIZ_SIZE) {
+        throw new Error('Quiz words could not be loaded.');
+      }
+
+      setQuizWords(words);
+      setAnswers({});
+      setResult(null);
+    } catch {
+      setLoadError('The quiz could not be prepared. Please try again.');
+    } finally {
+      setIsStarting(false);
+    }
   };
 
-  const handleAnswerChange = (wordId: string, value: string) => {
-    setAnswers((prev) => ({ ...prev, [wordId]: value }));
-  };
-
-  const submitQuiz = () => {
+  const finishQuiz = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const mastered: string[] = [];
     const struggling: string[] = [];
     const kept: string[] = [];
 
     quizWords.forEach((word) => {
-      const userAnswer = answers[word.id]?.trim().toLowerCase() || '';
-      const correctAnswer = word.turkishMeaning.trim().toLowerCase();
-
-      if (userAnswer === '') {
+      const answer = answers[word.id] ?? '';
+      if (!answer.trim()) {
         kept.push(word.id);
-      } else if (userAnswer === correctAnswer) {
+      } else if (isTurkishQuizAnswerCorrect(answer, word.turkishMeaning)) {
         mastered.push(word.id);
-        onQuizCorrect(word.id);
       } else {
         struggling.push(word.id);
-        onQuizIncorrect(word.id);
       }
     });
 
-    setResults({ mastered, struggling, kept });
-    setShowResults(true);
+    VocabularyMenuService.completeLearnedQuiz({
+      masteredWordIds: mastered,
+      strugglingWordIds: struggling,
+    });
+    setResult({ mastered, struggling, kept });
   };
 
-  const resetQuiz = () => {
-    setQuizActive(false);
+  const handleAnswerKeyDown = (
+    event: KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    const nextInput = inputRefs.current[index + 1];
+    if (nextInput) {
+      nextInput.focus();
+    } else {
+      finishButtonRef.current?.focus();
+    }
+  };
+
+  const backToLearned = () => {
     setQuizWords([]);
     setAnswers({});
-    setShowResults(false);
-    setResults(null);
+    setResult(null);
+    setLoadError(null);
   };
 
-  const answeredCount = Object.keys(answers).length;
+  const answeredCount = Object.values(answers).filter((answer) =>
+    answer.trim()
+  ).length;
 
   return (
-    <div className="rounded-[4px] border-2 border-primary/30 bg-primary/5 p-4 mb-6">
-      <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-          <span className="text-lg">🏆</span> Mastered Quiz
-        </h3>
-        <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[10px] font-bold text-muted-copy">
-          {learnedCount}/100 words
-        </span>
-      </div>
-
-      {!quizActive && !showResults && (
-        <div className="text-center">
-          <p className="text-xs text-muted-copy mb-3">
-            {canStartQuiz
-              ? 'Translate 10 English words to Turkish. Correct = Mastered, Wrong = Struggling.'
-              : `Need ${100 - learnedCount} more learned words to start quiz.`}
-          </p>
-          <button
-            type="button"
-            onClick={startQuiz}
-            disabled={!canStartQuiz}
-            className={`rounded-[4px] px-4 py-2 text-xs font-bold uppercase transition-all ${
-              canStartQuiz
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer'
-                : 'bg-surface text-muted-copy cursor-not-allowed'
-            }`}
-          >
-            Start Quiz
-          </button>
+    <SectionCard
+      title="Learned Quiz"
+      subtitle="Test whether your learned words are ready for long-term recall."
+      icon={Award}
+    >
+      {!isRunning && !result && (
+        <div className="space-y-4">
+          <div className="grid gap-3 border-y border-border-soft py-4 sm:grid-cols-[1fr_auto] sm:items-center">
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                100 learned words required.
+              </p>
+              <p className="mt-1 text-xs text-muted-copy">
+                Current: Learned: {learnedIds.length} / {LEARNED_QUIZ_MINIMUM}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void startQuiz()}
+              disabled={!canStartQuiz || isStarting}
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[4px] bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted-copy"
+            >
+              {isStarting && <LoaderCircle className="h-3.5 w-3.5 animate-spin" />}
+              Start Quiz
+            </button>
+          </div>
+          {!canStartQuiz && (
+            <p className="text-xs text-muted-copy">
+              Learn at least 100 words to unlock the quiz.
+            </p>
+          )}
+          {loadError && (
+            <p role="alert" className="text-xs text-rose-600">
+              {loadError}
+            </p>
+          )}
         </div>
       )}
 
-      {quizActive && !showResults && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-[10px] text-muted-copy">
-            <span>{answeredCount}/{quizWords.length} answered</span>
-            <button
-              type="button"
-              onClick={submitQuiz}
-              className="flex items-center gap-1 rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 cursor-pointer"
-            >
-              Tamam <ArrowRight className="h-3 w-3" />
-            </button>
+      {isRunning && (
+        <form onSubmit={finishQuiz} className="space-y-5" noValidate>
+          <div className="flex items-center justify-between border-b border-border-soft pb-3 text-xs text-muted-copy">
+            <span>
+              {answeredCount} / {LEARNED_QUIZ_SIZE} answered
+            </span>
+            <span>Complete any questions you are ready to answer.</span>
           </div>
-
-          <div className="space-y-2 max-h-96 overflow-y-auto">
+          <div className="space-y-4">
             {quizWords.map((word, index) => (
               <div
                 key={word.id}
-                className="flex items-center gap-3 rounded-[4px] border border-border-soft bg-background p-2"
+                className="border-b border-border-soft pb-4 last:border-b-0"
               >
-                <span className="text-[10px] font-bold text-muted-copy min-w-[20px]">
-                  {index + 1}.
-                </span>
-                <span className="text-sm font-semibold text-foreground flex-1">
+                <label
+                  htmlFor={`learned-quiz-${word.id}`}
+                  className="block text-xs font-bold uppercase tracking-wider text-muted-copy"
+                >
+                  Question {index + 1} / {LEARNED_QUIZ_SIZE}
+                </label>
+                <p className="mt-2 text-xl font-semibold text-foreground">
                   {repairVocabularyText(word.term)}
-                </span>
+                </p>
+                <p className="mt-1 text-sm text-muted-copy">
+                  Type Turkish meaning:
+                </p>
                 <input
+                  ref={(element) => {
+                    inputRefs.current[index] = element;
+                  }}
+                  id={`learned-quiz-${word.id}`}
                   type="text"
-                  value={answers[word.id] || ''}
-                  onChange={(e) => handleAnswerChange(word.id, e.target.value)}
-                  placeholder="Türkçe çevirisi"
-                  className="w-40 rounded-[4px] border border-border-soft bg-surface px-2 py-1 text-xs text-foreground outline-none focus:border-[#0047bb]"
+                  value={answers[word.id] ?? ''}
+                  onChange={(event) =>
+                    setAnswers((current) => ({
+                      ...current,
+                      [word.id]: event.target.value,
+                    }))
+                  }
+                  onKeyDown={(event) => handleAnswerKeyDown(event, index)}
+                  autoComplete="off"
+                  className="mt-2 w-full max-w-xl rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-sm text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15"
                 />
               </div>
             ))}
           </div>
-        </div>
+          <div className="flex justify-end border-t border-border-soft pt-4">
+            <button
+              ref={finishButtonRef}
+              type="submit"
+              className="min-h-10 rounded-[4px] bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              Finish Quiz
+            </button>
+          </div>
+        </form>
       )}
 
-      {showResults && results && (
-        <div className="space-y-3">
-          <div className="flex justify-center gap-4 text-xs">
-            <span className="flex items-center gap-1 text-green-600">
-              <CheckCircle className="h-3 w-3" /> {results.mastered.length} Mastered
-            </span>
-            <span className="flex items-center gap-1 text-red-600">
-              <XCircle className="h-3 w-3" /> {results.struggling.length} Struggling
-            </span>
-            <span className="flex items-center gap-1 text-muted-copy">
-              {results.kept.length} Kept in Learned
-            </span>
+      {result && (
+        <div className="space-y-4" aria-live="polite">
+          <div className="flex items-center gap-3 border-b border-border-soft pb-4">
+            <CheckCircle2
+              className="h-6 w-6 text-emerald-600"
+              aria-hidden="true"
+            />
+            <div>
+              <h5 className="text-base font-semibold text-foreground">
+                Quiz Complete
+              </h5>
+              <p className="text-xs text-muted-copy">
+                Your vocabulary pools have been updated.
+              </p>
+            </div>
           </div>
-
-          <div className="space-y-1 max-h-60 overflow-y-auto text-[10px]">
-            {results.mastered.map((id) => {
-              const word = quizWords.find((w) => w.id === id);
-              return (
-                <div key={id} className="flex items-center gap-2 text-green-600">
-                  <CheckCircle className="h-3 w-3" />
-                  <span className="font-semibold">{word?.term}</span>
-                  <span>→ Mastered</span>
-                </div>
-              );
-            })}
-            {results.struggling.map((id) => {
-              const word = quizWords.find((w) => w.id === id);
-              return (
-                <div key={id} className="flex items-center gap-2 text-red-600">
-                  <XCircle className="h-3 w-3" />
-                  <span className="font-semibold">{word?.term}</span>
-                  <span>→ Struggling</span>
-                </div>
-              );
-            })}
-            {results.kept.map((id) => {
-              const word = quizWords.find((w) => w.id === id);
-              return (
-                <div key={id} className="flex items-center gap-2 text-muted-copy">
-                  <span className="font-semibold">{word?.term}</span>
-                  <span>→ Kept in Learned</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="flex justify-center gap-2 pt-2">
+          <dl className="grid gap-3 text-sm sm:grid-cols-3">
+            <div><dt className="text-muted-copy">Correct</dt><dd className="font-semibold text-emerald-600">{result.mastered.length}</dd></div>
+            <div><dt className="text-muted-copy">Wrong</dt><dd className="font-semibold text-rose-600">{result.struggling.length}</dd></div>
+            <div><dt className="text-muted-copy">Skipped</dt><dd className="font-semibold text-foreground">{result.kept.length}</dd></div>
+            <div><dt className="text-muted-copy">Moved to Mastered</dt><dd className="font-semibold text-emerald-600">{result.mastered.length}</dd></div>
+            <div><dt className="text-muted-copy">Moved to Struggling</dt><dd className="font-semibold text-rose-600">{result.struggling.length}</dd></div>
+            <div><dt className="text-muted-copy">Stayed in Learned</dt><dd className="font-semibold text-foreground">{result.kept.length}</dd></div>
+          </dl>
+          <div className="flex justify-end border-t border-border-soft pt-4">
             <button
               type="button"
-              onClick={startQuiz}
-              className="rounded-[4px] border border-border-soft px-3 py-1.5 text-[10px] font-bold text-foreground hover:bg-surface-hover cursor-pointer"
+              onClick={backToLearned}
+              className="min-h-10 rounded-[4px] border border-border-soft px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover"
             >
-              New Quiz
-            </button>
-            <button
-              type="button"
-              onClick={resetQuiz}
-              className="rounded-[4px] bg-primary px-3 py-1.5 text-[10px] font-bold text-primary-foreground hover:bg-primary/90 cursor-pointer"
-            >
-              Close
+              Back to Learned
             </button>
           </div>
         </div>
       )}
-    </div>
+    </SectionCard>
   );
 };
