@@ -39,12 +39,8 @@ export const QuizModal = ({
   >([]);
   const [showResult, setShowResult] = useState(false);
 
-  const {
-    onQuizCorrect,
-    onQuizIncorrect,
-    onStrugglingQuizCorrect,
-    onStrugglingQuizIncorrect,
-  } = useVocabularyStore();
+  const { onQuizCorrect, onQuizIncorrect, moveToLearned, keepStruggling } =
+    useVocabularyStore();
 
   useEffect(() => {
     if (isOpen && words.length > 0) {

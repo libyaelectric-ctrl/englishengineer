@@ -41,6 +41,7 @@ const StatusContent = ({
   mode,
   onReview,
   showAnswer,
+  onLearn,
 }: {
   status: string;
   progress?: VocabularyMenuProgress;
@@ -48,15 +49,16 @@ const StatusContent = ({
   mode: VocabularySetMode;
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
   showAnswer: boolean;
+  onLearn?: (term: VocabularyTerm) => void;
 }) => {
-  const isLearned = status === 'Learning' || status === 'learned';
+  const isLearned = status === 'learned';
   const isQuizMode = mode === 'Quiz';
 
   return (
     <>
       {isLearned && isQuizMode && (
         <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-          <CheckCircle2 className="h-4 w-4" /> Learned Listesine Eklendi
+          <CheckCircle2 className="h-4 w-4" /> Added to Learned List
         </div>
       )}
       {isLearned && !isQuizMode && progress && (
@@ -67,8 +69,19 @@ const StatusContent = ({
           onReview={onReview}
         />
       )}
-      {status === 'Mastered' && <MasteredBadge />}
-      {status === 'New' && <NewWordHint />}
+      {status === 'mastered' && <MasteredBadge />}
+      {status === 'new' && (
+        <>
+          <NewWordHint />
+          <button
+            type="button"
+            onClick={() => onLearn?.(term)}
+            className="mt-2 w-full rounded-[4px] bg-[#0047bb] px-3 py-2 text-xs font-bold text-white hover:bg-[#0047bb]/90 transition-colors cursor-pointer"
+          >
+            I Know This
+          </button>
+        </>
+      )}
       {showAnswer && (
         <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
           <p>{repairVocabularyText(term.exampleSentence)}</p>
@@ -173,7 +186,7 @@ export const WordCard = ({
   const [knowThisCheck, setKnowThisCheck] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const status = progress?.status ?? 'New';
+  const status = progress?.status ?? 'new';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
 
   const handleLearnClick = (t: VocabularyTerm) => {
@@ -228,6 +241,7 @@ export const WordCard = ({
             mode={mode}
             onReview={onReview}
             showAnswer={showAnswer}
+            onLearn={onLearn}
           />
           <DomainBar status={status} />
           <CardActions

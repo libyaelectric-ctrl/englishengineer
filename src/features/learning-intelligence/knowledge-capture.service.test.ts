@@ -29,7 +29,7 @@ describe('KnowledgeCaptureService', () => {
     expect(result.grammarExposed).toBeGreaterThanOrEqual(1);
     expect(
       VocabularyMenuService.getState().progress[vocabulary.id]?.status
-    ).toBe('Learning');
+    ).toBe('Learned');
     expect(GrammarProgressService.get(grammar.id).exposures).toBe(1);
   });
 

@@ -165,7 +165,7 @@ export const LearningTaskEngine = {
     const preferredDomains = domain ? [] : getPreferredDomains(profile);
     const memoryIds = Object.entries(memory.progress)
       .filter(([, progress]) =>
-        ['Learning', 'Mastered'].includes(progress.status)
+        ['Learned', 'Mastered'].includes(progress.status)
       )
       .map(([id]) => id);
     const [known, currentTerms, stretchTerms] = await Promise.all([

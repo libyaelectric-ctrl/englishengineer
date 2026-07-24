@@ -14,8 +14,9 @@ export interface WordProgress {
 
 export const MASTERY_QUIZ_MIN_WORDS = 100;
 export const READING_WRITING_UNLOCK_THRESHOLD = 200;
+export const QUIZ_THRESHOLD = 4;
 
-const getTodayKey = (): string => new Date().toISOString().split('T')[0];
+export const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
 export const VocabularyProgressService = {
   addWord(wordId: string): WordProgress {
@@ -91,6 +92,10 @@ export const VocabularyProgressService = {
 
   canAccessReadingWriting(masteredCount: number): boolean {
     return masteredCount >= READING_WRITING_UNLOCK_THRESHOLD;
+  },
+
+  isQuizReady(learnedCount: number): boolean {
+    return learnedCount >= QUIZ_THRESHOLD;
   },
 
   getStatusLabel(status: WordStatus): string {
