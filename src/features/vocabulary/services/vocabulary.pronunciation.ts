@@ -39,18 +39,31 @@ export const PronunciationService = {
       throw new Error('Speech synthesis not supported');
     }
 
+    // Detect language: Turkish characters or Turkish-specific words
+    const isTurkish = /[çğıöşüÇĞİÖŞÜ]/.test(word) ||
+      /^(ve|bir|bu|için|ile|için|ama|veya|olan|den|dan|de|da)$/.test(word.toLowerCase());
+
     const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
+    utterance.lang = isTurkish ? 'tr-TR' : 'en-US';
     utterance.rate = rate;
     utterance.pitch = 1;
 
     const voices = speechSynthesis.getVoices();
-    const englishVoice =
-      voices.find(
-        (v) => v.lang.startsWith('en') && v.name.includes('Google')
-      ) ?? voices.find((v) => v.lang.startsWith('en'));
 
-    if (englishVoice) utterance.voice = englishVoice;
+    if (isTurkish) {
+      // Turkish voice priority
+      const turkishVoice =
+        voices.find((v) => v.lang.startsWith('tr') && v.name.includes('Google')) ??
+        voices.find((v) => v.lang.startsWith('tr') && (v.name.includes('Natural') || v.name.includes('Neural'))) ??
+        voices.find((v) => v.lang.startsWith('tr'));
+      if (turkishVoice) utterance.voice = turkishVoice;
+    } else {
+      // English voice priority
+      const englishVoice =
+        voices.find((v) => v.lang.startsWith('en') && v.name.includes('Google')) ??
+        voices.find((v) => v.lang.startsWith('en'));
+      if (englishVoice) utterance.voice = englishVoice;
+    }
 
     return new Promise((resolve, reject) => {
       utterance.onend = () => resolve();
