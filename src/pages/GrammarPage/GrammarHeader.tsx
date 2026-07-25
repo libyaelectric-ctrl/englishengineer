@@ -82,11 +82,13 @@ export const GrammarHeader = ({
           🏆 Quiz ({grammarLearned ?? 0}/2)
         </button>
 
-        <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto">
+        <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm overflow-x-auto" role="tablist" aria-label="Grammar level">
           {CEFR_LEVELS.map((cefrLevel) => (
             <button
               key={cefrLevel}
               type="button"
+              role="tab"
+              aria-selected={cefrLevel === level}
               onClick={() => setQuery(cefrLevel)}
               className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                 cefrLevel === level

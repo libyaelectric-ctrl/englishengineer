@@ -113,7 +113,7 @@ export const FieldDocAssistant: React.FC = () => {
               }}
               className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'border-primary bg-primary/5 shadow-md ring-1 ring-[#0047bb]'
+                  ? 'border-primary bg-primary/5 shadow-md ring-1 ring-primary'
                   : 'border-border-soft bg-surface hover:bg-surface-hover hover:border-border-hover'
               }`}
             >

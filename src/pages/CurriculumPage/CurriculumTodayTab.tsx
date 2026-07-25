@@ -128,7 +128,7 @@ export const CurriculumTodayTab = ({
                     key={mission.id}
                     className={`flex min-h-44 flex-col rounded-[4px] border p-5 shadow-sm transition-all hover:border-primary/40 ${
                       isActive
-                        ? 'border-y border-r border-border-soft border-l-[3px] border-l-[#0047bb] bg-surface'
+                        ? 'border-y border-r border-border-soft border-l-[3px] border-l-primary bg-surface'
                         : 'border-border-soft bg-surface'
                     }`}
                   >

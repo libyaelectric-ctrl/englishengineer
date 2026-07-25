@@ -46,7 +46,7 @@ const GraphLink = ({
       y1={source.y}
       x2={target.x}
       y2={target.y}
-      stroke={highlighted ? '#0047bb' : '#e2e8f0'}
+      stroke={highlighted ? 'var(--color-primary)' : '#e2e8f0'}
       strokeWidth={highlighted ? 2.5 : 1.2}
       strokeDasharray={
         link.source.startsWith('topic') || link.target.startsWith('topic')

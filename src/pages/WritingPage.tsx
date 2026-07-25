@@ -112,13 +112,15 @@ const SubTabSwitcher = ({
   ];
 
   return (
-    <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm">
+    <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm" role="tablist" aria-label="Writing mode">
       {tabs.map((tab) => {
         const isActive = subTab === tab.key;
         return (
           <button
             key={tab.key}
             type="button"
+            role="tab"
+            aria-selected={isActive}
             onClick={() => setSubTab(tab.key)}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               isActive
