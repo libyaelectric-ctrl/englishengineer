@@ -10,17 +10,17 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 describe('useKeyboardNavigation', () => {
   it('does not throw when called inside MemoryRouter', () => {
     expect(() => {
-      renderHook(() => useKeyboardNavigation(), { wrapper });
+      renderHook(() => useKeyboardNavigation({ key: 'Enter', onKeyPress: () => {} }), { wrapper });
     }).not.toThrow();
   });
 
   it('cleans up on unmount without error', () => {
-    const { unmount } = renderHook(() => useKeyboardNavigation(), { wrapper });
+    const { unmount } = renderHook(() => useKeyboardNavigation({ key: 'Enter', onKeyPress: () => {} }), { wrapper });
     expect(() => unmount()).not.toThrow();
   });
 
   it('can be called multiple times', () => {
-    const { result, rerender } = renderHook(() => useKeyboardNavigation(), {
+    const { result, rerender } = renderHook(() => useKeyboardNavigation({ key: 'Enter', onKeyPress: () => {} }), {
       wrapper,
     });
     expect(result.current).toBeUndefined();

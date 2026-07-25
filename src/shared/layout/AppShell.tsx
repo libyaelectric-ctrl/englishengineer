@@ -12,7 +12,10 @@ const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 
 export const AppShell: FC = () => {
   const { toggleSidebar } = useAppStore();
-  useKeyboardNavigation();
+  useKeyboardNavigation({
+    key: 'Escape',
+    onKeyPress: () => toggleSidebar(),
+  });
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-background text-foreground">
