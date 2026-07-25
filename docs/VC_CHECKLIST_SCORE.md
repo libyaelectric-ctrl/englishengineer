@@ -12,29 +12,86 @@
 
 ### npm run typecheck
 ```
-tsc --noEmit
-(0 errors)
+> engvox-frontend@4.0.1 typecheck
+> tsc --noEmit
+
+(hata yok)
 ```
 
 ### npm run lint
 ```
-eslint .
-0 errors, 20 warnings
+> engvox-frontend@4.0.1 lint
+> eslint .
+
+backend\src\middleware\csrf.middleware.ts
+  58:9  warning  Arrow function has a complexity of 14. Maximum allowed is 10  complexity
+
+backend\src\tracing.ts
+  2:10  warning  'logger' is defined but never used  @typescript-eslint/no-unused-vars
+
+public\sw.js
+   11:7   warning  'MAX_CACHE_SIZE' is assigned a value but never used    no-unused-vars
+   36:7   warning  'enforceCacheSize' is assigned a value but never used  no-unused-vars
+  162:14  warning  'e' is defined but never used                          no-unused-vars
+
+src\core\learning\learning.store.ts
+  379:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  380:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+src\features\listening\AudioPlayer.tsx
+  104:6  warning  React Hook useEffect has missing dependencies  react-hooks/exhaustive-deps
+  119:6  warning  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
+
+src\features\profile\useLearningCockpit.ts
+  77:6  warning  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
+
+src\features\team\components\TeamDashboard.tsx
+  15:6  warning  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
+
+src\features\vocabulary\services\vocabulary.pronunciation.ts
+  37:3  warning  Async method 'speak' has a complexity of 11  complexity
+
+src\pages\GrammarPage\GrammarLessonContent.tsx
+  455:6  warning  React Hook useEffect has missing dependencies  react-hooks/exhaustive-deps
+
+src\pages\GrammarPage\hooks\useGrammarPage.ts
+  147:5  warning  React Hook useMemo has an unnecessary dependency  react-hooks/exhaustive-deps
+  310:6  warning  React Hook useEffect has missing dependencies  react-hooks/exhaustive-deps
+
+src\pages\LoginPage.tsx
+  27:6  warning  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
+
+src\pages\ProgressPage\utils.ts
+  150:6  warning  React Hook useEffect has a missing dependency  react-hooks/exhaustive-deps
+
+src\pages\ReadingPage\ReadingWorkspace.tsx
+  92:6  warning  React Hook useEffect has missing dependencies  react-hooks/exhaustive-deps
+
+src\shared\storage\persist-middleware.ts
+  42:26  warning  Unexpected any  @typescript-eslint/no-explicit-any
+  67:26  warning  Unexpected any  @typescript-eslint/no-explicit-any
+
+✖ 20 problems (0 errors, 20 warnings)
 ```
 
 ### npm run test
 ```
-vitest run
+> engvox-frontend@4.0.1 test
+> vitest run
+
 Test Files  134 passed (134)
-Tests       845 passed | 1 skipped (846)
-Duration    98.35s
+     Tests  845 passed | 1 skipped (846)
+  Duration  88.23s
 ```
 
 ### npm run build
 ```
-tsc --noEmit && vite build
+> engvox-frontend@4.0.1 build
+> tsc --noEmit && vite build
+
+vite v6.4.3 building for production...
+✓ 2691 modules transformed.
 ✓ built in 5.99s
-Output: dist/ (index.html 3.65 kB, 80+ JS/CSS chunks)
 ```
 
 ### npm --prefix backend ci
@@ -42,23 +99,187 @@ Output: dist/ (index.html 3.65 kB, 80+ JS/CSS chunks)
 added 532 packages
 ```
 
-### npm --prefix backend test
+### npm --prefix backend test (TAM ÇIKTI — 29 hata dahil)
 ```
+> engineeros-backend@4.0.1 test
+> tsx --test
+
+ℹ tests 153
+ℹ suites 27
 ℹ pass 124
-ℹ fail 29 (pre-existing auth-bypass and validation failures)
+ℹ fail 29
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13274.3477
+
+✖ failing tests:
+
+test at test\auth-bypass.test.ts:1:845
+✖ insecure dev auth is blocked in production by default (78.5694ms)
+  AssertionError: 403 !== 401
+  at auth-bypass.test.ts:45:10
+
+test at test\auth-bypass.test.ts:1:1657
+✖ demo engineer profiles are blocked from creating checkout sessions (18.0379ms)
+  AssertionError: 'csrf_token_missing' !== 'FORBIDDEN_DEMO_ACTION'
+  at auth-bypass.test.ts:92:10
+
+test at test\auth-bypass.test.ts:1:2354
+✖ demo engineer profiles are blocked from creating billing portal sessions (14.0993ms)
+  AssertionError: 'csrf_token_missing' !== 'FORBIDDEN_DEMO_ACTION'
+  at auth-bypass.test.ts:119:10
+
+test at test\backend.test.ts:1:2392
+✖ AI route rejects an empty prompt (19.3401ms)
+  AssertionError: 403 !== 400
+  at backend.test.ts:87:10
+
+test at test\backend.test.ts:1:2730
+✖ AI route explicitly labels safe mock mode (5.6067ms)
+  AssertionError: 403 !== 200
+  at backend.test.ts:99:10
+
+test at test\backend.test.ts:1:3190
+✖ configured AI provider returns a real-mode contract (5.3914ms)
+  AssertionError: undefined !== 'real'
+  at backend.test.ts:131:10
+
+test at test\backend.test.ts:1:4171
+✖ configured provider failure returns a safe unavailable error (5.4793ms)
+  AssertionError: 403 !== 502
+  at backend.test.ts:156:10
+
+test at test\backend.test.ts:1:10158
+✖ production AI routes reject missing authentication (5.2669ms)
+  AssertionError: 403 !== 401
+  at backend.test.ts:369:10
+
+test at test\backend.test.ts:1:10787
+✖ valid internal authentication protects identity (4.927ms)
+  AssertionError: 403 !== 200
+  at backend.test.ts:382:10
+
+test at test\backend.test.ts:1:11215
+✖ AI operation is controlled by the route (4.3829ms)
+  AssertionError: 403 !== 400
+  at backend.test.ts:397:10
+
+test at test\backend.test.ts:1:11581
+✖ AI prompt size and rate limit are enforced (4.2197ms)
+  AssertionError: 403 !== 400
+  at backend.test.ts:408:10
+
+test at test\backend.test.ts:1:13131
+✖ checkout rejects a mismatched body user (5.3075ms)
+  AssertionError: 403 !== 200
+  at backend.test.ts:496:10
+
+test at test\backend.test.ts:1:15914
+✖ Anthropic request and response contracts (4.2874ms)
+  AssertionError: 403 !== 200
+  at backend.test.ts:588:10
+
+test at test\backend.test.ts:1:20734
+✖ checkout returns 503 STRIPE_NOT_CONFIGURED (3.5609ms)
+  AssertionError: 403 !== 503
+  at backend.test.ts:772:10
+
+test at test\backend.test.ts:1:21332
+✖ checkout route permits request with valid Supabase token (3.8206ms)
+  AssertionError: 403 !== 200
+  at backend.test.ts:829:10
+
+test at test\backend.test.ts:1:22584
+✖ checkout route rejects request with missing authorization (4.4326ms)
+  AssertionError: 403 !== 401
+  at backend.test.ts:860:10
+
+test at test\backend.test.ts:1:23358
+✖ checkout route rejects request with invalid Supabase token (4.3732ms)
+  AssertionError: 403 !== 401
+  at backend.test.ts:892:10
+
+test at test\integration\api.integration.test.ts:1:1107
+✖ POST /api/ai/writing-review with dev bypass (35.486ms)
+  AssertionError: 403 !== 200
+  at api.integration.test.ts:51:12
+
+test at test\integration\api.integration.test.ts:1:1364
+✖ POST /api/ai/coach with dev bypass (5.3156ms)
+  AssertionError: 403 !== 200
+  at api.integration.test.ts:59:12
+
+test at test\validation-integration.test.ts:1:922
+✖ rejects POST with missing prompt (86.1991ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:46:12
+
+test at test\validation-integration.test.ts:1:1268
+✖ rejects POST with empty prompt (9.1482ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:58:12
+
+test at test\validation-integration.test.ts:1:1564
+✖ rejects POST with whitespace-only prompt (4.3949ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:69:12
+
+test at test\validation-integration.test.ts:1:1796
+✖ rejects POST with oversized prompt (4.3735ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:78:12
+
+test at test\validation-integration.test.ts:1:2111
+✖ rejects POST with invalid operation (9.7363ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:89:12
+
+test at test\validation-integration.test.ts:1:2434
+✖ accepts valid request (3.3453ms)
+  AssertionError: 403 !== 200
+  at validation-integration.test.ts:100:12
+
+test at test\validation-integration.test.ts:1:4748
+✖ rejects POST /api/workspaces with invalid name type (4.4564ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:198:12
+
+test at test\validation-integration.test.ts:1:5042
+✖ accepts POST /api/workspaces with valid body (3.5916ms)
+  AssertionError: 403 !== 200
+  at validation-integration.test.ts:209:12
+
+test at test\validation-integration.test.ts:1:5265
+✖ rejects PUT memory with missing key (14.3351ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:218:12
+
+test at test\validation-integration.test.ts:1:5561
+✖ rejects POST documents with missing docName (15.6943ms)
+  AssertionError: 403 !== 400
+  at validation-integration.test.ts:229:12
 ```
 
-### Frontend Health (Vercel)
-```
-curl -I https://englishengineer.vercel.app
-HTTP/2 200 (assumed — requires network access to verify)
-```
+### 29 Backend Test Hatası — Kök Neden Analizi
 
-### Backend Health (Railway)
-```
-curl -s https://englishengineer-production.up.railway.app/api/health
-(requires network access to verify)
-```
+**Tüm 29 hata aynı kök nedenle:** CSRF middleware'i auth middleware'inden önce çalışıyor ve CSRF token'ı olmadan gelen istekleri 403 ile reddediyor. Testler CSRF token'ı göndermiyor, bu yüzden auth/validation testleri bile 403 alıyor.
+
+**Kategoriler:**
+- **CSRF token eksikliği (22 test):** Tüm validation-integration, auth-bypass, ve backend.test.ts'deki AI/checkout testleri 403 alıyor çünkü CSRF middleware'i önce çalışıyor.
+- **Auth bypass testleri (3 test):** `auth-bypass.test.ts` — CSRF yüzünden auth kontrolleri test edilemiyor.
+- **Dev bypass testleri (2 test):** `api.integration.test.ts` — CSRF yüzünden dev bypass çalıştırılamıyor.
+- **AI contract testi (1 test):** `backend.test.ts:131` — undefined !== 'real' (CSRF yüzünden yanıt alınamıyor).
+- **Billing testi (1 test):** `backend.test.ts:772` — 403 !== 503 (CSRF yüzünden billing endpoint'e ulaşılamıyor).
+
+**Düzeltme yönü:** Testlere CSRF token eklenmeli veya test ortamında CSRF doğrulaması devre dışı bırakılmalı. Bu düzeltme henüz yapılmadı — mevcut durum rapor ediliyor.
+
+### Puan Etkisi
+
+29 backend test hatası nedeniyle:
+- Backend test puanı: %100'den %80.7'ye düşürüldü (124/153 geçti)
+- Güvenlik puanı: CSRF middleware'i çalışıyor (olumlu), ama testler bunu doğrulayamıyor (olumsuz)
+- Genel puan: 29 hatanın etkisiyle yeniden hesaplandı
 
 ---
 
@@ -258,10 +479,10 @@ curl -s https://englishengineer-production.up.railway.app/api/health
 | #   | Madde                             | Kanıt                                   | Puan |
 | --- | --------------------------------- | --------------------------------------- | ---- |
 | 141 | Testing Strategy                  | Kapsamlı test stratejisi                | 75   |
-| 142 | Unit Testing                      | 480+ FE, 124 BE test                    | 80   |
+| 142 | Unit Testing                      | 480+ FE, 124/153 BE test (29 CSRF)      | 65   |
 | 143 | Integration Testing               | Sınırlı entegrasyon testi               | 60   |
 | 144 | End-to-End Testing                | Playwright mevcut                       | 70   |
-| 145 | API Testing                       | Backend testleri                        | 75   |
+| 145 | API Testing                       | CSRF nedeniyle 29 API test fail         | 60   |
 | 146 | Regression Testing                | CI'da otomatik                          | 75   |
 | 147 | Test Coverage                     | Coverage raporu var                     | 65   |
 | 148 | Test Automation                   | GitHub Actions                          | 80   |
@@ -278,7 +499,7 @@ curl -s https://englishengineer-production.up.railway.app/api/health
 | 159 | Resource Optimization             | Optimizasyonlar                         | 65   |
 | 160 | Continuous Performance Monitoring | Sentry metrics + performance-monitor.js | 70   |
 
-**Alt Toplam:** 1410/2000
+**Alt Toplam:** 1380/2000
 
 ### 9. AI & Enterprise
 
@@ -347,10 +568,10 @@ curl -s https://englishengineer-production.up.railway.app/api/health
 | 5. Database          | 81-100    | 1365/2000       | %68.25    |
 | 6. Security          | 101-120   | 1490/2000       | %74.5     |
 | 7. DevOps            | 121-140   | 1460/2000       | %73       |
-| 8. Testing           | 141-160   | 1410/2000       | %70.5     |
+| 8. Testing           | 141-160   | 1380/2000       | %69      |
 | 9. AI & Enterprise   | 161-180   | 1310/2000       | %65.5     |
 | 10. Documentation    | 181-200   | 1430/2000       | %71.5     |
-| **TOPLAM**           | **1-200** | **14120/20000** | **%70.6** |
+| **TOPLAM**           | **1-200** | **14090/20000** | **%70.45** |
 
 ---
 
@@ -449,13 +670,13 @@ curl -s https://englishengineer-production.up.railway.app/api/health
 
 ## SONUÇ
 
-**Toplam Puan:** 14120/20000 (%70.6)
+**Toplam Puan:** 14090/20000 (%70.45)
 
 **Önceki puanlama (18100) ile karşılaştırma:**
 
 - Önceki: 18100/20000 (%90.5)
-- Yeni (sıfırdan): 14120/20000 (%70.6)
-- Fark: -3980 puan (-19.9%)
+- Yeni (sıfırdan): 14090/20000 (%70.45)
+- Fark: -4010 puan (-20.05%)
 
 **Neden fark var?**
 Önceki puanlamada "var olan" dosyaları 80-90 ile puanlamıştım. Ama aslında bu dosyaların çoğu **sadece doküman** — gerçek uygulama kodu değil. Gerçek uygulama özelliklerinin çoğu hala eksik:
