@@ -15,7 +15,7 @@ Product ownership and author attribution: **Özcan ERENSAYIN**.
 
 > **Katkıda bulunmak veya geliştirme ortamı kurmak istiyorsanız önce [docs/ONBOARDING.md](docs/ONBOARDING.md) dosyasına bakın.**
 
-See [ENGINEEROS_ROADMAP.md](ENGINEEROS_ROADMAP.md) for the official v2.0 to v4.0 development roadmap.
+See [docs/ROADMAP.md](docs/ROADMAP.md) for the official v2.0 to v4.0 development roadmap.
 
 ## Current Milestone
 
@@ -104,7 +104,7 @@ EngineerOS v2.5 introduced the Engineer Assessment Engine:
 - Analytics skill matrix, readiness signals, strengths, and improvement areas
 - Clear trust labels for limited local data and non-AI assessment mode
 
-See [ASSESSMENT_ENGINE.md](ASSESSMENT_ENGINE.md) for implementation details.
+Assessment engine implementation is in `src/features/assessment/`.
 
 EngineerOS v2.4 introduced the Engineer AI Copilot:
 
@@ -114,7 +114,7 @@ EngineerOS v2.4 introduced the Engineer AI Copilot:
 - Copy, export, regenerate, and clear-session controls
 - Clear mock/backend/fallback trust labels
 
-See [ENGINEER_AI_COPILOT.md](ENGINEER_AI_COPILOT.md) for implementation details.
+AI Copilot implementation is in `src/features/ai/`.
 
 EngineerOS v2.3 introduced the Real Audio Engine for Listening:
 
@@ -125,7 +125,7 @@ EngineerOS v2.3 introduced the Real Audio Engine for Listening:
 - Favorite missions and resume-later playback
 - Local listening analytics and audio cache support
 
-See [LISTENING_ENGINE.md](LISTENING_ENGINE.md) for implementation details.
+Listening engine implementation is in `src/features/listening/`.
 
 ---
 

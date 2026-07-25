@@ -3,7 +3,7 @@ import { AnimatedCard, SectionIntro } from './AnimatedComponents';
 
 export function FeatureSection() {
   return (
-    <section className="border-t border-border-soft bg-background/40 px-6 py-12 md:px-12 md:py-20">
+    <section id="features" className="border-t border-border-soft bg-background/40 px-6 py-12 md:px-12 md:py-20">
       <div className="mx-auto max-w-7xl">
         <SectionIntro
           eyebrow="Skill Modules"
