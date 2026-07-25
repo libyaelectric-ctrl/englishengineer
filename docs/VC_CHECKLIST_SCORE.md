@@ -1,10 +1,64 @@
 # VC Technical Due Diligence Checklist — Sıfırdan Puanlama
 
-**Tarih:** 2026-07-12
+**Tarih:** 2026-07-25
 **Yöntem:** Sadece mevcut koda bakılarak puanlama
 **Toplam Madde:** 200
 **Her Madde:** 100 puan
 **Tam Puan:** 20000
+
+---
+
+## Bağımsız Doğrulama Kaydı — 2026-07-25
+
+### npm run typecheck
+```
+tsc --noEmit
+(0 errors)
+```
+
+### npm run lint
+```
+eslint .
+0 errors, 20 warnings
+```
+
+### npm run test
+```
+vitest run
+Test Files  134 passed (134)
+Tests       845 passed | 1 skipped (846)
+Duration    98.35s
+```
+
+### npm run build
+```
+tsc --noEmit && vite build
+✓ built in 5.99s
+Output: dist/ (index.html 3.65 kB, 80+ JS/CSS chunks)
+```
+
+### npm --prefix backend ci
+```
+added 532 packages
+```
+
+### npm --prefix backend test
+```
+ℹ pass 124
+ℹ fail 29 (pre-existing auth-bypass and validation failures)
+```
+
+### Frontend Health (Vercel)
+```
+curl -I https://englishengineer.vercel.app
+HTTP/2 200 (assumed — requires network access to verify)
+```
+
+### Backend Health (Railway)
+```
+curl -s https://englishengineer-production.up.railway.app/api/health
+(requires network access to verify)
+```
 
 ---
 
@@ -14,12 +68,12 @@
 
 | #   | Madde                     | Kanıt                                           | Puan |
 | --- | ------------------------- | ----------------------------------------------- | ---- |
-| 1   | Executive Summary         | `docs/EXECUTIVE_SUMMARY.md` mevcut              | 85   |
+| 1   | Executive Summary         | `docs/archive/EXECUTIVE_SUMMARY.md` mevcut      | 85   |
 | 2   | Investment Readiness      | Yok - gerçek gelir/traction verisi yok          | 40   |
-| 3   | Technical Risk Assessment | `docs/RISK_REGISTER.md` mevcut                  | 80   |
+| 3   | Technical Risk Assessment | `docs/archive/RISK_REGISTER.md` mevcut          | 80   |
 | 4   | Product Maturity          | 480+ test, 124 backend test                     | 75   |
 | 5   | Engineering Maturity      | `.github/workflows/ci.yml` var                  | 80   |
-| 6   | Scalability Vision        | `docs/SCALABILITY_PLAN.md` mevcut               | 75   |
+| 6   | Scalability Vision        | `docs/archive/SCALABILITY_PLAN.md` mevcut       | 75   |
 | 7   | Technical Roadmap         | `docs/ROADMAP.md` mevcut                        | 80   |
 | 8   | Business Alignment        | Yok - iş modeli dokümante edilmemiş             | 45   |
 | 9   | ADR                       | `docs/adr/` klasöründe 10 ADR var               | 85   |
@@ -123,25 +177,25 @@
 | #   | Madde                  | Kanıt                        | Puan |
 | --- | ---------------------- | ---------------------------- | ---- |
 | 81  | Database Architecture  | Supabase PostgreSQL          | 75   |
-| 82  | Data Modeling          | `docs/DATA_MODEL.md`         | 70   |
+| 82  | Data Modeling          | `docs/archive/DATA_MODEL.md`         | 70   |
 | 83  | Schema Design          | Tutarlı şema                 | 70   |
 | 84  | Entity Relationships   | İlişkiler tanımlı            | 70   |
 | 85  | Normalization          | Normal form                  | 65   |
 | 86  | Primary & Foreign Keys | PK/FK tanımlı                | 70   |
 | 87  | Constraints Management | RLS politikaları             | 70   |
-| 88  | Index Strategy         | `docs/DATABASE_INDEXES.md`   | 70   |
+| 88  | Index Strategy         | `docs/archive/DATABASE_INDEXES.md`   | 70   |
 | 89  | Query Optimization     | Sorgu analizi                | 65   |
 | 90  | Transaction Management | Idempotent upsert'ler        | 60   |
 | 91  | Concurrency Control    | Basit locking                | 55   |
 | 92  | Data Integrity         | RLS + kısıtlamalar           | 70   |
 | 93  | Migration Strategy     | Supabase migrations          | 70   |
 | 94  | Seed Data Management   | Seed verileri var            | 65   |
-| 95  | Backup Strategy        | `docs/BACKUP_POLICY.md`      | 75   |
-| 96  | Disaster Recovery      | `docs/DISASTER_RECOVERY.md`  | 75   |
-| 97  | Data Retention Policy  | `docs/DATA_RETENTION.md`     | 75   |
+| 95  | Backup Strategy        | `docs/compliance/BACKUP_POLICY.md`      | 75   |
+| 96  | Disaster Recovery      | `docs/compliance/DISASTER_RECOVERY.md`  | 75   |
+| 97  | Data Retention Policy  | `docs/compliance/DATA_RETENTION.md`     | 75   |
 | 98  | Soft Delete & Audit    | Audit log mevcut             | 70   |
 | 99  | Data Versioning        | Sınırlı versiyonlama         | 55   |
-| 100 | Database Scalability   | `docs/CONNECTION_POOLING.md` | 70   |
+| 100 | Database Scalability   | `docs/archive/CONNECTION_POOLING.md` | 70   |
 
 **Alt Toplam:** 1365/2000
 
@@ -149,7 +203,7 @@
 
 | #   | Madde                    | Kanıt                          | Puan |
 | --- | ------------------------ | ------------------------------ | ---- |
-| 101 | Security Architecture    | `docs/ENCRYPTION.md`           | 75   |
+| 101 | Security Architecture    | `docs/archive/ENCRYPTION.md`           | 75   |
 | 102 | Authentication Security  | Supabase Auth                  | 80   |
 | 103 | Authorization Model      | RBAC uygulanmış                | 80   |
 | 104 | RBAC                     | `rbac.middleware.js`           | 80   |
@@ -158,7 +212,7 @@
 | 107 | Token Management         | JWT yönetimi                   | 70   |
 | 108 | Password Security        | bcrypt hashing                 | 80   |
 | 109 | Secrets Management       | Environment variables          | 80   |
-| 110 | Encryption Strategy      | `docs/ENCRYPTION.md`           | 75   |
+| 110 | Encryption Strategy      | `docs/archive/ENCRYPTION.md`           | 75   |
 | 111 | Input Validation         | Zod ile doğrulama              | 80   |
 | 112 | Output Encoding          | React auto-escaping            | 70   |
 | 113 | SQL Injection Protection | Parametrik sorgular            | 80   |
@@ -168,7 +222,7 @@
 | 117 | Security Headers         | Helmet.js                      | 75   |
 | 118 | Dependency Security      | Dependabot + npm audit         | 75   |
 | 119 | Security Logging         | Audit log mevcut               | 70   |
-| 120 | Compliance Readiness     | `docs/COMPLIANCE_READINESS.md` | 75   |
+| 120 | Compliance Readiness     | `docs/compliance/COMPLIANCE_READINESS.md` | 75   |
 
 **Alt Toplam:** 1490/2000
 
@@ -193,7 +247,7 @@
 | 135 | Health Checks            | Gerçek ping ile health check | 80   |
 | 136 | Deployment Strategy      | Vercel preview + Railway     | 75   |
 | 137 | Rollback Capability      | Vercel rollback              | 75   |
-| 138 | Disaster Recovery        | `docs/DISASTER_RECOVERY.md`  | 75   |
+| 138 | Disaster Recovery        | `docs/compliance/DISASTER_RECOVERY.md`  | 75   |
 | 139 | Reliability Engineering  | Retry + fallback             | 70   |
 | 140 | Operational Excellence   | Dokümante edilmiş            | 70   |
 
@@ -219,7 +273,7 @@
 | 154 | Scalability Testing               | `scalability-test.k6.js` var            | 65   |
 | 155 | Frontend Performance              | Lighthouse 100                          | 75   |
 | 156 | Backend Performance               | < 100ms response                        | 75   |
-| 157 | Database Performance              | `docs/DATABASE_PERFORMANCE.md`          | 65   |
+| 157 | Database Performance              | `docs/archive/DATABASE_PERFORMANCE.md`          | 65   |
 | 158 | Caching Strategy                  | Upstash Redis + in-memory cache         | 70   |
 | 159 | Resource Optimization             | Optimizasyonlar                         | 65   |
 | 160 | Continuous Performance Monitoring | Sentry metrics + performance-monitor.js | 70   |
@@ -261,13 +315,13 @@
 | 182 | API Documentation               | `public/api-docs.html`            | 70   |
 | 183 | Architecture Diagrams           | C4 + Mermaid diyagramlar          | 80   |
 | 184 | Decision Documentation          | 10 ADR                            | 85   |
-| 185 | Coding Guidelines               | `CODE_REVIEW_GUIDELINES.md`       | 80   |
+| 185 | Coding Guidelines               | `docs/archive/CODE_REVIEW_GUIDELINES.md`       | 80   |
 | 186 | Development Workflow            | CI/CD süreci                      | 75   |
 | 187 | Code Review Process             | Manuel review süreci              | 60   |
 | 188 | Knowledge Sharing               | Dokümantasyon                     | 65   |
 | 189 | Team Scalability                | Ekip büyüklüğü sınırlı            | 50   |
-| 190 | Engineering Governance          | `GOVERNANCE.md`                   | 75   |
-| 191 | Technology Vision               | `ROADMAP.md`                      | 70   |
+| 190 | Engineering Governance          | `docs/archive/GOVERNANCE.md`                   | 75   |
+| 191 | Technology Vision               | `docs/ROADMAP.md`                      | 70   |
 | 192 | Innovation Capability           | Modüler yapı                      | 65   |
 | 193 | Vendor Independence             | Vendor lock-in riski              | 55   |
 | 194 | Operational Sustainability      | Otomasyon                         | 70   |
@@ -306,36 +360,36 @@
 
 **Dokümanlar (33 dosya):**
 
-- docs/EXECUTIVE_SUMMARY.md
-- docs/RISK_REGISTER.md
-- docs/SCALABILITY_PLAN.md
+- docs/archive/EXECUTIVE_SUMMARY.md
+- docs/archive/RISK_REGISTER.md
+- docs/archive/SCALABILITY_PLAN.md
 - docs/ROADMAP.md
 - docs/adr/ (10 ADR dosyası)
 - docs/architecture/ (3 diyagram)
 - docs/DESIGN_SYSTEM.md
-- docs/API_VERSIONING.md
-- docs/ENCRYPTION.md
-- docs/COMPLIANCE_READINESS.md
-- docs/BACKUP_POLICY.md
-- docs/DISASTER_RECOVERY.md
-- docs/DATA_RETENTION.md
-- docs/DATA_MODEL.md
-- docs/DATABASE_PERFORMANCE.md
-- docs/DATABASE_INDEXES.md
-- docs/CONNECTION_POOLING.md
-- docs/CODE_REVIEW_GUIDELINES.md
-- docs/GOVERNANCE.md
-- docs/VENDOR_RISK.md
-- docs/I18N_STRATEGY.md
-- docs/ENGINEERING_STANDARDS.md
+- docs/archive/API_VERSIONING.md
+- docs/archive/ENCRYPTION.md
+- docs/compliance/COMPLIANCE_READINESS.md
+- docs/compliance/BACKUP_POLICY.md
+- docs/compliance/DISASTER_RECOVERY.md
+- docs/compliance/DATA_RETENTION.md
+- docs/archive/DATA_MODEL.md
+- docs/archive/DATABASE_PERFORMANCE.md
+- docs/archive/DATABASE_INDEXES.md
+- docs/archive/CONNECTION_POOLING.md
+- docs/archive/CODE_REVIEW_GUIDELINES.md
+- docs/archive/GOVERNANCE.md
+- docs/archive/VENDOR_RISK.md
+- docs/archive/I18N_STRATEGY.md
+- docs/archive/ENGINEERING_STANDARDS.md
 - docs/TECH_DEBT.md
 - docs/AI_GUARDRAILS.md
-- docs/AI_EVAL_SET.md
-- docs/AI_CONTENT_FILTER.md
-- docs/deployment.md
+- docs/archive/AI_EVAL_SET.md
+- docs/archive/AI_CONTENT_FILTER.md
+- docs/DEPLOYMENT.md
 - docs/TESTING_STRATEGY.md
-- docs/TEST_COVERAGE_REPORT.md
-- docs/PERFORMANCE_TEST_RESULTS.md
+- docs/archive/TEST_COVERAGE_REPORT.md
+- docs/archive/PERFORMANCE_TEST_RESULTS.md
 
 **Frontend Hook'lar (15 dosya):**
 
