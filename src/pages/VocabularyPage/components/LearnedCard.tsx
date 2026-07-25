@@ -34,7 +34,7 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}
             transition={{ duration: 0.15 }}
-            className="rounded-[4px] border border-[#0047bb]/25 bg-surface p-4 shadow-md"
+            className="rounded-[4px] border border-primary/25 bg-surface p-4 shadow-md"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -64,7 +64,7 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-2 rounded-[4px] border border-[#0047bb]/15 bg-surface/60 px-3 py-2 hover:border-[#0047bb]/40 hover:bg-surface transition-all cursor-pointer"
+            className="flex items-center gap-2 rounded-[4px] border border-primary/15 bg-surface/60 px-3 py-2 hover:border-primary/40 hover:bg-surface transition-all cursor-pointer"
           >
             <span className="text-[10px] font-bold text-muted-copy min-w-[24px]">
               #{index + 1}

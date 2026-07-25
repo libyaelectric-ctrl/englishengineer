@@ -28,8 +28,8 @@ const LockedView = ({
   grammarLearned: number;
 }) => (
   <div className="min-h-screen bg-background flex items-center justify-center p-6">
-    <div className="max-w-md w-full rounded-[4px] border-2 border-[#0047bb] bg-surface p-8 text-center space-y-4">
-      <Lock className="mx-auto h-10 w-10 text-[#0047bb]" />
+    <div className="max-w-md w-full rounded-[4px] border-2 border-primary bg-surface p-8 text-center space-y-4">
+      <Lock className="mx-auto h-10 w-10 text-primary" />
       <h2 className="text-lg font-bold text-foreground">Writing Locked</h2>
       <p className="text-xs text-muted-copy leading-relaxed">
         You need to learn 200 vocabulary words and 10 grammar rules before
@@ -50,13 +50,13 @@ const LockedView = ({
       <div className="flex gap-2 justify-center pt-2">
         <Link
           to="/vocabulary"
-          className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
+          className="rounded-[4px] border-2 border-primary px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
         >
           Go to Vocabulary
         </Link>
         <Link
           to="/grammar"
-          className="rounded-[4px] border-2 border-[#0047bb] px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
+          className="rounded-[4px] border-2 border-primary px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
         >
           Go to Grammar
         </Link>
@@ -88,7 +88,7 @@ const EmptyMissionView = ({
     <EmptyLevelState skill="Writing" />
     <Link
       to="/curriculum"
-      className="inline-flex text-sm font-bold text-[#0047bb] hover:underline"
+      className="inline-flex text-sm font-bold text-primary hover:underline"
     >
       Back to Learning Hub
     </Link>
@@ -122,7 +122,7 @@ const SubTabSwitcher = ({
             onClick={() => setSubTab(tab.key)}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               isActive
-                ? 'bg-[#0047bb] text-white shadow-sm'
+                ? 'bg-primary text-white shadow-sm'
                 : 'text-muted-copy hover:text-foreground hover:bg-surface-hover'
             }`}
           >
@@ -151,7 +151,7 @@ const WritingHeader = ({
       <h1 className="text-base font-bold tracking-tight text-foreground">
         Writing
       </h1>
-      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
         {currentLevel}
       </span>
       <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">

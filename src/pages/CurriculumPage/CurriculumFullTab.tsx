@@ -167,7 +167,7 @@ export const CurriculumFullTab = ({
       {/* Precision Engineering Roadmap List (full width) */}
       <div className="space-y-3 pt-2">
         <div className="flex items-center gap-2 border-b border-border-soft pb-3">
-          <Map className="h-5 w-5 text-[#0047bb]" />
+          <Map className="h-5 w-5 text-primary" />
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
               Precision Engineering Roadmap
@@ -191,7 +191,7 @@ export const CurriculumFullTab = ({
               {/* Header */}
               <div className="relative z-10 flex items-start justify-between gap-3 border-b border-border-soft pb-4">
                 <div>
-                  <span className="font-mono text-[10px] font-bold text-[#0047bb] uppercase tracking-wider bg-[#0047bb]/5 px-2 py-0.5 rounded-[4px] border border-[#0047bb]/10">
+                  <span className="font-mono text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded-[4px] border border-primary/10">
                     {mod.id} // LEVEL MODULE
                   </span>
                   <h3 className="text-sm font-bold text-foreground mt-2 tracking-tight">
@@ -219,8 +219,8 @@ export const CurriculumFullTab = ({
                       key={lesson.num}
                       className={`relative flex items-start gap-4 p-3.5 rounded-[4px] border transition-colors ${
                         isActive
-                          ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
-                          : 'border-border-soft/60 bg-[#f3f3fd]'
+                          ? 'border-primary/40 bg-primary/5'
+                          : 'border-border-soft/60 bg-surface-hover'
                       }`}
                     >
                       {/* Dot / Icon Connector */}
@@ -229,7 +229,7 @@ export const CurriculumFullTab = ({
                           <CheckCircle2 className="h-[14px] w-[14px] text-success bg-surface rounded-full" />
                         )}
                         {isActive && (
-                          <PlayCircle className="h-[14px] w-[14px] text-[#0047bb] bg-surface rounded-full animate-pulse" />
+                          <PlayCircle className="h-[14px] w-[14px] text-primary bg-surface rounded-full animate-pulse" />
                         )}
                         {isLocked && (
                           <Circle className="h-[14px] w-[14px] text-muted-copy bg-surface rounded-full" />
@@ -242,7 +242,7 @@ export const CurriculumFullTab = ({
                             {lessonIdStr}
                           </span>
                           {isActive && (
-                            <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                            <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
                               ACTIVE TARGET
                             </span>
                           )}

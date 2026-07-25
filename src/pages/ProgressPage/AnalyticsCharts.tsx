@@ -15,7 +15,7 @@ export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
             className="flex-1 flex flex-col items-center gap-2"
           >
             <div
-              className="w-full rounded-t bg-[#0047bb]/80 min-h-[6px]"
+              className="w-full rounded-t bg-primary/80 min-h-[6px]"
               style={{ height: `${Math.max(6, (value / maxValue) * 120)}px` }}
             />
             <span className="text-[9px] font-mono text-muted-copy font-bold">
@@ -46,9 +46,9 @@ export const StudyHeatmap = ({
             item.count >= 3
               ? 'bg-success'
               : item.count === 2
-                ? 'bg-[#0047bb]'
+                ? 'bg-primary'
                 : item.count === 1
-                  ? 'bg-[#0047bb]/40'
+                  ? 'bg-primary/40'
                   : 'bg-surface-hover'
           }`}
         />
@@ -133,7 +133,7 @@ export const TimelinePanel = ({
 }) => (
   <div className="space-y-5">
     <div className="flex items-center gap-2 text-foreground">
-      <Icon className="h-5 w-5 text-[#0047bb]" />
+      <Icon className="h-5 w-5 text-primary" />
       <h3 className="text-lg font-bold">{title}</h3>
     </div>
     <LineSvg points={points} />
@@ -153,7 +153,7 @@ export const TimelinePanel = ({
                 {point.date}
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-[#0047bb]">
+            <span className="text-xs font-mono font-bold text-primary">
               {point.value}
             </span>
           </div>

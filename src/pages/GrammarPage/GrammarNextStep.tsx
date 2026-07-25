@@ -15,9 +15,9 @@ export const GrammarNextStep = ({
     <button
       type="button"
       onClick={() => selectRule(nextLesson.id)}
-      className="mt-2 flex w-full items-center gap-3 rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 text-left hover:bg-[#0047bb]/10 cursor-pointer"
+      className="mt-2 flex w-full items-center gap-3 rounded-[4px] border border-primary/25 bg-primary/5 p-3 text-left hover:bg-primary/10 cursor-pointer"
     >
-      <ArrowRight className="h-4 w-4 shrink-0 text-[#0047bb]" />
+      <ArrowRight className="h-4 w-4 shrink-0 text-primary" />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-bold text-foreground">
           {nextLesson.title}

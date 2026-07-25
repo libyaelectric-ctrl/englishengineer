@@ -170,7 +170,7 @@ const getVocabBtnStyle = (
 ): string => {
   if (!showAnswer) {
     return isSelected
-      ? 'border-[#0047bb] bg-[#0047bb] text-white'
+      ? 'border-primary bg-primary text-white'
       : 'border-border-soft bg-surface text-foreground hover:border-border-hover';
   }
   if (isCorrect) return 'border-success bg-success/10 text-success font-bold';

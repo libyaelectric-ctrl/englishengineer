@@ -38,13 +38,13 @@ const MemoryEntryItem = ({
           onChange={(e) => setEditValue(e.target.value)}
           rows={2}
           aria-label={`Edit memory for ${keyName}`}
-          className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm"
+          className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-[11px] text-foreground placeholder:text-muted-copy focus:outline-none focus:border-primary shadow-sm"
         />
         <div className="flex gap-1">
           <button
             type="button"
             onClick={onSave}
-            className="flex items-center gap-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-2.5 py-1 text-[10px] font-bold text-white cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold text-white cursor-pointer shadow-sm"
           >
             <Check className="h-3 w-3" /> Save
           </button>
@@ -60,7 +60,7 @@ const MemoryEntryItem = ({
     ) : (
       <>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold text-[#0047bb] truncate">
+          <p className="text-[10px] font-bold text-primary truncate">
             {keyName}
           </p>
           <p className="mt-0.5 text-xs leading-4 text-foreground font-semibold break-words">
@@ -73,7 +73,7 @@ const MemoryEntryItem = ({
               type="button"
               onClick={onStartEdit}
               aria-label={`Edit ${keyName}`}
-              className="rounded-[4px] p-1 text-muted-copy hover:text-[#0047bb] hover:bg-surface-hover transition-colors border border-transparent hover:border-border-soft cursor-pointer"
+              className="rounded-[4px] p-1 text-muted-copy hover:text-primary hover:bg-surface-hover transition-colors border border-transparent hover:border-border-soft cursor-pointer"
             >
               <Edit2 className="h-3 w-3" />
             </button>
@@ -109,8 +109,8 @@ const AddMemoryForm = ({
   onAdd: () => void;
   onCancel: () => void;
 }) => (
-  <div className="mt-2 rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 space-y-2 shadow-sm">
-    <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+  <div className="mt-2 rounded-[4px] border border-primary/25 bg-primary/5 p-3 space-y-2 shadow-sm">
+    <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
       New Memory Entry
     </p>
     <input
@@ -120,7 +120,7 @@ const AddMemoryForm = ({
       value={newKey}
       onChange={(e) => setNewKey(e.target.value)}
       aria-label="Memory entry key"
-      className="w-full rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+      className="w-full rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-primary shadow-sm font-semibold"
     />
     <label className="block">
       <span className="sr-only">Memory entry value</span>
@@ -130,7 +130,7 @@ const AddMemoryForm = ({
         value={newValue}
         onChange={(e) => setNewValue(e.target.value)}
         rows={2}
-        className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+        className="w-full resize-none rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-primary shadow-sm font-semibold"
       />
     </label>
     {keyError && (
@@ -143,7 +143,7 @@ const AddMemoryForm = ({
         type="button"
         id="memory-add-confirm-btn"
         onClick={onAdd}
-        className="flex-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
       >
         Add to Memory
       </button>
@@ -315,12 +315,12 @@ export const WorkspaceMemoryPanel = ({
     <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex items-center justify-between mb-3 border-b border-border-soft pb-2">
         <div className="flex items-center gap-2">
-          <Brain className="h-3.5 w-3.5 text-[#0047bb]" aria-hidden="true" />
+          <Brain className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
           <p className="text-[10px] font-bold uppercase tracking-wider text-foreground">
             Workspace Memory
           </p>
           {entries.length > 0 && (
-            <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
               {entries.length} active
             </span>
           )}
@@ -333,7 +333,7 @@ export const WorkspaceMemoryPanel = ({
               setAddingNew(true);
               setKeyError(null);
             }}
-            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 border border-border-soft bg-surface cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-primary hover:bg-primary/5 border border-border-soft bg-surface cursor-pointer shadow-sm"
             aria-label="Add memory entry"
           >
             <Plus className="h-3 w-3 text-muted-copy" aria-hidden="true" /> Add

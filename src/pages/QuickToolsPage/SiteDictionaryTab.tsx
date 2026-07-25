@@ -99,7 +99,7 @@ export const SiteDictionaryTab = () => {
   return (
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
-        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 focus-within:border-[#0047bb] shadow-sm">
+        <label className="flex-1 flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 focus-within:border-primary shadow-sm">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search site dictionary</span>
           <input
@@ -124,7 +124,7 @@ export const SiteDictionaryTab = () => {
             }
             setIsAddingTerm(true);
           }}
-          className="gap-1.5 h-11 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
+          className="gap-1.5 h-11 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
         >
           <Plus className="h-4 w-4" />
           {!hasProjectAccess && (
@@ -135,9 +135,9 @@ export const SiteDictionaryTab = () => {
       </div>
 
       {isAddingTerm && (
-        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-5 space-y-4 shadow-sm animate-in fade-in duration-300">
-          <div className="flex items-center justify-between border-b border-[#0047bb]/20 pb-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#0047bb]">
+        <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-5 space-y-4 shadow-sm animate-in fade-in duration-300">
+          <div className="flex items-center justify-between border-b border-primary/20 pb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-primary">
               Add Custom Terminology
             </h3>
             <button
@@ -155,21 +155,21 @@ export const SiteDictionaryTab = () => {
               placeholder="Term (e.g. Grounding grid)"
               value={newTerm}
               onChange={(e) => setNewTerm(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Turkish Meaning (e.g. Topraklama ağı)"
               value={newMeaning}
               onChange={(e) => setNewMeaning(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Category (e.g. electrical, civil)"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
             />
           </div>
 
@@ -179,14 +179,14 @@ export const SiteDictionaryTab = () => {
               value={newExplanation}
               onChange={(e) => setNewExplanation(e.target.value)}
               rows={2}
-              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
             />
             <input
               type="text"
               placeholder="Site Example (e.g. The grounding grid installation passed inspection.)"
               value={newExample}
               onChange={(e) => setNewExample(e.target.value)}
-              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+              className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <input
@@ -194,14 +194,14 @@ export const SiteDictionaryTab = () => {
                 placeholder="Common Wrong Usage (e.g. ground grid)"
                 value={newWrongUsage}
                 onChange={(e) => setNewWrongUsage(e.target.value)}
-                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
               />
               <input
                 type="text"
                 placeholder="Related Terms (comma-separated)"
                 value={newRelated}
                 onChange={(e) => setNewRelated(e.target.value)}
-                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-[#0047bb] shadow-sm font-medium"
+                className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground focus:outline-none focus:border-primary shadow-sm font-medium"
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ export const SiteDictionaryTab = () => {
             <Button
               type="button"
               onClick={handleAddTerm}
-              className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
+              className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
             >
               Add to Scope
             </Button>
@@ -238,13 +238,13 @@ export const SiteDictionaryTab = () => {
           return (
             <Card
               key={item.id}
-              className="p-5 space-y-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all flex flex-col justify-between"
+              className="p-5 space-y-4 rounded-xl border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all flex flex-col justify-between"
               hoverEffect={false}
             >
               <div>
                 <div className="flex items-start justify-between border-b border-border-soft pb-2">
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-primary">
                       {item.category}
                     </p>
                     <h2 className="mt-1 text-sm font-bold text-foreground">

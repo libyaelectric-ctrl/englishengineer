@@ -53,10 +53,10 @@ export const SkillEntryBrief = ({
     return (
       <div className="rounded-[4px] border border-border-soft bg-surface-hover p-3.5 mb-2 text-left shadow-sm">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
             {recommendation.targetCefr}
           </span>
-          <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
             Lesson {recommendation.lessonNumber}
           </span>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
@@ -74,18 +74,18 @@ export const SkillEntryBrief = ({
   }
 
   return (
-    <section className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm">
+    <section className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <Target className="h-4 w-4 text-[#0047bb]" />
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <Target className="h-4 w-4 text-primary" />
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
               System recommendation
             </p>
-            <span className="rounded-[4px] border border-[#0047bb]/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <span className="rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
               {recommendation.targetCefr}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-[4px] border border-[#0047bb]/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <span className="inline-flex items-center gap-1 rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
               <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
               {recommendation.lessonNumber}
             </span>
@@ -115,7 +115,7 @@ export const SkillEntryBrief = ({
             </span>
           </div>
           <details className="mt-3 text-xs text-muted-copy font-medium">
-            <summary className="cursor-pointer font-bold text-[#0047bb] hover:underline uppercase tracking-wider text-[10px]">
+            <summary className="cursor-pointer font-bold text-primary hover:underline uppercase tracking-wider text-[10px]">
               Why this lesson and how ELO moves
             </summary>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">

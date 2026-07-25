@@ -31,7 +31,7 @@ export const HeroPanel = React.memo(
     <>
       <div className="rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm flex items-center justify-between animate-on-scroll">
         <div className="flex items-center gap-4 w-full">
-          <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 text-[#0047bb] font-black text-xl shadow-sm">
+          <div className="shrink-0 flex items-center justify-center w-12 h-12 rounded-[4px] bg-primary/10 border border-primary/25 text-primary font-black text-xl shadow-sm">
             {summary.averageScore}
           </div>
           <div className="flex-1">
@@ -49,14 +49,14 @@ export const HeroPanel = React.memo(
                 <span
                   className={`text-[10px] font-bold ${competency.color} flex items-center gap-1`}
                 >
-                  <Target className="w-3 h-3 text-[#0047bb]" />{' '}
+                  <Target className="w-3 h-3 text-primary" />{' '}
                   {competency.text}
                 </span>
               </div>
             </div>
             <div className="h-2 rounded-[4px] bg-surface-hover overflow-hidden border border-border-soft">
               <div
-                className="h-full rounded-[4px] bg-[#0047bb] transition-all duration-1000 relative"
+                className="h-full rounded-[4px] bg-primary transition-all duration-1000 relative"
                 style={{ width: `${summary.averageScore}%` }}
               >
                 <div className="absolute inset-0 bg-surface/20 animate-pulse"></div>
@@ -77,7 +77,7 @@ export const HeroPanel = React.memo(
             <p className="text-lg font-bold text-foreground mt-4">
               Good {greeting}, {userName}!
             </p>
-            <h1 className="mt-5 text-xs font-bold text-[#0047bb] uppercase tracking-wider">
+            <h1 className="mt-5 text-xs font-bold text-primary uppercase tracking-wider">
               EngVox Command Center
             </h1>
             <p className="mt-2 text-2xl font-bold leading-tight text-foreground sm:text-3xl">
@@ -90,17 +90,17 @@ export const HeroPanel = React.memo(
           </div>
           <Button
             type="button"
-            className="min-h-10 px-5 text-xs btn-press rounded-[4px] bg-[#0047bb] text-white hover:bg-[#0047bb]/90"
+            className="min-h-10 px-5 text-xs btn-press rounded-[4px] bg-primary text-white hover:bg-primary/90"
             onClick={onStartLesson}
           >
             Start today&apos;s lesson <ArrowRight className="h-3.5 w-3.5" />
           </Button>
         </div>
 
-        <div className="mt-6 rounded-[4px] border border-[#0047bb]/20 bg-[#0047bb]/5 p-5">
+        <div className="mt-6 rounded-[4px] border border-primary/20 bg-primary/5 p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
                 TODAY&apos;S FOCUS
               </p>
               <h2 className="mt-1 text-lg font-bold text-foreground">
@@ -135,7 +135,7 @@ export const HeroPanel = React.memo(
             <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
               COMPETENCY INDEX
             </p>
-            <p className="mt-1 truncate text-lg font-bold text-[#0047bb] sm:text-xl">
+            <p className="mt-1 truncate text-lg font-bold text-primary sm:text-xl">
               {summary.averageScore}%
             </p>
           </div>
@@ -159,7 +159,7 @@ export const HeroPanel = React.memo(
             <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
               COMPLETION RATE
             </p>
-            <p className="mt-1 truncate text-lg font-bold text-[#0047bb] sm:text-xl">
+            <p className="mt-1 truncate text-lg font-bold text-primary sm:text-xl">
               {summary.completionPercentage}%
             </p>
           </div>

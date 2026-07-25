@@ -97,8 +97,8 @@ export const CurriculumRecommendationBrief = ({
             </Card>
           </div>
 
-          <div className="rounded-[4px] border border-primary/25 bg-[#0047bb]/5 p-4 shadow-sm animate-in fade-in duration-300">
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm animate-in fade-in duration-300">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
               Why recommended
             </p>
             <p className="mt-2 text-xs leading-5 text-foreground font-medium">
@@ -202,14 +202,14 @@ export const CurriculumRecommendationBrief = ({
             <p className="mt-2 text-xs leading-5 text-muted-copy font-medium">
               {recommendation.context}
             </p>
-            <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#0047bb]">
+            <p className="mt-2 text-xs font-bold uppercase tracking-wider text-primary">
               Weakest-area priority: {recommendation.focusPriority}
             </p>
           </div>
 
           {selectedMeta.route ? (
             <Button
-              className="w-full bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 flex items-center justify-center gap-1.5"
+              className="w-full bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm min-h-9 flex items-center justify-center gap-1.5"
               onClick={() => navigate(selectedMeta.route!)}
             >
               Open {selectedMeta.label} workspace

@@ -119,8 +119,8 @@ const PlacementPage = () => {
                 onClick={() => answer(question.id, choiceIndex)}
                 className={`min-h-12 rounded-[4px] border border-border-soft px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer ${
                   answers[question.id] === choiceIndex
-                    ? 'border-[#0047bb]/40 bg-[#0047bb]/10 text-foreground'
-                    : 'bg-white text-muted-copy hover:border-[#0047bb]'
+                    ? 'border-primary/40 bg-primary/10 text-foreground'
+                    : 'bg-white text-muted-copy hover:border-primary'
                 }`}
               >
                 {choice}
@@ -133,7 +133,7 @@ const PlacementPage = () => {
           <Button
             variant="ghost"
             onClick={currentIndex === 0 ? continueAtA1 : previous}
-            className="rounded-[4px] border border-border-soft bg-surface hover:bg-background text-xs font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm min-h-9 px-4"
+            className="rounded-[4px] border border-border-soft bg-surface hover:bg-background text-xs font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm min-h-9 px-4"
           >
             <ArrowLeft className="h-4 w-4" />
             {currentIndex === 0 ? 'Start at A1' : 'Previous'}

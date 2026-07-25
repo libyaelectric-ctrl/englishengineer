@@ -62,7 +62,7 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
     `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
   return (
-    <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 space-y-3">
+    <div className="rounded-[4px] border-2 border-primary bg-surface p-4 space-y-3">
       <audio ref={audioRef} src={audioUrl} preload="metadata">
         <track kind="captions" label="English" />
       </audio>

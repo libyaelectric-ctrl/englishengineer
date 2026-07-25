@@ -73,8 +73,8 @@ const TemplateCard = ({
         </p>
       </div>
 
-      <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 shadow-sm">
-        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+      <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-3 shadow-sm">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
           [ORCHESTRATED PRODUCTION PHRASE]
         </p>
         <p className="mt-1 text-xs leading-relaxed text-foreground font-semibold">
@@ -428,7 +428,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         />
       )}
 
-      <div className="flex flex-col gap-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-xl border border-primary/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
         <div
           className="flex flex-wrap gap-2"
           role="tablist"
@@ -443,8 +443,8 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
               onClick={() => setTab(id)}
               className={`flex shrink-0 items-center gap-1.5 rounded-[4px] border px-3 py-2 text-[10px] font-sans font-bold uppercase tracking-wider transition-colors cursor-pointer ${
                 tab === id
-                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-border-soft bg-[#f3f3fd] text-muted-copy hover:text-foreground hover:bg-surface-hover'
+                  ? 'border-primary/40 bg-primary/5 text-primary'
+                  : 'border-border-soft bg-surface-hover text-muted-copy hover:text-foreground hover:bg-surface-hover'
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -452,7 +452,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
             </button>
           ))}
         </div>
-        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-background px-3 focus-within:border-[#0047bb] md:w-72 shadow-sm font-sans">
+        <label className="flex min-h-11 items-center gap-2 rounded-[4px] border border-border-soft bg-background px-3 focus-within:border-primary md:w-72 shadow-sm font-sans">
           <Search className="h-4 w-4 text-muted-copy" />
           <span className="sr-only">Search work tools</span>
           <input

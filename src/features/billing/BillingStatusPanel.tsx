@@ -138,7 +138,7 @@ export const BillingStatusPanel = ({
               navigate('/pricing');
             }}
             disabled={isLoading}
-            className="text-xs bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
+            className="text-xs bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
           >
             <Crown className="h-3.5 w-3.5" />
             Upgrade Plan
@@ -158,7 +158,7 @@ export const BillingStatusPanel = ({
           variant="outline"
           onClick={onOpenPortal}
           disabled={isLoading || !canOpenPortal}
-          className="text-xs border border-border-soft bg-surface hover:bg-surface-hover text-[#0047bb] font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
+          className="text-xs border border-border-soft bg-surface hover:bg-surface-hover text-primary font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
         >
           <ExternalLink className="h-3.5 w-3.5" /> Manage Subscription
         </Button>

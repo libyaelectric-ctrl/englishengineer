@@ -40,7 +40,7 @@ const VocabularyTerms = ({ terms }: { terms: string[] }) => (
     {terms.map((term) => (
       <span
         key={term}
-        className="text-[9px] font-mono bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
+        className="text-[9px] font-mono bg-primary/10 text-primary border border-primary/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
       >
         {term}
       </span>
@@ -58,10 +58,10 @@ export const CoachResultPanel = ({
   const isBackend = providerStatus.state === 'backend-configured';
 
   return (
-    <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-4 shadow-sm space-y-4 font-sans">
+    <div className="rounded-xl border border-primary/25 bg-surface/80 p-4 shadow-sm space-y-4 font-sans">
       <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border-soft/60">
         <div className="flex items-center gap-2">
-          <Cpu className="h-4 w-4 text-[#0047bb]" />
+          <Cpu className="h-4 w-4 text-primary" />
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-foreground">
               Structured Coach Result
@@ -100,8 +100,8 @@ export const CoachResultPanel = ({
           isLimitedResponse={isLimitedResponse}
           mode={providerStatus.mode}
         />
-        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm">
-          <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
+        <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
+          <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
             Summary
           </p>
           <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
@@ -110,8 +110,8 @@ export const CoachResultPanel = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm">
-            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
+          <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
+            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
               Professional Version
             </p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-semibold">

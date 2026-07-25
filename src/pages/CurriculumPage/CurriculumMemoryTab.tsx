@@ -55,9 +55,9 @@ export const CurriculumMemoryTab = ({
           />
 
           {/* diagnostic mini dashboard */}
-          <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 space-y-3 shadow-sm">
+          <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 space-y-3 shadow-sm">
             <div className="flex items-center gap-2 text-foreground">
-              <BarChart3 className="h-4 w-4 text-[#0047bb]" />
+              <BarChart3 className="h-4 w-4 text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-wider">
                 Knowledge diagnostics
               </span>
@@ -65,7 +65,7 @@ export const CurriculumMemoryTab = ({
             <div className="space-y-2 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               <div className="flex justify-between border-b border-border-soft pb-1.5">
                 <span>Memory Retention</span>
-                <span className="text-[#0047bb]">88% STABLE</span>
+                <span className="text-primary">88% STABLE</span>
               </div>
               <div className="flex justify-between border-b border-border-soft pb-1.5">
                 <span>Active Queue</span>
@@ -84,7 +84,7 @@ export const CurriculumMemoryTab = ({
         <div className="relative z-10">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                 Unified Review Queue
               </p>
               <p className="mt-1 text-xs text-muted-copy font-medium">
@@ -93,7 +93,7 @@ export const CurriculumMemoryTab = ({
             </div>
             <Link
               to="/progress/next-steps"
-              className="text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:underline cursor-pointer"
+              className="text-xs font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer"
             >
               View plan
             </Link>
@@ -111,7 +111,7 @@ export const CurriculumMemoryTab = ({
                 return (
                   <div
                     key={item.id}
-                    className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm hover:border-[#0047bb]/40 transition-all flex flex-col justify-between min-h-[170px]"
+                    className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm hover:border-primary/40 transition-all flex flex-col justify-between min-h-[170px]"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
@@ -135,7 +135,7 @@ export const CurriculumMemoryTab = ({
                       </p>
 
                       {/* Secondary information block nested using #f3f3fd background */}
-                      <div className="mt-2.5 p-2 rounded-[4px] bg-[#f3f3fd] border border-border-soft/45 flex items-start gap-1.5">
+                      <div className="mt-2.5 p-2 rounded-[4px] bg-surface-hover border border-border-soft/45 flex items-start gap-1.5">
                         {isFirst ? (
                           <History className="h-3 w-3 text-rose-500 shrink-0 mt-0.5" />
                         ) : (
@@ -150,7 +150,7 @@ export const CurriculumMemoryTab = ({
                     {'route' in item && (
                       <Button
                         variant="ghost"
-                        className="mt-4 w-full h-8 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-[#0047bb] cursor-pointer shadow-sm gap-1.5"
+                        className="mt-4 w-full h-8 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm gap-1.5"
                         onClick={() =>
                           navigate((item as UnifiedReviewItem).route)
                         }

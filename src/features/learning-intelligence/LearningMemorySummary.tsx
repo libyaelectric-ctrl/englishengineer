@@ -33,7 +33,7 @@ export const LearningMemorySummary = ({
           : 'Review queue is clear',
       href: '/vocabulary',
       icon: BookMarked,
-      tone: 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]',
+      tone: 'border-primary/25 bg-primary/5 text-primary',
     },
     {
       label: 'Grammar path',
@@ -44,7 +44,7 @@ export const LearningMemorySummary = ({
           : `${grammar.learning} learning`,
       href: '/grammar',
       icon: Languages,
-      tone: 'border-[#0047bb]/25 bg-[#0047bb]/5 text-[#0047bb]',
+      tone: 'border-primary/25 bg-primary/5 text-primary',
     },
     {
       label: 'Mistake memory',
@@ -75,7 +75,7 @@ export const LearningMemorySummary = ({
           <Link
             key={item.label}
             to={item.href}
-            className="group flex min-w-0 items-center gap-3 rounded-[4px] border border-border-soft bg-surface p-3.5 transition-colors hover:border-[#0047bb]/40 hover:bg-surface-hover shadow-sm"
+            className="group flex min-w-0 items-center gap-3 rounded-[4px] border border-border-soft bg-surface p-3.5 transition-colors hover:border-primary/40 hover:bg-surface-hover shadow-sm"
           >
             <span className={`shrink-0 rounded-[4px] border p-2 ${item.tone}`}>
               <Icon className="h-4 w-4" aria-hidden="true" />

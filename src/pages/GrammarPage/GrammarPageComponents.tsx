@@ -45,7 +45,7 @@ export const LessonBlock = ({
 }) => (
   <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <div className="flex items-center gap-1.5">
-      <Icon className="h-3.5 w-3.5 text-[#0047bb]" />
+      <Icon className="h-3.5 w-3.5 text-primary" />
       <h2 className="text-xs font-bold uppercase tracking-wide text-foreground">
         {title}
       </h2>

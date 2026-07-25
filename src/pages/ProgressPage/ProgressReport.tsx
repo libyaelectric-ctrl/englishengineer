@@ -13,7 +13,7 @@ export const ProgressReport = ({
 }) => (
   <Card className="space-y-5 p-5 shadow-sm" hoverEffect={false}>
     <div className="flex items-center gap-3">
-      <FileChartColumn className="h-5 w-5 text-[#0047bb]" />
+      <FileChartColumn className="h-5 w-5 text-primary" />
       <div>
         <h2 className="text-xl font-bold text-foreground">
           7-Day Progress Report

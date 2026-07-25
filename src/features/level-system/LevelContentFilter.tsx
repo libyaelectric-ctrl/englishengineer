@@ -12,7 +12,7 @@ const FILTERS: Array<{ value: ContentLevelFilter; label: string }> = [
 ];
 
 const accessStyles: Record<ContentAccessLabel, string> = {
-  Current: 'border-[#0047bb]/20 bg-[#0047bb]/5 text-[#0047bb]',
+  Current: 'border-primary/20 bg-primary/5 text-primary',
   Review: 'border-emerald-200 bg-emerald-50 text-emerald-700',
   Preview: 'border-amber-200 bg-amber-50 text-amber-700',
   Locked: 'border-border-soft bg-surface-hover text-muted-copy',
@@ -52,8 +52,8 @@ export const LevelContentFilter = ({
               aria-pressed={value === filter.value}
               className={`min-h-9 rounded-[4px] border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer shadow-sm ${
                 value === filter.value
-                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5 text-[#0047bb]'
-                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/30'
+                  ? 'border-primary/40 bg-primary/5 text-primary'
+                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30'
               }`}
             >
               {filter.label}

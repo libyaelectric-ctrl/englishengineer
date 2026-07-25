@@ -31,12 +31,12 @@ export const SkillSidebar = ({
 }) => {
   return (
     <aside className="relative">
-      <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
+      <div className="rounded-xl border border-primary/25 bg-surface/80 p-4 shadow-sm mb-4 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
             <span className="text-amber-500">🔥</span> 7 Day Active Streak
           </div>
-          <span className="text-[10px] font-bold text-[#0047bb] bg-[#0047bb]/10 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
             Top 10% Active
           </span>
         </div>
@@ -49,7 +49,7 @@ export const SkillSidebar = ({
           </div>
           <div className="h-2 w-full rounded-full bg-border-soft overflow-hidden">
             <div
-              className="h-full rounded-full bg-[#0047bb]"
+              className="h-full rounded-full bg-primary"
               style={{ width: '83%' }}
             />
           </div>
@@ -62,7 +62,7 @@ export const SkillSidebar = ({
         </div>
       </div>
 
-      <div className="xl:sticky xl:top-16 space-y-0 border border-[#0047bb]/25 bg-surface/80 rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div className="xl:sticky xl:top-16 space-y-0 border border-primary/25 bg-surface/80 rounded-xl shadow-sm overflow-hidden animate-in fade-in duration-300">
         <div className="px-4 pt-3 pb-2 border-b border-border-soft">
           <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy flex items-center gap-1.5">
             <Layers className="h-3 w-3" /> Skill Progress
@@ -119,7 +119,7 @@ export const SkillSidebar = ({
             {selectedGraphNode && (
               <button
                 onClick={() => setSelectedGraphNode(null)}
-                className="text-[10px] font-bold uppercase text-muted-copy hover:text-[#0047bb] cursor-pointer transition-colors"
+                className="text-[10px] font-bold uppercase text-muted-copy hover:text-primary cursor-pointer transition-colors"
               >
                 Clear
               </button>
@@ -134,7 +134,7 @@ export const SkillSidebar = ({
               className="space-y-2.5"
             >
               <div className="flex items-center gap-1.5">
-                <span className="rounded-[4px] bg-[#0047bb]/10 px-2 py-0.5 text-[10px] font-bold text-[#0047bb] border border-[#0047bb]/25 uppercase">
+                <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/25 uppercase">
                   {selectedGraphNode.type}
                 </span>
                 <span className="text-[10px] font-bold text-foreground px-1.5 py-0.5 rounded-[4px] bg-surface-hover border border-border-soft">
@@ -158,7 +158,7 @@ export const SkillSidebar = ({
                 </div>
                 <div className="h-1.5 w-full rounded-[4px] bg-border-soft">
                   <div
-                    className="h-full rounded-[4px] bg-[#0047bb]"
+                    className="h-full rounded-[4px] bg-primary"
                     style={{ width: `${selectedGraphNode.strength}%` }}
                   />
                 </div>

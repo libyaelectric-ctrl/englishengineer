@@ -101,7 +101,7 @@ export function SearchResultsSection({
                 onChange={(event) =>
                   onSetCustomDraft({ ...customDraft, term: event.target.value })
                 }
-                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
             <label className="text-sm font-semibold">
@@ -115,7 +115,7 @@ export function SearchResultsSection({
                     turkishMeaning: event.target.value,
                   })
                 }
-                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
             <label className="text-sm font-semibold">
@@ -129,7 +129,7 @@ export function SearchResultsSection({
                     exampleSentence: event.target.value,
                   })
                 }
-                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
+                className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
             <div className="grid grid-cols-2 gap-3">
@@ -143,7 +143,7 @@ export function SearchResultsSection({
                       cefrLevel: event.target.value as CefrLevel,
                     })
                   }
-                  className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft bg-surface px-3 font-normal cursor-pointer outline-none focus:border-[#0047bb]"
+                  className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft bg-surface px-3 font-normal cursor-pointer outline-none focus:border-primary"
                 >
                   {CEFR_LEVELS.map((level) => (
                     <option key={level}>{level}</option>
@@ -161,7 +161,7 @@ export function SearchResultsSection({
                       domain: event.target.value,
                     })
                   }
-                  className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
+                  className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                 />
               </label>
             </div>

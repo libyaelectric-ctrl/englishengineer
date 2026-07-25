@@ -46,7 +46,7 @@ export function PronunciationFeedbackPanel({
         <button
           type="button"
           onClick={() => (result ? setExpanded(!expanded) : analyze())}
-          className="text-[10px] font-bold text-[#0047bb] cursor-pointer"
+          className="text-[10px] font-bold text-primary cursor-pointer"
         >
           {result ? (expanded ? 'Hide' : 'Show') : 'Analyze'}
         </button>

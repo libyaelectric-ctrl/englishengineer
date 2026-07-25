@@ -36,8 +36,8 @@ const PlanLockBanner = ({
   isProLocked: boolean;
   onNavigate: (path: string) => void;
 }) => (
-  <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center space-y-4 animate-in fade-in duration-300 shadow-sm">
-    <div className="mx-auto h-12 w-12 rounded-[4px] bg-[#0047bb]/10 flex items-center justify-center text-[#0047bb]">
+  <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-6 text-center space-y-4 animate-in fade-in duration-300 shadow-sm">
+    <div className="mx-auto h-12 w-12 rounded-[4px] bg-primary/10 flex items-center justify-center text-primary">
       <Lock className="h-5 w-5" />
     </div>
     <div className="space-y-2">
@@ -53,7 +53,7 @@ const PlanLockBanner = ({
     <Button
       type="button"
       onClick={() => onNavigate('/pricing')}
-      className="h-9 bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
+      className="h-9 bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
     >
       Upgrade to {isProLocked ? 'Pro' : 'Project'} Plan
     </Button>
@@ -72,7 +72,7 @@ const AIEntitlementWarning = ({
     <Button
       type="button"
       onClick={() => onNavigate('/profile')}
-      className="mt-3 h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
+      className="mt-3 h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center px-4"
     >
       Upgrade to Pro
     </Button>
@@ -108,7 +108,7 @@ const DocumentUploadSection = ({
         accept=".txt,.pdf,.docx"
         onChange={onFileUpload}
         disabled={!allowed}
-        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-[#0047bb] hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-primary hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-surface border border-border-soft px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
         {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
@@ -188,7 +188,7 @@ const FormActions = ({
     </p>
     <Button
       type="submit"
-      className="h-9 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
+      className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
       disabled={isLoading || input.trim().length === 0 || !allowed}
     >
       {isLoading ? (
@@ -252,7 +252,7 @@ const FormBody = ({
       onChange={(event) => onSetInput(event.target.value)}
       disabled={!aiEntitlement.allowed}
       rows={3}
-      className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-border-soft bg-surface-hover focus:border-[#0047bb] focus:ring-0 shadow-sm"
+      className="w-full resize-none p-3 font-mono text-sm text-foreground rounded-[4px] border border-border-soft bg-surface-hover focus:border-primary focus:ring-0 shadow-sm"
       placeholder={selectedMode?.placeholder ?? ''}
       aria-label="Technical note content input"
     />
@@ -288,10 +288,10 @@ export const CoachInputForm = ({
   onFileUpload,
   onNavigate,
 }: CoachInputFormProps) => (
-  <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3.5 shadow-sm space-y-3 font-sans">
+  <div className="rounded-xl border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3 font-sans">
     <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-border-soft/60">
       <div className="flex items-center gap-2">
-        <Terminal className="h-4 w-4 text-[#0047bb]" />
+        <Terminal className="h-4 w-4 text-primary" />
         <span className="text-xs font-bold uppercase tracking-wider text-foreground">
           {selectedMode?.name ?? 'Copilot'} Prompt Input
         </span>

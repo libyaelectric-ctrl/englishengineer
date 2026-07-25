@@ -178,7 +178,7 @@ export const SkillsProgressSection = ({
             <span>
               {memory.mastered} of {memory.total} terms mastered
             </span>
-            <span className="text-[#0047bb] font-bold">
+            <span className="text-primary font-bold">
               {memory.dueToday} terms due today
             </span>
           </div>
@@ -261,7 +261,7 @@ export const SkillsProgressSection = ({
           <div className="flex justify-end mt-2">
             <Link
               to="/progress/overview"
-              className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors cursor-pointer shadow-sm"
+              className="inline-flex min-h-9 items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-primary hover:bg-primary/5 transition-colors cursor-pointer shadow-sm"
             >
               View Detailed Analytics <ArrowRight className="h-3.5 w-3.5" />
             </Link>

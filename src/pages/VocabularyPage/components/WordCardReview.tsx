@@ -21,7 +21,7 @@ export const LearningReview = ({
   mode: _mode,
   onReview: _onReview,
 }: LearningReviewProps) => (
-  <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 text-xs font-bold text-[#0047bb]">
+  <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-blue-200 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 text-xs font-bold text-primary">
     <CheckCircle2 className="h-4 w-4" /> Learned (In Master Quiz Pool)
   </div>
 );
@@ -72,7 +72,7 @@ export const QuizForm = ({
   <form onSubmit={onSubmit} className="mt-4 space-y-2">
     <Button
       type="button"
-      className="w-full rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold"
+      className="w-full rounded-[4px] bg-primary hover:bg-primary/90 text-white font-bold"
       onClick={() => onLearn?.(term)}
     >
       <CheckCircle2 className="h-4 w-4 mr-1.5" /> I Know This
@@ -88,7 +88,7 @@ export const QuizForm = ({
         value={answer}
         disabled={quizResult !== null}
         onChange={(event) => onAnswerChange(event.target.value)}
-        className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-[#0047bb]"
+        className="mt-1 min-h-10 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary"
         placeholder="Type Turkish meaning..."
       />
     </label>

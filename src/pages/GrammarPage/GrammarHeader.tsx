@@ -26,7 +26,7 @@ export const GrammarHeader = ({
         <h1 className="text-base font-bold tracking-tight text-foreground">
           Grammar
         </h1>
-        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
           {level}
         </span>
         <label
@@ -38,7 +38,7 @@ export const GrammarHeader = ({
             id="grammar-search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-8 pr-2 text-xs outline-none focus:border-[#0047bb] text-foreground"
+            className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-8 pr-2 text-xs outline-none focus:border-primary text-foreground"
             placeholder="Search..."
           />
         </label>
@@ -90,8 +90,8 @@ export const GrammarHeader = ({
               onClick={() => setQuery(cefrLevel)}
               className={`px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                 cefrLevel === level
-                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+                  ? 'bg-primary text-white border border-primary'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
               }`}
             >
               {cefrLevel}

@@ -30,7 +30,7 @@ export const WritingFeedbackPanel = ({
       {scores.map((score) => (
         <div
           key={score.label}
-          className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3"
+          className="rounded-[4px] border-2 border-primary bg-surface p-3"
         >
           <p className="text-[10px] font-bold uppercase text-muted-copy">
             {score.label}
@@ -40,7 +40,7 @@ export const WritingFeedbackPanel = ({
           </p>
           <div className="mt-1 h-1 rounded-full bg-border-soft overflow-hidden">
             <div
-              className="h-full bg-[#0047bb] transition-all"
+              className="h-full bg-primary transition-all"
               style={{ width: `${(score.value / score.max) * 100}%` }}
             />
           </div>
@@ -49,7 +49,7 @@ export const WritingFeedbackPanel = ({
     </div>
 
     {feedback && (
-      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4">
+      <div className="rounded-[4px] border-2 border-primary bg-surface p-4">
         <p className="text-[10px] font-bold uppercase text-muted-copy mb-2">
           Feedback
         </p>

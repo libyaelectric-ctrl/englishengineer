@@ -68,7 +68,7 @@ const STATUS_BADGE_STYLES: Record<string, string> = {
     'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600',
   Struggling: 'border-red-400/40 bg-red-50 dark:bg-red-900/20 text-red-700',
 };
-const DEFAULT_BADGE_STYLE = 'border-border-soft bg-[#f3f3fd] text-muted-copy';
+const DEFAULT_BADGE_STYLE = 'border-border-soft bg-surface-hover text-muted-copy';
 
 const STATUS_HINTS: Record<string, { text: string; className?: string }> = {
   Learning: { text: '1 correct → Learned' },
@@ -99,7 +99,7 @@ const LessonHeader = ({
     <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#0047bb]">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
             {selectedModule}
           </p>
           <h2 className="mt-0.5 break-words text-base font-bold">
@@ -231,7 +231,7 @@ const ChatPanel = ({
   setChatInput: (v: string) => void;
   handleSend: () => void;
 }) => (
-  <div className="rounded-[4px] border border-[#0047bb]/25 bg-surface p-4 shadow-sm">
+  <div className="rounded-[4px] border border-primary/25 bg-surface p-4 shadow-sm">
     <SectionHeading
       title="AI Grammar Teacher"
       subtitle="Practice, translate, and chat with your bilingual engineering English tutor"
@@ -243,7 +243,7 @@ const ChatPanel = ({
           className={cn(
             'flex flex-col max-w-[85%] rounded-[4px] p-3 text-xs leading-relaxed',
             msg.role === 'assistant'
-              ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
+              ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
               : 'bg-foreground text-background ml-auto'
           )}
         >
@@ -254,7 +254,7 @@ const ChatPanel = ({
         </div>
       ))}
       {isTalking && (
-        <div className="flex flex-col max-w-[85%] rounded-[4px] p-3 text-xs bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto animate-pulse">
+        <div className="flex flex-col max-w-[85%] rounded-[4px] p-3 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
           <p className="font-bold text-[10px] uppercase opacity-60 mb-1">
             AI Teacher 🎓
           </p>
@@ -274,7 +274,7 @@ const ChatPanel = ({
           }}
           disabled={isTalking}
           placeholder="Type your reply, translation effort, or question..."
-          className="w-full rounded-[4px] border border-border-soft bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb]"
+          className="w-full rounded-[4px] border border-border-soft bg-background px-3 py-2 text-xs text-foreground outline-none focus:border-primary"
         />
       </label>
       <Button
@@ -300,7 +300,7 @@ const QuizPanel = ({
     fn: (prev: Record<number, string>) => Record<number, string>
   ) => void;
 }) => (
-  <div className="mt-3 space-y-3 rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3">
+  <div className="mt-3 space-y-3 rounded-[4px] border border-primary/25 bg-primary/5 p-3">
     {quizItems.map((item, qi) => (
       <div key={item.question}>
         <p className="text-xs font-bold">
@@ -320,7 +320,7 @@ const QuizPanel = ({
                 onClick={() =>
                   setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))
                 }
-                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-[#0047bb] bg-[#0047bb] text-white' : 'border-border-soft bg-surface text-foreground hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5'}`}
+                className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-primary bg-primary text-white' : 'border-border-soft bg-surface text-foreground hover:border-primary/30 hover:bg-primary/5'}`}
               >
                 <span className="mr-1.5 font-black">{letter}.</span>
                 {choice}
@@ -380,7 +380,7 @@ const SkillLinksSection = ({ skillUse }: { skillUse: string[] }) => {
             <Link
               key={skill}
               to={link.to}
-              className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-[#0047bb]/40 cursor-pointer"
+              className="inline-flex min-h-8 items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 text-xs font-bold hover:border-primary/40 cursor-pointer"
             >
               <Icon className="h-3 w-3" /> {link.label}
             </Link>
@@ -512,11 +512,11 @@ export const GrammarLessonContent = ({
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#f3f3fd] p-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#0047bb]">
+        <div className="rounded-[4px] border border-primary/25 bg-surface-hover p-4">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
             Structure
           </p>
-          <p className="mt-2 break-words font-mono text-sm font-bold text-[#0047bb]">
+          <p className="mt-2 break-words font-mono text-sm font-bold text-primary">
             {selectedRule.structure}
           </p>
           <p className="mt-2 break-words text-xs text-muted-copy">

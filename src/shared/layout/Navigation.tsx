@@ -17,7 +17,7 @@ const linkClasses = ({ isActive }: { isActive: boolean }) =>
   cn(
     'group relative flex min-h-9 items-center gap-2.5 rounded-[4px] px-3 py-2 text-sm font-medium transition-all duration-150',
     isActive
-      ? 'bg-[#0047bb]/10 text-[#0047bb] border border-[#0047bb]/25 font-semibold'
+      ? 'bg-primary/10 text-primary border border-primary/25 font-semibold'
       : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
   );
 

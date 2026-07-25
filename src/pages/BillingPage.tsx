@@ -194,7 +194,7 @@ export const BillingPage = () => {
                       <td className="px-4 py-3 text-right">
                         <button
                           type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-[#0047bb] hover:text-[#0047bb] transition-all cursor-pointer shadow-sm"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
                           aria-label="Download receipt"
                         >
                           <Download className="h-4 w-4" />
@@ -217,11 +217,11 @@ export const BillingPage = () => {
           >
             <div className="space-y-5">
               {/* Virtual Premium Card mockup */}
-              <div className="relative overflow-hidden rounded-[4px] border border-[#0047bb]/30 bg-[#0047bb]/5 p-5 text-[#0047bb] shadow-sm">
-                <div className="absolute right-0 top-0 -mr-6 -mt-6 h-24 w-24 rounded-[4px] bg-[#0047bb]/5" />
+              <div className="relative overflow-hidden rounded-[4px] border border-primary/30 bg-primary/5 p-5 text-primary shadow-sm">
+                <div className="absolute right-0 top-0 -mr-6 -mt-6 h-24 w-24 rounded-[4px] bg-primary/5" />
                 <div className="flex justify-between items-start mb-8">
-                  <CreditCard className="h-8 w-8 text-[#0047bb]" />
-                  <span className="rounded-[4px] bg-[#0047bb]/15 border border-[#0047bb]/35 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                  <CreditCard className="h-8 w-8 text-primary" />
+                  <span className="rounded-[4px] bg-primary/15 border border-primary/35 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
                     Primary
                   </span>
                 </div>
@@ -231,7 +231,7 @@ export const BillingPage = () => {
                   </p>
                   <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
                     <div>
-                      <span className="block text-[#0047bb]/70 text-[8px]">
+                      <span className="block text-primary/70 text-[8px]">
                         Cardholder
                       </span>
                       <span className="truncate max-w-[120px] block">
@@ -239,7 +239,7 @@ export const BillingPage = () => {
                       </span>
                     </div>
                     <div>
-                      <span className="block text-[#0047bb]/70 text-[8px]">
+                      <span className="block text-primary/70 text-[8px]">
                         Expires
                       </span>
                       <span>{cardExpiry}</span>
@@ -256,7 +256,7 @@ export const BillingPage = () => {
                     type="text"
                     value={cardName}
                     onChange={(e) => setCardName(e.target.value)}
-                    className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
+                    className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-all shadow-sm font-bold"
                     required
                   />
                 </label>
@@ -268,7 +268,7 @@ export const BillingPage = () => {
                       type="text"
                       value={cardNumber}
                       onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold font-mono"
+                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-all shadow-sm font-bold font-mono"
                       required
                     />
                   </label>
@@ -279,7 +279,7 @@ export const BillingPage = () => {
                       placeholder="MM/YY"
                       value={cardExpiry}
                       onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-all shadow-sm font-bold"
+                      className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-all shadow-sm font-bold"
                       required
                     />
                   </label>
@@ -288,7 +288,7 @@ export const BillingPage = () => {
                 <div className="pt-2 flex flex-col gap-2">
                   <Button
                     type="submit"
-                    className="w-full bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center min-h-9"
+                    className="w-full bg-primary hover:bg-primary/90 border border-primary text-xs font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center min-h-9"
                   >
                     Update Payment Method
                   </Button>

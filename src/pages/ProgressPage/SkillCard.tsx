@@ -58,7 +58,7 @@ export const SkillCard = ({
             delay: index * 0.08 + 0.2,
             ease: 'easeOut',
           }}
-          className="absolute inset-y-0 left-0 bg-[#0047bb] rounded-[4px]"
+          className="absolute inset-y-0 left-0 bg-primary rounded-[4px]"
         />
       </div>
       <div className="flex gap-0.5 mt-2">
@@ -66,7 +66,7 @@ export const SkillCard = ({
           <div
             key={level}
             className={`h-1 flex-1 rounded-[4px] transition-colors duration-300 ${
-              i <= cefrIdx ? 'bg-[#0047bb]' : 'bg-border-soft'
+              i <= cefrIdx ? 'bg-primary' : 'bg-border-soft'
             }`}
             title={level}
           />

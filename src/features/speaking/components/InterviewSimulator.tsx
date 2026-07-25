@@ -38,9 +38,9 @@ const SelectView = ({
         <button
           type="button"
           onClick={() => onSelect('system-design')}
-          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5 shadow-sm cursor-pointer"
         >
-          <Layers className="h-8 w-8 text-[#0047bb]" />
+          <Layers className="h-8 w-8 text-primary" />
           <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
             System Design
           </h3>
@@ -48,7 +48,7 @@ const SelectView = ({
             Practice designing scalable systems. Cover architecture, trade-offs,
             and technical decisions.
           </p>
-          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
+          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider">
             Start practice
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </div>
@@ -57,9 +57,9 @@ const SelectView = ({
         <button
           type="button"
           onClick={() => onSelect('coding')}
-          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-[#0047bb]/40 hover:bg-[#0047bb]/5 shadow-sm cursor-pointer"
+          className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5 shadow-sm cursor-pointer"
         >
-          <Code className="h-8 w-8 text-[#0047bb]" />
+          <Code className="h-8 w-8 text-primary" />
           <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
             Coding Interview
           </h3>
@@ -67,7 +67,7 @@ const SelectView = ({
             Solve coding problems aloud. Practice explaining your approach,
             complexity, and edge cases.
           </p>
-          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-[#0047bb] uppercase tracking-wider">
+          <div className="mt-4 flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider">
             Start practice
             <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </div>
@@ -96,15 +96,15 @@ const ResultsView = ({
       footer={
         <Button
           onClick={onReset}
-          className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
+          className="rounded-[4px] cursor-pointer bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm flex items-center gap-1.5"
         >
           <RotateCcw className="h-4 w-4" /> New Interview
         </Button>
       }
     >
       <div className="space-y-6">
-        <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-6 text-center shadow-sm">
-          <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+        <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-6 text-center shadow-sm">
+          <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
             Overall Score
           </p>
           <p className="mt-2 text-4xl font-bold text-foreground">
@@ -151,7 +151,7 @@ const ResultsView = ({
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="text-center bg-[#f3f3fd] p-2 rounded-[4px] border border-border-soft"
+                  className="text-center bg-surface-hover p-2 rounded-[4px] border border-border-soft"
                 >
                   <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
                     {label}
@@ -273,7 +273,7 @@ const RecordingControls = ({
       variant={isRecording ? 'danger' : 'secondary'}
       onClick={toggleRecording}
       disabled={isScoring || isTimeUp}
-      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-border-soft text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'}`}
+      className={`rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border shadow-sm ${isRecording ? 'bg-rose-600 text-white border-rose-600' : 'border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'}`}
     >
       {isRecording ? (
         <>
@@ -306,10 +306,10 @@ const QuestionCard = ({
     className={`rounded-[4px] border p-5 shadow-sm ${
       isTimeUp
         ? 'border-rose-500/30 bg-rose-500/5'
-        : 'border-[#0047bb]/25 bg-[#0047bb]/5'
+        : 'border-primary/25 bg-primary/5'
     }`}
   >
-    <p className="text-xs font-bold uppercase text-[#0047bb] tracking-wider">
+    <p className="text-xs font-bold uppercase text-primary tracking-wider">
       {question.difficulty.toUpperCase()} · {question.topics.join(', ')}
     </p>
     <p className="mt-2 text-base leading-7 text-foreground font-normal">
@@ -335,7 +335,7 @@ const SubmitBar = ({
     <Button
       onClick={submitAnswer}
       disabled={!canSubmit || isScoring}
-      className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
+      className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm"
     >
       {isScoring
         ? 'Scoring...'
@@ -346,7 +346,7 @@ const SubmitBar = ({
     <Button
       variant="outline"
       onClick={resetInterview}
-      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-primary/5 hover:text-primary shadow-sm flex items-center gap-1.5"
     >
       <StopCircle className="h-4 w-4" /> End Interview
     </Button>
@@ -391,7 +391,7 @@ const InterviewView = ({
         headerActions={
           <div className="flex items-center gap-3">
             <span className="text-sm font-mono text-muted-copy font-bold uppercase">
-              <Clock className="mr-1 inline h-3.5 w-3.5 text-[#0047bb]" />
+              <Clock className="mr-1 inline h-3.5 w-3.5 text-primary" />
               {InterviewSimulatorService.formatTime(timeRemaining)}
             </span>
             <Button
@@ -399,7 +399,7 @@ const InterviewView = ({
               size="icon"
               onClick={resetInterview}
               aria-label="Reset interview"
-              className="h-8 w-8 rounded-[4px] cursor-pointer border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+              className="h-8 w-8 rounded-[4px] cursor-pointer border-border-soft hover:bg-primary/5 hover:text-primary"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -425,7 +425,7 @@ const InterviewView = ({
               value={currentAnswer}
               onChange={(e) => setCurrentAnswer(e.target.value)}
               disabled={isScoring}
-              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
+              className="mt-3 min-h-40 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/10 disabled:opacity-50 font-bold placeholder-muted-copy shadow-sm"
               placeholder={
                 isTimeUp
                   ? "Time's up! Submit your answer below."
