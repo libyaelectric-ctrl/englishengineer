@@ -120,7 +120,7 @@ const PlacementPage = () => {
                 className={`min-h-12 rounded-[4px] border border-border-soft px-4 py-3 text-left text-xs font-bold uppercase tracking-wider transition-all shadow-sm cursor-pointer ${
                   answers[question.id] === choiceIndex
                     ? 'border-primary/40 bg-primary/10 text-foreground'
-                    : 'bg-white text-muted-copy hover:border-primary'
+                    : 'bg-surface text-muted-copy hover:border-primary'
                 }`}
               >
                 {choice}

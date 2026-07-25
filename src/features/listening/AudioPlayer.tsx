@@ -342,7 +342,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
                 className={`px-2.5 py-1 text-xs rounded-[4px] transition-colors cursor-pointer border ${
                   playbackSpeed === speed
                     ? 'bg-primary text-white border-primary font-bold'
-                    : 'bg-white border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'
+                    : 'bg-surface border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'
                 }`}
               >
                 {speed}x

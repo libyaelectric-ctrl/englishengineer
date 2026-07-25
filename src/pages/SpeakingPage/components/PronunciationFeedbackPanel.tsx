@@ -122,7 +122,7 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
-    <div className="rounded-[4px] border border-border-soft bg-white p-2">
+    <div className="rounded-[4px] border border-border-soft bg-surface p-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-xs font-bold text-foreground">

@@ -160,7 +160,7 @@ const EmailCard = ({
       ).map(([label, text]) => (
         <details
           key={label}
-          className="rounded-[4px] border border-border-soft bg-background open:bg-white shadow-sm"
+          className="rounded-[4px] border border-border-soft bg-background open:bg-surface shadow-sm"
         >
           <summary className="cursor-pointer px-4 py-3 text-xs font-bold text-foreground flex items-center justify-between">
             <span>[VERSION: {label.toUpperCase()}]</span>
