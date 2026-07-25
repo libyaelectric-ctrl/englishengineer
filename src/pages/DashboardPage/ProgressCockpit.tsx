@@ -56,7 +56,7 @@ export const ProgressCockpit = React.memo(
                 key={skill}
                 type="button"
                 onClick={() => navigate(meta.route)}
-                className="group min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-primary/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
+                className="group min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-primary/30 hover:bg-surface-hover card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="rounded-[4px] border border-border-soft bg-surface-hover p-1.5 text-primary group-hover:bg-primary group-hover:text-white transition-colors">

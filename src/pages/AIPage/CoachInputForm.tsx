@@ -108,7 +108,7 @@ const DocumentUploadSection = ({
         accept=".txt,.pdf,.docx"
         onChange={onFileUpload}
         disabled={!allowed}
-        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-white file:text-primary hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+        className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-surface file:text-primary hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-surface border border-border-soft px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
         {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
