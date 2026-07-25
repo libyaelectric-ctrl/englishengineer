@@ -123,7 +123,7 @@ export function VocabularyHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm">
+          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm" role="tablist" aria-label="Vocabulary filter">
             {TABS.map((tab) => (
               <button
                 key={tab}

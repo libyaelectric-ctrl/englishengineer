@@ -45,7 +45,7 @@ export const MobileBottomNavigation = () => {
                     {translations[item.label] ?? item.label}
                   </span>
                   {isActive && (
-                    <span className="h-1 w-4 bg-primary rounded-full shadow-[0_0_8px_#0047bb] animate-in fade-in duration-200 mt-0.5" />
+                    <span className="h-1 w-4 bg-primary rounded-full shadow-[0_0_8px_var(--color-primary)] animate-in fade-in duration-200 mt-0.5" />
                   )}
                 </>
               )}

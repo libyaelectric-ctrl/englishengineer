@@ -96,7 +96,7 @@ export const LearningPreferencesSection = ({
                           : [...curr, goal.id]
                       );
                     }}
-                    className="h-3.5 w-3.5 accent-[#0047bb] rounded-[4px] border border-border-soft shadow-sm cursor-pointer"
+                    className="h-3.5 w-3.5 accent-primary rounded-[4px] border border-border-soft shadow-sm cursor-pointer"
                   />
                   {goal.label}
                 </label>
