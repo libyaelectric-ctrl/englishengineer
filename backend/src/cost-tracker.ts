@@ -66,7 +66,7 @@ export const checkUserLimits = (
   return { allowed: true };
 };
 
-export const trackAIUsage = ({
+const trackAIUsage = ({
   model,
   inputTokens,
   outputTokens,
@@ -102,7 +102,7 @@ interface UsageSummary {
   byModel: Record<string, number>;
 }
 
-export const getUsageSummary = (hours: number = 24): UsageSummary => {
+const getUsageSummary = (hours: number = 24): UsageSummary => {
   const since = Date.now() - hours * 3600000;
   const recent = usage.filter((r) => new Date(r.timestamp).getTime() >= since);
 

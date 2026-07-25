@@ -119,10 +119,6 @@ const validateSupabaseToken = async (
   }
 };
 
-export const extractAuthenticatedUser = (
-  request: Request
-): AuthenticatedUser | null => request.auth ?? null;
-
 export interface BackendAuthConfig extends AuthConfig {
   environment: RuntimeEnvironment;
 }

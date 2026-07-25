@@ -1,6 +1,6 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBackendAuth, extractAuthenticatedUser } from '../src/auth.js';
+import { createBackendAuth } from '../src/auth.js';
 
 const mockFetch = (response) => async () => response;
 
@@ -165,19 +165,5 @@ describe('createBackendAuth', () => {
       await optionalBackendAuth(req, {}, next);
       assert.ok(req.auth);
     });
-  });
-});
-
-describe('extractAuthenticatedUser', () => {
-  it('returns auth from request if present', () => {
-    const req = { auth: { userId: 'user-1', source: 'test' } };
-    const user = extractAuthenticatedUser(req);
-    assert.equal(user.userId, 'user-1');
-  });
-
-  it('returns null if no auth on request', () => {
-    const req = {};
-    const user = extractAuthenticatedUser(req);
-    assert.equal(user, null);
   });
 });
