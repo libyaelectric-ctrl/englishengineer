@@ -35,7 +35,7 @@ jobs:
         run: npm run lint
 
       - name: Architecture Check
-        run: npx depcruise src --config .dependency-cruiser.mjs
+        run: npx depcruise src backend/src --config .dependency-cruiser.mjs
 
   test:
     name: Tests

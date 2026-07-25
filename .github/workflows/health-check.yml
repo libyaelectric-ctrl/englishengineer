@@ -2,7 +2,7 @@ name: Health Check
 
 on:
   schedule:
-    - cron: '*/30 * * * *' # Her 30 dakikada bir
+    - cron: '0 */6 * * *' # Her 6 saatte bir (gununde 4 kez)
   workflow_dispatch:
 
 jobs:
