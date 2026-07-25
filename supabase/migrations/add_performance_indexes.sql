@@ -1,40 +1,38 @@
 -- Performance indexes for EngineerOS
--- Generated from docs/DATABASE_INDEXES.md
+-- Fixed: uses correct table names (subscription_status, ai_sessions, vocabulary_reviews)
 
--- High Priority: Query Performance
+-- Vocabulary reviews by user and review time
+CREATE INDEX IF NOT EXISTS idx_vocabulary_reviews_user_reviewed
+ON public.vocabulary_reviews(user_id, reviewed_at DESC);
 
--- Vocabulary progress by user and status
-CREATE INDEX IF NOT EXISTS idx_vocabulary_progress_user_status
-ON vocabulary_progress(user_id, status, next_review_at);
-
--- Subscriptions by user and status (partial index)
-CREATE INDEX IF NOT EXISTS idx_subscriptions_user_status
-ON subscriptions(user_id, status)
+-- Subscription status by user and status (partial index)
+CREATE INDEX IF NOT EXISTS idx_subscription_status_user_status
+ON public.subscription_status(user_id, status)
 WHERE status = 'active';
 
 -- Audit logs by user and time
 CREATE INDEX IF NOT EXISTS idx_audit_logs_user_time
-ON audit_logs(user_id, created_at DESC);
+ON public.audit_logs(user_id, created_at DESC);
 
 -- Workspaces by user
 CREATE INDEX IF NOT EXISTS idx_workspaces_user
-ON workspaces(user_id);
+ON public.workspaces(user_id);
 
--- AI conversations by user and date
-CREATE INDEX IF NOT EXISTS idx_ai_conversations_user_date
-ON ai_conversations(user_id, created_at DESC);
+-- AI sessions by user and date
+CREATE INDEX IF NOT EXISTS idx_ai_sessions_user_date
+ON public.ai_sessions(user_id, created_at DESC);
 
 -- Medium Priority: Analytics
 
 -- Audit logs by action type
 CREATE INDEX IF NOT EXISTS idx_audit_logs_action
-ON audit_logs(action, created_at DESC);
+ON public.audit_logs(action, created_at DESC);
 
--- Subscriptions by plan (partial index)
-CREATE INDEX IF NOT EXISTS idx_subscriptions_plan
-ON subscriptions(plan_id)
+-- Subscription status by plan (partial index)
+CREATE INDEX IF NOT EXISTS idx_subscription_status_plan
+ON public.subscription_status(plan_id)
 WHERE status = 'active';
 
--- Vocabulary by word (for lookups)
-CREATE INDEX IF NOT EXISTS idx_vocabulary_word
-ON vocabulary_progress(word);
+-- Vocabulary reviews by vocabulary_id (for lookups)
+CREATE INDEX IF NOT EXISTS idx_vocabulary_reviews_vocabulary_id
+ON public.vocabulary_reviews(vocabulary_id);
