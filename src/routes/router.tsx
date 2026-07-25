@@ -33,6 +33,7 @@ const Team = lazy(() => import('@/pages/TeamPage'));
 const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
+const AuthCallback = lazy(() => import('@/pages/AuthCallbackPage'));
 
 export const router = createBrowserRouter([
   {
@@ -302,6 +303,14 @@ export const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingState />}>
         <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: '/auth/callback',
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <AuthCallback />
       </Suspense>
     ),
   },

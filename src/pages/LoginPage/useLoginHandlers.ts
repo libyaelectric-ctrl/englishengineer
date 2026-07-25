@@ -60,7 +60,7 @@ export const useLoginHandlers = () => {
       const { error: authError } = await client.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (authError && isProviderNotEnabled(authError.message ?? '')) {
@@ -117,7 +117,7 @@ export const useLoginHandlers = () => {
       const { data, error: authError } = await client.auth.signInWithSSO({
         domain,
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (authError) throw authError;
