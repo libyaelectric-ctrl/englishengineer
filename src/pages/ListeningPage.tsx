@@ -84,7 +84,7 @@ const QuestionField = ({
             return (
               <label
                 key={choice}
-                className="flex cursor-pointer gap-2.5 rounded-[4px] border border-border-soft bg-surface p-3 text-sm text-foreground hover:bg-[#0047bb]/5 hover:border-[#0047bb]/30 transition-colors"
+                className="flex cursor-pointer gap-2.5 rounded-[4px] border border-border-soft bg-surface p-3 text-sm text-foreground hover:bg-primary/5 hover:border-primary/30 transition-colors"
               >
                 <input
                   type="radio"
@@ -108,7 +108,7 @@ const QuestionField = ({
           <select
             value={answer}
             onChange={(event) => onAnswer(question.id, event.target.value)}
-            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none"
+            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-primary focus:outline-none"
           >
             <option value="">Select true or false</option>
             <option value="true">True</option>
@@ -125,7 +125,7 @@ const QuestionField = ({
           value={answer}
           onChange={(event) => onAnswer(question.id, event.target.value)}
           placeholder="Complete the missing technical phrase"
-          className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold"
+          className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-primary focus:outline-none font-bold"
         />
       </label>
     );
@@ -134,7 +134,7 @@ const QuestionField = ({
   return (
     <fieldset
       key={question.id}
-      className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 shadow-sm"
+      className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm"
     >
       <legend className="px-2 text-sm font-bold text-foreground uppercase tracking-wider font-mono">
         {index + 1}. {question.questionText}
@@ -177,7 +177,7 @@ const WorkspaceView = ({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Button
           variant="outline"
-          className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+          className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-primary/5 hover:text-primary"
           onClick={onBack}
         >
           Back to tasks
@@ -190,7 +190,7 @@ const WorkspaceView = ({
       <AudioPlayer mission={currentMission} />
 
       <div className="flex items-center gap-3 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
-        <Gauge className="h-4 w-4 text-[#0047bb] shrink-0" />
+        <Gauge className="h-4 w-4 text-primary shrink-0" />
         <span className="text-xs font-bold text-foreground uppercase tracking-wider">
           Playback Speed:
         </span>
@@ -202,8 +202,8 @@ const WorkspaceView = ({
               onClick={() => setPlaybackSpeed(speed)}
               className={`rounded-[4px] px-3 py-1.5 text-xs font-bold transition-colors cursor-pointer border ${
                 playbackSpeed === speed
-                  ? 'bg-[#0047bb] text-white border-[#0047bb]'
-                  : 'bg-[#f3f3fd] border-border-soft text-muted-copy hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'bg-surface-hover border-border-soft text-muted-copy hover:bg-primary/5 hover:text-primary'
               }`}
             >
               {speed}x
@@ -214,7 +214,7 @@ const WorkspaceView = ({
 
       <Button
         variant="outline"
-        className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb]"
+        className="rounded-[4px] cursor-pointer text-xs h-9 border-border-soft hover:bg-primary/5 hover:text-primary"
         onClick={() => setShowTranscript((prev) => !prev)}
       >
         {showTranscript ? 'Hide Transcript' : 'Show Transcript'}
@@ -251,14 +251,14 @@ const WorkspaceView = ({
 
             <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
               <span className="flex items-center gap-2">
-                <KeyRound className="h-4 w-4 text-[#0047bb]" /> Key words you
+                <KeyRound className="h-4 w-4 text-primary" /> Key words you
                 identified
               </span>
               <input
                 value={userKeywords}
                 onChange={(event) => setUserKeywords(event.target.value)}
                 placeholder="Separate key words with commas"
-                className="mt-2 w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy"
+                className="mt-2 w-full rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-primary focus:outline-none font-bold placeholder-muted-copy"
               />
             </label>
             <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
@@ -266,13 +266,13 @@ const WorkspaceView = ({
               <textarea
                 value={summary}
                 onChange={(event) => setSummary(event.target.value)}
-                className="mt-2 min-h-[160px] w-full resize-y rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-[#0047bb] focus:outline-none font-bold placeholder-muted-copy leading-relaxed"
+                className="mt-2 min-h-[160px] w-full resize-y rounded-[4px] border border-border-soft bg-surface p-3 text-sm focus:border-primary focus:outline-none font-bold placeholder-muted-copy leading-relaxed"
               />
             </label>
             <Button
               onClick={() => submitCurrentMission()}
               disabled={!summary.trim()}
-              className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
+              className="bg-primary hover:bg-primary-hover text-primary-foreground font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm"
             >
               Submit transcript task
             </Button>
@@ -314,14 +314,14 @@ const WorkspaceView = ({
             {evaluationResult.feedback}
           </p>
           <Button
-            className="mt-4 bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] h-10 px-5 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm animate-in fade-in"
+            className="mt-4 bg-primary hover:bg-primary-hover text-primary-foreground font-bold uppercase tracking-wider text-[10px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm animate-in fade-in"
             onClick={resetCurrentMission}
           >
             Try another response
           </Button>
           <Button
             variant="outline"
-            className="mt-4 ml-2 rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm"
+            className="mt-4 ml-2 rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-primary/5 hover:text-primary shadow-sm"
             onClick={resetCurrentMission}
           >
             <RefreshCw className="h-4 w-4 mr-2" /> Replay Audio
@@ -433,7 +433,7 @@ const ListeningPage = () => {
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Listening
           </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
             {currentLevel}
           </span>
           <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
@@ -470,8 +470,8 @@ const ListeningPage = () => {
                   onClick={() => setCategoryFilter(cat)}
                   className={`min-h-9 rounded-[4px] px-3.5 text-xs font-bold transition-all cursor-pointer border ${
                     categoryFilter === cat
-                      ? 'bg-[#0047bb] border-[#0047bb] text-white shadow-sm'
-                      : 'text-muted-copy border-border-soft bg-surface hover:bg-[#0047bb]/5 hover:text-[#0047bb]'
+                      ? 'bg-primary border-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-copy border-border-soft bg-surface hover:bg-primary/5 hover:text-primary'
                   }`}
                 >
                   {cat}
@@ -482,11 +482,11 @@ const ListeningPage = () => {
               {filteredMissions.map((mission) => (
                 <article
                   key={mission.id}
-                  className="group rounded-[4px] border border-border-soft bg-surface p-5 hover:border-[#0047bb]/30 hover:shadow-md transition-all duration-200"
+                  className="group rounded-[4px] border border-border-soft bg-surface p-5 hover:border-primary/30 hover:shadow-md transition-all duration-200"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
                         {mission.cefrLevel}
                       </span>
                       <LevelAccessBadge
@@ -500,14 +500,14 @@ const ListeningPage = () => {
                       {mission.estimatedMinutes} M
                     </span>
                   </div>
-                  <h2 className="mt-3 font-bold text-foreground group-hover:text-[#0047bb] transition-colors tracking-tight">
+                  <h2 className="mt-3 font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">
                     {mission.title}
                   </h2>
                   <p className="mt-2 text-sm leading-6 text-muted-copy font-normal">
                     {mission.description}
                   </p>
                   <Button
-                    className="mt-4 w-full rounded-[4px] font-bold uppercase tracking-wider text-[10px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] h-10"
+                    className="mt-4 w-full rounded-[4px] font-bold uppercase tracking-wider text-[10px] cursor-pointer bg-primary hover:bg-primary-hover border border-primary h-10"
                     onClick={() => {
                       selectMission(mission.id);
                       setWorkspaceOpen(true);
