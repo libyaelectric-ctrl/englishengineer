@@ -56,8 +56,9 @@ export const csrfProtection = (
   res: Response,
   next: NextFunction
 ): void => {
-  // Skip CSRF in test environment
-  if (process.env.NODE_ENV === 'test') {
+  // CSRF is only enforced in production. In development/test, skip to allow
+  // integration tests and dev-bypass routes to work without cookie tokens.
+  if (process.env.NODE_ENV !== 'production') {
     next();
     return;
   }
