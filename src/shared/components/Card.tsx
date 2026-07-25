@@ -1,11 +1,11 @@
-import { type FC, type HTMLAttributes } from 'react';
+import { memo, type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hoverEffect?: boolean;
 }
 
-export const Card: FC<CardProps> = ({
+export const Card: FC<CardProps> = memo(({
   className,
   children,
   hoverEffect,
@@ -21,4 +21,6 @@ export const Card: FC<CardProps> = ({
   >
     {children}
   </div>
-);
+));
+
+Card.displayName = 'Card';
