@@ -1,0 +1,14 @@
+node_modules
+.git
+.env
+.env.*
+!.env.example
+dist
+build
+coverage
+test
+*.test.*
+*.spec.*
+*.log
+.DS_Store
+.mimocode
