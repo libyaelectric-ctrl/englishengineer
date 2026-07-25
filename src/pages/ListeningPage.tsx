@@ -340,18 +340,6 @@ const ListeningPage = () => {
   const canAccess =
     readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
 
-  if (!canAccess) {
-    return (
-      <SkillLockedState
-        skillName="Listening"
-        readingDone={readingDone}
-        writingDone={writingDone}
-        readingThreshold={READING_THRESHOLD}
-        writingThreshold={WRITING_THRESHOLD}
-      />
-    );
-  }
-
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore(
     (s) => s.selectedMissionId
@@ -404,6 +392,18 @@ const ListeningPage = () => {
     visibleMissions[0];
 
   useEffect(() => initializeStore(), [initializeStore]);
+
+  if (!canAccess) {
+    return (
+      <SkillLockedState
+        skillName="Listening"
+        readingDone={readingDone}
+        writingDone={writingDone}
+        readingThreshold={READING_THRESHOLD}
+        writingThreshold={WRITING_THRESHOLD}
+      />
+    );
+  }
 
   if (!currentMission) {
     return (

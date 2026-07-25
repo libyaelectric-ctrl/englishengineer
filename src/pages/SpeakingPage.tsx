@@ -285,6 +285,14 @@ const SpeakingPage = () => {
   const canAccess =
     readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
 
+  const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
+  const {
+    MAX_VOICE_MINUTES,
+    voiceMinutesUsedThisMonth,
+    scoreResult,
+    setScoreResult,
+  } = useSpeakingPage();
+
   if (!canAccess) {
     return (
       <SkillLockedState
@@ -296,14 +304,6 @@ const SpeakingPage = () => {
       />
     );
   }
-
-  const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
-  const {
-    MAX_VOICE_MINUTES,
-    voiceMinutesUsedThisMonth,
-    scoreResult,
-    setScoreResult,
-  } = useSpeakingPage();
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 pt-12 sm:pt-0 text-foreground relative z-10 font-sans pb-16 animate-in fade-in duration-300">

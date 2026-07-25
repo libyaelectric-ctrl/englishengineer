@@ -274,15 +274,6 @@ const ReadingPage = () => {
   const canAccess =
     vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
 
-  if (!canAccess) {
-    return (
-      <LockedReadingView
-        vocabLearned={vocabLearned}
-        grammarLearned={grammarLearned}
-      />
-    );
-  }
-
   const {
     missions,
     answers,
@@ -316,6 +307,15 @@ const ReadingPage = () => {
     handleBackToMissions,
     moveMission,
   } = useReadingPage();
+
+  if (!canAccess) {
+    return (
+      <LockedReadingView
+        vocabLearned={vocabLearned}
+        grammarLearned={grammarLearned}
+      />
+    );
+  }
 
   if (!currentMission) {
     return (
