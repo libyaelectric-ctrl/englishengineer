@@ -13,13 +13,13 @@ describe('Button', () => {
   it('renders with primary variant by default', () => {
     render(<Button>Primary</Button>);
     const button = screen.getByRole('button');
-    expect(button.className).toContain('bg-[#0047bb]');
+    expect(button.className).toContain('bg-primary');
   });
 
   it('renders with secondary variant', () => {
     render(<Button variant="secondary">Secondary</Button>);
     const button = screen.getByRole('button');
-    expect(button.className).toContain('bg-white');
+    expect(button.className).toContain('bg-surface');
   });
 
   it('calls onClick when clicked', () => {

@@ -126,8 +126,8 @@ const RoleplayTab = () => {
                 />
               }
             >
-              <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-5 shadow-sm">
-                <p className="text-xs font-bold uppercase text-[#0047bb] tracking-wider">
+              <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-5 shadow-sm">
+                <p className="text-xs font-bold uppercase text-primary tracking-wider">
                   Roleplay prompt
                 </p>
                 <p className="mt-2 text-base leading-7 text-foreground font-normal">
@@ -135,7 +135,7 @@ const RoleplayTab = () => {
                 </p>
               </div>
 
-              <div className="flex items-start gap-2.5 mt-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-3 shadow-sm">
+              <div className="flex items-start gap-2.5 mt-3 rounded-[4px] border border-border-soft bg-surface-hover p-3 shadow-sm">
                 <FileText className="h-4 w-4 text-muted-copy shrink-0 mt-0.5" />
                 <div>
                   <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
@@ -156,7 +156,7 @@ const RoleplayTab = () => {
                   onClick={() => setResponseMode('written')}
                   className={`pb-2 px-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all relative cursor-pointer ${
                     responseMode === 'written'
-                      ? 'text-[#0047bb] font-bold border-b-2 border-[#0047bb]'
+                      ? 'text-primary font-bold border-b-2 border-primary'
                       : 'text-muted-copy hover:text-foreground'
                   }`}
                 >
@@ -167,8 +167,8 @@ const RoleplayTab = () => {
                   onClick={() => setResponseMode('voice')}
                   className={`pb-2 px-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 cursor-pointer ${
                     responseMode === 'voice'
-                      ? 'text-[#0047bb] font-bold border-b-2 border-[#0047bb]'
-                      : 'text-muted-copy hover:text-[#0047bb]'
+                      ? 'text-primary font-bold border-b-2 border-primary'
+                      : 'text-muted-copy hover:text-primary'
                   }`}
                 >
                   <Mic className="h-3.5 w-3.5" />
@@ -197,21 +197,21 @@ const RoleplayTab = () => {
                     id="written-roleplay-response"
                     value={typedTranscript}
                     onChange={(event) => setTypedTranscript(event.target.value)}
-                    className="mt-3 min-h-48 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-[#0047bb] focus:bg-white focus:ring-2 focus:ring-[#0047bb]/10 font-bold placeholder-muted-copy shadow-sm"
+                    className="mt-3 min-h-48 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-4 py-3 text-sm leading-6 text-foreground outline-none focus:border-primary focus:bg-surface focus:ring-2 focus:ring-primary/10 font-bold placeholder-muted-copy shadow-sm"
                     placeholder="Typed transcript fallback for Written Roleplay. Respond at your current Speaking level."
                   />
                   <div className="mt-4 flex flex-wrap gap-3">
                     <Button
                       onClick={submitRoleplay}
                       disabled={!typedTranscript.trim()}
-                      className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm"
+                      className="rounded-[4px] cursor-pointer bg-primary hover:bg-primary-hover border border-primary text-primary-foreground font-bold uppercase tracking-wider text-[11px] h-10 px-5 shadow-sm"
                     >
                       Submit Written Roleplay
                     </Button>
                     <Button
                       variant="secondary"
                       onClick={resetMission}
-                      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+                      className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-primary/5 hover:text-primary shadow-sm flex items-center gap-1.5"
                     >
                       <RotateCcw className="h-4 w-4" /> Reset response
                     </Button>
@@ -313,7 +313,7 @@ const SpeakingPage = () => {
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Speaking
           </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
             {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT
           </span>
           <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
@@ -340,8 +340,8 @@ const SpeakingPage = () => {
               onClick={() => setSpeakingTab(key)}
               className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
                 speakingTab === key
-                  ? 'bg-[#0047bb] text-white border border-[#0047bb]'
-                  : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+                  ? 'bg-primary text-primary-foreground border border-primary'
+                  : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
               }`}
             >
               <Icon className="h-3 w-3" />
