@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, FileCheck, Layers, Lock, ShieldCheck } from 'lucide-react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
+import { LockProgressBar } from '@/shared/components/LockProgressBar';
 import {
   LevelContentFilter,
   EmptyLevelState,
@@ -18,33 +19,6 @@ import { useGrammarStore } from '@/features/grammar/store/grammar.store';
 
 const VOCAB_THRESHOLD = 200;
 const GRAMMAR_THRESHOLD = 10;
-
-const LockProgressBar = ({
-  label,
-  learned,
-  threshold,
-}: {
-  label: string;
-  learned: number;
-  threshold: number;
-}) => (
-  <>
-    <div className="flex justify-between text-muted-copy">
-      <span>{label}</span>
-      <span className="font-bold text-foreground">
-        {learned}/{threshold}
-      </span>
-    </div>
-    <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-      <div
-        className="h-full bg-[#0047bb] transition-all"
-        style={{
-          width: `${Math.min((learned / threshold) * 100, 100)}%`,
-        }}
-      />
-    </div>
-  </>
-);
 
 const LockedView = ({
   vocabLearned,
@@ -64,13 +38,13 @@ const LockedView = ({
       <div className="space-y-2 text-[10px]">
         <LockProgressBar
           label="Vocabulary"
-          learned={vocabLearned}
-          threshold={VOCAB_THRESHOLD}
+          done={vocabLearned}
+          total={VOCAB_THRESHOLD}
         />
         <LockProgressBar
           label="Grammar"
-          learned={grammarLearned}
-          threshold={GRAMMAR_THRESHOLD}
+          done={grammarLearned}
+          total={GRAMMAR_THRESHOLD}
         />
       </div>
       <div className="flex gap-2 justify-center pt-2">
