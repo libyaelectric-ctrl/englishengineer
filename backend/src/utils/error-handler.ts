@@ -67,8 +67,7 @@ export const createErrorHandler =
         path: request.path,
         method: request.method,
         requestId,
-        userId: (request as unknown as { auth?: { userId?: string } })?.auth
-          ?.userId,
+        userId: request.auth?.userId,
         timestamp: new Date().toISOString(),
       },
       error instanceof Error ? error : undefined

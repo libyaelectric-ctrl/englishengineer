@@ -34,6 +34,7 @@ import {
 } from './workspace.js';
 import { createI18nMiddleware } from './i18n.js';
 import { initAuditLog, getAuditLogs } from './audit-log.js';
+import { getPrometheusMetrics } from './prometheus.js';
 import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
 import { swaggerSpec } from './swagger.js';
 import { logger } from './logger.js';
@@ -41,6 +42,7 @@ import {
   createIdempotencyStore,
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
+import { csrfProtection } from './middleware/csrf.middleware.js';
 import type { BackendConfig } from '../types.js';
 import type { BackendAuthConfig } from './auth.js';
 import type { UpstashRateLimitStore } from './rate-limit.js';
@@ -211,6 +213,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
         'X-EngineerOS-Request-Id',
         'X-EngineerOS-User-Id',
         'X-EngineerOS-User-Email',
+        'X-CSRF-Token',
       ],
     })
   );
@@ -223,6 +226,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   );
   app.use(stripeRawRouter);
   app.use(express.json({ limit: '256kb' }));
+  app.use(csrfProtection);
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     const start = process.hrtime();
@@ -284,9 +288,7 @@ const resolveWorkspaceRepo = (
   if (workspaceRepository) return workspaceRepository;
   if (!config.workspace?.configured) return null;
   try {
-    return createWorkspaceRepository(
-      config as unknown as Record<string, unknown>
-    );
+    return createWorkspaceRepository(config);
   } catch (err: unknown) {
     logger.warn('Failed to create workspace repository', {
       error: err instanceof Error ? err.message : String(err),
@@ -371,6 +373,13 @@ const registerRoutes = (
 
   v1Router.get('/health', healthHandler);
   app.get('/api/health', healthHandler);
+
+  // Prometheus metrics endpoint
+  app.get('/api/metrics', (_req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'text/plain; version=0.0.4');
+    res.send(getPrometheusMetrics());
+  });
+
   app.get('/api-docs.json', (_req: Request, res: Response) =>
     res.json(swaggerSpec)
   );
@@ -397,12 +406,7 @@ const registerRoutes = (
 
   registerAIRoutes(
     app,
-    createAIService(config.ai, fetchImpl) as unknown as {
-      complete: (
-        op: string,
-        body: Record<string, unknown>
-      ) => Promise<Record<string, unknown>>;
-    },
+    createAIService(config.ai, fetchImpl),
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -415,7 +419,7 @@ const registerRoutes = (
         },
         fetchImpl
       ),
-    config as unknown as Record<string, unknown>,
+    config,
     fetchImpl
   );
 
@@ -441,8 +445,8 @@ const registerRoutes = (
   registerBillingRoutes(
     app,
     createBillingService({
-      config: config.stripe as unknown as BillingServiceConfig,
-      stripeClient: stripeClient as unknown as Stripe,
+      config: config.stripe as BillingServiceConfig,
+      stripeClient: stripeClient as Stripe,
       repository:
         billingRepository ??
         createSubscriptionRepository(
@@ -540,7 +544,7 @@ const initIdempotency = (config: BackendConfig, fetchImpl: typeof fetch) => {
     config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory';
   const store = createIdempotencyStore(
     storeType,
-    config as unknown as {
+    config as {
       rateLimit?: {
         upstashUrl?: string;
         upstashToken?: string;
@@ -586,7 +590,7 @@ export const createApp = ({
     config.rateLimit?.upstashToken ?? undefined
   );
   initConnectionPool(config);
-  initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
+  initAuditLog(config as { workspace?: Record<string, unknown> });
   initIdempotency(config, fetchImpl);
   initSentryIfConfigured(config);
 

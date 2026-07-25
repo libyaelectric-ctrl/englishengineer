@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes } from 'react';
+import { memo, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
@@ -6,18 +6,10 @@ interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   max?: number;
   showValue?: boolean;
   animated?: boolean;
-  color?:
-    | 'primary'
-    | 'cyan'
-    | 'emerald'
-    | 'rose'
-    | 'amber'
-    | 'success'
-    | 'warning'
-    | 'danger';
+  color?: 'primary' | 'cyan' | 'emerald' | 'rose' | 'amber' | 'success' | 'warning' | 'danger';
 }
 
-export const ProgressBar: FC<ProgressBarProps> = ({
+export const ProgressBar = memo<ProgressBarProps>(({
   value,
   max = 100,
   showValue = false,
@@ -28,7 +20,7 @@ export const ProgressBar: FC<ProgressBarProps> = ({
 }) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
-  const colors = {
+  const colors: Record<string, string> = {
     primary: 'bg-foreground',
     cyan: 'bg-primary',
     emerald: 'bg-success',
@@ -60,4 +52,6 @@ export const ProgressBar: FC<ProgressBarProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ProgressBar.displayName = 'ProgressBar';

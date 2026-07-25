@@ -44,6 +44,7 @@ export const FloatingMascotWidget: React.FC<FloatingMascotWidgetProps> = ({
         onClick={() => setIsMinimized(false)}
         className={`fixed ${positionClasses} z-50 p-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-full shadow-2xl transition-transform hover:scale-110 flex items-center justify-center border-2 border-emerald-400 cursor-pointer`}
         title="Open EngVox Assistant"
+        aria-label="Open EngVox Assistant"
         type="button"
       >
         <span className="text-xl">🤖</span>
@@ -68,6 +69,7 @@ export const FloatingMascotWidget: React.FC<FloatingMascotWidgetProps> = ({
             <button
               onClick={() => setIsOpen(false)}
               className="text-zinc-400 hover:text-white text-xs px-1.5 py-0.5 rounded hover:bg-zinc-800 cursor-pointer"
+              aria-label="Close assistant"
               type="button"
             >
               ✕
@@ -78,6 +80,7 @@ export const FloatingMascotWidget: React.FC<FloatingMascotWidgetProps> = ({
             <button
               onClick={handleMascotClick}
               className="text-xs bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
+              aria-label="Show next tip"
               type="button"
             >
               💡 Next Tip
@@ -85,6 +88,7 @@ export const FloatingMascotWidget: React.FC<FloatingMascotWidgetProps> = ({
             <button
               onClick={() => setIsMinimized(true)}
               className="text-xs text-zinc-400 hover:text-zinc-200 cursor-pointer"
+              aria-label="Minimize assistant"
               type="button"
             >
               Minimize

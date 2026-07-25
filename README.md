@@ -77,7 +77,7 @@ content-panel hover states.
 
 Kademe 8 remains the live-service gate. While it is `BLOCKED`, production
 launch and live customer billing are not allowed even when code-only readiness
-checks pass. See `DEPLOYMENT.md` for staging and rollback instructions.
+checks pass. See `docs/DEPLOYMENT.md` for staging and rollback instructions.
 
 EngineerOS v2.6.0 was the Project Olympus production verification evidence sprint:
 
@@ -208,7 +208,7 @@ npm run e2e
 
 EngineerOS keeps both layers: 20 fast Vitest/jsdom release smoke scenarios and
 11 real Playwright Chromium scenarios. Chromium installation and execution are
-documented in `TESTING.md` and CI.
+documented in `docs/TESTING_STRATEGY.md` and CI.
 
 ## Commercial & Product Information
 
@@ -232,7 +232,7 @@ Before packaging, run:
 npm run clean
 ```
 
-Then follow `PROJECT_PACKAGE_GUIDE.md` to create `engineeros-clean-source.zip` from source files only.
+Then zip the cleaned source (excluding `node_modules/`, `dist/`, `.git/`, `.env*`).
 
 ---
 

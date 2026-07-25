@@ -58,6 +58,26 @@ jobs:
       - name: Test Coverage
         run: npm run test:coverage
 
+      - name: Enforce Coverage Thresholds
+        run: |
+          echo "=== Coverage Threshold Enforcement ==="
+          if [ -f coverage/coverage-summary.json ]; then
+            LINES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.lines.pct)")
+            BRANCHES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.branches.pct)")
+            FUNCTIONS=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.functions.pct)")
+            echo "Lines: ${LINES}% (min: 55%)"
+            echo "Branches: ${BRANCHES}% (min: 45%)"
+            echo "Functions: ${FUNCTIONS}% (min: 50%)"
+            FAIL=0
+            if [ "$(echo "$LINES < 55" | bc -l)" -eq 1 ]; then echo "FAIL: Lines coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$BRANCHES < 45" | bc -l)" -eq 1 ]; then echo "FAIL: Branches coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$FUNCTIONS < 50" | bc -l)" -eq 1 ]; then echo "FAIL: Functions coverage below threshold"; FAIL=1; fi
+            if [ "$FAIL" -eq 1 ]; then exit 1; fi
+            echo "Coverage thresholds met"
+          else
+            echo "Coverage report not found, skipping enforcement"
+          fi
+
       - name: Upload Coverage
         uses: actions/upload-artifact@v4
         if: always()

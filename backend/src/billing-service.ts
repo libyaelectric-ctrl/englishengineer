@@ -260,10 +260,11 @@ const processWebhookEvent = async (
   const eventId = event.id;
   if (await repository.hasStripeEventBeenProcessed(eventId))
     return { received: true, duplicate: true, eventId };
+  const eventData = (event.data?.object ?? {}) as Record<string, unknown>;
   await dispatchWebhookEvent(
     repository,
     event.type,
-    (event.data?.object ?? {}) as unknown as Record<string, unknown>
+    eventData
   );
   await repository.markStripeEventProcessed(eventId, {
     type: event.type,

@@ -16,6 +16,12 @@ export const AppShell: FC = () => {
 
   return (
     <div className="relative flex h-screen w-screen overflow-hidden bg-background text-foreground">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:p-4 focus:bg-primary focus:text-white focus:rounded-lg"
+      >
+        Skip to main content
+      </a>
       <Suspense fallback={null}>
         <CommandPalette />
       </Suspense>
@@ -32,7 +38,10 @@ export const AppShell: FC = () => {
         >
           <Menu className="h-5 w-5" />
         </button>
-        <main className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8 max-w-full">
+        <main
+          id="main-content"
+          className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8 max-w-full"
+        >
           <Outlet />
         </main>
         <BetaFeedbackWidget />

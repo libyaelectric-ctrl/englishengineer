@@ -1,10 +1,14 @@
-const CACHE_NAME = 'engvox-v1';
+const CACHE_VERSION = 'v2';
+const CACHE_NAME = `engvox-${CACHE_VERSION}`;
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/offline.html',
   '/brand/logo.webp',
   '/manifest.json',
 ];
+
+const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
 // Install: cache static assets
 self.addEventListener('install', (event) => {
@@ -28,14 +32,62 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: stale-while-revalidate for assets, network-first for API
+// Enforce cache size limit
+const enforceCacheSize = async (cache, maxSize) => {
+  const keys = await cache.keys();
+  let totalSize = 0;
+  const entries = [];
+
+  for (const key of keys) {
+    const response = await cache.match(key);
+    if (response) {
+      const blob = await response.blob();
+      totalSize += blob.size;
+      entries.push({ key, size: blob.size });
+    }
+  }
+
+  if (totalSize > maxSize) {
+    // Remove oldest entries until under limit
+    entries.sort((a, b) => a.size - b.size);
+    while (totalSize > maxSize && entries.length > 0) {
+      const entry = entries.shift();
+      if (entry) {
+        await cache.delete(entry.key);
+        totalSize -= entry.size;
+      }
+    }
+  }
+};
+
+// Fetch strategies
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
+
   // Network-first for API calls
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(fetch(request).catch(() => caches.match(request)));
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache successful API responses (except auth-related)
+          if (
+            response.ok &&
+            !url.pathname.includes('/auth/') &&
+            !url.pathname.includes('/webhooks/')
+          ) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
     return;
   }
 
@@ -43,15 +95,20 @@ self.addEventListener('fetch', (event) => {
   if (
     request.destination === 'style' ||
     request.destination === 'script' ||
-    request.destination === 'image'
+    request.destination === 'image' ||
+    request.destination === 'font'
   ) {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) =>
         cache.match(request).then((cached) => {
-          const fetched = fetch(request).then((response) => {
-            cache.put(request, response.clone());
-            return response;
-          });
+          const fetched = fetch(request)
+            .then((response) => {
+              if (response.ok) {
+                cache.put(request, response.clone());
+              }
+              return response;
+            })
+            .catch(() => cached);
           return cached || fetched;
         })
       )
@@ -60,5 +117,61 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Network-first for HTML (navigation)
-  event.respondWith(fetch(request).catch(() => caches.match(request)));
+  event.respondWith(
+    fetch(request)
+      .then((response) => {
+        // Cache HTML pages
+        if (response.ok) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() =>
+        caches.match(request).then((cached) => cached || caches.match('/offline.html'))
+      )
+  );
+});
+
+// Background Sync: queue failed POST requests for retry
+self.addEventListener('sync', (event) => {
+  if (event.tag === 'sync-offline-actions') {
+    event.waitUntil(syncOfflineActions());
+  }
+});
+
+const syncOfflineActions = async () => {
+  const cache = await caches.open(CACHE_NAME);
+  const requests = await cache.keys();
+  const pendingActions = requests.filter((req) => req.url.includes('/sync/pending'));
+
+  for (const request of pendingActions) {
+    try {
+      const response = await cache.match(request);
+      if (response) {
+        const body = await response.json();
+        await fetch('/api/v1/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        await cache.delete(request);
+      }
+    } catch (e) {
+      // Will retry on next sync event
+    }
+  }
+};
+
+// Notify clients when coming back online
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    self.clients.matchAll().then((clients) => {
+      clients.forEach((client) => {
+        client.postMessage({ type: 'SW_ACTIVATED' });
+      });
+    })
+  );
 });

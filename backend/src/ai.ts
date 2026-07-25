@@ -135,7 +135,7 @@ export const registerAIRoutes = (
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
   billingRepository: SubscriptionRepository,
-  config: Record<string, unknown>,
+  config: { ai?: { rateLimitWindowMs?: number; rateLimitMax?: number }; stripe?: Record<string, unknown>; supabase?: Record<string, unknown> },
   _fetchImpl: typeof fetch = fetch
 ): void => {
   const ledger = createAiLedger(config);
