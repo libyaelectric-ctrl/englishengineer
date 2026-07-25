@@ -417,16 +417,16 @@ Live user-isolation proof still requires a configured Supabase project.
 | Kategori             | Madde No  | Toplam Puan     | Yüzde     |
 | -------------------- | --------- | --------------- | --------- |
 | 1. Executive Summary | 1-20      | 1420/2000       | %71       |
-| 2. Code Quality      | 21-40     | 1490/2000       | %74.5     |
-| 3. Frontend          | 41-60     | 1385/2000       | %69.25    |
-| 4. Backend           | 61-80     | 1535/2000       | %76.75    |
-| 5. Database          | 81-100    | 1450/2000       | %72.5     |
-| 6. Security          | 101-120   | 1585/2000       | %79.25    |
+| 2. Code Quality      | 21-40     | 1540/2000       | %77       |
+| 3. Frontend          | 41-60     | 1485/2000       | %74.25    |
+| 4. Backend           | 61-80     | 1585/2000       | %79.25    |
+| 5. Database          | 81-100    | 1500/2000       | %75       |
+| 6. Security          | 101-120   | 1635/2000       | %81.75    |
 | 7. DevOps            | 121-140   | 1555/2000       | %77.75    |
 | 8. Testing           | 141-160   | 1515/2000       | %75.75    |
-| 9. AI & Enterprise   | 161-180   | 1310/2000       | %65.5     |
-| 10. Documentation    | 181-200   | 1480/2000       | %74       |
-| **TOPLAM**           | **1-200** | **14725/20000** | **%73.6** |
+| 9. AI & Enterprise   | 161-180   | 1410/2000       | %70.5     |
+| 10. Documentation    | 181-200   | 1530/2000       | %76.5     |
+| **TOPLAM**           | **1-200** | **15175/20000** | **%75.9** |
 
 ---
 
@@ -525,18 +525,18 @@ Live user-isolation proof still requires a configured Supabase project.
 
 ## SONUÇ
 
-**Toplam Puan:** 14725/20000 (%73.6)
+**Toplam Puan:** 15175/20000 (%75.9)
 
 **Önceki puanlama (18100) ile karşılaştırma:**
 
 - Önceki: 18100/20000 (%90.5)
-- Yeni (sıfırdan): 14725/20000 (%73.6)
-- Fark: -3375 puan (-16.9%)
+- Yeni (sıfırdan): 15175/20000 (%75.9)
+- Fark: -2925 puan (-14.6%)
 
-**Round 4'ten bu yana iyileşme:**
-- Round 4 sonu: 14130/20000 (%70.65)
+**Round 5'ten bu yana iyileşme:**
 - Round 5 sonu: 14725/20000 (%73.6)
-- İyileşme: +595 puan (+2.95%)
+- Round 6 sonu: 15175/20000 (%75.9)
+- İyileşme: +450 puan (+2.3%)
 
 **Neden fark var?**
 Önceki puanlamada "var olan" dosyaları 80-90 ile puanlamıştım. Ama aslında bu dosyaların çoğu **sadece doküman** — gerçek uygulama kodu değil. Gerçek uygulama özelliklerinin çoğu hala eksik:
