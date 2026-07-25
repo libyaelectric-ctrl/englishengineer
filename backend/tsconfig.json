@@ -13,6 +13,6 @@
     "checkJs": false,
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "types.d.ts"],
-  "exclude": ["node_modules", "dist", "test"]
+  "include": ["src/**/*.ts", "src/**/*.js", "types.d.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

@@ -59,7 +59,12 @@ export const ToastContainer = () => {
   };
 
   return (
-    <div className="fixed top-4 right-4 z-[200] space-y-2 max-w-sm">
+    <div
+      className="fixed top-4 right-4 z-[200] space-y-2 max-w-sm"
+      aria-live="polite"
+      aria-atomic="false"
+      role="status"
+    >
       <AnimatePresence>
         {toasts.map((toast) => {
           const Icon = icons[toast.type];
@@ -78,6 +83,7 @@ export const ToastContainer = () => {
               <button
                 onClick={() => dismiss(toast.id)}
                 className="shrink-0 opacity-60 hover:opacity-100"
+                aria-label="Dismiss notification"
               >
                 <X className="h-3.5 w-3.5" />
               </button>

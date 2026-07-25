@@ -7,7 +7,12 @@ interface LoadingStateProps {
 }
 
 export const LoadingState: FC<LoadingStateProps> = ({ title, description }) => (
-  <div className="min-h-[60vh] w-full px-4 py-10">
+  <div
+    className="min-h-[60vh] w-full px-4 py-10"
+    role="status"
+    aria-busy="true"
+    aria-label="Loading content"
+  >
     <div className="mx-auto max-w-5xl space-y-6">
       <div className="space-y-2">
         {title ? (

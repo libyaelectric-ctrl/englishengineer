@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes, type ReactNode } from 'react';
+import { memo, type HTMLAttributes, type ReactNode } from 'react';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
@@ -11,7 +11,7 @@ interface SectionCardProps extends HTMLAttributes<HTMLDivElement> {
   footer?: ReactNode;
 }
 
-export const SectionCard: FC<SectionCardProps> = ({
+export const SectionCard = memo<SectionCardProps>(({
   title,
   subtitle,
   icon: Icon,
@@ -51,4 +51,6 @@ export const SectionCard: FC<SectionCardProps> = ({
       )}
     </Card>
   );
-};
+});
+
+SectionCard.displayName = 'SectionCard';

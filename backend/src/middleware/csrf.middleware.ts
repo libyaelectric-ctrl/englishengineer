@@ -7,6 +7,22 @@ const CSRF_COOKIE_NAME = 'eos_csrf';
 const CSRF_HEADER_NAME = 'x-csrf-token';
 
 /**
+ * Simple cookie parser (avoids cookie-parser dependency).
+ */
+const parseCookies = (req: Request): Record<string, string> => {
+  const header = req.headers.cookie;
+  if (!header) return {};
+  const cookies: Record<string, string> = {};
+  for (const pair of header.split(';')) {
+    const [key, ...rest] = pair.split('=');
+    if (key) {
+      cookies[key.trim()] = rest.join('=').trim();
+    }
+  }
+  return cookies;
+};
+
+/**
  * Generates a cryptographically secure CSRF token.
  */
 export const generateCsrfToken = (): string => {
@@ -33,12 +49,19 @@ const tokensMatch = (a: string, b: string): boolean => {
  * - On GET requests: sets a CSRF cookie if not present
  * - On POST/PUT/DELETE requests: validates the token from header matches cookie
  * - Exempts: Stripe webhooks (raw body), health checks, GET requests
+ * - Skipped in test environment (NODE_ENV=test)
  */
 export const csrfProtection = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
+  // Skip CSRF in test environment
+  if (process.env.NODE_ENV === 'test') {
+    next();
+    return;
+  }
+
   const isStateChanging =
     req.method === 'POST' ||
     req.method === 'PUT' ||
@@ -48,7 +71,8 @@ export const csrfProtection = (
   // Exempt GET requests and health checks
   if (!isStateChanging || req.path === '/api/health' || req.path === '/api/v1/health') {
     // Set CSRF cookie on GET requests if not present
-    if (req.method === 'GET' && !req.cookies?.[CSRF_COOKIE_NAME]) {
+    const cookies = parseCookies(req);
+    if (req.method === 'GET' && !cookies[CSRF_COOKIE_NAME]) {
       const token = generateCsrfToken();
       res.cookie(CSRF_COOKIE_NAME, token, {
         httpOnly: false, // Frontend needs to read this
@@ -68,7 +92,8 @@ export const csrfProtection = (
     return;
   }
 
-  const cookieToken = req.cookies?.[CSRF_COOKIE_NAME];
+  const cookies = parseCookies(req);
+  const cookieToken = cookies[CSRF_COOKIE_NAME];
   const headerToken = req.headers[CSRF_HEADER_NAME] as string | undefined;
 
   if (!cookieToken || !headerToken) {

@@ -18,6 +18,10 @@ const VENDOR_CHUNKS: [string, string][] = [
   ['isomorphic-dompurify', 'vendor-sanitize'],
   ['clsx', 'vendor-utils'],
   ['tailwind', 'vendor-utils'],
+  ['react-helmet', 'vendor-seo'],
+  ['react-virtuoso', 'vendor-virtual'],
+  ['react-error-boundary', 'vendor-error'],
+  ['web-vitals', 'vendor-vitals'],
 ];
 
 function getVendorChunk(id: string): string | undefined {
@@ -53,14 +57,22 @@ export default defineConfig(() => {
       host: '0.0.0.0',
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8787',
+          changeOrigin: true,
+        },
+      },
     },
     build: {
       outDir: 'dist',
       sourcemap: 'hidden' as const,
-      chunkSizeWarningLimit: 3500,
+      chunkSizeWarningLimit: 500,
       target: 'es2020',
       minify: 'esbuild' as const,
+      cssMinify: 'esbuild' as const,
       rollupOptions: {
+        external: ['express', 'openai', 'stripe', 'cors', 'dotenv'],
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) return getVendorChunk(id);

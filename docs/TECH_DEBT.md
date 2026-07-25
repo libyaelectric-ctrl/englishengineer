@@ -12,6 +12,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Component exceeds 500 lines
 **Impact:** Maintainability, testability
 **Effort:** 2-3 days
+**Status:** Resolved — WritingPage.tsx is now 333 lines, within acceptable range.
 **Action:** Split into smaller components
 
 ### TD-002: Extract Business Logic
@@ -20,6 +21,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Business logic mixed with UI
 **Impact:** Testability, reusability
 **Effort:** 1-2 days
+**Status:** Resolved — Billing logic extracted to billing.service.ts and billing-flow.test.tsx focuses on UI behavior.
 **Action:** Extract to custom hooks
 
 ### TD-003: Add Error Boundaries
@@ -28,6 +30,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Missing error boundaries
 **Impact:** User experience on errors
 **Effort:** 1 day
+**Status:** Resolved — ErrorBoundaryProvider wraps the entire app, RouteErrorPage is set as errorElement on all route groups.
 **Action:** Add error boundaries to key routes
 
 ## Medium Priority
@@ -131,9 +134,9 @@ This document tracks known technical debt items that should be addressed in futu
 
 | ID     | Priority | Status | Assigned | Due Date |
 | ------ | -------- | ------ | -------- | -------- |
-| TD-001 | High     | Open   | TBD      | TBD      |
-| TD-002 | High     | Open   | TBD      | TBD      |
-| TD-003 | High     | Open   | TBD      | TBD      |
+| TD-001 | High     | Resolved | TBD | TBD |
+| TD-002 | High     | Resolved | TBD | TBD |
+| TD-003 | High     | Resolved | TBD | TBD |
 | TD-004 | Medium   | Open   | TBD      | TBD      |
 | TD-005 | Medium   | Open   | TBD      | TBD      |
 | TD-006 | Medium   | Open   | TBD      | TBD      |
@@ -149,5 +152,5 @@ This document tracks known technical debt items that should be addressed in futu
 
 ## Last Updated
 
-- **Date:** 2026-07-12
+- **Date:** 2026-07-25
 - **Total Items:** 15

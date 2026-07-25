@@ -1,4 +1,6 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { LearningState } from '@/core/learning/learning.types';
@@ -20,13 +22,6 @@ import {
   getCoachModeById,
 } from './ai.helpers';
 import { useLearningIntelligenceStore } from '@/features/learning-intelligence/learning-intelligence.store';
-import {
-  AIUsageSummary,
-  getInitialState,
-  saveState,
-  removeStoredState,
-  buildAIUsageSummary,
-} from './ai.persistence';
 
 interface AIStoreState {
   modes: AICoachMode[];
@@ -57,7 +52,12 @@ interface AIStoreState {
 
 const EMPTY_EXAMPLES: Array<{ input: string; output: string }> = [];
 
-const persistedState = getInitialState();
+export interface AIUsageSummary {
+  totalSessions: number;
+  mostUsedMode: string;
+  suggestedFocusArea: string;
+  recentSession: AICoachSession | null;
+}
 
 const buildResultOrFallback = (
   response: Awaited<ReturnType<typeof AIService.run>>,
@@ -134,198 +134,181 @@ const buildErrorLogList = (
     ...existingLogs,
   ].slice(0, 50);
 
-export const useAIStore = create<AIStoreState>((set, get) => ({
-  modes: AI_COACH_MODES,
-  selectedModeId: persistedState.selectedModeId,
-  input: persistedState.input,
-  sessions: persistedState.sessions,
-  sessionLogs: persistedState.sessionLogs,
-  providerStatus: AIService.getStatus(EMPTY_EXAMPLES),
-  isLoading: false,
-  error: null,
-  lastResult: persistedState.sessions[0]?.result || null,
-  isLimitedResponse: false,
+export const buildAIUsageSummary = (
+  sessions: AICoachSession[]
+): AIUsageSummary => {
+  const modeCounts = sessions.reduce<Record<string, number>>((acc, session) => {
+    acc[session.modeName] = (acc[session.modeName] || 0) + 1;
+    return acc;
+  }, {});
+  const mostUsedMode =
+    Object.entries(modeCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ||
+    'No sessions yet';
+  const recentSession = sessions[0] || null;
+  return {
+    totalSessions: sessions.length,
+    mostUsedMode,
+    suggestedFocusArea: recentSession?.result.focusArea || 'Writing',
+    recentSession,
+  };
+};
 
-  setMode: (modeId) => {
-    set({ selectedModeId: modeId });
-    saveState({
-      selectedModeId: modeId,
-      input: get().input,
-      sessions: get().sessions,
-      sessionLogs: get().sessionLogs,
-    });
-  },
+const STORAGE_KEY = 'ai_coach_pro_state';
 
-  setInput: (input) => {
-    set({ input });
-    saveState({
-      selectedModeId: get().selectedModeId,
-      input,
-      sessions: get().sessions,
-      sessionLogs: get().sessionLogs,
-    });
-  },
-
-  submitCoachRequest: async (user, learningState) => {
-    const prompt = get().input.trim();
-    if (!prompt || get().isLoading) return;
-
-    const mode = getCoachModeById(get().selectedModeId);
-    const mistakeLog = useLearningIntelligenceStore.getState().mistakeLog;
-    const context = buildCoachContext(user, learningState, mistakeLog);
-
-    set({ isLoading: true, error: null });
-    eventBus.publish({
-      id: IdService.createId('evt'),
-      type: 'ai.coach.started',
-      timestamp: new Date().toISOString(),
-      payload: {
-        modeId: mode.id,
-        modeName: mode.name,
-        focusArea: context.recommendedFocus,
-      },
-    });
-
-    try {
-      const response = await AIService.run(EMPTY_EXAMPLES, mode.operation, {
-        modeId: mode.id,
-        modeName: mode.name,
-        prompt,
-        context,
-      });
-
-      const result = buildResultOrFallback(response, context);
-      const isLimitedResponse = !response.structuredResult;
-      if (isLimitedResponse && response.providerStatus.mode === 'backend') {
-        logger.w(
-          'Backend AI response did not include structuredResult; showing raw response.'
-        );
-      }
-
-      const sessions = buildSessionList(
-        mode,
-        prompt,
-        response,
-        result,
-        get().sessions
-      );
-      const sessionLogs = buildSuccessLogList(
-        mode,
-        response,
-        get().sessionLogs
-      );
-
-      set({
-        sessions,
-        sessionLogs,
-        input: '',
-        providerStatus: response.providerStatus,
-        lastResult: result,
-        isLimitedResponse,
-        isLoading: false,
-      });
-      saveState({ selectedModeId: mode.id, input: '', sessions, sessionLogs });
-
-      eventBus.publish({
-        id: IdService.createId('evt'),
-        type: 'ai.coach.completed',
-        timestamp: new Date().toISOString(),
-        payload: {
-          modeId: mode.id,
-          modeName: mode.name,
-          providerState: response.providerStatus.state,
-          focusArea: result.focusArea,
-        },
-      });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'AI Coach request failed.';
-      const sessionLogs = buildErrorLogList(mode, message, get().sessionLogs);
-
-      set({
-        isLoading: false,
-        error: message,
-        isLimitedResponse: false,
-        sessionLogs,
-      });
-      saveState({
-        selectedModeId: get().selectedModeId,
-        input: get().input,
-        sessions: get().sessions,
-        sessionLogs,
-      });
-      eventBus.publish({
-        id: IdService.createId('evt'),
-        type: 'ai.coach.failed',
-        timestamp: new Date().toISOString(),
-        payload: {
-          modeId: mode.id,
-          modeName: mode.name,
-          message,
-        },
-      });
-    }
-  },
-
-  resetCoach: () => {
-    set({
+export const useAIStore = create<AIStoreState>()(
+  persist(
+    (set, get) => ({
+      modes: AI_COACH_MODES,
       selectedModeId: 'site_report_writer',
       input: '',
       sessions: [],
       sessionLogs: [],
-      lastResult: null,
-      isLimitedResponse: false,
-      error: null,
       providerStatus: AIService.getStatus(EMPTY_EXAMPLES),
-    });
-    removeStoredState();
-  },
-
-  clearSessionHistory: () => {
-    set({
-      sessions: [],
-      sessionLogs: [],
+      isLoading: false,
+      error: null,
       lastResult: null,
       isLimitedResponse: false,
-      error: null,
-    });
-    saveState({
-      selectedModeId: get().selectedModeId,
-      input: get().input,
-      sessions: [],
-      sessionLogs: [],
-    });
-  },
 
-  regenerateLast: async (user, learningState) => {
-    const lastSession = get().sessions[0];
-    if (!lastSession) return;
-    set({
-      selectedModeId: lastSession.modeId,
-      input: lastSession.input,
-    });
-    saveState({
-      selectedModeId: lastSession.modeId,
-      input: lastSession.input,
-      sessions: get().sessions,
-      sessionLogs: get().sessionLogs,
-    });
-    await get().submitCoachRequest(user, learningState);
-  },
+      setMode: (modeId) => set({ selectedModeId: modeId }),
 
-  getUsageSummary: () => {
-    return buildAIUsageSummary(get().sessions);
-  },
+      setInput: (input) => set({ input }),
 
-  setSessions: (sessions) => {
-    set({ sessions, lastResult: sessions[0]?.result || null });
-    saveState({
-      selectedModeId: get().selectedModeId,
-      input: get().input,
-      sessions,
-      sessionLogs: get().sessionLogs,
-    });
-  },
-}));
+      submitCoachRequest: async (user, learningState) => {
+        const prompt = get().input.trim();
+        if (!prompt || get().isLoading) return;
 
-export { buildAIUsageSummary };
+        const mode = getCoachModeById(get().selectedModeId);
+        const mistakeLog = useLearningIntelligenceStore.getState().mistakeLog;
+        const context = buildCoachContext(user, learningState, mistakeLog);
+
+        set({ isLoading: true, error: null });
+        eventBus.publish({
+          id: IdService.createId('evt'),
+          type: 'ai.coach.started',
+          timestamp: new Date().toISOString(),
+          payload: {
+            modeId: mode.id,
+            modeName: mode.name,
+            focusArea: context.recommendedFocus,
+          },
+        });
+
+        try {
+          const response = await AIService.run(EMPTY_EXAMPLES, mode.operation, {
+            modeId: mode.id,
+            modeName: mode.name,
+            prompt,
+            context,
+          });
+
+          const result = buildResultOrFallback(response, context);
+          const isLimitedResponse = !response.structuredResult;
+          if (isLimitedResponse && response.providerStatus.mode === 'backend') {
+            logger.w(
+              'Backend AI response did not include structuredResult; showing raw response.'
+            );
+          }
+
+          const sessions = buildSessionList(
+            mode,
+            prompt,
+            response,
+            result,
+            get().sessions
+          );
+          const sessionLogs = buildSuccessLogList(
+            mode,
+            response,
+            get().sessionLogs
+          );
+
+          set({
+            sessions,
+            sessionLogs,
+            input: '',
+            providerStatus: response.providerStatus,
+            lastResult: result,
+            isLimitedResponse,
+            isLoading: false,
+          });
+
+          eventBus.publish({
+            id: IdService.createId('evt'),
+            type: 'ai.coach.completed',
+            timestamp: new Date().toISOString(),
+            payload: {
+              modeId: mode.id,
+              modeName: mode.name,
+              providerState: response.providerStatus.state,
+              focusArea: result.focusArea,
+            },
+          });
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : 'AI Coach request failed.';
+          const sessionLogs = buildErrorLogList(mode, message, get().sessionLogs);
+
+          set({
+            isLoading: false,
+            error: message,
+            isLimitedResponse: false,
+            sessionLogs,
+          });
+
+          eventBus.publish({
+            id: IdService.createId('evt'),
+            type: 'ai.coach.failed',
+            timestamp: new Date().toISOString(),
+            payload: {
+              modeId: mode.id,
+              modeName: mode.name,
+              message,
+            },
+          });
+        }
+      },
+
+      resetCoach: () => {
+        set({
+          selectedModeId: 'site_report_writer',
+          input: '',
+          sessions: [],
+          sessionLogs: [],
+          lastResult: null,
+          isLimitedResponse: false,
+          error: null,
+          providerStatus: AIService.getStatus(EMPTY_EXAMPLES),
+        });
+      },
+
+      clearSessionHistory: () => {
+        set({
+          sessions: [],
+          sessionLogs: [],
+          lastResult: null,
+          isLimitedResponse: false,
+          error: null,
+        });
+      },
+
+      regenerateLast: async (user, learningState) => {
+        const lastSession = get().sessions[0];
+        if (!lastSession) return;
+        set({
+          selectedModeId: lastSession.modeId,
+          input: lastSession.input,
+        });
+        await get().submitCoachRequest(user, learningState);
+      },
+
+      getUsageSummary: () => {
+        return buildAIUsageSummary(get().sessions);
+      },
+
+      setSessions: (sessions) => {
+        set({ sessions, lastResult: sessions[0]?.result || null });
+      },
+    }),
+    eosPersistConfig(STORAGE_KEY)
+  )
+);

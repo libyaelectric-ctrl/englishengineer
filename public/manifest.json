@@ -11,6 +11,7 @@
   "lang": "en",
   "dir": "ltr",
   "categories": ["education", "productivity"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/brand/logo-192.png",
@@ -50,17 +51,26 @@
   "shortcuts": [
     {
       "name": "Dashboard",
+      "short_name": "Home",
       "url": "/dashboard",
       "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
     },
     {
       "name": "Vocabulary",
+      "short_name": "Vocab",
       "url": "/vocabulary",
       "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
     },
     {
       "name": "AI Coach",
+      "short_name": "AI",
       "url": "/ai",
+      "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Grammar",
+      "short_name": "Grammar",
+      "url": "/grammar",
       "icons": [{ "src": "/brand/logo-96.png", "sizes": "96x96" }]
     }
   ]

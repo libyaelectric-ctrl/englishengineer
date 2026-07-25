@@ -1,4 +1,4 @@
-import { memo, type FC, type HTMLAttributes } from 'react';
+import { memo, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 type StatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
@@ -16,7 +16,7 @@ const toneClasses: Record<StatusTone, string> = {
   danger: 'border-error/20 bg-error/10 text-error',
 };
 
-export const StatusBadge: FC<StatusBadgeProps> = memo(({
+export const StatusBadge = memo<StatusBadgeProps>(({
   label,
   tone = 'neutral',
   className,

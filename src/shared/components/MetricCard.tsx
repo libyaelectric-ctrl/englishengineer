@@ -1,4 +1,4 @@
-import { memo, type FC, type HTMLAttributes } from 'react';
+import { memo, type HTMLAttributes } from 'react';
 import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
@@ -9,18 +9,10 @@ interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
   icon: LucideIcon;
   trend?: string;
   trendDirection?: 'up' | 'down' | 'neutral';
-  statusColor?:
-    | 'primary'
-    | 'emerald'
-    | 'cyan'
-    | 'amber'
-    | 'rose'
-    | 'success'
-    | 'warning'
-    | 'danger';
+  statusColor?: 'primary' | 'emerald' | 'cyan' | 'amber' | 'rose' | 'success' | 'warning' | 'danger';
 }
 
-export const MetricCard: FC<MetricCardProps> = memo(({
+export const MetricCard = memo<MetricCardProps>(({
   label,
   value,
   icon: Icon,
@@ -30,7 +22,7 @@ export const MetricCard: FC<MetricCardProps> = memo(({
   className,
   ...props
 }) => {
-  const iconColors = {
+  const iconColors: Record<string, string> = {
     primary: 'text-foreground bg-surface-hover',
     emerald: 'text-success bg-success/10',
     cyan: 'text-primary bg-primary/10',
@@ -41,7 +33,7 @@ export const MetricCard: FC<MetricCardProps> = memo(({
     danger: 'text-error bg-error/10',
   };
 
-  const trendTextColors = {
+  const trendTextColors: Record<string, string> = {
     up: 'text-success',
     down: 'text-error',
     neutral: 'text-muted-copy',

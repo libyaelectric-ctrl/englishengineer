@@ -230,10 +230,22 @@ export interface VocabularyLookupService {
   }): Promise<VocabularyLookupResult>;
 }
 
+const createMemoryCache = (): VocabularyCache => {
+  const store = new Map<string, VocabularyLookupResult>();
+  return {
+    async get(key) {
+      return store.get(key) ?? null;
+    },
+    async set(key, value) {
+      store.set(key, value);
+    },
+  };
+};
+
 export const createVocabularyLookupService = (
   config: VocabularyConfig,
   fetchImpl: typeof fetch = fetch,
-  cache: VocabularyCache = new Map() as unknown as VocabularyCache
+  cache: VocabularyCache = createMemoryCache()
 ): VocabularyLookupService => ({
   async lookup(query) {
     const { word, targetLang } = query;
