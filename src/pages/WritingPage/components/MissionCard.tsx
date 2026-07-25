@@ -43,7 +43,7 @@ export const MissionCard = ({
           {/* Top Badge Row */}
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${WritingHelpers.getCefrBadgeStyles(mission.cefrLevel)}`}
+              className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${WritingHelpers.getCefrBadgeStyles(mission.cefrLevel)}`}
             >
               {mission.cefrLevel}
             </span>
@@ -51,7 +51,7 @@ export const MissionCard = ({
               label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
             />
             <span
-              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
+              className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
                 difficultyColor === 'rose'
                   ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                   : difficultyColor === 'amber'
@@ -81,7 +81,7 @@ export const MissionCard = ({
         {/* Footer Row */}
         <div className="flex items-center justify-between pt-4 border-t border-border-soft">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
+            <span className="text-[10px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {mission.discipline}
             </span>
           </div>
@@ -93,7 +93,7 @@ export const MissionCard = ({
                 <span>Score: {bestScore}%</span>
               </div>
             ) : (
-              <span className="text-[9px] font-bold font-mono text-muted-copy uppercase tracking-wider">
+              <span className="text-[10px] font-bold font-mono text-muted-copy uppercase tracking-wider">
                 Available
               </span>
             )}

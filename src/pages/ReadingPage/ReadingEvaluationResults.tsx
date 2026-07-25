@@ -101,7 +101,7 @@ export const ReadingEvaluationResults = ({
           </h5>
           <div className="grid grid-cols-3 gap-3">
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
-              <span className="text-[9px] font-mono text-muted-copy uppercase block">
+              <span className="text-[10px] font-mono text-muted-copy uppercase block">
                 XP gained
               </span>
               <span className="mt-0.5 block text-sm font-bold text-foreground">
@@ -109,7 +109,7 @@ export const ReadingEvaluationResults = ({
               </span>
             </div>
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
-              <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
+              <span className="text-[10px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <Coins className="h-2.5 w-2.5 text-warning shrink-0" /> COINS
               </span>
               <span className="mt-0.5 block text-sm font-bold text-foreground">
@@ -117,7 +117,7 @@ export const ReadingEvaluationResults = ({
               </span>
             </div>
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
-              <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
+              <span className="text-[10px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
                 <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" />{' '}
                 LEVEL PROGRESS
               </span>
@@ -196,7 +196,7 @@ export const ReadingEvaluationResults = ({
                     </h6>
                   </div>
                   <span
-                    className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase flex items-center gap-1 shrink-0 ${item.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}
+                    className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase flex items-center gap-1 shrink-0 ${item.isCorrect ? 'bg-success/10 text-success border border-success/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}`}
                   >
                     {item.isCorrect ? (
                       <Check className="h-3.5 w-3.5" />
@@ -208,7 +208,7 @@ export const ReadingEvaluationResults = ({
                 </div>
                 <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-border-soft bg-surface-hover p-3 md:grid-cols-2">
                   <div>
-                    <span className="text-[9px] font-mono text-muted-copy uppercase block">
+                    <span className="text-[10px] font-mono text-muted-copy uppercase block">
                       Your Answer
                     </span>
                     <span className="mt-0.5 block text-xs font-bold text-foreground">
@@ -216,7 +216,7 @@ export const ReadingEvaluationResults = ({
                     </span>
                   </div>
                   <div>
-                    <span className="text-[9px] font-mono text-muted-copy uppercase block">
+                    <span className="text-[10px] font-mono text-muted-copy uppercase block">
                       Expected Key / Option
                     </span>
                     <span className="text-xs font-bold text-success block mt-0.5">
@@ -225,7 +225,7 @@ export const ReadingEvaluationResults = ({
                   </div>
                 </div>
                 <div className="space-y-1 rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm">
-                  <span className="text-[9px] font-bold uppercase text-muted-copy tracking-wider font-mono">
+                  <span className="text-[10px] font-bold uppercase text-muted-copy tracking-wider font-mono">
                     Technical Justification
                   </span>
                   <p className="text-xs text-muted-copy leading-relaxed font-normal">

@@ -146,7 +146,7 @@ export const Sidebar: React.FC = () => {
                     <span className="block text-xs font-bold text-foreground truncate">
                       {currentUser.displayName}
                     </span>
-                    <span className="block text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                    <span className="block text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                       {planName} plan
                     </span>
                   </span>

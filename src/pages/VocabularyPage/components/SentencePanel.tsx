@@ -72,11 +72,11 @@ export function SentencePanel({
               className="rounded-[4px] border border-border-soft bg-surface p-2.5"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-[9px] font-bold text-muted-copy">
+                <span className="text-[10px] font-bold text-muted-copy">
                   {CONTEXT_LABELS[s.context] ?? s.context}
                 </span>
                 <span
-                  className={`rounded px-1.5 py-0.5 text-[8px] font-bold uppercase ${DIFFICULTY_COLORS[s.difficulty]}`}
+                  className={`rounded px-1.5 py-0.5 text-[10px] font-bold uppercase ${DIFFICULTY_COLORS[s.difficulty]}`}
                 >
                   {s.difficulty}
                 </span>

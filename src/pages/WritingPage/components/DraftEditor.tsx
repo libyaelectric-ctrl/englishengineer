@@ -100,7 +100,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
       subtitle={description}
       icon={PenTool}
       headerActions={
-        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[10px] font-bold text-muted-copy uppercase tracking-wider">
           {discipline}
         </span>
       }
@@ -203,7 +203,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
                   messageRoleClass(msg.role)
                 )}
               >
-                <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
                   {messageRoleLabel(msg.role)}
                 </p>
                 <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -211,7 +211,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             ))}
             {isTalking && (
               <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-                <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
+                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
                   AI Coach 🎓
                 </p>
                 <p>Analyzing draft and context...</p>

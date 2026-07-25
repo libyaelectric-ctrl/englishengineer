@@ -56,7 +56,7 @@ export const StyleGuidelines = ({
               <button
                 key={c.id}
                 onClick={() => onSelectRule(c)}
-                className={`text-[9px] font-mono px-2.5 py-1 rounded-[4px] border transition-all cursor-pointer uppercase font-bold tracking-wider ${
+                className={`text-[10px] font-mono px-2.5 py-1 rounded-[4px] border transition-all cursor-pointer uppercase font-bold tracking-wider ${
                   isFixed
                     ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
                     : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:bg-primary/5 hover:text-foreground'

@@ -276,7 +276,7 @@ const PricingPage = () => {
               >
                 {badge && (
                   <div
-                    className={`absolute -top-3 left-4 rounded-full ${badge.color} px-3 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
+                    className={`absolute -top-3 left-4 rounded-full ${badge.color} px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
                   >
                     <badge.icon className="h-3 w-3" /> {badge.label}
                   </div>
@@ -287,7 +287,7 @@ const PricingPage = () => {
                     <h3 className="text-base font-extrabold text-foreground">
                       {plan.name}
                     </h3>
-                    <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                    <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold tracking-wider text-muted-copy uppercase font-mono">
                       {getAccessBadge(plan.id)}
                     </span>
                   </div>
@@ -306,7 +306,7 @@ const PricingPage = () => {
                   </p>
 
                   <div className="mt-3 rounded-xl border border-border-soft bg-background p-2.5 shadow-inner">
-                    <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
                       Target Audience:
                     </p>
                     <p className="mt-0.5 text-xs font-bold text-foreground">

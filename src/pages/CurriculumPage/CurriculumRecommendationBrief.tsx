@@ -55,7 +55,7 @@ export const CurriculumRecommendationBrief = ({
               hoverEffect={false}
               className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
-              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Target CEFR
               </p>
               <p className="mt-1.5 text-lg font-bold text-foreground font-mono">
@@ -66,7 +66,7 @@ export const CurriculumRecommendationBrief = ({
               hoverEffect={false}
               className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
-              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Safe / Stretch
               </p>
               <p className="mt-1.5 text-lg font-bold text-foreground font-mono">
@@ -77,7 +77,7 @@ export const CurriculumRecommendationBrief = ({
               hoverEffect={false}
               className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
-              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Effort
               </p>
               <p className="mt-1.5 text-lg font-bold text-foreground font-mono">
@@ -88,7 +88,7 @@ export const CurriculumRecommendationBrief = ({
               hoverEffect={false}
               className="p-4 rounded-[4px] border border-border-soft bg-surface shadow-sm flex flex-col justify-between"
             >
-              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 AI required
               </p>
               <p className="mt-1.5 text-lg font-bold text-success font-mono">
@@ -114,7 +114,7 @@ export const CurriculumRecommendationBrief = ({
               <StatusBadge
                 label={recommendation.sharedLessonTitle}
                 tone="info"
-                className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+                className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
               />
             </div>
             <div className="mt-3 grid gap-2 md:grid-cols-2">

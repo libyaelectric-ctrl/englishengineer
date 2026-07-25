@@ -49,7 +49,7 @@ const TemplateCard = ({
 }) => (
   <Card className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300">
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
-      <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
+      <span className="font-mono text-[10px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
         {item.id.toUpperCase()}
       </span>
     </div>
@@ -65,7 +65,7 @@ const TemplateCard = ({
 
     <div className="space-y-3 font-sans">
       <div className="rounded-[4px] border border-border-soft bg-background p-3 shadow-sm">
-        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           [TECHNICAL CONTEXT]
         </p>
         <p className="mt-1 text-xs text-foreground font-medium">
@@ -74,7 +74,7 @@ const TemplateCard = ({
       </div>
 
       <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-3 shadow-sm">
-        <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
           [ORCHESTRATED PRODUCTION PHRASE]
         </p>
         <p className="mt-1 text-xs leading-relaxed text-foreground font-semibold">
@@ -136,7 +136,7 @@ const EmailCard = ({
 }) => (
   <Card className="p-5 space-y-4 border-l-4 border-l-secondary shadow-sm hover:shadow-md transition-all duration-300">
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
-      <span className="font-mono text-[9px] uppercase tracking-widest text-secondary font-bold bg-secondary/5 px-2 py-0.5 rounded">
+      <span className="font-mono text-[10px] uppercase tracking-widest text-secondary font-bold bg-secondary/5 px-2 py-0.5 rounded">
         {item.id.toUpperCase()}
       </span>
     </div>
@@ -222,7 +222,7 @@ const PhraseCard = ({
     hoverEffect
   >
     <div className="flex items-center justify-between border-b border-border-soft pb-2">
-      <span className="font-mono text-[9px] uppercase tracking-widest text-cyan-500 font-bold bg-cyan-500/5 px-2 py-0.5 rounded">
+      <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-500 font-bold bg-cyan-500/5 px-2 py-0.5 rounded">
         {item.category.toUpperCase()}
       </span>
       <div className="flex items-center gap-2">

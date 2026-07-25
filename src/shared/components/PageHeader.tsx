@@ -32,7 +32,7 @@ export function PageHeader({
         {badgeText && (
           <span
             className={cn(
-              'rounded-[4px] border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider',
+              'rounded-[4px] border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider',
               badgeColor || 'border-border-soft bg-surface text-primary'
             )}
           >

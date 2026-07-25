@@ -30,11 +30,11 @@ export const WordCardHeader = ({
       )}
     </div>
     <div className="flex flex-wrap items-center justify-end gap-1.5">
-      <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
+      <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
         LVL-<span>{term.cefrLevel}</span>
       </span>
       {status !== 'new' && (
-        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2 py-0.5 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
           {status}
         </span>
       )}

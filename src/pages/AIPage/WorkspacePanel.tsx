@@ -18,12 +18,12 @@ export const WorkspacePanel = ({
       <div className="flex items-center gap-3">
         <WorkspaceSelector planId={planId} />
         {workspaceMemoryContext && (
-          <span className="hidden sm:inline text-[9px] font-bold text-muted-copy border border-border-soft rounded-[4px] px-2 py-0.5 uppercase tracking-wider bg-surface-hover">
+          <span className="hidden sm:inline text-[10px] font-bold text-muted-copy border border-border-soft rounded-[4px] px-2 py-0.5 uppercase tracking-wider bg-surface-hover">
             Memory active
           </span>
         )}
       </div>
-      <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+      <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
         Sessions and documents are isolated per workspace.
       </p>
     </div>

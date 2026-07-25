@@ -54,7 +54,7 @@ export const SecuritySection = ({
             <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
               <Shield className="h-4 w-4" /> Cloud Synced Records
             </span>
-            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[8px] font-mono font-bold text-primary uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
               {providerMode === 'supabase'
                 ? 'CLOUD-ACTIVE'
                 : 'LOCAL-PERSISTENCE'}
@@ -74,7 +74,7 @@ export const SecuritySection = ({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
                 Current Password
               </span>
               <div className="relative">
@@ -88,7 +88,7 @@ export const SecuritySection = ({
               </div>
             </div>
             <div className="space-y-1.5">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
                 New Security Password
               </span>
               <div className="relative">
@@ -125,7 +125,7 @@ export const SecuritySection = ({
             </span>
           </div>
           <div className="flex items-center gap-3 shrink-0">
-            <span className="rounded-[4px] border border-rose-500/20 bg-rose-500/5 px-2 py-1 text-[8px] font-mono font-bold text-rose-600 uppercase tracking-wider">
+            <span className="rounded-[4px] border border-rose-500/20 bg-rose-500/5 px-2 py-1 text-[10px] font-mono font-bold text-rose-600 uppercase tracking-wider">
               2FA-DISABLED
             </span>
             <Button
@@ -145,7 +145,7 @@ export const SecuritySection = ({
               <History className="h-4 w-4 text-primary" /> Session Access
               History
             </span>
-            <span className="rounded-[4px] bg-surface-hover border border-border-soft/60 px-2 py-0.5 text-[8px] font-mono font-bold text-muted-copy uppercase tracking-wider">
+            <span className="rounded-[4px] bg-surface-hover border border-border-soft/60 px-2 py-0.5 text-[10px] font-mono font-bold text-muted-copy uppercase tracking-wider">
               TOTAL: 1 ACTIVE
             </span>
           </div>
@@ -157,17 +157,17 @@ export const SecuritySection = ({
                   <span className="font-bold text-foreground">
                     Windows Chrome OS (Desktop)
                   </span>
-                  <span className="rounded-[4px] bg-success/10 border border-success/20 px-1 text-[8px] font-bold text-success uppercase tracking-wider">
+                  <span className="rounded-[4px] bg-success/10 border border-success/20 px-1 text-[10px] font-bold text-success uppercase tracking-wider">
                     SYS-ACTIVE
                   </span>
                 </div>
                 <span>Session ID: SES-4820a2e0e0129</span>
               </div>
               <div className="text-right">
-                <span className="rounded-[4px] bg-surface-hover border border-border-soft px-1.5 py-0.5 text-[8px] font-bold text-foreground uppercase tracking-wider block">
+                <span className="rounded-[4px] bg-surface-hover border border-border-soft px-1.5 py-0.5 text-[10px] font-bold text-foreground uppercase tracking-wider block">
                   IP-VERIFIED
                 </span>
-                <span className="block mt-0.5 text-[8px]">ACTIVE NOW</span>
+                <span className="block mt-0.5 text-[10px]">ACTIVE NOW</span>
               </div>
             </div>
           </div>

@@ -89,7 +89,7 @@ export function PronunciationFeedbackPanel({
                 {result.weakPhonemes.map((p) => (
                   <span
                     key={p}
-                    className="rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-mono text-amber-700"
+                    className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-mono text-amber-700"
                   >
                     {p}
                   </span>
@@ -128,11 +128,11 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
           <span className="text-xs font-bold text-foreground">
             {feedback.word}
           </span>
-          <span className="text-[9px] font-mono text-muted-copy">
+          <span className="text-[10px] font-mono text-muted-copy">
             {feedback.ipa}
           </span>
           <span
-            className={`rounded px-1.5 py-0.5 text-[8px] font-bold ${
+            className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${
               feedback.overallAccuracy >= 80
                 ? 'bg-emerald-100 text-emerald-700'
                 : feedback.overallAccuracy >= 60
@@ -156,7 +156,7 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
 
       {feedback.problemArea && (
         <div
-          className={`mt-1 inline-flex rounded border px-1.5 py-0.5 text-[8px] font-bold ${ACCENT_COLORS[feedback.problemArea] ?? ''}`}
+          className={`mt-1 inline-flex rounded border px-1.5 py-0.5 text-[10px] font-bold ${ACCENT_COLORS[feedback.problemArea] ?? ''}`}
         >
           {feedback.problemArea}
         </div>
@@ -169,7 +169,7 @@ function WordFeedbackCard({ feedback }: { feedback: PronunciationFeedback }) {
           {feedback.phonemeDetails.map((p, i) => (
             <span
               key={i}
-              className={`rounded px-1 py-0.5 text-[8px] font-mono ${
+              className={`rounded px-1 py-0.5 text-[10px] font-mono ${
                 p.accuracy >= 80
                   ? 'bg-emerald-50 text-emerald-700'
                   : p.accuracy >= 60

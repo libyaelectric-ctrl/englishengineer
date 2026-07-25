@@ -73,7 +73,7 @@ const VoiceWorkspace = ({
         <p className="text-xs font-bold text-foreground">
           Audio response successfully captured
         </p>
-        <span className="text-[9px] text-muted-copy font-bold uppercase tracking-wider bg-[#d9d9e3]/30 px-2 py-0.5 rounded-[4px]">
+        <span className="text-[10px] text-muted-copy font-bold uppercase tracking-wider bg-[#d9d9e3]/30 px-2 py-0.5 rounded-[4px]">
           VOCAL-ACQUISITION: COMPLETE
         </span>
       </div>
@@ -83,7 +83,7 @@ const VoiceWorkspace = ({
         <p className="text-xs font-bold text-foreground">
           Voice capture module ready
         </p>
-        <p className="text-[9px] text-muted-copy font-bold uppercase tracking-wider">
+        <p className="text-[10px] text-muted-copy font-bold uppercase tracking-wider">
           Initialize capture sequence by starting microphone
         </p>
       </div>
@@ -187,7 +187,7 @@ const PhonemeCard = ({
           <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
         )}
         <span
-          className={`text-[9px] font-bold ${isAccurate ? 'text-primary' : 'text-amber-600'}`}
+          className={`text-[10px] font-bold ${isAccurate ? 'text-primary' : 'text-amber-600'}`}
         >
           {item.score}%
         </span>
@@ -236,7 +236,7 @@ export const VoicePracticePanel = ({
 
       {recordedAudio && typedTranscript && (
         <div className="rounded-[4px] bg-surface-hover border border-border-soft p-3.5 space-y-1 shadow-sm">
-          <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+          <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
             Loopback Speech Transcription
           </p>
           <p className="text-xs text-foreground italic leading-relaxed font-normal">
@@ -249,7 +249,7 @@ export const VoicePracticePanel = ({
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 space-y-4 shadow-sm">
           <div className="flex items-center justify-between border-b border-border-soft pb-3">
             <div>
-              <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+              <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
                 PRON-EVAL
               </span>
               <p className="text-xs font-bold text-foreground uppercase tracking-wider mt-1">
@@ -264,7 +264,7 @@ export const VoicePracticePanel = ({
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
               <History className="h-3.5 w-3.5 text-primary" />
-              <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                 Phoneme Diagnostics:
               </p>
             </div>

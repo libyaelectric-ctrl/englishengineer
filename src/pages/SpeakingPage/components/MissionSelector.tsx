@@ -49,10 +49,10 @@ export const MissionSelector = ({
               )}
             </div>
             <div className="flex flex-wrap items-center gap-1.5 mt-auto">
-              <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/10 uppercase tracking-wider">
+              <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[10px] font-bold text-warning border border-warning/10 uppercase tracking-wider">
                 {mission.difficulty}
               </span>
-              <span className="rounded-[4px] bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/10">
+              <span className="rounded-[4px] bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary border border-primary/10">
                 {mission.estimatedMinutes}M
               </span>
               <LevelAccessBadge

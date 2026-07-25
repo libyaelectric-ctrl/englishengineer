@@ -27,7 +27,7 @@ export const MeetingPhrasebookTab = () => {
             <div>
               <div className="flex items-start justify-between gap-3 border-b border-border-soft pb-2">
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-primary">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                     {item.category}
                   </p>
                   <h2 className="mt-1 text-sm font-bold text-foreground">

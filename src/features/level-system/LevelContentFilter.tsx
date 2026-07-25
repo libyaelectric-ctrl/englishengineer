@@ -74,12 +74,12 @@ export const LevelContentFilter = ({
 export const LevelAccessBadge = ({ label }: { label: ContentAccessLabel }) => (
   <span className="inline-flex flex-wrap items-center gap-1.5 font-sans">
     <span
-      className={`rounded-[4px] border px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider ${accessStyles[label]}`}
+      className={`rounded-[4px] border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${accessStyles[label]}`}
     >
       {label}
     </span>
     {label === 'Locked' && (
-      <span className="rounded-[4px] border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-700">
+      <span className="rounded-[4px] border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-700">
         Advanced Preview
       </span>
     )}

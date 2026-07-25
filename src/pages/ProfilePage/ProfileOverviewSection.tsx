@@ -54,13 +54,13 @@ const IdentityCard = ({
     </div>
     <div className="flex-1 text-center sm:text-left relative z-10">
       <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
-        <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest bg-surface border border-border-soft px-2 py-0.5 rounded-[4px]">
+        <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest bg-surface border border-border-soft px-2 py-0.5 rounded-[4px]">
           ID: ENG-{(profile.userId || 'DEMO').slice(0, 6).toUpperCase()}
         </span>
-        <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
+        <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
           USER-STATUS: ONLINE
         </span>
-        <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-2 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
+        <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
           ID-VERIFIED
         </span>
       </div>
@@ -136,10 +136,10 @@ const InfoGrid = ({
             className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm flex flex-col justify-between min-h-[90px]"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 {item.label}
               </span>
-              <span className="font-mono text-[8px] font-bold text-muted-copy uppercase tracking-widest bg-surface-hover border border-border-soft px-1 rounded-[4px]">
+              <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest bg-surface-hover border border-border-soft px-1 rounded-[4px]">
                 {item.code}
               </span>
             </div>
@@ -158,7 +158,7 @@ const InfoGrid = ({
 
 const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
       Communication Goals
     </span>
     {goals && goals.length > 0 ? (
@@ -184,14 +184,14 @@ const SecurityLogsCard = () => (
   <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 space-y-3 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     <div className="flex justify-between items-center relative z-10">
-      <span className="text-[9px] font-bold uppercase tracking-wider text-primary">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
         Security Status & Activity Logs
       </span>
-      <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider">
+      <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[10px] font-bold px-1.5 py-0.5 uppercase tracking-wider">
         ENCRYPTED
       </span>
     </div>
-    <div className="space-y-1.5 font-mono text-[9px] text-muted-copy relative z-10">
+    <div className="space-y-1.5 font-mono text-[10px] text-muted-copy relative z-10">
       <div className="flex justify-between">
         <span>[LOG-001] AUTH: User session initialized successfully</span>
         <span>JUST NOW</span>

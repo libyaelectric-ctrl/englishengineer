@@ -115,7 +115,7 @@ export const CurriculumMemoryTab = ({
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+                        <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
                           {memIdStr}
                         </span>
                         <div className="flex items-center gap-1.5">
@@ -124,7 +124,7 @@ export const CurriculumMemoryTab = ({
                           ) : (
                             <span className="flex h-1.5 w-1.5 rounded-full bg-success" />
                           )}
-                          <span className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                          <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                             {isFirst ? 'RECALL DUE' : 'MASTERED'}
                           </span>
                         </div>

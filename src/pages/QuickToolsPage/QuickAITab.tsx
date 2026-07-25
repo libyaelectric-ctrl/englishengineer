@@ -79,7 +79,7 @@ export const QuickAITab = ({
           <StatusBadge
             label={status.label}
             tone={status.isConnected ? 'success' : 'warning'}
-            className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+            className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
           />
         </div>
         {!status.isConnected && (
@@ -88,12 +88,12 @@ export const QuickAITab = ({
               <StatusBadge
                 label="Backend required"
                 tone="warning"
-                className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+                className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
               />
               <StatusBadge
                 label="Mock preview"
                 tone="neutral"
-                className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+                className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
               />
             </div>
             <div className="flex gap-3">

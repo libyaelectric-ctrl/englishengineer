@@ -32,7 +32,7 @@ export const MobileBottomNavigation = () => {
               to={item.href}
               className={({ isActive }) =>
                 cn(
-                  'relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[4px] px-1 text-[9px] font-bold text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground border border-transparent',
+                  'relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[4px] px-1 text-[10px] font-bold text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground border border-transparent',
                   isActive &&
                     'bg-primary/10 text-primary border-primary/25'
                 )

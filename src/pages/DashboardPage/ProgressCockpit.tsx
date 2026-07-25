@@ -90,7 +90,7 @@ export const ProgressCockpit = React.memo(
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-end px-1">
                       <div className="flex flex-col items-start">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-copy/70">
                           Min
                         </span>
                         <span className="text-[10px] font-medium text-muted-copy">
@@ -103,7 +103,7 @@ export const ProgressCockpit = React.memo(
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-copy/70">
                           Max
                         </span>
                         <span className="text-[10px] font-medium text-muted-copy">
@@ -121,7 +121,7 @@ export const ProgressCockpit = React.memo(
                       <span className="text-[10px] font-bold text-primary">
                         {skillProfile.cefrBand} Level
                       </span>
-                      <span className="text-[9px] font-medium text-muted-copy">
+                      <span className="text-[10px] font-medium text-muted-copy">
                         {skillProfile.progressToNextBand}% to next level
                       </span>
                     </div>
@@ -130,10 +130,10 @@ export const ProgressCockpit = React.memo(
                   {/* Global Progress */}
                   <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[9px] font-medium text-muted-copy">
+                      <span className="text-[10px] font-medium text-muted-copy">
                         Global Progress (A1 - C2+)
                       </span>
-                      <span className="text-[9px] font-bold text-foreground">
+                      <span className="text-[10px] font-bold text-foreground">
                         {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
                       </span>
                     </div>
@@ -144,10 +144,10 @@ export const ProgressCockpit = React.memo(
                       className="h-1.5"
                     />
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[8px] text-muted-copy/70">
+                      <span className="text-[10px] text-muted-copy/70">
                         1000 ELO (A1)
                       </span>
-                      <span className="text-[8px] text-muted-copy/70">
+                      <span className="text-[10px] text-muted-copy/70">
                         5000 ELO (C2+)
                       </span>
                     </div>
