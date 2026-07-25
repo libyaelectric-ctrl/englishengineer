@@ -56,10 +56,10 @@ export const ProgressCockpit = React.memo(
                 key={skill}
                 type="button"
                 onClick={() => navigate(meta.route)}
-                className="group min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-[#0047bb]/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
+                className="group min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 text-left transition-all hover:border-primary/30 hover:bg-white/95 card-interactive relative transition-transform hover:-translate-y-0.5 hover:shadow-sm"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-[4px] border border-border-soft bg-surface-hover p-1.5 text-[#0047bb] group-hover:bg-[#0047bb] group-hover:text-white transition-colors">
+                  <span className="rounded-[4px] border border-border-soft bg-surface-hover p-1.5 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                     <Icon className="h-4 w-4" />
                   </span>
                   <div className="text-right">
@@ -82,7 +82,7 @@ export const ProgressCockpit = React.memo(
 
                 <Sparkline
                   data={skillSparklineData[skill]}
-                  className="w-full h-6 text-[#0047bb]/40"
+                  className="w-full h-6 text-primary/40"
                 />
 
                 <div className="mt-4 space-y-3">
@@ -118,7 +118,7 @@ export const ProgressCockpit = React.memo(
                       className=""
                     />
                     <div className="flex justify-between items-center px-1 pt-0.5">
-                      <span className="text-[10px] font-bold text-[#0047bb]">
+                      <span className="text-[10px] font-bold text-primary">
                         {skillProfile.cefrBand} Level
                       </span>
                       <span className="text-[9px] font-medium text-muted-copy">

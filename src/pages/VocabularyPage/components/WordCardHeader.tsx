@@ -24,17 +24,17 @@ export const WordCardHeader = ({
         {repairVocabularyText(term.term)}
       </h3>
       {showAnswer && (
-        <p className="mt-1 font-bold text-[#0047bb]">
+        <p className="mt-1 font-bold text-primary">
           {repairVocabularyText(term.turkishMeaning)}
         </p>
       )}
     </div>
     <div className="flex flex-wrap items-center justify-end gap-1.5">
-      <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+      <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
         LVL-<span>{term.cefrLevel}</span>
       </span>
       {status !== 'new' && (
-        <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
           {status}
         </span>
       )}

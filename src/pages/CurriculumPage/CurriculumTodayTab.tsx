@@ -55,7 +55,7 @@ export const CurriculumTodayTab = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="rounded-[4px] border border-[#0047bb]/20 bg-[#0047bb]/5 px-2 py-0.5 text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+              <span className="rounded-[4px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
                 OPS-CURRENT
               </span>
               <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[9px] font-bold text-success uppercase tracking-wider">
@@ -66,8 +66,8 @@ export const CurriculumTodayTab = ({
 
           <div className="relative z-10 mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {/* Daily Streak Box nested using #f3f3fd */}
-            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
-              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-[#0047bb] shrink-0 shadow-sm">
+            <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex items-start gap-3">
+              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-primary shrink-0 shadow-sm">
                 <Flame className="h-4 w-4" />
               </span>
               <div>
@@ -81,8 +81,8 @@ export const CurriculumTodayTab = ({
             </div>
 
             {/* Daily Intensity Box */}
-            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex items-start gap-3">
-              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-[#0047bb] shrink-0 shadow-sm">
+            <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex items-start gap-3">
+              <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-primary shrink-0 shadow-sm">
                 <Bolt className="h-4 w-4" />
               </span>
               <div>
@@ -96,14 +96,14 @@ export const CurriculumTodayTab = ({
             </div>
 
             {/* Daily Progress loading bar */}
-            <div className="rounded-[4px] border border-border-soft/60 bg-[#f3f3fd] p-3.5 flex flex-col justify-between">
+            <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex flex-col justify-between">
               <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-wider text-muted-copy">
                 <span>Mission progress</span>
                 <span>{displayProgressPercent}%</span>
               </div>
               <div className="w-full bg-[#d9d9e3] h-2.5 border border-border-soft mt-2 relative overflow-hidden rounded-[0px]">
                 <div
-                  className="bg-[#0047bb] h-full transition-all duration-500 rounded-[0px]"
+                  className="bg-primary h-full transition-all duration-500 rounded-[0px]"
                   style={{ width: `${displayProgressPercent}%` }}
                 />
               </div>
@@ -126,7 +126,7 @@ export const CurriculumTodayTab = ({
                 return (
                   <article
                     key={mission.id}
-                    className={`flex min-h-44 flex-col rounded-[4px] border p-5 shadow-sm transition-all hover:border-[#0047bb]/40 ${
+                    className={`flex min-h-44 flex-col rounded-[4px] border p-5 shadow-sm transition-all hover:border-primary/40 ${
                       isActive
                         ? 'border-y border-r border-border-soft border-l-[3px] border-l-[#0047bb] bg-surface'
                         : 'border-border-soft bg-surface'
@@ -138,7 +138,7 @@ export const CurriculumTodayTab = ({
                           {taskIdStr}
                         </span>
                         {isActive && (
-                          <span className="rounded-[4px] bg-[#0047bb]/10 border border-primary/25 px-1 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+                          <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
                             ACTIVE
                           </span>
                         )}
@@ -159,8 +159,8 @@ export const CurriculumTodayTab = ({
                       variant={isActive ? 'primary' : 'ghost'}
                       className={`mt-4 w-full h-9 inline-flex items-center justify-center rounded-[4px] text-xs font-bold uppercase tracking-wider cursor-pointer shadow-sm gap-1.5 border transition-all ${
                         isActive
-                          ? 'bg-[#0047bb] hover:bg-[#0047bb]/90 border-[#0047bb] text-white'
-                          : 'bg-surface hover:bg-surface-hover border-border-soft text-[#0047bb]'
+                          ? 'bg-primary hover:bg-primary/90 border-primary text-white'
+                          : 'bg-surface hover:bg-surface-hover border-border-soft text-primary'
                       }`}
                       onClick={() => navigate(mission.route)}
                     >

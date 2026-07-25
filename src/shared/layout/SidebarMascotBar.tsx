@@ -214,12 +214,12 @@ export const SidebarMascotBar: React.FC = () => {
         }}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="mx-3 my-2.5 rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3 shadow-sm hover:border-[#0047bb]/50 hover:shadow-md transition-all cursor-pointer"
+        className="mx-3 my-2.5 rounded-xl border border-primary/25 bg-surface/80 p-3 shadow-sm hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
       >
         <div className="flex items-center gap-3">
           {/* Authentic 3D Mascot Image with 3D Mouse Tilt */}
           <div
-            className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-[#0047bb]/30 bg-[#0047bb]/5 shadow-inner transition-transform duration-150 ease-out"
+            className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg border border-primary/30 bg-primary/5 shadow-inner transition-transform duration-150 ease-out"
             style={{
               transform: `perspective(500px) rotateX(${mousePos.y}deg) rotateY(${mousePos.x}deg) scale(${
                 isHovered ? 1.06 : 1
@@ -238,8 +238,8 @@ export const SidebarMascotBar: React.FC = () => {
           {/* Mascot Info & Dynamic Term */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[9px] font-extrabold uppercase tracking-wider text-[#0047bb] bg-[#0047bb]/10 px-1.5 py-0.5 rounded flex items-center gap-1">
-                <Sparkles className="h-2.5 w-2.5 text-[#0047bb]" />{' '}
+              <span className="font-mono text-[9px] font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+                <Sparkles className="h-2.5 w-2.5 text-primary" />{' '}
                 {currentTerm.code}
               </span>
               <span className="text-[9px] font-bold text-muted-copy">
@@ -262,8 +262,8 @@ export const SidebarMascotBar: React.FC = () => {
           <button
             type="button"
             onClick={(e) => handleSpeak(currentTerm.term, e)}
-            className={`inline-flex items-center gap-1 text-muted-copy hover:text-[#0047bb] transition-colors ${
-              isPlayingAudio ? 'text-[#0047bb] font-black animate-pulse' : ''
+            className={`inline-flex items-center gap-1 text-muted-copy hover:text-primary transition-colors ${
+              isPlayingAudio ? 'text-primary font-black animate-pulse' : ''
             }`}
           >
             <Volume2 className="h-3 w-3" /> Listen
@@ -272,7 +272,7 @@ export const SidebarMascotBar: React.FC = () => {
           <button
             type="button"
             onClick={handleSendToAI}
-            className="inline-flex items-center gap-1 text-[#0047bb] hover:text-[#003896] transition-colors"
+            className="inline-flex items-center gap-1 text-primary hover:text-[#003896] transition-colors"
           >
             <Bot className="h-3 w-3" /> Quick AI
           </button>
@@ -294,15 +294,15 @@ export const SidebarMascotBar: React.FC = () => {
             ref={(el) => {
               if (el) el.addEventListener('click', (e) => e.stopPropagation());
             }}
-            className="w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl border border-[#0047bb]/30 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
+            className="w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl border border-primary/30 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
           >
             <div className="flex items-start justify-between border-b border-border-soft pb-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0047bb]/10 text-[#0047bb]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
                     [{currentTerm.code}] // {currentTerm.domain}
                   </span>
                   <h3 className="text-sm sm:text-base font-black text-foreground truncate">
@@ -320,8 +320,8 @@ export const SidebarMascotBar: React.FC = () => {
             </div>
 
             <div className="my-4 space-y-3">
-              <div className="rounded-lg border border-[#0047bb]/25 bg-[#0047bb]/5 p-3">
-                <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+              <div className="rounded-lg border border-primary/25 bg-primary/5 p-3">
+                <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
                   Türkçe Anlamı
                 </p>
                 <p className="mt-0.5 text-sm font-bold text-foreground">
@@ -330,9 +330,9 @@ export const SidebarMascotBar: React.FC = () => {
               </div>
 
               {/* Responsive Audio Engine & Speed Control Box */}
-              <div className="rounded-lg border border-[#0047bb]/20 bg-surface p-3 space-y-2.5 max-w-full overflow-hidden">
+              <div className="rounded-lg border border-primary/20 bg-surface p-3 space-y-2.5 max-w-full overflow-hidden">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider shrink-0">
+                  <p className="text-[10px] font-bold text-primary uppercase tracking-wider shrink-0">
                     Voice & Audio Speed
                   </p>
                   <div className="flex items-center gap-1 text-[10px] font-bold text-muted-copy shrink-0">
@@ -344,7 +344,7 @@ export const SidebarMascotBar: React.FC = () => {
                         onClick={() => setSpeechRate(r)}
                         className={`px-1.5 py-0.5 rounded text-[9px] cursor-pointer transition-colors ${
                           speechRate === r
-                            ? 'bg-[#0047bb] text-white font-black'
+                            ? 'bg-primary text-white font-black'
                             : 'bg-surface-hover hover:bg-border-soft text-foreground'
                         }`}
                       >
@@ -358,7 +358,7 @@ export const SidebarMascotBar: React.FC = () => {
                   <select
                     value={selectedVoiceName}
                     onChange={(e) => setSelectedVoiceName(e.target.value)}
-                    className="w-full truncate rounded-md border border-border-soft bg-surface px-2.5 py-1.5 text-xs text-foreground font-medium focus:border-[#0047bb] focus:outline-none"
+                    className="w-full truncate rounded-md border border-border-soft bg-surface px-2.5 py-1.5 text-xs text-foreground font-medium focus:border-primary focus:outline-none"
                   >
                     {availableVoices.map((v) => (
                       <option key={v.name} value={v.name} className="truncate">
@@ -389,14 +389,14 @@ export const SidebarMascotBar: React.FC = () => {
                 onClick={() => handleSpeak(currentTerm.sampleSentence)}
                 className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-3 py-2 text-xs font-bold text-foreground hover:bg-surface-hover cursor-pointer shadow-sm"
               >
-                <Volume2 className="h-4 w-4 text-[#0047bb]" /> Listen Audio
+                <Volume2 className="h-4 w-4 text-primary" /> Listen Audio
               </button>
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleSendToAI}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#0047bb] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#003896] cursor-pointer shadow-sm transition-all"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-2 text-xs font-bold text-white hover:bg-primary-hover cursor-pointer shadow-sm transition-all"
                 >
                   <Bot className="h-4 w-4" /> Send to Quick AI
                 </button>

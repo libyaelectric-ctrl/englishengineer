@@ -80,7 +80,7 @@ export const PdfSpecExtractor: React.FC = () => {
     <div className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm space-y-6">
       <div className="flex items-center justify-between border-b border-border-soft pb-4">
         <div className="flex items-center gap-2.5">
-          <span className="p-2 rounded-xl bg-[#0047bb]/10 text-[#0047bb]">
+          <span className="p-2 rounded-xl bg-primary/10 text-primary">
             <FileCode className="h-5 w-5" />
           </span>
           <div>
@@ -103,7 +103,7 @@ export const PdfSpecExtractor: React.FC = () => {
           onChange={handleSimulatedUpload}
           className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
         />
-        <div className="p-3 rounded-full bg-[#0047bb]/10 text-[#0047bb]">
+        <div className="p-3 rounded-full bg-primary/10 text-primary">
           <UploadCloud className="h-6 w-6" />
         </div>
         <div>
@@ -120,7 +120,7 @@ export const PdfSpecExtractor: React.FC = () => {
 
       {isProcessing && (
         <div className="py-6 text-center space-y-2 animate-pulse">
-          <Sparkles className="mx-auto h-6 w-6 text-[#0047bb] animate-spin" />
+          <Sparkles className="mx-auto h-6 w-6 text-primary animate-spin" />
           <p className="text-xs font-bold text-foreground">
             Analyzing PDF specification & extracting technical vocabulary...
           </p>
@@ -158,13 +158,13 @@ export const PdfSpecExtractor: React.FC = () => {
             {extractedTerms.map((term, idx) => (
               <div
                 key={idx}
-                className="rounded-xl border border-border-soft bg-background p-4 space-y-2 hover:border-[#0047bb]/40 transition-all shadow-sm"
+                className="rounded-xl border border-border-soft bg-background p-4 space-y-2 hover:border-primary/40 transition-all shadow-sm"
               >
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-extrabold text-foreground">
                     {term.word}
                   </h4>
-                  <span className="rounded-full bg-[#0047bb]/10 px-2 py-0.5 text-[9px] font-bold text-[#0047bb]">
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
                     {term.category}
                   </span>
                 </div>

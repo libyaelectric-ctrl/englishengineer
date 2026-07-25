@@ -28,8 +28,8 @@ export const HeroBanner = ({
   const eloNeeded = Math.max(0, eloForNext - totalElo);
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-[#0047bb]/25 bg-surface/80 p-5 shadow-sm">
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-[#0047bb]/5 rounded-full blur-3xl" />
+    <div className="relative overflow-hidden rounded-xl border border-primary/25 bg-surface/80 p-5 shadow-sm">
+      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
           <svg className="w-32 h-32 -rotate-90">
@@ -72,7 +72,7 @@ export const HeroBanner = ({
             >
               {rank.icon} {rank.label}
             </span>
-            <span className="inline-flex items-center rounded-lg border border-[#0047bb]/25 bg-[#0047bb]/10 px-2.5 py-0.5 text-xs font-bold text-[#0047bb]">
+            <span className="inline-flex items-center rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
               CEFR {totalCEFR}
             </span>
             <span className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
@@ -98,7 +98,7 @@ export const HeroBanner = ({
                   width: `${Math.min(100, ((totalElo - (totalCEFRIdx * 333 + MIN_ELO)) / 333) * 100)}%`,
                 }}
                 transition={{ duration: 1.5, ease: 'easeOut' }}
-                className="h-full rounded-full bg-[#0047bb]"
+                className="h-full rounded-full bg-primary"
               />
             </div>
             <span className="text-[10px] font-bold text-muted-copy">
@@ -112,7 +112,7 @@ export const HeroBanner = ({
                 Learning Velocity: <strong>+180 ELO/week</strong>
               </span>
             </span>
-            <span className="font-bold text-[#0047bb]">
+            <span className="font-bold text-primary">
               ⏱️ Est. ~3.8 weeks to C1 Target
             </span>
           </div>

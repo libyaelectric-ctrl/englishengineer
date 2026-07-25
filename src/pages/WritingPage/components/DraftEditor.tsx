@@ -22,7 +22,7 @@ const wordCountColor = (count: number) =>
   count > 200
     ? 'text-green-500'
     : count > 100
-      ? 'text-[#0047bb]'
+      ? 'text-primary'
       : 'text-muted-copy';
 
 const charBarColor = (len: number) =>
@@ -30,7 +30,7 @@ const charBarColor = (len: number) =>
 
 const messageRoleClass = (role: string) =>
   role === 'assistant'
-    ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
+    ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
     : 'bg-foreground text-background ml-auto';
 
 const messageRoleLabel = (role: string) =>
@@ -100,13 +100,13 @@ Tell me what you want to write or paste a sentence you want to improve!`,
       subtitle={description}
       icon={PenTool}
       headerActions={
-        <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+        <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
           {discipline}
         </span>
       }
     >
       <div className="space-y-4">
-        <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 text-sm text-foreground shadow-sm">
+        <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 text-sm text-foreground shadow-sm">
           <p className="text-xs font-bold uppercase tracking-wider text-foreground">
             Scenario
           </p>
@@ -128,7 +128,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
           <textarea
             value={draft}
             onChange={(e) => onDraftChange(e.target.value)}
-            className="h-64 w-full resize-none rounded-[4px] border border-border-soft bg-surface p-5 text-sm font-normal leading-[1.7] text-foreground outline-none focus:border-[#0047bb] focus:ring-2 focus:ring-[#0047bb]/10"
+            className="h-64 w-full resize-none rounded-[4px] border border-border-soft bg-surface p-5 text-sm font-normal leading-[1.7] text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
             placeholder="Start writing or polishing your technical draft..."
           />
         </label>
@@ -144,9 +144,9 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             <span>Goal: {Math.min(wordCount, 200)}/200 words</span>
             <span>{Math.round(Math.min(100, (wordCount / 200) * 100))}%</span>
           </div>
-          <div className="h-1.5 w-full rounded-full bg-[#f3f3fd] border border-border-soft overflow-hidden">
+          <div className="h-1.5 w-full rounded-full bg-surface-hover border border-border-soft overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#0047bb] to-emerald-500 transition-all duration-300"
+              className="h-full rounded-full bg-gradient-to-r from-primary to-emerald-500 transition-all duration-300"
               style={{ width: `${Math.min(100, (wordCount / 200) * 100)}%` }}
             />
           </div>
@@ -156,7 +156,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
           <div className="flex items-center gap-2">
             <span>CHARACTER COUNT: {draft.length}</span>
             {draft.length > 0 && (
-              <div className="w-24 h-1.5 rounded-full bg-[#f3f3fd] border border-border-soft overflow-hidden">
+              <div className="w-24 h-1.5 rounded-full bg-surface-hover border border-border-soft overflow-hidden">
                 <div
                   className={`h-full rounded-full transition-all ${charBarColor(draft.length)}`}
                   style={{
@@ -210,7 +210,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
               </div>
             ))}
             {isTalking && (
-              <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto animate-pulse">
+              <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
                 <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
                   AI Coach 🎓
                 </p>
@@ -228,12 +228,12 @@ Tell me what you want to write or paste a sentence you want to improve!`,
               }}
               disabled={isTalking}
               placeholder="Ask for feedback or outline ideas..."
-              className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
+              className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
             />
             <Button
               onClick={handleSendChat}
               disabled={!chatInput.trim() || isTalking}
-              className="rounded-[4px] cursor-pointer bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb]"
+              className="rounded-[4px] cursor-pointer bg-primary hover:bg-primary/90 border border-primary"
             >
               <Send className="h-3.5 w-3.5" />
             </Button>

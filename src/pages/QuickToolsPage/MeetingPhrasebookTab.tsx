@@ -21,13 +21,13 @@ export const MeetingPhrasebookTab = () => {
         return (
           <Card
             key={item.id}
-            className="p-5 space-y-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all flex flex-col justify-between"
+            className="p-5 space-y-4 rounded-xl border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all flex flex-col justify-between"
             hoverEffect={false}
           >
             <div>
               <div className="flex items-start justify-between gap-3 border-b border-border-soft pb-2">
                 <div>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+                  <p className="text-[9px] font-bold uppercase tracking-wider text-primary">
                     {item.category}
                   </p>
                   <h2 className="mt-1 text-sm font-bold text-foreground">

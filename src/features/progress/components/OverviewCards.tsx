@@ -77,7 +77,7 @@ export const OverviewCards = ({ overview }: OverviewCardsProps) => (
         <Link
           key={mod.key}
           to={mod.href}
-          className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 hover:shadow-md transition-all"
+          className="rounded-[4px] border-2 border-primary bg-surface p-4 hover:shadow-md transition-all"
         >
           <div className="flex items-center gap-2 mb-3">
             <div className="flex h-7 w-7 items-center justify-center rounded-[4px] border border-border-soft bg-background">

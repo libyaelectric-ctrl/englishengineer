@@ -18,7 +18,7 @@ export const MissionList = ({
         >
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
             <div>
-              <p className="text-[10px] font-mono text-[#0047bb] uppercase tracking-widest font-bold">
+              <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-bold">
                 {mission.template.category}
               </p>
               <h4 className="mt-1 text-base font-bold text-foreground">
@@ -106,7 +106,7 @@ export const FeedList = ({
         <p className="text-xs text-muted-copy mt-1 font-medium">
           {item.description}
         </p>
-        <p className="text-[10px] font-mono text-[#0047bb] mt-2 font-bold">
+        <p className="text-[10px] font-mono text-primary mt-2 font-bold">
           {new Date(item.timestamp).toLocaleDateString()}
         </p>
       </div>

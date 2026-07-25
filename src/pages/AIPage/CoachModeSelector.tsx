@@ -30,10 +30,10 @@ export const CoachModeSelector = ({
   onSetMode,
   onSetInput,
 }: CoachModeSelectorProps) => (
-  <div className="rounded-xl border border-[#0047bb]/25 bg-surface/80 p-3.5 shadow-sm space-y-3">
+  <div className="rounded-xl border border-primary/25 bg-surface/80 p-3.5 shadow-sm space-y-3">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <Brain className="h-4 w-4 text-[#0047bb]" />
+        <Brain className="h-4 w-4 text-primary" />
         <span className="text-xs font-bold uppercase tracking-wider text-foreground">
           Coach Mode
         </span>
@@ -54,8 +54,8 @@ export const CoachModeSelector = ({
             onClick={() => onSetMode(mode.id)}
             className={`px-3 py-1.5 rounded-[4px] border text-[11px] font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${
               isActive
-                ? 'bg-[#0047bb]/10 border-[#0047bb]/50 text-[#0047bb]'
-                : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/40 hover:text-foreground'
+                ? 'bg-primary/10 border-primary/50 text-primary'
+                : 'border-border-soft bg-surface text-muted-copy hover:border-primary/40 hover:text-foreground'
             }`}
           >
             <span className="flex items-center gap-1.5">
@@ -79,7 +79,7 @@ export const CoachModeSelector = ({
     {promptTemplates.length > 0 && (
       <div className="pt-2 border-t border-border-soft/60 space-y-1.5">
         <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
-          <Sparkles className="h-3 w-3 text-[#0047bb]" />
+          <Sparkles className="h-3 w-3 text-primary" />
           <span>Quick Prompt Templates</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -88,7 +88,7 @@ export const CoachModeSelector = ({
               key={template.id}
               type="button"
               onClick={() => onSetInput(template.prompt)}
-              className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-foreground transition-all hover:border-[#0047bb]/40 cursor-pointer shadow-sm"
+              className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-left text-[10px] font-bold uppercase tracking-wider text-foreground transition-all hover:border-primary/40 cursor-pointer shadow-sm"
             >
               {template.title}
             </button>

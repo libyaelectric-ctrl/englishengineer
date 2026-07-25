@@ -446,39 +446,6 @@
   --color-shadow: rgba(0, 0, 0, 0.5);
 }
 
-/* === DARK MODE — Hardcoded white/light background neutralization === */
-/* Converts components using hardcoded Tailwind/hex whites into surface color */
-.dark .bg-white {
-  background-color: var(--color-surface) !important;
-}
-.dark .bg-\[\#faf8ff\] {
-  background-color: var(--color-surface-hover) !important;
-}
-.dark .bg-\[\#f3f3fd\] {
-  background-color: var(--color-surface-hover) !important;
-}
-.dark .border-\[\#d9d9e3\] {
-  border-color: var(--color-border-soft) !important;
-}
-.dark .border-\[\#0047bb\]\/25 {
-  border-color: rgba(59, 130, 246, 0.25) !important;
-}
-.dark .text-\[\#0047bb\] {
-  color: var(--color-primary) !important;
-}
-.dark .bg-\[\#0047bb\]\/5 {
-  background-color: rgba(59, 130, 246, 0.08) !important;
-}
-.dark .bg-\[\#0047bb\]\/10 {
-  background-color: rgba(59, 130, 246, 0.12) !important;
-}
-.dark .bg-\[\#0047bb\]\/15 {
-  background-color: rgba(59, 130, 246, 0.15) !important;
-}
-.dark .stroke-\[\#d9d9e3\] {
-  stroke: var(--color-border-soft) !important;
-}
-
 /* === MICRO-INTERACTIONS === */
 .card-interactive {
   transition:

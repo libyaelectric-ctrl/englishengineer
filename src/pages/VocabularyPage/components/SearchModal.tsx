@@ -92,7 +92,7 @@ export function SearchModal({
                       void onSearch(searchInput);
                     }
                   }}
-                  className="w-full rounded-[4px] border border-border-soft bg-background pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:border-[#0047bb]"
+                  className="w-full rounded-[4px] border border-border-soft bg-background pl-10 pr-4 py-3 text-sm text-foreground outline-none focus:border-primary"
                   placeholder="Type a word to search..."
                   aria-label="Search vocabulary"
                 />

@@ -45,9 +45,9 @@ const IdentityCard = ({
   currentUser: { displayName?: string } | null;
   profile: { userId?: string };
 }) => (
-  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
+  <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
-    <div className="h-14 w-14 shrink-0 rounded-[4px] bg-[#0047bb] text-white flex items-center justify-center font-bold text-lg border border-border-soft shadow-sm select-none relative z-10">
+    <div className="h-14 w-14 shrink-0 rounded-[4px] bg-primary text-white flex items-center justify-center font-bold text-lg border border-border-soft shadow-sm select-none relative z-10">
       {currentUser?.displayName
         ? currentUser.displayName.slice(0, 2).toUpperCase()
         : 'DE'}
@@ -60,7 +60,7 @@ const IdentityCard = ({
         <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
           USER-STATUS: ONLINE
         </span>
-        <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/10 px-2 py-0.5 text-[8px] font-bold text-[#0047bb] uppercase tracking-wider">
+        <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-2 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
           ID-VERIFIED
         </span>
       </div>
@@ -144,7 +144,7 @@ const InfoGrid = ({
               </span>
             </div>
             <div className="mt-2.5 flex items-center gap-2">
-              <Icon className="h-4 w-4 text-[#0047bb] shrink-0" />
+              <Icon className="h-4 w-4 text-primary shrink-0" />
               <p className="text-xs font-bold text-foreground truncate">
                 {item.value}
               </p>
@@ -166,7 +166,7 @@ const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
         {goals.map((gId) => (
           <span
             key={gId}
-            className="rounded-[4px] bg-[#0047bb]/10 border border-[#0047bb]/25 px-2.5 py-1 text-[10px] font-bold text-[#0047bb] uppercase tracking-wider"
+            className="rounded-[4px] bg-primary/10 border border-primary/25 px-2.5 py-1 text-[10px] font-bold text-primary uppercase tracking-wider"
           >
             {COMMUNICATION_GOALS.find((g) => g.id === gId)?.label || gId}
           </span>
@@ -181,10 +181,10 @@ const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
 );
 
 const SecurityLogsCard = () => (
-  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 space-y-3 shadow-sm relative overflow-hidden">
+  <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 space-y-3 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     <div className="flex justify-between items-center relative z-10">
-      <span className="text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+      <span className="text-[9px] font-bold uppercase tracking-wider text-primary">
         Security Status & Activity Logs
       </span>
       <span className="rounded-[4px] bg-success/15 text-success border border-success/20 text-[8px] font-bold px-1.5 py-0.5 uppercase tracking-wider">
@@ -220,9 +220,9 @@ const BadgesSection = ({ achievements }: { achievements?: Achievement[] }) => {
       {earnedBadges.map((badge) => (
         <div
           key={badge.id}
-          className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 text-center space-y-2 shadow-sm animate-in fade-in duration-300"
+          className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 text-center space-y-2 shadow-sm animate-in fade-in duration-300"
         >
-          <Trophy className="h-6 w-6 mx-auto text-[#0047bb]" />
+          <Trophy className="h-6 w-6 mx-auto text-primary" />
           <p className="text-sm font-bold text-foreground">{badge.title}</p>
           <p className="text-[10px] text-muted-copy leading-4 font-medium">
             {badge.description}
@@ -293,7 +293,7 @@ export const ProfileOverviewSection = ({
                 <input
                   value={editFirstName}
                   onChange={(e) => setEditFirstName(e.target.value)}
-                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-colors shadow-sm font-bold"
                 />
               </label>
               <label className="block space-y-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground">
@@ -301,7 +301,7 @@ export const ProfileOverviewSection = ({
                 <input
                   value={editLastName}
                   onChange={(e) => setEditLastName(e.target.value)}
-                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors shadow-sm font-bold"
+                  className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-colors shadow-sm font-bold"
                 />
               </label>
             </div>
@@ -316,7 +316,7 @@ export const ProfileOverviewSection = ({
               <button
                 type="submit"
                 disabled={isSaving}
-                className="inline-flex items-center gap-1.5 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:opacity-50 shadow-sm"
+                className="inline-flex items-center gap-1.5 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-white cursor-pointer transition-colors disabled:opacity-50 shadow-sm"
               >
                 {isSaving ? 'Saving...' : 'Save Profile'}
               </button>

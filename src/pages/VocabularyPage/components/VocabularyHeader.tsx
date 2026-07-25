@@ -99,7 +99,7 @@ export function VocabularyHeader({
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Vocabulary
           </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {vocabularyLevel}
           </span>
           <SoundToggle
@@ -133,8 +133,8 @@ export function VocabularyHeader({
                 onClick={() => chooseTab(tab)}
                 className={`rounded-[4px] px-3 py-1 text-[10px] font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   activeTab === tab
-                    ? 'border border-[#0047bb] bg-[#0047bb] text-white'
-                    : 'text-muted-copy hover:bg-primary/5 hover:text-[#0047bb]'
+                    ? 'border border-primary bg-primary text-white'
+                    : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
                 }`}
               >
                 {TAB_LABELS[tab]}
@@ -144,7 +144,7 @@ export function VocabularyHeader({
               type="button"
               onClick={onOpenSearch}
               title="Search vocabulary"
-              className="flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-[11px] font-bold text-muted-copy transition-all hover:bg-primary/5 hover:text-[#0047bb] sm:px-2 sm:py-1 sm:text-[10px]"
+              className="flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-[11px] font-bold text-muted-copy transition-all hover:bg-primary/5 hover:text-primary sm:px-2 sm:py-1 sm:text-[10px]"
             >
               <Search className="h-4 w-4 sm:h-3 sm:w-3" />
               <span className="hidden sm:inline">Search</span>

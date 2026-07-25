@@ -48,7 +48,7 @@ export const TaskGrid = ({
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#0047bb]">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
                     Priority {index + 1} · {task.module}
                   </p>
                   <h3 className="mt-1 text-base font-bold text-foreground">

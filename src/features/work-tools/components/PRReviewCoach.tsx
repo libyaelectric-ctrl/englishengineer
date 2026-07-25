@@ -91,7 +91,7 @@ export const PRReviewCoach = () => {
               id="pr-review-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="min-h-24 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+              className="min-h-24 w-full resize-y rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs leading-5 text-foreground outline-none focus:border-primary shadow-sm font-semibold"
               placeholder="e.g., This code is terrible. Why did you write it this way? Fix it now."
             />
           </div>
@@ -105,7 +105,7 @@ export const PRReviewCoach = () => {
                 key={i}
                 type="button"
                 onClick={() => handleSample(sample)}
-                className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-[#0047bb] hover:text-[#0047bb] cursor-pointer font-bold uppercase tracking-wider shadow-sm"
+                className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 text-[10px] text-muted-copy transition-colors hover:border-primary hover:text-primary cursor-pointer font-bold uppercase tracking-wider shadow-sm"
               >
                 Sample {i + 1}
               </button>
@@ -148,8 +148,8 @@ export const PRReviewCoach = () => {
           </div>
 
           <div className="space-y-4">
-            <div className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 shadow-sm">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-[#0047bb]">
+            <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
+              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
                 [ORIGINAL HARSH REVIEW]
               </p>
               <p className="mt-2 text-xs text-foreground line-through opacity-60">

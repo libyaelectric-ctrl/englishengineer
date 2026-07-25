@@ -12,7 +12,7 @@ export const AnalyticsProgress = ({
   <div className="space-y-2">
     <div className="flex justify-between text-xs font-medium text-border-hover">
       <span>{label}</span>
-      <span className="text-[#0047bb] font-bold font-mono">{value}%</span>
+      <span className="text-primary font-bold font-mono">{value}%</span>
     </div>
     <ProgressBar value={value} color="primary" />
   </div>
@@ -86,7 +86,7 @@ const ReadinessCard = ({
   <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
     <div className="flex items-center justify-between text-xs font-medium text-foreground">
       <span>{label}</span>
-      <span className="text-[#0047bb] font-bold font-mono">
+      <span className="text-primary font-bold font-mono">
         {value === null ? 'Pending' : `${value}%`}
       </span>
     </div>
@@ -145,10 +145,10 @@ const getDimensionsToDisplay = (
     : profile.dimensionScores;
 
 const PendingBaselineBanner = () => (
-  <div className="rounded-xl border border-[#0047bb]/30 bg-[#0047bb]/5 p-5 shadow-sm">
+  <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 shadow-sm">
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div>
-        <p className="text-xs font-bold text-[#0047bb] uppercase tracking-wider">
+        <p className="text-xs font-bold text-primary uppercase tracking-wider">
           Engineering Assessment Profile — Initializing Baseline
         </p>
         <p className="mt-1 text-xs leading-relaxed text-muted-copy font-medium">
@@ -159,7 +159,7 @@ const PendingBaselineBanner = () => (
       </div>
       <Link
         to="/vocabulary"
-        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors"
+        className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors"
       >
         Start Diagnostic
       </Link>
@@ -201,8 +201,8 @@ const DisclaimerBox = ({
   disclaimer: string | null;
   explanation: string | null;
 }) => (
-  <div className="rounded-xl border border-[#0047bb]/20 bg-surface/80 p-4 shadow-sm">
-    <p className="text-xs font-bold text-[#0047bb]">
+  <div className="rounded-xl border border-primary/20 bg-surface/80 p-4 shadow-sm">
+    <p className="text-xs font-bold text-primary">
       {disclaimer || 'Engineering Communication Standards & CEFR Mapping'}
     </p>
     <p className="mt-1.5 text-xs leading-relaxed text-muted-copy font-medium">
@@ -291,11 +291,11 @@ const DimensionCard = ({
 }) => (
   <div
     key={dimension.dimensionId}
-    className="rounded-xl border border-[#0047bb]/20 bg-surface p-4 shadow-sm hover:border-[#0047bb]/40 transition-colors"
+    className="rounded-xl border border-primary/20 bg-surface p-4 shadow-sm hover:border-primary/40 transition-colors"
   >
     <div className="flex items-center justify-between gap-3">
       <p className="text-xs font-bold text-foreground">{dimension.label}</p>
-      <span className="text-[10px] font-mono font-bold text-[#0047bb]">
+      <span className="text-[10px] font-mono font-bold text-primary">
         {dimension.score === null ? 'Pending' : `${dimension.score}%`}
       </span>
     </div>
@@ -326,9 +326,9 @@ const DimensionCardsGrid = ({
 );
 
 const QuickWorkoutBanner = () => (
-  <div className="rounded-xl border border-[#0047bb]/30 bg-[#0047bb]/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+  <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
     <div className="flex items-center gap-3">
-      <div className="rounded-lg bg-[#0047bb]/10 px-2.5 py-1 text-[#0047bb] font-bold text-[10px] uppercase tracking-wider">
+      <div className="rounded-lg bg-primary/10 px-2.5 py-1 text-primary font-bold text-[10px] uppercase tracking-wider">
         ⚡ Quick Workout
       </div>
       <div>
@@ -343,7 +343,7 @@ const QuickWorkoutBanner = () => (
     </div>
     <Link
       to="/speaking"
-      className="shrink-0 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors cursor-pointer"
+      className="shrink-0 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-primary-hover transition-colors cursor-pointer"
     >
       🚀 Start 3-min Workout
     </Link>

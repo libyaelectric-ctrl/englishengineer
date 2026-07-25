@@ -28,7 +28,7 @@ export const RecentSessions = ({
               </p>
             </div>
             <div className="text-right">
-              <p className="text-sm font-bold text-[#0047bb]">
+              <p className="text-sm font-bold text-primary">
                 {session.score}%
               </p>
               <p className="text-[10px] font-mono text-muted-copy">

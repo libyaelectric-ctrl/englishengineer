@@ -56,8 +56,8 @@ export const WritingEvaluationResults = ({
             </p>
           </div>
 
-          <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-[#0047bb]/25 bg-[#0047bb]/5 shadow-sm">
-            <div className="absolute inset-2 rounded-full border border-dashed border-[#0047bb]/20" />
+          <div className="relative flex h-32 w-32 items-center justify-center rounded-full border-4 border-primary/25 bg-primary/5 shadow-sm">
+            <div className="absolute inset-2 rounded-full border border-dashed border-primary/20" />
             <div className="flex flex-col items-center">
               <span className="text-4xl font-bold leading-none text-foreground">
                 {evaluationResult.finalScore}
@@ -130,7 +130,7 @@ export const WritingEvaluationResults = ({
             </div>
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[9px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
-                <TrendingUp className="h-2.5 w-2.5 text-[#0047bb] shrink-0" />{' '}
+                <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" />{' '}
                 LEVEL PROGRESS
               </span>
               <span
@@ -228,7 +228,7 @@ export const WritingEvaluationResults = ({
                     <span>{item.isFixed ? 'Optimized' : 'Unresolved'}</span>
                   </span>
                 </div>
-                <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-3 md:grid-cols-2 shadow-sm">
+                <div className="grid grid-cols-1 gap-3 rounded-[4px] border border-border-soft bg-surface-hover p-3 md:grid-cols-2 shadow-sm">
                   <div>
                     <span className="text-[9px] font-mono text-muted-copy uppercase block font-bold">
                       Casual / Error Term
@@ -260,7 +260,7 @@ export const WritingEvaluationResults = ({
         <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
           <Link
             to="/curriculum"
-            className="inline-flex min-h-10 items-center rounded-[4px] px-3 text-xs font-bold text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
+            className="inline-flex min-h-10 items-center rounded-[4px] px-3 text-xs font-bold text-primary hover:bg-primary/5 cursor-pointer"
           >
             Learning Hub
           </Link>
@@ -270,20 +270,20 @@ export const WritingEvaluationResults = ({
               resetCurrentMission();
               setSelectedRule(null);
             }}
-            className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer shadow-sm"
+            className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-primary hover:bg-primary/5 cursor-pointer shadow-sm"
           >
             Retry Sandbox
           </Button>
           <Button
             onClick={handleBackToMissions}
-            className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-6 h-10 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
+            className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-6 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
           >
             Back to Writing list
           </Button>
           {currentMissionIndex < visibleMissions.length - 1 && (
             <Button
               onClick={() => moveMission(1)}
-              className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm flex items-center gap-1"
+              className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm flex items-center gap-1"
             >
               Next lesson <ChevronRight className="h-4 w-4" />
             </Button>

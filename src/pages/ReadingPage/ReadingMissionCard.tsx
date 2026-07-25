@@ -53,7 +53,7 @@ export function ReadingMissionCard({
   return (
     <div
       id={`reading-card-${m.id}`}
-      className={`group relative rounded-[4px] border bg-surface p-5 transition-all duration-200 hover:border-[#0047bb]/30 hover:shadow-md ${
+      className={`group relative rounded-[4px] border bg-surface p-5 transition-all duration-200 hover:border-primary/30 hover:shadow-md ${
         isCompleted ? 'border-success/20' : 'border-border-soft'
       }`}
     >
@@ -91,13 +91,13 @@ export function ReadingMissionCard({
               className="ml-1 shrink-0 p-1 rounded-[4px] transition-colors hover:bg-surface-hover cursor-pointer"
             >
               <Bookmark
-                className={`h-4 w-4 ${isBookmarked ? 'fill-[#0047bb] text-[#0047bb]' : 'text-muted-copy'}`}
+                className={`h-4 w-4 ${isBookmarked ? 'fill-primary text-primary' : 'text-muted-copy'}`}
               />
             </button>
           </div>
 
           <div>
-            <h4 className="text-base font-bold text-foreground group-hover:text-[#0047bb] transition-colors tracking-tight">
+            <h4 className="text-base font-bold text-foreground group-hover:text-primary transition-colors tracking-tight">
               {m.title}
             </h4>
             <p className="text-xs text-muted-copy mt-1 line-clamp-2 leading-relaxed font-normal">
@@ -108,7 +108,7 @@ export function ReadingMissionCard({
 
         <div className="flex items-center justify-between pt-4 border-t border-border-soft">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-bold font-mono bg-[#f3f3fd] border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
+            <span className="text-[9px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {m.discipline}
             </span>
           </div>
@@ -129,8 +129,8 @@ export function ReadingMissionCard({
               onClick={() => onLaunch(m.id)}
               className={`h-8 px-3.5 rounded-[4px] font-bold text-[10px] uppercase tracking-wider flex items-center gap-1.5 cursor-pointer transition-colors ${
                 isCompleted
-                  ? 'border border-border-soft bg-surface text-foreground hover:bg-[#0047bb]/5'
-                  : 'bg-[#0047bb] hover:bg-[#0047bb]/90 text-white border border-[#0047bb]'
+                  ? 'border border-border-soft bg-surface text-foreground hover:bg-primary/5'
+                  : 'bg-primary hover:bg-primary/90 text-white border border-primary'
               }`}
             >
               {isCompleted ? (

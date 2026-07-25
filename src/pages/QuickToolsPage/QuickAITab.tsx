@@ -63,7 +63,7 @@ export const QuickAITab = ({
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
       <Card
-        className="p-5 space-y-5 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all"
+        className="p-5 space-y-5 rounded-xl border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all"
         hoverEffect={false}
       >
         <div className="flex items-start justify-between gap-4">
@@ -108,7 +108,7 @@ export const QuickAITab = ({
           value={input}
           onChange={(event) => setInput(event.target.value)}
           placeholder="Paste a site message, report note or email draft"
-          className="min-h-44 w-full rounded-[4px] border border-border-soft bg-surface-hover p-4 text-xs leading-6 text-foreground outline-none transition focus:border-[#0047bb] focus:ring-0 shadow-sm"
+          className="min-h-44 w-full rounded-[4px] border border-border-soft bg-surface-hover p-4 text-xs leading-6 text-foreground outline-none transition focus:border-primary focus:ring-0 shadow-sm"
         />
         <div className="flex flex-wrap gap-2">
           {QUICK_AI_ACTIONS.map((action) => (
@@ -126,7 +126,7 @@ export const QuickAITab = ({
         </div>
       </Card>
       <Card
-        className="p-5 space-y-4 rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm hover:border-[#0047bb]/50 transition-all"
+        className="p-5 space-y-4 rounded-xl border border-primary/25 bg-surface/80 shadow-sm hover:border-primary/50 transition-all"
         hoverEffect={false}
       >
         <h2 className="text-base font-bold text-foreground">Result</h2>
@@ -138,7 +138,7 @@ export const QuickAITab = ({
           </div>
         ) : result ? (
           <>
-            <p className="whitespace-pre-line rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-4 text-xs leading-6 text-foreground font-medium shadow-sm">
+            <p className="whitespace-pre-line rounded-[4px] border border-primary/25 bg-primary/5 p-4 text-xs leading-6 text-foreground font-medium shadow-sm">
               {result}
             </p>
             <Button

@@ -41,7 +41,7 @@ export const GrammarLessonMap = ({
         className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors hover:bg-background/45 cursor-pointer"
       >
         <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#0047bb]">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary">
             Curriculum Map
           </span>
           <span className="text-[11px] text-muted-copy">
@@ -100,7 +100,7 @@ export const GrammarLessonMap = ({
                               ? 'bg-foreground text-background font-bold shadow-sm'
                               : locked
                                 ? 'bg-surface-hover/50 text-muted-copy opacity-50 cursor-not-allowed border border-dashed border-border-soft'
-                                : 'hover:bg-[#0047bb]/5 text-foreground hover:text-[#0047bb] border border-border-soft hover:border-[#0047bb]/30'
+                                : 'hover:bg-primary/5 text-foreground hover:text-primary border border-border-soft hover:border-primary/30'
                           }`}
                         >
                           <span className="truncate text-xs font-semibold pr-2">
@@ -120,7 +120,7 @@ export const GrammarLessonMap = ({
                                 R/W
                               </span>
                             ) : (
-                              <span className="h-1.5 w-1.5 rounded-full bg-[#0047bb]/40" />
+                              <span className="h-1.5 w-1.5 rounded-full bg-primary/40" />
                             )}
                           </span>
                         </button>

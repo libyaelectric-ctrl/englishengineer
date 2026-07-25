@@ -113,7 +113,7 @@ export const FieldDocAssistant: React.FC = () => {
               }}
               className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'border-[#0047bb] bg-[#0047bb]/5 shadow-md ring-1 ring-[#0047bb]'
+                  ? 'border-primary bg-primary/5 shadow-md ring-1 ring-[#0047bb]'
                   : 'border-border-soft bg-surface hover:bg-surface-hover hover:border-border-hover'
               }`}
             >
@@ -121,13 +121,13 @@ export const FieldDocAssistant: React.FC = () => {
                 <span
                   className={`p-2 rounded-lg ${
                     isActive
-                      ? 'bg-[#0047bb] text-white'
+                      ? 'bg-primary text-white'
                       : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
                   {tmpl.badge}
                 </span>
               </div>
@@ -149,7 +149,7 @@ export const FieldDocAssistant: React.FC = () => {
           className="lg:col-span-5 rounded-2xl border border-border-soft bg-surface p-5 space-y-4 shadow-sm"
         >
           <div className="flex items-center gap-2 border-b border-border-soft pb-3">
-            <Sparkles className="h-4 w-4 text-[#0047bb]" />
+            <Sparkles className="h-4 w-4 text-primary" />
             <h3 className="text-xs font-extrabold uppercase tracking-wider text-foreground">
               Technical Details Input
             </h3>
@@ -168,7 +168,7 @@ export const FieldDocAssistant: React.FC = () => {
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
               placeholder="e.g. Metro Line Extension - Station 4"
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-[#0047bb] focus:outline-none"
+              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -185,7 +185,7 @@ export const FieldDocAssistant: React.FC = () => {
               value={clauseRef}
               onChange={(e) => setClauseRef(e.target.value)}
               placeholder="e.g. FIDIC Sub-Clause 20.1 / Spec 15400"
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-[#0047bb] focus:outline-none"
+              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
             />
           </div>
 
@@ -202,7 +202,7 @@ export const FieldDocAssistant: React.FC = () => {
               onChange={(e) => setConflictDetails(e.target.value)}
               rows={4}
               placeholder="Describe the clash, site condition, or NCR grounds in plain English..."
-              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-[#0047bb] focus:outline-none"
+              className="w-full rounded-lg border border-border-soft bg-background px-3 py-2 text-xs font-medium text-foreground focus:border-primary focus:outline-none"
               required
             />
           </div>

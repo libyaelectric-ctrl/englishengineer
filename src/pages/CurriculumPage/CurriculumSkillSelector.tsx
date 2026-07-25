@@ -45,12 +45,12 @@ export const CurriculumSkillSelector = ({
               }}
               className={`rounded-[4px] border p-4 text-left transition-all cursor-pointer shadow-sm ${
                 selectedSkill === skill
-                  ? 'border-[#0047bb]/40 bg-[#0047bb]/5'
-                  : 'border-border-soft bg-surface hover:border-[#0047bb]'
+                  ? 'border-primary/40 bg-primary/5'
+                  : 'border-border-soft bg-surface hover:border-primary'
               }`}
             >
               <div className="flex items-center justify-between gap-2">
-                <Icon className="h-5 w-5 text-[#0047bb]" />
+                <Icon className="h-5 w-5 text-primary" />
                 {skill === weakestSkill && (
                   <span className="text-[9px] font-bold uppercase tracking-wider text-warning">
                     Focus
@@ -63,7 +63,7 @@ export const CurriculumSkillSelector = ({
               <p className="mt-1 text-xs text-muted-copy font-medium">
                 {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
               </p>
-              <p className="mt-1 text-xs font-bold text-[#0047bb] uppercase tracking-wider">
+              <p className="mt-1 text-xs font-bold text-primary uppercase tracking-wider">
                 Lesson{' '}
                 {
                   LessonPathEngine.getSkillProgress(profile, skill).lesson

@@ -24,7 +24,7 @@ export const SkillRadar = ({ profile }: { profile: UserLearningProfile }) => (
             </div>
             <div className="mt-2.5 h-2 overflow-hidden border border-border-soft bg-surface rounded-[0px]">
               <div
-                className="h-full bg-[#0047bb] transition-all duration-500 rounded-[0px]"
+                className="h-full bg-primary transition-all duration-500 rounded-[0px]"
                 style={{ width: `${Math.max(strength, 2)}%` }}
               />
             </div>

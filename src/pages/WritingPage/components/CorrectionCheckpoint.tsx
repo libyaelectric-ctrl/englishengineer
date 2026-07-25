@@ -29,7 +29,7 @@ export const CorrectionCheckpoint = ({
         <Button
           onClick={onAutoFixAll}
           variant="outline"
-          className="text-[10px] h-7 border-[#0047bb]/40 text-[#0047bb] hover:bg-[#0047bb]/5 font-bold font-mono py-0 rounded-[4px] cursor-pointer shadow-sm"
+          className="text-[10px] h-7 border-primary/40 text-primary hover:bg-primary/5 font-bold font-mono py-0 rounded-[4px] cursor-pointer shadow-sm"
         >
           Auto-Fix All
         </Button>
@@ -61,7 +61,7 @@ export const CorrectionCheckpoint = ({
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') onSelectRule(alert);
               }}
-              className="group relative cursor-pointer space-y-3 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm transition-all hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5"
+              className="group relative cursor-pointer space-y-3 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm transition-all hover:border-primary/30 hover:bg-primary/5"
             >
               <div className="flex items-start gap-2.5 text-xs">
                 <AlertTriangle
@@ -83,7 +83,7 @@ export const CorrectionCheckpoint = ({
                     e.stopPropagation();
                     onApplyFix(alert.original, alert.fix);
                   }}
-                  className="text-[10px] h-6 px-2.5 py-0 bg-[#0047bb]/10 hover:bg-[#0047bb]/20 text-[#0047bb] rounded-[4px] font-bold cursor-pointer border border-[#0047bb]/25 transition-colors shadow-sm animate-in fade-in"
+                  className="text-[10px] h-6 px-2.5 py-0 bg-primary/10 hover:bg-primary/20 text-primary rounded-[4px] font-bold cursor-pointer border border-primary/25 transition-colors shadow-sm animate-in fade-in"
                 >
                   Auto-Fix
                 </Button>
@@ -97,13 +97,13 @@ export const CorrectionCheckpoint = ({
         <Button
           variant="outline"
           onClick={onReset}
-          className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer shadow-sm"
+          className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-primary hover:bg-primary/5 cursor-pointer shadow-sm"
         >
           Reset Sandbox
         </Button>
         <Button
           onClick={onSubmit}
-          className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-[#0047bb] shadow-sm"
+          className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary shadow-sm"
         >
           Submit Draft
         </Button>

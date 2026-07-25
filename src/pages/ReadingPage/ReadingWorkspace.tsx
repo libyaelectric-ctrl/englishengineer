@@ -158,10 +158,10 @@ What questions do you have about this passage?`,
                 }}
                 className={`underline decoration-2 underline-offset-4 cursor-pointer px-1 rounded-[4px] font-medium transition-all duration-200 ${
                   isSelected
-                    ? 'bg-[#0047bb]/10 text-foreground decoration-[#0047bb]'
+                    ? 'bg-primary/10 text-foreground decoration-primary'
                     : hasExplored
                       ? 'decoration-success/60 text-foreground hover:bg-success/5'
-                      : 'decoration-[#0047bb]/60 text-foreground hover:bg-[#0047bb]/5 hover:text-foreground'
+                      : 'decoration-primary/60 text-foreground hover:bg-primary/5 hover:text-foreground'
                 }`}
               >
                 {part}
@@ -181,7 +181,7 @@ What questions do you have about this passage?`,
       <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between shadow-sm">
         <button
           onClick={handleBackToMissions}
-          className="flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-wider text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
+          className="flex items-center gap-2 text-[10px] font-sans font-bold uppercase tracking-wider text-muted-copy hover:text-primary transition-colors cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Reading list</span>
@@ -193,12 +193,12 @@ What questions do you have about this passage?`,
           >
             Level: {currentMission.cefrLevel}
           </span>
-          <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
-            <Clock className="h-3.5 w-3.5 text-[#0047bb]" />
+          <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
+            <Clock className="h-3.5 w-3.5 text-primary" />
             <span>Elapsed: {ReadingHelpers.formatTime(timeSpentSeconds)}</span>
           </span>
           {timeSpentSeconds > 0 && (
-            <span className="text-xs font-mono text-[#0047bb] bg-[#0047bb]/5 px-3 py-1 rounded-[4px] border border-[#0047bb]/25 font-bold">
+            <span className="text-xs font-mono text-primary bg-primary/5 px-3 py-1 rounded-[4px] border border-primary/25 font-bold">
               WPM:{' '}
               {Math.round(
                 (currentMission.passageText.split(/\s+/).length /
@@ -230,7 +230,7 @@ What questions do you have about this passage?`,
           </Button>
           <Link
             to="/curriculum"
-            className="hidden text-xs font-bold text-[#0047bb] sm:inline-flex"
+            className="hidden text-xs font-bold text-primary sm:inline-flex"
           >
             Hub
           </Link>
@@ -246,7 +246,7 @@ What questions do you have about this passage?`,
               subtitle="Active Document Reading - Click underlined technical terms to expand system glossary"
               icon={BookOpen}
               headerActions={
-                <span className="rounded-[4px] border border-border-soft bg-[#f3f3fd] px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                <span className="rounded-[4px] border border-border-soft bg-surface-hover px-2.5 py-1 font-mono text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                   {currentMission.discipline}
                 </span>
               }
@@ -259,9 +259,9 @@ What questions do you have about this passage?`,
               </div>
             </SectionCard>
 
-            <div className="space-y-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 shadow-sm">
+            <div className="space-y-3 rounded-[4px] border border-border-soft bg-surface-hover p-5 shadow-sm">
               <h5 className="text-xs font-bold uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
-                <Info className="h-4 w-4 text-[#0047bb]" />
+                <Info className="h-4 w-4 text-primary" />
                 <span>
                   Domain Term Notes ({clickedVocab.length}/
                   {currentMission.vocabulary.length} explored)
@@ -269,8 +269,8 @@ What questions do you have about this passage?`,
               </h5>
 
               {selectedWord ? (
-                <div className="p-4 bg-[#0047bb]/5 border border-[#0047bb]/25 rounded-[4px] animate-in slide-in-from-top-2 duration-300 shadow-sm">
-                  <h6 className="font-mono text-sm text-[#0047bb] font-bold">
+                <div className="p-4 bg-primary/5 border border-primary/25 rounded-[4px] animate-in slide-in-from-top-2 duration-300 shadow-sm">
+                  <h6 className="font-mono text-sm text-primary font-bold">
                     {selectedWord.term}
                   </h6>
                   <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
@@ -310,7 +310,7 @@ What questions do you have about this passage?`,
                     className={cn(
                       'flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs leading-relaxed',
                       msg.role === 'assistant'
-                        ? 'bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto'
+                        ? 'bg-primary/5 text-foreground border border-primary/10 mr-auto'
                         : 'bg-foreground text-background ml-auto'
                     )}
                   >
@@ -321,7 +321,7 @@ What questions do you have about this passage?`,
                   </div>
                 ))}
                 {isTalking && (
-                  <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-[#0047bb]/5 text-foreground border border-[#0047bb]/10 mr-auto animate-pulse">
+                  <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
                     <p className="font-bold text-[9px] uppercase opacity-60 mb-0.5">
                       AI Mentor 🎓
                     </p>
@@ -339,7 +339,7 @@ What questions do you have about this passage?`,
                   }}
                   disabled={isTalking}
                   placeholder="Ask a question about the text..."
-                  className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-[#0047bb]"
+                  className="flex-1 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:border-primary"
                 />
                 <Button
                   onClick={handleSendChat}
@@ -363,7 +363,7 @@ What questions do you have about this passage?`,
                 {currentMission.questions.map((q, idx) => (
                   <div
                     key={q.id}
-                    className="space-y-3 rounded-[4px] border border-border-soft bg-[#f3f3fd] p-4 shadow-sm"
+                    className="space-y-3 rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm"
                   >
                     <div className="flex gap-2.5">
                       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] border border-border-soft bg-surface font-mono text-xs font-bold text-muted-copy">
@@ -389,8 +389,8 @@ What questions do you have about this passage?`,
                               onClick={() => setAnswer(q.id, choiceLetter)}
                               className={`w-full text-left p-3 rounded-[4px] border transition-all text-xs font-bold flex items-center justify-between cursor-pointer ${
                                 isSelected
-                                  ? 'border-[#0047bb] bg-[#0047bb] text-white'
-                                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/30 hover:bg-[#0047bb]/5 hover:text-foreground'
+                                  ? 'border-primary bg-primary text-white'
+                                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:bg-primary/5 hover:text-foreground'
                               }`}
                             >
                               <span>{choice}</span>
@@ -417,7 +417,7 @@ What questions do you have about this passage?`,
                                   ? option === 'true'
                                     ? 'border-success bg-success/10 text-success font-bold'
                                     : 'border-rose-500 bg-rose-500/10 text-rose-700 font-bold'
-                                  : 'border-border-soft bg-surface text-muted-copy hover:border-[#0047bb]/20 hover:bg-[#0047bb]/5 hover:text-foreground'
+                                  : 'border-border-soft bg-surface text-muted-copy hover:border-primary/20 hover:bg-primary/5 hover:text-foreground'
                               }`}
                             >
                               {option}
@@ -441,7 +441,7 @@ What questions do you have about this passage?`,
                                 ? 'Enter precise number or code standard...'
                                 : 'Draft technical explanation...'
                             }
-                            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-[#0047bb] focus:outline-none focus:ring-2 focus:ring-[#0047bb]/10 font-bold"
+                            className="w-full rounded-[4px] border border-border-soft bg-surface p-3 text-xs text-foreground placeholder-muted-copy focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/10 font-bold"
                           />
                         </label>
                         {q.type === 'short_answer' && (
@@ -466,14 +466,14 @@ What questions do you have about this passage?`,
                   <Button
                     variant="outline"
                     onClick={resetCurrentMission}
-                    className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-[#0047bb] hover:bg-[#0047bb]/5 cursor-pointer"
+                    className="h-10 rounded-[4px] border-border-soft text-xs text-muted-copy hover:text-primary hover:bg-primary/5 cursor-pointer"
                   >
                     Reset Form
                   </Button>
 
                   <Button
                     onClick={handleSubmit}
-                    className="bg-[#0047bb] hover:bg-[#0047bb]/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-[#0047bb]"
+                    className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-primary"
                   >
                     Submit Answers
                   </Button>
@@ -485,7 +485,7 @@ What questions do you have about this passage?`,
       ) : (
         <>
           <div className="text-center py-4">
-            <p className="text-4xl font-bold text-[#0047bb]">
+            <p className="text-4xl font-bold text-primary">
               {evaluationResult.finalScore}%
             </p>
             <p className="text-sm text-muted-copy font-bold uppercase tracking-wider">

@@ -59,12 +59,12 @@ export const LearningPreferencesSection = ({
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4 relative z-10">
           <div className="flex justify-between items-center border-b border-border-soft pb-2">
             <div className="flex items-center gap-1.5">
-              <Settings className="h-4 w-4 text-[#0047bb]" />
+              <Settings className="h-4 w-4 text-primary" />
               <legend className="text-[10px] font-bold uppercase tracking-wider text-foreground">
                 Learning Goals Configuration
               </legend>
             </div>
-            <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[8px] font-mono font-bold text-[#0047bb] uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[8px] font-mono font-bold text-primary uppercase tracking-wider">
               GOALS-SET: {prefGoals.length}
             </span>
           </div>
@@ -82,8 +82,8 @@ export const LearningPreferencesSection = ({
                   key={goal.id}
                   className={`flex cursor-pointer items-center gap-2 rounded-[4px] border px-3 py-2 text-xs font-bold uppercase tracking-wider transition-all shadow-sm ${
                     isChecked
-                      ? 'border-[#0047bb]/40 bg-[#0047bb]/10 text-foreground'
-                      : 'border-border-soft bg-surface-hover text-muted-copy hover:border-[#0047bb]/30'
+                      ? 'border-primary/40 bg-primary/10 text-foreground'
+                      : 'border-border-soft bg-surface-hover text-muted-copy hover:border-primary/30'
                   }`}
                 >
                   <input
@@ -108,7 +108,7 @@ export const LearningPreferencesSection = ({
         {/* Section: Daily Targets */}
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4 relative z-10">
           <div className="flex items-center gap-1.5 border-b border-border-soft pb-2">
-            <Target className="h-4 w-4 text-[#0047bb]" />
+            <Target className="h-4 w-4 text-primary" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">
               Daily Target Parameters
             </span>
@@ -120,7 +120,7 @@ export const LearningPreferencesSection = ({
               <select
                 value={prefMinutes}
                 onChange={(event) => setPrefMinutes(Number(event.target.value))}
-                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-[#0047bb] focus:ring-0 transition-colors cursor-pointer shadow-sm"
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-0 transition-colors cursor-pointer shadow-sm"
               >
                 {DAILY_DURATION_OPTIONS.map((val) => (
                   <option key={val} value={val}>
@@ -135,7 +135,7 @@ export const LearningPreferencesSection = ({
               <select
                 value={prefTasks}
                 onChange={(event) => setPrefTasks(Number(event.target.value))}
-                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-[#0047bb] focus:ring-0 transition-colors cursor-pointer shadow-sm"
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-0 transition-colors cursor-pointer shadow-sm"
               >
                 {DAILY_TASK_COUNT_OPTIONS.map((val) => (
                   <option key={val} value={val}>
@@ -153,7 +153,7 @@ export const LearningPreferencesSection = ({
 
           <summary className="flex cursor-pointer items-center justify-between font-bold text-xs uppercase tracking-wider text-foreground list-none select-none relative z-10">
             <span className="flex items-center gap-1.5">
-              <Shield className="h-4 w-4 text-[#0047bb]" />
+              <Shield className="h-4 w-4 text-primary" />
               Advanced learning preferences
             </span>
             <ChevronDown className="h-4 w-4 text-muted-copy transition-transform group-open:rotate-180" />
@@ -167,7 +167,7 @@ export const LearningPreferencesSection = ({
                 onChange={(event) =>
                   setPrefMissedDays(Number(event.target.value))
                 }
-                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-[#0047bb] focus:ring-0 transition-colors cursor-pointer shadow-sm"
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-0 transition-colors cursor-pointer shadow-sm"
               >
                 {[0, 1, 2, 3].map((val) => (
                   <option key={val} value={val}>
@@ -182,7 +182,7 @@ export const LearningPreferencesSection = ({
               <select
                 value={prefExpLevel}
                 onChange={(event) => setPrefExpLevel(event.target.value)}
-                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-[#0047bb] focus:ring-0 transition-colors cursor-pointer shadow-sm"
+                className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-0 transition-colors cursor-pointer shadow-sm"
               >
                 <option value="">Select level</option>
                 {EXPERIENCE_LEVELS.map((el) => (
@@ -205,12 +205,12 @@ export const LearningPreferencesSection = ({
                 value={prefCareerGoal}
                 onChange={(event) => setPrefCareerGoal(event.target.value)}
                 placeholder="e.g. Lead site meetings with confidence"
-                className="w-full rounded-[4px] border border-border-soft bg-surface-hover px-3 py-2 text-xs text-foreground outline-none focus:border-[#0047bb] focus:ring-1 focus:ring-[#0047bb]/15 transition-colors font-bold shadow-sm"
+                className="w-full rounded-[4px] border border-border-soft bg-surface-hover px-3 py-2 text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/15 transition-colors font-bold shadow-sm"
               />
             </div>
 
             {/* Technical Rectangular Switch/Toggle */}
-            <div className="flex items-center justify-between p-3.5 rounded-[4px] bg-[#f3f3fd] border border-border-soft/60 shadow-sm mt-2">
+            <div className="flex items-center justify-between p-3.5 rounded-[4px] bg-surface-hover border border-border-soft/60 shadow-sm mt-2">
               <div>
                 <span className="text-[10px] font-bold text-foreground uppercase tracking-wider block">
                   Automatic Local Persistence State
@@ -222,7 +222,7 @@ export const LearningPreferencesSection = ({
               </div>
               <button
                 type="button"
-                className="w-12 h-6 rounded-[4px] border transition-colors flex items-center p-0.5 cursor-pointer bg-[#0047bb] border-[#0047bb] justify-end"
+                className="w-12 h-6 rounded-[4px] border transition-colors flex items-center p-0.5 cursor-pointer bg-primary border-primary justify-end"
               >
                 <span className="w-5 h-5 rounded-[4px] bg-surface border border-border-soft/30 shadow-sm" />
               </button>
@@ -239,7 +239,7 @@ export const LearningPreferencesSection = ({
           )}
           <Button
             type="submit"
-            className="text-xs min-h-9 bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+            className="text-xs min-h-9 bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
           >
             <Save className="h-3.5 w-3.5 mr-1" /> Save Preferences
           </Button>

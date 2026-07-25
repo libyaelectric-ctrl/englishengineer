@@ -23,7 +23,7 @@ export const WorkspaceHeader = ({
   <div className="flex flex-col gap-4 rounded-[4px] border border-border-soft bg-surface p-4 md:flex-row md:items-center md:justify-between shadow-sm">
     <button
       onClick={onBack}
-      className="flex items-center gap-2 text-xs font-bold text-muted-copy hover:text-[#0047bb] transition-colors cursor-pointer"
+      className="flex items-center gap-2 text-xs font-bold text-muted-copy hover:text-primary transition-colors cursor-pointer"
     >
       <ArrowLeft className="h-4 w-4" />
       <span>Back to Writing list</span>
@@ -35,8 +35,8 @@ export const WorkspaceHeader = ({
       >
         Level: {cefrLevel}
       </span>
-      <span className="text-xs font-mono text-muted-copy bg-[#f3f3fd] px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
-        <Clock className="h-3.5 w-3.5 text-[#0047bb]" />
+      <span className="text-xs font-mono text-muted-copy bg-surface-hover px-3 py-1 rounded-[4px] border border-border-soft flex items-center gap-1.5 font-bold">
+        <Clock className="h-3.5 w-3.5 text-primary" />
         <span>Elapsed: {WritingHelpers.formatTime(timeSpentSeconds)}</span>
       </span>
     </div>
@@ -63,7 +63,7 @@ export const WorkspaceHeader = ({
       </Button>
       <Link
         to="/curriculum"
-        className="hidden text-xs font-bold text-[#0047bb] sm:inline-flex"
+        className="hidden text-xs font-bold text-primary sm:inline-flex"
       >
         Hub
       </Link>

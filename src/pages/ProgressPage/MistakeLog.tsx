@@ -45,7 +45,7 @@ export const MistakeLog = ({
       hoverEffect={false}
     >
       <div className="flex items-center gap-3">
-        <ClipboardList className="h-5 w-5 text-[#0047bb]" />
+        <ClipboardList className="h-5 w-5 text-primary" />
         <div>
           <h2 className="text-xl font-bold text-foreground">
             Mistake Log / Hata Defteri
@@ -70,7 +70,7 @@ export const MistakeLog = ({
             ))}
           </select>
         </label>
-        <p className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 p-3 text-xs leading-5 text-foreground font-medium shadow-sm">
+        <p className="rounded-[4px] border border-primary/25 bg-primary/5 p-3 text-xs leading-5 text-foreground font-medium shadow-sm">
           Suggestion: {MISTAKE_SUGGESTIONS[category]}
         </p>
         <label className="block">
@@ -94,7 +94,7 @@ export const MistakeLog = ({
         <Button
           type="submit"
           disabled={!originalText.trim() || !correction.trim()}
-          className="bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer shadow-sm flex items-center gap-1.5"
+          className="bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer shadow-sm flex items-center gap-1.5"
         >
           <Plus className="h-4 w-4" /> Add mistake
         </Button>

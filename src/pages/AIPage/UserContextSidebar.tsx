@@ -110,7 +110,7 @@ export const UserContextSidebar = ({
             ))}
             <Button
               onClick={() => navigate('/dashboard')}
-              className="w-full h-8 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center"
+              className="w-full h-8 rounded-[4px] bg-primary hover:bg-primary/95 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer inline-flex items-center justify-center"
             >
               Open Dashboard
             </Button>
@@ -140,7 +140,7 @@ export const UserContextSidebar = ({
               <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">
                 {session.input}
               </p>
-              <p className="text-[9px] font-mono font-bold text-[#0047bb] mt-1 uppercase tracking-wider">
+              <p className="text-[9px] font-mono font-bold text-primary mt-1 uppercase tracking-wider">
                 {session.result.focusArea}
               </p>
             </div>
@@ -152,7 +152,7 @@ export const UserContextSidebar = ({
       </SectionCard>
 
       <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
-        <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-[#0047bb]">
+        <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
           Integration Notice
         </p>
         <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">

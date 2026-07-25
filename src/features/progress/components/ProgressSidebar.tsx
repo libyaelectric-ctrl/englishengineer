@@ -3,9 +3,9 @@ import { Filter, BarChart3 } from 'lucide-react';
 export function ProgressSidebar() {
   return (
     <aside className="w-64 space-y-4 p-4">
-      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
-          <Filter className="h-3 w-3 text-[#0047bb]" />
+          <Filter className="h-3 w-3 text-primary" />
           <span className="text-[10px] font-bold uppercase text-foreground">
             Filter
           </span>
@@ -21,9 +21,9 @@ export function ProgressSidebar() {
           ))}
         </div>
       </div>
-      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-3">
+      <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
         <div className="flex items-center gap-2 mb-2">
-          <BarChart3 className="h-3 w-3 text-[#0047bb]" />
+          <BarChart3 className="h-3 w-3 text-primary" />
           <span className="text-[10px] font-bold uppercase text-foreground">
             Summary
           </span>

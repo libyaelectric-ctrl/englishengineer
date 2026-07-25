@@ -21,7 +21,7 @@ export const ProviderStatusPanel = ({
   isBuyingCredits,
   onBuyCredits,
 }: ProviderStatusPanelProps) => (
-  <div className="flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-[#0047bb]/25 bg-surface/80 shadow-sm font-sans">
+  <div className="flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-primary/25 bg-surface/80 shadow-sm font-sans">
     <div className="space-y-0.5">
       <div className="flex items-center gap-2">
         <p className="text-xs font-bold text-foreground">

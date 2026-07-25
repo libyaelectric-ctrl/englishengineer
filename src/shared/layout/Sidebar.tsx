@@ -126,7 +126,7 @@ export const Sidebar: React.FC = () => {
                     toggleSidebar();
                   navigate('/billing');
                 }}
-                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-[#0047bb] hover:bg-[#0047bb]/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
+                className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
               >
                 <Wallet className="h-5 w-5 shrink-0 text-muted-copy" />
                 <span className="flex-1 truncate">Billing & Plan</span>

@@ -111,7 +111,7 @@ export const ProgressNextStepsTab = () => {
             </p>
             <Button
               onClick={() => navigate('/profile')}
-              className="mt-4 h-10 bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider text-[10px] rounded-[4px] px-4 cursor-pointer shadow-sm"
+              className="mt-4 h-10 bg-primary hover:bg-primary/90 border border-primary text-white font-bold uppercase tracking-wider text-[10px] rounded-[4px] px-4 cursor-pointer shadow-sm"
             >
               Upgrade to Pro
             </Button>

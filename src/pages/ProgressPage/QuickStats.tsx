@@ -34,7 +34,7 @@ export const QuickStats = ({
       icon: Target,
       label: 'Avg Elo',
       value: totalElo,
-      color: 'text-[#0047bb]',
+      color: 'text-primary',
     },
     {
       icon: TrendingUp,
@@ -53,7 +53,7 @@ export const QuickStats = ({
       icon: Layers,
       label: 'Knowledge Pool',
       value: knowledgePoolSize,
-      color: 'text-[#0047bb]',
+      color: 'text-primary',
     },
     ...(grammarMastered !== undefined
       ? [

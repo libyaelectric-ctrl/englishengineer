@@ -36,8 +36,8 @@ export const MissionSelector = ({
             onClick={() => onMissionSelect(mission.id)}
             className={`w-full text-left p-4 rounded-[4px] border transition-all cursor-pointer shadow-sm flex flex-col justify-between gap-3 min-h-[110px] ${
               isSelected
-                ? 'border-[#0047bb] bg-[#0047bb]/5'
-                : 'border-border-soft bg-surface hover:border-[#0047bb]/40 hover:bg-surface-hover'
+                ? 'border-primary bg-primary/5'
+                : 'border-border-soft bg-surface hover:border-primary/40 hover:bg-surface-hover'
             }`}
           >
             <div className="flex items-start justify-between gap-2 w-full">
@@ -52,7 +52,7 @@ export const MissionSelector = ({
               <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[9px] font-bold text-warning border border-warning/10 uppercase tracking-wider">
                 {mission.difficulty}
               </span>
-              <span className="rounded-[4px] bg-[#0047bb]/10 px-1.5 py-0.5 text-[9px] font-bold text-[#0047bb] border border-[#0047bb]/10">
+              <span className="rounded-[4px] bg-primary/10 px-1.5 py-0.5 text-[9px] font-bold text-primary border border-primary/10">
                 {mission.estimatedMinutes}M
               </span>
               <LevelAccessBadge

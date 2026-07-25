@@ -129,7 +129,7 @@ export const DefenseSimulator: React.FC = () => {
               }}
               className={`flex flex-col items-start p-4 rounded-xl border text-left transition-all cursor-pointer ${
                 isActive
-                  ? 'border-[#0047bb] bg-[#0047bb]/5 shadow-md ring-1 ring-[#0047bb]'
+                  ? 'border-primary bg-primary/5 shadow-md ring-1 ring-[#0047bb]'
                   : 'border-border-soft bg-surface hover:bg-surface-hover hover:border-border-hover'
               }`}
             >
@@ -137,13 +137,13 @@ export const DefenseSimulator: React.FC = () => {
                 <span
                   className={`p-2 rounded-lg ${
                     isActive
-                      ? 'bg-[#0047bb] text-white'
+                      ? 'bg-primary text-white'
                       : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
                 </span>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
                   {s.badge}
                 </span>
               </div>
@@ -161,9 +161,9 @@ export const DefenseSimulator: React.FC = () => {
       {/* AI Interviewer Roleplay Stage */}
       <div className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm space-y-6">
         {/* AI Question Banner */}
-        <div className="rounded-xl border border-[#0047bb]/30 bg-[#0047bb]/5 p-4 space-y-2">
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0047bb]">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary">
               AI Roleplay Prompt ({scenario.badge})
             </span>
             <span className="flex items-center gap-1 text-[11px] font-bold text-emerald-500">

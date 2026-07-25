@@ -38,7 +38,7 @@ const WorkspaceListItem = ({
       aria-selected={isActive}
       onClick={() => onSwitch(ws)}
       className={`flex w-full items-center justify-between gap-2 px-3 py-2 text-xs transition-colors hover:bg-surface-hover cursor-pointer ${
-        isActive ? 'bg-[#0047bb]/5 font-bold text-[#0047bb]' : 'text-foreground'
+        isActive ? 'bg-primary/5 font-bold text-primary' : 'text-foreground'
       }`}
     >
       <span className="flex items-center gap-2 min-w-0">
@@ -87,7 +87,7 @@ const CreateWorkspaceForm = ({
         if (e.key === 'Escape') onCancel();
       }}
       aria-label="New workspace name"
-      className="w-full rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-[#0047bb] shadow-sm font-semibold"
+      className="w-full rounded-[4px] border border-border-soft bg-surface px-2 py-1.5 text-xs text-foreground placeholder:text-muted-copy focus:outline-none focus:border-primary shadow-sm font-semibold"
     />
     {createError && (
       <p className="text-[10px] text-error font-bold uppercase tracking-wider leading-4">
@@ -98,7 +98,7 @@ const CreateWorkspaceForm = ({
       <button
         type="button"
         onClick={onCreate}
-        className="flex-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white cursor-pointer shadow-sm"
       >
         Create
       </button>
@@ -125,7 +125,7 @@ const CreateWorkspaceButton = ({
   <button
     type="button"
     onClick={onClick}
-    className="flex w-full items-center gap-1.5 rounded-[4px] px-2 py-1.5 text-xs text-[#0047bb] hover:bg-[#0047bb]/5 transition-colors font-bold uppercase tracking-wider cursor-pointer border border-border-soft bg-surface shadow-sm"
+    className="flex w-full items-center gap-1.5 rounded-[4px] px-2 py-1.5 text-xs text-primary hover:bg-primary/5 transition-colors font-bold uppercase tracking-wider cursor-pointer border border-border-soft bg-surface shadow-sm"
   >
     <Plus className="h-3 w-3" aria-hidden="true" />
     New Workspace
@@ -204,7 +204,7 @@ const WorkspaceDropdown = ({
       className="absolute left-0 top-full z-50 mt-1.5 w-64 rounded-[4px] border border-border-soft bg-surface shadow-xl shadow-black/10 overflow-hidden"
     >
       <div className="border-b border-border-soft px-3 py-2 flex items-center justify-between">
-        <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-wider">
+        <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
           Project Workspaces
         </p>
         <button
@@ -323,7 +323,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
         className="flex items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover cursor-pointer transition-colors shadow-sm"
       >
         <FolderOpen
-          className="h-3.5 w-3.5 text-[#0047bb] shrink-0"
+          className="h-3.5 w-3.5 text-primary shrink-0"
           aria-hidden="true"
         />
         <span className="max-w-[140px] truncate">

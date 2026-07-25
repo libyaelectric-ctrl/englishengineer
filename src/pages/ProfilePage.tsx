@@ -30,7 +30,7 @@ const ProfileHeader = ({
         </p>
       </div>
       <div className="flex items-center gap-2">
-        <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#0047bb]">
+        <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
           {subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial'}
         </span>
         <span className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">

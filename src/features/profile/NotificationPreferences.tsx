@@ -28,7 +28,7 @@ const Toggle = ({ label, description, checked, onChange }: ToggleProps) => {
         onClick={() => onChange(!checked)}
         className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-[4px] border transition-colors cursor-pointer ${
           checked
-            ? 'bg-[#0047bb] border-[#0047bb]'
+            ? 'bg-primary border-primary'
             : 'bg-surface-hover border-border-soft'
         }`}
       >
@@ -55,7 +55,7 @@ export const NotificationPreferences = () => {
   return (
     <div className="space-y-4 font-sans">
       <div className="flex items-center gap-2">
-        <Bell className="h-4 w-4 text-[#0047bb]" />
+        <Bell className="h-4 w-4 text-primary" />
         <h3 className="text-[10px] font-bold text-foreground uppercase tracking-wider">
           Notification Preferences
         </h3>

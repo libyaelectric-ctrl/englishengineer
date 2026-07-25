@@ -51,10 +51,10 @@ export const SecuritySection = ({
         {/* Cloud Sync section */}
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
           <div className="flex justify-between items-center border-b border-border-soft pb-2 mb-4">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#0047bb] flex items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-primary flex items-center gap-1.5">
               <Shield className="h-4 w-4" /> Cloud Synced Records
             </span>
-            <span className="rounded-[4px] border border-[#0047bb]/25 bg-[#0047bb]/5 px-2 py-0.5 text-[8px] font-mono font-bold text-[#0047bb] uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[8px] font-mono font-bold text-primary uppercase tracking-wider">
               {providerMode === 'supabase'
                 ? 'CLOUD-ACTIVE'
                 : 'LOCAL-PERSISTENCE'}
@@ -66,7 +66,7 @@ export const SecuritySection = ({
         {/* Change Password Configuration Card */}
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
           <div className="flex items-center gap-1.5 border-b border-border-soft pb-2">
-            <Key className="h-4 w-4 text-[#0047bb]" />
+            <Key className="h-4 w-4 text-primary" />
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">
               Credential Management
             </span>
@@ -142,10 +142,10 @@ export const SecuritySection = ({
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
           <div className="flex justify-between items-center border-b border-border-soft pb-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-              <History className="h-4 w-4 text-[#0047bb]" /> Session Access
+              <History className="h-4 w-4 text-primary" /> Session Access
               History
             </span>
-            <span className="rounded-[4px] bg-[#f3f3fd] border border-border-soft/60 px-2 py-0.5 text-[8px] font-mono font-bold text-muted-copy uppercase tracking-wider">
+            <span className="rounded-[4px] bg-surface-hover border border-border-soft/60 px-2 py-0.5 text-[8px] font-mono font-bold text-muted-copy uppercase tracking-wider">
               TOTAL: 1 ACTIVE
             </span>
           </div>

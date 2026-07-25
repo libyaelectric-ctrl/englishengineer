@@ -50,7 +50,7 @@ const VoiceWorkspace = ({
   recordedAudio: string | null;
   waveformBars: number[];
 }) => (
-  <div className="rounded-[4px] border border-border-soft bg-[#f3f3fd] p-5 flex flex-col items-center justify-center min-h-32 relative overflow-hidden shadow-sm">
+  <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 flex flex-col items-center justify-center min-h-32 relative overflow-hidden shadow-sm">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     {isRecording ? (
       <div className="flex flex-col items-center gap-3 w-full relative z-10">
@@ -58,18 +58,18 @@ const VoiceWorkspace = ({
           {waveformBars.map((h, i) => (
             <div
               key={i}
-              className="w-1.5 rounded-[4px] bg-[#0047bb] transition-all"
+              className="w-1.5 rounded-[4px] bg-primary transition-all"
               style={{ height: `${h}px`, transition: 'height 120ms ease' }}
             />
           ))}
         </div>
-        <p className="text-[10px] font-bold text-[#0047bb] uppercase tracking-widest animate-pulse">
+        <p className="text-[10px] font-bold text-primary uppercase tracking-widest animate-pulse">
           VOCAL-SYNC: ACTIVE RECORDING STATE...
         </p>
       </div>
     ) : recordedAudio ? (
       <div className="flex flex-col items-center gap-2 relative z-10">
-        <Volume2 className="h-8 w-8 text-[#0047bb] animate-pulse" />
+        <Volume2 className="h-8 w-8 text-primary animate-pulse" />
         <p className="text-xs font-bold text-foreground">
           Audio response successfully captured
         </p>
@@ -115,7 +115,7 @@ const VoiceControls = ({
       <button
         type="button"
         onClick={onStartRecording}
-        className="flex-1 rounded-[4px] bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] px-4 py-2.5 text-xs font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm"
+        className="flex-1 rounded-[4px] bg-primary hover:bg-primary/90 border border-primary px-4 py-2.5 text-xs font-bold text-white transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm"
       >
         <Mic className="h-3.5 w-3.5" />
         Start Voice Capture
@@ -140,7 +140,7 @@ const VoiceControls = ({
           setIsPaused(false);
           pauseRef.current = false;
         }}
-        className="flex-1 rounded-[4px] bg-[#0047bb] px-4 py-2.5 text-xs font-bold text-white hover:bg-[#0047bb]/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-[#0047bb]"
+        className="flex-1 rounded-[4px] bg-primary px-4 py-2.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider h-10 shadow-sm border border-primary"
       >
         Resume Voice Capture
       </button>
@@ -158,7 +158,7 @@ const VoiceControls = ({
       <Button
         variant="secondary"
         onClick={onResetRecording}
-        className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-[#0047bb]/5 hover:text-[#0047bb] shadow-sm flex items-center gap-1.5"
+        className="rounded-[4px] cursor-pointer h-10 px-4 text-xs font-bold border-border-soft hover:bg-primary/5 hover:text-primary shadow-sm flex items-center gap-1.5"
       >
         <RotateCcw className="h-4 w-4" /> Restart
       </Button>
@@ -182,12 +182,12 @@ const PhonemeCard = ({
       </div>
       <div className="mt-3 flex items-center justify-center gap-1">
         {isAccurate ? (
-          <Check className="h-3 w-3 text-[#0047bb]" />
+          <Check className="h-3 w-3 text-primary" />
         ) : (
           <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
         )}
         <span
-          className={`text-[9px] font-bold ${isAccurate ? 'text-[#0047bb]' : 'text-amber-600'}`}
+          className={`text-[9px] font-bold ${isAccurate ? 'text-primary' : 'text-amber-600'}`}
         >
           {item.score}%
         </span>
@@ -235,8 +235,8 @@ export const VoicePracticePanel = ({
       />
 
       {recordedAudio && typedTranscript && (
-        <div className="rounded-[4px] bg-[#f3f3fd] border border-border-soft p-3.5 space-y-1 shadow-sm">
-          <p className="text-[9px] font-bold text-[#0047bb] uppercase tracking-wider">
+        <div className="rounded-[4px] bg-surface-hover border border-border-soft p-3.5 space-y-1 shadow-sm">
+          <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
             Loopback Speech Transcription
           </p>
           <p className="text-xs text-foreground italic leading-relaxed font-normal">
@@ -256,14 +256,14 @@ export const VoicePracticePanel = ({
                 Pronunciation Analysis Feedback
               </p>
             </div>
-            <span className="rounded-[4px] bg-[#0047bb]/5 text-[#0047bb] text-[10px] font-bold px-2 py-0.5 border border-[#0047bb]/15">
+            <span className="rounded-[4px] bg-primary/5 text-primary text-[10px] font-bold px-2 py-0.5 border border-primary/15">
               Score: {pronunciationScore}/100
             </span>
           </div>
 
           <div className="space-y-2">
             <div className="flex items-center gap-1.5">
-              <History className="h-3.5 w-3.5 text-[#0047bb]" />
+              <History className="h-3.5 w-3.5 text-primary" />
               <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
                 Phoneme Diagnostics:
               </p>

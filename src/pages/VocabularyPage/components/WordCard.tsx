@@ -76,7 +76,7 @@ const StatusContent = ({
           <button
             type="button"
             onClick={() => onLearn?.(term)}
-            className="mt-2 w-full rounded-[4px] bg-[#0047bb] px-3 py-2 text-xs font-bold text-white hover:bg-[#0047bb]/90 transition-colors cursor-pointer"
+            className="mt-2 w-full rounded-[4px] bg-primary px-3 py-2 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
           >
             I Know This
           </button>
@@ -164,7 +164,7 @@ const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
 const getBorderClass = (isWeak?: boolean): string =>
   isWeak
     ? 'border border-rose-400/50'
-    : 'border border-[#0047bb]/25 hover:border-[#0047bb]/50';
+    : 'border border-primary/25 hover:border-primary/50';
 
 import { playSound } from '@/shared/utils/sound';
 

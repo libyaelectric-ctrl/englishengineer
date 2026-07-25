@@ -67,7 +67,7 @@ export const ListenerView = ({
       <AudioPlayer />
 
       <div
-        className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-6"
+        className="rounded-[4px] border-2 border-primary bg-surface p-6"
         style={{ fontSize: '18px', lineHeight: '1.8', maxWidth: '720px' }}
       >
         {words.map((word, i) => (
@@ -82,14 +82,14 @@ export const ListenerView = ({
                 onWordClick(word);
               }
             }}
-            className={`cursor-pointer hover:bg-[#0047bb]/10 transition ${onWordClick ? 'border-b border-[#0047bb]/30 text-[#0047bb]' : ''}`}
+            className={`cursor-pointer hover:bg-primary/10 transition ${onWordClick ? 'border-b border-primary/30 text-primary' : ''}`}
           >
             {word}{' '}
           </span>
         ))}
       </div>
 
-      <div className="rounded-[4px] border-2 border-[#0047bb] bg-surface p-4 space-y-3">
+      <div className="rounded-[4px] border-2 border-primary bg-surface p-4 space-y-3">
         <p className="text-[10px] font-bold uppercase text-muted-copy">
           Dictation Practice
         </p>
@@ -97,7 +97,7 @@ export const ListenerView = ({
           value={dictationText}
           onChange={(e) => setDictationText(e.target.value)}
           placeholder="Type what you heard..."
-          className="w-full rounded-[4px] border border-border-soft bg-background p-3 text-sm outline-none focus:border-[#0047bb]/50"
+          className="w-full rounded-[4px] border border-border-soft bg-background p-3 text-sm outline-none focus:border-primary/50"
           rows={3}
         />
         <div className="flex gap-2">
