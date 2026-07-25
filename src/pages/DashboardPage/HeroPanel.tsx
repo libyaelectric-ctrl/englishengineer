@@ -132,7 +132,7 @@ export const HeroPanel = React.memo(
             data-testid="dashboard-summary-score"
             className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
-            <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+            <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               COMPETENCY INDEX
             </p>
             <p className="mt-1 truncate text-lg font-bold text-primary sm:text-xl">
@@ -143,7 +143,7 @@ export const HeroPanel = React.memo(
             data-testid="dashboard-summary-elo"
             className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
-            <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider mb-1">
+            <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-1">
               TARGET LEVEL
             </p>
             <span
@@ -156,7 +156,7 @@ export const HeroPanel = React.memo(
             data-testid="dashboard-summary-done"
             className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"
           >
-            <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+            <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               COMPLETION RATE
             </p>
             <p className="mt-1 truncate text-lg font-bold text-primary sm:text-xl">

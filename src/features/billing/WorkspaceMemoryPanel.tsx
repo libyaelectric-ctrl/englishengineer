@@ -235,7 +235,7 @@ const WorkspaceMemoryContent = ({
     )}
     {!hasProjectAccess && entries.length > 0 && (
       <div className="mt-3 rounded-[4px] bg-surface-hover border border-border-soft p-2.5 text-center shadow-sm">
-        <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
           Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to
           edit details.
         </p>
@@ -320,7 +320,7 @@ export const WorkspaceMemoryPanel = ({
             Workspace Memory
           </p>
           {entries.length > 0 && (
-            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-1.5 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-1.5 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
               {entries.length} active
             </span>
           )}
@@ -333,7 +333,7 @@ export const WorkspaceMemoryPanel = ({
               setAddingNew(true);
               setKeyError(null);
             }}
-            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-primary hover:bg-primary/5 border border-border-soft bg-surface cursor-pointer shadow-sm"
+            className="flex items-center gap-1 rounded-[4px] px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:bg-primary/5 border border-border-soft bg-surface cursor-pointer shadow-sm"
             aria-label="Add memory entry"
           >
             <Plus className="h-3 w-3 text-muted-copy" aria-hidden="true" /> Add

@@ -18,7 +18,7 @@ export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
               className="w-full rounded-t bg-primary/80 min-h-[6px]"
               style={{ height: `${Math.max(6, (value / maxValue) * 120)}px` }}
             />
-            <span className="text-[9px] font-mono text-muted-copy font-bold">
+            <span className="text-[10px] font-mono text-muted-copy font-bold">
               {value}m
             </span>
           </div>
@@ -98,18 +98,18 @@ export const SkillRadar = ({
         <polygon
           points={polygon}
           fill="rgba(0, 71, 187, 0.15)"
-          stroke="#0047bb"
+          stroke="var(--color-primary)"
           strokeWidth="2"
         />
         {points.map((point) => (
           <g key={point.skill.module}>
-            <circle cx={point.x} cy={point.y} r="4" fill="#0047bb" />
+            <circle cx={point.x} cy={point.y} r="4" fill="var(--color-primary)" />
             <text
               x={point.labelX}
               y={point.labelY}
               textAnchor="middle"
               fill="var(--muted-copy)"
-              className="text-[9px] font-bold font-mono"
+              className="text-[10px] font-bold font-mono"
             >
               {point.skill.module}
             </text>
@@ -149,7 +149,7 @@ export const TimelinePanel = ({
           >
             <div>
               <p className="text-xs font-bold text-foreground">{point.label}</p>
-              <p className="text-[9px] font-mono text-muted-copy">
+              <p className="text-[10px] font-mono text-muted-copy">
                 {point.date}
               </p>
             </div>
@@ -199,7 +199,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
         <path
           d={path}
           fill="none"
-          stroke="#0047bb"
+          stroke="var(--color-primary)"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -211,7 +211,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
               cy={item.y}
               r="4"
               fill="var(--foreground)"
-              stroke="#0047bb"
+              stroke="var(--color-primary)"
               strokeWidth="2"
             />
           </g>

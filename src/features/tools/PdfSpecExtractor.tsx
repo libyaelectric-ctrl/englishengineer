@@ -164,7 +164,7 @@ export const PdfSpecExtractor: React.FC = () => {
                   <h4 className="text-xs font-extrabold text-foreground">
                     {term.word}
                   </h4>
-                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+                  <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
                     {term.category}
                   </span>
                 </div>

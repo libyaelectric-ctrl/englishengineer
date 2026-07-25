@@ -43,7 +43,7 @@ export const CurriculumTodayTab = ({
 
           <div className="relative z-10 flex flex-wrap items-start justify-between gap-4 border-b border-border-soft pb-4">
             <div>
-              <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+              <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
                 {dayIndexStr} // SYSTEM BRIEFING
               </span>
               <h2 className="text-sm font-bold text-foreground mt-1.5 tracking-tight">
@@ -55,10 +55,10 @@ export const CurriculumTodayTab = ({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="rounded-[4px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
+              <span className="rounded-[4px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
                 OPS-CURRENT
               </span>
-              <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[9px] font-bold text-success uppercase tracking-wider">
+              <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
                 STATUS-ONLINE
               </span>
             </div>
@@ -71,7 +71,7 @@ export const CurriculumTodayTab = ({
                 <Flame className="h-4 w-4" />
               </span>
               <div>
-                <span className="text-[8px] font-bold uppercase tracking-wider text-muted-copy block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
                   Daily Streak
                 </span>
                 <span className="text-sm font-bold text-foreground mt-1 block">
@@ -86,7 +86,7 @@ export const CurriculumTodayTab = ({
                 <Bolt className="h-4 w-4" />
               </span>
               <div>
-                <span className="text-[8px] font-bold uppercase tracking-wider text-muted-copy block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
                   Daily Intensity
                 </span>
                 <span className="text-sm font-bold text-foreground mt-1 block">
@@ -97,7 +97,7 @@ export const CurriculumTodayTab = ({
 
             {/* Daily Progress loading bar */}
             <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex flex-col justify-between">
-              <div className="flex justify-between items-center text-[8px] font-bold uppercase tracking-wider text-muted-copy">
+              <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 <span>Mission progress</span>
                 <span>{displayProgressPercent}%</span>
               </div>
@@ -134,11 +134,11 @@ export const CurriculumTodayTab = ({
                   >
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+                        <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
                           {taskIdStr}
                         </span>
                         {isActive && (
-                          <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
+                          <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
                             ACTIVE
                           </span>
                         )}

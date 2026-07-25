@@ -53,13 +53,13 @@ export const SkillEntryBrief = ({
     return (
       <div className="rounded-[4px] border border-border-soft bg-surface-hover p-3.5 mb-2 text-left shadow-sm">
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
+          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
             {recommendation.targetCefr}
           </span>
-          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary uppercase tracking-wider">
+          <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
             Lesson {recommendation.lessonNumber}
           </span>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2 py-0.5 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
             {recommendation.estimatedMinutes}m
           </span>
         </div>
@@ -82,10 +82,10 @@ export const SkillEntryBrief = ({
             <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
               System recommendation
             </p>
-            <span className="rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+            <span className="rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
               {recommendation.targetCefr}
             </span>
-            <span className="inline-flex items-center gap-1 rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+            <span className="inline-flex items-center gap-1 rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
               <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
               {recommendation.lessonNumber}
             </span>

@@ -30,7 +30,7 @@ export function ProfileSidebar() {
                 <span className="text-[11px] font-medium text-foreground">
                   MacBook Pro - Istanbul
                 </span>
-                <span className="text-[9px] text-green-500">
+                <span className="text-[10px] text-green-500">
                   Current Session
                 </span>
               </div>

@@ -238,11 +238,11 @@ export const SidebarMascotBar: React.FC = () => {
           {/* Mascot Info & Dynamic Term */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[9px] font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded flex items-center gap-1">
+              <span className="font-mono text-[10px] font-extrabold uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded flex items-center gap-1">
                 <Sparkles className="h-2.5 w-2.5 text-primary" />{' '}
                 {currentTerm.code}
               </span>
-              <span className="text-[9px] font-bold text-muted-copy">
+              <span className="text-[10px] font-bold text-muted-copy">
                 {currentTerm.domain}
               </span>
             </div>
@@ -302,7 +302,7 @@ export const SidebarMascotBar: React.FC = () => {
                   <Sparkles className="h-4 w-4" />
                 </div>
                 <div className="min-w-0">
-                  <span className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
                     [{currentTerm.code}] // {currentTerm.domain}
                   </span>
                   <h3 className="text-sm sm:text-base font-black text-foreground truncate">
@@ -342,7 +342,7 @@ export const SidebarMascotBar: React.FC = () => {
                         key={r}
                         type="button"
                         onClick={() => setSpeechRate(r)}
-                        className={`px-1.5 py-0.5 rounded text-[9px] cursor-pointer transition-colors ${
+                        className={`px-1.5 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
                           speechRate === r
                             ? 'bg-primary text-white font-black'
                             : 'bg-surface-hover hover:bg-border-soft text-foreground'

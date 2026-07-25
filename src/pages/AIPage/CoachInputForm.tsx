@@ -141,7 +141,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onRegenerate}
       variant="outline"
-      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
       disabled={sessions.length === 0 || isLoading}
     >
       Regenerate
@@ -149,7 +149,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onClearHistory}
       variant="outline"
-      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
       disabled={sessions.length === 0}
     >
       Clear
@@ -157,7 +157,7 @@ const FormHeaderActions = ({
     <Button
       onClick={onReset}
       variant="outline"
-      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
+      className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm px-2.5"
     >
       Reset
     </Button>
@@ -183,7 +183,7 @@ const FormActions = ({
   allowed: boolean;
 }) => (
   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-    <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
       Mode: {selectedMode?.name ?? ''}
     </p>
     <Button

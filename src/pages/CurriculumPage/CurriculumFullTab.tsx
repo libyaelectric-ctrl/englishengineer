@@ -238,16 +238,16 @@ export const CurriculumFullTab = ({
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-mono text-[9px] font-bold text-muted-copy uppercase tracking-widest">
+                          <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
                             {lessonIdStr}
                           </span>
                           {isActive && (
-                            <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1.5 py-0.5 text-[8px] font-bold text-primary uppercase tracking-wider">
+                            <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1.5 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
                               ACTIVE TARGET
                             </span>
                           )}
                           {isCompleted && (
-                            <span className="rounded-[4px] bg-success/10 border border-success/25 px-1.5 py-0.5 text-[8px] font-bold text-success uppercase tracking-wider">
+                            <span className="rounded-[4px] bg-success/10 border border-success/25 px-1.5 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
                               SYNCED
                             </span>
                           )}

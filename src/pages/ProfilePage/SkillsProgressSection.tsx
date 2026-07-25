@@ -78,7 +78,7 @@ export const SkillsProgressSection = ({
                   <div className="space-y-1.5">
                     <div className="flex justify-between items-end px-1">
                       <div className="flex flex-col items-start">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70 font-bold">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-copy/70 font-bold">
                           Min
                         </span>
                         <span className="text-[10px] font-bold text-muted-copy">
@@ -91,7 +91,7 @@ export const SkillsProgressSection = ({
                         </span>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-[8px] uppercase tracking-widest text-muted-copy/70 font-bold">
+                        <span className="text-[10px] uppercase tracking-widest text-muted-copy/70 font-bold">
                           Max
                         </span>
                         <span className="text-[10px] font-bold text-muted-copy">
@@ -109,7 +109,7 @@ export const SkillsProgressSection = ({
                       <span className="text-[10px] font-bold text-primary">
                         {skillProfile.cefrBand} Level
                       </span>
-                      <span className="text-[9px] font-medium text-muted-copy">
+                      <span className="text-[10px] font-medium text-muted-copy">
                         {skillProfile.progressToNextBand}% to next level
                       </span>
                     </div>
@@ -118,10 +118,10 @@ export const SkillsProgressSection = ({
                   {/* Global Progress */}
                   <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[9px] font-medium text-muted-copy">
+                      <span className="text-[10px] font-medium text-muted-copy">
                         Global Progress (A1 - C2+)
                       </span>
-                      <span className="text-[9px] font-bold text-foreground">
+                      <span className="text-[10px] font-bold text-foreground">
                         {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
                       </span>
                     </div>
@@ -132,10 +132,10 @@ export const SkillsProgressSection = ({
                       className="h-1.5"
                     />
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[8px] text-muted-copy/70">
+                      <span className="text-[10px] text-muted-copy/70">
                         1000 ELO (A1)
                       </span>
-                      <span className="text-[8px] text-muted-copy/70">
+                      <span className="text-[10px] text-muted-copy/70">
                         5000 ELO (C2+)
                       </span>
                     </div>
@@ -159,7 +159,7 @@ export const SkillsProgressSection = ({
               key={label}
               className="rounded-[4px] border border-border-soft bg-surface p-3 shadow-sm"
             >
-              <p className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 {label}
               </p>
               <p className="mt-1 text-base font-bold text-foreground">
@@ -171,7 +171,7 @@ export const SkillsProgressSection = ({
 
         {/* Vocabulary Progress */}
         <div className="mt-6 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             Vocabulary Mastery
           </span>
           <div className="mt-2 flex items-center justify-between gap-3 text-xs font-medium">
@@ -191,7 +191,7 @@ export const SkillsProgressSection = ({
 
         {/* Unlocked Badges */}
         <div className="mt-6">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             Achievements & Badges
           </span>
           <div className="mt-2 grid gap-3 sm:grid-cols-2">
@@ -219,7 +219,7 @@ export const SkillsProgressSection = ({
 
         {/* Mistake Log Summary */}
         <div className="mt-6">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             Mistake Log Summary
           </span>
           {mistakeLog.length === 0 ? (
@@ -234,10 +234,10 @@ export const SkillsProgressSection = ({
                   className="rounded-[4px] border border-border-soft bg-surface p-3 text-xs shadow-sm"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-mono text-[9px] text-muted-copy uppercase font-bold">
+                    <span className="font-mono text-[10px] text-muted-copy uppercase font-bold">
                       {m.category}
                     </span>
-                    <span className="text-[9px] font-bold text-rose-600 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded-[4px] shadow-sm">
+                    <span className="text-[10px] font-bold text-rose-600 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded-[4px] shadow-sm">
                       {(m.repetitionCount ?? 1) >= 3
                         ? 'Critical'
                         : `${m.repetitionCount ?? 1}x`}

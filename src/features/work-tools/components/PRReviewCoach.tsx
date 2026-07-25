@@ -52,11 +52,11 @@ export const PRReviewCoach = () => {
     <div className="space-y-6">
       <Card className="p-5 space-y-4 border-l-4 border-l-primary shadow-sm hover:shadow-md transition-all duration-300">
         <div className="flex items-center justify-between border-b border-border-soft pb-2">
-          <span className="font-mono text-[9px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-primary font-bold bg-primary/5 px-2 py-0.5 rounded">
             PR-REVIEW-COACH // MENTOR
           </span>
           {result?.isAiPowered && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[9px] font-bold text-primary">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
               <Sparkles className="h-2.5 w-2.5" /> AI POWERED
             </span>
           )}
@@ -133,7 +133,7 @@ export const PRReviewCoach = () => {
       {result && (
         <Card className="p-5 space-y-4 border-l-4 border-l-success shadow-sm hover:shadow-md transition-all duration-300 animate-in fade-in slide-in-from-bottom duration-300">
           <div className="flex items-center justify-between border-b border-border-soft pb-2">
-            <span className="font-mono text-[9px] uppercase tracking-widest text-success font-bold bg-success/5 px-2 py-0.5 rounded">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-success font-bold bg-success/5 px-2 py-0.5 rounded">
               ORCHESTRATED-OUTPUT // REFACTORED
             </span>
           </div>
@@ -149,7 +149,7 @@ export const PRReviewCoach = () => {
 
           <div className="space-y-4">
             <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-primary">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
                 [ORIGINAL HARSH REVIEW]
               </p>
               <p className="mt-2 text-xs text-foreground line-through opacity-60">
@@ -162,7 +162,7 @@ export const PRReviewCoach = () => {
             </div>
 
             <div className="rounded-[4px] border border-success/25 bg-success/5 p-4 shadow-sm">
-              <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-success">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-success">
                 [ORCHESTRATED PROFESSIONAL VERSION]
               </p>
               <p className="mt-2 text-xs leading-relaxed text-foreground whitespace-pre-wrap font-semibold">
@@ -172,7 +172,7 @@ export const PRReviewCoach = () => {
 
             {result.keyChanges.length > 0 && (
               <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
-                <p className="font-mono text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                   [REFACTORING KEY ACTIONS]
                 </p>
                 <ul className="mt-2 space-y-1.5">

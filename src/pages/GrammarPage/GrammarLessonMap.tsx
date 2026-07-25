@@ -80,7 +80,7 @@ export const GrammarLessonMap = ({
                     <h3 className="text-xs font-bold uppercase tracking-wide text-foreground">
                       {group.module}
                     </h3>
-                    <span className="text-[9px] font-bold text-muted-copy bg-background px-2 py-0.5 rounded-[4px] border border-border-soft uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-muted-copy bg-background px-2 py-0.5 rounded-[4px] border border-border-soft uppercase tracking-wider">
                       {masteredInGroup}/{group.entries.length} Passed
                     </span>
                   </div>
@@ -116,7 +116,7 @@ export const GrammarLessonMap = ({
                                 ✓
                               </span>
                             ) : status === 'Needs Reading/Writing' ? (
-                              <span className="text-[9px] bg-warning/10 text-warning px-1.5 py-0.5 rounded-[4px] font-bold uppercase border border-warning/20">
+                              <span className="text-[10px] bg-warning/10 text-warning px-1.5 py-0.5 rounded-[4px] font-bold uppercase border border-warning/20">
                                 R/W
                               </span>
                             ) : (

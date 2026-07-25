@@ -524,16 +524,16 @@ export const CommandPalette: React.FC = () => {
               </div>
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">
                     &uarr;
                   </kbd>
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">
                     &darr;
                   </kbd>
                   navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[9px]">
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">
                     ↵
                   </kbd>
                   select

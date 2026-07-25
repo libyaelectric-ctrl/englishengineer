@@ -187,7 +187,7 @@ export const BillingPage = () => {
                         {inv.amount}
                       </td>
                       <td className="px-4 py-3 text-xs">
-                        <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-success">
+                        <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success">
                           {inv.status}
                         </span>
                       </td>
@@ -221,7 +221,7 @@ export const BillingPage = () => {
                 <div className="absolute right-0 top-0 -mr-6 -mt-6 h-24 w-24 rounded-[4px] bg-primary/5" />
                 <div className="flex justify-between items-start mb-8">
                   <CreditCard className="h-8 w-8 text-primary" />
-                  <span className="rounded-[4px] bg-primary/15 border border-primary/35 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+                  <span className="rounded-[4px] bg-primary/15 border border-primary/35 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
                     Primary
                   </span>
                 </div>
@@ -231,7 +231,7 @@ export const BillingPage = () => {
                   </p>
                   <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
                     <div>
-                      <span className="block text-primary/70 text-[8px]">
+                      <span className="block text-primary/70 text-[10px]">
                         Cardholder
                       </span>
                       <span className="truncate max-w-[120px] block">
@@ -239,7 +239,7 @@ export const BillingPage = () => {
                       </span>
                     </div>
                     <div>
-                      <span className="block text-primary/70 text-[8px]">
+                      <span className="block text-primary/70 text-[10px]">
                         Expires
                       </span>
                       <span>{cardExpiry}</span>

@@ -174,7 +174,7 @@ const RoleplayTab = () => {
                   <Mic className="h-3.5 w-3.5" />
                   Voice & Microphone Response
                   {!hasMaxAccess && (
-                    <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[8px] font-bold text-warning uppercase tracking-wider">
+                    <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[10px] font-bold text-warning uppercase tracking-wider">
                       Max
                     </span>
                   )}
@@ -313,7 +313,7 @@ const SpeakingPage = () => {
           <h1 className="text-base font-bold tracking-tight text-foreground">
             Speaking
           </h1>
-          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+          <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT
           </span>
           <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">

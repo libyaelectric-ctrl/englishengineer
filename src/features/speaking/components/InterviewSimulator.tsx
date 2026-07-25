@@ -153,7 +153,7 @@ const ResultsView = ({
                   key={label}
                   className="text-center bg-surface-hover p-2 rounded-[4px] border border-border-soft"
                 >
-                  <p className="text-[9px] uppercase text-muted-copy font-bold tracking-wider">
+                  <p className="text-[10px] uppercase text-muted-copy font-bold tracking-wider">
                     {label}
                   </p>
                   <p className="text-sm font-bold text-foreground mt-0.5">

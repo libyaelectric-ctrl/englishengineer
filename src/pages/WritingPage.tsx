@@ -153,7 +153,7 @@ const WritingHeader = ({
       <h1 className="text-base font-bold tracking-tight text-foreground">
         Writing
       </h1>
-      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+      <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
         {currentLevel}
       </span>
       <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">

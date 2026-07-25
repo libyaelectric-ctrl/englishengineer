@@ -69,7 +69,7 @@ export const CurriculumActionsGrid = ({
               : 'border-border-soft bg-surface'
           }`}
         >
-          <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {item.label}
           </span>
           <span className="mt-2 block line-clamp-2 text-sm font-bold text-foreground">

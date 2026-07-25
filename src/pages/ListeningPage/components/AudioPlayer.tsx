@@ -110,7 +110,7 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
             <button
               key={s}
               onClick={() => setSpeed(s)}
-              className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${speed === s ? 'bg-primary text-primary-foreground' : 'text-muted-copy hover:text-foreground'}`}
+              className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${speed === s ? 'bg-primary text-primary-foreground' : 'text-muted-copy hover:text-foreground'}`}
             >
               {s}x
             </button>

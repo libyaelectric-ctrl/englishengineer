@@ -78,7 +78,7 @@ export const CoachModeSelector = ({
 
     {promptTemplates.length > 0 && (
       <div className="pt-2 border-t border-border-soft/60 space-y-1.5">
-        <div className="flex items-center gap-1.5 text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
+        <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
           <Sparkles className="h-3 w-3 text-primary" />
           <span>Quick Prompt Templates</span>
         </div>

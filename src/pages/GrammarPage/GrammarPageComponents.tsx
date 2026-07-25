@@ -28,7 +28,7 @@ export const StatusPill = ({
   compact?: boolean;
 }) => (
   <span
-    className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold uppercase tracking-wider ${isCompact ? 'px-2 py-0.5 text-[9px]' : 'px-3 py-1 text-xs'} ${STATUS_STYLES[status]}`}
+    className={`shrink-0 whitespace-nowrap rounded-[4px] border font-bold uppercase tracking-wider ${isCompact ? 'px-2 py-0.5 text-[10px]' : 'px-3 py-1 text-xs'} ${STATUS_STYLES[status]}`}
   >
     {getStatusLabel(status, isCompact)}
   </span>
@@ -66,7 +66,7 @@ export const MasteryPill = ({
   complete: boolean;
 }) => (
   <span
-    className={`inline-flex items-center gap-1.5 rounded-[4px] border px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider ${complete ? 'border-success/30 bg-success/5 text-success' : 'border-border-soft bg-background text-muted-copy'}`}
+    className={`inline-flex items-center gap-1.5 rounded-[4px] border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${complete ? 'border-success/30 bg-success/5 text-success' : 'border-border-soft bg-background text-muted-copy'}`}
   >
     {label}
     <span className="font-bold">{value}</span>

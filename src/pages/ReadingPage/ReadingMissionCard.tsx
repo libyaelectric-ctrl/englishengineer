@@ -65,7 +65,7 @@ export function ReadingMissionCard({
         <div className="space-y-3">
           <div className="flex flex-wrap items-center gap-2">
             <span
-              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${ReadingHelpers.getCefrBadgeStyles(m.cefrLevel)}`}
+              className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] border uppercase tracking-wider ${ReadingHelpers.getCefrBadgeStyles(m.cefrLevel)}`}
             >
               {m.cefrLevel}
             </span>
@@ -76,7 +76,7 @@ export function ReadingMissionCard({
               )}
             />
             <span
-              className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${difficultyBadgeClass(difficultyColor)}`}
+              className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${difficultyBadgeClass(difficultyColor)}`}
             >
               {m.difficulty}
             </span>
@@ -108,7 +108,7 @@ export function ReadingMissionCard({
 
         <div className="flex items-center justify-between pt-4 border-t border-border-soft">
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
+            <span className="text-[10px] font-bold font-mono bg-surface-hover border border-border-soft text-muted-copy px-2 py-1 rounded-[4px] uppercase tracking-wider">
               {m.discipline}
             </span>
           </div>
@@ -120,7 +120,7 @@ export function ReadingMissionCard({
                 <span>Score: {bestScore}%</span>
               </div>
             ) : (
-              <span className="text-[9px] font-bold font-mono text-muted-copy uppercase tracking-wider">
+              <span className="text-[10px] font-bold font-mono text-muted-copy uppercase tracking-wider">
                 Available
               </span>
             )}

@@ -40,7 +40,7 @@ const VocabularyTerms = ({ terms }: { terms: string[] }) => (
     {terms.map((term) => (
       <span
         key={term}
-        className="text-[9px] font-mono bg-primary/10 text-primary border border-primary/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
+        className="text-[10px] font-mono bg-primary/10 text-primary border border-primary/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
       >
         {term}
       </span>
@@ -72,13 +72,13 @@ export const CoachResultPanel = ({
           <StatusBadge
             label={isBackend ? 'Secure AI response' : 'Mock AI demo response'}
             tone={isBackend ? 'success' : 'warning'}
-            className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+            className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
           />
           <Button
             type="button"
             variant="outline"
             onClick={onCopyResult}
-            className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-2.5 inline-flex items-center justify-center"
+            className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-2.5 inline-flex items-center justify-center"
           >
             <Clipboard className="h-3 w-3 text-muted-copy" />
             Copy
@@ -87,7 +87,7 @@ export const CoachResultPanel = ({
             type="button"
             variant="outline"
             onClick={onExportResult}
-            className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[9px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-2.5 inline-flex items-center justify-center"
+            className="h-7 rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-foreground cursor-pointer shadow-sm gap-1 px-2.5 inline-flex items-center justify-center"
           >
             <Download className="h-3 w-3 text-muted-copy" />
             Export
@@ -101,7 +101,7 @@ export const CoachResultPanel = ({
           mode={providerStatus.mode}
         />
         <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
-          <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
             Summary
           </p>
           <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
@@ -111,7 +111,7 @@ export const CoachResultPanel = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
-            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
               Professional Version
             </p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-semibold">
@@ -119,7 +119,7 @@ export const CoachResultPanel = ({
             </p>
           </div>
           <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
-            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Simplified Version
             </p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
@@ -148,7 +148,7 @@ export const CoachResultPanel = ({
         />
 
         <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
-          <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
             Native Rewrite
           </p>
           <p className="mt-1.5 text-xs leading-relaxed text-foreground font-semibold">
@@ -158,13 +158,13 @@ export const CoachResultPanel = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
-            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Technical Vocabulary
             </p>
             <VocabularyTerms terms={lastResult.technicalVocabulary} />
           </div>
           <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
-            <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-muted-copy">
+            <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
               Tone & Next Task
             </p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">

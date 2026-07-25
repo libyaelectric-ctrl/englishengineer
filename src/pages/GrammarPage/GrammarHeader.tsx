@@ -26,7 +26,7 @@ export const GrammarHeader = ({
         <h1 className="text-base font-bold tracking-tight text-foreground">
           Grammar
         </h1>
-        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+        <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
           {level}
         </span>
         <label
@@ -97,7 +97,7 @@ export const GrammarHeader = ({
               }`}
             >
               {cefrLevel}
-              <span className="ml-1 text-[8px] opacity-60">
+              <span className="ml-1 text-[10px] opacity-60">
                 {levelCounts[cefrLevel]}
               </span>
             </button>

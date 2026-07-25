@@ -32,12 +32,12 @@ export const ProviderStatusPanel = ({
             providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
           }
           tone={providerTone}
-          className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider py-0"
+          className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider py-0"
         />
         <StatusBadge
           label={AI_ACCESS_POLICY.freeAccess}
           tone="info"
-          className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider py-0 hidden sm:inline-flex"
+          className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider py-0 hidden sm:inline-flex"
         />
       </div>
       <p className="text-[11px] text-muted-copy font-medium line-clamp-1">
@@ -62,7 +62,7 @@ export const ProviderStatusPanel = ({
         type="button"
         onClick={onBuyCredits}
         disabled={isBuyingCredits}
-        className="h-7 rounded-[4px] border border-emerald-500/25 bg-emerald-500/5 hover:bg-emerald-500/10 text-[9px] font-bold uppercase tracking-wider text-emerald-600 cursor-pointer shadow-sm gap-1 transition-all px-3 inline-flex items-center justify-center"
+        className="h-7 rounded-[4px] border border-emerald-500/25 bg-emerald-500/5 hover:bg-emerald-500/10 text-[10px] font-bold uppercase tracking-wider text-emerald-600 cursor-pointer shadow-sm gap-1 transition-all px-3 inline-flex items-center justify-center"
       >
         {isBuyingCredits ? 'Processing...' : '+ Buy 50 AI Credits ($5)'}
       </Button>

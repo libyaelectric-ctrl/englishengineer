@@ -110,12 +110,12 @@ export function CsvPanel({ words, onImport }: CsvPanelProps) {
           {importResult.errors.length > 0 && (
             <div className="mt-2 space-y-1">
               {importResult.errors.slice(0, 5).map((err, i) => (
-                <p key={i} className="text-[9px] text-rose-600">
+                <p key={i} className="text-[10px] text-rose-600">
                   {err}
                 </p>
               ))}
               {importResult.errors.length > 5 && (
-                <p className="text-[9px] text-muted-copy">
+                <p className="text-[10px] text-muted-copy">
                   ...and {importResult.errors.length - 5} more errors
                 </p>
               )}
@@ -124,7 +124,7 @@ export function CsvPanel({ words, onImport }: CsvPanelProps) {
           <button
             type="button"
             onClick={() => setShowResult(false)}
-            className="mt-2 text-[9px] text-muted-copy underline cursor-pointer"
+            className="mt-2 text-[10px] text-muted-copy underline cursor-pointer"
           >
             Dismiss
           </button>

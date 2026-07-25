@@ -55,7 +55,7 @@ export const UserContextSidebar = ({
               key={label}
               className="flex items-center justify-between border-b border-border-soft/60 pb-1.5"
             >
-              <span className="text-muted-copy font-mono text-[9px] font-bold uppercase tracking-wider">
+              <span className="text-muted-copy font-mono text-[10px] font-bold uppercase tracking-wider">
                 {label}
               </span>
               <span className="text-right font-semibold text-foreground text-xs">
@@ -78,12 +78,12 @@ export const UserContextSidebar = ({
                   : 'Assessment data limited'
               }
               tone={assessmentProfile.hasEnoughData ? 'success' : 'warning'}
-              className="rounded-[4px] font-bold text-[9px] uppercase tracking-wider"
+              className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
             />
             {coachContext.weakSkills.map((skill) => (
               <span
                 key={skill}
-                className="text-[9px] font-mono bg-danger/5 text-danger border border-danger/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
+                className="text-[10px] font-mono bg-danger/5 text-danger border border-danger/25 px-2 py-0.5 rounded-[4px] font-bold uppercase tracking-wider"
               >
                 {skill}
               </span>
@@ -133,14 +133,14 @@ export const UserContextSidebar = ({
                 <p className="text-[10px] font-bold text-foreground">
                   {session.modeName}
                 </p>
-                <span className="text-[9px] font-mono text-muted-copy">
+                <span className="text-[10px] font-mono text-muted-copy">
                   {new Date(session.timestamp).toLocaleDateString()}
                 </span>
               </div>
               <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">
                 {session.input}
               </p>
-              <p className="text-[9px] font-mono font-bold text-primary mt-1 uppercase tracking-wider">
+              <p className="text-[10px] font-mono font-bold text-primary mt-1 uppercase tracking-wider">
                 {session.result.focusArea}
               </p>
             </div>
@@ -152,7 +152,7 @@ export const UserContextSidebar = ({
       </SectionCard>
 
       <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
-        <p className="text-[9px] font-mono font-bold uppercase tracking-wider text-primary">
+        <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
           Integration Notice
         </p>
         <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">

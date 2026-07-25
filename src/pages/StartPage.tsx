@@ -63,7 +63,7 @@ const StartPage = () => {
               No account required. Progress stays on this device and can be
               cleared by the browser.
             </p>
-            <span className="mt-4 rounded-full border border-warning/25 bg-warning/10 px-3 py-0.5 text-[9px] font-bold text-warning uppercase tracking-wider w-fit">
+            <span className="mt-4 rounded-full border border-warning/25 bg-warning/10 px-3 py-0.5 text-[10px] font-bold text-warning uppercase tracking-wider w-fit">
               Local demo mode
             </span>
             <Button

@@ -121,7 +121,7 @@ const LessonHeader = ({
           </span>
           {hint && (
             <span
-              className={`text-[9px] ${hint.className ?? 'text-muted-copy'}`}
+              className={`text-[10px] ${hint.className ?? 'text-muted-copy'}`}
             >
               {hint.text}
             </span>
@@ -209,7 +209,7 @@ const MasteryBar = ({
           />
         </div>
         {missing.length > 0 && (
-          <span className="rounded-[4px] border border-warning/30 bg-warning/5 px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-warning">
+          <span className="rounded-[4px] border border-warning/30 bg-warning/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-warning">
             Missing: {missing.join(', ')}
           </span>
         )}

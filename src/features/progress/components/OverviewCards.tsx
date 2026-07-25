@@ -14,7 +14,7 @@ const MODULES = [
     label: 'Vocabulary',
     icon: BookMarked,
     href: '/vocabulary',
-    color: '#0047bb',
+    color: 'var(--color-primary)',
   },
   {
     key: 'grammar',

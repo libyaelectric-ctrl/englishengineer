@@ -64,7 +64,7 @@ export const LearningPreferencesSection = ({
                 Learning Goals Configuration
               </legend>
             </div>
-            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[8px] font-mono font-bold text-primary uppercase tracking-wider">
+            <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
               GOALS-SET: {prefGoals.length}
             </span>
           </div>
@@ -215,7 +215,7 @@ export const LearningPreferencesSection = ({
                 <span className="text-[10px] font-bold text-foreground uppercase tracking-wider block">
                   Automatic Local Persistence State
                 </span>
-                <span className="text-[9px] text-muted-copy font-medium mt-0.5 block leading-relaxed">
+                <span className="text-[10px] text-muted-copy font-medium mt-0.5 block leading-relaxed">
                   Write state updates directly to local databases in continuous
                   sync mode.
                 </span>
@@ -233,7 +233,7 @@ export const LearningPreferencesSection = ({
         {/* Form Footer */}
         <div className="flex items-center justify-end gap-3 border-t border-border-soft pt-4 relative z-10">
           {preferencesSaved && (
-            <span className="rounded-[4px] border border-success/20 bg-success/5 px-2.5 py-1 text-[9px] font-bold text-success uppercase tracking-wider animate-pulse">
+            <span className="rounded-[4px] border border-success/20 bg-success/5 px-2.5 py-1 text-[10px] font-bold text-success uppercase tracking-wider animate-pulse">
               CONFIG-SYNCED
             </span>
           )}
