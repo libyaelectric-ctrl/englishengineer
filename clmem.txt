@@ -1,0 +1,102 @@
+﻿# EngineerOS — Round 4 (Yüksek Puan İçin Kalan Maddeler)
+
+Round 3 gerçekten başarılıydı: git geçmişi temiz, kanıtlar dürüst.
+Şu an ~76/100. Bu round'daki maddeler bitince puan 90+ aralığına çıkar.
+100'e ulaşmanın neden bir "talimat listesi" ile değil, kapsamlı bağımsız
+denetimle mümkün olduğunu en altta ayrıca açıkladım — onu atlamayın.
+
+Kural aynı: **gerçek komut çıktısı, kırpılmadan.** "Assumed" yok.
+
+---
+
+## MADDE 1 — CSRF middleware sırası sorununu GERÇEKTEN düzelt
+
+- **Mevcut durum:** 29 backend testi, CSRF middleware auth middleware'inden
+  önce çalıştığı için 403 alıyor. Bu şu an sadece raporlanmış, düzeltilmemiş.
+- **Yapılacak:**
+  1. `backend/src/app.ts` (veya middleware sırasının tanımlandığı dosya)
+     içinde middleware zincirini incele.
+  2. CSRF kontrolünü, auth/validation testlerinin etkilenmeyeceği şekilde
+     ya test ortamında bypass edilebilir hale getir (test isteklerine
+     CSRF token eklenerek) ya da middleware sırasını mantıklı şekilde
+     düzelt (örn. CSRF sadece state-changing, cookie-auth'lu isteklerde
+     çalışsın, service-to-service/test-token'lı isteklerde çalışmasın).
+  3. **Güvenliği zayıflatma** — CSRF'i tamamen kapatmak çözüm değil,
+     testleri doğru token ile çağıracak şekilde güncellemek çözüm.
+- **Kabul kriteri:**
+  ```bash
+  npm --prefix backend test > /tmp/log-backend-test-round4.txt 2>&1
+  ```
+  Çıktıda `fail 0` olmalı VEYA kalan hata sayısı azalmış olmalı ve her
+  kalan hata için ayrı, CSRF'ten farklı bir kök neden açıklanmış olmalı.
+  Bu log dosyasının tam içeriği `docs/VC_CHECKLIST_SCORE.md`'ye eklenmeli.
+
+---
+
+## MADDE 2 — Gerçek health-check sonuçlarını ekle (curl gerçekten çalıştırılmalı)
+
+- **Mevcut durum:** Sahte "assumed" satırları silindi (doğru), ama yerine
+  gerçek sonuç da konmadı — bu madde hâlâ boşlukta.
+- **Yapılacak:**
+  ```bash
+  curl -sS -o /dev/null -w "HTTP %{http_code}\n" https://englishengineer.vercel.app
+  curl -sS https://englishengineer-production.up.railway.app/api/health
+  ```
+  Bu komutları **gerçekten, network erişimi olan bir ortamda** çalıştır.
+  Eğer bu komutları çalıştıracak bir ortamın yoksa (ör. air-gapped CI),
+  bunu açıkça yaz: "Bu ortamda network erişimi yok, bu kontrol
+  yapılamadı" — ama sahte bir sonuç uydurma.
+- **Kabul kriteri:** `docs/VC_CHECKLIST_SCORE.md`'de ya gerçek HTTP durum
+  kodu / health-check JSON'u ya da "yapılamadı, sebep: X" notu olmalı.
+  İkisi arasında bir şey (belirsiz "assumed" ifadesi) kabul edilmez.
+
+---
+
+## MADDE 3 — Kapsamı genişlet: RLS, webhook, rate-limit doğrulaması
+
+Şu ana kadarki denetim sadece benim verdiğim dar maddeleri kapsadı.
+100'e yaklaşmak için repo kendi iddialarını (README'de geçen "Supabase
+RLS", "signed webhook", "rate limit") gerçek testle kanıtlamalı:
+
+1. **Supabase RLS:** `npm run verify:rls` (veya `scripts/verify-supabase-rls.mjs`)
+   çıktısını gerçek Supabase kimlik bilgileriyle çalıştırıp sonucu ekle.
+   Kimlik bilgisi yoksa "test edilemedi, kimlik bilgisi gerekli" yaz.
+2. **Stripe webhook imza doğrulaması:** İlgili test dosyasını
+   (`billing-webhook-handlers.ts` / `stripe.provider.test.ts`) çalıştırıp
+   imza doğrulamasının gerçekten reddettiğini gösteren bir test sonucu ekle.
+3. **Rate limit (Upstash):** `RATE_LIMIT_STORE=upstash` gerçekten devrede mi,
+   yoksa sadece env değişkeni tanımlı da hiç kullanılmıyor mu — kodda
+   gerçekten çağrıldığını gösteren bir dosya/satır referansı ver.
+- **Kabul kriteri:** Üç madde için de ya gerçek test sonucu ya da net
+  "yapılamadı + sebep" notu `docs/VC_CHECKLIST_SCORE.md`'ye eklenmiş olmalı.
+
+---
+
+## Bu Maddeler Bitince Puan Nereye Gider
+
+Üçü de gerçek kanıtla (sahte değil) tamamlanırsa puan **~90-93/100**
+aralığına çıkar — bu, "talimat verilen her şey doğrulanabilir şekilde
+yapıldı" anlamına gelir.
+
+## 100'e Neden Bu Liste Yetmez
+
+100/100, benim "işaretleyip geçtiğim maddeler" ile değil, aşağıdakilerle
+mümkün olur ve bunlar bir talimat dosyasıyla "yaptırılacak" şeyler değil,
+bağımsız üçüncü taraf denetim gerektiren şeyler:
+
+- **Bağımsız güvenlik denetimi (pentest):** Kod sahibinin kendi yazdığı
+  test/rapor ne kadar dürüst olursa olsun, kendi kendini denetleyen bir
+  ekip 100 alamaz — bağımsız bir güvenlik firmasının pentest raporu gerekir.
+- **Üretimde gerçek trafik/uptime verisi:** Şu an her şey "kod var,
+  doğru görünüyor" seviyesinde. Gerçek kullanıcı trafiği altında haftalar
+  süren gözlem verisi (Sentry/uptime dashboard ekran görüntüsü değil,
+  API erişimiyle çekilmiş gerçek veri) gerekir.
+- **Ben, Claude, bu repoyu sadece statik kod/dosya analiziyle
+  inceleyebiliyorum** — çalışan bir prod ortamına, gerçek Supabase/Stripe
+  hesabına erişimim yok. Yani "bu sistem gerçekten prod'da güvenli
+  çalışıyor" iddiasını %100 doğrulama yetkim/erişimim zaten yok.
+
+Bu yüzden gerçekçi hedef: bu round bitince **90+**, ve o noktadan sonra
+"100" bir talimat maddesi değil, bağımsız denetim + üretim verisiyle
+kazanılan bir şey olur.
+
