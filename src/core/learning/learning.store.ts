@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { storage } from '@/shared/storage';
+import { persist } from 'zustand/middleware';
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 import { logger } from '@/shared/logger';
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
@@ -49,19 +50,6 @@ const ensureArrays = (state: Partial<LearningState>): LearningState => {
     grammarPool: safe(state.grammarPool, []),
     speakingPool: safe(state.speakingPool, []),
   };
-};
-
-const getInitialState = (): LearningState => {
-  const persisted = storage.get<LearningState>(STORAGE_KEY);
-  if (persisted) {
-    persisted.missions = mergeDefaults(persisted.missions, DEFAULT_MISSIONS);
-    persisted.achievements = mergeDefaults(
-      persisted.achievements ?? [],
-      DEFAULT_ACHIEVEMENTS
-    );
-    return ensureArrays(persisted);
-  }
-  return ensureArrays({});
 };
 
 export interface LearningStoreActions {
@@ -115,265 +103,291 @@ const emitLearningCompleted = (
   });
 };
 
-export const useLearningStore = create<LearningState & LearningStoreActions>(
-  (set, get) => ({
-    ...getInitialState(),
+export const useLearningStore = create<LearningState & LearningStoreActions>()(
+  persist(
+    (set, get) => ({
+      missions: DEFAULT_MISSIONS,
+      achievements: DEFAULT_ACHIEVEMENTS,
+      xp: 0,
+      level: 1,
+      coins: 0,
+      elo: 1000,
+      streak: 0,
+      lastActivityDate: null,
+      studySessions: [],
+      scoreHistory: [],
+      xpHistory: [],
+      eloHistory: [],
+      vocabularyPool: [],
+      grammarPool: [],
+      speakingPool: [],
 
-    startMission: (missionId: string) => {
-      const updated = get().missions.map((m) =>
-        m.id === missionId ? { ...m, status: 'active' as const } : m
-      );
+      startMission: (missionId: string) => {
+        const updated = get().missions.map((m) =>
+          m.id === missionId ? { ...m, status: 'active' as const } : m
+        );
 
-      set({ missions: updated });
-      storage.set(STORAGE_KEY, { ...get() });
+        set({ missions: updated });
 
-      const active = updated.find((m) => m.id === missionId);
-      if (active) {
-        eventBus.publish({
-          id: IdService.createId('evt'),
-          type: 'learning.started',
-          timestamp: new Date().toISOString(),
-          payload: { module: active.module, topicId: active.id },
+        const active = updated.find((m) => m.id === missionId);
+        if (active) {
+          eventBus.publish({
+            id: IdService.createId('evt'),
+            type: 'learning.started',
+            timestamp: new Date().toISOString(),
+            payload: { module: active.module, topicId: active.id },
+          });
+        }
+      },
+
+      submitMissionResult: (
+        missionId: string,
+        performanceRatio: number,
+        durationMinutes: number
+      ) => {
+        const mission = get().missions.find((m) => m.id === missionId);
+        if (!mission) throw new Error(`Mission ${missionId} not found`);
+
+        const result = ScoringService.calculateScore({
+          module: mission.module,
+          difficulty: mission.difficulty,
+          performanceRatio,
+          timeSpentMinutes: durationMinutes,
         });
-      }
-    },
 
-    submitMissionResult: (
-      missionId: string,
-      performanceRatio: number,
-      durationMinutes: number
-    ) => {
-      const mission = get().missions.find((m) => m.id === missionId);
-      if (!mission) throw new Error(`Mission ${missionId} not found`);
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const currentStreak = calculateStreak(
+          get().streak,
+          get().lastActivityDate,
+          now
+        );
+        const totalXP = get().xp + result.xp;
+        const computedLevel = Math.floor(totalXP / 500) + 1;
+        const newElo = get().elo + result.eloChange;
 
-      const result = ScoringService.calculateScore({
-        module: mission.module,
-        difficulty: mission.difficulty,
-        performanceRatio,
-        timeSpentMinutes: durationMinutes,
-      });
+        const updatedMissions = get().missions.map((m) =>
+          m.id === missionId
+            ? {
+                ...m,
+                status: 'completed' as const,
+                completedAt: now.toISOString(),
+                score: result.score,
+              }
+            : m
+        );
 
-      const now = new Date();
-      const todayStr = now.toISOString().split('T')[0];
-      const currentStreak = calculateStreak(
-        get().streak,
-        get().lastActivityDate,
-        now
-      );
-      const totalXP = get().xp + result.xp;
-      const computedLevel = Math.floor(totalXP / 500) + 1;
-      const newElo = get().elo + result.eloChange;
+        const newSession: StudySession = {
+          timestamp: now.toISOString(),
+          durationMinutes,
+          score: result.score,
+          module: mission.module,
+        };
 
-      const updatedMissions = get().missions.map((m) =>
-        m.id === missionId
-          ? {
-              ...m,
-              status: 'completed' as const,
-              completedAt: now.toISOString(),
-              score: result.score,
-            }
-          : m
-      );
+        const todayDateStr = now.toLocaleDateString();
+        const updatedSessions = [...get().studySessions, newSession].slice(
+          -MAX_HISTORY_SIZE
+        );
+        const updatedScoreHistory = [
+          ...get().scoreHistory,
+          { date: todayDateStr, score: result.score, module: mission.module },
+        ].slice(-MAX_HISTORY_SIZE);
+        const updatedXpHistory = [
+          ...get().xpHistory,
+          {
+            date: todayDateStr,
+            amount: result.xp,
+            reason: `Completed ${mission.title}`,
+          },
+        ].slice(-MAX_HISTORY_SIZE);
+        const updatedEloHistory = [
+          ...get().eloHistory,
+          { date: todayDateStr, value: newElo },
+        ].slice(-MAX_HISTORY_SIZE);
 
-      const newSession: StudySession = {
-        timestamp: now.toISOString(),
-        durationMinutes,
-        score: result.score,
-        module: mission.module,
-      };
+        const tempState: LearningState = {
+          ...get(),
+          missions: updatedMissions,
+          studySessions: updatedSessions,
+          xp: totalXP,
+          streak: currentStreak,
+          coins: get().coins + result.coins,
+          elo: newElo,
+        };
 
-      const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession].slice(
-        -MAX_HISTORY_SIZE
-      );
-      const updatedScoreHistory = [
-        ...get().scoreHistory,
-        { date: todayDateStr, score: result.score, module: mission.module },
-      ].slice(-MAX_HISTORY_SIZE);
-      const updatedXpHistory = [
-        ...get().xpHistory,
-        {
-          date: todayDateStr,
-          amount: result.xp,
-          reason: `Completed ${mission.title}`,
-        },
-      ].slice(-MAX_HISTORY_SIZE);
-      const updatedEloHistory = [
-        ...get().eloHistory,
-        { date: todayDateStr, value: newElo },
-      ].slice(-MAX_HISTORY_SIZE);
+        const { updatedAchievements, newlyUnlocked } =
+          AchievementService.checkAndUnlockAchievements(tempState);
 
-      const tempState: LearningState = {
-        ...get(),
-        missions: updatedMissions,
-        studySessions: updatedSessions,
-        xp: totalXP,
-        streak: currentStreak,
-        coins: get().coins + result.coins,
-        elo: newElo,
-      };
+        set({
+          missions: updatedMissions,
+          studySessions: updatedSessions,
+          scoreHistory: updatedScoreHistory,
+          xpHistory: updatedXpHistory,
+          eloHistory: updatedEloHistory,
+          xp: totalXP,
+          level: computedLevel,
+          coins: get().coins + result.coins,
+          elo: newElo,
+          streak: currentStreak,
+          lastActivityDate: todayStr,
+          achievements: updatedAchievements,
+        });
 
-      const { updatedAchievements, newlyUnlocked } =
-        AchievementService.checkAndUnlockAchievements(tempState);
+        emitLearningCompleted(
+          mission.module,
+          mission.id,
+          result.score,
+          durationMinutes,
+          result.xp,
+          `Mission: ${mission.title}`,
+          newlyUnlocked
+        );
 
-      set({
-        missions: updatedMissions,
-        studySessions: updatedSessions,
-        scoreHistory: updatedScoreHistory,
-        xpHistory: updatedXpHistory,
-        eloHistory: updatedEloHistory,
-        xp: totalXP,
-        level: computedLevel,
-        coins: get().coins + result.coins,
-        elo: newElo,
-        streak: currentStreak,
-        lastActivityDate: todayStr,
-        achievements: updatedAchievements,
-      });
+        return result;
+      },
 
-      storage.set(STORAGE_KEY, { ...get() });
+      completeGenericPractice: (
+        module: MissionModule,
+        score: number,
+        durationMinutes: number
+      ) => {
+        const result = ScoringService.calculateScore({
+          module,
+          difficulty: 'Intermediate',
+          performanceRatio: score / 100,
+          timeSpentMinutes: durationMinutes,
+        });
 
-      emitLearningCompleted(
-        mission.module,
-        mission.id,
-        result.score,
-        durationMinutes,
-        result.xp,
-        `Mission: ${mission.title}`,
-        newlyUnlocked
-      );
+        const now = new Date();
+        const todayStr = now.toISOString().split('T')[0];
+        const currentStreak = calculateStreak(
+          get().streak,
+          get().lastActivityDate,
+          now
+        );
+        const totalXP = get().xp + result.xp;
+        const computedLevel = Math.floor(totalXP / 500) + 1;
 
-      return result;
-    },
+        const skillName =
+          module.toLowerCase() as import('@/features/profile/profile.types').SkillName;
+        const userId = useAuthStore.getState().currentUser?.id || 'local-user';
+        const profile = LearningProfileRepository.getProfile(userId);
+        const currentSkillElo = profile.skills[skillName]?.elo || 1000;
+        const newSkillElo = Math.max(1000, currentSkillElo + result.eloChange);
 
-    completeGenericPractice: (
-      module: MissionModule,
-      score: number,
-      durationMinutes: number
-    ) => {
-      const result = ScoringService.calculateScore({
-        module,
-        difficulty: 'Intermediate',
-        performanceRatio: score / 100,
-        timeSpentMinutes: durationMinutes,
-      });
+        LearningProfileRepository.updateSkill(userId, skillName, {
+          elo: newSkillElo,
+          accuracy: score,
+          completedTasks: (profile.skills[skillName]?.completedTasks || 0) + 1,
+          weaknessScore: 100 - score,
+          lastPracticedAt: now.toISOString(),
+        });
 
-      const now = new Date();
-      const todayStr = now.toISOString().split('T')[0];
-      const currentStreak = calculateStreak(
-        get().streak,
-        get().lastActivityDate,
-        now
-      );
-      const totalXP = get().xp + result.xp;
-      const computedLevel = Math.floor(totalXP / 500) + 1;
+        const newElo = newSkillElo;
 
-      // Update per-skill elo in profile (not global elo)
-      const skillName =
-        module.toLowerCase() as import('@/features/profile/profile.types').SkillName;
-      const userId = useAuthStore.getState().currentUser?.id || 'local-user';
-      const profile = LearningProfileRepository.getProfile(userId);
-      const currentSkillElo = profile.skills[skillName]?.elo || 1000;
-      const newSkillElo = Math.max(1000, currentSkillElo + result.eloChange);
+        const newSession: StudySession = {
+          timestamp: now.toISOString(),
+          durationMinutes,
+          score: result.score,
+          module,
+        };
 
-      LearningProfileRepository.updateSkill(userId, skillName, {
-        elo: newSkillElo,
-        accuracy: score,
-        completedTasks: (profile.skills[skillName]?.completedTasks || 0) + 1,
-        weaknessScore: 100 - score,
-        lastPracticedAt: now.toISOString(),
-      });
+        const todayDateStr = now.toLocaleDateString();
+        const updatedSessions = [...get().studySessions, newSession].slice(
+          -MAX_HISTORY_SIZE
+        );
+        const updatedScoreHistory = [
+          ...get().scoreHistory,
+          { date: todayDateStr, score: result.score, module },
+        ].slice(-MAX_HISTORY_SIZE);
+        const updatedXpHistory = [
+          ...get().xpHistory,
+          {
+            date: todayDateStr,
+            amount: result.xp,
+            reason: `Practiced ${module}`,
+          },
+        ].slice(-MAX_HISTORY_SIZE);
+        const updatedEloHistory = [
+          ...get().eloHistory,
+          { date: todayDateStr, value: newElo },
+        ].slice(-MAX_HISTORY_SIZE);
 
-      const newElo = newSkillElo; // Use per-skill elo as display value
+        const tempState: LearningState = {
+          ...get(),
+          studySessions: updatedSessions,
+          xp: totalXP,
+          streak: currentStreak,
+          coins: get().coins + result.coins,
+          elo: newElo,
+        };
 
-      const newSession: StudySession = {
-        timestamp: now.toISOString(),
-        durationMinutes,
-        score: result.score,
-        module,
-      };
+        const { updatedAchievements, newlyUnlocked } =
+          AchievementService.checkAndUnlockAchievements(tempState);
 
-      const todayDateStr = now.toLocaleDateString();
-      const updatedSessions = [...get().studySessions, newSession].slice(
-        -MAX_HISTORY_SIZE
-      );
-      const updatedScoreHistory = [
-        ...get().scoreHistory,
-        { date: todayDateStr, score: result.score, module },
-      ].slice(-MAX_HISTORY_SIZE);
-      const updatedXpHistory = [
-        ...get().xpHistory,
-        {
-          date: todayDateStr,
-          amount: result.xp,
-          reason: `Practiced ${module}`,
-        },
-      ].slice(-MAX_HISTORY_SIZE);
-      const updatedEloHistory = [
-        ...get().eloHistory,
-        { date: todayDateStr, value: newElo },
-      ].slice(-MAX_HISTORY_SIZE);
+        set({
+          studySessions: updatedSessions,
+          scoreHistory: updatedScoreHistory,
+          xpHistory: updatedXpHistory,
+          eloHistory: updatedEloHistory,
+          xp: totalXP,
+          level: computedLevel,
+          coins: get().coins + result.coins,
+          elo: newElo,
+          streak: currentStreak,
+          lastActivityDate: todayStr,
+          achievements: updatedAchievements,
+        });
 
-      const tempState: LearningState = {
-        ...get(),
-        studySessions: updatedSessions,
-        xp: totalXP,
-        streak: currentStreak,
-        coins: get().coins + result.coins,
-        elo: newElo,
-      };
+        emitLearningCompleted(
+          module,
+          `generic_${module.toLowerCase()}`,
+          result.score,
+          durationMinutes,
+          result.xp,
+          `Practice: ${module}`,
+          newlyUnlocked
+        );
 
-      const { updatedAchievements, newlyUnlocked } =
-        AchievementService.checkAndUnlockAchievements(tempState);
+        return result;
+      },
 
-      set({
-        studySessions: updatedSessions,
-        scoreHistory: updatedScoreHistory,
-        xpHistory: updatedXpHistory,
-        eloHistory: updatedEloHistory,
-        xp: totalXP,
-        level: computedLevel,
-        coins: get().coins + result.coins,
-        elo: newElo,
-        streak: currentStreak,
-        lastActivityDate: todayStr,
-        achievements: updatedAchievements,
-      });
-
-      storage.set(STORAGE_KEY, { ...get() });
-
-      emitLearningCompleted(
-        module,
-        `generic_${module.toLowerCase()}`,
-        result.score,
-        durationMinutes,
-        result.xp,
-        `Practice: ${module}`,
-        newlyUnlocked
-      );
-
-      return result;
-    },
-
-    resetAll: () => {
-      set({
-        missions: DEFAULT_MISSIONS,
-        achievements: DEFAULT_ACHIEVEMENTS,
-        xp: 0,
-        level: 1,
-        coins: 0,
-        elo: 1000,
-        streak: 0,
-        lastActivityDate: null,
-        studySessions: [],
-        scoreHistory: [],
-        xpHistory: [],
-        eloHistory: [],
-        vocabularyPool: [],
-        grammarPool: [],
-        speakingPool: [],
-      });
-      storage.set(STORAGE_KEY, { ...get() });
-    },
-  })
+      resetAll: () => {
+        set({
+          missions: DEFAULT_MISSIONS,
+          achievements: DEFAULT_ACHIEVEMENTS,
+          xp: 0,
+          level: 1,
+          coins: 0,
+          elo: 1000,
+          streak: 0,
+          lastActivityDate: null,
+          studySessions: [],
+          scoreHistory: [],
+          xpHistory: [],
+          eloHistory: [],
+          vocabularyPool: [],
+          grammarPool: [],
+          speakingPool: [],
+        });
+      },
+    }),
+    {
+      ...eosPersistConfig(STORAGE_KEY),
+      merge: (persistedState, currentState) => {
+        const persisted = persistedState as Partial<LearningState>;
+        const state = currentState as any;
+        const merged: any = {
+          ...state,
+          ...ensureArrays(persisted),
+        };
+        merged.missions = mergeDefaults(merged.missions, DEFAULT_MISSIONS);
+        merged.achievements = mergeDefaults(
+          merged.achievements ?? [],
+          DEFAULT_ACHIEVEMENTS
+        );
+        return merged;
+      },
+    }
+  )
 );

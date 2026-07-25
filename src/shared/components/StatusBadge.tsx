@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes } from 'react';
+import { memo, type FC, type HTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 type StatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
@@ -16,7 +16,7 @@ const toneClasses: Record<StatusTone, string> = {
   danger: 'border-error/20 bg-error/10 text-error',
 };
 
-export const StatusBadge: FC<StatusBadgeProps> = ({
+export const StatusBadge: FC<StatusBadgeProps> = memo(({
   label,
   tone = 'neutral',
   className,
@@ -33,4 +33,6 @@ export const StatusBadge: FC<StatusBadgeProps> = ({
     <span className="h-1.5 w-1.5 rounded-full bg-current" />
     {label}
   </span>
-);
+));
+
+StatusBadge.displayName = 'StatusBadge';

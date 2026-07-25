@@ -1,4 +1,4 @@
-import { type FC, type HTMLAttributes } from 'react';
+import { memo, type FC, type HTMLAttributes } from 'react';
 import { LucideIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
@@ -20,7 +20,7 @@ interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
     | 'danger';
 }
 
-export const MetricCard: FC<MetricCardProps> = ({
+export const MetricCard: FC<MetricCardProps> = memo(({
   label,
   value,
   icon: Icon,
@@ -84,4 +84,6 @@ export const MetricCard: FC<MetricCardProps> = ({
       </div>
     </Card>
   );
-};
+});
+
+MetricCard.displayName = 'MetricCard';
