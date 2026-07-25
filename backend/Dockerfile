@@ -16,4 +16,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["tsx", "server.js"]
+CMD ["npm", "start"]
