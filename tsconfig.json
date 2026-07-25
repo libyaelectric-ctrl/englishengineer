@@ -15,9 +15,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@shared/*": ["./src/shared/*"],
-      "@config/*": ["./src/config/*"]
+      "@/*": ["./src/*"]
     },
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,

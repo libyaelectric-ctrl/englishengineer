@@ -13,15 +13,9 @@ const VENDOR_CHUNKS: [string, string][] = [
   ['@supabase', 'vendor-supabase'],
   ['@tanstack', 'vendor-query'],
   ['motion', 'vendor-motion'],
-  ['framer', 'vendor-motion'],
   ['zustand', 'vendor-state'],
   ['lucide', 'vendor-icons'],
   ['isomorphic-dompurify', 'vendor-sanitize'],
-  ['rxjs', 'vendor-rxjs'],
-  ['zod', 'vendor-zod'],
-  ['es-toolkit', 'vendor-utils'],
-  ['date-fns', 'vendor-utils'],
-  ['@sentry', 'vendor-sentry'],
   ['clsx', 'vendor-utils'],
   ['tailwind', 'vendor-utils'],
 ];
@@ -52,8 +46,6 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@': path.resolve(projectRoot, './src'),
-        '@shared': path.resolve(projectRoot, './src/shared'),
-        '@config': path.resolve(projectRoot, './src/config'),
       },
     },
     server: {
