@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from 'react';
 
 import { MetricCard } from '@/shared/components/MetricCard';
 import { Button } from '@/shared/components/Button';
+import { LockProgressBar } from '@/shared/components/LockProgressBar';
 import {
   EmptyLevelState,
   LevelContentFilter,
@@ -20,31 +21,6 @@ import type { VocabularyItem } from '@/features/reading';
 
 const VOCAB_THRESHOLD = 200;
 const GRAMMAR_THRESHOLD = 10;
-
-const ProgressBar = ({
-  label,
-  learned,
-  threshold,
-}: {
-  label: string;
-  learned: number;
-  threshold: number;
-}) => (
-  <>
-    <div className="flex justify-between text-muted-copy">
-      <span>{label}</span>
-      <span className="font-bold text-foreground">
-        {learned}/{threshold}
-      </span>
-    </div>
-    <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-      <div
-        className="h-full bg-[#0047bb] transition-all"
-        style={{ width: `${Math.min((learned / threshold) * 100, 100)}%` }}
-      />
-    </div>
-  </>
-);
 
 const LockedReadingView = ({
   vocabLearned,
@@ -64,15 +40,15 @@ const LockedReadingView = ({
         (Progress at 75% your current level and 25% the next level.)
       </p>
       <div className="space-y-2 text-[10px]">
-        <ProgressBar
+        <LockProgressBar
           label="Vocabulary"
-          learned={vocabLearned}
-          threshold={VOCAB_THRESHOLD}
+          done={vocabLearned}
+          total={VOCAB_THRESHOLD}
         />
-        <ProgressBar
+        <LockProgressBar
           label="Grammar"
-          learned={grammarLearned}
-          threshold={GRAMMAR_THRESHOLD}
+          done={grammarLearned}
+          total={GRAMMAR_THRESHOLD}
         />
       </div>
       <div className="flex gap-2 justify-center pt-2">

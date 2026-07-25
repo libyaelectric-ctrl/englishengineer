@@ -91,12 +91,6 @@ export function LandingVideoShowcase() {
               poster="/agentic/arc.webp"
             >
               <source src="/agentic-hero.mp4" type="video/mp4" />
-              <track
-                kind="captions"
-                src="/captions/engvox-demo.vtt"
-                srcLang="en"
-                label="English"
-              />
             </video>
 
             {/* Video Controls Overlay */}
