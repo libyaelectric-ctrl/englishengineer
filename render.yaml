@@ -5,7 +5,7 @@ services:
     plan: free
     rootDir: backend
     buildCommand: npm install
-    startCommand: node server.js
+    startCommand: npx tsx server.js
     healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
@@ -31,7 +31,7 @@ services:
       - key: RATE_LIMIT_STORE
         value: upstash
       - key: UPSTASH_REDIS_REST_URL
-        value: https://maximum-raven-40360.upstash.io
+        sync: false
       - key: UPSTASH_REDIS_REST_TOKEN
         sync: false
       - key: STRIPE_SECRET_KEY
