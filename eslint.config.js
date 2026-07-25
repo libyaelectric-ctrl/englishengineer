@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import reactHooks from 'eslint-plugin-react-hooks';
 
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
@@ -30,6 +31,10 @@ export default tseslint.config(
       globals: globals.browser,
     },
 
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -38,6 +43,8 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       complexity: ['warn', { max: 10 }],
       'prefer-const': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/aria-props': 'warn',
       'jsx-a11y/aria-proptypes': 'warn',
