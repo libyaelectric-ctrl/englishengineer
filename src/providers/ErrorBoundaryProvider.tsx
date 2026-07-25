@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 
@@ -45,13 +46,13 @@ const ErrorFallback: React.FC<FallbackProps> = ({
           </p>
         )}
         <div className="flex flex-wrap justify-end gap-3 pt-2">
-          <a
-            href="/"
+          <Link
+            to="/"
             className="flex items-center gap-2 rounded-[12px] border border-border-soft bg-surface px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-surface-hover"
           >
             <Home className="h-4 w-4" />
             <span>Home</span>
-          </a>
+          </Link>
           <button
             onClick={handleReport}
             className="flex cursor-pointer items-center gap-2 rounded-[12px] border border-border-soft bg-surface px-5 py-2.5 text-sm font-bold text-foreground transition-colors hover:bg-surface-hover"

@@ -80,26 +80,28 @@ describe('Billing Checkout Flow', () => {
     };
 
     render(
-      <BillingStatusPanel
-        subscription={{
-          planId: 'free',
-          status: 'none',
-          currentPeriodEnd: null,
-          cancelAtPeriodEnd: false,
-          stripeCustomerId: null,
-          stripeSubscriptionId: null,
-          updatedAt: '',
-        }}
-        providerStatus={{
-          isConfigured: true,
-          mode: 'backend',
-          label: '',
-          detail: '',
-        }}
-        isLoading={false}
-        onUpgrade={handleUpgradeMock}
-        onOpenPortal={vi.fn()}
-      />
+      <MemoryRouter>
+        <BillingStatusPanel
+          subscription={{
+            planId: 'free',
+            status: 'none',
+            currentPeriodEnd: null,
+            cancelAtPeriodEnd: false,
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+            updatedAt: '',
+          }}
+          providerStatus={{
+            isConfigured: true,
+            mode: 'backend',
+            label: '',
+            detail: '',
+          }}
+          isLoading={false}
+          onUpgrade={handleUpgradeMock}
+          onOpenPortal={vi.fn()}
+        />
+      </MemoryRouter>
     );
 
     const profileButton = screen.getByRole('button', {

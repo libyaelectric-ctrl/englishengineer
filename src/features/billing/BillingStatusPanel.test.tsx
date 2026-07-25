@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { BillingStatusPanel } from './BillingStatusPanel';
 import type {
@@ -40,13 +41,15 @@ const renderPanel = (
   providerStatus = backendStatus
 ) =>
   render(
-    <BillingStatusPanel
-      subscription={subscription}
-      providerStatus={providerStatus}
-      isLoading={false}
-      onUpgrade={vi.fn()}
-      onOpenPortal={vi.fn()}
-    />
+    <BrowserRouter>
+      <BillingStatusPanel
+        subscription={subscription}
+        providerStatus={providerStatus}
+        isLoading={false}
+        onUpgrade={vi.fn()}
+        onOpenPortal={vi.fn()}
+      />
+    </BrowserRouter>
   );
 
 describe('BillingStatusPanel', () => {

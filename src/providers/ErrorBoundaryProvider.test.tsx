@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 
@@ -12,9 +13,11 @@ describe('ErrorBoundaryProvider', () => {
   it('shows a friendly fallback, diagnostic and safe Home link', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     render(
-      <ErrorBoundaryProvider>
-        <BrokenView />
-      </ErrorBoundaryProvider>
+      <BrowserRouter>
+        <ErrorBoundaryProvider>
+          <BrokenView />
+        </ErrorBoundaryProvider>
+      </BrowserRouter>
     );
 
     expect(screen.getByText('Application Error')).toBeInTheDocument();

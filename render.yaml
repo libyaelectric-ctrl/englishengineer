@@ -23,9 +23,9 @@ services:
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: SUPABASE_URL
-        value: https://wxabrwzitwsjtpmlvvqe.supabase.co
+        sync: false
       - key: SUPABASE_ANON_KEY
-        value: sb_publishable_00dqafXox-03M5wM_9elEg_vYnMZhKq
+        sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: RATE_LIMIT_STORE
