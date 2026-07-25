@@ -51,7 +51,6 @@
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'"
   },
   "dependencies": {
-    "@sentry/react": "^8.0.0",
     "@supabase/supabase-js": "^2.108.2",
     "@tanstack/react-query": "^5.101.2",
     "clsx": "^2.1.1",
