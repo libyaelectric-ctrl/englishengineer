@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpenCheck, Clock3, Target } from 'lucide-react';
 import { useLearningStore } from '@/core/learning';
 import { useAuthStore } from '@/features/auth';
@@ -129,12 +130,12 @@ export const SkillEntryBrief = ({
             </div>
           </details>
         </div>
-        <a
-          href="/curriculum"
+        <Link
+          to="/curriculum"
           className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-[4px] border border-border-soft bg-surface px-4 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover cursor-pointer shadow-sm"
         >
           Manual change <ArrowRight className="h-4 w-4" />
-        </a>
+        </Link>
       </div>
     </section>
   );

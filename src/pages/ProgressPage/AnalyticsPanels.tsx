@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import type { AssessmentProfile } from '@/features/assessment';
 
@@ -156,12 +157,12 @@ const PendingBaselineBanner = () => (
           communication rating.
         </p>
       </div>
-      <a
-        href="/vocabulary"
+      <Link
+        to="/vocabulary"
         className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors"
       >
         Start Diagnostic
-      </a>
+      </Link>
     </div>
   </div>
 );
@@ -340,12 +341,12 @@ const QuickWorkoutBanner = () => (
         </p>
       </div>
     </div>
-    <a
-      href="/speaking"
+    <Link
+      to="/speaking"
       className="shrink-0 rounded-lg bg-[#0047bb] px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-[#003896] transition-colors cursor-pointer"
     >
       🚀 Start 3-min Workout
-    </a>
+    </Link>
   </div>
 );
 

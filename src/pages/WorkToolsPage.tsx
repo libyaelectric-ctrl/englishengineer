@@ -407,7 +407,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
     text: string
   ) => {
     sendToQuickAI({ sourceId, sourceKind, title, text });
-    navigate('/tools?tab=quick');
+    navigate('/tools/quick');
   };
 
   const counts = {

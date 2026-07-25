@@ -33,7 +33,7 @@ const LockedView = () => (
       </p>
     </div>
     <Button
-      onClick={() => (window.location.href = '/checkout?plan=max')}
+      onClick={() => (window.location.href = '/pricing')}
       className="bg-warning hover:bg-warning/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-warning shadow-sm"
     >
       Upgrade to Max Plan

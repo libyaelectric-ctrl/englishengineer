@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Crown, ExternalLink } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
@@ -33,6 +34,7 @@ export const BillingStatusPanel = ({
   onOpenPortal,
   error,
 }: BillingStatusPanelProps) => {
+  const navigate = useNavigate();
   const presentation = getBillingStatusPresentation(
     subscription,
     providerStatus
@@ -133,7 +135,7 @@ export const BillingStatusPanel = ({
             type="button"
             onClick={() => {
               onUpgrade();
-              window.location.href = '/pricing';
+              navigate('/pricing');
             }}
             disabled={isLoading}
             className="text-xs bg-[#0047bb] hover:bg-[#0047bb]/90 border border-[#0047bb] text-white font-bold uppercase tracking-wider rounded-[4px] cursor-pointer shadow-sm flex items-center justify-center gap-1.5 min-h-9 px-4"
