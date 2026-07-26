@@ -1,4 +1,5 @@
 import { memo, type HTMLAttributes, type ReactNode } from 'react';
+import { motion } from 'motion/react';
 import { LucideIcon } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 import { Card } from './Card';
@@ -22,7 +23,12 @@ export const SectionCard = memo<SectionCardProps>(({
   ...props
 }) => {
   return (
-    <Card className={cn('flex h-full flex-col p-5', className)} {...props}>
+    <motion.div
+      whileHover={{ y: -2, boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)' }}
+      transition={{ duration: 0.2, easing: [0.25, 1, 0.5, 1] }}
+      className="h-full"
+    >
+      <Card className={cn('flex h-full flex-col p-5', className)} {...props}>
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border-soft pb-4">
         <div className="flex items-center gap-3">
           {Icon && (
@@ -49,7 +55,8 @@ export const SectionCard = memo<SectionCardProps>(({
           {footer}
         </div>
       )}
-    </Card>
+      </Card>
+    </motion.div>
   );
 });
 
