@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "tsx watch server.js",
     "start": "tsx server.js",
-    "test": "tsx --test",
+    "test": "NODE_ENV=test tsx --test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

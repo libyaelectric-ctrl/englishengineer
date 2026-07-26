@@ -49,16 +49,18 @@ const tokensMatch = (a: string, b: string): boolean => {
  * - On GET requests: sets a CSRF cookie if not present
  * - On POST/PUT/DELETE requests: validates the token from header matches cookie
  * - Exempts: Stripe webhooks (raw body), health checks, GET requests
- * - Skipped in test environment (NODE_ENV=test)
+ * - Skipped ONLY in the automated test environment (NODE_ENV=test)
  */
 export const csrfProtection = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  // CSRF is only enforced in production. In development/test, skip to allow
-  // integration tests and dev-bypass routes to work without cookie tokens.
-  if (process.env.NODE_ENV !== 'production') {
+  // CSRF is enforced in every environment except the automated test run.
+  // Development and staging are NOT exempt — only NODE_ENV=test (set by the
+  // "test" script in package.json) skips this check, so real environments
+  // (including local dev pointed at staging/prod services) stay protected.
+  if (process.env.NODE_ENV === 'test') {
     next();
     return;
   }
