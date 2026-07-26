@@ -13,6 +13,8 @@ import {
   GamificationService,
   useGamificationStore,
 } from '@/features/gamification';
+import { useLevelUpDetector } from '@/features/gamification/level-up.hook';
+import { LevelUpCelebration } from '@/features/gamification/components/LevelUpCelebration';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { MissionList, DetailRow, MiniStat, FeedList } from './NextStepsHelpers';
@@ -28,10 +30,13 @@ export const GamificationContent = ({
     learningState,
     persistedGamification
   );
+  const { justLeveledUp, acknowledge } = useLevelUpDetector(
+    gamification.levelInfo.currentLevel
+  );
 
   return (
     <>
-      <SectionCard
+      <LevelUpCelebration level={justLeveledUp} onDismiss={acknowledge} />      <SectionCard
         title="Level Progression"
         subtitle="Permanent level system derived from existing XP"
         icon={Trophy}
