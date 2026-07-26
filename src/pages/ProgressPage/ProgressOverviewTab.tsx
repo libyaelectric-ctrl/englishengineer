@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { motion } from 'motion/react';
 import { ShieldCheck } from 'lucide-react';
 import { useAuthStore } from '@/features/auth';
 import { useLearningCockpit } from '@/features/profile';
@@ -144,10 +145,34 @@ export const ProgressOverviewTab = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+        },
+      }}
+      className="space-y-6"
+    >
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, easing: [0.25, 1, 0.5, 1] } },
+        }}
+      >
+        <HeroBanner totalElo={totalElo} totalPercentage={totalPercentage} />
+      </motion.div>
 
-      <QuickStats
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, easing: [0.25, 1, 0.5, 1] } },
+        }}
+      >
+        <QuickStats
         totalElo={totalElo}
         highestSkillLabel={highestSkill.label}
         peakElo={Math.max(...Object.values(eloScores))}
@@ -160,10 +185,25 @@ export const ProgressOverviewTab = () => {
         advancedRules={difficultyStats.advanced + difficultyStats.challenge}
       />
 
-      <AnalyticsMetricCards analytics={analytics} />
+      </motion.div>
+
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, easing: [0.25, 1, 0.5, 1] } },
+        }}
+      >
+        <AnalyticsMetricCards analytics={analytics} />
+      </motion.div>
 
       {/* Top Section: Assessment Profile + Skill Sidebar (Balanced) */}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <motion.div
+        variants={{
+          hidden: { opacity: 0, y: 20 },
+          visible: { opacity: 1, y: 0, transition: { duration: 0.4, easing: [0.25, 1, 0.5, 1] } },
+        }}
+        className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"
+      >
         <SectionCard
           title="Assessment Profile"
           subtitle="Engineering communication dimensions derived from existing learning evidence"
@@ -194,15 +234,24 @@ export const ProgressOverviewTab = () => {
         />
       </div>
 
+      </motion.div>
+
       {/* Bottom Section: Charts (Full Width) */}
       {advancedAnalyticsEntitlement.allowed && (
-        <AnalyticsChartsSection
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4, easing: [0.25, 1, 0.5, 1] } },
+          }}
+        >
+          <AnalyticsChartsSection
           analytics={analytics}
           activeChart={activeChart}
           setActiveChart={setActiveChart}
           chartTabs={chartTabs}
-        />
+          />
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };

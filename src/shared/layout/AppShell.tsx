@@ -1,5 +1,6 @@
 import { type FC, lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
 import { Sidebar } from './Sidebar';
 import { RightSidebar } from './RightSidebar';
 import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
@@ -12,6 +13,7 @@ const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 
 export const AppShell: FC = () => {
   const { toggleSidebar } = useAppStore();
+  const location = useLocation();
   useKeyboardNavigation({
     key: 'Escape',
     onKeyPress: () => toggleSidebar(),
@@ -45,7 +47,18 @@ export const AppShell: FC = () => {
           id="main-content"
           className="custom-scrollbar flex-1 scroll-smooth overflow-y-auto px-4 pb-28 sm:px-6 sm:pb-28 lg:px-8 lg:pb-8 max-w-full"
         >
-          <Outlet />
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.25, easing: [0.25, 1, 0.5, 1] }}
+              className="min-h-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
         <BetaFeedbackWidget />
         <MobileBottomNavigation />
