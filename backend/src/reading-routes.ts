@@ -1,10 +1,20 @@
 import { ApiError } from './errors.js';
 import { validateBody, ReadingScoreBodySchema } from './validation.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerReadingRoutes = (app: Express): void => {
+export const registerReadingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.get(
     '/api/reading/feed',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -29,6 +39,7 @@ export const registerReadingRoutes = (app: Express): void => {
 
   app.post(
     '/api/reading/:id/progress',
+    requireBackendAuth,
     validateBody(ReadingScoreBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -54,6 +65,7 @@ export const registerReadingRoutes = (app: Express): void => {
 
   app.get(
     '/api/reading/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
