@@ -1,5 +1,4 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
-import { motion } from 'motion/react';
 import { cn } from '@/shared/utils/cn';
 
 type ButtonVariant =
@@ -32,11 +31,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'default', ...props }, ref) => (
-    <motion.button
+    <button
       ref={ref}
-      whileHover={{ scale: 1.02, y: -1 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.15, easing: [0.25, 1, 0.5, 1] }}
       className={cn(
         'btn-press inline-flex min-w-0 max-w-full items-center justify-center gap-2 whitespace-normal break-words rounded-[4px] text-center font-bold leading-tight transition-all duration-150 ease-out active:translate-y-0 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer shadow-sm text-xs',
         size === 'default' && 'min-h-10 px-4 py-2',
