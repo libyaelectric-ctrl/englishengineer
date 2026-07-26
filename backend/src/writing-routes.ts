@@ -1,10 +1,20 @@
 import { ApiError } from './errors.js';
 import { validateBody, WritingSubmitBodySchema } from './validation.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerWritingRoutes = (app: Express): void => {
+export const registerWritingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.get(
     '/api/writing/prompts',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -28,6 +38,7 @@ export const registerWritingRoutes = (app: Express): void => {
 
   app.post(
     '/api/writing/submit',
+    requireBackendAuth,
     validateBody(WritingSubmitBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -55,6 +66,7 @@ export const registerWritingRoutes = (app: Express): void => {
 
   app.get(
     '/api/writing/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -74,6 +86,7 @@ export const registerWritingRoutes = (app: Express): void => {
 
   app.get(
     '/api/writing/:id',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;

@@ -1,3 +1,4 @@
+import path from 'node:path';
 import cors from 'cors';
 import express, {
   type Express,
@@ -522,10 +523,16 @@ const registerRoutes = (
   registerAdminRoutes(app, requireBackendAuth, limiters.global);
 
   registerProgressRoutes(app);
-  registerReadingRoutes(app);
-  registerWritingRoutes(app);
-  registerListeningRoutes(app);
-  registerSpeakingRoutes(app);
+  registerReadingRoutes(app, requireBackendAuth);
+  registerWritingRoutes(app, requireBackendAuth);
+  registerListeningRoutes(app, requireBackendAuth);
+  registerSpeakingRoutes(app, requireBackendAuth);
+  // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
+  // this one directory only, never the whole filesystem.
+  app.use(
+    '/uploads/speaking',
+    express.static(path.resolve(process.cwd(), 'uploads', 'speaking'))
+  );
   registerGrammarRoutes(app);
 };
 
