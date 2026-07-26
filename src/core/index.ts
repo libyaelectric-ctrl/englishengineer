@@ -45,10 +45,6 @@ export {
   eventBus,
 } from './events';
 
-export { type ServiceMetadata, BaseService } from './services';
-
-export { type IRepository, BaseRepository } from './repositories';
-
 export {
   type EntityId,
   type Timestamp,
