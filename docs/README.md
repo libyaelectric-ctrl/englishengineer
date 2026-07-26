@@ -9,12 +9,12 @@ Bu klasör, EngineerOS projesinin dokümantasyonlarını içerir.
 | `ONBOARDING.md`           | Yeni geliştiriciler için başlangıç rehberi |
 | `PRODUCT.md`              | Ürün bilgileri, pricing                    |
 | `ROADMAP.md`              | Geliştirme yol haritası                    |
-| `RISK_REGISTER.md`        | Risk listesi ve mitigasyonlar              |
+| `archive/RISK_REGISTER.md`        | Risk listesi ve mitigasyonlar              |
 | `TECH_DEBT.md`            | Teknik borç takibi                         |
-| `TEST_COVERAGE_REPORT.md` | Test coverage raporu                       |
+| `archive/TEST_COVERAGE_REPORT.md` | Test coverage raporu                       |
 | `TESTING_STRATEGY.md`     | Test stratejisi                            |
 | `DESIGN_SYSTEM.md`        | Görsel tasarım sistemi                     |
-| `DATA_MODEL.md`           | Veritabanı şeması                          |
+| `archive/DATA_MODEL.md`           | Veritabanı şeması                          |
 | `DEPLOYMENT.md`           | Deploy rehberi                             |
 | `GLOSSARY.md`             | Terimler sözlüğü                           |
 | `adr/`                    | Mimari Karar Kayıtları                     |
