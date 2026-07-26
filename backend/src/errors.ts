@@ -39,6 +39,32 @@ export const toErrorResponse = (
     };
   }
 
+  // Errors thrown by body-parser/raw-body (e.g. payload-too-large,
+  // malformed body) use the standard `http-errors` shape: a numeric
+  // `status`/`statusCode` plus a `type` string, but are not ApiError
+  // instances. Surface their real HTTP status instead of defaulting to 500.
+  const httpErrorStatus =
+    typeof (error as { status?: unknown }).status === 'number'
+      ? (error as { status: number }).status
+      : typeof (error as unknown as { statusCode?: unknown }).statusCode ===
+          'number'
+        ? (error as unknown as { statusCode: number }).statusCode
+        : undefined;
+
+  if (httpErrorStatus && httpErrorStatus >= 400 && httpErrorStatus < 500) {
+    const errorType = (error as { type?: string }).type;
+    return {
+      status: httpErrorStatus,
+      body: {
+        ok: false,
+        error: {
+          code: errorType ?? 'request_error',
+          message: error.message || 'The request could not be processed.',
+        },
+      },
+    };
+  }
+
   const isProduction = process.env.NODE_ENV === 'production';
   return {
     status: 500,
