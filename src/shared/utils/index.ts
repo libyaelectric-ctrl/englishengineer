@@ -1,5 +1,5 @@
 export { cn } from './cn';
-export { sanitize } from './sanitize';
-export { prefetch } from './prefetch';
-export { sound } from './sound';
-export { indexedDb } from './indexed-db';
+export { sanitizeHtml } from './sanitize';
+export { prefetchRoute } from './prefetch';
+export { getSoundMuted } from './sound';
+export { getCachedSeed } from './indexed-db';
