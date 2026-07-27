@@ -1,18 +1,27 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import type { Express, Request, Response, NextFunction } from 'express';
 import { registerAIRoutes, AI_ROUTES } from '../src/ai.js';
+import type { SubscriptionRepository } from '../src/subscription-repository.js';
+
+interface RegisteredRoute {
+  method: string;
+  path: string;
+  handlerCount: number;
+}
 
 const createMockApp = () => {
-  const registered = [];
+  const registered: RegisteredRoute[] = [];
   return {
-    post: (path, ...handlers) => {
+    post: (path: string, ...handlers: unknown[]) => {
       registered.push({ method: 'POST', path, handlerCount: handlers.length });
     },
     registered,
   };
 };
 
-const noopMiddleware = () => async (_req, _res, next) => next();
+const noopMiddleware =
+  () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
 describe('AI Routes', () => {
   it('exports AI_ROUTES mapping with expected paths', () => {
@@ -32,10 +41,10 @@ describe('AI Routes', () => {
     };
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
-    };
+    } as unknown as SubscriptionRepository;
 
     registerAIRoutes(
-      app,
+      app as unknown as Express,
       mockAiService,
       noopMiddleware(),
       noopMiddleware(),
@@ -59,10 +68,10 @@ describe('AI Routes', () => {
     };
     const mockBillingRepo = {
       getSubscriptionStatus: async () => ({ planId: 'free', topupCredits: 0 }),
-    };
+    } as unknown as SubscriptionRepository;
 
     registerAIRoutes(
-      app,
+      app as unknown as Express,
       mockAiService,
       noopMiddleware(),
       noopMiddleware(),
