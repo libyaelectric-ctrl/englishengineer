@@ -1,5 +1,4 @@
 import { randomUUID } from 'node:crypto';
-import { logger } from './logger.js';
 
 interface TraceSpan {
   name: string;

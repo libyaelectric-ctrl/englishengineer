@@ -100,6 +100,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Unused imports and variables
 **Impact:** Code clarity
 **Effort:** 0.5 days
+**Status:** Resolved — Removed unused imports/variables (backend/src/tracing.ts, public/sw.js) flagged by `npm run lint`.
 **Action:** Remove dead code
 
 ### TD-012: Standardize Error Messages
@@ -144,7 +145,7 @@ This document tracks known technical debt items that should be addressed in futu
 | TD-008 | Medium   | Open   | TBD      | TBD      |
 | TD-009 | Low      | Open   | TBD      | TBD      |
 | TD-010 | Low      | Open   | TBD      | TBD      |
-| TD-011 | Low      | Open   | TBD      | TBD      |
+| TD-011 | Low      | Resolved | TBD | TBD |
 | TD-012 | Low      | Open   | TBD      | TBD      |
 | TD-013 | Low      | Open   | TBD      | TBD      |
 | TD-014 | Low      | Open   | TBD      | TBD      |
