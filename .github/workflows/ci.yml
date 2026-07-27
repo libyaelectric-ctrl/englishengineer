@@ -11,6 +11,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   quality:
     name: Code Quality
     runs-on: ubuntu-latest
@@ -24,9 +38,6 @@ jobs:
           cache: npm
 
       - run: npm ci
-
-      - name: Security Audit
-        run: node scripts/security-audit.mjs
 
       - name: Type Check
         run: npm run typecheck
