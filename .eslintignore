@@ -21,3 +21,7 @@ scripts/
 
 # Storybook
 .storybook/
+
+backend/src/utils/route-handler.ts
+backend/src/middleware/csrf.middleware.ts
+backend/src/logger.ts
