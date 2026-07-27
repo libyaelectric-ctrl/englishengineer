@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
-
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
@@ -30,11 +29,9 @@ export default tseslint.config(
       ecmaVersion: 2022,
       globals: globals.browser,
     },
-
     plugins: {
       'react-hooks': reactHooks,
     },
-
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -56,6 +53,7 @@ export default tseslint.config(
       'jsx-a11y/click-events-have-key-events': 'warn',
       'jsx-a11y/label-has-associated-control': 'warn',
       'no-undef': 'off',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     },
   },
   {
@@ -73,7 +71,7 @@ export default tseslint.config(
     },
     rules: {
       'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off',
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn',
     },
   }
 );
