@@ -159,7 +159,7 @@ const ProfilePage = () => {
         <SkillsProgressSection
           profile={profile}
           memory={memory}
-          learningState={learningState as { streak: number; studySessions: Array<{ timestamp: number; score: number }> }}
+          learningState={learningState}
           mistakeLog={mistakeLog}
         />
       )}
