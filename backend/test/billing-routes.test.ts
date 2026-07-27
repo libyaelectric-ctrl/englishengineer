@@ -1,21 +1,30 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import type { Express, Request, Response, NextFunction } from 'express';
 import { registerBillingRoutes } from '../src/billing-routes.js';
+import type { BillingService } from '../src/billing-service.js';
+
+interface RegisteredRoute {
+  method: string;
+  path: string;
+  handlerCount: number;
+}
 
 const createMockApp = () => {
-  const registered = [];
+  const registered: RegisteredRoute[] = [];
   return {
-    post: (path, ...handlers) => {
+    post: (path: string, ...handlers: unknown[]) => {
       registered.push({ method: 'POST', path, handlerCount: handlers.length });
     },
-    get: (path, ...handlers) => {
+    get: (path: string, ...handlers: unknown[]) => {
       registered.push({ method: 'GET', path, handlerCount: handlers.length });
     },
     registered,
   };
 };
 
-const noopMiddleware = () => async (_req, _res, next) => next();
+const noopMiddleware =
+  () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
 describe('Billing Routes', () => {
   it('registers checkout, topup, portal, subscription-status, and webhook routes', () => {
@@ -29,8 +38,8 @@ describe('Billing Routes', () => {
     };
 
     registerBillingRoutes(
-      app,
-      mockBillingService,
+      app as unknown as Express,
+      mockBillingService as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
@@ -49,8 +58,8 @@ describe('Billing Routes', () => {
   it('checkout route includes auth, rateLimiter, idempotency, validator, and handler', () => {
     const app = createMockApp();
     registerBillingRoutes(
-      app,
-      { createCheckoutSession: async () => ({}) },
+      app as unknown as Express,
+      { createCheckoutSession: async () => ({}) } as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
@@ -70,8 +79,8 @@ describe('Billing Routes', () => {
   it('portal route includes auth, rateLimiter, validator, and handler', () => {
     const app = createMockApp();
     registerBillingRoutes(
-      app,
-      { createPortalSession: async () => ({}) },
+      app as unknown as Express,
+      { createPortalSession: async () => ({}) } as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
@@ -92,8 +101,8 @@ describe('Billing Routes', () => {
   it('subscription status is registered on both api and legacy paths', () => {
     const app = createMockApp();
     registerBillingRoutes(
-      app,
-      { getSubscriptionStatus: async () => ({}) },
+      app as unknown as Express,
+      { getSubscriptionStatus: async () => ({}) } as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
@@ -111,8 +120,8 @@ describe('Billing Routes', () => {
   it('webhook route does not require auth middleware', () => {
     const app = createMockApp();
     registerBillingRoutes(
-      app,
-      { processWebhook: async () => ({}) },
+      app as unknown as Express,
+      { processWebhook: async () => ({}) } as unknown as BillingService,
       noopMiddleware(),
       noopMiddleware()
     );
