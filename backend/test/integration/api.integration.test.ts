@@ -75,3 +75,148 @@ describe('API docs', () => {
     assert.ok(res.body.openapi);
   });
 });
+
+// NOTE: registerReadingRoutes/registerListeningRoutes/registerSpeakingRoutes/
+// registerGrammarRoutes/registerProgressRoutes are mounted in app.ts without any
+// requireBackendAuth/optionalBackendAuth middleware. Their internal
+// `request.auth?.userId` check can therefore never succeed — these endpoints
+// currently always return 401, even with a valid dev-bypass header. The tests
+// below intentionally assert this actual (broken) behavior; see TD-005 follow-up.
+
+describe('Reading endpoints', () => {
+  it('GET /api/reading/feed always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/reading/feed')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+    assert.equal(res.body.error.code, 'authentication_required');
+  });
+
+  it('POST /api/reading/:id/progress always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .post('/api/reading/r1/progress')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
+      .send({ score: 80 });
+    assert.equal(res.status, 401);
+  });
+
+  it('GET /api/reading/stats always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/reading/stats')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+  });
+});
+
+describe('Listening endpoints', () => {
+  it('GET /api/listening/feed always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl).get('/api/listening/feed');
+    assert.equal(res.status, 401);
+  });
+
+  it('POST /api/listening/:id/progress always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .post('/api/listening/l1/progress')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
+      .send({ score: 50 });
+    assert.equal(res.status, 401);
+  });
+
+  it('GET /api/listening/stats always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/listening/stats')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+  });
+});
+
+describe('Speaking endpoints', () => {
+  it('GET /api/speaking/prompts always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl).get('/api/speaking/prompts');
+    assert.equal(res.status, 401);
+  });
+
+  it('POST /api/speaking/submit always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .post('/api/speaking/submit')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
+      .send({ missionId: 'm1' });
+    assert.equal(res.status, 401);
+  });
+
+  it('GET /api/speaking/stats always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/speaking/stats')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+  });
+});
+
+describe('Grammar endpoints', () => {
+  it('POST /api/grammar/:id/progress always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .post('/api/grammar/g1/progress')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user')
+      .send({ result: 'correct' });
+    assert.equal(res.status, 401);
+  });
+
+  it('GET /api/grammar/stats always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl).get('/api/grammar/stats');
+    assert.equal(res.status, 401);
+  });
+
+  it('GET /api/user/access-status always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/user/access-status')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+  });
+});
+
+describe('Progress endpoints', () => {
+  it('GET /api/progress/overview always returns 401 (auth middleware not wired)', async () => {
+    const res = await request(baseUrl)
+      .get('/api/progress/overview')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 401);
+  });
+});
+
+describe('Admin endpoints', () => {
+  it('GET /api/admin/stats without any header still authenticates via dev bypass, then denies non-admin role with 403', async () => {
+    const res = await request(baseUrl).get('/api/admin/stats');
+    assert.equal(res.status, 403);
+    assert.equal(res.body.error.code, 'forbidden_role');
+  });
+
+  it('GET /api/admin/stats with dev bypass but non-admin role returns 403', async () => {
+    const res = await request(baseUrl)
+      .get('/api/admin/stats')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.status, 403);
+    assert.equal(res.body.error.code, 'forbidden_role');
+  });
+
+  it('GET /api/admin/activity with invalid query returns 400 or 401/403', async () => {
+    const res = await request(baseUrl)
+      .get('/api/admin/activity')
+      .query({ limit: 'not-a-number' });
+    assert.ok([400, 401, 403].includes(res.status));
+  });
+});
+
+describe('Deprecation headers on legacy /api routes', () => {
+  it('GET /api/progress/overview (non-v1) includes Deprecation and Sunset headers', async () => {
+    const res = await request(baseUrl)
+      .get('/api/progress/overview')
+      .set('X-EngineerOS-User-Id', 'engineeros-dev-user');
+    assert.equal(res.headers['deprecation'], 'true');
+    assert.ok(res.headers['sunset']);
+  });
+
+  it('GET /api/v1/health does not include Deprecation header', async () => {
+    const res = await request(baseUrl).get('/api/v1/health');
+    assert.equal(res.headers['deprecation'], undefined);
+  });
+});
