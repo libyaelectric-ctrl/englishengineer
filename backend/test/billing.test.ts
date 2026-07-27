@@ -3,47 +3,53 @@ import assert from 'node:assert/strict';
 import {
   createBillingService,
   createStripeClient,
+  type BillingServiceConfig,
 } from '../src/billing-service.js';
+import type Stripe from 'stripe';
+import type { BillingRepository } from '../src/billing-webhook-handlers.js';
+
+const makeConfig = () =>
+  ({
+    stripe: { secretKey: 'sk_test_fake' },
+    billing: { repository: 'memory' },
+  }) as unknown as BillingServiceConfig;
 
 describe('billing service', () => {
   it('creates billing service', () => {
-    const config = {
-      stripe: { secretKey: 'sk_test_fake' },
-      billing: { repository: 'memory' },
-    };
-    const stripeClient = createStripeClient(config.stripe);
+    const config = makeConfig();
+    const stripeClient = createStripeClient(
+      config.stripe as unknown as { configured: boolean; secretKey: string | null }
+    );
     const service = createBillingService({
       config,
-      stripeClient,
-      repository: {},
+      stripeClient: stripeClient as unknown as Stripe,
+      repository: {} as unknown as BillingRepository,
     });
     assert.ok(service);
   });
 
   it('has createCheckoutSession method', () => {
-    const config = {
-      stripe: { secretKey: 'sk_test_fake' },
-      billing: { repository: 'memory' },
-    };
-    const stripeClient = createStripeClient(config.stripe);
+    const config = makeConfig();
+    const stripeClient = createStripeClient(
+      config.stripe as unknown as { configured: boolean; secretKey: string | null }
+    );
     const service = createBillingService({
       config,
-      stripeClient,
-      repository: {},
+      stripeClient: stripeClient as unknown as Stripe,
+      repository: {} as unknown as BillingRepository,
     });
     assert.equal(typeof service.createCheckoutSession, 'function');
   });
 
   it('has getSubscriptionStatus method', () => {
-    const config = {
-      stripe: { secretKey: 'sk_test_fake' },
-      billing: { repository: 'memory' },
-    };
-    const stripeClient = createStripeClient(config.stripe);
+    const config = makeConfig();
+    const stripeClient = createStripeClient(
+      config.stripe as unknown as { configured: boolean; secretKey: string | null }
+    );
     const service = createBillingService({
       config,
-      stripeClient,
-      repository: {},
+      stripeClient: stripeClient as unknown as Stripe,
+      repository: {} as unknown as BillingRepository,
     });
     assert.equal(typeof service.getSubscriptionStatus, 'function');
   });
