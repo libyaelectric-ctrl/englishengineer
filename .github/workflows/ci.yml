@@ -37,6 +37,9 @@ jobs:
       - name: Architecture Check
         run: npx depcruise src backend/src --config .dependency-cruiser.mjs
 
+      - name: Image Optimization Check
+        run: npm run optimize:images:check
+
   test:
     name: Tests
     runs-on: ubuntu-latest

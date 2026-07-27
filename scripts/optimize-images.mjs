@@ -2,29 +2,51 @@ import sharp from 'sharp';
 import { readdirSync, statSync } from 'fs';
 import { join, extname } from 'path';
 
-const optimizeImage = async (inputPath, outputPath, quality = 80) => {
+const CHECK_MODE = process.argv.includes('--check');
+const MAX_DIMENSION = 1920;
+const QUALITY = 75;
+
+const optimizeImage = async (inputPath, quality = QUALITY) => {
   try {
     const inputSize = statSync(inputPath).size;
 
-    await sharp(inputPath)
+    const buffer = await sharp(inputPath)
       .resize({
-        width: 1920,
-        height: 1920,
+        width: MAX_DIMENSION,
+        height: MAX_DIMENSION,
         fit: 'inside',
         withoutEnlargement: true,
       })
-      .jpeg({ quality, progressive: true })
-      .toFile(outputPath);
+      .webp({ quality })
+      .toBuffer();
 
-    const outputSize = statSync(outputPath).size;
+    const outputSize = buffer.length;
     const reduction = ((1 - outputSize / inputSize) * 100).toFixed(1);
 
-    console.log(
-      `${inputPath.split('/').pop()} -> ${outputPath.split('/').pop()}`
-    );
-    console.log(
-      `  ${(inputSize / 1024).toFixed(1)} KB -> ${(outputSize / 1024).toFixed(1)} KB (${reduction}% reduction)`
-    );
+    if (CHECK_MODE) {
+      // Only report images that could be meaningfully re-optimized.
+      if (outputSize < inputSize) {
+        console.log(
+          `${inputPath}: ${(inputSize / 1024).toFixed(1)} KB -> ${(outputSize / 1024).toFixed(1)} KB (${reduction}% potential reduction)`
+        );
+      }
+    } else {
+      await sharp(inputPath)
+        .resize({
+          width: MAX_DIMENSION,
+          height: MAX_DIMENSION,
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .webp({ quality })
+        .toFile(inputPath + '.tmp');
+      const { renameSync } = await import('fs');
+      renameSync(inputPath + '.tmp', inputPath);
+
+      console.log(
+        `${inputPath.split('/').pop()}: ${(inputSize / 1024).toFixed(1)} KB -> ${(outputSize / 1024).toFixed(1)} KB (${reduction}% reduction)`
+      );
+    }
 
     return { inputSize, outputSize, reduction: parseFloat(reduction) };
   } catch (err) {
@@ -33,16 +55,15 @@ const optimizeImage = async (inputPath, outputPath, quality = 80) => {
   }
 };
 
-const optimizeDirectory = async (dir, quality = 75) => {
+const optimizeDirectory = async (dir, quality = QUALITY) => {
   const files = readdirSync(dir);
   const results = [];
 
   for (const file of files) {
     const ext = extname(file).toLowerCase();
-    if (ext === '.png') {
+    if (ext === '.webp' || ext === '.png' || ext === '.jpg' || ext === '.jpeg') {
       const inputPath = join(dir, file);
-      const outputPath = join(dir, file.replace('.png', '.jpg'));
-      const result = await optimizeImage(inputPath, outputPath, quality);
+      const result = await optimizeImage(inputPath, quality);
       if (result) results.push({ file, ...result });
     }
   }
@@ -50,23 +71,40 @@ const optimizeDirectory = async (dir, quality = 75) => {
   return results;
 };
 
-// Optimize brand images
-console.log('=== Brand Images ===');
-const brandResults = await optimizeDirectory('public/brand', 75);
+const TARGET_DIRS = ['public/brand', 'public/agentic'];
 
-// Optimize agentic images
-console.log('\n=== Agentic Images ===');
-const agenticResults = await optimizeDirectory('public/agentic', 75);
+console.log(
+  CHECK_MODE
+    ? '=== Checking image optimization (no files will be modified) ==='
+    : '=== Optimizing Images ==='
+);
 
-// Summary
-const allResults = [...brandResults, ...agenticResults];
+const allResults = [];
+for (const dir of TARGET_DIRS) {
+  console.log(`\n--- ${dir} ---`);
+  const results = await optimizeDirectory(dir);
+  allResults.push(...results);
+}
+
 const totalInput = allResults.reduce((sum, r) => sum + r.inputSize, 0);
 const totalOutput = allResults.reduce((sum, r) => sum + r.outputSize, 0);
-const avgReduction =
-  allResults.reduce((sum, r) => sum + r.reduction, 0) / allResults.length;
+const avgReduction = allResults.length
+  ? allResults.reduce((sum, r) => sum + r.reduction, 0) / allResults.length
+  : 0;
 
 console.log(`\n=== Ozet ===`);
-console.log(`Toplam: ${allResults.length} gorsel optimize edildi`);
-console.log(`Onceki: ${(totalInput / 1024 / 1024).toFixed(1)} MB`);
-console.log(`Sonra: ${(totalOutput / 1024 / 1024).toFixed(1)} MB`);
-console.log(`Ortalama dusus: ${avgReduction.toFixed(1)}%`);
+console.log(`Toplam: ${allResults.length} gorsel islendi`);
+console.log(`Onceki: ${(totalInput / 1024 / 1024).toFixed(2)} MB`);
+console.log(`Sonra: ${(totalOutput / 1024 / 1024).toFixed(2)} MB`);
+console.log(`Ortalama degisim: ${avgReduction.toFixed(1)}%`);
+
+if (CHECK_MODE) {
+  const regressions = allResults.filter((r) => r.outputSize > r.inputSize * 1.05);
+  if (regressions.length > 0) {
+    console.error(
+      `\nFAIL: ${regressions.length} image(s) are significantly larger than an optimized re-encode would produce.`
+    );
+    process.exit(1);
+  }
+  console.log('\nOK: all images are within expected optimization bounds.');
+}

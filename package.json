@@ -46,6 +46,8 @@
     "test:lighthouse": "lighthouse https://englishengineer.vercel.app --output html --output-path ./docs/lighthouse-report.html",
     "test:duplication": "jscpd --min-lines 5 --min-tokens 50 --reporters console",
     "analyze": "ANALYZE=true npm run build",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "optimize:images:check": "node scripts/optimize-images.mjs --check",
     "check:licenses": "license-checker --production --csv --out licenses.csv",
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'"
   },
