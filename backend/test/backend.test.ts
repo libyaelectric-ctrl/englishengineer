@@ -7,19 +7,25 @@ import {
   createSubscriptionRepository,
 } from '../src/subscription-repository.js';
 
-const servers = [];
+const servers: Array<{ close: () => void }> = [];
 
 afterEach(() => {
   servers.splice(0).forEach((server) => server.close());
 });
 
-const start = async (environment = {}, dependencies = {}) => {
+const start = async (
+  environment: Record<string, string> = {},
+  dependencies: Record<string, unknown> = {}
+) => {
   const config = createBackendConfig({ NODE_ENV: 'test', ...environment });
   const app = createApp({ config, ...dependencies });
   const server = app.listen(0);
   servers.push(server);
   await new Promise((resolve) => server.once('listening', resolve));
   const address = server.address();
+  if (!address || typeof address === 'string') {
+    throw new Error('Expected server to have a network address');
+  }
   return `http://127.0.0.1:${address.port}`;
 };
 
@@ -105,9 +111,9 @@ test('AI route explicitly labels safe mock mode', async () => {
 test('configured AI provider returns a real-mode contract', async () => {
   let providerUrl = null;
   let providerRequest = null;
-  const fetchImpl = async (url, init) => {
+  const fetchImpl = async (url: string, init?: RequestInit) => {
     providerUrl = url;
-    providerRequest = JSON.parse(init.body);
+    providerRequest = JSON.parse(init!.body as string);
     return new Response(
       JSON.stringify({
         choices: [{ message: { content: 'Provider response' } }],
@@ -263,7 +269,7 @@ test('subscription status can report active and payment-failed backend states', 
   };
   const repository = {
     getSubscriptionStatus: () => snapshot,
-    upsertSubscriptionStatus: (_userId, next) => {
+    upsertSubscriptionStatus: (_userId: string, next: typeof snapshot) => {
       snapshot = next;
     },
     hasStripeEventBeenProcessed: () => false,
@@ -422,7 +428,7 @@ test('AI prompt size and rate limit are enforced', async () => {
 test('billing derives ownership from authenticated identity', async () => {
   let requestedUserId = null;
   const repository = {
-    async getSubscriptionStatus(userId) {
+    async getSubscriptionStatus(userId: string) {
       requestedUserId = userId;
       return null;
     },
@@ -459,7 +465,7 @@ test('checkout rejects a mismatched body user and accepts the authenticated user
   const stripeClient = {
     checkout: {
       sessions: {
-        create: async (payload) => {
+        create: async (payload: Record<string, unknown>) => {
           checkoutUserId = payload.client_reference_id;
           return { url: 'https://checkout.example/session' };
         },
@@ -516,7 +522,7 @@ test('memory billing repository is bounded and production-guarded', async () => 
   await repository.markStripeEventProcessed('evt_1');
   await repository.markStripeEventProcessed('evt_2');
   await repository.markStripeEventProcessed('evt_3');
-  assert.equal(repository.getProcessedEventCount(), 2);
+  assert.equal(repository.getProcessedEventCount!(), 2);
   assert.equal(await repository.hasStripeEventBeenProcessed('evt_1'), false);
   time += 101;
   assert.equal(await repository.hasStripeEventBeenProcessed('evt_3'), false);
@@ -526,7 +532,7 @@ test('Stripe signature verification receives a raw Buffer', async () => {
   let receivedRawBuffer = false;
   const stripeClient = {
     webhooks: {
-      constructEvent: (rawBody) => {
+      constructEvent: (rawBody: Buffer) => {
         receivedRawBuffer = Buffer.isBuffer(rawBody);
         return { id: 'evt_raw', type: 'unhandled', data: { object: {} } };
       },
@@ -562,9 +568,12 @@ test('security headers are present without restricting health', async () => {
 });
 
 test('Anthropic request and response contracts are parsed consistently', async () => {
-  let requestBody = null;
-  const fetchImpl = async (_url, init) => {
-    requestBody = JSON.parse(init.body);
+  let requestBody: {
+    model: string;
+    messages: Array<{ content: string }>;
+  } | null = null;
+  const fetchImpl = async (_url: string, init?: RequestInit) => {
+    requestBody = JSON.parse(init!.body as string);
     return new Response(
       JSON.stringify({
         content: [{ type: 'text', text: 'Anthropic response' }],
@@ -587,9 +596,13 @@ test('Anthropic request and response contracts are parsed consistently', async (
   });
   assert.equal(response.status, 200);
   assert.equal((await response.json()).text, 'Anthropic response');
-  assert.equal(requestBody.model, 'claude-test-model');
+  const capturedRequestBody = requestBody as {
+    model: string;
+    messages: Array<{ content: string }>;
+  } | null;
+  assert.equal(capturedRequestBody?.model, 'claude-test-model');
   assert.equal(
-    requestBody.messages[0].content,
+    capturedRequestBody?.messages[0].content,
     'Prepare a commissioning update.'
   );
 });
@@ -672,7 +685,11 @@ test('production accepts Upstash rate limiting without exposing its token', () =
 
   assert.equal(config.rateLimit.storeMode, 'upstash');
   assert.equal(config.rateLimit.upstashUrl, 'https://rate-limit.example.test');
-  assert.equal(toPublicHealth(config).upstashToken, undefined);
+  assert.equal(
+    (toPublicHealth(config) as unknown as Record<string, unknown>)
+      .upstashToken,
+    undefined
+  );
 });
 
 test('billing status returns 200 Free/Lite when no subscription record exists', async () => {
@@ -775,9 +792,11 @@ test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured',
 });
 
 test('checkout route permits request with valid Supabase token', async () => {
-  const fetchImpl = async (requestUrl, options) => {
+  const fetchImpl = async (requestUrl: string, options?: RequestInit) => {
     if (requestUrl.endsWith('/auth/v1/user')) {
-      const authorization = options?.headers?.Authorization;
+      const authorization = (
+        options?.headers as Record<string, string> | undefined
+      )?.Authorization;
       if (authorization === 'Bearer valid-supabase-token') {
         return {
           ok: true,
@@ -897,14 +916,17 @@ test('checkout route rejects request with invalid Supabase token', async () => {
 test('webhook logging on repository failure log error details but not secrets', async () => {
   const repository = {
     async hasStripeEventBeenProcessed() {
-      const err = new Error('Database connection failed');
+      const err = new Error('Database connection failed') as Error & {
+        code?: string;
+        details?: string;
+      };
       err.code = 'XX000';
       err.details = 'Connection timeout';
       throw err;
     },
   };
 
-  const logs = [];
+  const logs: string[] = [];
   const originalError = console.error;
   const originalLog = console.log;
   console.error = (...args) => {
@@ -960,27 +982,27 @@ test('webhook logging on repository failure log error details but not secrets', 
 });
 
 test('full webhook flow: completes checkout, marks event, handles duplicate, and updates subscription status', async () => {
-  const db = {
+  const db: { subscription: unknown; processedEvents: Set<string> } = {
     subscription: null,
     processedEvents: new Set(),
   };
 
   const repository = {
-    async getSubscriptionStatus(userId) {
+    async getSubscriptionStatus(userId: string) {
       if (userId === 'owner-user') {
         return db.subscription;
       }
       return null;
     },
-    async upsertSubscriptionStatus(userId, snapshot) {
+    async upsertSubscriptionStatus(userId: string, snapshot: unknown) {
       if (userId === 'owner-user') {
         db.subscription = snapshot;
       }
     },
-    async hasStripeEventBeenProcessed(eventId) {
+    async hasStripeEventBeenProcessed(eventId: string) {
       return db.processedEvents.has(eventId);
     },
-    async markStripeEventProcessed(eventId) {
+    async markStripeEventProcessed(eventId: string) {
       db.processedEvents.add(eventId);
     },
   };
@@ -998,7 +1020,7 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
     {
       stripeClient: {
         webhooks: {
-          constructEvent: (body, _sig, _secret) => {
+          constructEvent: (body: Buffer, _sig: string, _secret: string) => {
             const parsed = JSON.parse(body.toString('utf8'));
             return {
               id: parsed.id,
