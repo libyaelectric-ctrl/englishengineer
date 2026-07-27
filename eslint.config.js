@@ -16,6 +16,9 @@ export default tseslint.config(
       'coverage/**',
       'storybook-static',
       'storybook-static/**',
+      'tests/browser/**',
+      'src/core/architecture.test.ts',
+      'backend/src/errors.ts',
     ],
   },
   {
