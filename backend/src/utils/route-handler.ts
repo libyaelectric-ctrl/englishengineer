@@ -20,13 +20,20 @@ export const asyncHandler = (handler: AsyncHandler) => {
       await handler(req, res);
     } catch (error) {
       if (error instanceof ApiError) {
-        res.status(error.statusCode).json({ error: error.toJSON() });
+        res.status(error.status).json({
+          error: {
+            code: error.code,
+            message: error.message,
+            details: error.details,
+          },
+        });
         return;
       }
 
-      logger.e('Unhandled route error', error, {
+      logger.e('Unhandled route error', {
         path: req.path,
         method: req.method,
+        error: error instanceof Error ? error.message : String(error),
       });
 
       res.status(500).json({
@@ -55,11 +62,7 @@ export const requireFields = (
   );
 
   if (missing.length > 0) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `Missing required fields: ${missing.join(', ')}`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `Missing required fields: ${missing.join(', ')}`);
   }
 };
 
@@ -69,11 +72,7 @@ export const requireFields = (
  */
 export const validateEmail = (email: string): void => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: 'Invalid email format.',
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', 'Invalid email format.');
   }
 };
 
@@ -83,11 +82,7 @@ export const validateEmail = (email: string): void => {
  */
 export const validatePassword = (password: string, minLength = 6): void => {
   if (password.length < minLength) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `Password must be at least ${minLength} characters.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `Password must be at least ${minLength} characters.`);
   }
 };
 

@@ -49,11 +49,11 @@ export const requestLogger = (
 
     // Log level based on status code
     if (res.statusCode >= 500) {
-      logger.e('Request failed', log);
+      logger.e('Request failed', log as unknown as Record<string, unknown>);
     } else if (res.statusCode >= 400) {
-      logger.w('Request error', log);
+      logger.w('Request error', log as unknown as Record<string, unknown>);
     } else {
-      logger.i('Request completed', log);
+      logger.i('Request completed', log as unknown as Record<string, unknown>);
     }
 
     // Log slow requests

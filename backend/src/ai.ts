@@ -138,7 +138,9 @@ export const registerAIRoutes = (
   config: { ai?: { rateLimitWindowMs?: number; rateLimitMax?: number }; stripe?: Record<string, unknown>; supabase?: Record<string, unknown> },
   _fetchImpl: typeof fetch = fetch
 ): void => {
-  const ledger = createAiLedger(config);
+  const ledger = createAiLedger(
+    config as unknown as Parameters<typeof createAiLedger>[0]
+  );
 
   const validateOperation = (
     body: Record<string, unknown>,
