@@ -30,22 +30,16 @@ const optimizeImage = async (inputPath, quality = QUALITY) => {
           `${inputPath}: ${(inputSize / 1024).toFixed(1)} KB -> ${(outputSize / 1024).toFixed(1)} KB (${reduction}% potential reduction)`
         );
       }
-    } else {
-      await sharp(inputPath)
-        .resize({
-          width: MAX_DIMENSION,
-          height: MAX_DIMENSION,
-          fit: 'inside',
-          withoutEnlargement: true,
-        })
-        .webp({ quality })
-        .toFile(inputPath + '.tmp');
-      const { renameSync } = await import('fs');
+    } else if (outputSize < inputSize * 0.95) {
+      const { renameSync, writeFileSync } = await import('fs');
+      writeFileSync(inputPath + '.tmp', buffer);
       renameSync(inputPath + '.tmp', inputPath);
 
       console.log(
         `${inputPath.split('/').pop()}: ${(inputSize / 1024).toFixed(1)} KB -> ${(outputSize / 1024).toFixed(1)} KB (${reduction}% reduction)`
       );
+    } else {
+      console.log(`${inputPath.split('/').pop()}: already optimized, skipping`);
     }
 
     return { inputSize, outputSize, reduction: parseFloat(reduction) };
@@ -99,7 +93,7 @@ console.log(`Sonra: ${(totalOutput / 1024 / 1024).toFixed(2)} MB`);
 console.log(`Ortalama degisim: ${avgReduction.toFixed(1)}%`);
 
 if (CHECK_MODE) {
-  const regressions = allResults.filter((r) => r.outputSize > r.inputSize * 1.05);
+  const regressions = allResults.filter((r) => r.inputSize > r.outputSize * 1.05);
   if (regressions.length > 0) {
     console.error(
       `\nFAIL: ${regressions.length} image(s) are significantly larger than an optimized re-encode would produce.`
