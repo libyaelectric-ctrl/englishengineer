@@ -1,7 +1,6 @@
 import { Sparkles, Shield, Award, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { STATS } from './constants';
-import { LandingDemoConsole } from './LandingDemoConsole';
 
 const heroFadeStyle = (visible: boolean, delay: string) => ({
   opacity: visible ? 1 : 0,
@@ -140,7 +139,6 @@ export function HeroSection({
               'opacity 900ms cubic-bezier(0.16,1,0.3,1) 350ms, transform 900ms cubic-bezier(0.16,1,0.3,1) 350ms',
           }}
         >
-          <LandingDemoConsole />
         </div>
       </div>
     </section>
