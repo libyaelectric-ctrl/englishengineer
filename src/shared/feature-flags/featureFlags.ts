@@ -91,6 +91,10 @@ export function isFeatureEnabled(flag: FeatureFlag): boolean {
   const config = FEATURE_FLAGS[flag];
   if (!config) return false;
 
+  // A hard off-switch always wins, checked before rollout/environment logic
+  // so overrideFeatureFlag(flag, false) reliably disables a flag.
+  if (!config.enabled) return false;
+
   // Check environment restriction
   const env = getEnvironment();
   if (config.allowedEnvironments && !config.allowedEnvironments.includes(env)) {
@@ -108,7 +112,7 @@ export function isFeatureEnabled(flag: FeatureFlag): boolean {
     return false;
   }
 
-  return config.enabled;
+  return true;
 }
 
 /**
@@ -120,10 +124,19 @@ export function getAllFeatureFlags(): Record<FeatureFlag, FeatureFlagConfig> {
 
 /**
  * Override a feature flag at runtime (for testing).
+ *
+ * This is an unconditional override: enabling a flag also lifts its
+ * rollout-percentage gate (set to 100) so tests/tools that call
+ * overrideFeatureFlag(flag, true) reliably see isFeatureEnabled(flag)
+ * return true, regardless of the flag's normal gradual-rollout config.
+ * Disabling always wins via the enabled-check at the top of
+ * isFeatureEnabled, so rolloutPercentage is left untouched in that case.
  */
 export function overrideFeatureFlag(flag: FeatureFlag, enabled: boolean): void {
-  if (FEATURE_FLAGS[flag]) {
-    FEATURE_FLAGS[flag].enabled = enabled;
+  if (!FEATURE_FLAGS[flag]) return;
+  FEATURE_FLAGS[flag].enabled = enabled;
+  if (enabled && FEATURE_FLAGS[flag].rolloutPercentage !== undefined) {
+    FEATURE_FLAGS[flag].rolloutPercentage = 100;
   }
 }
 
