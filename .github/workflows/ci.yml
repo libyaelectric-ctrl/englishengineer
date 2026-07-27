@@ -65,13 +65,13 @@ jobs:
             LINES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.lines.pct)")
             BRANCHES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.branches.pct)")
             FUNCTIONS=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.functions.pct)")
-            echo "Lines: ${LINES}% (min: 55%)"
-            echo "Branches: ${BRANCHES}% (min: 45%)"
-            echo "Functions: ${FUNCTIONS}% (min: 50%)"
+            echo "Lines: ${LINES}% (min: 60%)"
+            echo "Branches: ${BRANCHES}% (min: 50%)"
+            echo "Functions: ${FUNCTIONS}% (min: 55%)"
             FAIL=0
-            if [ "$(echo "$LINES < 55" | bc -l)" -eq 1 ]; then echo "FAIL: Lines coverage below threshold"; FAIL=1; fi
-            if [ "$(echo "$BRANCHES < 45" | bc -l)" -eq 1 ]; then echo "FAIL: Branches coverage below threshold"; FAIL=1; fi
-            if [ "$(echo "$FUNCTIONS < 50" | bc -l)" -eq 1 ]; then echo "FAIL: Functions coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$LINES < 60" | bc -l)" -eq 1 ]; then echo "FAIL: Lines coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$BRANCHES < 50" | bc -l)" -eq 1 ]; then echo "FAIL: Branches coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$FUNCTIONS < 55" | bc -l)" -eq 1 ]; then echo "FAIL: Functions coverage below threshold"; FAIL=1; fi
             if [ "$FAIL" -eq 1 ]; then exit 1; fi
             echo "Coverage thresholds met"
           else
@@ -118,7 +118,7 @@ jobs:
           echo "=== Bundle Size Budget ==="
           JS_SIZE=$(du -sb dist/assets/*.js | awk '{s+=$1}END{print s}')
           CSS_SIZE=$(du -sb dist/assets/*.css | awk '{s+=$1}END{print s}')
-          JS_LIMIT=2000000
+          JS_LIMIT=1000000
           CSS_LIMIT=200000
           echo "JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
           echo "CSS: ${CSS_SIZE} bytes (limit: ${CSS_LIMIT})"

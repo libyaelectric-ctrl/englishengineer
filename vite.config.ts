@@ -67,7 +67,7 @@ export default defineConfig(() => {
     build: {
       outDir: 'dist',
       sourcemap: 'hidden' as const,
-      chunkSizeWarningLimit: 500,
+      chunkSizeWarningLimit: 300, // Reduced from 500 for tighter control
       target: 'es2020',
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
