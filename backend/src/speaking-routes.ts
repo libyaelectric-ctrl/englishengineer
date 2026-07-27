@@ -1,10 +1,20 @@
 import { ApiError } from './errors.js';
 import { validateBody, SpeakingSubmitBodySchema } from './validation.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerSpeakingRoutes = (app: Express): void => {
+export const registerSpeakingRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.get(
     '/api/speaking/prompts',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -21,6 +31,7 @@ export const registerSpeakingRoutes = (app: Express): void => {
 
   app.post(
     '/api/speaking/submit',
+    requireBackendAuth,
     validateBody(SpeakingSubmitBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -42,6 +53,7 @@ export const registerSpeakingRoutes = (app: Express): void => {
 
   app.get(
     '/api/speaking/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -56,6 +68,7 @@ export const registerSpeakingRoutes = (app: Express): void => {
 
   app.get(
     '/api/speaking/:id',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;

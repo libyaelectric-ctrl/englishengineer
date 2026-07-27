@@ -47,7 +47,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Limited integration test coverage
 **Impact:** Regression risk
 **Effort:** 3-4 days
-**Status:** Resolved — Expanded `backend/test/integration/api.integration.test.ts` to cover reading, listening, speaking, grammar, progress, and admin endpoints plus API docs and deprecation headers (8 → 27 tests). Also surfaced that several route groups are registered without auth middleware (see app.ts registerRoutes) — tracked as a follow-up fix.
+**Status:** Resolved — Expanded `backend/test/integration/api.integration.test.ts` to cover reading, listening, speaking, grammar, progress, and admin endpoints plus API docs and deprecation headers (8 → 27 tests). The new tests initially surfaced that reading/listening/speaking/grammar/progress/writing route groups were registered without `requireBackendAuth` (see `app.ts` registerRoutes), causing those endpoints to always return 401 in production; this has been fixed by wiring `requireBackendAuth` into all six route registrations, and the tests now assert the real authenticated-success behavior.
 **Action:** Add API integration tests
 
 ### TD-006: Update Dependencies

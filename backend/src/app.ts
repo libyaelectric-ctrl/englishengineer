@@ -521,12 +521,12 @@ const registerRoutes = (
 
   registerAdminRoutes(app, requireBackendAuth, limiters.global);
 
-  registerProgressRoutes(app);
-  registerReadingRoutes(app);
-  registerWritingRoutes(app);
-  registerListeningRoutes(app);
-  registerSpeakingRoutes(app);
-  registerGrammarRoutes(app);
+  registerProgressRoutes(app, requireBackendAuth);
+  registerReadingRoutes(app, requireBackendAuth);
+  registerWritingRoutes(app, requireBackendAuth);
+  registerListeningRoutes(app, requireBackendAuth);
+  registerSpeakingRoutes(app, requireBackendAuth);
+  registerGrammarRoutes(app, requireBackendAuth);
 };
 
 const initConnectionPool = (config: BackendConfig) => {

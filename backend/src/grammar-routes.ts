@@ -1,10 +1,20 @@
 import { ApiError } from './errors.js';
 import { validateBody, ProgressBodySchema } from './validation.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerGrammarRoutes = (app: Express): void => {
+export const registerGrammarRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.post(
     '/api/grammar/:id/progress',
+    requireBackendAuth,
     validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -31,6 +41,7 @@ export const registerGrammarRoutes = (app: Express): void => {
 
   app.get(
     '/api/grammar/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -53,6 +64,7 @@ export const registerGrammarRoutes = (app: Express): void => {
 
   app.get(
     '/api/user/access-status',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;

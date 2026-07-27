@@ -1,10 +1,20 @@
 import { ApiError } from './errors.js';
 import { validateBody, ListeningScoreBodySchema } from './validation.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerListeningRoutes = (app: Express): void => {
+export const registerListeningRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.get(
     '/api/listening/feed',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
@@ -23,6 +33,7 @@ export const registerListeningRoutes = (app: Express): void => {
 
   app.post(
     '/api/listening/:id/progress',
+    requireBackendAuth,
     validateBody(ListeningScoreBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
@@ -48,6 +59,7 @@ export const registerListeningRoutes = (app: Express): void => {
 
   app.get(
     '/api/listening/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;

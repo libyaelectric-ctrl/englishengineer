@@ -1,9 +1,19 @@
 import { ApiError } from './errors.js';
-import type { Express, Request, Response, NextFunction } from 'express';
+import type {
+  Express,
+  Request,
+  Response,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 
-export const registerProgressRoutes = (app: Express): void => {
+export const registerProgressRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.get(
     '/api/progress/overview',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
