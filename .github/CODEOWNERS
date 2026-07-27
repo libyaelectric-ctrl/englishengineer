@@ -2,7 +2,7 @@
 * @libyaelectric-ctrl
 
 # Documentation
-/docs/ @libyaelectric-ctrl
+docs/ @libyaelectric-ctrl
 *.md @libyaelectric-ctrl
 
 # CI/CD & DevOps
@@ -20,3 +20,9 @@
 /src/features/auth/ @libyaelectric-ctrl
 /src/features/billing/ @libyaelectric-ctrl
 .env* @libyaelectric-ctrl
+
+# Per-file ownership for critical modules
+/src/shared/errors/ @libyaelectric-ctrl
+/src/shared/feature-flags/ @libyaelectric-ctrl
+/src/features/ai/ @libyaelectric-ctrl
+/src/features/assessment/ @libyaelectric-ctrl
