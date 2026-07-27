@@ -5,27 +5,43 @@ import {
   createUpstashRateLimitStore,
 } from '../src/rate-limit.js';
 
-const runRequest = (limiter, userId) => {
-  const headers = new Map();
-  let error = null;
+import type { ApiError } from '../src/errors.js';
+
+type MockLimiter = (
+  req: unknown,
+  res: unknown,
+  next: (err?: unknown) => void
+) => unknown;
+
+const runRequest = (
+  rawLimiter: unknown,
+  userId: string
+): { error: ApiError | null; headers: Map<string, string> } => {
+  const limiter = rawLimiter as MockLimiter;
+  const headers = new Map<string, string>();
+  let error: ApiError | null = null;
   limiter(
     { auth: { userId }, ip: '127.0.0.1' },
-    { setHeader: (name, value) => headers.set(name, value) },
-    (nextError) => {
-      error = nextError ?? null;
+    { setHeader: (name: string, value: string) => headers.set(name, value) },
+    (nextError?: unknown) => {
+      error = (nextError as ApiError) ?? null;
     }
   );
   return { error, headers };
 };
 
-const runAsyncRequest = async (limiter, userId) => {
-  const headers = new Map();
-  let error = null;
+const runAsyncRequest = async (
+  rawLimiter: unknown,
+  userId: string
+): Promise<{ error: ApiError | null; headers: Map<string, string> }> => {
+  const limiter = rawLimiter as MockLimiter;
+  const headers = new Map<string, string>();
+  let error: ApiError | null = null;
   await limiter(
     { auth: { userId }, ip: '127.0.0.1' },
-    { setHeader: (name, value) => headers.set(name, value) },
-    (nextError) => {
-      error = nextError ?? null;
+    { setHeader: (name: string, value: string) => headers.set(name, value) },
+    (nextError?: unknown) => {
+      error = (nextError as ApiError) ?? null;
     }
   );
   return { error, headers };
@@ -95,12 +111,12 @@ test('hard bucket maximum evicts the oldest live identity', () => {
 });
 
 test('Upstash adapter performs an atomic scoped counter request', async () => {
-  let request = null;
+  let request: { url: string; init: RequestInit } | null = null;
   const store = createUpstashRateLimitStore({
     url: 'https://rate-limit.example.test',
     token: 'server-only-token',
     fetchImpl: async (url, init) => {
-      request = { url, init };
+      request = { url: url as string, init: init as RequestInit };
       return new Response(JSON.stringify({ result: [2, 45_000] }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
@@ -109,11 +125,14 @@ test('Upstash adapter performs an atomic scoped counter request', async () => {
   });
 
   const result = await store.consume('engineeros:rate-limit:ai:user-1', 60_000);
-  const body = JSON.parse(request.init.body);
+  const body = JSON.parse(request!.init.body as string);
 
   assert.deepEqual(result, { count: 2, resetAfterMs: 45_000 });
-  assert.equal(request.url, 'https://rate-limit.example.test');
-  assert.equal(request.init.headers.Authorization, 'Bearer server-only-token');
+  assert.equal(request!.url, 'https://rate-limit.example.test');
+  assert.equal(
+    (request!.init.headers as Record<string, string>).Authorization,
+    'Bearer server-only-token'
+  );
   assert.equal(body[0], 'EVAL');
   assert.equal(body[3], 'engineeros:rate-limit:ai:user-1');
   assert.equal(body[4], '60000');
