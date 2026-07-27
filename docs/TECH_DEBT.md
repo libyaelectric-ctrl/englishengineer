@@ -47,6 +47,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Limited integration test coverage
 **Impact:** Regression risk
 **Effort:** 3-4 days
+**Status:** Resolved — Expanded `backend/test/integration/api.integration.test.ts` to cover reading, listening, speaking, grammar, progress, and admin endpoints plus API docs and deprecation headers (8 → 27 tests). Also surfaced that several route groups are registered without auth middleware (see app.ts registerRoutes) — tracked as a follow-up fix.
 **Action:** Add API integration tests
 
 ### TD-006: Update Dependencies
@@ -77,6 +78,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Missing OpenAPI/Swagger docs
 **Impact:** Developer experience
 **Effort:** 2-3 days
+**Status:** Resolved — `backend/src/swagger.ts` documents all routes, served at `/api-docs` (Swagger UI) and `/api-docs.json`. Fixed a stale path (`/api/reading/{id}/score` → `/api/reading/{id}/progress`) and added previously undocumented endpoints (stats routes, `user/access-status`, `admin/activity`).
 **Action:** Generate from code
 
 ## Low Priority
@@ -93,6 +95,7 @@ This document tracks known technical debt items that should be addressed in futu
 **Issue:** Limited observability
 **Impact:** Debugging, performance
 **Effort:** 1-2 days
+**Status:** Resolved — Structured JSON logging already exists on both sides: `backend/src/logger.ts` (leveled, JSON output with timestamp/pid/env) and `src/shared/logger/index.ts` (leveled, contextual). No raw `console.*` calls remain outside these loggers in backend `src/`. Additional observability infra already present: `backend/src/tracing.ts`, `backend/src/performance-monitor.ts`, `backend/src/prometheus.ts`, `backend/src/ai-monitoring.ts`, and Sentry integration.
 **Action:** Add structured logging
 
 ### TD-011: Clean Up Dead Code
@@ -139,12 +142,12 @@ This document tracks known technical debt items that should be addressed in futu
 | TD-002 | High     | Resolved | TBD | TBD |
 | TD-003 | High     | Resolved | TBD | TBD |
 | TD-004 | Medium   | Open   | TBD      | TBD      |
-| TD-005 | Medium   | Open   | TBD      | TBD      |
+| TD-005 | Medium   | Resolved | TBD | TBD |
 | TD-006 | Medium   | Open   | TBD      | TBD      |
 | TD-007 | Medium   | Open   | TBD      | TBD      |
-| TD-008 | Medium   | Open   | TBD      | TBD      |
+| TD-008 | Medium   | Resolved | TBD | TBD |
 | TD-009 | Low      | Open   | TBD      | TBD      |
-| TD-010 | Low      | Open   | TBD      | TBD      |
+| TD-010 | Low      | Resolved | TBD | TBD |
 | TD-011 | Low      | Resolved | TBD | TBD |
 | TD-012 | Low      | Open   | TBD      | TBD      |
 | TD-013 | Low      | Open   | TBD      | TBD      |
@@ -153,5 +156,5 @@ This document tracks known technical debt items that should be addressed in futu
 
 ## Last Updated
 
-- **Date:** 2026-07-25
+- **Date:** 2026-07-27
 - **Total Items:** 15
