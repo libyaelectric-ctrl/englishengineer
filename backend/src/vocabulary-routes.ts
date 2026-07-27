@@ -27,7 +27,7 @@ export const registerVocabularyRoutes = (
     validateQuery(VocabularyLookupQuerySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const query = request.validatedQuery as VocabularyLookupQuery;
+        const query = request.validatedQuery as unknown as VocabularyLookupQuery;
         const cacheKey = `vocab:${query.word}`;
         const { value: result, fromCache } = await getOrSet(
           cacheKey,

@@ -131,7 +131,7 @@ type ZodSchema = z.ZodTypeAny;
 
 export const ProgressBodySchema = z.object({
   result: z.enum(['correct', 'incorrect'], {
-    errorMap: () => ({ message: 'result must be "correct" or "incorrect"' }),
+    error: 'result must be "correct" or "incorrect"',
   }),
 });
 

@@ -6,11 +6,7 @@ import { ApiError } from '../errors.js';
  */
 export const requireString = (value: unknown, fieldName: string): string => {
   if (typeof value !== 'string' || !value.trim()) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} is required and cannot be empty.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} is required and cannot be empty.`);
   }
   return value.trim();
 };
@@ -22,11 +18,7 @@ export const requireString = (value: unknown, fieldName: string): string => {
 export const requirePositiveInt = (value: unknown, fieldName: string): number => {
   const num = parseInt(String(value), 10);
   if (isNaN(num) || num < 0) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be a positive integer.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be a positive integer.`);
   }
   return num;
 };
@@ -39,11 +31,7 @@ export const requireUUID = (value: unknown, fieldName: string): string => {
   const str = requireString(value, fieldName);
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
   if (!uuidRegex.test(str)) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be a valid UUID.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be a valid UUID.`);
   }
   return str;
 };
@@ -59,11 +47,7 @@ export const requireEnum = <T extends string>(
 ): T => {
   const str = requireString(value, fieldName);
   if (!allowed.includes(str as T)) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be one of: ${allowed.join(', ')}`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be one of: ${allowed.join(', ')}`);
   }
   return str as T;
 };
@@ -79,11 +63,7 @@ export const requireLength = (
   max: number
 ): string => {
   if (value.length < min || value.length > max) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be between ${min} and ${max} characters.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be between ${min} and ${max} characters.`);
   }
   return value;
 };
@@ -95,11 +75,7 @@ export const requireLength = (
 export const requireEmail = (value: unknown, fieldName = 'email'): string => {
   const str = requireString(value, fieldName);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(str)) {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be a valid email address.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be a valid email address.`);
   }
   return str;
 };
@@ -113,11 +89,7 @@ export const requireURL = (value: unknown, fieldName = 'url'): string => {
   try {
     new URL(str);
   } catch {
-    throw new ApiError({
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      message: `${fieldName} must be a valid URL.`,
-    });
+    throw new ApiError(400, 'VALIDATION_ERROR', `${fieldName} must be a valid URL.`);
   }
   return str;
 };

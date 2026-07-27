@@ -407,7 +407,9 @@ const registerRoutes = (
 
   registerAIRoutes(
     app,
-    createAIService(config.ai, fetchImpl),
+    createAIService(config.ai, fetchImpl) as unknown as Parameters<
+      typeof registerAIRoutes
+    >[1],
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -420,7 +422,7 @@ const registerRoutes = (
         },
         fetchImpl
       ),
-    config,
+    config as unknown as Parameters<typeof registerAIRoutes>[5],
     fetchImpl
   );
 
@@ -446,7 +448,7 @@ const registerRoutes = (
   registerBillingRoutes(
     app,
     createBillingService({
-      config: config.stripe as BillingServiceConfig,
+      config: config.stripe as unknown as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
       repository:
         billingRepository ??
@@ -597,7 +599,7 @@ export const createApp = ({
     config.rateLimit?.upstashToken ?? undefined
   );
   initConnectionPool(config);
-  initAuditLog(config as { workspace?: Record<string, unknown> });
+  initAuditLog(config as unknown as { workspace?: Record<string, unknown> });
   initIdempotency(config, fetchImpl);
   initSentryIfConfigured(config);
 

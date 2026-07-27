@@ -30,6 +30,18 @@ export interface Logger {
   info: (msg: string, meta?: LogMeta) => void;
   warn: (msg: string, meta?: LogMeta) => void;
   error: (msg: string, meta?: LogMeta, err?: Error) => void;
+  /**
+   * Short aliases for info/warn/error. Several call sites across the
+   * codebase (job-processor.ts, request-logger.ts, prompt-version.ts,
+   * route-handler.ts) call logger.i()/logger.w()/logger.e() -- these did
+   * not previously exist on the logger object at all, which meant those
+   * call sites would throw `TypeError: logger.i is not a function` (etc.)
+   * at runtime the first time they executed. Adding real aliases here
+   * fixes the crash without having to touch every call site.
+   */
+  i: (msg: string, meta?: LogMeta) => void;
+  w: (msg: string, meta?: LogMeta) => void;
+  e: (msg: string, meta?: LogMeta, err?: Error) => void;
 }
 
 export const logger: Logger = {
@@ -51,5 +63,14 @@ export const logger: Logger = {
         console.error(entry);
       }
     }
+  },
+  i(msg: string, meta?: LogMeta) {
+    this.info(msg, meta);
+  },
+  w(msg: string, meta?: LogMeta) {
+    this.warn(msg, meta);
+  },
+  e(msg: string, meta?: LogMeta, err?: Error) {
+    this.error(msg, meta, err);
   },
 };
