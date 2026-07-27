@@ -1,8 +1,8 @@
-import { useAuthStore } from '@/features/auth';
+﻿import { useAuthStore } from '@/features/auth';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
-import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
-import { Section } from '@/shared/layout/sidebar/SidebarComponents';
-import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import { Section } from '@/layouts/sidebar/SidebarComponents';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import type { SkillName } from '@/features/profile/profile.types';
 
 export function ProfileSidebar() {
