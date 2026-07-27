@@ -36,6 +36,7 @@ export default tseslint.config(
       'react-hooks': reactHooks,
     },
     rules: {
+      'no-feature-to-feature-imports': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
