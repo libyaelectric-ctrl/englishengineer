@@ -25,7 +25,6 @@ export default tseslint.config(
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
-      jsxA11y.flatConfigs.recommended,
     ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -34,8 +33,10 @@ export default tseslint.config(
     },
     plugins: {
       'react-hooks': reactHooks,
+      'jsx-a11y': jsxA11y,
     },
     rules: {
+      'no-feature-to-feature-imports': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
