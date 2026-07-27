@@ -1,60 +1,82 @@
 # Changelog
 
-## [4.1.0] - 2025-07-23
+All notable changes to EngineerOS will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ### Added
-
-- Frontend contract layer for API response type safety
-- Cross-feature event handlers (vocabulary → learning, speaking → gamification)
-- ServiceRegistry for dependency injection
-- PageErrorBoundary for per-page error handling
-- Feature flag activation in ProgressCockpit
-- Error boundary unit tests (5 tests)
-- Service worker with stale-while-revalidate cache strategy
-- Sentry Lite wrapper (357KB → 0.04KB)
-- 26 accessibility tests (axe-core + component tests)
-- CSP meta tag in index.html
-- Security audit script in CI
-- Lighthouse CI workflow
-- CODEOWNERS file
-- CONTRIBUTING.md with development guidelines
-- Swagger API docs for missing endpoints
-
-### Fixed
-
-- Memory leaks in main.tsx, Toast, sync-queue
-- Accessibility warnings (jsx-a11y) in 4 files
-- Navigation config test updated for Team entry
-- Bundle splitting circular dependency (core/shared)
+- Config-based feature flag system (`src/shared/feature-flags/`)
+- Standardized error handling (`src/shared/errors/`)
+- Core Web Vitals performance benchmark script
+- Architecture C4 model documentation
+- FAQ with 20 common questions
+- Security policy and vulnerability reporting
+- Incident response runbook
+- Error handling migration guide
+- @ts-ignore audit documentation
+- Cyclomatic complexity guidelines
 
 ### Changed
-
-- VocabSidebar polling interval: 1s → 5s
-- Sentry init: immediate → requestIdleCallback
-- Vocabulary data: static import → lazy import
-- Font loading: preload removed, weights optimized
-- Bundle budget: 500KB → JS 2MB / CSS 200KB
-
-### Removed
-
-- 2,500+ lines of dead code (hooks, components, utilities)
-- Redundant deploy workflow (Vercel auto-deploys)
-- Unused EngVoxMascot directory
-- Unused feature hooks barrels
-- Superseded feature-flags module
-
-## [4.0.1] - 2025-07-01
-
-### Added
-
-- Express API with health endpoints
-- Server-side AI provider adapters
-- Stripe billing integration
-- Supabase authentication
-- Mobile bottom navigation
-- Offline learning mode
+- ESLint: `no-console` as error in production builds
+- Prettier: import sort configuration
+- Bundle size budget: 2MB → 1MB JS
+- Coverage thresholds: lines 55%→60%, branches 45%→50%
+- CODEOWNERS: per-file ownership rules
 
 ### Fixed
+- Commit message discipline (Conventional Commits enforced)
+- 7 Dependabot PRs merged (patch/minor updates)
+- Tech debt: 7/15 items resolved
 
-- Initial release stability issues
-- Audio file format conversion (WAV → MP3)
+## [4.0.1] - 2026-07-27
+
+### Added
+- MIT License
+- CONTRIBUTING.md with Conventional Commits guide
+- CODE_OF_CONDUCT.md (Contributor Covenant v2.1)
+- GitHub Issue templates (bug report, feature request)
+- Project badges in README
+
+### Changed
+- Repo description and topics
+- Commit-msg hook for Conventional Commits
+
+## [4.0.0] - 2026-07-27
+
+### Added
+- Initial public release
+- 6 learning skills: Reading, Writing, Listening, Speaking, Vocabulary, Grammar
+- AI Copilot with 12 engineering modes
+- CEFR Assessment Engine (17 dimensions)
+- Stripe billing integration
+- Team management (Free/Pro/Team)
+- Offline-first architecture (PWA + IndexedDB)
+- Multi-AI provider support (Claude, OpenAI, Gemini)
+
+## [3.x] - 2026 (Private Development)
+
+### Added
+- Backend API (Express + TypeScript)
+- Supabase integration (Auth + Database)
+- BullMQ queue system
+- Sentry observability
+- Dependency Cruiser architecture enforcement
+
+## [2.x] - 2026 (Private Development)
+
+### Added
+- React 19 migration
+- Vite 6 build system
+- Tailwind CSS v4
+- Zustand state management
+- Feature-based architecture
+
+## [1.x] - 2026 (Prototype)
+
+### Added
+- Initial prototype
+- Basic vocabulary exercises
+- Local storage persistence

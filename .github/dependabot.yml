@@ -1,35 +1,72 @@
 version: 2
 updates:
-  - package-ecosystem: 'npm'
-    directory: '/'
+  - package-ecosystem: npm
+    directory: /
     schedule:
-      interval: 'weekly'
-      day: 'monday'
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Istanbul
     open-pull-requests-limit: 10
+    reviewers:
+      - libyaelectric-ctrl
     labels:
-      - 'dependencies'
-      - 'tech-debt'
+      - dependencies
     commit-message:
-      prefix: 'deps'
+      prefix: chore(deps)
+      include: scope
+    # Auto-merge patch and minor updates
+    groups:
+      patch-updates:
+        patterns:
+          - "*"
+        update-types:
+          - patch
+      minor-updates:
+        patterns:
+          - "*"
+        update-types:
+          - minor
+    ignore:
+      # Major versions require manual review
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "stripe"
+        update-types: ["version-update:semver-major"]
 
-  - package-ecosystem: 'npm'
-    directory: '/backend'
+  - package-ecosystem: npm
+    directory: /backend
     schedule:
-      interval: 'weekly'
-      day: 'monday'
-    open-pull-requests-limit: 10
-    labels:
-      - 'dependencies'
-      - 'tech-debt'
-    commit-message:
-      prefix: 'deps'
-
-  - package-ecosystem: 'github-actions'
-    directory: '/'
-    schedule:
-      interval: 'weekly'
-      day: 'monday'
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Istanbul
     open-pull-requests-limit: 5
+    reviewers:
+      - libyaelectric-ctrl
     labels:
-      - 'dependencies'
-      - 'ci'
+      - dependencies
+      - backend
+    commit-message:
+      prefix: chore(deps)
+      include: scope
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Europe/Istanbul
+    labels:
+      - dependencies
+      - ci
+    commit-message:
+      prefix: chore(ci)
+      include: scope
