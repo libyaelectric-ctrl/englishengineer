@@ -43,48 +43,50 @@ const LandingPage = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
-      {/* 🎬 High-Visibility Full-Page Fixed Background Video Canvas */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-55 dark:opacity-65 filter saturate-125 contrast-110">
+      {/* 🎬 Full-Screen Background Video */}
+      <div className="fixed inset-0 z-0 overflow-hidden">
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="h-full w-full object-cover scale-105"
-          poster="/agentic/arc.webp"
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
         >
           <source src="/agentic-hero.mp4" type="video/mp4" />
         </video>
-        {/* Subtle Gradient Overlays for High Typography Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/45 via-background/65 to-background/85 backdrop-blur-[2px]" />
+
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-background/80 dark:bg-background/70" />
+
+        {/* Bottom gradient fade */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background" />
       </div>
 
       <PageMetadata
-        title="EngVox - Engineering English Training"
-        description="AI-powered English training for engineers."
-        canonical="https://englishengineer.vercel.app"
-        jsonLd={STRUCTURED_DATA}
+        title="EngineerOS — Engineering English OS for Global Infrastructure & Tech Teams"
+        description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
+        canonicalPath="/"
+        structuredData={STRUCTURED_DATA}
       />
 
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:text-white"
-      >
-        Skip to content
-      </a>
+      <Navbar />
 
-      {/* Content Layer Floating Over Fixed Video Canvas */}
-      <div className="relative z-10">
-        <Navbar />
-        <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
-        <FeatureSection />
-        <DisciplineShowcase />
-        <WorkflowSection />
-        <LandingVideoShowcase />
-        <PricingSection />
-        <FAQSection />
-        <Footer />
-      </div>
+      <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
+
+      <FeatureSection />
+
+      <DisciplineShowcase />
+
+      <WorkflowSection />
+
+      <LandingVideoShowcase />
+
+      <PricingSection />
+
+      <FAQSection />
+
+      <Footer />
     </main>
   );
 };
