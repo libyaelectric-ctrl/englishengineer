@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
-import { STRUCTURED_DATA } from './constants';
 import { Navbar } from './Navbar';
-import { HeroSection } from './HeroSection';
+import HeroSection from './HeroSection';
 import { FeatureSection } from './FeatureSection';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { WorkflowSection } from './WorkflowSection';
@@ -12,8 +11,7 @@ import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
 
 const LandingPage = () => {
-  const [heroVisible] = useState(true);
-  const [scrollShift, setScrollShift] = useState(0);
+    const [scrollShift, setScrollShift] = useState(0);
 
   useEffect(() => {
     try {
@@ -56,15 +54,14 @@ const LandingPage = () => {
       </div>
 
       <PageMetadata
-        title="EngineerOS — Engineering English OS for Global Infrastructure & Tech Teams"
+        title="EngineerOS â€” Engineering English OS for Global Infrastructure & Tech Teams"
         description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
         canonical="/"
-        structuredData={STRUCTURED_DATA}
-      />
+        />
 
       <Navbar />
 
-      <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
+      <HeroSection scrollShift={scrollShift} />
 
       <FeatureSection />
 

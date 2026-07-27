@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+﻿import { describe, it, expect, beforeAll } from 'vitest';
 
 /**
  * API Integration Smoke Tests
@@ -17,10 +17,10 @@ describe('API Integration Smoke Tests', () => {
     try {
       const response = await fetch(`${API_BASE}/health`);
       if (!response.ok) {
-        console.warn('⚠️  Backend not available. Skipping integration tests.');
+        console.warn('âš ï¸  Backend not available. Skipping integration tests.');
       }
     } catch {
-      console.warn('⚠️  Backend not available. Skipping integration tests.');
+      console.warn('âš ï¸  Backend not available. Skipping integration tests.');
     }
   });
 
