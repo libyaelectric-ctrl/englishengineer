@@ -7,7 +7,6 @@ import { HeroSection } from './HeroSection';
 import { FeatureSection } from './FeatureSection';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { WorkflowSection } from './WorkflowSection';
-import { LandingVideoShowcase } from './LandingVideoShowcase';
 import { PricingSection } from './PricingSection';
 import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
@@ -43,7 +42,7 @@ const LandingPage = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
-      {/* 🎬 Full-Screen Background Video */}
+      {/* 🎬 Full-Screen Background Video — Altlık */}
       <div className="fixed inset-0 z-0 overflow-hidden">
         <video
           autoPlay
@@ -56,11 +55,11 @@ const LandingPage = () => {
           <source src="/agentic-hero.mp4" type="video/mp4" />
         </video>
 
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-background/80 dark:bg-background/70" />
+        {/* Hafif overlay — video görünsün, içerik okunabilir olsun */}
+        <div className="absolute inset-0 bg-background/60 dark:bg-background/50" />
 
-        {/* Bottom gradient fade */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/30 to-background" />
+        {/* Alt kısımda yumuşak geçiş */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background" />
       </div>
 
       <PageMetadata
@@ -79,8 +78,6 @@ const LandingPage = () => {
       <DisciplineShowcase />
 
       <WorkflowSection />
-
-      <LandingVideoShowcase />
 
       <PricingSection />
 
