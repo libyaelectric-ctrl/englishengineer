@@ -58,7 +58,7 @@ const LandingPage = () => {
       <PageMetadata
         title="EngineerOS — Engineering English OS for Global Infrastructure & Tech Teams"
         description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
-        canonicalPath="/"
+        canonical="/"
         structuredData={STRUCTURED_DATA}
       />
 
