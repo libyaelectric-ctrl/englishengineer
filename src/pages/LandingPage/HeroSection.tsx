@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/shared/components/ui/button';
-import { useNavigate } from 'react-router-dom';
 import { Sparkles, ArrowRight, Shield, Zap, Globe } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -9,7 +8,6 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ heroVisible, scrollShift }: HeroSectionProps) => {
-  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -17,12 +15,20 @@ const HeroSection = ({ heroVisible, scrollShift }: HeroSectionProps) => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleStartFree = () => {
+    window.location.href = '/auth/register';
+  };
+
+  const handleDemo = () => {
+    window.location.href = '/demo';
+  };
+
   return (
     <section
       className="relative z-10 flex min-h-[90vh] flex-col items-center justify-center px-4 pt-24 pb-16"
       style={{ transform: `translateY(${scrollShift}px)` }}
     >
-      {/* Floating badges */}
+      {/* Floating badge */}
       <div className={`mb-8 flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <Sparkles className="h-4 w-4 text-blue-400" />
         <span className="text-sm font-medium text-white/80">v4.0.1 — Now with AI Copilot</span>
@@ -50,7 +56,7 @@ const HeroSection = ({ heroVisible, scrollShift }: HeroSectionProps) => {
         <Button
           size="lg"
           className="group bg-blue-500 text-white hover:bg-blue-600 px-8 py-6 text-lg font-semibold shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40"
-          onClick={() => navigate('/auth/register')}
+          onClick={handleStartFree}
         >
           Start Free
           <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -59,7 +65,7 @@ const HeroSection = ({ heroVisible, scrollShift }: HeroSectionProps) => {
           size="lg"
           variant="outline"
           className="border-white/20 bg-white/5 text-white hover:bg-white/10 px-8 py-6 text-lg backdrop-blur-sm"
-          onClick={() => navigate('/demo')}
+          onClick={handleDemo}
         >
           See Demo
         </Button>
