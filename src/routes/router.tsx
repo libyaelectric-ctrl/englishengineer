@@ -1,12 +1,12 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
-import { AppShell } from '@/shared/layout/AppShell';
+﻿import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { AppShell } from '@/layouts/AppShell';
 import { lazy, Suspense } from 'react';
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { LoadingState } from '@/shared/components/LoadingState';
 import { OnboardingGate } from '@/features/profile';
 import { RouteErrorPage } from './RouteErrorPage';
-import { PublicLayout } from '@/shared/layout/PublicLayout';
+import { PublicLayout } from '@/layouts/PublicLayout';
 
 const Dashboard = lazy(() => import('@/pages/DashboardPage'));
 const Profile = lazy(() => import('@/pages/ProfilePage'));

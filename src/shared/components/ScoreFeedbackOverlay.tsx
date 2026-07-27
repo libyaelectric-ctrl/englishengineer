@@ -1,7 +1,17 @@
 import React from 'react';
 import { Award, Zap, Coins, TrendingUp } from 'lucide-react';
 import { Button } from './Button';
-import { ScoreResult } from '@/core/learning';
+
+/** Minimal score result shape — mirrors ScoreResult from @/core/learning */
+interface ScoreResult {
+  score: number;
+  xp: number;
+  coins: number;
+  eloChange: number;
+  feedback: string;
+  strengths: string[];
+  weaknesses: string[];
+}
 
 interface ScoreFeedbackOverlayProps {
   result: ScoreResult | null;
@@ -9,6 +19,7 @@ interface ScoreFeedbackOverlayProps {
   onAction?: () => void;
   actionText?: string;
 }
+
 
 export const ScoreFeedbackOverlay = React.memo(
   ({

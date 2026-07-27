@@ -1,9 +1,9 @@
-import { GrammarProgressService } from '@/features/grammar/grammar.progress';
+﻿import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';
 import { useLearningStore } from '@/core/learning';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
-import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 const log = (_page: string, _action: string, _details: string) => {};
 
