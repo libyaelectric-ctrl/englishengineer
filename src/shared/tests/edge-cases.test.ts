@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import { AppError, ErrorCodes } from '@/shared/errors';
 import { isFeatureEnabled, overrideFeatureFlag } from '@/shared/feature-flags';
 
@@ -22,7 +22,7 @@ describe('AppError Edge Cases', () => {
   });
 
   it('should handle special characters in message', () => {
-    const specialMessage = 'Error: <script>alert("xss")</script> 🔥 ñ 中文';
+    const specialMessage = 'Error: <script>alert("xss")</script> ğŸ”¥ Ã± ä¸­æ–‡';
     const error = new AppError({
       code: ErrorCodes.DATA_VALIDATION_FAILED,
       message: specialMessage,
@@ -43,7 +43,7 @@ describe('AppError Edge Cases', () => {
       cause: middleError,
     });
     expect(outerError.cause).toBe(middleError);
-    expect(outerError.cause?.cause).toBe(innerError);
+    expect((outerError as any).cause?.cause).toBe(innerError);
   });
 
   it('should handle circular context', () => {
@@ -106,7 +106,7 @@ describe('Feature Flags Edge Cases', () => {
 
   it('should handle environment edge cases', () => {
     // Test that dev-only flags are disabled in production
-    const originalEnv = import.meta.env.DEV;
+    
     // Note: Cannot modify import.meta.env in tests, but function handles it
     expect(isFeatureEnabled('aiGeminiProvider')).toBe(false); // dev/staging only
   });
