@@ -15,7 +15,7 @@ const BENCHMARKS = {
   CLS: { target: 0.1, unit: '' },        // Cumulative Layout Shift
 };
 
-function measureBundleSize() {
+async function measureBundleSize() {
   const fs = await import('fs');
   const path = await import('path');
 
