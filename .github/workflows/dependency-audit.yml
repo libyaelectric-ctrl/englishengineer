@@ -32,6 +32,10 @@ jobs:
           npm ci
           npm audit --audit-level=high
 
+      - name: Moderate Vulnerabilities (advisory)
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
       - name: Check for Critical Vulnerabilities
         run: |
           CRITICAL=$(npm audit --json 2>/dev/null | grep -o '"critical":[0-9]*' | head -1 | cut -d: -f2)

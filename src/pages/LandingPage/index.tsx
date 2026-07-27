@@ -1,27 +1,22 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
-import { STRUCTURED_DATA } from './constants';
 import { Navbar } from './Navbar';
-import { HeroSection } from './HeroSection';
+import HeroSection from './HeroSection';
 import { FeatureSection } from './FeatureSection';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { WorkflowSection } from './WorkflowSection';
-import { LandingVideoShowcase } from './LandingVideoShowcase';
 import { PricingSection } from './PricingSection';
 import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
 
 const LandingPage = () => {
-  const [heroVisible] = useState(true);
-  const [scrollShift, setScrollShift] = useState(0);
+    const [scrollShift, setScrollShift] = useState(0);
 
   useEffect(() => {
     try {
       ProductAnalyticsService.track('screen_viewed', 'landing');
-    } catch {
-      // Ignore analytics error
-    }
+    } catch { /* ignore */ }
   }, []);
 
   useEffect(() => {
@@ -32,7 +27,6 @@ const LandingPage = () => {
         setScrollShift(Math.min(window.scrollY * 0.08, 72))
       );
     };
-
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
@@ -42,49 +36,44 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground">
-      {/* 🎬 High-Visibility Full-Page Fixed Background Video Canvas */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-55 dark:opacity-65 filter saturate-125 contrast-110">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="h-full w-full object-cover scale-105"
-          poster="/agentic/arc.webp"
-        >
-          <source src="/agentic-hero.mp4" type="video/mp4" />
-        </video>
-        {/* Subtle Gradient Overlays for High Typography Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/45 via-background/65 to-background/85 backdrop-blur-[2px]" />
+    <main className="relative min-h-screen overflow-x-hidden bg-[#0a0a0f] text-white antialiased selection:bg-blue-500/30">
+      {/* Animated gradient mesh background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-[#0a0a0f] to-[#0a0a0f]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
+        {/* Grid overlay */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
+            backgroundSize: '60px 60px'
+          }}
+        />
       </div>
 
       <PageMetadata
-        title="EngVox - Engineering English Training"
-        description="AI-powered English training for engineers."
-        canonical="https://englishengineer.vercel.app"
-        jsonLd={STRUCTURED_DATA}
-      />
+        title="EngineerOS â€” Engineering English OS for Global Infrastructure & Tech Teams"
+        description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
+        canonical="/"
+        />
 
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-black focus:px-4 focus:py-2 focus:text-sm focus:text-white"
-      >
-        Skip to content
-      </a>
+      <Navbar />
 
-      {/* Content Layer Floating Over Fixed Video Canvas */}
-      <div className="relative z-10">
-        <Navbar />
-        <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
-        <FeatureSection />
-        <DisciplineShowcase />
-        <WorkflowSection />
-        <LandingVideoShowcase />
-        <PricingSection />
-        <FAQSection />
-        <Footer />
-      </div>
+      <HeroSection scrollShift={scrollShift} />
+
+      <FeatureSection />
+
+      <DisciplineShowcase />
+
+      <WorkflowSection />
+
+      <PricingSection />
+
+      <FAQSection />
+
+      <Footer />
     </main>
   );
 };
