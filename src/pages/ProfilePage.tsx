@@ -1,4 +1,4 @@
-import { PROFESSIONS } from '@/features/profile/profile.preferences';
+﻿import { PROFESSIONS } from '@/features/profile/profile.preferences';
 import { useProfilePage } from './ProfilePage/useProfilePage';
 import {
   ProfileOverviewSection,
@@ -136,7 +136,7 @@ const ProfilePage = () => {
           currentUser={currentUser}
           profile={profile}
           subscription={subscription}
-          learningState={learningState}
+          learningState={{ achievements: learningState.achievements }}
           isEditMode={isEditMode}
           editFirstName={editFirstName}
           editLastName={editLastName}
@@ -159,7 +159,7 @@ const ProfilePage = () => {
         <SkillsProgressSection
           profile={profile}
           memory={memory}
-          learningState={learningState}
+          learningState={{ streak: learningState.streak, studySessions: learningState.studySessions.map((s: any) => ({ timestamp: Number(s.timestamp), score: s.score })) }}
           mistakeLog={mistakeLog}
         />
       )}

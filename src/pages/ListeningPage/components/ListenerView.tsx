@@ -69,6 +69,8 @@ export const ListenerView = ({
       <div
         className="rounded-[4px] border-2 border-primary bg-surface p-6"
         style={{ fontSize: '18px', lineHeight: '1.8', maxWidth: '720px' }}
+        role="region"
+        aria-label="Audio transcript"
       >
         {words.map((word, i) => (
           <span

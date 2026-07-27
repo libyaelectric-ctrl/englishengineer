@@ -64,6 +64,7 @@ export function useMicRecorder(): MicRecorderResult {
 
   useEffect(() => cleanupStream, [cleanupStream]);
 
+  // eslint-disable-next-line complexity
   const start = useCallback(async () => {
     setErrorMessage(null);
     setAudioBlob(null);

@@ -116,6 +116,7 @@ export function AnimatedCard({
     <div
       ref={setRefs}
       onMouseMove={handleMouseMove}
+      role="presentation"
       className={`group relative overflow-hidden rounded-2xl transition-all duration-300 hover:border-primary/40 ${className}`}
       style={cardStyle}
     >
