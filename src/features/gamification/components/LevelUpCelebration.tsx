@@ -33,9 +33,10 @@ export function LevelUpCelebration({
 
   return (
     <div
-      role="status"
+      role="button" tabIndex={0}
       aria-live="polite"
       onClick={() => {
+        /* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */
         setVisible(false);
         window.setTimeout(onDismiss, 200);
       }}
