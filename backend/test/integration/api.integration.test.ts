@@ -74,6 +74,28 @@ describe('API docs', () => {
     assert.equal(res.status, 200);
     assert.ok(res.body.openapi);
   });
+
+  it('GET /api-docs.json documents the actual reading progress route', async () => {
+    const res = await request(baseUrl).get('/api-docs.json');
+    assert.ok(res.body.paths['/api/reading/{id}/progress']);
+    assert.equal(res.body.paths['/api/reading/{id}/score'], undefined);
+  });
+
+  it('GET /api-docs.json documents stats and access-status endpoints', async () => {
+    const res = await request(baseUrl).get('/api-docs.json');
+    assert.ok(res.body.paths['/api/reading/stats']);
+    assert.ok(res.body.paths['/api/listening/stats']);
+    assert.ok(res.body.paths['/api/speaking/stats']);
+    assert.ok(res.body.paths['/api/grammar/stats']);
+    assert.ok(res.body.paths['/api/user/access-status']);
+    assert.ok(res.body.paths['/api/admin/activity']);
+  });
+
+  it('GET /api-docs returns the Swagger UI HTML page', async () => {
+    const res = await request(baseUrl).get('/api-docs');
+    assert.equal(res.status, 200);
+    assert.ok(res.text.includes('swagger-ui'));
+  });
 });
 
 // NOTE: registerReadingRoutes/registerListeningRoutes/registerSpeakingRoutes/

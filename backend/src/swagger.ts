@@ -189,6 +189,37 @@ export const swaggerSpec = {
         security: [{ bearerAuth: [] }],
         responses: {
           200: { description: 'Speaking evaluation' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/speaking/stats': {
+      get: {
+        tags: ['Speaking'],
+        summary: 'Get speaking statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Speaking stats' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/speaking/{id}': {
+      get: {
+        tags: ['Speaking'],
+        summary: 'Get a speaking submission by id',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: {
+          200: { description: 'Speaking submission' },
           401: { description: 'Unauthorized' },
         },
       },
@@ -229,6 +260,40 @@ export const swaggerSpec = {
         },
       },
     },
+    '/api/admin/activity': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Get admin activity/audit logs (alias for audit-logs)',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'userId',
+            in: 'query',
+            schema: { type: 'string' },
+          },
+          {
+            name: 'action',
+            in: 'query',
+            schema: { type: 'string' },
+          },
+          {
+            name: 'since',
+            in: 'query',
+            schema: { type: 'string', format: 'date-time' },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'integer', default: 50 },
+          },
+        ],
+        responses: {
+          200: { description: 'Admin activity list' },
+          401: { description: 'Unauthorized' },
+          403: { description: 'Forbidden' },
+        },
+      },
+    },
     '/api/grammar/{id}/progress': {
       post: {
         tags: ['Grammar'],
@@ -258,6 +323,29 @@ export const swaggerSpec = {
         },
         responses: {
           200: { description: 'Progress updated' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/grammar/stats': {
+      get: {
+        tags: ['Grammar'],
+        summary: 'Get grammar statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Grammar stats' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/user/access-status': {
+      get: {
+        tags: ['User'],
+        summary: 'Get feature-access status for the current user',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'User access status' },
           401: { description: 'Unauthorized' },
         },
       },
@@ -285,10 +373,10 @@ export const swaggerSpec = {
         },
       },
     },
-    '/api/reading/{id}/score': {
+    '/api/reading/{id}/progress': {
       post: {
         tags: ['Reading'],
-        summary: 'Submit reading score',
+        summary: 'Submit reading progress/score',
         security: [{ bearerAuth: [] }],
         parameters: [
           {
@@ -314,6 +402,18 @@ export const swaggerSpec = {
         },
         responses: {
           200: { description: 'Score recorded' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/reading/stats': {
+      get: {
+        tags: ['Reading'],
+        summary: 'Get reading statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Reading stats' },
           401: { description: 'Unauthorized' },
         },
       },
@@ -370,6 +470,18 @@ export const swaggerSpec = {
         },
         responses: {
           200: { description: 'Progress updated' },
+          400: { description: 'Validation error' },
+          401: { description: 'Unauthorized' },
+        },
+      },
+    },
+    '/api/listening/stats': {
+      get: {
+        tags: ['Listening'],
+        summary: 'Get listening statistics',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: { description: 'Listening stats' },
           401: { description: 'Unauthorized' },
         },
       },
