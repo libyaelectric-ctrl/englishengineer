@@ -8,6 +8,7 @@ import {
   it,
   vi,
 } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import { router } from '@/routes/router';
 import { AuthService } from '@/features/auth';
 import { ReadingService } from '@/features/reading';
@@ -247,9 +248,11 @@ describe('EngVox release candidate E2E smoke fallback', () => {
   it('20. error boundary smoke test renders fallback', () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined);
     render(
-      <ErrorBoundaryProvider>
-        <ThrowingComponent />
-      </ErrorBoundaryProvider>
+      <MemoryRouter>
+        <ErrorBoundaryProvider>
+          <ThrowingComponent />
+        </ErrorBoundaryProvider>
+      </MemoryRouter>
     );
 
     expect(screen.getByText('Application Error')).toBeInTheDocument();

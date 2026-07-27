@@ -42,10 +42,12 @@ describe('Critical flow: Vocabulary page', () => {
     expect(screen.getAllByText(/Vocabulary/i).length).toBeGreaterThan(0);
   });
 
-  it('shows search input', async () => {
+  it('shows search trigger', async () => {
     const { default: VocabularyPage } = await import('@/pages/VocabularyPage');
     renderWithRouter(<VocabularyPage />);
-    expect(screen.getByPlaceholderText(/Search/i)).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /^search$/i })
+    ).toBeInTheDocument();
   });
 });
 
