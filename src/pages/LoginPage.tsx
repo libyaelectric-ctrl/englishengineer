@@ -24,6 +24,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     void h.initialize();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [h.initialize]);
 
   return (

@@ -376,7 +376,9 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       ...eosPersistConfig(STORAGE_KEY),
       merge: (persistedState, currentState) => {
         const persisted = persistedState as Partial<LearningState>;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const state = currentState as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const merged: any = {
           ...state,
           ...ensureArrays(persisted),
