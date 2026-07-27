@@ -1,0 +1,150 @@
+/**
+ * Simple config-based feature flag system for EngineerOS.
+ * Addresses TD-014: Implement Feature Flags
+ *
+ * Usage:
+ *   if (isFeatureEnabled('aiClaudeProvider')) { ... }
+ *   if (isFeatureEnabled('newDashboard')) { ... }
+ */
+
+export type FeatureFlag =
+  | 'aiClaudeProvider'
+  | 'aiOpenAIProvider'
+  | 'aiGeminiProvider'
+  | 'newDashboard'
+  | 'teamManagement'
+  | 'advancedAnalytics'
+  | 'abTestingFramework'
+  | 'darkMode'
+  | 'offlineGrammar'
+  | 'betaWritingReview';
+
+interface FeatureFlagConfig {
+  enabled: boolean;
+  description: string;
+  rolloutPercentage?: number; // 0-100, for gradual rollout
+  allowedEnvironments?: ('development' | 'staging' | 'production')[];
+}
+
+const FEATURE_FLAGS: Record<FeatureFlag, FeatureFlagConfig> = {
+  aiClaudeProvider: {
+    enabled: true,
+    description: 'Anthropic Claude AI provider integration',
+    allowedEnvironments: ['development', 'staging', 'production'],
+  },
+  aiOpenAIProvider: {
+    enabled: true,
+    description: 'OpenAI GPT provider integration',
+    allowedEnvironments: ['development', 'staging', 'production'],
+  },
+  aiGeminiProvider: {
+    enabled: false,
+    description: 'Google Gemini AI provider integration',
+    allowedEnvironments: ['development', 'staging'],
+  },
+  newDashboard: {
+    enabled: false,
+    description: 'Redesigned learner dashboard with analytics',
+    rolloutPercentage: 0,
+    allowedEnvironments: ['development'],
+  },
+  teamManagement: {
+    enabled: true,
+    description: 'Team workspace and member management',
+    allowedEnvironments: ['development', 'staging', 'production'],
+  },
+  advancedAnalytics: {
+    enabled: false,
+    description: 'Advanced learning analytics and insights',
+    rolloutPercentage: 0,
+    allowedEnvironments: ['development'],
+  },
+  abTestingFramework: {
+    enabled: false,
+    description: 'A/B testing capability for UI experiments',
+    allowedEnvironments: ['development'],
+  },
+  darkMode: {
+    enabled: false,
+    description: 'Dark mode theme support',
+    rolloutPercentage: 0,
+    allowedEnvironments: ['development'],
+  },
+  offlineGrammar: {
+    enabled: true,
+    description: 'Offline grammar exercises without AI',
+    allowedEnvironments: ['development', 'staging', 'production'],
+  },
+  betaWritingReview: {
+    enabled: false,
+    description: 'Beta AI-powered writing review with advanced feedback',
+    rolloutPercentage: 10,
+    allowedEnvironments: ['development', 'staging'],
+  },
+};
+
+/**
+ * Check if a feature flag is enabled.
+ * Respects environment restrictions and rollout percentage.
+ */
+export function isFeatureEnabled(flag: FeatureFlag): boolean {
+  const config = FEATURE_FLAGS[flag];
+  if (!config) return false;
+
+  // Check environment restriction
+  const env = getEnvironment();
+  if (config.allowedEnvironments && !config.allowedEnvironments.includes(env)) {
+    return false;
+  }
+
+  // Check rollout percentage (deterministic based on user ID)
+  if (config.rolloutPercentage !== undefined && config.rolloutPercentage < 100) {
+    const userId = getCurrentUserId();
+    if (userId) {
+      const hash = hashString(`${flag}:${userId}`);
+      const percentage = (hash % 100) + 1; // 1-100
+      return percentage <= config.rolloutPercentage;
+    }
+    return false;
+  }
+
+  return config.enabled;
+}
+
+/**
+ * Get all feature flags for debugging/admin panels.
+ */
+export function getAllFeatureFlags(): Record<FeatureFlag, FeatureFlagConfig> {
+  return { ...FEATURE_FLAGS };
+}
+
+/**
+ * Override a feature flag at runtime (for testing).
+ */
+export function overrideFeatureFlag(flag: FeatureFlag, enabled: boolean): void {
+  if (FEATURE_FLAGS[flag]) {
+    FEATURE_FLAGS[flag].enabled = enabled;
+  }
+}
+
+// Helpers
+function getEnvironment(): 'development' | 'staging' | 'production' {
+  if (import.meta.env.DEV) return 'development';
+  if (import.meta.env.VITE_APP_ENV === 'staging') return 'staging';
+  return 'production';
+}
+
+function getCurrentUserId(): string | null {
+  // In real app, get from auth store
+  return localStorage.getItem('user_id');
+}
+
+function hashString(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}

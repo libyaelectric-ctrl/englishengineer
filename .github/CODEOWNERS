@@ -1,10 +1,22 @@
-# Default code owner
+# Global default — all files require review from the owner
 * @libyaelectric-ctrl
 
-# Security-sensitive files require explicit review
-backend/.env* @libyaelectric-ctrl
+# Documentation
+/docs/ @libyaelectric-ctrl
+*.md @libyaelectric-ctrl
+
+# CI/CD & DevOps
+/.github/ @libyaelectric-ctrl
+/scripts/ @libyaelectric-ctrl
+
+# Backend API
+/backend/ @libyaelectric-ctrl
+
+# Core architecture
+/src/core/ @libyaelectric-ctrl
+/src/contracts/ @libyaelectric-ctrl
+
+# Security-sensitive files
+/src/features/auth/ @libyaelectric-ctrl
+/src/features/billing/ @libyaelectric-ctrl
 .env* @libyaelectric-ctrl
-.github/workflows/ @libyaelectric-ctrl
-src/core/auth/ @libyaelectric-ctrl
-src/features/auth/ @libyaelectric-ctrl
-src/features/billing/ @libyaelectric-ctrl
