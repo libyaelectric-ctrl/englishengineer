@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useState } from 'react';
 import {
   type VocabularyMenuState,
   VocabularyMenuService,
 } from '@/features/vocabulary/services/vocabulary.menu';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
-import { SkillSidebar } from '@/shared/layout/sidebar/SkillSidebar';
-import type { SidebarConfig } from '@/shared/layout/sidebar/sidebar.config';
+import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
+import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 const VOCAB_LEVELS = [
   { id: 'A1', max: 500 },
