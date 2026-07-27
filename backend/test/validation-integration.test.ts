@@ -3,10 +3,14 @@ import assert from 'node:assert/strict';
 import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 
-let server;
-let baseUrl;
+import type { Server } from 'node:http';
 
-const start = async (envOverrides = {}) => {
+let server: Server | null;
+let baseUrl: string;
+
+const start = async (
+  envOverrides: Record<string, string> = {}
+): Promise<string> => {
   process.env.ALLOW_INSECURE_DEV_AUTH = 'true';
   Object.entries(envOverrides).forEach(([k, v]) => {
     process.env[k] = v;
@@ -15,16 +19,17 @@ const start = async (envOverrides = {}) => {
   const app = createApp({ config });
   return new Promise((resolve) => {
     server = app.listen(0, () => {
-      const { port } = server.address();
+      const address = server!.address();
+      const port = typeof address === 'object' && address ? address.port : 0;
       resolve(`http://localhost:${port}`);
     });
   });
 };
 
 const stop = () =>
-  new Promise((resolve) => {
+  new Promise<void>((resolve) => {
     if (!server) return resolve();
-    server.close(resolve);
+    server.close(() => resolve());
     server = null;
   });
 
@@ -46,7 +51,9 @@ describe('AI endpoint validation integration', () => {
     assert.equal(res.status, 400);
     const body = await res.json();
     assert.equal(body.error.code, 'validation_error');
-    assert.ok(body.error.details.some((d) => d.path === 'prompt'));
+    assert.ok(
+      body.error.details.some((d: { path: string }) => d.path === 'prompt')
+    );
   });
 
   it('rejects POST with empty prompt', async () => {
@@ -136,7 +143,7 @@ describe('Vocabulary endpoint validation integration', () => {
   });
 
   it('accepts valid request with default targetLang', async () => {
-    const fetchImpl = async () => ({
+    const fetchImpl = (async () => ({
       ok: true,
       json: async () => [
         {
@@ -149,11 +156,15 @@ describe('Vocabulary endpoint validation integration', () => {
           ],
         },
       ],
-    });
+    })) as unknown as typeof fetch;
     const customConfig = createBackendConfig();
     const app = createApp({ config: customConfig, fetchImpl });
     const customServer = app.listen(0);
-    const { port } = customServer.address();
+    const customAddress = customServer.address();
+    const port =
+      typeof customAddress === 'object' && customAddress
+        ? customAddress.port
+        : 0;
     const res = await fetch(
       `http://localhost:${port}/api/vocabulary/lookup?word=hello`
     );
@@ -163,7 +174,7 @@ describe('Vocabulary endpoint validation integration', () => {
 });
 
 describe('Workspace endpoint validation integration', () => {
-  let authHeaders;
+  let authHeaders: Record<string, string>;
 
   before(async () => {
     process.env.ALLOW_INSECURE_DEV_AUTH = 'true';
@@ -174,10 +185,13 @@ describe('Workspace endpoint validation integration', () => {
       getWorkspace: async () => null,
       createWorkspace: async () => ({ id: 'mock-id', name: 'Mock' }),
       countWorkspaces: async () => 0,
-    };
+    } as unknown as NonNullable<
+      Parameters<typeof createApp>[0]
+    >['workspaceRepository'];
     const app = createApp({ config, workspaceRepository: mockRepository });
     server = app.listen(0);
-    const { port } = server.address();
+    const address = server.address();
+    const port = typeof address === 'object' && address ? address.port : 0;
     baseUrl = `http://localhost:${port}`;
     authHeaders = {
       Authorization: `Bearer dev-backend-secret`,
