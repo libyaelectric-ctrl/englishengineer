@@ -1,1 +1,5 @@
-npx --no -- commitlint --edit $1
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Enforce Conventional Commits
+npx --no-install commitlint --edit "$1"
