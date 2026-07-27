@@ -74,10 +74,10 @@ describe('API Integration Smoke Tests', () => {
 });
 
 describe('Frontend-Backend Contract Tests', () => {
-  it('should have matching API schemas', () => {
+  it('should have matching API schemas', async () => {
     // Verify that frontend OpenAPI schemas match backend Swagger definitions
     // This is a static check that runs without the backend
-    const { OpenAPISchemas } = require('@/contracts/backend/openapi-schemas');
+    const { OpenAPISchemas } = await import('@/contracts/backend/openapi-schemas');
     expect(OpenAPISchemas).toBeDefined();
     expect(OpenAPISchemas.LoginRequest).toBeDefined();
     expect(OpenAPISchemas.User).toBeDefined();
