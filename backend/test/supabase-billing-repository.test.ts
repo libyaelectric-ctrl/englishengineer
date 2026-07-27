@@ -2,15 +2,20 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createSupabaseBillingRepository } from '../src/supabase-billing-repository.js';
 
+interface CallRecord {
+  url: string;
+  init: RequestInit & { headers?: Record<string, string> };
+}
+
 const config = {
   supabaseUrl: 'https://project.supabase.co',
   supabaseServiceRoleKey: 'service-role-test-key',
 };
 
 test('Supabase billing repository maps subscription rows', async () => {
-  const calls = [];
-  const fetchImpl = async (url, init) => {
-    calls.push({ url, init });
+  const calls: CallRecord[] = [];
+  const fetchImpl = async (url: string, init: RequestInit) => {
+    calls.push({ url, init: init as CallRecord['init'] });
     return new Response(
       JSON.stringify([
         {
@@ -27,23 +32,26 @@ test('Supabase billing repository maps subscription rows', async () => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   };
-  const repository = createSupabaseBillingRepository(config, fetchImpl);
+  const repository = createSupabaseBillingRepository(
+    config,
+    fetchImpl as unknown as typeof fetch
+  );
   const snapshot = await repository.getSubscriptionStatus('user-1');
 
-  assert.equal(snapshot.planId, 'pro');
-  assert.equal(snapshot.stripeCustomerId, 'cus_1');
-  assert.match(calls[0].url, /subscription_status\?.*user_id=eq\.user-1/);
-  assert.equal(calls[0].init.headers.apikey, 'service-role-test-key');
+  assert.equal(snapshot!.planId, 'pro');
+  assert.equal(snapshot!.stripeCustomerId, 'cus_1');
+  assert.match(calls[0]!.url, /subscription_status\?.*user_id=eq\.user-1/);
+  assert.equal(calls[0]!.init.headers?.apikey, 'service-role-test-key');
   assert.equal(
-    calls[0].init.headers.Authorization,
+    calls[0]!.init.headers?.Authorization,
     'Bearer service-role-test-key'
   );
 });
 
 test('Supabase billing repository upserts subscriptions and Stripe events', async () => {
-  const calls = [];
-  const fetchImpl = async (url, init) => {
-    calls.push({ url, init });
+  const calls: CallRecord[] = [];
+  const fetchImpl = async (url: string, init: RequestInit) => {
+    calls.push({ url, init: init as CallRecord['init'] });
     if (init.method === 'GET') {
       return new Response(JSON.stringify([]), {
         status: 200,
@@ -52,7 +60,10 @@ test('Supabase billing repository upserts subscriptions and Stripe events', asyn
     }
     return new Response(null, { status: 204 });
   };
-  const repository = createSupabaseBillingRepository(config, fetchImpl);
+  const repository = createSupabaseBillingRepository(
+    config,
+    fetchImpl as unknown as typeof fetch
+  );
   await repository.upsertSubscriptionStatus('user-1', {
     planId: 'pro',
     status: 'active',
@@ -62,6 +73,7 @@ test('Supabase billing repository upserts subscriptions and Stripe events', asyn
     stripeSubscriptionId: 'sub_1',
     updatedAt: '2026-06-27T00:00:00.000Z',
     source: 'stripe_webhook',
+    topupCredits: 0,
   });
   assert.equal(await repository.hasStripeEventBeenProcessed('evt_1'), false);
   await repository.markStripeEventProcessed('evt_1', {
@@ -69,13 +81,13 @@ test('Supabase billing repository upserts subscriptions and Stripe events', asyn
     processedAt: '2026-06-27T00:00:00.000Z',
   });
 
-  const subscriptionBody = JSON.parse(calls[0].init.body);
-  const eventBody = JSON.parse(calls[2].init.body);
+  const subscriptionBody = JSON.parse(calls[0]!.init.body as string);
+  const eventBody = JSON.parse(calls[2]!.init.body as string);
   assert.equal(subscriptionBody.user_id, 'user-1');
   assert.equal(subscriptionBody.plan_id, 'pro');
   assert.equal(eventBody.stripe_event_id, 'evt_1');
   assert.equal(eventBody.event_type, 'checkout.session.completed');
-  assert.match(calls[2].url, /stripe_processed_events\?.*on_conflict=/);
+  assert.match(calls[2]!.url, /stripe_processed_events\?.*on_conflict=/);
 });
 
 test('Supabase billing repository surfaces persistence failures', async () => {
