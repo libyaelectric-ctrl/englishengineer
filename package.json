@@ -94,7 +94,7 @@
     "fflate": "^0.8.3",
     "globals": "^15.0.0",
     "husky": "^9.1.7",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.0",
     "license-checker": "^25.0.1",
     "lint-staged": "^17.0.8",
     "prettier": "^3.0.0",
