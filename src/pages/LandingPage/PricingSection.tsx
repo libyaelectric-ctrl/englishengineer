@@ -23,17 +23,17 @@ export function PricingSection() {
                     </div>
                     <div className="relative z-10 mt-5">
                       <span className="text-4xl font-bold tracking-tight text-foreground">{plan.price}</span>
-                      <span className="ml-1.5 text-xs text-muted-copy font-mono">{plan.period || ''}</span>
+                      <span className="ml-1.5 text-xs text-muted-copy font-mono">{plan.cadence || ''}</span>
                     </div>
-                    <p className="relative z-10 mt-3 text-sm leading-relaxed text-muted-copy">{plan.description}</p>
+                    <p className="relative z-10 mt-3 text-sm leading-relaxed text-muted-copy">{plan.priceReason}</p>
                     <ul className="relative z-10 mt-6 space-y-3">
-                      {plan.features.map((f: string) => (
+                      {plan.benefits.map((f: string) => (
                         <li key={f} className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span className="text-sm text-foreground">{f}</span></li>
                       ))}
                     </ul>
                   </div>
                   <div className="relative z-10 mt-8">
-                    <Link to="/auth/register" className={`block w-full rounded px-4 py-3 text-center text-sm font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary-hover' : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'}`}>{plan.cta}</Link>
+                    <Link to="/auth/register" className={`block w-full rounded px-4 py-3 text-center text-sm font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary-hover' : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'}`}>{plan.id === 'free' ? 'Start Free' : 'Get Started'}</Link>
                   </div>
                 </div>
               </AnimatedCard>
