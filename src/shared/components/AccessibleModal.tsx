@@ -99,6 +99,8 @@ export const AccessibleModal: React.FC<AccessibleModalProps> = ({
       <div
         className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
         onClick={onClose}
+        onKeyDown={(e) => e.key === 'Escape' && onClose()}
+        role="presentation"
         aria-hidden="true"
       />
 

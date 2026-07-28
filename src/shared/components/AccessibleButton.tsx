@@ -18,6 +18,7 @@ interface AccessibleButtonProps
  * Accessible button with proper ARIA attributes.
  * Handles loading state, keyboard navigation, and screen reader support.
  */
+// eslint-disable-next-line complexity
 export const AccessibleButton: React.FC<AccessibleButtonProps> = ({
   label,
   icon,

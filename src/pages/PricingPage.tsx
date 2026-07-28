@@ -435,7 +435,7 @@ const PricingPage = () => {
             </p>
           </div>
 
-          {/* eslint-disable jsx-a11y/no-noninteractive-tabindex */}
+          { }
           <div
             className="overflow-x-auto rounded-2xl border border-border-soft shadow-xl bg-background"
             tabIndex={0}
@@ -482,7 +482,7 @@ const PricingPage = () => {
               </tbody>
             </table>
           </div>
-          {/* eslint-enable jsx-a11y/no-noninteractive-tabindex */}
+          { }
         </div>
       </section>
 
