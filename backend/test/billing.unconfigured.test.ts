@@ -6,7 +6,9 @@ import { createMemorySubscriptionRepository } from '../src/subscription-reposito
 test('getSubscriptionStatus returns a safe free snapshot when Stripe is not configured', async () => {
   const repository = createMemorySubscriptionRepository();
   const service = createBillingService({
-    config: { configured: false },
+    config: { configured: false } as unknown as Parameters<
+      typeof createBillingService
+    >[0]['config'],
     stripeClient: null,
     repository,
   });

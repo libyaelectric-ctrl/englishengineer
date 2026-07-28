@@ -1,3 +1,4 @@
+﻿/* eslint-disable @typescript-eslint/no-floating-promises, jsx-a11y/no-noninteractive-element-interactions */
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -71,7 +72,7 @@ describe('Architecture Rules', () => {
       }
     }
 
-    // Document violations but don't fail — these are known technical debt
+    // Document violations but don't fail â€” these are known technical debt
     console.log(
       `\n[Architecture] Feature-to-feature import violations: ${violations.length}`
     );

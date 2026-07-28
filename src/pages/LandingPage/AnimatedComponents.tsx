@@ -33,7 +33,13 @@ export function AnimatedCard({ children, className = '', delay = 0, dark = false
     transition: `opacity 720ms cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 720ms cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
   };
   return (
-    <div ref={setRefs} onMouseMove={handleMouseMove} className={`group relative overflow-hidden ${className}`} style={cardStyle}>
+    <div
+      ref={setRefs}
+      onMouseMove={handleMouseMove}
+      role="presentation"
+      className={`group relative overflow-hidden ${className}`}
+      style={cardStyle}
+    >
       <div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100" style={{ background: dark ? 'radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255,255,255,0.12), transparent 40%)' : 'radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(0,71,187,0.08), transparent 40%)' }} />
       {children}
     </div>

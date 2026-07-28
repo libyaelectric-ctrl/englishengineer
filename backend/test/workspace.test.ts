@@ -2,9 +2,13 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createWorkspaceRepository } from '../src/workspace.js';
 
+type WorkspaceRepoConfig = Parameters<typeof createWorkspaceRepository>[0];
+
 describe('workspace repository', () => {
   it('throws when workspace not configured', () => {
-    const config = { workspace: { configured: false } };
+    const config = {
+      workspace: { configured: false },
+    } as unknown as WorkspaceRepoConfig;
     assert.throws(() => createWorkspaceRepository(config), /SUPABASE/);
   });
 

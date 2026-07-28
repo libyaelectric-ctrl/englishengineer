@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@/shared/components/ui/button';
+import { Button } from '@/shared/components/Button';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, Terminal, Shield, Zap, Globe } from 'lucide-react';
 
-interface HeroSectionProps { heroVisible: boolean; scrollShift: number; }
+interface HeroSectionProps { scrollShift: number; }
 
 const HeroSection = ({ scrollShift }: HeroSectionProps) => {
   const navigate = useNavigate();

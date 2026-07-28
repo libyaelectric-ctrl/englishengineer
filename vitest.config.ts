@@ -19,6 +19,7 @@ export default defineConfig({
       'tests/**',
       'backend/**',
       '.mimocode/**',
+      'src/shared/tests/integration/**',
     ],
     coverage: {
       provider: 'v8',

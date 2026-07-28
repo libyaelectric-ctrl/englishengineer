@@ -136,7 +136,7 @@ const ProfilePage = () => {
           currentUser={currentUser}
           profile={profile}
           subscription={subscription}
-          learningState={learningState}
+          learningState={{ achievements: learningState.achievements }}
           isEditMode={isEditMode}
           editFirstName={editFirstName}
           editLastName={editLastName}

@@ -17,7 +17,7 @@ interface SkillsProgressSectionProps {
   memory: VocabularyMemorySummary;
   learningState: {
     streak: number;
-    studySessions: Array<{ timestamp: string }>;
+    studySessions: Array<{ timestamp: string; score: number }>;
   };
   mistakeLog: MistakeLogEntry[];
 }
@@ -257,7 +257,7 @@ export const SkillsProgressSection = ({
 
         {/* Heatmap & Analytics CTA */}
         <div className="mt-6 flex flex-col gap-4 border-t border-border-soft pt-4">
-          <Heatmap />
+          <Heatmap sessions={learningState.studySessions} />
           <div className="flex justify-end mt-2">
             <Link
               to="/progress/overview"
