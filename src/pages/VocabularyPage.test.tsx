@@ -5,7 +5,7 @@ import {
   waitFor,
   within,
 } from '@testing-library/react';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   VocabularyMenuService,
   VocabularyRepository,
@@ -95,36 +95,45 @@ describe('VocabularyPage menu', () => {
   }, 10_000);
 
   it('moves quiz answers through the learned pools in one completed quiz', async () => {
-    const terms = await VocabularyRepository.getVocabularyByLevel('A1');
-    terms.slice(0, 100).forEach((term) =>
-      VocabularyMenuService.startLearning(term.id)
-    );
-    render(<VocabularyPage />);
-    fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
+    // selectRandomQuizItems() uses Math.random() to pick which terms appear
+    // in the quiz. Left unseeded, this test picks a different "Question 1"
+    // term on every run, which was intermittently flaky in CI depending on
+    // which term got picked. Fix the sequence for a deterministic outcome.
+    const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0);
+    try {
+      const terms = await VocabularyRepository.getVocabularyByLevel('A1');
+      terms.slice(0, 100).forEach((term) =>
+        VocabularyMenuService.startLearning(term.id)
+      );
+      render(<VocabularyPage />);
+      fireEvent.click(screen.getByRole('tab', { name: 'Learned' }));
 
-    fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
-    const firstInput = await screen.findByLabelText('Question 1 / 10');
-    const question = firstInput.parentElement;
-    const termLabel = question?.querySelector('p')?.textContent;
-    const selectedTerm = terms.find((term) => term.term === termLabel);
-    expect(selectedTerm).toBeDefined();
+      fireEvent.click(screen.getByRole('button', { name: 'Start Quiz' }));
+      const firstInput = await screen.findByLabelText('Question 1 / 10');
+      const question = firstInput.parentElement;
+      const termLabel = question?.querySelector('p')?.textContent;
+      const selectedTerm = terms.find((term) => term.term === termLabel);
+      expect(selectedTerm).toBeDefined();
 
-    fireEvent.change(firstInput, {
-      target: { value: selectedTerm?.turkishMeaning },
-    });
-    fireEvent.click(screen.getByRole('button', { name: 'Finish Quiz' }));
+      fireEvent.change(firstInput, {
+        target: { value: selectedTerm?.turkishMeaning },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Finish Quiz' }));
 
-    await screen.findByText('Quiz Complete');
-    const statuses = Object.values(VocabularyMenuService.getState().progress);
-    expect(statuses.filter((word) => word.status === 'Mastered')).toHaveLength(
-      1
-    );
-    expect(statuses.filter((word) => word.status === 'Struggling')).toHaveLength(
-      0
-    );
-    expect(statuses.filter((word) => word.status === 'Learned')).toHaveLength(
-      99
-    );
+      await screen.findByText('Quiz Complete');
+      const statuses = Object.values(VocabularyMenuService.getState().progress);
+      expect(
+        statuses.filter((word) => word.status === 'Mastered')
+      ).toHaveLength(1);
+      expect(
+        statuses.filter((word) => word.status === 'Struggling')
+      ).toHaveLength(0);
+      expect(
+        statuses.filter((word) => word.status === 'Learned')
+      ).toHaveLength(99);
+    } finally {
+      randomSpy.mockRestore();
+    }
   }, 10_000);
 
   it('searches vocabulary via modal and finds results', async () => {
