@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '@/shared/utils';
+import { cn } from '@/shared/utils/cn';
 
 interface StudySessionLike {
   timestamp: string;
