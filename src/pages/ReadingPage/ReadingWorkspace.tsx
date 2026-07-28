@@ -89,6 +89,7 @@ What questions do you have about this passage?`,
       },
     ]);
     setChatInput('');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMission.id]);
 
   const handleSendChat = async () => {

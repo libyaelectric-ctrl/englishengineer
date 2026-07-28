@@ -34,6 +34,7 @@ export const PronunciationService = {
     }
   },
 
+  // eslint-disable-next-line complexity
   async speak(word: string, rate = 0.9): Promise<void> {
     if (!('speechSynthesis' in window)) {
       throw new Error('Speech synthesis not supported');

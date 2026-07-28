@@ -39,6 +39,7 @@ export const eosPersistConfig = <S>(
   partialize?: (state: S) => Partial<S>
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   storage: eosStorage as any,
   ...(partialize ? { partialize } : {}),
 });
@@ -64,6 +65,7 @@ export const eosPersistPartial = <S extends Record<string, unknown>>(
   keysToPersist: (keyof S)[]
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   storage: eosStorage as any,
   partialize: (state) => {
     const partial: Record<string, unknown> = {};

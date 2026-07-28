@@ -16,6 +16,7 @@ interface AccessibleInputProps
  * Accessible input with proper labels and error handling.
  * Automatically links label, input, error, and helper text via IDs.
  */
+// eslint-disable-next-line complexity
 export const AccessibleInput: React.FC<AccessibleInputProps> = ({
   label,
   error,

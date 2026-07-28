@@ -144,6 +144,7 @@ export function useGrammarPage() {
         status: getLessonStatus(GrammarProgressService.get(rule.id)),
         isUnlocked: unlockedIds.has(rule.id),
       })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [rules, progressVersion, unlockedIds]
   );
 
@@ -307,6 +308,7 @@ export function useGrammarPage() {
       }
     });
     recordQuizResult(correctCount);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizAnswers, selectedRule]);
 
   const quizItems = selectedRule

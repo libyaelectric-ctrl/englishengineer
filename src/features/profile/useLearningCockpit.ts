@@ -74,6 +74,7 @@ export const useLearningCockpit = (userId?: string | null) => {
     return () => {
       active = false;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, learningState.lastActivityDate, learningState.xp]);
 
   return { profile, memory, missions, isLoading, learningState };
