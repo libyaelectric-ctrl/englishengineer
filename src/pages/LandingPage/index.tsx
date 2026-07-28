@@ -3,7 +3,7 @@ import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ProductAnalyticsService } from '@/features/analytics';
 import { STRUCTURED_DATA } from './constants';
 import { Navbar } from './Navbar';
-import { HeroSection } from './HeroSection';
+import HeroSection from './HeroSection';
 import { FeatureSection } from './FeatureSection';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { WorkflowSection } from './WorkflowSection';
@@ -12,11 +12,14 @@ import { FAQSection } from './FAQSection';
 import { Footer } from './Footer';
 
 const LandingPage = () => {
-  const [heroVisible] = useState(true);
   const [scrollShift, setScrollShift] = useState(0);
 
   useEffect(() => {
-    try { ProductAnalyticsService.track('screen_viewed', 'landing'); } catch {}
+    try {
+      ProductAnalyticsService.track('screen_viewed', 'landing');
+    } catch {
+      /* ignore */
+    }
   }, []);
 
   useEffect(() => {
@@ -29,20 +32,32 @@ const LandingPage = () => {
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => { window.cancelAnimationFrame(frame); window.removeEventListener('scroll', handleScroll); };
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased selection:bg-primary/20">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'linear-gradient(#0047bb 1px,transparent 1px),linear-gradient(90deg,#0047bb 1px,transparent 1px)', backgroundSize: '60px 60px' }} />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'linear-gradient(#0047bb 1px,transparent 1px),linear-gradient(90deg,#0047bb 1px,transparent 1px)',
+            backgroundSize: '60px 60px',
+          }}
+        />
       </div>
-      <PageMetadata title="EngVox — Engineering Communication Operating System"
+      <PageMetadata
+        title="EngVox — Engineering Communication Operating System"
         description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
-        canonicalPath="/" structuredData={STRUCTURED_DATA} />
+        canonical="/"
+        jsonLd={STRUCTURED_DATA}
+      />
       <Navbar />
-      <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
+      <HeroSection scrollShift={scrollShift} />
       <FeatureSection />
       <DisciplineShowcase />
       <WorkflowSection />

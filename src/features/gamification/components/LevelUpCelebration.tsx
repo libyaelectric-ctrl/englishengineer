@@ -33,11 +33,19 @@ export function LevelUpCelebration({
 
   return (
     <div
-      role="status"
+      role="button" tabIndex={0}
       aria-live="polite"
       onClick={() => {
+         
         setVisible(false);
         window.setTimeout(onDismiss, 200);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setVisible(false);
+          window.setTimeout(onDismiss, 200);
+        }
       }}
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-300 cursor-pointer ${
         visible ? 'opacity-100' : 'opacity-0'

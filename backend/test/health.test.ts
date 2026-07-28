@@ -1,6 +1,8 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { toPublicHealth } from '../src/config.js';
+import { toPublicHealth, createBackendConfig } from '../src/config.js';
+
+type BackendConfig = ReturnType<typeof createBackendConfig>;
 
 describe('health endpoint', () => {
   const config = {
@@ -10,7 +12,7 @@ describe('health endpoint', () => {
     stripe: { configured: true },
     supabase: { configured: true },
     rateLimit: { storeMode: 'upstash' },
-  };
+  } as unknown as BackendConfig;
 
   it('returns ok true with version when all critical services configured', () => {
     const health = toPublicHealth(config);
@@ -20,7 +22,10 @@ describe('health endpoint', () => {
   });
 
   it('returns degraded when AI not configured', () => {
-    const testConfig = { ...config, ai: { configured: false } };
+    const testConfig = {
+      ...config,
+      ai: { configured: false },
+    } as unknown as BackendConfig;
     const health = toPublicHealth(testConfig);
     assert.equal(health.ok, false);
     assert.equal(health.status, 'degraded');

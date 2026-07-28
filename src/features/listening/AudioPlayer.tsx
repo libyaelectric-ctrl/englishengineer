@@ -101,6 +101,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
       audio.pause();
       audioRef.current = null;
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mission.id, mission.audioDurationSeconds]);
 
   // Load audio source when mission changes
@@ -116,6 +117,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
     if (resumePosition > 0) {
       audio.currentTime = resumePosition;
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mission.audioUrl, resumePosition]);
 
   // Sync playback speed

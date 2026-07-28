@@ -1,0 +1,27 @@
+# Build output
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Test files with known ESLint issues (temporary)
+tests/browser/
+src/core/architecture.test.ts
+
+# Coverage
+coverage/
+
+# Scripts (utility scripts, not production code)
+scripts/
+
+# Generated files
+*.generated.ts
+*.generated.tsx
+
+# Storybook
+.storybook/
+
+backend/src/utils/route-handler.ts
+backend/src/middleware/csrf.middleware.ts
+backend/src/logger.ts

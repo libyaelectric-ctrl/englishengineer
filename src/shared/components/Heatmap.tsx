@@ -1,10 +1,16 @@
 import React from 'react';
-import { useLearningStore } from '@/core/learning';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils';
 
-export const Heatmap: React.FC = React.memo(() => {
-  const sessions = useLearningStore((state) => state.studySessions);
+interface StudySessionLike {
+  timestamp: string;
+  score: number;
+}
 
+interface HeatmapProps {
+  sessions: StudySessionLike[];
+}
+
+export const Heatmap: React.FC<HeatmapProps> = React.memo(({ sessions }) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -55,7 +61,7 @@ export const Heatmap: React.FC = React.memo(() => {
                 'h-6 w-6 rounded-sm shrink-0 transition-all cursor-crosshair hover:scale-110',
                 levelClass,
                 i === 29 &&
-                  'ring-2 ring-primary ring-offset-1 ring-offset-background' // highlight today
+                  'ring-2 ring-primary ring-offset-1 ring-offset-background'
               )}
             />
           );

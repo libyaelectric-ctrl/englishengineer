@@ -1,3 +1,4 @@
+﻿/* eslint-disable @typescript-eslint/no-require-imports */
 import { test, expect } from '@playwright/test';
 
 const SITE = 'https://englishengineer.vercel.app';
@@ -201,7 +202,7 @@ test.describe('Detailed Agent Report', () => {
       await page
         .getByPlaceholder(/you@example.com/i)
         .fill('catexozcan@gmail.com');
-      await page.getByPlaceholder(/•/).fill('123456');
+      await page.getByPlaceholder(/â€¢/).fill('123456');
       await page.getByRole('button', { name: /sign in/i }).click();
       try {
         await page.waitForURL(/\/(dashboard|curriculum|onboarding)/, {
@@ -245,7 +246,7 @@ test.describe('Detailed Agent Report', () => {
     console.log(`Failed: ${results.filter((r) => r.status === 'FAIL').length}`);
     console.log('----------------------------------------');
     results.forEach((r) => {
-      const icon = r.status === 'PASS' ? '✅' : '❌';
+      const icon = r.status === 'PASS' ? 'âœ…' : 'âŒ';
       console.log(`${icon} ${r.test} (${r.duration}ms)`);
       console.log(`   ${r.details}`);
     });

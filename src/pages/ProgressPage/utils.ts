@@ -147,6 +147,7 @@ export const useAnimatedNumber = (value: number, duration: number = 1.5) => {
       else setDisplayValue(value);
     };
     requestAnimationFrame(animate);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, duration]);
   return displayValue;
 };

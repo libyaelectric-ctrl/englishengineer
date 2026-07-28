@@ -29,6 +29,7 @@ export class SpeakingAudioUploadError extends Error {
  * POST /api/speaking/audio-upload endpoint. Kademe 5.2 counterpart to
  * useMicRecorder's Kademe 5.1 capture step.
  */
+// eslint-disable-next-line complexity
 export async function uploadSpeakingAudio(
   blob: Blob,
   options: SpeakingAudioUploadOptions = {}

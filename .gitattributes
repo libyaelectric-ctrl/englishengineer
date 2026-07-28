@@ -1,0 +1,21 @@
+# Git LFS tracking for large binary files
+# Audio files
+public/audio/*.mp3 filter=lfs diff=lfs merge=lfs -text
+
+# Video files
+public/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
+public/**/*.webm filter=lfs diff=lfs merge=lfs -text
+
+# Large seed data files (>500KB)
+public/data/**/*.json filter=lfs diff=lfs merge=lfs -text
+
+# Images
+public/**/*.webp filter=lfs diff=lfs merge=lfs -text
+public/**/*.png filter=lfs diff=lfs merge=lfs -text
+public/**/*.jpg filter=lfs diff=lfs merge=lfs -text
+public/**/*.jpeg filter=lfs diff=lfs merge=lfs -text
+
+# Fonts
+public/**/*.woff2 filter=lfs diff=lfs merge=lfs -text
+public/**/*.woff filter=lfs diff=lfs merge=lfs -text
+public/**/*.ttf filter=lfs diff=lfs merge=lfs -text
