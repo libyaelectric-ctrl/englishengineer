@@ -3,7 +3,7 @@ import { afterEach, test } from 'node:test';
 import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 
-const servers = [];
+const servers: Array<{ close: () => void }> = [];
 
 afterEach(() => {
   servers.splice(0).forEach((server) => server.close());
@@ -15,7 +15,10 @@ const STRIPE_ENV = {
   STRIPE_WEBHOOK_SECRET: 'whsec_test_secret',
 };
 
-const start = async (environment = {}, dependencies = {}) => {
+const start = async (
+  environment: Record<string, string> = {},
+  dependencies: Record<string, unknown> = {}
+) => {
   const config = createBackendConfig({
     NODE_ENV: 'test',
     RATE_LIMIT_STORE: 'memory',
@@ -28,6 +31,9 @@ const start = async (environment = {}, dependencies = {}) => {
   servers.push(server);
   await new Promise((resolve) => server.once('listening', resolve));
   const address = server.address();
+  if (!address || typeof address === 'string') {
+    throw new Error('Expected server to have a network address');
+  }
   return `http://127.0.0.1:${address.port}`;
 };
 

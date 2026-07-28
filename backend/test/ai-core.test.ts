@@ -1,10 +1,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { createAIService } from '../src/ai-core/index.js';
+import type { AiConfig } from '../types.js';
 
 describe('AI Core Service', () => {
   it('returns mock response if AI is not configured', async () => {
-    const config = { configured: false };
+    const config = { configured: false } as unknown as AiConfig;
     const service = createAIService(config);
     const result = await service.complete('evaluateEngineeringEnglish', {
       prompt: 'Hello world',
@@ -22,7 +23,7 @@ describe('AI Core Service', () => {
       apiKey: 'test-key',
       model: 'gpt-4o',
       timeoutMs: 5000,
-    };
+    } as unknown as AiConfig;
 
     const mockResponseJson = JSON.stringify({
       summary: 'Excellent English grammar.',
@@ -43,8 +44,8 @@ describe('AI Core Service', () => {
     let capturedPrompt = '';
     let capturedJsonMode = false;
 
-    const mockFetch = async (url, options) => {
-      const body = JSON.parse(options.body);
+    const mockFetch = async (url: string, options?: RequestInit) => {
+      const body = JSON.parse(options!.body as string);
       capturedPrompt = body.messages[0].content;
       capturedJsonMode = !!body.response_format;
 
@@ -59,7 +60,7 @@ describe('AI Core Service', () => {
       );
     };
 
-    const service = createAIService(config, mockFetch);
+    const service = createAIService(config, mockFetch as unknown as typeof fetch);
     const result = await service.complete('evaluateEngineeringEnglish', {
       prompt: 'Initial prompt text',
       context: {},
@@ -85,7 +86,7 @@ describe('AI Core Service', () => {
       apiKey: 'test-key',
       model: 'gpt-4o',
       timeoutMs: 5000,
-    };
+    } as unknown as AiConfig;
 
     const rawText = 'This is raw, unstructured feedback from the LLM.';
 
@@ -101,7 +102,7 @@ describe('AI Core Service', () => {
       );
     };
 
-    const service = createAIService(config, mockFetch);
+    const service = createAIService(config, mockFetch as unknown as typeof fetch);
     const result = await service.complete('evaluateEngineeringEnglish', {
       prompt: 'Initial prompt text',
       context: {},
@@ -119,11 +120,11 @@ describe('AI Core Service', () => {
       apiKey: 'test-key',
       model: 'gpt-4o',
       timeoutMs: 5000,
-    };
+    } as unknown as AiConfig;
 
     let capturedPrompt = '';
-    const mockFetch = async (url, options) => {
-      const body = JSON.parse(options.body);
+    const mockFetch = async (url: string, options?: RequestInit) => {
+      const body = JSON.parse(options!.body as string);
       capturedPrompt = body.messages[0].content;
       return new Response(
         JSON.stringify({
@@ -136,7 +137,7 @@ describe('AI Core Service', () => {
       );
     };
 
-    const service = createAIService(config, mockFetch);
+    const service = createAIService(config, mockFetch as unknown as typeof fetch);
     const requestBody = {
       prompt: 'Sana özel kelimelerle çalışalım lütfen.',
       context: {
