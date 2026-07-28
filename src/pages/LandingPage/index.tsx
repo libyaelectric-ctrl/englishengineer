@@ -16,9 +16,7 @@ const LandingPage = () => {
   const [scrollShift, setScrollShift] = useState(0);
 
   useEffect(() => {
-    try {
-      ProductAnalyticsService.track('screen_viewed', 'landing');
-    } catch { /* ignore */ }
+    try { ProductAnalyticsService.track('screen_viewed', 'landing'); } catch {}
   }, []);
 
   useEffect(() => {
@@ -31,54 +29,27 @@ const LandingPage = () => {
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => { window.cancelAnimationFrame(frame); window.removeEventListener('scroll', handleScroll); };
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-[#0a0a0f] text-white antialiased selection:bg-blue-500/30">
-      {/* Animated gradient mesh background */}
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-[#0a0a0f] to-[#0a0a0f]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-900/10 via-transparent to-transparent" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl" />
-        {/* Grid overlay */}
-        <div 
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px'
-          }}
-        />
+    <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased selection:bg-primary/20">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 opacity-[0.04]"
+          style={{ backgroundImage: 'linear-gradient(#0047bb 1px,transparent 1px),linear-gradient(90deg,#0047bb 1px,transparent 1px)', backgroundSize: '60px 60px' }} />
       </div>
-
-      <PageMetadata
-        title="EngineerOS — Engineering English OS for Global Infrastructure & Tech Teams"
+      <PageMetadata title="EngVox — Engineering Communication Operating System"
         description="AI-powered oral defense coaching, FIDIC contract writing, technical presentation practice, and 5,000+ domain-specific terms."
-        canonicalPath="/"
-        structuredData={STRUCTURED_DATA}
-      />
-
+        canonicalPath="/" structuredData={STRUCTURED_DATA} />
       <Navbar />
-
       <HeroSection heroVisible={heroVisible} scrollShift={scrollShift} />
-
       <FeatureSection />
-
       <DisciplineShowcase />
-
       <WorkflowSection />
-
       <PricingSection />
-
       <FAQSection />
-
       <Footer />
     </main>
   );
 };
-
 export default LandingPage;
