@@ -2,7 +2,7 @@ import React from 'react';
 import { cn } from '@/shared/utils';
 
 interface StudySessionLike {
-  timestamp: number;
+  timestamp: string;
   score: number;
 }
 

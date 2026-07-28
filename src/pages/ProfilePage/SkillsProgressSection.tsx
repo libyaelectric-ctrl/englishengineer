@@ -17,7 +17,7 @@ interface SkillsProgressSectionProps {
   memory: VocabularyMemorySummary;
   learningState: {
     streak: number;
-    studySessions: Array<{ timestamp: number; score: number }>;
+    studySessions: Array<{ timestamp: string; score: number }>;
   };
   mistakeLog: MistakeLogEntry[];
 }
