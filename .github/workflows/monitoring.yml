@@ -48,10 +48,15 @@ jobs:
         run: |
           echo "" >> report.md
           echo "## Security Audit" >> report.md
-          echo "" >> report.md
+          echo ""
           npm audit --json > audit-results.json 2>&1 || true
           if [ -f audit-results.json ]; then
-            VULNS=$(cat audit-results.json | grep -o '"total":\s*[0-9]' | head -1)
+            VULNS=$(node -e "
+              try {
+                const d = JSON.parse(require('fs').readFileSync('audit-results.json', 'utf-8'));
+                console.log(d.metadata?.vulnerabilities?.total ?? 'unknown');
+              } catch { console.log('unknown'); }
+            ")
             echo "Vulnerabilities: $VULNS" >> report.md
           fi
 
