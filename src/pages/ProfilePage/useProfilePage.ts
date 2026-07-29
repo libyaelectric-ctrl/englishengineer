@@ -1,5 +1,5 @@
-import { useEffect, useReducer, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useEffect, useReducer, useState, useCallback } from 'react';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
 import { useAIStore } from '@/features/ai';
@@ -16,6 +16,7 @@ import { useProfilePreferences } from './useProfilePreferences';
 
 export const useProfilePage = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { section } = useParams<{ section: string }>();
   const activeSection = section || 'overview';
   const { currentUser, providerMode, logout } = useAuthStore();
@@ -179,14 +180,14 @@ export const useProfilePage = () => {
     setError(null);
   };
 
-  const clearLocalData = async () => {
+  const clearLocalData = useCallback(async () => {
     if (providerMode !== 'local' || clearConfirmation !== 'CLEAR') return;
     await logout();
     storage.clear();
-    window.location.assign('/start');
-  };
+    navigate('/start');
+  }, [providerMode, clearConfirmation, logout, navigate]);
 
-  const resetLearningProgress = async () => {
+  const resetLearningProgress = useCallback(async () => {
     if (clearConfirmation !== 'CLEAR') return;
     [
       'learning_state',
@@ -210,8 +211,8 @@ export const useProfilePage = () => {
         currentUser.id
       );
     storage.clear();
-    window.location.assign('/start');
-  };
+    navigate('/start');
+  }, [clearConfirmation, currentUser?.id, navigate]);
 
   const completionPercent = (() => {
     let c = 0;

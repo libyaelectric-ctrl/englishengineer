@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { EngVoxMascot } from '@/shared/components/Mascot';
 import { useBetaStore } from '@/features/beta/beta.store';
@@ -11,6 +11,13 @@ export const SidebarMascotHome: React.FC = () => {
   const [feedbackType, setFeedbackType] =
     useState<BetaFeedbackType>('suggestion');
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    };
+  }, []);
 
   const submitFeedback = useBetaStore((state) => state.submitFeedback);
 
@@ -29,7 +36,8 @@ export const SidebarMascotHome: React.FC = () => {
     });
 
     setFeedbackSubmitted(true);
-    setTimeout(() => {
+    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+    feedbackTimerRef.current = setTimeout(() => {
       setFeedbackMessage('');
       setFeedbackSubmitted(false);
       setShowFeedbackModal(false);

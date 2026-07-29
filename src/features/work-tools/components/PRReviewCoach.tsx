@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Clipboard,
   Check,
@@ -22,6 +22,13 @@ export const PRReviewCoach = () => {
   const [result, setResult] = useState<PRReviewResult | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const handlePolish = async () => {
     if (!input.trim()) return;
@@ -36,12 +43,13 @@ export const PRReviewCoach = () => {
     }
   };
 
-  const handleCopy = async () => {
+  const handleCopy = useCallback(async () => {
     if (!result?.polishedText) return;
     await navigator.clipboard.writeText(result.polishedText);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1400);
-  };
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(false), 1400);
+  }, [result]);
 
   const handleSample = (sample: string) => {
     setInput(sample);

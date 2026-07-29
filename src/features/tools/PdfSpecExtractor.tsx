@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   FileCode,
   UploadCloud,
@@ -20,8 +20,17 @@ export const PdfSpecExtractor: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedTerms, setExtractedTerms] = useState<ExtractedTerm[]>([]);
   const [copied, setCopied] = useState(false);
+  const processTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleSimulatedUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    return () => {
+      if (processTimerRef.current) clearTimeout(processTimerRef.current);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
+
+  const handleSimulatedUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -29,7 +38,8 @@ export const PdfSpecExtractor: React.FC = () => {
     setIsProcessing(true);
     setExtractedTerms([]);
 
-    setTimeout(() => {
+    if (processTimerRef.current) clearTimeout(processTimerRef.current);
+    processTimerRef.current = setTimeout(() => {
       setExtractedTerms([
         {
           word: 'Allowable Bearing Capacity',
@@ -62,19 +72,20 @@ export const PdfSpecExtractor: React.FC = () => {
       ]);
       setIsProcessing(false);
     }, 1200);
-  };
+  }, []);
 
-  const handleCopyFlashcards = () => {
+  const handleCopyFlashcards = useCallback(() => {
     const text = extractedTerms
       .map(
         (t) =>
-          `• ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`
+          `\u2022 ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`
       )
       .join('\n\n');
     navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+  }, [extractedTerms]);
 
   return (
     <div className="rounded-2xl border border-border-soft bg-surface p-6 shadow-sm space-y-6">

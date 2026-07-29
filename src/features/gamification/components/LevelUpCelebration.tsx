@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Trophy } from 'lucide-react';
 
 interface LevelUpCelebrationProps {
@@ -18,16 +18,29 @@ export function LevelUpCelebration({
   autoDismissMs = 3200,
 }: LevelUpCelebrationProps) {
   const [visible, setVisible] = useState(false);
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (level === null) return;
     setVisible(true);
-    const timer = window.setTimeout(() => {
+    const timer = setTimeout(() => {
       setVisible(false);
-      window.setTimeout(onDismiss, 250); // let fade-out finish before unmount
+      fadeTimerRef.current = setTimeout(onDismiss, 250);
     }, autoDismissMs);
-    return () => window.clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (fadeTimerRef.current) {
+        clearTimeout(fadeTimerRef.current);
+        fadeTimerRef.current = null;
+      }
+    };
   }, [level, autoDismissMs, onDismiss]);
+
+  const handleDismiss = useCallback(() => {
+    setVisible(false);
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    fadeTimerRef.current = setTimeout(onDismiss, 200);
+  }, [onDismiss]);
 
   if (level === null) return null;
 
@@ -35,16 +48,11 @@ export function LevelUpCelebration({
     <div
       role="button" tabIndex={0}
       aria-live="polite"
-      onClick={() => {
-         
-        setVisible(false);
-        window.setTimeout(onDismiss, 200);
-      }}
+      onClick={handleDismiss}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          setVisible(false);
-          window.setTimeout(onDismiss, 200);
+          handleDismiss();
         }
       }}
       className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-300 cursor-pointer ${

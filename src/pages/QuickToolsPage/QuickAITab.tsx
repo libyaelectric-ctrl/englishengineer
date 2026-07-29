@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Bot, Check, Clipboard, Send, WifiOff } from 'lucide-react';
 import { AIService, AIProviderStatus } from '@/features/ai';
 import { BetaService } from '@/features/beta';
@@ -27,6 +27,13 @@ export const QuickAITab = ({
   const [result, setResult] = useState('');
   const [isRunning, setIsRunning] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   // Sync draft input when initialDraft prop changes (e.g. from Mascot Quick AI button)
   useEffect(() => {
@@ -52,13 +59,14 @@ export const QuickAITab = ({
     }
   };
 
-  const copy = async (id: string, text: string) => {
+  const copy = useCallback(async (id: string, text: string) => {
     if (await WorkToolsService.copy(text)) {
       remember(id);
       setCopied(id);
-      window.setTimeout(() => setCopied(null), 1200);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(null), 1200);
     }
-  };
+  }, [remember]);
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">

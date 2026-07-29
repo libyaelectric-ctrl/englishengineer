@@ -52,7 +52,14 @@ export const WorkspaceCreateBodySchema = z.object({
 
 export const WorkspaceMemoryBodySchema = z.object({
   key: z.string().trim().min(1, 'Memory key is required.').max(200),
-  value: z.any(),
+  value: z.union([
+    z.string().max(50_000),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(z.union([z.string(), z.number(), z.boolean()])),
+    z.record(z.union([z.string(), z.number(), z.boolean()])),
+  ]),
 });
 
 export const WorkspaceDocumentBodySchema = z.object({

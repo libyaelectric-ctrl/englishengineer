@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Mic,
   Volume2,
@@ -84,19 +84,20 @@ export const DefenseSimulator: React.FC = () => {
     vocabulary: string;
     feedback: string;
   } | null>(null);
+  const evalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const scenario = SCENARIOS.find((s) => s.id === activeScenario)!;
 
-  const handleStartRecording = () => {
+  const handleStartRecording = useCallback(() => {
     setIsRecording(true);
     setUserSpeechText('');
     setEvaluation(null);
-  };
+  }, []);
 
-  const handleStopRecording = () => {
+  const handleStopRecording = useCallback(() => {
     setIsRecording(false);
-    // Simulate AI oral evaluation
-    setTimeout(() => {
+    if (evalTimerRef.current) clearTimeout(evalTimerRef.current);
+    evalTimerRef.current = setTimeout(() => {
       setUserSpeechText(
         'Due to unforeseen underground utility clashes, we revised the ductwork routing. We mobilized additional night shift crews to recover 5 days by next Friday.'
       );
@@ -109,7 +110,14 @@ export const DefenseSimulator: React.FC = () => {
           'Excellent technical defense! Your usage of "mobilized additional night shift crews" and "critical path recovery" convinced the client PM.',
       });
     }, 1200);
-  };
+  }, []);
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (evalTimerRef.current) clearTimeout(evalTimerRef.current);
+    };
+  }, []);
 
   return (
     <div className="space-y-6">

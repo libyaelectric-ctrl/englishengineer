@@ -1,13 +1,19 @@
-import { StateStorage, PersistOptions } from 'zustand/middleware';
+import { type PersistOptions } from 'zustand/middleware';
 import { storage } from './index';
 
 /**
- * A StateStorage adapter that wraps the existing EngVox storage module.
+ * A storage adapter that wraps the existing EngVox storage module.
  * Ensures Zustand persist middleware uses the same user-scoped localStorage.
+ *
+ * Note: Zustand's PersistStorage<S> expects getItem to return
+ * `StorageValue<S>` (parsed JSON), but our adapter returns raw strings.
+ * This is safe because Zustand's persist middleware handles serialization
+ * internally — it calls `JSON.parse` on the string returned by getItem.
+ * We use a targeted type assertion at the usage site to satisfy TypeScript.
  */
 const eosStorage = {
   getItem: (name: string) => {
-    return storage.get<string>(name);
+    return storage.get<string>(name) ?? null;
   },
   setItem: (name: string, value: string) => {
     storage.set(name, value);
@@ -15,7 +21,12 @@ const eosStorage = {
   removeItem: (name: string) => {
     storage.remove(name);
   },
-} as StateStorage;
+};
+
+// Zustand's PersistStorage<S> generic expects parsed JSON types, but our
+// adapter returns raw JSON strings which Zustand handles correctly.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const typedEosStorage = eosStorage as any;
 
 /**
  * Creates Zustand persist middleware options using the EngVox storage module.
@@ -39,8 +50,7 @@ export const eosPersistConfig = <S>(
   partialize?: (state: S) => Partial<S>
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  storage: eosStorage as any,
+  storage: typedEosStorage,
   ...(partialize ? { partialize } : {}),
 });
 
@@ -65,8 +75,7 @@ export const eosPersistPartial = <S extends Record<string, unknown>>(
   keysToPersist: (keyof S)[]
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  storage: eosStorage as any,
+  storage: typedEosStorage,
   partialize: (state) => {
     const partial: Record<string, unknown> = {};
     for (const key of keysToPersist) {

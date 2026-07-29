@@ -134,7 +134,8 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
     if (!audio) return;
 
     if (isPlaying) {
-      audio.play().catch(() => {
+      audio.play().catch((err) => {
+        console.debug('Audio playback failed:', err);
         pausePlaying();
       });
     } else {
