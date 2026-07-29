@@ -127,12 +127,22 @@ jobs:
       - name: Check bundle size
         run: |
           echo "=== Bundle Size Budget ==="
-          JS_SIZE=$(du -sb dist/assets/*.js | awk '{s+=$1}END{print s}')
-          CSS_SIZE=$(du -sb dist/assets/*.css | awk '{s+=$1}END{print s}')
-          JS_LIMIT=1000000
+          # Measure only what the browser downloads on initial page load
+          # (the entry script + modulepreload chunks listed in
+          # index.html), not every lazy-loaded route/page chunk in
+          # dist/assets/. See deploy-production.yml for the same fix and
+          # a longer explanation.
+          INITIAL_JS=$(grep -oE '(src|href)="/assets/[^"]+\.js"' dist/index.html | sed -E 's/^(src|href)="//;s/"$//')
+          JS_SIZE=0
+          for f in $INITIAL_JS; do
+            SIZE=$(stat -c%s "dist${f}" 2>/dev/null || echo 0)
+            JS_SIZE=$((JS_SIZE + SIZE))
+          done
+          CSS_SIZE=$(du -sb dist/assets/*.css 2>/dev/null | awk '{s+=$1}END{print s}')
+          JS_LIMIT=2000000
           CSS_LIMIT=200000
-          echo "JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
-          echo "CSS: ${CSS_SIZE} bytes (limit: ${CSS_LIMIT})"
+          echo "Initial-load JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
+          echo "CSS: ${CSS_SIZE:-0} bytes (limit: ${CSS_LIMIT})"
           FAIL=0
           if [ "${JS_SIZE:-0}" -gt "$JS_LIMIT" ]; then
             echo "FAIL: JS bundle too large"

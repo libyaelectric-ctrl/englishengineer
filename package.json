@@ -13,7 +13,7 @@
     "test": "vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude '.mimocode/**' --exclude 'tests/**' --exclude 'src/shared/tests/integration/**'",
     "test:integration": "vitest run --configLoader runner src/shared/tests/integration",
     "test:watch": "vitest --configLoader runner",
-    "test:coverage": "vitest run --coverage --configLoader runner",
+    "test:coverage": "vitest run --coverage --configLoader runner --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude '.mimocode/**' --exclude 'tests/**' --exclude 'src/shared/tests/integration/**'",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "depcruise": "depcruise src backend --config .dependency-cruiser.mjs",
