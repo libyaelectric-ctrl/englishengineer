@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import type { ElementType } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Mic,
   Volume2,
@@ -22,7 +23,7 @@ interface ScenarioMeta {
   subtitle: string;
   badge: string;
   aiPrompt: string;
-  icon: React.ElementType;
+  icon: ElementType;
 }
 
 const SCENARIOS: ScenarioMeta[] = [
@@ -73,7 +74,7 @@ const SCENARIOS: ScenarioMeta[] = [
   },
 ];
 
-export const DefenseSimulator: React.FC = () => {
+export const DefenseSimulator = () => {
   const [activeScenario, setActiveScenario] =
     useState<DefenseScenarioType>('client');
   const [isRecording, setIsRecording] = useState(false);
@@ -113,7 +114,7 @@ export const DefenseSimulator: React.FC = () => {
   }, []);
 
   // Cleanup on unmount
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (evalTimerRef.current) clearTimeout(evalTimerRef.current);
     };

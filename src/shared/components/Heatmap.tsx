@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface StudySessionLike {
@@ -10,7 +10,7 @@ interface HeatmapProps {
   sessions: StudySessionLike[];
 }
 
-export const Heatmap: React.FC<HeatmapProps> = React.memo(({ sessions }) => {
+export const Heatmap = memo(({ sessions }: HeatmapProps) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

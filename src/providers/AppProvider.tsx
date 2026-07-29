@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { ThemeProvider } from './ThemeProvider';
 import { QueryProvider } from './QueryProvider';
@@ -8,10 +9,10 @@ import { logger } from '@/shared/logger';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
 interface AppProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+export const AppProvider = ({ children }: AppProviderProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const providerMode = useAuthStore((state) => state.providerMode);
 

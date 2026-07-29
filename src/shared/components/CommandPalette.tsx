@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import type { FC, KeyboardEvent } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
@@ -208,7 +209,7 @@ const COMMANDS = [
   },
 ];
 
-const ICON_MAP: Record<string, React.FC<{ className?: string }>> = {
+const ICON_MAP: Record<string, FC<{ className?: string }>> = {
   Home,
   User,
   BookMarked,
@@ -241,7 +242,7 @@ const CATEGORIES_ORDER = [
   'Account',
 ];
 
-export const CommandPalette: React.FC = () => {
+export const CommandPalette = () => {
   const { isOpen, close, recordVisit, getRecent, getFrequency } =
     useCommandPalette();
   const [search, setSearch] = useState('');
@@ -323,7 +324,7 @@ export const CommandPalette: React.FC = () => {
     close();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();

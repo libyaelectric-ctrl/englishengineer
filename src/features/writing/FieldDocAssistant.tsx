@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import type { ElementType, FormEvent } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   FileText,
   AlertTriangle,
@@ -18,7 +19,7 @@ interface DocTemplate {
   id: DocType;
   title: string;
   subtitle: string;
-  icon: React.ElementType;
+  icon: ElementType;
   badge: string;
 }
 
@@ -53,7 +54,7 @@ const TEMPLATES: DocTemplate[] = [
   },
 ];
 
-export const FieldDocAssistant: React.FC = () => {
+export const FieldDocAssistant = () => {
   const [activeType, setActiveType] = useState<DocType>('rfi');
   const [projectName, setProjectName] = useState('');
   const [clauseRef, setClauseRef] = useState('');
@@ -71,7 +72,7 @@ export const FieldDocAssistant: React.FC = () => {
     };
   }, []);
 
-  const handleGenerate = useCallback((e: React.FormEvent) => {
+  const handleGenerate = useCallback((e: FormEvent) => {
     e.preventDefault();
     if (!conflictDetails.trim()) return;
 

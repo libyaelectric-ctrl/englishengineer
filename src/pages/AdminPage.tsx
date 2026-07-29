@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AdminHeader } from './AdminPage/AdminHeader';
 import { StatsGrid } from './AdminPage/StatsGrid';
 import { UsersTab } from './AdminPage/UsersTab';
@@ -86,7 +86,7 @@ const SYSTEM_LOGS = [
   },
 ];
 
-export const AdminPage: React.FC = () => {
+export const AdminPage = () => {
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
   const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
     'users'

@@ -1,8 +1,7 @@
-import React from 'react';
 import { Wallet, CheckCircle } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 
-export const BillingTab: React.FC = () => {
+export const BillingTab = () => {
   return (
     <SectionCard title="Stripe Billing Integrations" icon={Wallet}>
       <div className="space-y-4">

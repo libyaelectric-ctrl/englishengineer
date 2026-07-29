@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
@@ -17,7 +17,7 @@ import { Navigation } from './Navigation';
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
 import { PRODUCT_VERSION } from '@/config/product.config';
 
-export const Sidebar: React.FC = () => {
+export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useAppStore();
   const { currentUser, logout } = useAuthStore();
   const { subscription } = useBillingStore();

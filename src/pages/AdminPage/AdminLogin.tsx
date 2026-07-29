@@ -1,4 +1,4 @@
-import React from 'react';
+import type { FormEvent } from 'react';
 import { Shield, Lock } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 
@@ -8,17 +8,17 @@ interface AdminLoginProps {
   loginError: string;
   onUsernameChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
+  onSubmit: (e: FormEvent) => void;
 }
 
-export const AdminLogin: React.FC<AdminLoginProps> = ({
+export const AdminLogin = ({
   username,
   password,
   loginError,
   onUsernameChange,
   onPasswordChange,
   onSubmit,
-}) => {
+}: AdminLoginProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">

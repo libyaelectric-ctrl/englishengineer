@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { useAppStore } from '@/store/app.store';
 
 interface ThemeProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const theme = useAppStore((state) => state.theme);
 
   useEffect(() => {

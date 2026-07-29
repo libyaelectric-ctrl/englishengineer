@@ -1,4 +1,3 @@
-import React from 'react';
 import { Users } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
@@ -19,7 +18,7 @@ interface UsersTabProps {
   onPromote: (id: string) => void;
 }
 
-export const UsersTab: React.FC<UsersTabProps> = ({ users, onPromote }) => {
+export const UsersTab = ({ users, onPromote }: UsersTabProps) => {
   return (
     <SectionCard title="Active User Management" icon={Users}>
       <div className="overflow-x-auto">

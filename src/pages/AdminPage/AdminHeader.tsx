@@ -1,4 +1,3 @@
-import React from 'react';
 import { Shield, Users, Wallet, Settings, LogOut } from 'lucide-react';
 import { Button } from '@/shared/components/Button';
 
@@ -8,11 +7,11 @@ interface AdminHeaderProps {
   onLogout: () => void;
 }
 
-export const AdminHeader: React.FC<AdminHeaderProps> = ({
+export const AdminHeader = ({
   activeTab,
   onTabChange,
   onLogout,
-}) => {
+}: AdminHeaderProps) => {
   return (
     <header className="premium-panel overflow-hidden p-6 sm:p-8">
       <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">

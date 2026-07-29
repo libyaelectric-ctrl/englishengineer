@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { lazy, useState } from 'react';
 import {
   FileText,
@@ -253,7 +254,7 @@ const RoleplayTab = () => {
 
 const TAB_CONFIG: Record<
   SpeakingTab,
-  { label: string; icon: typeof MessageSquareText; Component: React.FC }
+  { label: string; icon: typeof MessageSquareText; Component: React.LazyExoticComponent<() => JSX.Element | null> | (() => JSX.Element | null) }
 > = {
   roleplay: {
     label: 'Roleplay',

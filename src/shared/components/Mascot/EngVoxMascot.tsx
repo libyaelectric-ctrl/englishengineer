@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import type { ReactNode, RefObject } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export type MascotMood =
   | 'idle'
@@ -28,7 +29,7 @@ const MASCOT_SIZES: Record<string, number> = {
 const getMascotDimension = (size: EngVoxMascotProps['size'] = 'md'): number =>
   typeof size === 'number' ? size : (MASCOT_SIZES[size] ?? 220);
 
-const MascotEqualizer: React.FC<{ waveStep: number }> = ({ waveStep }) => {
+const MascotEqualizer = ({ waveStep }: { waveStep: number }) => {
   const bars = [
     { x: 4, h: 12 + Math.sin(waveStep * 0.2) * 8 },
     { x: 12, h: 22 + Math.cos(waveStep * 0.25) * 12 },
@@ -81,7 +82,7 @@ const HappyEyes = () => (
   </g>
 );
 
-const NormalEye: React.FC<{ cx: number }> = ({ cx }) => (
+const NormalEye = ({ cx }: { cx: number }) => (
   <g>
     <circle
       cx={cx}
@@ -102,11 +103,15 @@ const DefaultEyes = () => (
   </>
 );
 
-const MascotEyes: React.FC<{
+const MascotEyes = ({
+  eyeOffset,
+  isBlinking,
+  mood,
+}: {
   eyeOffset: { x: number; y: number };
   isBlinking: boolean;
   mood: MascotMood;
-}> = ({ eyeOffset, isBlinking, mood }) => {
+}) => {
   const renderEyeContent = () => {
     if (isBlinking) return <BlinkingEyes />;
     if (mood === 'happy') return <HappyEyes />;
@@ -124,7 +129,7 @@ const MascotEyes: React.FC<{
   );
 };
 
-const MOUTH_SHAPES: Record<string, React.ReactNode> = {
+const MOUTH_SHAPES: Record<string, ReactNode> = {
   speaking: <ellipse cx="250" cy="190" rx="10" ry="6" fill="#18181B" />,
   happy: (
     <path
@@ -137,7 +142,7 @@ const MOUTH_SHAPES: Record<string, React.ReactNode> = {
   ),
 };
 
-const MascotMouth: React.FC<{ mood: MascotMood }> = ({ mood }) => (
+const MascotMouth = ({ mood }: { mood: MascotMood }) => (
   <>
     {MOUTH_SHAPES[mood] ?? (
       <path
@@ -421,9 +426,12 @@ const MascotLeftArm = () => (
   </g>
 );
 
-const MascotRightArm: React.FC<{ shouldBounce: boolean; waveStep: number }> = ({
+const MascotRightArm = ({
   shouldBounce,
   waveStep,
+}: {
+  shouldBounce: boolean;
+  waveStep: number;
 }) => (
   <g
     id="rightArmGroup"
@@ -509,11 +517,15 @@ const MascotRightArm: React.FC<{ shouldBounce: boolean; waveStep: number }> = ({
   </g>
 );
 
-const MascotHelmet: React.FC<{
+const MascotHelmet = ({
+  eyeOffset,
+  isBlinking,
+  mood,
+}: {
   eyeOffset: { x: number; y: number };
   isBlinking: boolean;
   mood: MascotMood;
-}> = ({ eyeOffset, isBlinking, mood }) => (
+}) => (
   <g
     id="headGroup"
     style={{
@@ -606,7 +618,7 @@ const MascotHelmet: React.FC<{
 );
 
 const useMouseTracking = (
-  containerRef: React.RefObject<HTMLButtonElement | null>,
+  containerRef: RefObject<HTMLButtonElement | null>,
   enabled: boolean,
   setEyeOffset: (offset: { x: number; y: number }) => void
 ) => {
@@ -659,7 +671,7 @@ const useMascotAnimations = (
   }, [setWaveStep]);
 };
 
-const SpeechBubble: React.FC<{ text: string }> = ({ text }) => (
+const SpeechBubble = ({ text }: { text: string }) => (
   <div className="absolute -top-14 z-20 animate-bounce duration-1000 bg-emerald-950/90 border border-emerald-500/40 text-emerald-100 px-3.5 py-1.5 rounded-2xl shadow-lg backdrop-blur-md text-xs font-medium whitespace-nowrap flex items-center gap-2">
     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
     <span>{text}</span>
@@ -673,14 +685,21 @@ const resolveMood = (mood: MascotMood, isHovered: boolean): MascotMood =>
 const BUTTON_CLASS =
   'relative inline-flex flex-col items-center justify-center select-none border-0 bg-transparent p-0 outline-none cursor-pointer transition-transform duration-300';
 
-const MascotSvg: React.FC<{
+const MascotSvg = ({
+  animated,
+  eyeOffset,
+  isBlinking,
+  mood,
+  shouldBounce,
+  waveStep,
+}: {
   animated: boolean;
   eyeOffset: { x: number; y: number };
   isBlinking: boolean;
   mood: MascotMood;
   shouldBounce: boolean;
   waveStep: number;
-}> = ({ animated, eyeOffset, isBlinking, mood, shouldBounce, waveStep }) => (
+}) => (
   <svg
     viewBox="0 0 500 520"
     className={`w-full h-full drop-shadow-2xl overflow-visible ${
@@ -706,7 +725,7 @@ const MascotSvg: React.FC<{
 );
 
 type MascotInternalProps = {
-  containerRef: React.RefObject<HTMLButtonElement | null>;
+  containerRef: RefObject<HTMLButtonElement | null>;
   className: string;
   dimension: number;
   onClick?: () => void;
@@ -721,7 +740,7 @@ type MascotInternalProps = {
   waveStep: number;
 };
 
-const MascotButton: React.FC<MascotInternalProps> = ({
+const MascotButton = ({
   containerRef,
   className,
   dimension,
@@ -735,7 +754,7 @@ const MascotButton: React.FC<MascotInternalProps> = ({
   currentMood,
   shouldBounce,
   waveStep,
-}) => (
+}: MascotInternalProps) => (
   <button
     type="button"
     ref={containerRef}
@@ -758,7 +777,7 @@ const MascotButton: React.FC<MascotInternalProps> = ({
   </button>
 );
 
-export const EngVoxMascot: React.FC<EngVoxMascotProps> = (props) => {
+export const EngVoxMascot = (props: EngVoxMascotProps) => {
   const {
     size = 'md',
     mood = 'idle',
