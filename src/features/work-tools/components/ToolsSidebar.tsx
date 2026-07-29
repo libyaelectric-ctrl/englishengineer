@@ -1,4 +1,4 @@
-﻿import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 import type { SkillName } from '@/features/profile/profile.types';

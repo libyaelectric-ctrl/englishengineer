@@ -1,4 +1,4 @@
-﻿/* eslint-disable @typescript-eslint/no-floating-promises, jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable @typescript-eslint/no-floating-promises, jsx-a11y/no-noninteractive-element-interactions */
 import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
