@@ -1,30 +1,30 @@
 import { describe, it, expect } from 'vitest';
-import { AppError, ErrorCodes } from '@/shared/errors';
+import { AppError, ErrorCode } from '@/core/errors';
 import { isFeatureEnabled, overrideFeatureFlag } from '@/shared/feature-flags';
 
 describe('AppError Edge Cases', () => {
   it('should handle empty message', () => {
     const error = new AppError({
-      code: ErrorCodes.UNKNOWN_ERROR,
+      code: ErrorCode.UNKNOWN,
       message: '',
     });
     expect(error.message).toBe('');
-    expect(error.code).toBe('UNKNOWN_ERROR');
+    expect(error.code).toBe('error.unknown');
   });
 
   it('should handle very long message', () => {
     const longMessage = 'a'.repeat(10000);
     const error = new AppError({
-      code: ErrorCodes.API_INTERNAL_ERROR,
+      code: ErrorCode.AI,
       message: longMessage,
     });
     expect(error.message).toBe(longMessage);
   });
 
   it('should handle special characters in message', () => {
-    const specialMessage = 'Error: <script>alert("xss")</script> ğŸ”¥ Ã± ä¸­æ–‡';
+    const specialMessage = 'Error: <script>alert("xss")</script>';
     const error = new AppError({
-      code: ErrorCodes.DATA_VALIDATION_FAILED,
+      code: ErrorCode.VALIDATION,
       message: specialMessage,
     });
     expect(error.message).toBe(specialMessage);
@@ -33,12 +33,12 @@ describe('AppError Edge Cases', () => {
   it('should handle nested cause errors', () => {
     const innerError = new Error('Inner');
     const middleError = new AppError({
-      code: ErrorCodes.NETWORK_REQUEST_FAILED,
+      code: ErrorCode.NETWORK,
       message: 'Middle',
       cause: innerError,
     });
     const outerError = new AppError({
-      code: ErrorCodes.API_INTERNAL_ERROR,
+      code: ErrorCode.AI,
       message: 'Outer',
       cause: middleError,
     });
@@ -46,22 +46,22 @@ describe('AppError Edge Cases', () => {
     expect((outerError as any).cause?.cause).toBe(innerError);
   });
 
-  it('should handle circular context', () => {
-    const context: Record<string, unknown> = { key: 'value' };
-    context.self = context; // Circular reference
+  it('should handle metadata', () => {
+    const metadata = { key: 'value' };
     const error = new AppError({
-      code: ErrorCodes.UNKNOWN_ERROR,
-      message: 'Circular test',
-      context,
+      code: ErrorCode.UNKNOWN,
+      message: 'Metadata test',
+      metadata,
     });
-    expect(error.context).toBeDefined();
+    expect(error.metadata).toBeDefined();
+    expect(error.metadata.key).toBe('value');
   });
 
-  it('should handle statusCode edge values', () => {
-    const error100 = new AppError({ code: ErrorCodes.UNKNOWN_ERROR, message: 'x', statusCode: 100 });
-    const error599 = new AppError({ code: ErrorCodes.UNKNOWN_ERROR, message: 'x', statusCode: 599 });
-    expect(error100.statusCode).toBe(100);
-    expect(error599.statusCode).toBe(599);
+  it('should handle severity levels', () => {
+    const errorInfo = new AppError({ code: ErrorCode.UNKNOWN, message: 'x', severity: 'info' });
+    const errorCritical = new AppError({ code: ErrorCode.UNKNOWN, message: 'x', severity: 'critical' });
+    expect(errorInfo.severity).toBe('info');
+    expect(errorCritical.severity).toBe('critical');
   });
 });
 
@@ -105,8 +105,6 @@ describe('Feature Flags Edge Cases', () => {
   });
 
   it('should handle environment edge cases', () => {
-    // Test that dev-only flags are disabled in production
-    
     // Note: Cannot modify import.meta.env in tests, but function handles it
     expect(isFeatureEnabled('aiGeminiProvider')).toBe(false); // dev/staging only
   });

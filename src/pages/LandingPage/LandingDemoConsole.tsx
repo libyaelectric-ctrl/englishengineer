@@ -281,7 +281,8 @@ export function LandingDemoConsole() {
 
   const toggleAudio = () => {
     setIsPlayingAudio(true);
-    setTimeout(() => setIsPlayingAudio(false), 3500);
+    const timer = setTimeout(() => setIsPlayingAudio(false), 3500);
+    return () => clearTimeout(timer);
   };
 
   const handleSelectOption = (idx: number) => {

@@ -26,6 +26,6 @@ export const prefetchRoute = (path: string) => {
 
   const importer = routes[path];
   if (importer) {
-    importer().catch(() => {});
+    importer().catch((err) => console.debug(`Prefetch failed for ${path}:`, err));
   }
 };

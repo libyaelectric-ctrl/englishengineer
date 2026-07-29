@@ -1,4 +1,5 @@
 import { Lock, Mic, RotateCcw, Volume2, History, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 
 interface VoicePracticePanelProps {
@@ -17,29 +18,32 @@ interface VoicePracticePanelProps {
   onResetRecording: () => void;
 }
 
-const LockedView = () => (
-  <div className="rounded-[4px] border border-warning/20 bg-warning/5 p-6 text-center space-y-4 shadow-sm animate-in fade-in">
-    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-warning/10 text-warning">
-      <Lock className="h-5 w-5" />
+const LockedView = () => {
+  const navigate = useNavigate();
+  return (
+    <div className="rounded-[4px] border border-warning/20 bg-warning/5 p-6 text-center space-y-4 shadow-sm animate-in fade-in">
+      <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-warning/10 text-warning">
+        <Lock className="h-5 w-5" />
+      </div>
+      <div className="space-y-2">
+        <p className="text-sm font-bold text-foreground uppercase tracking-wider">
+          Voice Practice & Pronunciation Rating is Locked
+        </p>
+        <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
+          Real Voice Speaking, pronunciation analysis, and voice simulator
+          workflows are exclusive features of the Max Plan ($59/mo). Upgrade today
+          to practice speech dynamically.
+        </p>
+      </div>
+      <Button
+        onClick={() => navigate('/pricing')}
+        className="bg-warning hover:bg-warning/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-warning shadow-sm"
+      >
+        Upgrade to Max Plan
+      </Button>
     </div>
-    <div className="space-y-2">
-      <p className="text-sm font-bold text-foreground uppercase tracking-wider">
-        Voice Practice & Pronunciation Rating is Locked
-      </p>
-      <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
-        Real Voice Speaking, pronunciation analysis, and voice simulator
-        workflows are exclusive features of the Max Plan ($59/mo). Upgrade today
-        to practice speech dynamically.
-      </p>
-    </div>
-    <Button
-      onClick={() => (window.location.href = '/pricing')}
-      className="bg-warning hover:bg-warning/90 text-white font-bold uppercase tracking-wider text-[10px] px-5 h-10 rounded-[4px] cursor-pointer border border-warning shadow-sm"
-    >
-      Upgrade to Max Plan
-    </Button>
-  </div>
-);
+  );
+};
 
 const VoiceWorkspace = ({
   isRecording,
