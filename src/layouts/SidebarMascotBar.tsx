@@ -291,10 +291,8 @@ export const SidebarMascotBar: React.FC = () => {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/20 backdrop-blur-sm animate-in fade-in duration-200">
           <div
-            ref={(el) => {
-              if (el) el.addEventListener('click', (e) => e.stopPropagation());
-            }}
             className="w-full max-w-md max-h-[90vh] overflow-y-auto custom-scrollbar rounded-2xl border border-primary/30 bg-surface/95 p-5 sm:p-6 shadow-2xl backdrop-blur-xl animate-in zoom-in-95 duration-200 font-sans"
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between border-b border-border-soft pb-3">
               <div className="flex items-center gap-3 min-w-0">

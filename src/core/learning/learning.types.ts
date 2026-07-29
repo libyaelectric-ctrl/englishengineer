@@ -1,5 +1,7 @@
 import { Timestamp } from '../entities/entity.types';
 
+export const XP_PER_LEVEL = 500;
+
 export type MissionModule =
   | 'Reading'
   | 'Writing'

@@ -28,9 +28,6 @@ export { VocabularyRepository } from './services/vocabulary.repository';
 
 export { VocabularyEngine } from './engine/vocabulary.engine';
 
-// Vocabulary data lazy-load icin dogrudan import edilmeli
-// export { loadVocabularyEntries, getVocabularyEntries, getVocabularyEntriesOrWait } from './data/vocabulary.data';
-
 export {
   normalizeVocabularyText,
   isVocabularyResponseCorrect,
