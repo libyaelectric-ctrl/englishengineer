@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { AppError, ErrorCodes } from '@/shared/errors';
 import { isFeatureEnabled, overrideFeatureFlag } from '@/shared/feature-flags';
 
