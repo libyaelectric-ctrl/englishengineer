@@ -87,6 +87,7 @@ export function useSpeakingPage() {
     Array<{ word: string; score: number; phonemes: string }>
   >([]);
   const waveformTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recordingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pauseRef = useRef(false);
   const [waveformBars, setWaveformBars] = useState<number[]>(Array(24).fill(4));
 
@@ -128,6 +129,13 @@ export function useSpeakingPage() {
     }
   }, [activeMission, selectMission, selectedMissionId]);
 
+  useEffect(() => {
+    return () => {
+      if (waveformTimerRef.current) clearInterval(waveformTimerRef.current);
+      if (recordingTimerRef.current) clearTimeout(recordingTimerRef.current);
+    };
+  }, []);
+
   // Actions
   const startRecording = () => {
     setIsRecording(true);
@@ -143,7 +151,7 @@ export function useSpeakingPage() {
     }, 120);
 
     // Simulate recording duration
-    setTimeout(() => {
+    recordingTimerRef.current = setTimeout(() => {
       if (waveformTimerRef.current) {
         clearInterval(waveformTimerRef.current);
         waveformTimerRef.current = null;

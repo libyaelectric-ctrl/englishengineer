@@ -653,14 +653,18 @@ const useMascotAnimations = (
   setWaveStep: (fn: (prev: number) => number) => void
 ) => {
   useEffect(() => {
+    let blinkTimeout: ReturnType<typeof setTimeout>;
     const blinkInterval = setInterval(
       () => {
         setIsBlinking(true);
-        setTimeout(() => setIsBlinking(false), 180);
+        blinkTimeout = setTimeout(() => setIsBlinking(false), 180);
       },
       3800 + Math.random() * 2000
     );
-    return () => clearInterval(blinkInterval);
+    return () => {
+      clearInterval(blinkInterval);
+      clearTimeout(blinkTimeout);
+    };
   }, [setIsBlinking]);
 
   useEffect(() => {

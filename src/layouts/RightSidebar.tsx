@@ -53,12 +53,12 @@ const ProfileSidebar = React.lazy(() =>
   }))
 );
 
-const EXACT_ROUTES: Record<string, React.FC> = {
+const EXACT_ROUTES: Record<string, React.ComponentType> = {
   '/dashboard': DashboardSidebar,
   '/': DashboardSidebar,
 };
 
-const PREFIX_ROUTES: [string, React.FC][] = [
+const PREFIX_ROUTES: [string, React.ComponentType][] = [
   ['/vocabulary', VocabSidebar],
   ['/grammar', GrammarSidebar],
   ['/reading', ReadingSidebar],
