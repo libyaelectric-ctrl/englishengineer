@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   FileText,
   AlertTriangle,
@@ -61,14 +61,24 @@ export const FieldDocAssistant: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedLetter, setGeneratedLetter] = useState('');
   const [copied, setCopied] = useState(false);
+  const genTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleGenerate = (e: React.FormEvent) => {
+  useEffect(() => {
+    return () => {
+      if (genTimerRef.current) clearTimeout(genTimerRef.current);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
+
+  const handleGenerate = useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!conflictDetails.trim()) return;
 
     setIsGenerating(true);
 
-    setTimeout(() => {
+    if (genTimerRef.current) clearTimeout(genTimerRef.current);
+    genTimerRef.current = setTimeout(() => {
       let draftText = '';
       const proj = projectName.trim() || 'PROJECT-ALPHAVOX-2026';
       const ref =
@@ -87,14 +97,15 @@ export const FieldDocAssistant: React.FC = () => {
       setGeneratedLetter(draftText);
       setIsGenerating(false);
     }, 1000);
-  };
+  }, [conflictDetails]);
 
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     if (!generatedLetter) return;
     navigator.clipboard.writeText(generatedLetter);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+  }, [generatedLetter]);
 
   return (
     <div className="space-y-6">

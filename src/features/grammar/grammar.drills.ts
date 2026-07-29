@@ -1,5 +1,14 @@
 import type { GrammarRule } from './grammar.types';
 
+function fisherYatesShuffle<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export type DrillType =
   | 'fill_blank'
   | 'correction'
@@ -89,7 +98,7 @@ const DRILL_GENERATORS: Record<
       ]
         .filter((w) => w !== target)
         .slice(0, 3);
-      const options = [target, ...wrongOptions].sort(() => Math.random() - 0.5);
+      const options = fisherYatesShuffle([target, ...wrongOptions]);
 
       questions.push({
         id: `${rule.id}_mc_${i}`,
@@ -111,7 +120,7 @@ const DRILL_GENERATORS: Record<
     const questions: DrillQuestion[] = [];
     rule.examples.forEach((ex, i) => {
       const words = ex.english.split(' ').filter((w) => w.length > 0);
-      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      const shuffled = fisherYatesShuffle(words);
       questions.push({
         id: `${rule.id}_reorder_${i}`,
         type: 'reordering',
@@ -154,7 +163,7 @@ export const InteractiveDrillService = {
     const allDrills = rules.flatMap((rule) =>
       this.generateDrills(rule, ['fill_blank', 'multiple_choice', 'correction'])
     );
-    return allDrills.sort(() => Math.random() - 0.5).slice(0, count);
+    return fisherYatesShuffle(allDrills).slice(0, count);
   },
 
   checkAnswer(question: DrillQuestion, userAnswer: string): boolean {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { X, Building2, Send, CheckCircle2 } from 'lucide-react';
 
 interface EnterpriseQuoteModalProps {
@@ -14,13 +14,21 @@ export const EnterpriseQuoteModal: React.FC<EnterpriseQuoteModalProps> = ({
   const [teamSize, setTeamSize] = useState('25');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
       setSubmitted(false);
       onClose();
     }, 2000);

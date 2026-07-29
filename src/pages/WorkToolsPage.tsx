@@ -1,4 +1,4 @@
-import { lazy, useMemo, useState } from 'react';
+import { lazy, useMemo, useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BookOpenText,
@@ -363,8 +363,15 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const [tab, setTab] = useState<Tab>('templates');
   const [query, setQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { favoritePhraseIds, toggleFavorite, remember, sendToQuickAI } =
     useWorkToolsStore();
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   const normalizedQuery = query.trim().toLowerCase();
   const templates = useMemo(
@@ -391,14 +398,15 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
     [normalizedQuery]
   );
 
-  const copy = async (id: string, text: string) => {
+  const copy = useCallback(async (id: string, text: string) => {
     const didCopy = await WorkToolsService.copy(text);
     if (!didCopy) return;
     remember(id);
     BetaService.trackEvent('template_used', '/work-tools');
     setCopiedId(id);
-    window.setTimeout(() => setCopiedId(null), 1400);
-  };
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopiedId(null), 1400);
+  }, [remember]);
 
   const openQuickAI = (
     sourceId: string,
