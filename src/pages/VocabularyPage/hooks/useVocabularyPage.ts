@@ -93,6 +93,7 @@ export function useVocabularyPage() {
   } satisfies VocabularySearchState);
 
   const initializedSet = useRef(false);
+  const reviewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { terms, allLevelsLoaded, loadError, menuState, wordSetIds } = data;
   const {
@@ -132,6 +133,12 @@ export function useVocabularyPage() {
       cancelled = true;
     };
   }, [vocabularyLevel]);
+
+  useEffect(() => {
+    return () => {
+      if (reviewTimerRef.current) clearTimeout(reviewTimerRef.current);
+    };
+  }, []);
 
   const loadAllLevels = useCallback(async (): Promise<VocabularyTerm[]> => {
     if (allLevelsLoaded) return terms;
@@ -271,7 +278,7 @@ export function useVocabularyPage() {
       menuState: VocabularyMenuService.getState(),
     });
 
-    setTimeout(() => {
+    reviewTimerRef.current = setTimeout(() => {
       const currentState = VocabularyMenuService.getState();
       const nextStatus =
         isCorrect && prevStatus === 'New' ? 'Learned' : activeTab;
