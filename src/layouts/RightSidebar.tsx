@@ -83,7 +83,7 @@ function getContent(path: string): React.ReactNode {
   return <DashboardSidebar />;
 }
 
-export const RightSidebar: React.FC = () => {
+export const RightSidebar = () => {
   const location = useLocation();
   const content = getContent(location.pathname);
   return (

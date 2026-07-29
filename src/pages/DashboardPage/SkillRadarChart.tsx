@@ -1,4 +1,3 @@
-import React from 'react';
 import type { SkillName, UserLearningProfile } from '@/features/profile';
 
 interface SkillRadarChartProps {
@@ -14,9 +13,9 @@ const SKILL_LABELS: { key: SkillName; label: string }[] = [
   { key: 'speaking', label: 'Speaking' },
 ];
 
-export const SkillRadarChart: React.FC<SkillRadarChartProps> = ({
+export const SkillRadarChart = ({
   profile,
-}) => {
+}: SkillRadarChartProps) => {
   const size = 260;
   const center = size / 2;
   const radius = 90;

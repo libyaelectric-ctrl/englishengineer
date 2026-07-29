@@ -1,4 +1,5 @@
-import React, {
+import type { ReactNode } from 'react';
+import {
   createContext,
   useContext,
   useMemo,
@@ -42,8 +43,10 @@ const saveFlags = (flags: FeatureFlags): void => {
   }
 };
 
-export const FeatureFlagProvider: React.FC<{ children: React.ReactNode }> = ({
+export const FeatureFlagProvider = ({
   children,
+}: {
+  children: ReactNode;
 }) => {
   const [flags, setFlags] = useState<FeatureFlags>(loadFlags);
 

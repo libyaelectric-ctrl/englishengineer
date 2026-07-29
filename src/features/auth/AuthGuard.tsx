@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from './auth.store';
 import { LoadingState } from '@/shared/components/LoadingState';
 
 interface AuthGuardProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
+export const AuthGuard = ({ children }: AuthGuardProps) => {
   const { isAuthenticated, isLoading, initialize } = useAuthStore();
   const location = useLocation();
 

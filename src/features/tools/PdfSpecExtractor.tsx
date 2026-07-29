@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import type { ChangeEvent } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import {
   FileCode,
   UploadCloud,
@@ -15,7 +16,7 @@ interface ExtractedTerm {
   specClause: string;
 }
 
-export const PdfSpecExtractor: React.FC = () => {
+export const PdfSpecExtractor = () => {
   const [fileName, setFileName] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [extractedTerms, setExtractedTerms] = useState<ExtractedTerm[]>([]);
@@ -30,7 +31,7 @@ export const PdfSpecExtractor: React.FC = () => {
     };
   }, []);
 
-  const handleSimulatedUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSimulatedUpload = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 

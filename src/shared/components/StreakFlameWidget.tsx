@@ -1,4 +1,3 @@
-import React from 'react';
 import { Flame, ShieldCheck } from 'lucide-react';
 
 interface StreakFlameWidgetProps {
@@ -6,10 +5,10 @@ interface StreakFlameWidgetProps {
   freezeAvailable?: boolean;
 }
 
-export const StreakFlameWidget: React.FC<StreakFlameWidgetProps> = ({
+export const StreakFlameWidget = ({
   streakDays = 7,
   freezeAvailable = true,
-}) => {
+}: StreakFlameWidgetProps) => {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-primary/20 bg-gradient-to-r from-amber-500/10 via-primary/5 to-surface p-3.5 shadow-sm">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-500 shadow-inner">

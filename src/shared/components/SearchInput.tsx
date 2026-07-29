@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Search, X } from 'lucide-react';
 
 interface SearchInputProps {
@@ -8,8 +8,8 @@ interface SearchInputProps {
   debounceMs?: number;
 }
 
-export const SearchInput: React.FC<SearchInputProps> = React.memo(
-  ({ placeholder = 'Search...', onSearch, onClear, debounceMs = 300 }) => {
+export const SearchInput = memo(
+  ({ placeholder = 'Search...', onSearch, onClear, debounceMs = 300 }: SearchInputProps) => {
     const [query, setQuery] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<NodeJS.Timeout>(undefined);

@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { useState } from 'react';
 import {
   Mic,
@@ -255,7 +256,7 @@ const VocabTab = ({
 
 const TAB_CONTENT: Record<
   TabKey,
-  React.FC<{
+  (props: {
     isPlayingAudio: boolean;
     toggleAudio: () => void;
     currentVocab: (typeof DEMO_VOCAB_QUESTIONS)[number];
@@ -263,7 +264,7 @@ const TAB_CONTENT: Record<
     showAnswer: boolean;
     handleSelectOption: (idx: number) => void;
     nextVocabQuestion: () => void;
-  }>
+  }) => JSX.Element
 > = {
   voice: VoiceTab,
   writing: WritingTab,

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Activity } from 'lucide-react';
 import { SectionCard } from '@/shared/components/SectionCard';
 
@@ -13,7 +12,7 @@ interface SystemTabProps {
   systemLogs: SystemLog[];
 }
 
-export const SystemTab: React.FC<SystemTabProps> = ({ systemLogs }) => {
+export const SystemTab = ({ systemLogs }: SystemTabProps) => {
   return (
     <SectionCard title="System Diagnostics" icon={Activity}>
       <div className="space-y-4">

@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import type { FormEvent } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Sparkles } from 'lucide-react';
 import { EngVoxMascot } from '@/shared/components/Mascot';
 import { useBetaStore } from '@/features/beta/beta.store';
 import { BetaFeedbackType } from '@/features/beta/beta.types';
 
-export const SidebarMascotHome: React.FC = () => {
+export const SidebarMascotHome = () => {
   const [isMascotExpanded, setIsMascotExpanded] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
@@ -21,7 +22,7 @@ export const SidebarMascotHome: React.FC = () => {
 
   const submitFeedback = useBetaStore((state) => state.submitFeedback);
 
-  const handleFeedbackSubmit = (e: React.FormEvent) => {
+  const handleFeedbackSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!feedbackMessage.trim()) return;
 

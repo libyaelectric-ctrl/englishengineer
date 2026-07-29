@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import type { MouseEvent as ReactMouseEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Volume2, Bot, X } from 'lucide-react';
 import { useWorkToolsStore } from '@/features/work-tools';
@@ -94,7 +95,7 @@ const RICH_ENGINEERING_TERMS: EngineeringTermSpec[] = [
   },
 ];
 
-export const SidebarMascotBar: React.FC = () => {
+export const SidebarMascotBar = () => {
   const navigate = useNavigate();
   const { sendToQuickAI } = useWorkToolsStore();
 
@@ -168,7 +169,7 @@ export const SidebarMascotBar: React.FC = () => {
     return () => clearInterval(timer);
   }, [showModal]);
 
-  const handleSpeak = (text: string, e?: React.MouseEvent) => {
+  const handleSpeak = (text: string, e?: ReactMouseEvent) => {
     if (e) e.stopPropagation();
     setIsPlayingAudio(true);
     playNaturalTTS(text, {
@@ -180,7 +181,7 @@ export const SidebarMascotBar: React.FC = () => {
     });
   };
 
-  const handleSendToAI = (e: React.MouseEvent) => {
+  const handleSendToAI = (e: ReactMouseEvent) => {
     e.stopPropagation();
     sendToQuickAI({
       sourceId: currentTerm.id,
@@ -193,7 +194,7 @@ export const SidebarMascotBar: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleNextTerm = (e: React.MouseEvent) => {
+  const handleNextTerm = (e: ReactMouseEvent) => {
     e.stopPropagation();
     setTermIdx((prev) => (prev + 1) % RICH_ENGINEERING_TERMS.length);
   };

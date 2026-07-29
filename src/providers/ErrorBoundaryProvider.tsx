@@ -1,19 +1,20 @@
-import React, { useCallback } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 
 interface ErrorBoundaryProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const isDevelopment =
   (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV === true;
 
-const ErrorFallback: React.FC<FallbackProps> = ({
+const ErrorFallback = ({
   error,
   resetErrorBoundary,
-}) => {
+}: FallbackProps) => {
   const errorDetails = error instanceof Error ? error.message : String(error);
 
   const handleReport = () => {
@@ -73,9 +74,9 @@ const ErrorFallback: React.FC<FallbackProps> = ({
   );
 };
 
-export const ErrorBoundaryProvider: React.FC<ErrorBoundaryProviderProps> = ({
+export const ErrorBoundaryProvider = ({
   children,
-}) => {
+}: ErrorBoundaryProviderProps) => {
   const handleReset = useCallback(() => {
     window.location.reload();
   }, []);
