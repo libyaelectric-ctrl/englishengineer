@@ -1,4 +1,4 @@
-﻿import { useAuthStore } from '@/features/auth';
+import { useAuthStore } from '@/features/auth';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import { Section } from '@/layouts/sidebar/SidebarComponents';
