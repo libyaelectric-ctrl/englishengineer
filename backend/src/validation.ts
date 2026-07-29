@@ -58,7 +58,7 @@ export const WorkspaceMemoryBodySchema = z.object({
     z.boolean(),
     z.null(),
     z.array(z.union([z.string(), z.number(), z.boolean()])),
-    z.record(z.union([z.string(), z.number(), z.boolean()])),
+    z.record(z.string(), z.union([z.string(), z.number(), z.boolean()])),
   ]),
 });
 
