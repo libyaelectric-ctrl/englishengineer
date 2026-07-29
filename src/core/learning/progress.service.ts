@@ -1,4 +1,4 @@
-import { LearningState } from './learning.types';
+import { LearningState, XP_PER_LEVEL } from './learning.types';
 
 export interface ProgressSummary {
   completedMissionsCount: number;
@@ -19,7 +19,7 @@ export const ProgressService = {
    * Every 500 XP is a level up.
    */
   calculateLevel(xp: number): number {
-    return Math.floor(xp / 500) + 1;
+    return Math.floor(xp / XP_PER_LEVEL) + 1;
   },
 
   /**

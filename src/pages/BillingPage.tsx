@@ -49,25 +49,30 @@ export const BillingPage = () => {
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   useEffect(() => {
+    if (!saveSuccess) return;
+    const timer = setTimeout(() => setSaveSuccess(false), 3000);
+    return () => clearTimeout(timer);
+  }, [saveSuccess]);
+
+  useEffect(() => {
     if (currentUser?.id) {
-      refreshBilling(currentUser.id).catch(() => {});
+      refreshBilling(currentUser.id).catch((err) => console.error('Billing refresh failed:', err));
     }
   }, [currentUser?.id, refreshBilling]);
 
   const handleUpgrade = () => {
     if (!currentUser?.id || !currentUser?.email) return;
-    startCheckout(currentUser.id, currentUser.email, 'pro').catch(() => {});
+    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) => console.error('Checkout failed:', err));
   };
 
   const handleManageSubscription = () => {
     if (!currentUser?.id) return;
-    openCustomerPortal(currentUser.id).catch(() => {});
+    openCustomerPortal(currentUser.id).catch((err) => console.error('Portal failed:', err));
   };
 
   const handleSaveBillingInfo = (e: React.FormEvent) => {
     e.preventDefault();
     setSaveSuccess(true);
-    setTimeout(() => setSaveSuccess(false), 3000);
   };
 
   return (

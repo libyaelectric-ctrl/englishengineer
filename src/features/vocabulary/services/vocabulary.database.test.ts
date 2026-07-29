@@ -50,8 +50,4 @@ describe('vocabulary database integration', () => {
       false
     );
   });
-
-  it.skip('generates the cross-validation report', () => {
-    // Skipped: data/canonical folder removed from repo
-  });
 });
