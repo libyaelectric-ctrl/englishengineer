@@ -6,8 +6,14 @@ public/audio/*.mp3 filter=lfs diff=lfs merge=lfs -text
 public/**/*.mp4 filter=lfs diff=lfs merge=lfs -text
 public/**/*.webm filter=lfs diff=lfs merge=lfs -text
 
-# Large seed data files (>500KB)
-public/data/**/*.json filter=lfs diff=lfs merge=lfs -text
+# NOTE: JSON seed data is intentionally NOT tracked via LFS. A prior
+# attempt to move public/data/**/*.json into LFS resulted in the actual
+# vocabulary content being replaced by LFS pointer text (invalid JSON)
+# in this checkout, because LFS smudging wasn't confirmed to be
+# configured in the production build environment. JSON text files also
+# aren't what LFS is designed for -- Git's own delta compression
+# already handles text reasonably well at these sizes (hundreds of KB
+# to a few MB). Reverted; real content restored directly in git.
 
 # Images
 public/**/*.webp filter=lfs diff=lfs merge=lfs -text
