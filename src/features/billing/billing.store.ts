@@ -34,7 +34,8 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
-    } catch {
+    } catch (err) {
+      console.error('Billing initialization failed, using local:', err);
       // Fallback to local subscription on any error
       const localSubscription = BillingService.getLocalSubscription();
       set({ subscription: localSubscription, isLoading: false });
@@ -50,7 +51,8 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
-    } catch {
+    } catch (err) {
+      console.error('Billing refresh failed, using local:', err);
       // Fallback to local subscription on any error
       const localSubscription = BillingService.getLocalSubscription();
       set({ subscription: localSubscription, isLoading: false });

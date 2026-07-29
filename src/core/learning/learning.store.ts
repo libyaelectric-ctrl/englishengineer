@@ -9,6 +9,7 @@ import {
   MissionModule,
   ScoreResult,
   StudySession,
+  XP_PER_LEVEL,
 } from './learning.types';
 import { ScoringService } from './scoring.service';
 import { AchievementService } from './achievement.service';
@@ -163,7 +164,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           now
         );
         const totalXP = get().xp + result.xp;
-        const computedLevel = Math.floor(totalXP / 500) + 1;
+        const computedLevel = Math.floor(totalXP / XP_PER_LEVEL) + 1;
         const newElo = get().elo + result.eloChange;
 
         const updatedMissions = get().missions.map((m) =>
