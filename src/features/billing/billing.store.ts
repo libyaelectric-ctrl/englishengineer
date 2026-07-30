@@ -5,6 +5,7 @@ import {
   BillingState,
   SubscriptionSnapshot,
 } from './billing.types';
+import { logger } from '@/shared/logger';
 
 interface BillingActions {
   initializeBilling: (userId: string | null) => Promise<void>;
@@ -35,7 +36,7 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
     } catch (err) {
-      console.error('Billing initialization failed, using local:', err);
+      logger.e('Billing initialization failed, using local:', err);
       // Fallback to local subscription on any error
       const localSubscription = BillingService.getLocalSubscription();
       set({ subscription: localSubscription, isLoading: false });
@@ -52,7 +53,7 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
       const subscription = await BillingService.refreshSubscription(userId);
       set({ subscription, isLoading: false });
     } catch (err) {
-      console.error('Billing refresh failed, using local:', err);
+      logger.e('Billing refresh failed, using local:', err);
       // Fallback to local subscription on any error
       const localSubscription = BillingService.getLocalSubscription();
       set({ subscription: localSubscription, isLoading: false });

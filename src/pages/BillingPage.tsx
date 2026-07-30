@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   CreditCard,
   Download,
@@ -16,13 +16,7 @@ import { BillingPlanCards } from './ProfilePage/BillingPlanCards';
 import { BillingUpgradeCTA } from './ProfilePage/BillingUpgradeCTA';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Button } from '@/shared/components/Button';
-
-// Mock transaction history that matches professional invoicing systems
-const MOCK_INVOICES = [
-  { id: 'INV-2026-003', date: '2026-07-01', amount: '$29.00', status: 'Paid' },
-  { id: 'INV-2026-002', date: '2026-06-01', amount: '$29.00', status: 'Paid' },
-  { id: 'INV-2026-001', date: '2026-05-01', amount: '$29.00', status: 'Paid' },
-];
+import { logger } from '@/shared/logger';
 
 export const BillingPage = () => {
   const { currentUser } = useAuthStore();
@@ -56,18 +50,18 @@ export const BillingPage = () => {
 
   useEffect(() => {
     if (currentUser?.id) {
-      refreshBilling(currentUser.id).catch((err) => console.error('Billing refresh failed:', err));
+      refreshBilling(currentUser.id).catch((err) => logger.e('Billing refresh failed:', err));
     }
   }, [currentUser?.id, refreshBilling]);
 
   const handleUpgrade = () => {
     if (!currentUser?.id || !currentUser?.email) return;
-    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) => console.error('Checkout failed:', err));
+    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) => logger.e('Checkout failed:', err));
   };
 
   const handleManageSubscription = () => {
     if (!currentUser?.id) return;
-    openCustomerPortal(currentUser.id).catch((err) => console.error('Portal failed:', err));
+    openCustomerPortal(currentUser.id).catch((err) => logger.e('Portal failed:', err));
   };
 
   const handleSaveBillingInfo = (e: React.FormEvent) => {
@@ -177,7 +171,7 @@ export const BillingPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#d9d9e3]">
-                  {MOCK_INVOICES.map((inv) => (
+                  {[].map((inv: { id: string; date: string; amount: string; status: string }) => (
                     <tr
                       key={inv.id}
                       className="hover:bg-background transition-colors"

@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
@@ -86,9 +85,7 @@ try {
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <App />
 );
 
 // Preload vocabulary data in background (non-blocking, lazy loaded)
@@ -112,7 +109,7 @@ indexedDBStorage.migrateAll().catch((err: unknown) => {
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch((err) => {
-      console.debug('Service worker registration failed:', err);
+      logger.d('Service worker registration failed:', err);
     });
   });
 }

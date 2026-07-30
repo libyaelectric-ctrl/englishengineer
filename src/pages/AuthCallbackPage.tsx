@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getSupabaseClient } from '@/features/auth/supabase.client';
 import { LoadingState } from '@/shared/components/LoadingState';
+import { logger } from '@/shared/logger';
 
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function AuthCallbackPage() {
         const { error: exchangeError } =
           await client.auth.exchangeCodeForSession(code);
         if (exchangeError) {
-          console.error('OAuth code exchange failed:', exchangeError);
+          logger.e('OAuth code exchange failed:', exchangeError);
           setError(exchangeError.message);
           return;
         }

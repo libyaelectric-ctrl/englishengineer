@@ -17,6 +17,15 @@ const LIMITS = {
   css: 200 * 1024,   // 200KB
 };
 
+function exists(path) {
+  try {
+    statSync(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function analyzeBundle() {
   console.log('📦 EngineerOS Bundle Analysis');
   console.log('==============================\n');
@@ -100,15 +109,6 @@ function analyzeBundle() {
       process.exit(1);
     }
     console.log('\n✅ Bundle size within budget.');
-  }
-}
-
-function exists(path) {
-  try {
-    statSync(path);
-    return true;
-  } catch {
-    return false;
   }
 }
 
