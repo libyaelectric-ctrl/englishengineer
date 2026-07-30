@@ -3,9 +3,9 @@ import { Building2, Check, MinusCircle, Sparkles, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { logger } from '@/shared/logger';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
+import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
@@ -186,9 +186,9 @@ const PricingPage = () => {
         const h = await res.json();
         if (!mounted) return;
         setBillingReadiness(h?.stripeConfigured ? 'ready' : 'unavailable');
-    } catch (e) {
-      logger.w('[PRICING] Health check failed', e);
-      if (!mounted) return;
+      } catch (e) {
+        logger.w('[PRICING] Health check failed', e);
+        if (!mounted) return;
         setBillingReadiness('unavailable');
       }
     };

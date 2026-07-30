@@ -2,6 +2,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useStat
 
 import { useLearningStore } from '@/core/learning';
 
+import { logger } from '@/shared/logger';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 import { playSound } from '@/shared/utils/sound';
 
@@ -350,7 +351,8 @@ export function useVocabularyPage() {
     if (!allLevelsLoaded) {
       try {
         await loadAllLevels();
-      } catch {
+      } catch (e) {
+        logger.w('[VOCABULARY] Failed to load all levels for search', e);
         dispatchSearch({
           type: 'SET_SEARCH_ERROR',
           error: 'The full vocabulary index could not be loaded.',

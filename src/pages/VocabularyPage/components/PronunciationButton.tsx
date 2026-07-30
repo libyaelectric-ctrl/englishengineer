@@ -2,6 +2,8 @@ import { Loader2, Volume2 } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { logger } from '@/shared/logger';
+
 import { PronunciationService } from '@/features/vocabulary';
 
 interface PronunciationButtonProps {
@@ -18,8 +20,8 @@ export function PronunciationButton({ word, className = '' }: PronunciationButto
     setPlaying(true);
     try {
       await PronunciationService.speak(word);
-    } catch {
-      // TTS not supported
+    } catch (e) {
+      logger.w('[PRONUNCIATION] TTS failed', e);
     } finally {
       setPlaying(false);
     }

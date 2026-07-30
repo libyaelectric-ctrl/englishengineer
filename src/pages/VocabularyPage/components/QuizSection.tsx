@@ -3,6 +3,7 @@ import { Award, CheckCircle2, LoaderCircle } from 'lucide-react';
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
+import { logger } from '@/shared/logger';
 
 import {
   VocabularyMenuService,
@@ -68,7 +69,8 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
       setQuizWords(words);
       setAnswers({});
       setResult(null);
-    } catch {
+    } catch (e) {
+      logger.w('[QUIZ] Failed to start quiz', e);
       setLoadError('The quiz could not be prepared. Please try again.');
     } finally {
       setIsStarting(false);

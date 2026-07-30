@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+
 import { logger } from '@/shared/logger';
 
 const STORAGE_KEY_RECENT = 'command-palette:recent';

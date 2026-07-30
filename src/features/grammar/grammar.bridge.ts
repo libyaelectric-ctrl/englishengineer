@@ -1,4 +1,5 @@
 import { addToVocabularyPool } from '@/core/learning/learning.pool';
+
 import { logger } from '@/shared/logger';
 
 import type { GrammarRule } from './grammar.types';

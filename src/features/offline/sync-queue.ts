@@ -164,7 +164,8 @@ export const SyncQueue = {
       try {
         await postSyncItem(item);
         processedIds.push(item.id);
-      } catch {
+      } catch (e) {
+        logger.w('[SYNC_QUEUE] Failed to post sync item', e);
         item.retries += 1;
         if (item.retries >= item.maxRetries) {
           moveToDeadLetter(item);

@@ -1,4 +1,5 @@
 import { FEATURE_FLAGS } from '@/config/feature-flags.config';
+
 import { logger } from '@/shared/logger';
 
 interface ABTest {

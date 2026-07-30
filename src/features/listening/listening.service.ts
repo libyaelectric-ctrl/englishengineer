@@ -2,6 +2,7 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
@@ -235,7 +236,8 @@ export const ListeningService = {
       }
       await cache.put(mission.audioUrl, response.clone());
       return { ok: true, message: 'Audio cached for offline replay.' };
-    } catch {
+    } catch (e) {
+      logger.w('[LISTENING] Audio cache failed', e);
       return {
         ok: false,
         message: 'Audio cache failed. The browser may be offline or storage may be unavailable.',

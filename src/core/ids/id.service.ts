@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { IdPrefix } from './id.types';
 
 const hexEncode = (bytes: Uint8Array): string =>

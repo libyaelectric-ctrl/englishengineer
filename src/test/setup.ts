@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import { afterEach, vi } from 'vitest';
+import { logger } from '@/shared/logger';
 
 import React from 'react';
 
@@ -62,7 +63,8 @@ globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise
         json: async () => JSON.parse(content),
         text: async () => content,
       } as unknown as Response;
-    } catch {
+    } catch (e) {
+      logger.w('[TEST_SETUP] Mock fetch failed', e);
       return {
         ok: false,
         status: 404,

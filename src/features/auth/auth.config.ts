@@ -1,3 +1,5 @@
+import { logger } from '@/shared/logger';
+
 export interface SupabaseReadyConfig {
   url: string | null;
   anonKey: string | null;
@@ -5,8 +7,6 @@ export interface SupabaseReadyConfig {
   urlValid: boolean;
   keyValid: boolean;
 }
-
-import { logger } from '@/shared/logger';
 
 interface AuthEnv {
   VITE_AUTH_PROVIDER?: string;
