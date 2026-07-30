@@ -1,5 +1,6 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { logger } from '@/shared/logger';
 
 import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
 
@@ -53,7 +54,8 @@ const parseErrorMessage = async (response: Response): Promise<string> => {
     if (typeof data.error === 'string') return data.error;
     if (data.error?.message) return data.error.message;
     return data.message || `Billing backend returned ${response.status}.`;
-  } catch {
+  } catch (e) {
+    logger.w('[STRIPE] Failed to parse error response', e);
     return `Billing backend returned ${response.status}.`;
   }
 };

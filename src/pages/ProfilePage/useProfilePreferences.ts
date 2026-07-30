@@ -120,7 +120,8 @@ export const useProfilePreferences = (
       setPreferencesSaved(true);
       setMessage('Learning preferences saved successfully.');
       setError(null);
-    } catch {
+    } catch (e) {
+      logger.w('[PROFILE] Failed to save learning preferences', e);
       setError('Failed to save learning preferences.');
     }
   };

@@ -1,4 +1,5 @@
 import { addToVocabularyPool } from '@/core/learning/learning.pool';
+import { logger } from '@/shared/logger';
 
 import type { GrammarRule } from './grammar.types';
 
@@ -33,8 +34,8 @@ export const GrammarVocabularyBridge = {
       try {
         addToVocabularyPool(tag);
         poolAdded++;
-      } catch {
-        // Pool add failed silently
+      } catch (e) {
+        logger.w('[GRAMMAR_BRIDGE] Failed to add vocabulary to pool', e);
       }
     });
 

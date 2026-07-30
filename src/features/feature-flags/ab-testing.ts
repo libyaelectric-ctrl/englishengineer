@@ -1,4 +1,5 @@
 import { FEATURE_FLAGS } from '@/config/feature-flags.config';
+import { logger } from '@/shared/logger';
 
 interface ABTest {
   id: string;
@@ -19,7 +20,8 @@ const getStoredAssignments = (): Record<string, ABAssignment> => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
-  } catch {
+  } catch (e) {
+    logger.w('[AB_TESTING] Failed to read stored assignments', e);
     return {};
   }
 };

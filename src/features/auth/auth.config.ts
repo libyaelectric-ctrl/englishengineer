@@ -6,6 +6,8 @@ export interface SupabaseReadyConfig {
   keyValid: boolean;
 }
 
+import { logger } from '@/shared/logger';
+
 interface AuthEnv {
   VITE_AUTH_PROVIDER?: string;
   VITE_SUPABASE_URL?: string;
@@ -28,7 +30,8 @@ const isSupabaseUrlValid = (url: string | null): boolean => {
   try {
     const parsed = new URL(url);
     return parsed.hostname.endsWith('.supabase.co') || parsed.hostname === 'localhost';
-  } catch {
+  } catch (e) {
+    logger.w('[AUTH] Supabase URL validation failed', e);
     return false;
   }
 };
@@ -41,7 +44,8 @@ const isSupabaseKeyValid = (key: string | null): boolean => {
   try {
     const payload = JSON.parse(atob(parts[1]));
     return Boolean(payload.aud || payload.sub || payload.role);
-  } catch {
+  } catch (e) {
+    logger.w('[AUTH] Supabase key validation failed', e);
     return false;
   }
 };

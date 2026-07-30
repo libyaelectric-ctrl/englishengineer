@@ -1,5 +1,6 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { logger } from '@/shared/logger';
 
 import { storage } from '@/shared/storage';
 
@@ -57,7 +58,8 @@ export const BillingService = {
       const subscription = await provider.getSubscriptionStatus(userId);
       saveSubscription(subscription);
       return subscription;
-    } catch {
+    } catch (e) {
+      logger.w('[BILLING] Failed to fetch subscription from provider, falling back to local', e);
       return this.getLocalSubscription();
     }
   },
