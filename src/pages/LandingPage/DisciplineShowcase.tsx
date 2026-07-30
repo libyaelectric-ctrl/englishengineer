@@ -47,7 +47,7 @@ export function DisciplineShowcase() {
                 <div className="w-full max-w-sm rounded bg-surface border border-border-soft p-8 text-center">
                   <active.icon className="mx-auto h-12 w-12 text-primary mb-4" />
                   <p className="text-sm font-medium text-muted-copy">Practice real scenarios from {active.title.toLowerCase()} projects</p>
-                  <Link to="/auth/register" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Start practicing <ArrowUpRight className="h-3 w-3" /></Link>
+                  <Link to="/signup" className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline">Start practicing <ArrowUpRight className="h-3 w-3" /></Link>
                 </div>
               </div>
             </div>

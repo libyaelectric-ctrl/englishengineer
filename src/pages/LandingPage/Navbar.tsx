@@ -24,8 +24,8 @@ export function Navbar() {
           <a href="#pricing" className="text-muted-copy hover:text-foreground transition-colors">Pricing</a>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/auth/login" className="hidden text-xs font-semibold text-muted-copy hover:text-foreground transition-colors sm:inline">Log in</Link>
-          <Link to="/auth/register" className="inline-flex items-center gap-1.5 rounded bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors">
+          <Link to="/login" className="hidden text-xs font-semibold text-muted-copy hover:text-foreground transition-colors sm:inline">Log in</Link>
+          <Link to="/signup" className="inline-flex items-center gap-1.5 rounded bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors">
             Get Started <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>

@@ -25,10 +25,10 @@ const HeroSection = ({ scrollShift }: HeroSectionProps) => {
         AI-powered oral defense coaching, FIDIC contract writing, technical presentations, and 5,000+ domain-specific terms — all offline-first.
       </p>
       <div className={`mt-10 flex flex-col gap-4 sm:flex-row transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-        <Button size="default" className="group bg-primary text-primary-foreground hover:bg-primary-hover px-8 py-6 text-lg font-semibold shadow-sm transition-all rounded" onClick={() => navigate('/auth/register')}>
+        <Button size="default" className="group bg-primary text-primary-foreground hover:bg-primary-hover px-8 py-6 text-lg font-semibold shadow-sm transition-all rounded" onClick={() => navigate('/signup')}>
           Start Free <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
         </Button>
-        <Button size="default" variant="outline" className="border-border-soft bg-surface text-foreground hover:bg-surface-hover px-8 py-6 text-lg rounded" onClick={() => navigate('/demo')}>
+        <Button size="default" variant="outline" className="border-border-soft bg-surface text-foreground hover:bg-surface-hover px-8 py-6 text-lg rounded" onClick={() => navigate('/start')}>
           <Play className="mr-2 h-5 w-5 text-primary" /> Watch Demo
         </Button>
       </div>

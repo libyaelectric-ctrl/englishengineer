@@ -11,9 +11,9 @@ export function Footer() {
             <span className="text-sm font-bold text-foreground">EngVox</span>
           </div>
           <div className="flex items-center gap-6 text-xs font-medium text-muted-copy">
-            <Link to="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-            <Link to="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-            <Link to="/contact" className="hover:text-foreground transition-colors">Contact</Link>
+            <Link to="/legal/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <Link to="/legal/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link to="/business" className="hover:text-foreground transition-colors">Contact</Link>
           </div>
           <p className="text-xs text-muted-copy">© {new Date().getFullYear()} EngVox. All rights reserved.</p>
         </div>
