@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Terminal } from 'lucide-react';
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 export function Navbar() {
   return (
@@ -13,7 +14,7 @@ export function Navbar() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">EngVox</span>
-            <span className="rounded bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft">v2.1</span>
+            <span className="rounded bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft">v{PRODUCT_VERSION}</span>
           </div>
         </Link>
         <div className="hidden items-center gap-6 text-xs font-semibold uppercase tracking-wider md:flex">

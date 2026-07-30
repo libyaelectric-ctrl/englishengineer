@@ -15,7 +15,7 @@ import { MissionListTab } from './WritingPage/components/MissionListTab';
 import { WorkspaceTab } from './WritingPage/components/WorkspaceTab';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { useGrammarStore } from '@/features/grammar/store/grammar.store';
+import { useGrammarStore } from '@/features/grammar';
 
 const VOCAB_THRESHOLD = 200;
 const GRAMMAR_THRESHOLD = 10;

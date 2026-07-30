@@ -1,4 +1,6 @@
-export const PRODUCT_VERSION = '4.0.1';
+export const PRODUCT_VERSION = '2.1.2';
+export const APP_NAME = 'EngVox';
+export const APP_TAGLINE = 'Engineering Communication Operating System';
 
 export const BREAKPOINTS = {
   mobile: 640,
@@ -8,7 +10,7 @@ export const BREAKPOINTS = {
 } as const;
 
 export const PRODUCT_POSITIONING =
-  'EngineerOS - AI-powered English communication platform for engineers on international projects';
+  'EngVox - AI-powered English communication platform for engineers on international projects';
 
 export const AI_ACCESS_POLICY = {
   freeAccess: 'Limited free AI demo',

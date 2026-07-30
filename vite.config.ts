@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
+import { compression } from 'vite-plugin-compression2';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
@@ -43,6 +44,7 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
+      compression({ algorithms: ['brotliCompress'] }),
       ...(process.env.ANALYZE
         ? [visualizer({ open: true, filename: 'bundle-report.html' })]
         : []),

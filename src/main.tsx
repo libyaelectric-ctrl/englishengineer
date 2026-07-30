@@ -26,25 +26,10 @@ if (typeof window !== 'undefined') {
     });
   }, observerOptions);
 
-  // Re-observe when DOM changes (for lazy-loaded content)
-  const domObserver = new MutationObserver(() => {
-    document
-      .querySelectorAll('.animate-on-scroll:not(.animate-visible)')
-      .forEach((el) => {
-        observer.observe(el);
-      });
-  });
-
   window.addEventListener('load', () => {
-    // Initial observe
     document.querySelectorAll('.animate-on-scroll').forEach((el) => {
       observer.observe(el);
     });
-    // Watch for new elements (scoped to main content, not full body)
-    const mainContent = document.getElementById('root');
-    if (mainContent) {
-      domObserver.observe(mainContent, { childList: true, subtree: true });
-    }
 
     // Mouse tracking for card hover effects (throttled via rAF)
     let mouseFrame = 0;
@@ -99,10 +84,13 @@ requestIdleCallback(async () => {
   }
 });
 
-// Migrate large data sets from localStorage to IndexedDB
-import { indexedDBStorage } from '@/shared/storage/indexed-db.service';
-indexedDBStorage.migrateAll().catch((err: unknown) => {
-  logger.w('[IndexedDB] Migration failed:', err);
+// Migrate large data sets from localStorage to IndexedDB (deferred)
+requestIdleCallback(() => {
+  import('@/shared/storage/indexed-db.service').then(({ indexedDBStorage }) =>
+    indexedDBStorage.migrateAll().catch((err: unknown) => {
+      logger.w('[IndexedDB] Migration failed:', err);
+    })
+  );
 });
 
 // Register service worker for PWA
