@@ -81,14 +81,10 @@ Only availability is shown. No value, token, key or secret is written to this re
 
 ## Commands Run
 
-| Command                | Exit code | Result |
-| ---------------------- | --------: | ------ |
-| `npm run typecheck`    |         0 | PASS   |
-| `npm test`             |         0 | PASS   |
-| `npm run build`        |         0 | PASS   |
-| `npm run backend:test` |         0 | PASS   |
-| `npm run verify:rls`   |         0 | PASS   |
-| `npm run quality:gate` |         1 | FAIL   |
+| Command             | Exit code | Result |
+| ------------------- | --------: | ------ |
+| `npm run typecheck` |         0 | PASS   |
+| `npm test`          |         1 | FAIL   |
 
 The external invocation required for this report is `npm run kademe8:verify`.
 
@@ -101,7 +97,7 @@ The external invocation required for this report is `npm run kademe8:verify`.
 
 ## Remaining Blockers
 
-- npm run quality:gate exited with code 1.
+- npm test exited with code 1.
 
 ## Next Decision
 

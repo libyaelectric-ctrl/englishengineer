@@ -101,7 +101,7 @@ export const FieldDocAssistant = () => {
         setIsGenerating(false);
       }, 1000);
     },
-    [conflictDetails]
+    [conflictDetails, activeType, projectName, clauseRef]
   );
 
   const handleCopy = useCallback(() => {

@@ -1,7 +1,7 @@
+import { logger } from '@/shared/logger';
+
 const REMINDER_STORAGE_KEY = 'EngVox_review_reminder';
 const REMINDER_CHECK_KEY = 'EngVox_review_reminder_last_check';
-
-import { logger } from '@/shared/logger';
 
 export interface ReviewReminderSettings {
   enabled: boolean;

@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from 'react';
 
 import { logger } from '@/shared/logger';
+
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileRepository, type UserLearningProfile } from '@/features/profile';
 
