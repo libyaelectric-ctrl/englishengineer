@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@sentry/node": "^10.68.0",
+    "@sentry/node": "^10.69.0",
     "@supabase/supabase-js": "^2.110.9",
     "bullmq": "^5.81.2",
     "cors": "^2.8.5",
