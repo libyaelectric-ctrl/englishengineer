@@ -91,7 +91,7 @@ export const Sidebar = () => {
                   EngVox
                 </span>
                 <span className="text-[10px] font-bold text-primary leading-tight font-mono">
-                  V.{PRODUCT_VERSION}
+                  v{PRODUCT_VERSION}
                 </span>
               </div>
             </div>
