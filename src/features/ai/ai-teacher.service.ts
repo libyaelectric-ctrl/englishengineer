@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { AIService } from './ai.service';
 import type { MockExample } from './mock-ai.provider';
 
@@ -62,7 +63,8 @@ Explain best practices, engineering terminology, and communication rules. Encour
         message: response.text.trim(),
         isAiPowered: true,
       };
-    } catch {
+    } catch (e) {
+      logger.w('[AITeacher] AI chat failed, using fallback:', e);
       return {
         message: `Let's practice your ${skill} skills with "${contextInfo}".
 Could you write a sentence or outline your thoughts about this topic in English, and I will review it?`,

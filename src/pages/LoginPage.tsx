@@ -24,7 +24,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     void h.initialize();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- initialize is a stable ref from useLoginHandlers
   }, [h.initialize]);
 
   return (

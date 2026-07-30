@@ -17,10 +17,10 @@ services:
       - key: APP_VERSION
         value: 2.1.2
       - key: AI_PROVIDER
-        value: anthropic
+        value: gemini
       - key: AI_MODEL
-        value: claude-haiku-4-5
-      - key: ANTHROPIC_API_KEY
+        value: gemini-2.0-flash
+      - key: GEMINI_API_KEY
         sync: false
       - key: SUPABASE_URL
         sync: false

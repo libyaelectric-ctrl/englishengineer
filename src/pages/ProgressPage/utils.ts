@@ -133,6 +133,7 @@ export const useAnimatedNumber = (value: number, duration: number = 1.5) => {
   const [displayValue, setDisplayValue] = useState(0);
   useEffect(() => {
     let startTime: number;
+    let rafId: number;
     const startValue = displayValue;
     const distance = value - startValue;
     const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
@@ -143,11 +144,11 @@ export const useAnimatedNumber = (value: number, duration: number = 1.5) => {
       setDisplayValue(
         Math.floor(startValue + distance * easeOutQuart(progress))
       );
-      if (progress < 1) requestAnimationFrame(animate);
+      if (progress < 1) rafId = requestAnimationFrame(animate);
       else setDisplayValue(value);
     };
-    requestAnimationFrame(animate);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value, duration]);
+    rafId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafId);
+  }, [value, duration]); // eslint-disable-line react-hooks/exhaustive-deps -- startValue is intentionally captured per run
   return displayValue;
 };

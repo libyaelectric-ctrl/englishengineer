@@ -452,7 +452,7 @@ export const GrammarLessonContent = ({
       },
     ]);
     setChatInput('');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
   }, [selectedRule.id]);
 
   const handleSend = async () => {

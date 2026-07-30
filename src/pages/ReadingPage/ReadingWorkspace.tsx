@@ -89,7 +89,7 @@ What questions do you have about this passage?`,
       },
     ]);
     setChatInput('');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
   }, [currentMission.id]);
 
   const handleSendChat = async () => {

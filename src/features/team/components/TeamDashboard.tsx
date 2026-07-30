@@ -12,7 +12,7 @@ export const TeamDashboard: FC = () => {
 
   useEffect(() => {
     void team.loadWorkspace();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- loadWorkspace is a stable Zustand action
   }, [team.loadWorkspace]);
 
   return (
