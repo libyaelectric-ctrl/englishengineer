@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { IdService } from '@/core/ids/id.service';
-import { logger } from '@/shared/logger';
 
+import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
 import { useAIStore } from '@/features/ai/ai.store';

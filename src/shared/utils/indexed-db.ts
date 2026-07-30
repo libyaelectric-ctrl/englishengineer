@@ -4,7 +4,6 @@
  * Caches loaded vocabulary terms and grammar rules into browser IndexedDB
  * for instant offline access in remote job sites, tunnels, or offline PWA mode.
  */
-
 import { logger } from '@/shared/logger';
 
 const DB_NAME = 'engvox_offline_cache';

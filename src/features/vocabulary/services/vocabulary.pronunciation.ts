@@ -1,9 +1,11 @@
+import { logger } from '@/shared/logger';
+
 export interface PronunciationResult {
   word: string;
   audioUrl: string;
   phonetic: string | null;
   source: 'browser-tts' | 'cached';
-  cached: boolean;
+  cached?: boolean;
 }
 
 const CACHE_KEY = 'EngVox_pronunciation_cache';
@@ -27,7 +29,8 @@ export const PronunciationService = {
           this.cache.set(key, { ...val, audioBlob: new Blob() });
         });
       }
-    } catch {
+    } catch (e) {
+      logger.w('[VOCAB_PRONUNCIATION] Failed to load pronunciation cache', e);
       this.cache.clear();
     }
   },

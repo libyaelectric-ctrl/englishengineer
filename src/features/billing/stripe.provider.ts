@@ -1,5 +1,6 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+
 import { logger } from '@/shared/logger';
 
 import { getBackendAuthHeaders } from '@/features/auth/backend-auth';

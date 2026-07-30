@@ -1,3 +1,5 @@
+import { logger } from '@/shared/logger';
+
 export interface SpeakingAudioUploadResult {
   audioUrl: string;
   sizeBytes: number;
@@ -54,7 +56,8 @@ export async function uploadSpeakingAudio(
   let body: unknown;
   try {
     body = await response.json();
-  } catch {
+  } catch (e) {
+    logger.w('[SPEAKING] Failed to parse upload response', e);
     body = null;
   }
 

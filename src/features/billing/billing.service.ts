@@ -1,7 +1,7 @@
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
-import { logger } from '@/shared/logger';
 
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 import {

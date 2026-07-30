@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 import { useLearningStore } from '@/core/learning';
 
@@ -37,7 +38,8 @@ export function useReadingPage() {
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     try {
       return new Set(JSON.parse(localStorage.getItem('reading_bookmarks') || '[]'));
-    } catch {
+    } catch (e) {
+      logger.w('[READING] Failed to parse bookmarks', e);
       return new Set<string>();
     }
   });

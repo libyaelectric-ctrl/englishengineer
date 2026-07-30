@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 import type {
@@ -77,7 +78,8 @@ export const lookupExternalVocabulary = async (
     const result = { ...payload, cached: false };
     storage.set(CACHE_KEY, { ...cache, [normalizedWord]: result });
     return { status: 'success', result };
-  } catch {
+  } catch (e) {
+    logger.w('[VOCAB_SEARCH] External lookup failed', e);
     return { status: 'unavailable' };
   }
 };

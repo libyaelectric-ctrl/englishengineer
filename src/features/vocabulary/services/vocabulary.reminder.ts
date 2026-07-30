@@ -1,6 +1,8 @@
 const REMINDER_STORAGE_KEY = 'EngVox_review_reminder';
 const REMINDER_CHECK_KEY = 'EngVox_review_reminder_last_check';
 
+import { logger } from '@/shared/logger';
+
 export interface ReviewReminderSettings {
   enabled: boolean;
   timeOfDay: string;
@@ -27,7 +29,8 @@ export const ReviewReminderService = {
     try {
       const stored = localStorage.getItem(REMINDER_STORAGE_KEY);
       return stored ? { ...defaultSettings(), ...JSON.parse(stored) } : defaultSettings();
-    } catch {
+    } catch (e) {
+      logger.w('[VOCAB_REMINDER] Failed to read reminder settings', e);
       return defaultSettings();
     }
   },

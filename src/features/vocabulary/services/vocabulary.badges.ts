@@ -1,3 +1,5 @@
+import { logger } from '@/shared/logger';
+
 export interface VocabularyBadge {
   id: string;
   name: string;
@@ -152,7 +154,8 @@ export const VocabularyBadgeService = {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       return stored ? JSON.parse(stored) : {};
-    } catch {
+    } catch (e) {
+      logger.w('[VOCAB_BADGES] Failed to read unlocked badges', e);
       return {};
     }
   },
