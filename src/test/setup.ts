@@ -2,9 +2,10 @@
 import fs from 'fs';
 import path from 'path';
 import { afterEach, vi } from 'vitest';
-import { logger } from '@/shared/logger';
 
 import React from 'react';
+
+import { logger } from '@/shared/logger';
 
 let cleanupDom: (() => void) | undefined;
 if (typeof document !== 'undefined') {
@@ -19,6 +20,26 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
     unobserve() {}
     disconnect() {}
   } as unknown as typeof globalThis.IntersectionObserver;
+}
+
+// Mock IndexedDB for jsdom tests
+if (typeof globalThis.indexedDB === 'undefined') {
+  globalThis.indexedDB = {
+    open: () => {
+      const request = {
+        onupgradeneeded: null,
+        onsuccess: null,
+        onerror: null,
+        error: new Error('IndexedDB blocked in tests'),
+      };
+      setTimeout(() => {
+        if (typeof request.onerror === 'function') {
+          (request as any).onerror({ target: request });
+        }
+      }, 0);
+      return request;
+    },
+  } as unknown as IDBFactory;
 }
 
 afterEach(() => {

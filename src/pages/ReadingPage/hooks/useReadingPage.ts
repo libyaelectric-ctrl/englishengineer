@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { logger } from '@/shared/logger';
 
 import { useLearningStore } from '@/core/learning';
+
+import { logger } from '@/shared/logger';
 
 import {
   ContentLevelFilter,
