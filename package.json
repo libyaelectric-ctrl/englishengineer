@@ -91,7 +91,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-hooks": "^7.1.1",
     "fflate": "^0.8.3",
-    "globals": "^15.0.0",
+    "globals": "^17.8.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",
     "license-checker": "^25.0.1",
