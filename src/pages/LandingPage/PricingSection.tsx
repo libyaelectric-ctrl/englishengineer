@@ -33,7 +33,7 @@ export function PricingSection() {
                     </ul>
                   </div>
                   <div className="relative z-10 mt-8">
-                    <Link to="/auth/register" className={`block w-full rounded px-4 py-3 text-center text-sm font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary-hover' : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'}`}>{plan.id === 'free' ? 'Start Free' : 'Get Started'}</Link>
+                    <Link to="/signup" className={`block w-full rounded px-4 py-3 text-center text-sm font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary-hover' : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'}`}>{plan.id === 'free' ? 'Start Free' : 'Get Started'}</Link>
                   </div>
                 </div>
               </AnimatedCard>
