@@ -1,26 +1,29 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LandingPage from '@/pages/LandingPage';
+
+const createTestQueryClient = () =>
+  new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
+const renderWithProviders = (component: React.ReactElement) =>
+  render(
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter>{component}</MemoryRouter>
+    </QueryClientProvider>
+  );
 
 describe('Landing page E2E', () => {
   it('renders hero section with correct branding', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<LandingPage />);
 
-    expect(screen.getByText(/Engineering English OS/)).toBeInTheDocument();
+    expect(screen.getByText(/The Engineering English/)).toBeInTheDocument();
     expect(screen.getAllByText(/Start free/i).length).toBeGreaterThan(0);
   });
 
   it('displays all 6 features', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<LandingPage />);
 
     expect(screen.getByText(/Writing desk/i)).toBeInTheDocument();
     expect(screen.getByText(/Speaking room/i)).toBeInTheDocument();
@@ -31,11 +34,7 @@ describe('Landing page E2E', () => {
   });
 
   it('shows 3 pricing plans on landing', () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<LandingPage />);
 
     expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
     expect(screen.getByText('$0')).toBeInTheDocument();
@@ -44,11 +43,7 @@ describe('Landing page E2E', () => {
   });
 
   it('FAQ items are clickable', async () => {
-    render(
-      <MemoryRouter>
-        <LandingPage />
-      </MemoryRouter>
-    );
+    renderWithProviders(<LandingPage />);
 
     const faqButton = screen.getByText('Is there a free plan?');
     expect(faqButton).toBeInTheDocument();
