@@ -1,1 +1,0 @@
-export { ToolsSidebar } from './ToolsSidebar';
