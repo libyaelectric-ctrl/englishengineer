@@ -36,7 +36,6 @@ export default tseslint.config(
       'jsx-a11y': jsxA11y,
     },
     rules: {
-      'no-feature-to-feature-imports': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
@@ -91,11 +90,10 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
     },
   },
-  // Auth callback and PWA prompt — console used for debugging/logging
+  // Auth callback — console used for debugging/logging
   {
     files: [
       'src/pages/AuthCallbackPage.tsx',
-      'src/shared/components/PWAInstallPrompt.tsx',
     ],
     rules: { 'no-console': 'off' },
   },

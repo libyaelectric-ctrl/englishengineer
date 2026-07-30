@@ -93,15 +93,3 @@ export const stripeRetry = createRetryWrapper('stripe', {
   baseDelay: 1000,
   retryableErrors: ['429', '500', '502', '503'],
 });
-
-export const supabaseRetry = createRetryWrapper('supabase', {
-  maxRetries: 3,
-  baseDelay: 500,
-  retryableErrors: ['ECONNRESET', 'ETIMEDOUT', '429', '500', '502', '503'],
-});
-
-export const anthropicRetry = createRetryWrapper('anthropic', {
-  maxRetries: 3,
-  baseDelay: 2000,
-  retryableErrors: ['429', '500', '502', '503'],
-});

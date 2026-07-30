@@ -1,3 +1,5 @@
+import { logger } from '@/shared/logger';
+
 const prefetched = new Set<string>();
 
 export const prefetchRoute = (path: string) => {
@@ -26,6 +28,6 @@ export const prefetchRoute = (path: string) => {
 
   const importer = routes[path];
   if (importer) {
-    importer().catch((err) => console.debug(`Prefetch failed for ${path}:`, err));
+    importer().catch((err) => logger.d(`Prefetch failed for ${path}:`, err));
   }
 };

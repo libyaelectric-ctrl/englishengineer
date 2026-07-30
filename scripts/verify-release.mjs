@@ -13,7 +13,7 @@ const requiredPaths = [
 
 const missing = requiredPaths.filter((path) => !existsSync(resolve(path)));
 const audioFiles = existsSync(resolve('public/audio'))
-  ? readdirSync(resolve('public/audio')).filter((file) => file.endsWith('.wav'))
+  ? readdirSync(resolve('public/audio')).filter((file) => file.endsWith('.mp3'))
   : [];
 
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
@@ -289,7 +289,7 @@ if (missing.length > 0) {
 }
 
 console.log('Release structure verified.');
-console.log(`WAV assets: ${audioFiles.length}`);
+console.log(`MP3 assets: ${audioFiles.length}`);
 console.log('Frontend lockfile: present');
 console.log('Backend lockfile: present');
 console.log('Supabase migrations: present');

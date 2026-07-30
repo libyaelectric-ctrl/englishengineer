@@ -13,6 +13,7 @@ import { ListeningHelpers } from './listening.helpers';
 import type { ListeningPlaybackSpeed } from './listening.types';
 import type { ListeningMission } from './listening.types';
 import { Button } from '@/shared/components/Button';
+import { logger } from '@/shared/logger';
 
 const SPEED_OPTIONS: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
 
@@ -135,7 +136,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
 
     if (isPlaying) {
       audio.play().catch((err) => {
-        console.debug('Audio playback failed:', err);
+        logger.d('Audio playback failed:', err);
         pausePlaying();
       });
     } else {

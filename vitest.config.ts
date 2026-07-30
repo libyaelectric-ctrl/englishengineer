@@ -67,8 +67,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': srcPath,
-      '@shared': fileURLToPath(new URL('./src/shared', import.meta.url)),
-      '@config': fileURLToPath(new URL('./src/config', import.meta.url)),
     },
   },
 });

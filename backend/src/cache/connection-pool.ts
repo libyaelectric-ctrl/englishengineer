@@ -1,5 +1,3 @@
-import { logger } from '../logger.js';
-
 interface PoolConfig {
   maxConnections: number;
   connectionTimeoutMs: number;
@@ -12,30 +10,7 @@ const DEFAULT_POOL_CONFIG: PoolConfig = {
   idleTimeoutMs: 30_000,
 };
 
-let activeConnections = 0;
-
 export const getPoolConfig = (overrides?: Partial<PoolConfig>): PoolConfig => ({
   ...DEFAULT_POOL_CONFIG,
   ...overrides,
-});
-
-export const acquireConnection = (config: PoolConfig): boolean => {
-  if (activeConnections >= config.maxConnections) {
-    logger.warn('[Pool] Max connections reached', {
-      active: activeConnections,
-      max: config.maxConnections,
-    });
-    return false;
-  }
-  activeConnections += 1;
-  return true;
-};
-
-export const releaseConnection = (): void => {
-  if (activeConnections > 0) activeConnections -= 1;
-};
-
-export const getPoolStats = () => ({
-  active: activeConnections,
-  idle: 0,
 });
