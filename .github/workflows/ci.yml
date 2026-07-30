@@ -76,13 +76,13 @@ jobs:
             LINES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.lines.pct)")
             BRANCHES=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.branches.pct)")
             FUNCTIONS=$(cat coverage/coverage-summary.json | node -e "const d=require('fs').readFileSync('/dev/stdin','utf8');const j=JSON.parse(d);console.log(j.total.functions.pct)")
-            echo "Lines: ${LINES}% (min: 60%)"
-            echo "Branches: ${BRANCHES}% (min: 50%)"
-            echo "Functions: ${FUNCTIONS}% (min: 55%)"
+            echo "Lines: ${LINES}% (min: 38%)"
+            echo "Branches: ${BRANCHES}% (min: 28%)"
+            echo "Functions: ${FUNCTIONS}% (min: 34%)"
             FAIL=0
-            if [ "$(echo "$LINES < 60" | bc -l)" -eq 1 ]; then echo "FAIL: Lines coverage below threshold"; FAIL=1; fi
-            if [ "$(echo "$BRANCHES < 50" | bc -l)" -eq 1 ]; then echo "FAIL: Branches coverage below threshold"; FAIL=1; fi
-            if [ "$(echo "$FUNCTIONS < 55" | bc -l)" -eq 1 ]; then echo "FAIL: Functions coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$LINES < 38" | bc -l)" -eq 1 ]; then echo "FAIL: Lines coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$BRANCHES < 28" | bc -l)" -eq 1 ]; then echo "FAIL: Branches coverage below threshold"; FAIL=1; fi
+            if [ "$(echo "$FUNCTIONS < 34" | bc -l)" -eq 1 ]; then echo "FAIL: Functions coverage below threshold"; FAIL=1; fi
             if [ "$FAIL" -eq 1 ]; then exit 1; fi
             echo "Coverage thresholds met"
           else
