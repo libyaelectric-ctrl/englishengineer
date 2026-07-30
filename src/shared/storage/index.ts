@@ -85,7 +85,8 @@ export const storage = {
       localStorage.setItem(testKey, '1');
       localStorage.removeItem(testKey);
       return true;
-    } catch {
+    } catch (e) {
+      logger.w('[STORAGE] Availability check failed', e);
       return false;
     }
   },
@@ -164,7 +165,8 @@ export const storage = {
         const exportKey = key.slice(prefix.length);
         try {
           snapshot[exportKey] = JSON.parse(value) as unknown;
-        } catch {
+        } catch (e) {
+          logger.w('[STORAGE] Failed to parse export key', e);
           snapshot[exportKey] = value;
         }
       });

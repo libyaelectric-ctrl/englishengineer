@@ -42,8 +42,8 @@ export function useCommandPalette() {
       const recent: string[] = raw ? JSON.parse(raw) : [];
       const updated = [href, ...recent.filter((r) => r !== href)].slice(0, MAX_RECENT);
       localStorage.setItem(STORAGE_KEY_RECENT, JSON.stringify(updated));
-    } catch {
-      /* ignore */
+    } catch (e) {
+      logger.w('[COMMAND_PALETTE] Failed to record recent visit', e);
     }
 
     // Update frequency
@@ -52,8 +52,8 @@ export function useCommandPalette() {
       const freq: Record<string, number> = raw ? JSON.parse(raw) : {};
       freq[href] = (freq[href] || 0) + 1;
       localStorage.setItem(STORAGE_KEY_FREQ, JSON.stringify(freq));
-    } catch {
-      /* ignore */
+    } catch (e) {
+      logger.w('[COMMAND_PALETTE] Failed to record frequency', e);
     }
   }, []);
 
@@ -61,7 +61,8 @@ export function useCommandPalette() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY_RECENT);
       return raw ? JSON.parse(raw) : [];
-    } catch {
+    } catch (e) {
+      logger.w('[COMMAND_PALETTE] Failed to read recent visits', e);
       return [];
     }
   }, []);
@@ -70,7 +71,8 @@ export function useCommandPalette() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY_FREQ);
       return raw ? JSON.parse(raw) : {};
-    } catch {
+    } catch (e) {
+      logger.w('[COMMAND_PALETTE] Failed to read frequency', e);
       return {};
     }
   }, []);

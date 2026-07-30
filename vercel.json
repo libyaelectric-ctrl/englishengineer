@@ -1,6 +1,11 @@
 {
   "redirects": [
     {
+      "source": "/demo",
+      "destination": "/start",
+      "permanent": false
+    },
+    {
       "source": "/learning",
       "destination": "/learning-plan",
       "permanent": false

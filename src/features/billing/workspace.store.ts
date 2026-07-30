@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { IdService } from '@/core/ids/id.service';
+import { logger } from '@/shared/logger';
 
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
@@ -188,7 +189,8 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
             if (typeof window === 'undefined' || !window.localStorage) return null;
             const item = localStorage.getItem(`eos_${name}`);
             return item ? JSON.parse(item) : null;
-          } catch {
+          } catch (e) {
+            logger.w('[WORKSPACE_STORE] Failed to read from localStorage', e);
             return null;
           }
         },
@@ -196,16 +198,16 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
           try {
             if (typeof window === 'undefined' || !window.localStorage) return;
             localStorage.setItem(`eos_${name}`, JSON.stringify(value));
-          } catch {
-            // ignore
+          } catch (e) {
+            logger.w('[WORKSPACE_STORE] Failed to write to localStorage', e);
           }
         },
         removeItem: (name) => {
           try {
             if (typeof window === 'undefined' || !window.localStorage) return;
             localStorage.removeItem(`eos_${name}`);
-          } catch {
-            // ignore
+          } catch (e) {
+            logger.w('[WORKSPACE_STORE] Failed to remove from localStorage', e);
           }
         },
       },

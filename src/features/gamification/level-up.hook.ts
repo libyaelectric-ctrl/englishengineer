@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 const STORAGE_KEY = 'gamification.lastSeenLevel.v1';
@@ -25,7 +26,8 @@ export function useLevelUpDetector(currentLevel: number): {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       lastSeen = raw ? Number(raw) : null;
-    } catch {
+    } catch (e) {
+      logger.w('[GAMIFICATION] Failed to read last seen level', e);
       lastSeen = null;
     }
 
@@ -34,8 +36,8 @@ export function useLevelUpDetector(currentLevel: number): {
       // just record the current level as the baseline.
       try {
         window.localStorage.setItem(STORAGE_KEY, String(currentLevel));
-      } catch {
-        // Storage unavailable (private browsing, etc.) — safe to ignore.
+      } catch (e) {
+        logger.w('[GAMIFICATION] Failed to write last seen level', e);
       }
       return;
     }
@@ -48,8 +50,8 @@ export function useLevelUpDetector(currentLevel: number): {
   const acknowledge = () => {
     try {
       window.localStorage.setItem(STORAGE_KEY, String(currentLevel));
-    } catch {
-      // Storage unavailable — celebration will simply show again next visit.
+    } catch (e) {
+      logger.w('[GAMIFICATION] Failed to persist acknowledged level', e);
     }
     setJustLeveledUp(null);
   };

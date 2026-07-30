@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import {
@@ -42,7 +43,8 @@ export function useWritingPage() {
   >(() => {
     try {
       return JSON.parse(localStorage.getItem('writing_history') || '[]');
-    } catch {
+    } catch (e) {
+      logger.w('[WRITING] Failed to parse writing history', e);
       return [];
     }
   });

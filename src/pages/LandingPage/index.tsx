@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { PageMetadata } from '@/shared/components/PageMetadata';
+import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 
@@ -20,8 +21,8 @@ const LandingPage = () => {
   useEffect(() => {
     try {
       ProductAnalyticsService.track('screen_viewed', 'landing');
-    } catch {
-      /* ignore */
+    } catch (e) {
+      logger.w('[LANDING] Failed to track screen view', e);
     }
   }, []);
 

@@ -119,7 +119,8 @@ export async function addOfflineAction(
       tx.oncomplete = () => resolve(id);
       tx.onerror = () => resolve(id);
     });
-  } catch {
+  } catch (e) {
+    logger.w('[IDB] Failed to add offline action', e);
     return id;
   }
 }
@@ -135,7 +136,8 @@ export async function getOfflineActions(): Promise<OfflineAction[]> {
       request.onsuccess = () => resolve(request.result || []);
       request.onerror = () => resolve([]);
     });
-  } catch {
+  } catch (e) {
+    logger.w('[IDB] Failed to get offline actions', e);
     return [];
   }
 }
@@ -150,8 +152,8 @@ export async function removeOfflineAction(id: string): Promise<void> {
       tx.oncomplete = () => resolve();
       tx.onerror = () => resolve();
     });
-  } catch {
-    // Ignore
+  } catch (e) {
+    logger.w('[IDB] Failed to remove offline action', e);
   }
 }
 
@@ -165,8 +167,8 @@ export async function clearOfflineActions(): Promise<void> {
       tx.oncomplete = () => resolve();
       tx.onerror = () => resolve();
     });
-  } catch {
-    // Ignore
+  } catch (e) {
+    logger.w('[IDB] Failed to clear offline actions', e);
   }
 }
 
@@ -181,7 +183,8 @@ export async function getOfflineActionCount(): Promise<number> {
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => resolve(0);
     });
-  } catch {
+  } catch (e) {
+    logger.w('[IDB] Failed to count offline actions', e);
     return 0;
   }
 }
