@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "tsx watch server.js",
     "start": "tsx server.js",
-    "test": "NODE_ENV=test tsx --test",
+    "test": "cross-env NODE_ENV=test tsx --test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@types/node": "^26.1.1",
     "@types/supertest": "^7.2.1",
     "supertest": "^7.2.2",
+    "cross-env": "^7.0.3",
     "typescript": "^5.7.0"
   }
 }

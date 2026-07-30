@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import DashboardPage from '@/pages/DashboardPage';
 import VocabularyPage from '@/pages/VocabularyPage';
 import GrammarPage from '@/pages/GrammarPage';
@@ -12,12 +13,17 @@ import ProfilePage from '@/pages/ProfilePage';
 import ToolsPage from '@/pages/ToolsPage';
 import LoginPage from '@/pages/LoginPage';
 
+const createTestQueryClient = () =>
+  new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
 const renderWithRouter = (
   component: React.ReactElement,
   initialEntries = ['/']
 ) =>
   render(
-    <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
+    <QueryClientProvider client={createTestQueryClient()}>
+      <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
+    </QueryClientProvider>
   );
 
 describe('Navigation E2E: Main routes render without errors', () => {
@@ -149,12 +155,14 @@ describe('Navigation E2E: Redirect routes', () => {
   it('/analytics redirects to /progress/overview', async () => {
     const { default: ProgressPage } = await import('@/pages/ProgressPage');
     render(
-      <MemoryRouter initialEntries={['/analytics']}>
-        <Routes>
-          <Route path="/analytics" element={<ProgressPage />} />
-          <Route path="/progress/overview" element={<ProgressPage />} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <MemoryRouter initialEntries={['/analytics']}>
+          <Routes>
+            <Route path="/analytics" element={<ProgressPage />} />
+            <Route path="/progress/overview" element={<ProgressPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     await waitFor(() => {
       expect(screen.getAllByText(/Progress/i).length).toBeGreaterThan(0);
@@ -163,12 +171,14 @@ describe('Navigation E2E: Redirect routes', () => {
 
   it('/tools redirects to /tools/work', async () => {
     render(
-      <MemoryRouter initialEntries={['/tools']}>
-        <Routes>
-          <Route path="/tools" element={<ToolsPage />} />
-          <Route path="/tools/:section" element={<ToolsPage />} />
-        </Routes>
-      </MemoryRouter>
+      <QueryClientProvider client={createTestQueryClient()}>
+        <MemoryRouter initialEntries={['/tools']}>
+          <Routes>
+            <Route path="/tools" element={<ToolsPage />} />
+            <Route path="/tools/:section" element={<ToolsPage />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
     await waitFor(() => {
       expect(screen.getByText(/Templates, quick phrases/i)).toBeInTheDocument();
