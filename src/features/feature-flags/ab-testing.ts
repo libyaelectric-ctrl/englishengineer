@@ -65,15 +65,9 @@ export const isVariant = (testId: string, variant: string): boolean => {
   return stored[testId]?.variant === variant;
 };
 
-export const getFeatureVariant = (
-  flagKey: string,
-  userId: string
-): string | null => {
+export const getFeatureVariant = (flagKey: string, userId: string): string | null => {
   const flag = FEATURE_FLAGS[flagKey];
   if (!flag || !flag.enabled) return null;
 
-  return assignVariant(
-    { id: flagKey, flag: flagKey, variants: ['control', 'treatment'] },
-    userId
-  );
+  return assignVariant({ id: flagKey, flag: flagKey, variants: ['control', 'treatment'] }, userId);
 };

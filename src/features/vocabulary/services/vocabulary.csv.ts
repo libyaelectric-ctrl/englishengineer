@@ -13,13 +13,7 @@ export interface ImportResult {
   errors: string[];
 }
 
-const CSV_HEADERS = [
-  'term',
-  'turkishMeaning',
-  'cefrLevel',
-  'domain',
-  'exampleSentence',
-];
+const CSV_HEADERS = ['term', 'turkishMeaning', 'cefrLevel', 'domain', 'exampleSentence'];
 
 export const VocabularyCsvService = {
   exportToCsv(words: CsvWord[]): string {
@@ -39,9 +33,7 @@ export const VocabularyCsvService = {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download =
-      filename ??
-      `vocabulary-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    anchor.download = filename ?? `vocabulary-export-${new Date().toISOString().slice(0, 10)}.csv`;
     anchor.click();
     URL.revokeObjectURL(url);
   },

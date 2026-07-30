@@ -1,9 +1,4 @@
-export {
-  type ErrorCode,
-  type ErrorSeverity,
-  type AppErrorParams,
-  AppError,
-} from './errors';
+export { type ErrorCode, type ErrorSeverity, type AppErrorParams, AppError } from './errors';
 
 export {
   type AppEvent,
@@ -28,10 +23,7 @@ export {
   eventBus,
 } from './events';
 
-export {
-  type EntityId,
-  type Timestamp,
-} from './entities';
+export { type EntityId, type Timestamp } from './entities';
 
 export { type IdPrefix, IdService } from './ids';
 

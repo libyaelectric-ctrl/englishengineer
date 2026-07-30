@@ -1,32 +1,18 @@
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  ClipboardCheck,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/features/auth';
-import {
-  PLACEMENT_QUESTIONS,
-  PlacementService,
-  usePlacementStore,
-} from '@/features/placement';
+
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
+
+import { useAuthStore } from '@/features/auth';
+import { PLACEMENT_QUESTIONS, PlacementService, usePlacementStore } from '@/features/placement';
 
 const PlacementPage = () => {
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.currentUser?.id ?? 'local-user');
-  const {
-    currentIndex,
-    answers,
-    result,
-    answer,
-    next,
-    previous,
-    submit,
-    reset,
-  } = usePlacementStore();
+  const { currentIndex, answers, result, answer, next, previous, submit, reset } =
+    usePlacementStore();
   const question = PLACEMENT_QUESTIONS[currentIndex];
   const isLast = currentIndex === PLACEMENT_QUESTIONS.length - 1;
 
@@ -40,16 +26,14 @@ const PlacementPage = () => {
       <main className="mx-auto max-w-3xl py-4 sm:py-8">
         <section className="rounded-xl border border-border-soft bg-surface p-6 sm:p-8">
           <CheckCircle2 className="h-8 w-8 text-success" />
-          <p className="mt-5 text-xs font-medium uppercase text-success">
-            Placement complete
-          </p>
+          <p className="mt-5 text-xs font-medium uppercase text-success">Placement complete</p>
           <h1 className="mt-2 text-3xl font-medium text-foreground">
             Recommended start: {result.recommendedBand}
           </h1>
           <p className="mt-3 text-sm leading-6 text-muted-copy">
-            Confidence: {result.confidence}. Reading, Vocabulary and Grammar use
-            this local estimate. Writing, Listening and Speaking remain at A1
-            until their own activity provides evidence.
+            Confidence: {result.confidence}. Reading, Vocabulary and Grammar use this local
+            estimate. Writing, Listening and Speaking remain at A1 until their own activity provides
+            evidence.
           </p>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl border border-border-soft bg-surface-hover p-4">
@@ -87,9 +71,7 @@ const PlacementPage = () => {
           <div className="flex items-center gap-3">
             <ClipboardCheck className="h-5 w-5 text-primary" />
             <div>
-              <p className="text-xs font-medium uppercase text-primary">
-                Placement MVP
-              </p>
+              <p className="text-xs font-medium uppercase text-primary">Placement MVP</p>
               <h1 className="text-xl font-medium text-foreground">
                 Find a practical starting point
               </h1>
@@ -108,9 +90,7 @@ const PlacementPage = () => {
           <span className="rounded-[4px] border border-border-soft bg-background px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             {question.domain} · {question.band}
           </span>
-          <h2 className="mt-5 text-sm font-bold text-foreground">
-            {question.prompt}
-          </h2>
+          <h2 className="mt-5 text-sm font-bold text-foreground">{question.prompt}</h2>
           <div className="mt-5 grid gap-3">
             {question.choices.map((choice, choiceIndex) => (
               <button
@@ -142,14 +122,12 @@ const PlacementPage = () => {
             disabled={!Number.isInteger(answers[question.id])}
             onClick={() => (isLast ? submit(userId) : next())}
           >
-            {isLast ? 'Finish placement' : 'Next'}{' '}
-            <ArrowRight className="h-4 w-4" />
+            {isLast ? 'Finish placement' : 'Next'} <ArrowRight className="h-4 w-4" />
           </Button>
         </footer>
       </section>
       <p className="mt-4 text-center text-xs leading-5 text-muted-copy">
-        This is an internal Engineering Communication estimate, not an official
-        CEFR certificate.
+        This is an internal Engineering Communication estimate, not an official CEFR certificate.
       </p>
     </main>
   );

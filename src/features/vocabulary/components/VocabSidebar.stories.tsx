@@ -35,10 +35,7 @@ const VocabLevelGrid = ({ mastered }: { mastered: number }) => {
         const isCompleted = mastered >= lvl.max;
         const prevMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
         const bracketTotal = lvl.max - prevMax;
-        const bracketProgress = Math.max(
-          0,
-          Math.min(bracketTotal, mastered - prevMax)
-        );
+        const bracketProgress = Math.max(0, Math.min(bracketTotal, mastered - prevMax));
         const percent = (bracketProgress / bracketTotal) * 100;
         return (
           <div
@@ -54,27 +51,17 @@ const VocabLevelGrid = ({ mastered }: { mastered: number }) => {
             <div className="flex items-center justify-between mb-2">
               <span
                 className={`text-xs font-bold ${
-                  isActive
-                    ? 'text-primary'
-                    : isCompleted
-                      ? 'text-success'
-                      : 'text-foreground'
+                  isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-foreground'
                 }`}
               >
                 {lvl.id}
               </span>
-              <span className="text-[10px] text-muted-copy font-medium">
-                {lvl.max}
-              </span>
+              <span className="text-[10px] text-muted-copy font-medium">{lvl.max}</span>
             </div>
             <div className="h-1.5 w-full bg-border-soft rounded-full overflow-hidden relative">
               <div
                 className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
-                  isActive
-                    ? 'bg-primary'
-                    : isCompleted
-                      ? 'bg-success'
-                      : 'bg-foreground/30'
+                  isActive ? 'bg-primary' : isCompleted ? 'bg-success' : 'bg-foreground/30'
                 }`}
                 style={{ width: `${percent}%` }}
               />
@@ -114,9 +101,7 @@ const VocabSidebarDemo = ({ mastered }: { mastered: number }) => {
         ].map((stat) => (
           <div key={stat.label} className="flex items-center justify-between">
             <span className="text-xs text-muted-copy">{stat.label}</span>
-            <span className={`text-sm font-semibold ${stat.color}`}>
-              {stat.value}
-            </span>
+            <span className={`text-sm font-semibold ${stat.color}`}>{stat.value}</span>
           </div>
         ))}
       </div>

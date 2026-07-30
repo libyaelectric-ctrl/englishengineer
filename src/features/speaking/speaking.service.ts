@@ -1,9 +1,16 @@
-import { storage } from '@/shared/storage';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
-import { useLearningStore } from '@/core/learning';
 import { eventBus } from '@/core/events/event-bus';
+import { useLearningStore } from '@/core/learning';
+
+import { storage } from '@/shared/storage';
+
+import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
+import { getSpeakingHistoryDetails } from './speaking-mvp';
 import { SPEAKING_MISSIONS } from './speaking.data';
+import { SpeakingEvaluator } from './speaking.evaluator';
 import {
   SpeakingEvaluationResult,
   SpeakingHistoryEntry,
@@ -11,10 +18,6 @@ import {
   SpeakingState,
   SpeakingSubmission,
 } from './speaking.types';
-import { SpeakingEvaluator } from './speaking.evaluator';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
-import { LearningIntelligenceService } from '@/features/learning-intelligence';
-import { getSpeakingHistoryDetails } from './speaking-mvp';
 
 const STORAGE_KEY = 'EngVox_speaking_state';
 
@@ -52,10 +55,8 @@ export const SpeakingService = {
     if (pool.length === 0) return SPEAKING_MISSIONS;
     const lowerPool = pool.map((w) => w.toLowerCase());
     return [...SPEAKING_MISSIONS].sort((a, b) => {
-      const aText =
-        `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
-      const bText =
-        `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
+      const aText = `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
+      const bText = `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
       const aCount = lowerPool.filter((w) => aText.includes(w)).length;
       const bCount = lowerPool.filter((w) => bText.includes(w)).length;
       return bCount - aCount;
@@ -82,10 +83,7 @@ export const SpeakingService = {
     ]);
     const state = this.getState();
     const prevBest = state.completedMissions[mission.id] || 0;
-    state.completedMissions[mission.id] = Math.max(
-      prevBest,
-      evaluation.finalScore
-    );
+    state.completedMissions[mission.id] = Math.max(prevBest, evaluation.finalScore);
     state.lastSelectedMissionId = mission.id;
 
     const historyEntry: SpeakingHistoryEntry = {
@@ -102,8 +100,7 @@ export const SpeakingService = {
       LearningIntelligenceService.addMistake(
         'Speaking Response',
         mission.title,
-        historyEntry.progressNote ??
-          'Repeat the written roleplay at the current level.'
+        historyEntry.progressNote ?? 'Repeat the written roleplay at the current level.'
       );
     }
 

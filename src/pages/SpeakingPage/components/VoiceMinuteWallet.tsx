@@ -1,4 +1,5 @@
 import { Mic } from 'lucide-react';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
 interface VoiceMinuteWalletProps {
@@ -25,11 +26,7 @@ export const VoiceMinuteWallet = ({
           </span>
           <span
             className={`font-mono font-bold ${
-              isOverQuota
-                ? 'text-rose-600'
-                : isWarning
-                  ? 'text-warning'
-                  : 'text-primary'
+              isOverQuota ? 'text-rose-600' : isWarning ? 'text-warning' : 'text-primary'
             }`}
           >
             {voiceMinutesUsedThisMonth} / {maxVoiceMinutes} min

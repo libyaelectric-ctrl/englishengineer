@@ -1,16 +1,15 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import LandingPage from '@/pages/LandingPage';
 
 const createTestQueryClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-const renderWithProviders = (
-  component: React.ReactElement,
-  initialEntries = ['/']
-) =>
+const renderWithProviders = (component: React.ReactElement, initialEntries = ['/']) =>
   render(
     <QueryClientProvider client={createTestQueryClient()}>
       <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
@@ -51,9 +50,7 @@ describe('Critical flow: Vocabulary page', () => {
   it('shows search trigger', async () => {
     const { default: VocabularyPage } = await import('@/pages/VocabularyPage');
     renderWithProviders(<VocabularyPage />);
-    expect(
-      screen.getByRole('button', { name: /^search$/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^search$/i })).toBeInTheDocument();
   });
 });
 

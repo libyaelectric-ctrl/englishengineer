@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
 
@@ -139,8 +140,7 @@ const CODING_QUESTIONS: InterviewQuestion[] = [
   {
     id: 'code-5',
     type: 'coding',
-    question:
-      'Write a function to detect a cycle in a linked list. Optimize for space complexity.',
+    question: 'Write a function to detect a cycle in a linked list. Optimize for space complexity.',
     timeLimitSeconds: 900,
     difficulty: 'easy',
     topics: ['linked lists', 'two pointers', 'cycle detection'],
@@ -172,28 +172,16 @@ const MOCK_EXAMPLES: MockExample[] = [
   },
 ];
 
-const ruleBasedScoring = (
-  answer: InterviewAnswer,
-  question: InterviewQuestion
-): InterviewScore => {
-  const wordCount = answer.transcript
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean).length;
+const ruleBasedScoring = (answer: InterviewAnswer, question: InterviewQuestion): InterviewScore => {
+  const wordCount = answer.transcript.trim().split(/\s+/).filter(Boolean).length;
   const timeRatio = answer.timeSpentSeconds / question.timeLimitSeconds;
 
-  const technicalAccuracy = Math.min(
-    85,
-    40 + wordCount * 0.8 + (timeRatio < 1 ? 10 : 0)
-  );
+  const technicalAccuracy = Math.min(85, 40 + wordCount * 0.8 + (timeRatio < 1 ? 10 : 0));
   const clarity = Math.min(90, 45 + wordCount * 0.6);
   const depth = Math.min(80, 30 + wordCount * 0.7);
   const communication = Math.min(88, 50 + wordCount * 0.5);
   const overall = Math.round(
-    technicalAccuracy * 0.35 +
-      clarity * 0.25 +
-      depth * 0.25 +
-      communication * 0.15
+    technicalAccuracy * 0.35 + clarity * 0.25 + depth * 0.25 + communication * 0.15
   );
 
   return {
@@ -202,18 +190,13 @@ const ruleBasedScoring = (
     depth: Math.round(depth),
     communication: Math.round(communication),
     overall,
-    feedback:
-      'Rule-based scoring active. Connect AI for more detailed technical feedback.',
+    feedback: 'Rule-based scoring active. Connect AI for more detailed technical feedback.',
     strengths: [
-      wordCount >= 50
-        ? 'Provided detailed response'
-        : 'Clear and concise answer',
+      wordCount >= 50 ? 'Provided detailed response' : 'Clear and concise answer',
       'Addressed the core question',
     ],
     improvements: [
-      wordCount < 30
-        ? 'Consider adding more technical detail'
-        : 'Good depth of response',
+      wordCount < 30 ? 'Consider adding more technical detail' : 'Good depth of response',
       'Discuss trade-offs and alternatives',
     ],
   };
@@ -238,28 +221,19 @@ export const InterviewSimulatorService = {
     return session.questions[session.currentQuestionIndex] ?? null;
   },
 
-  async scoreAnswer(
-    answer: InterviewAnswer,
-    question: InterviewQuestion
-  ): Promise<InterviewScore> {
+  async scoreAnswer(answer: InterviewAnswer, question: InterviewQuestion): Promise<InterviewScore> {
     try {
-      const response = await AIService.run(
-        MOCK_EXAMPLES,
-        'evaluateEngineeringEnglish',
-        {
-          modeId: 'roleplay_simulator',
-          modeName: 'Interview Simulator',
-          prompt: `Score this technical interview answer. Question: "${question.question}" Answer: "${answer.transcript}". Provide scores for technical accuracy, clarity, depth, and communication (0-100 each), plus overall score, feedback, strengths, and improvements.`,
-        }
-      );
+      const response = await AIService.run(MOCK_EXAMPLES, 'evaluateEngineeringEnglish', {
+        modeId: 'roleplay_simulator',
+        modeName: 'Interview Simulator',
+        prompt: `Score this technical interview answer. Question: "${question.question}" Answer: "${answer.transcript}". Provide scores for technical accuracy, clarity, depth, and communication (0-100 each), plus overall score, feedback, strengths, and improvements.`,
+      });
 
       const text = response.text;
       const scoreMatch = text.match(/Overall:\s*(\d+)/i);
       const overall = scoreMatch ? parseInt(scoreMatch[1], 10) : 75;
 
-      const strengthsMatch = text.match(
-        /Strengths:\s*(.+?)(?=Improvements|$)/is
-      );
+      const strengthsMatch = text.match(/Strengths:\s*(.+?)(?=Improvements|$)/is);
       const improvementsMatch = text.match(/Improvements:\s*(.+?)$/is);
 
       return {

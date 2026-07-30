@@ -1,7 +1,12 @@
-import React, { useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Compass } from 'lucide-react';
+
+import React, { useMemo, useState } from 'react';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
+import { PlacementService } from '@/features/placement';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import type {
   CommunicationGoal,
@@ -13,13 +18,12 @@ import type {
   SkillName,
   UserLearningProfile,
 } from '@/features/profile/profile.types';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
-import { PlacementService } from '@/features/placement';
-import { ProfileStep } from './steps/ProfileStep';
-import { RoleStep } from './steps/RoleStep';
+
 import { GoalsStep } from './steps/GoalsStep';
 import { LevelStep } from './steps/LevelStep';
 import { PlanStep } from './steps/PlanStep';
+import { ProfileStep } from './steps/ProfileStep';
+import { RoleStep } from './steps/RoleStep';
 
 const STEPS = ['profile', 'role', 'goals', 'level', 'plan'] as const;
 type Step = (typeof STEPS)[number];
@@ -108,15 +112,11 @@ const StepContent = ({
   professionalTrack: ProfessionalTrack;
   setProfessionalTrack: React.Dispatch<React.SetStateAction<ProfessionalTrack>>;
   electricalSubdomain: ElectricalSubdomain;
-  setElectricalSubdomain: React.Dispatch<
-    React.SetStateAction<ElectricalSubdomain>
-  >;
+  setElectricalSubdomain: React.Dispatch<React.SetStateAction<ElectricalSubdomain>>;
   industryId: IndustryId | '';
   setIndustryId: React.Dispatch<React.SetStateAction<IndustryId | ''>>;
   communicationGoals: CommunicationGoal[];
-  setCommunicationGoals: React.Dispatch<
-    React.SetStateAction<CommunicationGoal[]>
-  >;
+  setCommunicationGoals: React.Dispatch<React.SetStateAction<CommunicationGoal[]>>;
   learningFocus: SkillName[];
   setLearningFocus: React.Dispatch<React.SetStateAction<SkillName[]>>;
   careerGoal: string;
@@ -124,9 +124,7 @@ const StepContent = ({
   selfReportedCefr: SelfReportedCefr;
   setSelfReportedCefr: React.Dispatch<React.SetStateAction<SelfReportedCefr>>;
   selectedPlan: UserLearningProfile['selectedPlan'];
-  setSelectedPlan: React.Dispatch<
-    React.SetStateAction<UserLearningProfile['selectedPlan']>
-  >;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<UserLearningProfile['selectedPlan']>>;
 }) => {
   if (step === 'profile') {
     return (
@@ -169,15 +167,10 @@ const StepContent = ({
   }
   if (step === 'level') {
     return (
-      <LevelStep
-        selfReportedCefr={selfReportedCefr}
-        setSelfReportedCefr={setSelfReportedCefr}
-      />
+      <LevelStep selfReportedCefr={selfReportedCefr} setSelfReportedCefr={setSelfReportedCefr} />
     );
   }
-  return (
-    <PlanStep selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} />
-  );
+  return <PlanStep selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} />;
 };
 
 const OnboardingFooter = ({
@@ -233,23 +226,16 @@ const OnboardingPage = () => {
   const location = useLocation();
   const currentUser = useAuthStore((state) => state.currentUser);
   const userId = currentUser?.id ?? 'local-user';
-  const initial = useMemo(
-    () => LearningProfileRepository.getProfile(userId),
-    [userId]
-  );
+  const initial = useMemo(() => LearningProfileRepository.getProfile(userId), [userId]);
   const step = parseStep(location.pathname);
   const index = STEPS.indexOf(step);
   const [minutes, setMinutes] = useState(initial.dailyTarget.minutes);
   const [taskCount, setTaskCount] = useState(initial.dailyTarget.taskCount);
-  const [industryId, setIndustryId] = useState<IndustryId | ''>(
-    initial.industryId ?? ''
+  const [industryId, setIndustryId] = useState<IndustryId | ''>(initial.industryId ?? '');
+  const [communicationGoals, setCommunicationGoals] = useState<CommunicationGoal[]>(
+    initial.communicationGoals
   );
-  const [communicationGoals, setCommunicationGoals] = useState<
-    CommunicationGoal[]
-  >(initial.communicationGoals);
-  const [learningFocus, setLearningFocus] = useState<SkillName[]>(
-    initial.learningFocus
-  );
+  const [learningFocus, setLearningFocus] = useState<SkillName[]>(initial.learningFocus);
   const [selfReportedCefr, setSelfReportedCefr] = useState<SelfReportedCefr>(
     initial.selfReportedCefr
   );
@@ -257,13 +243,13 @@ const OnboardingPage = () => {
   const [professionalTrack, setProfessionalTrack] = useState<ProfessionalTrack>(
     initial.professionalTrack
   );
-  const [electricalSubdomain, setElectricalSubdomain] =
-    useState<ElectricalSubdomain>(initial.electricalSubdomain ?? 'low-voltage');
+  const [electricalSubdomain, setElectricalSubdomain] = useState<ElectricalSubdomain>(
+    initial.electricalSubdomain ?? 'low-voltage'
+  );
   const [careerGoal, setCareerGoal] = useState(initial.careerGoal);
   const [country, setCountry] = useState(initial.country);
   const [timezone, setTimezone] = useState(initial.timezone);
-  const isLiteMode =
-    new URLSearchParams(location.search).get('mode') === 'lite';
+  const isLiteMode = new URLSearchParams(location.search).get('mode') === 'lite';
 
   const save = (complete = false) => {
     LearningProfileRepository.updatePreferences(userId, {
@@ -321,18 +307,11 @@ const OnboardingPage = () => {
           <div className="flex items-start gap-3 sm:items-center">
             <Compass className="h-5 w-5 text-primary" />
             <div>
-              <p className="text-xs font-medium uppercase text-primary">
-                Personal setup
-              </p>
-              <h1 className="text-xl font-medium text-foreground sm:text-2xl">
-                Personal setup
-              </h1>
+              <p className="text-xs font-medium uppercase text-primary">Personal setup</p>
+              <h1 className="text-xl font-medium text-foreground sm:text-2xl">Personal setup</h1>
             </div>
           </div>
-          <ol
-            className="mt-5 grid grid-cols-5 gap-2"
-            aria-label="Onboarding progress"
-          >
+          <ol className="mt-5 grid grid-cols-5 gap-2" aria-label="Onboarding progress">
             {STEPS.map((item, itemIndex) => (
               <li
                 key={item}

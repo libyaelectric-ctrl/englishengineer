@@ -4,11 +4,7 @@ interface LockProgressBarProps {
   total: number;
 }
 
-export const LockProgressBar = ({
-  label,
-  done,
-  total,
-}: LockProgressBarProps) => (
+export const LockProgressBar = ({ label, done, total }: LockProgressBarProps) => (
   <>
     <div className="flex justify-between text-muted-copy">
       <span>{label}</span>

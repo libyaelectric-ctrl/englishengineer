@@ -1,20 +1,15 @@
-import {
-  Trophy,
-  UserRound,
-  Mail,
-  ShieldCheck,
-  Calendar,
-  Briefcase,
-  Layers,
-} from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
-import {
-  PROFESSIONS,
-  PROFESSIONAL_TRACKS,
-  COMMUNICATION_GOALS,
-} from '@/features/profile/profile.preferences';
-import type { UserLearningProfile } from '@/features/profile';
+import { Briefcase, Calendar, Layers, Mail, ShieldCheck, Trophy, UserRound } from 'lucide-react';
+
 import type { Achievement } from '@/core/learning/learning.types';
+
+import { SectionCard } from '@/shared/components/SectionCard';
+
+import type { UserLearningProfile } from '@/features/profile';
+import {
+  COMMUNICATION_GOALS,
+  PROFESSIONAL_TRACKS,
+  PROFESSIONS,
+} from '@/features/profile/profile.preferences';
 
 interface ProfileOverviewSectionProps {
   currentUser: { displayName?: string; email?: string } | null;
@@ -48,9 +43,7 @@ const IdentityCard = ({
   <div className="rounded-[4px] border border-border-soft bg-surface-hover p-5 flex flex-col sm:flex-row items-center gap-5 shadow-sm relative overflow-hidden">
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808003_1px,transparent_1px),linear-gradient(to_bottom,#80808003_1px,transparent_1px)] bg-[size:16px_16px]" />
     <div className="h-14 w-14 shrink-0 rounded-[4px] bg-primary text-white flex items-center justify-center font-bold text-lg border border-border-soft shadow-sm select-none relative z-10">
-      {currentUser?.displayName
-        ? currentUser.displayName.slice(0, 2).toUpperCase()
-        : 'DE'}
+      {currentUser?.displayName ? currentUser.displayName.slice(0, 2).toUpperCase() : 'DE'}
     </div>
     <div className="flex-1 text-center sm:text-left relative z-10">
       <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2">
@@ -110,17 +103,15 @@ const InfoGrid = ({
     },
     {
       label: 'Profession / Role',
-      value:
-        PROFESSIONS.find((p) => p.id === profile.professionId)?.label ||
-        'Not Selected',
+      value: PROFESSIONS.find((p) => p.id === profile.professionId)?.label || 'Not Selected',
       icon: Briefcase,
       code: 'ID-05',
     },
     {
       label: 'Engineering Track',
       value:
-        PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)
-          ?.label || 'Electrical Engineering',
+        PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label ||
+        'Electrical Engineering',
       icon: Layers,
       code: 'ID-06',
     },
@@ -145,9 +136,7 @@ const InfoGrid = ({
             </div>
             <div className="mt-2.5 flex items-center gap-2">
               <Icon className="h-4 w-4 text-primary shrink-0" />
-              <p className="text-xs font-bold text-foreground truncate">
-                {item.value}
-              </p>
+              <p className="text-xs font-bold text-foreground truncate">{item.value}</p>
             </div>
           </div>
         );
@@ -173,9 +162,7 @@ const CommunicationGoalsSection = ({ goals }: { goals?: string[] }) => (
         ))}
       </div>
     ) : (
-      <p className="mt-2 text-xs text-muted-copy font-medium">
-        No goals set yet.
-      </p>
+      <p className="mt-2 text-xs text-muted-copy font-medium">No goals set yet.</p>
     )}
   </div>
 );
@@ -224,9 +211,7 @@ const BadgesSection = ({ achievements }: { achievements?: Achievement[] }) => {
         >
           <Trophy className="h-6 w-6 mx-auto text-primary" />
           <p className="text-sm font-bold text-foreground">{badge.title}</p>
-          <p className="text-[10px] text-muted-copy leading-4 font-medium">
-            {badge.description}
-          </p>
+          <p className="text-[10px] text-muted-copy leading-4 font-medium">{badge.description}</p>
           {badge.unlockedAt && (
             <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               {new Date(badge.unlockedAt).toLocaleDateString()}
@@ -254,10 +239,7 @@ export const ProfileOverviewSection = ({
   handleSaveProfile,
 }: ProfileOverviewSectionProps) => {
   return (
-    <section
-      id="overview"
-      className="animate-in fade-in duration-200 space-y-6"
-    >
+    <section id="overview" className="animate-in fade-in duration-200 space-y-6">
       <SectionCard
         title="Profile Overview"
         subtitle="Your professional and regional classification metadata"
@@ -266,11 +248,7 @@ export const ProfileOverviewSection = ({
         {!isEditMode ? (
           <div className="space-y-6">
             <IdentityCard currentUser={currentUser} profile={profile} />
-            <InfoGrid
-              currentUser={currentUser}
-              profile={profile}
-              subscription={subscription}
-            />
+            <InfoGrid currentUser={currentUser} profile={profile} subscription={subscription} />
             <CommunicationGoalsSection goals={profile.communicationGoals} />
             <SecurityLogsCard />
             <div className="flex justify-end">
@@ -283,10 +261,7 @@ export const ProfileOverviewSection = ({
             </div>
           </div>
         ) : (
-          <form
-            onSubmit={handleSaveProfile}
-            className="space-y-4 animate-in fade-in duration-200"
-          >
+          <form onSubmit={handleSaveProfile} className="space-y-4 animate-in fade-in duration-200">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block space-y-1.5 text-[10px] font-bold uppercase tracking-wider text-foreground">
                 First Name

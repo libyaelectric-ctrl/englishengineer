@@ -1,21 +1,20 @@
+import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
+
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import { GrammarRepository } from '@/features/grammar/grammar.repository';
 import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
+import { getPreferredDomains } from '@/features/profile/profile.preferences';
+import type { SkillName, UserLearningProfile } from '@/features/profile/profile.types';
 import {
   getBaseCefrLevel,
   getNextCefrBand,
   getTaskBandMix,
 } from '@/features/profile/profile.utils';
-import { getPreferredDomains } from '@/features/profile/profile.preferences';
-import type {
-  SkillName,
-  UserLearningProfile,
-} from '@/features/profile/profile.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
-import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
 import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
+
 import type {
   LearningTaskRecommendation,
   SelectedVocabularyTerm,
@@ -50,9 +49,7 @@ const CONTEXT_BY_SKILL: Record<SkillName, string> = {
   grammar: 'Structured grammar practice in a practical communication context',
 };
 
-const uniqueTerms = (
-  items: SelectedVocabularyTerm[]
-): SelectedVocabularyTerm[] => {
+const uniqueTerms = (items: SelectedVocabularyTerm[]): SelectedVocabularyTerm[] => {
   const seen = new Set<string>();
   return items.filter(({ term }) => {
     if (seen.has(term.id)) return false;
@@ -61,11 +58,7 @@ const uniqueTerms = (
   });
 };
 
-const isEligible = (
-  term: VocabularyTerm,
-  skill: SkillName,
-  domain?: string
-): boolean =>
+const isEligible = (term: VocabularyTerm, skill: SkillName, domain?: string): boolean =>
   term.status === 'approved' &&
   term.skillUse.includes(skill) &&
   (!domain || term.domain === domain);
@@ -76,23 +69,17 @@ const rankPreferredDomains = (
 ): VocabularyTerm[] =>
   [...terms].sort(
     (a, b) =>
-      Number(preferredDomains.includes(b.domain)) -
-      Number(preferredDomains.includes(a.domain))
+      Number(preferredDomains.includes(b.domain)) - Number(preferredDomains.includes(a.domain))
   );
 
 const resolveGrammarFocus = async (
   skill: SkillName,
   baseLevel: CefrLevel,
-  selectedGrammar: Awaited<
-    ReturnType<typeof GrammarEngine.selectGrammarForTask>
-  >
+  selectedGrammar: Awaited<ReturnType<typeof GrammarEngine.selectGrammarForTask>>
 ) => {
   if (selectedGrammar.length > 0) return selectedGrammar.slice(0, 2);
   return (
-    await GrammarRepository.getGrammarRulesForUserSkillLevel(
-      skill as LearningDataSkill,
-      baseLevel
-    )
+    await GrammarRepository.getGrammarRulesForUserSkillLevel(skill as LearningDataSkill, baseLevel)
   ).slice(0, 2);
 };
 
@@ -108,9 +95,7 @@ const getFocusPriority = (
 const buildProfileContext = (profile: UserLearningProfile) =>
   [
     profile.goals.length > 0 ? `${profile.goals.join(', ')} goals` : '',
-    profile.professionId
-      ? `${profile.professionId.replace(/-/g, ' ')} role`
-      : '',
+    profile.professionId ? `${profile.professionId.replace(/-/g, ' ')} role` : '',
   ]
     .filter(Boolean)
     .join(' and ');
@@ -143,9 +128,7 @@ export const LearningTaskEngine = {
   getWeakestSkill(profile: UserLearningProfile): SkillName {
     return [...Object.values(profile.skills)].sort(
       (a, b) =>
-        b.weaknessScore - a.weaknessScore ||
-        a.completedTasks - b.completedTasks ||
-        a.elo - b.elo
+        b.weaknessScore - a.weaknessScore || a.completedTasks - b.completedTasks || a.elo - b.elo
     )[0].skill;
   },
 
@@ -164,14 +147,10 @@ export const LearningTaskEngine = {
     const memory = VocabularyMenuService.getState();
     const preferredDomains = domain ? [] : getPreferredDomains(profile);
     const memoryIds = Object.entries(memory.progress)
-      .filter(([, progress]) =>
-        ['Learned', 'Mastered'].includes(progress.status)
-      )
+      .filter(([, progress]) => ['Learned', 'Mastered'].includes(progress.status))
       .map(([id]) => id);
     const [known, currentTerms, stretchTerms] = await Promise.all([
-      Promise.all(
-        memoryIds.map((id) => VocabularyRepository.getVocabularyTermById(id))
-      ),
+      Promise.all(memoryIds.map((id) => VocabularyRepository.getVocabularyTermById(id))),
       VocabularyRepository.getVocabularyByLevel(currentLevel),
       VocabularyRepository.getVocabularyByLevel(stretchLevel),
     ]);
@@ -181,34 +160,23 @@ export const LearningTaskEngine = {
       .map((term) => ({ term, bucket: 'memory' as const }))
       .slice(0, 7);
     const currentNew = rankPreferredDomains(currentTerms, preferredDomains)
-      .filter(
-        (term) => isEligible(term, skill, domain) && !memory.progress[term.id]
-      )
+      .filter((term) => isEligible(term, skill, domain) && !memory.progress[term.id])
       .map((term) => ({ term, bucket: 'current-new' as const }));
     const stretchNew = rankPreferredDomains(stretchTerms, preferredDomains)
-      .filter(
-        (term) => isEligible(term, skill, domain) && !memory.progress[term.id]
-      )
+      .filter((term) => isEligible(term, skill, domain) && !memory.progress[term.id])
       .map((term) => ({ term, bucket: 'stretch' as const }));
     const currentPriority = currentNew.slice(0, 2);
     const priorityIds = new Set([
       ...memoryTerms.map(({ term }) => term.id),
       ...currentPriority.map(({ term }) => term.id),
     ]);
-    const stretchPriority = stretchNew.find(
-      ({ term }) => !priorityIds.has(term.id)
-    );
+    const stretchPriority = stretchNew.find(({ term }) => !priorityIds.has(term.id));
     const preferred = uniqueTerms([
       ...memoryTerms,
       ...currentPriority,
       ...(stretchPriority ? [stretchPriority] : []),
     ]);
-    const fallback = uniqueTerms([
-      ...preferred,
-      ...currentNew,
-      ...stretchNew,
-      ...memoryTerms,
-    ]);
+    const fallback = uniqueTerms([...preferred, ...currentNew, ...stretchNew, ...memoryTerms]);
     return fallback.slice(0, 10);
   },
 
@@ -224,22 +192,13 @@ export const LearningTaskEngine = {
     const baseLevel = getBaseCefrLevel(safeCefr);
     const [vocabularyFocus, selectedGrammar] = await Promise.all([
       this.selectTaskVocabulary(profile, skill, options.domain),
-      GrammarEngine.selectGrammarForTask(
-        skill,
-        baseLevel,
-        TASK_TYPE[skill],
-        options.domain
-      ),
+      GrammarEngine.selectGrammarForTask(skill, baseLevel, TASK_TYPE[skill], options.domain),
     ]);
-    const grammarFocus = await resolveGrammarFocus(
-      skill,
-      baseLevel,
-      selectedGrammar
-    );
+    const grammarFocus = await resolveGrammarFocus(skill, baseLevel, selectedGrammar);
     const intelligence = LearningIntelligenceService.load();
-    const weakWords = Object.values(
-      VocabularyMenuService.getState().progress
-    ).filter((word) => word.isWeak).length;
+    const weakWords = Object.values(VocabularyMenuService.getState().progress).filter(
+      (word) => word.isWeak
+    ).length;
     const focusPriority = getFocusPriority(profile, weakWords);
     const profileContext = buildProfileContext(profile);
 
@@ -251,11 +210,7 @@ export const LearningTaskEngine = {
       safeCefr,
       stretchCefr,
       levelAllocation: getTaskLevelAllocation(profile, skill),
-      whyRecommended: buildWhyRecommended(
-        skill,
-        options.recommended,
-        profileContext
-      ),
+      whyRecommended: buildWhyRecommended(skill, options.recommended, profileContext),
       context: CONTEXT_BY_SKILL[skill],
       prompt:
         grammarFocus[0]?.taskPromptTemplate ??
@@ -273,8 +228,7 @@ export const LearningTaskEngine = {
       sourceSummary: {
         vocabularyDatabase: vocabularyFocus.length > 0,
         grammarDatabase: grammarFocus.length > 0,
-        memoryTerms: vocabularyFocus.filter((item) => item.bucket === 'memory')
-          .length,
+        memoryTerms: vocabularyFocus.filter((item) => item.bucket === 'memory').length,
         weakWords,
         mistakeLogEntries: intelligence.mistakeLog.length,
       },

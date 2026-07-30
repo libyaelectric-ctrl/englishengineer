@@ -1,12 +1,9 @@
+import type { NextFunction, Request, Response } from 'express';
 import { timingSafeEqual, webcrypto } from 'node:crypto';
+
+import type { AuthConfig, AuthenticatedUser, RuntimeEnvironment } from '../types.js';
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
-import type {
-  AuthConfig,
-  AuthenticatedUser,
-  RuntimeEnvironment,
-} from '../types.js';
-import type { Request, Response, NextFunction } from 'express';
 
 const subtle = webcrypto.subtle;
 
@@ -69,10 +66,7 @@ const verifyJwtLocally = async (
 
 const readBearerToken = (request: Request): string | null => {
   const authorization = request.headers.authorization;
-  if (
-    typeof authorization !== 'string' ||
-    !authorization.startsWith('Bearer ')
-  ) {
+  if (typeof authorization !== 'string' || !authorization.startsWith('Bearer ')) {
     return null;
   }
   return authorization.slice('Bearer '.length).trim() || null;
@@ -85,10 +79,7 @@ const secretsMatch = (
   if (!left || !right) return false;
   const leftBuffer = Buffer.from(left);
   const rightBuffer = Buffer.from(right);
-  return (
-    leftBuffer.length === rightBuffer.length &&
-    timingSafeEqual(leftBuffer, rightBuffer)
-  );
+  return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
 };
 
 const validateSupabaseToken = async (
@@ -128,16 +119,8 @@ export interface BackendAuthConfig extends AuthConfig {
 }
 
 export interface BackendAuth {
-  requireBackendAuth: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>;
-  optionalBackendAuth: (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => Promise<void>;
+  requireBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+  optionalBackendAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 }
 
 export const createBackendAuth = (
@@ -169,25 +152,17 @@ export const createBackendAuth = (
 
   const getRequestedUserId = (request: Request): string | undefined => {
     const raw =
-      request.body?.userId ??
-      request.query?.userId ??
-      request.headers['x-engineeros-user-id'];
+      request.body?.userId ?? request.query?.userId ?? request.headers['x-engineeros-user-id'];
     return typeof raw === 'string' && raw.trim() ? raw.trim() : undefined;
   };
 
-  const authenticateDevBypass = (
-    request: Request
-  ): AuthenticatedUser | null => {
-    if (
-      config.environment === 'production' ||
-      process.env.NODE_ENV === 'production'
-    ) {
+  const authenticateDevBypass = (request: Request): AuthenticatedUser | null => {
+    if (config.environment === 'production' || process.env.NODE_ENV === 'production') {
       logger.warn('Dev auth bypass attempted in production — blocked');
       return null;
     }
     if (!config.allowInsecureDevAuth) return null;
-    const email =
-      typeof request.body?.email === 'string' ? request.body.email : undefined;
+    const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
     return {
       userId: getRequestedUserId(request) ?? 'engineeros-dev-user',
       email,
@@ -198,10 +173,7 @@ export const createBackendAuth = (
   const authenticate = async (request: Request): Promise<AuthenticatedUser> => {
     const token = readBearerToken(request);
 
-    const internalUser = authenticateInternalSecret(
-      token ?? undefined,
-      request
-    );
+    const internalUser = authenticateInternalSecret(token ?? undefined, request);
     if (internalUser) return internalUser;
 
     if (config.supabaseJwtSecret && token) {

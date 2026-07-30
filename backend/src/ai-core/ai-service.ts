@@ -1,25 +1,18 @@
 import { randomUUID } from 'node:crypto';
+
+import type { AiConfig } from '../../types.js';
 import { ApiError } from '../errors.js';
 import { logger } from '../logger.js';
-import {
-  mockText,
-  callOpenAI,
-  callAnthropic,
-  callGemini,
-} from './providers.js';
+import { getCustomPracticePrompt, getJsonStructureInstruction } from '../prompts/prompt-loader.js';
+import { callAnthropic, callGemini, callOpenAI, mockText } from './providers.js';
 import type { ProviderConfig } from './providers.js';
-import {
-  getJsonStructureInstruction,
-  getCustomPracticePrompt,
-} from '../prompts/prompt-loader.js';
-import type { AiConfig } from '../../types.js';
 
 export const AI_CONTRACT_VERSION = '2026-06-26.v1';
 
 const isEvaluationOperation = (operation: string, body: AiRequestBody) =>
-  (
-    ['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]
-  ).includes(operation) && body?.context !== undefined;
+  (['analyzeProgress', 'evaluateEngineeringEnglish', 'analyzeText'] as string[]).includes(
+    operation
+  ) && body?.context !== undefined;
 
 const isCustomPracticeRequest = (prompt: string) => {
   const lower = prompt.toLowerCase();
@@ -33,11 +26,7 @@ const isCustomPracticeRequest = (prompt: string) => {
   );
 };
 
-const buildPrompt = (
-  prompt: string,
-  body: AiRequestBody,
-  evaluation: boolean
-): string => {
+const buildPrompt = (prompt: string, body: AiRequestBody, evaluation: boolean): string => {
   let finalPrompt = prompt;
   if (evaluation) {
     finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
@@ -59,20 +48,8 @@ const callProvider = async (
   if (config.provider === 'anthropic')
     return callAnthropic(config as ProviderConfig, prompt, signal, fetchImpl);
   if (config.provider === 'gemini')
-    return callGemini(
-      config as ProviderConfig,
-      prompt,
-      signal,
-      fetchImpl,
-      evaluation
-    );
-  return callOpenAI(
-    config as ProviderConfig,
-    prompt,
-    signal,
-    fetchImpl,
-    evaluation
-  );
+    return callGemini(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
+  return callOpenAI(config as ProviderConfig, prompt, signal, fetchImpl, evaluation);
 };
 
 const parseEvaluationResponse = (
@@ -92,11 +69,7 @@ const parseEvaluationResponse = (
       responseText: parsed.professionalVersion || parsed.summary || text,
     };
   } catch (err) {
-    logger.error(
-      'Failed to parse AI evaluation structured response',
-      {},
-      err as Error
-    );
+    logger.error('Failed to parse AI evaluation structured response', {}, err as Error);
     return { structured: null, responseText: text };
   }
 };
@@ -111,11 +84,7 @@ const withTimeout = async <T>(
     return await work(controller.signal);
   } catch (error: unknown) {
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new ApiError(
-        504,
-        'ai_timeout',
-        'The AI provider did not respond before the timeout.'
-      );
+      throw new ApiError(504, 'ai_timeout', 'The AI provider did not respond before the timeout.');
     }
     throw error;
   } finally {
@@ -143,16 +112,11 @@ interface AiRequestBody {
   context?: Record<string, unknown>;
 }
 
-export const createAIService = (
-  config: AiConfig,
-  fetchImpl: typeof fetch = fetch
-) => ({
+export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetch) => ({
   async complete(operation: string, body: AiRequestBody): Promise<AiResult> {
     const prompt = body?.prompt ?? '';
     const requestId =
-      typeof body?.metadata?.requestId === 'string'
-        ? body.metadata.requestId
-        : randomUUID();
+      typeof body?.metadata?.requestId === 'string' ? body.metadata.requestId : randomUUID();
     const startedAt = Date.now();
 
     if (!config.configured) {
@@ -172,8 +136,7 @@ export const createAIService = (
     const finalPrompt = buildPrompt(prompt, body, evaluation);
 
     const text = await withTimeout(
-      (signal) =>
-        callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
+      (signal) => callProvider(config, finalPrompt, signal, fetchImpl, evaluation),
       config.timeoutMs
     );
 

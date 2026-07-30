@@ -1,16 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  getInitialUserLearningProfile,
-  LearningProfileRepository,
-} from '@/features/profile';
-import {
-  VocabularyMenuService,
-  VocabularyRepository,
-} from '@/features/vocabulary';
-import {
-  LearningTaskEngine,
-  getTaskLevelAllocation,
-} from './learning-task.engine';
+
+import { LearningProfileRepository, getInitialUserLearningProfile } from '@/features/profile';
+import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabulary';
+
+import { LearningTaskEngine, getTaskLevelAllocation } from './learning-task.engine';
 import { TaskEvaluationService } from './task-evaluation.service';
 
 describe('connected learning task orchestration', () => {
@@ -47,20 +40,11 @@ describe('connected learning task orchestration', () => {
     const profile = getInitialUserLearningProfile();
     profile.skills.reading.elo = 3800;
     profile.skills.reading.cefrBand = 'C1';
-    const recommendation = await LearningTaskEngine.createRecommendation(
-      profile,
-      'speaking'
-    );
+    const recommendation = await LearningTaskEngine.createRecommendation(profile, 'speaking');
     expect(recommendation.targetCefr).toBe('A1');
     expect(recommendation.stretchCefr).toBe('A1+');
-    expect(
-      recommendation.vocabularyFocus.every(
-        ({ term }) => term.cefrLevel === 'A1'
-      )
-    ).toBe(true);
-    expect(
-      recommendation.grammarFocus.every((rule) => rule.cefrLevel === 'A1')
-    ).toBe(true);
+    expect(recommendation.vocabularyFocus.every(({ term }) => term.cefrLevel === 'A1')).toBe(true);
+    expect(recommendation.grammarFocus.every((rule) => rule.cefrLevel === 'A1')).toBe(true);
     expect(recommendation.lessonNumber).toBe(1);
     expect(recommendation.explanation.levelReason).toContain('speaking ELO');
     expect(recommendation.explanation.eloRule).toContain('85%');
@@ -78,24 +62,15 @@ describe('connected learning task orchestration', () => {
 
   it('selects 70/20/10 vocabulary when a seven-word memory bank exists', async () => {
     const profile = getInitialUserLearningProfile();
-    const speakingTerms = (
-      await VocabularyRepository.getVocabularyByLevel('A1')
-    ).filter((term) => term.skillUse.includes('speaking'));
-    speakingTerms
-      .slice(0, 7)
-      .forEach((term) => VocabularyMenuService.startLearning(term.id));
-    const selected = await LearningTaskEngine.selectTaskVocabulary(
-      profile,
-      'speaking'
+    const speakingTerms = (await VocabularyRepository.getVocabularyByLevel('A1')).filter((term) =>
+      term.skillUse.includes('speaking')
     );
+    speakingTerms.slice(0, 7).forEach((term) => VocabularyMenuService.startLearning(term.id));
+    const selected = await LearningTaskEngine.selectTaskVocabulary(profile, 'speaking');
     expect(selected).toHaveLength(10);
     expect(selected.filter((item) => item.bucket === 'memory')).toHaveLength(7);
-    expect(
-      selected.filter((item) => item.bucket === 'current-new')
-    ).toHaveLength(2);
-    expect(selected.filter((item) => item.bucket === 'stretch')).toHaveLength(
-      1
-    );
+    expect(selected.filter((item) => item.bucket === 'current-new')).toHaveLength(2);
+    expect(selected.filter((item) => item.bucket === 'stretch')).toHaveLength(1);
   });
 
   it('records ELO delta, CEFR effect, and a review recommendation', () => {

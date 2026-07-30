@@ -1,7 +1,7 @@
 // @vitest-environment node
-
-import { describe, expect, it } from 'vitest';
 import { createLearningState } from '@/test/fixtures';
+import { describe, expect, it } from 'vitest';
+
 import { LearningProfileEngine } from './profile.engine';
 import { getInitialUserLearningProfile } from './profile.utils';
 
@@ -42,10 +42,7 @@ describe('learning profile engine', () => {
     profile.skills.vocabulary.weaknessScore = 40;
     profile.skills.grammar.weaknessScore = 50;
     const memory = await LearningProfileEngine.getVocabularyMemorySummary();
-    const missions = await LearningProfileEngine.generateDailyMissions(
-      profile,
-      memory
-    );
+    const missions = await LearningProfileEngine.generateDailyMissions(profile, memory);
     expect(missions).toHaveLength(3);
     expect(missions[0]).toMatchObject({ skill: 'speaking', cefrBand: 'A1' });
     expect(missions.map((mission) => mission.skill)).toContain('vocabulary');
@@ -63,10 +60,7 @@ describe('learning profile engine', () => {
     profile.skills.vocabulary.weaknessScore = 20;
     profile.skills.grammar.weaknessScore = 20;
     const memory = await LearningProfileEngine.getVocabularyMemorySummary();
-    const missions = await LearningProfileEngine.generateDailyMissions(
-      profile,
-      memory
-    );
+    const missions = await LearningProfileEngine.generateDailyMissions(profile, memory);
     expect(missions[0].skill).toBe('speaking');
     expect(missions[0].cefrBand).toBe('A1');
   });

@@ -1,10 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { AdaptiveDifficultyEngine } from './grammar.adaptive-difficulty';
 import type { GrammarRuleProgress } from './grammar.progress';
 
-const makeProgress = (
-  overrides: Partial<GrammarRuleProgress> = {}
-): GrammarRuleProgress => ({
+const makeProgress = (overrides: Partial<GrammarRuleProgress> = {}): GrammarRuleProgress => ({
   ruleId: 'rule-1',
   exposures: 0,
   correctUsages: 0,
@@ -55,10 +54,7 @@ describe('AdaptiveDifficultyEngine', () => {
         correctUsages: 5,
         incorrectUsages: 2,
       });
-      const result = AdaptiveDifficultyEngine.selectQuestionDifficulty(
-        progress,
-        3
-      );
+      const result = AdaptiveDifficultyEngine.selectQuestionDifficulty(progress, 3);
       expect(['intermediate', 'advanced', 'challenge']).toContain(result);
     });
 
@@ -68,28 +64,17 @@ describe('AdaptiveDifficultyEngine', () => {
         correctUsages: 2,
         incorrectUsages: 3,
       });
-      const result = AdaptiveDifficultyEngine.selectQuestionDifficulty(
-        progress,
-        0
-      );
+      const result = AdaptiveDifficultyEngine.selectQuestionDifficulty(progress, 0);
       expect(['beginner', 'intermediate']).toContain(result);
     });
   });
 
   describe('getDifficultyMultiplier', () => {
     it('returns correct multipliers', () => {
-      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('beginner')).toBe(
-        1.0
-      );
-      expect(
-        AdaptiveDifficultyEngine.getDifficultyMultiplier('intermediate')
-      ).toBe(1.5);
-      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('advanced')).toBe(
-        2.0
-      );
-      expect(
-        AdaptiveDifficultyEngine.getDifficultyMultiplier('challenge')
-      ).toBe(3.0);
+      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('beginner')).toBe(1.0);
+      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('intermediate')).toBe(1.5);
+      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('advanced')).toBe(2.0);
+      expect(AdaptiveDifficultyEngine.getDifficultyMultiplier('challenge')).toBe(3.0);
     });
   });
 });

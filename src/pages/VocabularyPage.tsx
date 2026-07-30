@@ -1,11 +1,13 @@
 import { CheckCircle2 } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
-import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
-import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
-import { WordSetSection } from './VocabularyPage/components/WordSetSection';
 import { QuizSection } from './VocabularyPage/components/QuizSection';
 import { SearchModal } from './VocabularyPage/components/SearchModal';
+import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
+import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
+import { WordSetSection } from './VocabularyPage/components/WordSetSection';
 import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
 
 const VocabularyPage = () => {
@@ -58,9 +60,7 @@ const VocabularyPage = () => {
         allSearchResults={allSearchResults}
         filterOptions={filterOptions}
         chooseTab={chooseTab}
-        onSearchInputChange={(input) =>
-          dispatchSearch({ type: 'SET_SEARCH_INPUT', input })
-        }
+        onSearchInputChange={(input) => dispatchSearch({ type: 'SET_SEARCH_INPUT', input })}
         onSearchSubmit={async (query: string) => {
           dispatchSearch({ type: 'RUN_SEARCH', query });
         }}
@@ -82,9 +82,7 @@ const VocabularyPage = () => {
             dispatchSearch({ type: 'RUN_SEARCH', query });
           }}
           searchInput={searchInput}
-          onSearchInputChange={(input) =>
-            dispatchSearch({ type: 'SET_SEARCH_INPUT', input })
-          }
+          onSearchInputChange={(input) => dispatchSearch({ type: 'SET_SEARCH_INPUT', input })}
           searchResults={searchResults}
           hasSearched={hasSearched}
         />
@@ -100,20 +98,12 @@ const VocabularyPage = () => {
           menuState={menuState}
           onReview={reviewWord}
           onLearn={learnWord}
-          onSetShowAddForm={(show) =>
-            dispatchUI({ type: 'SET_SHOW_ADD_FORM', show })
-          }
-          onSetCustomDraft={(draft) =>
-            dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft })
-          }
+          onSetShowAddForm={(show) => dispatchUI({ type: 'SET_SHOW_ADD_FORM', show })}
+          onSetCustomDraft={(draft) => dispatchUI({ type: 'SET_CUSTOM_DRAFT', draft })}
           onAddCustomWord={addCustomWord}
         />
 
-        {activeTab === 'Learned' && (
-          <QuizSection
-            menuState={menuState}
-          />
-        )}
+        {activeTab === 'Learned' && <QuizSection menuState={menuState} />}
 
         <WordSetSection
           activeTab={activeTab}

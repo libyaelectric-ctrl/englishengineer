@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { SpeakingEvaluator } from './speaking.evaluator';
 import { SpeakingMission, SpeakingSubmission } from './speaking.types';
 
@@ -86,14 +87,8 @@ describe('SpeakingEvaluator', () => {
         'The cable tray um installation is basically blocked by scaffolding so we need to like resequence',
     };
 
-    const cleanResult = SpeakingEvaluator.evaluate(
-      mockMission,
-      cleanSubmission
-    );
-    const fillerResult = SpeakingEvaluator.evaluate(
-      mockMission,
-      fillerSubmission
-    );
+    const cleanResult = SpeakingEvaluator.evaluate(mockMission, cleanSubmission);
+    const fillerResult = SpeakingEvaluator.evaluate(mockMission, fillerSubmission);
 
     expect(cleanResult.fillerWordCount).toBe(0);
     expect(fillerResult.fillerWordCount).toBeGreaterThan(0);

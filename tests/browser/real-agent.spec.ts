@@ -65,15 +65,11 @@ test.describe('Real User Agent', () => {
     await page.waitForTimeout(2000);
 
     // Check word cards
-    const wordCards = await page
-      .locator('[data-testid="vocabulary-word-card"]')
-      .count();
+    const wordCards = await page.locator('[data-testid="vocabulary-word-card"]').count();
     log(`📚 Found ${wordCards} word cards`);
 
     // Try "Learn this word"
-    const learnBtn = page
-      .getByRole('button', { name: /learn this word/i })
-      .first();
+    const learnBtn = page.getByRole('button', { name: /learn this word/i }).first();
     if (await learnBtn.isVisible()) {
       await learnBtn.click();
       await page.waitForTimeout(1000);
@@ -147,10 +143,7 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/reading');
     await page.waitForTimeout(2000);
 
-    const missions = await page
-      .locator('button')
-      .filter({ hasText: /begin/i })
-      .count();
+    const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
     log(`📖 Found ${missions} reading missions`);
 
     if (missions > 0) {
@@ -170,10 +163,7 @@ test.describe('Real User Agent', () => {
     await page.goto(SITE + '/writing');
     await page.waitForTimeout(2000);
 
-    const missions = await page
-      .locator('button')
-      .filter({ hasText: /begin/i })
-      .count();
+    const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
     log(`✍️ Found ${missions} writing missions`);
   });
 
@@ -226,9 +216,7 @@ test.describe('Real User Agent', () => {
     log('🔑 Testing Super User...');
     await page.goto(SITE + '/login');
 
-    await page
-      .getByPlaceholder(/you@example.com/i)
-      .fill('catexozcan@gmail.com');
+    await page.getByPlaceholder(/you@example.com/i).fill('catexozcan@gmail.com');
     await page.getByPlaceholder(/•/).fill('123456');
     await page.getByRole('button', { name: /sign in/i }).click();
 
@@ -240,9 +228,7 @@ test.describe('Real User Agent', () => {
         .getByText(/super admin/i)
         .first()
         .isVisible();
-      log(
-        `🔑 Super user login: ${superAdmin ? 'SUCCESS' : 'PARTIAL (onboarding)'}`
-      );
+      log(`🔑 Super user login: ${superAdmin ? 'SUCCESS' : 'PARTIAL (onboarding)'}`);
     } catch {
       log('🔑 Super user: redirected to onboarding (expected)');
     }

@@ -1,4 +1,5 @@
-import { memo, type HTMLAttributes } from 'react';
+import { type HTMLAttributes, memo } from 'react';
+
 import { cn } from '@/shared/utils/cn';
 
 type StatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
@@ -16,23 +17,20 @@ const toneClasses: Record<StatusTone, string> = {
   danger: 'border-error/20 bg-error/10 text-error',
 };
 
-export const StatusBadge = memo<StatusBadgeProps>(({
-  label,
-  tone = 'neutral',
-  className,
-  ...props
-}) => (
-  <span
-    className={cn(
-      'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-medium',
-      toneClasses[tone],
-      className
-    )}
-    {...props}
-  >
-    <span className="h-1.5 w-1.5 rounded-full bg-current" />
-    {label}
-  </span>
-));
+export const StatusBadge = memo<StatusBadgeProps>(
+  ({ label, tone = 'neutral', className, ...props }) => (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] font-medium',
+        toneClasses[tone],
+        className
+      )}
+      {...props}
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
+      {label}
+    </span>
+  )
+);
 
 StatusBadge.displayName = 'StatusBadge';

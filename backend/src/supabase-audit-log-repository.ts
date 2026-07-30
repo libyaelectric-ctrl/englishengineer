@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+
 import { logger } from './logger.js';
 
 const MAX_BATCH_SIZE = 50;
@@ -39,10 +40,7 @@ export const createSupabaseAuditLogRepository = (
     return null;
   }
 
-  const client = createClient(
-    config.supabaseUrl,
-    config.supabaseServiceRoleKey
-  );
+  const client = createClient(config.supabaseUrl, config.supabaseServiceRoleKey);
   const pendingBatch: AuditLogRecord[] = [];
   let flushTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -93,9 +91,7 @@ export const createSupabaseAuditLogRepository = (
     }
   };
 
-  const query = async (
-    filters: AuditLogFilters = {}
-  ): Promise<AuditLogRecord[]> => {
+  const query = async (filters: AuditLogFilters = {}): Promise<AuditLogRecord[]> => {
     try {
       let queryBuilder = client
         .from('audit_logs')

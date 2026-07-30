@@ -1,3 +1,6 @@
+import { useListeningMissionsStore } from './listening-missions.store';
+import { useListeningPlaybackStore } from './listening-playback.store';
+
 /**
  * Backward-compatible re-export.
  * Consumers should gradually migrate to:
@@ -6,9 +9,6 @@
  */
 export { useListeningMissionsStore } from './listening-missions.store';
 export { useListeningPlaybackStore } from './listening-playback.store';
-
-import { useListeningMissionsStore } from './listening-missions.store';
-import { useListeningPlaybackStore } from './listening-playback.store';
 
 /**
  * Combined store selector for backward compatibility.

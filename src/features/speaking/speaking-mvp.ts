@@ -7,16 +7,12 @@ import type {
 export const SPEAKING_MVP_MODE = 'Written Roleplay' as const;
 export const SPEAKING_MVP_REQUIRES_MICROPHONE = false;
 
-export const getSpeakingRoleplayCategory = (
-  mission: SpeakingMission
-): SpeakingRoleplayCategory => {
+export const getSpeakingRoleplayCategory = (mission: SpeakingMission): SpeakingRoleplayCategory => {
   if (mission.id === 'speaking_a1_site_introduction') return 'Daily';
   if (
-    [
-      'progress_meeting',
-      'consultant_discussion',
-      'client_presentation',
-    ].includes(mission.scenarioType)
+    ['progress_meeting', 'consultant_discussion', 'client_presentation'].includes(
+      mission.scenarioType
+    )
   ) {
     return 'Work';
   }
@@ -32,14 +28,9 @@ export const getSpeakingHistoryDetails = (
   const lowestDimension = [
     ['Grammar', evaluation.grammarScore],
     ['Vocabulary', evaluation.technicalVocabularyScore],
-    [
-      'Speaking Response',
-      Math.min(evaluation.fluencyScore, evaluation.clarityScore),
-    ],
+    ['Speaking Response', Math.min(evaluation.fluencyScore, evaluation.clarityScore)],
   ] as const;
-  const [errorType] = [...lowestDimension].sort(
-    (left, right) => left[1] - right[1]
-  )[0];
+  const [errorType] = [...lowestDimension].sort((left, right) => left[1] - right[1])[0];
 
   return {
     roleplayMode: SPEAKING_MVP_MODE,

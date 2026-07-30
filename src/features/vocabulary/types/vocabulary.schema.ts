@@ -1,4 +1,5 @@
 import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+
 import type { VocabularyTerm } from './vocabulary.types';
 
 const hasStringField = (obj: Record<string, unknown>, key: string): boolean =>
@@ -8,8 +9,7 @@ const hasArrayField = (obj: Record<string, unknown>, key: string): boolean =>
   Array.isArray(obj[key]);
 
 const hasValidCefrLevel = (level: unknown): level is string =>
-  typeof level === 'string' &&
-  CEFR_LEVELS.includes(level as (typeof CEFR_LEVELS)[number]);
+  typeof level === 'string' && CEFR_LEVELS.includes(level as (typeof CEFR_LEVELS)[number]);
 
 const validateVocabularyTermFields = (term: Record<string, unknown>): boolean =>
   hasStringField(term, 'id') &&

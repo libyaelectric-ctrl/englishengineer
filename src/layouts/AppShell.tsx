@@ -1,12 +1,17 @@
-import { type FC, lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Sidebar } from './Sidebar';
-import { RightSidebar } from './RightSidebar';
-import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
-import { MobileBottomNavigation } from './MobileBottomNavigation';
-import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
 import { useAppStore } from '@/store/app.store';
 import { Menu } from 'lucide-react';
+
+import { type FC, Suspense, lazy } from 'react';
+
+import { Outlet } from 'react-router-dom';
+
+import { useKeyboardNavigation } from '@/shared/hooks/useKeyboardNavigation';
+
+import { BetaAnalyticsTracker, BetaFeedbackWidget } from '@/features/beta';
+
+import { MobileBottomNavigation } from './MobileBottomNavigation';
+import { RightSidebar } from './RightSidebar';
+import { Sidebar } from './Sidebar';
 
 const CommandPalette = lazy(() => import('@/shared/components/CommandPalette'));
 

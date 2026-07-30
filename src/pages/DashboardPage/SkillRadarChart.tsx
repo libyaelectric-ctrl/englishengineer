@@ -13,9 +13,7 @@ const SKILL_LABELS: { key: SkillName; label: string }[] = [
   { key: 'speaking', label: 'Speaking' },
 ];
 
-export const SkillRadarChart = ({
-  profile,
-}: SkillRadarChartProps) => {
+export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
   const size = 260;
   const center = size / 2;
   const radius = 90;

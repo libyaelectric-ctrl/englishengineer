@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { IdPrefix } from './id.types';
 
 const hexEncode = (bytes: Uint8Array): string =>
@@ -14,10 +15,9 @@ const secureRandomHex = (length: number): string => {
       const nodeCrypto = require('node:crypto');
       const buf = nodeCrypto.randomBytes(bytes.length);
       bytes.set(buf);
-    } catch {
-      // Should never happen in any JS runtime
-      for (let i = 0; i < bytes.length; i++)
-        bytes[i] = (Math.random() * 256) | 0;
+    } catch (e) {
+      logger.w('[ID] Node crypto fallback failed', e);
+      for (let i = 0; i < bytes.length; i++) bytes[i] = (Math.random() * 256) | 0;
     }
   }
   return hexEncode(bytes).substring(0, length);

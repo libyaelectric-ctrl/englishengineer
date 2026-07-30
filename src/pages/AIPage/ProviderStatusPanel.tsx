@@ -1,6 +1,8 @@
+import { AI_ACCESS_POLICY } from '@/config/product.config';
+
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import { AI_ACCESS_POLICY } from '@/config/product.config';
+
 import type { AIProviderStatus } from '@/features/ai';
 import type { SubscriptionSnapshot } from '@/features/billing';
 
@@ -24,13 +26,9 @@ export const ProviderStatusPanel = ({
   <div className="flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between rounded-xl border border-primary/25 bg-surface/80 shadow-sm font-sans">
     <div className="space-y-0.5">
       <div className="flex items-center gap-2">
-        <p className="text-xs font-bold text-foreground">
-          {providerStatus.label}
-        </p>
+        <p className="text-xs font-bold text-foreground">{providerStatus.label}</p>
         <StatusBadge
-          label={
-            providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'
-          }
+          label={providerStatus.state === 'mock-fallback' ? 'Mock AI' : 'Secure AI'}
           tone={providerTone}
           className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider py-0"
         />
@@ -45,17 +43,12 @@ export const ProviderStatusPanel = ({
           ? 'Mock AI active. Connect proxy for live model responses.'
           : providerStatus.detail}
       </p>
-      {typeof subscription.topupCredits === 'number' &&
-        subscription.topupCredits > 0 && (
-          <p className="text-[10px] text-emerald-600 font-bold flex items-center gap-1 uppercase tracking-wider">
-            ✓ Top-up Credits: {subscription.topupCredits} requests remaining
-          </p>
-        )}
-      {buyError && (
-        <p className="text-[10px] text-rose-500 font-medium">
-          Error: {buyError}
+      {typeof subscription.topupCredits === 'number' && subscription.topupCredits > 0 && (
+        <p className="text-[10px] text-emerald-600 font-bold flex items-center gap-1 uppercase tracking-wider">
+          ✓ Top-up Credits: {subscription.topupCredits} requests remaining
         </p>
       )}
+      {buyError && <p className="text-[10px] text-rose-500 font-medium">Error: {buyError}</p>}
     </div>
     <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
       <Button

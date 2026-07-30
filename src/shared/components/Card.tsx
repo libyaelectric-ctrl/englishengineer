@@ -1,4 +1,5 @@
-import { memo, type HTMLAttributes } from 'react';
+import { type HTMLAttributes, memo } from 'react';
+
 import { cn } from '@/shared/utils/cn';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {

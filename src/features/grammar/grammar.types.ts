@@ -1,5 +1,6 @@
-import type { CefrLevel } from '@/features/level-system';
 import type { LearningDataSkill, UserSkillProfile } from '@/core/learning';
+
+import type { CefrLevel } from '@/features/level-system';
 
 export interface GrammarExample {
   english: string;

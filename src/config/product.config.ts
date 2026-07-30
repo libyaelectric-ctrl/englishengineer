@@ -25,9 +25,6 @@ export const AI_ACCESS_POLICY = {
   ],
 } as const;
 
-export const FUTURE_MONETIZATION_OPTIONS = [
-  'Subscription',
-  'Extra AI credit packs',
-] as const;
+export const FUTURE_MONETIZATION_OPTIONS = ['Subscription', 'Extra AI credit packs'] as const;
 
 export const ADMIN_PANEL_ENABLED = true;

@@ -1,14 +1,9 @@
 import { logger } from '@/shared/logger';
+
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
+import { AIOperation, AIProvider, AIProviderStatus, AIRequest, AIResponse } from './ai.types';
 import { createBackendProxyProvider } from './backend-proxy.provider';
-import { createMockAIProvider, MockExample } from './mock-ai.provider';
-import {
-  AIOperation,
-  AIProvider,
-  AIProviderStatus,
-  AIRequest,
-  AIResponse,
-} from './ai.types';
+import { MockExample, createMockAIProvider } from './mock-ai.provider';
 
 const getActiveProvider = (examples: MockExample[]): AIProvider => {
   if (
@@ -72,8 +67,7 @@ export const AIService = {
     examples: MockExample[],
     request: AIRequest | Omit<AIRequest, 'operation'>
   ): Promise<AIResponse> {
-    const operation =
-      'operation' in request ? request.operation : 'rewriteText';
+    const operation = 'operation' in request ? request.operation : 'rewriteText';
     const normalizedRequest =
       'operation' in request
         ? {

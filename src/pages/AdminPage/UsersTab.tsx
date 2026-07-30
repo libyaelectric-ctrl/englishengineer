@@ -1,6 +1,7 @@
 import { Users } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
 
 interface UserRecord {
   id: string;
@@ -49,9 +50,7 @@ export const UsersTab = ({ users, onPromote }: UsersTabProps) => {
                     {u.level}
                   </span>
                 </td>
-                <td className="py-3.5 px-4 font-semibold text-foreground">
-                  {u.elo}
-                </td>
+                <td className="py-3.5 px-4 font-semibold text-foreground">{u.elo}</td>
                 <td className="py-3.5 px-4">
                   <span
                     className={`rounded px-1.5 py-0.5 font-semibold text-[10px] ${

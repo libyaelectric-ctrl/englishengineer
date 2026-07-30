@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
 import { Search, Volume2, VolumeX } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
+
 import type {
   VocabularyMenuState,
   VocabularyMenuStatus,
@@ -32,23 +35,14 @@ interface VocabularyHeaderProps {
   chooseTab: (tab: VocabularyMenuStatus) => void;
   onSearchInputChange: (input: string) => void;
   onSearchSubmit: (query: string) => Promise<void>;
-  onFilterChange?: (
-    field: keyof VocabularySearchFilters,
-    value: string
-  ) => void;
+  onFilterChange?: (field: keyof VocabularySearchFilters, value: string) => void;
   onOpenSearch?: () => void;
   menuState: VocabularyMenuState;
 }
 
 export { TABS, TAB_LABELS };
 
-const SoundToggle = ({
-  isMuted,
-  onToggle,
-}: {
-  isMuted: boolean;
-  onToggle: () => void;
-}) => (
+const SoundToggle = ({ isMuted, onToggle }: { isMuted: boolean; onToggle: () => void }) => (
   <button
     type="button"
     onClick={onToggle}
@@ -59,11 +53,7 @@ const SoundToggle = ({
         : 'border-border-soft bg-surface text-muted-copy hover:bg-surface-hover hover:text-foreground'
     }`}
   >
-    {isMuted ? (
-      <VolumeX className="h-3.5 w-3.5" />
-    ) : (
-      <Volume2 className="h-3.5 w-3.5" />
-    )}
+    {isMuted ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
   </button>
 );
 
@@ -88,17 +78,14 @@ export function VocabularyHeader({
       if (customEvent.detail) setIsSoundMuted(customEvent.detail.muted);
     };
     window.addEventListener('engvox_sound_toggle', handleToggle);
-    return () =>
-      window.removeEventListener('engvox_sound_toggle', handleToggle);
+    return () => window.removeEventListener('engvox_sound_toggle', handleToggle);
   }, []);
 
   return (
     <>
       <div className="sticky top-0 z-30 mb-6 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl">
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Vocabulary
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Vocabulary</h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {vocabularyLevel}
           </span>
@@ -123,7 +110,11 @@ export function VocabularyHeader({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm" role="tablist" aria-label="Vocabulary filter">
+          <div
+            className="flex gap-1 rounded-[4px] border border-border-soft bg-surface p-1 shadow-sm"
+            role="tablist"
+            aria-label="Vocabulary filter"
+          >
             {TABS.map((tab) => (
               <button
                 key={tab}
@@ -155,8 +146,8 @@ export function VocabularyHeader({
 
       {hasSearched && searchResults && searchResults.length > 0 && (
         <p className="pb-3 text-[10px] font-medium text-muted-copy">
-          Showing {searchResults.length} of{' '}
-          {allSearchResults?.length || searchResults.length} results found
+          Showing {searchResults.length} of {allSearchResults?.length || searchResults.length}{' '}
+          results found
         </p>
       )}
     </>

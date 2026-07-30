@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { LocalizationService } from './localization.service';
 import type { SupportedInterfaceLanguage } from './localization.types';
 
@@ -14,6 +15,5 @@ export const useLocalizationStore = create<LocalizationStore>((set) => ({
     LocalizationService.setLanguage(language);
     set({ language });
   },
-  translate: (key) =>
-    LocalizationService.translate(key, LocalizationService.getLanguage()),
+  translate: (key) => LocalizationService.translate(key, LocalizationService.getLanguage()),
 }));

@@ -1,10 +1,6 @@
 export { type UserProfile, type AuthState } from './auth.types';
 
-export {
-  type SupabaseReadyConfig,
-  isLocalAuthAllowed,
-  AUTH_CONFIG,
-} from './auth.config';
+export { type SupabaseReadyConfig, isLocalAuthAllowed, AUTH_CONFIG } from './auth.config';
 
 export {
   type AuthAdapter,

@@ -1,32 +1,35 @@
-import { useState, useMemo } from 'react';
 import { ShieldCheck } from 'lucide-react';
-import { useAuthStore } from '@/features/auth';
-import { useLearningCockpit } from '@/features/profile';
+
+import { useMemo, useState } from 'react';
+
 import { useLearningStore } from '@/core/learning';
 
-import { useBillingStore, canViewAdvancedAnalytics } from '@/features/billing';
-import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
+
+import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
+import { useAuthStore } from '@/features/auth';
+import { canViewAdvancedAnalytics, useBillingStore } from '@/features/billing';
 import {
-  GrammarProgressService,
-  ErrorPatternAnalyzer,
   AdaptiveDifficultyEngine,
+  ErrorPatternAnalyzer,
+  GrammarProgressService,
 } from '@/features/grammar';
+import { useLearningCockpit } from '@/features/profile';
+
+import { AssessmentProfilePanel } from '@/pages/ProgressPage/AnalyticsPanels';
+
+import { AnalyticsChartsSection } from './AnalyticsChartsSection';
+import { AnalyticsMetricCards } from './AnalyticsMetricCards';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
-import { AnalyticsMetricCards } from './AnalyticsMetricCards';
-import { AnalyticsChartsSection } from './AnalyticsChartsSection';
-
 import { SkillSidebar } from './SkillSidebar';
-import { SKILLS, MIN_ELO, MAX_ELO, getCEFRBand } from './utils';
+import { MAX_ELO, MIN_ELO, SKILLS, getCEFRBand } from './utils';
 
 export const ProgressOverviewTab = () => {
   const { currentUser } = useAuthStore();
   const { profile, learningState } = useLearningCockpit(currentUser?.id);
-  const vocabularyPool =
-    useLearningStore((state) => state.vocabularyPool) ?? [];
+  const vocabularyPool = useLearningStore((state) => state.vocabularyPool) ?? [];
   const grammarPool = useLearningStore((state) => state.grammarPool) ?? [];
   const speakingPool = useLearningStore((state) => state.speakingPool) ?? [];
 
@@ -38,23 +41,15 @@ export const ProgressOverviewTab = () => {
     AdaptiveDifficultyEngine.assessDifficulty(p.ruleId, p)
   );
   const difficultyStats = {
-    beginner: difficultyBreakdown.filter(
-      (d) => d.suggestedDifficulty === 'beginner'
-    ).length,
-    intermediate: difficultyBreakdown.filter(
-      (d) => d.suggestedDifficulty === 'intermediate'
-    ).length,
-    advanced: difficultyBreakdown.filter(
-      (d) => d.suggestedDifficulty === 'advanced'
-    ).length,
-    challenge: difficultyBreakdown.filter(
-      (d) => d.suggestedDifficulty === 'challenge'
-    ).length,
+    beginner: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'beginner').length,
+    intermediate: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'intermediate')
+      .length,
+    advanced: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'advanced').length,
+    challenge: difficultyBreakdown.filter((d) => d.suggestedDifficulty === 'challenge').length,
   };
 
   const calculateSkillElo = (skillId: string) => {
-    const skillProfile =
-      profile?.skills?.[skillId as keyof typeof profile.skills];
+    const skillProfile = profile?.skills?.[skillId as keyof typeof profile.skills];
     return Math.min(MAX_ELO, Math.max(MIN_ELO, skillProfile?.elo || MIN_ELO));
   };
 
@@ -66,24 +61,16 @@ export const ProgressOverviewTab = () => {
     return scores;
   });
 
-  const totalElo = Math.floor(
-    Object.values(eloScores).reduce((a, b) => a + b, 0) / SKILLS.length
-  );
+  const totalElo = Math.floor(Object.values(eloScores).reduce((a, b) => a + b, 0) / SKILLS.length);
   const totalPercentage = Math.min(100, (totalElo / MAX_ELO) * 100);
   const totalCEFR = getCEFRBand(totalElo);
 
   const highestSkill = useMemo(
-    () =>
-      SKILLS.reduce((best, s) =>
-        eloScores[s.id] > eloScores[best.id] ? s : best
-      ),
+    () => SKILLS.reduce((best, s) => (eloScores[s.id] > eloScores[best.id] ? s : best)),
     [eloScores]
   );
   const lowestSkill = useMemo(
-    () =>
-      SKILLS.reduce((worst, s) =>
-        eloScores[s.id] < eloScores[worst.id] ? s : worst
-      ),
+    () => SKILLS.reduce((worst, s) => (eloScores[s.id] < eloScores[worst.id] ? s : worst)),
     [eloScores]
   );
 
@@ -152,9 +139,7 @@ export const ProgressOverviewTab = () => {
         highestSkillLabel={highestSkill.label}
         peakElo={Math.max(...Object.values(eloScores))}
         sessionsCount={learningState?.studySessions?.length || 0}
-        knowledgePoolSize={
-          vocabularyPool.length + grammarPool.length + speakingPool.length
-        }
+        knowledgePoolSize={vocabularyPool.length + grammarPool.length + speakingPool.length}
         grammarMastered={grammarSummary.strong}
         grammarErrors={errorPatternSummary.totalErrors}
         advancedRules={difficultyStats.advanced + difficultyStats.challenge}
@@ -171,11 +156,7 @@ export const ProgressOverviewTab = () => {
           headerActions={
             <StatusBadge
               label={analytics.assessmentProfile.trustLabel}
-              tone={
-                analytics.assessmentProfile.hasEnoughData
-                  ? 'success'
-                  : 'warning'
-              }
+              tone={analytics.assessmentProfile.hasEnoughData ? 'success' : 'warning'}
             />
           }
         >

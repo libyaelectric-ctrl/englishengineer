@@ -1,15 +1,14 @@
-import { useGrammarPage } from './GrammarPage/hooks/useGrammarPage';
-import { getModuleLabel } from './GrammarPage/GrammarPageHelpers';
-import { GrammarHeader } from './GrammarPage/GrammarHeader';
-import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
-import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
-import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
-import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
 import { useGrammarStore } from '@/features/grammar';
 
-const getSelectedStatus = (
-  progress: ReturnType<typeof useGrammarPage>['selectedProgress']
-) => {
+import { GrammarHeader } from './GrammarPage/GrammarHeader';
+import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
+import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
+import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
+import { getModuleLabel } from './GrammarPage/GrammarPageHelpers';
+import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
+import { useGrammarPage } from './GrammarPage/hooks/useGrammarPage';
+
+const getSelectedStatus = (progress: ReturnType<typeof useGrammarPage>['selectedProgress']) => {
   if (!progress) return 'New' as const;
   if (progress.reviewStatus === 'Strong') return 'Mastered' as const;
   if (progress.correctUsages >= 3 && progress.strength >= 70)
@@ -50,9 +49,7 @@ const GrammarPage = () => {
   } = useGrammarPage();
 
   const selectedStatus = getSelectedStatus(selectedProgress);
-  const selectedModule = selectedRule
-    ? getModuleLabel(selectedRule.grammarCategory)
-    : '';
+  const selectedModule = selectedRule ? getModuleLabel(selectedRule.grammarCategory) : '';
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground">
@@ -109,10 +106,7 @@ const GrammarPage = () => {
         )}
 
         {reviewTargets.length > 0 && (
-          <GrammarReviewQueue
-            reviewTargets={reviewTargets}
-            selectRule={selectRule}
-          />
+          <GrammarReviewQueue reviewTargets={reviewTargets} selectRule={selectRule} />
         )}
       </main>
     </div>

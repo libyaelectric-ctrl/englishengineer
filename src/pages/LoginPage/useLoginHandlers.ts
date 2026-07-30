@@ -1,23 +1,24 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '@/features/auth';
+
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
-import { AUTH_CONFIG } from '@/features/auth/auth.config';
+
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { useAuthStore } from '@/features/auth';
+import { AUTH_CONFIG } from '@/features/auth/auth.config';
 import { getSupabaseClient } from '@/features/auth/supabase.client';
-import { getErrorMessage, type RouteLocationState } from './constants';
+
+import { type RouteLocationState, getErrorMessage } from './constants';
 
 export const useLoginHandlers = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, signUp, demoLogin, initialize, isLoading, providerMode } =
-    useAuthStore();
+  const { login, signUp, demoLogin, initialize, isLoading, providerMode } = useAuthStore();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSignUpMode, setIsSignUpMode] = useState(
-    location.pathname === '/signup'
-  );
+  const [isSignUpMode, setIsSignUpMode] = useState(location.pathname === '/signup');
   const [error, setError] = useState<string | null>(null);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [ssoDomain, setSsoDomain] = useState('');
@@ -27,16 +28,12 @@ export const useLoginHandlers = () => {
   const isSupabaseMode = providerMode === 'supabase';
   const isLocalAuthBlocked = !isSupabaseMode && !AUTH_CONFIG.localAuthAllowed;
   const isLocalDemoMode = !isSupabaseMode && !isLocalAuthBlocked;
-  const from =
-    (location.state as RouteLocationState | null)?.from?.pathname ||
-    '/dashboard';
+  const from = (location.state as RouteLocationState | null)?.from?.pathname || '/dashboard';
 
   const isProviderNotEnabled = (msg: string) =>
     msg.includes('not enabled') || msg.includes('Unsupported provider');
 
-  const handleSocialLogin = async (
-    provider: 'google' | 'linkedin' | 'apple'
-  ) => {
+  const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
     if (provider === 'apple') {
       setError('Apple Sign In is coming soon. Please use Google or LinkedIn.');
       return;
@@ -44,14 +41,11 @@ export const useLoginHandlers = () => {
 
     const client = getSupabaseClient();
     if (!client) {
-      setError(
-        'Social login requires Supabase authentication to be configured.'
-      );
+      setError('Social login requires Supabase authentication to be configured.');
       return;
     }
 
-    const capitalizedProvider =
-      provider.charAt(0).toUpperCase() + provider.slice(1);
+    const capitalizedProvider = provider.charAt(0).toUpperCase() + provider.slice(1);
     const notEnabledMsg = `${capitalizedProvider} login is not yet enabled. Please use email login or try the demo mode.`;
 
     try {
@@ -82,8 +76,7 @@ export const useLoginHandlers = () => {
       await demoLogin();
       const loggedUser = useAuthStore.getState().currentUser;
       if (loggedUser) {
-        const { LearningProfileRepository } =
-          await import('@/features/profile/profile.repository');
+        const { LearningProfileRepository } = await import('@/features/profile/profile.repository');
         LearningProfileRepository.updatePreferences(loggedUser.id, {
           onboardingCompleted: true,
         });
@@ -111,9 +104,7 @@ export const useLoginHandlers = () => {
       setSsoLoading(true);
       setError(null);
       const domainOrId = ssoDomain.trim();
-      const domain = domainOrId.includes('@')
-        ? domainOrId.split('@')[1]
-        : domainOrId;
+      const domain = domainOrId.includes('@') ? domainOrId.split('@')[1] : domainOrId;
       const { data, error: authError } = await client.auth.signInWithSSO({
         domain,
         options: {
@@ -166,7 +157,17 @@ export const useLoginHandlers = () => {
       }
       navigate(from, { replace: true });
     } catch (err: unknown) {
-      setError(getErrorMessage(err, 'Sign-in failed.'));
+      const msg = getErrorMessage(err, 'Sign-in failed.');
+      if (
+        msg.toLowerCase().includes('failed to fetch') ||
+        msg.toLowerCase().includes('fetch failed')
+      ) {
+        setError(
+          'Backend service is currently unreachable. Please check your internet connection or try local demo mode.'
+        );
+      } else {
+        setError(msg);
+      }
     }
   };
 

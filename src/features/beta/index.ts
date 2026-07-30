@@ -6,10 +6,7 @@ export {
   type ProductAnalyticsEvent,
 } from './beta.types';
 
-export {
-  BETA_ONBOARDING_OPTIONS,
-  calculateProductAnalyticsSummary,
-} from './beta.helpers';
+export { BETA_ONBOARDING_OPTIONS, calculateProductAnalyticsSummary } from './beta.helpers';
 
 export { BetaService } from './beta.service';
 

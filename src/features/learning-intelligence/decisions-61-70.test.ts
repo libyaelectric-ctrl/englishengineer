@@ -1,17 +1,19 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SPEAKING_MISSIONS } from '@/features/speaking/speaking.data';
+
 import {
-  getSpeakingHistoryDetails,
-  getSpeakingRoleplayCategory,
   SPEAKING_MVP_MODE,
   SPEAKING_MVP_REQUIRES_MICROPHONE,
+  getSpeakingHistoryDetails,
+  getSpeakingRoleplayCategory,
 } from '@/features/speaking/speaking-mvp';
+import { SPEAKING_MISSIONS } from '@/features/speaking/speaking.data';
 import type { SpeakingEvaluationResult } from '@/features/speaking/speaking.types';
-import { buildReviewPriorities } from './review-priority';
+
 import {
   CRITICAL_MISTAKE_REPEAT_THRESHOLD,
   LearningIntelligenceService,
 } from './learning-intelligence.service';
+import { buildReviewPriorities } from './review-priority';
 
 const evaluation: SpeakingEvaluationResult = {
   missionId: 'speaking_a1_site_introduction',
@@ -51,9 +53,7 @@ describe('decisions 61-70', () => {
   });
 
   it('offers Daily, Work and Engineering roleplay categories', () => {
-    const categories = new Set(
-      SPEAKING_MISSIONS.map(getSpeakingRoleplayCategory)
-    );
+    const categories = new Set(SPEAKING_MISSIONS.map(getSpeakingRoleplayCategory));
     expect(categories).toEqual(new Set(['Daily', 'Work', 'Engineering']));
   });
 
@@ -62,23 +62,13 @@ describe('decisions 61-70', () => {
       roleplayMode: 'Written Roleplay',
       errorType: 'Speaking Response',
     });
-    expect(getSpeakingHistoryDetails(evaluation).progressNote).toContain(
-      'Repeat'
-    );
+    expect(getSpeakingHistoryDetails(evaluation).progressNote).toContain('Repeat');
   });
 
   it('marks the same mistake critical at exactly three repetitions', () => {
     expect(CRITICAL_MISTAKE_REPEAT_THRESHOLD).toBe(3);
-    LearningIntelligenceService.addMistake(
-      'Grammar',
-      'Wrong tense',
-      'Use past simple.'
-    );
-    LearningIntelligenceService.addMistake(
-      'Grammar',
-      'Wrong tense',
-      'Use past simple.'
-    );
+    LearningIntelligenceService.addMistake('Grammar', 'Wrong tense', 'Use past simple.');
+    LearningIntelligenceService.addMistake('Grammar', 'Wrong tense', 'Use past simple.');
     const third = LearningIntelligenceService.addMistake(
       'Grammar',
       'Wrong tense',

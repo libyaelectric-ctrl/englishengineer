@@ -1,20 +1,17 @@
+import { PRODUCT_VERSION } from '@/config/product.config';
+import { ArrowRight, Award, CheckCircle2, Play, ShieldAlert, Sparkles, Zap } from 'lucide-react';
+
 import { useEffect } from 'react';
+
 import { Link } from 'react-router-dom';
-import {
-  ShieldAlert,
-  Sparkles,
-  CheckCircle2,
-  Award,
-  Zap,
-  ArrowRight,
-  Play,
-} from 'lucide-react';
+
 import { useLocalizationStore } from '@/features/localization';
-import { AUTH_COPY } from './LoginPage/constants';
-import { TopNavBar } from './LoginPage/TopNavBar';
-import { SocialLoginButtons } from './LoginPage/SocialLoginButtons';
-import { SSOForm } from './LoginPage/SSOForm';
+
 import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
+import { SSOForm } from './LoginPage/SSOForm';
+import { SocialLoginButtons } from './LoginPage/SocialLoginButtons';
+import { TopNavBar } from './LoginPage/TopNavBar';
+import { AUTH_COPY } from './LoginPage/constants';
 import { useLoginHandlers } from './LoginPage/useLoginHandlers';
 
 const LoginPage = () => {
@@ -24,7 +21,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     void h.initialize();
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- initialize is a stable ref from useLoginHandlers
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- initialize is a stable ref from useLoginHandlers
   }, [h.initialize]);
 
   return (
@@ -42,7 +39,7 @@ const LoginPage = () => {
             <div className="space-y-4">
               <span className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/80 backdrop-blur-xl px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm">
                 <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                EngineerOS v2.1 · Production Ready
+                EngineerOS v{PRODUCT_VERSION} · Production Ready
               </span>
 
               <h1 className="text-4xl font-extrabold tracking-tight text-foreground leading-tight">
@@ -53,9 +50,8 @@ const LoginPage = () => {
               </h1>
 
               <p className="text-sm leading-relaxed text-muted-copy font-medium max-w-md">
-                Join international MEP contractors, Civil leads, QA/QC
-                inspectors, and software engineers mastering technical
-                communication.
+                Join international MEP contractors, Civil leads, QA/QC inspectors, and software
+                engineers mastering technical communication.
               </p>
             </div>
 
@@ -88,9 +84,7 @@ const LoginPage = () => {
                       <Icon className="h-3.5 w-3.5" />
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-foreground">
-                        {item.title}
-                      </h3>
+                      <h3 className="text-xs font-bold text-foreground">{item.title}</h3>
                       <p className="mt-0.5 text-[11px] text-muted-copy leading-relaxed">
                         {item.desc}
                       </p>
@@ -103,14 +97,12 @@ const LoginPage = () => {
             {/* Testimonial Quote */}
             <div className="rounded-xl border border-border-soft bg-surface/90 p-4 backdrop-blur-md space-y-2">
               <p className="text-xs italic text-muted-copy leading-relaxed">
-                &quot;EngVox allowed our commissioning team to present NFPA
-                submittals confidently to international clients in Dubai.&quot;
+                &quot;EngVox allowed our commissioning team to present NFPA submittals confidently
+                to international clients in Dubai.&quot;
               </p>
               <div className="flex items-center justify-between text-[10px] font-bold text-foreground">
                 <span>— Lead Electrical Commissioning Engineer</span>
-                <span className="text-primary uppercase tracking-widest">
-                  Verified User
-                </span>
+                <span className="text-primary uppercase tracking-widest">Verified User</span>
               </div>
             </div>
           </div>
@@ -220,17 +212,11 @@ const LoginPage = () => {
             {/* Terms & Privacy */}
             <p className="text-center text-[10px] text-muted-copy leading-relaxed">
               By continuing, you agree to EngVox{' '}
-              <Link
-                to="/legal/terms"
-                className="underline hover:text-primary font-semibold"
-              >
+              <Link to="/legal/terms" className="underline hover:text-primary font-semibold">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link
-                to="/legal/privacy"
-                className="underline hover:text-primary font-semibold"
-              >
+              <Link to="/legal/privacy" className="underline hover:text-primary font-semibold">
                 Privacy Policy
               </Link>
               .

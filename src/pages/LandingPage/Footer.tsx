@@ -1,6 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Terminal } from 'lucide-react';
 import { PRODUCT_VERSION } from '@/config/product.config';
+import { Terminal } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
 
 export function Footer() {
   return (
@@ -8,18 +9,30 @@ export function Footer() {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary"><Terminal className="h-4 w-4 text-primary-foreground" /></div>
+            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary">
+              <Terminal className="h-4 w-4 text-primary-foreground" />
+            </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-foreground">EngVox</span>
-              <span className="rounded bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft">v{PRODUCT_VERSION}</span>
+              <span className="rounded bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft">
+                v{PRODUCT_VERSION}
+              </span>
             </div>
           </div>
           <div className="flex items-center gap-6 text-xs font-medium text-muted-copy">
-            <Link to="/legal/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-            <Link to="/legal/terms" className="hover:text-foreground transition-colors">Terms</Link>
-            <Link to="/business" className="hover:text-foreground transition-colors">Contact</Link>
+            <Link to="/legal/privacy" className="hover:text-foreground transition-colors">
+              Privacy
+            </Link>
+            <Link to="/legal/terms" className="hover:text-foreground transition-colors">
+              Terms
+            </Link>
+            <Link to="/business" className="hover:text-foreground transition-colors">
+              Contact
+            </Link>
           </div>
-          <p className="text-xs text-muted-copy">© {new Date().getFullYear()} EngVox. All rights reserved.</p>
+          <p className="text-xs text-muted-copy">
+            © {new Date().getFullYear()} EngVox. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>

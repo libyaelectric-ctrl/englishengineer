@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { PronunciationService } from './vocabulary.pronunciation';
 
 describe('PronunciationService', () => {

@@ -1,25 +1,27 @@
 import { FormEvent, useMemo, useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
-import { useAuthStore } from '@/features/auth';
 import { useLearningStore } from '@/core/learning';
-import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
+
 import {
-  buildCoachContext,
   buildAIUsageSummary,
+  buildCoachContext,
   formatCoachResult,
   getCoachModeById,
   getTemplatesForMode,
   useAIStore,
 } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
+import { useAuthStore } from '@/features/auth';
 import {
+  BillingFeature,
+  canAccessFeature,
   canUseAICoach,
   useBillingStore,
-  canAccessFeature,
-  BillingFeature,
 } from '@/features/billing';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
+import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
 
 export const MODE_REQUIRED_FEATURES: Record<string, string> = {
   linkedin_optimizer: 'linkedinOptimization',
@@ -28,8 +30,7 @@ export const MODE_REQUIRED_FEATURES: Record<string, string> = {
   cv_optimizer: 'unlimitedAIFeedback',
 };
 
-const isDocumentFile = (name: string): boolean =>
-  name.endsWith('.pdf') || name.endsWith('.docx');
+const isDocumentFile = (name: string): boolean => name.endsWith('.pdf') || name.endsWith('.docx');
 
 const isUploadBlocked = (
   planId: string,
@@ -43,10 +44,7 @@ const isUploadBlocked = (
   return null;
 };
 
-const incrementDocCount = (
-  current: number,
-  setter: (n: number) => void
-): number => {
+const incrementDocCount = (current: number, setter: (n: number) => void): number => {
   const next = current + 1;
   setter(next);
   localStorage.setItem('uploaded_docs_count', next.toString());
@@ -59,9 +57,7 @@ const computeDocLimit = (planId: string): number | 'unlimited' => {
   return 'unlimited';
 };
 
-const computeProviderTone = (
-  state: string
-): 'success' | 'danger' | 'warning' => {
+const computeProviderTone = (state: string): 'success' | 'danger' | 'warning' => {
   if (state === 'backend-configured') return 'success';
   if (state === 'backend-error') return 'danger';
   return 'warning';
@@ -74,8 +70,7 @@ const computeConnectionValue = (state: string): string => {
 };
 
 const computeConnectionTrend = (state: string): string => {
-  if (state === 'backend-configured')
-    return 'Protected backend proxy configured';
+  if (state === 'backend-configured') return 'Protected backend proxy configured';
   if (state === 'backend-error') return 'Backend request failed safely';
   return 'Local deterministic fallback';
 };
@@ -104,8 +99,7 @@ export function useAIPage() {
   } = useAIStore();
 
   const { workspaces, activeWorkspaceId } = useWorkspaceStore();
-  const activeWorkspace =
-    workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
+  const activeWorkspace = workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
   const workspaceMemoryContext = activeWorkspace?.memory
     ? Object.entries(activeWorkspace.memory)
         .filter(([, v]) => v)
@@ -118,9 +112,7 @@ export function useAIPage() {
     return val ? parseInt(val, 10) : 0;
   });
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const startTopupCheckout = useBillingStore(
-    (state) => state.startTopupCheckout
-  );
+  const startTopupCheckout = useBillingStore((state) => state.startTopupCheckout);
   const [isBuyingCredits, setIsBuyingCredits] = useState(false);
   const [buyError, setBuyError] = useState<string | null>(null);
 
@@ -131,21 +123,16 @@ export function useAIPage() {
     try {
       await startTopupCheckout(currentUser.id, currentUser.email);
     } catch (err) {
-      setBuyError(
-        err instanceof Error ? err.message : 'Top-up purchase failed.'
-      );
+      setBuyError(err instanceof Error ? err.message : 'Top-up purchase failed.');
       setIsBuyingCredits(false);
     }
   };
 
   const docLimit = computeDocLimit(subscription.planId);
-  const docLimitLabel =
-    docLimit === 'unlimited' ? 'Unlimited' : `${docLimit} documents / month`;
+  const docLimitLabel = docLimit === 'unlimited' ? 'Unlimited' : `${docLimit} documents / month`;
 
   const modeToCheck = modes.find((m) => m.id === selectedModeId);
-  const requiredFeature = modeToCheck
-    ? MODE_REQUIRED_FEATURES[modeToCheck.id]
-    : null;
+  const requiredFeature = modeToCheck ? MODE_REQUIRED_FEATURES[modeToCheck.id] : null;
   const isModeLocked = requiredFeature
     ? !canAccessFeature(subscription, requiredFeature as BillingFeature).allowed
     : false;
@@ -155,11 +142,7 @@ export function useAIPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const blockReason = isUploadBlocked(
-      subscription.planId,
-      docLimit,
-      uploadedDocsCount
-    );
+    const blockReason = isUploadBlocked(subscription.planId, docLimit, uploadedDocsCount);
     if (blockReason) {
       setUploadError(blockReason);
       return;
@@ -177,16 +160,12 @@ export function useAIPage() {
     reader.onload = (e) => {
       const text = e.target?.result as string;
       if (!text) return;
-      useWorkspaceStore
-        .getState()
-        .addDocumentToWorkspace(activeWorkspaceId, file.name, text);
+      useWorkspaceStore.getState().addDocumentToWorkspace(activeWorkspaceId, file.name, text);
       setInput(`[Uploaded File: ${file.name}]\n\n${text}`);
       incrementDocCount(uploadedDocsCount, setUploadedDocsCount);
     };
     reader.onerror = () => {
-      setUploadError(
-        'Could not read file. Please ensure it is a valid text file.'
-      );
+      setUploadError('Could not read file. Please ensure it is a valid text file.');
     };
     reader.readAsText(file);
   };
@@ -194,16 +173,11 @@ export function useAIPage() {
   const selectedMode = getCoachModeById(selectedModeId);
   const promptTemplates = getTemplatesForMode(selectedModeId);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
-  const coachContext = buildCoachContext(
-    currentUser,
-    learningState,
-    mistakeLog
-  );
+  const coachContext = buildCoachContext(currentUser, learningState, mistakeLog);
   const assessmentProfile = AssessmentService.getProfile(learningState);
   const usage = useMemo(() => buildAIUsageSummary(sessions), [sessions]);
   const todaysCoachSessions = sessions.filter(
-    (session) =>
-      new Date(session.timestamp).toDateString() === new Date().toDateString()
+    (session) => new Date(session.timestamp).toDateString() === new Date().toDateString()
   ).length;
   const aiEntitlement = canUseAICoach(subscription, todaysCoachSessions);
   const providerTone = computeProviderTone(providerStatus.state);
@@ -215,14 +189,8 @@ export function useAIPage() {
     if (!aiEntitlement.allowed) {
       return;
     }
-    if (
-      workspaceMemoryContext &&
-      input.trim() &&
-      !input.startsWith('[WorkspaceMemory]')
-    ) {
-      setInput(
-        `[WorkspaceMemory]\n${workspaceMemoryContext}\n\n[UserInput]\n${input}`
-      );
+    if (workspaceMemoryContext && input.trim() && !input.startsWith('[WorkspaceMemory]')) {
+      setInput(`[WorkspaceMemory]\n${workspaceMemoryContext}\n\n[UserInput]\n${input}`);
       setTimeout(() => void submitCoachRequest(currentUser, learningState), 0);
       return;
     }

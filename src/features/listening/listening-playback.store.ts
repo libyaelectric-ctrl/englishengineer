@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import { ListeningPlaybackSpeed } from './listening.types';
-import { ListeningService } from './listening.service';
+
 import { useListeningMissionsStore } from './listening-missions.store';
+import { ListeningService } from './listening.service';
+import { ListeningPlaybackSpeed } from './listening.types';
 
 interface ListeningPlaybackState {
   isPlaying: boolean;
@@ -39,181 +40,167 @@ interface ListeningPlaybackActions {
   resetPlaybackState: () => void;
 }
 
-export const useListeningPlaybackStore = create<
-  ListeningPlaybackState & ListeningPlaybackActions
->((set, get) => ({
-  isPlaying: false,
-  currentTimeSeconds: 0,
-  totalDurationSeconds:
-    ListeningService.getMissions()[0]?.audioDurationSeconds || 45,
-  playbackSpeed: 1,
-  isAudioLoading: false,
-  audioError: null,
-  favoriteMissionIds: [],
-  resumePositions: {},
-  replayCounts: {},
-  listeningSecondsByMission: {},
-  speedSamples: [],
-  audioCompletedMissionIds: [],
+export const useListeningPlaybackStore = create<ListeningPlaybackState & ListeningPlaybackActions>(
+  (set, get) => ({
+    isPlaying: false,
+    currentTimeSeconds: 0,
+    totalDurationSeconds: ListeningService.getMissions()[0]?.audioDurationSeconds || 45,
+    playbackSpeed: 1,
+    isAudioLoading: false,
+    audioError: null,
+    favoriteMissionIds: [],
+    resumePositions: {},
+    replayCounts: {},
+    listeningSecondsByMission: {},
+    speedSamples: [],
+    audioCompletedMissionIds: [],
 
-  initializePlayback: () => {
-    const state = ListeningService.getState();
-    const missions = ListeningService.getMissions();
-    const lastId = state.lastSelectedMissionId || 'listening_a1_safe_room';
-    const currentMission = missions.find((m) => m.id === lastId) || missions[0];
+    initializePlayback: () => {
+      const state = ListeningService.getState();
+      const missions = ListeningService.getMissions();
+      const lastId = state.lastSelectedMissionId || 'listening_a1_safe_room';
+      const currentMission = missions.find((m) => m.id === lastId) || missions[0];
 
-    set({
-      favoriteMissionIds: state.favoriteMissionIds,
-      resumePositions: state.resumePositions,
-      replayCounts: state.replayCounts,
-      listeningSecondsByMission: state.listeningSecondsByMission,
-      speedSamples: state.speedSamples,
-      audioCompletedMissionIds: state.audioCompletedMissionIds,
-      isPlaying: false,
-      currentTimeSeconds: state.resumePositions[lastId] || 0,
-      totalDurationSeconds: currentMission
-        ? currentMission.audioDurationSeconds
-        : 45,
-      playbackSpeed: 1,
-      isAudioLoading: false,
-      audioError: null,
-    });
-  },
+      set({
+        favoriteMissionIds: state.favoriteMissionIds,
+        resumePositions: state.resumePositions,
+        replayCounts: state.replayCounts,
+        listeningSecondsByMission: state.listeningSecondsByMission,
+        speedSamples: state.speedSamples,
+        audioCompletedMissionIds: state.audioCompletedMissionIds,
+        isPlaying: false,
+        currentTimeSeconds: state.resumePositions[lastId] || 0,
+        totalDurationSeconds: currentMission ? currentMission.audioDurationSeconds : 45,
+        playbackSpeed: 1,
+        isAudioLoading: false,
+        audioError: null,
+      });
+    },
 
-  syncPlaybackToMission: (missionId: string) => {
-    const missions = ListeningService.getMissions();
-    const currentMission =
-      missions.find((m) => m.id === missionId) || missions[0];
-    const { resumePositions } = get();
+    syncPlaybackToMission: (missionId: string) => {
+      const missions = ListeningService.getMissions();
+      const currentMission = missions.find((m) => m.id === missionId) || missions[0];
+      const { resumePositions } = get();
 
-    set({
-      isPlaying: false,
-      currentTimeSeconds: resumePositions[missionId] || 0,
-      totalDurationSeconds: currentMission
-        ? currentMission.audioDurationSeconds
-        : 45,
-      isAudioLoading: false,
-      audioError: null,
-    });
-  },
+      set({
+        isPlaying: false,
+        currentTimeSeconds: resumePositions[missionId] || 0,
+        totalDurationSeconds: currentMission ? currentMission.audioDurationSeconds : 45,
+        isAudioLoading: false,
+        audioError: null,
+      });
+    },
 
-  startPlaying: () => {
-    const { currentTimeSeconds, totalDurationSeconds } = get();
-    if (currentTimeSeconds >= totalDurationSeconds) {
-      set({ isPlaying: true, currentTimeSeconds: 0 });
-    } else {
-      set({ isPlaying: true });
-    }
-  },
+    startPlaying: () => {
+      const { currentTimeSeconds, totalDurationSeconds } = get();
+      if (currentTimeSeconds >= totalDurationSeconds) {
+        set({ isPlaying: true, currentTimeSeconds: 0 });
+      } else {
+        set({ isPlaying: true });
+      }
+    },
 
-  pausePlaying: () => set({ isPlaying: false }),
+    pausePlaying: () => set({ isPlaying: false }),
 
-  replayPlaying: () => set({ isPlaying: true, currentTimeSeconds: 0 }),
+    replayPlaying: () => set({ isPlaying: true, currentTimeSeconds: 0 }),
 
-  setCurrentTime: (seconds: number) => {
-    const { totalDurationSeconds } = get();
-    set({
-      currentTimeSeconds: Math.min(totalDurationSeconds, Math.max(0, seconds)),
-    });
-  },
+    setCurrentTime: (seconds: number) => {
+      const { totalDurationSeconds } = get();
+      set({
+        currentTimeSeconds: Math.min(totalDurationSeconds, Math.max(0, seconds)),
+      });
+    },
 
-  setPlayingState: (playing: boolean) => set({ isPlaying: playing }),
+    setPlayingState: (playing: boolean) => set({ isPlaying: playing }),
 
-  setPlaybackSpeed: (speed: ListeningPlaybackSpeed) => {
-    const allowedSpeeds: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
-    if (allowedSpeeds.includes(speed)) {
-      set({ playbackSpeed: speed });
-    }
-  },
+    setPlaybackSpeed: (speed: ListeningPlaybackSpeed) => {
+      const allowedSpeeds: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
+      if (allowedSpeeds.includes(speed)) {
+        set({ playbackSpeed: speed });
+      }
+    },
 
-  setAudioLoading: (loading: boolean) => set({ isAudioLoading: loading }),
+    setAudioLoading: (loading: boolean) => set({ isAudioLoading: loading }),
 
-  setAudioError: (message: string | null) =>
-    set({ audioError: message, isAudioLoading: false, isPlaying: false }),
+    setAudioError: (message: string | null) =>
+      set({ audioError: message, isAudioLoading: false, isPlaying: false }),
 
-  updateAudioProgress: (currentSeconds: number, totalSeconds: number) => {
-    const { selectedMissionId } = useListeningMissionsStore.getState();
-    const nextCurrent = Math.max(0, Math.floor(currentSeconds));
-    const nextTotal =
-      Number.isFinite(totalSeconds) && totalSeconds > 0
-        ? Math.floor(totalSeconds)
-        : get().totalDurationSeconds;
-    ListeningService.saveResumePosition(selectedMissionId, nextCurrent);
-    set({
-      currentTimeSeconds: nextCurrent,
-      totalDurationSeconds: nextTotal,
-    });
-  },
+    updateAudioProgress: (currentSeconds: number, totalSeconds: number) => {
+      const { selectedMissionId } = useListeningMissionsStore.getState();
+      const nextCurrent = Math.max(0, Math.floor(currentSeconds));
+      const nextTotal =
+        Number.isFinite(totalSeconds) && totalSeconds > 0
+          ? Math.floor(totalSeconds)
+          : get().totalDurationSeconds;
+      ListeningService.saveResumePosition(selectedMissionId, nextCurrent);
+      set({
+        currentTimeSeconds: nextCurrent,
+        totalDurationSeconds: nextTotal,
+      });
+    },
 
-  skipRelative: (deltaSeconds: number) => {
-    const { currentTimeSeconds, totalDurationSeconds } = get();
-    set({
-      currentTimeSeconds: Math.min(
-        totalDurationSeconds,
-        Math.max(0, currentTimeSeconds + deltaSeconds)
-      ),
-    });
-  },
+    skipRelative: (deltaSeconds: number) => {
+      const { currentTimeSeconds, totalDurationSeconds } = get();
+      set({
+        currentTimeSeconds: Math.min(
+          totalDurationSeconds,
+          Math.max(0, currentTimeSeconds + deltaSeconds)
+        ),
+      });
+    },
 
-  toggleFavoriteMission: (missionId: string) => {
-    const state = ListeningService.toggleFavoriteMission(missionId);
-    set({ favoriteMissionIds: state.favoriteMissionIds });
-  },
+    toggleFavoriteMission: (missionId: string) => {
+      const state = ListeningService.toggleFavoriteMission(missionId);
+      set({ favoriteMissionIds: state.favoriteMissionIds });
+    },
 
-  recordReplay: (missionId: string) => {
-    const state = ListeningService.recordReplay(missionId);
-    set({ replayCounts: state.replayCounts });
-  },
+    recordReplay: (missionId: string) => {
+      const state = ListeningService.recordReplay(missionId);
+      set({ replayCounts: state.replayCounts });
+    },
 
-  recordListeningSecond: () => {
-    const { selectedMissionId } = useListeningMissionsStore.getState();
-    const { playbackSpeed } = get();
-    const state = ListeningService.recordListeningSecond(
-      selectedMissionId,
-      playbackSpeed
-    );
-    set({
-      listeningSecondsByMission: state.listeningSecondsByMission,
-      speedSamples: state.speedSamples,
-    });
-  },
+    recordListeningSecond: () => {
+      const { selectedMissionId } = useListeningMissionsStore.getState();
+      const { playbackSpeed } = get();
+      const state = ListeningService.recordListeningSecond(selectedMissionId, playbackSpeed);
+      set({
+        listeningSecondsByMission: state.listeningSecondsByMission,
+        speedSamples: state.speedSamples,
+      });
+    },
 
-  markAudioCompleted: (missionId: string) => {
-    const state = ListeningService.markAudioCompleted(missionId);
-    set({
-      audioCompletedMissionIds: state.audioCompletedMissionIds,
-      resumePositions: state.resumePositions,
-      currentTimeSeconds: 0,
-      isPlaying: false,
-    });
-  },
+    markAudioCompleted: (missionId: string) => {
+      const state = ListeningService.markAudioCompleted(missionId);
+      set({
+        audioCompletedMissionIds: state.audioCompletedMissionIds,
+        resumePositions: state.resumePositions,
+        currentTimeSeconds: 0,
+        isPlaying: false,
+      });
+    },
 
-  selectNextMission: () => {
-    const { missions, selectedMissionId } =
-      useListeningMissionsStore.getState();
-    const { selectMission } = useListeningMissionsStore.getState();
-    const currentIndex = missions.findIndex(
-      (mission) => mission.id === selectedMissionId
-    );
-    const nextMission = missions[(currentIndex + 1) % missions.length];
-    if (nextMission) {
-      selectMission(nextMission.id);
-    }
-  },
+    selectNextMission: () => {
+      const { missions, selectedMissionId } = useListeningMissionsStore.getState();
+      const { selectMission } = useListeningMissionsStore.getState();
+      const currentIndex = missions.findIndex((mission) => mission.id === selectedMissionId);
+      const nextMission = missions[(currentIndex + 1) % missions.length];
+      if (nextMission) {
+        selectMission(nextMission.id);
+      }
+    },
 
-  resetPlaybackState: () => {
-    const missions = ListeningService.getMissions();
-    const currentMission = missions[0];
+    resetPlaybackState: () => {
+      const missions = ListeningService.getMissions();
+      const currentMission = missions[0];
 
-    set({
-      isPlaying: false,
-      currentTimeSeconds: 0,
-      totalDurationSeconds: currentMission
-        ? currentMission.audioDurationSeconds
-        : 45,
-      playbackSpeed: 1,
-      isAudioLoading: false,
-      audioError: null,
-    });
-  },
-}));
+      set({
+        isPlaying: false,
+        currentTimeSeconds: 0,
+        totalDurationSeconds: currentMission ? currentMission.audioDurationSeconds : 45,
+        playbackSpeed: 1,
+        isAudioLoading: false,
+        audioError: null,
+      });
+    },
+  })
+);

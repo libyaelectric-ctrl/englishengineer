@@ -10,8 +10,7 @@ export const STARTER_SPEAKING_MISSIONS: SpeakingMission[] = [
     cefrLevel: 'A1',
     difficulty: 'Beginner',
     estimatedMinutes: 5,
-    promptText:
-      'I am an electrical engineer. I check the electrical rooms and report site issues.',
+    promptText: 'I am an electrical engineer. I check the electrical rooms and report site issues.',
     expectedKeywords: ['name', 'electrical engineer', 'check', 'report'],
     grammarTargets: ['My name is', 'I am', 'I check'],
     confidenceMarkers: ['I am', 'I check', 'I report'],
@@ -52,8 +51,7 @@ export const STARTER_SPEAKING_MISSIONS: SpeakingMission[] = [
   {
     id: 'speaking_b1_inspection_status',
     title: 'Inspection Status Brief',
-    description:
-      'Report completed inspection work, one open issue, and the agreed next action.',
+    description: 'Report completed inspection work, one open issue, and the agreed next action.',
     scenarioType: 'site_meeting',
     discipline: 'Electrical Engineering',
     cefrLevel: 'B1',
@@ -61,13 +59,7 @@ export const STARTER_SPEAKING_MISSIONS: SpeakingMission[] = [
     estimatedMinutes: 8,
     promptText:
       'We completed the panel inspection this morning. Two feeder labels are still missing, so the contractor will update them before the consultant arrives. I will send photos after the work is complete.',
-    expectedKeywords: [
-      'panel inspection',
-      'feeder labels',
-      'contractor',
-      'consultant',
-      'photos',
-    ],
+    expectedKeywords: ['panel inspection', 'feeder labels', 'contractor', 'consultant', 'photos'],
     grammarTargets: [
       'We completed',
       'are still missing',

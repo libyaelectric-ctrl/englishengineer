@@ -1,11 +1,11 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
 import { LearningState } from '@/core/learning';
+
 import { AssessmentProfile } from '@/features/assessment';
-import {
-  buildSevenDayReport,
-  getPersonalizedTasks,
-} from './learning-intelligence.helpers';
+
+import { buildSevenDayReport, getPersonalizedTasks } from './learning-intelligence.helpers';
 import { MistakeLogEntry } from './learning-intelligence.types';
 
 const learning: LearningState = {
@@ -53,14 +53,7 @@ const mistake: MistakeLogEntry = {
 
 describe('Learning Intelligence personalization', () => {
   it('changes recommended tasks with career role', () => {
-    const qa = buildSevenDayReport(
-      learning,
-      assessment,
-      {},
-      [mistake],
-      'QA/QC Engineer',
-      'A1'
-    );
+    const qa = buildSevenDayReport(learning, assessment, {}, [mistake], 'QA/QC Engineer', 'A1');
     const commissioning = buildSevenDayReport(
       learning,
       assessment,
@@ -69,9 +62,7 @@ describe('Learning Intelligence personalization', () => {
       'Commissioning Engineer',
       'A1'
     );
-    expect(qa.recommendedNextTasks).not.toEqual(
-      commissioning.recommendedNextTasks
-    );
+    expect(qa.recommendedNextTasks).not.toEqual(commissioning.recommendedNextTasks);
     expect(qa.recommendedNextTasks[0]).toContain('NCR');
   });
 
@@ -91,13 +82,7 @@ describe('Learning Intelligence personalization', () => {
   });
 
   it('generates role-aware and level-aware daily tasks', () => {
-    const tasks = getPersonalizedTasks(
-      'Procurement Engineer',
-      'A2',
-      'Writing',
-      [mistake],
-      {}
-    );
+    const tasks = getPersonalizedTasks('Procurement Engineer', 'A2', 'Writing', [mistake], {});
     expect(tasks[0].module).toBe('Writing');
     expect(tasks.every((task) => task.level === 'A2')).toBe(true);
     expect(tasks[0].description).toContain('Procurement Engineer');

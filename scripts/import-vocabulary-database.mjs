@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import {
   CEFR_LEVELS,
   assertValidLevels,
@@ -16,10 +17,7 @@ import {
 } from './learning-database-utils.mjs';
 
 const root = process.cwd();
-const input = path.join(
-  root,
-  'data/import/EngineerOS_Vocabulary_Database_Final.xlsx'
-);
+const input = path.join(root, 'data/import/EngineerOS_Vocabulary_Database_Final.xlsx');
 const canonicalDir = path.join(root, 'data/canonical/vocabulary');
 const seedDir = path.join(root, 'src/data/vocabulary/by-level');
 const requiredColumns = [
@@ -44,10 +42,7 @@ const requiredColumns = [
   'status',
 ];
 
-const { headers, records: sourceRecords } = await readDatabaseSheet(
-  input,
-  'vocabulary_database'
-);
+const { headers, records: sourceRecords } = await readDatabaseSheet(input, 'vocabulary_database');
 requireColumns(headers, requiredColumns, 'Vocabulary database');
 
 const terms = sourceRecords.map((row) => ({
@@ -93,12 +88,7 @@ assertValidLevels(terms, 'Vocabulary database');
 const duplicateIds = duplicateValues(terms, 'id');
 const duplicateNormalizedTerms = duplicateValues(terms, 'normalizedTerm');
 const missingRequired = terms.filter(
-  (term) =>
-    !term.id ||
-    !term.term ||
-    !term.normalizedTerm ||
-    !term.definition ||
-    !term.status
+  (term) => !term.id || !term.term || !term.normalizedTerm || !term.definition || !term.status
 );
 const report = {
   generatedAt: new Date().toISOString(),
@@ -116,10 +106,7 @@ const report = {
 };
 
 await writeJson(path.join(canonicalDir, 'vocabulary.normalized.json'), terms);
-await writeJson(
-  path.join(canonicalDir, 'vocabulary-validation-report.json'),
-  report
-);
+await writeJson(path.join(canonicalDir, 'vocabulary-validation-report.json'), report);
 await writeJson(path.join(canonicalDir, 'vocabulary-taxonomy.json'), {
   cefrLevels: CEFR_LEVELS,
   domains: unique(terms.map((term) => term.domain)),

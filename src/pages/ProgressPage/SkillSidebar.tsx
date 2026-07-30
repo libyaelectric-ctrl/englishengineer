@@ -1,6 +1,8 @@
+import { Brain, Layers, type LucideIcon, Network } from 'lucide-react';
 import { motion } from 'motion/react';
-import { Brain, Layers, Network, type LucideIcon } from 'lucide-react';
+
 import { type GraphNode } from '@/pages/CurriculumPage/curriculum-data';
+
 import { SkillCard } from './SkillCard';
 
 export const SkillSidebar = ({
@@ -43,22 +45,15 @@ export const SkillSidebar = ({
         <div className="space-y-1">
           <div className="flex justify-between text-[11px] font-semibold text-muted-copy">
             <span>Today's Target</span>
-            <span className="text-foreground font-bold">
-              25 / 30 mins (83%)
-            </span>
+            <span className="text-foreground font-bold">25 / 30 mins (83%)</span>
           </div>
           <div className="h-2 w-full rounded-full bg-border-soft overflow-hidden">
-            <div
-              className="h-full rounded-full bg-primary"
-              style={{ width: '83%' }}
-            />
+            <div className="h-full rounded-full bg-primary" style={{ width: '83%' }} />
           </div>
         </div>
         <div className="pt-2 border-t border-border-soft/60 flex items-center justify-between text-[10px] font-medium text-muted-copy">
           <span>⚡ Weekly Focus:</span>
-          <span className="font-bold text-foreground">
-            Technical PRs & Reports
-          </span>
+          <span className="font-bold text-foreground">Technical PRs & Reports</span>
         </div>
       </div>
 
@@ -70,12 +65,7 @@ export const SkillSidebar = ({
         </div>
         <div className="p-3 space-y-2">
           {skills.map((skill, index) => (
-            <SkillCard
-              key={skill.id}
-              skill={skill}
-              elo={eloScores[skill.id]}
-              index={index}
-            />
+            <SkillCard key={skill.id} skill={skill} elo={eloScores[skill.id]} index={index} />
           ))}
         </div>
 
@@ -88,15 +78,13 @@ export const SkillSidebar = ({
           <div className="flex items-center justify-between text-xs font-medium">
             <span className="text-muted-copy">Strongest</span>
             <span className="font-bold text-success flex items-center gap-1">
-              <highestSkill.icon className="h-3 w-3 text-success" />{' '}
-              {highestSkill.label}
+              <highestSkill.icon className="h-3 w-3 text-success" /> {highestSkill.label}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs font-medium">
             <span className="text-muted-copy">Weakest</span>
             <span className="font-bold text-error flex items-center gap-1">
-              <lowestSkill.icon className="h-3 w-3 text-error" />{' '}
-              {lowestSkill.label}
+              <lowestSkill.icon className="h-3 w-3 text-error" /> {lowestSkill.label}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs font-medium">
@@ -128,11 +116,7 @@ export const SkillSidebar = ({
         </div>
         <div className="px-4 pb-4">
           {selectedGraphNode ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="space-y-2.5"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2.5">
               <div className="flex items-center gap-1.5">
                 <span className="rounded-[4px] bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary border border-primary/25 uppercase">
                   {selectedGraphNode.type}
@@ -142,9 +126,7 @@ export const SkillSidebar = ({
                 </span>
               </div>
               <div>
-                <h4 className="text-sm font-bold text-foreground">
-                  {selectedGraphNode.label}
-                </h4>
+                <h4 className="text-sm font-bold text-foreground">{selectedGraphNode.label}</h4>
                 <p className="mt-0.5 text-[11px] text-muted-copy leading-4 font-medium">
                   {selectedGraphNode.description}
                 </p>
@@ -152,9 +134,7 @@ export const SkillSidebar = ({
               <div className="bg-surface-hover rounded-[4px] p-2.5 border border-border-soft shadow-sm">
                 <div className="flex justify-between text-[10px] font-bold mb-1">
                   <span className="text-muted-copy uppercase">Strength</span>
-                  <span className="text-foreground">
-                    {selectedGraphNode.strength}%
-                  </span>
+                  <span className="text-foreground">{selectedGraphNode.strength}%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-[4px] bg-border-soft">
                   <div
@@ -163,24 +143,23 @@ export const SkillSidebar = ({
                   />
                 </div>
               </div>
-              {selectedGraphNode.relatedVocab &&
-                selectedGraphNode.relatedVocab.length > 0 && (
-                  <div className="border-t border-border-soft pt-2">
-                    <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-1.5">
-                      Related Words
-                    </h4>
-                    <div className="flex flex-wrap gap-1">
-                      {selectedGraphNode.relatedVocab.map((word) => (
-                        <span
-                          key={word}
-                          className="rounded-[4px] bg-surface border border-border-soft px-1.5 py-0.5 text-[10px] font-bold text-foreground"
-                        >
-                          {word}
-                        </span>
-                      ))}
-                    </div>
+              {selectedGraphNode.relatedVocab && selectedGraphNode.relatedVocab.length > 0 && (
+                <div className="border-t border-border-soft pt-2">
+                  <h4 className="text-[10px] font-bold text-muted-copy uppercase mb-1.5">
+                    Related Words
+                  </h4>
+                  <div className="flex flex-wrap gap-1">
+                    {selectedGraphNode.relatedVocab.map((word) => (
+                      <span
+                        key={word}
+                        className="rounded-[4px] bg-surface border border-border-soft px-1.5 py-0.5 text-[10px] font-bold text-foreground"
+                      >
+                        {word}
+                      </span>
+                    ))}
                   </div>
-                )}
+                </div>
+              )}
             </motion.div>
           ) : (
             <div className="text-center py-5 rounded-[4px] border border-dashed border-border-soft bg-surface-hover">

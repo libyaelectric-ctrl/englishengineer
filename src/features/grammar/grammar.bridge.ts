@@ -1,5 +1,6 @@
-import type { GrammarRule } from './grammar.types';
 import { addToVocabularyPool } from '@/core/learning/learning.pool';
+
+import type { GrammarRule } from './grammar.types';
 
 export interface BridgeResult {
   ruleId: string;
@@ -45,19 +46,12 @@ export const GrammarVocabularyBridge = {
     };
   },
 
-  getGrammarRulesForVocabulary(
-    vocabularyTags: string[],
-    allRules: GrammarRule[]
-  ): GrammarRule[] {
+  getGrammarRulesForVocabulary(vocabularyTags: string[], allRules: GrammarRule[]): GrammarRule[] {
     const normalizedTags = vocabularyTags.map((t) => t.toLowerCase());
     return allRules.filter(
       (rule) =>
-        rule.linkedVocabularyTags.some((tag) =>
-          normalizedTags.includes(tag.toLowerCase())
-        ) ||
-        rule.grammarFits.some((fit) =>
-          normalizedTags.includes(fit.toLowerCase())
-        )
+        rule.linkedVocabularyTags.some((tag) => normalizedTags.includes(tag.toLowerCase())) ||
+        rule.grammarFits.some((fit) => normalizedTags.includes(fit.toLowerCase()))
     );
   },
 

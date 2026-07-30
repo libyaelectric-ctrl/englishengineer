@@ -29,11 +29,9 @@ export const initAuditLog = async (config: {
   workspace?: Record<string, unknown>;
 }): Promise<void> => {
   const ws = config?.workspace;
-  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey)
-    return;
+  if (!ws?.configured || !ws?.supabaseUrl || !ws?.supabaseServiceRoleKey) return;
   try {
-    const { createSupabaseAuditLogRepository } =
-      await import('./supabase-audit-log-repository.js');
+    const { createSupabaseAuditLogRepository } = await import('./supabase-audit-log-repository.js');
     supabaseRepository = createSupabaseAuditLogRepository(ws);
   } catch (error: unknown) {
     logger.warn('Failed to initialize remote audit repository', {
@@ -43,9 +41,7 @@ export const initAuditLog = async (config: {
   }
 };
 
-export const auditLog = (
-  entry: Omit<AuditLogEntry, 'id' | 'timestamp'>
-): AuditLogEntry => {
+export const auditLog = (entry: Omit<AuditLogEntry, 'id' | 'timestamp'>): AuditLogEntry => {
   const record: AuditLogEntry = {
     id: `audit_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
     timestamp: new Date().toISOString(),
@@ -69,9 +65,7 @@ export const auditLog = (
   return record;
 };
 
-export const getAuditLogs = async (
-  filters: AuditLogFilters = {}
-): Promise<AuditLogEntry[]> => {
+export const getAuditLogs = async (filters: AuditLogFilters = {}): Promise<AuditLogEntry[]> => {
   if (supabaseRepository) {
     const remoteLogs = await supabaseRepository.query(filters);
     if (remoteLogs.length > 0) return remoteLogs;

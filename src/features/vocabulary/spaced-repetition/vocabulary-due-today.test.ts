@@ -1,14 +1,9 @@
-import { describe, it, expect } from 'vitest';
-import {
-  getDueTodayWords,
-  getUpcomingReviews,
-  getReviewStats,
-} from './vocabulary-due-today';
-import type { VocabularyReviewState } from '../types/vocabulary.types';
+import { describe, expect, it } from 'vitest';
 
-const makeReview = (
-  overrides: Partial<VocabularyReviewState> = {}
-): VocabularyReviewState => ({
+import type { VocabularyReviewState } from '../types/vocabulary.types';
+import { getDueTodayWords, getReviewStats, getUpcomingReviews } from './vocabulary-due-today';
+
+const makeReview = (overrides: Partial<VocabularyReviewState> = {}): VocabularyReviewState => ({
   wordId: 'test-word',
   interval: 1,
   easeFactor: 2.5,

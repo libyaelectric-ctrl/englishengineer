@@ -1,5 +1,5 @@
-import http from 'k6/http';
 import { check, sleep } from 'k6';
+import http from 'k6/http';
 import { Rate, Trend } from 'k6/metrics';
 
 const errorRate = new Rate('errors');
@@ -36,8 +36,7 @@ export default function () {
     headers: { Authorization: 'Bearer test-token' },
   });
   check(subRes, {
-    'subscription returns 401 or 200': (r) =>
-      r.status === 401 || r.status === 200,
+    'subscription returns 401 or 200': (r) => r.status === 401 || r.status === 200,
   });
 
   sleep(0.1);

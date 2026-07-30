@@ -1,15 +1,17 @@
 import { storage } from '@/shared/storage';
+
+import type { CefrLevel } from '@/features/level-system';
+
 import type {
+  ExternalVocabularyResult,
   MyVocabularyFilter,
   SavedVocabularyWord,
-  ExternalVocabularyResult,
   VocabularyEntry,
   VocabularyMemoryState,
   VocabularyMemorySummary,
   VocabularyWordSource,
   VocabularyWordStatus,
 } from '../types/vocabulary.types';
-import type { CefrLevel } from '@/features/level-system';
 
 const STORAGE_KEY = 'EngVox_vocabulary_memory';
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -24,16 +26,12 @@ const getNextReviewDate = (status: VocabularyWordStatus, now: Date): string => {
   return addDays(now, 1);
 };
 
-const normalizeState = (
-  state: VocabularyMemoryState | null
-): VocabularyMemoryState => ({
+const normalizeState = (state: VocabularyMemoryState | null): VocabularyMemoryState => ({
   savedWords: Array.isArray(state?.savedWords) ? state.savedWords : [],
 });
 
-export const isVocabularyWordDue = (
-  word: SavedVocabularyWord,
-  now = new Date()
-): boolean => new Date(word.nextReviewDate).getTime() <= now.getTime();
+export const isVocabularyWordDue = (word: SavedVocabularyWord, now = new Date()): boolean =>
+  new Date(word.nextReviewDate).getTime() <= now.getTime();
 
 export const filterMyVocabulary = (
   words: SavedVocabularyWord[],
@@ -118,11 +116,7 @@ export const VocabularyMemoryService = {
     return word;
   },
 
-  updateStatus(
-    id: string,
-    status: VocabularyWordStatus,
-    now = new Date()
-  ): void {
+  updateStatus(id: string, status: VocabularyWordStatus, now = new Date()): void {
     const state = this.getState();
     this.saveState({
       savedWords: state.savedWords.map((word) =>
@@ -140,9 +134,7 @@ export const VocabularyMemoryService = {
   },
 
   markEntryWeak(entryId: string, now = new Date()): void {
-    const word = this.getState().savedWords.find(
-      (item) => item.entryId === entryId
-    );
+    const word = this.getState().savedWords.find((item) => item.entryId === entryId);
     if (word) this.updateStatus(word.id, 'Weak', now);
   },
 
@@ -154,9 +146,7 @@ export const VocabularyMemoryService = {
   },
 
   getDueWords(now = new Date()): SavedVocabularyWord[] {
-    return this.getState().savedWords.filter((word) =>
-      isVocabularyWordDue(word, now)
-    );
+    return this.getState().savedWords.filter((word) => isVocabularyWordDue(word, now));
   },
 
   getWeakWords(): SavedVocabularyWord[] {

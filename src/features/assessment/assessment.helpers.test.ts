@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
 import { LearningState } from '@/core/learning/learning.types';
+
 import {
   getAssessmentConfidence,
   getDataStatus,
@@ -9,9 +11,7 @@ import {
 } from './assessment.helpers';
 import { AssessmentService } from './assessment.service';
 
-const createState = (
-  overrides: Partial<LearningState> = {}
-): LearningState => ({
+const createState = (overrides: Partial<LearningState> = {}): LearningState => ({
   missions: [],
   achievements: [],
   xp: 0,
@@ -57,9 +57,7 @@ describe('assessment helpers', () => {
   it('calculates confidence from evidence count and module coverage', () => {
     expect(getAssessmentConfidence([])).toMatchObject({ score: 0 });
     expect(
-      getAssessmentConfidence([
-        { module: 'Writing', score: 70, durationMinutes: 10 },
-      ]).score
+      getAssessmentConfidence([{ module: 'Writing', score: 70, durationMinutes: 10 }]).score
     ).toBe(18);
     expect(
       getAssessmentConfidence([

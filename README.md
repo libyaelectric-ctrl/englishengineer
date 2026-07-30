@@ -7,7 +7,6 @@
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
 
-
 An offline-first Engineering English and career communication platform for professional engineers working in international project environments.
 
 **Master the English you actually use on site.** Built for engineers who write

@@ -1,12 +1,11 @@
 import { Target } from 'lucide-react';
-import {
-  SKILL_NAMES,
-  type SkillName,
-  type UserLearningProfile,
-} from '@/features/profile';
-import { LessonPathEngine } from '@/features/learning-orchestrator';
+
 import { SectionCard } from '@/shared/components/SectionCard';
-import { SKILL_META, ICON_MAP } from './curriculum-data';
+
+import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { SKILL_NAMES, type SkillName, type UserLearningProfile } from '@/features/profile';
+
+import { ICON_MAP, SKILL_META } from './curriculum-data';
 
 interface Props {
   selectedSkill: SkillName;
@@ -57,18 +56,12 @@ export const CurriculumSkillSelector = ({
                   </span>
                 )}
               </div>
-              <p className="mt-3 text-sm font-bold text-foreground">
-                {meta.label}
-              </p>
+              <p className="mt-3 text-sm font-bold text-foreground">{meta.label}</p>
               <p className="mt-1 text-xs text-muted-copy font-medium">
                 {skillProfile.cefrBand} · {skillProfile.progressToNextBand}%
               </p>
               <p className="mt-1 text-xs font-bold text-primary uppercase tracking-wider">
-                Lesson{' '}
-                {
-                  LessonPathEngine.getSkillProgress(profile, skill).lesson
-                    .number
-                }
+                Lesson {LessonPathEngine.getSkillProgress(profile, skill).lesson.number}
               </p>
             </button>
           );

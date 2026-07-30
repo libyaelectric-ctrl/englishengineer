@@ -1,8 +1,6 @@
 import { LearningState } from '@/core/learning';
 
-export const createLearningState = (
-  overrides: Partial<LearningState> = {}
-): LearningState => ({
+export const createLearningState = (overrides: Partial<LearningState> = {}): LearningState => ({
   missions: [],
   achievements: [],
   xp: 0,

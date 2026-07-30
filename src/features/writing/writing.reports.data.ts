@@ -11,12 +11,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     scenario:
       'The electrical team completed containment installation in a hospital corridor and must report progress to the project manager.',
     task: 'Rewrite the daily update into a concise site progress report.',
-    expectedStructure: [
-      'Date and area',
-      'Completed work',
-      'Constraints',
-      'Next shift plan',
-    ],
+    expectedStructure: ['Date and area', 'Completed work', 'Constraints', 'Next shift plan'],
     targetVocabulary: [
       'containment',
       'work front',
@@ -24,10 +19,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
       'constraint',
       'look-ahead',
     ],
-    grammarFocus: [
-      'past simple for completed work',
-      'passive voice for installed items',
-    ],
+    grammarFocus: ['past simple for completed work', 'passive voice for installed items'],
     strongPhrase:
       'Cable tray containment in Corridor C reached 85% completion with one access constraint near the nurse station.',
     weakPhrase: 'The tray work is almost done and maybe one area is blocked.',
@@ -55,10 +47,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
       'forecast',
       'constraint log',
     ],
-    grammarFocus: [
-      'present perfect for weekly achievements',
-      'modal verbs for recovery actions',
-    ],
+    grammarFocus: ['present perfect for weekly achievements', 'modal verbs for recovery actions'],
     strongPhrase:
       'The weekly progress remains on the planned curve, except for the delayed AHU delivery affecting Level 4 ductwork.',
     weakPhrase: 'This week was fine but AHU delivery is late.',
@@ -73,12 +62,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     scenario:
       'Switchgear delivery is delayed because protection relays are unavailable from the supplier.',
     task: 'Write a factual delay explanation with recovery measures.',
-    expectedStructure: [
-      'Delayed item',
-      'Root cause',
-      'Schedule impact',
-      'Mitigation',
-    ],
+    expectedStructure: ['Delayed item', 'Root cause', 'Schedule impact', 'Mitigation'],
     targetVocabulary: [
       'delivery delay',
       'supply chain',
@@ -101,12 +85,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     scenario:
       'The contractor must stop installation until revised coordinated drawings are approved.',
     task: 'Write a clear instruction without sounding aggressive.',
-    expectedStructure: [
-      'Instruction',
-      'Reason',
-      'Required evidence',
-      'Restart condition',
-    ],
+    expectedStructure: ['Instruction', 'Reason', 'Required evidence', 'Restart condition'],
     targetVocabulary: [
       'instruction',
       'suspend works',
@@ -129,12 +108,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     scenario:
       'A commissioning lead must summarize completed tests, failed interfaces, and next actions.',
     task: 'Write a commissioning summary for the client weekly report.',
-    expectedStructure: [
-      'Completed tests',
-      'Outstanding issues',
-      'Risk',
-      'Next action',
-    ],
+    expectedStructure: ['Completed tests', 'Outstanding issues', 'Risk', 'Next action'],
     targetVocabulary: [
       'commissioning',
       'interface test',
@@ -154,8 +128,7 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     discipline: 'Handover',
     cefrLevel: 'C1',
     difficulty: 'Advanced',
-    scenario:
-      'A project engineer must prepare a handover status for a completed electrical room.',
+    scenario: 'A project engineer must prepare a handover status for a completed electrical room.',
     task: 'Write a handover report paragraph with documents and remaining conditions.',
     expectedStructure: [
       'Area status',
@@ -182,22 +155,10 @@ export const WRITING_REPORT_SPECS: WritingSpec[] = [
     discipline: 'Handover',
     cefrLevel: 'B1',
     difficulty: 'Beginner',
-    scenario:
-      'Several minor defects remain before a room can be handed over to the client.',
+    scenario: 'Several minor defects remain before a room can be handed over to the client.',
     task: 'Write punch list items with clear closure requirements.',
-    expectedStructure: [
-      'Location',
-      'Defect',
-      'Required action',
-      'Closure evidence',
-    ],
-    targetVocabulary: [
-      'punch list',
-      'defect',
-      'closure',
-      'snagging',
-      'handover',
-    ],
+    expectedStructure: ['Location', 'Defect', 'Required action', 'Closure evidence'],
+    targetVocabulary: ['punch list', 'defect', 'closure', 'snagging', 'handover'],
     grammarFocus: ['short imperative items', 'location prepositions'],
     strongPhrase:
       'Room 3.12 remains open due to missing device labels and incomplete ceiling access panel cleaning.',

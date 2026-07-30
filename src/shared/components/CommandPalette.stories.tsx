@@ -33,9 +33,7 @@ const CommandPaletteDemo = ({ searchQuery }: { searchQuery?: string }) => {
   ];
 
   const filtered = searchQuery
-    ? COMMANDS.filter((c) =>
-        c.label.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? COMMANDS.filter((c) => c.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : COMMANDS;
 
   const grouped = filtered.reduce(

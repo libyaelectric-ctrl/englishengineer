@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { Section, Progress, Action } from './SidebarComponents';
+
+import { Action, Progress, Section } from './SidebarComponents';
 
 export function DashboardSidebar() {
   const navigate = useNavigate();
@@ -27,11 +29,7 @@ export function DashboardSidebar() {
               {isFree ? '3 / 3 Daily' : '300 / 300 Monthly'}
             </span>
           </div>
-          <Progress
-            value={isFree ? 33 : 10}
-            max={100}
-            color="var(--color-primary)"
-          />
+          <Progress value={isFree ? 33 : 10} max={100} color="var(--color-primary)" />
           <button
             onClick={() => navigate('/billing')}
             className="mt-3 w-full cursor-pointer rounded-lg bg-primary/10 py-2 text-xs font-bold text-primary hover:bg-primary/20 transition-all border border-primary/20"
@@ -67,27 +65,13 @@ export function DashboardSidebar() {
             icon="⚡"
             label="Command Palette (Cmd+K)"
             onClick={() =>
-              window.dispatchEvent(
-                new KeyboardEvent('keydown', { key: 'k', metaKey: true })
-              )
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }))
             }
             variant="primary"
           />
-          <Action
-            icon="🎯"
-            label="Placement Level Test"
-            onClick={() => navigate('/placement')}
-          />
-          <Action
-            icon="🤖"
-            label="AI Copilot & Tools"
-            onClick={() => navigate('/tools')}
-          />
-          <Action
-            icon="👥"
-            label="Team Management"
-            onClick={() => navigate('/team')}
-          />
+          <Action icon="🎯" label="Placement Level Test" onClick={() => navigate('/placement')} />
+          <Action icon="🤖" label="AI Copilot & Tools" onClick={() => navigate('/tools')} />
+          <Action icon="👥" label="Team Management" onClick={() => navigate('/team')} />
         </div>
       </Section>
     </>

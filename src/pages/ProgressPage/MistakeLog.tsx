@@ -1,12 +1,15 @@
-import { FormEvent, useState } from 'react';
 import { ClipboardList, Plus, Trash2 } from 'lucide-react';
+
+import { FormEvent, useState } from 'react';
+
+import { Button } from '@/shared/components/Button';
+import { Card } from '@/shared/components/Card';
+
 import {
   MISTAKE_CATEGORIES,
   MISTAKE_SUGGESTIONS,
   MistakeCategory,
 } from '@/features/learning-intelligence';
-import { Button } from '@/shared/components/Button';
-import { Card } from '@/shared/components/Card';
 
 export const MistakeLog = ({
   mistakeLog,
@@ -19,11 +22,7 @@ export const MistakeLog = ({
     originalText: string;
     correction: string;
   }>;
-  addMistake: (
-    category: MistakeCategory,
-    originalText: string,
-    correction: string
-  ) => void;
+  addMistake: (category: MistakeCategory, originalText: string, correction: string) => void;
   removeMistake: (id: string) => void;
 }) => {
   const [category, setCategory] = useState<MistakeCategory>('grammar');
@@ -39,17 +38,11 @@ export const MistakeLog = ({
   };
 
   return (
-    <Card
-      id="mistake-log"
-      className="space-y-5 p-5 shadow-sm"
-      hoverEffect={false}
-    >
+    <Card id="mistake-log" className="space-y-5 p-5 shadow-sm" hoverEffect={false}>
       <div className="flex items-center gap-3">
         <ClipboardList className="h-5 w-5 text-primary" />
         <div>
-          <h2 className="text-xl font-bold text-foreground">
-            Mistake Log / Hata Defteri
-          </h2>
+          <h2 className="text-xl font-bold text-foreground">Mistake Log / Hata Defteri</h2>
           <p className="text-xs text-muted-copy font-medium uppercase tracking-wider">
             Record patterns worth practising again.
           </p>
@@ -60,9 +53,7 @@ export const MistakeLog = ({
           <span className="sr-only">Mistake category</span>
           <select
             value={category}
-            onChange={(event) =>
-              setCategory(event.target.value as MistakeCategory)
-            }
+            onChange={(event) => setCategory(event.target.value as MistakeCategory)}
             className="min-h-10 w-full rounded-[4px] border border-border-soft bg-surface px-3 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 shadow-sm cursor-pointer"
           >
             {MISTAKE_CATEGORIES.map((item) => (
@@ -118,9 +109,7 @@ export const MistakeLog = ({
                   <p className="mt-2 text-sm text-muted-copy line-through font-normal">
                     {entry.originalText}
                   </p>
-                  <p className="mt-1 text-sm font-bold text-foreground">
-                    {entry.correction}
-                  </p>
+                  <p className="mt-1 text-sm font-bold text-foreground">{entry.correction}</p>
                 </div>
                 <button
                   onClick={() => removeMistake(entry.id)}

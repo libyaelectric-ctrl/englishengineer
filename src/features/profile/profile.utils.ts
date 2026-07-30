@@ -1,14 +1,15 @@
+import type { CefrLevel } from '@/features/level-system';
+
 import {
-  SKILL_NAMES,
   type AdaptivePaceDecision,
   type AdaptivePaceInput,
   type CefrBand,
+  SKILL_NAMES,
   type SkillElo,
   type SkillName,
   type SkillProfile,
   type UserLearningProfile,
 } from './profile.types';
-import type { CefrLevel } from '@/features/level-system';
 
 export const MIN_SKILL_ELO = 1000;
 export const MAX_SKILL_ELO = 5000;
@@ -46,30 +47,22 @@ export const clampSkillElo = (elo: number): SkillElo =>
 
 export const getCefrBandFromElo = (elo: number): CefrBand => {
   const safeElo = clampSkillElo(elo);
-  return (
-    ELO_BANDS.find(({ min, max }) => safeElo >= min && safeElo <= max)?.band ??
-    'A1'
-  );
+  return ELO_BANDS.find(({ min, max }) => safeElo >= min && safeElo <= max)?.band ?? 'A1';
 };
 
-export const getEloBandRange = (
-  cefrBand: CefrBand
-): { min: number; max: number } => {
+export const getEloBandRange = (cefrBand: CefrBand): { min: number; max: number } => {
   const range = ELO_BANDS.find(({ band }) => band === cefrBand);
   return range ? { min: range.min, max: range.max } : { min: 1000, max: 1332 };
 };
 
-export const getBaseCefrLevel = (band: CefrBand): CefrLevel =>
-  band.replace('+', '') as CefrLevel;
+export const getBaseCefrLevel = (band: CefrBand): CefrLevel => band.replace('+', '') as CefrLevel;
 
 export const getNextCefrBand = (band: CefrBand): CefrBand => {
   const index = CEFR_BAND_ORDER.indexOf(band);
   return CEFR_BAND_ORDER[Math.min(index + 1, CEFR_BAND_ORDER.length - 1)];
 };
 
-export const getTaskBandMix = (
-  band: CefrBand
-): Array<{ band: CefrBand; share: number }> => [
+export const getTaskBandMix = (band: CefrBand): Array<{ band: CefrBand; share: number }> => [
   { band, share: 0.75 },
   { band: getNextCefrBand(band), share: 0.25 },
 ];
@@ -130,9 +123,7 @@ export const getInitialUserLearningProfile = (
   updatedAt: now.toISOString(),
 });
 
-export const getAdaptivePaceDecision = (
-  input: AdaptivePaceInput
-): AdaptivePaceDecision => {
+export const getAdaptivePaceDecision = (input: AdaptivePaceInput): AdaptivePaceDecision => {
   const sendToMistakeLog = input.repeatMistakeCount >= 3;
   if (input.accuracy >= 85 && input.responseTimeSeconds <= 90) {
     return {

@@ -1,10 +1,12 @@
 import { IdService } from '@/core/ids';
+
 import { storage } from '@/shared/storage';
+
 import {
   ConsoleProductAnalyticsProvider,
   LocalProductAnalyticsProvider,
-  PostHogProductAnalyticsProvider,
   PRODUCT_ANALYTICS_STORAGE_KEY,
+  PostHogProductAnalyticsProvider,
 } from './product-analytics.provider';
 import type {
   ProductAnalyticsEvent,
@@ -24,14 +26,7 @@ interface ImportMetaWithProductAnalyticsEnv {
 }
 
 const ONCE_KEY_PREFIX = 'product_analytics_once_';
-const skills = new Set([
-  'reading',
-  'writing',
-  'listening',
-  'speaking',
-  'vocabulary',
-  'grammar',
-]);
+const skills = new Set(['reading', 'writing', 'listening', 'speaking', 'vocabulary', 'grammar']);
 const plans = new Set(['free', 'pro', 'enterprise']);
 const subscriptionStatuses = new Set([
   'none',
@@ -49,54 +44,32 @@ const getConfig = (): {
   mode: ProductAnalyticsProviderMode;
 } => {
   const env = (import.meta as unknown as ImportMetaWithProductAnalyticsEnv).env;
-  const enabled =
-    String(env?.VITE_PRODUCT_ANALYTICS_ENABLED ?? 'true').toLowerCase() !==
-    'false';
-  const requested = String(
-    env?.VITE_PRODUCT_ANALYTICS_PROVIDER ?? 'local'
-  ).toLowerCase();
-  const mode: ProductAnalyticsProviderMode = [
-    'local',
-    'console',
-    'posthog',
-  ].includes(requested)
+  const enabled = String(env?.VITE_PRODUCT_ANALYTICS_ENABLED ?? 'true').toLowerCase() !== 'false';
+  const requested = String(env?.VITE_PRODUCT_ANALYTICS_PROVIDER ?? 'local').toLowerCase();
+  const mode: ProductAnalyticsProviderMode = ['local', 'console', 'posthog'].includes(requested)
     ? (requested as 'local' | 'console' | 'posthog')
     : 'local';
   return { enabled, mode: enabled ? mode : 'disabled' };
 };
 
-const isAllowedString = (
-  value: unknown,
-  allowed: Set<string>
-): value is string => typeof value === 'string' && allowed.has(value);
+const isAllowedString = (value: unknown, allowed: Set<string>): value is string =>
+  typeof value === 'string' && allowed.has(value);
 
 const MISSION_ID_RE = /^[a-zA-Z0-9:_-]{1,100}$/;
 
-const sanitizeSkill = (
-  input: Record<string, unknown>,
-  out: ProductAnalyticsMetadata
-) => {
+const sanitizeSkill = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
   if (isAllowedString(input.skill, skills)) {
     out.skill = input.skill as ProductAnalyticsMetadata['skill'];
   }
 };
 
-const sanitizeMissionId = (
-  input: Record<string, unknown>,
-  out: ProductAnalyticsMetadata
-) => {
-  if (
-    typeof input.missionId === 'string' &&
-    MISSION_ID_RE.test(input.missionId)
-  ) {
+const sanitizeMissionId = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
+  if (typeof input.missionId === 'string' && MISSION_ID_RE.test(input.missionId)) {
     out.missionId = input.missionId;
   }
 };
 
-const sanitizePlan = (
-  input: Record<string, unknown>,
-  out: ProductAnalyticsMetadata
-) => {
+const sanitizePlan = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
   if (isAllowedString(input.plan, plans)) {
     out.plan = input.plan as ProductAnalyticsMetadata['plan'];
   }
@@ -112,19 +85,13 @@ const sanitizeSubscriptionStatus = (
   }
 };
 
-const sanitizeSource = (
-  input: Record<string, unknown>,
-  out: ProductAnalyticsMetadata
-) => {
+const sanitizeSource = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
   if (isAllowedString(input.source, sources)) {
     out.source = input.source as ProductAnalyticsMetadata['source'];
   }
 };
 
-const sanitizeRating = (
-  input: Record<string, unknown>,
-  out: ProductAnalyticsMetadata
-) => {
+const sanitizeRating = (input: Record<string, unknown>, out: ProductAnalyticsMetadata) => {
   if (typeof input.rating === 'number') {
     out.rating = Math.max(1, Math.min(5, Math.round(input.rating)));
   }
@@ -213,8 +180,6 @@ export const ProductAnalyticsService = {
   },
 
   getLocalEvents(): ProductAnalyticsEvent[] {
-    return (
-      storage.get<ProductAnalyticsEvent[]>(PRODUCT_ANALYTICS_STORAGE_KEY) || []
-    );
+    return storage.get<ProductAnalyticsEvent[]>(PRODUCT_ANALYTICS_STORAGE_KEY) || [];
   },
 };

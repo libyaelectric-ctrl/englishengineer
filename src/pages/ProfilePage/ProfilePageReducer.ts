@@ -15,10 +15,7 @@ type UIAction =
   | { type: 'TOGGLE_CLEAR_CONFIRMATION' }
   | { type: 'SET_CLEAR_CONFIRMATION'; value: string };
 
-export const uiReducer = (
-  state: ProfileUIState,
-  action: UIAction
-): ProfileUIState => {
+export const uiReducer = (state: ProfileUIState, action: UIAction): ProfileUIState => {
   switch (action.type) {
     case 'SET_SAVING':
       return { ...state, isSaving: action.value };
@@ -61,9 +58,7 @@ type EditAction =
   | { type: 'SET_GOALS'; value: string[] }
   | { type: 'RESET_EDIT' };
 
-const EDIT_FIELD_MAP: Partial<
-  Record<EditAction['type'], keyof ProfileEditState>
-> = {
+const EDIT_FIELD_MAP: Partial<Record<EditAction['type'], keyof ProfileEditState>> = {
   SET_FIRST_NAME: 'firstName',
   SET_LAST_NAME: 'lastName',
   SET_PROFESSION: 'profession',
@@ -74,12 +69,8 @@ const EDIT_FIELD_MAP: Partial<
   SET_GOALS: 'goals',
 };
 
-export const editReducer = (
-  state: ProfileEditState,
-  action: EditAction
-): ProfileEditState => {
-  if (action.type === 'SET_EDIT_MODE')
-    return { ...state, isEditMode: action.value };
+export const editReducer = (state: ProfileEditState, action: EditAction): ProfileEditState => {
+  if (action.type === 'SET_EDIT_MODE') return { ...state, isEditMode: action.value };
   if (action.type === 'RESET_EDIT') return { ...state, isEditMode: false };
 
   const field = EDIT_FIELD_MAP[action.type];
@@ -118,10 +109,7 @@ type PrefsAction =
       careerGoal: string;
     };
 
-export const prefsReducer = (
-  state: ProfilePrefsState,
-  action: PrefsAction
-): ProfilePrefsState => {
+export const prefsReducer = (state: ProfilePrefsState, action: PrefsAction): ProfilePrefsState => {
   switch (action.type) {
     case 'SET_GOALS':
       return { ...state, goals: action.value };

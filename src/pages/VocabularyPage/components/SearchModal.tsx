@@ -1,6 +1,8 @@
-import { useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { Search, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
+import { useEffect, useRef } from 'react';
+
 import type { VocabularyTerm } from '@/features/vocabulary';
 
 interface SearchModalProps {
@@ -119,7 +121,9 @@ export function SearchModal({
                       >
                         <div>
                           <span className="text-sm font-semibold text-foreground">{term.term}</span>
-                          <span className="ml-2 text-xs text-muted-copy">{term.turkishMeaning}</span>
+                          <span className="ml-2 text-xs text-muted-copy">
+                            {term.turkishMeaning}
+                          </span>
                         </div>
                         <span className="text-[10px] text-muted-copy">{term.cefrLevel}</span>
                       </button>

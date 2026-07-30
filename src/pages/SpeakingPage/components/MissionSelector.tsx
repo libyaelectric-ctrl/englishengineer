@@ -1,9 +1,6 @@
 import { CheckCircle2 } from 'lucide-react';
-import {
-  LevelAccessBadge,
-  getContentAccessLabel,
-  type CefrLevel,
-} from '@/features/level-system';
+
+import { type CefrLevel, LevelAccessBadge, getContentAccessLabel } from '@/features/level-system';
 import type { SpeakingMission } from '@/features/speaking';
 
 interface MissionSelectorProps {
@@ -44,9 +41,7 @@ export const MissionSelector = ({
               <span className="text-xs font-bold text-foreground leading-tight">
                 {mission.title}
               </span>
-              {isCompleted && (
-                <CheckCircle2 className="h-4 w-4 text-success shrink-0" />
-              )}
+              {isCompleted && <CheckCircle2 className="h-4 w-4 text-success shrink-0" />}
             </div>
             <div className="flex flex-wrap items-center gap-1.5 mt-auto">
               <span className="rounded-[4px] bg-warning/10 px-1.5 py-0.5 text-[10px] font-bold text-warning border border-warning/10 uppercase tracking-wider">
@@ -55,9 +50,7 @@ export const MissionSelector = ({
               <span className="rounded-[4px] bg-primary/10 px-1.5 py-0.5 text-[10px] font-bold text-primary border border-primary/10">
                 {mission.estimatedMinutes}M
               </span>
-              <LevelAccessBadge
-                label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
-              />
+              <LevelAccessBadge label={getContentAccessLabel(mission.cefrLevel, currentLevel)} />
             </div>
           </button>
         );
@@ -65,8 +58,8 @@ export const MissionSelector = ({
     </div>
     {roleplayMissions.length === 0 && (
       <div className="rounded-[4px] border border-border-soft bg-surface p-6 text-xs font-bold text-muted-copy uppercase tracking-wider text-center shadow-sm">
-        No current-level content yet. No Speaking roleplay is available for this
-        category and level filter.
+        No current-level content yet. No Speaking roleplay is available for this category and level
+        filter.
       </div>
     )}
   </div>

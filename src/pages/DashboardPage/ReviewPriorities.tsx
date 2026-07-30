@@ -1,5 +1,7 @@
 import { Target } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
+
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
@@ -12,9 +14,7 @@ interface ReviewPrioritiesProps {
   reviewPriorities: ReviewItem[];
 }
 
-export const ReviewPriorities = ({
-  reviewPriorities,
-}: ReviewPrioritiesProps) => {
+export const ReviewPriorities = ({ reviewPriorities }: ReviewPrioritiesProps) => {
   const navigate = useNavigate();
 
   return (
@@ -23,10 +23,7 @@ export const ReviewPriorities = ({
       subtitle="The clearest places to improve next"
       icon={Target}
     >
-      <div
-        data-testid="dashboard-review-summary"
-        className="grid gap-3 md:grid-cols-3"
-      >
+      <div data-testid="dashboard-review-summary" className="grid gap-3 md:grid-cols-3">
         {reviewPriorities.length === 0 && (
           <p className="text-sm text-muted-copy col-span-3 text-center py-6">
             No weak areas detected. Keep practicing!
@@ -43,9 +40,7 @@ export const ReviewPriorities = ({
               label={index === 0 ? 'Start here' : `Priority ${index + 1}`}
               tone={index === 0 ? 'warning' : 'neutral'}
             />
-            <p className="mt-3 text-xs font-bold text-foreground">
-              {item.label}
-            </p>
+            <p className="mt-3 text-xs font-bold text-foreground">{item.label}</p>
           </button>
         ))}
       </div>

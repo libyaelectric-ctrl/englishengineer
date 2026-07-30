@@ -62,12 +62,7 @@ export const SentenceGeneratorService = {
       const template = templates[i % templates.length];
 
       const sentence = template.replace(/\{word\}/g, word);
-      const translation = this.generateTranslation(
-        sentence,
-        word,
-        meaning,
-        context
-      );
+      const translation = this.generateTranslation(sentence, word, meaning, context);
 
       if (!usedContexts.has(context)) {
         usedContexts.add(context);
@@ -84,12 +79,7 @@ export const SentenceGeneratorService = {
     return sentences;
   },
 
-  generateTranslation(
-    _sentence: string,
-    word: string,
-    meaning: string,
-    context: string
-  ): string {
+  generateTranslation(_sentence: string, word: string, meaning: string, context: string): string {
     const contextTranslations: Record<string, string> = {
       workplace: 'İş ortamında',
       technical: 'Teknik bağlamda',
@@ -100,10 +90,7 @@ export const SentenceGeneratorService = {
     return `${contextTranslations[context] || ''} "${meaning}" anlamında: ${word}`;
   },
 
-  getDifficulty(
-    _partOfSpeech: string,
-    index: number
-  ): 'beginner' | 'intermediate' | 'advanced' {
+  getDifficulty(_partOfSpeech: string, index: number): 'beginner' | 'intermediate' | 'advanced' {
     if (index === 0) return 'beginner';
     if (index === 1) return 'intermediate';
     return 'advanced';
@@ -115,22 +102,14 @@ export const SentenceGeneratorService = {
   ): GenerateSentencesResult[] {
     return words.map((w) => ({
       word: w.word,
-      sentences: this.generateForWord(
-        w.word,
-        w.partOfSpeech,
-        w.meaning,
-        sentencesPerWord
-      ),
+      sentences: this.generateForWord(w.word, w.partOfSpeech, w.meaning, sentencesPerWord),
       generatedAt: new Date().toISOString(),
     }));
   },
 
   formatForDisplay(result: GenerateSentencesResult): string {
     return result.sentences
-      .map(
-        (s) =>
-          `[${s.context}] ${s.sentence}\n  → ${s.translation} (${s.difficulty})`
-      )
+      .map((s) => `[${s.context}] ${s.sentence}\n  → ${s.translation} (${s.difficulty})`)
       .join('\n\n');
   },
 };

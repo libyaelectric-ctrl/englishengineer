@@ -1,14 +1,10 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Full user journey', () => {
-  test('landing → login → dashboard → vocabulary → grammar → profile → tools', async ({
-    page,
-  }) => {
+  test('landing → login → dashboard → vocabulary → grammar → profile → tools', async ({ page }) => {
     // 1. Landing page
     await page.goto('/');
-    await expect(
-      page.getByRole('heading', { name: /engineering english os/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /engineering english os/i })).toBeVisible();
 
     // 2. Navigate to login via CTA
     const loginLink = page.getByRole('link', { name: /login/i }).first();
@@ -38,9 +34,7 @@ test.describe('Full user journey', () => {
       .first()
       .click();
     await page.waitForURL(/\/vocabulary/);
-    await expect(
-      page.getByRole('heading', { name: 'Vocabulary', exact: true })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
 
     // 7. Navigate to grammar via sidebar
     await page
@@ -48,9 +42,7 @@ test.describe('Full user journey', () => {
       .first()
       .click();
     await page.waitForURL(/\/grammar/);
-    await expect(
-      page.getByText(/Select a grammar lesson/i).first()
-    ).toBeVisible();
+    await expect(page.getByText(/Select a grammar lesson/i).first()).toBeVisible();
 
     // 8. Navigate to profile via sidebar
     const profileMenu = page.getByRole('button', { name: /profile/i });
@@ -100,9 +92,7 @@ test.describe('Full user journey', () => {
     const signupToggle = page.getByRole('button', { name: /sign up/i });
     if (await signupToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
       await signupToggle.click();
-      await expect(
-        page.getByRole('heading', { name: /create.*account|sign up/i })
-      ).toBeVisible();
+      await expect(page.getByRole('heading', { name: /create.*account|sign up/i })).toBeVisible();
     }
   });
 

@@ -1,11 +1,9 @@
 import { Clipboard, Heart } from 'lucide-react';
-import {
-  MEETING_PHRASES,
-  WorkToolsService,
-  useWorkToolsStore,
-} from '@/features/work-tools';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
+
+import { MEETING_PHRASES, WorkToolsService, useWorkToolsStore } from '@/features/work-tools';
 
 export const MeetingPhrasebookTab = () => {
   const { favoritePhraseIds, toggleFavorite } = useWorkToolsStore();
@@ -30,9 +28,7 @@ export const MeetingPhrasebookTab = () => {
                   <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                     {item.category}
                   </p>
-                  <h2 className="mt-1 text-sm font-bold text-foreground">
-                    {item.phrase}
-                  </h2>
+                  <h2 className="mt-1 text-sm font-bold text-foreground">{item.phrase}</h2>
                 </div>
                 <Button
                   variant="ghost"
@@ -47,12 +43,10 @@ export const MeetingPhrasebookTab = () => {
               </div>
               <div className="mt-3 space-y-2">
                 <p className="text-xs text-foreground font-medium">
-                  <strong className="text-foreground">Türkçe:</strong>{' '}
-                  {item.turkishMeaning}
+                  <strong className="text-foreground">Türkçe:</strong> {item.turkishMeaning}
                 </p>
                 <p className="text-xs text-muted-copy font-medium">
-                  <strong className="text-foreground font-bold">Use:</strong>{' '}
-                  {item.whenToUse}
+                  <strong className="text-foreground font-bold">Use:</strong> {item.whenToUse}
                 </p>
                 <p className="rounded-[4px] border border-border-soft bg-surface-hover p-3 text-xs italic text-foreground font-medium shadow-sm">
                   {item.example}

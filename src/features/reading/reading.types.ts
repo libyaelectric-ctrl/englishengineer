@@ -1,11 +1,8 @@
 import { MissionDifficulty } from '@/core/learning/learning.types';
+
 import { CefrLevel } from '@/features/level-system';
 
-export type QuestionType =
-  | 'multiple_choice'
-  | 'short_answer'
-  | 'keyword_answer'
-  | 'true_false';
+export type QuestionType = 'multiple_choice' | 'short_answer' | 'keyword_answer' | 'true_false';
 
 export interface ReadingQuestion {
   id: string;

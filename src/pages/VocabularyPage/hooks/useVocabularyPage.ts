@@ -1,42 +1,38 @@
-import {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useReducer,
-  useState,
-} from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+
 import { useLearningStore } from '@/core/learning';
-import { playSound } from '@/shared/utils/sound';
+
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
-import { useAuthStore } from '@/features/auth';
+import { playSound } from '@/shared/utils/sound';
+
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { useAuthStore } from '@/features/auth';
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import {
+  LearningProfileRepository,
   getBaseCefrLevel,
   getPreferredDomains,
-  LearningProfileRepository,
 } from '@/features/profile';
 import {
+  VocabularyMenuService,
+  type VocabularyMenuStatus,
+  VocabularyRepository,
+  type VocabularySearchFilters,
+  type VocabularyTerm,
   isVocabularyProgressDue,
   repairVocabularyText,
   searchVocabularyMenu,
   selectVocabularyLearningSet,
-  VocabularyMenuService,
-  VocabularyRepository,
-  type VocabularyMenuStatus,
-  type VocabularySearchFilters,
-  type VocabularyTerm,
 } from '@/features/vocabulary';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+
 import {
-  dataReducer,
-  uiReducer,
-  searchReducer,
   type VocabularyDataState,
-  type VocabularyUIState,
   type VocabularySearchState,
+  type VocabularyUIState,
+  dataReducer,
+  searchReducer,
+  uiReducer,
 } from '../VocabularyPageReducer';
 import { emptyFilters } from '../VocabularyPageUtils';
 import type { VocabularySetMode } from '../components/WordCard';
@@ -53,10 +49,7 @@ export function useVocabularyPage() {
   );
   const vocabularyProfile = learningProfile.skills.vocabulary;
   const vocabularyLevel = getBaseCefrLevel(vocabularyProfile.cefrBand);
-  const preferredDomains = useMemo(
-    () => getPreferredDomains(learningProfile),
-    [learningProfile]
-  );
+  const preferredDomains = useMemo(() => getPreferredDomains(learningProfile), [learningProfile]);
 
   const [data, dispatchData] = useReducer(dataReducer, {
     terms: [] as VocabularyTerm[],
@@ -96,15 +89,8 @@ export function useVocabularyPage() {
   const reviewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { terms, allLevelsLoaded, loadError, menuState, wordSetIds } = data;
-  const {
-    activeTab,
-    mode,
-    batchOffset,
-    learningDomain,
-    showFilters,
-    showAddForm,
-    customDraft,
-  } = ui;
+  const { activeTab, mode, batchOffset, learningDomain, showFilters, showAddForm, customDraft } =
+    ui;
   const {
     isSearchLoading,
     searchInput,
@@ -145,9 +131,7 @@ export function useVocabularyPage() {
     dispatchSearch({ type: 'SET_SEARCH_LOADING', loading: true });
     try {
       const levels = await Promise.all(
-        CEFR_LEVELS.map((level) =>
-          VocabularyRepository.getVocabularyByLevel(level)
-        )
+        CEFR_LEVELS.map((level) => VocabularyRepository.getVocabularyByLevel(level))
       );
       const allTerms = levels.flat();
       dispatchData({ type: 'LOAD_ALL_LEVELS', terms: allTerms });
@@ -184,10 +168,7 @@ export function useVocabularyPage() {
     });
   }, [menuState, selectSet, terms.length]);
 
-  const termsById = useMemo(
-    () => new Map(terms.map((term) => [term.id, term])),
-    [terms]
-  );
+  const termsById = useMemo(() => new Map(terms.map((term) => [term.id, term])), [terms]);
   const wordSet = wordSetIds
     .map((id) => termsById.get(id))
     .filter((term): term is VocabularyTerm => Boolean(term));
@@ -201,14 +182,7 @@ export function useVocabularyPage() {
     [menuState, termsById]
   );
   const allSearchResults = useMemo(
-    () =>
-      searchVocabularyMenu(
-        terms,
-        searchQuery,
-        menuState,
-        new Date(),
-        appliedFilters
-      ),
+    () => searchVocabularyMenu(terms, searchQuery, menuState, new Date(), appliedFilters),
     [appliedFilters, menuState, searchQuery, terms]
   );
   const searchResults = allSearchResults.slice(0, SEARCH_RESULT_LIMIT);
@@ -217,9 +191,7 @@ export function useVocabularyPage() {
     const values =
       field === 'skillUse'
         ? terms.flatMap((term) => term.skillUse)
-        : terms.map((term) =>
-            String(term[field as keyof VocabularyTerm] ?? '')
-          );
+        : terms.map((term) => String(term[field as keyof VocabularyTerm] ?? ''));
     return ['All', ...new Set(values.filter(Boolean))].sort();
   };
 
@@ -239,26 +211,16 @@ export function useVocabularyPage() {
       dispatchData({
         type: 'SYNC_MENU_STATE',
         menuState: nextMenuState,
-        wordSetIds: selectSet(
-          activeTab,
-          nextMenuState,
-          learningDomain,
-          batchOffset
-        ),
+        wordSetIds: selectSet(activeTab, nextMenuState, learningDomain, batchOffset),
       });
     };
 
     window.addEventListener(STORAGE_CHANGE_EVENT, syncVocabularyProgress);
-    return () =>
-      window.removeEventListener(
-        STORAGE_CHANGE_EVENT,
-        syncVocabularyProgress
-      );
+    return () => window.removeEventListener(STORAGE_CHANGE_EVENT, syncVocabularyProgress);
   }, [activeTab, batchOffset, learningDomain, selectSet]);
 
   const reviewWord = (term: VocabularyTerm, isCorrect: boolean) => {
-    const prevStatus =
-      VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
+    const prevStatus = VocabularyMenuService.getState().progress[term.id]?.status ?? 'New';
 
     VocabularyMenuService.reviewWord(
       term.id,
@@ -266,13 +228,9 @@ export function useVocabularyPage() {
       new Date(),
       repairVocabularyText(term.term)
     );
-    useVocabularyStore
-      .getState()
-      .updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
+    useVocabularyStore.getState().updateWordProgress(term.id, isCorrect ? 'correct' : 'incorrect');
     if (isCorrect) playSound('ding');
-    useLearningStore
-      .getState()
-      .completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
+    useLearningStore.getState().completeGenericPractice('Vocabulary', isCorrect ? 100 : 0, 0.5);
     dispatchData({
       type: 'SET_MENU_STATE',
       menuState: VocabularyMenuService.getState(),
@@ -280,8 +238,7 @@ export function useVocabularyPage() {
 
     reviewTimerRef.current = setTimeout(() => {
       const currentState = VocabularyMenuService.getState();
-      const nextStatus =
-        isCorrect && prevStatus === 'New' ? 'Learned' : activeTab;
+      const nextStatus = isCorrect && prevStatus === 'New' ? 'Learned' : activeTab;
       const nextSet = selectVocabularyLearningSet(terms, currentState, {
         cefrBand: vocabularyProfile?.cefrBand ?? 'A1',
         skillUse: 'vocabulary',
@@ -291,17 +248,13 @@ export function useVocabularyPage() {
         dispatchData({ type: 'SET_MENU_STATE', menuState: currentState });
       }
     }, 500);
-    ProductAnalyticsService.track(
-      'vocabulary_review_completed',
-      '/vocabulary',
-      {
-        metadata: {
-          skill: 'vocabulary',
-          missionId: term.id,
-          source: 'user',
-        },
-      }
-    );
+    ProductAnalyticsService.track('vocabulary_review_completed', '/vocabulary', {
+      metadata: {
+        skill: 'vocabulary',
+        missionId: term.id,
+        source: 'user',
+      },
+    });
     ProductAnalyticsService.trackOnce('first_task_completed', '/vocabulary', {
       skill: 'vocabulary',
       source: 'user',
@@ -317,17 +270,13 @@ export function useVocabularyPage() {
       type: 'SET_MENU_STATE',
       menuState: VocabularyMenuService.getState(),
     });
-    ProductAnalyticsService.track(
-      'vocabulary_review_completed',
-      '/vocabulary',
-      {
-        metadata: {
-          skill: 'vocabulary',
-          missionId: term.id,
-          source: 'user',
-        },
-      }
-    );
+    ProductAnalyticsService.track('vocabulary_review_completed', '/vocabulary', {
+      metadata: {
+        skill: 'vocabulary',
+        missionId: term.id,
+        source: 'user',
+      },
+    });
   };
 
   const startVocabularySession = useCallback(() => {
@@ -339,10 +288,7 @@ export function useVocabularyPage() {
       source: 'user',
     });
     const newWordIds = selectSet('New', menuState).slice(0, 15);
-    const reviewIds = [
-      ...dueTerms.map((term) => term.id),
-      ...selectSet('Learned', menuState),
-    ]
+    const reviewIds = [...dueTerms.map((term) => term.id), ...selectSet('Learned', menuState)]
       .filter((id, index, values) => values.indexOf(id) === index)
       .slice(0, 0);
     dispatchUI({ type: 'START_SESSION' });
@@ -384,19 +330,14 @@ export function useVocabularyPage() {
     dispatchUI({ type: 'SET_BATCH_OFFSET', offset: resolvedOffset });
     dispatchData({
       type: 'SET_WORD_SET_IDS',
-      wordSetIds:
-        nextIds.length > 0
-          ? nextIds
-          : selectSet(activeTab, menuState, learningDomain, 0),
+      wordSetIds: nextIds.length > 0 ? nextIds : selectSet(activeTab, menuState, learningDomain, 0),
     });
   };
 
   const runSearch = async (event: FormEvent) => {
     event.preventDefault();
     const query = searchInput.trim();
-    const hasFilter = Object.values(filters).some(
-      (value) => value && value !== 'All'
-    );
+    const hasFilter = Object.values(filters).some((value) => value && value !== 'All');
     if (!query && !hasFilter) {
       dispatchSearch({
         type: 'SET_SEARCH_ERROR',
@@ -431,8 +372,7 @@ export function useVocabularyPage() {
   useEffect(() => {
     const handleStartSession = () => startVocabularySession();
     window.addEventListener('startVocabularySession', handleStartSession);
-    return () =>
-      window.removeEventListener('startVocabularySession', handleStartSession);
+    return () => window.removeEventListener('startVocabularySession', handleStartSession);
   }, [startVocabularySession]);
 
   useEffect(() => {
@@ -441,8 +381,7 @@ export function useVocabularyPage() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     window.addEventListener('addCustomWord', handleAddCustomWord);
-    return () =>
-      window.removeEventListener('addCustomWord', handleAddCustomWord);
+    return () => window.removeEventListener('addCustomWord', handleAddCustomWord);
   }, []);
 
   const [showSearchModal, setShowSearchModal] = useState(false);

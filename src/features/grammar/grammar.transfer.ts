@@ -1,12 +1,8 @@
-import type {
-  ReadingEvaluationResult,
-  ReadingMission,
-} from '@/features/reading';
-import type {
-  WritingEvaluationResult,
-  WritingMission,
-} from '@/features/writing';
 import { includesNormalized } from '@/core/learning';
+
+import type { ReadingEvaluationResult, ReadingMission } from '@/features/reading';
+import type { WritingEvaluationResult, WritingMission } from '@/features/writing';
+
 import { GrammarProgressService } from './grammar.progress';
 import { GrammarRepository } from './grammar.repository';
 import type { GrammarRule } from './grammar.types';
@@ -103,12 +99,7 @@ const recordTransferEvidence = (
   score: number
 ): string[] => {
   rules.forEach((rule) => {
-    GrammarProgressService.recordSkillEvidence(
-      rule.id,
-      skill,
-      missionId,
-      score
-    );
+    GrammarProgressService.recordSkillEvidence(rule.id, skill, missionId, score);
   });
   return rules.map((rule) => rule.id);
 };
@@ -119,26 +110,13 @@ export const GrammarTransferService = {
     evaluation: ReadingEvaluationResult
   ): Promise<string[]> {
     if (evaluation.finalScore < TRANSFER_SCORE_THRESHOLD) return [];
-    const rules = await findTransferRules(
-      'reading',
-      mission.cefrLevel,
-      'reading-comprehension',
-      [
-        mission.title,
-        mission.description,
-        mission.passageText,
-        ...mission.questions.flatMap((question) => [
-          question.questionText,
-          question.explanation,
-        ]),
-      ]
-    );
-    return recordTransferEvidence(
-      rules,
-      'reading',
-      mission.id,
-      evaluation.finalScore
-    );
+    const rules = await findTransferRules('reading', mission.cefrLevel, 'reading-comprehension', [
+      mission.title,
+      mission.description,
+      mission.passageText,
+      ...mission.questions.flatMap((question) => [question.questionText, question.explanation]),
+    ]);
+    return recordTransferEvidence(rules, 'reading', mission.id, evaluation.finalScore);
   },
 
   async recordWritingEvidence(
@@ -152,10 +130,7 @@ export const GrammarTransferService = {
       grammarCorrections.length === 0 ||
       grammarCorrections.every((correction) => correction.isFixed);
 
-    if (
-      evaluation.finalScore < TRANSFER_SCORE_THRESHOLD ||
-      !grammarWasControlled
-    ) {
+    if (evaluation.finalScore < TRANSFER_SCORE_THRESHOLD || !grammarWasControlled) {
       return [];
     }
 
@@ -172,11 +147,6 @@ export const GrammarTransferService = {
       ],
       mission.grammarFocus ?? []
     );
-    return recordTransferEvidence(
-      rules,
-      'writing',
-      mission.id,
-      evaluation.finalScore
-    );
+    return recordTransferEvidence(rules, 'writing', mission.id, evaluation.finalScore);
   },
 };

@@ -1,4 +1,5 @@
-import { describe, it, beforeEach, assert } from 'vitest';
+import { assert, beforeEach, describe, it } from 'vitest';
+
 import { useListeningMissionsStore } from './listening-missions.store';
 import { useListeningPlaybackStore } from './listening-playback.store';
 

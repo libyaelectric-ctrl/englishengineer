@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+
 import { ScoreFeedbackOverlay } from './ScoreFeedbackOverlay';
 
 describe('ScoreFeedbackOverlay light result UI', () => {

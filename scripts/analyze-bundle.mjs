@@ -1,20 +1,20 @@
 #!/usr/bin/env node
+
 /**
  * Bundle Analysis Script
- * 
+ *
  * Analyzes the production build bundle and reports sizes.
  * Run: node scripts/analyze-bundle.mjs
- * 
+ *
  * CI Usage: node scripts/analyze-bundle.mjs --ci
  */
-
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 
 const DIST_DIR = resolve(process.cwd(), 'dist/assets');
 const LIMITS = {
-  js: 1000 * 1024,   // 1MB
-  css: 200 * 1024,   // 200KB
+  js: 1000 * 1024, // 1MB
+  css: 200 * 1024, // 200KB
 };
 
 function exists(path) {

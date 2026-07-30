@@ -1,9 +1,12 @@
+import { logger } from '@/shared/logger';
+
 const SOUND_MUTED_KEY = 'engvox_sound_muted';
 
 export const getSoundMuted = (): boolean => {
   try {
     return localStorage.getItem(SOUND_MUTED_KEY) === 'true';
-  } catch {
+  } catch (e) {
+    logger.w('[SOUND] Failed to read mute state', e);
     return false;
   }
 };
@@ -11,11 +14,9 @@ export const getSoundMuted = (): boolean => {
 export const setSoundMuted = (muted: boolean): void => {
   try {
     localStorage.setItem(SOUND_MUTED_KEY, muted ? 'true' : 'false');
-    window.dispatchEvent(
-      new CustomEvent('engvox_sound_toggle', { detail: { muted } })
-    );
-  } catch {
-    // Ignore storage errors
+    window.dispatchEvent(new CustomEvent('engvox_sound_toggle', { detail: { muted } }));
+  } catch (e) {
+    logger.w('[SOUND] Failed to write mute state', e);
   }
 };
 
@@ -25,16 +26,13 @@ export const toggleSoundMuted = (): boolean => {
   return next;
 };
 
-export const playSound = (
-  type: 'pop' | 'ding' | 'success' | 'error' | 'flip'
-) => {
+export const playSound = (type: 'pop' | 'ding' | 'success' | 'error' | 'flip') => {
   if (getSoundMuted()) return;
   try {
     // Check if AudioContext is supported
     const AudioContextClass =
       window.AudioContext ??
-      (window as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
+      (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return;
 
     const ctx = new AudioContextClass();
@@ -77,8 +75,8 @@ export const playSound = (
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.2);
     }
-  } catch {
-    // Silently ignore audio playback failures
+  } catch (e) {
+    logger.w('[SOUND] Audio playback failed', e);
   }
 };
 
@@ -89,9 +87,7 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
 
   // 1. Google US/UK English (Natural/High Quality)
   const googleVoice = voices.find(
-    (v) =>
-      (v.name.includes('Google') || v.name.includes('Natural')) &&
-      v.lang.startsWith('en')
+    (v) => (v.name.includes('Google') || v.name.includes('Natural')) && v.lang.startsWith('en')
   );
   if (googleVoice) return googleVoice;
 
@@ -107,9 +103,7 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
   // 3. Microsoft Natural (any)
   const msNatural = voices.find(
     (v) =>
-      (v.name.includes('Online') ||
-        v.name.includes('Natural') ||
-        v.name.includes('Neural')) &&
+      (v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Neural')) &&
       v.lang.startsWith('en')
   );
   if (msNatural) return msNatural;
@@ -123,9 +117,7 @@ export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
   if (appleFemaleVoice) return appleFemaleVoice;
 
   // 6. Apple Siri
-  const appleVoice = voices.find(
-    (v) => v.name.includes('Siri') && v.lang.startsWith('en')
-  );
+  const appleVoice = voices.find((v) => v.name.includes('Siri') && v.lang.startsWith('en'));
   if (appleVoice) return appleVoice;
 
   // 7. Any English voice

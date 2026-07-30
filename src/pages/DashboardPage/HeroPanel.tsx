@@ -1,7 +1,10 @@
-import React from 'react';
 import { ArrowRight, Target } from 'lucide-react';
+
+import React from 'react';
+
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { getCefrColor } from './getCefrColor';
 
 interface HeroPanelProps {
@@ -37,20 +40,16 @@ export const HeroPanel = React.memo(
           <div className="flex-1">
             <div className="flex justify-between items-end mb-1.5">
               <div>
-                <h3 className="text-sm font-bold text-foreground">
-                  Engineering Readiness Score
-                </h3>
+                <h3 className="text-sm font-bold text-foreground">Engineering Readiness Score</h3>
                 <p className="text-[10px] font-medium text-muted-copy">
-                  Based on communication, technical vocabulary, and scenario
-                  performance.
+                  Based on communication, technical vocabulary, and scenario performance.
                 </p>
               </div>
               <div className="text-right">
                 <span
                   className={`text-[10px] font-bold ${competency.color} flex items-center gap-1`}
                 >
-                  <Target className="w-3 h-3 text-primary" />{' '}
-                  {competency.text}
+                  <Target className="w-3 h-3 text-primary" /> {competency.text}
                 </span>
               </div>
             </div>
@@ -84,8 +83,8 @@ export const HeroPanel = React.memo(
               Your next step is clear.
             </p>
             <p className="mt-2 max-w-xl text-xs leading-5 text-muted-copy">
-              Continue one lesson at a time. Every completed task updates your
-              skill level, vocabulary memory, grammar path and review plan.
+              Continue one lesson at a time. Every completed task updates your skill level,
+              vocabulary memory, grammar path and review plan.
             </p>
           </div>
           <Button
@@ -107,8 +106,7 @@ export const HeroPanel = React.memo(
                 {primaryMission?.title ?? `${focusMeta.label} · Lesson 1`}
               </h2>
               <p className="mt-1 text-xs leading-5 text-muted-copy">
-                {primaryMission?.reason ??
-                  `Build your first reliable ${focusMeta.label} baseline.`}
+                {primaryMission?.reason ?? `Build your first reliable ${focusMeta.label} baseline.`}
               </p>
             </div>
             <div className="shrink-0 text-left sm:text-right">
@@ -124,10 +122,7 @@ export const HeroPanel = React.memo(
           </div>
         </div>
 
-        <div
-          data-testid="dashboard-summary-metrics"
-          className="mt-6 grid grid-cols-3 gap-3"
-        >
+        <div data-testid="dashboard-summary-metrics" className="mt-6 grid grid-cols-3 gap-3">
           <div
             data-testid="dashboard-summary-score"
             className="min-w-0 rounded-[4px] border border-border-soft bg-surface/60 p-4 shadow-sm"

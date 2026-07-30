@@ -1,12 +1,17 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { AppShell } from '@/layouts/AppShell';
-import { lazy, Suspense } from 'react';
+import { PublicLayout } from '@/layouts/PublicLayout';
+
+import { Suspense, lazy } from 'react';
+
+import { Navigate, createBrowserRouter } from 'react-router-dom';
+
+import { LoadingState } from '@/shared/components/LoadingState';
+
 import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
-import { LoadingState } from '@/shared/components/LoadingState';
 import { OnboardingGate } from '@/features/profile';
+
 import { RouteErrorPage } from './RouteErrorPage';
-import { PublicLayout } from '@/layouts/PublicLayout';
 
 const Dashboard = lazy(() => import('@/pages/DashboardPage'));
 const Profile = lazy(() => import('@/pages/ProfilePage'));
@@ -72,16 +77,18 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      ...(['terms', 'privacy', 'cookies', 'refund'] as const).map(
-        (document) => ({
-          path: `/legal/${document}`,
-          element: (
-            <Suspense fallback={<LoadingState />}>
-              <Legal document={document} />
-            </Suspense>
-          ),
-        })
-      ),
+      {
+        path: '/demo',
+        element: <Navigate to="/start" replace />,
+      },
+      ...(['terms', 'privacy', 'cookies', 'refund'] as const).map((document) => ({
+        path: `/legal/${document}`,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Legal document={document} />
+          </Suspense>
+        ),
+      })),
     ],
   },
   {
@@ -122,16 +129,14 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      ...(['profile', 'role', 'goals', 'level', 'plan'] as const).map(
-        (step) => ({
-          path: `onboarding/${step}`,
-          element: (
-            <Suspense fallback={<LoadingState />}>
-              <Onboarding />
-            </Suspense>
-          ),
-        })
-      ),
+      ...(['profile', 'role', 'goals', 'level', 'plan'] as const).map((step) => ({
+        path: `onboarding/${step}`,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <Onboarding />
+          </Suspense>
+        ),
+      })),
       {
         path: 'profile',
         element: <Navigate to="/profile/overview" replace />,

@@ -169,9 +169,7 @@ Each test case contains:
   "id": "error-001",
   "input": "Find errors: 'Their going to the store yesterday.'",
   "expected": {
-    "errors": [
-      { "original": "Their", "correct": "They're", "reason": "contraction" }
-    ],
+    "errors": [{ "original": "Their", "correct": "They're", "reason": "contraction" }],
     "min_length": 50,
     "max_length": 200,
     "tone": "helpful"

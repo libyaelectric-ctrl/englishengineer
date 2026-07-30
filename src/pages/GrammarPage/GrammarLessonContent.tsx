@@ -1,34 +1,31 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
   BookOpen,
   CheckCircle2,
   FileText,
   HelpCircle,
   PenLine,
+  Send,
   Target,
   TriangleAlert,
-  Send,
 } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
+import { Link } from 'react-router-dom';
+
+import { Button } from '@/shared/components/Button';
 import { cn } from '@/shared/utils/cn';
+
 import {
-  getGrammarReviewReason,
-  getMissingGrammarTransferEvidence,
+  type ChatMessage,
   type GrammarRuleProgress,
   GrammarTeacherService,
-  type ChatMessage,
+  getGrammarReviewReason,
+  getMissingGrammarTransferEvidence,
 } from '@/features/grammar';
-import { Button } from '@/shared/components/Button';
-import {
-  getPracticeCount,
-  getTransferCount,
-  compact,
-} from './GrammarPageHelpers';
-import {
-  SectionHeading,
-  MasteryPill,
-  LessonBlock,
-} from './GrammarPageComponents';
+
+import { LessonBlock, MasteryPill, SectionHeading } from './GrammarPageComponents';
+import { compact, getPracticeCount, getTransferCount } from './GrammarPageHelpers';
 
 type Rule = {
   id: string;
@@ -60,12 +57,9 @@ type QuizItem = {
 };
 
 const STATUS_BADGE_STYLES: Record<string, string> = {
-  Mastered:
-    'border-yellow-400/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700',
-  Learned:
-    'border-green-400/40 bg-green-50 dark:bg-green-900/20 text-green-700',
-  Learning:
-    'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600',
+  Mastered: 'border-yellow-400/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700',
+  Learned: 'border-green-400/40 bg-green-50 dark:bg-green-900/20 text-green-700',
+  Learning: 'border-yellow-300/40 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600',
   Struggling: 'border-red-400/40 bg-red-50 dark:bg-red-900/20 text-red-700',
 };
 const DEFAULT_BADGE_STYLE = 'border-border-soft bg-surface-hover text-muted-copy';
@@ -106,10 +100,7 @@ const LessonHeader = ({
             {selectedRule.ruleTitle || selectedRule.title}
           </h2>
           <p className="mt-1 text-xs leading-relaxed text-muted-copy">
-            {compact(
-              selectedRule.engineeringUseCase,
-              selectedRule.languageFunction
-            )}
+            {compact(selectedRule.engineeringUseCase, selectedRule.languageFunction)}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -120,9 +111,7 @@ const LessonHeader = ({
             {selectedStatus}
           </span>
           {hint && (
-            <span
-              className={`text-[10px] ${hint.className ?? 'text-muted-copy'}`}
-            >
+            <span className={`text-[10px] ${hint.className ?? 'text-muted-copy'}`}>
               {hint.text}
             </span>
           )}
@@ -157,27 +146,19 @@ const StatsGrid = ({
         className="rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-center shadow-sm"
       >
         <p className="text-base font-bold text-foreground">{value}</p>
-        <p className="text-[10px] font-bold uppercase text-muted-copy">
-          {label}
-        </p>
+        <p className="text-[10px] font-bold uppercase text-muted-copy">{label}</p>
       </div>
     ))}
   </div>
 );
 
-const MasteryBar = ({
-  selectedProgress,
-}: {
-  selectedProgress: GrammarRuleProgress;
-}) => {
+const MasteryBar = ({ selectedProgress }: { selectedProgress: GrammarRuleProgress }) => {
   const missing = getMissingGrammarTransferEvidence(selectedProgress);
 
   return (
     <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex flex-wrap items-center gap-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
-          Mastery
-        </p>
+        <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">Mastery</p>
         <div className="flex flex-wrap items-center gap-2">
           <MasteryPill
             label="Practice"
@@ -255,9 +236,7 @@ const ChatPanel = ({
       ))}
       {isTalking && (
         <div className="flex flex-col max-w-[85%] rounded-[4px] p-3 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-          <p className="font-bold text-[10px] uppercase opacity-60 mb-1">
-            AI Teacher 🎓
-          </p>
+          <p className="font-bold text-[10px] uppercase opacity-60 mb-1">AI Teacher 🎓</p>
           <p>Thinking and explaining...</p>
         </div>
       )}
@@ -296,9 +275,7 @@ const QuizPanel = ({
 }: {
   quizItems: QuizItem[];
   quizAnswers: Record<number, string>;
-  setQuizAnswers: (
-    fn: (prev: Record<number, string>) => Record<number, string>
-  ) => void;
+  setQuizAnswers: (fn: (prev: Record<number, string>) => Record<number, string>) => void;
 }) => (
   <div className="mt-3 space-y-3 rounded-[4px] border border-primary/25 bg-primary/5 p-3">
     {quizItems.map((item, qi) => (
@@ -317,9 +294,7 @@ const QuizPanel = ({
                 key={`${item.question}-${choice}`}
                 type="button"
                 disabled={revealed}
-                onClick={() =>
-                  setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))
-                }
+                onClick={() => setQuizAnswers((prev) => ({ ...prev, [qi]: letter }))}
                 className={`break-words rounded-[4px] border p-2 text-left text-[11px] font-semibold transition-colors cursor-pointer ${revealed ? (correct ? 'border-success bg-success/10 text-success' : selected ? 'border-rose-300 bg-rose-50 text-rose-700' : 'border-border-soft bg-surface opacity-60') : selected ? 'border-primary bg-primary text-white' : 'border-border-soft bg-surface text-foreground hover:border-primary/30 hover:bg-primary/5'}`}
               >
                 <span className="mr-1.5 font-black">{letter}.</span>
@@ -358,10 +333,7 @@ const LinkedVocabularySection = ({
 
 const SkillLinksSection = ({ skillUse }: { skillUse: string[] }) => {
   if (skillUse.length === 0) return null;
-  const SKILL_LINKS: Record<
-    string,
-    { to: string; icon: typeof FileText; label: string }
-  > = {
+  const SKILL_LINKS: Record<string, { to: string; icon: typeof FileText; label: string }> = {
     reading: { to: '/reading', icon: FileText, label: 'Reading' },
     writing: { to: '/writing', icon: PenLine, label: 'Writing' },
   };
@@ -435,9 +407,7 @@ export const GrammarLessonContent = ({
   hintOpen: boolean;
   setHintOpen: (fn: (v: boolean) => boolean) => void;
   quizAnswers: Record<number, string>;
-  setQuizAnswers: (
-    fn: (prev: Record<number, string>) => Record<number, string>
-  ) => void;
+  setQuizAnswers: (fn: (prev: Record<number, string>) => Record<number, string>) => void;
   quizItems: QuizItem[];
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -452,29 +422,19 @@ export const GrammarLessonContent = ({
       },
     ]);
     setChatInput('');
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
   }, [selectedRule.id]);
 
   const handleSend = async () => {
     if (!chatInput.trim() || isTalking) return;
     const userMsg = chatInput.trim();
     setChatInput('');
-    const nextHistory = [
-      ...messages,
-      { role: 'user' as const, content: userMsg },
-    ];
+    const nextHistory = [...messages, { role: 'user' as const, content: userMsg }];
     setMessages(nextHistory);
     setIsTalking(true);
     try {
-      const response = await GrammarTeacherService.chat(
-        selectedRule.id,
-        nextHistory,
-        userMsg
-      );
-      setMessages([
-        ...nextHistory,
-        { role: 'assistant' as const, content: response.message },
-      ]);
+      const response = await GrammarTeacherService.chat(selectedRule.id, nextHistory, userMsg);
+      setMessages([...nextHistory, { role: 'assistant' as const, content: response.message }]);
     } finally {
       setIsTalking(false);
     }
@@ -514,9 +474,7 @@ export const GrammarLessonContent = ({
 
       <div className="grid gap-3 md:grid-cols-2">
         <div className="rounded-[4px] border border-primary/25 bg-surface-hover p-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
-            Structure
-          </p>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-primary">Structure</p>
           <p className="mt-2 break-words font-mono text-sm font-bold text-primary">
             {selectedRule.structure}
           </p>
@@ -546,9 +504,7 @@ export const GrammarLessonContent = ({
               className="rounded-[4px] border border-border-soft bg-background p-3"
             >
               <p className="break-words text-xs font-bold">{example.english}</p>
-              <p className="mt-0.5 break-words text-[11px] text-muted-copy">
-                {example.turkish}
-              </p>
+              <p className="mt-0.5 break-words text-[11px] text-muted-copy">{example.turkish}</p>
             </div>
           ))}
         </div>
@@ -564,14 +520,11 @@ export const GrammarLessonContent = ({
               {selectedRule.badExampleEnglish}
             </p>
             <p className="mt-1 break-words text-xs leading-relaxed text-rose-800">
-              {selectedRule.badExampleTurkishExplanation ||
-                selectedRule.commonMistakes}
+              {selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
             </p>
           </div>
           <div className="rounded-[4px] border border-success/30 bg-surface p-3 shadow-sm">
-            <p className="text-[11px] font-bold uppercase text-success">
-              Better
-            </p>
+            <p className="text-[11px] font-bold uppercase text-success">Better</p>
             <p className="mt-1 break-words text-xs font-bold">
               {selectedRule.correctedExampleEnglish}
             </p>
@@ -593,11 +546,7 @@ export const GrammarLessonContent = ({
           <Button onClick={() => recordUsage(true)} className="rounded-[4px]">
             <CheckCircle2 className="h-3.5 w-3.5" /> Used Correctly
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => recordUsage(false)}
-            className="rounded-[4px]"
-          >
+          <Button variant="outline" onClick={() => recordUsage(false)} className="rounded-[4px]">
             <TriangleAlert className="h-3.5 w-3.5" /> Needs Review
           </Button>
           <Button

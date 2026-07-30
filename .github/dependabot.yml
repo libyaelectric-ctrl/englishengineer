@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: "09:00"
+      time: '09:00'
       timezone: Europe/Istanbul
     open-pull-requests-limit: 10
     reviewers:
@@ -19,33 +19,33 @@ updates:
     groups:
       patch-updates:
         patterns:
-          - "*"
+          - '*'
         update-types:
           - patch
       minor-updates:
         patterns:
-          - "*"
+          - '*'
         update-types:
           - minor
     ignore:
       # Major versions require manual review
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vite"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@eslint/js"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "stripe"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vite'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@eslint/js'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'stripe'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: npm
     directory: /backend
     schedule:
       interval: weekly
       day: monday
-      time: "09:00"
+      time: '09:00'
       timezone: Europe/Istanbul
     open-pull-requests-limit: 5
     reviewers:
@@ -62,7 +62,7 @@ updates:
     schedule:
       interval: weekly
       day: monday
-      time: "09:00"
+      time: '09:00'
       timezone: Europe/Istanbul
     labels:
       - dependencies

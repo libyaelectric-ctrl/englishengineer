@@ -1,10 +1,10 @@
-import { electricalCategories } from './electrical';
-import { mechanicalCategories } from './mechanical';
+import { ExpansionCategory } from '../vocabulary.expansion-categories';
 import { civilCategories } from './civil';
+import { electricalCategories } from './electrical';
 import { hseCategories } from './hse';
+import { mechanicalCategories } from './mechanical';
 import { projectManagementCategories } from './project-management';
 import { specializedCategories } from './specialized';
-import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const expansionCategories: ExpansionCategory[] = [
   ...electricalCategories,

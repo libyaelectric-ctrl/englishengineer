@@ -1,11 +1,7 @@
 import { MissionModule } from '@/core/learning/learning.types';
 
 export type GamificationMissionCadence = 'daily' | 'weekly' | 'monthly';
-export type GamificationMissionCategory =
-  | MissionModule
-  | 'Mixed'
-  | 'AI Coach'
-  | 'Analytics';
+export type GamificationMissionCategory = MissionModule | 'Mixed' | 'AI Coach' | 'Analytics';
 
 export interface GamificationLevelInfo {
   currentLevel: number;

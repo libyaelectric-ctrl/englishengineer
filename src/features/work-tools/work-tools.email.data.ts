@@ -343,10 +343,6 @@ export const EXPANDED_EMAIL_TEMPLATES: EmailTemplate[] = EMAIL_SEEDS.map(
     politeVersion: `Subject: ${subject}\n\nDear Team,\n\nCould you please ${request}? ${issue} Your timely support will help us maintain the agreed project sequence.\n\nKind regards,`,
     technicalVersion: `Subject: ${subject}\n\nDear Team,\n\n${issue} Please ${request} with the applicable drawing, specification, inspection or programme reference. Identify any technical constraint, accountable owner and close-out date.\n\nKind regards,`,
     turkishExplanation: `Bu e-posta, ${title.toLocaleLowerCase('tr-TR')} için teknik durumu ve beklenen cevabı profesyonel biçimde açıklar.`,
-    tags: [
-      category.toLowerCase(),
-      'engineering email',
-      'project communication',
-    ],
+    tags: [category.toLowerCase(), 'engineering email', 'project communication'],
   })
 );

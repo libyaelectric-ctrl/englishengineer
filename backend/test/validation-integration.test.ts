@@ -1,16 +1,14 @@
-import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
+import type { Server } from 'node:http';
+import { after, before, describe, it } from 'node:test';
+
 import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
-
-import type { Server } from 'node:http';
 
 let server: Server | null;
 let baseUrl: string;
 
-const start = async (
-  envOverrides: Record<string, string> = {}
-): Promise<string> => {
+const start = async (envOverrides: Record<string, string> = {}): Promise<string> => {
   process.env.ALLOW_INSECURE_DEV_AUTH = 'true';
   Object.entries(envOverrides).forEach(([k, v]) => {
     process.env[k] = v;
@@ -51,9 +49,7 @@ describe('AI endpoint validation integration', () => {
     assert.equal(res.status, 400);
     const body = await res.json();
     assert.equal(body.error.code, 'validation_error');
-    assert.ok(
-      body.error.details.some((d: { path: string }) => d.path === 'prompt')
-    );
+    assert.ok(body.error.details.some((d: { path: string }) => d.path === 'prompt'));
   });
 
   it('rejects POST with empty prompt', async () => {
@@ -127,16 +123,12 @@ describe('Vocabulary endpoint validation integration', () => {
   });
 
   it('rejects GET with empty word', async () => {
-    const res = await fetch(
-      `${baseUrl}/api/vocabulary/lookup?word=&targetLang=tr`
-    );
+    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?word=&targetLang=tr`);
     assert.equal(res.status, 400);
   });
 
   it('rejects GET with invalid targetLang', async () => {
-    const res = await fetch(
-      `${baseUrl}/api/vocabulary/lookup?word=hello&targetLang=toolong`
-    );
+    const res = await fetch(`${baseUrl}/api/vocabulary/lookup?word=hello&targetLang=toolong`);
     assert.equal(res.status, 400);
     const body = await res.json();
     assert.equal(body.error.code, 'validation_error');
@@ -161,13 +153,8 @@ describe('Vocabulary endpoint validation integration', () => {
     const app = createApp({ config: customConfig, fetchImpl });
     const customServer = app.listen(0);
     const customAddress = customServer.address();
-    const port =
-      typeof customAddress === 'object' && customAddress
-        ? customAddress.port
-        : 0;
-    const res = await fetch(
-      `http://localhost:${port}/api/vocabulary/lookup?word=hello`
-    );
+    const port = typeof customAddress === 'object' && customAddress ? customAddress.port : 0;
+    const res = await fetch(`http://localhost:${port}/api/vocabulary/lookup?word=hello`);
     assert.equal(res.status, 200);
     customServer.close();
   });
@@ -185,9 +172,7 @@ describe('Workspace endpoint validation integration', () => {
       getWorkspace: async () => null,
       createWorkspace: async () => ({ id: 'mock-id', name: 'Mock' }),
       countWorkspaces: async () => 0,
-    } as unknown as NonNullable<
-      Parameters<typeof createApp>[0]
-    >['workspaceRepository'];
+    } as unknown as NonNullable<Parameters<typeof createApp>[0]>['workspaceRepository'];
     const app = createApp({ config, workspaceRepository: mockRepository });
     server = app.listen(0);
     const address = server.address();

@@ -1,7 +1,10 @@
 import { act, render, screen } from '@testing-library/react';
-import { createElement } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
+
+import { createElement } from 'react';
+
 import { storage } from '@/shared/storage';
+
 import { CloudSyncStatusPanel } from './CloudSyncStatus';
 import {
   CloudSyncService,
@@ -10,15 +13,10 @@ import {
   mergeJsonValues,
   mergeSnapshots,
 } from './cloud-sync.service';
-import {
-  setConflictResolver,
-  createTimestampResolver,
-} from './conflict-resolver';
 import { CloudProgressSnapshot } from './cloud-sync.types';
+import { createTimestampResolver, setConflictResolver } from './conflict-resolver';
 
-const createSnapshot = (
-  data: Partial<CloudProgressSnapshot['data']>
-): CloudProgressSnapshot => ({
+const createSnapshot = (data: Partial<CloudProgressSnapshot['data']>): CloudProgressSnapshot => ({
   schemaVersion: 1,
   userId: 'user_1',
   capturedAt: '2026-06-26T00:00:00.000Z',
@@ -56,17 +54,12 @@ describe('cloud sync merge helpers', () => {
 
   it('recursively merges objects', () => {
     expect(
-      mergeJsonValues(
-        { xp: 120, nested: { streak: 3 } },
-        { xp: 80, nested: { coins: 50 } }
-      )
+      mergeJsonValues({ xp: 120, nested: { streak: 3 } }, { xp: 80, nested: { coins: 50 } })
     ).toEqual({ xp: 120, nested: { coins: 50, streak: 3 } });
   });
 
   it('prefers local strings during conflict', () => {
-    expect(mergeJsonValues('local profile', 'remote profile')).toBe(
-      'local profile'
-    );
+    expect(mergeJsonValues('local profile', 'remote profile')).toBe('local profile');
   });
 
   it('returns remote value when local is null', () => {

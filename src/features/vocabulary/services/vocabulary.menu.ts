@@ -1,17 +1,15 @@
-import { storage } from '@/shared/storage';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
-import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
 import { eventBus } from '@/core/events/event-bus';
+
+import { storage } from '@/shared/storage';
+
+import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
+
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const CANONICAL_VOCABULARY_TOTAL = 5000;
 
-export type VocabularyMenuStatus =
-  | 'New'
-  | 'Learning'
-  | 'Learned'
-  | 'Mastered'
-  | 'Struggling';
+export type VocabularyMenuStatus = 'New' | 'Learning' | 'Learned' | 'Mastered' | 'Struggling';
 
 export interface VocabularyMenuProgress {
   correctReviews: number;
@@ -134,9 +132,7 @@ export const isVocabularyForgotten = (
 ): boolean => {
   if (progress.isForgotten) return true;
   if (!progress.lastReviewed) return false;
-  return (
-    now.getTime() - new Date(progress.lastReviewed).getTime() >= 60 * DAY_MS
-  );
+  return now.getTime() - new Date(progress.lastReviewed).getTime() >= 60 * DAY_MS;
 };
 
 export const getVocabularyReviewReason = (
@@ -216,12 +212,9 @@ const getDefaultProgress = (): VocabularyMenuProgress => ({
   nextReviewDate: '',
 });
 
-const normalizeState = (
-  state: VocabularyMenuState | null
-): VocabularyMenuState => {
+const normalizeState = (state: VocabularyMenuState | null): VocabularyMenuState => {
   if (!state || typeof state !== 'object') return emptyState();
-  const rawProgress =
-    state.progress && typeof state.progress === 'object' ? state.progress : {};
+  const rawProgress = state.progress && typeof state.progress === 'object' ? state.progress : {};
   return {
     progress: Object.fromEntries(
       Object.entries(rawProgress).map(([id, progress]) => [
@@ -280,18 +273,12 @@ const matchesQuery = (
 const matchesFilter = (value: string, filter?: string): boolean =>
   !filter || filter === 'All' || normalize(value) === normalize(filter);
 
-const matchesSkillUseFilter = (
-  term: VocabularyTerm,
-  skillUse?: string
-): boolean =>
+const matchesSkillUseFilter = (term: VocabularyTerm, skillUse?: string): boolean =>
   !skillUse ||
   skillUse === 'All' ||
   term.skillUse.some((skill) => normalize(skill) === normalize(skillUse));
 
-const matchesStatusFilter = (
-  searchableStatuses: string[],
-  status?: string
-): boolean =>
+const matchesStatusFilter = (searchableStatuses: string[], status?: string): boolean =>
   !status ||
   status === 'All' ||
   searchableStatuses.some((item) => normalize(item) === normalize(status));
@@ -317,9 +304,7 @@ export const searchVocabularyMenu = (
   filters: VocabularySearchFilters = {}
 ): VocabularyTerm[] => {
   const target = normalize(query);
-  const hasFilters = Object.values(filters).some(
-    (value) => value && value !== 'All'
-  );
+  const hasFilters = Object.values(filters).some((value) => value && value !== 'All');
   if (!target && !hasFilters) return [];
 
   return terms.filter((term) => {
@@ -348,12 +333,8 @@ export const VocabularyMenuService = {
     now = new Date()
   ): VocabularyMenuSummary {
     const progress = Object.values((state ?? this.getState()).progress);
-    const learning = progress.filter(
-      (word) => word.status === 'Learning'
-    ).length;
-    const mastered = progress.filter(
-      (word) => word.status === 'Mastered'
-    ).length;
+    const learning = progress.filter((word) => word.status === 'Learning').length;
+    const mastered = progress.filter((word) => word.status === 'Mastered').length;
 
     return {
       total,
@@ -361,11 +342,9 @@ export const VocabularyMenuService = {
       learning,
       mastered,
       weak: progress.filter((word) => word.isWeak).length,
-      forgotten: progress.filter((word) => isVocabularyForgotten(word, now))
-        .length,
+      forgotten: progress.filter((word) => isVocabularyForgotten(word, now)).length,
       leeches: progress.filter((word) => word.isLeech).length,
-      dueToday: progress.filter((word) => isVocabularyProgressDue(word, now))
-        .length,
+      dueToday: progress.filter((word) => isVocabularyProgressDue(word, now)).length,
     };
   },
 
@@ -397,11 +376,7 @@ export const VocabularyMenuService = {
       ? buildCorrectReviewResult(current, now)
       : buildIncorrectReviewResult(current, now);
 
-    if (
-      isCorrect &&
-      next.status === 'Mastered' &&
-      current.status !== 'Mastered'
-    ) {
+    if (isCorrect && next.status === 'Mastered' && current.status !== 'Mastered') {
       eventBus.publish({
         id: `vocab-mastered-${wordId}-${Date.now()}`,
         type: 'vocabulary:mastered',
@@ -426,10 +401,7 @@ export const VocabularyMenuService = {
     return next;
   },
 
-  completeLearnedQuiz(
-    completion: LearnedQuizCompletion,
-    now = new Date()
-  ): VocabularyMenuState {
+  completeLearnedQuiz(completion: LearnedQuizCompletion, now = new Date()): VocabularyMenuState {
     const state = this.getState();
     const masteredIds = new Set(completion.masteredWordIds);
     const strugglingIds = new Set(
@@ -486,10 +458,7 @@ export const VocabularyMenuService = {
     return nextState;
   },
 
-  addToMyVocabulary(
-    input: AddMyVocabularyInput,
-    now = new Date()
-  ): MyVocabularyWord {
+  addToMyVocabulary(input: AddMyVocabularyInput, now = new Date()): MyVocabularyWord {
     const state = this.getState();
     const existing = state.myVocabulary.find(
       (word) => normalize(word.term) === normalize(input.term)

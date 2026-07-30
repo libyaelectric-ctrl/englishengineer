@@ -43,8 +43,7 @@ export const UI_TRANSLATIONS: Record<
     'onboarding.professionalTrack': 'Professional track',
     'onboarding.electricalFocus': 'Electrical focus',
     'onboarding.industry': 'Industry',
-    'onboarding.roleContext':
-      'Your focus changes the work context, not the CEFR difficulty.',
+    'onboarding.roleContext': 'Your focus changes the work context, not the CEFR difficulty.',
     'profile.nameLanguage': 'Name and language',
     'profile.firstName': 'First name',
     'profile.lastName': 'Last name',
@@ -88,8 +87,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.startFreeUpgrade': 'Start free. Upgrade when ready.',
     'landing.faq': 'FAQ',
     'landing.trust': 'Your data stays local',
-    'landing.trustDesc':
-      'Progress stored in your browser. No account required to start.',
+    'landing.trustDesc': 'Progress stored in your browser. No account required to start.',
   },
   tr: {
     'nav.home': 'Ana Sayfa',
@@ -154,15 +152,11 @@ export const UI_TRANSLATIONS: Record<
     'landing.startFreeUpgrade': 'Ücretsiz başla, hazır olunca yükselt.',
     'landing.faq': 'SSS',
     'landing.trust': 'Verileriniz yerel kalır',
-    'landing.trustDesc':
-      'İlerlemeniz tarayıcınızda saklanır. Başlamak için hesap gerekmez.',
+    'landing.trustDesc': 'İlerlemeniz tarayıcınızda saklanır. Başlamak için hesap gerekmez.',
   },
 };
 
-export const NAVIGATION_TRANSLATIONS: Record<
-  SupportedInterfaceLanguage,
-  Record<string, string>
-> = {
+export const NAVIGATION_TRANSLATIONS: Record<SupportedInterfaceLanguage, Record<string, string>> = {
   en: {},
   tr: {
     Home: 'Ana Sayfa',

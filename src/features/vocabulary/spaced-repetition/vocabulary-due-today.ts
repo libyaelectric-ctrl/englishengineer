@@ -48,10 +48,7 @@ export const getUpcomingReviews = (
   return Object.values(reviewStates)
     .filter((state) => {
       const nextReview = new Date(state.nextReview);
-      return (
-        nextReview.getTime() > today.getTime() &&
-        nextReview.getTime() <= futureDate.getTime()
-      );
+      return nextReview.getTime() > today.getTime() && nextReview.getTime() <= futureDate.getTime();
     })
     .map((state) => {
       const nextReview = new Date(state.nextReview);
@@ -84,9 +81,7 @@ export const getReviewStats = (
     newWords: newWords.length,
     averageEaseFactor:
       all.length > 0
-        ? Math.round(
-            (all.reduce((sum, s) => sum + s.easeFactor, 0) / all.length) * 100
-          ) / 100
+        ? Math.round((all.reduce((sum, s) => sum + s.easeFactor, 0) / all.length) * 100) / 100
         : 0,
   };
 };

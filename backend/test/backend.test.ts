@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
+
 import { createApp } from '../src/app.js';
 import { createBackendConfig, toPublicHealth } from '../src/config.js';
 import {
@@ -72,10 +73,7 @@ test('health never exposes secret values', async () => {
     SUPABASE_SERVICE_ROLE_KEY: 'secret-service-role',
   });
   const text = await (await fetch(`${url}/api/health`)).text();
-  assert.doesNotMatch(
-    text,
-    /secret-ai-value|secret-stripe-value|secret-service-role/
-  );
+  assert.doesNotMatch(text, /secret-ai-value|secret-stripe-value|secret-service-role/);
   const body = JSON.parse(text);
   assert.equal(body.checks.ai.configured, true);
   assert.equal(body.checks.stripe.configured, true);
@@ -124,10 +122,7 @@ test('configured AI provider returns a real-mode contract', async () => {
       }
     );
   };
-  const url = await start(
-    { AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' },
-    { fetchImpl }
-  );
+  const url = await start({ AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' }, { fetchImpl });
   const response = await fetch(`${url}/api/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -140,19 +135,13 @@ test('configured AI provider returns a real-mode contract', async () => {
   assert.equal(providerUrl, 'https://api.openai.com/v1/chat/completions');
   assert.deepEqual(providerRequest, {
     model: 'gpt-4.1-mini',
-    messages: [
-      { role: 'user', content: 'Prepare a site coordination response.' },
-    ],
+    messages: [{ role: 'user', content: 'Prepare a site coordination response.' }],
   });
 });
 
 test('configured provider failure returns a safe unavailable error', async () => {
-  const fetchImpl = async () =>
-    new Response('provider secret detail', { status: 500 });
-  const url = await start(
-    { AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' },
-    { fetchImpl }
-  );
+  const fetchImpl = async () => new Response('provider secret detail', { status: 500 });
+  const url = await start({ AI_PROVIDER: 'openai', OPENAI_API_KEY: 'test-key' }, { fetchImpl });
   const response = await fetch(`${url}/api/ai/coach`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -166,9 +155,7 @@ test('configured provider failure returns a safe unavailable error', async () =>
 
 test('billing routes return a free fallback when Stripe is not configured', async () => {
   const url = await start();
-  const response = await fetch(
-    `${url}/api/billing/subscription-status?userId=user-1`
-  );
+  const response = await fetch(`${url}/api/billing/subscription-status?userId=user-1`);
   const body = await response.json();
   assert.equal(response.status, 200);
   assert.equal(body.planId, 'free');
@@ -247,12 +234,8 @@ test('webhook idempotency marks duplicate events', async () => {
     },
     body: '{}',
   };
-  const first = await (
-    await fetch(`${url}/api/webhooks/stripe`, options)
-  ).json();
-  const second = await (
-    await fetch(`${url}/api/webhooks/stripe`, options)
-  ).json();
+  const first = await (await fetch(`${url}/api/webhooks/stripe`, options)).json();
+  const second = await (await fetch(`${url}/api/webhooks/stripe`, options)).json();
   assert.equal(first.duplicate, false);
   assert.equal(second.duplicate, true);
 });
@@ -283,14 +266,10 @@ test('subscription status can report active and payment-failed backend states', 
     },
     { stripeClient, billingRepository: repository }
   );
-  const active = await (
-    await fetch(`${url}/api/billing/subscription-status?userId=user-1`)
-  ).json();
+  const active = await (await fetch(`${url}/api/billing/subscription-status?userId=user-1`)).json();
   assert.equal(active.status, 'active');
   snapshot = { ...snapshot, status: 'past_due' };
-  const failed = await (
-    await fetch(`${url}/api/billing/subscription-status?userId=user-1`)
-  ).json();
+  const failed = await (await fetch(`${url}/api/billing/subscription-status?userId=user-1`)).json();
   assert.equal(failed.status, 'past_due');
 });
 
@@ -305,9 +284,7 @@ test('vocabulary lookup rejects a missing word', async () => {
 test('vocabulary lookup handles provider failure safely', async () => {
   const fetchImpl = async () => ({ ok: false, status: 503 });
   const url = await start({}, { fetchImpl });
-  const response = await fetch(
-    `${url}/api/vocabulary/lookup?word=panel&targetLang=tr`
-  );
+  const response = await fetch(`${url}/api/vocabulary/lookup?word=panel&targetLang=tr`);
   const body = await response.json();
   assert.equal(response.status, 502);
   assert.equal(body.error.code, 'vocabulary_provider_unavailable');
@@ -326,9 +303,7 @@ test('vocabulary lookup reuses a successful cached result', async () => {
           phonetic: '/ˈpæn.əl/',
           meanings: [
             {
-              definitions: [
-                { definition: 'A board that contains electrical controls.' },
-              ],
+              definitions: [{ definition: 'A board that contains electrical controls.' }],
             },
           ],
         },
@@ -446,10 +421,9 @@ test('billing derives ownership from authenticated identity', async () => {
     },
     { stripeClient: {}, billingRepository: repository }
   );
-  const response = await fetch(
-    `${url}/api/billing/subscription-status?userId=another-user`,
-    { headers: internalHeaders('owner-user') }
-  );
+  const response = await fetch(`${url}/api/billing/subscription-status?userId=another-user`, {
+    headers: internalHeaders('owner-user'),
+  });
   assert.equal(response.status, 403);
   assert.equal(requestedUserId, null);
 
@@ -601,10 +575,7 @@ test('Anthropic request and response contracts are parsed consistently', async (
     messages: Array<{ content: string }>;
   } | null;
   assert.equal(capturedRequestBody?.model, 'claude-test-model');
-  assert.equal(
-    capturedRequestBody?.messages[0].content,
-    'Prepare a commissioning update.'
-  );
+  assert.equal(capturedRequestBody?.messages[0].content, 'Prepare a commissioning update.');
 });
 
 test('real AI provider rejects an explicitly empty model', () => {
@@ -651,10 +622,7 @@ test('production selects Supabase billing persistence when configured', () => {
 });
 
 test('production requires an explicitly configured external rate-limit store', () => {
-  assert.throws(
-    () => createBackendConfig({ NODE_ENV: 'production' }),
-    /UPSTASH_REDIS_REST_URL/
-  );
+  assert.throws(() => createBackendConfig({ NODE_ENV: 'production' }), /UPSTASH_REDIS_REST_URL/);
   // Memory rate limit in production now warns instead of throwing
   const originalWarn = console.warn;
   let warningMessage = '';
@@ -686,8 +654,7 @@ test('production accepts Upstash rate limiting without exposing its token', () =
   assert.equal(config.rateLimit.storeMode, 'upstash');
   assert.equal(config.rateLimit.upstashUrl, 'https://rate-limit.example.test');
   assert.equal(
-    (toPublicHealth(config) as unknown as Record<string, unknown>)
-      .upstashToken,
+    (toPublicHealth(config) as unknown as Record<string, unknown>).upstashToken,
     undefined
   );
 });
@@ -794,9 +761,7 @@ test('checkout returns 503 STRIPE_NOT_CONFIGURED when Stripe is not configured',
 test('checkout route permits request with valid Supabase token', async () => {
   const fetchImpl = async (requestUrl: string, options?: RequestInit) => {
     if (requestUrl.endsWith('/auth/v1/user')) {
-      const authorization = (
-        options?.headers as Record<string, string> | undefined
-      )?.Authorization;
+      const authorization = (options?.headers as Record<string, string> | undefined)?.Authorization;
       if (authorization === 'Bearer valid-supabase-token') {
         return {
           ok: true,
@@ -1062,12 +1027,9 @@ test('full webhook flow: completes checkout, marks event, handles duplicate, and
   assert.equal(body.duplicate, false);
   assert.equal(body.eventId, 'evt_1Tooe1LYQum3RaPO1NTqL56V');
 
-  const statusResponse = await fetch(
-    `${url}/api/billing/subscription-status?userId=owner-user`,
-    {
-      headers: internalHeaders('owner-user'),
-    }
-  );
+  const statusResponse = await fetch(`${url}/api/billing/subscription-status?userId=owner-user`, {
+    headers: internalHeaders('owner-user'),
+  });
   assert.equal(statusResponse.status, 200);
   const statusBody = await statusResponse.json();
   assert.equal(statusBody.planId, 'pro');

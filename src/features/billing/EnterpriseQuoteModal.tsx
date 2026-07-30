@@ -1,16 +1,14 @@
+import { Building2, CheckCircle2, Send, X } from 'lucide-react';
+
 import type { FormEvent } from 'react';
-import { useState, useRef, useEffect } from 'react';
-import { X, Building2, Send, CheckCircle2 } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface EnterpriseQuoteModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const EnterpriseQuoteModal = ({
-  isOpen,
-  onClose,
-}: EnterpriseQuoteModalProps) => {
+export const EnterpriseQuoteModal = ({ isOpen, onClose }: EnterpriseQuoteModalProps) => {
   const [submitted, setSubmitted] = useState(false);
   const [teamSize, setTeamSize] = useState('25');
   const [email, setEmail] = useState('');
@@ -48,12 +46,9 @@ export const EnterpriseQuoteModal = ({
         {submitted ? (
           <div className="flex flex-col items-center py-8 text-center space-y-3">
             <CheckCircle2 className="h-12 w-12 text-success" />
-            <h3 className="text-lg font-bold text-foreground">
-              Quote Request Sent!
-            </h3>
+            <h3 className="text-lg font-bold text-foreground">Quote Request Sent!</h3>
             <p className="text-xs text-muted-copy">
-              Our enterprise team will reach out to <strong>{email}</strong>{' '}
-              within 2 hours.
+              Our enterprise team will reach out to <strong>{email}</strong> within 2 hours.
             </p>
           </div>
         ) : (

@@ -1,14 +1,10 @@
 import { Link } from 'react-router-dom';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
+
 import type { AssessmentProfile } from '@/features/assessment';
 
-export const AnalyticsProgress = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: number;
-}) => (
+export const AnalyticsProgress = ({ label, value }: { label: string; value: number }) => (
   <div className="space-y-2">
     <div className="flex justify-between text-xs font-medium text-border-hover">
       <span>{label}</span>
@@ -18,28 +14,14 @@ export const AnalyticsProgress = ({
   </div>
 );
 
-export const MiniStat = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+export const MiniStat = ({ label, value }: { label: string; value: string }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-    <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">
-      {label}
-    </p>
+    <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">{label}</p>
     <p className="mt-1 text-2xl font-bold text-foreground">{value}</p>
   </div>
 );
 
-export const DetailRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+export const DetailRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase font-bold">{label}</span>
     <span className="text-right font-bold text-foreground">{value}</span>
@@ -76,13 +58,7 @@ export const TagList = ({
   );
 };
 
-const ReadinessCard = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: number | null;
-}) => (
+const ReadinessCard = ({ label, value }: { label: string; value: number | null }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
     <div className="flex items-center justify-between text-xs font-medium text-foreground">
       <span>{label}</span>
@@ -99,18 +75,15 @@ const ReadinessCard = ({
 const DEFAULT_DIMENSIONS = [
   {
     label: 'Technical Accuracy',
-    evidence:
-      'Measures accuracy of engineering terms & units across site reports.',
+    evidence: 'Measures accuracy of engineering terms & units across site reports.',
   },
   {
     label: 'Reading Comprehension',
-    evidence:
-      'Measures speed and precision in technical specifications & specifications.',
+    evidence: 'Measures speed and precision in technical specifications & specifications.',
   },
   {
     label: 'Professional Writing',
-    evidence:
-      'Evaluates email clarity, tone, and formal structure in engineering logs.',
+    evidence: 'Evaluates email clarity, tone, and formal structure in engineering logs.',
   },
   {
     label: 'Listening Retention',
@@ -118,23 +91,17 @@ const DEFAULT_DIMENSIONS = [
   },
   {
     label: 'Speaking Fluency',
-    evidence:
-      'Assesses pronunciation, vocabulary choice, and confidence in meetings.',
+    evidence: 'Assesses pronunciation, vocabulary choice, and confidence in meetings.',
   },
   {
     label: 'Grammar & Syntax',
-    evidence:
-      'Evaluates passive voice, conditionals, and complex sentence structures.',
+    evidence: 'Evaluates passive voice, conditionals, and complex sentence structures.',
   },
 ];
 
-const toDimensionId = (label: string) =>
-  label.toLowerCase().replace(/[^a-z0-9]/g, '-');
+const toDimensionId = (label: string) => label.toLowerCase().replace(/[^a-z0-9]/g, '-');
 
-const getDimensionsToDisplay = (
-  isPending: boolean,
-  profile: AssessmentProfile
-) =>
+const getDimensionsToDisplay = (isPending: boolean, profile: AssessmentProfile) =>
   isPending
     ? DEFAULT_DIMENSIONS.map((d) => ({
         dimensionId: toDimensionId(d.label),
@@ -152,9 +119,8 @@ const PendingBaselineBanner = () => (
           Engineering Assessment Profile — Initializing Baseline
         </p>
         <p className="mt-1 text-xs leading-relaxed text-muted-copy font-medium">
-          Complete practice missions across Reading, Writing, Listening,
-          Speaking, or Vocabulary to build your verified engineering
-          communication rating.
+          Complete practice missions across Reading, Writing, Listening, Speaking, or Vocabulary to
+          build your verified engineering communication rating.
         </p>
       </div>
       <Link
@@ -175,22 +141,10 @@ const OverviewStats = ({
   profile: AssessmentProfile;
 }) => (
   <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <MiniStat
-      label="Overall"
-      value={isPending ? 'Baseline' : `${profile.overallScore ?? 0}%`}
-    />
-    <MiniStat
-      label="Engineer CEFR"
-      value={profile.engineerCefr || 'A2-B1 Baseline'}
-    />
-    <MiniStat
-      label="Internal progress index"
-      value={`${profile.engineerElo ?? 1000}`}
-    />
-    <MiniStat
-      label="Confidence"
-      value={isPending ? 'Initial' : `${profile.confidenceScore}%`}
-    />
+    <MiniStat label="Overall" value={isPending ? 'Baseline' : `${profile.overallScore ?? 0}%`} />
+    <MiniStat label="Engineer CEFR" value={profile.engineerCefr || 'A2-B1 Baseline'} />
+    <MiniStat label="Internal progress index" value={`${profile.engineerElo ?? 1000}`} />
+    <MiniStat label="Confidence" value={isPending ? 'Initial' : `${profile.confidenceScore}%`} />
   </div>
 );
 
@@ -212,20 +166,10 @@ const DisclaimerBox = ({
   </div>
 );
 
-const ReadinessGrid = ({
-  readiness,
-}: {
-  readiness: AssessmentProfile['readiness'];
-}) => (
+const ReadinessGrid = ({ readiness }: { readiness: AssessmentProfile['readiness'] }) => (
   <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-    <ReadinessCard
-      label="Meeting Readiness"
-      value={readiness?.meetings ?? null}
-    />
-    <ReadinessCard
-      label="Report Readiness"
-      value={readiness?.reports ?? null}
-    />
+    <ReadinessCard label="Meeting Readiness" value={readiness?.meetings ?? null} />
+    <ReadinessCard label="Report Readiness" value={readiness?.reports ?? null} />
     <ReadinessCard
       label="Consultant Readiness"
       value={readiness?.consultantCommunication ?? null}
@@ -336,8 +280,7 @@ const QuickWorkoutBanner = () => (
           Priority Focus: Speaking Fluency & Technical Register
         </p>
         <p className="text-[11px] text-muted-copy font-medium">
-          Targeted 3-minute practice mission to boost your lowest dimension
-          score.
+          Targeted 3-minute practice mission to boost your lowest dimension score.
         </p>
       </div>
     </div>
@@ -350,11 +293,7 @@ const QuickWorkoutBanner = () => (
   </div>
 );
 
-export const AssessmentProfilePanel = ({
-  profile,
-}: {
-  profile: AssessmentProfile;
-}) => {
+export const AssessmentProfilePanel = ({ profile }: { profile: AssessmentProfile }) => {
   const isPending = !profile.hasEnoughData;
   const dimensionsToDisplay = getDimensionsToDisplay(isPending, profile);
 

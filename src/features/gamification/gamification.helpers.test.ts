@@ -1,7 +1,9 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
-import { AnalyticsSummary } from '@/features/analytics';
 import { createLearningState } from '@/test/fixtures';
+import { describe, expect, it } from 'vitest';
+
+import { AnalyticsSummary } from '@/features/analytics';
+
 import {
   buildMissionProgress,
   getLevelInfo,

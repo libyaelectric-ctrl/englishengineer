@@ -1,12 +1,9 @@
-import { useMemo, type FC } from 'react';
-import {
-  Users,
-  Activity,
-  BookOpen,
-  BrainCircuit,
-  TrendingUp,
-} from 'lucide-react';
+import { Activity, BookOpen, BrainCircuit, TrendingUp, Users } from 'lucide-react';
+
+import { type FC, useMemo } from 'react';
+
 import { MetricCard } from '@/shared/components/MetricCard';
+
 import type { TeamMember, TeamProgressSummary } from '../team.types';
 
 interface TeamStatsProps {
@@ -29,16 +26,12 @@ export const TeamStats: FC<TeamStatsProps> = ({ members, summaries }) => {
 
     const avgVocab =
       vocabScores.length > 0
-        ? Math.round(
-            vocabScores.reduce((a, b) => a + b, 0) / vocabScores.length
-          )
+        ? Math.round(vocabScores.reduce((a, b) => a + b, 0) / vocabScores.length)
         : 0;
 
     const avgGrammar =
       grammarScores.length > 0
-        ? Math.round(
-            grammarScores.reduce((a, b) => a + b, 0) / grammarScores.length
-          )
+        ? Math.round(grammarScores.reduce((a, b) => a + b, 0) / grammarScores.length)
         : 0;
 
     const avgScore =

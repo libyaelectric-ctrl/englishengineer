@@ -1,9 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import {
-  isConfiguredPublicUrl,
-  validateEnvironment,
-} from './environment.config';
+
+import { isConfiguredPublicUrl, validateEnvironment } from './environment.config';
 
 describe('environment validation', () => {
   it('keeps local mode usable without production integrations', () => {

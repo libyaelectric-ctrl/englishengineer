@@ -1,4 +1,5 @@
 import type { ComponentType } from 'react';
+
 import type { AnalyticsTimelinePoint } from '@/features/analytics';
 
 export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
@@ -10,17 +11,12 @@ export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
       </p>
       <div className="h-36 flex items-end gap-2 mt-5">
         {values.map((value, index) => (
-          <div
-            key={`${value}-${index}`}
-            className="flex-1 flex flex-col items-center gap-2"
-          >
+          <div key={`${value}-${index}`} className="flex-1 flex flex-col items-center gap-2">
             <div
               className="w-full rounded-t bg-primary/80 min-h-[6px]"
               style={{ height: `${Math.max(6, (value / maxValue) * 120)}px` }}
             />
-            <span className="text-[10px] font-mono text-muted-copy font-bold">
-              {value}m
-            </span>
+            <span className="text-[10px] font-mono text-muted-copy font-bold">{value}m</span>
           </div>
         ))}
       </div>
@@ -28,11 +24,7 @@ export const WeeklyActivityChart = ({ values }: { values: number[] }) => {
   );
 };
 
-export const StudyHeatmap = ({
-  values,
-}: {
-  values: Array<{ date: string; count: number }>;
-}) => (
+export const StudyHeatmap = ({ values }: { values: Array<{ date: string; count: number }> }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm">
     <p className="text-[10px] font-mono text-muted-copy uppercase tracking-widest font-bold">
       Study Heatmap
@@ -149,13 +141,9 @@ export const TimelinePanel = ({
           >
             <div>
               <p className="text-xs font-bold text-foreground">{point.label}</p>
-              <p className="text-[10px] font-mono text-muted-copy">
-                {point.date}
-              </p>
+              <p className="text-[10px] font-mono text-muted-copy">{point.date}</p>
             </div>
-            <span className="text-xs font-mono font-bold text-primary">
-              {point.value}
-            </span>
+            <span className="text-xs font-mono font-bold text-primary">{point.value}</span>
           </div>
         ))}
     </div>
@@ -166,8 +154,7 @@ export const TimelinePanel = ({
 );
 
 const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
-  if (points.length === 0)
-    return <p className="text-xs text-muted-copy">No timeline data yet.</p>;
+  if (points.length === 0) return <p className="text-xs text-muted-copy">No timeline data yet.</p>;
 
   const width = 600;
   const height = 180;
@@ -177,13 +164,8 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
   const minValue = Math.min(...values, 0);
   const range = maxValue - minValue || 1;
   const svgPoints = points.map((point, index) => {
-    const x =
-      padding +
-      (index / Math.max(points.length - 1, 1)) * (width - padding * 2);
-    const y =
-      height -
-      padding -
-      ((point.value - minValue) / range) * (height - padding * 2);
+    const x = padding + (index / Math.max(points.length - 1, 1)) * (width - padding * 2);
+    const y = height - padding - ((point.value - minValue) / range) * (height - padding * 2);
     return { x, y, point };
   });
   const path = svgPoints
@@ -192,10 +174,7 @@ const LineSvg = ({ points }: { points: AnalyticsTimelinePoint[] }) => {
 
   return (
     <div className="relative overflow-x-auto rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full h-44 overflow-visible"
-      >
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-44 overflow-visible">
         <path
           d={path}
           fill="none"

@@ -1,10 +1,10 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 import { defineConfig } from 'vite';
 import { compression } from 'vite-plugin-compression2';
-import { visualizer } from 'rollup-plugin-visualizer';
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,9 +45,7 @@ export default defineConfig(() => {
       react(),
       tailwindcss(),
       compression({ algorithms: ['brotliCompress'] }),
-      ...(process.env.ANALYZE
-        ? [visualizer({ open: true, filename: 'bundle-report.html' })]
-        : []),
+      ...(process.env.ANALYZE ? [visualizer({ open: true, filename: 'bundle-report.html' })] : []),
     ],
     resolve: {
       alias: {
@@ -80,8 +78,7 @@ export default defineConfig(() => {
             if (id.includes('node_modules')) return getVendorChunk(id);
             if (id.includes('/data/') && id.includes('by-level/'))
               return getDataChunk(id) ?? 'seed-data';
-            if (id.includes('/data/') || id.includes('seed'))
-              return 'seed-data';
+            if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
           },
         },
       },

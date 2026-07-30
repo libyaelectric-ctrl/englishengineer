@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 interface UseKeyboardNavigationOptions {
   /** Key to trigger action (e.g., 'Enter', ' ') */
@@ -77,9 +77,7 @@ export const useArrowNavigation = ({
       const items = container.querySelectorAll(itemSelector);
       if (items.length === 0) return;
 
-      const currentIndex = Array.from(items).indexOf(
-        document.activeElement as Element
-      );
+      const currentIndex = Array.from(items).indexOf(document.activeElement as Element);
 
       let nextIndex = currentIndex;
 

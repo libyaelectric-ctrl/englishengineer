@@ -1,5 +1,7 @@
+import { Award, Coins, TrendingUp, Zap } from 'lucide-react';
+
 import React from 'react';
-import { Award, Zap, Coins, TrendingUp } from 'lucide-react';
+
 import { Button } from './Button';
 
 /** Minimal score result shape — mirrors ScoreResult from @/core/learning */
@@ -19,7 +21,6 @@ interface ScoreFeedbackOverlayProps {
   onAction?: () => void;
   actionText?: string;
 }
-
 
 export const ScoreFeedbackOverlay = React.memo(
   ({
@@ -44,9 +45,7 @@ export const ScoreFeedbackOverlay = React.memo(
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-surface-hover">
               <Award className="h-7 w-7 text-foreground" />
             </div>
-            <h3 className="text-xl font-semibold text-foreground">
-              Evaluation Complete
-            </h3>
+            <h3 className="text-xl font-semibold text-foreground">Evaluation Complete</h3>
           </div>
 
           {/* Score */}
@@ -73,9 +72,7 @@ export const ScoreFeedbackOverlay = React.memo(
             <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
               <Coins className="h-4 w-4 text-warning mx-auto" />
               <p className="mt-1 text-[10px] text-muted-copy">Coins</p>
-              <p className="text-sm font-bold text-foreground">
-                +{result.coins}
-              </p>
+              <p className="text-sm font-bold text-foreground">+{result.coins}</p>
             </div>
             <div className="rounded-xl border border-border-soft bg-surface p-3 text-center">
               <TrendingUp className="h-4 w-4 text-foreground mx-auto" />
@@ -83,9 +80,7 @@ export const ScoreFeedbackOverlay = React.memo(
               <p
                 className={`text-sm font-bold ${result.eloChange >= 0 ? 'text-success' : 'text-error'}`}
               >
-                {result.eloChange >= 0
-                  ? `+${result.eloChange}`
-                  : result.eloChange}
+                {result.eloChange >= 0 ? `+${result.eloChange}` : result.eloChange}
               </p>
             </div>
           </div>
@@ -94,9 +89,7 @@ export const ScoreFeedbackOverlay = React.memo(
           <div className="space-y-4 border-t border-border-soft pt-4">
             <div>
               <p className="text-xs font-medium text-muted-copy">Feedback</p>
-              <p className="mt-1 text-sm text-foreground leading-relaxed">
-                {result.feedback}
-              </p>
+              <p className="mt-1 text-sm text-foreground leading-relaxed">{result.feedback}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

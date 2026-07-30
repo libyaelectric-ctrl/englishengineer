@@ -1,5 +1,6 @@
+import type { NextFunction, Request, Response } from 'express';
+
 import { ApiError } from '../errors.js';
-import type { Request, Response, NextFunction } from 'express';
 
 interface IdempotencyEntry {
   statusCode: number;
@@ -33,11 +34,7 @@ export const idempotencyKey = (options: IdempotencyOptions = {}) => {
     store = options.store || globalIdempotencyStore || new Map(),
   } = options;
 
-  return async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
+  return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const key = req.headers[headerName.toLowerCase()] as string | undefined;
 
@@ -116,16 +113,12 @@ const createRedisStore = (
   },
   fetchImpl: typeof fetch
 ): IdempotencyStore => {
-  const url =
-    config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL;
-  const token =
-    config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = config.rateLimit?.upstashUrl || process.env.UPSTASH_REDIS_REST_URL;
+  const token = config.rateLimit?.upstashToken || process.env.UPSTASH_REDIS_REST_TOKEN;
   const timeoutMs = config.rateLimit?.storeTimeoutMs || 3000;
 
   if (!url || !token)
-    throw new Error(
-      'Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.'
-    );
+    throw new Error('Redis store configured but UPSTASH_REDIS_REST_URL or TOKEN is missing.');
 
   const redisFetch = async (args: (string | number)[]) => {
     const controller = new AbortController();
@@ -150,10 +143,7 @@ const createRedisStore = (
 
   return {
     async get(key: string) {
-      const payload = await redisFetch([
-        'GET',
-        `engineeros:idempotency:${key}`,
-      ]);
+      const payload = await redisFetch(['GET', `engineeros:idempotency:${key}`]);
       return payload?.result ? JSON.parse(payload.result) : null;
     },
     async set(key: string, value: IdempotencyEntry) {

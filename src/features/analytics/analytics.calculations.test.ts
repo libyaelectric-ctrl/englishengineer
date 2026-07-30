@@ -1,5 +1,7 @@
 // @vitest-environment node
+import { createLearningState } from '@/test/fixtures';
 import { describe, expect, it } from 'vitest';
+
 import {
   calculateEstimatedCefr,
   calculateImprovementVelocity,
@@ -7,7 +9,6 @@ import {
   calculateStudyConsistency,
   calculateTrend,
 } from './analytics.calculations';
-import { createLearningState } from '@/test/fixtures';
 
 describe('analytics calculations', () => {
   it('calculates upward trend when recent scores improve by at least five points', () => {

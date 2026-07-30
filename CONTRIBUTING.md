@@ -37,18 +37,18 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ### Types
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code style (formatting, semicolons, etc.) |
-| `refactor` | Code refactoring |
-| `perf` | Performance improvements |
-| `test` | Adding or updating tests |
-| `chore` | Build process, dependencies, tooling |
-| `ci` | CI/CD configuration |
-| `revert` | Reverting a previous commit |
+| Type       | Description                               |
+| ---------- | ----------------------------------------- |
+| `feat`     | New feature                               |
+| `fix`      | Bug fix                                   |
+| `docs`     | Documentation changes                     |
+| `style`    | Code style (formatting, semicolons, etc.) |
+| `refactor` | Code refactoring                          |
+| `perf`     | Performance improvements                  |
+| `test`     | Adding or updating tests                  |
+| `chore`    | Build process, dependencies, tooling      |
+| `ci`       | CI/CD configuration                       |
+| `revert`   | Reverting a previous commit               |
 
 ### Scopes
 
@@ -74,6 +74,7 @@ chore(deps): bump typescript-eslint from 8.62.0 to 8.65.0
 - **Coverage**: Maintain or improve current coverage thresholds
 
 Run tests before committing:
+
 ```bash
 npm run test:unit
 npm run test:e2e
@@ -83,18 +84,21 @@ npm run test:smoke
 ## 🏗️ Code Standards
 
 ### TypeScript
+
 - Enable `strict` mode compliance
 - No `any` types without justification
 - Explicit return types for public APIs
 - Use `Result<T, E>` pattern from `src/core/result.ts`
 
 ### Architecture
+
 - Follow **Feature-based architecture**: `src/features/<feature>/`
 - No cross-feature imports (enforced by Dependency Cruiser)
 - No frontend→backend direct imports
 - Place shared code in `src/shared/`
 
 ### Component Guidelines
+
 - Use functional components with hooks
 - Props interface naming: `{ComponentName}Props`
 - Export from `index.ts` barrel files
@@ -121,6 +125,7 @@ Use GitHub Issues with the bug template:
 Clear description of the bug.
 
 **Steps to Reproduce:**
+
 1. Go to '...'
 2. Click on '...'
 3. See error
@@ -129,6 +134,7 @@ Clear description of the bug.
 What should happen.
 
 **Environment:**
+
 - OS: [e.g., macOS 14]
 - Browser: [e.g., Chrome 126]
 - Version: [e.g., v4.0.1]
@@ -137,6 +143,7 @@ What should happen.
 ## 💡 Feature Requests
 
 Open a GitHub Issue with:
+
 - Clear use case
 - Proposed solution
 - Alternative solutions considered

@@ -1,15 +1,14 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
 import { Bot, Check, Clipboard, Send, WifiOff } from 'lucide-react';
-import { AIService, AIProviderStatus } from '@/features/ai';
-import { BetaService } from '@/features/beta';
-import {
-  QUICK_AI_ACTIONS,
-  WorkToolsService,
-  useWorkToolsStore,
-} from '@/features/work-tools';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
+import { AIProviderStatus, AIService } from '@/features/ai';
+import { BetaService } from '@/features/beta';
+import { QUICK_AI_ACTIONS, WorkToolsService, useWorkToolsStore } from '@/features/work-tools';
 
 type QuickAITabProps = {
   initialDraft: string;
@@ -17,11 +16,7 @@ type QuickAITabProps = {
   onStatusChange: (s: AIProviderStatus) => void;
 };
 
-export const QuickAITab = ({
-  initialDraft,
-  status,
-  onStatusChange,
-}: QuickAITabProps) => {
+export const QuickAITab = ({ initialDraft, status, onStatusChange }: QuickAITabProps) => {
   const { remember } = useWorkToolsStore();
   const [input, setInput] = useState(initialDraft);
   const [result, setResult] = useState('');
@@ -59,14 +54,17 @@ export const QuickAITab = ({
     }
   };
 
-  const copy = useCallback(async (id: string, text: string) => {
-    if (await WorkToolsService.copy(text)) {
-      remember(id);
-      setCopied(id);
-      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-      copyTimerRef.current = setTimeout(() => setCopied(null), 1200);
-    }
-  }, [remember]);
+  const copy = useCallback(
+    async (id: string, text: string) => {
+      if (await WorkToolsService.copy(text)) {
+        remember(id);
+        setCopied(id);
+        if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        copyTimerRef.current = setTimeout(() => setCopied(null), 1200);
+      }
+    },
+    [remember]
+  );
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_0.9fr]">
@@ -76,12 +74,10 @@ export const QuickAITab = ({
       >
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="text-base font-bold text-foreground">
-              Quick AI Editor
-            </h2>
+            <h2 className="text-base font-bold text-foreground">Quick AI Editor</h2>
             <p className="mt-1 text-xs text-muted-copy font-medium">
-              AI requires an internet-connected backend. No vendor API key is
-              stored in this browser.
+              AI requires an internet-connected backend. No vendor API key is stored in this
+              browser.
             </p>
           </div>
           <StatusBadge
@@ -106,9 +102,7 @@ export const QuickAITab = ({
             </div>
             <div className="flex gap-3">
               <WifiOff className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-              <span>
-                {status.detail} Connect AI backend for real rewriting.
-              </span>
+              <span>{status.detail} Connect AI backend for real rewriting.</span>
             </div>
           </div>
         )}

@@ -99,11 +99,7 @@ const ACCENT_STRENGTH_MAP = {
 };
 
 export const PronunciationFeedbackEngine = {
-  analyzeWord(
-    word: string,
-    ipa: string,
-    recognizedText: string
-  ): PronunciationFeedback {
+  analyzeWord(word: string, ipa: string, recognizedText: string): PronunciationFeedback {
     const recognized = recognizedText.toLowerCase().trim();
     const similarity = this.calculateSimilarity(recognized, word);
     const phonemeDetails = this.extractPhonemeDetails(word, ipa, recognized);
@@ -125,10 +121,7 @@ export const PronunciationFeedbackEngine = {
     recognizedText: string,
     sessionId: string
   ): PronunciationMap {
-    const recognizedWords = recognizedText
-      .toLowerCase()
-      .split(/\s+/)
-      .filter(Boolean);
+    const recognizedWords = recognizedText.toLowerCase().split(/\s+/).filter(Boolean);
     const feedbacks = targetWords.map((t) => {
       let bestMatch = '';
       let bestSim = 0;
@@ -144,10 +137,7 @@ export const PronunciationFeedbackEngine = {
 
     const overallScore =
       feedbacks.length > 0
-        ? Math.round(
-            feedbacks.reduce((s, f) => s + f.overallAccuracy, 0) /
-              feedbacks.length
-          )
+        ? Math.round(feedbacks.reduce((s, f) => s + f.overallAccuracy, 0) / feedbacks.length)
         : 0;
 
     const phonemeCounts = new Map<string, number>();
@@ -207,18 +197,13 @@ export const PronunciationFeedbackEngine = {
     return maxLen === 0 ? 1 : 1 - matrix[s1.length][s2.length] / maxLen;
   },
 
-  extractPhonemeDetails(
-    word: string,
-    ipa: string,
-    _recognized: string
-  ): PhonemeDetail[] {
+  extractPhonemeDetails(word: string, ipa: string, _recognized: string): PhonemeDetail[] {
     const phonemes = ipa.replace(/[/[\]]/g, '').split('');
     const wordChars = word.split('');
     const details: PhonemeDetail[] = [];
 
     phonemes.forEach((phoneme, i) => {
-      const position =
-        i === 0 ? 'initial' : i === phonemes.length - 1 ? 'final' : 'medial';
+      const position = i === 0 ? 'initial' : i === phonemes.length - 1 ? 'final' : 'medial';
       const expected = phoneme;
       const recognizedChar = i < wordChars.length ? wordChars[i] : '';
       const accuracy = this.calculateSimilarity(recognizedChar, expected) * 100;
@@ -229,26 +214,19 @@ export const PronunciationFeedbackEngine = {
         expected,
         recognized: recognizedChar,
         accuracy: Math.round(accuracy),
-        tip:
-          PHONEME_TIPS[phoneme] ??
-          `Practice the "${phoneme}" sound in "${word}".`,
+        tip: PHONEME_TIPS[phoneme] ?? `Practice the "${phoneme}" sound in "${word}".`,
       });
     });
 
     return details;
   },
 
-  detectProblemArea(
-    details: PhonemeDetail[],
-    word: string
-  ): PronunciationFeedback['problemArea'] {
+  detectProblemArea(details: PhonemeDetail[], word: string): PronunciationFeedback['problemArea'] {
     const vowels = details.filter((d) => /[iɪɛæɑɔʊuʌəɜ]/.test(d.phoneme));
     const consonants = details.filter((d) => !/[iɪɛæɑɔʊuʌəɜ]/.test(d.phoneme));
 
     const vowelAccuracy =
-      vowels.length > 0
-        ? vowels.reduce((s, v) => s + v.accuracy, 0) / vowels.length
-        : 100;
+      vowels.length > 0 ? vowels.reduce((s, v) => s + v.accuracy, 0) / vowels.length : 100;
     const consonantAccuracy =
       consonants.length > 0
         ? consonants.reduce((s, c) => s + c.accuracy, 0) / consonants.length
@@ -257,9 +235,7 @@ export const PronunciationFeedbackEngine = {
     if (vowelAccuracy < 60) return 'vowel';
     if (consonantAccuracy < 60) return 'consonant';
 
-    const turkishMatch = TURKISH_ACCENT_PATTERNS.find((p) =>
-      p.pattern.test(word)
-    );
+    const turkishMatch = TURKISH_ACCENT_PATTERNS.find((p) => p.pattern.test(word));
     if (turkishMatch) return 'rhythm';
 
     return null;
@@ -272,9 +248,7 @@ export const PronunciationFeedbackEngine = {
     details: PhonemeDetail[]
   ): string {
     if (problemArea === 'vowel') {
-      const weakVowels = details.filter(
-        (d) => /[iɪɛæɑɔʊuʌəɜ]/.test(d.phoneme) && d.accuracy < 70
-      );
+      const weakVowels = details.filter((d) => /[iɪɛæɑɔʊuʌəɜ]/.test(d.phoneme) && d.accuracy < 70);
       if (weakVowels.length > 0) {
         return `Focus on vowel sound "${weakVowels[0].phoneme}" — ${PHONEME_TIPS[weakVowels[0].phoneme] ?? 'practice this sound'}.`;
       }
@@ -289,9 +263,7 @@ export const PronunciationFeedbackEngine = {
       }
     }
 
-    const turkishIssue = TURKISH_ACCENT_PATTERNS.find((p) =>
-      p.pattern.test(word)
-    );
+    const turkishIssue = TURKISH_ACCENT_PATTERNS.find((p) => p.pattern.test(word));
     if (turkishIssue) return turkishIssue.tip;
 
     return `Good pronunciation of "${word}". Keep practicing to maintain accuracy.`;
@@ -318,8 +290,6 @@ export const PronunciationFeedbackEngine = {
   },
 
   detectTurkishAccentPatterns(text: string): string[] {
-    return TURKISH_ACCENT_PATTERNS.filter((p) => p.pattern.test(text)).map(
-      (p) => p.tip
-    );
+    return TURKISH_ACCENT_PATTERNS.filter((p) => p.pattern.test(text)).map((p) => p.tip);
   },
 };

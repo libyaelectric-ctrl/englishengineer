@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { LearningPathAdvisor } from './learning-path-advisor';
 
 describe('LearningPathAdvisor', () => {
@@ -20,11 +21,7 @@ describe('LearningPathAdvisor', () => {
     });
 
     it('identifies skill gaps correctly', () => {
-      const plan = LearningPathAdvisor.generatePlan(
-        'user-1',
-        balancedLevels,
-        'B2'
-      );
+      const plan = LearningPathAdvisor.generatePlan('user-1', balancedLevels, 'B2');
       expect(plan.goals.length).toBeGreaterThan(0);
       expect(plan.goals.some((g) => g.skill === 'writing')).toBe(true);
       expect(plan.goals.some((g) => g.skill === 'speaking')).toBe(true);
@@ -39,11 +36,7 @@ describe('LearningPathAdvisor', () => {
         listening: 'B2' as const,
         speaking: 'A2' as const,
       };
-      const plan = LearningPathAdvisor.generatePlan(
-        'user-1',
-        unevenLevels,
-        'B2'
-      );
+      const plan = LearningPathAdvisor.generatePlan('user-1', unevenLevels, 'B2');
       const highPriority = plan.goals.filter((g) => g.priority === 'high');
       expect(highPriority.length).toBeGreaterThan(0);
       expect(highPriority.some((g) => g.skill === 'vocabulary')).toBe(true);
@@ -71,9 +64,7 @@ describe('LearningPathAdvisor', () => {
         'Electrical Engineer'
       );
       expect(plan.recommendations.length).toBeGreaterThan(0);
-      expect(
-        plan.recommendations.some((r) => r.includes('Electrical Engineer'))
-      ).toBe(true);
+      expect(plan.recommendations.some((r) => r.includes('Electrical Engineer'))).toBe(true);
     });
 
     it('handles already-at-target level', () => {
@@ -85,11 +76,7 @@ describe('LearningPathAdvisor', () => {
         listening: 'B2' as const,
         speaking: 'B2' as const,
       };
-      const plan = LearningPathAdvisor.generatePlan(
-        'user-1',
-        highLevels as never,
-        'B2'
-      );
+      const plan = LearningPathAdvisor.generatePlan('user-1', highLevels as never, 'B2');
       expect(plan.goals).toHaveLength(0);
       expect(plan.weakAreasIdentified).toHaveLength(0);
     });

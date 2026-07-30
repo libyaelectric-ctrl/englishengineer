@@ -1,7 +1,4 @@
-export type ContentItemType =
-  | 'vocabulary_set'
-  | 'practice_scenario'
-  | 'lesson_plan';
+export type ContentItemType = 'vocabulary_set' | 'practice_scenario' | 'lesson_plan';
 
 export interface MarketplaceContent {
   id: string;
@@ -147,10 +144,7 @@ const MOCK_CONTENT: MarketplaceContent[] = [
 ];
 
 export const MarketplaceService = {
-  searchContent(
-    query: string = '',
-    filters: MarketplaceSearchFilters = {}
-  ): MarketplaceContent[] {
+  searchContent(query: string = '', filters: MarketplaceSearchFilters = {}): MarketplaceContent[] {
     let results = MOCK_CONTENT.filter((c) => c.isPublished);
 
     if (query) {
@@ -178,9 +172,7 @@ export const MarketplaceService = {
       if (sortBy === 'rating') return b.rating - a.rating;
       if (sortBy === 'downloads') return b.downloadCount - a.downloadCount;
       if (sortBy === 'newest')
-        return (
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       return 0;
     });
 
@@ -218,11 +210,7 @@ export const MarketplaceService = {
     };
   },
 
-  rateContent(
-    contentId: string,
-    rating: number,
-    review?: string
-  ): MarketplaceRating {
+  rateContent(contentId: string, rating: number, review?: string): MarketplaceRating {
     return {
       contentId,
       userId: 'current-user',

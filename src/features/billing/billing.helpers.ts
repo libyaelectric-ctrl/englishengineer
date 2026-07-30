@@ -1,3 +1,5 @@
+import { isConfiguredPublicUrl } from '@/config/environment.config';
+
 import {
   BillingPlan,
   BillingPlanId,
@@ -5,7 +7,6 @@ import {
   BillingStatusPresentation,
   SubscriptionSnapshot,
 } from './billing.types';
-import { isConfiguredPublicUrl } from '@/config/environment.config';
 
 interface BillingEnv {
   VITE_BILLING_API_URL?: string;
@@ -41,8 +42,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   pro: {
     id: 'pro',
     name: 'Pro',
-    description:
-      'Unlimited individual learning with AI writing feedback and mistake logs.',
+    description: 'Unlimited individual learning with AI writing feedback and mistake logs.',
     isFutureReady: false,
     features: [
       'reading',
@@ -71,8 +71,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   project: {
     id: 'project',
     name: 'Project',
-    description:
-      'Collaborative workspaces, persistent memory, and LinkedIn tools.',
+    description: 'Collaborative workspaces, persistent memory, and LinkedIn tools.',
     isFutureReady: false,
     features: [
       'reading',
@@ -107,8 +106,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   exec: {
     id: 'exec',
     name: 'Exec',
-    description:
-      'Dedicated executive coaching, offline audio, and priority slots.',
+    description: 'Dedicated executive coaching, offline audio, and priority slots.',
     isFutureReady: false,
     features: [
       'reading',
@@ -146,8 +144,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   private: {
     id: 'private',
     name: 'Private',
-    description:
-      'Ultimate personalized English training and dedicated private proxy.',
+    description: 'Ultimate personalized English training and dedicated private proxy.',
     isFutureReady: true,
     features: [
       'reading',
@@ -197,9 +194,7 @@ export const createFreeSubscription = (): SubscriptionSnapshot => ({
 export const getBillingApiUrl = (): string | null => {
   const env = (import.meta as unknown as ImportMetaWithBillingEnv).env;
   const value = env?.VITE_BILLING_API_URL?.trim();
-  return isConfiguredPublicUrl(value)
-    ? value?.replace(/\/$/, '') || null
-    : null;
+  return isConfiguredPublicUrl(value) ? value?.replace(/\/$/, '') || null : null;
 };
 
 export const getBillingProviderStatus = (): BillingProviderStatus => {
@@ -209,8 +204,7 @@ export const getBillingProviderStatus = (): BillingProviderStatus => {
       mode: 'local-fallback',
       isConfigured: false,
       label: 'Free plan fallback',
-      detail:
-        'Billing backend is not connected. Stripe actions require VITE_BILLING_API_URL.',
+      detail: 'Billing backend is not connected. Stripe actions require VITE_BILLING_API_URL.',
     };
   }
 
@@ -218,8 +212,7 @@ export const getBillingProviderStatus = (): BillingProviderStatus => {
     mode: 'backend',
     isConfigured: true,
     label: 'Billing backend configured',
-    detail:
-      'Checkout, customer portal and subscription status are delegated to the backend.',
+    detail: 'Checkout, customer portal and subscription status are delegated to the backend.',
   };
 };
 
@@ -236,8 +229,7 @@ export const formatRenewalDate = (isoDate: string | null): string => {
 };
 
 const isCancellationPending = (sub: SubscriptionSnapshot) =>
-  sub.cancelAtPeriodEnd &&
-  (sub.status === 'active' || sub.status === 'trialing');
+  sub.cancelAtPeriodEnd && (sub.status === 'active' || sub.status === 'trialing');
 
 export const getBillingStatusPresentation = (
   subscription: SubscriptionSnapshot,
@@ -268,8 +260,7 @@ export const getBillingStatusPresentation = (
       planLabel: plan.name,
       statusLabel: 'Cancellation scheduled',
       statusTone: 'warning',
-      message:
-        'Your subscription remains active until the end of the current billing period.',
+      message: 'Your subscription remains active until the end of the current billing period.',
       entitlementLabel: `${plan.name} entitlements active until period end`,
       entitlementTone: 'success',
       periodLabel: 'Access until',
@@ -301,8 +292,7 @@ export const getBillingStatusPresentation = (
         ...base,
         statusLabel: 'Trialing',
         statusTone: 'info',
-        message:
-          'Your trial is active. Paid access continues during the trial.',
+        message: 'Your trial is active. Paid access continues during the trial.',
         entitlementLabel: `${plan.name} trial entitlements active`,
         entitlementTone: 'info',
         periodLabel: 'Trial ends',

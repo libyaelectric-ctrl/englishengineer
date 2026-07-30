@@ -1,10 +1,14 @@
-import { useId, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import { LockKeyhole } from 'lucide-react';
-import { useBillingStore } from './billing.store';
-import { canAccessFeature } from './billing.entitlements';
-import type { BillingFeature } from './billing.types';
+
+import { type ReactNode, useId } from 'react';
+
+import { Link } from 'react-router-dom';
+
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
+import { canAccessFeature } from './billing.entitlements';
+import { useBillingStore } from './billing.store';
+import type { BillingFeature } from './billing.types';
 
 interface EntitlementGateProps {
   feature: BillingFeature;

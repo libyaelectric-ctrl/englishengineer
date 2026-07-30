@@ -1,9 +1,7 @@
 export type SupportedInterfaceLanguage = 'en' | 'tr';
 export type PlannedInterfaceLanguage = 'ar' | 'es' | 'it' | 'fr';
 
-export type InterfaceLanguageId =
-  | SupportedInterfaceLanguage
-  | PlannedInterfaceLanguage;
+export type InterfaceLanguageId = SupportedInterfaceLanguage | PlannedInterfaceLanguage;
 
 export interface InterfaceLanguageOption {
   id: InterfaceLanguageId;

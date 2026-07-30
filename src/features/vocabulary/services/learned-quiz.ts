@@ -18,14 +18,10 @@ const meaningAlternatives = (meaning: string): string[] =>
     .map(normalizeQuizText)
     .filter(Boolean);
 
-export const isTurkishQuizAnswerCorrect = (
-  answer: string,
-  turkishMeaning: string
-): boolean => {
+export const isTurkishQuizAnswerCorrect = (answer: string, turkishMeaning: string): boolean => {
   const normalizedAnswer = normalizeQuizText(answer);
   return (
-    normalizedAnswer.length > 0 &&
-    meaningAlternatives(turkishMeaning).includes(normalizedAnswer)
+    normalizedAnswer.length > 0 && meaningAlternatives(turkishMeaning).includes(normalizedAnswer)
   );
 };
 

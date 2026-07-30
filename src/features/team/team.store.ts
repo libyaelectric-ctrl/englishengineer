@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { DEMO_TEAM_WORKSPACE } from './team.data';
 import { TeamService } from './team.service';
 import type { OrganizationRole, TeamState } from './team.types';
@@ -10,10 +11,7 @@ export interface BulkInviteResult {
 
 interface TeamActions {
   loadWorkspace: () => Promise<void>;
-  inviteMember: (
-    email: string,
-    role: Exclude<OrganizationRole, 'admin'>
-  ) => Promise<void>;
+  inviteMember: (email: string, role: Exclude<OrganizationRole, 'admin'>) => Promise<void>;
   bulkInviteMembers: (
     emails: string[],
     role: Exclude<OrganizationRole, 'admin'>
@@ -34,8 +32,7 @@ export const useTeamStore = create<TeamState & TeamActions>((set) => ({
     } catch (error) {
       set({
         isLoading: false,
-        error:
-          error instanceof Error ? error.message : 'Team workspace failed.',
+        error: error instanceof Error ? error.message : 'Team workspace failed.',
       });
     }
   },
@@ -60,10 +57,7 @@ export const useTeamStore = create<TeamState & TeamActions>((set) => ({
       } else {
         failed.push({
           email: emails[index],
-          reason:
-            result.reason instanceof Error
-              ? result.reason.message
-              : 'Unknown error',
+          reason: result.reason instanceof Error ? result.reason.message : 'Unknown error',
         });
       }
     });

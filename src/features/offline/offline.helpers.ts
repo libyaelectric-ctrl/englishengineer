@@ -1,9 +1,7 @@
 import { OfflineCapability, OfflineCapabilityStatus } from './offline.types';
 
-export const canUseCapability = (
-  capability: OfflineCapability,
-  isOnline: boolean
-): boolean => isOnline || capability.status !== 'internet-required';
+export const canUseCapability = (capability: OfflineCapability, isOnline: boolean): boolean =>
+  isOnline || capability.status !== 'internet-required';
 
 export const getCapabilityLabel = (status: OfflineCapabilityStatus): string => {
   if (status === 'available') return 'Offline available';
@@ -14,7 +12,5 @@ export const getCapabilityLabel = (status: OfflineCapabilityStatus): string => {
 export const getOfflineSummary = (capabilities: OfflineCapability[]) => ({
   available: capabilities.filter((item) => item.status === 'available').length,
   limited: capabilities.filter((item) => item.status === 'limited').length,
-  internetRequired: capabilities.filter(
-    (item) => item.status === 'internet-required'
-  ).length,
+  internetRequired: capabilities.filter((item) => item.status === 'internet-required').length,
 });

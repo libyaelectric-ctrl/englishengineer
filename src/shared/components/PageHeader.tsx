@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { cn } from '@/shared/utils/cn';
 
 export function PageHeader({
@@ -26,9 +27,7 @@ export function PageHeader({
             {icon}
           </div>
         )}
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          {title}
-        </h1>
+        <h1 className="text-base font-bold tracking-tight text-foreground">{title}</h1>
         {badgeText && (
           <span
             className={cn(
@@ -45,9 +44,7 @@ export function PageHeader({
           </p>
         )}
       </div>
-      {actions && (
-        <div className="shrink-0 flex items-center gap-2">{actions}</div>
-      )}
+      {actions && <div className="shrink-0 flex items-center gap-2">{actions}</div>}
       {children}
     </div>
   );

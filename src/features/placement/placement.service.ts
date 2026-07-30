@@ -1,5 +1,7 @@
 import { storage } from '@/shared/storage';
+
 import { LearningProfileRepository, getEloBandRange } from '@/features/profile';
+
 import { PLACEMENT_QUESTIONS } from './placement.data';
 import { evaluatePlacement } from './placement.helpers';
 import type { PlacementAnswers, PlacementResult } from './placement.types';

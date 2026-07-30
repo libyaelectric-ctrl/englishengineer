@@ -1,6 +1,7 @@
 import { MissionDifficulty } from '@/core/learning';
-import { CefrLevel } from '@/features/level-system';
 import type { LearningDataSkill } from '@/core/learning';
+
+import { CefrLevel } from '@/features/level-system';
 
 export type VocabularyDiscipline =
   | 'Electrical Engineering'
@@ -49,12 +50,7 @@ export type VocabularyWordSource =
   | 'MyMemory fallback'
   | 'Cached result';
 
-export type MyVocabularyFilter =
-  | 'All'
-  | CefrLevel
-  | 'Weak'
-  | 'Review Today'
-  | 'Mastered';
+export type MyVocabularyFilter = 'All' | CefrLevel | 'Weak' | 'Review Today' | 'Mastered';
 
 export interface VocabularyEntry {
   id: string;

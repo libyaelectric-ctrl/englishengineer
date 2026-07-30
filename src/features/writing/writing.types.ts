@@ -1,4 +1,5 @@
 import { MissionDifficulty } from '@/core/learning/learning.types';
+
 import { CefrLevel } from '@/features/level-system';
 
 export type CorrectionType = 'grammar' | 'style' | 'vocabulary';

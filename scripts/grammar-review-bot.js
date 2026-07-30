@@ -26,20 +26,13 @@ const GRAMMAR_PATTERNS = [
     description: "its vs it's",
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (
-        match.toLowerCase() === 'its' &&
-        (lower.includes('it is') || lower.includes('it has'))
-      ) {
+      if (match.toLowerCase() === 'its' && (lower.includes('it is') || lower.includes('it has'))) {
         return {
           suggestion: "it's",
           reason: 'Use "it\'s" for "it is" or "it has"',
         };
       }
-      if (
-        match.toLowerCase() === "it's" &&
-        !lower.includes('it is') &&
-        !lower.includes('it has')
-      ) {
+      if (match.toLowerCase() === "it's" && !lower.includes('it is') && !lower.includes('it has')) {
         return { suggestion: 'its', reason: 'Use "its" for possessive form' };
       }
       return null;
@@ -76,9 +69,7 @@ const GRAMMAR_PATTERNS = [
       const lower = context.toLowerCase();
       if (
         match.toLowerCase() === 'then' &&
-        (lower.includes('more') ||
-          lower.includes('better') ||
-          lower.includes('worse'))
+        (lower.includes('more') || lower.includes('better') || lower.includes('worse'))
       ) {
         return { suggestion: 'than', reason: 'Use "than" for comparisons' };
       }
@@ -135,10 +126,7 @@ const GRAMMAR_PATTERNS = [
     description: 'lose vs loose',
     check: (match, context) => {
       const lower = context.toLowerCase();
-      if (
-        match.toLowerCase() === 'loose' &&
-        (lower.includes('weight') || lower.includes('game'))
-      ) {
+      if (match.toLowerCase() === 'loose' && (lower.includes('weight') || lower.includes('game'))) {
         return {
           suggestion: 'lose',
           reason: 'Use "lose" for "to not win" or "to misplace"',
@@ -298,9 +286,7 @@ function checkGrammar(text, source = 'text') {
  */
 async function getPRCommits() {
   try {
-    const commits = await githubApi(
-      `/repos/${REPOSITORY}/pulls/${PR_NUMBER}/commits`
-    );
+    const commits = await githubApi(`/repos/${REPOSITORY}/pulls/${PR_NUMBER}/commits`);
     return commits.map((c) => ({
       message: c.commit.message,
       sha: c.sha.substring(0, 7),
@@ -316,16 +302,13 @@ async function getPRCommits() {
  */
 async function getPRDiff() {
   try {
-    const response = await fetch(
-      `${API_BASE}/repos/${REPOSITORY}/pulls/${PR_NUMBER}`,
-      {
-        headers: {
-          Accept: 'application/vnd.github.v3.diff',
-          Authorization: `token ${GITHUB_TOKEN}`,
-          'User-Agent': 'EngVox-Grammar-Bot',
-        },
-      }
-    );
+    const response = await fetch(`${API_BASE}/repos/${REPOSITORY}/pulls/${PR_NUMBER}`, {
+      headers: {
+        Accept: 'application/vnd.github.v3.diff',
+        Authorization: `token ${GITHUB_TOKEN}`,
+        'User-Agent': 'EngVox-Grammar-Bot',
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch diff: ${response.status}`);
@@ -348,11 +331,7 @@ function extractDiffComments(diff) {
   for (const line of lines) {
     if (line.startsWith('+') && !line.startsWith('+++')) {
       const content = line.substring(1).trim();
-      if (
-        content.length > 0 &&
-        !content.startsWith('//') &&
-        !content.startsWith('/*')
-      ) {
+      if (content.length > 0 && !content.startsWith('//') && !content.startsWith('/*')) {
         comments.push(content);
       }
     }

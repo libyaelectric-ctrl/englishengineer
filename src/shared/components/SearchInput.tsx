@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, memo } from 'react';
 import { Search, X } from 'lucide-react';
+
+import { memo, useEffect, useRef, useState } from 'react';
 
 interface SearchInputProps {
   placeholder?: string;

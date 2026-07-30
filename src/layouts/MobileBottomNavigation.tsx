@@ -1,10 +1,10 @@
 import { BriefcaseBusiness, Home, Layers3, Map, User } from 'lucide-react';
+
 import { NavLink } from 'react-router-dom';
+
 import { cn } from '@/shared/utils/cn';
-import {
-  NAVIGATION_TRANSLATIONS,
-  useLocalizationStore,
-} from '@/features/localization';
+
+import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
 const ITEMS = [
   { label: 'Home', href: '/dashboard', icon: Home },
@@ -33,8 +33,7 @@ export const MobileBottomNavigation = () => {
               className={({ isActive }) =>
                 cn(
                   'relative flex min-h-11 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[4px] px-1 text-[10px] font-bold text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground border border-transparent',
-                  isActive &&
-                    'bg-primary/10 text-primary border-primary/25'
+                  isActive && 'bg-primary/10 text-primary border-primary/25'
                 )
               }
             >

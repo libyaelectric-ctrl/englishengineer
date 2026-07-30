@@ -1,12 +1,13 @@
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLearningStore } from '@/core/learning';
 import { useShallow } from 'zustand/shallow';
+
+import { useMemo } from 'react';
+
+import { useLearningStore } from '@/core/learning';
+
 import { LearningProfileEngine } from './profile.engine';
 import { LearningProfileRepository } from './profile.repository';
-import type {
-  UserLearningProfile,
-} from './profile.types';
+import type { UserLearningProfile } from './profile.types';
 
 export const useLearningCockpit = (userId?: string | null) => {
   const learningState = useLearningStore(
@@ -32,8 +33,7 @@ export const useLearningCockpit = (userId?: string | null) => {
     [userId]
   );
   const profile = useMemo<UserLearningProfile>(
-    () =>
-      LearningProfileEngine.buildProfileSnapshot(storedProfile, learningState),
+    () => LearningProfileEngine.buildProfileSnapshot(storedProfile, learningState),
     [learningState, storedProfile]
   );
 
@@ -52,7 +52,15 @@ export const useLearningCockpit = (userId?: string | null) => {
 
   return {
     profile,
-    memory: memory ?? { total: 0, new: 0, learning: 0, mastered: 0, forgotten: 0, dueToday: 0, weakWords: 0 },
+    memory: memory ?? {
+      total: 0,
+      new: 0,
+      learning: 0,
+      mastered: 0,
+      forgotten: 0,
+      dueToday: 0,
+      weakWords: 0,
+    },
     missions: missions ?? [],
     isLoading: memoryLoading || missionsLoading,
     learningState,

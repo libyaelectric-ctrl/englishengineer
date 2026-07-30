@@ -28,9 +28,7 @@ export const ReadingHelpers = {
   /**
    * Retrieves status color string for progress bars or indicator dots based on difficulty.
    */
-  getDifficultyColor(
-    difficulty: string
-  ): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
+  getDifficultyColor(difficulty: string): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
     switch (difficulty.toLowerCase()) {
       case 'advanced':
         return 'rose';

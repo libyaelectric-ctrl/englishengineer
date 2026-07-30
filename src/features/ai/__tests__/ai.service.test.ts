@@ -1,9 +1,8 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import type { AIRequest, MockExample } from '../ai.types';
 
-const mockExamples: MockExample[] = [
-  { input: 'hello', output: 'AI REFINEMENT:\nHello world' },
-];
+const mockExamples: MockExample[] = [{ input: 'hello', output: 'AI REFINEMENT:\nHello world' }];
 
 const mockContext = {
   userName: 'Test User',
@@ -71,11 +70,7 @@ describe('AIService', () => {
 
     it('returns mock response when provider is mock', async () => {
       const { AIService } = await import('../ai.service');
-      const result = await AIService.run(
-        mockExamples,
-        'rewriteText',
-        mockRequest
-      );
+      const result = await AIService.run(mockExamples, 'rewriteText', mockRequest);
 
       expect(result.text).toBeTruthy();
       expect(result.providerStatus.mode).toBe('mock');
@@ -123,9 +118,7 @@ describe('AIService', () => {
           rewriteText: vi.fn().mockResolvedValue(mockBackendResponse),
           analyzeText: vi.fn().mockResolvedValue(mockBackendResponse),
           generatePractice: vi.fn().mockResolvedValue(mockBackendResponse),
-          evaluateEngineeringEnglish: vi
-            .fn()
-            .mockResolvedValue(mockBackendResponse),
+          evaluateEngineeringEnglish: vi.fn().mockResolvedValue(mockBackendResponse),
           generateStudyPlan: vi.fn().mockResolvedValue(mockBackendResponse),
           analyzeProgress: vi.fn().mockResolvedValue(mockBackendResponse),
         })),
@@ -134,11 +127,7 @@ describe('AIService', () => {
 
     it('uses backend proxy when configured', async () => {
       const { AIService } = await import('../ai.service');
-      const result = await AIService.run(
-        mockExamples,
-        'rewriteText',
-        mockRequest
-      );
+      const result = await AIService.run(mockExamples, 'rewriteText', mockRequest);
 
       expect(result.text).toBe('Backend response');
       expect(result.metadata?.success).toBe(true);
@@ -175,11 +164,7 @@ describe('AIService', () => {
       }));
 
       const { AIService } = await import('../ai.service');
-      const result = await AIService.run(
-        mockExamples,
-        'rewriteText',
-        mockRequest
-      );
+      const result = await AIService.run(mockExamples, 'rewriteText', mockRequest);
 
       expect(result.text).toBeTruthy();
       expect(result.metadata?.errorCode).toBe('backend_proxy_error');

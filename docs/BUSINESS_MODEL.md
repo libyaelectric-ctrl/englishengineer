@@ -8,11 +8,11 @@ EngVox helps engineers improve their professional English communication through 
 
 ### 1. Subscription Plans
 
-| Plan | Price | Features |
-|------|-------|----------|
-| Free | $0 | 3 AI requests/day, basic vocabulary |
-| Pro | $15/mo | Unlimited AI, advanced grammar, writing coach |
-| Team | $25/user/mo | Team analytics, admin dashboard, SSO |
+| Plan | Price       | Features                                      |
+| ---- | ----------- | --------------------------------------------- |
+| Free | $0          | 3 AI requests/day, basic vocabulary           |
+| Pro  | $15/mo      | Unlimited AI, advanced grammar, writing coach |
+| Team | $25/user/mo | Team analytics, admin dashboard, SSO          |
 
 ### 2. Enterprise
 
@@ -23,14 +23,14 @@ EngVox helps engineers improve their professional English communication through 
 
 ## Key Metrics
 
-| Metric | Current | Target (12mo) |
-|--------|---------|---------------|
-| MRR | - | $50K |
-| Users | - | 10,000 |
-| Conversion | - | 5% free→paid |
-| Churn | - | <5% monthly |
-| LTV | - | $300 |
-| CAC | - | $50 |
+| Metric     | Current | Target (12mo) |
+| ---------- | ------- | ------------- |
+| MRR        | -       | $50K          |
+| Users      | -       | 10,000        |
+| Conversion | -       | 5% free→paid  |
+| Churn      | -       | <5% monthly   |
+| LTV        | -       | $300          |
+| CAC        | -       | $50           |
 
 ## Go-to-Market
 
@@ -48,8 +48,8 @@ EngVox helps engineers improve their professional English communication through 
 
 ## Financial Projections
 
-| Year | Revenue | Users | Burn Rate |
-|------|---------|-------|-----------|
-| Y1 | $120K | 2,000 | $8K/mo |
-| Y2 | $500K | 10,000 | $15K/mo |
-| Y3 | $1.5M | 30,000 | $25K/mo |
+| Year | Revenue | Users  | Burn Rate |
+| ---- | ------- | ------ | --------- |
+| Y1   | $120K   | 2,000  | $8K/mo    |
+| Y2   | $500K   | 10,000 | $15K/mo   |
+| Y3   | $1.5M   | 30,000 | $25K/mo   |

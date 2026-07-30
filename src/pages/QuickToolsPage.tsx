@@ -1,20 +1,21 @@
-import { useState, useEffect } from 'react';
-import { AIService, AIProviderStatus } from '@/features/ai';
-import { useWorkToolsStore } from '@/features/work-tools';
+import { useEffect, useState } from 'react';
+
 import { PageHeader } from '@/shared/components/PageHeader';
-import { QuickAITab } from '@/pages/QuickToolsPage/QuickAITab';
-import { MeetingPhrasebookTab } from '@/pages/QuickToolsPage/MeetingPhrasebookTab';
-import { SiteDictionaryTab } from '@/pages/QuickToolsPage/SiteDictionaryTab';
+
+import { AIProviderStatus, AIService } from '@/features/ai';
 import { PdfSpecExtractor } from '@/features/tools/PdfSpecExtractor';
+import { useWorkToolsStore } from '@/features/work-tools';
+
+import { MeetingPhrasebookTab } from '@/pages/QuickToolsPage/MeetingPhrasebookTab';
+import { QuickAITab } from '@/pages/QuickToolsPage/QuickAITab';
+import { SiteDictionaryTab } from '@/pages/QuickToolsPage/SiteDictionaryTab';
 
 type QuickTab = 'ai' | 'meeting' | 'dictionary' | 'pdf-spec';
 
 const QuickToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const { quickAIDraft } = useWorkToolsStore();
   const [tab, setTab] = useState<QuickTab>('ai');
-  const [status, setStatus] = useState<AIProviderStatus>(() =>
-    AIService.getStatus([])
-  );
+  const [status, setStatus] = useState<AIProviderStatus>(() => AIService.getStatus([]));
 
   useEffect(() => {
     if (quickAIDraft) {

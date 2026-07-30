@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
 import { storage } from '@/shared/storage';
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
 import { createRewardHistoryItem, getTodayKey } from './gamification.helpers';
 import { DAILY_LOGIN_REWARD } from './gamification.rewards';
-import {
-  GamificationStoreState,
-} from './gamification.types';
+import { GamificationStoreState } from './gamification.types';
 
 const STORAGE_KEY = 'gamification_pro_state';
 

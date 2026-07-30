@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { AIService } from './ai.service';
 import type { MockExample } from './mock-ai.provider';
 
@@ -44,10 +45,7 @@ Explain best practices, engineering terminology, and communication rules. Encour
     }
 
     const chatHistoryText = history
-      .map(
-        (msg) =>
-          `${msg.role === 'user' ? 'Student' : 'Teacher'}: ${msg.content}`
-      )
+      .map((msg) => `${msg.role === 'user' ? 'Student' : 'Teacher'}: ${msg.content}`)
       .join('\n');
 
     const prompt = `${systemPrompt}\n\nChat History:\n${chatHistoryText}\nStudent: ${userMessage}\nTeacher:`;

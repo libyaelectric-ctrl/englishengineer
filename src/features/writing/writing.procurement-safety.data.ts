@@ -39,12 +39,7 @@ export const WRITING_PROCUREMENT_SAFETY_SPECS: WritingSpec[] = [
     scenario:
       'A supplier has not confirmed delivery dates for fire alarm modules required for commissioning.',
     task: 'Write a professional follow-up email requesting commitment.',
-    expectedStructure: [
-      'Reference',
-      'Pending item',
-      'Required date',
-      'Escalation risk',
-    ],
+    expectedStructure: ['Reference', 'Pending item', 'Required date', 'Escalation risk'],
     targetVocabulary: [
       'delivery commitment',
       'lead time',
@@ -64,15 +59,9 @@ export const WRITING_PROCUREMENT_SAFETY_SPECS: WritingSpec[] = [
     discipline: 'HSE',
     cefrLevel: 'B2',
     difficulty: 'Intermediate',
-    scenario:
-      'A technician entered an energized panel area without the correct arc-flash PPE.',
+    scenario: 'A technician entered an energized panel area without the correct arc-flash PPE.',
     task: 'Write a safety observation with immediate corrective action.',
-    expectedStructure: [
-      'Observation',
-      'Risk',
-      'Immediate action',
-      'Preventive action',
-    ],
+    expectedStructure: ['Observation', 'Risk', 'Immediate action', 'Preventive action'],
     targetVocabulary: [
       'safety observation',
       'arc-flash PPE',
@@ -94,19 +83,8 @@ export const WRITING_PROCUREMENT_SAFETY_SPECS: WritingSpec[] = [
     difficulty: 'Intermediate',
     scenario: 'A team must isolate a 415V switchboard before inspection.',
     task: 'Write a step-by-step lockout-tagout instruction.',
-    expectedStructure: [
-      'Isolation point',
-      'Locking step',
-      'Verification',
-      'Release condition',
-    ],
-    targetVocabulary: [
-      'lockout-tagout',
-      'isolator',
-      'zero voltage',
-      'padlock',
-      'permit',
-    ],
+    expectedStructure: ['Isolation point', 'Locking step', 'Verification', 'Release condition'],
+    targetVocabulary: ['lockout-tagout', 'isolator', 'zero voltage', 'padlock', 'permit'],
     grammarFocus: ['sequence connectors', 'must before'],
     strongPhrase:
       'Before inspection starts, the upstream breaker and local isolator must be locked and verified for zero voltage.',

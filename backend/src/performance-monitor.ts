@@ -39,9 +39,7 @@ export const getPerformanceMetrics = (): PerformanceMetricsResult => {
 
   const durations = metricsState.requests.map((r) => r.duration);
   const avgDuration =
-    durations.length > 0
-      ? durations.reduce((a, b) => a + b, 0) / durations.length
-      : 0;
+    durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0;
 
   const sorted = [...durations].sort((a, b) => a - b);
   const p95 = sorted.length > 0 ? sorted[Math.floor(sorted.length * 0.95)] : 0;

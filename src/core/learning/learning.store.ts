@@ -1,9 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { eosPersistConfig } from '@/shared/storage/persist-middleware';
-import { logger } from '@/shared/logger';
+
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
+
+import { logger } from '@/shared/logger';
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
+import { useAuthStore } from '@/features/auth';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
+
+import { AchievementService } from './achievement.service';
+import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
+import { DEFAULT_MISSIONS } from './learning.missions.data';
+import { calculateStreak } from './learning.streak';
 import {
   LearningState,
   MissionModule,
@@ -12,28 +22,18 @@ import {
   XP_PER_LEVEL,
 } from './learning.types';
 import { ScoringService } from './scoring.service';
-import { AchievementService } from './achievement.service';
-import { DEFAULT_MISSIONS } from './learning.missions.data';
-import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
-import { calculateStreak } from './learning.streak';
-import { useAuthStore } from '@/features/auth';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 
 const STORAGE_KEY = 'learning_state';
 const MAX_HISTORY_SIZE = 500;
 
-const mergeDefaults = <T extends { id: string }>(
-  existing: T[],
-  defaults: T[]
-): T[] => {
+const mergeDefaults = <T extends { id: string }>(existing: T[], defaults: T[]): T[] => {
   const existingIds = new Set(existing.map((item) => item.id));
   const missing = defaults.filter((item) => !existingIds.has(item.id));
   return missing.length > 0 ? [...existing, ...missing] : existing;
 };
 
 const ensureArrays = (state: Partial<LearningState>): LearningState => {
-  const safe = <T>(v: T[] | undefined, fallback: T[]): T[] =>
-    Array.isArray(v) ? v : fallback;
+  const safe = <T>(v: T[] | undefined, fallback: T[]): T[] => (Array.isArray(v) ? v : fallback);
   return {
     missions: state.missions ?? DEFAULT_MISSIONS,
     achievements: state.achievements ?? DEFAULT_ACHIEVEMENTS,
@@ -158,11 +158,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
 
         const now = new Date();
         const todayStr = now.toISOString().split('T')[0];
-        const currentStreak = calculateStreak(
-          get().streak,
-          get().lastActivityDate,
-          now
-        );
+        const currentStreak = calculateStreak(get().streak, get().lastActivityDate, now);
         const totalXP = get().xp + result.xp;
         const computedLevel = Math.floor(totalXP / XP_PER_LEVEL) + 1;
         const newElo = get().elo + result.eloChange;
@@ -186,9 +182,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         };
 
         const todayDateStr = now.toLocaleDateString();
-        const updatedSessions = [...get().studySessions, newSession].slice(
-          -MAX_HISTORY_SIZE
-        );
+        const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
         const updatedScoreHistory = [
           ...get().scoreHistory,
           { date: todayDateStr, score: result.score, module: mission.module },
@@ -247,11 +241,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         return result;
       },
 
-      completeGenericPractice: (
-        module: MissionModule,
-        score: number,
-        durationMinutes: number
-      ) => {
+      completeGenericPractice: (module: MissionModule, score: number, durationMinutes: number) => {
         const result = ScoringService.calculateScore({
           module,
           difficulty: 'Intermediate',
@@ -261,11 +251,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
 
         const now = new Date();
         const todayStr = now.toISOString().split('T')[0];
-        const currentStreak = calculateStreak(
-          get().streak,
-          get().lastActivityDate,
-          now
-        );
+        const currentStreak = calculateStreak(get().streak, get().lastActivityDate, now);
         const totalXP = get().xp + result.xp;
         const computedLevel = Math.floor(totalXP / 500) + 1;
 
@@ -294,9 +280,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         };
 
         const todayDateStr = now.toLocaleDateString();
-        const updatedSessions = [...get().studySessions, newSession].slice(
-          -MAX_HISTORY_SIZE
-        );
+        const updatedSessions = [...get().studySessions, newSession].slice(-MAX_HISTORY_SIZE);
         const updatedScoreHistory = [
           ...get().scoreHistory,
           { date: todayDateStr, score: result.score, module },
@@ -383,10 +367,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           ...ensureArrays(persisted),
         };
         merged.missions = mergeDefaults(merged.missions, DEFAULT_MISSIONS);
-        merged.achievements = mergeDefaults(
-          merged.achievements ?? [],
-          DEFAULT_ACHIEVEMENTS
-        );
+        merged.achievements = mergeDefaults(merged.achievements ?? [], DEFAULT_ACHIEVEMENTS);
         return merged as LearningState & LearningStoreActions;
       },
     }

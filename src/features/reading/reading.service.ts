@@ -1,22 +1,25 @@
-import { storage } from '@/shared/storage';
-import { AppError } from '@/core/errors/app-error';
-import { ErrorCode } from '@/core/errors/error-codes';
-import { READING_MISSIONS } from './reading.data';
-import {
-  ReadingMission,
-  ReadingState,
-  ReadingSubmission,
-  ReadingEvaluationResult,
-  ReadingHistoryEntry,
-} from './reading.types';
-import { ReadingEvaluator } from './reading.evaluator';
-import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
-import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
 import {
   KnowledgePoolEntry,
   sortContentByPoolRatio,
 } from '@/core/content-selection/personalized-content.service';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
+import { useLearningStore } from '@/core/learning';
+
+import { storage } from '@/shared/storage';
+
+import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
+import { READING_MISSIONS } from './reading.data';
+import { ReadingEvaluator } from './reading.evaluator';
+import {
+  ReadingEvaluationResult,
+  ReadingHistoryEntry,
+  ReadingMission,
+  ReadingState,
+  ReadingSubmission,
+} from './reading.types';
 
 const STORAGE_KEY = 'EngVox_reading_state';
 export const READING_CONTENT_SCHEMA_VERSION = 1;
@@ -69,12 +72,10 @@ export const ReadingService = {
   },
 
   getMissionsSortedByPoolRatio(
-    pool: KnowledgePoolEntry[] = useLearningStore
-      .getState()
-      .vocabularyPool.map((id) => ({
-        content_type: 'vocabulary',
-        content_id: id,
-      }))
+    pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
+      content_type: 'vocabulary',
+      content_id: id,
+    }))
   ): ReadingMission[] {
     return sortContentByPoolRatio(this.getMissions(), pool);
   },
@@ -103,11 +104,7 @@ export const ReadingService = {
     }
 
     // 1. Evaluate submission using rule-based evaluator
-    const evaluation = ReadingEvaluator.evaluate(
-      mission,
-      submission,
-      clickedVocabTerms.length
-    );
+    const evaluation = ReadingEvaluator.evaluate(mission, submission, clickedVocabTerms.length);
     VocabularyService.addDiscoveredTerms(clickedVocabTerms);
 
     // 2. Load reading state
@@ -135,9 +132,7 @@ export const ReadingService = {
 
     // 7. Sync with global LearningStore to award XP, coins, and update ELO/achievements
     const learningStore = useLearningStore.getState();
-    const globalMissionExists = learningStore.missions.some(
-      (m) => m.id === mission.id
-    );
+    const globalMissionExists = learningStore.missions.some((m) => m.id === mission.id);
 
     if (globalMissionExists) {
       // If the mission exists in the global store, submit it there to update progress

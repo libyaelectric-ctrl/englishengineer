@@ -1,7 +1,4 @@
-export type OfflineCapabilityStatus =
-  | 'available'
-  | 'limited'
-  | 'internet-required';
+export type OfflineCapabilityStatus = 'available' | 'limited' | 'internet-required';
 
 export interface OfflineCapability {
   id: string;

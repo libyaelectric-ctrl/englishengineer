@@ -1,13 +1,18 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpenCheck, Clock3, Target } from 'lucide-react';
+
+import { useEffect, useMemo, useState } from 'react';
+
+import { Link } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
+
 import { useAuthStore } from '@/features/auth';
 import {
   LearningProfileEngine,
   LearningProfileRepository,
   type SkillName,
 } from '@/features/profile';
+
 import type { LearningTaskRecommendation } from './learning-orchestrator.types';
 import { LearningTaskEngine } from './learning-task.engine';
 
@@ -28,16 +33,13 @@ export const SkillEntryBrief = ({
       ),
     [learning, userId]
   );
-  const [recommendation, setRecommendation] =
-    useState<LearningTaskRecommendation | null>(null);
+  const [recommendation, setRecommendation] = useState<LearningTaskRecommendation | null>(null);
 
   useEffect(() => {
     let active = true;
-    void LearningTaskEngine.createRecommendation(profile, skill).then(
-      (next) => {
-        if (active) setRecommendation(next);
-      }
-    );
+    void LearningTaskEngine.createRecommendation(profile, skill).then((next) => {
+      if (active) setRecommendation(next);
+    });
     return () => {
       active = false;
     };
@@ -86,16 +88,13 @@ export const SkillEntryBrief = ({
               {recommendation.targetCefr}
             </span>
             <span className="inline-flex items-center gap-1 rounded-[4px] border border-primary/25 bg-surface px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              <BookOpenCheck className="h-3.5 w-3.5" /> Lesson{' '}
-              {recommendation.lessonNumber}
+              <BookOpenCheck className="h-3.5 w-3.5" /> Lesson {recommendation.lessonNumber}
             </span>
           </div>
           <p className="mt-2 text-xs font-bold text-sky-900 uppercase tracking-wider">
             {recommendation.sharedLessonTitle}
           </p>
-          <p className="mt-2 text-sm font-bold text-foreground">
-            {recommendation.whyRecommended}
-          </p>
+          <p className="mt-2 text-sm font-bold text-foreground">{recommendation.whyRecommended}</p>
           <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-copy font-medium">
             <span>
               Vocabulary:{' '}
@@ -105,9 +104,7 @@ export const SkillEntryBrief = ({
                 .join(', ') || 'current-level database set'}
             </span>
             <span>
-              Grammar:{' '}
-              {recommendation.grammarFocus[0]?.title ??
-                'current-level foundation'}
+              Grammar: {recommendation.grammarFocus[0]?.title ?? 'current-level foundation'}
             </span>
             <span className="inline-flex items-center gap-1">
               <Clock3 className="h-3.5 w-3.5" />

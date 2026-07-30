@@ -5,6 +5,8 @@
  * for instant offline access in remote job sites, tunnels, or offline PWA mode.
  */
 
+import { logger } from '@/shared/logger';
+
 const DB_NAME = 'engvox_offline_cache';
 const DB_VERSION = 2;
 const STORE_SEED = 'seed_data';
@@ -68,7 +70,8 @@ export async function getCachedSeed<T>(key: string): Promise<T | null> {
       };
       request.onerror = () => resolve(null);
     });
-  } catch {
+  } catch (e) {
+    logger.w('[IDB] Failed to read cached seed', e);
     return null;
   }
 }
@@ -88,8 +91,8 @@ export async function setCachedSeed<T>(key: string, data: T): Promise<void> {
       tx.oncomplete = () => resolve();
       tx.onerror = () => resolve();
     });
-  } catch {
-    // Ignore cache write errors
+  } catch (e) {
+    logger.w('[IDB] Failed to write cached seed', e);
   }
 }
 

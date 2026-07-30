@@ -46,7 +46,8 @@
     "test:duplication": "jscpd --min-lines 5 --min-tokens 50 --reporters console",
     "analyze": "ANALYZE=true npm run build",
     "check:licenses": "license-checker --production --csv --out licenses.csv",
-    "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'"
+    "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
+    "content:validate": "node scripts/verify-release.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",

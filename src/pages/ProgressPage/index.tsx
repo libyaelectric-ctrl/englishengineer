@@ -1,6 +1,7 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { ProgressOverviewTab } from './ProgressOverviewTab';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import { ProgressNextStepsTab } from './ProgressNextStepsTab';
+import { ProgressOverviewTab } from './ProgressOverviewTab';
 
 const TABS = [
   { id: 'overview', label: 'Overview' },
@@ -17,9 +18,7 @@ const ProgressPage = () => {
       {/* Fixed Header with Tabs */}
       <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex min-w-0 items-baseline gap-2">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Progress Hub
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Progress Hub</h1>
           <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
             Analytics, milestones, and next steps.
           </p>

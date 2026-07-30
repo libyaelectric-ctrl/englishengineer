@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Public route rendering', () => {
   const publicRoutes = [
@@ -108,9 +108,7 @@ test.describe('Route redirects', () => {
     await expect(page).toHaveURL(/\/progress\/overview/);
   });
 
-  test('/dashboard redirects to login when unauthenticated', async ({
-    page,
-  }) => {
+  test('/dashboard redirects to login when unauthenticated', async ({ page }) => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/login/);
   });
@@ -125,9 +123,7 @@ test.describe('404 page', () => {
     });
 
     await page.goto('/completely-unknown-route-xyz');
-    await expect(
-      page.getByText(/404|not found|logic fault/i).first()
-    ).toBeVisible();
+    await expect(page.getByText(/404|not found|logic fault/i).first()).toBeVisible();
   });
 
   test('404 page has return link to dashboard', async ({ page }) => {
@@ -161,9 +157,7 @@ test.describe('Command palette (Cmd+K)', () => {
   test('Cmd+K opens command palette', async ({ page }) => {
     await loginAsDemo(page);
     await page.keyboard.press('Control+k');
-    await expect(
-      page.getByRole('textbox', { name: /command palette/i })
-    ).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /command palette/i })).toBeVisible();
   });
 
   test('command palette shows navigation items', async ({ page }) => {
@@ -173,9 +167,7 @@ test.describe('Command palette (Cmd+K)', () => {
     await expect(input).toBeVisible();
 
     // Should show Dashboard command
-    await expect(
-      page.getByRole('button', { name: /dashboard/i })
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /dashboard/i })).toBeVisible();
   });
 
   test('command palette search filters results', async ({ page }) => {
@@ -183,22 +175,16 @@ test.describe('Command palette (Cmd+K)', () => {
     await page.keyboard.press('Control+k');
     const input = page.getByRole('textbox', { name: /command palette/i });
     await input.fill('vocabulary');
-    await expect(
-      page.getByRole('button', { name: /vocabulary/i }).first()
-    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /vocabulary/i }).first()).toBeVisible();
   });
 
   test('command palette closes on Escape', async ({ page }) => {
     await loginAsDemo(page);
     await page.keyboard.press('Control+k');
-    await expect(
-      page.getByRole('textbox', { name: /command palette/i })
-    ).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /command palette/i })).toBeVisible();
 
     await page.keyboard.press('Escape');
-    await expect(
-      page.getByRole('textbox', { name: /command palette/i })
-    ).not.toBeVisible();
+    await expect(page.getByRole('textbox', { name: /command palette/i })).not.toBeVisible();
   });
 
   test('command palette navigates on Enter', async ({ page }) => {

@@ -26,8 +26,7 @@ export const PLACEMENT_QUESTIONS: PlacementQuestion[] = [
     id: 'placement_3',
     domain: 'reading',
     band: 'A2+',
-    prompt:
-      'The delivery is delayed until Thursday. When is the new delivery day?',
+    prompt: 'The delivery is delayed until Thursday. When is the new delivery day?',
     choices: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'],
     correctIndex: 3,
   },
@@ -76,20 +75,14 @@ export const PLACEMENT_QUESTIONS: PlacementQuestion[] = [
     domain: 'vocabulary',
     band: 'C1',
     prompt: 'Which phrase best describes reducing a project risk?',
-    choices: [
-      'Risk mitigation',
-      'Scope omission',
-      'Cost escalation',
-      'Design supersession',
-    ],
+    choices: ['Risk mitigation', 'Scope omission', 'Cost escalation', 'Design supersession'],
     correctIndex: 0,
   },
   {
     id: 'placement_8',
     domain: 'reading',
     band: 'C2',
-    prompt:
-      'A waiver is granted without prejudice to contractual rights. What does this mean?',
+    prompt: 'A waiver is granted without prejudice to contractual rights. What does this mean?',
     choices: [
       'All contractual rights are cancelled',
       'The waiver does not surrender other contractual rights',

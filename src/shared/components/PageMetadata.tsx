@@ -13,17 +13,10 @@ const upsertMeta = (selector: string, attributes: Record<string, string>) => {
     element = document.createElement('meta');
     document.head.appendChild(element);
   }
-  Object.entries(attributes).forEach(([name, value]) =>
-    element?.setAttribute(name, value)
-  );
+  Object.entries(attributes).forEach(([name, value]) => element?.setAttribute(name, value));
 };
 
-export const PageMetadata = ({
-  title,
-  description,
-  canonical,
-  jsonLd,
-}: PageMetadataProps) => {
+export const PageMetadata = ({ title, description, canonical, jsonLd }: PageMetadataProps) => {
   useEffect(() => {
     document.title = `${title} | EngVox`;
     upsertMeta('meta[name="description"]', {
@@ -60,9 +53,7 @@ export const PageMetadata = ({
     });
 
     if (canonical) {
-      let linkEl = document.head.querySelector<HTMLLinkElement>(
-        'link[rel="canonical"]'
-      );
+      let linkEl = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
       if (!linkEl) {
         linkEl = document.createElement('link');
         linkEl.setAttribute('rel', 'canonical');

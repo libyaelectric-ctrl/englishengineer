@@ -9,10 +9,8 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
   {
     id: 'ncr-reply',
     title: 'NCR -> Reply',
-    context:
-      'Respond to a non-conformance without accepting unsupported liability.',
-    sampleInput:
-      'Cable tray supports at Grid B7 do not match the approved spacing.',
+    context: 'Respond to a non-conformance without accepting unsupported liability.',
+    sampleInput: 'Cable tray supports at Grid B7 do not match the approved spacing.',
     professionalOutput:
       'We acknowledge NCR-014. The affected supports at Grid B7 have been isolated, and installation has stopped in this area. The team will reinstall the supports in accordance with the approved method statement and submit photographic evidence for reinspection by 15:00 tomorrow.',
     turkishExplanation:
@@ -21,10 +19,8 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
   {
     id: 'consultant-comment-reply',
     title: 'Consultant Comment -> Reply',
-    context:
-      'Close a consultant comment with evidence and a clear next action.',
-    sampleInput:
-      'Provide discrimination study confirmation for the revised LV panel settings.',
+    context: 'Close a consultant comment with evidence and a clear next action.',
+    sampleInput: 'Provide discrimination study confirmation for the revised LV panel settings.',
     professionalOutput:
       'The revised protection settings have been checked against the approved discrimination study. The updated setting schedule and highlighted coordination curves are attached for review. Please confirm closure of Comment EL-27.',
     turkishExplanation:
@@ -57,8 +53,7 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
     sampleInput: 'Clarify enclosure IP rating and corrosion protection.',
     professionalOutput:
       'The proposed enclosure is rated IP66 in accordance with IEC 60529 and includes a polyester powder-coated finish suitable for the specified indoor plantroom environment. The manufacturer test certificate and coating data sheet are included in Revision 02.',
-    turkishExplanation:
-      'Teknik soruya standart, performans değeri ve kanıt belgeyle cevap verir.',
+    turkishExplanation: 'Teknik soruya standart, performans değeri ve kanıt belgeyle cevap verir.',
   },
   {
     id: 'fat-report',
@@ -67,19 +62,16 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
     sampleInput: 'Generator FAT passed except remote alarm simulation.',
     professionalOutput:
       'The generator FAT was completed in accordance with the approved procedure. Load performance, protection trips and local controls passed. The remote common-alarm simulation remains open because the interface relay was unavailable. The supplier will repeat this test before dispatch and issue the signed test sheet.',
-    turkishExplanation:
-      'Kapsam, basarili testler, acik madde ve kapanış sorumlulugunu kaydeder.',
+    turkishExplanation: 'Kapsam, basarili testler, acik madde ve kapanış sorumlulugunu kaydeder.',
   },
   {
     id: 'mir-comment',
     title: 'MIR -> Comment',
     context: 'Record a material inspection comment.',
-    sampleInput:
-      'Delivered cable glands have no visible certification marking.',
+    sampleInput: 'Delivered cable glands have no visible certification marking.',
     professionalOutput:
       'Inspection is held. Certification markings are not visible on the delivered cable glands, and the submitted batch certificate does not identify the packing list. Segregate the material and provide traceable certification before reinspection.',
-    turkishExplanation:
-      'Malzemenin durumunu, uygunsuzlugu ve kabul icin gereken kanıtı belirtir.',
+    turkishExplanation: 'Malzemenin durumunu, uygunsuzlugu ve kabul icin gereken kanıtı belirtir.',
   },
   {
     id: 'itp-comment',
@@ -98,8 +90,7 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
     sampleInput: 'Need confirmed delivery for ATS panels.',
     professionalOutput:
       'Please provide the confirmed manufacturing status and ex-works date for the ATS panels by 12:00 today. The current required-on-site date is 18 August. Identify any outstanding approvals or commercial constraints that may affect this date.',
-    turkishExplanation:
-      'Kesin durum, son cevap saati, gerekli teslim tarihi ve engelleri sorar.',
+    turkishExplanation: 'Kesin durum, son cevap saati, gerekli teslim tarihi ve engelleri sorar.',
   },
   {
     id: 'hse-observation-response',
@@ -108,19 +99,16 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
     sampleInput: 'Temporary extension cable crossed an access route.',
     professionalOutput:
       'The extension cable was removed from the access route immediately and rerouted overhead using approved supports. The area supervisor briefed the team, and temporary power routing will be included in the next daily inspection checklist.',
-    turkishExplanation:
-      'Anlik duzeltme ile tekrarini onleyen faaliyeti birbirinden ayirir.',
+    turkishExplanation: 'Anlik duzeltme ile tekrarini onleyen faaliyeti birbirinden ayirir.',
   },
   {
     id: 'meeting-minutes',
     title: 'Meeting -> Minutes',
     context: 'Convert a discussion into accountable meeting minutes.',
-    sampleInput:
-      'Consultant wants revised containment route; contractor to submit Thursday.',
+    sampleInput: 'Consultant wants revised containment route; contractor to submit Thursday.',
     professionalOutput:
       'Action EL-08: The contractor shall submit the revised containment route for Corridor 2, including coordinated sections and access clearances, by Thursday 16:00. The consultant will review the revision within two working days. Owner: MEP Coordinator.',
-    turkishExplanation:
-      'Karari; aksiyon, teslim, tarih, inceleme suresi ve sorumluya donusturur.',
+    turkishExplanation: 'Karari; aksiyon, teslim, tarih, inceleme suresi ve sorumluya donusturur.',
   },
   {
     id: 'handover-punch-note',
@@ -129,7 +117,6 @@ export const BASE_ENGINEERING_TEMPLATES: BaseEngineeringTemplate[] = [
     sampleInput: 'UPS room panel directory does not match final circuits.',
     professionalOutput:
       'Update the UPS room distribution-board directory to match the final connected circuit references. Verify each outgoing feeder against the as-built drawing, replace the directory card and submit a dated close-out photograph.',
-    turkishExplanation:
-      'Eksigi, doğrulama yöntemini ve kapanış kanıtını netleştirir.',
+    turkishExplanation: 'Eksigi, doğrulama yöntemini ve kapanış kanıtını netleştirir.',
   },
 ];

@@ -16,9 +16,7 @@ const app = createApp({ config });
 let isShuttingDown = false;
 
 const server = app.listen(config.port, () => {
-  console.info(
-    `EngineerOS backend ${config.version} listening on port ${config.port}`
-  );
+  console.info(`EngineerOS backend ${config.version} listening on port ${config.port}`);
 });
 
 // Track active connections for graceful drain

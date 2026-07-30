@@ -43,15 +43,11 @@ function calculateMemberScore(member: {
   skillScores: Record<string, number>;
 }): number {
   const scores = Object.values(member.skillScores);
-  const avgScore =
-    scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+  const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
   return Math.round(avgScore * 0.6 + member.completedTasks * 0.4);
 }
 
-function determineTrend(
-  currentScore: number,
-  previousScore: number
-): 'up' | 'down' | 'stable' {
+function determineTrend(currentScore: number, previousScore: number): 'up' | 'down' | 'stable' {
   if (currentScore > previousScore) return 'up';
   if (currentScore < previousScore) return 'down';
   return 'stable';
@@ -152,10 +148,7 @@ export const TeamLeaderboardService = {
         tasksCompleted: member.completedTasks,
         streak: member.streak,
         rank: 0,
-        trend: determineTrend(
-          calculateMemberScore(member),
-          previousScores[member.id] || 0
-        ),
+        trend: determineTrend(calculateMemberScore(member), previousScores[member.id] || 0),
       }))
       .sort((a, b) => b.score - a.score)
       .map((entry, index) => ({ ...entry, rank: index + 1 }));
@@ -201,23 +194,16 @@ export const TeamLeaderboardService = {
     previousScores: Record<string, number> = {},
     memberProgress: Record<string, number> = {},
     weekNumber: number = Math.ceil(
-      (Date.now() - new Date(new Date().getFullYear(), 0, 1).getTime()) /
-        (7 * 24 * 60 * 60 * 1000)
+      (Date.now() - new Date(new Date().getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000)
     )
   ): TeamLeaderboard {
     const entries = this.generateLeaderboard(members, previousScores);
-    const challenges = this.generateWeeklyChallenges(
-      memberProgress,
-      weekNumber
-    );
+    const challenges = this.generateWeeklyChallenges(memberProgress, weekNumber);
 
     const activeMembers = members.length;
 
     const totalXpEarned = members.reduce((sum, m) => sum + m.xpEarned, 0);
-    const totalTasksCompleted = members.reduce(
-      (sum, m) => sum + m.completedTasks,
-      0
-    );
+    const totalTasksCompleted = members.reduce((sum, m) => sum + m.completedTasks, 0);
 
     const allScores = entries.map((e) => e.score);
     const averageScore =

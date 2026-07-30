@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
+
 import { PageMetadata } from '@/shared/components/PageMetadata';
+
 import { ProductAnalyticsService } from '@/features/analytics';
-import { STRUCTURED_DATA } from './constants';
-import { Navbar } from './Navbar';
-import HeroSection from './HeroSection';
-import { FeatureSection } from './FeatureSection';
+
 import { DisciplineShowcase } from './DisciplineShowcase';
-import { WorkflowSection } from './WorkflowSection';
-import { PricingSection } from './PricingSection';
 import { FAQSection } from './FAQSection';
+import { FeatureSection } from './FeatureSection';
 import { Footer } from './Footer';
+import HeroSection from './HeroSection';
+import { Navbar } from './Navbar';
+import { PricingSection } from './PricingSection';
+import { WorkflowSection } from './WorkflowSection';
+import { STRUCTURED_DATA } from './constants';
 
 const LandingPage = () => {
   const [scrollShift, setScrollShift] = useState(0);

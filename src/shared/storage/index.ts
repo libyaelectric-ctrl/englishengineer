@@ -123,10 +123,7 @@ export const storage = {
       }
       return JSON.parse(item) as T;
     } catch (e) {
-      logger.w(
-        `[STORAGE] Failed to read/parse key "${k}" from localStorage:`,
-        e
-      );
+      logger.w(`[STORAGE] Failed to read/parse key "${k}" from localStorage:`, e);
       return null;
     }
   },

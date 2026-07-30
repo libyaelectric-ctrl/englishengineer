@@ -1,5 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { AppError, ErrorCode } from '@/core/errors';
+
 import { isFeatureEnabled, overrideFeatureFlag } from '@/shared/feature-flags';
 
 describe('AppError Edge Cases', () => {
@@ -59,7 +61,11 @@ describe('AppError Edge Cases', () => {
 
   it('should handle severity levels', () => {
     const errorInfo = new AppError({ code: ErrorCode.UNKNOWN, message: 'x', severity: 'info' });
-    const errorCritical = new AppError({ code: ErrorCode.UNKNOWN, message: 'x', severity: 'critical' });
+    const errorCritical = new AppError({
+      code: ErrorCode.UNKNOWN,
+      message: 'x',
+      severity: 'critical',
+    });
     expect(errorInfo.severity).toBe('info');
     expect(errorCritical.severity).toBe('critical');
   });
@@ -99,7 +105,7 @@ describe('Feature Flags Edge Cases', () => {
       'betaWritingReview',
     ] as const;
 
-    flags.forEach(flag => {
+    flags.forEach((flag) => {
       expect(() => isFeatureEnabled(flag)).not.toThrow();
     });
   });

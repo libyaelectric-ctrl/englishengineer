@@ -1,23 +1,27 @@
-import { Link } from 'react-router-dom';
 import { BookOpen, FileText, GraduationCap, Lock } from 'lucide-react';
+
 import type { Dispatch, SetStateAction } from 'react';
 
-import { MetricCard } from '@/shared/components/MetricCard';
+import { Link } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
 import { LockProgressBar } from '@/shared/components/LockProgressBar';
+import { MetricCard } from '@/shared/components/MetricCard';
+
+import { useGrammarStore } from '@/features/grammar';
 import {
+  type CefrLevel,
+  type ContentLevelFilter,
   EmptyLevelState,
   LevelContentFilter,
-  type ContentLevelFilter,
-  type CefrLevel,
 } from '@/features/level-system';
-import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
+import type { VocabularyItem } from '@/features/reading';
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+
 import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';
 import { ReaderView } from './ReadingPage/components/ReaderView';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { useGrammarStore } from '@/features/grammar';
-import type { VocabularyItem } from '@/features/reading';
+import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
 
 const VOCAB_THRESHOLD = 200;
 const GRAMMAR_THRESHOLD = 10;
@@ -34,22 +38,13 @@ const LockedReadingView = ({
       <Lock className="mx-auto h-10 w-10 text-primary" />
       <h2 className="text-lg font-bold text-foreground">Reading Locked</h2>
       <p className="text-xs text-muted-copy leading-relaxed">
-        You need to learn 200 vocabulary words and 10 grammar rules before
-        accessing Reading.
+        You need to learn 200 vocabulary words and 10 grammar rules before accessing Reading.
         <br />
         (Progress at 75% your current level and 25% the next level.)
       </p>
       <div className="space-y-2 text-[10px]">
-        <LockProgressBar
-          label="Vocabulary"
-          done={vocabLearned}
-          total={VOCAB_THRESHOLD}
-        />
-        <LockProgressBar
-          label="Grammar"
-          done={grammarLearned}
-          total={GRAMMAR_THRESHOLD}
-        />
+        <LockProgressBar label="Vocabulary" done={vocabLearned} total={VOCAB_THRESHOLD} />
+        <LockProgressBar label="Grammar" done={grammarLearned} total={GRAMMAR_THRESHOLD} />
       </div>
       <div className="flex gap-2 justify-center pt-2">
         <Link
@@ -80,20 +75,11 @@ const EmptyMissionView = ({
 }) => (
   <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <h1 className="text-base font-bold tracking-tight text-foreground">
-        Reading
-      </h1>
+      <h1 className="text-base font-bold tracking-tight text-foreground">Reading</h1>
     </div>
-    <LevelContentFilter
-      value={levelFilter}
-      currentLevel={currentLevel}
-      onChange={setLevelFilter}
-    />
+    <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
     <EmptyLevelState skill="Reading" />
-    <Link
-      to="/curriculum"
-      className="inline-flex text-sm font-bold text-primary hover:underline"
-    >
+    <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
       Back to Learning Hub
     </Link>
   </div>
@@ -163,8 +149,7 @@ const MissionsTabContent = ({
             Technical Mission Library
           </h3>
           <p className="text-xs text-muted-copy mt-0.5">
-            Select a professional documentation scenario to begin reading
-            comprehension assessment
+            Select a professional documentation scenario to begin reading comprehension assessment
           </p>
         </div>
         {finishedCount > 0 && (
@@ -192,8 +177,7 @@ const MissionsTabContent = ({
         ))}
         {visibleMissions.length === 0 && (
           <div className="col-span-full rounded-[4px] border border-border-soft bg-surface/60 p-6 text-sm text-muted-copy">
-            No current-level content yet. No Reading missions are available for
-            this filter.
+            No current-level content yet. No Reading missions are available for this filter.
           </div>
         )}
       </div>
@@ -271,8 +255,7 @@ const ReadingPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
   const vocabLearned = vocabStats.learned + vocabStats.mastered;
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
-  const canAccess =
-    vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
+  const canAccess = vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
 
   const {
     missions,
@@ -309,12 +292,7 @@ const ReadingPage = () => {
   } = useReadingPage();
 
   if (!canAccess) {
-    return (
-      <LockedReadingView
-        vocabLearned={vocabLearned}
-        grammarLearned={grammarLearned}
-      />
-    );
+    return <LockedReadingView vocabLearned={vocabLearned} grammarLearned={grammarLearned} />;
   }
 
   if (!currentMission) {
@@ -331,9 +309,7 @@ const ReadingPage = () => {
     <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Reading
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Reading</h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {currentLevel}
           </span>

@@ -1,6 +1,9 @@
-import { useEffect, useState } from 'react';
 import { Cloud, CloudOff } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { CloudSyncService } from './cloud-sync.service';
 import type { CloudSyncState, CloudSyncStatus } from './cloud-sync.types';
 
@@ -48,12 +51,8 @@ interface CloudSyncStatusProps {
   providerMode: 'local' | 'supabase';
 }
 
-export const CloudSyncStatusPanel = ({
-  providerMode,
-}: CloudSyncStatusProps) => {
-  const [state, setState] = useState<CloudSyncState>(() =>
-    CloudSyncService.getState()
-  );
+export const CloudSyncStatusPanel = ({ providerMode }: CloudSyncStatusProps) => {
+  const [state, setState] = useState<CloudSyncState>(() => CloudSyncService.getState());
 
   useEffect(() => CloudSyncService.subscribe(setState), []);
 
@@ -66,8 +65,7 @@ export const CloudSyncStatusPanel = ({
           tone: 'neutral' as const,
         }
       : statusPresentation[state.status];
-  const Icon =
-    providerMode === 'local' || state.status === 'offline' ? CloudOff : Cloud;
+  const Icon = providerMode === 'local' || state.status === 'offline' ? CloudOff : Cloud;
 
   return (
     <section
@@ -79,9 +77,7 @@ export const CloudSyncStatusPanel = ({
         <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div className="min-w-0">
           <p className="text-sm font-black text-foreground">Progress storage</p>
-          <p className="mt-1 text-xs leading-5 text-muted-copy">
-            {presentation.detail}
-          </p>
+          <p className="mt-1 text-xs leading-5 text-muted-copy">{presentation.detail}</p>
           {providerMode === 'supabase' && state.lastError && (
             <p className="mt-1 text-xs text-rose-700">{state.lastError}</p>
           )}

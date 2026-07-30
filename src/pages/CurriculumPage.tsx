@@ -1,48 +1,42 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useParams } from 'react-router-dom';
+
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
+import { GrammarProgressService } from '@/features/grammar';
+import {
+  type UnifiedReviewItem,
+  UnifiedReviewQueueService,
+  buildReviewPriorities,
+  useLearningIntelligenceStore,
+} from '@/features/learning-intelligence';
 import {
   LearningTaskEngine,
   type LearningTaskRecommendation,
 } from '@/features/learning-orchestrator';
-import {
-  LearningProfileEngine,
-  type SkillName,
-  useLearningCockpit,
-} from '@/features/profile';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
-import { GrammarProgressService } from '@/features/grammar';
-import {
-  buildReviewPriorities,
-  UnifiedReviewQueueService,
-  useLearningIntelligenceStore,
-  type UnifiedReviewItem,
-} from '@/features/learning-intelligence';
-import { SKILL_META } from './CurriculumPage/curriculum-data';
+import { LearningProfileEngine, type SkillName, useLearningCockpit } from '@/features/profile';
+
 import { CurriculumActionsGrid } from './CurriculumPage/CurriculumActionsGrid';
-import { CurriculumTodayTab } from './CurriculumPage/CurriculumTodayTab';
-import { CurriculumMemoryTab } from './CurriculumPage/CurriculumMemoryTab';
 import { CurriculumFullTab } from './CurriculumPage/CurriculumFullTab';
+import { CurriculumMemoryTab } from './CurriculumPage/CurriculumMemoryTab';
+import { CurriculumTodayTab } from './CurriculumPage/CurriculumTodayTab';
+import { SKILL_META } from './CurriculumPage/curriculum-data';
 
 const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeSection = section || 'today';
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { profile, memory, missions, isLoading, learningState } =
-    useLearningCockpit(currentUser?.id);
-  const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
-  const weakestSkill = useMemo(
-    () => LearningTaskEngine.getWeakestSkill(profile),
-    [profile]
+  const { profile, memory, missions, isLoading, learningState } = useLearningCockpit(
+    currentUser?.id
   );
+  const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
+  const weakestSkill = useMemo(() => LearningTaskEngine.getWeakestSkill(profile), [profile]);
   const [selectedSkill, setSelectedSkill] = useState<SkillName>('reading');
   const [domain, setDomain] = useState('All');
-  const [recommendation, setRecommendation] =
-    useState<LearningTaskRecommendation | null>(null);
+  const [recommendation, setRecommendation] = useState<LearningTaskRecommendation | null>(null);
   const [recommendationLoading, setRecommendationLoading] = useState(true);
-  const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<
-    UnifiedReviewItem[]
-  >([]);
+  const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<UnifiedReviewItem[]>([]);
 
   useEffect(() => {
     ProductAnalyticsService.track('review_queue_opened', '/curriculum', {
@@ -125,16 +119,12 @@ const CurriculumPage = () => {
   const currentSkillProfile = profile.skills[weakestSkill];
   const grammarSummary = GrammarProgressService.getSummary(360);
   const badges = LearningProfileEngine.getBadges(profile, memory);
-  const repeatedMistakes = mistakeLog.filter(
-    (item) => (item.repetitionCount ?? 1) >= 3
-  ).length;
+  const repeatedMistakes = mistakeLog.filter((item) => (item.repetitionCount ?? 1) >= 3).length;
 
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
       <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          Learning Hub
-        </h1>
+        <h1 className="text-base font-bold tracking-tight text-foreground">Learning Hub</h1>
       </div>
 
       <CurriculumActionsGrid

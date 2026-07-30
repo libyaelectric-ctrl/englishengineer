@@ -1,18 +1,12 @@
-import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { createSupabaseBillingRepository } from './supabase-billing-repository.js';
 
 export interface SubscriptionRepository {
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
-  upsertSubscriptionStatus(
-    userId: string,
-    snapshot: SubscriptionSnapshot
-  ): Promise<void>;
+  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
-  markStripeEventProcessed(
-    eventId: string,
-    metadata?: Record<string, unknown>
-  ): Promise<void>;
+  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
   getProcessedEventCount?(): number;
 }
 

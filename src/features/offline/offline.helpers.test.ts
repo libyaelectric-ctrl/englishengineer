@@ -1,17 +1,12 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
 import { OFFLINE_CAPABILITIES } from './offline.data';
-import {
-  canUseCapability,
-  getCapabilityLabel,
-  getOfflineSummary,
-} from './offline.helpers';
+import { canUseCapability, getCapabilityLabel, getOfflineSummary } from './offline.helpers';
 
 describe('offline capability rules', () => {
   it('allows bundled content while offline', () => {
-    const vocabulary = OFFLINE_CAPABILITIES.find(
-      (item) => item.id === 'vocabulary'
-    );
+    const vocabulary = OFFLINE_CAPABILITIES.find((item) => item.id === 'vocabulary');
     expect(vocabulary && canUseCapability(vocabulary, false)).toBe(true);
   });
 

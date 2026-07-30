@@ -14,29 +14,19 @@ interface WebhookObject {
 
 export interface BillingRepository {
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
-  upsertSubscriptionStatus(
-    userId: string,
-    snapshot: SubscriptionSnapshot
-  ): Promise<void>;
+  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
-  markStripeEventProcessed(
-    eventId: string,
-    metadata?: Record<string, unknown>
-  ): Promise<void>;
+  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
 }
 
 const getUserId = (object: WebhookObject): string | null =>
   object.metadata?.userId || object.client_reference_id || null;
 
-const buildCheckoutUpdate = (
-  current: SubscriptionSnapshot,
-  object: WebhookObject
-) => {
+const buildCheckoutUpdate = (current: SubscriptionSnapshot, object: WebhookObject) => {
   const meta = object.metadata ?? {};
   if (meta.type === 'topup')
     return {
-      topupCredits:
-        (current.topupCredits || 0) + parseInt(meta.credits ?? '50', 10),
+      topupCredits: (current.topupCredits || 0) + parseInt(meta.credits ?? '50', 10),
     };
   return {
     planId: meta.planId ?? 'pro',
@@ -70,9 +60,7 @@ const buildSubscriptionUpdate = (
 
 const parsePeriodEnd = (object: WebhookObject): string | null => {
   const sec = object.current_period_end;
-  return typeof sec === 'number' && sec > 0
-    ? new Date(sec * 1000).toISOString()
-    : null;
+  return typeof sec === 'number' && sec > 0 ? new Date(sec * 1000).toISOString() : null;
 };
 
 export const handleCheckoutCompleted = async (
@@ -81,8 +69,7 @@ export const handleCheckoutCompleted = async (
 ): Promise<void> => {
   const userId = getUserId(object);
   if (!userId) return;
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     ...buildCheckoutUpdate(current, object),
@@ -97,8 +84,7 @@ export const handleSubscriptionUpdated = async (
 ): Promise<void> => {
   const userId = getUserId(object);
   if (!userId) return;
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(
     userId,
     buildSubscriptionUpdate(current, object, parsePeriodEnd(object))
@@ -112,8 +98,7 @@ export const handlePaymentFailed = async (
   const userId = getUserId(object);
   if (!userId) return;
 
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     status: 'past_due',
@@ -129,8 +114,7 @@ export const handleSubscriptionDeleted = async (
   const userId = getUserId(object);
   if (!userId) return;
 
-  const current =
-    (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
+  const current = (await repository.getSubscriptionStatus(userId)) ?? emptySubscription();
   await repository.upsertSubscriptionStatus(userId, {
     ...current,
     status: 'canceled',

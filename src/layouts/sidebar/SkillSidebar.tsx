@@ -1,4 +1,4 @@
-import { Section, Item, Stat, Progress, Action } from './SidebarComponents';
+import { Action, Item, Progress, Section, Stat } from './SidebarComponents';
 import type { SidebarConfig } from './sidebar.config';
 
 function renderTabs(title: string, tabs: NonNullable<SidebarConfig['tabs']>) {
@@ -25,12 +25,7 @@ function renderStats(stats: NonNullable<SidebarConfig['stats']>) {
   return (
     <Section title="Stats">
       {stats.map((stat) => (
-        <Stat
-          key={stat.label}
-          label={stat.label}
-          value={stat.value}
-          color={stat.color}
-        />
+        <Stat key={stat.label} label={stat.label} value={stat.value} color={stat.color} />
       ))}
     </Section>
   );
@@ -47,8 +42,7 @@ function renderProgressBars(bars: NonNullable<SidebarConfig['progressBars']>) {
               <span>{bar.label}</span>
               <span>
                 {bar.value}/{bar.max}
-                {bar.showPercent &&
-                  ` (${Math.round((bar.value / bar.max) * 100)}%)`}
+                {bar.showPercent && ` (${Math.round((bar.value / bar.max) * 100)}%)`}
               </span>
             </div>
             <Progress value={bar.value} max={bar.max} color={bar.color} />
@@ -81,12 +75,9 @@ export function SkillSidebar({ config }: { config: SidebarConfig }) {
         <div className="space-y-3">
           <div>
             <p className="text-[10px] font-bold text-primary tracking-wider uppercase mb-1">
-              {config.currentLevel || 'Loading'} PATH · {config.totalItems ?? 0}{' '}
-              ITEMS
+              {config.currentLevel || 'Loading'} PATH · {config.totalItems ?? 0} ITEMS
             </p>
-            <p className="text-xs text-muted-copy leading-5">
-              {config.pathDescription}
-            </p>
+            <p className="text-xs text-muted-copy leading-5">{config.pathDescription}</p>
           </div>
           {config.custom}
         </div>

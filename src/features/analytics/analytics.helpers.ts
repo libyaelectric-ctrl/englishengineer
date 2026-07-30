@@ -1,6 +1,8 @@
 import { LearningState } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
+
 import { VocabularySummary } from '@/features/vocabulary/types/vocabulary.types';
+
 import {
   AnalyticsAIContextSummary,
   AnalyticsNextStudy,
@@ -9,16 +11,10 @@ import {
   AnalyticsSummary,
 } from './analytics.types';
 
-export const getRecentSessions = (
-  state: LearningState,
-  limit = 8
-): AnalyticsRecentSession[] =>
+export const getRecentSessions = (state: LearningState, limit = 8): AnalyticsRecentSession[] =>
   state.studySessions
     .slice()
-    .sort(
-      (a, b) =>
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-    )
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, limit);
 
 export const getRecentAchievements = (
@@ -32,10 +28,7 @@ export const getRecentAchievements = (
       title: achievement.title,
       unlockedAt: achievement.unlockedAt || '',
     }))
-    .sort(
-      (a, b) =>
-        new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime()
-    )
+    .sort((a, b) => new Date(b.unlockedAt).getTime() - new Date(a.unlockedAt).getTime())
     .slice(0, limit);
 
 export const getNextRecommendedStudy = (
@@ -73,9 +66,7 @@ export const getNextRecommendedStudy = (
   };
 };
 
-export const buildAnalyticsAIContext = (
-  summary: AnalyticsSummary
-): AnalyticsAIContextSummary => ({
+export const buildAnalyticsAIContext = (summary: AnalyticsSummary): AnalyticsAIContextSummary => ({
   estimatedCefr: summary.estimatedCefr,
   weakestSkills: summary.weakSkills,
   strongestSkills: summary.strongSkills,
@@ -86,9 +77,7 @@ export const buildAnalyticsAIContext = (
   aiCoachSessions: summary.aiCoachUsage.totalSessions,
 });
 
-export const summarizeAnalyticsForDisplay = (
-  state: LearningState
-): string[] => {
+export const summarizeAnalyticsForDisplay = (state: LearningState): string[] => {
   const progress = ProgressService.getSummary(state);
   return [
     `${progress.completionPercentage}% overall progress`,

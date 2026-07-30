@@ -1,6 +1,8 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
 import { LearningState } from '@/core/learning';
+
 import {
   buildLevelProfile,
   buildSequentialLevelPath,
@@ -39,9 +41,7 @@ describe('sequential level system', () => {
   it('starts every demo skill and overall profile at A1', () => {
     const profile = buildLevelProfile(learning(30), 'demo_engineer_42');
     expect(profile.overallLevel).toBe('A1');
-    expect(profile.skills.every((skill) => skill.currentLevel === 'A1')).toBe(
-      true
-    );
+    expect(profile.skills.every((skill) => skill.currentLevel === 'A1')).toBe(true);
     expect(profile.confidence).toBe('demo');
   });
 
@@ -56,9 +56,7 @@ describe('sequential level system', () => {
       ...calculateSkillProgress('reading', learning(20), false),
       currentLevel: 'B1' as const,
     };
-    const c1 = buildSequentialLevelPath(progress).find(
-      (node) => node.level === 'C1'
-    );
+    const c1 = buildSequentialLevelPath(progress).find((node) => node.level === 'C1');
     expect(c1?.status).toBe('preview-only');
     expect(c1?.reason).toContain('Complete B2');
   });
@@ -66,9 +64,7 @@ describe('sequential level system', () => {
   it('builds the same six-level path for every skill', () => {
     const profile = buildLevelProfile(learning(), 'real_user');
     profile.skills.forEach((skill) => {
-      expect(buildSequentialLevelPath(skill).map((node) => node.level)).toEqual(
-        CEFR_LEVELS
-      );
+      expect(buildSequentialLevelPath(skill).map((node) => node.level)).toEqual(CEFR_LEVELS);
     });
   });
 });

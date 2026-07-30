@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+
 import { createSupabaseBillingRepository } from '../src/supabase-billing-repository.js';
 
 interface CallRecord {
@@ -32,20 +33,14 @@ test('Supabase billing repository maps subscription rows', async () => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
   };
-  const repository = createSupabaseBillingRepository(
-    config,
-    fetchImpl as unknown as typeof fetch
-  );
+  const repository = createSupabaseBillingRepository(config, fetchImpl as unknown as typeof fetch);
   const snapshot = await repository.getSubscriptionStatus('user-1');
 
   assert.equal(snapshot!.planId, 'pro');
   assert.equal(snapshot!.stripeCustomerId, 'cus_1');
   assert.match(calls[0]!.url, /subscription_status\?.*user_id=eq\.user-1/);
   assert.equal(calls[0]!.init.headers?.apikey, 'service-role-test-key');
-  assert.equal(
-    calls[0]!.init.headers?.Authorization,
-    'Bearer service-role-test-key'
-  );
+  assert.equal(calls[0]!.init.headers?.Authorization, 'Bearer service-role-test-key');
 });
 
 test('Supabase billing repository upserts subscriptions and Stripe events', async () => {
@@ -60,10 +55,7 @@ test('Supabase billing repository upserts subscriptions and Stripe events', asyn
     }
     return new Response(null, { status: 204 });
   };
-  const repository = createSupabaseBillingRepository(
-    config,
-    fetchImpl as unknown as typeof fetch
-  );
+  const repository = createSupabaseBillingRepository(config, fetchImpl as unknown as typeof fetch);
   await repository.upsertSubscriptionStatus('user-1', {
     planId: 'pro',
     status: 'active',
@@ -95,8 +87,5 @@ test('Supabase billing repository surfaces persistence failures', async () => {
     config,
     async () => new Response('unavailable', { status: 503 })
   );
-  await assert.rejects(
-    repository.getSubscriptionStatus('user-1'),
-    /failed with status 503/
-  );
+  await assert.rejects(repository.getSubscriptionStatus('user-1'), /failed with status 503/);
 });

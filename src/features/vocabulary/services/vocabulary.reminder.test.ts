@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+
 import { ReviewReminderService } from './vocabulary.reminder';
 
 describe('ReviewReminderService', () => {
@@ -51,15 +52,11 @@ describe('ReviewReminderService', () => {
 
   describe('shouldShowBanner', () => {
     it('returns true when there are due words and not yet notified today', () => {
-      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-18')).toBe(
-        true
-      );
+      expect(ReviewReminderService.shouldShowBanner(3, '2026-07-18')).toBe(true);
     });
 
     it('returns false when no due words', () => {
-      expect(ReviewReminderService.shouldShowBanner(0, '2026-07-18')).toBe(
-        false
-      );
+      expect(ReviewReminderService.shouldShowBanner(0, '2026-07-18')).toBe(false);
     });
 
     it('returns false when already notified today', () => {

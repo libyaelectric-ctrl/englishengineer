@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
-import { afterEach, test } from 'node:test';
 import { rm } from 'node:fs/promises';
 import path from 'node:path';
+import { afterEach, test } from 'node:test';
+
 import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 
@@ -37,10 +38,7 @@ const productionAuthEnvironment = {
   ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION: 'true',
 };
 
-const internalHeaders = (
-  userId = 'speaking-test-user',
-  contentType?: string
-) => ({
+const internalHeaders = (userId = 'speaking-test-user', contentType?: string) => ({
   Authorization: 'Bearer internal-test-secret',
   'X-Forwarded-Proto': 'https',
   'X-EngineerOS-User-Id': userId,

@@ -1,8 +1,4 @@
-export {
-  ENGINEERING_TEMPLATES,
-  EMAIL_TEMPLATES,
-  PHRASE_LIBRARY,
-} from './work-tools.data';
+export { ENGINEERING_TEMPLATES, EMAIL_TEMPLATES, PHRASE_LIBRARY } from './work-tools.data';
 
 export {
   type MeetingPhrase,

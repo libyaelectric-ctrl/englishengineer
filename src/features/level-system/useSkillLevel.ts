@@ -1,9 +1,12 @@
 import { useMemo } from 'react';
+
 import { useLearningStore } from '@/core/learning';
+
 import { useAuthStore } from '@/features/auth';
-import { getBaseCefrLevel } from '@/features/profile/profile.utils';
 import { LearningProfileEngine } from '@/features/profile/profile.engine';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { getBaseCefrLevel } from '@/features/profile/profile.utils';
+
 import type { SkillKey } from './level-system.types';
 
 export const useSkillLevel = (skill: SkillKey) => {
@@ -22,10 +25,7 @@ export const useSkillLevel = (skill: SkillKey) => {
       };
     }
     const stored = LearningProfileRepository.getProfile(userId || 'local-user');
-    const snapshot = LearningProfileEngine.buildProfileSnapshot(
-      stored,
-      learning
-    );
+    const snapshot = LearningProfileEngine.buildProfileSnapshot(stored, learning);
     const independent = snapshot.skills[skill];
     return {
       skill,

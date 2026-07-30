@@ -1,13 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import {
-  dataReducer,
-  uiReducer,
-  searchReducer,
-  type VocabularyDataState,
-  type VocabularyUIState,
-  type VocabularySearchState,
-} from './VocabularyPageReducer';
+import { describe, expect, it } from 'vitest';
+
 import { VocabularyMenuService } from '@/features/vocabulary';
+
+import {
+  type VocabularyDataState,
+  type VocabularySearchState,
+  type VocabularyUIState,
+  dataReducer,
+  searchReducer,
+  uiReducer,
+} from './VocabularyPageReducer';
 
 const initialData: VocabularyDataState = {
   terms: [],

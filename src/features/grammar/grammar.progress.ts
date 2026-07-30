@@ -1,5 +1,7 @@
-import { storage } from '@/shared/storage';
 import { eventBus } from '@/core/events/event-bus';
+
+import { storage } from '@/shared/storage';
+
 import { GrammarRepository } from './grammar.repository';
 
 export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
@@ -38,9 +40,7 @@ const getReviewIsDue = (progress: GrammarRuleProgress, now: Date): boolean =>
   (progress.nextReviewDate !== null &&
     new Date(progress.nextReviewDate).getTime() <= now.getTime());
 
-const describeStrongWithMissingEvidence = (
-  missingEvidence: GrammarTransferSkill[]
-): string =>
+const describeStrongWithMissingEvidence = (missingEvidence: GrammarTransferSkill[]): string =>
   `The grammar practice is strong, but mastery still needs ${missingEvidence.join(' and ')} transfer evidence.`;
 
 const describeReviewOverdue = (progress: GrammarRuleProgress): string =>
@@ -60,14 +60,10 @@ const describeReviewNotDue = (progress: GrammarRuleProgress): string => {
     : 'This rule needs more correct uses before it can become Strong.';
 };
 
-export const getGrammarReviewReason = (
-  progress: GrammarRuleProgress,
-  now = new Date()
-): string => {
+export const getGrammarReviewReason = (progress: GrammarRuleProgress, now = new Date()): string => {
   const missingEvidence = getMissingGrammarTransferEvidence(progress);
   const reviewIsDue = getReviewIsDue(progress, now);
-  const hasStrongPractice =
-    progress.correctUsages >= 3 && progress.strength >= 70;
+  const hasStrongPractice = progress.correctUsages >= 3 && progress.strength >= 70;
 
   if (hasStrongPractice && missingEvidence.length > 0) {
     return describeStrongWithMissingEvidence(missingEvidence);
@@ -91,18 +87,16 @@ const initialProgress = (ruleId: string): GrammarRuleProgress => ({
   skillEvidence: {},
   isPassed: false,
 });
-const normalizeProgress = (
-  progress: GrammarRuleProgress
-): GrammarRuleProgress => ({
+const normalizeProgress = (progress: GrammarRuleProgress): GrammarRuleProgress => ({
   ...initialProgress(progress.ruleId),
   ...progress,
   skillEvidence: progress.skillEvidence ?? {},
 });
 const load = (): Record<string, GrammarRuleProgress> =>
   Object.fromEntries(
-    Object.entries(
-      storage.get<Record<string, GrammarRuleProgress>>(STORAGE_KEY) ?? {}
-    ).map(([ruleId, progress]) => [ruleId, normalizeProgress(progress)])
+    Object.entries(storage.get<Record<string, GrammarRuleProgress>>(STORAGE_KEY) ?? {}).map(
+      ([ruleId, progress]) => [ruleId, normalizeProgress(progress)]
+    )
   );
 const saveOne = (progress: GrammarRuleProgress): GrammarRuleProgress => {
   storage.set(STORAGE_KEY, { ...load(), [progress.ruleId]: progress });
@@ -121,15 +115,9 @@ const hasGrammarTransferMastery = (progress: GrammarRuleProgress): boolean =>
   getMissingGrammarTransferEvidence(progress).length === 0;
 
 const canBecomeStrong = (progress: GrammarRuleProgress): boolean =>
-  progress.correctUsages >= 3 &&
-  progress.strength >= 70 &&
-  hasGrammarTransferMastery(progress);
+  progress.correctUsages >= 3 && progress.strength >= 70 && hasGrammarTransferMastery(progress);
 
-const publishMastery = (
-  ruleId: string,
-  now: Date,
-  progress: GrammarRuleProgress
-): void => {
+const publishMastery = (ruleId: string, now: Date, progress: GrammarRuleProgress): void => {
   eventBus.publish({
     id: `grammar-mastered-${ruleId}-${Date.now()}`,
     type: 'grammar:mastered',
@@ -144,9 +132,7 @@ const publishMastery = (
 
 export const GrammarProgressService = {
   getAll(now = new Date()): Record<string, GrammarRuleProgress> {
-    return Object.fromEntries(
-      Object.keys(load()).map((ruleId) => [ruleId, this.get(ruleId, now)])
-    );
+    return Object.fromEntries(Object.keys(load()).map((ruleId) => [ruleId, this.get(ruleId, now)]));
   },
 
   getSummary(totalRules = 360, now = new Date()): GrammarProgressSummary {
@@ -154,8 +140,7 @@ export const GrammarProgressService = {
     return {
       tracked: values.length,
       newRules: Math.max(0, totalRules - values.length),
-      learning: values.filter((item) => item.reviewStatus === 'Learning')
-        .length,
+      learning: values.filter((item) => item.reviewStatus === 'Learning').length,
       due: values.filter((item) => item.reviewStatus === 'Due').length,
       strong: values.filter((item) => item.reviewStatus === 'Strong').length,
     };
@@ -177,19 +162,14 @@ export const GrammarProgressService = {
     const index = all.findIndex((r) => r.id === ruleId);
     if (index <= 0) return true;
     const prev = this.get(all[index - 1].id);
-    return (
-      prev.isPassed === true ||
-      prev.reviewStatus === 'Strong' ||
-      prev.correctUsages >= 3
-    );
+    return prev.isPassed === true || prev.reviewStatus === 'Strong' || prev.correctUsages >= 3;
   },
   recordPass(ruleId: string, now = new Date()): GrammarRuleProgress {
     const current = this.get(ruleId, now);
     return saveOne({
       ...current,
       isPassed: true,
-      reviewStatus:
-        current.reviewStatus === 'New' ? 'Learning' : current.reviewStatus,
+      reviewStatus: current.reviewStatus === 'New' ? 'Learning' : current.reviewStatus,
       lastUsedAt: now.toISOString(),
     });
   },
@@ -198,23 +178,15 @@ export const GrammarProgressService = {
     return saveOne({
       ...current,
       exposures: current.exposures + 1,
-      reviewStatus:
-        current.correctUsages > 0 ? current.reviewStatus : 'Learning',
+      reviewStatus: current.correctUsages > 0 ? current.reviewStatus : 'Learning',
       lastUsedAt: now.toISOString(),
     });
   },
-  recordUsage(
-    ruleId: string,
-    correct: boolean,
-    now = new Date()
-  ): GrammarRuleProgress {
+  recordUsage(ruleId: string, correct: boolean, now = new Date()): GrammarRuleProgress {
     const current = this.get(ruleId, now);
     const correctUsages = current.correctUsages + (correct ? 1 : 0);
     const incorrectUsages = current.incorrectUsages + (correct ? 0 : 1);
-    const strength = Math.max(
-      0,
-      Math.min(100, current.strength + (correct ? 25 : -20))
-    );
+    const strength = Math.max(0, Math.min(100, current.strength + (correct ? 25 : -20)));
     const candidate = { ...current, correctUsages, incorrectUsages, strength };
     const strong = canBecomeStrong(candidate);
     const becameStrong = strong && current.reviewStatus !== 'Strong';
@@ -228,9 +200,7 @@ export const GrammarProgressService = {
       strength,
       reviewStatus: nextStatus,
       lastUsedAt: now.toISOString(),
-      nextReviewDate: new Date(
-        now.getTime() + reviewDays * DAY_MS
-      ).toISOString(),
+      nextReviewDate: new Date(now.getTime() + reviewDays * DAY_MS).toISOString(),
     });
     if (becameStrong) publishMastery(ruleId, now, result);
     return result;

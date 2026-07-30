@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { useVocabularyStore } from './store/vocabulary.store';
 
 describe('Vocabulary Integration', () => {
@@ -24,9 +25,7 @@ describe('Vocabulary Integration', () => {
 
   it('can set word response', () => {
     useVocabularyStore.getState().setResponse('word-1', 'transformer');
-    expect(useVocabularyStore.getState().responses['word-1']).toBe(
-      'transformer'
-    );
+    expect(useVocabularyStore.getState().responses['word-1']).toBe('transformer');
   });
 
   it('calculates vocabulary stats', () => {

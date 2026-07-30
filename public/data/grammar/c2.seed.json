@@ -125,13 +125,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "Notwithstanding any prior discussion, written approval remains required before energization.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -183,11 +177,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Save as yapısını save fiilinin normal anlamıyla karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "save-as-otherwise-agreed",
-      "testing-sequence",
-      "document-control"
-    ],
+    "linkedVocabularyTags": ["save-as-otherwise-agreed", "testing-sequence", "document-control"],
     "grammarFits": ["contractual wording"],
     "difficulty": 6,
     "prerequisites": ["grammar_c1_052"],
@@ -604,12 +594,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Waiver ile approval/acceptance farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "no-waiver",
-      "contractual-rights",
-      "entitlement",
-      "access-support"
-    ],
+    "linkedVocabularyTags": ["no-waiver", "contractual-rights", "entitlement", "access-support"],
     "grammarFits": ["dispute wording", "contractual wording"],
     "difficulty": 6,
     "prerequisites": ["grammar_c2_001"],
@@ -884,12 +869,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Interpret as ile constitute farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "not-interpreted-as",
-      "attendance",
-      "delay-analysis",
-      "design-change"
-    ],
+    "linkedVocabularyTags": ["not-interpreted-as", "attendance", "delay-analysis", "design-change"],
     "grammarFits": ["verb to be", "dispute wording", "contractual wording"],
     "difficulty": 6,
     "prerequisites": ["grammar_c2_007"],
@@ -971,13 +951,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Write one concise executive summary sentence about risk, impact or decision.",
     "minimumUserOutput": "Delayed approval of the revised drawings is affecting commissioning readiness; management decision is required on priority review.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1029,12 +1003,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Riskin türünü ve etkisini ayırmamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "risk-framing",
-      "comment-closure",
-      "handover",
-      "shutdown-window"
-    ],
+    "linkedVocabularyTags": ["risk-framing", "comment-closure", "handover", "shutdown-window"],
     "grammarFits": ["executive summary", "technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_c1_036"],
@@ -1115,13 +1084,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one concise executive summary sentence about risk, impact or decision.",
     "minimumUserOutput": "A decision is required on whether to prioritize generator testing over lighting inspections.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1191,13 +1154,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one concise executive summary sentence about risk, impact or decision.",
     "minimumUserOutput": "The unresolved NCR may affect final acceptance and expose the project to additional review.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1336,12 +1293,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "commissioning",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "commissioning", "procurement", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "Contemporaneous records show that access was unavailable on the planned testing date.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1410,13 +1362,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one site status sentence using am/is/are.",
     "minimumUserOutput": "Causation between the late approval and the commissioning delay must be demonstrated.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1554,12 +1500,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "There is no demonstrable impact on the critical path based on the available records.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1680,12 +1621,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Evidence trail olmadan sonuç iddia etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "evidence-trail",
-      "defect",
-      "handover",
-      "sequence-of-events"
-    ],
+    "linkedVocabularyTags": ["evidence-trail", "defect", "handover", "sequence-of-events"],
     "grammarFits": ["technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_c1_049"],
@@ -1697,12 +1633,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "The evidence trail supports the conclusion that the defect was identified before handover.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1754,12 +1685,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Root cause yerine symptom yazmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "root-cause",
-      "repeated-alarm",
-      "relay-setting",
-      "overheating"
-    ],
+    "linkedVocabularyTags": ["root-cause", "repeated-alarm", "relay-setting", "overheating"],
     "grammarFits": ["technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_b1_058"],
@@ -1841,12 +1767,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "Restricted access was a contributing factor to the inspection delay.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1898,11 +1819,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Material kelimesini sadece malzeme anlamında yorumlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "material-impact",
-      "commissioning-sequence",
-      "procurement-planning"
-    ],
+    "linkedVocabularyTags": ["material-impact", "commissioning-sequence", "procurement-planning"],
     "grammarFits": ["technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_c2_022"],
@@ -1914,13 +1831,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "procurement", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "The issue had no material impact on the commissioning sequence.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2060,13 +1971,7 @@
       "roleplay",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "procurement"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "procurement"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "Further delay may affect the planned energization date.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2206,12 +2111,7 @@
       "roleplay",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "This matter requires escalation to project management due to potential handover impact.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2279,13 +2179,7 @@
       "report-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "procurement", "project-management"],
     "taskPromptTemplate": "Write one risk statement with possible consequence and mitigation context.",
     "minimumUserOutput": "The missing label may affect the inspection result.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2337,12 +2231,7 @@
     "mistakeType": "lexical confusion",
     "commonMistakes": "Comply to veya conform with kullanımını bağlama göre yanlış seçmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "comply-conform",
-      "safety-procedure",
-      "specification",
-      "QAQC"
-    ],
+    "linkedVocabularyTags": ["comply-conform", "safety-procedure", "specification", "QAQC"],
     "grammarFits": ["technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_b2_065"],
@@ -2421,13 +2310,7 @@
       "report-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "The consultant approved the revised drawing.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2495,12 +2378,7 @@
       "report-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "Late approval caused a delay to commissioning activities.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2626,11 +2504,7 @@
       "QAQC",
       "records"
     ],
-    "grammarFits": [
-      "dispute wording",
-      "contractual wording",
-      "technical reporting"
-    ],
+    "grammarFits": ["dispute wording", "contractual wording", "technical reporting"],
     "difficulty": 6,
     "prerequisites": ["grammar_c2_020"],
     "canGenerateTaskTypes": [
@@ -2844,13 +2718,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Write one site status sentence using am/is/are.",
     "minimumUserOutput": "Energization should not have been undertaken without written approval.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2989,12 +2857,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The assertion that electrical works delayed commissioning is not supported by the available record.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3064,12 +2927,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The conclusion does not necessarily follow from the inspection photographs alone.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3139,12 +2997,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The proposed interpretation is not consistent with the agreed inspection procedure.",
     "masteryCriteria": "User can recognize, correct and produce this C2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",

@@ -1,5 +1,7 @@
+import { Lock, Shield } from 'lucide-react';
+
 import type { FormEvent } from 'react';
-import { Shield, Lock } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 
 interface AdminLoginProps {
@@ -28,16 +30,11 @@ export const AdminLogin = ({
               <Lock className="h-6 w-6 text-primary" />
             </div>
             <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-xs text-muted-copy mt-1">
-              Authorized personnel only
-            </p>
+            <p className="text-xs text-muted-copy mt-1">Authorized personnel only</p>
           </div>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label
-                htmlFor="admin-username"
-                className="text-xs font-bold text-muted-copy"
-              >
+              <label htmlFor="admin-username" className="text-xs font-bold text-muted-copy">
                 Username
               </label>
               <input
@@ -50,10 +47,7 @@ export const AdminLogin = ({
               />
             </div>
             <div>
-              <label
-                htmlFor="admin-password"
-                className="text-xs font-bold text-muted-copy"
-              >
+              <label htmlFor="admin-password" className="text-xs font-bold text-muted-copy">
                 Password
               </label>
               <input
@@ -65,9 +59,7 @@ export const AdminLogin = ({
                 required
               />
             </div>
-            {loginError && (
-              <p className="text-xs font-medium text-danger">{loginError}</p>
-            )}
+            {loginError && <p className="text-xs font-medium text-danger">{loginError}</p>}
             <Button type="submit" className="w-full">
               <Shield className="h-4 w-4" /> Access Admin Panel
             </Button>

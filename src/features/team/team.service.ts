@@ -1,14 +1,16 @@
-import { IdService } from '@/core/ids';
-import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { IdService } from '@/core/ids';
+
+import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth';
+
 import { DEMO_TEAM_WORKSPACE } from './team.data';
 import type {
   OrganizationRole,
   TeamInvitation,
-  TeamWorkspaceSnapshot,
   TeamMember,
   TeamProgressSummary,
+  TeamWorkspaceSnapshot,
 } from './team.types';
 
 /**
@@ -21,10 +23,7 @@ import type {
  */
 export interface TeamProvider {
   getWorkspace(): Promise<TeamWorkspaceSnapshot>;
-  inviteMember(
-    email: string,
-    role: Exclude<OrganizationRole, 'admin'>
-  ): Promise<TeamInvitation>;
+  inviteMember(email: string, role: Exclude<OrganizationRole, 'admin'>): Promise<TeamInvitation>;
 }
 
 class DemoTeamProvider implements TeamProvider {
@@ -64,9 +63,8 @@ function mapTeamMember(
 ): TeamMember {
   const profile = m.profiles?.[0];
   const fallback = (val: string | undefined, def: string) => val || def;
-  const fallbackNull = (
-    ...vals: (string | null | undefined)[]
-  ): string | null => vals.find((v) => v != null && v !== '') as string | null;
+  const fallbackNull = (...vals: (string | null | undefined)[]): string | null =>
+    vals.find((v) => v != null && v !== '') as string | null;
   return {
     id: m.user_id,
     organizationId: orgId,
@@ -165,9 +163,7 @@ class SupabaseTeamProvider implements TeamProvider {
     const [membersResult, invitesResult, summariesResult] = await Promise.all([
       supabase
         .from('organization_members')
-        .select(
-          'user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)'
-        )
+        .select('user_id, role, joined_at, profiles(display_name, email, discipline, updated_at)')
         .eq('organization_id', orgId),
       supabase
         .from('organization_invitations')
@@ -195,16 +191,11 @@ class SupabaseTeamProvider implements TeamProvider {
       },
       members: (membersResult.data || []).map((m) => mapTeamMember(m, orgId)),
       summaries: (summariesResult.data || []).map(mapTeamSummary),
-      invitations: (invitesResult.data || []).map((inv) =>
-        mapTeamInvitation(inv, orgId)
-      ),
+      invitations: (invitesResult.data || []).map((inv) => mapTeamInvitation(inv, orgId)),
     };
   }
 
-  private throwIfError(
-    error: { message: string } | null,
-    entity: string
-  ): void {
+  private throwIfError(error: { message: string } | null, entity: string): void {
     if (error)
       throw new AppError({
         code: ErrorCode.NETWORK,
@@ -228,9 +219,7 @@ class SupabaseTeamProvider implements TeamProvider {
       });
     }
 
-    return membership
-      ? (membership as { organization_id: string }).organization_id
-      : null;
+    return membership ? (membership as { organization_id: string }).organization_id : null;
   }
 
   async inviteMember(
@@ -253,8 +242,7 @@ class SupabaseTeamProvider implements TeamProvider {
     if (memError || !membership) {
       throw new AppError({
         code: ErrorCode.AUTH,
-        message:
-          'You do not belong to an organization and cannot invite members.',
+        message: 'You do not belong to an organization and cannot invite members.',
       });
     }
 

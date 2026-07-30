@@ -1,9 +1,11 @@
-import { GrammarProgressService } from '@/features/grammar/grammar.progress';
-import { useGrammarStore } from '@/features/grammar/grammar.store';
-import { useLearningStore } from '@/core/learning';
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+
+import { useLearningStore } from '@/core/learning';
+
+import { GrammarProgressService } from '@/features/grammar/grammar.progress';
+import { useGrammarStore } from '@/features/grammar/grammar.store';
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 
 const log = (_page: string, _action: string, _details: string) => {};
 
@@ -12,29 +14,20 @@ export function GrammarSidebar() {
   const g = GrammarProgressService.getSummary(360);
   const { tab, setTab, rules, selectedId } = useGrammarStore();
   const selectedRule = rules.find((r) => r.id === selectedId) ?? rules[0];
-  const selectedRuleIndex = selectedRule
-    ? rules.findIndex((r) => r.id === selectedRule.id)
-    : -1;
+  const selectedRuleIndex = selectedRule ? rules.findIndex((r) => r.id === selectedRule.id) : -1;
 
   const config: SidebarConfig = {
     header: <SkillEntryBrief skill="grammar" compact={true} />,
     skill: 'grammar',
     pathLabel: 'Your grammar path',
-    pathDescription:
-      'Move through named topics in order; practice feeds Learning Memory.',
+    pathDescription: 'Move through named topics in order; practice feeds Learning Memory.',
     currentLevel: selectedRule?.cefrLevel,
     totalItems: rules.length,
     tabs: (['New', 'Learning', 'Due', 'Strong'] as const).map((t) => ({
       label: t,
       active: t === tab,
       badge:
-        t === 'New'
-          ? g.newRules
-          : t === 'Learning'
-            ? g.learning
-            : t === 'Due'
-              ? g.due
-              : g.strong,
+        t === 'New' ? g.newRules : t === 'Learning' ? g.learning : t === 'Due' ? g.due : g.strong,
       onClick: () => {
         setTab(t);
         log('/grammar', 'tab', t);
@@ -80,12 +73,8 @@ export function GrammarSidebar() {
             }}
           />
         </div>
-        <p className="text-sm font-bold text-foreground">
-          {selectedRule.title}
-        </p>
-        <p className="text-[10px] text-muted-copy mt-1 truncate">
-          {selectedRule.grammarCategory}
-        </p>
+        <p className="text-sm font-bold text-foreground">{selectedRule.title}</p>
+        <p className="text-[10px] text-muted-copy mt-1 truncate">{selectedRule.grammarCategory}</p>
       </div>
     ) : undefined,
   };

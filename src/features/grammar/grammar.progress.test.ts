@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+
 import {
-  getMissingGrammarTransferEvidence,
-  getGrammarReviewReason,
   GrammarProgressService,
+  getGrammarReviewReason,
+  getMissingGrammarTransferEvidence,
 } from './grammar.progress';
 
 describe('Grammar progression', () => {
@@ -23,17 +24,8 @@ describe('Grammar progression', () => {
     const practiced = GrammarProgressService.recordUsage('rule_1', true, now);
     expect(practiced.reviewStatus).toBe('Learning');
     expect(practiced.strength).toBe(75);
-    expect(getMissingGrammarTransferEvidence(practiced)).toEqual([
-      'reading',
-      'writing',
-    ]);
-    GrammarProgressService.recordSkillEvidence(
-      'rule_1',
-      'reading',
-      'reading_mission',
-      86,
-      now
-    );
+    expect(getMissingGrammarTransferEvidence(practiced)).toEqual(['reading', 'writing']);
+    GrammarProgressService.recordSkillEvidence('rule_1', 'reading', 'reading_mission', 86, now);
     const progress = GrammarProgressService.recordSkillEvidence(
       'rule_1',
       'writing',
@@ -76,17 +68,14 @@ describe('Grammar progression', () => {
   });
   it('explains new, learning and due review priorities', () => {
     const now = new Date('2026-06-29T10:00:00Z');
-    expect(
-      getGrammarReviewReason(GrammarProgressService.get('new', now), now)
-    ).toContain('next named topic');
+    expect(getGrammarReviewReason(GrammarProgressService.get('new', now), now)).toContain(
+      'next named topic'
+    );
     const learning = GrammarProgressService.recordUsage('learning', false, now);
     expect(getGrammarReviewReason(learning, now)).toContain('previous mistake');
     expect(
       getGrammarReviewReason(
-        GrammarProgressService.get(
-          'learning',
-          new Date('2026-06-30T10:00:00Z')
-        ),
+        GrammarProgressService.get('learning', new Date('2026-06-30T10:00:00Z')),
         new Date('2026-06-30T10:00:00Z')
       )
     ).toContain('current priority');

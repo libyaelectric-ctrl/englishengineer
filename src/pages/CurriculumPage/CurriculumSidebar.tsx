@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom';
 import { Clock3, Target } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import type { UserLearningProfile } from '@/features/profile';
+
 import { DOMAINS } from './curriculum-data';
 
 interface Props {
@@ -31,8 +35,8 @@ export const CurriculumSidebar = ({ domain, setDomain, profile }: Props) => {
           </select>
         </label>
         <p className="mt-4 text-xs leading-5 text-muted-copy font-medium">
-          Difficulty remains bounded to the selected skill: three safe
-          allocations and one controlled stretch allocation.
+          Difficulty remains bounded to the selected skill: three safe allocations and one
+          controlled stretch allocation.
         </p>
       </SectionCard>
 

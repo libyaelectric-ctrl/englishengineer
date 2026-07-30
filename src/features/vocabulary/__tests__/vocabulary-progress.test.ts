@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  VocabularyProgressService,
-  type WordProgress,
   MASTERY_QUIZ_MIN_WORDS,
   READING_WRITING_UNLOCK_THRESHOLD,
+  VocabularyProgressService,
+  type WordProgress,
 } from '../services/vocabulary.progress';
 
 describe('VocabularyProgressService', () => {

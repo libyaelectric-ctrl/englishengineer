@@ -1,17 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {
-  createRateLimiter,
-  createUpstashRateLimitStore,
-} from '../src/rate-limit.js';
 
 import type { ApiError } from '../src/errors.js';
+import { createRateLimiter, createUpstashRateLimitStore } from '../src/rate-limit.js';
 
-type MockLimiter = (
-  req: unknown,
-  res: unknown,
-  next: (err?: unknown) => void
-) => unknown;
+type MockLimiter = (req: unknown, res: unknown, next: (err?: unknown) => void) => unknown;
 
 const runRequest = (
   rawLimiter: unknown,

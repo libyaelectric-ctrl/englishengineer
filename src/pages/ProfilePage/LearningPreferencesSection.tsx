@@ -1,12 +1,15 @@
+import { ChevronDown, Save, Settings, Shield, Target } from 'lucide-react';
+
 import { FormEvent } from 'react';
-import { Save, Target, ChevronDown, Settings, Shield } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
-  LEARNING_GOALS,
   DAILY_DURATION_OPTIONS,
   DAILY_TASK_COUNT_OPTIONS,
   EXPERIENCE_LEVELS,
+  LEARNING_GOALS,
 } from '@/features/profile/profile.preferences';
 
 interface LearningPreferencesSectionProps {
@@ -42,10 +45,7 @@ export const LearningPreferencesSection = ({
   preferencesSaved,
   onSave,
 }: LearningPreferencesSectionProps) => (
-  <section
-    id="preferences"
-    className="animate-in fade-in duration-200 space-y-6"
-  >
+  <section id="preferences" className="animate-in fade-in duration-200 space-y-6">
     <SectionCard
       title="Learning Preferences"
       subtitle="Manage your learning goals, target pace, and training rhythm"
@@ -70,8 +70,7 @@ export const LearningPreferencesSection = ({
           </div>
 
           <p className="text-xs text-muted-copy font-medium leading-relaxed">
-            Select one or more targets to calibrate daily algorithm
-            recommendations.
+            Select one or more targets to calibrate daily algorithm recommendations.
           </p>
 
           <div className="grid gap-2 sm:grid-cols-3">
@@ -164,9 +163,7 @@ export const LearningPreferencesSection = ({
               Weekly Streak Tolerance (Allowed Missed Days)
               <select
                 value={prefMissedDays}
-                onChange={(event) =>
-                  setPrefMissedDays(Number(event.target.value))
-                }
+                onChange={(event) => setPrefMissedDays(Number(event.target.value))}
                 className="w-full rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground outline-none focus:border-primary focus:ring-0 transition-colors cursor-pointer shadow-sm"
               >
                 {[0, 1, 2, 3].map((val) => (
@@ -216,8 +213,7 @@ export const LearningPreferencesSection = ({
                   Automatic Local Persistence State
                 </span>
                 <span className="text-[10px] text-muted-copy font-medium mt-0.5 block leading-relaxed">
-                  Write state updates directly to local databases in continuous
-                  sync mode.
+                  Write state updates directly to local databases in continuous sync mode.
                 </span>
               </div>
               <button

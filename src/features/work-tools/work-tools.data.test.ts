@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  EMAIL_TEMPLATES,
-  ENGINEERING_TEMPLATES,
-  PHRASE_LIBRARY,
-} from './work-tools.data';
+
+import { EMAIL_TEMPLATES, ENGINEERING_TEMPLATES, PHRASE_LIBRARY } from './work-tools.data';
 import { WorkToolsService } from './work-tools.service';
 
 describe('Work Tools content pack', () => {
@@ -24,28 +21,18 @@ describe('Work Tools content pack', () => {
     );
     ENGINEERING_TEMPLATES.forEach((item) => {
       expect(item.title && item.category && item.useCase).toBeTruthy();
-      expect(
-        item.context && item.sampleInput && item.professionalOutput
-      ).toBeTruthy();
-      expect(
-        item.turkishExplanation && item.tone && item.tags.length
-      ).toBeTruthy();
+      expect(item.context && item.sampleInput && item.professionalOutput).toBeTruthy();
+      expect(item.turkishExplanation && item.tone && item.tags.length).toBeTruthy();
     });
   });
 
   it('keeps every email variant and phrase evidence complete', () => {
     EMAIL_TEMPLATES.forEach((item) => {
-      expect(
-        item.subject && item.shortVersion && item.professionalVersion
-      ).toBeTruthy();
-      expect(
-        item.politeVersion && item.technicalVersion && item.turkishExplanation
-      ).toBeTruthy();
+      expect(item.subject && item.shortVersion && item.professionalVersion).toBeTruthy();
+      expect(item.politeVersion && item.technicalVersion && item.turkishExplanation).toBeTruthy();
     });
     PHRASE_LIBRARY.forEach((item) => {
-      expect(
-        item.phrase && item.turkishMeaning && item.usageContext
-      ).toBeTruthy();
+      expect(item.phrase && item.turkishMeaning && item.usageContext).toBeTruthy();
       expect(item.example && item.tone && item.tags.length).toBeTruthy();
     });
   });

@@ -29,8 +29,7 @@ export const PRODUCT_ANALYTICS_EVENT_NAMES = [
   'beta_payment_intent',
 ] as const;
 
-export type ProductAnalyticsEventName =
-  (typeof PRODUCT_ANALYTICS_EVENT_NAMES)[number];
+export type ProductAnalyticsEventName = (typeof PRODUCT_ANALYTICS_EVENT_NAMES)[number];
 
 export type ProductAnalyticsSkill =
   | 'reading'
@@ -70,9 +69,4 @@ export interface ProductAnalyticsProvider {
   track(event: ProductAnalyticsEvent): void | Promise<void>;
 }
 
-export type ProductAnalyticsProviderMode =
-  | 'disabled'
-  | 'local'
-  | 'console'
-  | 'posthog'
-  | 'custom';
+export type ProductAnalyticsProviderMode = 'disabled' | 'local' | 'console' | 'posthog' | 'custom';

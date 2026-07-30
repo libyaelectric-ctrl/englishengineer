@@ -1,13 +1,15 @@
 import { create } from 'zustand';
+
+import type { CefrLevel } from '@/features/level-system';
+
 import { VocabularyMemoryService } from '../services/vocabulary.memory';
 import type {
+  ExternalVocabularyResult,
   SavedVocabularyWord,
   VocabularyEntry,
-  ExternalVocabularyResult,
   VocabularyMemorySummary,
   VocabularyWordStatus,
 } from '../types/vocabulary.types';
-import type { CefrLevel } from '@/features/level-system';
 
 interface VocabularyMemoryStore {
   savedWords: SavedVocabularyWord[];
@@ -24,25 +26,23 @@ const snapshot = () => ({
   summary: VocabularyMemoryService.getSummary(),
 });
 
-export const useVocabularyMemoryStore = create<VocabularyMemoryStore>(
-  (set) => ({
-    ...snapshot(),
-    refresh: () => set(snapshot()),
-    addEntry: (entry) => {
-      VocabularyMemoryService.addEntry(entry);
-      set(snapshot());
-    },
-    addExternal: (result, level) => {
-      VocabularyMemoryService.addExternalResult(result, level);
-      set(snapshot());
-    },
-    updateStatus: (id, status) => {
-      VocabularyMemoryService.updateStatus(id, status);
-      set(snapshot());
-    },
-    remove: (id) => {
-      VocabularyMemoryService.remove(id);
-      set(snapshot());
-    },
-  })
-);
+export const useVocabularyMemoryStore = create<VocabularyMemoryStore>((set) => ({
+  ...snapshot(),
+  refresh: () => set(snapshot()),
+  addEntry: (entry) => {
+    VocabularyMemoryService.addEntry(entry);
+    set(snapshot());
+  },
+  addExternal: (result, level) => {
+    VocabularyMemoryService.addExternalResult(result, level);
+    set(snapshot());
+  },
+  updateStatus: (id, status) => {
+    VocabularyMemoryService.updateStatus(id, status);
+    set(snapshot());
+  },
+  remove: (id) => {
+    VocabularyMemoryService.remove(id);
+    set(snapshot());
+  },
+}));

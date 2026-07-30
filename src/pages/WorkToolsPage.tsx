@@ -1,5 +1,3 @@
-import { lazy, useMemo, useState, useRef, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   BookOpenText,
   Bot,
@@ -11,9 +9,16 @@ import {
   Search,
   WandSparkles,
 } from 'lucide-react';
+
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
 import { PageHeader } from '@/shared/components/PageHeader';
+
+import { BetaService } from '@/features/beta';
 import {
   EMAIL_TEMPLATES,
   ENGINEERING_TEMPLATES,
@@ -21,7 +26,6 @@ import {
   WorkToolsService,
   useWorkToolsStore,
 } from '@/features/work-tools';
-import { BetaService } from '@/features/beta';
 
 const PRReviewCoach = lazy(() =>
   import('@/features/work-tools/components/PRReviewCoach').then((m) => ({
@@ -57,9 +61,7 @@ const TemplateCard = ({
       <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
         Workflow Specification
       </p>
-      <h2 className="text-base font-black tracking-tight text-foreground">
-        {item.title}
-      </h2>
+      <h2 className="text-base font-black tracking-tight text-foreground">{item.title}</h2>
       <p className="text-xs leading-relaxed text-muted-copy">{item.context}</p>
     </div>
 
@@ -68,9 +70,7 @@ const TemplateCard = ({
         <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           [TECHNICAL CONTEXT]
         </p>
-        <p className="mt-1 text-xs text-foreground font-medium">
-          {item.sampleInput}
-        </p>
+        <p className="mt-1 text-xs text-foreground font-medium">{item.sampleInput}</p>
       </div>
 
       <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-3 shadow-sm">
@@ -90,11 +90,7 @@ const TemplateCard = ({
       </p>
     </div>
     <div className="flex flex-wrap gap-2 pt-1">
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() => copy(item.id, item.professionalOutput)}
-      >
+      <Button variant="secondary" size="sm" onClick={() => copy(item.id, item.professionalOutput)}>
         {copiedId === item.id ? (
           <Check className="h-3.5 w-3.5" />
         ) : (
@@ -106,12 +102,7 @@ const TemplateCard = ({
         variant="outline"
         size="sm"
         onClick={() =>
-          openQuickAI(
-            item.id,
-            'engineering-template',
-            item.title,
-            item.professionalOutput
-          )
+          openQuickAI(item.id, 'engineering-template', item.title, item.professionalOutput)
         }
       >
         <Bot className="h-3.5 w-3.5" /> Send to Quick AI
@@ -144,9 +135,7 @@ const EmailCard = ({
       <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
         Communication Spec
       </p>
-      <h2 className="text-base font-black tracking-tight text-foreground">
-        {item.title}
-      </h2>
+      <h2 className="text-base font-black tracking-tight text-foreground">{item.title}</h2>
     </div>
 
     <div className="space-y-3">
@@ -181,12 +170,7 @@ const EmailCard = ({
                 variant="outline"
                 size="sm"
                 onClick={() =>
-                  openQuickAI(
-                    item.id,
-                    'email-template',
-                    `${item.title} - ${label}`,
-                    text
-                  )
+                  openQuickAI(item.id, 'email-template', `${item.title} - ${label}`, text)
                 }
               >
                 <Bot className="h-3.5 w-3.5" /> Send to Quick AI
@@ -233,36 +217,26 @@ const PhraseCard = ({
           onClick={() => toggleFavorite(item.id)}
           aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
         >
-          <Heart
-            className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`}
-          />
+          <Heart className={`h-3.5 w-3.5 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`} />
         </Button>
       </div>
     </div>
     <div>
-      <h2 className="text-sm font-black leading-relaxed text-foreground">
-        {item.phrase}
-      </h2>
+      <h2 className="text-sm font-black leading-relaxed text-foreground">{item.phrase}</h2>
     </div>
     <div className="space-y-2 pt-1">
       <p className="text-xs text-foreground">
-        <strong className="text-foreground font-black">Türkçe:</strong>{' '}
-        {item.turkishMeaning}
+        <strong className="text-foreground font-black">Türkçe:</strong> {item.turkishMeaning}
       </p>
       <p className="text-xs text-muted-copy">
-        <strong className="text-foreground font-black">Target Usage:</strong>{' '}
-        {item.usageContext}
+        <strong className="text-foreground font-black">Target Usage:</strong> {item.usageContext}
       </p>
       <p className="rounded-[4px] border border-border-soft bg-background p-3 text-xs italic text-foreground leading-relaxed shadow-sm font-medium">
         {item.example}
       </p>
     </div>
     <div className="pt-2 border-t border-border-soft">
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={() => copy(item.id, item.phrase)}
-      >
+      <Button variant="secondary" size="sm" onClick={() => copy(item.id, item.phrase)}>
         <Clipboard className="h-3.5 w-3.5" /> Copy Phrase
       </Button>
     </div>
@@ -330,12 +304,7 @@ const TabContent = ({
     return (
       <div className="grid gap-5 xl:grid-cols-2">
         {emails.map((item) => (
-          <EmailCard
-            key={item.id}
-            item={item}
-            copy={copy}
-            openQuickAI={openQuickAI}
-          />
+          <EmailCard key={item.id} item={item} copy={copy} openQuickAI={openQuickAI} />
         ))}
       </div>
     );
@@ -364,8 +333,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
   const [query, setQuery] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { favoritePhraseIds, toggleFavorite, remember, sendToQuickAI } =
-    useWorkToolsStore();
+  const { favoritePhraseIds, toggleFavorite, remember, sendToQuickAI } = useWorkToolsStore();
 
   useEffect(() => {
     return () => {
@@ -382,10 +350,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
     [normalizedQuery]
   );
   const emails = useMemo(
-    () =>
-      EMAIL_TEMPLATES.filter((item) =>
-        item.title.toLowerCase().includes(normalizedQuery)
-      ),
+    () => EMAIL_TEMPLATES.filter((item) => item.title.toLowerCase().includes(normalizedQuery)),
     [normalizedQuery]
   );
   const phrases = useMemo(
@@ -398,15 +363,18 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
     [normalizedQuery]
   );
 
-  const copy = useCallback(async (id: string, text: string) => {
-    const didCopy = await WorkToolsService.copy(text);
-    if (!didCopy) return;
-    remember(id);
-    BetaService.trackEvent('template_used', '/work-tools');
-    setCopiedId(id);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setCopiedId(null), 1400);
-  }, [remember]);
+  const copy = useCallback(
+    async (id: string, text: string) => {
+      const didCopy = await WorkToolsService.copy(text);
+      if (!didCopy) return;
+      remember(id);
+      BetaService.trackEvent('template_used', '/work-tools');
+      setCopiedId(id);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopiedId(null), 1400);
+    },
+    [remember]
+  );
 
   const openQuickAI = (
     sourceId: string,
@@ -437,11 +405,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       )}
 
       <div className="flex flex-col gap-4 rounded-xl border border-primary/25 bg-surface/80 p-3 shadow-sm md:flex-row md:items-center md:justify-between">
-        <div
-          className="flex flex-wrap gap-2"
-          role="tablist"
-          aria-label="Work tool type"
-        >
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Work tool type">
           {TAB_ITEMS.map(([id, label, Icon]) => (
             <button
               key={id}
@@ -488,9 +452,7 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
       {showEmpty && (
         <Card className="py-12 text-center" hoverEffect={false}>
           <Search className="mx-auto h-7 w-7 text-muted-copy" />
-          <p className="mt-3 font-medium text-foreground">
-            No matching work tool found.
-          </p>
+          <p className="mt-3 font-medium text-foreground">No matching work tool found.</p>
         </Card>
       )}
     </div>

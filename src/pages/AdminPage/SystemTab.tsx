@@ -1,4 +1,5 @@
 import { Activity } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
 
 interface SystemLog {
@@ -17,9 +18,7 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
     <SectionCard title="System Diagnostics" icon={Activity}>
       <div className="space-y-4">
         <div className="rounded-xl bg-surface-hover/50 p-4 border border-border-soft">
-          <h3 className="text-sm font-semibold text-foreground">
-            Active Configuration State
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">Active Configuration State</h3>
           <div className="mt-3 grid gap-3 text-xs sm:grid-cols-2">
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">Dev Auth Bypass:</span>
@@ -27,15 +26,11 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
             </div>
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">Supabase RLS Rules:</span>
-              <span className="font-bold text-emerald-600">
-                Active (Secure)
-              </span>
+              <span className="font-bold text-emerald-600">Active (Secure)</span>
             </div>
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">AI LLM Model:</span>
-              <span className="font-bold text-foreground">
-                claude-haiku-4-5
-              </span>
+              <span className="font-bold text-foreground">claude-haiku-4-5</span>
             </div>
             <div className="flex justify-between border-b border-border-soft pb-1">
               <span className="text-muted-copy">Rate-Limiter (Upstash):</span>
@@ -52,11 +47,7 @@ export const SystemTab = ({ systemLogs }: SystemTabProps) => {
             {systemLogs.map((log) => (
               <p key={log.id}>
                 <span className="opacity-50">[{log.time}]</span>{' '}
-                <span
-                  className={
-                    log.type === 'warning' ? 'text-amber-600 font-bold' : ''
-                  }
-                >
+                <span className={log.type === 'warning' ? 'text-amber-600 font-bold' : ''}>
                   {log.msg}
                 </span>
               </p>

@@ -1,16 +1,17 @@
-import React from 'react';
 import { Target } from 'lucide-react';
+
+import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
-import {
-  type SkillName,
-  type UserLearningProfile,
-  getEloBandRange,
-} from '@/features/profile';
-import { useFeatureFlag } from '@/features/feature-flags';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { Sparkline } from './Sparkline';
+
+import { useFeatureFlag } from '@/features/feature-flags';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { type SkillName, type UserLearningProfile, getEloBandRange } from '@/features/profile';
+
+import { Sparkline } from './Sparkline';
 
 interface SkillMeta {
   label: string;
@@ -26,12 +27,7 @@ interface ProgressCockpitProps {
 }
 
 export const ProgressCockpit = React.memo(
-  ({
-    skillNames,
-    skillMeta,
-    profile,
-    skillSparklineData,
-  }: ProgressCockpitProps) => {
+  ({ skillNames, skillMeta, profile, skillSparklineData }: ProgressCockpitProps) => {
     const navigate = useNavigate();
     const advancedAnalytics = useFeatureFlag('advanced-analytics');
 
@@ -47,8 +43,7 @@ export const ProgressCockpit = React.memo(
             const skillProfile = profile.skills[skill];
             const meta = skillMeta[skill];
             const Icon = meta.icon;
-            const lesson = LessonPathEngine.getSkillProgress(profile, skill)
-              .lesson.number;
+            const lesson = LessonPathEngine.getSkillProgress(profile, skill).lesson.number;
             const isSimulated = skill === 'listening' || skill === 'speaking';
 
             return (
@@ -63,9 +58,7 @@ export const ProgressCockpit = React.memo(
                     <Icon className="h-4 w-4" />
                   </span>
                   <div className="text-right">
-                    <span className="block text-sm font-bold text-foreground">
-                      {meta.label}
-                    </span>
+                    <span className="block text-sm font-bold text-foreground">{meta.label}</span>
                     <span className="block text-[10px] font-medium text-muted-copy">
                       Lesson {lesson}
                     </span>
@@ -144,12 +137,8 @@ export const ProgressCockpit = React.memo(
                       className="h-1.5"
                     />
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[10px] text-muted-copy/70">
-                        1000 ELO (A1)
-                      </span>
-                      <span className="text-[10px] text-muted-copy/70">
-                        5000 ELO (C2+)
-                      </span>
+                      <span className="text-[10px] text-muted-copy/70">1000 ELO (A1)</span>
+                      <span className="text-[10px] text-muted-copy/70">5000 ELO (C2+)</span>
                     </div>
                   </div>
                 </div>

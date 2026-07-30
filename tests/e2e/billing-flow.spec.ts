@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Billing Flow', () => {
   test('pricing page loads with plans', async ({ page }) => {
@@ -9,9 +9,7 @@ test.describe('Billing Flow', () => {
     await expect(page).toHaveTitle(/EngVox/);
 
     // Check that pricing plans are visible
-    const plans = page
-      .locator('[data-testid*="plan"], [class*="pricing"]')
-      .first();
+    const plans = page.locator('[data-testid*="plan"], [class*="pricing"]').first();
     await expect(plans).toBeVisible();
   });
 

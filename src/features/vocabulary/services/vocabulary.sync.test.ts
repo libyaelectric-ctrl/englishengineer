@@ -1,10 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { VocabularySyncService } from './vocabulary.sync';
-import type { VocabularyMenuProgress } from './vocabulary.menu';
 
-const makeProgress = (
-  overrides: Partial<VocabularyMenuProgress> = {}
-): VocabularyMenuProgress => ({
+import type { VocabularyMenuProgress } from './vocabulary.menu';
+import { VocabularySyncService } from './vocabulary.sync';
+
+const makeProgress = (overrides: Partial<VocabularyMenuProgress> = {}): VocabularyMenuProgress => ({
   correctReviews: 0,
   wrongReviews: 0,
   status: 'New',
@@ -103,10 +102,7 @@ describe('VocabularySyncService', () => {
         progress: { w1: makeProgress({ correctReviews: 3 }) },
         myVocabulary: [{ id: 'my_1' }],
       };
-      const payload = VocabularySyncService.prepareSyncPayload(
-        localState as never,
-        'user-1'
-      );
+      const payload = VocabularySyncService.prepareSyncPayload(localState as never, 'user-1');
       expect(payload.userId).toBe('user-1');
       expect(payload.syncVersion).toBe(1);
 

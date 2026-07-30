@@ -1,6 +1,8 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
+
 import { CommandPalette } from '@/shared/components/CommandPalette';
 
 const renderPalette = (initialEntries = ['/dashboard']) =>
@@ -22,9 +24,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
   });
 
@@ -32,9 +32,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', metaKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
   });
 
@@ -42,9 +40,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
     fireEvent.keyDown(window, { key: 'Escape' });
     await waitFor(() => {
@@ -62,10 +58,7 @@ describe('Command Palette E2E', () => {
         name: /command palette search/i,
       });
       expect(input).toBeInTheDocument();
-      expect(input).toHaveAttribute(
-        'placeholder',
-        'Search pages, navigate, or run actions...'
-      );
+      expect(input).toHaveAttribute('placeholder', 'Search pages, navigate, or run actions...');
     });
   });
 
@@ -85,9 +78,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     const input = screen.getByRole('textbox', {
@@ -107,9 +98,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     const input = screen.getByRole('textbox', {
@@ -126,9 +115,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     const input = screen.getByRole('textbox', {
@@ -147,9 +134,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     const vocabularyItem = screen.getByText('Vocabulary');
@@ -167,9 +152,7 @@ describe('Command Palette E2E', () => {
     renderPalette();
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     const input = screen.getByRole('textbox', {
@@ -206,9 +189,7 @@ describe('Command Palette E2E', () => {
     // Open
     fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
     await waitFor(() => {
-      expect(
-        screen.getByRole('textbox', { name: /command palette search/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: /command palette search/i })).toBeInTheDocument();
     });
 
     // Close

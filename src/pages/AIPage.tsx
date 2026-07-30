@@ -1,12 +1,13 @@
 import { useBillingStore } from '@/features/billing';
-import { useAIPage } from './AIPage/hooks/useAIPage';
-import { WorkspacePanel } from './AIPage/WorkspacePanel';
-import { ProviderStatusPanel } from './AIPage/ProviderStatusPanel';
-import { MetricsGrid } from './AIPage/MetricsGrid';
-import { CoachModeSelector } from './AIPage/CoachModeSelector';
+
 import { CoachInputForm } from './AIPage/CoachInputForm';
+import { CoachModeSelector } from './AIPage/CoachModeSelector';
 import { CoachResultPanel } from './AIPage/CoachResultPanel';
+import { MetricsGrid } from './AIPage/MetricsGrid';
+import { ProviderStatusPanel } from './AIPage/ProviderStatusPanel';
 import { UserContextSidebar } from './AIPage/UserContextSidebar';
+import { WorkspacePanel } from './AIPage/WorkspacePanel';
+import { useAIPage } from './AIPage/hooks/useAIPage';
 
 interface AIPageProps {
   embedded?: boolean;
@@ -20,9 +21,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
     <div className="space-y-4 animate-in fade-in duration-300 font-sans pt-8 sm:pt-0">
       {!embedded && (
         <div className="sticky top-0 z-40 flex h-14 shrink-0 items-center border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            AI Copilot Studio
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">AI Copilot Studio</h1>
         </div>
       )}
 
@@ -80,9 +79,7 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
             sessions={h.sessions}
             onSetInput={h.setInput}
             onSubmit={h.handleSubmit}
-            onRegenerate={() =>
-              h.regenerateLast(h.currentUser, h.learningState)
-            }
+            onRegenerate={() => h.regenerateLast(h.currentUser, h.learningState)}
             onClearHistory={h.clearSessionHistory}
             onReset={h.resetCoach}
             onFileUpload={h.handleFileUpload}

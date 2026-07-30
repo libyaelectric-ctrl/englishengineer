@@ -84,8 +84,7 @@ export const hseCategories: ExpansionCategory[] = [
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['procurement', 'supplier', 'submittal'],
-    context:
-      'procurement tracking, supplier communication, and technical submittals',
+    context: 'procurement tracking, supplier communication, and technical submittals',
     terms: [
       'purchase order',
       'technical submittal',

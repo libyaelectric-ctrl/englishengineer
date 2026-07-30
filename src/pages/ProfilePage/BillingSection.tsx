@@ -1,12 +1,15 @@
 import { CreditCard } from 'lucide-react';
+
+import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
+  type BillingProviderStatus,
   BillingStatusPanel,
   type SubscriptionSnapshot,
-  type BillingProviderStatus,
 } from '@/features/billing';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { BillingStatusBadge } from './BillingStatusBadge';
+
 import { BillingPlanCards } from './BillingPlanCards';
+import { BillingStatusBadge } from './BillingStatusBadge';
 import { BillingUpgradeCTA } from './BillingUpgradeCTA';
 
 interface BillingSectionProps {

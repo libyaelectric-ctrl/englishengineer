@@ -1,37 +1,29 @@
-import { useMemo, useCallback } from 'react';
-import {
-  BookMarked,
-  BookOpen,
-  Headphones,
-  Languages,
-  Mic2,
-  PenTool,
-} from 'lucide-react';
+import { BookMarked, BookOpen, Headphones, Languages, Mic2, PenTool } from 'lucide-react';
+
+import { useCallback, useMemo } from 'react';
+
 import { useNavigate } from 'react-router-dom';
+
 import { ProgressService } from '@/core/learning';
+
+import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
+
 import { useAuthStore } from '@/features/auth';
-import {
-  SKILL_NAMES,
-  type SkillName,
-  useLearningCockpit,
-} from '@/features/profile';
-import { LessonPathEngine } from '@/features/learning-orchestrator';
 import {
   buildReviewPriorities,
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
-import { DashboardSkeleton } from './DashboardPage/DashboardSkeleton';
+import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { SKILL_NAMES, type SkillName, useLearningCockpit } from '@/features/profile';
+
 import { DailyGoalBar } from './DashboardPage/DailyGoalBar';
+import { DashboardSkeleton } from './DashboardPage/DashboardSkeleton';
 import { HeroPanel } from './DashboardPage/HeroPanel';
 import { ProgressCockpit } from './DashboardPage/ProgressCockpit';
 import { ReviewPriorities } from './DashboardPage/ReviewPriorities';
 import { SkillRadarChart } from './DashboardPage/SkillRadarChart';
-import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
 
-const SKILL_META: Record<
-  SkillName,
-  { label: string; route: string; icon: typeof BookOpen }
-> = {
+const SKILL_META: Record<SkillName, { label: string; route: string; icon: typeof BookOpen }> = {
   reading: { label: 'Reading', route: '/reading', icon: BookOpen },
   writing: { label: 'Writing', route: '/writing', icon: PenTool },
   listening: { label: 'Listening', route: '/listening', icon: Headphones },
@@ -46,8 +38,7 @@ const getCompetencyLabel = (score: number) => {
       text: 'High Competency',
       color: 'text-success dark:text-success',
     };
-  if (score >= 60)
-    return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
+  if (score >= 60) return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
   if (score >= 40)
     return {
       text: 'Developing',
@@ -59,9 +50,7 @@ const getCompetencyLabel = (score: number) => {
 const DashboardPage = () => {
   const navigate = useNavigate();
   const currentUser = useAuthStore((state) => state.currentUser);
-  const { profile, memory, missions, learningState } = useLearningCockpit(
-    currentUser?.id
-  );
+  const { profile, memory, missions, learningState } = useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const summary = ProgressService.getSummary(learningState);
   const focusSkill = useMemo(
@@ -69,9 +58,7 @@ const DashboardPage = () => {
       [...SKILL_NAMES]
         .map((skill) => profile.skills[skill])
         .sort(
-          (a, b) =>
-            a.completedTasks - b.completedTasks ||
-            b.weaknessScore - a.weaknessScore
+          (a, b) => a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore
         )[0],
     [profile]
   );
@@ -124,19 +111,14 @@ const DashboardPage = () => {
   const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
 
   const skillSparklineData = useMemo(() => {
-    const result: Record<SkillName, number[]> = {} as Record<
-      SkillName,
-      number[]
-    >;
+    const result: Record<SkillName, number[]> = {} as Record<SkillName, number[]>;
     for (const skill of SKILL_NAMES) {
       const sp = profile.skills[skill];
       const base = sp.completedTasks;
       result[skill] = Array.from({ length: 7 }, (_, i) =>
         Math.max(
           0,
-          base -
-            (6 - i) * Math.floor(base / 6) +
-            ((i * 7 + SKILL_NAMES.indexOf(skill)) % 3)
+          base - (6 - i) * Math.floor(base / 6) + ((i * 7 + SKILL_NAMES.indexOf(skill)) % 3)
         )
       );
     }
@@ -151,17 +133,13 @@ const DashboardPage = () => {
   const isLoading = !profile;
   if (isLoading) return <DashboardSkeleton />;
 
-  const focusLessonNumber = LessonPathEngine.getSkillProgress(
-    profile,
-    focusSkill.skill
-  ).lesson.number;
+  const focusLessonNumber = LessonPathEngine.getSkillProgress(profile, focusSkill.skill).lesson
+    .number;
 
   return (
     <div className="mx-auto w-full max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
       <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <h1 className="text-base font-bold tracking-tight text-foreground">
-          Dashboard
-        </h1>
+        <h1 className="text-base font-bold tracking-tight text-foreground">Dashboard</h1>
       </div>
       <div className="space-y-6">
         <StreakFlameWidget streakDays={7} freezeAvailable={true} />

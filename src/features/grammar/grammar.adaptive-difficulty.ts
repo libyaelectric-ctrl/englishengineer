@@ -1,10 +1,6 @@
 import type { GrammarRuleProgress } from './grammar.progress';
 
-export type DifficultyLevel =
-  | 'beginner'
-  | 'intermediate'
-  | 'advanced'
-  | 'challenge';
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced' | 'challenge';
 
 export interface DifficultyAssessment {
   ruleId: string;
@@ -18,14 +14,10 @@ const ACCURACY_WEIGHT = 0.4;
 const EXPOSURE_WEIGHT = 0.2;
 
 export const AdaptiveDifficultyEngine = {
-  assessDifficulty(
-    ruleId: string,
-    progress: GrammarRuleProgress
-  ): DifficultyAssessment {
+  assessDifficulty(ruleId: string, progress: GrammarRuleProgress): DifficultyAssessment {
     const accuracy =
       progress.correctUsages + progress.incorrectUsages > 0
-        ? progress.correctUsages /
-          (progress.correctUsages + progress.incorrectUsages)
+        ? progress.correctUsages / (progress.correctUsages + progress.incorrectUsages)
         : 0.5;
 
     const strengthScore = progress.strength / 100;
@@ -59,8 +51,7 @@ export const AdaptiveDifficultyEngine = {
         ruleId,
         suggestedDifficulty: 'intermediate',
         confidence: compositeScore,
-        reasoning:
-          'Building foundation — intermediate complexity is appropriate.',
+        reasoning: 'Building foundation — intermediate complexity is appropriate.',
       };
     }
 

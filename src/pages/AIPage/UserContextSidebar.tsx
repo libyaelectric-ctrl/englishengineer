@@ -1,14 +1,13 @@
 import { CheckCircle2, Sparkles, Zap } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
-import type {
-  AICoachContext,
-  AICoachResult,
-  AICoachSession,
-} from '@/features/ai';
+
+import type { AICoachContext, AICoachResult, AICoachSession } from '@/features/ai';
 import type { AssessmentProfile } from '@/features/assessment';
 
 interface UserContextSidebarProps {
@@ -28,11 +27,7 @@ export const UserContextSidebar = ({
 
   return (
     <div className="space-y-4 lg:sticky lg:top-[5rem] lg:self-start">
-      <SectionCard
-        title="User Context"
-        subtitle="Live local learning profile"
-        icon={Zap}
-      >
+      <SectionCard title="User Context" subtitle="Live local learning profile" icon={Zap}>
         <div className="space-y-2 text-sm">
           {[
             ['Learner', coachContext.userName],
@@ -58,9 +53,7 @@ export const UserContextSidebar = ({
               <span className="text-muted-copy font-mono text-[10px] font-bold uppercase tracking-wider">
                 {label}
               </span>
-              <span className="text-right font-semibold text-foreground text-xs">
-                {value}
-              </span>
+              <span className="text-right font-semibold text-foreground text-xs">{value}</span>
             </div>
           ))}
           <div>
@@ -93,11 +86,7 @@ export const UserContextSidebar = ({
       </SectionCard>
 
       {lastResult && (
-        <SectionCard
-          title="Suggested Actions"
-          subtitle="Next practice steps"
-          icon={CheckCircle2}
-        >
+        <SectionCard title="Suggested Actions" subtitle="Next practice steps" icon={CheckCircle2}>
           <div className="space-y-2">
             {lastResult.suggestedActions.map((action) => (
               <div
@@ -118,11 +107,7 @@ export const UserContextSidebar = ({
         </SectionCard>
       )}
 
-      <SectionCard
-        title="Recent Sessions"
-        subtitle="Last 5 coach interactions"
-        icon={Sparkles}
-      >
+      <SectionCard title="Recent Sessions" subtitle="Last 5 coach interactions" icon={Sparkles}>
         <div className="space-y-2 max-h-[200px] overflow-y-auto custom-scrollbar pr-1">
           {sessions.slice(0, 5).map((session) => (
             <div
@@ -130,16 +115,12 @@ export const UserContextSidebar = ({
               className="rounded-[4px] border border-border-soft bg-surface-hover p-2.5 shadow-sm"
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[10px] font-bold text-foreground">
-                  {session.modeName}
-                </p>
+                <p className="text-[10px] font-bold text-foreground">{session.modeName}</p>
                 <span className="text-[10px] font-mono text-muted-copy">
                   {new Date(session.timestamp).toLocaleDateString()}
                 </span>
               </div>
-              <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">
-                {session.input}
-              </p>
+              <p className="text-[10px] text-muted-copy mt-1 line-clamp-1">{session.input}</p>
               <p className="text-[10px] font-mono font-bold text-primary mt-1 uppercase tracking-wider">
                 {session.result.focusArea}
               </p>
@@ -156,8 +137,8 @@ export const UserContextSidebar = ({
           Integration Notice
         </p>
         <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
-          Set VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL to connect the
-          server-side AI proxy. This frontend never receives vendor secrets.
+          Set VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL to connect the server-side AI proxy.
+          This frontend never receives vendor secrets.
         </p>
       </div>
     </div>

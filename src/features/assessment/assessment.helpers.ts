@@ -1,4 +1,5 @@
 import { MissionModule } from '@/core/learning/learning.types';
+
 import {
   AssessmentDimension,
   AssessmentDimensionId,
@@ -10,8 +11,7 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {
     id: 'grammar_accuracy',
     label: 'Grammar Accuracy',
-    description:
-      'Control of tense, articles, sentence structure, and error-free communication.',
+    description: 'Control of tense, articles, sentence structure, and error-free communication.',
   },
   {
     id: 'vocabulary_range',
@@ -41,8 +41,7 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {
     id: 'meeting_readiness',
     label: 'Meeting Readiness',
-    description:
-      'Readiness for coordination, progress, and technical meetings.',
+    description: 'Readiness for coordination, progress, and technical meetings.',
   },
   {
     id: 'site_communication',
@@ -52,26 +51,22 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {
     id: 'qa_qc_communication',
     label: 'QA/QC Communication',
-    description:
-      'Ability to communicate NCR, inspection, ITP, and quality matters.',
+    description: 'Ability to communicate NCR, inspection, ITP, and quality matters.',
   },
   {
     id: 'commissioning_communication',
     label: 'Commissioning Communication',
-    description:
-      'Ability to explain testing, commissioning, and handover issues.',
+    description: 'Ability to explain testing, commissioning, and handover issues.',
   },
   {
     id: 'consultant_communication',
     label: 'Consultant Communication',
-    description:
-      'Ability to respond to consultants with evidence and professionalism.',
+    description: 'Ability to respond to consultants with evidence and professionalism.',
   },
   {
     id: 'report_writing',
     label: 'Report Writing',
-    description:
-      'Ability to write site reports, updates, and technical summaries.',
+    description: 'Ability to write site reports, updates, and technical summaries.',
   },
   {
     id: 'email_writing',
@@ -81,8 +76,7 @@ export const ASSESSMENT_DIMENSIONS: AssessmentDimension[] = [
   {
     id: 'listening_comprehension',
     label: 'Listening Comprehension',
-    description:
-      'Understanding engineering briefings and spoken project details.',
+    description: 'Understanding engineering briefings and spoken project details.',
   },
   {
     id: 'speaking_confidence',
@@ -155,15 +149,11 @@ export const getAssessmentConfidence = (
 
   return {
     score: confidence,
-    explanation:
-      'Confidence is low because the estimate is based on very limited local evidence.',
+    explanation: 'Confidence is low because the estimate is based on very limited local evidence.',
   };
 };
 
-export const mapScoreToEngineerElo = (
-  score: number | null,
-  currentElo: number
-): number | null => {
+export const mapScoreToEngineerElo = (score: number | null, currentElo: number): number | null => {
   if (score === null) return null;
   const normalized = Math.max(0, Math.min(100, score));
   const estimate = Math.round(currentElo + (normalized - 70) * 6);
@@ -180,9 +170,7 @@ export const getDataStatus = (
 
 export const averageScores = (scores: number[]): number | null => {
   if (scores.length === 0) return null;
-  return Math.round(
-    scores.reduce((total, score) => total + score, 0) / scores.length
-  );
+  return Math.round(scores.reduce((total, score) => total + score, 0) / scores.length);
 };
 
 export const getModuleAverage = (
@@ -190,9 +178,7 @@ export const getModuleAverage = (
   modules: MissionModule[]
 ): number | null =>
   averageScores(
-    sourceScores
-      .filter((item) => modules.includes(item.module))
-      .map((item) => item.score)
+    sourceScores.filter((item) => modules.includes(item.module)).map((item) => item.score)
   );
 
 export const buildDimensionScore = (
@@ -200,9 +186,7 @@ export const buildDimensionScore = (
   score: number | null,
   evidence: string
 ): AssessmentDimensionScore => {
-  const dimension = ASSESSMENT_DIMENSIONS.find(
-    (item) => item.id === dimensionId
-  );
+  const dimension = ASSESSMENT_DIMENSIONS.find((item) => item.id === dimensionId);
   return {
     dimensionId,
     label: dimension?.label || dimensionId,

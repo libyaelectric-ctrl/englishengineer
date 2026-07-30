@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react';
-import {
-  type VocabularyMenuState,
-  VocabularyMenuService,
-} from '@/features/vocabulary/services/vocabulary.menu';
-import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+
+import { useEffect, useState } from 'react';
+
+import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
+
+import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
+import {
+  VocabularyMenuService,
+  type VocabularyMenuState,
+} from '@/features/vocabulary/services/vocabulary.menu';
 
 const VOCAB_LEVELS = [
   { id: 'A1', max: 500 },
@@ -33,10 +36,7 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
         const isCompleted = mastered >= level.max;
         const previousMax = index === 0 ? 0 : VOCAB_LEVELS[index - 1].max;
         const bracketTotal = level.max - previousMax;
-        const bracketProgress = Math.max(
-          0,
-          Math.min(bracketTotal, mastered - previousMax)
-        );
+        const bracketProgress = Math.max(0, Math.min(bracketTotal, mastered - previousMax));
         const percent = (bracketProgress / bracketTotal) * 100;
         return (
           <div
@@ -49,9 +49,7 @@ function VocabLevelGrid({ mastered }: { mastered: number }) {
               >
                 {level.id}
               </span>
-              <span className="text-[10px] font-medium text-muted-copy">
-                {level.max}
-              </span>
+              <span className="text-[10px] font-medium text-muted-copy">{level.max}</span>
             </div>
             <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
               <div
@@ -71,13 +69,10 @@ const log = (_page: string, _action: string, _details: string) => {};
 const getStatusCount = (
   state: VocabularyMenuState,
   status: 'Learning' | 'Learned' | 'Mastered' | 'Struggling'
-): number =>
-  Object.values(state.progress).filter((word) => word.status === status).length;
+): number => Object.values(state.progress).filter((word) => word.status === status).length;
 
 export function VocabSidebar() {
-  const [menuState, setMenuState] = useState(() =>
-    VocabularyMenuService.getState()
-  );
+  const [menuState, setMenuState] = useState(() => VocabularyMenuService.getState());
   const summary = VocabularyMenuService.getSummary(menuState);
   const learned = getStatusCount(menuState, 'Learned');
   const struggling = getStatusCount(menuState, 'Struggling');
@@ -90,11 +85,7 @@ export function VocabSidebar() {
       }
     };
     window.addEventListener(STORAGE_CHANGE_EVENT, syncVocabularySummary);
-    return () =>
-      window.removeEventListener(
-        STORAGE_CHANGE_EVENT,
-        syncVocabularySummary
-      );
+    return () => window.removeEventListener(STORAGE_CHANGE_EVENT, syncVocabularySummary);
   }, []);
 
   const config: SidebarConfig = {
@@ -140,9 +131,7 @@ export function VocabSidebar() {
         icon: 'Add',
         label: 'Add custom word',
         onClick: () => {
-          document
-            .querySelector('input')
-            ?.scrollIntoView({ behavior: 'smooth' });
+          document.querySelector('input')?.scrollIntoView({ behavior: 'smooth' });
         },
       },
     ],

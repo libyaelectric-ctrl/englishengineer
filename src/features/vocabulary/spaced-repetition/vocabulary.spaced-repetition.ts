@@ -1,8 +1,6 @@
 import { VocabularyReviewState } from '../types/vocabulary.types';
 
-export const createInitialReviewState = (
-  wordId: string
-): VocabularyReviewState => ({
+export const createInitialReviewState = (wordId: string): VocabularyReviewState => ({
   wordId,
   interval: 0,
   easeFactor: 2.5,
@@ -19,8 +17,7 @@ export const updateSm2ReviewState = (
   const boundedQuality = Math.max(0, Math.min(5, quality));
   const easeFactor = Math.max(
     1.3,
-    previous.easeFactor +
-      (0.1 - (5 - boundedQuality) * (0.08 + (5 - boundedQuality) * 0.02))
+    previous.easeFactor + (0.1 - (5 - boundedQuality) * (0.08 + (5 - boundedQuality) * 0.02))
   );
 
   const repetitions = boundedQuality < 3 ? 0 : previous.repetitions + 1;

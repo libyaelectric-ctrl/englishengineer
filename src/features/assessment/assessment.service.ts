@@ -1,9 +1,7 @@
-import {
-  LearningState,
-  MissionModule,
-  ScoreResult,
-} from '@/core/learning/learning.types';
+import { LearningState, MissionModule, ScoreResult } from '@/core/learning/learning.types';
+
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
 import {
   averageScores,
   buildDimensionScore,
@@ -23,12 +21,7 @@ import {
   AssessmentWrappedScore,
 } from './assessment.types';
 
-const COMMUNICATION_MODULES: MissionModule[] = [
-  'Writing',
-  'Speaking',
-  'Listening',
-  'Reading',
-];
+const COMMUNICATION_MODULES: MissionModule[] = ['Writing', 'Speaking', 'Listening', 'Reading'];
 
 const CERTIFICATE_DISCLAIMER =
   'This is an internal Engineering Communication estimate, not an official CEFR certificate.';
@@ -40,10 +33,7 @@ const getSourceScores = (state: LearningState): AssessmentSourceScore[] => [
     durationMinutes: session.durationMinutes,
   })),
   ...state.missions
-    .filter(
-      (mission) =>
-        mission.status === 'completed' && typeof mission.score === 'number'
-    )
+    .filter((mission) => mission.status === 'completed' && typeof mission.score === 'number')
     .map((mission) => ({
       module: mission.module,
       score: mission.score || 0,
@@ -73,21 +63,14 @@ const deriveDimensionScores = (
   );
   const overall = averageScores(sourceScores.map((item) => item.score));
   const retention =
-    vocabulary.retentionPercentage > 0
-      ? vocabulary.retentionPercentage
-      : vocabularyScore;
-  const eloSignal = Math.max(
-    0,
-    Math.min(100, Math.round((state.elo - 800) / 16))
-  );
+    vocabulary.retentionPercentage > 0 ? vocabulary.retentionPercentage : vocabularyScore;
+  const eloSignal = Math.max(0, Math.min(100, Math.round((state.elo - 800) / 16)));
 
   return [
     buildDimensionScore(
       'grammar_accuracy',
       bounded(
-        averageScores(
-          [writing, speaking].filter((score): score is number => score !== null)
-        )
+        averageScores([writing, speaking].filter((score): score is number => score !== null))
       ),
       'Derived from Writing and Speaking activity.'
     ),
@@ -99,19 +82,11 @@ const deriveDimensionScores = (
     buildDimensionScore(
       'technical_vocabulary',
       bounded(
-        averageScores(
-          [vocabularyScore, reading].filter(
-            (score): score is number => score !== null
-          )
-        )
+        averageScores([vocabularyScore, reading].filter((score): score is number => score !== null))
       ),
       'Derived from Vocabulary and Reading technical comprehension.'
     ),
-    buildDimensionScore(
-      'professional_tone',
-      bounded(writing),
-      'Derived from Writing activity.'
-    ),
+    buildDimensionScore('professional_tone', bounded(writing), 'Derived from Writing activity.'),
     buildDimensionScore(
       'clarity',
       bounded(communicationAverage),
@@ -125,11 +100,7 @@ const deriveDimensionScores = (
     buildDimensionScore(
       'meeting_readiness',
       bounded(
-        averageScores(
-          [listening, speaking].filter(
-            (score): score is number => score !== null
-          )
-        )
+        averageScores([listening, speaking].filter((score): score is number => score !== null))
       ),
       'Derived from Listening and Speaking activity.'
     ),
@@ -137,47 +108,29 @@ const deriveDimensionScores = (
       'site_communication',
       bounded(
         averageScores(
-          [speaking, listening, writing].filter(
-            (score): score is number => score !== null
-          )
+          [speaking, listening, writing].filter((score): score is number => score !== null)
         )
       ),
       'Derived from site-facing communication modules.'
     ),
     buildDimensionScore(
       'qa_qc_communication',
-      bounded(
-        averageScores(
-          [writing, reading].filter((score): score is number => score !== null)
-        )
-      ),
+      bounded(averageScores([writing, reading].filter((score): score is number => score !== null))),
       'Derived from Reading and Writing activity.'
     ),
     buildDimensionScore(
       'commissioning_communication',
       bounded(
-        averageScores(
-          [listening, reading].filter(
-            (score): score is number => score !== null
-          )
-        )
+        averageScores([listening, reading].filter((score): score is number => score !== null))
       ),
       'Derived from Listening and Reading activity.'
     ),
     buildDimensionScore(
       'consultant_communication',
-      bounded(
-        averageScores(
-          [writing, reading].filter((score): score is number => score !== null)
-        )
-      ),
+      bounded(averageScores([writing, reading].filter((score): score is number => score !== null))),
       'Derived from consultant-style Reading and Writing activity.'
     ),
-    buildDimensionScore(
-      'report_writing',
-      bounded(writing),
-      'Derived from Writing activity.'
-    ),
+    buildDimensionScore('report_writing', bounded(writing), 'Derived from Writing activity.'),
     buildDimensionScore(
       'email_writing',
       bounded(writing === null ? null : Math.max(0, writing - 2)),
@@ -245,19 +198,13 @@ const buildReadiness = (
 ): AssessmentProfile['readiness'] => ({
   meetings: averageScores(
     [
-      dimensionScores.find((item) => item.dimensionId === 'meeting_readiness')
-        ?.score,
-      dimensionScores.find((item) => item.dimensionId === 'speaking_confidence')
-        ?.score,
+      dimensionScores.find((item) => item.dimensionId === 'meeting_readiness')?.score,
+      dimensionScores.find((item) => item.dimensionId === 'speaking_confidence')?.score,
     ].filter((score): score is number => score !== null && score !== undefined)
   ),
-  reports:
-    dimensionScores.find((item) => item.dimensionId === 'report_writing')
-      ?.score ?? null,
+  reports: dimensionScores.find((item) => item.dimensionId === 'report_writing')?.score ?? null,
   consultantCommunication:
-    dimensionScores.find(
-      (item) => item.dimensionId === 'consultant_communication'
-    )?.score ?? null,
+    dimensionScores.find((item) => item.dimensionId === 'consultant_communication')?.score ?? null,
 });
 
 const getTrustLabel = (dataStatus: string): string => {
@@ -276,9 +223,7 @@ export const AssessmentService = {
       (item) => item.score !== null && item.dimensionId !== 'engineer_elo'
     );
     const overallScore =
-      dataStatus === 'insufficient'
-        ? null
-        : averageScores(scorable.map((item) => item.score || 0));
+      dataStatus === 'insufficient' ? null : averageScores(scorable.map((item) => item.score || 0));
     const strongestDimensions = getStrongestDimensions(dimensionScores);
     const weakestDimensions = getWeakestDimensions(dimensionScores);
     const readiness = buildReadiness(dimensionScores);
@@ -298,9 +243,7 @@ export const AssessmentService = {
         .map((item) => this.assessActivity(item.module, item.score, state)),
       recommendedNextMissions:
         weakestDimensions.length > 0
-          ? weakestDimensions
-              .map((item) => `Practice ${item.label}`)
-              .slice(0, 3)
+          ? weakestDimensions.map((item) => `Practice ${item.label}`).slice(0, 3)
           : ['Complete one Writing mission', 'Complete one Listening mission'],
       readiness,
       trustLabel: getTrustLabel(dataStatus),
@@ -315,8 +258,7 @@ export const AssessmentService = {
     score: number,
     state: LearningState
   ): AssessmentResult {
-    const sourceScores =
-      module === 'AI Copilot' ? [] : [{ module, score, durationMinutes: 1 }];
+    const sourceScores = module === 'AI Copilot' ? [] : [{ module, score, durationMinutes: 1 }];
     const baseScores = deriveDimensionScores(state, sourceScores);
     const confidence = getAssessmentConfidence(sourceScores);
     const dimensionScores = baseScores.map((item) => ({

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 async function loginAsDemo(page: import('@playwright/test').Page) {
   await page.goto('/login');
@@ -11,18 +11,14 @@ async function loginAsDemo(page: import('@playwright/test').Page) {
 async function navigateToVocabulary(page: import('@playwright/test').Page) {
   await loginAsDemo(page);
   await page.goto('/vocabulary');
-  await expect(
-    page.getByRole('heading', { name: 'Vocabulary', exact: true })
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
 }
 
 test.describe('Vocabulary page loading', () => {
   test('vocabulary page renders with header and tabs', async ({ page }) => {
     await navigateToVocabulary(page);
     // Heading
-    await expect(
-      page.getByRole('heading', { name: 'Vocabulary', exact: true })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
     // Tabs: New, Learned, Mastered
     await expect(page.getByRole('tab', { name: /new/i })).toBeVisible();
     await expect(page.getByRole('tab', { name: /learned/i })).toBeVisible();
@@ -31,9 +27,7 @@ test.describe('Vocabulary page loading', () => {
 
   test('search input is present', async ({ page }) => {
     await navigateToVocabulary(page);
-    await expect(
-      page.getByRole('textbox', { name: /search vocabulary/i })
-    ).toBeVisible();
+    await expect(page.getByRole('textbox', { name: /search vocabulary/i })).toBeVisible();
   });
 });
 
@@ -50,9 +44,7 @@ test.describe('Vocabulary search', () => {
     await page.waitForTimeout(2000);
 
     // Should show results section or "no match" message
-    const resultsOrNoMatch = page.getByText(
-      /search results|no canonical match|results found/i
-    );
+    const resultsOrNoMatch = page.getByText(/search results|no canonical match|results found/i);
     await expect(resultsOrNoMatch.first()).toBeVisible();
   });
 
@@ -65,9 +57,7 @@ test.describe('Vocabulary search', () => {
     await searchInput.press('Enter');
     await page.waitForTimeout(500);
     // No crash, page stays intact
-    await expect(
-      page.getByRole('heading', { name: 'Vocabulary', exact: true })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
   });
 });
 
@@ -104,9 +94,7 @@ test.describe('Vocabulary word card details', () => {
     await page.waitForTimeout(2000);
 
     // Find a word card's details toggle
-    const detailsToggle = page
-      .getByRole('button', { name: /word details/i })
-      .first();
+    const detailsToggle = page.getByRole('button', { name: /word details/i }).first();
     if (await detailsToggle.isVisible({ timeout: 3000 }).catch(() => false)) {
       await expect(detailsToggle).toHaveAttribute('aria-expanded', 'false');
       await detailsToggle.click();
@@ -125,17 +113,13 @@ test.describe('Vocabulary word card details', () => {
     if (await flipButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await flipButton.click();
       // After flip, button should say "Front"
-      await expect(
-        page.getByRole('button', { name: /front/i }).first()
-      ).toBeVisible();
+      await expect(page.getByRole('button', { name: /front/i }).first()).toBeVisible();
     }
   });
 });
 
 test.describe('Add to My Vocabulary', () => {
-  test('searching for unknown word shows Add to My Vocabulary button', async ({
-    page,
-  }) => {
+  test('searching for unknown word shows Add to My Vocabulary button', async ({ page }) => {
     await navigateToVocabulary(page);
     const searchInput = page.getByRole('textbox', {
       name: /search vocabulary/i,
@@ -152,9 +136,7 @@ test.describe('Add to My Vocabulary', () => {
     if (await addButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await addButton.click();
       // Add form should appear
-      await expect(
-        page.getByRole('form', { name: /add to my vocabulary/i })
-      ).toBeVisible();
+      await expect(page.getByRole('form', { name: /add to my vocabulary/i })).toBeVisible();
     }
   });
 

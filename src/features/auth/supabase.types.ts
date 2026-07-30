@@ -50,9 +50,7 @@ export interface EngVoxDatabase {
   };
 }
 
-export const mapProfileToSupabaseRow = (
-  profile: UserProfile
-): SupabaseProfileRow => ({
+export const mapProfileToSupabaseRow = (profile: UserProfile): SupabaseProfileRow => ({
   id: profile.id,
   email: profile.email,
   display_name: profile.displayName,
@@ -65,9 +63,7 @@ export const mapProfileToSupabaseRow = (
   updated_at: profile.updatedAt,
 });
 
-export const mapSupabaseRowToProfile = (
-  row: SupabaseProfileRow
-): UserProfile => ({
+export const mapSupabaseRowToProfile = (row: SupabaseProfileRow): UserProfile => ({
   id: row.id,
   displayName: row.display_name,
   email: row.email,

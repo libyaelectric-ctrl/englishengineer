@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { isFeatureEnabled, getAllFeatureFlags, overrideFeatureFlag } from './featureFlags';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { getAllFeatureFlags, isFeatureEnabled, overrideFeatureFlag } from './featureFlags';
 
 describe('Feature Flags', () => {
   beforeEach(() => {

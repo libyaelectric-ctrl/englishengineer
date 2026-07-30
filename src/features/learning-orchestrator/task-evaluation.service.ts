@@ -1,26 +1,22 @@
 import { storage } from '@/shared/storage';
+
+import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
+import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import {
   clampSkillElo,
   getAdaptivePaceDecision,
   getCefrBandFromElo,
 } from '@/features/profile/profile.utils';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
-import { GrammarProgressService } from '@/features/grammar/grammar.progress';
-import type {
-  TaskEvaluationInput,
-  TaskEvaluationRecord,
-} from './learning-orchestrator.types';
+
+import type { TaskEvaluationInput, TaskEvaluationRecord } from './learning-orchestrator.types';
 
 const STORAGE_KEY = 'task_evaluation_records';
 
 const calculateEloDelta = (input: TaskEvaluationInput): number => {
   const base = input.accuracy >= 85 ? 12 : input.accuracy >= 60 ? 4 : -8;
-  if (
-    base > 0 &&
-    input.responseTimeSeconds > input.expectedResponseTimeSeconds * 2
-  ) {
+  if (base > 0 && input.responseTimeSeconds > input.expectedResponseTimeSeconds * 2) {
     return Math.max(1, base - 4);
   }
   return base;

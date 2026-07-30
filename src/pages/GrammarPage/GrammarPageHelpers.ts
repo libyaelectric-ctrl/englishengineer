@@ -1,14 +1,7 @@
+import { type GrammarRuleProgress, getMissingGrammarTransferEvidence } from '@/features/grammar';
 import { type CefrLevel } from '@/features/level-system';
-import {
-  getMissingGrammarTransferEvidence,
-  type GrammarRuleProgress,
-} from '@/features/grammar';
 
-export type LessonStatus =
-  | 'New'
-  | 'Practicing'
-  | 'Needs Reading/Writing'
-  | 'Mastered';
+export type LessonStatus = 'New' | 'Practicing' | 'Needs Reading/Writing' | 'Mastered';
 
 export const MODULE_LABELS: Record<string, string> = {
   'sentence-structure': 'Sentence Basics',
@@ -66,9 +59,7 @@ const toTitle = (value: string): string =>
 export const getModuleLabel = (category: string): string =>
   MODULE_LABELS[category] ?? toTitle(category);
 
-export const getLessonStatus = (
-  progress: GrammarRuleProgress
-): LessonStatus => {
+export const getLessonStatus = (progress: GrammarRuleProgress): LessonStatus => {
   if (progress.reviewStatus === 'Strong') return 'Mastered';
   const practiceReady = progress.correctUsages >= 3 && progress.strength >= 70;
   if (practiceReady) return 'Needs Reading/Writing';
@@ -92,10 +83,7 @@ export const getTransferCount = (progress: GrammarRuleProgress): number =>
 export const compact = (value: string, fallback: string): string =>
   value.trim() ? value : fallback;
 
-export const getStatusLabel = (
-  status: LessonStatus,
-  compactLabel = false
-): string => {
+export const getStatusLabel = (status: LessonStatus, compactLabel = false): string => {
   if (status === 'Needs Reading/Writing') return compactLabel ? 'R/W' : status;
   return status;
 };

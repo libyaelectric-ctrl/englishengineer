@@ -46,6 +46,7 @@
 ## Component Details
 
 ### Frontend
+
 - **Framework**: React 19 + TypeScript
 - **Build**: Vite
 - **State**: Zustand + React Query
@@ -53,6 +54,7 @@
 - **Testing**: Vitest + Playwright
 
 ### Backend
+
 - **Runtime**: Node.js 22
 - **Framework**: Express.js
 - **Auth**: Supabase Auth + OAuth
@@ -60,6 +62,7 @@
 - **AI**: Anthropic/Gemini/OpenAI
 
 ### Data
+
 - **Database**: Supabase PostgreSQL
 - **Cache**: Upstash Redis
 - **Storage**: Supabase Storage

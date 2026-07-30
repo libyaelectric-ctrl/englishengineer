@@ -1,5 +1,6 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
 import { createWorkspaceRepository } from '../src/workspace.js';
 
 type WorkspaceRepoConfig = Parameters<typeof createWorkspaceRepository>[0];

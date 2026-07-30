@@ -1,11 +1,15 @@
-import { FormEvent } from 'react';
 import { CheckCircle2, XCircle } from 'lucide-react';
+
+import { FormEvent } from 'react';
+
+import { Button } from '@/shared/components/Button';
+
 import {
-  getVocabularyReviewReason,
   type VocabularyMenuProgress,
   type VocabularyTerm,
+  getVocabularyReviewReason,
 } from '@/features/vocabulary';
-import { Button } from '@/shared/components/Button';
+
 import type { VocabularySetMode } from './WordCard';
 
 interface LearningReviewProps {
@@ -101,12 +105,8 @@ export const QuizForm = ({
       Check Answer
     </Button>
     {quizResult !== null && (
-      <p
-        className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}
-      >
-        {quizResult
-          ? 'Correct — Moved to Learned pool.'
-          : 'Incorrect — Added to Weak Words.'}
+      <p className={`text-xs font-bold mt-1 ${quizResult ? 'text-emerald-600' : 'text-rose-600'}`}>
+        {quizResult ? 'Correct — Moved to Learned pool.' : 'Incorrect — Added to Weak Words.'}
       </p>
     )}
   </form>

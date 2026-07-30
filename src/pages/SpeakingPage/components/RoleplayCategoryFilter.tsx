@@ -1,5 +1,7 @@
 import { MessageSquareText } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import type { RoleplayFilter } from '../hooks/useSpeakingPage';
 
 interface RoleplayCategoryFilterProps {
@@ -18,11 +20,7 @@ export const RoleplayCategoryFilter = ({
     subtitle="Daily, workplace and engineering communication remain balanced"
     icon={MessageSquareText}
   >
-    <div
-      className="flex flex-wrap gap-2"
-      role="tablist"
-      aria-label="Speaking roleplay categories"
-    >
+    <div className="flex flex-wrap gap-2" role="tablist" aria-label="Speaking roleplay categories">
       {roleplayFilters.map((category) => (
         <button
           key={category}

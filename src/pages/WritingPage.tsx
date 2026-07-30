@@ -1,21 +1,25 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FileText, FileCheck, Layers, Lock, ShieldCheck } from 'lucide-react';
+import { FileCheck, FileText, Layers, Lock, ShieldCheck } from 'lucide-react';
 
-import { MetricCard } from '@/shared/components/MetricCard';
+import { useState } from 'react';
+
+import { Link } from 'react-router-dom';
+
 import { LockProgressBar } from '@/shared/components/LockProgressBar';
+import { MetricCard } from '@/shared/components/MetricCard';
+
+import { useGrammarStore } from '@/features/grammar';
 import {
-  LevelContentFilter,
-  EmptyLevelState,
-  type ContentLevelFilter,
   type CefrLevel,
+  type ContentLevelFilter,
+  EmptyLevelState,
+  LevelContentFilter,
 } from '@/features/level-system';
-import { useWritingPage } from './WritingPage/hooks/useWritingPage';
+import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
+
 import { MissionListTab } from './WritingPage/components/MissionListTab';
 import { WorkspaceTab } from './WritingPage/components/WorkspaceTab';
-import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
-import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { useGrammarStore } from '@/features/grammar';
+import { useWritingPage } from './WritingPage/hooks/useWritingPage';
 
 const VOCAB_THRESHOLD = 200;
 const GRAMMAR_THRESHOLD = 10;
@@ -32,20 +36,11 @@ const LockedView = ({
       <Lock className="mx-auto h-10 w-10 text-primary" />
       <h2 className="text-lg font-bold text-foreground">Writing Locked</h2>
       <p className="text-xs text-muted-copy leading-relaxed">
-        You need to learn 200 vocabulary words and 10 grammar rules before
-        accessing Writing.
+        You need to learn 200 vocabulary words and 10 grammar rules before accessing Writing.
       </p>
       <div className="space-y-2 text-[10px]">
-        <LockProgressBar
-          label="Vocabulary"
-          done={vocabLearned}
-          total={VOCAB_THRESHOLD}
-        />
-        <LockProgressBar
-          label="Grammar"
-          done={grammarLearned}
-          total={GRAMMAR_THRESHOLD}
-        />
+        <LockProgressBar label="Vocabulary" done={vocabLearned} total={VOCAB_THRESHOLD} />
+        <LockProgressBar label="Grammar" done={grammarLearned} total={GRAMMAR_THRESHOLD} />
       </div>
       <div className="flex gap-2 justify-center pt-2">
         <Link
@@ -76,20 +71,11 @@ const EmptyMissionView = ({
 }) => (
   <div className="min-h-screen bg-background pb-16 text-foreground space-y-4">
     <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <h1 className="text-base font-bold tracking-tight text-foreground">
-        Writing
-      </h1>
+      <h1 className="text-base font-bold tracking-tight text-foreground">Writing</h1>
     </div>
-    <LevelContentFilter
-      value={levelFilter}
-      currentLevel={currentLevel}
-      onChange={setLevelFilter}
-    />
+    <LevelContentFilter value={levelFilter} currentLevel={currentLevel} onChange={setLevelFilter} />
     <EmptyLevelState skill="Writing" />
-    <Link
-      to="/curriculum"
-      className="inline-flex text-sm font-bold text-primary hover:underline"
-    >
+    <Link to="/curriculum" className="inline-flex text-sm font-bold text-primary hover:underline">
       Back to Learning Hub
     </Link>
   </div>
@@ -112,7 +98,11 @@ const SubTabSwitcher = ({
   ];
 
   return (
-    <div className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm" role="tablist" aria-label="Writing mode">
+    <div
+      className="flex items-center gap-1.5 rounded-xl border border-border-soft bg-surface/90 p-1 shadow-sm"
+      role="tablist"
+      aria-label="Writing mode"
+    >
       {tabs.map((tab) => {
         const isActive = subTab === tab.key;
         return (
@@ -150,9 +140,7 @@ const WritingHeader = ({
 }) => (
   <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
     <div className="flex items-center gap-3">
-      <h1 className="text-base font-bold tracking-tight text-foreground">
-        Writing
-      </h1>
+      <h1 className="text-base font-bold tracking-tight text-foreground">Writing</h1>
       <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
         {currentLevel}
       </span>
@@ -161,9 +149,7 @@ const WritingHeader = ({
       </p>
     </div>
 
-    {activeTab === 'missions' && (
-      <SubTabSwitcher subTab={subTab} setSubTab={setSubTab} />
-    )}
+    {activeTab === 'missions' && <SubTabSwitcher subTab={subTab} setSubTab={setSubTab} />}
   </div>
 );
 
@@ -210,8 +196,7 @@ const WritingPage = () => {
   const grammarStats = useGrammarStore((s) => s.stats);
   const vocabLearned = vocabStats.learned + vocabStats.mastered;
   const grammarLearned = grammarStats.learned + grammarStats.mastered;
-  const canAccess =
-    vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
+  const canAccess = vocabLearned >= VOCAB_THRESHOLD && grammarLearned >= GRAMMAR_THRESHOLD;
 
   const {
     missions,
@@ -249,9 +234,7 @@ const WritingPage = () => {
   } = useWritingPage();
 
   if (!canAccess) {
-    return (
-      <LockedView vocabLearned={vocabLearned} grammarLearned={grammarLearned} />
-    );
+    return <LockedView vocabLearned={vocabLearned} grammarLearned={grammarLearned} />;
   }
 
   if (!currentMission) {
@@ -297,9 +280,7 @@ const WritingPage = () => {
         />
       )}
 
-      {activeTab === 'missions' && subTab === 'field-docs' && (
-        <FieldDocAssistant />
-      )}
+      {activeTab === 'missions' && subTab === 'field-docs' && <FieldDocAssistant />}
 
       {activeTab === 'workspace' && (
         <WorkspaceTab

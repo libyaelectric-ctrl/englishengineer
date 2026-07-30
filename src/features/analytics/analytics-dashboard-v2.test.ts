@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { AnalyticsDashboardV2 } from './analytics-dashboard-v2';
 
 describe('AnalyticsDashboardV2', () => {
@@ -59,10 +60,7 @@ describe('AnalyticsDashboardV2', () => {
         { timestamp: now.toISOString(), durationMinutes: 20, score: 90 },
       ];
       const heatmap = AnalyticsDashboardV2.generateHeatmap(sessions);
-      const totalActivity = heatmap.reduce(
-        (sum, h) => sum + h.activityCount,
-        0
-      );
+      const totalActivity = heatmap.reduce((sum, h) => sum + h.activityCount, 0);
       expect(totalActivity).toBe(2);
     });
 
@@ -107,22 +105,14 @@ describe('AnalyticsDashboardV2', () => {
 
   describe('generateInsights', () => {
     it('generates insights from data', () => {
-      const sessions = [
-        { timestamp: '2026-07-10T09:00:00Z', durationMinutes: 30, score: 85 },
-      ];
-      const insights = AnalyticsDashboardV2.generateInsights(
-        mockSkillScores,
-        sessions
-      );
+      const sessions = [{ timestamp: '2026-07-10T09:00:00Z', durationMinutes: 30, score: 85 }];
+      const insights = AnalyticsDashboardV2.generateInsights(mockSkillScores, sessions);
       expect(insights.length).toBeGreaterThan(0);
       expect(insights.some((i) => i.type === 'peak_hour')).toBe(true);
     });
 
     it('includes improvement insight when skills are improving', () => {
-      const insights = AnalyticsDashboardV2.generateInsights(
-        mockSkillScores,
-        []
-      );
+      const insights = AnalyticsDashboardV2.generateInsights(mockSkillScores, []);
       expect(insights.some((i) => i.type === 'improvement')).toBe(true);
     });
 

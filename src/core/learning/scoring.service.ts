@@ -1,8 +1,4 @@
-import {
-  ScoreResult,
-  MissionModule,
-  MissionDifficulty,
-} from './learning.types';
+import { MissionDifficulty, MissionModule, ScoreResult } from './learning.types';
 
 const getModuleFeedback = (
   module: MissionModule,
@@ -12,10 +8,7 @@ const getModuleFeedback = (
 
   if (module === 'Reading') {
     ranges[90] = {
-      s: [
-        'Excellent technical reading accuracy',
-        'Strong understanding of engineering context',
-      ],
+      s: ['Excellent technical reading accuracy', 'Strong understanding of engineering context'],
       w: [],
       f: 'Strong technical reading. You identified key terms, requirements, and document intent accurately.',
     };
@@ -26,18 +19,12 @@ const getModuleFeedback = (
     };
     ranges[0] = {
       s: [],
-      w: [
-        'Missed several key document details',
-        'Technical vocabulary needs reinforcement',
-      ],
+      w: ['Missed several key document details', 'Technical vocabulary needs reinforcement'],
       f: 'Low comprehension match. Re-read the passage and clarify the annotated definitions.',
     };
   } else if (module === 'Writing') {
     ranges[90] = {
-      s: [
-        'Professional engineering tone',
-        'Strong grammar and revision accuracy',
-      ],
+      s: ['Professional engineering tone', 'Strong grammar and revision accuracy'],
       w: [],
       f: 'Pristine technical writing. Your phrasing maintains professional tone and precise specification standards.',
     };
@@ -48,18 +35,12 @@ const getModuleFeedback = (
     };
     ranges[0] = {
       s: [],
-      w: [
-        'High volume of syntax style flags',
-        'Inconsistent active verb tenses',
-      ],
+      w: ['High volume of syntax style flags', 'Inconsistent active verb tenses'],
       f: 'The draft needs revision for grammar, tone, and technical clarity before it is suitable for project communication.',
     };
   } else if (module === 'Listening') {
     ranges[90] = {
-      s: [
-        'Strong transcript comprehension',
-        'Accurate technical detail retention',
-      ],
+      s: ['Strong transcript comprehension', 'Accurate technical detail retention'],
       w: [],
       f: 'Excellent comprehension. You captured the key engineering details from the briefing transcript.',
     };
@@ -70,10 +51,7 @@ const getModuleFeedback = (
     };
     ranges[0] = {
       s: [],
-      w: [
-        'Important briefing details were missed',
-        'Keyword recognition needs practice',
-      ],
+      w: ['Important briefing details were missed', 'Keyword recognition needs practice'],
       f: 'Comprehension was limited. Review the transcript and repeat the simulation before submitting again.',
     };
   } else {
@@ -110,28 +88,16 @@ export const ScoringService = {
     mistakesCount?: number;
     timeSpentMinutes?: number;
   }): ScoreResult {
-    const score = Math.min(
-      100,
-      Math.max(0, Math.round(params.performanceRatio * 100))
-    );
+    const score = Math.min(100, Math.max(0, Math.round(params.performanceRatio * 100)));
 
     const difficultyMultiplier =
-      params.difficulty === 'Intermediate'
-        ? 1.5
-        : params.difficulty === 'Advanced'
-          ? 2.0
-          : 1.0;
+      params.difficulty === 'Intermediate' ? 1.5 : params.difficulty === 'Advanced' ? 2.0 : 1.0;
 
     const xpEarned = Math.round(60 * difficultyMultiplier * (score / 100));
     const coinsEarned = Math.round(15 * difficultyMultiplier * (score / 100));
-    const eloChange = Math.round(
-      4 * difficultyMultiplier * ((score - 50) / 50)
-    );
+    const eloChange = Math.round(4 * difficultyMultiplier * ((score - 50) / 50));
 
-    const { strengths, weaknesses, feedback } = getModuleFeedback(
-      params.module,
-      score
-    );
+    const { strengths, weaknesses, feedback } = getModuleFeedback(params.module, score);
 
     return {
       score,

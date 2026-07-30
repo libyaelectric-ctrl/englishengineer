@@ -1,4 +1,4 @@
-import { LearningState, Achievement } from './learning.types';
+import { Achievement, LearningState } from './learning.types';
 
 export const AchievementService = {
   /**
@@ -10,9 +10,7 @@ export const AchievementService = {
     newlyUnlocked: Achievement[];
   } {
     const newlyUnlocked: Achievement[] = [];
-    const completedMissions = state.missions.filter(
-      (m) => m.status === 'completed'
-    );
+    const completedMissions = state.missions.filter((m) => m.status === 'completed');
     const totalXP = state.xp;
     const currentStreak = state.streak;
 
@@ -50,8 +48,7 @@ export const AchievementService = {
           // Check if any completed mission achieved a perfect 100% score (optionally filter by module)
           shouldUnlock = state.studySessions.some(
             (s) =>
-              s.score >= ach.criteriaValue &&
-              (!ach.moduleFilter || s.module === ach.moduleFilter)
+              s.score >= ach.criteriaValue && (!ach.moduleFilter || s.module === ach.moduleFilter)
           );
           break;
 

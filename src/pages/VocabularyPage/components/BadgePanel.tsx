@@ -1,9 +1,12 @@
+import { Award, CheckCircle2, Lock } from 'lucide-react';
+
 import { useState } from 'react';
-import { Award, Lock, CheckCircle2 } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
-  VocabularyBadgeService,
   type VocabularyBadge,
+  VocabularyBadgeService,
   type VocabularyStats,
 } from '@/features/vocabulary';
 
@@ -74,25 +77,15 @@ export function BadgePanel({ stats }: BadgePanelProps) {
   );
 }
 
-function BadgeCard({
-  badge,
-  unlocked,
-}: {
-  badge: VocabularyBadge;
-  unlocked: boolean;
-}) {
+function BadgeCard({ badge, unlocked }: { badge: VocabularyBadge; unlocked: boolean }) {
   return (
     <div
       className={`flex flex-col items-center gap-1 rounded-[4px] border p-3 text-center transition-colors ${
-        unlocked
-          ? 'border-emerald-200 bg-emerald-50'
-          : 'border-border-soft bg-surface opacity-60'
+        unlocked ? 'border-emerald-200 bg-emerald-50' : 'border-border-soft bg-surface opacity-60'
       }`}
     >
       <span className="text-2xl">{unlocked ? badge.icon : '🔒'}</span>
-      <span className="text-[10px] font-bold text-foreground">
-        {badge.name}
-      </span>
+      <span className="text-[10px] font-bold text-foreground">{badge.name}</span>
       <span className="text-[10px] text-muted-copy">{badge.description}</span>
       {unlocked ? (
         <CheckCircle2 className="h-3 w-3 text-emerald-500" />

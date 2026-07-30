@@ -217,12 +217,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "a/an artikelini unutmak; tekil sayılabilir isimlerde gerekir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "site-engineer",
-      "distribution-panel",
-      "role",
-      "equipment"
-    ],
+    "linkedVocabularyTags": ["site-engineer", "distribution-panel", "role", "equipment"],
     "grammarFits": ["simple sentence", "verb to be"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_002"],
@@ -285,13 +280,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Türkçe kelime sırasını İngilizceye taşımak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "technician",
-      "cable",
-      "approved-drawing",
-      "check",
-      "use"
-    ],
+    "linkedVocabularyTags": ["technician", "cable", "approved-drawing", "check", "use"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_001"],
@@ -354,12 +343,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Yer veya zamanı cümlenin ortasına yanlış yerleştirmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "contractor",
-      "lift-shaft",
-      "after-lunch",
-      "meeting"
-    ],
+    "linkedVocabularyTags": ["contractor", "lift-shaft", "after-lunch", "meeting"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_005"],
@@ -600,12 +584,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Sadece 'yes' veya 'no' ile bırakmak bazen belirsiz kalır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "confirmation",
-      "yes-no",
-      "short-answer",
-      "site-talk"
-    ],
+    "linkedVocabularyTags": ["confirmation", "yes-no", "short-answer", "site-talk"],
     "grammarFits": ["verb to be", "questions"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_009"],
@@ -732,13 +711,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "He/she/it ile don't kullanmak; fiile ayrıca -s eklemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "sensor",
-      "work",
-      "cable-route",
-      "use",
-      "negative"
-    ],
+    "linkedVocabularyTags": ["sensor", "work", "cable-route", "use", "negative"],
     "grammarFits": ["negatives"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_011"],
@@ -863,12 +836,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Üçüncü tekilde -s unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "UPS",
-      "backup-power",
-      "supervisor",
-      "daily-check"
-    ],
+    "linkedVocabularyTags": ["UPS", "backup-power", "supervisor", "daily-check"],
     "grammarFits": ["simple present"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_011"],
@@ -931,14 +899,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Fiilden sonra nesneyi eksik bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "check",
-      "open",
-      "close",
-      "panel",
-      "cover",
-      "junction-box"
-    ],
+    "linkedVocabularyTags": ["check", "open", "close", "panel", "cover", "junction-box"],
     "grammarFits": ["simple present"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_005"],
@@ -1253,12 +1214,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Soru sırasında is/are kelime sırasını unutmamak gerekir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "spare-fuse",
-      "consultant",
-      "comment",
-      "existence"
-    ],
+    "linkedVocabularyTags": ["spare-fuse", "consultant", "comment", "existence"],
     "grammarFits": ["questions"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_017", "grammar_a1_018"],
@@ -1323,14 +1279,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Çoğul -s unutmak; 'three cable' yerine 'three cables'.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "drawing",
-      "switch",
-      "site-office",
-      "material-box",
-      "cable",
-      "plural"
-    ],
+    "linkedVocabularyTags": ["drawing", "switch", "site-office", "material-box", "cable", "plural"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_018"],
@@ -1456,13 +1405,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Equipments veya informations demek yaygın hatadır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "equipment",
-      "information",
-      "cable",
-      "inspection",
-      "route"
-    ],
+    "linkedVocabularyTags": ["equipment", "information", "cable", "inspection", "route"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_021"],
@@ -1588,12 +1531,7 @@
     "mistakeType": "missing article",
     "commonMistakes": "Belirli nesnelerde a/an kullanmak veya the unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "main-distribution-panel",
-      "contractor",
-      "basement",
-      "specific"
-    ],
+    "linkedVocabularyTags": ["main-distribution-panel", "contractor", "basement", "specific"],
     "grammarFits": ["articles"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_024"],
@@ -1839,14 +1777,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "Sıfatı çoğul yapmak; İngilizcede sıfatlar çoğul olmaz.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "ready",
-      "safe",
-      "open",
-      "closed",
-      "complete",
-      "incomplete"
-    ],
+    "linkedVocabularyTags": ["ready", "safe", "open", "closed", "complete", "incomplete"],
     "grammarFits": ["verb to be", "adverbs"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_003"],
@@ -1969,13 +1900,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Çoğul ve firma isimlerinde kesme işaretini yanlış koymak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "contractor",
-      "manufacturer",
-      "label",
-      "report",
-      "ownership"
-    ],
+    "linkedVocabularyTags": ["contractor", "manufacturer", "label", "report", "ownership"],
     "grammarFits": ["pronouns"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_030"],
@@ -2106,13 +2031,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Emir cümlesine gereksiz 'you' ile başlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "helmet",
-      "grounding-cable",
-      "check",
-      "wear",
-      "instruction"
-    ],
+    "linkedVocabularyTags": ["helmet", "grounding-cable", "check", "wear", "instruction"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_015"],
@@ -2176,12 +2095,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "No + verb kullanmak; 'No touch' doğal değildir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "live-cable",
-      "panel-cover",
-      "safety",
-      "prohibition"
-    ],
+    "linkedVocabularyTags": ["live-cable", "panel-cover", "safety", "prohibition"],
     "grammarFits": ["simple sentence"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_033"],
@@ -2245,13 +2159,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Can sonrası to kullanmak; 'can to check' yanlıştır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "can",
-      "permission",
-      "ability",
-      "cable-route",
-      "electrical-room"
-    ],
+    "linkedVocabularyTags": ["can", "permission", "ability", "cable-route", "electrical-room"],
     "grammarFits": ["modal ability", "modal permission"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_013"],
@@ -2316,13 +2224,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Cannot sonrası fiile -s veya to eklemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "cannot",
-      "energize",
-      "access",
-      "permission",
-      "room"
-    ],
+    "linkedVocabularyTags": ["cannot", "energize", "access", "permission", "room"],
     "grammarFits": ["modal permission", "modal prohibition"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_035"],
@@ -2334,12 +2236,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "commissioning"],
     "taskPromptTemplate": "Write one safety prohibition using must not.",
     "minimumUserOutput": "We cannot energize the panel today.",
     "masteryCriteria": "User can recognize, correct and produce this A1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2388,12 +2285,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "WH kelimesinden sonra cümle sırasını Türkçe kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "where",
-      "which",
-      "main-panel",
-      "approved-drawing"
-    ],
+    "linkedVocabularyTags": ["where", "which", "main-panel", "approved-drawing"],
     "grammarFits": ["questions"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_009", "grammar_a1_013"],
@@ -2455,13 +2347,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Zaman ifadesini anlamı bozacak yerde kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "today",
-      "tomorrow",
-      "after-lunch",
-      "inspection",
-      "plan"
-    ],
+    "linkedVocabularyTags": ["today", "tomorrow", "after-lunch", "inspection", "plan"],
     "grammarFits": ["technical reporting"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_006"],
@@ -2526,14 +2412,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Bağlaçları cümle başında gereksiz ve tekrarlı kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "panel",
-      "label",
-      "supervisor",
-      "and",
-      "but",
-      "or"
-    ],
+    "linkedVocabularyTags": ["panel", "label", "supervisor", "and", "but", "or"],
     "grammarFits": ["conjunctions"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_005"],
@@ -2597,14 +2476,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "Frequency adverb yerini yanlış kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "always",
-      "usually",
-      "sometimes",
-      "never",
-      "permit",
-      "alarm"
-    ],
+    "linkedVocabularyTags": ["always", "usually", "sometimes", "never", "permit", "alarm"],
     "grammarFits": ["adverbs"],
     "difficulty": 1,
     "prerequisites": ["grammar_a1_011"],

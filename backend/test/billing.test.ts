@@ -1,11 +1,12 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import type Stripe from 'stripe';
+
 import {
+  type BillingServiceConfig,
   createBillingService,
   createStripeClient,
-  type BillingServiceConfig,
 } from '../src/billing-service.js';
-import type Stripe from 'stripe';
 import type { BillingRepository } from '../src/billing-webhook-handlers.js';
 
 const makeConfig = () =>

@@ -1,10 +1,9 @@
+import { ChevronDown, FolderOpen, Plus, Trash2, X } from 'lucide-react';
+
 import { useState } from 'react';
-import { FolderOpen, Plus, Trash2, ChevronDown, X } from 'lucide-react';
-import {
-  useWorkspaceStore,
-  Workspace,
-} from '@/features/billing/workspace.store';
+
 import { BillingPlanId } from '@/features/billing/billing.types';
+import { Workspace, useWorkspaceStore } from '@/features/billing/workspace.store';
 
 interface WorkspaceSelectorProps {
   planId: BillingPlanId;
@@ -42,10 +41,7 @@ const WorkspaceListItem = ({
       }`}
     >
       <span className="flex items-center gap-2 min-w-0">
-        <FolderOpen
-          className="h-3 w-3 shrink-0 text-muted-copy"
-          aria-hidden="true"
-        />
+        <FolderOpen className="h-3 w-3 shrink-0 text-muted-copy" aria-hidden="true" />
         <span className="truncate">{ws.name}</span>
       </span>
       {!isActive && canDelete && (
@@ -147,11 +143,7 @@ const WorkspaceLimitMessage = ({ limit }: { limit: number }) => (
   </div>
 );
 
-const WorkspaceSummary = ({
-  activeWorkspace,
-}: {
-  activeWorkspace?: Workspace;
-}) => (
+const WorkspaceSummary = ({ activeWorkspace }: { activeWorkspace?: Workspace }) => (
   <div className="border-t border-border-soft px-3 py-2">
     <p className="text-[10px] text-muted-copy leading-4 font-mono font-medium">
       <span className="font-bold text-foreground">{activeWorkspace?.name}</span>
@@ -194,8 +186,7 @@ const WorkspaceDropdown = ({
   setShowCreate: (v: boolean) => void;
   setIsOpen: (v: boolean | ((prev: boolean) => boolean)) => void;
 }) => {
-  const activeWorkspace =
-    workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
+  const activeWorkspace = workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
 
   return (
     <div
@@ -261,13 +252,8 @@ const WorkspaceDropdown = ({
 };
 
 export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
-  const {
-    workspaces,
-    activeWorkspaceId,
-    createWorkspace,
-    deleteWorkspace,
-    switchWorkspace,
-  } = useWorkspaceStore();
+  const { workspaces, activeWorkspaceId, createWorkspace, deleteWorkspace, switchWorkspace } =
+    useWorkspaceStore();
 
   const [isOpen, setIsOpen] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
@@ -276,8 +262,7 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
 
   const limit = PLAN_WORKSPACE_LIMIT[planId];
   const canCreate = limit === null || workspaces.length < limit;
-  const activeWorkspace =
-    workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
+  const activeWorkspace = workspaces.find((ws) => ws.id === activeWorkspaceId) ?? workspaces[0];
 
   const handleCreate = () => {
     setCreateError(null);
@@ -322,13 +307,8 @@ export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
         onClick={() => setIsOpen((v) => !v)}
         className="flex items-center gap-2 rounded-[4px] border border-border-soft bg-surface px-3 py-2 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-surface-hover cursor-pointer transition-colors shadow-sm"
       >
-        <FolderOpen
-          className="h-3.5 w-3.5 text-primary shrink-0"
-          aria-hidden="true"
-        />
-        <span className="max-w-[140px] truncate">
-          {activeWorkspace?.name ?? 'Workspace'}
-        </span>
+        <FolderOpen className="h-3.5 w-3.5 text-primary shrink-0" aria-hidden="true" />
+        <span className="max-w-[140px] truncate">{activeWorkspace?.name ?? 'Workspace'}</span>
         <ChevronDown
           className={`h-3 w-3 text-muted-copy transition-transform ${isOpen ? 'rotate-180' : ''}`}
           aria-hidden="true"

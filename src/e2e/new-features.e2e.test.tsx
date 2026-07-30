@@ -1,19 +1,17 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, expect, it, beforeEach } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
-import WorkToolsPage from '@/pages/WorkToolsPage';
-import SpeakingPage from '@/pages/SpeakingPage';
-import TeamPage from '@/pages/TeamPage';
+
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
 
-const renderWithRouter = (
-  component: React.ReactElement,
-  initialEntries = ['/']
-) =>
-  render(
-    <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
-  );
+import SpeakingPage from '@/pages/SpeakingPage';
+import TeamPage from '@/pages/TeamPage';
+import WorkToolsPage from '@/pages/WorkToolsPage';
+
+const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) =>
+  render(<MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>);
 
 describe('New Feature E2E: PR Review Coach on WorkTools', () => {
   it('PR Review Coach tab exists on WorkTools page', () => {
@@ -44,9 +42,7 @@ describe('New Feature E2E: PR Review Coach on WorkTools', () => {
     fireEvent.click(reviewCoachTab);
 
     await waitFor(() => {
-      expect(
-        screen.getByLabelText(/Paste harsh review comment/i)
-      ).toBeInTheDocument();
+      expect(screen.getByLabelText(/Paste harsh review comment/i)).toBeInTheDocument();
     });
   });
 
@@ -138,9 +134,7 @@ describe('New Feature E2E: Interview Simulator on Speaking', () => {
     fireEvent.click(interviewTab);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Technical Interview Simulator/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Technical Interview Simulator/i)).toBeInTheDocument();
     });
   });
 
@@ -153,12 +147,8 @@ describe('New Feature E2E: Interview Simulator on Speaking', () => {
     fireEvent.click(interviewTab);
 
     await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: /System Design/i })
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('heading', { name: /Coding Interview/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /System Design/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Coding Interview/i })).toBeInTheDocument();
     });
   });
 
@@ -171,9 +161,7 @@ describe('New Feature E2E: Interview Simulator on Speaking', () => {
     fireEvent.click(interviewTab);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Practice System Design and Coding interviews/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Practice System Design and Coding interviews/i)).toBeInTheDocument();
     });
   });
 
@@ -196,9 +184,7 @@ describe('New Feature E2E: Team Dashboard on Team page', () => {
   it('Team page renders Team Management heading', async () => {
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
-      expect(
-        screen.getAllByText('Team Management').length
-      ).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('Team Management').length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -219,9 +205,7 @@ describe('New Feature E2E: Team Dashboard on Team page', () => {
   it('Team page renders EntitlementGate', async () => {
     renderWithRouter(<TeamPage />, ['/team']);
     await waitFor(() => {
-      expect(
-        screen.getByText(/Team management requires the Project plan/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Team management requires the Project plan/i)).toBeInTheDocument();
     });
   });
 });

@@ -1,7 +1,7 @@
 ---
 name: Feature Request
 about: Suggest an idea for EngineerOS
-title: "[FEAT] "
+title: '[FEAT] '
 labels: enhancement
 assignees: ''
 ---
@@ -16,6 +16,7 @@ A clear and concise description of what you want to happen.
 A clear and concise description of any alternative solutions or features you've considered.
 
 **Which skill area does this affect?**
+
 - [ ] Reading
 - [ ] Writing
 - [ ] Listening
@@ -26,7 +27,7 @@ A clear and concise description of any alternative solutions or features you've 
 - [ ] Assessment
 - [ ] Team/Billing
 - [ ] UI/UX
-- [ ] Other: ___
+- [ ] Other: \_\_\_
 
 **Additional context**
 Add any other context, mockups, or screenshots about the feature request here.

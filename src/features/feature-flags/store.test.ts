@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { useFeatureFlagsStore } from './feature-flags.store';
 
 describe('Feature Flags Store', () => {
@@ -29,9 +30,7 @@ describe('Feature Flags Store', () => {
   });
 
   it('returns false for non-existent flag', () => {
-    const enabled = useFeatureFlagsStore
-      .getState()
-      .isFeatureEnabled('nonexistent');
+    const enabled = useFeatureFlagsStore.getState().isFeatureEnabled('nonexistent');
     expect(enabled).toBe(false);
   });
 

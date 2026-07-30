@@ -17,8 +17,7 @@ describe('Speaking Progress', () => {
       vocabulary: 75,
     };
     const overall = Math.round(
-      Object.values(scores).reduce((a, b) => a + b, 0) /
-        Object.keys(scores).length
+      Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length
     );
     expect(overall).toBe(78);
   });

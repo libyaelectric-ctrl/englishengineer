@@ -1,18 +1,21 @@
-import { storage } from '@/shared/storage';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { useLearningStore } from '@/core/learning';
+
+import { storage } from '@/shared/storage';
+
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
 import { LISTENING_MISSIONS } from './listening.data';
+import { ListeningEvaluator } from './listening.evaluator';
 import {
-  ListeningMission,
-  ListeningState,
-  ListeningSubmission,
   ListeningEvaluationResult,
   ListeningHistoryEntry,
+  ListeningMission,
   ListeningPlaybackSpeed,
+  ListeningState,
+  ListeningSubmission,
 } from './listening.types';
-import { ListeningEvaluator } from './listening.evaluator';
-import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 
 const STORAGE_KEY = 'EngVox_listening_state';
 
@@ -71,12 +74,8 @@ export const ListeningService = {
     if (pool.length === 0) return LISTENING_MISSIONS;
     const lowerPool = pool.map((w) => w.toLowerCase());
     return [...LISTENING_MISSIONS].sort((a, b) => {
-      const aCount = lowerPool.filter((w) =>
-        a.transcript.toLowerCase().includes(w)
-      ).length;
-      const bCount = lowerPool.filter((w) =>
-        b.transcript.toLowerCase().includes(w)
-      ).length;
+      const aCount = lowerPool.filter((w) => a.transcript.toLowerCase().includes(w)).length;
+      const bCount = lowerPool.filter((w) => b.transcript.toLowerCase().includes(w)).length;
       return bCount - aCount;
     });
   },
@@ -133,9 +132,7 @@ export const ListeningService = {
 
     // 7. Sync with global LearningStore to award XP, coins, and update ELO/achievements
     const learningStore = useLearningStore.getState();
-    const globalMissionExists = learningStore.missions.some(
-      (m) => m.id === mission.id
-    );
+    const globalMissionExists = learningStore.missions.some((m) => m.id === mission.id);
 
     if (globalMissionExists) {
       // If the mission exists in the global store, submit it there to update progress
@@ -195,10 +192,7 @@ export const ListeningService = {
     return state;
   },
 
-  recordListeningSecond(
-    missionId: string,
-    speed: ListeningPlaybackSpeed
-  ): ListeningState {
+  recordListeningSecond(missionId: string, speed: ListeningPlaybackSpeed): ListeningState {
     const state = this.getState();
     state.listeningSecondsByMission = {
       ...state.listeningSecondsByMission,
@@ -215,18 +209,14 @@ export const ListeningService = {
       ...state.resumePositions,
       [missionId]: 0,
     };
-    state.audioCompletedMissionIds = state.audioCompletedMissionIds.includes(
-      missionId
-    )
+    state.audioCompletedMissionIds = state.audioCompletedMissionIds.includes(missionId)
       ? state.audioCompletedMissionIds
       : [...state.audioCompletedMissionIds, missionId];
     this.saveState(state);
     return state;
   },
 
-  async cacheMissionAudio(
-    mission: ListeningMission
-  ): Promise<{ ok: boolean; message: string }> {
+  async cacheMissionAudio(mission: ListeningMission): Promise<{ ok: boolean; message: string }> {
     if (typeof window === 'undefined' || !('caches' in window)) {
       return {
         ok: false,
@@ -248,8 +238,7 @@ export const ListeningService = {
     } catch {
       return {
         ok: false,
-        message:
-          'Audio cache failed. The browser may be offline or storage may be unavailable.',
+        message: 'Audio cache failed. The browser may be offline or storage may be unavailable.',
       };
     }
   },

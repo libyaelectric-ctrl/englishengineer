@@ -39,19 +39,8 @@ export const WRITING_DESIGN_SPECS: WritingSpec[] = [
     scenario:
       'A shop drawing was revised to reroute chilled water pipes around a new structural column.',
     task: 'Draft a revision note explaining the technical change.',
-    expectedStructure: [
-      'Revision reference',
-      'Reason for change',
-      'Technical change',
-      'Impact',
-    ],
-    targetVocabulary: [
-      'shop drawing',
-      'revision',
-      'reroute',
-      'clearance',
-      'coordination',
-    ],
+    expectedStructure: ['Revision reference', 'Reason for change', 'Technical change', 'Impact'],
+    targetVocabulary: ['shop drawing', 'revision', 'reroute', 'clearance', 'coordination'],
     grammarFocus: ['because of', 'has been revised to'],
     strongPhrase:
       'The chilled water pipe route has been revised to avoid the new structural column at Grid E-12.',
@@ -95,12 +84,7 @@ export const WRITING_DESIGN_SPECS: WritingSpec[] = [
     scenario:
       'A method statement for transformer installation lacks lifting plan details and exclusion zone controls.',
     task: 'Write a consultant-style review comment.',
-    expectedStructure: [
-      'Document reference',
-      'Missing information',
-      'Risk',
-      'Required revision',
-    ],
+    expectedStructure: ['Document reference', 'Missing information', 'Risk', 'Required revision'],
     targetVocabulary: [
       'method statement',
       'lifting plan',

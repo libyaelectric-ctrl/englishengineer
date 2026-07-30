@@ -68,10 +68,7 @@ export const getCurrencyFromCountry = (countryCode?: string): Currency => {
   return COUNTRY_TO_CURRENCY[countryCode.toUpperCase()] ?? DEFAULT_CURRENCY;
 };
 
-export const formatPrice = (
-  amountInCents: number,
-  currency: Currency
-): string => {
+export const formatPrice = (amountInCents: number, currency: Currency): string => {
   const config = CURRENCIES[currency];
   const convertedAmount = (amountInCents / 100) * config.exchangeRate;
 
@@ -85,11 +82,7 @@ export const formatPrice = (
 
 export const detectCurrencyFromTimezone = (): Currency => {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  if (
-    tz.includes('Istanbul') ||
-    tz.includes('Ankara') ||
-    tz.includes('Izmir')
-  ) {
+  if (tz.includes('Istanbul') || tz.includes('Ankara') || tz.includes('Izmir')) {
     return 'TRY';
   }
   if (tz.includes('London')) return 'GBP';

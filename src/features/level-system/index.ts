@@ -27,10 +27,6 @@ export {
   type LevelledContent,
 } from './level-system.types';
 
-export {
-  LevelContentFilter,
-  LevelAccessBadge,
-  EmptyLevelState,
-} from './LevelContentFilter';
+export { LevelContentFilter, LevelAccessBadge, EmptyLevelState } from './LevelContentFilter';
 
 export { useSkillLevel } from './useSkillLevel';

@@ -1,16 +1,11 @@
 import express from 'express';
-import { ApiError } from './errors.js';
-import { validateBody, SpeakingSubmitBodySchema } from './validation.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from 'express';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+
+import { ApiError } from './errors.js';
+import { SpeakingSubmitBodySchema, validateBody } from './validation.js';
 
 // Uploaded audio is stored under backend/uploads/speaking/<userId>/<uuid>.<ext>.
 // This is a minimal, safe local-disk implementation (Kademe 5.2). Moving this
@@ -29,10 +24,7 @@ const ALLOWED_AUDIO_TYPES: Record<string, string> = {
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15MB, generous for a few minutes of speech
 
-export const registerSpeakingRoutes = (
-  app: Express,
-  requireBackendAuth: RequestHandler
-): void => {
+export const registerSpeakingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
   // Raw audio body parser scoped ONLY to this route -- does not affect the
   // rest of the app's express.json() parsing.
   app.post(
@@ -61,11 +53,7 @@ export const registerSpeakingRoutes = (
           throw new ApiError(400, 'empty_audio', 'No audio data received');
         }
         if (buffer.length > MAX_AUDIO_BYTES) {
-          throw new ApiError(
-            413,
-            'audio_too_large',
-            `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`
-          );
+          throw new ApiError(413, 'audio_too_large', `Audio exceeds ${MAX_AUDIO_BYTES} byte limit`);
         }
 
         // userId is our own auth-derived value, never taken from a path/query
@@ -94,8 +82,7 @@ export const registerSpeakingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         const limit = Number(request.query.limit) || 10;
         const offset = Number(request.query.offset) || 0;
         response.json({ items: [], total: 0, limit, offset });
@@ -112,8 +99,7 @@ export const registerSpeakingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         response.json({
           success: true,
           id: 'mock-id',
@@ -133,8 +119,7 @@ export const registerSpeakingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         response.json({ totalSubmissions: 0, averageScore: 0, byCategory: {} });
       } catch (error) {
         next(error);
@@ -148,8 +133,7 @@ export const registerSpeakingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         response.json({ notFound: true });
       } catch (error) {
         next(error);

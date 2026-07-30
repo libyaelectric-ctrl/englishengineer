@@ -1,35 +1,38 @@
-import type { FC, KeyboardEvent } from 'react';
-import { useEffect, useState, useRef, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
 import {
-  Search,
-  Home,
-  User,
-  BookMarked,
-  Languages,
-  BookOpen,
-  PenTool,
-  Headphones,
-  Mic2,
-  Library,
-  Calendar,
   BarChart3,
-  Target,
-  Trophy,
-  BriefcaseBusiness,
-  WandSparkles,
+  BookMarked,
+  BookOpen,
   BrainCircuit,
-  Shield,
-  Wallet,
-  Settings,
-  Moon,
-  Sun,
+  BriefcaseBusiness,
+  Calendar,
   ChevronRight,
   Command,
+  Headphones,
+  Home,
+  Languages,
+  Library,
+  Mic2,
+  Moon,
+  PenTool,
+  Search,
+  Settings,
+  Shield,
+  Sun,
+  Target,
+  Trophy,
+  User,
+  Wallet,
+  WandSparkles,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { AnimatePresence, motion } from 'motion/react';
+
+import type { FC, KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useCommandPalette } from '@/shared/hooks/useCommandPalette';
+import { cn } from '@/shared/utils/cn';
 
 const COMMANDS = [
   // Skills
@@ -233,18 +236,10 @@ const ICON_MAP: Record<string, FC<{ className?: string }>> = {
   Sun,
 };
 
-const CATEGORIES_ORDER = [
-  'Navigate',
-  'Skills',
-  'Learning Hub',
-  'Progress',
-  'Tools',
-  'Account',
-];
+const CATEGORIES_ORDER = ['Navigate', 'Skills', 'Learning Hub', 'Progress', 'Tools', 'Account'];
 
 export const CommandPalette = () => {
-  const { isOpen, close, recordVisit, getRecent, getFrequency } =
-    useCommandPalette();
+  const { isOpen, close, recordVisit, getRecent, getFrequency } = useCommandPalette();
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -260,17 +255,10 @@ export const CommandPalette = () => {
     }
   }, [isOpen]);
 
-  const recentHrefs = useMemo(
-    () => (isOpen ? getRecent() : []),
-    [isOpen, getRecent]
-  );
-  const frequency = useMemo(
-    () => (isOpen ? getFrequency() : []),
-    [isOpen, getFrequency]
-  );
+  const recentHrefs = useMemo(() => (isOpen ? getRecent() : []), [isOpen, getRecent]);
+  const frequency = useMemo(() => (isOpen ? getFrequency() : []), [isOpen, getFrequency]);
 
-  const currentTheme =
-    document.documentElement.getAttribute('data-theme') || 'light';
+  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
   const toggleTheme = () => {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
@@ -312,9 +300,7 @@ export const CommandPalette = () => {
   // Keep selected item visible
   useEffect(() => {
     if (!listRef.current) return;
-    const btn = listRef.current.querySelector(
-      `[data-index="${selectedIndex}"]`
-    );
+    const btn = listRef.current.querySelector(`[data-index="${selectedIndex}"]`);
     btn?.scrollIntoView({ block: 'nearest' });
   }, [selectedIndex]);
 
@@ -357,9 +343,7 @@ export const CommandPalette = () => {
     return Object.entries(frequency)
       .sort((a, b) => b[1] - a[1])
       .map(([href]) => COMMANDS.find((c) => c.href === href))
-      .filter(
-        (cmd): cmd is (typeof COMMANDS)[0] => !!cmd && !recentSet.has(cmd.href)
-      )
+      .filter((cmd): cmd is (typeof COMMANDS)[0] => !!cmd && !recentSet.has(cmd.href))
       .slice(0, 3);
   }, [search, recentHrefs, frequency]);
 
@@ -452,10 +436,7 @@ export const CommandPalette = () => {
             </div>
 
             {/* Results */}
-            <div
-              ref={listRef}
-              className="max-h-[360px] overflow-y-auto p-2 custom-scrollbar"
-            >
+            <div ref={listRef} className="max-h-[360px] overflow-y-auto p-2 custom-scrollbar">
               {sections.length === 0 ? (
                 <div className="py-10 text-center text-sm text-muted-copy">
                   No results for "{search}"
@@ -506,9 +487,7 @@ export const CommandPalette = () => {
                           Current
                         </span>
                       )}
-                      {isSelected && (
-                        <ChevronRight className="h-4 w-4 shrink-0 opacity-50" />
-                      )}
+                      {isSelected && <ChevronRight className="h-4 w-4 shrink-0 opacity-50" />}
                     </button>
                   );
                 })
@@ -534,9 +513,7 @@ export const CommandPalette = () => {
                   navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">
-                    ↵
-                  </kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">↵</kbd>
                   select
                 </span>
               </div>

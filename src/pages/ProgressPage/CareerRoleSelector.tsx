@@ -1,5 +1,6 @@
-import { CAREER_ROLES } from '@/features/learning-intelligence';
 import { Card } from '@/shared/components/Card';
+
+import { CAREER_ROLES } from '@/features/learning-intelligence';
 
 export const CareerRoleSelector = ({
   careerRole,

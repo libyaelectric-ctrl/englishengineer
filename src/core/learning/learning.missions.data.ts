@@ -186,8 +186,7 @@ export const DEFAULT_MISSIONS: Mission[] = [
   {
     id: 'speaking_toolbox_talk',
     title: 'Daily Toolbox Talk',
-    description:
-      'Deliver a concise daily safety and work-front briefing for site technicians.',
+    description: 'Deliver a concise daily safety and work-front briefing for site technicians.',
     module: 'Speaking',
     difficulty: 'Beginner',
     estimatedMinutes: 8,
@@ -284,8 +283,7 @@ export const DEFAULT_MISSIONS: Mission[] = [
   {
     id: 'speaking_safety_briefing',
     title: 'Safety Briefing Escalation',
-    description:
-      'Give a clear safety escalation briefing for live electrical diagnostic work.',
+    description: 'Give a clear safety escalation briefing for live electrical diagnostic work.',
     module: 'Speaking',
     difficulty: 'Intermediate',
     estimatedMinutes: 10,
@@ -298,8 +296,7 @@ export const DEFAULT_MISSIONS: Mission[] = [
   {
     id: 'speaking_design_coordination',
     title: 'Design Coordination Resolution',
-    description:
-      'Resolve a design interface clash between mechanical and electrical systems.',
+    description: 'Resolve a design interface clash between mechanical and electrical systems.',
     module: 'Speaking',
     difficulty: 'Advanced',
     estimatedMinutes: 15,
@@ -326,8 +323,7 @@ export const DEFAULT_MISSIONS: Mission[] = [
   {
     id: 'grammar_kernel',
     title: 'Audit Technical Grammar Issues',
-    description:
-      'Review formal grammar and clarity issues in engineering project communication.',
+    description: 'Review formal grammar and clarity issues in engineering project communication.',
     module: 'Grammar',
     difficulty: 'Advanced',
     estimatedMinutes: 25,

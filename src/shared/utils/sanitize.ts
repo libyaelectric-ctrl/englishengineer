@@ -2,19 +2,7 @@ import DOMPurify from 'isomorphic-dompurify';
 
 export const sanitizeHtml = (dirty: string): string => {
   return DOMPurify.sanitize(dirty, {
-    ALLOWED_TAGS: [
-      'b',
-      'i',
-      'em',
-      'strong',
-      'p',
-      'br',
-      'ul',
-      'ol',
-      'li',
-      'code',
-      'pre',
-    ],
+    ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'p', 'br', 'ul', 'ol', 'li', 'code', 'pre'],
     ALLOWED_ATTR: [],
   });
 };

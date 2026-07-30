@@ -1,9 +1,10 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
 import { createLearningState } from '@/test/fixtures';
-import { ScoringService } from './scoring.service';
+import { describe, expect, it } from 'vitest';
+
 import { AchievementService } from './achievement.service';
 import { Achievement } from './learning.types';
+import { ScoringService } from './scoring.service';
 
 const achievement = (overrides: Partial<Achievement>): Achievement => ({
   id: 'ach',
@@ -74,9 +75,7 @@ describe('learning scoring and achievements', () => {
             completedAt: '2026-06-26T00:00:00.000Z',
           },
         ],
-        achievements: [
-          achievement({ criteriaType: 'first_mission', criteriaValue: 1 }),
-        ],
+        achievements: [achievement({ criteriaType: 'first_mission', criteriaValue: 1 })],
       })
     );
 
@@ -88,9 +87,7 @@ describe('learning scoring and achievements', () => {
     const result = AchievementService.checkAndUnlockAchievements(
       createLearningState({
         streak: 7,
-        achievements: [
-          achievement({ criteriaType: 'streak', criteriaValue: 7 }),
-        ],
+        achievements: [achievement({ criteriaType: 'streak', criteriaValue: 7 })],
       })
     );
 

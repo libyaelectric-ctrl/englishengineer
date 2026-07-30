@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { SentenceGeneratorService } from './vocabulary.sentences';
 
 describe('SentenceGeneratorService', () => {
@@ -16,23 +17,13 @@ describe('SentenceGeneratorService', () => {
     });
 
     it('generates different contexts', () => {
-      const sentences = SentenceGeneratorService.generateForWord(
-        'approve',
-        'verb',
-        'onaylamak',
-        3
-      );
+      const sentences = SentenceGeneratorService.generateForWord('approve', 'verb', 'onaylamak', 3);
       const contexts = sentences.map((s) => s.context);
       expect(new Set(contexts).size).toBe(3);
     });
 
     it('generates translations', () => {
-      const sentences = SentenceGeneratorService.generateForWord(
-        'submit',
-        'verb',
-        'sunmak',
-        2
-      );
+      const sentences = SentenceGeneratorService.generateForWord('submit', 'verb', 'sunmak', 2);
       expect(sentences[0].translation).toBeTruthy();
     });
 

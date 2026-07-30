@@ -1,6 +1,9 @@
+import { ArrowLeft, ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
+
 import { WritingHelpers } from '@/features/writing';
 
 interface WorkspaceHeaderProps {
@@ -61,10 +64,7 @@ export const WorkspaceHeader = ({
       >
         Next <ChevronRight className="h-4 w-4" />
       </Button>
-      <Link
-        to="/curriculum"
-        className="hidden text-xs font-bold text-primary sm:inline-flex"
-      >
+      <Link to="/curriculum" className="hidden text-xs font-bold text-primary sm:inline-flex">
         Hub
       </Link>
     </div>

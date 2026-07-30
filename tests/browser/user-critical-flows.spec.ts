@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Critical User Flows', () => {
   test.describe('Landing Page & Pricing (Unauthenticated)', () => {
@@ -37,9 +37,7 @@ test.describe('Critical User Flows', () => {
   });
 
   test.describe('Dashboard Security', () => {
-    test('dashboard redirects to login when not authenticated', async ({
-      page,
-    }) => {
+    test('dashboard redirects to login when not authenticated', async ({ page }) => {
       await page.goto('/dashboard');
       // Removed weak OR logic, enforced unconditional redirect assertion
       await expect(page).toHaveURL(/.*login/);

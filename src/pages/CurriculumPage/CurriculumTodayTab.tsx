@@ -1,7 +1,10 @@
+import { ArrowRight, Bolt, Flame, Sparkles } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles, Flame, Bolt } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import type { DailyMission } from '@/features/profile';
 
 interface Props {
@@ -14,11 +17,7 @@ interface Props {
   };
 }
 
-export const CurriculumTodayTab = ({
-  isLoading,
-  missions,
-  learningState,
-}: Props) => {
+export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props) => {
   const navigate = useNavigate();
   const streak = learningState?.streak ?? 0;
   const xp = learningState?.xp ?? 0;
@@ -50,8 +49,8 @@ export const CurriculumTodayTab = ({
                 Daily Operations Hub
               </h2>
               <p className="text-xs text-muted-copy mt-0.5 font-medium">
-                Verify system status metrics and complete active recommendations
-                to maintain your streak.
+                Verify system status metrics and complete active recommendations to maintain your
+                streak.
               </p>
             </div>
             <div className="flex items-center gap-2">
@@ -164,9 +163,7 @@ export const CurriculumTodayTab = ({
                       }`}
                       onClick={() => navigate(mission.route)}
                     >
-                      {isActive
-                        ? 'Start active mission'
-                        : 'Review recommendation'}
+                      {isActive ? 'Start active mission' : 'Review recommendation'}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </article>

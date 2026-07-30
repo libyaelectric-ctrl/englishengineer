@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
+
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { useAuthStore } from '@/features/auth';
+import { LearningProfileRepository, type ProfessionId } from '@/features/profile';
+
 import { BETA_ONBOARDING_OPTIONS } from './beta.helpers';
 import { useBetaStore } from './beta.store';
 import { BetaOnboardingProfile } from './beta.types';
-import { useAuthStore } from '@/features/auth';
-import {
-  LearningProfileRepository,
-  type ProfessionId,
-} from '@/features/profile';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
@@ -59,9 +60,7 @@ export const BetaOnboarding = () => {
     const minutes = Number.parseInt(form.dailyStudyGoal, 10) || 15;
     LearningProfileRepository.updatePreferences(userId ?? 'local-user', {
       goals: ['work', 'engineering'],
-      professionId:
-        professionByDiscipline[form.engineeringDiscipline] ??
-        'electrical-engineer',
+      professionId: professionByDiscipline[form.engineeringDiscipline] ?? 'electrical-engineer',
       dailyTarget: {
         minutes,
         taskCount: Math.max(1, Math.round(minutes / 10)),
@@ -73,11 +72,7 @@ export const BetaOnboarding = () => {
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
-  const renderSelect = (
-    label: string,
-    key: keyof typeof form,
-    options: string[]
-  ) => (
+  const renderSelect = (label: string, key: keyof typeof form, options: string[]) => (
     <label className="space-y-2">
       <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
         {label}
@@ -111,8 +106,8 @@ export const BetaOnboarding = () => {
               Calibrate EngVox for your work.
             </h2>
             <p className="mt-2 text-sm leading-6 text-muted-copy">
-              Only essential beta fields are collected locally. You can use the
-              product without connecting a production backend.
+              Only essential beta fields are collected locally. You can use the product without
+              connecting a production backend.
             </p>
           </div>
         </div>
@@ -138,21 +133,9 @@ export const BetaOnboarding = () => {
             'targetEnglishLevel',
             BETA_ONBOARDING_OPTIONS.englishLevels
           )}
-          {renderSelect(
-            'Industry',
-            'industry',
-            BETA_ONBOARDING_OPTIONS.industries
-          )}
-          {renderSelect(
-            'Daily Study Goal',
-            'dailyStudyGoal',
-            BETA_ONBOARDING_OPTIONS.dailyGoals
-          )}
-          {renderSelect(
-            'Career Goal',
-            'careerGoal',
-            BETA_ONBOARDING_OPTIONS.careerGoals
-          )}
+          {renderSelect('Industry', 'industry', BETA_ONBOARDING_OPTIONS.industries)}
+          {renderSelect('Daily Study Goal', 'dailyStudyGoal', BETA_ONBOARDING_OPTIONS.dailyGoals)}
+          {renderSelect('Career Goal', 'careerGoal', BETA_ONBOARDING_OPTIONS.careerGoals)}
           <label className="space-y-2">
             <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
               Timezone
@@ -202,16 +185,13 @@ export const BetaOnboarding = () => {
         </div>
 
         <p className="mt-4 text-xs leading-5 text-muted-copy">
-          Your level starts at A1 in demo mode. EngVox updates the estimate
-          after enough completed tasks. Scores are internal Engineering
-          Communication estimates, not official CEFR certificates.
+          Your level starts at A1 in demo mode. EngVox updates the estimate after enough completed
+          tasks. Scores are internal Engineering Communication estimates, not official CEFR
+          certificates.
         </p>
 
         <div className="mt-6 flex justify-end">
-          <Button
-            onClick={finishOnboarding}
-            className="bg-sky-600 text-white hover:bg-sky-700"
-          >
+          <Button onClick={finishOnboarding} className="bg-sky-600 text-white hover:bg-sky-700">
             Enter Closed Beta
           </Button>
         </div>

@@ -1,6 +1,8 @@
 import { useCallback } from 'react';
-import { useBillingStore } from './index';
+
 import { useAuthStore } from '@/features/auth';
+
+import { useBillingStore } from './index';
 
 export const useBilling = () => {
   const { currentUser } = useAuthStore();

@@ -10,19 +10,10 @@ export type SkillKey =
   | 'workTools'
   | 'quickAI';
 export type LevelConfidence = 'demo' | 'estimated' | 'calibrated';
-export type ContentLevelFilter =
-  | 'my-level'
-  | 'review-previous'
-  | 'preview-next'
-  | 'all-levels';
+export type ContentLevelFilter = 'my-level' | 'review-previous' | 'preview-next' | 'all-levels';
 export const DEFAULT_CONTENT_LEVEL_FILTER: ContentLevelFilter = 'my-level';
 export type ContentAccessLabel = 'Current' | 'Review' | 'Preview' | 'Locked';
-export type LevelNodeStatus =
-  | 'completed'
-  | 'current'
-  | 'available'
-  | 'locked'
-  | 'preview-only';
+export type LevelNodeStatus = 'completed' | 'current' | 'available' | 'locked' | 'preview-only';
 
 export interface SkillLevelProgress {
   skill: SkillKey;

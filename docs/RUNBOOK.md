@@ -4,12 +4,12 @@
 
 ### Severity Levels
 
-| Level | Description | Response Time | Escalation |
-|-------|-------------|---------------|------------|
-| P0 | Complete outage | 15 min | Immediate |
-| P1 | Major feature broken | 1 hour | Within 4 hours |
-| P2 | Minor bug / degradation | 4 hours | Next business day |
-| P3 | Cosmetic / enhancement | 1 week | Next sprint |
+| Level | Description             | Response Time | Escalation        |
+| ----- | ----------------------- | ------------- | ----------------- |
+| P0    | Complete outage         | 15 min        | Immediate         |
+| P1    | Major feature broken    | 1 hour        | Within 4 hours    |
+| P2    | Minor bug / degradation | 4 hours       | Next business day |
+| P3    | Cosmetic / enhancement  | 1 week        | Next sprint       |
 
 ### P0 Response Checklist
 
@@ -58,6 +58,7 @@ git push origin main
 ### Deploy Steps
 
 1. **Staging**
+
    ```bash
    git checkout -b release/vX.Y.Z
    git push origin release/vX.Y.Z
@@ -66,6 +67,7 @@ git push origin main
    ```
 
 2. **Smoke Tests**
+
    ```bash
    npm run test:smoke
    npm run test:e2e
@@ -89,13 +91,13 @@ git push origin main
 
 ### Key Metrics
 
-| Metric | Target | Alert Threshold |
-|--------|--------|-------------------|
-| Uptime | 99.9% | < 99.5% |
-| API Response Time (p95) | < 500ms | > 1s |
-| Error Rate | < 0.1% | > 1% |
-| Bundle Size (JS) | < 1MB | > 1.2MB |
-| AI Response Time | < 5s | > 10s |
+| Metric                  | Target  | Alert Threshold |
+| ----------------------- | ------- | --------------- |
+| Uptime                  | 99.9%   | < 99.5%         |
+| API Response Time (p95) | < 500ms | > 1s            |
+| Error Rate              | < 0.1%  | > 1%            |
+| Bundle Size (JS)        | < 1MB   | > 1.2MB         |
+| AI Response Time        | < 5s    | > 10s           |
 
 ### Dashboards
 
@@ -107,9 +109,10 @@ git push origin main
 
 ## Contacts
 
-| Role | Name | Email | Slack |
-|------|------|-------|-------|
+| Role  | Name            | Email                   | Slack          |
+| ----- | --------------- | ----------------------- | -------------- |
 | Owner | Özcan ERENSAYIN | libyaelectric@gmail.com | @libyaelectric |
 
 ## Last Updated
+
 - **Date:** 2026-07-27

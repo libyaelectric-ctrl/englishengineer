@@ -5,12 +5,10 @@ import type { UserLearningProfile } from '@/features/profile/profile.types';
 import { isVocabularyProgressDue } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
-import { buildReviewPriorities } from './review-priority';
+
 import { LearningIntelligenceService } from './learning-intelligence.service';
-import type {
-  ReviewPriorityCandidate,
-  UnifiedReviewItem,
-} from './learning-intelligence.types';
+import type { ReviewPriorityCandidate, UnifiedReviewItem } from './learning-intelligence.types';
+import { buildReviewPriorities } from './review-priority';
 
 interface ReviewMetadata {
   route: string;
@@ -18,16 +16,12 @@ interface ReviewMetadata {
 }
 
 export const UnifiedReviewQueueService = {
-  async buildQueue(
-    profile: UserLearningProfile,
-    now = new Date()
-  ): Promise<UnifiedReviewItem[]> {
+  async buildQueue(profile: UserLearningProfile, now = new Date()): Promise<UnifiedReviewItem[]> {
     const candidates: ReviewPriorityCandidate[] = [];
     const metadata = new Map<string, ReviewMetadata>();
     const vocabularyState = VocabularyMenuService.getState();
     const vocabularyEntries = Object.entries(vocabularyState.progress).filter(
-      ([, progress]) =>
-        progress.isWeak || isVocabularyProgressDue(progress, now)
+      ([, progress]) => progress.isWeak || isVocabularyProgressDue(progress, now)
     );
     const vocabularyTerms = await Promise.all(
       vocabularyEntries.slice(0, 12).map(async ([id, progress]) => ({
@@ -52,9 +46,9 @@ export const UnifiedReviewQueueService = {
       });
     });
 
-    const grammarEntries = Object.values(
-      GrammarProgressService.getAll(now)
-    ).filter((progress) => progress.reviewStatus === 'Due');
+    const grammarEntries = Object.values(GrammarProgressService.getAll(now)).filter(
+      (progress) => progress.reviewStatus === 'Due'
+    );
     const grammarRules = await Promise.all(
       grammarEntries.slice(0, 8).map(async (progress) => ({
         progress,
@@ -94,8 +88,7 @@ export const UnifiedReviewQueueService = {
 
     const catchUpSkill = [...SKILL_NAMES].sort(
       (left, right) =>
-        profile.skills[left].completedTasks -
-          profile.skills[right].completedTasks ||
+        profile.skills[left].completedTasks - profile.skills[right].completedTasks ||
         profile.skills[right].weaknessScore - profile.skills[left].weaknessScore
     )[0];
     const skillCandidateId = `skill-${catchUpSkill}`;

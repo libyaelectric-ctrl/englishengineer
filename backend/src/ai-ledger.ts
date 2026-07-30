@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+
 import { logger } from './logger.js';
 
 const FREE_DAILY_LIMIT = 3;
@@ -38,9 +39,7 @@ export const createSupabaseAiLedger = (config: {
   };
 }): AiLedger => {
   if (!config.workspace?.configured) {
-    throw new Error(
-      'AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.'
-    );
+    throw new Error('AI ledger requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.');
   }
 
   const supabase = createClient(
@@ -118,9 +117,7 @@ export const createMemoryAiLedger = (): AiLedger => {
       prune(now);
       const { windowMs } = getLimitForPlan(planId);
       const startTime = now - windowMs;
-      return ledger.filter(
-        (item) => item.userId === userId && item.timestamp >= startTime
-      ).length;
+      return ledger.filter((item) => item.userId === userId && item.timestamp >= startTime).length;
     },
 
     async logSession(userId, session) {
@@ -129,9 +126,7 @@ export const createMemoryAiLedger = (): AiLedger => {
   };
 };
 
-export const createAiLedger = (config: {
-  workspace?: Record<string, unknown>;
-}): AiLedger => {
+export const createAiLedger = (config: { workspace?: Record<string, unknown> }): AiLedger => {
   if (config.workspace?.configured) {
     return createSupabaseAiLedger(config);
   }

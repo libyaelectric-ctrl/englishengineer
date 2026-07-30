@@ -24,6 +24,7 @@ https://wxabrwzitwsjtpmlvvqe.supabase.co/auth/v1/authorize?provider=google&redir
 ### Token Refresh
 
 Tokens auto-refresh. If expired, call:
+
 ```
 POST /api/auth/refresh
 Authorization: Bearer <refresh_token>
@@ -33,15 +34,16 @@ Authorization: Bearer <refresh_token>
 
 API endpoints are rate-limited:
 
-| Endpoint | Limit | Window |
-|----------|-------|--------|
-| `/api/ai/*` | 30 requests | 15 minutes |
-| `/api/billing/*` | 100 requests | 15 minutes |
-| `/api/vocabulary/*` | 60 requests | 15 minutes |
-| `/api/reading/*` | 60 requests | 15 minutes |
-| `/api/workspaces/*` | 60 requests | 15 minutes |
+| Endpoint            | Limit        | Window     |
+| ------------------- | ------------ | ---------- |
+| `/api/ai/*`         | 30 requests  | 15 minutes |
+| `/api/billing/*`    | 100 requests | 15 minutes |
+| `/api/vocabulary/*` | 60 requests  | 15 minutes |
+| `/api/reading/*`    | 60 requests  | 15 minutes |
+| `/api/workspaces/*` | 60 requests  | 15 minutes |
 
 Rate limit headers are included in responses:
+
 ```
 X-RateLimit-Limit: 30
 X-RateLimit-Remaining: 29

@@ -1,12 +1,13 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import { describe, it } from 'node:test';
+
 import {
   AiRequestBodySchema,
-  VocabularyLookupQuerySchema,
   BillingCheckoutBodySchema,
   ProgressBodySchema,
-  WritingSubmitBodySchema,
   ReadingScoreBodySchema,
+  VocabularyLookupQuerySchema,
+  WritingSubmitBodySchema,
 } from '../src/validation.js';
 
 describe('Validation Schemas', () => {
@@ -119,14 +120,8 @@ describe('Validation Schemas', () => {
     });
 
     it('accepts boundary values', () => {
-      assert.strictEqual(
-        ReadingScoreBodySchema.safeParse({ score: 0 }).success,
-        true
-      );
-      assert.strictEqual(
-        ReadingScoreBodySchema.safeParse({ score: 100 }).success,
-        true
-      );
+      assert.strictEqual(ReadingScoreBodySchema.safeParse({ score: 0 }).success, true);
+      assert.strictEqual(ReadingScoreBodySchema.safeParse({ score: 100 }).success, true);
     });
 
     it('rejects score over 100', () => {

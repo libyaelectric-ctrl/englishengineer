@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
 function getAutoTheme(): 'dark' | 'light' {

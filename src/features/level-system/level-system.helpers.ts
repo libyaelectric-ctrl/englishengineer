@@ -1,6 +1,7 @@
-import { LearningState, MissionModule } from '@/core/learning';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { LearningState, MissionModule } from '@/core/learning';
+
 import {
   CEFR_LEVELS,
   CefrLevel,
@@ -9,18 +10,12 @@ import {
   EngineeringLevelProfile,
   LevelConfidence,
   LevelPathNode,
+  LevelledContent,
   SkillKey,
   SkillLevelProgress,
-  LevelledContent,
 } from './level-system.types';
 
-const CORE_SKILLS: SkillKey[] = [
-  'reading',
-  'writing',
-  'listening',
-  'speaking',
-  'vocabulary',
-];
+const CORE_SKILLS: SkillKey[] = ['reading', 'writing', 'listening', 'speaking', 'vocabulary'];
 
 const MODULE_BY_SKILL: Partial<Record<SkillKey, MissionModule>> = {
   reading: 'Reading',
@@ -35,19 +30,13 @@ export const getNextCefrLevel = (level: CefrLevel): CefrLevel | null => {
   return CEFR_LEVELS[next] ?? null;
 };
 
-export const getLevelConfidence = (
-  completedTasks: number,
-  isDemo: boolean
-): LevelConfidence => {
+export const getLevelConfidence = (completedTasks: number, isDemo: boolean): LevelConfidence => {
   if (isDemo || completedTasks === 0) return 'demo';
   if (completedTasks < 10) return 'estimated';
   return 'calibrated';
 };
 
-const getLevelIndex = (
-  completedTasks: number,
-  averageScore: number
-): number => {
+const getLevelIndex = (completedTasks: number, averageScore: number): number => {
   if (completedTasks < 10 || averageScore < 65) return 0;
   return Math.min(Math.floor(completedTasks / 10), CEFR_LEVELS.length - 1);
 };
@@ -85,9 +74,7 @@ export const calculateSkillProgress = (
     skill,
     currentLevel,
     completedTasks,
-    requiredTasksForNextLevel: nextLevel
-      ? Math.max(0, nextThreshold - completedTasks)
-      : 0,
+    requiredTasksForNextLevel: nextLevel ? Math.max(0, nextThreshold - completedTasks) : 0,
     nextLevel,
     confidence: getLevelConfidence(completedTasks, false),
   };
@@ -98,19 +85,12 @@ export const buildLevelProfile = (
   userId?: string
 ): EngineeringLevelProfile => {
   const isDemo = !userId || userId.startsWith('demo_');
-  const coreProgress = CORE_SKILLS.map((skill) =>
-    calculateSkillProgress(skill, learning, isDemo)
-  );
+  const coreProgress = CORE_SKILLS.map((skill) => calculateSkillProgress(skill, learning, isDemo));
   const overallIndex = Math.min(
-    ...coreProgress.map((progress) =>
-      CEFR_LEVELS.indexOf(progress.currentLevel)
-    )
+    ...coreProgress.map((progress) => CEFR_LEVELS.indexOf(progress.currentLevel))
   );
   const overallLevel = CEFR_LEVELS[Math.max(0, overallIndex)];
-  const totalTasks = coreProgress.reduce(
-    (sum, progress) => sum + progress.completedTasks,
-    0
-  );
+  const totalTasks = coreProgress.reduce((sum, progress) => sum + progress.completedTasks, 0);
   const confidence = getLevelConfidence(totalTasks, isDemo);
   const supportingSkills: SkillLevelProgress[] = [
     {
@@ -138,9 +118,7 @@ export const buildLevelProfile = (
   };
 };
 
-export const buildSequentialLevelPath = (
-  progress: SkillLevelProgress
-): LevelPathNode[] => {
+export const buildSequentialLevelPath = (progress: SkillLevelProgress): LevelPathNode[] => {
   const currentIndex = CEFR_LEVELS.indexOf(progress.currentLevel);
   return CEFR_LEVELS.map((level, index) => {
     if (index < currentIndex) {
@@ -153,10 +131,7 @@ export const buildSequentialLevelPath = (
     if (index === currentIndex) {
       return { level, status: 'current', reason: 'Current learning level' };
     }
-    if (
-      index === currentIndex + 1 &&
-      progress.requiredTasksForNextLevel === 0
-    ) {
+    if (index === currentIndex + 1 && progress.requiredTasksForNextLevel === 0) {
       return { level, status: 'available', reason: 'Ready to start' };
     }
     if (index >= 4 && currentIndex < 3) {
@@ -213,32 +188,22 @@ export const filterContentByLevel = <T extends LevelledContent>(
   const currentIndex = CEFR_LEVELS.indexOf(currentLevel);
   if (filter === 'all-levels') return items;
   if (filter === 'review-previous') {
-    return items.filter(
-      (item) => CEFR_LEVELS.indexOf(item.cefrLevel) < currentIndex
-    );
+    return items.filter((item) => CEFR_LEVELS.indexOf(item.cefrLevel) < currentIndex);
   }
   if (filter === 'preview-next') {
-    return items.filter(
-      (item) => CEFR_LEVELS.indexOf(item.cefrLevel) === currentIndex + 1
-    );
+    return items.filter((item) => CEFR_LEVELS.indexOf(item.cefrLevel) === currentIndex + 1);
   }
   return items.filter((item) => item.cefrLevel === currentLevel);
 };
 
-export const resolveActiveLevelContent = <
-  T extends LevelledContent & { id: string },
->(
+export const resolveActiveLevelContent = <T extends LevelledContent & { id: string }>(
   visibleItems: T[],
   selectedId: string | null
-): T | null =>
-  visibleItems.find((item) => item.id === selectedId) ??
-  visibleItems[0] ??
-  null;
+): T | null => visibleItems.find((item) => item.id === selectedId) ?? visibleItems[0] ?? null;
 
 export const canOpenLevelContent = (
   contentLevel: CefrLevel,
   currentLevel: CefrLevel,
   filter: ContentLevelFilter
 ): boolean =>
-  filter === 'all-levels' ||
-  getContentAccessLabel(contentLevel, currentLevel) !== 'Locked';
+  filter === 'all-levels' || getContentAccessLabel(contentLevel, currentLevel) !== 'Locked';

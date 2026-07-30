@@ -37,12 +37,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "May be ile maybe karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "may-be",
-      "revised-route",
-      "test-date",
-      "access-restriction"
-    ],
+    "linkedVocabularyTags": ["may-be", "revised-route", "test-date", "access-restriction"],
     "grammarFits": ["verb to be", "passive voice", "modal obligation"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_021"],
@@ -106,13 +101,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Could be sonrası V3 yerine yalın fiil kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "could-be",
-      "relay",
-      "alarm",
-      "battery-voltage",
-      "solution"
-    ],
+    "linkedVocabularyTags": ["could-be", "relay", "alarm", "battery-voltage", "solution"],
     "grammarFits": ["verb to be", "passive voice", "modal obligation"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_022"],
@@ -176,12 +165,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "It reported that gibi öznesiz/eksik passive yapı kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "reported-that",
-      "MV-room",
-      "access",
-      "corrective-action"
-    ],
+    "linkedVocabularyTags": ["reported-that", "MV-room", "access", "corrective-action"],
     "grammarFits": ["passive voice", "technical reporting", "reported speech"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_047"],
@@ -193,12 +177,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "project-management"],
     "taskPromptTemplate": "Rewrite the sentence in passive voice to focus on the work, not the person.",
     "minimumUserOutput": "It was reported that the MV room access was blocked.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -250,12 +229,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Gereksiz aktör ekleyerek tonu suçlayıcı yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "neutral-passive",
-      "missing-tags",
-      "approved-drawing",
-      "inspection"
-    ],
+    "linkedVocabularyTags": ["neutral-passive", "missing-tags", "approved-drawing", "inspection"],
     "grammarFits": ["passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_013"],
@@ -319,13 +293,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Observed/confirmed sonrası that clause eksik bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "formal-passive",
-      "observed",
-      "confirmed",
-      "label",
-      "test-result"
-    ],
+    "linkedVocabularyTags": ["formal-passive", "observed", "confirmed", "label", "test-result"],
     "grammarFits": ["verb to be", "passive voice", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_009"],
@@ -337,12 +305,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the sentence in passive voice to focus on the work, not the person.",
     "minimumUserOutput": "It has been observed that several labels are missing.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -394,12 +357,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "To be yapısında be unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "to-be-closed",
-      "to-be-tested",
-      "handover",
-      "energization"
-    ],
+    "linkedVocabularyTags": ["to-be-closed", "to-be-tested", "handover", "energization"],
     "grammarFits": ["verb to be", "passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_015"],
@@ -463,12 +421,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "By kullanarak her pasifte gereksiz fail belirtmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "by-agent",
-      "QAQC",
-      "commissioning-team",
-      "verified"
-    ],
+    "linkedVocabularyTags": ["by-agent", "QAQC", "commissioning-team", "verified"],
     "grammarFits": ["passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_013"],
@@ -532,12 +485,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Resmi raporda get passive'i gereksiz kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "get-passive",
-      "damaged-cable",
-      "access-door",
-      "site-talk"
-    ],
+    "linkedVocabularyTags": ["get-passive", "damaged-cable", "access-door", "site-talk"],
     "grammarFits": ["passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_013"],
@@ -601,12 +549,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Being kelimesini unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "being-inspected",
-      "panel",
-      "cable-tray",
-      "handover"
-    ],
+    "linkedVocabularyTags": ["being-inspected", "panel", "cable-tray", "handover"],
     "grammarFits": ["verb to be", "passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_a2_009"],
@@ -670,12 +613,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Was being yerine was been kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "past-continuous-passive",
-      "generator-test",
-      "cable-pulling",
-      "alarm"
-    ],
+    "linkedVocabularyTags": ["past-continuous-passive", "generator-test", "cable-pulling", "alarm"],
     "grammarFits": ["verb to be", "passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_a2_012"],
@@ -739,13 +677,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "If kısmında would kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "second-conditional",
-      "manpower",
-      "labeling",
-      "access",
-      "test"
-    ],
+    "linkedVocabularyTags": ["second-conditional", "manpower", "labeling", "access", "test"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_025"],
@@ -808,12 +740,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Could ve would farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "second-conditional-could",
-      "spare-relay",
-      "restore",
-      "route-clear"
-    ],
+    "linkedVocabularyTags": ["second-conditional-could", "spare-relay", "restore", "route-clear"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_011"],
@@ -876,12 +803,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "If kısmında would have kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "third-conditional",
-      "inspection",
-      "handover",
-      "material-delay"
-    ],
+    "linkedVocabularyTags": ["third-conditional", "inspection", "handover", "material-delay"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_020"],
@@ -892,13 +814,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "procurement", "project-management"],
     "taskPromptTemplate": "Write one project consequence using the target conditional structure.",
     "minimumUserOutput": "If the inspection had been completed earlier, the handover would have started.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -950,12 +866,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Could have sonrası V3 unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "could-have",
-      "permit",
-      "panel-test",
-      "vendor-support"
-    ],
+    "linkedVocabularyTags": ["could-have", "permit", "panel-test", "vendor-support"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_013"],
@@ -1018,12 +929,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should have ile suçlayıcı tonu aşırı kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-have",
-      "unclear-label",
-      "setting-change",
-      "record"
-    ],
+    "linkedVocabularyTags": ["should-have", "unclear-label", "setting-change", "record"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_020"],
@@ -1086,12 +992,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Zamanları tek bir tense ile kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "mixed-conditional",
-      "approval",
-      "schedule",
-      "room-ready"
-    ],
+    "linkedVocabularyTags": ["mixed-conditional", "approval", "schedule", "room-ready"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_013"],
@@ -1102,12 +1003,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "project-management"],
     "taskPromptTemplate": "Write one project consequence using the target conditional structure.",
     "minimumUserOutput": "If the drawing had been approved earlier, we would be on schedule now.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1159,12 +1055,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Provided that yerine providing yanlış kullanımını bağlama göre karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "provided-that",
-      "permit",
-      "access-safe",
-      "conditional-approval"
-    ],
+    "linkedVocabularyTags": ["provided-that", "permit", "access-safe", "conditional-approval"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_064"],
@@ -1227,12 +1118,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "As long as ile unless anlamını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "as-long-as",
-      "isolation",
-      "temporary-supply",
-      "monitoring"
-    ],
+    "linkedVocabularyTags": ["as-long-as", "isolation", "temporary-supply", "monitoring"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_017"],
@@ -1295,13 +1181,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Unless ile not'u birlikte kullanarak çift olumsuz yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "unless",
-      "postponed",
-      "comments",
-      "submission",
-      "attachments"
-    ],
+    "linkedVocabularyTags": ["unless", "postponed", "comments", "submission", "attachments"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_027"],
@@ -1374,18 +1254,8 @@
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_030"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "The generator, which was tested yesterday, is ready for load transfer.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1437,11 +1307,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Reduced clause'u tam cümle gibi çekimlemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "reduced-relative-passive",
-      "installed-cables",
-      "consultant-comments"
-    ],
+    "linkedVocabularyTags": ["reduced-relative-passive", "installed-cables", "consultant-comments"],
     "grammarFits": ["relative clauses", "passive voice"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_032"],
@@ -1452,12 +1318,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the sentence in passive voice to focus on the work, not the person.",
     "minimumUserOutput": "The cables installed in Block C require testing.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1509,19 +1370,11 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "V-ing yerine V3 kullanarak anlamı ters çevirmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "reduced-relative-active",
-      "basement-team",
-      "UPS-feeder"
-    ],
+    "linkedVocabularyTags": ["reduced-relative-active", "basement-team", "UPS-feeder"],
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_030"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "electrical", "qa-qc", "commissioning"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "The team working in the basement needs access approval.",
@@ -1574,20 +1427,11 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Preposition'u cümle sonunda bırakmak formal ton için zayıf olabilir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "preposition-which",
-      "drawing",
-      "UPS-room",
-      "ventilation"
-    ],
+    "linkedVocabularyTags": ["preposition-which", "drawing", "UPS-room", "ventilation"],
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_031"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "architecture"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "The drawing on which the installation was based has been revised.",
@@ -1640,20 +1484,11 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Which'in hangi isme döndüğünü belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "which-clause",
-      "missing-labels",
-      "delay",
-      "congestion"
-    ],
+    "linkedVocabularyTags": ["which-clause", "missing-labels", "delay", "congestion"],
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_031"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "qa-qc", "hse", "project-management"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "The labels were missing, which delayed the inspection.",
@@ -1706,27 +1541,12 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Whose yerine who's kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "whose",
-      "subcontractor",
-      "damaged-cables",
-      "system-settings"
-    ],
+    "linkedVocabularyTags": ["whose", "subcontractor", "damaged-cables", "system-settings"],
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_a1_031"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "The subcontractor whose cables were damaged requested an inspection.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1788,11 +1608,7 @@
     "grammarFits": ["relative clauses"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_040"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "electrical", "qa-qc", "commissioning"],
     "taskPromptTemplate": "Combine two engineering sentences using a relative clause.",
     "minimumUserOutput": "A process was introduced whereby all test results are recorded digitally.",
@@ -2012,13 +1828,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal recommendation using 'It is recommended that' and a base verb.",
     "minimumUserOutput": "It is recommended that the contractor revise the cable schedule.",
     "masteryCriteria": "User can write a formal recommendation with 'It is recommended that' and use the correct base verb form.",
@@ -2212,12 +2022,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Remain fiilini be ile gereksiz kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "remain-open",
-      "punch-list",
-      "documentation-comments",
-      "inspection"
-    ],
+    "linkedVocabularyTags": ["remain-open", "punch-list", "documentation-comments", "inspection"],
     "grammarFits": ["technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_005"],
@@ -2281,12 +2086,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Address'i sadece adres anlamında düşünmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "to-be-addressed",
-      "missing-labels",
-      "access-issue",
-      "contractor"
-    ],
+    "linkedVocabularyTags": ["to-be-addressed", "missing-labels", "access-issue", "contractor"],
     "grammarFits": ["verb to be", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_006"],
@@ -2414,12 +2214,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "May have sonrası past simple kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "may-have",
-      "relay-failure",
-      "power-fluctuation",
-      "customs-delay"
-    ],
+    "linkedVocabularyTags": ["may-have", "relay-failure", "power-fluctuation", "customs-delay"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_021"],
@@ -2481,12 +2276,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Might have ile kesin sonuç yazmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "might-have",
-      "false-signal",
-      "superseded-drawing",
-      "revision"
-    ],
+    "linkedVocabularyTags": ["might-have", "false-signal", "superseded-drawing", "revision"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_038"],
@@ -2548,12 +2338,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Potentially kelimesini kesin kanıt gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "could-potentially",
-      "delay",
-      "commissioning",
-      "final-approval"
-    ],
+    "linkedVocabularyTags": ["could-potentially", "delay", "commissioning", "final-approval"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_021"],
@@ -2563,13 +2348,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the statement with cautious professional hedging.",
     "minimumUserOutput": "This issue could potentially delay commissioning.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2621,12 +2400,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Likely kelimesini only adjective olarak kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "likely-to",
-      "late-delivery",
-      "installation-sequence",
-      "testing-time"
-    ],
+    "linkedVocabularyTags": ["likely-to", "late-delivery", "installation-sequence", "testing-time"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_021"],
@@ -2688,12 +2462,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Unlikely yerine not likely kullanımı bazen daha az formal kalır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "unlikely-to",
-      "critical-path",
-      "minor-defect",
-      "rework"
-    ],
+    "linkedVocabularyTags": ["unlikely-to", "critical-path", "minor-defect", "rework"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_041"],
@@ -2755,12 +2524,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Appears to have sonrası V3 unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "appears-to-have",
-      "cable-damage",
-      "setting-change",
-      "pulling"
-    ],
+    "linkedVocabularyTags": ["appears-to-have", "cable-damage", "setting-change", "pulling"],
     "grammarFits": ["hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_024"],
@@ -2822,12 +2586,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "There appears kullanırken tekil/çoğul uyumunu ihmal etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "appears-to-be",
-      "mismatch",
-      "site-condition",
-      "clearance"
-    ],
+    "linkedVocabularyTags": ["appears-to-be", "mismatch", "site-condition", "clearance"],
     "grammarFits": ["verb to be", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_024"],
@@ -2956,12 +2715,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Even though ile but'ı gereksiz birlikte kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "even-though",
-      "limited-access",
-      "inspection",
-      "late-delivery"
-    ],
+    "linkedVocabularyTags": ["even-though", "limited-access", "inspection", "late-delivery"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_035"],
@@ -3023,13 +2777,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Whereas'ı basit because gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "whereas",
-      "electrical-room",
-      "mechanical-room",
-      "cost",
-      "risk"
-    ],
+    "linkedVocabularyTags": ["whereas", "electrical-room", "mechanical-room", "cost", "risk"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_035"],
@@ -3039,13 +2787,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "mechanical",
-      "architecture",
-      "hse"
-    ],
+    "domainFit": ["general-site", "electrical", "mechanical", "architecture", "hse"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "The electrical rooms are ready, whereas the mechanical rooms remain incomplete.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3097,12 +2839,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "While'ın zaman mı zıtlık mı olduğunu bağlamla netleştirmemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "while-contrast",
-      "installation",
-      "documentation",
-      "test-result"
-    ],
+    "linkedVocabularyTags": ["while-contrast", "installation", "documentation", "test-result"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_042"],
@@ -3164,12 +2901,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Despite sonrası tam cümle kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "despite",
-      "delay",
-      "limited-access",
-      "installation"
-    ],
+    "linkedVocabularyTags": ["despite", "delay", "limited-access", "installation"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_035"],
@@ -3231,12 +2963,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "In spite of sonrası that clause kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "in-spite-of",
-      "missing-material",
-      "late-approval",
-      "mobilization"
-    ],
+    "linkedVocabularyTags": ["in-spite-of", "missing-material", "late-approval", "mobilization"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_046"],
@@ -3298,12 +3025,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Nevertheless ile however'ı arka arkaya kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "nevertheless",
-      "congested-room",
-      "critical-activity",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["nevertheless", "congested-room", "critical-activity", "delay"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_036"],
@@ -3313,13 +3035,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "procurement", "project-management"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "The room was congested. Nevertheless, the inspection was completed.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3371,12 +3087,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Her zıtlık için gereksiz kullanarak raporu şişirmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "on-the-other-hand",
-      "temporary-supply",
-      "monitoring",
-      "reliability"
-    ],
+    "linkedVocabularyTags": ["on-the-other-hand", "temporary-supply", "monitoring", "reliability"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_a2_026"],
@@ -3639,12 +3350,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Leading to yapısını ana fiil gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "leading-to",
-      "cable-route-delay",
-      "incorrect-setting",
-      "overheating"
-    ],
+    "linkedVocabularyTags": ["leading-to", "cable-route-delay", "incorrect-setting", "overheating"],
     "grammarFits": ["conjunctions", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_030"],
@@ -3706,12 +3412,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Due to'yu because gibi tam cümle önünde yanlış kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "due-to",
-      "late-approval",
-      "shop-drawing",
-      "control-supply"
-    ],
+    "linkedVocabularyTags": ["due-to", "late-approval", "shop-drawing", "control-supply"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_038"],
@@ -3721,12 +3422,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "project-management"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "The delay occurred due to late approval of the revised shop drawings.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3778,12 +3474,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Owing to sonrası tam cümle kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "owing-to",
-      "restricted-access",
-      "vendor-data",
-      "calculation"
-    ],
+    "linkedVocabularyTags": ["owing-to", "restricted-access", "vendor-data", "calculation"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_054"],
@@ -3845,12 +3536,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "As a result ile as a result of karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "as-a-result-of",
-      "late-delivery",
-      "route-change",
-      "supports"
-    ],
+    "linkedVocabularyTags": ["as-a-result-of", "late-delivery", "route-change", "supports"],
     "grammarFits": ["conjunctions", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_055"],
@@ -3912,12 +3598,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Cause fiilini passive yapmadan noun gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "caused-by",
-      "relay-setting",
-      "error",
-      "access-preparation"
-    ],
+    "linkedVocabularyTags": ["caused-by", "relay-setting", "error", "access-preparation"],
     "grammarFits": ["conjunctions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_058"],
@@ -3994,13 +3675,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "civil",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "civil", "commissioning", "project-management"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "The additional testing time is attributable to incomplete calibration records.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4052,13 +3727,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Shall'ı günlük konuşmada aşırı kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "shall",
-      "contractor",
-      "test-report",
-      "cable-labeling",
-      "contract"
-    ],
+    "linkedVocabularyTags": ["shall", "contractor", "test-report", "cable-labeling", "contract"],
     "grammarFits": ["contractual wording", "modal obligation"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_017"],
@@ -4071,13 +3740,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The contractor shall submit the test report within three days.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4199,13 +3862,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Is to be yapısında to veya be unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "is-to-be",
-      "tested",
-      "energization",
-      "documents",
-      "deadline"
-    ],
+    "linkedVocabularyTags": ["is-to-be", "tested", "energization", "documents", "deadline"],
     "grammarFits": ["verb to be", "contractual wording"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_006"],
@@ -4270,12 +3927,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Should be ile must be ton farkını kaçırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-be",
-      "access-route",
-      "records",
-      "test-update"
-    ],
+    "linkedVocabularyTags": ["should-be", "access-route", "records", "test-update"],
     "grammarFits": ["verb to be", "contractual wording"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_016"],
@@ -4358,13 +4010,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The installation was completed in compliance with the project specification.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4416,13 +4062,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Advised sonrası V-ing kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "advised-to",
-      "contractor",
-      "labeling",
-      "civil-works",
-      "coordination"
-    ],
+    "linkedVocabularyTags": ["advised-to", "contractor", "labeling", "civil-works", "coordination"],
     "grammarFits": ["contractual wording", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_054"],
@@ -4485,12 +4125,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Propose sonrası directly to + verb kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "propose-that",
-      "two-stage-test",
-      "temporary-lighting",
-      "night-work"
-    ],
+    "linkedVocabularyTags": ["propose-that", "two-stage-test", "temporary-lighting", "night-work"],
     "grammarFits": ["technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_055"],
@@ -4553,11 +4188,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Subject to'yu kesin izin gibi yorumlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "subject-to-approval",
-      "consultant-approval",
-      "client-acceptance"
-    ],
+    "linkedVocabularyTags": ["subject-to-approval", "consultant-approval", "client-acceptance"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_064"],
@@ -4688,12 +4319,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "As long as'ı deadline gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "as-long-as",
-      "barricaded-area",
-      "vendor-supervision",
-      "testing"
-    ],
+    "linkedVocabularyTags": ["as-long-as", "barricaded-area", "vendor-supervision", "testing"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_018"],
@@ -4756,11 +4382,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Unless otherwise ile not ekleyerek çift olumsuz yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "unless-otherwise-instructed",
-      "approved-route",
-      "report-issue"
-    ],
+    "linkedVocabularyTags": ["unless-otherwise-instructed", "approved-route", "report-issue"],
     "grammarFits": ["conditionals"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_027"],
@@ -4823,12 +4445,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Based from kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "based-on",
-      "inspection-record",
-      "load-calculation",
-      "cable-size"
-    ],
+    "linkedVocabularyTags": ["based-on", "inspection-record", "load-calculation", "cable-size"],
     "grammarFits": ["technical reporting", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_063"],
@@ -4892,12 +4509,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "As per'i her according to yerine fazla kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "as-per",
-      "approved-drawing",
-      "client-instruction",
-      "panel-room"
-    ],
+    "linkedVocabularyTags": ["as-per", "approved-drawing", "client-instruction", "panel-room"],
     "grammarFits": ["technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_064"],
@@ -4967,12 +4579,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Reference for/to kullanımını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "with-reference-to",
-      "comment",
-      "cable-schedule",
-      "inspection-report"
-    ],
+    "linkedVocabularyTags": ["with-reference-to", "comment", "cable-schedule", "inspection-report"],
     "grammarFits": ["technical reporting", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_064"],
@@ -5036,12 +4643,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Considering'i because ile aynı düzeyde kesin neden gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "considering",
-      "limited-access",
-      "revised-sequence",
-      "test-results"
-    ],
+    "linkedVocabularyTags": ["considering", "limited-access", "revised-sequence", "test-results"],
     "grammarFits": ["technical reporting", "hedging"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_056"],
@@ -5105,12 +4707,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Reference satırını belirsiz veya çok uzun yazmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "reference-line",
-      "subject-line",
-      "inspection-comments",
-      "LV-panels"
-    ],
+    "linkedVocabularyTags": ["reference-line", "subject-line", "inspection-comments", "LV-panels"],
     "grammarFits": ["formal email"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_050"],
@@ -5245,12 +4842,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Response for kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "response-to-comment",
-      "cable-labels",
-      "test-record",
-      "attachment"
-    ],
+    "linkedVocabularyTags": ["response-to-comment", "cable-labels", "test-record", "attachment"],
     "grammarFits": ["formal email"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_073"],
@@ -5263,12 +4855,7 @@
       "roleplay",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "In response to Comment E-05, the cable labels have been updated.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -5391,12 +4978,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Action required kime ait belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "action-required",
-      "contractor",
-      "next-inspection",
-      "safe-access"
-    ],
+    "linkedVocabularyTags": ["action-required", "contractor", "next-inspection", "safe-access"],
     "grammarFits": ["formal email"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_052"],
@@ -5461,12 +5043,7 @@
     "mistakeType": "reported speech tense shift",
     "commonMistakes": "State fiilini say ile aynı informal tonda kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "stated-that",
-      "consultant",
-      "test-record",
-      "client-approval"
-    ],
+    "linkedVocabularyTags": ["stated-that", "consultant", "test-record", "client-approval"],
     "grammarFits": ["reported speech", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_046"],
@@ -5478,12 +5055,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Report what the contractor/consultant said using reported speech.",
     "minimumUserOutput": "The consultant stated that the test record was incomplete.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -5535,13 +5107,7 @@
     "mistakeType": "reported speech tense shift",
     "commonMistakes": "Claimed kelimesinin ihtiyat/iddia tonu taşıdığını unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "claimed-that",
-      "access",
-      "planned-date",
-      "supplier-delay",
-      "customs"
-    ],
+    "linkedVocabularyTags": ["claimed-that", "access", "planned-date", "supplier-delay", "customs"],
     "grammarFits": ["reported speech", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_046"],
@@ -5605,12 +5171,7 @@
     "mistakeType": "reported speech tense shift",
     "commonMistakes": "Noted that yapısını kişisel görüş gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "noted-that",
-      "panel-schedule",
-      "fire-stopping",
-      "meeting-minutes"
-    ],
+    "linkedVocabularyTags": ["noted-that", "panel-schedule", "fire-stopping", "meeting-minutes"],
     "grammarFits": ["reported speech", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b2_003"],
@@ -5674,11 +5235,7 @@
     "mistakeType": "nominalization error",
     "commonMistakes": "Delay fiil/isim kullanımını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "delay",
-      "commissioning-sequence",
-      "material-approval"
-    ],
+    "linkedVocabularyTags": ["delay", "commissioning-sequence", "material-approval"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_a2_001"],
@@ -5690,13 +5247,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "procurement", "project-management"],
     "taskPromptTemplate": "Rewrite the action as a formal noun phrase.",
     "minimumUserOutput": "The delay affected the commissioning sequence.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -5748,12 +5299,7 @@
     "mistakeType": "nominalization error",
     "commonMistakes": "Approval to/for/of kullanımlarını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "approval",
-      "revised-drawing",
-      "material",
-      "consultant"
-    ],
+    "linkedVocabularyTags": ["approval", "revised-drawing", "material", "consultant"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_063"],
@@ -5765,13 +5311,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "procurement", "project-management"],
     "taskPromptTemplate": "Rewrite the action as a formal noun phrase.",
     "minimumUserOutput": "Approval of the revised drawing is still pending.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -5823,11 +5363,7 @@
     "mistakeType": "nominalization error",
     "commonMistakes": "Inspection kelimesini fiil gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "inspection",
-      "electrical-room",
-      "ready-for-inspection"
-    ],
+    "linkedVocabularyTags": ["inspection", "electrical-room", "ready-for-inspection"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 4,
     "prerequisites": ["grammar_a2_001"],
@@ -5908,12 +5444,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the action as a formal noun phrase.",
     "minimumUserOutput": "Compliance with the project specification has been verified.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -5965,11 +5496,7 @@
     "mistakeType": "wrong preposition",
     "commonMistakes": "Relation with/to karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "in-relation-to",
-      "cable-damage",
-      "grounding-comments"
-    ],
+    "linkedVocabularyTags": ["in-relation-to", "cable-damage", "grounding-comments"],
     "grammarFits": ["prepositions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_063"],
@@ -6175,12 +5702,7 @@
     "mistakeType": "wrong preposition",
     "commonMistakes": "Behalf kelimesini by behalf şeklinde kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "on-behalf-of",
-      "electrical-team",
-      "contractor",
-      "submission"
-    ],
+    "linkedVocabularyTags": ["on-behalf-of", "electrical-team", "contractor", "submission"],
     "grammarFits": ["verb to be", "prepositions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_050"],
@@ -6242,11 +5764,7 @@
     "mistakeType": "wrong preposition",
     "commonMistakes": "According to ile uygunluk anlamını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "in-accordance-with",
-      "approved-procedure",
-      "consultant-comment"
-    ],
+    "linkedVocabularyTags": ["in-accordance-with", "approved-procedure", "consultant-comment"],
     "grammarFits": ["prepositions"],
     "difficulty": 4,
     "prerequisites": ["grammar_b1_063"],
@@ -6256,12 +5774,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one sentence showing the location/reference of a site object.",
     "minimumUserOutput": "The test was carried out in accordance with the approved procedure.",
     "masteryCriteria": "User can recognize, correct and produce this B2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -6548,12 +6061,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write a final report conclusion using “In conclusion” based on the given engineering findings.",
     "minimumUserOutput": "In conclusion, the installation can proceed after the listed QA/QC comments are closed.",
     "masteryCriteria": "User can use “in conclusion” to summarize a report or meeting response without introducing unsupported new information.",

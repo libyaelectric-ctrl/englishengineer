@@ -1,18 +1,15 @@
-import { describe, it, expect, vi } from 'vitest';
-import {
-  uploadSpeakingAudio,
-  SpeakingAudioUploadError,
-} from './speaking-audio-upload.service';
+import { describe, expect, it, vi } from 'vitest';
 
-const makeBlob = (content = 'fake-audio-bytes') =>
-  new Blob([content], { type: 'audio/webm' });
+import { SpeakingAudioUploadError, uploadSpeakingAudio } from './speaking-audio-upload.service';
+
+const makeBlob = (content = 'fake-audio-bytes') => new Blob([content], { type: 'audio/webm' });
 
 describe('uploadSpeakingAudio', () => {
   it('rejects an empty blob without making a network call', async () => {
     const fetchImpl = vi.fn();
-    await expect(
-      uploadSpeakingAudio(new Blob([]), { fetchImpl })
-    ).rejects.toThrow(SpeakingAudioUploadError);
+    await expect(uploadSpeakingAudio(new Blob([]), { fetchImpl })).rejects.toThrow(
+      SpeakingAudioUploadError
+    );
     expect(fetchImpl).not.toHaveBeenCalled();
   });
 
@@ -54,9 +51,7 @@ describe('uploadSpeakingAudio', () => {
       }),
     });
 
-    await expect(
-      uploadSpeakingAudio(makeBlob(), { fetchImpl })
-    ).rejects.toMatchObject({
+    await expect(uploadSpeakingAudio(makeBlob(), { fetchImpl })).rejects.toMatchObject({
       status: 413,
       code: 'audio_too_large',
     });
@@ -71,9 +66,7 @@ describe('uploadSpeakingAudio', () => {
       },
     });
 
-    await expect(
-      uploadSpeakingAudio(makeBlob(), { fetchImpl })
-    ).rejects.toMatchObject({
+    await expect(uploadSpeakingAudio(makeBlob(), { fetchImpl })).rejects.toMatchObject({
       status: 500,
       code: 'upload_failed',
     });

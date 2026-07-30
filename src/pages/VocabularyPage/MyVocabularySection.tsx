@@ -1,7 +1,9 @@
 import { BookMarked } from 'lucide-react';
 import { Virtuoso } from 'react-virtuoso';
-import { VocabularyMenuService, MyVocabularyWord } from '@/features/vocabulary';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
+import { MyVocabularyWord, VocabularyMenuService } from '@/features/vocabulary';
 
 interface MyVocabularySectionProps {
   myVocabulary: MyVocabularyWord[];
@@ -10,10 +12,7 @@ interface MyVocabularySectionProps {
 
 const COL_COUNT = 3;
 
-const STATUS_STYLES: Record<
-  string,
-  { bg: string; text: string; label: string; emoji: string }
-> = {
+const STATUS_STYLES: Record<string, { bg: string; text: string; label: string; emoji: string }> = {
   new: {
     bg: 'bg-gray-100 dark:bg-gray-800',
     text: 'text-gray-600 dark:text-gray-400',
@@ -65,9 +64,7 @@ const WordCard = ({
             </span>
           </div>
           {word.turkishMeaning && (
-            <p className="mt-1 text-xs text-muted-copy">
-              {word.turkishMeaning}
-            </p>
+            <p className="mt-1 text-xs text-muted-copy">{word.turkishMeaning}</p>
           )}
         </div>
         <button
@@ -75,12 +72,7 @@ const WordCard = ({
           className="text-muted-copy hover:text-error transition-colors cursor-pointer"
           aria-label="Archive word"
         >
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
+          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -94,10 +86,7 @@ const WordCard = ({
   );
 };
 
-export const MyVocabularySection = ({
-  myVocabulary,
-  onUpdate,
-}: MyVocabularySectionProps) => {
+export const MyVocabularySection = ({ myVocabulary, onUpdate }: MyVocabularySectionProps) => {
   const activeWords = myVocabulary.filter((word) => !word.archivedAt);
 
   const handleArchive = (id: string) => {
@@ -108,15 +97,10 @@ export const MyVocabularySection = ({
   const rowCount = Math.ceil(activeWords.length / COL_COUNT);
 
   return (
-    <SectionCard
-      title="My Vocabulary"
-      subtitle="Custom terms saved by you"
-      icon={BookMarked}
-    >
+    <SectionCard title="My Vocabulary" subtitle="Custom terms saved by you" icon={BookMarked}>
       {activeWords.length === 0 ? (
         <p className="rounded-[4px] border border-dashed border-border-soft bg-surface/60 p-8 text-center text-xs text-muted-copy">
-          Your custom vocabulary list is empty. Any custom terms you save will
-          appear here.
+          Your custom vocabulary list is empty. Any custom terms you save will appear here.
         </p>
       ) : (
         <Virtuoso
@@ -128,11 +112,7 @@ export const MyVocabularySection = ({
             return (
               <div className="grid gap-4 pb-4 lg:grid-cols-2 xl:grid-cols-3">
                 {rowWords.map((word) => (
-                  <WordCard
-                    key={word.id}
-                    word={word}
-                    onArchive={handleArchive}
-                  />
+                  <WordCard key={word.id} word={word} onArchive={handleArchive} />
                 ))}
               </div>
             );

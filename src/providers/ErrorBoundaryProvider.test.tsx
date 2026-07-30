@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { BrowserRouter } from 'react-router-dom';
+
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 
 const BrokenView = () => {
@@ -21,13 +23,8 @@ describe('ErrorBoundaryProvider', () => {
     );
 
     expect(screen.getByText('Application Error')).toBeInTheDocument();
-    expect(
-      screen.getByText('Route module failed to render')
-    ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Home/i })).toHaveAttribute(
-      'href',
-      '/'
-    );
+    expect(screen.getByText('Route module failed to render')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Home/i })).toHaveAttribute('href', '/');
     expect(screen.getByRole('button', { name: /Retry/i })).toBeInTheDocument();
   });
 });

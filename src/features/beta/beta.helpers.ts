@@ -12,20 +12,7 @@ export const BETA_ONBOARDING_OPTIONS = {
     'Data Center Engineering',
   ],
   experienceLevels: ['0-2 years', '3-5 years', '6-10 years', '10+ years'],
-  englishLevels: [
-    'A1',
-    'A2',
-    'B1-',
-    'B1',
-    'B1+',
-    'B2-',
-    'B2',
-    'B2+',
-    'C1-',
-    'C1',
-    'C1+',
-    'C2',
-  ],
+  englishLevels: ['A1', 'A2', 'B1-', 'B1', 'B1+', 'B2-', 'B2', 'B2+', 'C1-', 'C1', 'C1+', 'C2'],
   industries: [
     'Hospital Projects',
     'Data Centers',
@@ -62,31 +49,21 @@ export const calculateProductAnalyticsSummary = (
     acc[event.screen] = (acc[event.screen] || 0) + 1;
     return acc;
   }, {});
-  const sortedScreens = Object.entries(screenCounts).sort(
-    (a, b) => b[1] - a[1]
-  );
+  const sortedScreens = Object.entries(screenCounts).sort((a, b) => b[1] - a[1]);
   const sessionDurations = events
     .map((event) => event.durationSeconds || 0)
     .filter((duration) => duration > 0);
   const averageSessionDurationSeconds =
     sessionDurations.length > 0
       ? Math.round(
-          sessionDurations.reduce((sum, duration) => sum + duration, 0) /
-            sessionDurations.length
+          sessionDurations.reduce((sum, duration) => sum + duration, 0) / sessionDurations.length
         )
       : 0;
-  const completionEvents = events.filter((event) =>
-    event.name.includes('completed')
-  );
+  const completionEvents = events.filter((event) => event.name.includes('completed'));
   const completionRate =
-    events.length > 0
-      ? Math.round((completionEvents.length / events.length) * 100)
-      : 0;
-  const countEvent = (name: string) =>
-    events.filter((event) => event.name === name).length;
-  const activeDates = unique(
-    recentWeekEvents.map((event) => event.timestamp.slice(0, 10))
-  );
+    events.length > 0 ? Math.round((completionEvents.length / events.length) * 100) : 0;
+  const countEvent = (name: string) => events.filter((event) => event.name === name).length;
+  const activeDates = unique(recentWeekEvents.map((event) => event.timestamp.slice(0, 10)));
 
   return {
     dailyActiveUsers: recentDayEvents.length > 0 ? 1 : 0,
@@ -102,12 +79,8 @@ export const calculateProductAnalyticsSummary = (
     mostUsedFeatures: sortedScreens.slice(0, 3).map(([screen]) => screen),
     leastUsedFeatures: sortedScreens.slice(-3).map(([screen]) => screen),
     retentionIndicators: unique([
-      recentDayEvents.length > 0
-        ? 'Day-1 activity present'
-        : 'No Day-1 signal yet',
-      recentWeekEvents.length > 0
-        ? 'Week activity present'
-        : 'No Week signal yet',
+      recentDayEvents.length > 0 ? 'Day-1 activity present' : 'No Day-1 signal yet',
+      recentWeekEvents.length > 0 ? 'Week activity present' : 'No Week signal yet',
     ]),
     returningUsers: activeDates.length > 1 ? 1 : 0,
     templatesUsed: countEvent('template_used'),

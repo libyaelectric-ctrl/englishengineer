@@ -37,12 +37,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Past simple ile present perfect zamanını karıştırmak; V3 yerine past form kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "present-perfect",
-      "revised-drawing",
-      "cable-pulling",
-      "completion"
-    ],
+    "linkedVocabularyTags": ["present-perfect", "revised-drawing", "cable-pulling", "completion"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_001"],
@@ -111,13 +106,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Yet ile already karıştırmak; has/have not sonrası V3 unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "not-completed",
-      "yet",
-      "breaker",
-      "shop-drawing",
-      "delivery"
-    ],
+    "linkedVocabularyTags": ["not-completed", "yet", "breaker", "shop-drawing", "delivery"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -180,12 +169,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Have/has sonrası past simple kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "completion-question",
-      "inspection",
-      "torque-values",
-      "check"
-    ],
+    "linkedVocabularyTags": ["completion-question", "inspection", "torque-values", "check"],
     "grammarFits": ["questions"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -250,12 +234,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Already kelimesini cümlenin en sonuna doğal olmayan şekilde koymak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "already",
-      "cleaned",
-      "electrical-room",
-      "shared-report"
-    ],
+    "linkedVocabularyTags": ["already", "cleaned", "electrical-room", "shared-report"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -266,12 +245,7 @@
       "speaking-production",
       "vocabulary-context"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "project-management"],
     "taskPromptTemplate": "Report a completed action with present result using present perfect.",
     "minimumUserOutput": "The team has already cleaned the electrical room.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -386,13 +360,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Just ile past time marker'ı gereksiz karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "just",
-      "inspector",
-      "site",
-      "revised-schedule",
-      "update"
-    ],
+    "linkedVocabularyTags": ["just", "inspector", "site", "revised-schedule", "update"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -455,13 +423,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Since ile süre değil başlangıç noktası kullanılır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "since",
-      "open-issue",
-      "approval",
-      "waiting",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["since", "open-issue", "approval", "waiting", "delay"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -524,13 +486,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "For ile başlangıç tarihini kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "for",
-      "duration",
-      "generator-offline",
-      "snag-list",
-      "work-duration"
-    ],
+    "linkedVocabularyTags": ["for", "duration", "generator-offline", "snag-list", "work-duration"],
     "grammarFits": ["present perfect"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_007"],
@@ -593,12 +549,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Been unutmak; active voice kullanıp gereksiz kişi belirtmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "inspection",
-      "installation",
-      "corrective-action",
-      "completion"
-    ],
+    "linkedVocabularyTags": ["inspection", "installation", "corrective-action", "completion"],
     "grammarFits": ["verb to be", "passive voice", "present perfect passive"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -663,12 +614,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Been unutmak veya not yerini yanlış koymak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "not-labeled",
-      "access-door",
-      "pending",
-      "passive"
-    ],
+    "linkedVocabularyTags": ["not-labeled", "access-door", "pending", "passive"],
     "grammarFits": ["verb to be", "passive voice", "present perfect passive"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_009"],
@@ -681,12 +627,7 @@
       "report-writing",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "project-management"],
     "taskPromptTemplate": "Rewrite a completed site action in present perfect passive.",
     "minimumUserOutput": "The panels have not been labeled yet.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -738,12 +679,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Been yerine be kullanmak; V3 unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "approval",
-      "method-statement",
-      "test-result",
-      "recorded"
-    ],
+    "linkedVocabularyTags": ["approval", "method-statement", "test-result", "recorded"],
     "grammarFits": ["verb to be", "questions", "passive voice"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_009"],
@@ -809,13 +745,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Present passive ile present continuous passive karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "routine",
-      "tested",
-      "emergency-light",
-      "energization",
-      "procedure"
-    ],
+    "linkedVocabularyTags": ["routine", "tested", "emergency-light", "energization", "procedure"],
     "grammarFits": ["verb to be", "passive voice"],
     "difficulty": 3,
     "prerequisites": ["grammar_a1_011"],
@@ -880,13 +810,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Was/were uyumunu ve V3 formunu unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "defect",
-      "identified",
-      "inspection",
-      "cable-drum",
-      "delivery"
-    ],
+    "linkedVocabularyTags": ["defect", "identified", "inspection", "cable-drum", "delivery"],
     "grammarFits": ["passive voice"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_001"],
@@ -951,12 +875,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Will be sonrası fiili yalın kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "future-passive",
-      "system-test",
-      "comment-closure",
-      "meeting"
-    ],
+    "linkedVocabularyTags": ["future-passive", "system-test", "comment-closure", "meeting"],
     "grammarFits": ["verb to be", "passive voice"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_006"],
@@ -1021,13 +940,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Must be yapısında be veya V3 unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "must-be",
-      "isolated",
-      "maintenance",
-      "handover",
-      "comments"
-    ],
+    "linkedVocabularyTags": ["must-be", "isolated", "maintenance", "handover", "comments"],
     "grammarFits": ["verb to be", "passive voice", "modal obligation"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_020"],
@@ -1040,13 +953,7 @@
       "report-writing",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Rewrite the sentence in passive voice to focus on the work, not the person.",
     "minimumUserOutput": "The circuit must be isolated before maintenance.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1098,13 +1005,7 @@
     "mistakeType": "active-passive confusion",
     "commonMistakes": "Should be yerine should + V3 kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-be",
-      "label",
-      "cable-route",
-      "MEP-team",
-      "review"
-    ],
+    "linkedVocabularyTags": ["should-be", "label", "cable-route", "MEP-team", "review"],
     "grammarFits": ["verb to be", "passive voice", "modal obligation"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_018"],
@@ -1169,13 +1070,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "İki yapıyı her bağlamda aynı tonla kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "must",
-      "have-to",
-      "PPE",
-      "live-area",
-      "submit-report"
-    ],
+    "linkedVocabularyTags": ["must", "have-to", "PPE", "live-area", "submit-report"],
     "grammarFits": ["modal obligation"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_016", "grammar_a2_020"],
@@ -1239,12 +1134,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Need to sonrası isim veya need sonrası yalın fiil kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "need-to",
-      "need-noun",
-      "inspection",
-      "calibration-certificate"
-    ],
+    "linkedVocabularyTags": ["need-to", "need-noun", "inspection", "calibration-certificate"],
     "grammarFits": ["modal obligation"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_017", "grammar_a2_041"],
@@ -1308,12 +1198,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should have sonrası past simple kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-have",
-      "label",
-      "shutdown",
-      "lessons-learned"
-    ],
+    "linkedVocabularyTags": ["should-have", "label", "shutdown", "lessons-learned"],
     "grammarFits": ["modal advice"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_018"],
@@ -1377,13 +1262,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "May ile kesin hüküm vermek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "may",
-      "delay",
-      "commissioning-date",
-      "control-cable",
-      "possibility"
-    ],
+    "linkedVocabularyTags": ["may", "delay", "commissioning-date", "control-cable", "possibility"],
     "grammarFits": ["hedging"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_024"],
@@ -1395,13 +1274,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the statement with cautious professional hedging.",
     "minimumUserOutput": "The delay may affect the commissioning date.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1453,14 +1326,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Might sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "might",
-      "sensor",
-      "faulty",
-      "delivery",
-      "customs",
-      "uncertainty"
-    ],
+    "linkedVocabularyTags": ["might", "sensor", "faulty", "delivery", "customs", "uncertainty"],
     "grammarFits": ["hedging"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_020"],
@@ -1524,12 +1390,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "Seems that ve seems to yapılarını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "seems-to",
-      "loose-connection",
-      "manpower",
-      "observation"
-    ],
+    "linkedVocabularyTags": ["seems-to", "loose-connection", "manpower", "observation"],
     "grammarFits": ["hedging"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_021"],
@@ -1681,13 +1542,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "hse",
-      "commissioning",
-      "procurement"
-    ],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "procurement"],
     "taskPromptTemplate": "Write one project consequence using the target conditional structure.",
     "minimumUserOutput": "If the material arrives today, we will start installation tomorrow.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1739,12 +1594,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "If cümlesinde modalı yanlış yere koymak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "conditional-modal",
-      "energized-panel",
-      "vendor-support",
-      "safety"
-    ],
+    "linkedVocabularyTags": ["conditional-modal", "energized-panel", "vendor-support", "safety"],
     "grammarFits": ["conditionals"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_024"],
@@ -1756,13 +1606,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "hse", "commissioning"],
     "taskPromptTemplate": "Write one project consequence using the target conditional structure.",
     "minimumUserOutput": "If the panel is energized, workers must stay outside the room.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1814,14 +1658,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Unless ile not'u birlikte gereksiz kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "unless",
-      "permit",
-      "approved",
-      "sensor",
-      "calibration",
-      "test"
-    ],
+    "linkedVocabularyTags": ["unless", "permit", "approved", "sensor", "calibration", "test"],
     "grammarFits": ["conditionals"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_025"],
@@ -1885,12 +1722,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should yerine will kullanarak tavsiye tonunu kaybetmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "if-should",
-      "voltage-drop",
-      "access-blocked",
-      "coordinator"
-    ],
+    "linkedVocabularyTags": ["if-should", "voltage-drop", "access-blocked", "coordinator"],
     "grammarFits": ["conditionals"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_025"],
@@ -1954,13 +1786,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "İnsan için which kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "who",
-      "engineer",
-      "technician",
-      "inspection",
-      "pump"
-    ],
+    "linkedVocabularyTags": ["who", "engineer", "technician", "inspection", "pump"],
     "grammarFits": ["relative clauses"],
     "difficulty": 3,
     "prerequisites": ["grammar_a1_037"],
@@ -2023,13 +1849,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Kişiler için which kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "which",
-      "report",
-      "test-result",
-      "panel",
-      "Block-C"
-    ],
+    "linkedVocabularyTags": ["which", "report", "test-result", "panel", "Block-C"],
     "grammarFits": ["relative clauses"],
     "difficulty": 3,
     "prerequisites": ["grammar_a1_037"],
@@ -2092,13 +1912,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Non-defining cümlede that kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "that",
-      "cable",
-      "damaged",
-      "replaced",
-      "test-record"
-    ],
+    "linkedVocabularyTags": ["that", "cable", "damaged", "replaced", "test-record"],
     "grammarFits": ["relative clauses"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_029"],
@@ -2161,13 +1975,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Yer için which ve where farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "where",
-      "UPS-room",
-      "cable-tray",
-      "area",
-      "congested"
-    ],
+    "linkedVocabularyTags": ["where", "UPS-room", "cable-tray", "area", "congested"],
     "grammarFits": ["relative clauses"],
     "difficulty": 3,
     "prerequisites": ["grammar_a1_037"],
@@ -2230,13 +2038,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Özne olan relative pronoun'u düşürmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "omitted-relative",
-      "drawing",
-      "issue",
-      "received",
-      "reported"
-    ],
+    "linkedVocabularyTags": ["omitted-relative", "drawing", "issue", "received", "reported"],
     "grammarFits": ["relative clauses"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_030"],
@@ -2438,12 +2240,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Because of sonrası tam cümle kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "because-of",
-      "missing-labels",
-      "unsafe-access",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["because-of", "missing-labels", "unsafe-access", "delay"],
     "grammarFits": ["verb to be", "conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_035"],
@@ -2507,13 +2304,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Due to sonrası fiilli tam cümle kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "due-to",
-      "late-delivery",
-      "shutdown",
-      "control-fault",
-      "cause"
-    ],
+    "linkedVocabularyTags": ["due-to", "late-delivery", "shutdown", "control-fault", "cause"],
     "grammarFits": ["conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_037"],
@@ -2577,13 +2368,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Therefore ile so tonunu karıştırmak; comma kullanımını ihmal etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "therefore",
-      "result",
-      "isolation",
-      "postponed",
-      "installation"
-    ],
+    "linkedVocabularyTags": ["therefore", "result", "isolation", "postponed", "installation"],
     "grammarFits": ["conjunctions", "technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_036"],
@@ -2647,13 +2432,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "So ile so that amaç yapısını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "so-that",
-      "purpose",
-      "label",
-      "verify-cable",
-      "testing"
-    ],
+    "linkedVocabularyTags": ["so-that", "purpose", "label", "verify-cable", "testing"],
     "grammarFits": ["conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_036"],
@@ -2717,13 +2496,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Before/after sonrası zaman uyumunu bozmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "before",
-      "after",
-      "grounding",
-      "energization",
-      "inspection"
-    ],
+    "linkedVocabularyTags": ["before", "after", "grounding", "energization", "inspection"],
     "grammarFits": ["verb to be", "conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_037"],
@@ -2787,13 +2560,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Once ile one karıştırmak; future yerine present kullanımı unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "once",
-      "permit",
-      "approved",
-      "test-complete",
-      "report"
-    ],
+    "linkedVocabularyTags": ["once", "permit", "approved", "test-complete", "report"],
     "grammarFits": ["conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_039"],
@@ -2857,13 +2624,7 @@
     "mistakeType": "under-hedging",
     "commonMistakes": "When ve while zaman ilişkisini karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "when",
-      "while",
-      "alarm",
-      "generator",
-      "parallel-work"
-    ],
+    "linkedVocabularyTags": ["when", "while", "alarm", "generator", "parallel-work"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_013"],
@@ -2927,13 +2688,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Until ile by farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "until",
-      "permit",
-      "energize",
-      "inspection",
-      "waiting"
-    ],
+    "linkedVocabularyTags": ["until", "permit", "energize", "inspection", "waiting"],
     "grammarFits": ["conjunctions"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_038"],
@@ -2945,13 +2700,7 @@
       "vocabulary-context",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "The team waited until the permit was approved.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3003,13 +2752,7 @@
     "mistakeType": "reported speech tense shift",
     "commonMistakes": "That clause içinde zaman ve özne eksik bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "confirmed-that",
-      "contractor",
-      "supplier",
-      "panel",
-      "material"
-    ],
+    "linkedVocabularyTags": ["confirmed-that", "contractor", "supplier", "panel", "material"],
     "grammarFits": ["reported speech", "technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_001"],
@@ -3021,13 +2764,7 @@
       "vocabulary-context",
       "report-writing"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "civil",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "civil", "procurement", "project-management"],
     "taskPromptTemplate": "Report what the contractor/consultant said using reported speech.",
     "minimumUserOutput": "The contractor confirmed that the panels were ready.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3149,13 +2886,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Indirect question içinde soru kelime sırasını kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "whether",
-      "confirm",
-      "room-ready",
-      "test-completed",
-      "email"
-    ],
+    "linkedVocabularyTags": ["whether", "confirm", "room-ready", "test-completed", "email"],
     "grammarFits": ["questions"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_040"],
@@ -3239,12 +2970,7 @@
       "roleplay",
       "meeting-response"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "project-management"],
     "taskPromptTemplate": "Ask one clear engineering question using the target question form.",
     "minimumUserOutput": "Can you explain why the inspection was delayed?",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3296,12 +3022,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Hi/Hey gibi çok gayriresmi açılışı resmi işlerde kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "email-opening",
-      "consultant",
-      "site-team",
-      "inspection-comment"
-    ],
+    "linkedVocabularyTags": ["email-opening", "consultant", "site-team", "inspection-comment"],
     "grammarFits": ["formal email"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_039"],
@@ -3316,13 +3037,7 @@
       "meeting-response",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "civil",
-      "architecture",
-      "qa-qc",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "civil", "architecture", "qa-qc", "project-management"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "Dear Site Team, please find the inspection comments below.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3374,13 +3089,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Talep ve nedeni kopuk iki cümle olarak belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "request",
-      "reason",
-      "approval",
-      "installation",
-      "client-meeting"
-    ],
+    "linkedVocabularyTags": ["request", "reason", "approval", "installation", "client-meeting"],
     "grammarFits": ["verb to be", "formal email"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_039", "grammar_b1_037"],
@@ -3444,12 +3153,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Action kelimesini fiil gibi kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "action-required",
-      "missing-labels",
-      "comments",
-      "inspection"
-    ],
+    "linkedVocabularyTags": ["action-required", "missing-labels", "comments", "inspection"],
     "grammarFits": ["formal email"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_051"],
@@ -3516,11 +3220,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Resmi emaili kapanışsız bitirmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "email-closing",
-      "electrical-team",
-      "commissioning-department"
-    ],
+    "linkedVocabularyTags": ["email-closing", "electrical-team", "commissioning-department"],
     "grammarFits": ["verb to be", "formal email"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_049"],
@@ -3584,12 +3284,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "recommendation",
-      "damaged-cable",
-      "verify-settings",
-      "testing"
-    ],
+    "linkedVocabularyTags": ["recommendation", "damaged-cable", "verify-settings", "testing"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_018"],
@@ -3602,12 +3297,7 @@
       "writing-production",
       "report-writing"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "The contractor should replace the damaged cable.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3659,12 +3349,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Recommend sonrası to infinitive ile kişiyi yanlış bağlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "recommend-that",
-      "earthing-system",
-      "test-repeat",
-      "consultant"
-    ],
+    "linkedVocabularyTags": ["recommend-that", "earthing-system", "test-repeat", "consultant"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_054"],
@@ -3677,12 +3362,7 @@
       "writing-production",
       "report-writing"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "We recommend that the contractor check the earthing system.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3734,13 +3414,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Better sonrası than olmadan bağlamı belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "better-to",
-      "cable-route",
-      "labeling",
-      "walkdown",
-      "approved"
-    ],
+    "linkedVocabularyTags": ["better-to", "cable-route", "labeling", "walkdown", "approved"],
     "grammarFits": ["verb to be", "technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_025"],
@@ -3804,13 +3478,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Related with kullanmak; doğru kalıp related to.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "related-to",
-      "control-wiring",
-      "material-approval",
-      "issue",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["related-to", "control-wiring", "material-approval", "issue", "delay"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_038"],
@@ -3875,12 +3543,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Cause/cause by yapısını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "caused-by",
-      "loose-connection",
-      "late-delivery",
-      "root-cause"
-    ],
+    "linkedVocabularyTags": ["caused-by", "loose-connection", "late-delivery", "root-cause"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_013"],
@@ -3893,12 +3556,7 @@
       "report-writing",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "procurement",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "procurement", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "The alarm was caused by a loose connection.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3968,12 +3626,7 @@
       "report-writing",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "This may affect the commissioning schedule.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4025,12 +3678,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Than yerine from kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "better-than",
-      "permanent-access",
-      "temporary-ladder",
-      "cable-route"
-    ],
+    "linkedVocabularyTags": ["better-than", "permanent-access", "temporary-ladder", "cable-route"],
     "grammarFits": ["verb to be", "technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_025"],
@@ -4094,13 +3742,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Suitable for/than preposition farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "more-suitable",
-      "cable-size",
-      "night-shift",
-      "shutdown",
-      "option"
-    ],
+    "linkedVocabularyTags": ["more-suitable", "cable-size", "night-shift", "shutdown", "option"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_026"],
@@ -4165,13 +3807,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Risk ve risky kelimelerini karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "less-risky",
-      "bypass",
-      "manual-switching",
-      "scaffold",
-      "ladder"
-    ],
+    "linkedVocabularyTags": ["less-risky", "bypass", "manual-switching", "scaffold", "ladder"],
     "grammarFits": ["risk language", "technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_026"],
@@ -4236,12 +3872,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "That clause içinde özne-fiil eksik bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "that-clause",
-      "energized-panel",
-      "material-delivery",
-      "confirmed"
-    ],
+    "linkedVocabularyTags": ["that-clause", "energized-panel", "material-delivery", "confirmed"],
     "grammarFits": ["simple sentence"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_046"],
@@ -4310,12 +3941,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Whether ile if'i resmi yazışmada rastgele değiştirmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "whether-clause",
-      "test-complete",
-      "access-available",
-      "confirm"
-    ],
+    "linkedVocabularyTags": ["whether-clause", "test-complete", "access-available", "confirm"],
     "grammarFits": ["simple sentence"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_048"],
@@ -4378,12 +4004,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Need to sonrası V-ing kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "need-to",
-      "revise",
-      "cable-schedule",
-      "verify-settings"
-    ],
+    "linkedVocabularyTags": ["need-to", "revise", "cable-schedule", "verify-settings"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_a2_017"],
@@ -4448,13 +4069,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Avoid sonrası to infinitive kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "avoid",
-      "delaying",
-      "inspection",
-      "live-cables",
-      "risk-prevention"
-    ],
+    "linkedVocabularyTags": ["avoid", "delaying", "inspection", "live-cables", "risk-prevention"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_059"],
@@ -4467,13 +4082,7 @@
       "writing-production",
       "report-writing"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "We must avoid delaying the inspection.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4525,11 +4134,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Recommend checking ile recommend to check'i karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "recommend-checking",
-      "earthing-continuity",
-      "as-built-drawing"
-    ],
+    "linkedVocabularyTags": ["recommend-checking", "earthing-continuity", "as-built-drawing"],
     "grammarFits": ["technical reporting"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_055"],
@@ -4542,12 +4147,7 @@
       "writing-production",
       "report-writing"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "project-management"],
     "taskPromptTemplate": "Write one formal site/report sentence using the target reporting pattern.",
     "minimumUserOutput": "We recommend checking the earthing continuity.",
     "masteryCriteria": "User can recognize, correct and produce this B1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4669,12 +4269,7 @@
     "mistakeType": "wrong preposition",
     "commonMistakes": "Related with yaygın ama resmi kullanımda zayıftır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "related-to",
-      "fire-stopping",
-      "NCR",
-      "documentation"
-    ],
+    "linkedVocabularyTags": ["related-to", "fire-stopping", "NCR", "documentation"],
     "grammarFits": ["prepositions"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_057"],
@@ -4807,13 +4402,7 @@
     "mistakeType": "wrong preposition",
     "commonMistakes": "Kendi fikrini 'according to me' ile ifade etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "according-to",
-      "schedule",
-      "manufacturer",
-      "calibration",
-      "source"
-    ],
+    "linkedVocabularyTags": ["according-to", "schedule", "manufacturer", "calibration", "source"],
     "grammarFits": ["prepositions"],
     "difficulty": 3,
     "prerequisites": ["grammar_b1_063"],

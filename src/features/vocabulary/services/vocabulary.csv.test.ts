@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { VocabularyCsvService, type CsvWord } from './vocabulary.csv';
+
+import { type CsvWord, VocabularyCsvService } from './vocabulary.csv';
 
 const sampleWords: CsvWord[] = [
   {

@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
+
 import { useLocation } from 'react-router-dom';
-import { useBetaStore } from './beta.store';
+
 import { BetaService } from './beta.service';
+import { useBetaStore } from './beta.store';
 
 export const BetaAnalyticsTracker = () => {
   const location = useLocation();

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
 import { GrammarDashboardService } from './grammar.dashboard';
-import type { GrammarRuleProgress } from './grammar.progress';
 import type { ErrorCategory } from './grammar.error-patterns';
+import type { GrammarRuleProgress } from './grammar.progress';
 
 const makeProgress = (
   id: string,
@@ -78,9 +79,7 @@ describe('GrammarDashboardService', () => {
       };
       const errorSummary = {
         totalErrors: 10,
-        topCategories: [
-          { category: 'tense' as ErrorCategory, count: 8, percentage: 80 },
-        ],
+        topCategories: [{ category: 'tense' as ErrorCategory, count: 8, percentage: 80 }],
       };
       const dashboard = GrammarDashboardService.buildDashboard(
         progress,
@@ -94,15 +93,9 @@ describe('GrammarDashboardService', () => {
 
   describe('getCategoryStrengthColor', () => {
     it('returns correct colors', () => {
-      expect(GrammarDashboardService.getCategoryStrengthColor(90)).toBe(
-        '#22c55e'
-      );
-      expect(GrammarDashboardService.getCategoryStrengthColor(50)).toBe(
-        '#eab308'
-      );
-      expect(GrammarDashboardService.getCategoryStrengthColor(10)).toBe(
-        '#ef4444'
-      );
+      expect(GrammarDashboardService.getCategoryStrengthColor(90)).toBe('#22c55e');
+      expect(GrammarDashboardService.getCategoryStrengthColor(50)).toBe('#eab308');
+      expect(GrammarDashboardService.getCategoryStrengthColor(10)).toBe('#ef4444');
     });
   });
 });

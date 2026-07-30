@@ -18,9 +18,7 @@ export const WritingModelAnswer = ({
       </div>
       {suggestions.length > 0 && (
         <div className="rounded-[16px] border border-border-soft bg-surface-hover p-5">
-          <h3 className="text-sm font-black text-foreground">
-            Improvement suggestions
-          </h3>
+          <h3 className="text-sm font-black text-foreground">Improvement suggestions</h3>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted-copy">
             {suggestions.map((suggestion) => (
               <li key={suggestion}>{suggestion}</li>

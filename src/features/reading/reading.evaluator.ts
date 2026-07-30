@@ -1,29 +1,25 @@
+import { ScoringService } from '@/core/learning/scoring.service';
+
 import {
+  DetailedAnswerFeedback,
+  ReadingEvaluationResult,
   ReadingMission,
   ReadingSubmission,
-  ReadingEvaluationResult,
-  DetailedAnswerFeedback,
 } from './reading.types';
-import { ScoringService } from '@/core/learning/scoring.service';
 
 interface QuestionEvalResult {
   isCorrect: boolean;
   category: 'comprehension' | 'tech' | 'vocab';
 }
 
-const evaluateMultipleChoice = (
-  userAns: string,
-  correctAnswer: string
-): boolean =>
+const evaluateMultipleChoice = (userAns: string, correctAnswer: string): boolean =>
   userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0);
 
 const evaluateTrueFalse = (userAns: string, correctAnswer: string): boolean => {
   const u = userAns.toLowerCase();
   const c = correctAnswer.toLowerCase();
   return (
-    u === c ||
-    (u.startsWith('t') && c.startsWith('t')) ||
-    (u.startsWith('f') && c.startsWith('f'))
+    u === c || (u.startsWith('t') && c.startsWith('t')) || (u.startsWith('f') && c.startsWith('f'))
   );
 };
 
@@ -34,18 +30,15 @@ const evaluateKeywordAnswer = (
 ): boolean => {
   const lower = userAns.toLowerCase();
   return (
-    keywords?.some((k) => lower.includes(k.toLowerCase())) ||
-    lower === correctAnswer.toLowerCase()
+    keywords?.some((k) => lower.includes(k.toLowerCase())) || lower === correctAnswer.toLowerCase()
   );
 };
 
 const evaluateShortAnswer = (userAns: string, keywords?: string[]): boolean => {
   const lower = userAns.toLowerCase();
   if (lower.length <= 5) return false;
-  const matched =
-    keywords?.filter((k) => lower.includes(k.toLowerCase())) ?? [];
-  const ratio =
-    keywords && keywords.length > 0 ? matched.length / keywords.length : 1.0;
+  const matched = keywords?.filter((k) => lower.includes(k.toLowerCase())) ?? [];
+  const ratio = keywords && keywords.length > 0 ? matched.length / keywords.length : 1.0;
   return ratio >= 0.5;
 };
 
@@ -113,22 +106,14 @@ export const ReadingEvaluator = {
         : 100;
 
     const technicalAccuracyScore =
-      counts.tech[0] > 0
-        ? Math.round((counts.tech[1] / counts.tech[0]) * 100)
-        : 100;
+      counts.tech[0] > 0 ? Math.round((counts.tech[1] / counts.tech[0]) * 100) : 100;
 
-    const qVocabRatio =
-      counts.vocab[0] > 0 ? counts.vocab[1] / counts.vocab[0] : 1.0;
+    const qVocabRatio = counts.vocab[0] > 0 ? counts.vocab[1] / counts.vocab[0] : 1.0;
     const clickBonus = Math.min(30, clickedVocabCount * 15);
-    const vocabularyScore = Math.min(
-      100,
-      Math.round(qVocabRatio * 70 + clickBonus)
-    );
+    const vocabularyScore = Math.min(100, Math.round(qVocabRatio * 70 + clickBonus));
 
     const finalScore = Math.round(
-      comprehensionScore * 0.4 +
-        vocabularyScore * 0.3 +
-        technicalAccuracyScore * 0.3
+      comprehensionScore * 0.4 + vocabularyScore * 0.3 + technicalAccuracyScore * 0.3
     );
 
     const scoringResult = ScoringService.calculateScore({
@@ -172,9 +157,7 @@ export const ReadingEvaluator = {
       eloChange: scoringResult.eloChange,
       strengths: Array.from(new Set(strengths)),
       weaknesses:
-        finalWeaknesses.length > 0
-          ? Array.from(new Set(finalWeaknesses))
-          : ['None detected'],
+        finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
       feedback: scoringResult.feedback,
       detailedAnswers,
     };

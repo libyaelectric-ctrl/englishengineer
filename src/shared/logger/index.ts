@@ -18,8 +18,7 @@ const LOG_LEVELS: Record<LogLevel, number> = {
 const ENV_LEVEL = ((): LogLevel => {
   const meta = import.meta as { env?: Record<string, string | undefined> };
   const raw = meta.env?.VITE_LOG_LEVEL;
-  if (raw === 'debug' || raw === 'info' || raw === 'warn' || raw === 'error')
-    return raw;
+  if (raw === 'debug' || raw === 'info' || raw === 'warn' || raw === 'error') return raw;
   const isProd = meta.env?.VITE_ENVIRONMENT_MODE === 'production';
   return isProd ? 'warn' : 'debug';
 })();

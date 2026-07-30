@@ -1,6 +1,7 @@
 import { create } from 'zustand';
-import { QuickAIDraft, WorkToolsPreferences } from './work-tools.types';
+
 import { WorkToolsService } from './work-tools.service';
+import { QuickAIDraft, WorkToolsPreferences } from './work-tools.types';
 
 interface WorkToolsState extends WorkToolsPreferences {
   toggleFavorite: (phraseId: string) => void;
@@ -14,11 +15,9 @@ const initial = WorkToolsService.load();
 
 export const useWorkToolsStore = create<WorkToolsState>((set, get) => ({
   ...initial,
-  toggleFavorite: (phraseId) =>
-    set(WorkToolsService.toggleFavorite(phraseId, get())),
+  toggleFavorite: (phraseId) => set(WorkToolsService.toggleFavorite(phraseId, get())),
   remember: (itemId) => set(WorkToolsService.remember(itemId, get())),
-  rememberSearch: (search) =>
-    set(WorkToolsService.rememberSearch(search, get())),
+  rememberSearch: (search) => set(WorkToolsService.rememberSearch(search, get())),
   sendToQuickAI: (draft) => set(WorkToolsService.setQuickAIDraft(draft, get())),
   clearQuickAIDraft: () => {
     const next = { ...get(), quickAIDraft: null };

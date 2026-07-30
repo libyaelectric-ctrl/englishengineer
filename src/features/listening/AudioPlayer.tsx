@@ -1,19 +1,14 @@
-import { useEffect, useRef, useCallback } from 'react';
-import {
-  Play,
-  Pause,
-  RotateCcw,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  CheckCircle,
-} from 'lucide-react';
+import { CheckCircle, Pause, Play, RotateCcw, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+
+import { useCallback, useEffect, useRef } from 'react';
+
+import { Button } from '@/shared/components/Button';
+import { logger } from '@/shared/logger';
+
 import { useListeningPlaybackStore } from './listening-playback.store';
 import { ListeningHelpers } from './listening.helpers';
 import type { ListeningPlaybackSpeed } from './listening.types';
 import type { ListeningMission } from './listening.types';
-import { Button } from '@/shared/components/Button';
-import { logger } from '@/shared/logger';
 
 const SPEED_OPTIONS: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
 
@@ -26,35 +21,23 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isPlaying = useListeningPlaybackStore((s) => s.isPlaying);
-  const currentTimeSeconds = useListeningPlaybackStore(
-    (s) => s.currentTimeSeconds
-  );
-  const totalDurationSeconds = useListeningPlaybackStore(
-    (s) => s.totalDurationSeconds
-  );
+  const currentTimeSeconds = useListeningPlaybackStore((s) => s.currentTimeSeconds);
+  const totalDurationSeconds = useListeningPlaybackStore((s) => s.totalDurationSeconds);
   const playbackSpeed = useListeningPlaybackStore((s) => s.playbackSpeed);
   const isAudioLoading = useListeningPlaybackStore((s) => s.isAudioLoading);
   const audioError = useListeningPlaybackStore((s) => s.audioError);
   const resumePositions = useListeningPlaybackStore((s) => s.resumePositions);
   const replayCounts = useListeningPlaybackStore((s) => s.replayCounts);
-  const audioCompletedMissionIds = useListeningPlaybackStore(
-    (s) => s.audioCompletedMissionIds
-  );
+  const audioCompletedMissionIds = useListeningPlaybackStore((s) => s.audioCompletedMissionIds);
   const startPlaying = useListeningPlaybackStore((s) => s.startPlaying);
   const pausePlaying = useListeningPlaybackStore((s) => s.pausePlaying);
   const replayPlaying = useListeningPlaybackStore((s) => s.replayPlaying);
   const setPlaybackSpeed = useListeningPlaybackStore((s) => s.setPlaybackSpeed);
   const setAudioLoading = useListeningPlaybackStore((s) => s.setAudioLoading);
   const setAudioError = useListeningPlaybackStore((s) => s.setAudioError);
-  const updateAudioProgress = useListeningPlaybackStore(
-    (s) => s.updateAudioProgress
-  );
-  const recordListeningSecond = useListeningPlaybackStore(
-    (s) => s.recordListeningSecond
-  );
-  const markAudioCompleted = useListeningPlaybackStore(
-    (s) => s.markAudioCompleted
-  );
+  const updateAudioProgress = useListeningPlaybackStore((s) => s.updateAudioProgress);
+  const recordListeningSecond = useListeningPlaybackStore((s) => s.recordListeningSecond);
+  const markAudioCompleted = useListeningPlaybackStore((s) => s.markAudioCompleted);
   const recordReplay = useListeningPlaybackStore((s) => s.recordReplay);
 
   const isCompleted = audioCompletedMissionIds.includes(mission.id);
@@ -102,7 +85,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
       audio.pause();
       audioRef.current = null;
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- mission.id is the key dep; Zustand selectors are stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mission.id is the key dep; Zustand selectors are stable
   }, [mission.id, mission.audioDurationSeconds]);
 
   // Load audio source when mission changes
@@ -118,7 +101,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
     if (resumePosition > 0) {
       audio.currentTime = resumePosition;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- audioRef/setAudioLoading are stable refs/setters
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- audioRef/setAudioLoading are stable refs/setters
   }, [mission.audioUrl, resumePosition]);
 
   // Sync playback speed
@@ -251,9 +234,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
             </span>
           )}
           {replayCount > 0 && (
-            <span className="text-xs text-muted-copy">
-              Replay #{replayCount}
-            </span>
+            <span className="text-xs text-muted-copy">Replay #{replayCount}</span>
           )}
         </div>
       </div>
@@ -318,11 +299,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
               title={isPlaying ? 'Pause' : 'Play'}
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5 ml-0.5" />
-              )}
+              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
             </Button>
 
             <Button

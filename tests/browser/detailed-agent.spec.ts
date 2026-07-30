@@ -1,5 +1,5 @@
 ﻿/* eslint-disable @typescript-eslint/no-require-imports */
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 const SITE = 'https://englishengineer.vercel.app';
 
@@ -12,10 +12,7 @@ interface TestResult {
 
 const results: TestResult[] = [];
 
-async function runTest(
-  name: string,
-  fn: () => Promise<string>
-): Promise<TestResult> {
+async function runTest(name: string, fn: () => Promise<string>): Promise<TestResult> {
   const start = Date.now();
   try {
     const detail = await fn();
@@ -37,9 +34,7 @@ test.describe('Detailed Agent Report', () => {
       await page.goto(SITE + '/login');
       await page.waitForTimeout(500);
       const loginPage = await page.getByText(/welcome back/i).isVisible();
-      const demoBtn = await page
-        .getByRole('button', { name: /try demo mode/i })
-        .isVisible();
+      const demoBtn = await page.getByRole('button', { name: /try demo mode/i }).isVisible();
       const socialBtns = await page
         .locator('button')
         .filter({ hasText: /continue with/i })
@@ -74,9 +69,7 @@ test.describe('Detailed Agent Report', () => {
     await runTest('Vocabulary Page', async () => {
       await page.goto(SITE + '/vocabulary');
       await page.waitForTimeout(2000);
-      const wordCards = await page
-        .locator('[data-testid="vocabulary-word-card"]')
-        .count();
+      const wordCards = await page.locator('[data-testid="vocabulary-word-card"]').count();
       const learnBtn = await page
         .getByRole('button', { name: /learn this word/i })
         .first()
@@ -94,9 +87,7 @@ test.describe('Detailed Agent Report', () => {
     await runTest('Vocabulary Learn Action', async () => {
       await page.goto(SITE + '/vocabulary');
       await page.waitForTimeout(2000);
-      const learnBtn = page
-        .getByRole('button', { name: /learn this word/i })
-        .first();
+      const learnBtn = page.getByRole('button', { name: /learn this word/i }).first();
       if (await learnBtn.isVisible()) {
         await learnBtn.click();
         await page.waitForTimeout(1000);
@@ -139,10 +130,7 @@ test.describe('Detailed Agent Report', () => {
     await runTest('Reading Page', async () => {
       await page.goto(SITE + '/reading');
       await page.waitForTimeout(2000);
-      const missions = await page
-        .locator('button')
-        .filter({ hasText: /begin/i })
-        .count();
+      const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
       const levelFilter = await page
         .locator('button')
         .filter({ hasText: /my level/i })
@@ -154,10 +142,7 @@ test.describe('Detailed Agent Report', () => {
     await runTest('Writing Page', async () => {
       await page.goto(SITE + '/writing');
       await page.waitForTimeout(2000);
-      const missions = await page
-        .locator('button')
-        .filter({ hasText: /begin/i })
-        .count();
+      const missions = await page.locator('button').filter({ hasText: /begin/i }).count();
       return `Writing missions: ${missions}`;
     });
 
@@ -199,9 +184,7 @@ test.describe('Detailed Agent Report', () => {
     // 13. Super User
     await runTest('Super User Login', async () => {
       await page.goto(SITE + '/login');
-      await page
-        .getByPlaceholder(/you@example.com/i)
-        .fill('catexozcan@gmail.com');
+      await page.getByPlaceholder(/you@example.com/i).fill('catexozcan@gmail.com');
       await page.getByPlaceholder(/â€¢/).fill('123456');
       await page.getByRole('button', { name: /sign in/i }).click();
       try {

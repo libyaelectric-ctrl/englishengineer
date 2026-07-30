@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
-import { describe, before, after, it } from 'node:test';
+import type { Server } from 'node:http';
+import { after, before, describe, it } from 'node:test';
 import request from 'supertest';
+
 import { createApp } from '../../src/app.js';
 import { createBackendConfig } from '../../src/config.js';
-
-import type { Server } from 'node:http';
 
 let server: Server;
 let baseUrl: string;

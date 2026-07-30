@@ -1,12 +1,10 @@
 import { MissionDifficulty } from '@/core/learning';
-import {
-  VocabularyDiscipline,
-  VocabularyEntry,
-} from '../types/vocabulary.types';
+
+import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
 import { expansionCategories } from './expansion-categories';
-import { meaningMap } from './expansion-data/meanings';
-import { examples, resolveExample } from './expansion-data/examples';
 import { resolveCollocations } from './expansion-data/collocations';
+import { examples, resolveExample } from './expansion-data/examples';
+import { meaningMap } from './expansion-data/meanings';
 
 type PartOfSpeech = VocabularyEntry['partOfSpeech'];
 
@@ -54,11 +52,7 @@ const getMeaning = (term: string, discipline: string): string => {
   return meaningMap[discipline]?.[term] || term;
 };
 
-const getDefinition = (
-  term: string,
-  discipline: string,
-  context: string
-): string => {
+const getDefinition = (term: string, discipline: string, context: string): string => {
   const definitions: Record<string, string> = {
     'Electrical Engineering': `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında yaygın olarak kullanılır.`,
     'Mechanical Engineering': `${term}, mekanik sistem tasarımında ve işletmesinde temel bir unsurdur. Sistem verimliliği ve güvenilirliği üzerinde doğrudan etkisi vardır.`,
@@ -77,9 +71,7 @@ const getDefinition = (
 };
 
 const getExample = (term: string, discipline: string): string => {
-  const pool = examples[discipline] || [
-    `The ${term} was verified during the quality review.`,
-  ];
+  const pool = examples[discipline] || [`The ${term} was verified during the quality review.`];
   let hash = 0;
   const str = term + discipline;
   for (let i = 0; i < str.length; i++) {
@@ -114,9 +106,7 @@ export function buildExpansionRows(): VocabularyContentRow[] {
   );
 }
 
-export function dedupeRowsByWord(
-  contentRows: VocabularyContentRow[]
-): VocabularyContentRow[] {
+export function dedupeRowsByWord(contentRows: VocabularyContentRow[]): VocabularyContentRow[] {
   const seen = new Set<string>();
   return contentRows.filter((item) => {
     const key = item.word.trim().toLowerCase();
@@ -126,15 +116,11 @@ export function dedupeRowsByWord(
   });
 }
 
-export function buildEntries(
-  rawData: VocabularyContentRow[]
-): VocabularyEntry[] {
+export function buildEntries(rawData: VocabularyContentRow[]): VocabularyEntry[] {
   const beginnerRows = rawData.filter((r) => r.difficulty === 'Beginner');
   const contentRows = rawData.filter((r) => r.difficulty !== 'Beginner');
 
-  const beginnerRowsByWord = new Map(
-    beginnerRows.map((item) => [item.word.toLowerCase(), item])
-  );
+  const beginnerRowsByWord = new Map(beginnerRows.map((item) => [item.word.toLowerCase(), item]));
   const leveledExistingRows = [...contentRows, ...buildExpansionRows()].map(
     (item) => beginnerRowsByWord.get(item.word.toLowerCase()) ?? item
   );

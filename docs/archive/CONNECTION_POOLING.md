@@ -40,18 +40,14 @@ EngineerOS uses Supabase's built-in connection pooling (PgBouncer) for efficient
 
 ```javascript
 // supabase-billing-repository.js
-const supabase = createClient(
-  config.supabaseUrl,
-  config.supabaseServiceRoleKey,
-  {
-    auth: {
-      persistSession: false,
-    },
-    global: {
-      fetch: wrappedFetch,
-    },
-  }
-);
+const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+  auth: {
+    persistSession: false,
+  },
+  global: {
+    fetch: wrappedFetch,
+  },
+});
 ```
 
 ## Best Practices

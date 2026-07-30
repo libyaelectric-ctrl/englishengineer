@@ -87,12 +87,7 @@ export interface BillingProviderStatus {
   detail: string;
 }
 
-export type BillingStatusTone =
-  | 'neutral'
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'danger';
+export type BillingStatusTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 
 export interface BillingStatusPresentation {
   planId: BillingPlanId;

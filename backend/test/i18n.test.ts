@@ -1,6 +1,7 @@
-import { describe, it } from 'node:test';
+import type { NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
-import type { Request, Response, NextFunction } from 'express';
+import { describe, it } from 'node:test';
+
 import { createI18nMiddleware } from '../src/i18n.js';
 
 describe('i18n middleware', () => {

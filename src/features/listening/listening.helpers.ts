@@ -8,10 +8,7 @@ export const ListeningHelpers = {
     return 'Audio asset could not be loaded. The file may be unavailable or the browser may be offline.';
   },
 
-  normalizeDurationSeconds(
-    browserDuration: number,
-    metadataDuration: number
-  ): number {
+  normalizeDurationSeconds(browserDuration: number, metadataDuration: number): number {
     if (Number.isFinite(browserDuration) && browserDuration > 0) {
       return Math.round(browserDuration);
     }
@@ -47,9 +44,7 @@ export const ListeningHelpers = {
   /**
    * Retrieves status color string for progress bars or indicator dots based on difficulty.
    */
-  getDifficultyColor(
-    difficulty: string
-  ): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
+  getDifficultyColor(difficulty: string): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
     switch (difficulty.toLowerCase()) {
       case 'advanced':
         return 'rose';

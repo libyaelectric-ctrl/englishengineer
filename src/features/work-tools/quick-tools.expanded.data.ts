@@ -61,11 +61,7 @@ const MEETING_TOPICS = [
     'identify one accountable action owner',
     'tek bir sorumlu aksiyon sahibini belirlemek',
   ],
-  [
-    'Ask for deadline',
-    'obtain a firm completion date',
-    'kesin bir bitiş tarihi almak',
-  ],
+  ['Ask for deadline', 'obtain a firm completion date', 'kesin bir bitiş tarihi almak'],
   [
     'Confirm scope',
     'define what is included and excluded',
@@ -106,10 +102,8 @@ const MEETING_TOPICS = [
 const MEETING_PATTERNS = [
   {
     phrase: (topic: string) => `May I pause here so we can ${topic}?`,
-    meaning: (topic: string) =>
-      `Burada durup ${topic} için ilerleyebilir miyiz?`,
-    example: (topic: string) =>
-      `Before we close this item, may I pause here so we can ${topic}?`,
+    meaning: (topic: string) => `Burada durup ${topic} için ilerleyebilir miyiz?`,
+    example: (topic: string) => `Before we close this item, may I pause here so we can ${topic}?`,
     tone: 'Polite and controlled',
   },
   {
@@ -173,49 +167,41 @@ const CATEGORY_EXPLANATION: Record<string, string> = {
   Electrical: 'electrical distribution, installation, protection or testing',
   Mechanical: 'mechanical services, HVAC, water systems or equipment operation',
   Civil: 'structural, concrete, earthwork or civil construction',
-  Architectural:
-    'architectural coordination, access, finishes or life-safety detailing',
+  Architectural: 'architectural coordination, access, finishes or life-safety detailing',
   'QA/QC': 'inspection, traceability, acceptance and quality close-out',
   HSE: 'hazard control, safe systems of work and incident prevention',
   Commissioning: 'system readiness, testing, integration and handover',
-  Procurement:
-    'technical procurement, manufacturing, delivery and vendor control',
-  'Site Management':
-    'programme, resources, coordination and site delivery control',
+  Procurement: 'technical procurement, manufacturing, delivery and vendor control',
+  'Site Management': 'programme, resources, coordination and site delivery control',
 };
 
 const EXAMPLE_PATTERNS = [
   (term: string) =>
     `Confirm the ${term} requirement against the approved drawing before work starts.`,
-  (term: string) =>
-    `The supervisor recorded the ${term} status in today’s site report.`,
-  (term: string) =>
-    `Please include the ${term} evidence in the inspection package.`,
-  (term: string) =>
-    `The coordination team must close the ${term} issue before the next activity.`,
-  (term: string) =>
-    `Verify the ${term} during the joint site walk and record any exception.`,
+  (term: string) => `The supervisor recorded the ${term} status in today’s site report.`,
+  (term: string) => `Please include the ${term} evidence in the inspection package.`,
+  (term: string) => `The coordination team must close the ${term} issue before the next activity.`,
+  (term: string) => `Verify the ${term} during the joint site walk and record any exception.`,
 ];
 
-export const EXPANDED_SITE_DICTIONARY: SiteDictionaryTerm[] = Object.entries(
-  TERM_PACKS
-).flatMap(([category, packed], categoryIndex) =>
-  packed.split(';').map((pair, termIndex) => {
-    const [term, turkishMeaning] = pair.split('|');
-    return {
-      id: `dictionary-expanded-${categoryIndex + 1}-${termIndex + 1}`,
-      term,
-      turkishMeaning,
-      technicalExplanation: `${term} is a professional term used when documenting ${CATEGORY_EXPLANATION[category]}. Its acceptance must follow the applicable project drawing, specification, method or test criteria.`,
-      siteExample: EXAMPLE_PATTERNS[termIndex % EXAMPLE_PATTERNS.length](term),
-      commonWrongUsage: `Do not use “${term}” as a general substitute for a different component, activity or approval status; keep the project-specific meaning.`,
-      relatedTerms: packed
-        .split(';')
-        .slice(Math.max(0, termIndex - 1), termIndex + 2)
-        .map((item) => item.split('|')[0])
-        .filter((item) => item !== term),
-      category,
-      tags: [category.toLowerCase(), 'site dictionary', 'engineering term'],
-    };
-  })
+export const EXPANDED_SITE_DICTIONARY: SiteDictionaryTerm[] = Object.entries(TERM_PACKS).flatMap(
+  ([category, packed], categoryIndex) =>
+    packed.split(';').map((pair, termIndex) => {
+      const [term, turkishMeaning] = pair.split('|');
+      return {
+        id: `dictionary-expanded-${categoryIndex + 1}-${termIndex + 1}`,
+        term,
+        turkishMeaning,
+        technicalExplanation: `${term} is a professional term used when documenting ${CATEGORY_EXPLANATION[category]}. Its acceptance must follow the applicable project drawing, specification, method or test criteria.`,
+        siteExample: EXAMPLE_PATTERNS[termIndex % EXAMPLE_PATTERNS.length](term),
+        commonWrongUsage: `Do not use “${term}” as a general substitute for a different component, activity or approval status; keep the project-specific meaning.`,
+        relatedTerms: packed
+          .split(';')
+          .slice(Math.max(0, termIndex - 1), termIndex + 2)
+          .map((item) => item.split('|')[0])
+          .filter((item) => item !== term),
+        category,
+        tags: [category.toLowerCase(), 'site dictionary', 'engineering term'],
+      };
+    })
 );

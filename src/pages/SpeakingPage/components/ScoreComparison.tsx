@@ -1,7 +1,9 @@
 import { BarChart3 } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { ProgressBar } from '@/shared/components/ProgressBar';
+
 import type { ScoreResult } from '@/core/learning';
+
+import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
 
 interface ScoreComparisonProps {
   scoreResult: ScoreResult;

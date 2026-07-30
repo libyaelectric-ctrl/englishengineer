@@ -1,51 +1,45 @@
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Trophy } from 'lucide-react';
+
+import { useMemo } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { useLearningStore } from '@/core/learning';
-import { useAuthStore } from '@/features/auth';
-import {
-  GamificationService,
-  useGamificationStore,
-} from '@/features/gamification';
-import { canAccessFeature, useBillingStore } from '@/features/billing';
+
+import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+
 import { AssessmentService } from '@/features/assessment';
-import { buildLevelProfile } from '@/features/level-system';
+import { useAuthStore } from '@/features/auth';
+import { canAccessFeature, useBillingStore } from '@/features/billing';
+import { GamificationService, useGamificationStore } from '@/features/gamification';
 import {
   buildSevenDayReport,
   getPersonalizedTasks,
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { Button } from '@/shared/components/Button';
+import { buildLevelProfile } from '@/features/level-system';
 
-import { DailyClaimBanner } from './DailyClaimBanner';
-import { GamificationMetrics } from './GamificationMetrics';
-import { GamificationContent } from './GamificationContent';
+import { AssessmentExplanation } from './AssessmentExplanation';
 import { CareerRoleSelector } from './CareerRoleSelector';
-import { TaskGrid } from './TaskGrid';
+import { DailyClaimBanner } from './DailyClaimBanner';
+import { GamificationContent } from './GamificationContent';
+import { GamificationMetrics } from './GamificationMetrics';
 import { MistakeLog } from './MistakeLog';
 import { ProgressReport } from './ProgressReport';
-import { AssessmentExplanation } from './AssessmentExplanation';
+import { TaskGrid } from './TaskGrid';
 
 export const ProgressNextStepsTab = () => {
   const navigate = useNavigate();
   const learning = useLearningStore();
   const subscription = useBillingStore((state) => state.subscription);
   const persistedGamification = useGamificationStore();
-  const claimDailyLoginReward = useGamificationStore(
-    (state) => state.claimDailyLoginReward
-  );
-  const gamification = GamificationService.getSummary(
-    learning,
-    persistedGamification
-  );
+  const claimDailyLoginReward = useGamificationStore((state) => state.claimDailyLoginReward);
+  const gamification = GamificationService.getSummary(learning, persistedGamification);
   const unlockedAchievements = learning.achievements.filter(
     (achievement) => achievement.unlocked
   ).length;
-  const fullGamificationEntitlement = canAccessFeature(
-    subscription,
-    'fullGamification'
-  );
+  const fullGamificationEntitlement = canAccessFeature(subscription, 'fullGamification');
 
   const intelligence = useLearningIntelligenceStore();
   const currentUser = useAuthStore((state) => state.currentUser);
@@ -119,25 +113,18 @@ export const ProgressNextStepsTab = () => {
         </SectionCard>
       )}
 
-      {fullGamificationEntitlement.allowed && (
-        <GamificationContent learningState={learning} />
-      )}
+      {fullGamificationEntitlement.allowed && <GamificationContent learningState={learning} />}
 
       <div className="border-t border-border-soft pt-8">
-        <h2 className="text-xl font-bold text-foreground mb-1">
-          Learning Intelligence
-        </h2>
+        <h2 className="text-xl font-bold text-foreground mb-1">Learning Intelligence</h2>
         <p className="text-xs text-muted-copy mb-6">
-          Role-based daily practice, repeated-mistake tracking and
-          evidence-based weekly guidance.
+          Role-based daily practice, repeated-mistake tracking and evidence-based weekly guidance.
         </p>
       </div>
 
       <CareerRoleSelector
         careerRole={intelligence.careerRole}
-        onRoleChange={(role) =>
-          intelligence.setCareerRole(role as typeof intelligence.careerRole)
-        }
+        onRoleChange={(role) => intelligence.setCareerRole(role as typeof intelligence.careerRole)}
       />
 
       <TaskGrid
@@ -154,10 +141,7 @@ export const ProgressNextStepsTab = () => {
           removeMistake={intelligence.removeMistake}
         />
 
-        <ProgressReport
-          report={report}
-          markReportGenerated={intelligence.markReportGenerated}
-        />
+        <ProgressReport report={report} markReportGenerated={intelligence.markReportGenerated} />
       </div>
 
       <AssessmentExplanation assessment={assessment} />

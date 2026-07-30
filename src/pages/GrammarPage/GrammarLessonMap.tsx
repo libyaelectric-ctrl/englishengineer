@@ -1,5 +1,7 @@
-import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+
+import { useState } from 'react';
+
 import { type LessonStatus } from './GrammarPageHelpers';
 
 type PathEntry = {
@@ -68,9 +70,7 @@ export const GrammarLessonMap = ({
         <div className="border-t border-border-soft bg-background/30 p-5">
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {pathGroups.map((group) => {
-              const masteredInGroup = group.entries.filter(
-                (e) => e.status === 'Mastered'
-              ).length;
+              const masteredInGroup = group.entries.filter((e) => e.status === 'Mastered').length;
               return (
                 <div
                   key={group.module}
@@ -103,18 +103,12 @@ export const GrammarLessonMap = ({
                                 : 'hover:bg-primary/5 text-foreground hover:text-primary border border-border-soft hover:border-primary/30'
                           }`}
                         >
-                          <span className="truncate text-xs font-semibold pr-2">
-                            {rule.title}
-                          </span>
+                          <span className="truncate text-xs font-semibold pr-2">{rule.title}</span>
                           <span className="flex shrink-0 items-center gap-1.5">
                             {locked ? (
-                              <span className="text-[10px] text-muted-copy opacity-75">
-                                🔒
-                              </span>
+                              <span className="text-[10px] text-muted-copy opacity-75">🔒</span>
                             ) : status === 'Mastered' ? (
-                              <span className="text-xs font-black text-success">
-                                ✓
-                              </span>
+                              <span className="text-xs font-black text-success">✓</span>
                             ) : status === 'Needs Reading/Writing' ? (
                               <span className="text-[10px] bg-warning/10 text-warning px-1.5 py-0.5 rounded-[4px] font-bold uppercase border border-warning/20">
                                 R/W

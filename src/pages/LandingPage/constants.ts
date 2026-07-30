@@ -1,11 +1,11 @@
 import {
-  Terminal,
-  Mic,
-  Headphones,
-  FolderOpen,
-  Bot,
   Activity,
+  Bot,
+  FolderOpen,
+  Headphones,
   type LucideIcon,
+  Mic,
+  Terminal,
 } from 'lucide-react';
 
 export const STRUCTURED_DATA = {

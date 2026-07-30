@@ -1,6 +1,7 @@
 import { Brain } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
 
 interface EvaluationScoresProps {
   evaluationResult: {
@@ -12,9 +13,7 @@ interface EvaluationScoresProps {
   };
 }
 
-export const EvaluationScores = ({
-  evaluationResult,
-}: EvaluationScoresProps) => (
+export const EvaluationScores = ({ evaluationResult }: EvaluationScoresProps) => (
   <SectionCard
     title="Latest Speaking Score"
     subtitle="Deterministic local text evaluation"

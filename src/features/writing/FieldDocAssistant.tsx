@@ -1,16 +1,18 @@
-import type { ElementType, FormEvent } from 'react';
-import { useState, useRef, useEffect, useCallback } from 'react';
 import {
-  FileText,
   AlertTriangle,
-  Clock,
-  Send,
-  Copy,
   Check,
-  Sparkles,
-  ShieldCheck,
+  Clock,
+  Copy,
   FileCheck2,
+  FileText,
+  Send,
+  ShieldCheck,
+  Sparkles,
 } from 'lucide-react';
+
+import type { ElementType, FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
 
 type DocType = 'rfi' | 'ncr' | 'rams' | 'eot';
@@ -72,33 +74,35 @@ export const FieldDocAssistant = () => {
     };
   }, []);
 
-  const handleGenerate = useCallback((e: FormEvent) => {
-    e.preventDefault();
-    if (!conflictDetails.trim()) return;
+  const handleGenerate = useCallback(
+    (e: FormEvent) => {
+      e.preventDefault();
+      if (!conflictDetails.trim()) return;
 
-    setIsGenerating(true);
+      setIsGenerating(true);
 
-    if (genTimerRef.current) clearTimeout(genTimerRef.current);
-    genTimerRef.current = setTimeout(() => {
-      let draftText = '';
-      const proj = projectName.trim() || 'PROJECT-ALPHAVOX-2026';
-      const ref =
-        clauseRef.trim() || 'Specification Section 15400 / FIDIC 20.1';
+      if (genTimerRef.current) clearTimeout(genTimerRef.current);
+      genTimerRef.current = setTimeout(() => {
+        let draftText = '';
+        const proj = projectName.trim() || 'PROJECT-ALPHAVOX-2026';
+        const ref = clauseRef.trim() || 'Specification Section 15400 / FIDIC 20.1';
 
-      if (activeType === 'rfi') {
-        draftText = `REQUEST FOR INFORMATION (RFI)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nReference: ${ref}\nSubject: Clarification Required for Technical Site Conflict\n\nDear Resident Engineer,\n\nWe request formal technical clarification regarding the following site condition:\n\n${conflictDetails.trim()}\n\nContractor Evaluation & Proposed Technical Solution:\nBased on applicable engineering standards, we recommend modifying the routing/detail to prevent site stoppage. Kindly confirm if the proposed modification meets the Consultant’s approval.\n\nImpact on Milestone Schedule: Pending Consultant response.\n\nSincerely,\nLead Project Engineer`;
-      } else if (activeType === 'ncr') {
-        draftText = `RESPONSE & DISPUTE TO NON-CONFORMANCE REPORT (NCR)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nClause / Spec Ref: ${ref}\nSubject: Technical Justification & Rectification Plan for Issued NCR\n\nDear QA/QC Manager,\n\nWe acknowledge receipt of the referenced NCR. Upon detailed engineering inspection, we present the following technical defense:\n\n${conflictDetails.trim()}\n\nCorrective & Preventive Action (CAPA) Plan:\n1. Re-inspection under joint Supervision Engineer presence.\n2. Verification against approved Shop Drawings & Method Statements.\n\nWe request the conditional clearance or complete closure of this NCR based on the above evidence.\n\nSincerely,\nQA/QC Lead Engineer`;
-      } else if (activeType === 'rams') {
-        draftText = `METHOD STATEMENT & RISK ASSESSMENT (RAMS)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nStandards: ISO 45001 / OSHA Compliance / Spec ${ref}\n\n1. SCOPE OF WORK & DESCRIPTION:\n${conflictDetails.trim()}\n\n2. HAZARD IDENTIFICATION & CONTROL MEASURES:\n- Fall Risk: Full-body safety harnesses, double lanyard, inspected scaffolding.\n- Electrical Risk: LOTO (Lockout/Tagout) protocols and insulated tools.\n- Overhead Hazards: Exclusion zone and certified crane rigging inspection.\n\n3. REQUIRED PERMIT TO WORK (PTW):\nHot Work Permit, Confined Space Entry, Lifting Permit.\n\nApproved By:\nSite HSE Director & Construction Manager`;
-      } else {
-        draftText = `NOTICE OF DELAY & EXTENSION OF TIME (EOT) CLAIM\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nContract Clause: FIDIC Sub-Clause 8.4 / 20.1 (${ref})\n\nDear Employer’s Representative,\n\nIn accordance with Contract conditions, we hereby give formal notice of an event giving rise to delay:\n\n${conflictDetails.trim()}\n\nImpact Analysis:\nThis employer-caused delay directly impacts the critical path of the project baseline schedule. Detailed delay fragnet network analysis will follow within the contractual 28-day window.\n\nWe reserve all rights to claim additional time and cost recovery.\n\nSincerely,\nCommercial & Contracts Manager`;
-      }
+        if (activeType === 'rfi') {
+          draftText = `REQUEST FOR INFORMATION (RFI)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nReference: ${ref}\nSubject: Clarification Required for Technical Site Conflict\n\nDear Resident Engineer,\n\nWe request formal technical clarification regarding the following site condition:\n\n${conflictDetails.trim()}\n\nContractor Evaluation & Proposed Technical Solution:\nBased on applicable engineering standards, we recommend modifying the routing/detail to prevent site stoppage. Kindly confirm if the proposed modification meets the Consultant’s approval.\n\nImpact on Milestone Schedule: Pending Consultant response.\n\nSincerely,\nLead Project Engineer`;
+        } else if (activeType === 'ncr') {
+          draftText = `RESPONSE & DISPUTE TO NON-CONFORMANCE REPORT (NCR)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nClause / Spec Ref: ${ref}\nSubject: Technical Justification & Rectification Plan for Issued NCR\n\nDear QA/QC Manager,\n\nWe acknowledge receipt of the referenced NCR. Upon detailed engineering inspection, we present the following technical defense:\n\n${conflictDetails.trim()}\n\nCorrective & Preventive Action (CAPA) Plan:\n1. Re-inspection under joint Supervision Engineer presence.\n2. Verification against approved Shop Drawings & Method Statements.\n\nWe request the conditional clearance or complete closure of this NCR based on the above evidence.\n\nSincerely,\nQA/QC Lead Engineer`;
+        } else if (activeType === 'rams') {
+          draftText = `METHOD STATEMENT & RISK ASSESSMENT (RAMS)\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nStandards: ISO 45001 / OSHA Compliance / Spec ${ref}\n\n1. SCOPE OF WORK & DESCRIPTION:\n${conflictDetails.trim()}\n\n2. HAZARD IDENTIFICATION & CONTROL MEASURES:\n- Fall Risk: Full-body safety harnesses, double lanyard, inspected scaffolding.\n- Electrical Risk: LOTO (Lockout/Tagout) protocols and insulated tools.\n- Overhead Hazards: Exclusion zone and certified crane rigging inspection.\n\n3. REQUIRED PERMIT TO WORK (PTW):\nHot Work Permit, Confined Space Entry, Lifting Permit.\n\nApproved By:\nSite HSE Director & Construction Manager`;
+        } else {
+          draftText = `NOTICE OF DELAY & EXTENSION OF TIME (EOT) CLAIM\n\nDate: ${new Date().toLocaleDateString()}\nProject: ${proj}\nContract Clause: FIDIC Sub-Clause 8.4 / 20.1 (${ref})\n\nDear Employer’s Representative,\n\nIn accordance with Contract conditions, we hereby give formal notice of an event giving rise to delay:\n\n${conflictDetails.trim()}\n\nImpact Analysis:\nThis employer-caused delay directly impacts the critical path of the project baseline schedule. Detailed delay fragnet network analysis will follow within the contractual 28-day window.\n\nWe reserve all rights to claim additional time and cost recovery.\n\nSincerely,\nCommercial & Contracts Manager`;
+        }
 
-      setGeneratedLetter(draftText);
-      setIsGenerating(false);
-    }, 1000);
-  }, [conflictDetails]);
+        setGeneratedLetter(draftText);
+        setIsGenerating(false);
+      }, 1000);
+    },
+    [conflictDetails]
+  );
 
   const handleCopy = useCallback(() => {
     if (!generatedLetter) return;
@@ -132,9 +136,7 @@ export const FieldDocAssistant = () => {
               <div className="flex w-full items-center justify-between">
                 <span
                   className={`p-2 rounded-lg ${
-                    isActive
-                      ? 'bg-primary text-white'
-                      : 'bg-surface-hover text-muted-copy'
+                    isActive ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -143,9 +145,7 @@ export const FieldDocAssistant = () => {
                   {tmpl.badge}
                 </span>
               </div>
-              <h3 className="mt-3 text-sm font-bold text-foreground">
-                {tmpl.title}
-              </h3>
+              <h3 className="mt-3 text-sm font-bold text-foreground">{tmpl.title}</h3>
               <p className="mt-1 text-xs text-muted-copy leading-relaxed line-clamp-2">
                 {tmpl.subtitle}
               </p>
@@ -273,8 +273,8 @@ export const FieldDocAssistant = () => {
             <div className="flex-1 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-border-soft rounded-xl bg-background/50 text-muted-copy space-y-2">
               <FileText className="h-8 w-8 text-muted-copy/60" />
               <p className="text-xs font-semibold">
-                Select a document template and enter technical details to draft
-                your C1/C2 field letter.
+                Select a document template and enter technical details to draft your C1/C2 field
+                letter.
               </p>
             </div>
           )}

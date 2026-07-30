@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { Button } from './Button';
 
 const meta: Meta<typeof Button> = {
@@ -8,14 +9,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: [
-        'primary',
-        'secondary',
-        'outline',
-        'ghost',
-        'danger',
-        'success',
-      ],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger', 'success'],
     },
     disabled: {
       control: 'boolean',

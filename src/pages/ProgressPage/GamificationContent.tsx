@@ -1,42 +1,26 @@
-import {
-  Award,
-  Calendar,
-  CheckCircle2,
-  Gift,
-  Layers,
-  Star,
-  Trophy,
-  Zap,
-} from 'lucide-react';
+import { Award, Calendar, CheckCircle2, Gift, Layers, Star, Trophy, Zap } from 'lucide-react';
+
 import { type LearningState } from '@/core/learning';
-import {
-  GamificationService,
-  useGamificationStore,
-} from '@/features/gamification';
-import { useLevelUpDetector } from '@/features/gamification/level-up.hook';
-import { LevelUpCelebration } from '@/features/gamification/components/LevelUpCelebration';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
-import { MissionList, DetailRow, MiniStat, FeedList } from './NextStepsHelpers';
+import { SectionCard } from '@/shared/components/SectionCard';
+
+import { GamificationService, useGamificationStore } from '@/features/gamification';
+import { LevelUpCelebration } from '@/features/gamification/components/LevelUpCelebration';
+import { useLevelUpDetector } from '@/features/gamification/level-up.hook';
+
+import { DetailRow, FeedList, MiniStat, MissionList } from './NextStepsHelpers';
 import { PersonalLeaderboard } from './PersonalLeaderboard';
 
-export const GamificationContent = ({
-  learningState,
-}: {
-  learningState: LearningState;
-}) => {
+export const GamificationContent = ({ learningState }: { learningState: LearningState }) => {
   const persistedGamification = useGamificationStore();
-  const gamification = GamificationService.getSummary(
-    learningState,
-    persistedGamification
-  );
-  const { justLeveledUp, acknowledge } = useLevelUpDetector(
-    gamification.levelInfo.currentLevel
-  );
+  const gamification = GamificationService.getSummary(learningState, persistedGamification);
+  const { justLeveledUp, acknowledge } = useLevelUpDetector(gamification.levelInfo.currentLevel);
 
   return (
     <>
-      <LevelUpCelebration level={justLeveledUp} onDismiss={acknowledge} />      <SectionCard
+      <LevelUpCelebration level={justLeveledUp} onDismiss={acknowledge} />{' '}
+      <SectionCard
         title="Level Progression"
         subtitle="Permanent level system derived from existing XP"
         icon={Trophy}
@@ -48,10 +32,7 @@ export const GamificationContent = ({
               <span>{gamification.levelInfo.currentXp} XP</span>
               <span>{gamification.levelInfo.nextLevelXp} XP</span>
             </div>
-            <ProgressBar
-              value={gamification.levelInfo.progressPercentage}
-              color="primary"
-            />
+            <ProgressBar value={gamification.levelInfo.progressPercentage} color="primary" />
           </div>
           <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-5 shadow-sm">
             <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-bold">
@@ -66,7 +47,6 @@ export const GamificationContent = ({
           </div>
         </div>
       </SectionCard>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <SectionCard
@@ -130,10 +110,7 @@ export const GamificationContent = ({
             icon={CheckCircle2}
           >
             <div className="grid grid-cols-2 gap-3">
-              <MiniStat
-                label="Daily"
-                value={`${gamification.challengeProgress.dailyCompleted}`}
-              />
+              <MiniStat label="Daily" value={`${gamification.challengeProgress.dailyCompleted}`} />
               <MiniStat
                 label="Weekly"
                 value={`${gamification.challengeProgress.weeklyCompleted}`}
@@ -142,10 +119,7 @@ export const GamificationContent = ({
                 label="Monthly"
                 value={`${gamification.challengeProgress.monthlyCompleted}`}
               />
-              <MiniStat
-                label="Chains"
-                value={`${gamification.challengeProgress.activeChains}`}
-              />
+              <MiniStat label="Chains" value={`${gamification.challengeProgress.activeChains}`} />
             </div>
           </SectionCard>
 
@@ -171,10 +145,7 @@ export const GamificationContent = ({
             subtitle="Locally persisted reward history"
             icon={Gift}
           >
-            <FeedList
-              items={gamification.recentRewards}
-              emptyLabel="No rewards claimed yet."
-            />
+            <FeedList items={gamification.recentRewards} emptyLabel="No rewards claimed yet." />
           </SectionCard>
 
           <SectionCard

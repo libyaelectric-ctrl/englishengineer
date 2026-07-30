@@ -1,12 +1,14 @@
-import type { CefrLevel } from '@/features/level-system';
 import {
-  includesNormalized,
-  isCefrAtOrBelow,
   type LearningDataSkill,
   type UserSkillProfile,
+  includesNormalized,
+  isCefrAtOrBelow,
 } from '@/core/learning';
-import { GrammarRepository } from './grammar.repository';
+
+import type { CefrLevel } from '@/features/level-system';
+
 import { GrammarProgressService } from './grammar.progress';
+import { GrammarRepository } from './grammar.repository';
 import type { GrammarExplanationLanguage, GrammarRule } from './grammar.types';
 
 export type GrammarTaskMix = 'safe' | 'stretch';
@@ -19,10 +21,7 @@ export const sortByCurriculumOrder = (rules: GrammarRule[]): GrammarRule[] =>
       a.title.localeCompare(b.title)
   );
 
-const applyTaskMix = (
-  rules: GrammarRule[],
-  mix?: GrammarTaskMix
-): GrammarRule[] => {
+const applyTaskMix = (rules: GrammarRule[], mix?: GrammarTaskMix): GrammarRule[] => {
   const sorted = sortByCurriculumOrder(rules);
   if (!mix) return sorted;
 
@@ -31,14 +30,10 @@ const applyTaskMix = (
     if (mix === 'safe') {
       return (
         progress.reviewStatus === 'Strong' ||
-        (progress.correctUsages > 0 &&
-          progress.correctUsages >= progress.incorrectUsages)
+        (progress.correctUsages > 0 && progress.correctUsages >= progress.incorrectUsages)
       );
     }
-    return (
-      progress.reviewStatus !== 'Strong' ||
-      progress.incorrectUsages > progress.correctUsages
-    );
+    return progress.reviewStatus !== 'Strong' || progress.incorrectUsages > progress.correctUsages;
   });
 
   return preferred.length > 0 ? preferred : sorted;
@@ -95,8 +90,6 @@ export const GrammarEngine = {
   ): Promise<string | null> {
     const rule = await GrammarRepository.getGrammarRuleById(ruleId);
     if (!rule) return null;
-    return language === 'turkish'
-      ? rule.turkishExplanation
-      : `${rule.title}: ${rule.explanation}`;
+    return language === 'turkish' ? rule.turkishExplanation : `${rule.title}: ${rule.explanation}`;
   },
 };

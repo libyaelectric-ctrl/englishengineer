@@ -1,12 +1,15 @@
 import { create } from 'zustand';
-import {
-  ListeningMission,
-  ListeningHistoryEntry,
-  ListeningEvaluationResult,
-} from './listening.types';
-import { ListeningService } from './listening.service';
-import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+
 import { logger } from '@/shared/logger';
+
+import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+
+import { ListeningService } from './listening.service';
+import {
+  ListeningEvaluationResult,
+  ListeningHistoryEntry,
+  ListeningMission,
+} from './listening.types';
 
 interface ListeningMissionsState {
   missions: ListeningMission[];
@@ -33,127 +36,121 @@ interface ListeningMissionsActions {
   resetAllMissionsProgress: () => void;
 }
 
-export const useListeningMissionsStore = create<
-  ListeningMissionsState & ListeningMissionsActions
->((set, get) => ({
-  missions: ListeningService.getMissions(),
-  selectedMissionId: 'listening_a1_safe_room',
-  answers: {},
-  summary: '',
-  userKeywords: '',
-  timeSpentSeconds: 0,
-  evaluationResult: null,
-  history: [],
-  completedMissions: {},
-  isSubmitting: false,
+export const useListeningMissionsStore = create<ListeningMissionsState & ListeningMissionsActions>(
+  (set, get) => ({
+    missions: ListeningService.getMissions(),
+    selectedMissionId: 'listening_a1_safe_room',
+    answers: {},
+    summary: '',
+    userKeywords: '',
+    timeSpentSeconds: 0,
+    evaluationResult: null,
+    history: [],
+    completedMissions: {},
+    isSubmitting: false,
 
-  initializeMissions: () => {
-    const state = ListeningService.getState();
-    const lastId = state.lastSelectedMissionId || 'listening_a1_safe_room';
-
-    set({
-      selectedMissionId: lastId,
-      history: state.history,
-      completedMissions: state.completedMissions,
-      answers: {},
-      summary: '',
-      userKeywords: '',
-      timeSpentSeconds: 0,
-      evaluationResult: null,
-    });
-  },
-
-  selectMission: (id: string) => {
-    ListeningService.setLastSelectedMissionId(id);
-    set({
-      selectedMissionId: id,
-      answers: {},
-      summary: '',
-      userKeywords: '',
-      timeSpentSeconds: 0,
-      evaluationResult: null,
-    });
-  },
-
-  setAnswer: (questionId: string, answer: string) => {
-    set((state) => ({
-      answers: { ...state.answers, [questionId]: answer },
-    }));
-  },
-
-  setSummary: (text: string) => set({ summary: text }),
-
-  setUserKeywords: (text: string) => set({ userKeywords: text }),
-
-  incrementTimer: () => {
-    set((state) => ({ timeSpentSeconds: state.timeSpentSeconds + 1 }));
-  },
-
-  submitCurrentMission: () => {
-    set({ isSubmitting: true });
-    const {
-      selectedMissionId,
-      answers,
-      summary,
-      userKeywords,
-      timeSpentSeconds,
-      missions,
-    } = get();
-    const timeSpentMinutes = Math.max(1, Math.round(timeSpentSeconds / 60));
-
-    try {
-      const result = ListeningService.submitSubmission({
-        missionId: selectedMissionId,
-        answers,
-        summary,
-        userKeywords,
-        timeSpentMinutes,
-      });
-
+    initializeMissions: () => {
       const state = ListeningService.getState();
-      const mission = missions.find((item) => item.id === selectedMissionId);
-      void KnowledgeCaptureService.capture({
-        cefrLevel: mission?.cefrLevel ?? 'A1',
-        vocabularyTerms: mission?.vocabulary.map((item) => item.term),
-      }).catch((err) => logger.d('KnowledgeCapture failed', err));
+      const lastId = state.lastSelectedMissionId || 'listening_a1_safe_room';
 
       set({
-        evaluationResult: result,
+        selectedMissionId: lastId,
         history: state.history,
         completedMissions: state.completedMissions,
-        isSubmitting: false,
+        answers: {},
+        summary: '',
+        userKeywords: '',
+        timeSpentSeconds: 0,
+        evaluationResult: null,
       });
+    },
 
-      return result;
-    } catch (error) {
-      set({ isSubmitting: false });
-      throw error;
-    }
-  },
+    selectMission: (id: string) => {
+      ListeningService.setLastSelectedMissionId(id);
+      set({
+        selectedMissionId: id,
+        answers: {},
+        summary: '',
+        userKeywords: '',
+        timeSpentSeconds: 0,
+        evaluationResult: null,
+      });
+    },
 
-  resetCurrentMission: () => {
-    set({
-      answers: {},
-      summary: '',
-      userKeywords: '',
-      timeSpentSeconds: 0,
-      evaluationResult: null,
-    });
-  },
+    setAnswer: (questionId: string, answer: string) => {
+      set((state) => ({
+        answers: { ...state.answers, [questionId]: answer },
+      }));
+    },
 
-  resetAllMissionsProgress: () => {
-    ListeningService.resetListeningState();
-    const state = ListeningService.getState();
+    setSummary: (text: string) => set({ summary: text }),
 
-    set({
-      selectedMissionId: 'listening_a1_safe_room',
-      answers: {},
-      summary: '',
-      userKeywords: '',
-      timeSpentSeconds: 0,
-      evaluationResult: null,
-      history: state.history,
-      completedMissions: state.completedMissions,
-    });
-  },
-}));
+    setUserKeywords: (text: string) => set({ userKeywords: text }),
+
+    incrementTimer: () => {
+      set((state) => ({ timeSpentSeconds: state.timeSpentSeconds + 1 }));
+    },
+
+    submitCurrentMission: () => {
+      set({ isSubmitting: true });
+      const { selectedMissionId, answers, summary, userKeywords, timeSpentSeconds, missions } =
+        get();
+      const timeSpentMinutes = Math.max(1, Math.round(timeSpentSeconds / 60));
+
+      try {
+        const result = ListeningService.submitSubmission({
+          missionId: selectedMissionId,
+          answers,
+          summary,
+          userKeywords,
+          timeSpentMinutes,
+        });
+
+        const state = ListeningService.getState();
+        const mission = missions.find((item) => item.id === selectedMissionId);
+        void KnowledgeCaptureService.capture({
+          cefrLevel: mission?.cefrLevel ?? 'A1',
+          vocabularyTerms: mission?.vocabulary.map((item) => item.term),
+        }).catch((err) => logger.d('KnowledgeCapture failed', err));
+
+        set({
+          evaluationResult: result,
+          history: state.history,
+          completedMissions: state.completedMissions,
+          isSubmitting: false,
+        });
+
+        return result;
+      } catch (error) {
+        set({ isSubmitting: false });
+        throw error;
+      }
+    },
+
+    resetCurrentMission: () => {
+      set({
+        answers: {},
+        summary: '',
+        userKeywords: '',
+        timeSpentSeconds: 0,
+        evaluationResult: null,
+      });
+    },
+
+    resetAllMissionsProgress: () => {
+      ListeningService.resetListeningState();
+      const state = ListeningService.getState();
+
+      set({
+        selectedMissionId: 'listening_a1_safe_room',
+        answers: {},
+        summary: '',
+        userKeywords: '',
+        timeSpentSeconds: 0,
+        evaluationResult: null,
+        history: state.history,
+        completedMissions: state.completedMissions,
+      });
+    },
+  })
+);

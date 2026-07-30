@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { FAQ_ITEMS } from './constants';
-import { AnimatedSection, SectionIntro } from './AnimatedComponents';
 import { ChevronDown } from 'lucide-react';
+
+import { useState } from 'react';
+
+import { AnimatedSection, SectionIntro } from './AnimatedComponents';
+import { FAQ_ITEMS } from './constants';
 
 export function FAQSection() {
   const [openQuestion, setOpenQuestion] = useState<number | null>(0);
@@ -14,13 +16,26 @@ export function FAQSection() {
             const isOpen = openQuestion === index;
             return (
               <AnimatedSection key={index} delay={index * 40}>
-                <div className={`rounded border transition-colors ${isOpen ? 'border-primary bg-background' : 'border-border-soft bg-background'}`}>
-                  <button onClick={() => setOpenQuestion(isOpen ? null : index)} className="flex w-full items-center justify-between p-5 text-left">
-                    <span className="text-sm font-semibold text-foreground pr-4">{item.question}</span>
-                    <ChevronDown className={`h-4 w-4 shrink-0 text-muted-copy transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <div
+                  className={`rounded border transition-colors ${isOpen ? 'border-primary bg-background' : 'border-border-soft bg-background'}`}
+                >
+                  <button
+                    onClick={() => setOpenQuestion(isOpen ? null : index)}
+                    className="flex w-full items-center justify-between p-5 text-left"
+                  >
+                    <span className="text-sm font-semibold text-foreground pr-4">
+                      {item.question}
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 shrink-0 text-muted-copy transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    />
                   </button>
-                  <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}>
-                    <p className="px-5 pb-5 text-sm leading-relaxed text-muted-copy">{item.answer}</p>
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96' : 'max-h-0'}`}
+                  >
+                    <p className="px-5 pb-5 text-sm leading-relaxed text-muted-copy">
+                      {item.answer}
+                    </p>
                   </div>
                 </div>
               </AnimatedSection>

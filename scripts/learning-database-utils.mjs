@@ -1,8 +1,8 @@
+import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import readXlsxFile from 'read-excel-file/node';
-import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import prettier from 'prettier';
+import readXlsxFile from 'read-excel-file/node';
 
 export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
 
@@ -30,9 +30,7 @@ export const readDatabaseSheet = async (filePath, sheetName) => {
   const records = rows
     .slice(1)
     .map((row) =>
-      Object.fromEntries(
-        headers.map((header, columnIndex) => [header, row[columnIndex] ?? null])
-      )
+      Object.fromEntries(headers.map((header, columnIndex) => [header, row[columnIndex] ?? null]))
     );
   return { headers, records, sourceRowOffset: 2 };
 };
@@ -40,9 +38,7 @@ export const readDatabaseSheet = async (filePath, sheetName) => {
 export const requireColumns = (headers, required, databaseName) => {
   const missing = required.filter((column) => !headers.includes(column));
   if (missing.length > 0) {
-    throw new Error(
-      `${databaseName} is missing required columns: ${missing.join(', ')}`
-    );
+    throw new Error(`${databaseName} is missing required columns: ${missing.join(', ')}`);
   }
 };
 
@@ -91,13 +87,7 @@ export const writeJson = async (filePath, value) => {
   await fs.writeFile(filePath, source, 'utf8');
 };
 
-export const writeSeedFile = async ({
-  filePath,
-  typeImport,
-  typeName,
-  exportName,
-  records,
-}) => {
+export const writeSeedFile = async ({ filePath, typeImport, typeName, exportName, records }) => {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
   const serialized = JSON.stringify(records);
   const chunks = [];
@@ -113,9 +103,7 @@ export const writeSeedFile = async ({
     chunks.push(serialized.slice(index, end));
     index = end - 16_000;
   }
-  const serializedParts = chunks
-    .map((chunk) => JSON.stringify(chunk))
-    .join(',\n');
+  const serializedParts = chunks.map((chunk) => JSON.stringify(chunk)).join(',\n');
   const source = await prettier.format(
     `import type { ${typeName} } from '${typeImport}';\n\nconst serializedParts: string[] = [\n${serializedParts}\n];\n\nexport const ${exportName} = JSON.parse(serializedParts.join('')) as ${typeName}[];\n`,
     {
@@ -130,12 +118,8 @@ export const writeSeedFile = async ({
 };
 
 export const assertValidLevels = (records, databaseName) => {
-  const invalid = records.filter(
-    (record) => !CEFR_LEVELS.includes(record.cefrLevel)
-  );
+  const invalid = records.filter((record) => !CEFR_LEVELS.includes(record.cefrLevel));
   if (invalid.length > 0) {
-    throw new Error(
-      `${databaseName} has ${invalid.length} records with invalid CEFR levels.`
-    );
+    throw new Error(`${databaseName} has ${invalid.length} records with invalid CEFR levels.`);
   }
 };

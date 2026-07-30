@@ -1,13 +1,15 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, vi } from 'vitest';
+import { FileText } from 'lucide-react';
+import { describe, expect, it, vi } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
+
+import { Button } from './Button';
+import { EmptyState } from './EmptyState';
 import { SearchInput } from './SearchInput';
 import { Skeleton, SkeletonCard, SkeletonText } from './Skeleton';
-import { EmptyState } from './EmptyState';
-import { Button } from './Button';
 import { ToastContainer, showToast } from './Toast';
-import { FileText } from 'lucide-react';
 
 const renderWithRouter = (component: React.ReactElement) =>
   render(<MemoryRouter>{component}</MemoryRouter>);
@@ -15,19 +17,13 @@ const renderWithRouter = (component: React.ReactElement) =>
 describe('Component Accessibility', () => {
   describe('SearchInput', () => {
     it('has accessible label', () => {
-      renderWithRouter(
-        <SearchInput onSearch={() => {}} placeholder="Search vocabulary" />
-      );
-      expect(
-        screen.getByRole('textbox', { name: /search vocabulary/i })
-      ).toBeInTheDocument();
+      renderWithRouter(<SearchInput onSearch={() => {}} placeholder="Search vocabulary" />);
+      expect(screen.getByRole('textbox', { name: /search vocabulary/i })).toBeInTheDocument();
     });
 
     it('supports keyboard interaction', async () => {
       const onSearch = vi.fn();
-      renderWithRouter(
-        <SearchInput onSearch={onSearch} placeholder="Search" />
-      );
+      renderWithRouter(<SearchInput onSearch={onSearch} placeholder="Search" />);
       const input = screen.getByRole('textbox');
       await userEvent.type(input, 'hello');
       expect(input).toHaveValue('hello');
@@ -35,9 +31,7 @@ describe('Component Accessibility', () => {
 
     it('clear button is accessible', async () => {
       const onSearch = vi.fn();
-      renderWithRouter(
-        <SearchInput onSearch={onSearch} placeholder="Search" />
-      );
+      renderWithRouter(<SearchInput onSearch={onSearch} placeholder="Search" />);
       const input = screen.getByRole('textbox');
       await userEvent.type(input, 'test');
       const clearBtn = screen.getByRole('button', { name: /clear/i });
@@ -65,15 +59,9 @@ describe('Component Accessibility', () => {
   describe('EmptyState', () => {
     it('has accessible heading', () => {
       renderWithRouter(
-        <EmptyState
-          icon={FileText}
-          title="No documents"
-          description="Create one"
-        />
+        <EmptyState icon={FileText} title="No documents" description="Create one" />
       );
-      expect(
-        screen.getByRole('heading', { name: /no documents/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /no documents/i })).toBeInTheDocument();
     });
 
     it('action button accessible', () => {
@@ -86,18 +74,14 @@ describe('Component Accessibility', () => {
           onAction={() => {}}
         />
       );
-      expect(
-        screen.getByRole('button', { name: /create/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /create/i })).toBeInTheDocument();
     });
   });
 
   describe('Button', () => {
     it('renders as button', () => {
       render(<Button>Click me</Button>);
-      expect(screen.getByRole('button', { name: /click me/i }).tagName).toBe(
-        'BUTTON'
-      );
+      expect(screen.getByRole('button', { name: /click me/i }).tagName).toBe('BUTTON');
     });
 
     it('disabled state accessible', () => {
@@ -180,9 +164,7 @@ describe('ARIA Attributes', () => {
         <Button>Two</Button>
       </div>
     );
-    const ids = Array.from(container.querySelectorAll('[id]')).map(
-      (el) => el.id
-    );
+    const ids = Array.from(container.querySelectorAll('[id]')).map((el) => el.id);
     const uniqueIds = new Set(ids);
     expect(ids.length).toBe(uniqueIds.size);
   });
@@ -194,9 +176,7 @@ describe('ARIA Attributes', () => {
         <SearchInput onSearch={() => {}} placeholder="Search" />
       </div>
     );
-    expect(
-      screen.getByRole('button', { name: /submit/i })
-    ).toHaveAccessibleName();
+    expect(screen.getByRole('button', { name: /submit/i })).toHaveAccessibleName();
     expect(screen.getByRole('textbox')).toHaveAccessibleName();
   });
 });

@@ -2,11 +2,11 @@
 
 ## Supported Versions
 
-| Version | Supported |
-|---------|-----------|
-| 4.0.x | ✅ Yes |
-| 3.x | ⚠️ Critical fixes only |
-| < 3.0 | ❌ No |
+| Version | Supported              |
+| ------- | ---------------------- |
+| 4.0.x   | ✅ Yes                 |
+| 3.x     | ⚠️ Critical fixes only |
+| < 3.0   | ❌ No                  |
 
 ## Reporting a Vulnerability
 
@@ -15,12 +15,14 @@
 Instead, email: **libyaelectric@gmail.com**
 
 Include:
+
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
 - Suggested fix (if any)
 
 **Response timeline:**
+
 - Acknowledgment: Within 48 hours
 - Initial assessment: Within 1 week
 - Fix released: Within 30 days (critical), 90 days (non-critical)
@@ -29,13 +31,13 @@ Include:
 
 EngineerOS uses the following security headers (via Helmet):
 
-| Header | Value | Purpose |
-|--------|-------|---------|
-| Content-Security-Policy | `default-src 'self'` | XSS prevention |
-| Strict-Transport-Security | `max-age=31536000` | HTTPS enforcement |
-| X-Content-Type-Options | `nosniff` | MIME sniffing prevention |
-| X-Frame-Options | `DENY` | Clickjacking prevention |
-| Referrer-Policy | `strict-origin-when-cross-origin` | Privacy |
+| Header                    | Value                             | Purpose                  |
+| ------------------------- | --------------------------------- | ------------------------ |
+| Content-Security-Policy   | `default-src 'self'`              | XSS prevention           |
+| Strict-Transport-Security | `max-age=31536000`                | HTTPS enforcement        |
+| X-Content-Type-Options    | `nosniff`                         | MIME sniffing prevention |
+| X-Frame-Options           | `DENY`                            | Clickjacking prevention  |
+| Referrer-Policy           | `strict-origin-when-cross-origin` | Privacy                  |
 
 ## Dependency Security
 
@@ -85,8 +87,8 @@ EngineerOS uses the following security headers (via Helmet):
 
 ## Security Audit History
 
-| Date | Auditor | Findings | Status |
-|------|---------|----------|--------|
+| Date       | Auditor    | Findings          | Status      |
+| ---------- | ---------- | ----------------- | ----------- |
 | 2026-07-27 | Self-audit | 0 critical, 3 low | In progress |
 
 ## References
@@ -96,4 +98,5 @@ EngineerOS uses the following security headers (via Helmet):
 - [Supabase Security](https://supabase.com/docs/guides/security)
 
 ## Last Updated
+
 - **Date:** 2026-07-27

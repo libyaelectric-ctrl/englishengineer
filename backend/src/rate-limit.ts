@@ -1,13 +1,9 @@
+import type { NextFunction, Request, Response } from 'express';
+
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
-import type { Request, Response, NextFunction } from 'express';
 
-const logRateLimit = (
-  scope: string,
-  identity: string,
-  count: number,
-  max: number
-): void => {
+const logRateLimit = (scope: string, identity: string, count: number, max: number): void => {
   if (count > max) {
     logger.warn('Rate limit blocked', { scope, identity, count, max });
   }
@@ -22,11 +18,7 @@ local ttl = redis.call('PTTL', KEYS[1])
 return {count, ttl}
 `.trim();
 
-const setRateLimitHeaders = (
-  response: Response,
-  max: number,
-  count: number
-): void => {
+const setRateLimitHeaders = (response: Response, max: number, count: number): void => {
   const remaining = String(Math.max(0, max - count));
   response.setHeader('RateLimit-Limit', String(max));
   response.setHeader('RateLimit-Remaining', remaining);
@@ -35,10 +27,7 @@ const setRateLimitHeaders = (
 };
 
 export interface UpstashRateLimitStore {
-  consume: (
-    key: string,
-    windowMs: number
-  ) => Promise<{ count: number; resetAfterMs: number }>;
+  consume: (key: string, windowMs: number) => Promise<{ count: number; resetAfterMs: number }>;
 }
 
 interface UpstashRateLimitConfig {
@@ -64,24 +53,14 @@ export const createUpstashRateLimitStore = ({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify([
-          'EVAL',
-          UPSTASH_COUNTER_SCRIPT,
-          '1',
-          key,
-          String(windowMs),
-        ]),
+        body: JSON.stringify(['EVAL', UPSTASH_COUNTER_SCRIPT, '1', key, String(windowMs)]),
         signal: controller.signal,
       });
       if (!response.ok) {
-        throw new Error(
-          `External rate-limit store returned ${response.status}.`
-        );
+        throw new Error(`External rate-limit store returned ${response.status}.`);
       }
       const payload = (await response.json()) as { result?: [number, number] };
-      const [count, ttlMs] = Array.isArray(payload?.result)
-        ? payload.result
-        : [];
+      const [count, ttlMs] = Array.isArray(payload?.result) ? payload.result : [];
       if (!Number.isFinite(count) || !Number.isFinite(ttlMs)) {
         throw new Error('External rate-limit store returned malformed data.');
       }
@@ -136,11 +115,7 @@ export const createRateLimitStore = (
   throw new Error(`Unsupported rate-limit store: ${config.storeMode}`);
 };
 
-type RateLimitMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => void;
+type RateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => void;
 
 interface RateLimiterConfig {
   windowMs: number;
@@ -179,11 +154,7 @@ export const createRateLimiter = ({
         if (result.count > max) {
           logRateLimit(scope, identity, result.count, max);
           return next(
-            new ApiError(
-              429,
-              'rate_limit_exceeded',
-              'Too many requests. Please try again later.'
-            )
+            new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.')
           );
         }
         return next();
@@ -230,10 +201,7 @@ export const createRateLimiter = ({
 
   return (request: Request, response: Response, next: NextFunction): void => {
     const currentTime = now();
-    if (
-      currentTime - lastPruneAt >= pruneIntervalMs ||
-      buckets.size >= bucketLimit
-    ) {
+    if (currentTime - lastPruneAt >= pruneIntervalMs || buckets.size >= bucketLimit) {
       pruneExpired(currentTime);
       lastPruneAt = currentTime;
     }
@@ -248,11 +216,7 @@ export const createRateLimiter = ({
     if (bucket.count > max) {
       logRateLimit(scope, identity, bucket.count, max);
       return next(
-        new ApiError(
-          429,
-          'rate_limit_exceeded',
-          'Too many requests. Please try again later.'
-        )
+        new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.')
       );
     }
     next();

@@ -1,17 +1,16 @@
-import type {
-  LearningState,
-  MissionModule,
-} from '@/core/learning/learning.types';
+import type { LearningState, MissionModule } from '@/core/learning/learning.types';
+
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
+
 import {
-  SKILL_NAMES,
   type CefrBand,
   type DailyMission,
   type ProfileBadge,
+  SKILL_NAMES,
   type SkillName,
   type SkillProfile,
   type UserLearningProfile,
@@ -49,8 +48,7 @@ const TASK_TYPE_BY_SKILL: Record<SkillName, string> = {
   grammar: 'writing-correction',
 };
 
-const toCefrLevel = (band: CefrBand): CefrLevel =>
-  band.replace('+', '') as CefrLevel;
+const toCefrLevel = (band: CefrBand): CefrLevel => band.replace('+', '') as CefrLevel;
 
 const getSessionDelta = (score: number): number => {
   if (score >= 85) return 12;
@@ -58,43 +56,29 @@ const getSessionDelta = (score: number): number => {
   return -8;
 };
 
-const withEvidence = (
-  profile: SkillProfile,
-  state: LearningState
-): SkillProfile => {
+const withEvidence = (profile: SkillProfile, state: LearningState): SkillProfile => {
   const module = MODULE_BY_SKILL[profile.skill];
-  const sessions = state.studySessions.filter(
-    (session) => session.module === module
-  );
+  const sessions = state.studySessions.filter((session) => session.module === module);
   if (sessions.length === 0) return profile;
   const accuracy = Math.round(
     sessions.reduce((sum, session) => sum + session.score, 0) / sessions.length
   );
   const elo = clampSkillElo(
-    profile.elo +
-      sessions.reduce((sum, session) => sum + getSessionDelta(session.score), 0)
+    profile.elo + sessions.reduce((sum, session) => sum + getSessionDelta(session.score), 0)
   );
   const progressToNextBand = getProgressToNextCefrBand(elo);
-  const latest = [...sessions].sort((a, b) =>
-    b.timestamp.localeCompare(a.timestamp)
-  )[0];
+  const latest = [...sessions].sort((a, b) => b.timestamp.localeCompare(a.timestamp))[0];
   return {
     ...profile,
     elo,
     cefrBand: getCefrBandFromElo(elo),
     progressToNextBand,
-    trend:
-      accuracy >= 85 ? 'improving' : accuracy < 60 ? 'declining' : 'steady',
+    trend: accuracy >= 85 ? 'improving' : accuracy < 60 ? 'declining' : 'steady',
     completedTasks: sessions.length,
     accuracy,
     weaknessScore: 100 - accuracy,
     lastPracticedAt: latest?.timestamp ?? null,
-    promotionState:
-      elo === 5000
-        ? 'maxed'
-        : progressToNextBand >= 90
-          ? 'ready'
-          : 'progressing',
+    promotionState: elo === 5000 ? 'maxed' : progressToNextBand >= 90 ? 'ready' : 'progressing',
   };
 };
 
@@ -169,10 +153,7 @@ export const LearningProfileEngine = {
     return {
       ...profile,
       skills: Object.fromEntries(
-        SKILL_NAMES.map((skill) => [
-          skill,
-          withEvidence(profile.skills[skill], learningState),
-        ])
+        SKILL_NAMES.map((skill) => [skill, withEvidence(profile.skills[skill], learningState)])
       ) as Record<SkillName, SkillProfile>,
     };
   },
@@ -197,16 +178,11 @@ export const LearningProfileEngine = {
   ): Promise<DailyMission[]> {
     const weakest = [...SKILL_NAMES]
       .map((skill) => profile.skills[skill])
-      .sort(
-        (a, b) =>
-          a.completedTasks - b.completedTasks ||
-          b.weaknessScore - a.weaknessScore
-      )[0];
+      .sort((a, b) => a.completedTasks - b.completedTasks || b.weaknessScore - a.weaknessScore)[0];
     const weakestLevel = toCefrLevel(weakest.cefrBand);
     const grammarLevel = toCefrLevel(profile.skills.grammar.cefrBand);
     const vocabularyLevel = toCefrLevel(profile.skills.vocabulary.cefrBand);
-    const grammarMix =
-      profile.skills.grammar.completedTasks % 4 === 3 ? 'stretch' : 'safe';
+    const grammarMix = profile.skills.grammar.completedTasks % 4 === 3 ? 'stretch' : 'safe';
     const [grammarRules, vocabularyTerms] = await Promise.all([
       GrammarEngine.selectGrammarForTask(
         weakest.skill,
@@ -229,28 +205,13 @@ export const LearningProfileEngine = {
         )
       )[0];
     return [
-      buildSkillMission(
-        weakest.skill,
-        weakest.completedTasks,
-        weakest.cefrBand
-      ),
-      buildVocabularyMission(
-        memory,
-        profile.skills.vocabulary.cefrBand,
-        vocabularyTerms.length
-      ),
-      buildGrammarMission(
-        grammarFocus,
-        profile.skills.grammar.cefrBand,
-        grammarMix
-      ),
+      buildSkillMission(weakest.skill, weakest.completedTasks, weakest.cefrBand),
+      buildVocabularyMission(memory, profile.skills.vocabulary.cefrBand, vocabularyTerms.length),
+      buildGrammarMission(grammarFocus, profile.skills.grammar.cefrBand, grammarMix),
     ];
   },
 
-  getBadges(
-    profile: UserLearningProfile,
-    memory: VocabularyMemorySummary
-  ): ProfileBadge[] {
+  getBadges(profile: UserLearningProfile, memory: VocabularyMemorySummary): ProfileBadge[] {
     const totalTasks = SKILL_NAMES.reduce(
       (sum, skill) => sum + profile.skills[skill].completedTasks,
       0

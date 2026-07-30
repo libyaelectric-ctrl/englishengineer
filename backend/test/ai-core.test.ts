@@ -1,5 +1,6 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
 import { createAIService } from '../src/ai-core/index.js';
 import type { AiConfig } from '../types.js';
 

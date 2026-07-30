@@ -1,12 +1,14 @@
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
+
+import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
+
 import {
   BillingPortalRequest,
   BillingRedirectResponse,
   BillingSessionRequest,
   SubscriptionSnapshot,
 } from './billing.types';
-import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
-import { AppError } from '@/core/errors/app-error';
-import { ErrorCode } from '@/core/errors/error-codes';
 
 interface BillingBackendErrorResponse {
   error?: string | { code?: string; message?: string };
@@ -26,20 +28,12 @@ const mapRequestError = (error: unknown): Error => {
     );
   }
 
-  return error instanceof Error
-    ? error
-    : new Error('Billing backend request failed.');
+  return error instanceof Error ? error : new Error('Billing backend request failed.');
 };
 
-const fetchWithTimeout = async (
-  endpoint: string,
-  init?: RequestInit
-): Promise<Response> => {
+const fetchWithTimeout = async (endpoint: string, init?: RequestInit): Promise<Response> => {
   const controller = new AbortController();
-  const timeoutId = window.setTimeout(
-    () => controller.abort(),
-    BILLING_TIMEOUT_MS
-  );
+  const timeoutId = window.setTimeout(() => controller.abort(), BILLING_TIMEOUT_MS);
 
   try {
     return await fetch(endpoint, {
@@ -92,10 +86,7 @@ const postJson = async <TResponse, TBody extends object>(
   return response.json() as Promise<TResponse>;
 };
 
-const getJson = async <TResponse>(
-  endpoint: string,
-  userId?: string
-): Promise<TResponse> => {
+const getJson = async <TResponse>(endpoint: string, userId?: string): Promise<TResponse> => {
   const response = await fetchWithTimeout(endpoint, {
     headers: await getBackendAuthHeaders(userId),
   });
@@ -120,9 +111,7 @@ export class StripeBillingProvider {
     );
   }
 
-  async createCheckoutSession(
-    request: BillingSessionRequest
-  ): Promise<BillingRedirectResponse> {
+  async createCheckoutSession(request: BillingSessionRequest): Promise<BillingRedirectResponse> {
     const authHeaders = await getBackendAuthHeaders(request.userId);
     if (!authHeaders.Authorization) {
       throw new AppError({
@@ -145,16 +134,12 @@ export class StripeBillingProvider {
     if (!authHeaders.Authorization) {
       throw new AppError({
         code: ErrorCode.AUTH,
-        message:
-          'Please sign in with your account before opening the customer portal.',
+        message: 'Please sign in with your account before opening the customer portal.',
       });
     }
 
     return postJson<BillingRedirectResponse, BillingPortalRequest>(
-      buildBillingEndpoint(
-        this.billingApiUrl,
-        'create-customer-portal-session'
-      ),
+      buildBillingEndpoint(this.billingApiUrl, 'create-customer-portal-session'),
       request,
       request.userId
     );
@@ -171,10 +156,7 @@ export class StripeBillingProvider {
       });
     }
 
-    return postJson<
-      BillingRedirectResponse,
-      Omit<BillingSessionRequest, 'planId'>
-    >(
+    return postJson<BillingRedirectResponse, Omit<BillingSessionRequest, 'planId'>>(
       buildBillingEndpoint(this.billingApiUrl, 'create-topup-session'),
       request,
       request.userId

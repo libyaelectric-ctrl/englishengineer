@@ -1,10 +1,8 @@
+import { type LearningDataSkill, includesNormalized, isCefrAtOrBelow } from '@/core/learning';
+
 import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrLevel } from '@/features/level-system';
-import {
-  includesNormalized,
-  isCefrAtOrBelow,
-  type LearningDataSkill,
-} from '@/core/learning';
+
 import { VocabularyRepository } from '../services/vocabulary.repository';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
@@ -21,10 +19,8 @@ export const VocabularyEngine = {
       (term) =>
         this.validateVocabularyEligibility(term, skill, level) &&
         (!domain || term.domain.toLowerCase() === domain.toLowerCase()) &&
-        (!contentDomain ||
-          term.contentDomain.toLowerCase() === contentDomain.toLowerCase()) &&
-        (!lifeContext ||
-          term.lifeContext.toLowerCase() === lifeContext.toLowerCase())
+        (!contentDomain || term.contentDomain.toLowerCase() === contentDomain.toLowerCase()) &&
+        (!lifeContext || term.lifeContext.toLowerCase() === lifeContext.toLowerCase())
     );
   },
 
