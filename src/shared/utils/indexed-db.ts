@@ -25,14 +25,18 @@ interface OfflineAction {
   retries: number;
 }
 
+const isSupported = (): boolean => {
+  return typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
+};
+
 const openDB = (): Promise<IDBDatabase> => {
   return new Promise((resolve, reject) => {
-    if (!('indexedDB' in window)) {
+    if (!isSupported()) {
       reject(new Error('IndexedDB not supported'));
       return;
     }
 
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = window.indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
@@ -56,6 +60,7 @@ const openDB = (): Promise<IDBDatabase> => {
 
 // Seed data cache
 export async function getCachedSeed<T>(key: string): Promise<T | null> {
+  if (!isSupported()) return null;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -76,6 +81,7 @@ export async function getCachedSeed<T>(key: string): Promise<T | null> {
 }
 
 export async function setCachedSeed<T>(key: string, data: T): Promise<void> {
+  if (!isSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -101,6 +107,7 @@ export async function addOfflineAction(
   payload: Record<string, unknown>
 ): Promise<string> {
   const id = `oa_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  if (!isSupported()) return id;
   const action: OfflineAction = {
     id,
     type,
@@ -125,6 +132,7 @@ export async function addOfflineAction(
 }
 
 export async function getOfflineActions(): Promise<OfflineAction[]> {
+  if (!isSupported()) return [];
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -142,6 +150,7 @@ export async function getOfflineActions(): Promise<OfflineAction[]> {
 }
 
 export async function removeOfflineAction(id: string): Promise<void> {
+  if (!isSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -157,6 +166,7 @@ export async function removeOfflineAction(id: string): Promise<void> {
 }
 
 export async function clearOfflineActions(): Promise<void> {
+  if (!isSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -172,6 +182,7 @@ export async function clearOfflineActions(): Promise<void> {
 }
 
 export async function getOfflineActionCount(): Promise<number> {
+  if (!isSupported()) return 0;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
