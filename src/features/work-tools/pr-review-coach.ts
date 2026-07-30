@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
 
@@ -116,7 +117,8 @@ export const PRReviewCoachService = {
         ],
         isAiPowered: true,
       };
-    } catch {
+    } catch (e) {
+      logger.w('[PRReview] AI polish failed, using rule-based:', e);
       return ruleBasedTransform(raw);
     }
   },

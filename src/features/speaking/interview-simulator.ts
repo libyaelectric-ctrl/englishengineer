@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
 
@@ -281,7 +282,8 @@ export const InterviewSimulatorService = {
               .filter(Boolean)
           : ['Add more technical depth'],
       };
-    } catch {
+    } catch (e) {
+      logger.w('[InterviewSim] AI scoring failed, using rule-based:', e);
       return ruleBasedScoring(answer, question);
     }
   },

@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { AI_BACKEND_PROXY_CONFIG } from './ai.config';
 import { createBackendProxyProvider } from './backend-proxy.provider';
 import { createMockAIProvider, MockExample } from './mock-ai.provider';
@@ -39,7 +40,8 @@ export const AIService = {
 
     try {
       return await provider[operation](fullRequest);
-    } catch {
+    } catch (e) {
+      logger.w('[AIService] Provider failed, falling back to mock:', e);
       const fallback = createMockAIProvider(examples);
       const fallbackResponse = await fallback[operation](fullRequest);
       return {

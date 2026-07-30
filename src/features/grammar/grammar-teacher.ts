@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
 import { GrammarRepository } from './grammar.repository';
@@ -69,7 +70,8 @@ If the user is answering a translation or practice prompt, evaluate their respon
         message: response.text.trim(),
         isAiPowered: true,
       };
-    } catch {
+    } catch (e) {
+      logger.w('[GrammarTeacher] AI chat failed, using fallback:', e);
       return {
         message: `Let's practice the rule "${rule.title}".
 Formula: ${rule.structure}

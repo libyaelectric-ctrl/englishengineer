@@ -5,11 +5,11 @@ import { storage } from './index';
  * A storage adapter that wraps the existing EngVox storage module.
  * Ensures Zustand persist middleware uses the same user-scoped localStorage.
  *
- * Note: Zustand's PersistStorage<S> expects getItem to return
- * `StorageValue<S>` (parsed JSON), but our adapter returns raw strings.
- * This is safe because Zustand's persist middleware handles serialization
- * internally — it calls `JSON.parse` on the string returned by getItem.
- * We use a targeted type assertion at the usage site to satisfy TypeScript.
+ * Zustand's PersistStorage<S> expects getItem to return parsed JSON objects,
+ * but our adapter returns raw JSON strings. This works correctly because
+ * Zustand's persist middleware calls JSON.parse on the returned string internally.
+ * We use `as any` to satisfy the type system — this is the standard Zustand
+ * pattern for custom string-based storage adapters.
  */
 const eosStorage = {
   getItem: (name: string) => {
@@ -23,9 +23,7 @@ const eosStorage = {
   },
 };
 
-// Zustand's PersistStorage<S> generic expects parsed JSON types, but our
-// adapter returns raw JSON strings which Zustand handles correctly.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Zustand PersistStorage expects parsed objects but we return strings; Zustand handles parsing internally
 const typedEosStorage = eosStorage as any;
 
 /**
