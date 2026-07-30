@@ -1,23 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useLearningStore } from '@/core/learning';
 import { useShallow } from 'zustand/shallow';
 import { LearningProfileEngine } from './profile.engine';
 import { LearningProfileRepository } from './profile.repository';
 import type {
-  DailyMission,
   UserLearningProfile,
-  VocabularyMemorySummary,
 } from './profile.types';
-
-const EMPTY_MEMORY: VocabularyMemorySummary = {
-  total: 0,
-  new: 0,
-  learning: 0,
-  mastered: 0,
-  forgotten: 0,
-  dueToday: 0,
-  weakWords: 0,
-};
 
 export const useLearningCockpit = (userId?: string | null) => {
   const learningState = useLearningStore(
@@ -47,35 +36,25 @@ export const useLearningCockpit = (userId?: string | null) => {
       LearningProfileEngine.buildProfileSnapshot(storedProfile, learningState),
     [learningState, storedProfile]
   );
-  const [memory, setMemory] = useState(EMPTY_MEMORY);
-  const [missions, setMissions] = useState<DailyMission[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    let active = true;
-    const load = async () => {
-      try {
-        const nextMemory =
-          await LearningProfileEngine.getVocabularyMemorySummary();
-        const nextMissions = await LearningProfileEngine.generateDailyMissions(
-          profile,
-          nextMemory
-        );
-        if (!active) return;
-        setMemory(nextMemory);
-        setMissions(nextMissions);
-      } catch {
-        // Fallback gracefully on storage error
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    };
-    void load();
-    return () => {
-      active = false;
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, learningState.lastActivityDate, learningState.xp]);
+  const { data: memory, isPending: memoryLoading } = useQuery({
+    queryKey: ['vocabularyMemory'],
+    queryFn: () => LearningProfileEngine.getVocabularyMemorySummary(),
+    staleTime: 5 * 60 * 1000,
+  });
 
-  return { profile, memory, missions, isLoading, learningState };
+  const { data: missions, isPending: missionsLoading } = useQuery({
+    queryKey: ['dailyMissions', profile, memory],
+    queryFn: () => LearningProfileEngine.generateDailyMissions(profile, memory!),
+    enabled: !!memory,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    profile,
+    memory: memory ?? { total: 0, new: 0, learning: 0, mastered: 0, forgotten: 0, dueToday: 0, weakWords: 0 },
+    missions: missions ?? [],
+    isLoading: memoryLoading || missionsLoading,
+    learningState,
+  };
 };

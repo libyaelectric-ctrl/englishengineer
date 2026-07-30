@@ -19,7 +19,7 @@ const audioFiles = existsSync(resolve('public/audio'))
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
 const frontendPackage = readJson('package.json');
 const backendPackage = readJson('backend/package.json');
-const expectedVersion = '4.0.1';
+const expectedVersion = '2.1.2';
 
 if (
   frontendPackage.version !== expectedVersion ||

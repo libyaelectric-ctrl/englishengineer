@@ -1,6 +1,7 @@
 import { Moon, Sun, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '@/store/app.store';
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 export const TopNavBar = () => {
   const theme = useAppStore((s) => s.theme);
@@ -21,7 +22,7 @@ export const TopNavBar = () => {
               EngVox
             </span>
             <span className="rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-primary font-mono shadow-inner">
-              v1.4.1
+              v{PRODUCT_VERSION}
             </span>
           </div>
         </Link>

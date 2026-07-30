@@ -1,8 +1,7 @@
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
 const STATIC_ASSETS = [
   '/',
-  '/index.html',
   '/offline.html',
   '/brand/logo.webp',
   '/manifest.json',

@@ -16,7 +16,7 @@ import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
 import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';
 import { ReaderView } from './ReadingPage/components/ReaderView';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import { useGrammarStore } from '@/features/grammar/store/grammar.store';
+import { useGrammarStore } from '@/features/grammar';
 import type { VocabularyItem } from '@/features/reading';
 
 const VOCAB_THRESHOLD = 200;

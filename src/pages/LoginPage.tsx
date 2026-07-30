@@ -42,7 +42,7 @@ const LoginPage = () => {
             <div className="space-y-4">
               <span className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/80 backdrop-blur-xl px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm">
                 <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                EngineerOS v4.0 · Production Ready
+                EngineerOS v2.1 · Production Ready
               </span>
 
               <h1 className="text-4xl font-extrabold tracking-tight text-foreground leading-tight">

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogOut,
@@ -22,6 +22,7 @@ export const Sidebar = () => {
   const { currentUser, logout } = useAuthStore();
   const { subscription } = useBillingStore();
   const navigate = useNavigate();
+  const [, startTransition] = useTransition();
   const planName = subscription?.planId || 'free';
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ export const Sidebar = () => {
 
   const handleLogout = async () => {
     await logout();
-    navigate('/login');
+    startTransition(() => navigate('/login'));
   };
 
   return (
@@ -124,7 +125,7 @@ export const Sidebar = () => {
                 onClick={() => {
                   if (window.innerWidth < 1024 && isSidebarOpen)
                     toggleSidebar();
-                  navigate('/billing');
+                  startTransition(() => navigate('/billing'));
                 }}
                 className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
               >
@@ -177,7 +178,7 @@ export const Sidebar = () => {
                         setNotificationsOpen(false);
                         if (window.innerWidth < 1024 && isSidebarOpen)
                           toggleSidebar();
-                        navigate('/curriculum');
+                        startTransition(() => navigate('/curriculum'));
                       }}
                       className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >
@@ -200,7 +201,7 @@ export const Sidebar = () => {
                         setNotificationsOpen(false);
                         if (window.innerWidth < 1024 && isSidebarOpen)
                           toggleSidebar();
-                        navigate('/profile');
+                        startTransition(() => navigate('/profile'));
                       }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
                     >

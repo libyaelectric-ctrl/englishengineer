@@ -87,7 +87,7 @@ describe('LearningReportGenerator', () => {
     it('generates valid HTML string', () => {
       const html = LearningReportGenerator.generateReport(mockReportData);
       expect(html).toContain('<!DOCTYPE html>');
-      expect(html).toContain('EngineerOS Learning Report');
+      expect(html).toContain('EngVox Learning Report');
       expect(html).toContain('John Engineer');
     });
 
@@ -140,7 +140,7 @@ describe('LearningReportGenerator', () => {
         recommendations: [],
       };
       const html = LearningReportGenerator.generateReport(emptyData);
-      expect(html).toContain('EngineerOS Learning Report');
+      expect(html).toContain('EngVox Learning Report');
     });
   });
 });

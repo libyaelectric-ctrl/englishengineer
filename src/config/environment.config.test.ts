@@ -19,7 +19,7 @@ describe('environment validation', () => {
     const result = validateEnvironment({});
 
     expect(result.safeConfig).toMatchObject({
-      appVersion: '1.4.1',
+      appVersion: '2.1.2',
       hasAiProxyUrl: false,
       hasSupabaseUrl: false,
       hasSupabaseAnonKey: false,

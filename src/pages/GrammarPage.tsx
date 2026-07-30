@@ -5,7 +5,7 @@ import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
 import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
 import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
 import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
-import { useGrammarStore } from '@/features/grammar/store/grammar.store';
+import { useGrammarStore } from '@/features/grammar';
 
 const getSelectedStatus = (
   progress: ReturnType<typeof useGrammarPage>['selectedProgress']

@@ -23,7 +23,7 @@ export const AdminHeader = ({
             </span>
           </div>
           <h1 className="mt-4 text-2xl font-bold text-foreground">
-            EngineerOS Command Console
+            EngVox Command Console
           </h1>
           <Button
             variant="ghost"

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/shared/components/Button';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Play, Terminal, Shield, Zap, Globe } from 'lucide-react';
+import { PRODUCT_VERSION } from '@/config/product.config';
 
 interface HeroSectionProps { scrollShift: number; }
 
@@ -14,7 +15,7 @@ const HeroSection = ({ scrollShift }: HeroSectionProps) => {
     <section className="relative z-10 flex min-h-[90vh] flex-col items-center justify-center px-4 pt-24 pb-16" style={{ transform: `translateY(${scrollShift}px)` }}>
       <div className={`mb-8 flex items-center gap-2 rounded bg-surface border border-border-soft px-4 py-2 shadow-sm transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <Terminal className="h-4 w-4 text-primary" />
-        <span className="text-sm font-semibold text-foreground">v2.1 — Precision Engineering OS</span>
+        <span className="text-sm font-semibold text-foreground">v{PRODUCT_VERSION} — Precision Engineering OS</span>
       </div>
       <h1 className={`max-w-4xl text-center text-5xl font-bold leading-tight tracking-tight sm:text-6xl md:text-7xl transition-all duration-1000 delay-100 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <span className="text-foreground">The Engineering English</span><br />
