@@ -1,25 +1,16 @@
-import { ApiError } from './errors.js';
-import { validateBody, WritingSubmitBodySchema } from './validation.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from 'express';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
-export const registerWritingRoutes = (
-  app: Express,
-  requireBackendAuth: RequestHandler
-): void => {
+import { ApiError } from './errors.js';
+import { WritingSubmitBodySchema, validateBody } from './validation.js';
+
+export const registerWritingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
   app.get(
     '/api/writing/prompts',
     requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const limit = Number(request.query.limit) || 10;
         const offset = Number(request.query.offset) || 0;
@@ -43,8 +34,7 @@ export const registerWritingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           success: true,
@@ -70,8 +60,7 @@ export const registerWritingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           totalSubmissions: 0,
@@ -90,8 +79,7 @@ export const registerWritingRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({ notFound: true });
       } catch (error) {

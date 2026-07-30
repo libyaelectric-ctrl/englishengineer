@@ -1,10 +1,8 @@
-import { Clock, CheckCircle2, RefreshCw, Play } from 'lucide-react';
+import { CheckCircle2, Clock, Play, RefreshCw } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
-import {
-  LevelAccessBadge,
-  getContentAccessLabel,
-  type CefrLevel,
-} from '@/features/level-system';
+
+import { type CefrLevel, LevelAccessBadge, getContentAccessLabel } from '@/features/level-system';
 import { WritingHelpers } from '@/features/writing';
 
 interface MissionCardProps {
@@ -22,12 +20,7 @@ interface MissionCardProps {
   onLaunch: (missionId: string) => void;
 }
 
-export const MissionCard = ({
-  mission,
-  bestScore,
-  currentLevel,
-  onLaunch,
-}: MissionCardProps) => {
+export const MissionCard = ({ mission, bestScore, currentLevel, onLaunch }: MissionCardProps) => {
   const isCompleted = bestScore !== undefined;
   const difficultyColor = WritingHelpers.getDifficultyColor(mission.difficulty);
 
@@ -47,9 +40,7 @@ export const MissionCard = ({
             >
               {mission.cefrLevel}
             </span>
-            <LevelAccessBadge
-              label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
-            />
+            <LevelAccessBadge label={getContentAccessLabel(mission.cefrLevel, currentLevel)} />
             <span
               className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${
                 difficultyColor === 'rose'
@@ -62,8 +53,7 @@ export const MissionCard = ({
               {mission.difficulty}
             </span>
             <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1 font-bold">
-              <Clock className="h-3 w-3 text-muted-copy" />{' '}
-              {mission.estimatedMinutes}M
+              <Clock className="h-3 w-3 text-muted-copy" /> {mission.estimatedMinutes}M
             </span>
           </div>
 

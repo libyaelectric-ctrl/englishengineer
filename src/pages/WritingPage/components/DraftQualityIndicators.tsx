@@ -1,6 +1,7 @@
 import { Layers } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
 
 interface DraftQualityIndicatorsProps {
   getReadabilityScore: () => number;
@@ -11,11 +12,7 @@ export const DraftQualityIndicators = ({
   getReadabilityScore,
   technicalDensity,
 }: DraftQualityIndicatorsProps) => (
-  <SectionCard
-    title="Draft Quality Indicators"
-    subtitle="Active textual metrics"
-    icon={Layers}
-  >
+  <SectionCard title="Draft Quality Indicators" subtitle="Active textual metrics" icon={Layers}>
     <div className="space-y-4">
       <div className="space-y-1">
         <div className="flex justify-between text-xs font-mono text-muted-copy font-bold">

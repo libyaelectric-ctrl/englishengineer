@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises, jsx-a11y/no-noninteractive-element-interactions */
-import { describe, it, expect } from 'vitest';
-import { readdirSync, readFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
+import { describe, expect, it } from 'vitest';
 
 const SRC_DIR = join(process.cwd(), 'src');
 const FEATURES_DIR = join(SRC_DIR, 'features');
@@ -33,9 +33,7 @@ describe('Architecture Rules', () => {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
             if (imp.startsWith('@/pages/')) {
-              violations.push(
-                `${fullPath.replace(SRC_DIR, '.')} imports from pages`
-              );
+              violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from pages`);
             }
           }
         }
@@ -59,23 +57,16 @@ describe('Architecture Rules', () => {
       for (const file of files) {
         const imports = getImportsFromFile(file);
         for (const imp of imports) {
-          if (
-            imp.startsWith('@/features/') &&
-            !imp.includes(`@/features/${feature}`)
-          ) {
+          if (imp.startsWith('@/features/') && !imp.includes(`@/features/${feature}`)) {
             const otherFeature = imp.replace('@/features/', '').split('/')[0];
-            violations.push(
-              `${file.replace(SRC_DIR, '.')} imports from ${otherFeature}`
-            );
+            violations.push(`${file.replace(SRC_DIR, '.')} imports from ${otherFeature}`);
           }
         }
       }
     }
 
     // Document violations but don't fail â€” these are known technical debt
-    console.log(
-      `\n[Architecture] Feature-to-feature import violations: ${violations.length}`
-    );
+    console.log(`\n[Architecture] Feature-to-feature import violations: ${violations.length}`);
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     // Expect violations to be documented and decreasing over time
@@ -96,9 +87,7 @@ describe('Architecture Rules', () => {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
             if (imp.startsWith('@/core/') || imp.startsWith('@/features/')) {
-              violations.push(
-                `${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`
-              );
+              violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`);
             }
           }
         }
@@ -107,9 +96,7 @@ describe('Architecture Rules', () => {
 
     checkDir(sharedPath);
 
-    console.log(
-      `\n[Architecture] Shared-to-core/features violations: ${violations.length}`
-    );
+    console.log(`\n[Architecture] Shared-to-core/features violations: ${violations.length}`);
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     expect(violations.length).toBeLessThan(20);
@@ -145,9 +132,7 @@ describe('Architecture Rules', () => {
         const imports = getImportsFromFile(file);
         for (const imp of imports) {
           if (imp.startsWith(`@/features/${feature}/`)) {
-            violations.push(
-              `${file.replace(SRC_DIR, '.')} has internal circular import`
-            );
+            violations.push(`${file.replace(SRC_DIR, '.')} has internal circular import`);
           }
         }
       }
@@ -171,9 +156,7 @@ describe('Architecture Rules', () => {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
             if (imp.startsWith('@/features/')) {
-              violations.push(
-                `${fullPath.replace(SRC_DIR, '.')} imports from features`
-              );
+              violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from features`);
             }
           }
         }
@@ -195,9 +178,7 @@ describe('Architecture Rules', () => {
         const imports = getImportsFromFile(fullPath);
         for (const imp of imports) {
           if (imp.startsWith('@/features/') || imp.startsWith('@/pages/')) {
-            violations.push(
-              `${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`
-            );
+            violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`);
           }
         }
       }
@@ -227,9 +208,7 @@ describe('Architecture Rules', () => {
                 ?.replace(/\.tsx?$/, '');
               const otherPageClean = otherPage.replace(/\.tsx?$/, '');
               if (otherPageClean !== currentPageRaw) {
-                violations.push(
-                  `${fullPath.replace(SRC_DIR, '.')} imports from ${otherPage}`
-                );
+                violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from ${otherPage}`);
               }
             }
           }

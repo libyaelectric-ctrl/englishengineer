@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
 import { Crown } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
 
 interface BillingUpgradeCTAProps {
   planId: string;

@@ -1,7 +1,10 @@
-import { useNavigate } from 'react-router-dom';
 import { Crown, ExternalLink } from 'lucide-react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { getBillingStatusPresentation } from './billing.helpers';
 import type {
   BillingProviderStatus,
@@ -35,28 +38,21 @@ export const BillingStatusPanel = ({
   error,
 }: BillingStatusPanelProps) => {
   const navigate = useNavigate();
-  const presentation = getBillingStatusPresentation(
-    subscription,
-    providerStatus
-  );
+  const presentation = getBillingStatusPresentation(subscription, providerStatus);
   const paidAccessIsActive =
     presentation.planId !== 'free' &&
     (subscription.status === 'active' || subscription.status === 'trialing');
-  const canOpenPortal =
-    providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
+  const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
   return (
-    <div
-      className="space-y-4 font-sans text-foreground"
-      data-testid="billing-status-panel"
-    >
+    <div className="space-y-4 font-sans text-foreground" data-testid="billing-status-panel">
       {error && (
         <div
           className="rounded-[4px] border border-warning/20 bg-warning/5 p-4 text-xs leading-5 text-warning shadow-sm font-bold uppercase tracking-wider"
           role="alert"
         >
-          Billing status is temporarily unavailable. Access entitlements are
-          based on the last known verified state.
+          Billing status is temporarily unavailable. Access entitlements are based on the last known
+          verified state.
         </div>
       )}
       <div className="flex flex-col gap-3 rounded-[4px] border border-border-soft bg-surface p-4 sm:flex-row sm:items-start sm:justify-between shadow-sm">
@@ -64,9 +60,7 @@ export const BillingStatusPanel = ({
           <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
             Current plan
           </p>
-          <p className="mt-1 text-base font-bold text-foreground">
-            {presentation.planLabel}
-          </p>
+          <p className="mt-1 text-base font-bold text-foreground">{presentation.planLabel}</p>
         </div>
         <StatusBadge
           label={presentation.statusLabel}
@@ -87,9 +81,7 @@ export const BillingStatusPanel = ({
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
             Subscription status
           </dt>
-          <dd className="font-bold text-foreground">
-            {presentation.statusLabel}
-          </dd>
+          <dd className="font-bold text-foreground">{presentation.statusLabel}</dd>
         </div>
         <div className="flex flex-col gap-1 border-b border-border-soft/60 pb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
@@ -107,9 +99,7 @@ export const BillingStatusPanel = ({
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
             {presentation.periodLabel}
           </dt>
-          <dd className="font-bold text-foreground">
-            {presentation.periodValue}
-          </dd>
+          <dd className="font-bold text-foreground">{presentation.periodValue}</dd>
         </div>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
           <dt className="text-muted-copy font-bold uppercase tracking-wider text-[10px]">
@@ -117,11 +107,7 @@ export const BillingStatusPanel = ({
           </dt>
           <dd>
             <StatusBadge
-              label={
-                presentation.isBackendVerified
-                  ? 'Backend configured'
-                  : 'Local billing mode'
-              }
+              label={presentation.isBackendVerified ? 'Backend configured' : 'Local billing mode'}
               tone={presentation.isBackendVerified ? 'success' : 'warning'}
               className="rounded-[4px] font-bold text-[10px] uppercase tracking-wider"
             />
@@ -165,8 +151,8 @@ export const BillingStatusPanel = ({
       </div>
 
       <p className="text-[10px] leading-4 text-muted-copy font-medium">
-        {providerStatus.detail} Payments and paid entitlements are verified by
-        the billing backend, never by this page.
+        {providerStatus.detail} Payments and paid entitlements are verified by the billing backend,
+        never by this page.
       </p>
     </div>
   );

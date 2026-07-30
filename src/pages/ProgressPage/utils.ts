@@ -1,12 +1,6 @@
-import { useState, useEffect } from 'react';
-import {
-  BookMarked,
-  Languages,
-  BookOpen,
-  PenTool,
-  Headphones,
-  MessageSquare,
-} from 'lucide-react';
+import { BookMarked, BookOpen, Headphones, Languages, MessageSquare, PenTool } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
 
 export const SKILLS = [
   {
@@ -141,9 +135,7 @@ export const useAnimatedNumber = (value: number, duration: number = 1.5) => {
       if (!startTime) startTime = currentTime;
       const timeElapsed = (currentTime - startTime) / (duration * 1000);
       const progress = Math.min(timeElapsed, 1);
-      setDisplayValue(
-        Math.floor(startValue + distance * easeOutQuart(progress))
-      );
+      setDisplayValue(Math.floor(startValue + distance * easeOutQuart(progress)));
       if (progress < 1) rafId = requestAnimationFrame(animate);
       else setDisplayValue(value);
     };

@@ -7,9 +7,9 @@ The goal is to achieve **zero `@ts-ignore`** by Q4 2026.
 
 ## Current Status
 
-| File | Line | Reason | Owner | Target Fix Date |
-|------|------|--------|-------|-----------------|
-| *(Audit in progress)* | | | | |
+| File                  | Line | Reason | Owner | Target Fix Date |
+| --------------------- | ---- | ------ | ----- | --------------- |
+| _(Audit in progress)_ |      |        |       |                 |
 
 ## Rules
 
@@ -21,16 +21,19 @@ The goal is to achieve **zero `@ts-ignore`** by Q4 2026.
 ## Migration Strategy
 
 ### Phase 1: Document (Current)
+
 - [ ] Run `grep -rn "@ts-ignore\|@ts-expect-error" src/ backend/`
 - [ ] Create table above with file/line/reason
 - [ ] Link each to GitHub issue
 
 ### Phase 2: Fix (Q3 2026)
+
 - [ ] Fix type definitions for external libraries
 - [ ] Add missing type declarations
 - [ ] Refactor any-typed code
 
 ### Phase 3: Enforce (Q4 2026)
+
 - [ ] ESLint rule: `@typescript-eslint/ban-ts-comment`
 - [ ] CI failure on any `@ts-ignore`
 
@@ -50,5 +53,6 @@ The goal is to achieve **zero `@ts-ignore`** by Q4 2026.
 ```
 
 ## Last Updated
+
 - **Date:** 2026-07-27
 - **Status:** Phase 1 — Documentation

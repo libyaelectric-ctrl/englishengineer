@@ -1,21 +1,26 @@
-import { FormEvent, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import { CheckCircle2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
+import { FormEvent, useState } from 'react';
+
+import { playSound } from '@/shared/utils/sound';
+
 import {
-  repairVocabularyText,
   type VocabularyMenuProgress,
   type VocabularyTerm,
+  repairVocabularyText,
 } from '@/features/vocabulary';
+
+import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';
 import {
   LearningReview,
   MasteredBadge,
   NewWordHint,
-  ReviewReasonBanner,
   QuizForm,
   ReviewActions,
+  ReviewReasonBanner,
 } from './WordCardReview';
-import { WordCardDetails } from './WordCardDetails';
 
 export type VocabularySetMode = 'Quiz' | 'Review' | 'View';
 
@@ -62,12 +67,7 @@ const StatusContent = ({
         </div>
       )}
       {isLearned && !isQuizMode && progress && (
-        <LearningReview
-          term={term}
-          progress={progress}
-          mode={mode}
-          onReview={onReview}
-        />
+        <LearningReview term={term} progress={progress} mode={mode} onReview={onReview} />
       )}
       {status === 'mastered' && <MasteredBadge />}
       {status === 'new' && (
@@ -85,9 +85,7 @@ const StatusContent = ({
       {showAnswer && (
         <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
           <p>{repairVocabularyText(term.exampleSentence)}</p>
-          <p className="text-foreground0">
-            {repairVocabularyText(term.turkishExample)}
-          </p>
+          <p className="text-foreground0">{repairVocabularyText(term.turkishExample)}</p>
         </div>
       )}
     </>
@@ -126,9 +124,7 @@ const CardActions = ({
   setShowDetails: (fn: (v: boolean) => boolean) => void;
 }) => (
   <>
-    {mode === 'Review' && progress && (
-      <ReviewReasonBanner term={term} progress={progress} />
-    )}
+    {mode === 'Review' && progress && <ReviewReasonBanner term={term} progress={progress} />}
     <WordCardDetails
       term={term}
       showDetails={showDetails}
@@ -156,25 +152,13 @@ const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
   const expected = normalizeAnswer(turkishMeaning);
   const response = normalizeAnswer(answer);
   const alternatives = expected.split('/').map((item) => item.trim());
-  return alternatives.some(
-    (item) => response === item || expected === response
-  );
+  return alternatives.some((item) => response === item || expected === response);
 };
 
 const getBorderClass = (isWeak?: boolean): string =>
-  isWeak
-    ? 'border border-rose-400/50'
-    : 'border border-primary/25 hover:border-primary/50';
+  isWeak ? 'border border-rose-400/50' : 'border border-primary/25 hover:border-primary/50';
 
-import { playSound } from '@/shared/utils/sound';
-
-export const WordCard = ({
-  term,
-  progress,
-  mode,
-  onReview,
-  onLearn,
-}: WordCardProps) => {
+export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardProps) => {
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);
@@ -222,12 +206,7 @@ export const WordCard = ({
           className="flex flex-col h-full"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <WordCardHeader
-            term={term}
-            showAnswer={showAnswer}
-            status={status}
-            progress={progress}
-          />
+          <WordCardHeader term={term} showAnswer={showAnswer} status={status} progress={progress} />
           <StatusContent
             status={status}
             progress={progress}

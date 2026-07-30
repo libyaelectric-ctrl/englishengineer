@@ -1,5 +1,6 @@
-import { ApiError } from './errors.js';
 import type { Request } from 'express';
+
+import { ApiError } from './errors.js';
 
 export interface SubscriptionSnapshot {
   planId: string;
@@ -38,9 +39,7 @@ const getRequestUserId = (request: Request): string | null => {
     return authUserId.trim();
   }
   const claimedUserId = request.body?.userId ?? request.query?.userId;
-  return typeof claimedUserId === 'string' && claimedUserId.trim()
-    ? claimedUserId.trim()
-    : null;
+  return typeof claimedUserId === 'string' && claimedUserId.trim() ? claimedUserId.trim() : null;
 };
 
 export const assertUserOwnership = (request: Request): string | null => {

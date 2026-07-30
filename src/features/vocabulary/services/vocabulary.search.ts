@@ -1,4 +1,5 @@
 import { storage } from '@/shared/storage';
+
 import type {
   ExternalLookupState,
   ExternalVocabularyResult,
@@ -81,9 +82,7 @@ export const lookupExternalVocabulary = async (
   }
 };
 
-export const isExternalVocabularyResult = (
-  value: unknown
-): value is ExternalVocabularyResult => {
+export const isExternalVocabularyResult = (value: unknown): value is ExternalVocabularyResult => {
   if (!value || typeof value !== 'object') return false;
   const result = value as Partial<ExternalVocabularyResult>;
   return (

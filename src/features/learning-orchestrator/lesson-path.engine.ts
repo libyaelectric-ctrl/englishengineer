@@ -1,44 +1,21 @@
-import type {
-  SkillName,
-  UserLearningProfile,
-} from '@/features/profile/profile.types';
-import {
-  getSkillLessonNumber,
-  LESSON_PATH_LENGTH,
-} from '@/features/profile/profile.utils';
+import type { SkillName, UserLearningProfile } from '@/features/profile/profile.types';
 import { SKILL_NAMES } from '@/features/profile/profile.types';
+import { LESSON_PATH_LENGTH, getSkillLessonNumber } from '@/features/profile/profile.utils';
+
 import type { SharedLesson, SkillLessonProgress } from './lesson-path.types';
 
 const TOPICS = [
-  [
-    'Introductions',
-    'Introduce yourself, your role and your immediate responsibility.',
-  ],
-  [
-    'Daily routine',
-    'Describe routine work with clear time and sequence language.',
-  ],
-  [
-    'Locations and access',
-    'Explain where equipment, people and work areas are located.',
-  ],
+  ['Introductions', 'Introduce yourself, your role and your immediate responsibility.'],
+  ['Daily routine', 'Describe routine work with clear time and sequence language.'],
+  ['Locations and access', 'Explain where equipment, people and work areas are located.'],
   ['Tools and materials', 'Identify tools, materials and their basic purpose.'],
   ['Instructions', 'Understand and give one clear action at a time.'],
-  [
-    'Progress updates',
-    'Report completed work, current work and the next action.',
-  ],
+  ['Progress updates', 'Report completed work, current work and the next action.'],
   ['Safety conditions', 'State a hazard, control and responsible person.'],
   ['Inspection readiness', 'Confirm scope, evidence and outstanding checks.'],
-  [
-    'Technical clarification',
-    'Ask for and provide precise technical clarification.',
-  ],
+  ['Technical clarification', 'Ask for and provide precise technical clarification.'],
   ['Coordination', 'Describe an interface, constraint and agreed owner.'],
-  [
-    'Quality observations',
-    'Record a factual observation and corrective action.',
-  ],
+  ['Quality observations', 'Record a factual observation and corrective action.'],
   ['Delay and impact', 'Explain cause, schedule impact and mitigation.'],
   ['Testing', 'Describe a test method, result and acceptance condition.'],
   ['Client communication', 'Present status and request a clear decision.'],
@@ -58,19 +35,11 @@ export const getSharedLesson = (number: number): SharedLesson => {
 };
 
 export const LessonPathEngine = {
-  getSkillProgress(
-    profile: UserLearningProfile,
-    skill: SkillName
-  ): SkillLessonProgress {
-    const completedLessons = Math.min(
-      LESSON_PATH_LENGTH,
-      profile.skills[skill].completedTasks
-    );
+  getSkillProgress(profile: UserLearningProfile, skill: SkillName): SkillLessonProgress {
+    const completedLessons = Math.min(LESSON_PATH_LENGTH, profile.skills[skill].completedTasks);
     const lessonNumber = getSkillLessonNumber(completedLessons);
     const minimumLesson = Math.min(
-      ...SKILL_NAMES.map((name) =>
-        getSkillLessonNumber(profile.skills[name].completedTasks)
-      )
+      ...SKILL_NAMES.map((name) => getSkillLessonNumber(profile.skills[name].completedTasks))
     );
     return {
       skill,
@@ -86,12 +55,8 @@ export const LessonPathEngine = {
 
   getCatchUpSkill(profile: UserLearningProfile): SkillName {
     return [...SKILL_NAMES].sort((left, right) => {
-      const leftLesson = getSkillLessonNumber(
-        profile.skills[left].completedTasks
-      );
-      const rightLesson = getSkillLessonNumber(
-        profile.skills[right].completedTasks
-      );
+      const leftLesson = getSkillLessonNumber(profile.skills[left].completedTasks);
+      const rightLesson = getSkillLessonNumber(profile.skills[right].completedTasks);
       return (
         leftLesson - rightLesson ||
         profile.skills[right].weaknessScore - profile.skills[left].weaknessScore

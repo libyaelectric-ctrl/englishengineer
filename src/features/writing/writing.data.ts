@@ -1,14 +1,13 @@
-import { WritingMission, WritingSpec } from './writing.types';
-import { STARTER_WRITING_MISSIONS } from './writing.starter.data';
-import { WRITING_REPORT_SPECS } from './writing.reports.data';
-import { WRITING_QAQC_SPECS } from './writing.qaqc.data';
 import { WRITING_DESIGN_SPECS } from './writing.design.data';
-import { WRITING_PROCUREMENT_SAFETY_SPECS } from './writing.procurement-safety.data';
 import { WRITING_ELECTRICAL_SPECS } from './writing.electrical.data';
+import { WRITING_PROCUREMENT_SAFETY_SPECS } from './writing.procurement-safety.data';
+import { WRITING_QAQC_SPECS } from './writing.qaqc.data';
+import { WRITING_REPORT_SPECS } from './writing.reports.data';
+import { STARTER_WRITING_MISSIONS } from './writing.starter.data';
+import { WritingMission, WritingSpec } from './writing.types';
 
 const rubric = {
-  clarity:
-    'The message explains the issue, status, impact, and required action without ambiguity.',
+  clarity: 'The message explains the issue, status, impact, and required action without ambiguity.',
   technicalAccuracy:
     'The response uses evidence, quantities, dates, references, and discipline-specific facts accurately.',
   grammar:
@@ -35,11 +34,7 @@ const buildMission = (spec: WritingSpec, index: number): WritingMission => ({
   cefrLevel: spec.cefrLevel,
   difficulty: spec.difficulty,
   estimatedMinutes:
-    spec.difficulty === 'Advanced'
-      ? 24
-      : spec.difficulty === 'Intermediate'
-        ? 18
-        : 14,
+    spec.difficulty === 'Advanced' ? 24 : spec.difficulty === 'Intermediate' ? 18 : 14,
   initialDraft: `${spec.weakPhrase} We did some work and there is a problem. Please check and approve fast because the team is waiting.`,
   corrections: [
     {

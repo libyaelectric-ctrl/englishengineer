@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { GrammarVocabularyBridge } from './grammar.bridge';
 import type { GrammarRule } from './grammar.types';
 
@@ -64,9 +65,7 @@ describe('GrammarVocabularyBridge', () => {
 
     it('extracts words from examples', () => {
       const rule = makeRule({
-        examples: [
-          { english: 'The engineer reviewed the document.', turkish: '' },
-        ],
+        examples: [{ english: 'The engineer reviewed the document.', turkish: '' }],
       });
       const tags = GrammarVocabularyBridge.extractVocabularyFromRule(rule);
       expect(tags.some((t) => t.includes('engineer'))).toBe(true);
@@ -79,10 +78,7 @@ describe('GrammarVocabularyBridge', () => {
         makeRule({ id: 'r1', linkedVocabularyTags: ['project'] }),
         makeRule({ id: 'r2', linkedVocabularyTags: ['report'] }),
       ];
-      const found = GrammarVocabularyBridge.getGrammarRulesForVocabulary(
-        ['project'],
-        rules
-      );
+      const found = GrammarVocabularyBridge.getGrammarRulesForVocabulary(['project'], rules);
       expect(found).toHaveLength(1);
       expect(found[0].id).toBe('r1');
     });
@@ -95,10 +91,7 @@ describe('GrammarVocabularyBridge', () => {
         { id: 'v1', term: 'project', tags: ['project', 'engineering'] },
         { id: 'v2', term: 'house', tags: ['building'] },
       ];
-      const found = GrammarVocabularyBridge.getVocabularyForGrammarRule(
-        rule,
-        vocabulary
-      );
+      const found = GrammarVocabularyBridge.getVocabularyForGrammarRule(rule, vocabulary);
       expect(found).toHaveLength(1);
       expect(found[0].term).toBe('project');
     });

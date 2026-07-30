@@ -1,6 +1,7 @@
-import { describe, it } from 'node:test';
+import type { Express, NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
-import type { Express, Request, Response, NextFunction } from 'express';
+import { describe, it } from 'node:test';
+
 import { registerBillingRoutes } from '../src/billing-routes.js';
 import type { BillingService } from '../src/billing-service.js';
 
@@ -23,8 +24,7 @@ const createMockApp = () => {
   };
 };
 
-const noopMiddleware =
-  () => async (_req: Request, _res: Response, next: NextFunction) => next();
+const noopMiddleware = () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
 describe('Billing Routes', () => {
   it('registers checkout, topup, portal, subscription-status, and webhook routes', () => {
@@ -47,9 +47,7 @@ describe('Billing Routes', () => {
     const paths = app.registered.map((r) => `${r.method} ${r.path}`);
     assert.ok(paths.includes('POST /api/billing/create-checkout-session'));
     assert.ok(paths.includes('POST /api/billing/create-topup-session'));
-    assert.ok(
-      paths.includes('POST /api/billing/create-customer-portal-session')
-    );
+    assert.ok(paths.includes('POST /api/billing/create-customer-portal-session'));
     assert.ok(paths.includes('GET /api/billing/subscription-status'));
     assert.ok(paths.includes('GET /subscription-status'));
     assert.ok(paths.includes('POST /api/webhooks/stripe'));
@@ -65,15 +63,10 @@ describe('Billing Routes', () => {
     );
 
     const checkout = app.registered.find(
-      (r) =>
-        r.method === 'POST' && r.path === '/api/billing/create-checkout-session'
+      (r) => r.method === 'POST' && r.path === '/api/billing/create-checkout-session'
     );
     assert.ok(checkout);
-    assert.equal(
-      checkout.handlerCount,
-      5,
-      'checkout should have 5 middlewares/handlers'
-    );
+    assert.equal(checkout.handlerCount, 5, 'checkout should have 5 middlewares/handlers');
   });
 
   it('portal route includes auth, rateLimiter, validator, and handler', () => {
@@ -86,16 +79,10 @@ describe('Billing Routes', () => {
     );
 
     const portal = app.registered.find(
-      (r) =>
-        r.method === 'POST' &&
-        r.path === '/api/billing/create-customer-portal-session'
+      (r) => r.method === 'POST' && r.path === '/api/billing/create-customer-portal-session'
     );
     assert.ok(portal);
-    assert.equal(
-      portal.handlerCount,
-      4,
-      'portal should have 4 middlewares/handlers'
-    );
+    assert.equal(portal.handlerCount, 4, 'portal should have 4 middlewares/handlers');
   });
 
   it('subscription status is registered on both api and legacy paths', () => {
@@ -130,10 +117,6 @@ describe('Billing Routes', () => {
       (r) => r.method === 'POST' && r.path === '/api/webhooks/stripe'
     );
     assert.ok(webhook);
-    assert.equal(
-      webhook.handlerCount,
-      1,
-      'webhook should only have the handler (no auth)'
-    );
+    assert.equal(webhook.handlerCount, 1, 'webhook should only have the handler (no auth)');
   });
 });

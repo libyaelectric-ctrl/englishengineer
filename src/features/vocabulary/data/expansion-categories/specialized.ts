@@ -6,8 +6,7 @@ export const specializedCategories: ExpansionCategory[] = [
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['hospital', 'healthcare', 'MEP'],
-    context:
-      'hospital project systems, clinical areas, and healthcare handover',
+    context: 'hospital project systems, clinical areas, and healthcare handover',
     terms: [
       'isolation room',
       'medical gas outlet',
@@ -124,8 +123,7 @@ export const specializedCategories: ExpansionCategory[] = [
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['communication', 'emails', 'meetings'],
-    context:
-      'professional engineering communication in emails, reports, and meetings',
+    context: 'professional engineering communication in emails, reports, and meetings',
     terms: [
       'for your review',
       'please confirm',

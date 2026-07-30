@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
 import { ObservabilityService } from './observability.service';
 
 describe('observability readiness', () => {

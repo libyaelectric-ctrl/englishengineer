@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
+
+import { BrowserRouter } from 'react-router-dom';
+
 import { BillingStatusPanel } from './BillingStatusPanel';
 import type {
   BillingProviderStatus,
@@ -36,10 +38,7 @@ const createSubscription = (
   ...overrides,
 });
 
-const renderPanel = (
-  subscription: SubscriptionSnapshot,
-  providerStatus = backendStatus
-) =>
+const renderPanel = (subscription: SubscriptionSnapshot, providerStatus = backendStatus) =>
   render(
     <BrowserRouter>
       <BillingStatusPanel
@@ -83,8 +82,7 @@ describe('BillingStatusPanel', () => {
       name: 'canceled',
       subscription: createSubscription('canceled'),
       statusLabel: 'Canceled',
-      message:
-        'Your paid subscription is canceled. You can start a new subscription at any time.',
+      message: 'Your paid subscription is canceled. You can start a new subscription at any time.',
     },
     {
       name: 'cancel at period end',
@@ -92,19 +90,15 @@ describe('BillingStatusPanel', () => {
         cancelAtPeriodEnd: true,
       }),
       statusLabel: 'Cancellation scheduled',
-      message:
-        'Your subscription remains active until the end of the current billing period.',
+      message: 'Your subscription remains active until the end of the current billing period.',
     },
-  ])(
-    'shows the $name subscription state',
-    ({ subscription, statusLabel, message }) => {
-      renderPanel(subscription);
+  ])('shows the $name subscription state', ({ subscription, statusLabel, message }) => {
+    renderPanel(subscription);
 
-      expect(screen.getByText(statusLabel, { selector: 'span' })).toBeVisible();
-      expect(screen.getByText(message)).toBeVisible();
-      expect(screen.getByText('Backend configured')).toBeVisible();
-    }
-  );
+    expect(screen.getByText(statusLabel, { selector: 'span' })).toBeVisible();
+    expect(screen.getByText(message)).toBeVisible();
+    expect(screen.getByText('Backend configured')).toBeVisible();
+  });
 
   it('does not present cached paid data as verified in local billing mode', () => {
     renderPanel(createSubscription('active'), localStatus);
@@ -116,8 +110,6 @@ describe('BillingStatusPanel', () => {
     ).toBeVisible();
     expect(screen.getByText('Free entitlements only')).toBeVisible();
     expect(screen.getByText('Local billing mode')).toBeVisible();
-    expect(
-      screen.getByRole('button', { name: /manage subscription/i })
-    ).toBeDisabled();
+    expect(screen.getByRole('button', { name: /manage subscription/i })).toBeDisabled();
   });
 });

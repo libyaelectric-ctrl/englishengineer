@@ -1,55 +1,51 @@
-import path from 'node:path';
-import cors from 'cors';
-import express, {
-  type Express,
-  type Request,
-  type Response,
-  type NextFunction,
-} from 'express';
-import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
-import { createAIService, registerAIRoutes } from './ai.js';
-import { createBillingService, createStripeClient } from './billing-service.js';
-import { registerBillingRoutes } from './billing-routes.js';
+import cors from 'cors';
+import express, { type Express, type NextFunction, type Request, type Response } from 'express';
+import helmet from 'helmet';
+import path from 'node:path';
+import type Stripe from 'stripe';
+
+import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
-import { registerProgressRoutes } from './progress-routes.js';
-import { registerReadingRoutes } from './reading-routes.js';
-import { registerWritingRoutes } from './writing-routes.js';
-import { registerListeningRoutes } from './listening-routes.js';
-import { registerSpeakingRoutes } from './speaking-routes.js';
-import { registerGrammarRoutes } from './grammar-routes.js';
+import { createAIService, registerAIRoutes } from './ai.js';
+import { getAuditLogs, initAuditLog } from './audit-log.js';
+import { createBackendAuth } from './auth.js';
+import type { BackendAuthConfig } from './auth.js';
+import { registerBillingRoutes } from './billing-routes.js';
+import { createBillingService, createStripeClient } from './billing-service.js';
+import type { BillingServiceConfig } from './billing-service.js';
+import { getPoolConfig } from './cache/connection-pool.js';
+import { initRedisCache } from './cache/redis-cache.service.js';
 import { toPublicHealth } from './config.js';
 import { ApiError, toErrorResponse } from './errors.js';
-import { createBackendAuth } from './auth.js';
-import { createRateLimiter, createRateLimitStore } from './rate-limit.js';
-import { initRedisCache } from './cache/redis-cache.service.js';
-import { getPoolConfig } from './cache/connection-pool.js';
-import {
-  createVocabularyLookupService,
-  createUpstashVocabularyCache,
-  registerVocabularyRoutes,
-} from './vocabulary.js';
-import {
-  createWorkspaceRepository,
-  registerWorkspaceRoutes,
-} from './workspace.js';
+import { registerGrammarRoutes } from './grammar-routes.js';
 import { createI18nMiddleware } from './i18n.js';
-import { initAuditLog, getAuditLogs } from './audit-log.js';
-import { getPrometheusMetrics } from './prometheus.js';
-import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
-import { swaggerSpec } from './swagger.js';
+import { registerListeningRoutes } from './listening-routes.js';
 import { logger } from './logger.js';
+import { csrfProtection } from './middleware/csrf.middleware.js';
 import {
   createIdempotencyStore,
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
-import { csrfProtection } from './middleware/csrf.middleware.js';
-import type { BackendConfig } from '../types.js';
-import type { BackendAuthConfig } from './auth.js';
+import { registerProgressRoutes } from './progress-routes.js';
+import { getPrometheusMetrics } from './prometheus.js';
+import { createRateLimitStore, createRateLimiter } from './rate-limit.js';
 import type { UpstashRateLimitStore } from './rate-limit.js';
+import { registerReadingRoutes } from './reading-routes.js';
+import { registerSpeakingRoutes } from './speaking-routes.js';
+import type { SubscriptionRepository } from './subscription-repository.js';
+import { createSubscriptionRepository } from './subscription-repository.js';
+import { swaggerSpec } from './swagger.js';
+import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 import type { VocabularyCache } from './vocabulary-service.js';
-import type { BillingServiceConfig } from './billing-service.js';
-import type Stripe from 'stripe';
+import {
+  createUpstashVocabularyCache,
+  createVocabularyLookupService,
+  registerVocabularyRoutes,
+} from './vocabulary.js';
+import type { WorkspaceRepository } from './workspace-repository.js';
+import { createWorkspaceRepository, registerWorkspaceRoutes } from './workspace.js';
+import { registerWritingRoutes } from './writing-routes.js';
 
 const SECURITY_HEADERS = {
   contentSecurityPolicy: {
@@ -58,10 +54,7 @@ const SECURITY_HEADERS = {
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: [
-        "'self'",
-        'https://englishengineer-production.up.railway.app',
-      ],
+      connectSrc: ["'self'", 'https://englishengineer-production.up.railway.app'],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -87,10 +80,7 @@ const checkSupabaseHealth = async (
   const TIMEOUT_MS = 5000;
   try {
     const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      config.auth.supabaseUrl!,
-      config.auth.supabaseAnonKey!
-    );
+    const supabase = createClient(config.auth.supabaseUrl!, config.auth.supabaseAnonKey!);
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS)
     );
@@ -113,11 +103,7 @@ const checkUpstashHealth = async (
   checks: Record<string, unknown>,
   health: { status: string; ok: boolean }
 ) => {
-  if (
-    config.rateLimit?.storeMode !== 'upstash' ||
-    !config.rateLimit?.upstashUrl
-  )
-    return;
+  if (config.rateLimit?.storeMode !== 'upstash' || !config.rateLimit?.upstashUrl) return;
   const TIMEOUT_MS = 5000;
   try {
     const timeoutPromise: Promise<Response> = new Promise((_, reject) =>
@@ -126,10 +112,7 @@ const checkUpstashHealth = async (
     const pingPromise = fetch(`${config.rateLimit.upstashUrl}/ping`, {
       headers: { Authorization: `Bearer ${config.rateLimit.upstashToken}` },
     });
-    const pingRes = (await Promise.race([
-      pingPromise,
-      timeoutPromise,
-    ])) as globalThis.Response;
+    const pingRes = (await Promise.race([pingPromise, timeoutPromise])) as globalThis.Response;
     checks.rateLimit = { configured: true, reachable: pingRes.ok };
     if (!pingRes.ok) {
       health.status = 'degraded';
@@ -145,9 +128,6 @@ const checkUpstashHealth = async (
     health.ok = false;
   }
 };
-import type { WorkspaceRepository } from './workspace-repository.js';
-import type { SubscriptionRepository } from './subscription-repository.js';
-import { createSubscriptionRepository } from './subscription-repository.js';
 
 interface CreateAppOpts {
   config?: BackendConfig;
@@ -186,10 +166,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
 
   if (config.environment === 'production') {
     app.use((req: Request, res: Response, next: NextFunction) => {
-      if (
-        req.headers['x-forwarded-proto'] !== 'https' &&
-        req.method !== 'GET'
-      ) {
+      if (req.headers['x-forwarded-proto'] !== 'https' && req.method !== 'GET') {
         return res.redirect(301, `https://${req.headers.host}${req.url}`);
       }
       next();
@@ -308,36 +285,23 @@ const parseAuditLogsFilters = (req: Request) => {
   };
 };
 
-const applyI18nTranslation = (
-  request: Request,
-  mapped: ReturnType<typeof toErrorResponse>
-) => {
+const applyI18nTranslation = (request: Request, mapped: ReturnType<typeof toErrorResponse>) => {
   if (!request.i18n || !mapped.body?.error?.code) return;
   const translated = request.i18n.t(mapped.body.error.code);
-  if (translated !== mapped.body.error.code)
-    mapped.body.error.message = translated;
+  if (translated !== mapped.body.error.code) mapped.body.error.message = translated;
 };
 
 const handleApiError =
   (config: BackendConfig) =>
-  (
-    error: unknown,
-    request: Request,
-    response: Response,
-    _next: NextFunction
-  ) => {
+  (error: unknown, request: Request, response: Response, _next: NextFunction) => {
     logger.error(
       'Unhandled API error',
       { path: request.path },
       error instanceof Error ? error : undefined
     );
     if (config.sentry?.dsn)
-      Sentry.captureException(
-        error instanceof Error ? error : new Error(String(error))
-      );
-    const mapped = toErrorResponse(
-      error instanceof Error ? error : new Error(String(error))
-    );
+      Sentry.captureException(error instanceof Error ? error : new Error(String(error)));
+    const mapped = toErrorResponse(error instanceof Error ? error : new Error(String(error)));
     applyI18nTranslation(request, mapped);
     response.status(mapped.status).json(mapped.body);
   };
@@ -358,8 +322,7 @@ const registerRoutes = (
     const startTime = Date.now();
     const health = toPublicHealth(config);
     const checks: Record<string, unknown> = { ...health.checks };
-    if (config.supabase?.configured)
-      await checkSupabaseHealth(config, checks, health);
+    if (config.supabase?.configured) await checkSupabaseHealth(config, checks, health);
     await checkUpstashHealth(config, checks, health);
     const responseTime = Date.now() - startTime;
     response.json({
@@ -367,8 +330,7 @@ const registerRoutes = (
       checks,
       responseTimeMs: responseTime,
       timestamp: new Date().toISOString(),
-      stripeConfigured:
-        (checks.stripe as { configured?: boolean })?.configured ?? false,
+      stripeConfigured: (checks.stripe as { configured?: boolean })?.configured ?? false,
     });
   };
 
@@ -381,9 +343,7 @@ const registerRoutes = (
     res.send(getPrometheusMetrics());
   });
 
-  app.get('/api-docs.json', (_req: Request, res: Response) =>
-    res.json(swaggerSpec)
-  );
+  app.get('/api-docs.json', (_req: Request, res: Response) => res.json(swaggerSpec));
   app.get('/api-docs', (_req: Request, res: Response) => {
     res.send(
       `<!DOCTYPE html><html><head><title>EngineerOS API Docs</title><link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"></head><body><div id="swagger-ui"></div><script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script><script>SwaggerUIBundle({url:'/api-docs.json',dom_id:'#swagger-ui'})</script></body></html>`
@@ -407,9 +367,7 @@ const registerRoutes = (
 
   registerAIRoutes(
     app,
-    createAIService(config.ai, fetchImpl) as unknown as Parameters<
-      typeof registerAIRoutes
-    >[1],
+    createAIService(config.ai, fetchImpl) as unknown as Parameters<typeof registerAIRoutes>[1],
     requireBackendAuth,
     limiters.ai,
     billingRepository ??
@@ -417,8 +375,7 @@ const registerRoutes = (
         {
           ...config.stripe,
           supabaseUrl: config.stripe.supabaseUrl ?? undefined,
-          supabaseServiceRoleKey:
-            config.stripe.supabaseServiceRoleKey ?? undefined,
+          supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
         },
         fetchImpl
       ),
@@ -437,11 +394,7 @@ const registerRoutes = (
       : new Map();
   registerVocabularyRoutes(
     app,
-    createVocabularyLookupService(
-      config.vocabulary,
-      fetchImpl,
-      vocabCache as VocabularyCache
-    ),
+    createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as VocabularyCache),
     limiters.vocabulary
   );
 
@@ -456,8 +409,7 @@ const registerRoutes = (
           {
             ...config.stripe,
             supabaseUrl: config.stripe.supabaseUrl ?? undefined,
-            supabaseServiceRoleKey:
-              config.stripe.supabaseServiceRoleKey ?? undefined,
+            supabaseServiceRoleKey: config.stripe.supabaseServiceRoleKey ?? undefined,
           },
           fetchImpl
         ),
@@ -467,32 +419,17 @@ const registerRoutes = (
     optionalBackendAuth
   );
 
-  const resolvedWorkspaceRepository = resolveWorkspaceRepo(
-    workspaceRepository,
-    config
-  );
+  const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
   registerWorkspaceRoutes(app, requireBackendAuth, limiters.workspace, {
     repository: resolvedWorkspaceRepository,
   });
 
-  const auditLogsHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  const auditLogsHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.auth?.userId;
-      if (!userId)
-        throw new ApiError(
-          401,
-          'authentication_required',
-          'Authentication required.'
-        );
-      const isAdmin =
-        userId === 'engineeros-dev-user' ||
-        req.auth?.source === 'internal-secret';
-      if (!isAdmin)
-        throw new ApiError(403, 'admin_required', 'Admin access required.');
+      if (!userId) throw new ApiError(401, 'authentication_required', 'Authentication required.');
+      const isAdmin = userId === 'engineeros-dev-user' || req.auth?.source === 'internal-secret';
+      if (!isAdmin) throw new ApiError(403, 'admin_required', 'Admin access required.');
       const filters = parseAuditLogsFilters(req);
       res.json({ success: true, data: await getAuditLogs(filters) });
     } catch (error) {
@@ -514,10 +451,7 @@ const registerRoutes = (
     if (!req.path.startsWith('/v1')) {
       _res.setHeader('Deprecation', 'true');
       _res.setHeader('Sunset', '2026-12-31');
-      _res.setHeader(
-        'Link',
-        '</api/v1' + req.path + '>; rel="successor-version"'
-      );
+      _res.setHeader('Link', '</api/v1' + req.path + '>; rel="successor-version"');
     }
     next();
   });
@@ -531,10 +465,7 @@ const registerRoutes = (
   registerSpeakingRoutes(app, requireBackendAuth);
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
   // this one directory only, never the whole filesystem.
-  app.use(
-    '/uploads/speaking',
-    express.static(path.resolve(process.cwd(), 'uploads', 'speaking'))
-  );
+  app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
   registerGrammarRoutes(app);
 };
 
@@ -549,8 +480,7 @@ const initConnectionPool = (config: BackendConfig) => {
 };
 
 const initIdempotency = (config: BackendConfig, fetchImpl: typeof fetch) => {
-  const storeType =
-    config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory';
+  const storeType = config.rateLimit.storeMode === 'upstash' ? 'redis' : 'memory';
   const store = createIdempotencyStore(
     storeType,
     config as {
@@ -574,10 +504,7 @@ const initSentryIfConfigured = (config: BackendConfig) => {
   });
 };
 
-const registerNotFoundAndErrorHandlers = (
-  app: Express,
-  config: BackendConfig
-) => {
+const registerNotFoundAndErrorHandlers = (app: Express, config: BackendConfig) => {
   app.use((_request: Request, _response: Response, next: NextFunction) => {
     next(new ApiError(404, 'route_not_found', 'Route not found.'));
   });

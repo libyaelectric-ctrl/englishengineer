@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { getInitials, generateId } from './auth.helpers';
+
+import { generateId, getInitials } from './auth.helpers';
 
 describe('auth helpers', () => {
   describe('getInitials', () => {

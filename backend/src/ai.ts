@@ -1,19 +1,14 @@
-import { ApiError } from './errors.js';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+
+import { AI_CONTRACT_VERSION, createAIService } from './ai-core/index.js';
 import { createAiLedger } from './ai-ledger.js';
-import { validateBody, AiRequestBodySchema } from './validation.js';
-import { createAIService, AI_CONTRACT_VERSION } from './ai-core/index.js';
-import { checkUserLimits } from './cost-tracker.js';
-import { getOrSet } from './cache/redis-cache.service.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from 'express';
-import type { SubscriptionRepository } from './subscription-repository.js';
-import type { SubscriptionSnapshot } from './billing-helpers.js';
 import type { AiLedger } from './ai-ledger.js';
+import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { getOrSet } from './cache/redis-cache.service.js';
+import { checkUserLimits } from './cost-tracker.js';
+import { ApiError } from './errors.js';
+import type { SubscriptionRepository } from './subscription-repository.js';
+import { AiRequestBodySchema, validateBody } from './validation.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
 
@@ -27,19 +22,13 @@ export const AI_ROUTES: Record<string, string> = {
 const isBypassUser = (userId: string): boolean => {
   if (process.env.NODE_ENV === 'production') return false;
   if (process.env.ALLOW_INSECURE_DEV_AUTH !== 'true') return false;
-  return (
-    userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_')
-  );
+  return userId === 'engineeros-dev-user' || userId.startsWith('demo_engineer_');
 };
 
 const checkCostLimits = (userId: string) => {
   const limits = checkUserLimits(userId);
   if (!limits.allowed)
-    throw new ApiError(
-      429,
-      'user_rate_limit_exceeded',
-      limits.reason ?? 'Rate limit exceeded.'
-    );
+    throw new ApiError(429, 'user_rate_limit_exceeded', limits.reason ?? 'Rate limit exceeded.');
 };
 
 const isLimitReached = (planId: string, count: number) =>
@@ -78,8 +67,7 @@ const checkRateLimits = async (
     ? await billingRepository.getSubscriptionStatus(userId)
     : null;
   const topupCredits = subscription?.topupCredits ?? 0;
-  if (topupCredits > 0)
-    return { count, useTopup: true, subscription, topupCredits };
+  if (topupCredits > 0) return { count, useTopup: true, subscription, topupCredits };
 
   throwLimitError(planId);
   // Unreachable — throwLimitError always throws, but TS needs an explicit return path
@@ -127,25 +115,21 @@ const logAiUsage = (
 export const registerAIRoutes = (
   app: Express,
   aiService: {
-    complete: (
-      op: string,
-      body: Record<string, unknown>
-    ) => Promise<Record<string, unknown>>;
+    complete: (op: string, body: Record<string, unknown>) => Promise<Record<string, unknown>>;
   },
   requireBackendAuth: RequestHandler,
   rateLimiter: RequestHandler,
   billingRepository: SubscriptionRepository,
-  config: { ai?: { rateLimitWindowMs?: number; rateLimitMax?: number }; stripe?: Record<string, unknown>; supabase?: Record<string, unknown> },
+  config: {
+    ai?: { rateLimitWindowMs?: number; rateLimitMax?: number };
+    stripe?: Record<string, unknown>;
+    supabase?: Record<string, unknown>;
+  },
   _fetchImpl: typeof fetch = fetch
 ): void => {
-  const ledger = createAiLedger(
-    config as unknown as Parameters<typeof createAiLedger>[0]
-  );
+  const ledger = createAiLedger(config as unknown as Parameters<typeof createAiLedger>[0]);
 
-  const validateOperation = (
-    body: Record<string, unknown>,
-    defaultOp: string
-  ) => {
+  const validateOperation = (body: Record<string, unknown>, defaultOp: string) => {
     if (body?.operation !== undefined && body.operation !== defaultOp) {
       throw new ApiError(
         400,
@@ -196,8 +180,7 @@ export const registerAIRoutes = (
           const userId = request.auth?.userId || 'unknown';
           const bypass = isBypassUser(userId);
 
-          const { useTopup, subscription, topupCredits } =
-            await resolveRateLimits(userId, bypass);
+          const { useTopup, subscription, topupCredits } = await resolveRateLimits(userId, bypass);
 
           const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
           const { value: result } = await getOrSet(cacheKey, 3600, () =>
@@ -205,12 +188,7 @@ export const registerAIRoutes = (
           );
 
           if (useTopup && !bypass) {
-            await decrementTopup(
-              billingRepository,
-              userId,
-              subscription,
-              topupCredits
-            );
+            await decrementTopup(billingRepository, userId, subscription, topupCredits);
           }
           logUsage(userId, bypass, result, body, defaultOperation);
           response.json(result);

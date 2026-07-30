@@ -1,48 +1,35 @@
-import { AUTH_CONFIG } from './auth.config';
+import { logger } from '@/shared/logger';
+
 import {
   AuthAdapter,
   LocalAuthAdapter,
   SupabaseAuthAdapter,
   SupabaseReadyAuthAdapter,
 } from './auth.adapter';
-import { logger } from '@/shared/logger';
-import { CloudSyncService } from './cloud-sync.service';
+import { AUTH_CONFIG } from './auth.config';
 import { UserProfile } from './auth.types';
+import { CloudSyncService } from './cloud-sync.service';
 
 const localAdapter = new LocalAuthAdapter(AUTH_CONFIG.localAuthAllowed);
-const supabaseReadyAdapter = new SupabaseReadyAuthAdapter(
-  localAdapter,
-  AUTH_CONFIG.supabase
-);
+const supabaseReadyAdapter = new SupabaseReadyAuthAdapter(localAdapter, AUTH_CONFIG.supabase);
 
 const activeAdapter: AuthAdapter = (() => {
   if (AUTH_CONFIG.requestedProvider !== 'supabase') {
     if (!AUTH_CONFIG.localAuthAllowed) {
-      logger.e(
-        'Local authentication is blocked in production. Configure Supabase auth.'
-      );
+      logger.e('Local authentication is blocked in production. Configure Supabase auth.');
     }
     return localAdapter;
   }
 
-  if (
-    !AUTH_CONFIG.isSupabaseReady ||
-    !AUTH_CONFIG.supabase.url ||
-    !AUTH_CONFIG.supabase.anonKey
-  ) {
-    logger.w(
-      'Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.'
-    );
+  if (!AUTH_CONFIG.isSupabaseReady || !AUTH_CONFIG.supabase.url || !AUTH_CONFIG.supabase.anonKey) {
+    logger.w('Supabase auth requested but env is incomplete. Falling back to LocalAuthProvider.');
     return localAdapter;
   }
 
   try {
     return new SupabaseAuthAdapter();
   } catch (e) {
-    logger.e(
-      'Failed to initialize Supabase adapter, falling back to local.',
-      e
-    );
+    logger.e('Failed to initialize Supabase adapter, falling back to local.', e);
     return localAdapter;
   }
 })();
@@ -105,9 +92,7 @@ export const AuthService = {
     await Promise.all([activeAdapter.logout(), localAdapter.logout()]);
   },
 
-  async updateProfile(
-    updates: Parameters<typeof activeAdapter.updateProfile>[0]
-  ) {
+  async updateProfile(updates: Parameters<typeof activeAdapter.updateProfile>[0]) {
     const localUser = await localAdapter.getCurrentUser();
     if (localUser?.id.startsWith('demo_engineer_')) {
       return localAdapter.updateProfile(updates);

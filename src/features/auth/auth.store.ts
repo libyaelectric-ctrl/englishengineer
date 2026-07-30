@@ -1,21 +1,15 @@
 import { create } from 'zustand';
-import { AuthState, UserProfile } from './auth.types';
-import { AuthService } from './auth.service';
+
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
+import { AuthService } from './auth.service';
+import { AuthState, UserProfile } from './auth.types';
+
 interface AuthActions {
   initialize: () => Promise<void>;
-  login: (
-    displayName: string,
-    email: string,
-    password?: string
-  ) => Promise<void>;
-  signUp: (
-    displayName: string,
-    email: string,
-    password: string
-  ) => Promise<void>;
+  login: (displayName: string, email: string, password?: string) => Promise<void>;
+  signUp: (displayName: string, email: string, password: string) => Promise<void>;
   demoLogin: () => Promise<void>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;

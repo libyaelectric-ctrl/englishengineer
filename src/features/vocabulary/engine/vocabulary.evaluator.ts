@@ -1,4 +1,5 @@
 import { ScoringService } from '@/core/learning/scoring.service';
+
 import {
   VocabularyAnswer,
   VocabularyEvaluationResult,
@@ -14,19 +15,14 @@ export const VocabularyEvaluator = {
     const correctAnswers = answers.filter((answer) => answer.isCorrect);
     const accuracy = Math.round((correctAnswers.length / total) * 100);
     const averageSpeed =
-      answers.reduce((sum, answer) => sum + answer.responseTimeSeconds, 0) /
-      total;
-    const speed = Math.round(
-      Math.max(0, Math.min(100, 100 - averageSpeed * 8))
-    );
+      answers.reduce((sum, answer) => sum + answer.responseTimeSeconds, 0) / total;
+    const speed = Math.round(Math.max(0, Math.min(100, 100 - averageSpeed * 8)));
 
     const retained = correctAnswers.filter(
       (answer) => (reviewStates[answer.wordId]?.repetitions || 0) >= 2
     ).length;
     const retention = Math.round((retained / total) * 100);
-    const finalScore = Math.round(
-      accuracy * 0.55 + speed * 0.2 + retention * 0.25
-    );
+    const finalScore = Math.round(accuracy * 0.55 + speed * 0.2 + retention * 0.25);
 
     const scoring = ScoringService.calculateScore({
       module: 'Vocabulary',
@@ -35,9 +31,7 @@ export const VocabularyEvaluator = {
       timeSpentMinutes: Math.max(1, Math.round(total * 0.5)),
     });
 
-    const weakWords = answers
-      .filter((answer) => !answer.isCorrect)
-      .map((answer) => answer.wordId);
+    const weakWords = answers.filter((answer) => !answer.isCorrect).map((answer) => answer.wordId);
     const strongWords = correctAnswers.map((answer) => answer.wordId);
 
     return {

@@ -84,8 +84,7 @@ const COMMON_MISTAKES: Array<{
   },
   {
     pattern: /\bat this point in time\b/gi,
-    message:
-      '"At this point in time" can be simplified to "now" or "currently"',
+    message: '"At this point in time" can be simplified to "now" or "currently"',
     fix: 'currently',
     type: 'style',
   },
@@ -224,9 +223,7 @@ function checkStylePatterns(text: string): RealtimeSuggestion[] {
   // Sentence length warning
   const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   for (let i = 0; i < sentences.length; i++) {
-    const wordCount = sentences[i]
-      .split(/\s+/)
-      .filter((w) => w.length > 0).length;
+    const wordCount = sentences[i].split(/\s+/).filter((w) => w.length > 0).length;
     if (wordCount > 35) {
       suggestions.push({
         id: `long-sentence-${i}`,
@@ -256,17 +253,12 @@ function checkStructure(text: string): RealtimeSuggestion[] {
   }
 
   // Check for bullet points or numbered lists
-  if (
-    text.length > 300 &&
-    !/^\s*[-*•]\s/m.test(text) &&
-    !/^\s*\d+[.)]\s/m.test(text)
-  ) {
+  if (text.length > 300 && !/^\s*[-*•]\s/m.test(text) && !/^\s*\d+[.)]\s/m.test(text)) {
     suggestions.push({
       id: 'no-lists',
       type: 'structure',
       severity: 'info',
-      message:
-        'Consider using bullet points or numbered lists for technical content',
+      message: 'Consider using bullet points or numbered lists for technical content',
     });
   }
 
@@ -298,16 +290,10 @@ export const WritingRealtimeAnalyzer = {
     const styleSuggestions = checkStylePatterns(text);
     const structureSuggestions = checkStructure(text);
 
-    const allSuggestions = [
-      ...grammarSuggestions,
-      ...styleSuggestions,
-      ...structureSuggestions,
-    ];
+    const allSuggestions = [...grammarSuggestions, ...styleSuggestions, ...structureSuggestions];
 
     const errors = allSuggestions.filter((s) => s.severity === 'error').length;
-    const warnings = allSuggestions.filter(
-      (s) => s.severity === 'warning'
-    ).length;
+    const warnings = allSuggestions.filter((s) => s.severity === 'warning').length;
 
     const grammarScore = Math.max(0, 100 - errors * 15 - warnings * 5);
     const styleScore = Math.max(0, 100 - styleSuggestions.length * 10);

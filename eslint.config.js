@@ -1,8 +1,8 @@
 import js from '@eslint/js';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import reactHooks from 'eslint-plugin-react-hooks';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import reactHooks from 'eslint-plugin-react-hooks';
-import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
   {
@@ -22,10 +22,7 @@ export default tseslint.config(
     ],
   },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2022,
@@ -92,9 +89,7 @@ export default tseslint.config(
   },
   // Auth callback — console used for debugging/logging
   {
-    files: [
-      'src/pages/AuthCallbackPage.tsx',
-    ],
+    files: ['src/pages/AuthCallbackPage.tsx'],
     rules: { 'no-console': 'off' },
-  },
+  }
 );

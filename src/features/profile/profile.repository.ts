@@ -1,4 +1,5 @@
 import { storage } from '@/shared/storage';
+
 import {
   type LearningGoal,
   type ProfessionId,
@@ -32,25 +33,17 @@ const normalizeSkill = (
   };
 };
 
-const mergeDailyTarget = (
-  stored: UserLearningProfile,
-  initial: UserLearningProfile
-) => ({
+const mergeDailyTarget = (stored: UserLearningProfile, initial: UserLearningProfile) => ({
   minutes: stored.dailyTarget?.minutes ?? initial.dailyTarget.minutes,
   taskCount: stored.dailyTarget?.taskCount ?? initial.dailyTarget.taskCount,
 });
 
-const mergeWeeklyTolerance = (
-  stored: UserLearningProfile,
-  initial: UserLearningProfile
-) => ({
+const mergeWeeklyTolerance = (stored: UserLearningProfile, initial: UserLearningProfile) => ({
   allowedMissedDays:
-    stored.weeklyTolerance?.allowedMissedDays ??
-    initial.weeklyTolerance.allowedMissedDays,
+    stored.weeklyTolerance?.allowedMissedDays ?? initial.weeklyTolerance.allowedMissedDays,
 });
 
-const pickOrFallback = <T>(value: T | undefined | null, fallback: T): T =>
-  value ?? fallback;
+const pickOrFallback = <T>(value: T | undefined | null, fallback: T): T => value ?? fallback;
 
 const pickArrayOrFallback = <T>(value: T[] | undefined, fallback: T[]): T[] =>
   Array.isArray(value) ? value : fallback;
@@ -63,53 +56,23 @@ const mergeProfileDefaults = (
   goals: pickArrayOrFallback(stored.goals, initial.goals),
   professionId: pickOrFallback(stored.professionId, initial.professionId),
   industryId: pickOrFallback(stored.industryId, initial.industryId),
-  communicationGoals: pickArrayOrFallback(
-    stored.communicationGoals,
-    initial.communicationGoals
-  ),
-  selfReportedCefr: pickOrFallback(
-    stored.selfReportedCefr,
-    initial.selfReportedCefr
-  ),
-  learningFocus: pickArrayOrFallback(
-    stored.learningFocus,
-    initial.learningFocus
-  ),
+  communicationGoals: pickArrayOrFallback(stored.communicationGoals, initial.communicationGoals),
+  selfReportedCefr: pickOrFallback(stored.selfReportedCefr, initial.selfReportedCefr),
+  learningFocus: pickArrayOrFallback(stored.learningFocus, initial.learningFocus),
   selectedPlan: pickOrFallback(stored.selectedPlan, initial.selectedPlan),
-  professionalTrack: pickOrFallback(
-    stored.professionalTrack,
-    initial.professionalTrack
-  ),
-  electricalSubdomain: pickOrFallback(
-    stored.electricalSubdomain,
-    initial.electricalSubdomain
-  ),
-  experienceLevel: pickOrFallback(
-    stored.experienceLevel,
-    initial.experienceLevel
-  ),
+  professionalTrack: pickOrFallback(stored.professionalTrack, initial.professionalTrack),
+  electricalSubdomain: pickOrFallback(stored.electricalSubdomain, initial.electricalSubdomain),
+  experienceLevel: pickOrFallback(stored.experienceLevel, initial.experienceLevel),
   careerGoal: pickOrFallback(stored.careerGoal, initial.careerGoal),
   country: pickOrFallback(stored.country, initial.country),
   timezone: pickOrFallback(stored.timezone, initial.timezone),
-  interfaceLanguage: pickOrFallback(
-    stored.interfaceLanguage,
-    initial.interfaceLanguage
-  ),
-  placementCompleted: pickOrFallback(
-    stored.placementCompleted,
-    initial.placementCompleted
-  ),
-  placementConfidence: pickOrFallback(
-    stored.placementConfidence,
-    initial.placementConfidence
-  ),
+  interfaceLanguage: pickOrFallback(stored.interfaceLanguage, initial.interfaceLanguage),
+  placementCompleted: pickOrFallback(stored.placementCompleted, initial.placementCompleted),
+  placementConfidence: pickOrFallback(stored.placementConfidence, initial.placementConfidence),
   placementBand: pickOrFallback(stored.placementBand, initial.placementBand),
   dailyTarget: mergeDailyTarget(stored, initial),
   weeklyTolerance: mergeWeeklyTolerance(stored, initial),
-  onboardingCompleted: pickOrFallback(
-    stored.onboardingCompleted,
-    initial.onboardingCompleted
-  ),
+  onboardingCompleted: pickOrFallback(stored.onboardingCompleted, initial.onboardingCompleted),
 });
 
 export const LearningProfileRepository = {
@@ -122,10 +85,7 @@ export const LearningProfileRepository = {
       ...mergeProfileDefaults(stored, initial),
       userId,
       skills: Object.fromEntries(
-        SKILL_NAMES.map((skill) => [
-          skill,
-          normalizeSkill(skill, stored.skills?.[skill]),
-        ])
+        SKILL_NAMES.map((skill) => [skill, normalizeSkill(skill, stored.skills?.[skill])])
       ) as Record<SkillName, SkillProfile>,
     };
   },

@@ -19,28 +19,19 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
       "Regarding the protection relay submittal, the electrical consultant issued a 'Revise and Resubmit' status due to the exclusion of arc-flash protection parameters in the short-circuit study. We must remind them that the switchgear operates under eighty kilo-Amps for zero-point-five seconds, and we have already integrated optical fiber sensor detection to mitigate internal arc faults. The response must cite the IEEE fifteen eighty-four standard for incident energy calculations. Let's write a technical response confirming that the sensor trip time is under ten milliseconds, which vastly reduces the incident energy levels below the category two threshold.",
     hiddenTranscript:
       "Regarding the protection relay submittal, the electrical consultant issued a [Revise and Resubmit] status due to the exclusion of [arc-flash protection parameters] in the short-circuit study. We must remind them that the switchgear operates under [eighty kilo-Amps] for zero-point-five seconds, and we have already integrated [optical fiber sensor detection] to mitigate internal arc faults. The response must cite the [IEEE fifteen eighty-four] standard for incident energy calculations. Let's write a technical response confirming that the sensor trip time is under [ten milliseconds], which vastly reduces the incident energy levels below the [category two] threshold.",
-    keywords: [
-      'submittal',
-      'arc-flash',
-      'switchgear',
-      'IEEE 1584',
-      'sensor',
-      'incident energy',
-    ],
+    keywords: ['submittal', 'arc-flash', 'switchgear', 'IEEE 1584', 'sensor', 'incident energy'],
     vocabulary: [
       {
         term: 'IEEE 1584',
         definition:
           'Guide for Performing Arc-Flash Hazard Calculations, providing models to calculate incident energy.',
-        context:
-          'The response must cite the IEEE fifteen eighty-four standard.',
+        context: 'The response must cite the IEEE fifteen eighty-four standard.',
       },
       {
         term: 'Incident Energy',
         definition:
           'The amount of thermal energy impressed on a surface at a certain distance from an electrical arc event.',
-        context:
-          'Reducing the incident energy levels below the category two threshold.',
+        context: 'Reducing the incident energy levels below the category two threshold.',
       },
     ],
     questions: [
@@ -91,51 +82,34 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
       "During the step-load test of the two-megawatt diesel generator, we observed a transient voltage drop of fourteen percent on the initial fifty percent block load step. The governor responded well, bringing the frequency back to fifty Hertz within two-point-eight seconds, which complies with ISO eighty-five twenty-eight class G3 requirements. However, the fuel injection system showed a momentary pressure dip of three-point-two bar on step-load application. We need to adjust the fuel bypass valve pressure regulator to prevent any diesel starvation on the second block load step. Let's execute the next run once the radiator fan speed has stabilized.",
     hiddenTranscript:
       "During the step-load test of the [two-megawatt] diesel generator, we observed a transient voltage drop of [fourteen percent] on the initial [fifty percent block load step]. The governor responded well, bringing the frequency back to [fifty Hertz] within [two-point-eight seconds], which complies with [ISO eighty-five twenty-eight] class G3 requirements. However, the fuel injection system showed a momentary pressure dip of [three-point-two bar] on step-load application. We need to adjust the [fuel bypass valve pressure regulator] to prevent any diesel starvation on the second block load step. Let's execute the next run once the radiator fan speed has stabilized.",
-    keywords: [
-      'transient',
-      'block load',
-      'governor',
-      'ISO 8528',
-      'frequency',
-      'starvation',
-    ],
+    keywords: ['transient', 'block load', 'governor', 'ISO 8528', 'frequency', 'starvation'],
     vocabulary: [
       {
         term: 'Transient Voltage Drop',
         definition:
           'A temporary reduction in voltage caused by sudden load application on a generator.',
-        context:
-          'We observed a transient voltage drop of fourteen percent on the load step.',
+        context: 'We observed a transient voltage drop of fourteen percent on the load step.',
       },
       {
         term: 'ISO 8528 Class G3',
         definition:
           'International standard specifying operating requirements for reciprocating internal combustion engine driven AC generating sets.',
-        context:
-          'Complies with ISO eighty-five twenty-eight class G3 requirements.',
+        context: 'Complies with ISO eighty-five twenty-eight class G3 requirements.',
       },
     ],
     questions: [
       {
         id: 'q_gt_1',
         type: 'multiple_choice',
-        questionText:
-          'What is the rating of the diesel generator being tested?',
-        choices: [
-          'A) 1.5 Megawatt',
-          'B) 2.0 Megawatt',
-          'C) 500 Kilowatt',
-          'D) 3.2 Megawatt',
-        ],
+        questionText: 'What is the rating of the diesel generator being tested?',
+        choices: ['A) 1.5 Megawatt', 'B) 2.0 Megawatt', 'C) 500 Kilowatt', 'D) 3.2 Megawatt'],
         correctAnswer: 'B',
-        explanation:
-          'The transcript explicitly names a "two-megawatt diesel generator".',
+        explanation: 'The transcript explicitly names a "two-megawatt diesel generator".',
       },
       {
         id: 'q_gt_2',
         type: 'true_false',
-        questionText:
-          'The generator recovery met the G3 requirements of ISO 8528.',
+        questionText: 'The generator recovery met the G3 requirements of ISO 8528.',
         correctAnswer: 'true',
         explanation:
           'Yes, the governor restored the frequency within 2.8 seconds, complying with ISO 8528 class G3 requirements.',
@@ -163,28 +137,19 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
       "We have some issues with the main low-voltage distribution board. The thermographic survey report shows a localized temperature hotspot on the phase-B busbar connection. The connection reached eighty-five degrees Celsius under a three-hundred-Amp load, which indicates high contact resistance. This is likely caused by loose securing bolts or oxidation on the copper contact surface. We must schedule an emergency outage this Sunday to clean the busbar faces and retorque all splice joints. Make sure to apply conductive grease before securing the bolts to sixty-five Newton-meters according to the manufacturer's specification.",
     hiddenTranscript:
       "We have some issues with the main [low-voltage distribution board]. The [thermographic survey] report shows a localized temperature hotspot on the [phase-B busbar connection]. The connection reached [eighty-five degrees Celsius] under a three-hundred-Amp load, which indicates [high contact resistance]. This is likely caused by loose securing bolts or [oxidation] on the copper contact surface. We must schedule an emergency outage this Sunday to clean the busbar faces and [retorque] all splice joints. Make sure to apply [conductive grease] before securing the bolts to [sixty-five Newton-meters] according to the manufacturer's specification.",
-    keywords: [
-      'busbar',
-      'thermographic',
-      'hotspot',
-      'contact resistance',
-      'torque',
-      'grease',
-    ],
+    keywords: ['busbar', 'thermographic', 'hotspot', 'contact resistance', 'torque', 'grease'],
     vocabulary: [
       {
         term: 'Thermographic Survey',
         definition:
           'An infrared inspection technique to detect thermal patterns, overheating, or defects in electrical systems.',
-        context:
-          'The thermographic survey report shows a localized temperature hotspot.',
+        context: 'The thermographic survey report shows a localized temperature hotspot.',
       },
       {
         term: 'Contact Resistance',
         definition:
           'The contribution to the total resistance of a system which can be attributed to the contacting interfaces of electrical leads.',
-        context:
-          'Reached eighty-five degrees Celsius, which indicates high contact resistance.',
+        context: 'Reached eighty-five degrees Celsius, which indicates high contact resistance.',
       },
     ],
     questions: [
@@ -234,14 +199,7 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
       'We are wrapping up the insulation resistance testing on the secondary winding terminals of transformer four. Using a calibrated megger test set, we applied one thousand volts DC for sixty seconds between each phase and the earth busbar. The insulation resistance readings are well over two giga-Ohms, which is highly satisfactory. However, during the visual grounding check, I noticed the transformer neutral grounding copper bar is missing its double-point earth termination. We need to install a two-point bolted copper plate to connect directly to the copper earthing ring outside to comply with local safety regulations. Please hold off on the high-voltage energization clearance until this connection is double-inspected.',
     hiddenTranscript:
       'We are wrapping up the [insulation resistance testing] on the secondary winding terminals of [transformer four]. Using a calibrated [megger test set], we applied [one thousand volts DC] for sixty seconds between each phase and the earth busbar. The insulation resistance readings are well over [two giga-Ohms], which is highly satisfactory. However, during the visual grounding check, I noticed the transformer [neutral grounding copper bar] is missing its [double-point earth termination]. We need to install a [two-point bolted copper plate] to connect directly to the [copper earthing ring] outside to comply with local safety regulations. Please hold off on the [high-voltage energization clearance] until this connection is double-inspected.',
-    keywords: [
-      'megger',
-      'insulation',
-      'windings',
-      'resistance',
-      'grounding',
-      'energization',
-    ],
+    keywords: ['megger', 'insulation', 'windings', 'resistance', 'grounding', 'energization'],
     vocabulary: [
       {
         term: 'Insulation Resistance',
@@ -254,16 +212,14 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
         term: 'Megger',
         definition:
           'An instrument used to measure high electrical resistance, commonly used to test insulation integrity.',
-        context:
-          'Using a calibrated megger test set, we applied one thousand volts.',
+        context: 'Using a calibrated megger test set, we applied one thousand volts.',
       },
     ],
     questions: [
       {
         id: 'q_ei_1',
         type: 'multiple_choice',
-        questionText:
-          'What deficiency was identified during the grounding inspection?',
+        questionText: 'What deficiency was identified during the grounding inspection?',
         choices: [
           'A) The insulation resistance reading was below two mega-Ohms.',
           'B) The transformer winding terminals had wrong phase labels.',
@@ -319,15 +275,13 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
         term: 'Cause-and-Effect Test',
         definition:
           'A commissioning test that verifies each fire alarm input triggers the required outputs and interfaces.',
-        context:
-          'We are starting the cause-and-effect test for the fire alarm system.',
+        context: 'We are starting the cause-and-effect test for the fire alarm system.',
       },
       {
         term: 'Fire Smoke Damper',
         definition:
           'A damper that closes during fire alarm activation to restrict smoke movement through ductwork.',
-        context:
-          'The control panel must send a signal to close the fire smoke dampers.',
+        context: 'The control panel must send a signal to close the fire smoke dampers.',
       },
     ],
     questions: [
@@ -349,8 +303,7 @@ export const ADVANCED_LISTENING_MISSIONS: ListeningMission[] = [
       {
         id: 'q_mc_2',
         type: 'true_false',
-        questionText:
-          'The workstation should show the exact detector address within five seconds.',
+        questionText: 'The workstation should show the exact detector address within five seconds.',
         correctAnswer: 'true',
         explanation:
           'Yes, the transcript states that the graphic workstation should show the exact detector address within five seconds.',

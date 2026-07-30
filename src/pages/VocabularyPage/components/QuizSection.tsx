@@ -1,23 +1,20 @@
-import {
-  FormEvent,
-  KeyboardEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
 import { Award, CheckCircle2, LoaderCircle } from 'lucide-react';
+
+import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
-  repairVocabularyText,
-  type VocabularyMenuState,
-  type VocabularyTerm,
   VocabularyMenuService,
+  type VocabularyMenuState,
   VocabularyRepository,
+  type VocabularyTerm,
+  repairVocabularyText,
 } from '@/features/vocabulary';
 import {
-  isTurkishQuizAnswerCorrect,
   LEARNED_QUIZ_MINIMUM,
   LEARNED_QUIZ_SIZE,
+  isTurkishQuizAnswerCorrect,
   selectRandomQuizItems,
 } from '@/features/vocabulary/services/learned-quiz';
 
@@ -60,13 +57,9 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
     try {
       const selectedIds = selectRandomQuizItems(learnedIds);
       const selectedTerms = await Promise.all(
-        selectedIds.map((wordId) =>
-          VocabularyRepository.getVocabularyTermById(wordId)
-        )
+        selectedIds.map((wordId) => VocabularyRepository.getVocabularyTermById(wordId))
       );
-      const words = selectedTerms.filter(
-        (term): term is VocabularyTerm => Boolean(term)
-      );
+      const words = selectedTerms.filter((term): term is VocabularyTerm => Boolean(term));
 
       if (words.length !== LEARNED_QUIZ_SIZE) {
         throw new Error('Quiz words could not be loaded.');
@@ -106,10 +99,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
     setResult({ mastered, struggling, kept });
   };
 
-  const handleAnswerKeyDown = (
-    event: KeyboardEvent<HTMLInputElement>,
-    index: number
-  ) => {
+  const handleAnswerKeyDown = (event: KeyboardEvent<HTMLInputElement>, index: number) => {
     if (event.key !== 'Enter') return;
     event.preventDefault();
     const nextInput = inputRefs.current[index + 1];
@@ -127,9 +117,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
     setLoadError(null);
   };
 
-  const answeredCount = Object.values(answers).filter((answer) =>
-    answer.trim()
-  ).length;
+  const answeredCount = Object.values(answers).filter((answer) => answer.trim()).length;
 
   return (
     <SectionCard
@@ -141,9 +129,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
         <div className="space-y-4">
           <div className="grid gap-3 border-y border-border-soft py-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
-              <p className="text-sm font-medium text-foreground">
-                100 learned words required.
-              </p>
+              <p className="text-sm font-medium text-foreground">100 learned words required.</p>
               <p className="mt-1 text-xs text-muted-copy">
                 Current: Learned: {learnedIds.length} / {LEARNED_QUIZ_MINIMUM}
               </p>
@@ -159,9 +145,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
             </button>
           </div>
           {!canStartQuiz && (
-            <p className="text-xs text-muted-copy">
-              Learn at least 100 words to unlock the quiz.
-            </p>
+            <p className="text-xs text-muted-copy">Learn at least 100 words to unlock the quiz.</p>
           )}
           {loadError && (
             <p role="alert" className="text-xs text-rose-600">
@@ -181,10 +165,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
           </div>
           <div className="space-y-4">
             {quizWords.map((word, index) => (
-              <div
-                key={word.id}
-                className="border-b border-border-soft pb-4 last:border-b-0"
-              >
+              <div key={word.id} className="border-b border-border-soft pb-4 last:border-b-0">
                 <label
                   htmlFor={`learned-quiz-${word.id}`}
                   className="block text-xs font-bold uppercase tracking-wider text-muted-copy"
@@ -194,9 +175,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
                 <p className="mt-2 text-xl font-semibold text-foreground">
                   {repairVocabularyText(word.term)}
                 </p>
-                <p className="mt-1 text-sm text-muted-copy">
-                  Type Turkish meaning:
-                </p>
+                <p className="mt-1 text-sm text-muted-copy">Type Turkish meaning:</p>
                 <input
                   ref={(element) => {
                     inputRefs.current[index] = element;
@@ -232,26 +211,37 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
       {result && (
         <div className="space-y-4" aria-live="polite">
           <div className="flex items-center gap-3 border-b border-border-soft pb-4">
-            <CheckCircle2
-              className="h-6 w-6 text-emerald-600"
-              aria-hidden="true"
-            />
+            <CheckCircle2 className="h-6 w-6 text-emerald-600" aria-hidden="true" />
             <div>
-              <h5 className="text-base font-semibold text-foreground">
-                Quiz Complete
-              </h5>
-              <p className="text-xs text-muted-copy">
-                Your vocabulary pools have been updated.
-              </p>
+              <h5 className="text-base font-semibold text-foreground">Quiz Complete</h5>
+              <p className="text-xs text-muted-copy">Your vocabulary pools have been updated.</p>
             </div>
           </div>
           <dl className="grid gap-3 text-sm sm:grid-cols-3">
-            <div><dt className="text-muted-copy">Correct</dt><dd className="font-semibold text-emerald-600">{result.mastered.length}</dd></div>
-            <div><dt className="text-muted-copy">Wrong</dt><dd className="font-semibold text-rose-600">{result.struggling.length}</dd></div>
-            <div><dt className="text-muted-copy">Skipped</dt><dd className="font-semibold text-foreground">{result.kept.length}</dd></div>
-            <div><dt className="text-muted-copy">Moved to Mastered</dt><dd className="font-semibold text-emerald-600">{result.mastered.length}</dd></div>
-            <div><dt className="text-muted-copy">Moved to Struggling</dt><dd className="font-semibold text-rose-600">{result.struggling.length}</dd></div>
-            <div><dt className="text-muted-copy">Stayed in Learned</dt><dd className="font-semibold text-foreground">{result.kept.length}</dd></div>
+            <div>
+              <dt className="text-muted-copy">Correct</dt>
+              <dd className="font-semibold text-emerald-600">{result.mastered.length}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-copy">Wrong</dt>
+              <dd className="font-semibold text-rose-600">{result.struggling.length}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-copy">Skipped</dt>
+              <dd className="font-semibold text-foreground">{result.kept.length}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-copy">Moved to Mastered</dt>
+              <dd className="font-semibold text-emerald-600">{result.mastered.length}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-copy">Moved to Struggling</dt>
+              <dd className="font-semibold text-rose-600">{result.struggling.length}</dd>
+            </div>
+            <div>
+              <dt className="text-muted-copy">Stayed in Learned</dt>
+              <dd className="font-semibold text-foreground">{result.kept.length}</dd>
+            </div>
           </dl>
           <div className="flex justify-end border-t border-border-soft pt-4">
             <button

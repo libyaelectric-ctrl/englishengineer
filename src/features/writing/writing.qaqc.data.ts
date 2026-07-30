@@ -11,12 +11,7 @@ export const WRITING_QAQC_SPECS: WritingSpec[] = [
     scenario:
       'A non-conformance was raised because cable tray supports were installed without approved spacing.',
     task: 'Write a corrective action response for the NCR register.',
-    expectedStructure: [
-      'NCR reference',
-      'Root cause',
-      'Correction',
-      'Preventive action',
-    ],
+    expectedStructure: ['NCR reference', 'Root cause', 'Correction', 'Preventive action'],
     targetVocabulary: [
       'non-conformance',
       'root cause',
@@ -24,10 +19,7 @@ export const WRITING_QAQC_SPECS: WritingSpec[] = [
       'preventive action',
       'verification',
     ],
-    grammarFocus: [
-      'cause-effect clauses',
-      'future passive for corrective work',
-    ],
+    grammarFocus: ['cause-effect clauses', 'future passive for corrective work'],
     strongPhrase:
       'The root cause was uncontrolled installation before approval of the coordinated support spacing schedule.',
     weakPhrase: 'The installer made mistake and we fixed it.',
@@ -70,12 +62,7 @@ export const WRITING_QAQC_SPECS: WritingSpec[] = [
     scenario:
       'During an ITP witness point, the inspector observes incomplete torque marking on busbar bolts.',
     task: 'Write a professional observation note with required closure evidence.',
-    expectedStructure: [
-      'ITP stage',
-      'Observation',
-      'Required correction',
-      'Closure evidence',
-    ],
+    expectedStructure: ['ITP stage', 'Observation', 'Required correction', 'Closure evidence'],
     targetVocabulary: [
       'witness point',
       'torque marking',
@@ -98,12 +85,7 @@ export const WRITING_QAQC_SPECS: WritingSpec[] = [
     scenario:
       'A factory acceptance test for LV panels passed most checks but one interlock sequence failed.',
     task: 'Write the FAT report conclusion and open item.',
-    expectedStructure: [
-      'Test scope',
-      'Passed checks',
-      'Failed item',
-      'Required rectification',
-    ],
+    expectedStructure: ['Test scope', 'Passed checks', 'Failed item', 'Required rectification'],
     targetVocabulary: [
       'factory acceptance test',
       'interlock',
@@ -126,12 +108,7 @@ export const WRITING_QAQC_SPECS: WritingSpec[] = [
     scenario:
       'A site acceptance test for the fire alarm interface passed after retesting the AHU shutdown signal.',
     task: 'Create a site acceptance test summary suitable for handover records.',
-    expectedStructure: [
-      'System tested',
-      'Test result',
-      'Retest note',
-      'Handover status',
-    ],
+    expectedStructure: ['System tested', 'Test result', 'Retest note', 'Handover status'],
     targetVocabulary: [
       'site acceptance test',
       'interface',

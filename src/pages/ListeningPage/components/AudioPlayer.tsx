@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+import { Pause, Play, SkipBack, SkipForward, Volume2 } from 'lucide-react';
+
+import { useEffect, useRef, useState } from 'react';
 
 const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5];
 
@@ -67,26 +68,16 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
         <track kind="captions" label="English" />
       </audio>
       <div className="flex items-center gap-3">
-        <button
-          onClick={() => seek(-10)}
-          className="text-muted-copy hover:text-foreground"
-        >
+        <button onClick={() => seek(-10)} className="text-muted-copy hover:text-foreground">
           <SkipBack className="h-4 w-4" />
         </button>
         <button
           onClick={togglePlay}
           className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground"
         >
-          {isPlaying ? (
-            <Pause className="h-4 w-4" />
-          ) : (
-            <Play className="h-4 w-4" />
-          )}
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </button>
-        <button
-          onClick={() => seek(10)}
-          className="text-muted-copy hover:text-foreground"
-        >
+        <button onClick={() => seek(10)} className="text-muted-copy hover:text-foreground">
           <SkipForward className="h-4 w-4" />
         </button>
         <span className="text-[10px] font-mono text-muted-copy">
@@ -99,8 +90,7 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
         max={duration || 1}
         value={currentTime}
         onChange={(e) => {
-          if (audioRef.current)
-            audioRef.current.currentTime = Number(e.target.value);
+          if (audioRef.current) audioRef.current.currentTime = Number(e.target.value);
         }}
         className="w-full h-1 accent-primary"
       />

@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { logger } from '@/shared/logger';
 
 const STORAGE_KEY_RECENT = 'command-palette:recent';
 const STORAGE_KEY_FREQ = 'command-palette:frequency';
@@ -39,10 +40,7 @@ export function useCommandPalette() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY_RECENT);
       const recent: string[] = raw ? JSON.parse(raw) : [];
-      const updated = [href, ...recent.filter((r) => r !== href)].slice(
-        0,
-        MAX_RECENT
-      );
+      const updated = [href, ...recent.filter((r) => r !== href)].slice(0, MAX_RECENT);
       localStorage.setItem(STORAGE_KEY_RECENT, JSON.stringify(updated));
     } catch {
       /* ignore */

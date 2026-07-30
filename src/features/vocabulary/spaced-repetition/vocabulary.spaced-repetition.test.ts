@@ -1,8 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import {
-  createInitialReviewState,
-  updateSm2ReviewState,
-} from './vocabulary.spaced-repetition';
+import { describe, expect, it } from 'vitest';
+
+import { createInitialReviewState, updateSm2ReviewState } from './vocabulary.spaced-repetition';
 
 describe('vocabulary.spaced-repetition', () => {
   describe('createInitialReviewState', () => {
@@ -97,9 +95,7 @@ describe('vocabulary.spaced-repetition', () => {
       const now = new Date('2026-07-10T12:00:00Z');
       const updated = updateSm2ReviewState(initial, 4, now);
       const expected = new Date('2026-07-11T12:00:00Z');
-      expect(new Date(updated.nextReview).toDateString()).toBe(
-        expected.toDateString()
-      );
+      expect(new Date(updated.nextReview).toDateString()).toBe(expected.toDateString());
     });
 
     it('calculates nextReview correctly for second successful review', () => {
@@ -109,9 +105,7 @@ describe('vocabulary.spaced-repetition', () => {
       const now = new Date('2026-07-10T12:00:00Z');
       const updated = updateSm2ReviewState(initial, 4, now);
       const expected = new Date('2026-07-16T12:00:00Z');
-      expect(new Date(updated.nextReview).toDateString()).toBe(
-        expected.toDateString()
-      );
+      expect(new Date(updated.nextReview).toDateString()).toBe(expected.toDateString());
     });
 
     it('preserves wordId through updates', () => {

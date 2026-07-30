@@ -47,9 +47,7 @@ function calculateWordSimilarity(recognized: string, expected: string): number {
   return 1 - matrix[a.length][b.length] / maxLen;
 }
 
-function classifyAccentStrength(
-  score: number
-): PronunciationScoreResult['accentStrength'] {
+function classifyAccentStrength(score: number): PronunciationScoreResult['accentStrength'] {
   if (score >= 90) return 'native';
   if (score >= 75) return 'strong';
   if (score >= 55) return 'moderate';
@@ -142,9 +140,7 @@ export const PronunciationScorer = {
     const accurateWordCount = wordAnalyses.filter((a) => a.isAccurate).length;
     const totalTargetWords = targetWords.length;
     const overallScore =
-      totalTargetWords > 0
-        ? Math.round((accurateWordCount / totalTargetWords) * 100)
-        : 100;
+      totalTargetWords > 0 ? Math.round((accurateWordCount / totalTargetWords) * 100) : 100;
 
     const accentStrength = classifyAccentStrength(overallScore);
     const recommendations = generateRecommendations(wordAnalyses);

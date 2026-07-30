@@ -1,16 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import {
-  useWritingStore,
-  WritingHelpers,
-  WritingCorrection,
-} from '@/features/writing';
+import { useEffect, useRef, useState } from 'react';
+
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import {
   ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
   filterContentByLevel,
   useSkillLevel,
 } from '@/features/level-system';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { WritingCorrection, WritingHelpers, useWritingStore } from '@/features/writing';
 
 export function useWritingPage() {
   // Read state and actions from the writing store
@@ -35,17 +32,11 @@ export function useWritingPage() {
   // Havuza göre sıralanmış mission'lar
   const sortedMissions = getMissionsSortedByPoolRatio();
 
-  const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>(
-    'missions'
-  );
-  const [selectedRule, setSelectedRule] = useState<WritingCorrection | null>(
-    null
-  );
+  const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>('missions');
+  const [selectedRule, setSelectedRule] = useState<WritingCorrection | null>(null);
   const [userErrors, setUserErrors] = useState<Record<string, string>>({});
   const [showModelAnswer, setShowModelAnswer] = useState(false);
-  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
-    DEFAULT_CONTENT_LEVEL_FILTER
-  );
+  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(DEFAULT_CONTENT_LEVEL_FILTER);
   const [writingHistory, setWritingHistory] = useState<
     Array<{ date: string; wordCount: number; score: number }>
   >(() => {
@@ -57,11 +48,7 @@ export function useWritingPage() {
   });
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const currentLevel = useSkillLevel('writing').currentLevel;
-  const visibleMissions = filterContentByLevel(
-    sortedMissions,
-    currentLevel,
-    levelFilter
-  );
+  const visibleMissions = filterContentByLevel(sortedMissions, currentLevel, levelFilter);
 
   // Initialize writing store
   useEffect(() => {
@@ -102,8 +89,7 @@ export function useWritingPage() {
   }, [selectMission, selectedMissionId, visibleMissions]);
 
   const currentMission =
-    visibleMissions.find((m) => m.id === selectedMissionId) ||
-    visibleMissions[0];
+    visibleMissions.find((m) => m.id === selectedMissionId) || visibleMissions[0];
 
   const currentMissionIndex = visibleMissions.findIndex(
     (mission) => mission.id === currentMission?.id
@@ -113,18 +99,13 @@ export function useWritingPage() {
   const finishedCount = Object.keys(completedMissions).length;
   const bestScoreAvg =
     finishedCount > 0
-      ? Math.round(
-          Object.values(completedMissions).reduce((a, b) => a + b, 0) /
-            finishedCount
-        )
+      ? Math.round(Object.values(completedMissions).reduce((a, b) => a + b, 0) / finishedCount)
       : 0;
 
   // Active Draft Analysis: count unresolved corrections
   const getActiveCorrections = () => {
     if (!currentMission) return [];
-    return currentMission.corrections.filter((item) =>
-      draft.includes(item.original)
-    );
+    return currentMission.corrections.filter((item) => draft.includes(item.original));
   };
 
   const activeCorrections = getActiveCorrections();

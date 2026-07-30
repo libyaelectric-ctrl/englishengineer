@@ -80,11 +80,7 @@ export const ProfileStep = ({
       <label className="text-sm font-medium text-foreground">
         Timezone
         <select
-          value={
-            TIMEZONES.includes(timezone as (typeof TIMEZONES)[number])
-              ? timezone
-              : 'UTC'
-          }
+          value={TIMEZONES.includes(timezone as (typeof TIMEZONES)[number]) ? timezone : 'UTC'}
           onChange={(event) => setTimezone(event.target.value)}
           className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
         >

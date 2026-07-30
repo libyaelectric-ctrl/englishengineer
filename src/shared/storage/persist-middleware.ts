@@ -1,4 +1,5 @@
 import { type PersistOptions } from 'zustand/middleware';
+
 import { storage } from './index';
 
 /**

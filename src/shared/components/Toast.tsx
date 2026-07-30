@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
-import { CheckCircle2, XCircle, Info, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { CheckCircle2, Info, X, XCircle } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
+import { useEffect, useState } from 'react';
 
 type ToastType = 'success' | 'error' | 'info';
 
@@ -77,9 +78,7 @@ export const ToastContainer = () => {
               className={`flex items-center gap-3 rounded-lg border p-3 shadow-lg ${colors[toast.type]}`}
             >
               <Icon className="h-4 w-4 shrink-0" />
-              <span className="text-sm font-medium flex-1">
-                {toast.message}
-              </span>
+              <span className="text-sm font-medium flex-1">{toast.message}</span>
               <button
                 onClick={() => dismiss(toast.id)}
                 className="shrink-0 opacity-60 hover:opacity-100"

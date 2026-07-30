@@ -1,8 +1,4 @@
-import {
-  ContentAccessLabel,
-  ContentLevelFilter,
-  CefrLevel,
-} from './level-system.types';
+import { CefrLevel, ContentAccessLabel, ContentLevelFilter } from './level-system.types';
 
 const FILTERS: Array<{ value: ContentLevelFilter; label: string }> = [
   { value: 'my-level', label: 'My Level' },
@@ -24,11 +20,7 @@ interface LevelContentFilterProps {
   onChange: (value: ContentLevelFilter) => void;
 }
 
-export const LevelContentFilter = ({
-  value,
-  currentLevel,
-  onChange,
-}: LevelContentFilterProps) => (
+export const LevelContentFilter = ({ value, currentLevel, onChange }: LevelContentFilterProps) => (
   <div className="space-y-2 font-sans">
     <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -40,10 +32,7 @@ export const LevelContentFilter = ({
             Current CEFR level: {currentLevel}
           </p>
         </div>
-        <div
-          className="grid grid-cols-2 gap-2 sm:flex"
-          aria-label="Content level filter"
-        >
+        <div className="grid grid-cols-2 gap-2 sm:flex" aria-label="Content level filter">
           {FILTERS.map((filter) => (
             <button
               key={filter.value}
@@ -64,8 +53,7 @@ export const LevelContentFilter = ({
     </div>
     {value === 'all-levels' && (
       <p className="rounded-[4px] border border-amber-200 bg-amber-50 p-3.5 text-xs font-medium text-amber-800 leading-relaxed">
-        You are viewing all levels. This may include advanced content above your
-        current level.
+        You are viewing all levels. This may include advanced content above your current level.
       </p>
     )}
   </div>
@@ -92,8 +80,8 @@ export const EmptyLevelState = ({ skill }: { skill: string }) => (
       No current-level content yet
     </p>
     <p className="mt-2 leading-relaxed text-muted-copy font-medium">
-      No {skill} content is available for this filter. Choose Review Previous,
-      Preview Next, or All Levels intentionally.
+      No {skill} content is available for this filter. Choose Review Previous, Preview Next, or All
+      Levels intentionally.
     </p>
   </div>
 );

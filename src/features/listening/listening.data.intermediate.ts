@@ -19,21 +19,13 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       "We need to align the trench coordinates for Substation B today. The civil team has marked the excavation lines, but the main cable entry conduits are hitting the structural column foundations. We need to shift the entire cable trench approximately five hundred millimeters to the east to clear the footings. If we shift it, make sure the bend radius for the one hundred and ten millimeter PVC conduits is not compromised. We need at least a nine hundred millimeter bend radius to allow the single-core copper cables to be pulled through without damaging the outer sheath. Let's make sure the site supervisor records this offset on the red-line drawings immediately.",
     hiddenTranscript:
       "We need to align the trench coordinates for [Substation B] today. The civil team has marked the excavation lines, but the main cable entry conduits are hitting the [structural column foundations]. We need to shift the entire cable trench approximately [five hundred millimeters] to the east to clear the footings. If we shift it, make sure the [bend radius] for the one hundred and ten millimeter PVC conduits is not compromised. We need at least a [nine hundred millimeter] bend radius to allow the single-core copper cables to be pulled through without damaging the [outer sheath]. Let's make sure the site supervisor records this offset on the [red-line drawings] immediately.",
-    keywords: [
-      'trench',
-      'coordinates',
-      'conduits',
-      'bend radius',
-      'offset',
-      'red-line drawings',
-    ],
+    keywords: ['trench', 'coordinates', 'conduits', 'bend radius', 'offset', 'red-line drawings'],
     vocabulary: [
       {
         term: 'Bend Radius',
         definition:
           'The minimum radius one can bend a pipe, cable, sheet, or conduit without damaging it.',
-        context:
-          'We need at least a nine hundred millimeter bend radius for the conduits.',
+        context: 'We need at least a nine hundred millimeter bend radius for the conduits.',
       },
       {
         term: 'Red-line Drawings',
@@ -46,8 +38,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       {
         id: 'q_sm_1',
         type: 'multiple_choice',
-        questionText:
-          'Why does the cable trench need to be shifted to the east?',
+        questionText: 'Why does the cable trench need to be shifted to the east?',
         choices: [
           'A) To avoid hitting the main structural column foundations.',
           'B) To shorten the overall length of the copper cables.',
@@ -90,14 +81,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       'We are commencing the FAT for the low-voltage control panels at the manufacturing plant tomorrow morning. The principal checks will focus on terminal torque settings, wire labeling consistency, and loop checking of the analog inputs. The manufacturer must supply certified calibration reports for all test instruments used during dielectric testing. We will select ten percent of the protection relays at random to perform a primary current injection test. If we find a single point of failure in the circuit breaker interlock scheme, the entire batch will be rejected and require a complete reinspection.',
     hiddenTranscript:
       'We are commencing the FAT for the [low-voltage control panels] at the manufacturing plant tomorrow morning. The principal checks will focus on [terminal torque settings], [wire labeling consistency], and [loop checking] of the analog inputs. The manufacturer must supply certified [calibration reports] for all test instruments used during [dielectric testing]. We will select [ten percent] of the protection relays at random to perform a [primary current injection test]. If we find a single point of failure in the circuit breaker [interlock scheme], the entire batch will be rejected and require a complete reinspection.',
-    keywords: [
-      'FAT',
-      'torque',
-      'calibration',
-      'dielectric',
-      'relays',
-      'interlock',
-    ],
+    keywords: ['FAT', 'torque', 'calibration', 'dielectric', 'relays', 'interlock'],
     vocabulary: [
       {
         term: 'Dielectric Testing',
@@ -174,15 +158,13 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
         term: 'Segregation',
         definition:
           'Physical separation of electrical circuits according to voltage level or function to prevent hazard or signal degradation.',
-        context:
-          'We must ensure proper segregation between power and control signals.',
+        context: 'We must ensure proper segregation between power and control signals.',
       },
       {
         term: 'Electromagnetic Interference',
         definition:
           'Disturbance that affects an electrical circuit due to electromagnetic conduction or radiation from an external source.',
-        context:
-          'Reside on the bottom tier to mitigate electromagnetic interference.',
+        context: 'Reside on the bottom tier to mitigate electromagnetic interference.',
       },
     ],
     questions: [
@@ -233,14 +215,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       "Good morning team, let's go over today's electrical safety protocols. Before any work begins on the four-hundred-and-fifteen-volt switchboard, we must execute a full lockout-tagout procedure. Both the upstream circuit breaker and the local isolator must be locked in the off position with personal padlocks and danger tags. Verify that there is zero voltage present by using a verified three-phase indicator before touch-testing. For any live diagnostics or boundary testing, you must wear category two arc-flash PPE, which includes an eight-calorie face shield, flame-resistant overalls, and insulated leather gloves. Let's maintain a zero-incident safety record on this project.",
     hiddenTranscript:
       "Good morning team, let's go over today's electrical safety protocols. Before any work begins on the [four-hundred-and-fifteen-volt switchboard], we must execute a full [lockout-tagout procedure]. Both the upstream [circuit breaker] and the [local isolator] must be locked in the [off position] with personal [padlocks] and [danger tags]. Verify that there is [zero voltage] present by using a verified [three-phase indicator] before touch-testing. For any [live diagnostics] or [boundary testing], you must wear [category two arc-flash PPE], which includes an [eight-calorie face shield], [flame-resistant overalls], and [insulated leather gloves]. Let's maintain a [zero-incident] safety record on this project.",
-    keywords: [
-      'LOTO',
-      'switchboard',
-      'isolator',
-      'voltage',
-      'arc-flash',
-      'PPE',
-    ],
+    keywords: ['LOTO', 'switchboard', 'isolator', 'voltage', 'arc-flash', 'PPE'],
     vocabulary: [
       {
         term: 'Lockout-Tagout (LOTO)',
@@ -259,14 +234,8 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       {
         id: 'q_st_1',
         type: 'multiple_choice',
-        questionText:
-          'What voltage level is present on the switchboard requiring LOTO procedures?',
-        choices: [
-          'A) 110 Volts',
-          'B) 230 Volts',
-          'C) 415 Volts',
-          'D) 11 Kilovolts',
-        ],
+        questionText: 'What voltage level is present on the switchboard requiring LOTO procedures?',
+        choices: ['A) 110 Volts', 'B) 230 Volts', 'C) 415 Volts', 'D) 11 Kilovolts'],
         correctAnswer: 'C',
         explanation:
           'The safety officer refers to safety protocols before working on the "four-hundred-and-fifteen-volt switchboard".',
@@ -303,14 +272,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       "Let's review the critical path milestones. The shipping delay for the main medium-voltage switchgear is now three weeks, which puts our September substation energization date at risk. The manufacturing yard reports that the micro-processor protection relays were held up due to supply chain backlogs. To recover this slippage, we must rearrange the site civil sequence and complete all structural floor plinths and drainage routes ahead of time. When the switchgear arrives on site, we will schedule double shifts for installation and immediate cable termination. I need the procurement engineer to contact the factory and arrange air freight shipping for the relays.",
     hiddenTranscript:
       "Let's review the [critical path milestones]. The [shipping delay] for the main [medium-voltage switchgear] is now [three weeks], which puts our [September substation energization] date at risk. The manufacturing yard reports that the [micro-processor protection relays] were held up due to [supply chain backlogs]. To recover this slippage, we must rearrange the [site civil sequence] and complete all [structural floor plinths] and [drainage routes] ahead of time. When the switchgear arrives on site, we will schedule [double shifts] for installation and immediate [cable termination]. I need the [procurement engineer] to contact the factory and arrange [air freight shipping] for the relays.",
-    keywords: [
-      'critical path',
-      'delay',
-      'switchgear',
-      'backlog',
-      'plinths',
-      'air freight',
-    ],
+    keywords: ['critical path', 'delay', 'switchgear', 'backlog', 'plinths', 'air freight'],
     vocabulary: [
       {
         term: 'Critical Path',
@@ -329,8 +291,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       {
         id: 'q_pp_1',
         type: 'multiple_choice',
-        questionText:
-          'Which items were delayed, holding up the switchgear manufacturing process?',
+        questionText: 'Which items were delayed, holding up the switchgear manufacturing process?',
         choices: [
           'A) Heavy-duty galvanized cable ladders.',
           'B) Galvanized steel enclosure plates.',
@@ -344,8 +305,7 @@ export const INTERMEDIATE_LISTENING_MISSIONS: ListeningMission[] = [
       {
         id: 'q_pp_2',
         type: 'true_false',
-        questionText:
-          'The project manager suggested delaying the floor plinths concrete work.',
+        questionText: 'The project manager suggested delaying the floor plinths concrete work.',
         correctAnswer: 'false',
         explanation:
           'No, the manager suggested completing all structural floor plinths and drainage routes "ahead of time" to recover slippage.',

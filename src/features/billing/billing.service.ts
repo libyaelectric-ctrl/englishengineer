@@ -1,17 +1,15 @@
-import { storage } from '@/shared/storage';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+
+import { storage } from '@/shared/storage';
+
 import {
   createFreeSubscription,
   getBillingApiUrl,
   getBillingProviderStatus,
 } from './billing.helpers';
+import { BillingPlanId, BillingProviderStatus, SubscriptionSnapshot } from './billing.types';
 import { StripeBillingProvider } from './stripe.provider';
-import {
-  BillingPlanId,
-  BillingProviderStatus,
-  SubscriptionSnapshot,
-} from './billing.types';
 
 const STORAGE_KEY = 'billing_subscription';
 
@@ -38,19 +36,14 @@ export const BillingService = {
   },
 
   getLocalSubscription(): SubscriptionSnapshot {
-    return (
-      storage.globalGet<SubscriptionSnapshot>(STORAGE_KEY) ||
-      createFreeSubscription()
-    );
+    return storage.globalGet<SubscriptionSnapshot>(STORAGE_KEY) || createFreeSubscription();
   },
 
   persistSubscription(subscription: SubscriptionSnapshot): void {
     saveSubscription(subscription);
   },
 
-  async refreshSubscription(
-    userId: string | null
-  ): Promise<SubscriptionSnapshot> {
+  async refreshSubscription(userId: string | null): Promise<SubscriptionSnapshot> {
     if (!userId) {
       return this.getLocalSubscription();
     }
@@ -69,11 +62,7 @@ export const BillingService = {
     }
   },
 
-  async startCheckout(
-    userId: string,
-    email: string,
-    planId: BillingPlanId
-  ): Promise<void> {
+  async startCheckout(userId: string, email: string, planId: BillingPlanId): Promise<void> {
     const provider = getProvider();
     if (!provider) {
       throw new AppError({

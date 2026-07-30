@@ -1,12 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { ArrowRight, Check, Clipboard, Sparkles, WandSparkles } from 'lucide-react';
+
 import { useState } from 'react';
-import {
-  WandSparkles,
-  Clipboard,
-  Check,
-  ArrowRight,
-  Sparkles,
-} from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
@@ -40,8 +36,7 @@ const PRReviewCoachDemo = ({
       ? {
           polishedText:
             "I have some concerns about the current implementation approach. Could we discuss alternative patterns that might better address the requirements? I'd suggest we consider a few options before proceeding.",
-          toneAnalysis:
-            'Transformed from aggressive tone to constructive feedback',
+          toneAnalysis: 'Transformed from aggressive tone to constructive feedback',
           keyChanges: [
             'Removed personal attacks and accusatory language',
             'Added constructive suggestion for collaboration',
@@ -83,8 +78,8 @@ const PRReviewCoachDemo = ({
               Paste harsh review comment
             </label>
             <p className="mt-1 text-xs text-muted-copy">
-              Paste the raw, harsh, or unclear code review comment you want to
-              transform into professional English.
+              Paste the raw, harsh, or unclear code review comment you want to transform into
+              professional English.
             </p>
             <textarea
               id="review-comment-input"
@@ -118,10 +113,7 @@ const PRReviewCoachDemo = ({
               setResult({
                 polishedText: `Thank you for your review feedback. Regarding the points you raised about the code quality — I understand your concerns and would like to discuss the approach. Could we schedule a brief sync to align on the best path forward?`,
                 toneAnalysis: 'Polite version of harsh feedback',
-                keyChanges: [
-                  'Removed aggressive tone',
-                  'Added collaborative language',
-                ],
+                keyChanges: ['Removed aggressive tone', 'Added collaborative language'],
                 isAiPowered: false,
               });
             }}
@@ -140,11 +132,7 @@ const PRReviewCoachDemo = ({
           footer={
             <div className="flex items-center gap-3">
               <Button variant="secondary" onClick={handleCopy}>
-                {copied ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  <Clipboard className="h-4 w-4" />
-                )}
+                {copied ? <Check className="h-4 w-4" /> : <Clipboard className="h-4 w-4" />}
                 {copied ? 'Copied' : 'Copy to clipboard'}
               </Button>
             </div>
@@ -153,9 +141,7 @@ const PRReviewCoachDemo = ({
           <div className="space-y-4">
             <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
               <p className="text-xs font-medium text-primary">Original</p>
-              <p className="mt-2 text-sm text-foreground line-through opacity-60">
-                {input}
-              </p>
+              <p className="mt-2 text-sm text-foreground line-through opacity-60">{input}</p>
             </div>
 
             <div className="flex justify-center">
@@ -163,9 +149,7 @@ const PRReviewCoachDemo = ({
             </div>
 
             <div className="rounded-lg border border-success/20 bg-success/5 p-4">
-              <p className="text-xs font-medium text-success">
-                Professional Version
-              </p>
+              <p className="text-xs font-medium text-success">Professional Version</p>
               <p className="mt-2 text-sm leading-6 text-foreground whitespace-pre-wrap">
                 {result.polishedText}
               </p>
@@ -173,15 +157,10 @@ const PRReviewCoachDemo = ({
 
             {result.keyChanges.length > 0 && (
               <div className="rounded-lg border border-border-soft bg-surface-hover p-4">
-                <p className="text-xs font-medium text-muted-copy">
-                  Key Changes
-                </p>
+                <p className="text-xs font-medium text-muted-copy">Key Changes</p>
                 <ul className="mt-2 space-y-1">
                   {result.keyChanges.map((change, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-sm text-foreground"
-                    >
+                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
                       <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                       {change}
                     </li>

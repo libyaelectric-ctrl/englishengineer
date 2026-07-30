@@ -36,15 +36,7 @@ export interface ProductivityPattern {
 }
 
 function getDayName(dayOfWeek: number): string {
-  const days = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return days[dayOfWeek] || 'Unknown';
 }
 
@@ -118,9 +110,7 @@ export const AnalyticsDashboardV2 = {
       const hour = date.getHours();
       const key = `${dayOfWeek}-${hour}`;
 
-      const cell = heatmap.find(
-        (h) => h.dayOfWeek === dayOfWeek && h.hour === hour
-      );
+      const cell = heatmap.find((h) => h.dayOfWeek === dayOfWeek && h.hour === hour);
       if (cell) {
         cell.activityCount++;
         cell.minutesStudied += session.durationMinutes;
@@ -136,9 +126,7 @@ export const AnalyticsDashboardV2 = {
       const key = `${cell.dayOfWeek}-${cell.hour}`;
       const scores = hourScores[key] || [];
       cell.averageScore =
-        scores.length > 0
-          ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-          : 0;
+        scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
     }
 
     return heatmap;
@@ -174,32 +162,19 @@ export const AnalyticsDashboardV2 = {
       totalMinutes += session.durationMinutes;
     }
 
-    const bestHour = Number(
-      Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 9
-    );
-    const bestDay = Number(
-      Object.entries(dayCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 1
-    );
-    const averageSessionLength = Math.round(
-      totalMinutes / studySessions.length
-    );
+    const bestHour = Number(Object.entries(hourCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 9);
+    const bestDay = Number(Object.entries(dayCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 1);
+    const averageSessionLength = Math.round(totalMinutes / studySessions.length);
     const totalStudyDays = uniqueDays.size;
 
     // Consistency: ratio of days studied vs days in period
     const firstSession = new Date(studySessions[0].timestamp);
-    const lastSession = new Date(
-      studySessions[studySessions.length - 1].timestamp
-    );
+    const lastSession = new Date(studySessions[studySessions.length - 1].timestamp);
     const totalDays = Math.max(
       1,
-      Math.ceil(
-        (lastSession.getTime() - firstSession.getTime()) / (1000 * 60 * 60 * 24)
-      )
+      Math.ceil((lastSession.getTime() - firstSession.getTime()) / (1000 * 60 * 60 * 24))
     );
-    const consistencyScore = Math.min(
-      100,
-      Math.round((totalStudyDays / totalDays) * 100)
-    );
+    const consistencyScore = Math.min(100, Math.round((totalStudyDays / totalDays) * 100));
 
     return {
       bestHour,
@@ -211,10 +186,7 @@ export const AnalyticsDashboardV2 = {
   },
 
   generateInsights(
-    skillScores: Record<
-      string,
-      { score: number; trend: 'up' | 'down' | 'stable' }
-    >,
+    skillScores: Record<string, { score: number; trend: 'up' | 'down' | 'stable' }>,
     studySessions: Array<{
       timestamp: string;
       durationMinutes: number;
@@ -252,9 +224,7 @@ export const AnalyticsDashboardV2 = {
     });
 
     // Improvement insight
-    const improvingSkills = Object.entries(skillScores).filter(
-      ([, data]) => data.trend === 'up'
-    );
+    const improvingSkills = Object.entries(skillScores).filter(([, data]) => data.trend === 'up');
     if (improvingSkills.length > 0) {
       insights.push({
         type: 'improvement',

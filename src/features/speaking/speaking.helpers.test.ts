@@ -1,12 +1,13 @@
 import { describe, expect, it } from 'vitest';
+
 import {
-  normalizeSpeechText,
-  countWords,
-  countSentences,
-  countFillerWords,
   calculateWordsPerMinute,
-  keywordMatchRatio,
+  countFillerWords,
+  countSentences,
+  countWords,
   formatSpeakingDifficulty,
+  keywordMatchRatio,
+  normalizeSpeechText,
 } from './speaking.helpers';
 
 describe('speaking helpers', () => {
@@ -104,15 +105,11 @@ describe('speaking helpers', () => {
     });
 
     it('returns 1 when all keywords match', () => {
-      expect(
-        keywordMatchRatio('cable tray installation', ['cable', 'tray'])
-      ).toBe(1);
+      expect(keywordMatchRatio('cable tray installation', ['cable', 'tray'])).toBe(1);
     });
 
     it('returns partial ratio', () => {
-      expect(keywordMatchRatio('cable installation', ['cable', 'tray'])).toBe(
-        0.5
-      );
+      expect(keywordMatchRatio('cable installation', ['cable', 'tray'])).toBe(0.5);
     });
 
     it('returns 0 when no keywords match', () => {

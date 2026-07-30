@@ -1,16 +1,16 @@
-import { BarChart3, Zap, LineChart } from 'lucide-react';
+import { BarChart3, LineChart, Zap } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
-import {
-  AnalyticsProgress,
-  MiniStat,
-} from '@/pages/ProgressPage/AnalyticsPanels';
-import {
-  WeeklyActivityChart,
-  StudyHeatmap,
-  SkillRadar,
-  TimelinePanel,
-} from '@/pages/ProgressPage/AnalyticsCharts';
+
 import type { AnalyticsStoreState } from '@/features/analytics';
+
+import {
+  SkillRadar,
+  StudyHeatmap,
+  TimelinePanel,
+  WeeklyActivityChart,
+} from '@/pages/ProgressPage/AnalyticsCharts';
+import { AnalyticsProgress, MiniStat } from '@/pages/ProgressPage/AnalyticsPanels';
 
 export const AnalyticsChartsSection = ({
   analytics,
@@ -18,9 +18,7 @@ export const AnalyticsChartsSection = ({
   setActiveChart,
   chartTabs,
 }: {
-  analytics: ReturnType<
-    typeof import('@/features/analytics').AnalyticsService.getSummary
-  >;
+  analytics: ReturnType<typeof import('@/features/analytics').AnalyticsService.getSummary>;
   activeChart: AnalyticsStoreState['activeChart'];
   setActiveChart: AnalyticsStoreState['setActiveChart'];
   chartTabs: Array<{ id: AnalyticsStoreState['activeChart']; label: string }>;
@@ -51,25 +49,11 @@ export const AnalyticsChartsSection = ({
       <div className="pt-6">
         {activeChart === 'overview' && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <AnalyticsProgress
-              label="Overall Progress"
-              value={analytics.overallProgress}
-            />
-            <AnalyticsProgress
-              label="Vocabulary Retention"
-              value={analytics.vocabularyRetention}
-            />
-            <AnalyticsProgress
-              label="Study Consistency"
-              value={analytics.studyConsistency}
-            />
-            <AnalyticsProgress
-              label="Average Retention"
-              value={analytics.retention}
-            />
-            <WeeklyActivityChart
-              values={analytics.weeklyActivity.map((item) => item.minutes)}
-            />
+            <AnalyticsProgress label="Overall Progress" value={analytics.overallProgress} />
+            <AnalyticsProgress label="Vocabulary Retention" value={analytics.vocabularyRetention} />
+            <AnalyticsProgress label="Study Consistency" value={analytics.studyConsistency} />
+            <AnalyticsProgress label="Average Retention" value={analytics.retention} />
+            <WeeklyActivityChart values={analytics.weeklyActivity.map((item) => item.minutes)} />
             <StudyHeatmap values={analytics.studyHeatmap} />
           </div>
         )}
@@ -83,9 +67,7 @@ export const AnalyticsChartsSection = ({
                   className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
                 >
                   <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-bold text-foreground">
-                      {skill.module}
-                    </h4>
+                    <h4 className="text-sm font-bold text-foreground">{skill.module}</h4>
                     <span
                       className={`text-[10px] font-mono uppercase ${skill.trend === 'up' ? 'text-success' : skill.trend === 'down' ? 'text-rose-400' : 'text-muted-copy'}`}
                     >
@@ -93,23 +75,11 @@ export const AnalyticsChartsSection = ({
                     </span>
                   </div>
                   <div className="mt-4 space-y-3">
-                    <AnalyticsProgress
-                      label="Average Score"
-                      value={skill.averageScore}
-                    />
+                    <AnalyticsProgress label="Average Score" value={skill.averageScore} />
                     <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                      <MiniStat
-                        label="Missions"
-                        value={`${skill.completedMissions}`}
-                      />
-                      <MiniStat
-                        label="Sessions"
-                        value={`${skill.sessionCount}`}
-                      />
-                      <MiniStat
-                        label="Minutes"
-                        value={`${skill.totalMinutes}`}
-                      />
+                      <MiniStat label="Missions" value={`${skill.completedMissions}`} />
+                      <MiniStat label="Sessions" value={`${skill.sessionCount}`} />
+                      <MiniStat label="Minutes" value={`${skill.totalMinutes}`} />
                     </div>
                   </div>
                 </div>
@@ -149,10 +119,7 @@ export const AnalyticsChartsSection = ({
                 value={`${analytics.vocabularySummary.vocabularyStreak}d`}
               />
             </div>
-            <AnalyticsProgress
-              label="Vocabulary Retention"
-              value={analytics.vocabularyRetention}
-            />
+            <AnalyticsProgress label="Vocabulary Retention" value={analytics.vocabularyRetention} />
             <div className="space-y-3">
               {analytics.vocabularySummary.categoryMastery.map((item) => (
                 <AnalyticsProgress

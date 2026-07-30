@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { cn } from '@/shared/utils/cn';
 
 export function Section({
@@ -21,20 +22,12 @@ export function Section({
           {title}
         </h3>
         <svg
-          className={cn(
-            'h-3 w-3 text-muted-copy transition-transform',
-            expanded && 'rotate-180'
-          )}
+          className={cn('h-3 w-3 text-muted-copy transition-transform', expanded && 'rotate-180')}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
         </svg>
       </button>
       {expanded && <div className="px-4 pb-3">{children}</div>}
@@ -91,9 +84,7 @@ export function Stat({
   return (
     <div className="flex justify-between items-center py-1">
       <span className="text-xs text-muted-copy">{label}</span>
-      <span className={cn('text-xs font-semibold', color || 'text-foreground')}>
-        {value}
-      </span>
+      <span className={cn('text-xs font-semibold', color || 'text-foreground')}>{value}</span>
     </div>
   );
 }
@@ -130,8 +121,7 @@ export function Action({
   variant?: string;
 }) {
   const v = {
-    default:
-      'border-border-soft hover:border-border-hover hover:bg-surface-hover',
+    default: 'border-border-soft hover:border-border-hover hover:bg-surface-hover',
     primary: 'border-primary/20 hover:bg-primary/5 text-primary',
     warning: 'border-amber-500/20 hover:bg-amber-500/5 text-amber-600',
   };
@@ -145,18 +135,8 @@ export function Action({
     >
       <span>{icon}</span>
       <span className="flex-1 text-left">{label}</span>
-      <svg
-        className="h-3 w-3 opacity-40"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 5l7 7-7 7"
-        />
+      <svg className="h-3 w-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
       </svg>
     </button>
   );

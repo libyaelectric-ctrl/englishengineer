@@ -4,8 +4,7 @@ export const STARTER_LISTENING_MISSIONS: ListeningMission[] = [
   {
     id: 'listening_a1_safe_room',
     title: 'Safe Electrical Room',
-    description:
-      'Listen for a room, equipment status, and a simple instruction.',
+    description: 'Listen for a room, equipment status, and a simple instruction.',
     missionType: 'Inspection',
     discipline: 'Electrical Engineering',
     cefrLevel: 'A1',
@@ -70,13 +69,7 @@ export const STARTER_LISTENING_MISSIONS: ListeningMission[] = [
       'Today we installed ten metres of cable tray in Corridor Two. The team will continue after lunch. One support is missing near Grid B4, so the supervisor will check it before work continues.',
     hiddenTranscript:
       'Today we installed [ten metres] of cable tray in [Corridor Two]. The team will continue [after lunch]. One [support] is missing near [Grid B4], so the supervisor will check it before work continues.',
-    keywords: [
-      'ten metres',
-      'cable tray',
-      'Corridor Two',
-      'support',
-      'Grid B4',
-    ],
+    keywords: ['ten metres', 'cable tray', 'Corridor Two', 'support', 'Grid B4'],
     vocabulary: [
       {
         term: 'cable tray',
@@ -129,18 +122,11 @@ export const STARTER_LISTENING_MISSIONS: ListeningMission[] = [
       'The team completed the visual inspection of Panel L V Three this morning. Most labels are correct, but two outgoing feeders still need circuit numbers. The contractor will update the labels before the consultant inspection at two o clock. Please send a photo when the work is complete.',
     hiddenTranscript:
       'The team completed the [visual inspection] of [Panel LV3] this morning. Most [labels] are correct, but two outgoing [feeders] still need circuit numbers. The contractor will update the labels before the [consultant inspection] at two o clock. Please send a photo when the work is complete.',
-    keywords: [
-      'visual inspection',
-      'Panel LV3',
-      'labels',
-      'feeders',
-      'consultant inspection',
-    ],
+    keywords: ['visual inspection', 'Panel LV3', 'labels', 'feeders', 'consultant inspection'],
     vocabulary: [
       {
         term: 'outgoing feeder',
-        definition:
-          'A circuit that carries power away from a distribution panel.',
+        definition: 'A circuit that carries power away from a distribution panel.',
         context: 'Two outgoing feeders still need circuit numbers.',
       },
       {
@@ -154,11 +140,7 @@ export const STARTER_LISTENING_MISSIONS: ListeningMission[] = [
         id: 'listening_b1_q1',
         type: 'multiple_choice',
         questionText: 'What remains incomplete?',
-        choices: [
-          'A) Two feeder labels',
-          'B) The panel installation',
-          'C) The visual inspection',
-        ],
+        choices: ['A) Two feeder labels', 'B) The panel installation', 'C) The visual inspection'],
         correctAnswer: 'A',
         explanation: 'Two outgoing feeders still need circuit numbers.',
       },

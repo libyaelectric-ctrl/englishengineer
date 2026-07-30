@@ -68,10 +68,7 @@ export const DEMO_TEAM_WORKSPACE: TeamWorkspaceSnapshot = {
         grammar: 55,
       },
       mistakeCategories: ['Articles', 'Inspection vocabulary'],
-      recommendedTasks: [
-        'Write an inspection response',
-        'Review electrical QA/QC terms',
-      ],
+      recommendedTasks: ['Write an inspection response', 'Review electrical QA/QC terms'],
     },
     {
       memberId: 'demo-member-3',

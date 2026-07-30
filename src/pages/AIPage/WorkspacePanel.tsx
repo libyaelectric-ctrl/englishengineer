@@ -1,6 +1,6 @@
-import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
-import { WorkspaceMemoryPanel } from '@/features/billing/WorkspaceMemoryPanel';
 import type { BillingPlanId } from '@/features/billing';
+import { WorkspaceMemoryPanel } from '@/features/billing/WorkspaceMemoryPanel';
+import { WorkspaceSelector } from '@/features/billing/WorkspaceSelector';
 
 interface WorkspacePanelProps {
   planId: BillingPlanId;

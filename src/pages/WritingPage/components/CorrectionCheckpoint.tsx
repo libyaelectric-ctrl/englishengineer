@@ -1,6 +1,8 @@
-import { Check, AlertTriangle, Sparkles } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+import { AlertTriangle, Check, Sparkles } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+
 import type { WritingCorrection } from '@/features/writing';
 
 interface CorrectionCheckpointProps {
@@ -41,12 +43,10 @@ export const CorrectionCheckpoint = ({
         <div className="flex flex-col items-center justify-center text-center p-6 bg-emerald-500/5 rounded-[4px] border border-emerald-500/20 space-y-4 animate-in zoom-in-95 duration-300 shadow-sm">
           <Check className="h-10 w-10 text-emerald-400 bg-emerald-500/10 p-2 rounded-full" />
           <div>
-            <p className="text-sm font-bold text-foreground">
-              No Issues Detected
-            </p>
+            <p className="text-sm font-bold text-foreground">No Issues Detected</p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
-              Linguistic clarity, professional tone, and technical jargon
-              conform completely to standard protocols.
+              Linguistic clarity, professional tone, and technical jargon conform completely to
+              standard protocols.
             </p>
           </div>
         </div>
@@ -67,16 +67,12 @@ export const CorrectionCheckpoint = ({
                 <AlertTriangle
                   className={`h-4.5 w-4.5 shrink-0 mt-0.5 ${alert.type === 'grammar' ? 'text-rose-500' : 'text-amber-500'}`}
                 />
-                <p className="text-muted-copy leading-relaxed font-bold">
-                  {alert.text}
-                </p>
+                <p className="text-muted-copy leading-relaxed font-bold">{alert.text}</p>
               </div>
               <div className="flex items-center justify-between gap-2 border-t border-border-soft pt-2.5">
                 <span className="text-[10px] font-mono text-muted-copy font-bold">
                   "{alert.original}" →{' '}
-                  <span className="text-emerald-400 font-bold font-mono">
-                    "{alert.fix}"
-                  </span>
+                  <span className="text-emerald-400 font-bold font-mono">"{alert.fix}"</span>
                 </span>
                 <Button
                   onClick={(e) => {

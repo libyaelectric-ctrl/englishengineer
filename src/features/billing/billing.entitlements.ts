@@ -25,9 +25,7 @@ const PREMIUM_FEATURES: Partial<Record<BillingFeature, BillingPlanId>> = {
   voiceMinuteWallet: 'exec',
 };
 
-export const isSubscriptionActive = (
-  subscription: SubscriptionSnapshot
-): boolean =>
+export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolean =>
   subscription.planId === 'free' ||
   subscription.status === 'active' ||
   subscription.status === 'trialing';
@@ -76,10 +74,7 @@ export const canUseAICoach = (
     return baseAccess;
   }
 
-  if (
-    typeof subscription.topupCredits === 'number' &&
-    subscription.topupCredits > 0
-  ) {
+  if (typeof subscription.topupCredits === 'number' && subscription.topupCredits > 0) {
     return {
       allowed: true,
       reason: `Using top-up credits (${subscription.topupCredits} left).`,
@@ -94,50 +89,34 @@ export const canUseAICoach = (
   };
 };
 
-export const canCreateMission = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'missionCreation');
+export const canCreateMission = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'missionCreation');
 
-export const canViewAdvancedAnalytics = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'advancedAnalytics');
+export const canViewAdvancedAnalytics = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'advancedAnalytics');
 
-export const canAccessProjectWorkspace = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'projectWorkspace');
+export const canAccessProjectWorkspace = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'projectWorkspace');
 
-export const canAccessPersistentMemory = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult =>
+export const canAccessPersistentMemory = (subscription: SubscriptionSnapshot): EntitlementResult =>
   canAccessFeature(subscription, 'persistentProjectMemory');
 
-export const canAccessCustomScenario = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult =>
+export const canAccessCustomScenario = (subscription: SubscriptionSnapshot): EntitlementResult =>
   canAccessFeature(subscription, 'customScenarioGeneration');
 
 export const canAccessLinkedInOptimization = (
   subscription: SubscriptionSnapshot
 ): EntitlementResult => canAccessFeature(subscription, 'linkedinOptimization');
 
-export const canAccessPersistentAIAgent = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'persistentAIAgent');
+export const canAccessPersistentAIAgent = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'persistentAIAgent');
 
-export const canAccessRealVoiceSpeaking = (
-  subscription: SubscriptionSnapshot
-): EntitlementResult => canAccessFeature(subscription, 'realVoiceSpeaking');
+export const canAccessRealVoiceSpeaking = (subscription: SubscriptionSnapshot): EntitlementResult =>
+  canAccessFeature(subscription, 'realVoiceSpeaking');
 
-const PLAN_HIERARCHY: BillingPlanId[] = [
-  'free',
-  'pro',
-  'project',
-  'exec',
-  'private',
-];
+const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'pro', 'project', 'exec', 'private'];
 
-const getPlanLevel = (planId: BillingPlanId): number =>
-  PLAN_HIERARCHY.indexOf(planId);
+const getPlanLevel = (planId: BillingPlanId): number => PLAN_HIERARCHY.indexOf(planId);
 
 export const isDowngrade = (from: BillingPlanId, to: BillingPlanId): boolean =>
   getPlanLevel(to) < getPlanLevel(from);
@@ -211,16 +190,13 @@ export const getDowngradeImpact = (
   const currentPlan = BILLING_PLANS[currentPlanId];
   const targetPlan = BILLING_PLANS[targetPlanId];
 
-  const lostFeatures = currentPlan.features.filter(
-    (f) => !targetPlan.features.includes(f)
-  );
+  const lostFeatures = currentPlan.features.filter((f) => !targetPlan.features.includes(f));
 
-  const restrictedLimits: DowngradeImpact['restrictedLimits'] =
-    LIMIT_FIELDS.map((field) => ({
-      field,
-      from: currentPlan.limits[field],
-      to: targetPlan.limits[field],
-    })).filter((item) => item.from !== item.to);
+  const restrictedLimits: DowngradeImpact['restrictedLimits'] = LIMIT_FIELDS.map((field) => ({
+    field,
+    from: currentPlan.limits[field],
+    to: targetPlan.limits[field],
+  })).filter((item) => item.from !== item.to);
 
   const targetWorkspaceLimit = getTargetWorkspaceLimit(targetPlanId);
   const requiresDataCleanup = currentWorkspaceCount > targetWorkspaceLimit;
@@ -244,10 +220,7 @@ export const getDowngradeImpact = (
 
 export const getPlanLimitLabel = (
   subscription: SubscriptionSnapshot,
-  limit:
-    | 'dailyAICoachRequests'
-    | 'moduleAttemptsPerDay'
-    | 'vocabularyReviewsPerDay'
+  limit: 'dailyAICoachRequests' | 'moduleAttemptsPerDay' | 'vocabularyReviewsPerDay'
 ): string => {
   const value = BILLING_PLANS[subscription.planId].limits[limit];
   return value === 'unlimited' ? 'Unlimited' : String(value);

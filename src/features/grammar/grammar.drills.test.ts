@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { InteractiveDrillService, type DrillQuestion } from './grammar.drills';
+
+import { type DrillQuestion, InteractiveDrillService } from './grammar.drills';
 import type { GrammarRule } from './grammar.types';
 
 const makeRule = (overrides: Partial<GrammarRule> = {}): GrammarRule => ({
@@ -61,27 +62,21 @@ describe('InteractiveDrillService', () => {
   describe('generateDrills', () => {
     it('generates fill_blank questions', () => {
       const rule = makeRule();
-      const drills = InteractiveDrillService.generateDrills(rule, [
-        'fill_blank',
-      ]);
+      const drills = InteractiveDrillService.generateDrills(rule, ['fill_blank']);
       expect(drills.length).toBeGreaterThan(0);
       expect(drills[0].type).toBe('fill_blank');
     });
 
     it('generates multiple_choice questions', () => {
       const rule = makeRule();
-      const drills = InteractiveDrillService.generateDrills(rule, [
-        'multiple_choice',
-      ]);
+      const drills = InteractiveDrillService.generateDrills(rule, ['multiple_choice']);
       expect(drills.length).toBeGreaterThan(0);
       expect(drills[0].options).toBeDefined();
     });
 
     it('generates correction questions', () => {
       const rule = makeRule();
-      const drills = InteractiveDrillService.generateDrills(rule, [
-        'correction',
-      ]);
+      const drills = InteractiveDrillService.generateDrills(rule, ['correction']);
       expect(drills.length).toBe(1);
       expect(drills[0].type).toBe('correction');
     });
@@ -173,9 +168,7 @@ describe('InteractiveDrillService', () => {
         explanation: '',
         difficulty: 'advanced',
       };
-      expect(
-        InteractiveDrillService.calculateXP(advanced, true, 5000)
-      ).toBeGreaterThan(
+      expect(InteractiveDrillService.calculateXP(advanced, true, 5000)).toBeGreaterThan(
         InteractiveDrillService.calculateXP(beginner, true, 5000)
       );
     });
@@ -200,12 +193,8 @@ describe('InteractiveDrillService', () => {
 
   describe('getDrillTypeLabel', () => {
     it('returns correct labels', () => {
-      expect(InteractiveDrillService.getDrillTypeLabel('fill_blank')).toBe(
-        'Fill in the Blank'
-      );
-      expect(InteractiveDrillService.getDrillTypeLabel('correction')).toBe(
-        'Error Correction'
-      );
+      expect(InteractiveDrillService.getDrillTypeLabel('fill_blank')).toBe('Fill in the Blank');
+      expect(InteractiveDrillService.getDrillTypeLabel('correction')).toBe('Error Correction');
     });
   });
 });

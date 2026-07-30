@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 
 /**
  * API Integration Smoke Tests
@@ -23,9 +23,7 @@ beforeAll(async () => {
   }
   if (!backendAvailable) {
     // eslint-disable-next-line no-console
-    console.warn(
-      'Backend not available at localhost:8787 -- skipping integration smoke tests.'
-    );
+    console.warn('Backend not available at localhost:8787 -- skipping integration smoke tests.');
   }
 });
 

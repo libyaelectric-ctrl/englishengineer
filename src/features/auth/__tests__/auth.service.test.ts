@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mockUserProfile = {
   id: 'user_test_123',
@@ -111,35 +111,19 @@ describe('AuthService', () => {
 
   it('login delegates to active adapter', async () => {
     const { AuthService, mockAdapter } = await setupAndImport();
-    const user = await AuthService.login(
-      'Test',
-      'test@engineer.com',
-      'password123'
-    );
+    const user = await AuthService.login('Test', 'test@engineer.com', 'password123');
 
     expect(user).toBeDefined();
     expect(user.id).toBe('user_test_123');
-    expect(mockAdapter.login).toHaveBeenCalledWith(
-      'Test',
-      'test@engineer.com',
-      'password123'
-    );
+    expect(mockAdapter.login).toHaveBeenCalledWith('Test', 'test@engineer.com', 'password123');
   });
 
   it('signUp delegates to active adapter', async () => {
     const { AuthService, mockAdapter } = await setupAndImport();
-    const user = await AuthService.signUp(
-      'Test',
-      'test@engineer.com',
-      'password123'
-    );
+    const user = await AuthService.signUp('Test', 'test@engineer.com', 'password123');
 
     expect(user).toBeDefined();
-    expect(mockAdapter.signUp).toHaveBeenCalledWith(
-      'Test',
-      'test@engineer.com',
-      'password123'
-    );
+    expect(mockAdapter.signUp).toHaveBeenCalledWith('Test', 'test@engineer.com', 'password123');
   });
 
   it('logout calls adapter', async () => {
@@ -166,8 +150,6 @@ describe('AuthService', () => {
 
   it('resetPassword resolves without error', async () => {
     const { AuthService } = await setupAndImport();
-    await expect(
-      AuthService.resetPassword('test@engineer.com')
-    ).resolves.toBeUndefined();
+    await expect(AuthService.resetPassword('test@engineer.com')).resolves.toBeUndefined();
   });
 });

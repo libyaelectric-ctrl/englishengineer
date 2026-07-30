@@ -1,17 +1,14 @@
 import React, { useEffect, useReducer } from 'react';
+
 import { useAuthStore } from '@/features/auth';
-import {
-  LearningProfileRepository,
-  type UserLearningProfile,
-} from '@/features/profile';
-import { prefsReducer, type ProfilePrefsState } from './ProfilePageReducer';
+import { LearningProfileRepository, type UserLearningProfile } from '@/features/profile';
+
+import { type ProfilePrefsState, prefsReducer } from './ProfilePageReducer';
 
 const resolveActionValue = <T>(v: React.SetStateAction<T>, current: T): T =>
   typeof v === 'function' ? (v as (prev: T) => T)(current) : v;
 
-const loadProfileToPrefs = (
-  profile: UserLearningProfile
-): Omit<ProfilePrefsState, 'saved'> => ({
+const loadProfileToPrefs = (profile: UserLearningProfile): Omit<ProfilePrefsState, 'saved'> => ({
   goals: profile.goals || [],
   minutes: profile.dailyTarget?.minutes || 15,
   tasks: profile.dailyTarget?.taskCount || 2,
@@ -33,8 +30,7 @@ const buildSavePayload = (
     goals: prefGoals as unknown as UserLearningProfile['goals'],
     dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
     weeklyTolerance: { allowedMissedDays: prefMissedDays },
-    experienceLevel:
-      (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
+    experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,
     careerGoal: prefCareerGoal,
   });
 };

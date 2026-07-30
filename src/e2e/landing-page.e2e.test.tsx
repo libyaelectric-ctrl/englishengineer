@@ -1,7 +1,9 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+
 import { MemoryRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import LandingPage from '@/pages/LandingPage';
 
 const createTestQueryClient = () =>
@@ -49,9 +51,7 @@ describe('Landing page E2E', () => {
     expect(faqButton).toBeInTheDocument();
     fireEvent.click(faqButton);
     await waitFor(() => {
-      expect(
-        screen.getByText(/includes the core modules/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/includes the core modules/i)).toBeInTheDocument();
     });
   });
 });

@@ -23,8 +23,7 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
         term: 'strobe synchronization',
         definition:
           'The process of flashing all notification strobe lights in a visual zone simultaneously to prevent causing seizures in individuals with photosensitive epilepsy.',
-        context:
-          'Strobe light synchronization was confirmed across all egress paths.',
+        context: 'Strobe light synchronization was confirmed across all egress paths.',
       },
       {
         term: 'elevator recall',
@@ -36,8 +35,7 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
         term: 'fire damper',
         definition:
           'A passive fire protection device used in air conditioning and ventilation ductwork to prevent the spread of fire and smoke inside duct barriers.',
-        context:
-          'The fire damper control relays on Floor 4 failed to de-energize.',
+        context: 'The fire damper control relays on Floor 4 failed to de-energize.',
       },
     ],
     questions: [
@@ -58,8 +56,7 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
           'What is the resistance value (in kΩ) of the checked and verified end-of-line resistors?',
         correctAnswer: '4.7',
         keywords: ['4.7', '4.7k', '4.7kΩ'],
-        explanation:
-          'The end-of-line resistor values were checked and verified to be 4.7kΩ.',
+        explanation: 'The end-of-line resistor values were checked and verified to be 4.7kΩ.',
       },
       {
         id: 'q4_3',
@@ -77,13 +74,7 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
           'What action must the contractor perform to correct the defect found in the Floor 4 HVAC damper integration?',
         correctAnswer:
           'The contractor must re-wire the auxiliary contact sequence on the motor starter panel.',
-        keywords: [
-          're-wire',
-          'auxiliary contact',
-          'motor starter',
-          'rewire',
-          'starter panel',
-        ],
+        keywords: ['re-wire', 'auxiliary contact', 'motor starter', 'rewire', 'starter panel'],
         explanation:
           'The passage states the contractor must re-wire the auxiliary contact sequence on the motor starter panel to ensure immediate fan shutdown.',
       },
@@ -115,22 +106,19 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
         term: 'BACnet MS/TP',
         definition:
           'Master-Slave/Token-Passing; a slower, low-cost serial transmission protocol for building automation based on the physical RS-485 communication standard.',
-        context:
-          'Section 15900, Clause 3.2 explicitly permits BACnet MS/TP over RS-485.',
+        context: 'Section 15900, Clause 3.2 explicitly permits BACnet MS/TP over RS-485.',
       },
       {
         term: 'BMS',
         definition:
           'Building Management System; a computer-based control system installed in buildings that controls and monitors mechanical and electrical equipment.',
-        context:
-          'With reference to the consultant comment sheet on the Phase 2 BMS Schematics.',
+        context: 'With reference to the consultant comment sheet on the Phase 2 BMS Schematics.',
       },
       {
         term: 'router gateway',
         definition:
           'A networking device that translates and routes packets between distinct physical network interfaces and protocols, such as RS-485 serial and Ethernet.',
-        context:
-          'Provide dual high-speed BACnet/IP router gateways on each floor.',
+        context: 'Provide dual high-speed BACnet/IP router gateways on each floor.',
       },
     ],
     questions: [
@@ -175,13 +163,7 @@ export const BUILDING_SYSTEMS_READING_MISSIONS: ReadingMission[] = [
           'How does the contractor propose to bridge the MS/TP serial data onto the main high-speed Ethernet server backbone?',
         correctAnswer:
           'The contractor will provide dual high-speed BACnet/IP router gateways on each floor.',
-        keywords: [
-          'router gateways',
-          'gateways',
-          'router gateway',
-          'bms gateway',
-          'bridge',
-        ],
+        keywords: ['router gateways', 'gateways', 'router gateway', 'bms gateway', 'bridge'],
         explanation:
           'The passage proposes to provide dual high-speed BACnet/IP router gateways on each floor to bridge data to the main server backbone.',
       },

@@ -1,5 +1,7 @@
-import { storage } from '@/shared/storage';
 import { IdService } from '@/core/ids';
+
+import { storage } from '@/shared/storage';
+
 import type {
   LearningIntelligencePreferences,
   MistakeCategory,
@@ -63,9 +65,7 @@ export const LearningIntelligenceService = {
           repetitionCount,
           isCritical: false,
         };
-    const withoutExisting = state.mistakeLog.filter(
-      (item) => item.id !== existing?.id
-    );
+    const withoutExisting = state.mistakeLog.filter((item) => item.id !== existing?.id);
     this.save({
       ...state,
       mistakeLog: [entry, ...withoutExisting].slice(0, 100),

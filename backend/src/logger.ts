@@ -10,11 +10,7 @@ const LOG_LEVELS: Record<string, number> = {
 };
 const currentLevel: number = LOG_LEVELS[process.env.LOG_LEVEL || 'info'] ?? 1;
 
-const formatJSON = (
-  level: string,
-  message: string,
-  meta: LogMeta = {}
-): string => {
+const formatJSON = (level: string, message: string, meta: LogMeta = {}): string => {
   return JSON.stringify({
     timestamp: new Date().toISOString(),
     level,

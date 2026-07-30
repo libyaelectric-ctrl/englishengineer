@@ -22,12 +22,7 @@ export interface MicRecorderResult {
   reset: () => void;
 }
 
-const PREFERRED_MIME_TYPES = [
-  'audio/webm',
-  'audio/ogg',
-  'audio/mp4',
-  'audio/wav',
-];
+const PREFERRED_MIME_TYPES = ['audio/webm', 'audio/ogg', 'audio/mp4', 'audio/wav'];
 
 function pickSupportedMimeType(): string | null {
   if (typeof MediaRecorder === 'undefined') return null;
@@ -75,9 +70,7 @@ export function useMicRecorder(): MicRecorderResult {
       typeof MediaRecorder === 'undefined'
     ) {
       setStatus('unsupported');
-      setErrorMessage(
-        'Audio recording is not supported in this browser.'
-      );
+      setErrorMessage('Audio recording is not supported in this browser.');
       return;
     }
 
@@ -89,13 +82,10 @@ export function useMicRecorder(): MicRecorderResult {
     } catch (error) {
       const isPermissionError =
         error instanceof DOMException &&
-        (error.name === 'NotAllowedError' ||
-          error.name === 'PermissionDeniedError');
+        (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
       setStatus(isPermissionError ? 'permission-denied' : 'error');
       setErrorMessage(
-        isPermissionError
-          ? 'Microphone permission was denied.'
-          : 'Could not access the microphone.'
+        isPermissionError ? 'Microphone permission was denied.' : 'Could not access the microphone.'
       );
       return;
     }

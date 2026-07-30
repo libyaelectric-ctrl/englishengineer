@@ -1,11 +1,12 @@
-import { beforeEach, describe, expect, it, vi, beforeAll } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { loadVocabularyEntries } from '../data/vocabulary.data';
+import { VocabularyEntry } from '../types/vocabulary.types';
 import {
   clearVocabularyLookupCache,
   lookupExternalVocabulary,
   searchVocabularyEntries,
 } from './vocabulary.search';
-import { VocabularyEntry } from '../types/vocabulary.types';
 
 let entries: VocabularyEntry[] = [];
 
@@ -20,18 +21,14 @@ describe('vocabulary search and external lookup', () => {
   });
 
   it('searches term, meaning, category, tags, related terms and examples', () => {
-    expect(
-      searchVocabularyEntries(entries, 'cable tray').length
-    ).toBeGreaterThan(0);
-    expect(
-      searchVocabularyEntries(entries, 'Electrical Engineering').length
-    ).toBeGreaterThan(0);
+    expect(searchVocabularyEntries(entries, 'cable tray').length).toBeGreaterThan(0);
+    expect(searchVocabularyEntries(entries, 'Electrical Engineering').length).toBeGreaterThan(0);
   });
 
   it('reports an honest not-configured state without an API URL', async () => {
-    await expect(
-      lookupExternalVocabulary('panel', { apiUrl: '' })
-    ).resolves.toEqual({ status: 'not-configured' });
+    await expect(lookupExternalVocabulary('panel', { apiUrl: '' })).resolves.toEqual({
+      status: 'not-configured',
+    });
   });
 
   it('reports an honest unavailable state for provider failure', async () => {

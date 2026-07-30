@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Grammar Flow', () => {
   test('grammar page loads', async ({ page }) => {
@@ -17,9 +17,7 @@ test.describe('Grammar Flow', () => {
     // Check for grammar-related content
     const content = await page.textContent('body');
     const hasGrammarContent =
-      content?.includes('Grammar') ||
-      content?.includes('lesson') ||
-      content?.includes('rule');
+      content?.includes('Grammar') || content?.includes('lesson') || content?.includes('rule');
     expect(hasGrammarContent).toBeTruthy();
   });
 });

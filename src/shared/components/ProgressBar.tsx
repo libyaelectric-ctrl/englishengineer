@@ -1,4 +1,5 @@
-import { memo, type HTMLAttributes } from 'react';
+import { type HTMLAttributes, memo } from 'react';
+
 import { cn } from '@/shared/utils/cn';
 
 interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
@@ -9,49 +10,49 @@ interface ProgressBarProps extends HTMLAttributes<HTMLDivElement> {
   color?: 'primary' | 'cyan' | 'emerald' | 'rose' | 'amber' | 'success' | 'warning' | 'danger';
 }
 
-export const ProgressBar = memo<ProgressBarProps>(({
-  value,
-  max = 100,
-  showValue = false,
-  animated: _animated = true,
-  color = 'primary',
-  className,
-  ...props
-}) => {
-  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+export const ProgressBar = memo<ProgressBarProps>(
+  ({
+    value,
+    max = 100,
+    showValue = false,
+    animated: _animated = true,
+    color = 'primary',
+    className,
+    ...props
+  }) => {
+    const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
-  const colors: Record<string, string> = {
-    primary: 'bg-foreground',
-    cyan: 'bg-primary',
-    emerald: 'bg-success',
-    rose: 'bg-error',
-    amber: 'bg-warning',
-    success: 'bg-success',
-    warning: 'bg-warning',
-    danger: 'bg-error',
-  };
+    const colors: Record<string, string> = {
+      primary: 'bg-foreground',
+      cyan: 'bg-primary',
+      emerald: 'bg-success',
+      rose: 'bg-error',
+      amber: 'bg-warning',
+      success: 'bg-success',
+      warning: 'bg-warning',
+      danger: 'bg-error',
+    };
 
-  return (
-    <div className={cn('w-full space-y-1', className)} {...props}>
-      {showValue && (
-        <div className="flex justify-between text-[10px] text-muted-copy">
-          <span>Progress</span>
-          <span className="font-medium text-foreground">
-            {percentage.toFixed(0)}%
-          </span>
+    return (
+      <div className={cn('w-full space-y-1', className)} {...props}>
+        {showValue && (
+          <div className="flex justify-between text-[10px] text-muted-copy">
+            <span>Progress</span>
+            <span className="font-medium text-foreground">{percentage.toFixed(0)}%</span>
+          </div>
+        )}
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
+          <div
+            className={cn(
+              'h-full rounded-full transition-all duration-500 ease-out',
+              colors[color]
+            )}
+            style={{ width: `${percentage}%` }}
+          />
         </div>
-      )}
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
-        <div
-          className={cn(
-            'h-full rounded-full transition-all duration-500 ease-out',
-            colors[color]
-          )}
-          style={{ width: `${percentage}%` }}
-        />
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 ProgressBar.displayName = 'ProgressBar';

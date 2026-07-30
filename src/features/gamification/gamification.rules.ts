@@ -36,8 +36,7 @@ export const GAMIFICATION_MISSION_TEMPLATES: GamificationMissionTemplate[] = [
   {
     id: 'weekly_balanced_engine',
     title: 'Balanced Engine Rotation',
-    description:
-      'Complete five sessions across core learning engines this week.',
+    description: 'Complete five sessions across core learning engines this week.',
     cadence: 'weekly',
     category: 'Mixed',
     target: 5,
@@ -57,8 +56,7 @@ export const GAMIFICATION_MISSION_TEMPLATES: GamificationMissionTemplate[] = [
   {
     id: 'weekly_analytics_review',
     title: 'Analytics Review Protocol',
-    description:
-      'Review Analytics Pro signals and follow the recommended next study.',
+    description: 'Review Analytics Pro signals and follow the recommended next study.',
     cadence: 'weekly',
     category: 'Analytics',
     target: 1,
@@ -78,8 +76,7 @@ export const GAMIFICATION_MISSION_TEMPLATES: GamificationMissionTemplate[] = [
   {
     id: 'monthly_vocabulary_mastery',
     title: 'Vocabulary Mastery Push',
-    description:
-      'Build long-term retention through repeated vocabulary review.',
+    description: 'Build long-term retention through repeated vocabulary review.',
     cadence: 'monthly',
     category: 'Vocabulary',
     target: 10,

@@ -1,4 +1,7 @@
 import { IdService } from '@/core/ids/id.service';
+
+import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
+
 import {
   AICoachContext,
   AICoachResult,
@@ -10,7 +13,6 @@ import {
   AIRequestMetadata,
   AIResponse,
 } from './ai.types';
-import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
 
 interface BackendProxyPayload {
   contractVersion: AIContractVersion;
@@ -53,11 +55,7 @@ class BackendProxyError extends Error {
   readonly code: BackendProxyErrorCode;
   readonly retryable: boolean;
 
-  constructor(
-    code: BackendProxyErrorCode,
-    message: string,
-    retryable: boolean
-  ) {
+  constructor(code: BackendProxyErrorCode, message: string, retryable: boolean) {
     super(message);
     this.name = 'BackendProxyError';
     this.code = code;
@@ -77,17 +75,10 @@ const ROUTE_BY_OPERATION: Record<AIOperation, string> = {
   analyzeProgress: 'coach',
 };
 
-const resolveProxyEndpoint = (
-  proxyUrl: string,
-  operation: AIOperation
-): string => {
+const resolveProxyEndpoint = (proxyUrl: string, operation: AIOperation): string => {
   const route = ROUTE_BY_OPERATION[operation];
   const withoutTrailingSlash = proxyUrl.replace(/\/$/, '');
-  if (
-    /\/(coach|writing-review|assessment-feedback|roleplay)$/.test(
-      withoutTrailingSlash
-    )
-  ) {
+  if (/\/(coach|writing-review|assessment-feedback|roleplay)$/.test(withoutTrailingSlash)) {
     return withoutTrailingSlash.replace(
       /\/(coach|writing-review|assessment-feedback|roleplay)$/,
       `/${route}`
@@ -117,11 +108,7 @@ export const isAICoachResult = (value: unknown): value is AICoachResult => {
 
 export const mapHttpError = (status: number): BackendProxyError => {
   if (status === 408)
-    return new BackendProxyError(
-      'backend_timeout',
-      'Backend AI request timed out.',
-      true
-    );
+    return new BackendProxyError('backend_timeout', 'Backend AI request timed out.', true);
   if (status === 429)
     return new BackendProxyError(
       'backend_rate_limited',
@@ -160,11 +147,7 @@ const mapUnknownError = (error: unknown): BackendProxyError => {
   if (error instanceof Error) {
     return new BackendProxyError('backend_unknown_error', error.message, false);
   }
-  return new BackendProxyError(
-    'backend_unknown_error',
-    'Unknown backend AI error.',
-    false
-  );
+  return new BackendProxyError('backend_unknown_error', 'Unknown backend AI error.', false);
 };
 
 const resolveBackendResponseText = (data: BackendProxyResponse): string => {
@@ -181,9 +164,7 @@ const resolveBackendResponseText = (data: BackendProxyResponse): string => {
   );
 };
 
-const parseErrorValue = (
-  errorValue: unknown
-): BackendProxyResponse['error'] => {
+const parseErrorValue = (errorValue: unknown): BackendProxyResponse['error'] => {
   if (
     !isRecord(errorValue) ||
     typeof errorValue.code !== 'string' ||
@@ -194,10 +175,7 @@ const parseErrorValue = (
   return {
     code: errorValue.code,
     message: errorValue.message,
-    retryable:
-      typeof errorValue.retryable === 'boolean'
-        ? errorValue.retryable
-        : undefined,
+    retryable: typeof errorValue.retryable === 'boolean' ? errorValue.retryable : undefined,
   };
 };
 
@@ -230,8 +208,7 @@ export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
   validateStructuredResult(data);
 
   return {
-    contractVersion:
-      data.contractVersion === CONTRACT_VERSION ? CONTRACT_VERSION : undefined,
+    contractVersion: data.contractVersion === CONTRACT_VERSION ? CONTRACT_VERSION : undefined,
     requestId: safeString(data.requestId),
     operation: safeString(data.operation) as AIOperation | undefined,
     structuredResult: data.structuredResult as unknown as AICoachResult,
@@ -260,8 +237,7 @@ const buildSuccessResponse = (
         mode: 'backend',
         state: 'mock-fallback',
         label: 'Mock AI demo through protected connection',
-        detail:
-          'The protected service is connected, but Mock AI demo mode is active.',
+        detail: 'The protected service is connected, but Mock AI demo mode is active.',
         isConnected: true,
       }
     : status;
@@ -298,15 +274,11 @@ const buildUnavailableResponse = (
   },
 });
 
-export const createBackendProxyProvider = (
-  proxyUrl: string | null
-): AIProvider => {
+export const createBackendProxyProvider = (proxyUrl: string | null): AIProvider => {
   const status: AIProviderStatus = {
     mode: 'backend',
     state: proxyUrl ? 'backend-configured' : 'backend-error',
-    label: proxyUrl
-      ? 'Protected AI connection ready'
-      : 'AI service unavailable',
+    label: proxyUrl ? 'Protected AI connection ready' : 'AI service unavailable',
     detail: proxyUrl
       ? 'Secure AI feedback is connected through the protected service.'
       : 'Secure AI feedback is not connected.',
@@ -320,10 +292,7 @@ export const createBackendProxyProvider = (
     payload: BackendProxyPayload
   ): Promise<BackendProxyResponse> => {
     const controller = new AbortController();
-    const timeoutId = window.setTimeout(
-      () => controller.abort(),
-      DEFAULT_PROXY_TIMEOUT_MS
-    );
+    const timeoutId = window.setTimeout(() => controller.abort(), DEFAULT_PROXY_TIMEOUT_MS);
 
     try {
       const authHeaders = await getBackendAuthHeaders();
@@ -347,9 +316,7 @@ export const createBackendProxyProvider = (
       const data = parseBackendResponse(await response.json());
       if (data.error) {
         throw new BackendProxyError(
-          data.error.code === 'rate_limited'
-            ? 'backend_rate_limited'
-            : 'backend_http_error',
+          data.error.code === 'rate_limited' ? 'backend_rate_limited' : 'backend_http_error',
           data.error.message,
           data.error.retryable === true
         );
@@ -373,23 +340,10 @@ export const createBackendProxyProvider = (
 
     while (retryCount <= MAX_RETRIES) {
       try {
-        const data = await executeSingleAttempt(
-          proxyUrl!,
-          operation,
-          requestId,
-          payload
-        );
-        return buildSuccessResponse(
-          data,
-          operation,
-          requestId,
-          status,
-          startedAt,
-          retryCount
-        );
+        const data = await executeSingleAttempt(proxyUrl!, operation, requestId, payload);
+        return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
       } catch (error) {
-        lastError =
-          error instanceof BackendProxyError ? error : mapUnknownError(error);
+        lastError = error instanceof BackendProxyError ? error : mapUnknownError(error);
         if (!lastError.retryable || retryCount >= MAX_RETRIES) break;
         retryCount += 1;
       }
@@ -402,10 +356,7 @@ export const createBackendProxyProvider = (
     );
   };
 
-  const callProxy = async (
-    operation: AIOperation,
-    request: AIRequest
-  ): Promise<AIResponse> => {
+  const callProxy = async (operation: AIOperation, request: AIRequest): Promise<AIResponse> => {
     const startedAt = performance.now();
     const requestId = IdService.createId('ai_req');
 
@@ -433,10 +384,8 @@ export const createBackendProxyProvider = (
 
   return {
     getStatus: () => status,
-    analyzeText: (request: AIRequest): Promise<AIResponse> =>
-      callProxy('analyzeText', request),
-    rewriteText: (request: AIRequest): Promise<AIResponse> =>
-      callProxy('rewriteText', request),
+    analyzeText: (request: AIRequest): Promise<AIResponse> => callProxy('analyzeText', request),
+    rewriteText: (request: AIRequest): Promise<AIResponse> => callProxy('rewriteText', request),
     generatePractice: (request: AIRequest): Promise<AIResponse> =>
       callProxy('generatePractice', request),
     evaluateEngineeringEnglish: (request: AIRequest): Promise<AIResponse> =>

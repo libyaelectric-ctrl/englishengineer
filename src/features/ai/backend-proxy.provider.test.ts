@@ -1,10 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import {
-  isAICoachResult,
-  mapHttpError,
-  parseBackendResponse,
-} from './backend-proxy.provider';
+
+import { isAICoachResult, mapHttpError, parseBackendResponse } from './backend-proxy.provider';
 
 const coachResult = {
   summary: 'Good technical clarity.',
@@ -38,9 +35,7 @@ describe('backend proxy response parsing', () => {
   });
 
   it('rejects malformed AI coach structured result', () => {
-    expect(isAICoachResult({ ...coachResult, suggestedActions: 'retry' })).toBe(
-      false
-    );
+    expect(isAICoachResult({ ...coachResult, suggestedActions: 'retry' })).toBe(false);
   });
 
   it('parses v1 text response contract', () => {
@@ -56,14 +51,12 @@ describe('backend proxy response parsing', () => {
   });
 
   it('throws on non-object backend response', () => {
-    expect(() => parseBackendResponse('not-json-object')).toThrow(
-      'not a JSON object'
-    );
+    expect(() => parseBackendResponse('not-json-object')).toThrow('not a JSON object');
   });
 
   it('throws on malformed structuredResult', () => {
-    expect(() =>
-      parseBackendResponse({ structuredResult: { summary: 'missing fields' } })
-    ).toThrow('structuredResult');
+    expect(() => parseBackendResponse({ structuredResult: { summary: 'missing fields' } })).toThrow(
+      'structuredResult'
+    );
   });
 });

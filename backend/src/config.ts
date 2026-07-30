@@ -1,21 +1,19 @@
-import { hasText, toPositiveInteger } from './config-helpers.js';
+import type { BackendConfig, RuntimeEnvironment } from '../types.js';
 import {
-  resolveEnvironment,
   resolveAI,
   resolveAuth,
-  resolveStripe,
+  resolveEnvironment,
   resolveRateLimit,
-  resolveVocabulary,
+  resolveStripe,
   resolveSupabase,
+  resolveVocabulary,
   resolveWorkspace,
 } from './config-builders.js';
-import type { BackendConfig, RuntimeEnvironment } from '../types.js';
+import { hasText, toPositiveInteger } from './config-helpers.js';
 
 type Env = Record<string, string | undefined>;
 
-export const createBackendConfig = (
-  environment: Env = process.env
-): BackendConfig => {
+export const createBackendConfig = (environment: Env = process.env): BackendConfig => {
   const runtimeEnv = resolveEnvironment(environment);
   const supabase = resolveSupabase(environment);
 
@@ -25,9 +23,7 @@ export const createBackendConfig = (
     environment: runtimeEnv,
     version: environment.APP_VERSION || '4.0.1',
     sentry: {
-      dsn: hasText(environment.SENTRY_DSN)
-        ? environment.SENTRY_DSN!.trim()
-        : null,
+      dsn: hasText(environment.SENTRY_DSN) ? environment.SENTRY_DSN!.trim() : null,
       environment: runtimeEnv,
       tracesSampleRate: runtimeEnv === 'production' ? 0.1 : 1.0,
     },
@@ -70,8 +66,7 @@ export const toPublicHealth = (config: BackendConfig): PublicHealth => {
     rateLimit: { configured: config.rateLimit.storeMode === 'upstash' },
   };
 
-  const allCriticalConfigured =
-    config.ai.configured && config.supabase.configured;
+  const allCriticalConfigured = config.ai.configured && config.supabase.configured;
   const status = allCriticalConfigured ? 'ok' : 'degraded';
 
   return {

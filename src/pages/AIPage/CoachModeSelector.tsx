@@ -1,14 +1,12 @@
 import { Brain, Lock, Sparkles } from 'lucide-react';
+
+import type { AICoachMode, AICoachModeId, AIPromptTemplate } from '@/features/ai';
 import {
-  canAccessFeature,
   type BillingFeature,
   type SubscriptionSnapshot,
+  canAccessFeature,
 } from '@/features/billing';
-import type {
-  AICoachModeId,
-  AICoachMode,
-  AIPromptTemplate,
-} from '@/features/ai';
+
 import { MODE_REQUIRED_FEATURES } from './hooks/useAIPage';
 
 interface CoachModeSelectorProps {
@@ -63,12 +61,9 @@ export const CoachModeSelector = ({
               {(() => {
                 const reqFeat = MODE_REQUIRED_FEATURES[mode.id];
                 const isLocked = reqFeat
-                  ? !canAccessFeature(subscription, reqFeat as BillingFeature)
-                      .allowed
+                  ? !canAccessFeature(subscription, reqFeat as BillingFeature).allowed
                   : false;
-                return isLocked ? (
-                  <Lock className="h-3 w-3 text-muted-copy" />
-                ) : null;
+                return isLocked ? <Lock className="h-3 w-3 text-muted-copy" /> : null;
               })()}
             </span>
           </button>

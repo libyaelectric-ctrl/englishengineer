@@ -1,8 +1,11 @@
-import { Outlet, Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, Moon, Sun, X } from 'lucide-react';
-import { useState } from 'react';
-import { cn } from '@/shared/utils/cn';
 import { useAppStore } from '@/store/app.store';
+import { Menu, Moon, Sun, X } from 'lucide-react';
+
+import { useState } from 'react';
+
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+
+import { cn } from '@/shared/utils/cn';
 
 const links = [
   { label: 'Features', href: '/#features' },
@@ -37,24 +40,15 @@ export const PublicLayout = () => {
               className="flex items-center gap-3 rounded-[10px] py-1 pr-2 transition-colors hover:bg-surface-hover"
               aria-label="EngVox home"
             >
-              <img
-                src="/brand/logo.webp"
-                alt="EngVox"
-                className="h-9 w-9 rounded-lg"
-              />
+              <img src="/brand/logo.webp" alt="EngVox" className="h-9 w-9 rounded-lg" />
               <span>
-                <strong className="block text-sm text-foreground">
-                  EngVox
-                </strong>
+                <strong className="block text-sm text-foreground">EngVox</strong>
                 <span className="hidden text-[10px] font-semibold uppercase text-muted-copy sm:block">
                   Your Engineering Voice
                 </span>
               </span>
             </Link>
-            <nav
-              className="hidden items-center gap-7 md:flex"
-              aria-label="Public navigation"
-            >
+            <nav className="hidden items-center gap-7 md:flex" aria-label="Public navigation">
               {links.map((item) =>
                 item.href.startsWith('/#') ? (
                   <a
@@ -85,17 +79,9 @@ export const PublicLayout = () => {
                 type="button"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="flex h-9 w-9 items-center justify-center rounded-[10px] border border-border-soft bg-surface text-muted-copy transition-colors hover:bg-surface-hover hover:text-foreground"
-                aria-label={
-                  theme === 'dark'
-                    ? 'Switch to light mode'
-                    : 'Switch to dark mode'
-                }
+                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               >
-                {theme === 'dark' ? (
-                  <Sun className="h-4 w-4" />
-                ) : (
-                  <Moon className="h-4 w-4" />
-                )}
+                {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
               <Link
                 to="/login"
@@ -103,10 +89,7 @@ export const PublicLayout = () => {
               >
                 Log in
               </Link>
-              <Link
-                to="/start"
-                className="public-primary-action min-h-10 px-4 py-2"
-              >
+              <Link to="/start" className="public-primary-action min-h-10 px-4 py-2">
                 Start free
               </Link>
             </div>
@@ -117,11 +100,7 @@ export const PublicLayout = () => {
               aria-expanded={mobileOpen}
               aria-label="Toggle navigation"
             >
-              {mobileOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
           {mobileOpen && (
@@ -141,10 +120,7 @@ export const PublicLayout = () => {
                   </Link>
                 ))}
                 <div className="mt-2 grid grid-cols-2 gap-2 border-t border-border-soft pt-4">
-                  <Link
-                    to="/login"
-                    className="public-secondary-action px-4 py-3"
-                  >
+                  <Link to="/login" className="public-secondary-action px-4 py-3">
                     Log in
                   </Link>
                   <Link to="/start" className="public-primary-action px-4 py-3">

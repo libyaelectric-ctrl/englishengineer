@@ -1,8 +1,10 @@
-import { FormEvent } from 'react';
 import { AlertCircle, Lock, RefreshCw, Send, Terminal } from 'lucide-react';
 
+import { FormEvent } from 'react';
+
 import { Button } from '@/shared/components/Button';
-import type { AICoachModeId, AICoachMode } from '@/features/ai';
+
+import type { AICoachMode, AICoachModeId } from '@/features/ai';
 
 interface CoachInputFormProps {
   selectedModeId: AICoachModeId;
@@ -111,8 +113,7 @@ const DocumentUploadSection = ({
         className="text-xs text-muted-copy file:mr-3 file:py-1 file:px-2.5 file:rounded-[4px] file:border file:border-border-soft file:text-[10px] file:font-bold file:uppercase file:tracking-wider file:bg-surface file:text-primary hover:file:bg-surface-hover cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy bg-surface border border-border-soft px-2.5 py-1 rounded-[4px] font-mono shadow-sm">
-        {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit}{' '}
-        uploads used this month
+        {uploadedDocsCount} / {docLimit === 'unlimited' ? '∞' : docLimit} uploads used this month
       </span>
     </div>
     {uploadError && (
@@ -191,11 +192,7 @@ const FormActions = ({
       className="h-9 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer flex items-center justify-center gap-2 px-4"
       disabled={isLoading || input.trim().length === 0 || !allowed}
     >
-      {isLoading ? (
-        <RefreshCw className="h-4 w-4 animate-spin" />
-      ) : (
-        <Send className="h-4 w-4" />
-      )}
+      {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       {isLoading ? 'Analyzing...' : 'Run Engineering Copilot'}
     </Button>
   </div>
@@ -232,10 +229,7 @@ const FormBody = ({
 }) => (
   <>
     {!aiEntitlement.allowed && (
-      <AIEntitlementWarning
-        reason={aiEntitlement.reason}
-        onNavigate={onNavigate}
-      />
+      <AIEntitlementWarning reason={aiEntitlement.reason} onNavigate={onNavigate} />
     )}
     {selectedModeId === 'document_analysis_assistant' && (
       <DocumentUploadSection

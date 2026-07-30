@@ -1,20 +1,15 @@
-import {
-  validateQuery,
-  validateBody,
-  VocabularyLookupQuerySchema,
-  ProgressBodySchema,
-} from './validation.js';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+
+import type { VocabularyLookupQuery } from '../types.js';
 import { getOrSet } from './cache/redis-cache.service.js';
 import { ApiError } from './errors.js';
+import {
+  ProgressBodySchema,
+  VocabularyLookupQuerySchema,
+  validateBody,
+  validateQuery,
+} from './validation.js';
 import type { VocabularyLookupService } from './vocabulary-service.js';
-import type { VocabularyLookupQuery } from '../types.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from 'express';
 
 export const registerVocabularyRoutes = (
   app: Express,
@@ -29,10 +24,8 @@ export const registerVocabularyRoutes = (
       try {
         const query = request.validatedQuery as unknown as VocabularyLookupQuery;
         const cacheKey = `vocab:${query.word}`;
-        const { value: result, fromCache } = await getOrSet(
-          cacheKey,
-          21600,
-          () => service.lookup(query)
+        const { value: result, fromCache } = await getOrSet(cacheKey, 21600, () =>
+          service.lookup(query)
         );
         response.json({ ...result, cached: fromCache });
       } catch (error) {
@@ -47,8 +40,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         const wordId = request.params.id;
         const { result } = request.validatedBody as {
@@ -78,8 +70,7 @@ export const registerVocabularyRoutes = (
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           total: 0,

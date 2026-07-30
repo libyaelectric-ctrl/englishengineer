@@ -1,5 +1,5 @@
-import http from 'k6/http';
 import { check, sleep } from 'k6';
+import http from 'k6/http';
 
 // 1. K6 Test Configuration
 // Hedef: Claude'un belirttigi Spike, Normal ve Sustained load senaryolarini tek bir testte kurgulamak.

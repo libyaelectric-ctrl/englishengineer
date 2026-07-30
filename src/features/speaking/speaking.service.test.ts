@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+
 import { SpeakingService } from './speaking.service';
 
 describe('SpeakingService', () => {

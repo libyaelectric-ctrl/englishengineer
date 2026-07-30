@@ -1,11 +1,9 @@
-import { expect, test, type Page } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 
 const loginDemo = async (page: Page) => {
   await page.goto('/login');
   await page.getByRole('button', { name: /demo/i }).click();
-  await expect(
-    page.getByRole('heading', { name: /command center/i })
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
 };
 
 const expectNoHorizontalOverflow = async (page: Page) => {
@@ -28,19 +26,13 @@ test.describe('mobile-first learning shell', () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await loginDemo(page);
     await page.goto('/grammar');
-    await expect(
-      page.getByRole('heading', { name: 'Grammar', exact: true })
-    ).toBeVisible();
-    await expect(
-      page.getByPlaceholder('Search grammar concepts...')
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Grammar', exact: true })).toBeVisible();
+    await expect(page.getByPlaceholder('Search grammar concepts...')).toBeVisible();
     await expectNoHorizontalOverflow(page);
 
     const sidebar = page.getByTestId('app-sidebar');
     const closedBox = await sidebar.boundingBox();
-    expect(closedBox ? closedBox.x + closedBox.width : 0).toBeLessThanOrEqual(
-      0
-    );
+    expect(closedBox ? closedBox.x + closedBox.width : 0).toBeLessThanOrEqual(0);
     await page.getByLabel('Toggle navigation sidebar').click();
     await expect(page.getByRole('link', { name: 'Grammar' })).toBeVisible();
     await page.getByRole('link', { name: 'Grammar' }).click();
@@ -52,9 +44,7 @@ test.describe('mobile-first learning shell', () => {
       .toBeLessThanOrEqual(0);
 
     await page.goto('/curriculum/memory');
-    await expect(
-      page.getByRole('heading', { name: 'Learning Hub' })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Learning Hub' })).toBeVisible();
     await expect(page.getByText('Unified Review Queue')).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
@@ -63,9 +53,7 @@ test.describe('mobile-first learning shell', () => {
     await page.setViewportSize({ width: 820, height: 1180 });
     await loginDemo(page);
     await page.goto('/dashboard');
-    await expect(
-      page.getByRole('heading', { name: /command center/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
     await expectNoHorizontalOverflow(page);
   });
 });

@@ -1,14 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
+import type { VocabularyMenuProgress } from '../services/vocabulary.menu';
 import {
   calculateWordPriority,
-  prioritizeWords,
   getSessionPriorityLabel,
+  prioritizeWords,
 } from './vocabulary.session-optimizer';
-import type { VocabularyMenuProgress } from '../services/vocabulary.menu';
 
-const makeProgress = (
-  overrides: Partial<VocabularyMenuProgress> = {}
-): VocabularyMenuProgress => ({
+const makeProgress = (overrides: Partial<VocabularyMenuProgress> = {}): VocabularyMenuProgress => ({
   correctReviews: 0,
   wrongReviews: 0,
   status: 'New',
@@ -38,11 +37,7 @@ describe('Session Optimizer', () => {
         lastReviewed: '2025-01-01T00:00:00Z',
         isForgotten: true,
       });
-      const result = calculateWordPriority(
-        'w1',
-        progress,
-        new Date('2026-07-19')
-      );
+      const result = calculateWordPriority('w1', progress, new Date('2026-07-19'));
       expect(result.reason).toBe('forgotten');
       expect(result.priority).toBe(80);
     });
@@ -58,11 +53,7 @@ describe('Session Optimizer', () => {
       const progress = makeProgress({
         nextReviewDate: '2026-07-18T00:00:00Z',
       });
-      const result = calculateWordPriority(
-        'w1',
-        progress,
-        new Date('2026-07-19')
-      );
+      const result = calculateWordPriority('w1', progress, new Date('2026-07-19'));
       expect(result.reason).toBe('due');
       expect(result.priority).toBe(40);
     });
@@ -81,11 +72,7 @@ describe('Session Optimizer', () => {
         w2: makeProgress({ isLeech: true, correctReviews: 1, wrongReviews: 3 }),
         w3: makeProgress({ nextReviewDate: '2026-07-18T00:00:00Z' }),
       };
-      const result = prioritizeWords(
-        ['w1', 'w2', 'w3'],
-        progressMap,
-        new Date('2026-07-19')
-      );
+      const result = prioritizeWords(['w1', 'w2', 'w3'], progressMap, new Date('2026-07-19'));
       expect(result[0].wordId).toBe('w2');
       expect(result[1].wordId).toBe('w1');
       expect(result[2].wordId).toBe('w3');

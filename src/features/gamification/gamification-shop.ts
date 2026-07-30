@@ -1,9 +1,4 @@
-export type ShopItemCategory =
-  | 'avatar'
-  | 'theme'
-  | 'content'
-  | 'boost'
-  | 'title';
+export type ShopItemCategory = 'avatar' | 'theme' | 'content' | 'boost' | 'title';
 
 export interface ShopItem {
   id: string;
@@ -193,19 +188,12 @@ export const ShopService = {
       ...item,
       isOwned: ownedItemIds.includes(item.id),
       isLimited:
-        item.isLimited && item.expiresAt
-          ? new Date(item.expiresAt) > new Date()
-          : item.isLimited,
+        item.isLimited && item.expiresAt ? new Date(item.expiresAt) > new Date() : item.isLimited,
     }));
   },
 
-  getCatalogByCategory(
-    category: ShopItemCategory,
-    ownedItemIds: string[] = []
-  ): ShopItem[] {
-    return this.getCatalog(ownedItemIds).filter(
-      (item) => item.category === category
-    );
+  getCatalogByCategory(category: ShopItemCategory, ownedItemIds: string[] = []): ShopItem[] {
+    return this.getCatalog(ownedItemIds).filter((item) => item.category === category);
   },
 
   canAfford(item: ShopItem, userCoins: number, userXp: number): boolean {
@@ -221,11 +209,7 @@ export const ShopService = {
       return { success: false, error: 'Item already owned' };
     }
 
-    if (
-      item.isLimited &&
-      item.expiresAt &&
-      new Date(item.expiresAt) < new Date()
-    ) {
+    if (item.isLimited && item.expiresAt && new Date(item.expiresAt) < new Date()) {
       return { success: false, error: 'Limited item has expired' };
     }
 
@@ -256,9 +240,7 @@ export const ShopService = {
     else if (streak >= 7) discountPercent = 10;
 
     return {
-      discountedCoins: Math.round(
-        item.priceCoins * (1 - discountPercent / 100)
-      ),
+      discountedCoins: Math.round(item.priceCoins * (1 - discountPercent / 100)),
       discountedXp: Math.round(item.priceXp * (1 - discountPercent / 100)),
       discountPercent,
     };

@@ -37,13 +37,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "-ed ekini unutmak veya her fiile düzenli çekim uygulamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "installed",
-      "submitted",
-      "yesterday",
-      "last-week",
-      "report"
-    ],
+    "linkedVocabularyTags": ["installed", "submitted", "yesterday", "last-week", "report"],
     "grammarFits": ["past simple"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_011"],
@@ -106,14 +100,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "Irregular fiillere -ed eklemek; 'goed' gibi hatalar yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "material",
-      "defect",
-      "walkdown",
-      "arrive",
-      "see",
-      "do"
-    ],
+    "linkedVocabularyTags": ["material", "defect", "walkdown", "arrive", "see", "do"],
     "grammarFits": ["past simple"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -176,13 +163,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Did not sonrası fiili geçmiş yapmak; 'did not started' yanlıştır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "inspection",
-      "revised-drawing",
-      "start",
-      "receive",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["inspection", "revised-drawing", "start", "receive", "delay"],
     "grammarFits": ["negatives"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -193,13 +174,7 @@
       "speaking-production",
       "vocabulary-context"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one negative site status sentence.",
     "minimumUserOutput": "The inspection did not start on time.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -251,13 +226,7 @@
     "mistakeType": "wrong word order",
     "commonMistakes": "Did sonrası fiile -ed eklemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "contractor",
-      "labeling",
-      "fire-alarm-panel",
-      "finish",
-      "check"
-    ],
+    "linkedVocabularyTags": ["contractor", "labeling", "fire-alarm-panel", "finish", "check"],
     "grammarFits": ["questions"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -322,13 +291,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "Ago ile before karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "scaffold",
-      "supplier",
-      "panel",
-      "last-week",
-      "two-days-ago"
-    ],
+    "linkedVocabularyTags": ["scaffold", "supplier", "panel", "last-week", "two-days-ago"],
     "grammarFits": ["past simple"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -391,13 +354,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Will sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "will",
-      "issue",
-      "photos",
-      "after-lunch",
-      "action"
-    ],
+    "linkedVocabularyTags": ["will", "issue", "photos", "after-lunch", "action"],
     "grammarFits": ["future will", "present perfect"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_038"],
@@ -460,13 +417,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Going to yapısında be fiilini unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "going-to",
-      "generator",
-      "test",
-      "next-week",
-      "installation"
-    ],
+    "linkedVocabularyTags": ["going-to", "generator", "test", "next-week", "installation"],
     "grammarFits": ["future will", "going to", "present perfect", "verb to be"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_007"],
@@ -529,13 +480,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "Gelecek zaman ifadesiyle past simple kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "inspection",
-      "material",
-      "tomorrow",
-      "next-week",
-      "later-today"
-    ],
+    "linkedVocabularyTags": ["inspection", "material", "tomorrow", "next-week", "later-today"],
     "grammarFits": ["future will"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_006", "grammar_a2_007"],
@@ -598,13 +543,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Be fiilini unutmak; 'team installing' yanlıştır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "installing",
-      "cable-ladder",
-      "UPS",
-      "alarm",
-      "current-activity"
-    ],
+    "linkedVocabularyTags": ["installing", "cable-ladder", "UPS", "alarm", "current-activity"],
     "grammarFits": ["present continuous", "present perfect", "verb to be"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_007"],
@@ -667,12 +606,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "Rutin işler için present continuous kullanımı abartılmamalıdır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "temporary-access",
-      "civil-team",
-      "basement",
-      "this-week"
-    ],
+    "linkedVocabularyTags": ["temporary-access", "civil-team", "basement", "this-week"],
     "grammarFits": ["present continuous", "present perfect", "verb to be"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_009"],
@@ -735,13 +669,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "Do/does ile continuous soru kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "fire-pump",
-      "subcontractor",
-      "zone",
-      "testing",
-      "working"
-    ],
+    "linkedVocabularyTags": ["fire-pump", "subcontractor", "zone", "testing", "working"],
     "grammarFits": ["present continuous", "verb to be"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_009"],
@@ -752,12 +680,7 @@
       "speaking-production",
       "vocabulary-context"
     ],
-    "domainFit": [
-      "general-site",
-      "mechanical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "mechanical", "commissioning", "project-management"],
     "taskPromptTemplate": "Describe what the site team is doing now using present continuous.",
     "minimumUserOutput": "Are they testing the fire pump now?",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -809,13 +732,7 @@
     "mistakeType": "wrong verb form",
     "commonMistakes": "Was/were yerine did kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "shaft",
-      "alarm",
-      "panel",
-      "past-activity",
-      "interruption"
-    ],
+    "linkedVocabularyTags": ["shaft", "alarm", "panel", "past-activity", "interruption"],
     "grammarFits": ["past continuous"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_009"],
@@ -947,12 +864,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "He/she/it ile have kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "method-statement",
-      "test-kit",
-      "contractor",
-      "approved-document"
-    ],
+    "linkedVocabularyTags": ["method-statement", "test-kit", "contractor", "approved-document"],
     "grammarFits": ["simple sentence"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_016"],
@@ -1015,13 +927,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Availability anlamında there is/have karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "store",
-      "cable-gland",
-      "access",
-      "riser-room",
-      "availability"
-    ],
+    "linkedVocabularyTags": ["store", "cable-gland", "access", "riser-room", "availability"],
     "grammarFits": ["simple sentence"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_014"],
@@ -1084,13 +990,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Has to yerine have to kullanmak; to sonrası fiile -s eklemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "obligation",
-      "isolate",
-      "circuit",
-      "update-drawing",
-      "procedure"
-    ],
+    "linkedVocabularyTags": ["obligation", "isolate", "circuit", "update-drawing", "procedure"],
     "grammarFits": ["modal obligation"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_016"],
@@ -1102,12 +1002,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "architecture",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "architecture", "project-management"],
     "taskPromptTemplate": "Write one obligation before testing or inspection.",
     "minimumUserOutput": "We have to isolate the circuit before work.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1159,13 +1054,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Need to sonrası isim değil fiil kullanmak gerekir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "need-to",
-      "clean",
-      "electrical-room",
-      "supplier",
-      "delivery-date"
-    ],
+    "linkedVocabularyTags": ["need-to", "clean", "electrical-room", "supplier", "delivery-date"],
     "grammarFits": ["modal obligation"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_016"],
@@ -1229,13 +1118,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should",
-      "gloves",
-      "torque-values",
-      "advice",
-      "safety"
-    ],
+    "linkedVocabularyTags": ["should", "gloves", "torque-values", "advice", "safety"],
     "grammarFits": ["modal advice"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_035"],
@@ -1299,13 +1182,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Should not ile must not farkını karıştırmak; must not daha kesin yasaktır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-not",
-      "energize",
-      "inspection",
-      "cable-storage",
-      "water"
-    ],
+    "linkedVocabularyTags": ["should-not", "energize", "inspection", "cable-storage", "water"],
     "grammarFits": ["modal advice"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_018"],
@@ -1317,13 +1194,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Give one safety or quality recommendation using should.",
     "minimumUserOutput": "We should not energize the panel before inspection.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1375,14 +1246,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Must sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "must",
-      "helmet",
-      "circuit",
-      "isolation",
-      "maintenance",
-      "safety"
-    ],
+    "linkedVocabularyTags": ["must", "helmet", "circuit", "isolation", "maintenance", "safety"],
     "grammarFits": ["modal obligation"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_016"],
@@ -1464,13 +1328,7 @@
       "vocabulary-context",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "mechanical",
-      "architecture",
-      "hse"
-    ],
+    "domainFit": ["general-site", "electrical", "mechanical", "architecture", "hse"],
     "taskPromptTemplate": "Write one obligation before testing or inspection.",
     "minimumUserOutput": "Workers must not enter the MV room without permission.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1522,13 +1380,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Can sonrası to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "request",
-      "drawing",
-      "access-route",
-      "send",
-      "use"
-    ],
+    "linkedVocabularyTags": ["request", "drawing", "access-route", "send", "use"],
     "grammarFits": ["modal ability", "modal permission"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_035"],
@@ -1593,12 +1445,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Could sonrası to kullanmak veya please'i yanlış yere koymak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "polite-request",
-      "inspection-time",
-      "updated-schedule",
-      "confirm"
-    ],
+    "linkedVocabularyTags": ["polite-request", "inspection-time", "updated-schedule", "confirm"],
     "grammarFits": ["modal permission"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_022"],
@@ -1663,12 +1510,7 @@
     "mistakeType": "modal misuse",
     "commonMistakes": "Could ile kesinlik ifade etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "possibility",
-      "fault",
-      "control-cable",
-      "access-door"
-    ],
+    "linkedVocabularyTags": ["possibility", "fault", "control-cable", "access-door"],
     "grammarFits": ["modal permission"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_023"],
@@ -1733,13 +1575,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "More shorter gibi çift karşılaştırma yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "shorter",
-      "safer",
-      "route",
-      "temporary-ladder",
-      "comparison"
-    ],
+    "linkedVocabularyTags": ["shorter", "safer", "route", "temporary-ladder", "comparison"],
     "grammarFits": ["comparatives", "adverbs"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_029"],
@@ -1802,13 +1638,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "Long adjective ile -er kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "more-practical",
-      "less-expensive",
-      "option",
-      "cost",
-      "solution"
-    ],
+    "linkedVocabularyTags": ["more-practical", "less-expensive", "option", "cost", "solution"],
     "grammarFits": ["comparatives", "adverbs"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_025"],
@@ -1871,13 +1701,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "Superlative öncesi the unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "safest",
-      "most-important",
-      "access-route",
-      "grounding",
-      "safety"
-    ],
+    "linkedVocabularyTags": ["safest", "most-important", "access-route", "grounding", "safety"],
     "grammarFits": ["superlatives", "adverbs"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_025", "grammar_a2_026"],
@@ -1940,13 +1764,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Some ile tekil sayılabilir isim kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "some",
-      "spare-label",
-      "dust",
-      "panel",
-      "quantity"
-    ],
+    "linkedVocabularyTags": ["some", "spare-label", "dust", "panel", "quantity"],
     "grammarFits": ["simple sentence"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_023"],
@@ -2009,14 +1827,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Olumlu cümlede gereksiz any kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "any",
-      "spare-breaker",
-      "label",
-      "cable",
-      "question",
-      "negative"
-    ],
+    "linkedVocabularyTags": ["any", "spare-breaker", "label", "cable", "question", "negative"],
     "grammarFits": ["simple sentence"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_028"],
@@ -2268,13 +2079,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Subject pronoun ile object pronoun karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "object-pronoun",
-      "supplier",
-      "inspection",
-      "call",
-      "send"
-    ],
+    "linkedVocabularyTags": ["object-pronoun", "supplier", "inspection", "call", "send"],
     "grammarFits": ["pronouns"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_030"],
@@ -2337,13 +2142,7 @@
     "mistakeType": "comparative misuse",
     "commonMistakes": "Sıfat ve zarfı karıştırmak; 'work safe' yerine 'work safely'.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "carefully",
-      "safely",
-      "terminal",
-      "live-area",
-      "work-method"
-    ],
+    "linkedVocabularyTags": ["carefully", "safely", "terminal", "live-area", "work-method"],
     "grammarFits": ["adverbs"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_029"],
@@ -2406,13 +2205,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Because sonrası eksik cümle kurmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "because",
-      "delay",
-      "permit",
-      "room-not-ready",
-      "reason"
-    ],
+    "linkedVocabularyTags": ["because", "delay", "permit", "room-not-ready", "reason"],
     "grammarFits": ["verb to be", "conjunctions"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_039"],
@@ -2424,12 +2217,7 @@
       "vocabulary-context",
       "writing-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "project-management"],
     "taskPromptTemplate": "Write one site status sentence using am/is/are.",
     "minimumUserOutput": "The inspection was delayed because the room was not ready.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2481,13 +2269,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "So ile because'i aynı cümlede gereksiz tekrarlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "so",
-      "result",
-      "label",
-      "inspection-fail",
-      "cable-route"
-    ],
+    "linkedVocabularyTags": ["so", "result", "label", "inspection-fail", "cable-route"],
     "grammarFits": ["conjunctions", "technical reporting"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_035"],
@@ -2551,14 +2333,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Sıralama kelimelerini rastgele kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "first",
-      "then",
-      "after-that",
-      "finally",
-      "test-step",
-      "procedure"
-    ],
+    "linkedVocabularyTags": ["first", "then", "after-that", "finally", "test-step", "procedure"],
     "grammarFits": ["conjunctions"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_006"],
@@ -2622,14 +2397,7 @@
     "mistakeType": "tense confusion",
     "commonMistakes": "If cümlesinde will kullanmak bu seviyede gerekli değildir.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "if",
-      "imperative",
-      "panel",
-      "water",
-      "cables",
-      "supervisor"
-    ],
+    "linkedVocabularyTags": ["if", "imperative", "panel", "water", "cables", "supervisor"],
     "grammarFits": ["conditionals"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_033", "grammar_a1_034"],
@@ -2693,13 +2461,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Please ve could dizilimini karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "request",
-      "revised-drawing",
-      "test-date",
-      "confirm",
-      "email"
-    ],
+    "linkedVocabularyTags": ["request", "revised-drawing", "test-date", "confirm", "email"],
     "grammarFits": ["formal email"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_023"],
@@ -2766,12 +2528,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Confirm kelimesinden sonra about kullanmak; 'confirm about' yanlıştır.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "confirm",
-      "inspection-schedule",
-      "room-ready",
-      "email"
-    ],
+    "linkedVocabularyTags": ["confirm", "inspection-schedule", "room-ready", "email"],
     "grammarFits": ["formal email"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_039"],
@@ -2786,13 +2543,7 @@
       "meeting-response",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "Please confirm the inspection schedule.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2844,13 +2595,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Send fiilinden sonra to/for nesne sırasını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "send",
-      "cable-schedule",
-      "test-photo",
-      "inspection",
-      "email"
-    ],
+    "linkedVocabularyTags": ["send", "cable-schedule", "test-photo", "inspection", "email"],
     "grammarFits": ["formal email"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_039"],
@@ -2865,13 +2610,7 @@
       "meeting-response",
       "roleplay"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one polite email sentence using the target structure.",
     "minimumUserOutput": "Please send the updated cable schedule today.",
     "masteryCriteria": "User can recognize, correct and produce this A2 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2923,13 +2662,7 @@
     "mistakeType": "under-formality",
     "commonMistakes": "Need + noun ile need to + verb karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "need",
-      "approved-drawing",
-      "installation",
-      "report",
-      "meeting"
-    ],
+    "linkedVocabularyTags": ["need", "approved-drawing", "installation", "report", "meeting"],
     "grammarFits": ["formal email"],
     "difficulty": 2,
     "prerequisites": ["grammar_a1_016", "grammar_a2_017"],
@@ -2996,13 +2729,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Zamanı ve nesneyi belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "completed-work",
-      "containment",
-      "zone",
-      "subcontractor",
-      "conduit"
-    ],
+    "linkedVocabularyTags": ["completed-work", "containment", "zone", "subcontractor", "conduit"],
     "grammarFits": ["technical reporting"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -3067,13 +2794,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Arrive ve deliver fiillerini özneye göre yanlış kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "material-arrival",
-      "cable-drum",
-      "panel",
-      "delivery",
-      "logistics"
-    ],
+    "linkedVocabularyTags": ["material-arrival", "cable-drum", "panel", "delivery", "logistics"],
     "grammarFits": ["technical reporting"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_001"],
@@ -3138,13 +2859,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Passive yapıda be fiilini unutmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "inspection",
-      "test",
-      "label",
-      "missing-power",
-      "incomplete"
-    ],
+    "linkedVocabularyTags": ["inspection", "test", "label", "missing-power", "incomplete"],
     "grammarFits": ["technical reporting"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_003", "grammar_a2_035"],
@@ -3209,13 +2924,7 @@
     "mistakeType": "missing auxiliary",
     "commonMistakes": "Will sonrası fiile -s veya to eklemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "finish",
-      "complete",
-      "labeling",
-      "test",
-      "tomorrow"
-    ],
+    "linkedVocabularyTags": ["finish", "complete", "labeling", "test", "tomorrow"],
     "grammarFits": ["technical reporting"],
     "difficulty": 2,
     "prerequisites": ["grammar_a2_006"],

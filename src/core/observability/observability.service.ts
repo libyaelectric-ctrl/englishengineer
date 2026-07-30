@@ -1,13 +1,12 @@
+import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
+
 import { logger } from '@/shared/logger';
-import {
-  type EngVoxEnv,
-  validateEnvironment,
-} from '@/config/environment.config';
+
 import {
   ErrorMonitoringConfig,
+  ErrorReport,
   HealthCheckContract,
   HealthStatus,
-  ErrorReport,
 } from './observability.types';
 
 interface ObservabilityEnv {
@@ -29,10 +28,7 @@ const normalizeSampleRate = (value: string | undefined): number => {
   return Math.max(0, Math.min(1, parsed));
 };
 
-const getHealthStatus = (
-  errors: string[],
-  warnings: string[]
-): HealthStatus => {
+const getHealthStatus = (errors: string[], warnings: string[]): HealthStatus => {
   if (errors.length > 0) return 'blocked';
   if (warnings.length > 0) return 'degraded';
   return 'healthy';
@@ -48,9 +44,7 @@ const initSentry = async () => {
 export const ObservabilityService = {
   getErrorMonitoringConfig(): ErrorMonitoringConfig {
     const provider =
-      env?.VITE_ERROR_MONITORING_PROVIDER === 'sentry'
-        ? 'sentry-compatible'
-        : 'none';
+      env?.VITE_ERROR_MONITORING_PROVIDER === 'sentry' ? 'sentry-compatible' : 'none';
     const dsnConfigured = Boolean(env?.VITE_SENTRY_DSN);
 
     return {
@@ -81,8 +75,7 @@ export const ObservabilityService = {
         aiBackendConfigured: environment.safeConfig.hasAiProxyUrl,
         billingBackendConfigured: environment.safeConfig.hasBillingApiUrl,
         supabaseConfigured:
-          environment.safeConfig.hasSupabaseUrl &&
-          environment.safeConfig.hasSupabaseAnonKey,
+          environment.safeConfig.hasSupabaseUrl && environment.safeConfig.hasSupabaseAnonKey,
         errorMonitoringConfigured: monitoring.configured,
       },
       notes,
@@ -96,11 +89,7 @@ export const ObservabilityService = {
 
   /** Report error and log locally. */
   logError(error: ErrorReport): void {
-    logger.e(
-      `[Observability] Error: ${error.code}`,
-      error.message,
-      error.context
-    );
+    logger.e(`[Observability] Error: ${error.code}`, error.message, error.context);
   },
 
   /** Log performance metric locally. */

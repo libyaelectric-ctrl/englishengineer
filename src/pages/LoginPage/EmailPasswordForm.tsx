@@ -1,4 +1,5 @@
-import { Mail, Lock, ArrowRight } from 'lucide-react';
+import { ArrowRight, Lock, Mail } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 
 interface EmailPasswordFormProps {
@@ -83,11 +84,7 @@ export const EmailPasswordForm = ({
         disabled={isLoading || isLocalAuthBlocked}
         className="flex h-12 w-full items-center justify-center gap-2 rounded-[4px] bg-primary hover:bg-primary-hover border border-primary text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-sm cursor-pointer"
       >
-        {isLoading
-          ? 'Loading...'
-          : isSignUpMode
-            ? copy.signupButton
-            : copy.loginButton}
+        {isLoading ? 'Loading...' : isSignUpMode ? copy.signupButton : copy.loginButton}
         {!isLoading && <ArrowRight className="h-4 w-4" />}
       </Button>
     </form>

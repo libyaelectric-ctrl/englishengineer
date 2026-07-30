@@ -1,23 +1,23 @@
-import { Link } from 'react-router-dom';
 import {
-  Check,
   AlertTriangle,
-  Sparkles,
-  FileText,
-  CheckCircle2,
   Award,
+  Check,
+  CheckCircle2,
+  ChevronRight,
   Coins,
+  FileText,
+  Sparkles,
   TrendingUp,
   X,
-  ChevronRight,
 } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
+
+import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { Button } from '@/shared/components/Button';
-import {
-  WritingModelAnswer,
-  type WritingEvaluationResult,
-} from '@/features/writing';
+
+import { type WritingEvaluationResult, WritingModelAnswer } from '@/features/writing';
 
 interface WritingEvaluationResultsProps {
   evaluationResult: WritingEvaluationResult;
@@ -62,9 +62,7 @@ export const WritingEvaluationResults = ({
               <span className="text-4xl font-bold leading-none text-foreground">
                 {evaluationResult.finalScore}
               </span>
-              <span className="text-[10px] font-mono text-muted-copy uppercase mt-1">
-                score %
-              </span>
+              <span className="text-[10px] font-mono text-muted-copy uppercase mt-1">score %</span>
             </div>
           </div>
 
@@ -78,30 +76,21 @@ export const WritingEvaluationResults = ({
                 <span>Linguistic Clarity</span>
                 <span>{evaluationResult.linguisticClarityScore}%</span>
               </div>
-              <ProgressBar
-                value={evaluationResult.linguisticClarityScore}
-                color="primary"
-              />
+              <ProgressBar value={evaluationResult.linguisticClarityScore} color="primary" />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                 <span>Jargon / Vocabulary</span>
                 <span>{evaluationResult.jargonDensityScore}%</span>
               </div>
-              <ProgressBar
-                value={evaluationResult.jargonDensityScore}
-                color="cyan"
-              />
+              <ProgressBar value={evaluationResult.jargonDensityScore} color="cyan" />
             </div>
             <div className="space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-mono font-bold text-muted-copy">
                 <span>Professional Tone</span>
                 <span>{evaluationResult.professionalToneScore}%</span>
               </div>
-              <ProgressBar
-                value={evaluationResult.professionalToneScore}
-                color="emerald"
-              />
+              <ProgressBar value={evaluationResult.professionalToneScore} color="emerald" />
             </div>
           </div>
         </div>
@@ -130,8 +119,7 @@ export const WritingEvaluationResults = ({
             </div>
             <div className="rounded-[4px] border border-border-soft bg-surface p-3 text-center shadow-sm">
               <span className="text-[10px] font-mono text-muted-copy uppercase block flex items-center justify-center gap-0.5">
-                <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" />{' '}
-                LEVEL PROGRESS
+                <TrendingUp className="h-2.5 w-2.5 text-primary shrink-0" /> LEVEL PROGRESS
               </span>
               <span
                 className={`text-sm font-bold block mt-0.5 ${evaluationResult.eloChange >= 0 ? 'text-success' : 'text-rose-400'}`}
@@ -158,9 +146,7 @@ export const WritingEvaluationResults = ({
                   key={s}
                   className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
                 >
-                  <span className="text-success font-bold shrink-0 mt-0.5">
-                    •
-                  </span>
+                  <span className="text-success font-bold shrink-0 mt-0.5">•</span>
                   <span>{s}</span>
                 </li>
               ))}
@@ -177,9 +163,7 @@ export const WritingEvaluationResults = ({
                   key={w}
                   className="text-xs text-muted-copy font-medium flex items-start gap-1.5"
                 >
-                  <span className="text-warning font-bold shrink-0 mt-0.5">
-                    •
-                  </span>
+                  <span className="text-warning font-bold shrink-0 mt-0.5">•</span>
                   <span>{w}</span>
                 </li>
               ))}

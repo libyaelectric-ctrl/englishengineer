@@ -1,27 +1,31 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { LearningState } from '@/core/learning/learning.types';
-import { UserProfile } from '@/features/auth/auth.types';
+
 import { logger } from '@/shared/logger';
-import { AIService } from './ai.service';
-import {
-  AIProviderStatus,
-  AISessionLog,
-  AICoachMode,
-  AICoachModeId,
-  AICoachResult,
-  AICoachSession,
-} from './ai.types';
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
+import { UserProfile } from '@/features/auth/auth.types';
+import { useLearningIntelligenceStore } from '@/features/learning-intelligence/learning-intelligence.store';
+
 import {
   AI_COACH_MODES,
   buildCoachContext,
   createCoachSessionId,
   getCoachModeById,
 } from './ai.helpers';
-import { useLearningIntelligenceStore } from '@/features/learning-intelligence/learning-intelligence.store';
+import { AIService } from './ai.service';
+import {
+  AICoachMode,
+  AICoachModeId,
+  AICoachResult,
+  AICoachSession,
+  AIProviderStatus,
+  AISessionLog,
+} from './ai.types';
 
 interface AIStoreState {
   modes: AICoachMode[];
@@ -36,16 +40,10 @@ interface AIStoreState {
   isLimitedResponse: boolean;
   setMode: (modeId: AICoachModeId) => void;
   setInput: (input: string) => void;
-  submitCoachRequest: (
-    user: UserProfile | null,
-    learningState: LearningState
-  ) => Promise<void>;
+  submitCoachRequest: (user: UserProfile | null, learningState: LearningState) => Promise<void>;
   resetCoach: () => void;
   clearSessionHistory: () => void;
-  regenerateLast: (
-    user: UserProfile | null,
-    learningState: LearningState
-  ) => Promise<void>;
+  regenerateLast: (user: UserProfile | null, learningState: LearningState) => Promise<void>;
   getUsageSummary: () => AIUsageSummary;
   setSessions: (sessions: AICoachSession[]) => void;
 }
@@ -107,10 +105,7 @@ const buildSuccessLogList = (
     durationMs: response.metadata?.durationMs || 0,
     success: response.metadata?.success === true,
     timestamp: new Date().toISOString(),
-    errorMessage:
-      response.metadata?.success === false
-        ? response.providerStatus.detail
-        : undefined,
+    errorMessage: response.metadata?.success === false ? response.providerStatus.detail : undefined,
     requestId: response.metadata?.requestId,
   };
   return [sessionLog, ...existingLogs].slice(0, 50);
@@ -134,16 +129,13 @@ const buildErrorLogList = (
     ...existingLogs,
   ].slice(0, 50);
 
-export const buildAIUsageSummary = (
-  sessions: AICoachSession[]
-): AIUsageSummary => {
+export const buildAIUsageSummary = (sessions: AICoachSession[]): AIUsageSummary => {
   const modeCounts = sessions.reduce<Record<string, number>>((acc, session) => {
     acc[session.modeName] = (acc[session.modeName] || 0) + 1;
     return acc;
   }, {});
   const mostUsedMode =
-    Object.entries(modeCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ||
-    'No sessions yet';
+    Object.entries(modeCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'No sessions yet';
   const recentSession = sessions[0] || null;
   return {
     totalSessions: sessions.length,
@@ -204,23 +196,11 @@ export const useAIStore = create<AIStoreState>()(
           const result = buildResultOrFallback(response, context);
           const isLimitedResponse = !response.structuredResult;
           if (isLimitedResponse && response.providerStatus.mode === 'backend') {
-            logger.w(
-              'Backend AI response did not include structuredResult; showing raw response.'
-            );
+            logger.w('Backend AI response did not include structuredResult; showing raw response.');
           }
 
-          const sessions = buildSessionList(
-            mode,
-            prompt,
-            response,
-            result,
-            get().sessions
-          );
-          const sessionLogs = buildSuccessLogList(
-            mode,
-            response,
-            get().sessionLogs
-          );
+          const sessions = buildSessionList(mode, prompt, response, result, get().sessions);
+          const sessionLogs = buildSuccessLogList(mode, response, get().sessionLogs);
 
           set({
             sessions,
@@ -244,8 +224,7 @@ export const useAIStore = create<AIStoreState>()(
             },
           });
         } catch (error) {
-          const message =
-            error instanceof Error ? error.message : 'AI Coach request failed.';
+          const message = error instanceof Error ? error.message : 'AI Coach request failed.';
           const sessionLogs = buildErrorLogList(mode, message, get().sessionLogs);
 
           set({

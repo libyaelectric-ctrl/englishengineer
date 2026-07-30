@@ -1,10 +1,14 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
+
+import { MemoryRouter } from 'react-router-dom';
+
+import { useAuthStore } from '@/features/auth';
+
 import PricingPage from '@/pages/PricingPage';
+
 import { BillingStatusPanel } from './BillingStatusPanel';
 import { useBillingStore } from './billing.store';
-import { useAuthStore } from '@/features/auth';
 
 vi.mock('@/features/auth', () => ({
   useAuthStore: vi.fn(),
@@ -56,9 +60,7 @@ describe('Billing Checkout Flow', () => {
 
     // Wait for the health check to run and UI to update
     await waitFor(() => {
-      expect(
-        screen.getByRole('button', { name: 'Upgrade to Pro' })
-      ).toBeEnabled();
+      expect(screen.getByRole('button', { name: 'Upgrade to Pro' })).toBeEnabled();
     });
 
     const pricingButton = screen.getByRole('button', {
@@ -66,11 +68,7 @@ describe('Billing Checkout Flow', () => {
     });
     fireEvent.click(pricingButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith(
-      'user-123',
-      'engineer@example.com',
-      'pro'
-    );
+    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
     startCheckoutMock.mockClear();
     unmount();
 
@@ -109,10 +107,6 @@ describe('Billing Checkout Flow', () => {
     });
     fireEvent.click(profileButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith(
-      'user-123',
-      'engineer@example.com',
-      'pro'
-    );
+    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
   });
 });

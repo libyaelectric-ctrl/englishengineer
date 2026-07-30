@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { useLevelUpDetector } from './level-up.hook';
 
 describe('useLevelUpDetector', () => {
@@ -10,9 +11,7 @@ describe('useLevelUpDetector', () => {
   it('does not celebrate on first-ever render (no baseline yet)', () => {
     const { result } = renderHook(() => useLevelUpDetector(3));
     expect(result.current.justLeveledUp).toBeNull();
-    expect(window.localStorage.getItem('gamification.lastSeenLevel.v1')).toBe(
-      '3'
-    );
+    expect(window.localStorage.getItem('gamification.lastSeenLevel.v1')).toBe('3');
   });
 
   it('celebrates when currentLevel is higher than last seen level', () => {
@@ -37,8 +36,6 @@ describe('useLevelUpDetector', () => {
     });
 
     expect(result.current.justLeveledUp).toBeNull();
-    expect(window.localStorage.getItem('gamification.lastSeenLevel.v1')).toBe(
-      '3'
-    );
+    expect(window.localStorage.getItem('gamification.lastSeenLevel.v1')).toBe('3');
   });
 });

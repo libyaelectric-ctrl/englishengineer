@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
+
 import { Navigate, useLocation } from 'react-router-dom';
+
 import { useAuthStore } from './auth.store';
 
 interface RequireAdminRoleProps {
   children: ReactNode;
 }
 
-export const RequireAdminRole = ({
-  children,
-}: RequireAdminRoleProps) => {
+export const RequireAdminRole = ({ children }: RequireAdminRoleProps) => {
   const { currentUser } = useAuthStore();
   const location = useLocation();
 

@@ -1,6 +1,7 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { auditLog, getAuditLogs, AUDIT_ACTIONS } from '../src/audit-log.js';
+import { describe, it } from 'node:test';
+
+import { AUDIT_ACTIONS, auditLog, getAuditLogs } from '../src/audit-log.js';
 
 describe('audit-log', () => {
   it('auditLog returns a record with id and timestamp', () => {

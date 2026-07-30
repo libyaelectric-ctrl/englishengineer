@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 
 const TeamDashboard = lazy(() =>
   import('@/features/team').then((m) => ({ default: m.TeamDashboard }))

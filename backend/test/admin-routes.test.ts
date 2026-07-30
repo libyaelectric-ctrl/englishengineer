@@ -1,13 +1,10 @@
-import { describe, it } from 'node:test';
+import type { Express, NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
-import type { Express, Request, Response, NextFunction } from 'express';
+import { describe, it } from 'node:test';
+
 import { registerAdminRoutes } from '../src/admin-routes.js';
 
-type MockHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => unknown;
+type MockHandler = (req: Request, res: Response, next: NextFunction) => unknown;
 
 interface MockApp {
   get: (path: string, ...handlers: MockHandler[]) => void;
@@ -33,20 +30,13 @@ const createMockAuth = () => async (req: Request, _res: Response, next: NextFunc
   next();
 };
 
-const createMockRateLimiter = () => async (
-  _req: Request,
-  _res: Response,
-  next: NextFunction
-) => next();
+const createMockRateLimiter = () => async (_req: Request, _res: Response, next: NextFunction) =>
+  next();
 
 describe('Admin Routes', () => {
   it('registers stats and activity routes', () => {
     const app = createMockApp();
-    registerAdminRoutes(
-      app as unknown as Express,
-      createMockAuth(),
-      createMockRateLimiter()
-    );
+    registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
     assert.ok(app.routes['GET /api/admin/stats']);
     assert.ok(app.routes['GET /api/admin/activity']);
@@ -54,11 +44,7 @@ describe('Admin Routes', () => {
 
   it('stats endpoint returns dashboard data', async () => {
     const app = createMockApp();
-    registerAdminRoutes(
-      app as unknown as Express,
-      createMockAuth(),
-      createMockRateLimiter()
-    );
+    registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
     const handlers = app.routes['GET /api/admin/stats'];
     const routeHandler = handlers[3]; // after auth, requireRole, rateLimiter
@@ -84,11 +70,7 @@ describe('Admin Routes', () => {
 
   it('activity endpoint returns audit log entries', async () => {
     const app = createMockApp();
-    registerAdminRoutes(
-      app as unknown as Express,
-      createMockAuth(),
-      createMockRateLimiter()
-    );
+    registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
     const handlers = app.routes['GET /api/admin/activity'];
     const routeHandler = handlers[4]; // after auth, requireRole, rateLimiter, validateQuery
@@ -112,11 +94,7 @@ describe('Admin Routes', () => {
 
   it('activity endpoint respects limit filter', async () => {
     const app = createMockApp();
-    registerAdminRoutes(
-      app as unknown as Express,
-      createMockAuth(),
-      createMockRateLimiter()
-    );
+    registerAdminRoutes(app as unknown as Express, createMockAuth(), createMockRateLimiter());
 
     const handlers = app.routes['GET /api/admin/activity'];
     const routeHandler = handlers[4];

@@ -18,12 +18,8 @@ const checks = [
   ],
   [
     'Stripe events service-role boundary',
-    sql.includes(
-      'revoke all on table public.stripe_processed_events from anon, authenticated'
-    ) &&
-      sql.includes(
-        'grant all on table public.stripe_processed_events to service_role'
-      ),
+    sql.includes('revoke all on table public.stripe_processed_events from anon, authenticated') &&
+      sql.includes('grant all on table public.stripe_processed_events to service_role'),
   ],
   [
     'Team organization tables',
@@ -48,9 +44,7 @@ const checks = [
 ];
 
 const failed = checks.filter(([, passed]) => !passed);
-checks.forEach(([label, passed]) =>
-  console.log(`${passed ? 'PASS' : 'FAIL'} ${label}`)
-);
+checks.forEach(([label, passed]) => console.log(`${passed ? 'PASS' : 'FAIL'} ${label}`));
 
 if (failed.length > 0) process.exit(1);
 console.log(

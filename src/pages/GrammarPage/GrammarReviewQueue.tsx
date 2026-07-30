@@ -1,4 +1,5 @@
 import { TriangleAlert } from 'lucide-react';
+
 import { StatusPill } from './GrammarPageComponents';
 import { type LessonStatus } from './GrammarPageHelpers';
 
@@ -15,9 +16,7 @@ export const GrammarReviewQueue = ({
   selectRule: (id: string) => void;
 }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-    <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">
-      Review Queue
-    </p>
+    <p className="text-xs font-bold uppercase tracking-wide text-muted-copy">Review Queue</p>
     <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
       {reviewTargets.map(({ rule, status }) => (
         <button

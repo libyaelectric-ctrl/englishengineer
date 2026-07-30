@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
 import { StripeBillingProvider } from './stripe.provider';
 
 const getBackendAuthHeaders = vi.fn();

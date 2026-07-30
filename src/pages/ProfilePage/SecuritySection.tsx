@@ -1,22 +1,14 @@
-import {
-  Download,
-  ShieldCheck,
-  Trash2,
-  Lock,
-  Shield,
-  Key,
-  History,
-} from 'lucide-react';
-import { CloudSyncStatusPanel } from '@/features/auth';
-import { SectionCard } from '@/shared/components/SectionCard';
+import { Download, History, Key, Lock, Shield, ShieldCheck, Trash2 } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+
+import { CloudSyncStatusPanel } from '@/features/auth';
 
 interface SecuritySectionProps {
   providerMode: 'local' | 'supabase';
   showClearConfirmation: boolean;
-  setShowClearConfirmation: (
-    show: boolean | ((prev: boolean) => boolean)
-  ) => void;
+  setShowClearConfirmation: (show: boolean | ((prev: boolean) => boolean)) => void;
   clearConfirmation: string;
   setClearConfirmation: (val: string) => void;
   exportLocalData: () => void;
@@ -34,10 +26,7 @@ export const SecuritySection = ({
   clearLocalData,
   resetLearningProgress,
 }: SecuritySectionProps) => (
-  <section
-    id="security"
-    className="animate-in fade-in duration-200 space-y-6 font-sans relative"
-  >
+  <section id="security" className="animate-in fade-in duration-200 space-y-6 font-sans relative">
     {/* Subtle grid pattern background */}
     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#80808005_1px,transparent_1px),linear-gradient(to_bottom,#80808005_1px,transparent_1px)] bg-[size:16px_16px]" />
 
@@ -55,9 +44,7 @@ export const SecuritySection = ({
               <Shield className="h-4 w-4" /> Cloud Synced Records
             </span>
             <span className="rounded-[4px] border border-primary/25 bg-primary/5 px-2 py-0.5 text-[10px] font-mono font-bold text-primary uppercase tracking-wider">
-              {providerMode === 'supabase'
-                ? 'CLOUD-ACTIVE'
-                : 'LOCAL-PERSISTENCE'}
+              {providerMode === 'supabase' ? 'CLOUD-ACTIVE' : 'LOCAL-PERSISTENCE'}
             </span>
           </div>
           <CloudSyncStatusPanel providerMode={providerMode} />
@@ -120,8 +107,7 @@ export const SecuritySection = ({
               Multi-Factor Authentication (MFA)
             </span>
             <span className="text-xs text-muted-copy font-medium block">
-              Secure your account using hardware keys or authenticator apps
-              (TOTP).
+              Secure your account using hardware keys or authenticator apps (TOTP).
             </span>
           </div>
           <div className="flex items-center gap-3 shrink-0">
@@ -142,8 +128,7 @@ export const SecuritySection = ({
         <div className="rounded-[4px] border border-border-soft bg-surface p-5 shadow-sm space-y-4">
           <div className="flex justify-between items-center border-b border-border-soft pb-2">
             <span className="text-[10px] font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-              <History className="h-4 w-4 text-primary" /> Session Access
-              History
+              <History className="h-4 w-4 text-primary" /> Session Access History
             </span>
             <span className="rounded-[4px] bg-surface-hover border border-border-soft/60 px-2 py-0.5 text-[10px] font-mono font-bold text-muted-copy uppercase tracking-wider">
               TOTAL: 1 ACTIVE
@@ -154,9 +139,7 @@ export const SecuritySection = ({
             <div className="flex justify-between items-center py-2 first:pt-0">
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-foreground">
-                    Windows Chrome OS (Desktop)
-                  </span>
+                  <span className="font-bold text-foreground">Windows Chrome OS (Desktop)</span>
                   <span className="rounded-[4px] bg-success/10 border border-success/20 px-1 text-[10px] font-bold text-success uppercase tracking-wider">
                     SYS-ACTIVE
                   </span>
@@ -179,8 +162,8 @@ export const SecuritySection = ({
             Local Backups Archive
           </span>
           <p className="text-xs text-muted-copy leading-relaxed mb-4 font-medium">
-            Export all stored local progress, CEFR stats, and memory logs into a
-            portable JSON backup file.
+            Export all stored local progress, CEFR stats, and memory logs into a portable JSON
+            backup file.
           </p>
           <Button
             type="button"
@@ -198,8 +181,8 @@ export const SecuritySection = ({
             Destructive Administration Actions
           </span>
           <p className="text-xs text-rose-600/80 leading-relaxed mb-4 font-medium">
-            Completely erase all study sessions, mistake history, and vocabulary
-            data from this local device. This action is irreversible.
+            Completely erase all study sessions, mistake history, and vocabulary data from this
+            local device. This action is irreversible.
           </p>
 
           {providerMode === 'local' ? (
@@ -219,9 +202,7 @@ export const SecuritySection = ({
                     Type CLEAR to remove local progress from this browser.
                     <input
                       value={clearConfirmation}
-                      onChange={(event) =>
-                        setClearConfirmation(event.target.value.toUpperCase())
-                      }
+                      onChange={(event) => setClearConfirmation(event.target.value.toUpperCase())}
                       className="mt-2 min-h-10 w-full rounded-[4px] border border-rose-500/25 bg-surface px-3 text-xs text-foreground outline-none focus:border-rose-500 focus:ring-1 focus:ring-rose-500/10 font-bold shadow-sm"
                     />
                   </label>
@@ -239,8 +220,8 @@ export const SecuritySection = ({
             </>
           ) : (
             <p className="text-xs text-muted-copy font-medium">
-              Cloud account administration is managed via Supabase. Local data
-              clearing is only available in Guest/Local profile modes.
+              Cloud account administration is managed via Supabase. Local data clearing is only
+              available in Guest/Local profile modes.
             </p>
           )}
         </div>
@@ -251,8 +232,8 @@ export const SecuritySection = ({
             Reset Learning Progress state
           </span>
           <p className="text-xs text-muted-copy leading-relaxed mb-4 font-medium">
-            Reset all learning progress, vocabulary mastery, grammar practice,
-            study sessions, and achievements to zero. Your account stays intact.
+            Reset all learning progress, vocabulary mastery, grammar practice, study sessions, and
+            achievements to zero. Your account stays intact.
           </p>
           <Button
             type="button"
@@ -269,9 +250,7 @@ export const SecuritySection = ({
                 Type CLEAR to reset all learning progress.
                 <input
                   value={clearConfirmation}
-                  onChange={(event) =>
-                    setClearConfirmation(event.target.value.toUpperCase())
-                  }
+                  onChange={(event) => setClearConfirmation(event.target.value.toUpperCase())}
                   className="mt-2 min-h-10 w-full rounded-[4px] border border-warning/30 bg-surface px-3 text-xs text-foreground outline-none focus:border-warning focus:ring-1 focus:ring-warning/10 font-bold shadow-sm"
                 />
               </label>

@@ -1,31 +1,27 @@
-import { render, screen } from '@testing-library/react';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { ErrorBoundaryProvider } from '@/providers/ErrorBoundaryProvider';
 import { router } from '@/routes/router';
+import { render, screen } from '@testing-library/react';
+import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { MemoryRouter } from 'react-router-dom';
+
+import { useLearningStore } from '@/core/learning';
+import { ObservabilityService } from '@/core/observability';
+
+import { storage } from '@/shared/storage';
+
+import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';
+import { createMockAIProvider } from '@/features/ai/mock-ai.provider';
+import { AssessmentService } from '@/features/assessment';
 import { AuthService } from '@/features/auth';
-import { ReadingService } from '@/features/reading';
-import { WritingService } from '@/features/writing';
+import { BillingService } from '@/features/billing';
 import { ListeningService } from '@/features/listening';
+import { LISTENING_MISSIONS } from '@/features/listening/listening.data';
+import { ReadingService } from '@/features/reading';
 import { SpeakingService } from '@/features/speaking';
 import { VocabularyService } from '@/features/vocabulary';
 import { loadVocabularyEntries } from '@/features/vocabulary/data/vocabulary.data';
-import { AssessmentService } from '@/features/assessment';
-import { createBackendProxyProvider } from '@/features/ai/backend-proxy.provider';
-import { createMockAIProvider } from '@/features/ai/mock-ai.provider';
-import { BillingService } from '@/features/billing';
-import { useLearningStore } from '@/core/learning';
-import { storage } from '@/shared/storage';
-import { ObservabilityService } from '@/core/observability';
-import { ErrorBoundaryProvider } from '@/providers/ErrorBoundaryProvider';
-import { LISTENING_MISSIONS } from '@/features/listening/listening.data';
+import { WritingService } from '@/features/writing';
 
 const ThrowingComponent = () => {
   throw new Error('release candidate boundary smoke');
@@ -34,9 +30,7 @@ const ThrowingComponent = () => {
 const getCorrectAnswerMap = (
   questions: Array<{ id: string; correctAnswer: string }>
 ): Record<string, string> =>
-  Object.fromEntries(
-    questions.map((question) => [question.id, question.correctAnswer])
-  );
+  Object.fromEntries(questions.map((question) => [question.id, question.correctAnswer]));
 
 describe('EngVox release candidate E2E smoke fallback', () => {
   beforeAll(async () => {
@@ -141,8 +135,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
   });
 
   it('10. speech recognition unavailable state is detectable', () => {
-    const speechApiAvailable =
-      'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+    const speechApiAvailable = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 
     expect(speechApiAvailable).toBe(false);
   });
@@ -240,9 +233,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
       value: 844,
     });
 
-    expect(ObservabilityService.getHealthCheck().status).toMatch(
-      /healthy|degraded|blocked/
-    );
+    expect(ObservabilityService.getHealthCheck().status).toMatch(/healthy|degraded|blocked/);
   });
 
   it('20. error boundary smoke test renders fallback', () => {
@@ -256,8 +247,6 @@ describe('EngVox release candidate E2E smoke fallback', () => {
     );
 
     expect(screen.getByText('Application Error')).toBeInTheDocument();
-    expect(
-      screen.getByText(/release candidate boundary smoke/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/release candidate boundary smoke/i)).toBeInTheDocument();
   });
 });

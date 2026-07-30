@@ -1,9 +1,6 @@
-import {
-  LearningState,
-  MissionModule,
-  StudySession,
-} from '@/core/learning/learning.types';
+import { LearningState, MissionModule, StudySession } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
+
 import {
   AnalyticsHeatmapPoint,
   AnalyticsSkillName,
@@ -26,9 +23,7 @@ export const clampPercentage = (value: number): number =>
 
 export const calculateAverage = (values: number[]): number => {
   if (values.length === 0) return 0;
-  return Math.round(
-    values.reduce((sum, value) => sum + value, 0) / values.length
-  );
+  return Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
 };
 
 export const calculateGrowth = (values: number[]): number => {
@@ -42,9 +37,7 @@ export const calculateTrend = (sessions: StudySession[]): AnalyticsTrend => {
   const earlierAverage = calculateAverage(
     sessions.slice(0, midpoint).map((session) => session.score)
   );
-  const recentAverage = calculateAverage(
-    sessions.slice(midpoint).map((session) => session.score)
-  );
+  const recentAverage = calculateAverage(sessions.slice(midpoint).map((session) => session.score));
   const delta = recentAverage - earlierAverage;
   if (delta >= 5) return 'up';
   if (delta <= -5) return 'down';
@@ -65,13 +58,9 @@ export const calculateEstimatedCefr = (state: LearningState): string => {
   return 'B1';
 };
 
-export const calculateSkillRadar = (
-  state: LearningState
-): AnalyticsSkillSnapshot[] =>
+export const calculateSkillRadar = (state: LearningState): AnalyticsSkillSnapshot[] =>
   ANALYTICS_SKILLS.map((module) => {
-    const sessions = state.studySessions.filter(
-      (session) => session.module === module
-    );
+    const sessions = state.studySessions.filter((session) => session.module === module);
     const completedMissions = state.missions.filter(
       (mission) => mission.module === module && mission.status === 'completed'
     ).length;
@@ -80,17 +69,12 @@ export const calculateSkillRadar = (
       averageScore: calculateAverage(sessions.map((session) => session.score)),
       completedMissions,
       sessionCount: sessions.length,
-      totalMinutes: sessions.reduce(
-        (sum, session) => sum + session.durationMinutes,
-        0
-      ),
+      totalMinutes: sessions.reduce((sum, session) => sum + session.durationMinutes, 0),
       trend: calculateTrend(sessions),
     };
   });
 
-export const calculateWeeklyActivity = (
-  state: LearningState
-): AnalyticsWeeklyActivity[] => {
+export const calculateWeeklyActivity = (state: LearningState): AnalyticsWeeklyActivity[] => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, index) => {
     const date = new Date(today);
@@ -102,17 +86,12 @@ export const calculateWeeklyActivity = (
     return {
       date: key,
       sessions: sessions.length,
-      minutes: sessions.reduce(
-        (sum, session) => sum + session.durationMinutes,
-        0
-      ),
+      minutes: sessions.reduce((sum, session) => sum + session.durationMinutes, 0),
     };
   });
 };
 
-export const calculateStudyHeatmap = (
-  state: LearningState
-): AnalyticsHeatmapPoint[] => {
+export const calculateStudyHeatmap = (state: LearningState): AnalyticsHeatmapPoint[] => {
   const today = new Date();
   return Array.from({ length: 28 }, (_, index) => {
     const date = new Date(today);
@@ -124,31 +103,22 @@ export const calculateStudyHeatmap = (
     return {
       date: key,
       count: sessions.length,
-      minutes: sessions.reduce(
-        (sum, session) => sum + session.durationMinutes,
-        0
-      ),
+      minutes: sessions.reduce((sum, session) => sum + session.durationMinutes, 0),
       averageScore: calculateAverage(sessions.map((session) => session.score)),
     };
   });
 };
 
-export const calculateStudyConsistency = (
-  weeklyActivity: AnalyticsWeeklyActivity[]
-): number => {
+export const calculateStudyConsistency = (weeklyActivity: AnalyticsWeeklyActivity[]): number => {
   const activeDays = weeklyActivity.filter((day) => day.sessions > 0).length;
-  return clampPercentage(
-    (activeDays / Math.max(weeklyActivity.length, 1)) * 100
-  );
+  return clampPercentage((activeDays / Math.max(weeklyActivity.length, 1)) * 100);
 };
 
 export const calculateImprovementVelocity = (state: LearningState): number => {
   const scores = state.scoreHistory.map((item) => item.score);
   if (scores.length < 2) return 0;
   const recent = calculateAverage(scores.slice(-3));
-  const earlier = calculateAverage(
-    scores.slice(0, Math.max(1, scores.length - 3))
-  );
+  const earlier = calculateAverage(scores.slice(0, Math.max(1, scores.length - 3)));
   return recent - earlier;
 };
 
@@ -166,7 +136,5 @@ export const toEloTimeline = (state: LearningState): AnalyticsTimelinePoint[] =>
     label: 'ELO',
   }));
 
-export const isAnalyticsSkill = (
-  module: MissionModule
-): module is AnalyticsSkillName =>
+export const isAnalyticsSkill = (module: MissionModule): module is AnalyticsSkillName =>
   ANALYTICS_SKILLS.includes(module as AnalyticsSkillName);

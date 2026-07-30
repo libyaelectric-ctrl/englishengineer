@@ -11,19 +11,8 @@ export const WRITING_ELECTRICAL_SPECS: WritingSpec[] = [
     scenario:
       'Thermal imaging found a hotspot on an LV panel busbar joint during maintenance inspection.',
     task: 'Write a concise defect notification for the maintenance team.',
-    expectedStructure: [
-      'Panel reference',
-      'Defect',
-      'Risk',
-      'Required outage action',
-    ],
-    targetVocabulary: [
-      'hotspot',
-      'busbar joint',
-      'contact resistance',
-      'outage',
-      'retorque',
-    ],
+    expectedStructure: ['Panel reference', 'Defect', 'Risk', 'Required outage action'],
+    targetVocabulary: ['hotspot', 'busbar joint', 'contact resistance', 'outage', 'retorque'],
     grammarFocus: ['risk language', 'recommended action'],
     strongPhrase:
       'A hotspot was detected on the Phase B busbar joint, indicating possible high contact resistance.',
@@ -39,12 +28,7 @@ export const WRITING_ELECTRICAL_SPECS: WritingSpec[] = [
     scenario:
       'Cable tray installation is complete, but one section needs additional support near a bend.',
     task: 'Write an installation status note with a corrective action.',
-    expectedStructure: [
-      'Installed area',
-      'Compliance status',
-      'Exception',
-      'Corrective action',
-    ],
+    expectedStructure: ['Installed area', 'Compliance status', 'Exception', 'Corrective action'],
     targetVocabulary: [
       'cable tray',
       'support bracket',
@@ -67,19 +51,8 @@ export const WRITING_ELECTRICAL_SPECS: WritingSpec[] = [
     scenario:
       'A cause-and-effect test confirmed sounder activation but the damper feedback signal is missing.',
     task: 'Write a commissioning observation for the test sheet.',
-    expectedStructure: [
-      'Cause input',
-      'Expected effect',
-      'Actual result',
-      'Action required',
-    ],
-    targetVocabulary: [
-      'cause-and-effect',
-      'damper feedback',
-      'sounder',
-      'interface',
-      'test sheet',
-    ],
+    expectedStructure: ['Cause input', 'Expected effect', 'Actual result', 'Action required'],
+    targetVocabulary: ['cause-and-effect', 'damper feedback', 'sounder', 'interface', 'test sheet'],
     grammarFocus: ['expected versus actual', 'passive result language'],
     strongPhrase:
       'Sounder activation was verified, but the fire smoke damper feedback signal was not received at the panel.',
@@ -95,12 +68,7 @@ export const WRITING_ELECTRICAL_SPECS: WritingSpec[] = [
     scenario:
       'A generator load test shows acceptable frequency recovery but a minor coolant temperature rise.',
     task: 'Write a technical test observation with next action.',
-    expectedStructure: [
-      'Test condition',
-      'Measured result',
-      'Observation',
-      'Recommendation',
-    ],
+    expectedStructure: ['Test condition', 'Measured result', 'Observation', 'Recommendation'],
     targetVocabulary: [
       'load bank',
       'frequency recovery',

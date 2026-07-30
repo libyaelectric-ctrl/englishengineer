@@ -1,10 +1,7 @@
 import { logger } from '@/shared/logger';
-import {
-  AppEvent,
-  AppEventHandler,
-  EventSubscriptionToken,
-} from './event.types';
+
 import { globalEventStore } from './event-store';
+import { AppEvent, AppEventHandler, EventSubscriptionToken } from './event.types';
 
 class EventBus {
   private readonly listeners = new Map<string, Set<AppEventHandler>>();
@@ -24,10 +21,7 @@ class EventBus {
         try {
           handler(event);
         } catch (error) {
-          logger.e(
-            `[EventBus] Error executing subscriber for event type "${event.type}":`,
-            error
-          );
+          logger.e(`[EventBus] Error executing subscriber for event type "${event.type}":`, error);
         }
       });
     }

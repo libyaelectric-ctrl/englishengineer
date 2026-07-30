@@ -1,14 +1,15 @@
 // @vitest-environment node
 import { afterEach, describe, expect, it } from 'vitest';
+
+import {
+  ProductAnalyticsService,
+  sanitizeProductAnalyticsMetadata,
+} from './product-analytics.service';
 import {
   PRODUCT_ANALYTICS_EVENT_NAMES,
   type ProductAnalyticsEvent,
   type ProductAnalyticsMetadata,
 } from './product-analytics.types';
-import {
-  ProductAnalyticsService,
-  sanitizeProductAnalyticsMetadata,
-} from './product-analytics.service';
 
 const requiredFunnelEvents = [
   'signup_started',
@@ -37,9 +38,7 @@ describe('product analytics privacy guard', () => {
   afterEach(() => ProductAnalyticsService.setProvider(null));
 
   it('defines every required funnel event in the typed catalog', () => {
-    requiredFunnelEvents.forEach((name) =>
-      expect(PRODUCT_ANALYTICS_EVENT_NAMES).toContain(name)
-    );
+    requiredFunnelEvents.forEach((name) => expect(PRODUCT_ANALYTICS_EVENT_NAMES).toContain(name));
   });
 
   it('drops raw answers, personal data and invalid free-text metadata', () => {

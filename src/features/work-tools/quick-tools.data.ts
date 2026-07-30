@@ -1,3 +1,5 @@
+import { EXPANDED_MEETING_PHRASES, EXPANDED_SITE_DICTIONARY } from './quick-tools.expanded.data';
+
 export interface MeetingPhrase {
   id: string;
   category: string;
@@ -31,11 +33,6 @@ export interface QuickAIAction {
   exampleOutput: string;
 }
 
-import {
-  EXPANDED_MEETING_PHRASES,
-  EXPANDED_SITE_DICTIONARY,
-} from './quick-tools.expanded.data';
-
 type BaseMeetingPhrase = Omit<MeetingPhrase, 'tone' | 'tags'>;
 type BaseSiteDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'>;
 type BaseQuickAIAction = Omit<
@@ -65,10 +62,8 @@ const BASE_MEETING_PHRASES: BaseMeetingPhrase[] = [
   {
     id: 'meeting-disagree',
     category: 'Disagree',
-    phrase:
-      'I understand the proposal, but the current sequence creates an interface risk.',
-    turkishMeaning:
-      'Teklifi anliyorum ancak mevcut siralama bir arayuz riski olusturuyor.',
+    phrase: 'I understand the proposal, but the current sequence creates an interface risk.',
+    turkishMeaning: 'Teklifi anliyorum ancak mevcut siralama bir arayuz riski olusturuyor.',
     whenToUse: 'Disagreeing professionally',
     example:
       'I understand the proposal, but the current sequence creates an interface risk between power and controls.',
@@ -76,20 +71,16 @@ const BASE_MEETING_PHRASES: BaseMeetingPhrase[] = [
   {
     id: 'meeting-clarify',
     category: 'Clarify',
-    phrase:
-      'Could you clarify whether this date is confirmed or still indicative?',
-    turkishMeaning:
-      'Bu tarihin kesin mi yoksa hala tahmini mi oldugunu netlestirebilir misiniz?',
+    phrase: 'Could you clarify whether this date is confirmed or still indicative?',
+    turkishMeaning: 'Bu tarihin kesin mi yoksa hala tahmini mi oldugunu netlestirebilir misiniz?',
     whenToUse: 'Testing whether a commitment is firm',
-    example:
-      'Could you clarify whether the panel delivery date is confirmed or still indicative?',
+    example: 'Could you clarify whether the panel delivery date is confirmed or still indicative?',
   },
   {
     id: 'meeting-summarize',
     category: 'Summarize',
     phrase: 'To summarize, two actions remain open before energization.',
-    turkishMeaning:
-      'Ozetlemek gerekirse enerjilendirme oncesinde iki aksiyon acik kalmistir.',
+    turkishMeaning: 'Ozetlemek gerekirse enerjilendirme oncesinde iki aksiyon acik kalmistir.',
     whenToUse: 'Closing a discussion clearly',
     example:
       'To summarize, two actions remain open before energization: protection settings and final labelling.',
@@ -98,8 +89,7 @@ const BASE_MEETING_PHRASES: BaseMeetingPhrase[] = [
     id: 'meeting-confirm',
     category: 'Ask for confirmation',
     phrase: 'Can we record this as the agreed action and completion date?',
-    turkishMeaning:
-      'Bunu mutabik kalinan aksiyon ve bitis tarihi olarak kaydedebilir miyiz?',
+    turkishMeaning: 'Bunu mutabik kalinan aksiyon ve bitis tarihi olarak kaydedebilir miyiz?',
     whenToUse: 'Turning discussion into a commitment',
     example: 'Can we record Thursday as the agreed action and completion date?',
   },
@@ -117,21 +107,16 @@ const BASE_MEETING_PHRASES: BaseMeetingPhrase[] = [
   {
     id: 'meeting-delay',
     category: 'Explain delay',
-    phrase:
-      'The delay is caused by an unresolved approval, not by site productivity.',
-    turkishMeaning:
-      'Gecikme saha verimliliginden degil, cozulmemis bir onaydan kaynaklanmaktadir.',
+    phrase: 'The delay is caused by an unresolved approval, not by site productivity.',
+    turkishMeaning: 'Gecikme saha verimliliginden degil, cozulmemis bir onaydan kaynaklanmaktadir.',
     whenToUse: 'Separating root cause from performance',
-    example:
-      'The delay is caused by an unresolved material approval, not by site productivity.',
+    example: 'The delay is caused by an unresolved material approval, not by site productivity.',
   },
   {
     id: 'meeting-progress',
     category: 'Report progress',
-    phrase:
-      'Installation is 80 percent complete, with testing planned to start on Monday.',
-    turkishMeaning:
-      'Montaj yuzde 80 tamamlandi, testlerin pazartesi baslamasi planlaniyor.',
+    phrase: 'Installation is 80 percent complete, with testing planned to start on Monday.',
+    turkishMeaning: 'Montaj yuzde 80 tamamlandi, testlerin pazartesi baslamasi planlaniyor.',
     whenToUse: 'Giving measurable progress',
     example:
       'Installation is 80 percent complete, with point-to-point testing planned to start on Monday.',
@@ -142,16 +127,13 @@ const BASE_MEETING_PHRASES: BaseMeetingPhrase[] = [
     phrase: 'The evidence has been accepted, so this action can be closed.',
     turkishMeaning: 'Kanıt kabul edildi, bu nedenle aksiyon kapatilabilir.',
     whenToUse: 'Closing an action against evidence',
-    example:
-      'The revised test record has been accepted, so this action can be closed.',
+    example: 'The revised test record has been accepted, so this action can be closed.',
   },
   {
     id: 'meeting-escalate',
     category: 'Escalate issue politely',
-    phrase:
-      'As the issue now affects the milestone, management support is required today.',
-    turkishMeaning:
-      'Konu artik kilometre tasini etkiledigi icin bugun yonetim destegi gereklidir.',
+    phrase: 'As the issue now affects the milestone, management support is required today.',
+    turkishMeaning: 'Konu artik kilometre tasini etkiledigi icin bugun yonetim destegi gereklidir.',
     whenToUse: 'Escalating without blame',
     example:
       'As the unresolved access issue now affects the milestone, management support is required today.',
@@ -165,10 +147,8 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'bara',
     technicalExplanation:
       'A rigid conductor used to distribute high current within switchgear or distribution equipment.',
-    siteExample:
-      'Confirm the busbar torque values before closing the LV panel.',
-    commonWrongUsage:
-      'Do not use cable when referring to the internal rigid conductor.',
+    siteExample: 'Confirm the busbar torque values before closing the LV panel.',
+    commonWrongUsage: 'Do not use cable when referring to the internal rigid conductor.',
     relatedTerms: ['switchgear', 'torque', 'feeder'],
     category: 'Electrical',
   },
@@ -178,8 +158,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'hidronik dengeleme',
     technicalExplanation:
       'Adjustment of water flow through HVAC branches so each circuit receives its design flow.',
-    siteExample:
-      'Hydronic balancing will begin after all control valves are commissioned.',
+    siteExample: 'Hydronic balancing will begin after all control valves are commissioned.',
     commonWrongUsage: 'Balancing is not the same as flushing the pipework.',
     relatedTerms: ['design flow', 'control valve', 'commissioning'],
     category: 'Mechanical',
@@ -190,8 +169,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'beton ortusu',
     technicalExplanation:
       'The distance between reinforcement steel and the nearest concrete surface.',
-    siteExample:
-      'The spacer blocks must maintain the specified concrete cover.',
+    siteExample: 'The spacer blocks must maintain the specified concrete cover.',
     commonWrongUsage: 'Do not call it concrete thickness.',
     relatedTerms: ['reinforcement', 'spacer', 'formwork'],
     category: 'Civil',
@@ -203,8 +181,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     technicalExplanation:
       'A mandatory inspection stage beyond which work cannot proceed without formal release.',
     siteExample: 'Cable energization is a hold point in the approved ITP.',
-    commonWrongUsage:
-      'A hold point is stronger than an optional witness point.',
+    commonWrongUsage: 'A hold point is stronger than an optional witness point.',
     relatedTerms: ['ITP', 'witness point', 'release'],
     category: 'QA/QC',
   },
@@ -215,8 +192,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     technicalExplanation:
       'A controlled isolation process that prevents hazardous energy from being restored during work.',
     siteExample: 'Apply lockout/tagout before opening the starter panel.',
-    commonWrongUsage:
-      'Switching equipment off alone is not a complete LOTO process.',
+    commonWrongUsage: 'Switching equipment off alone is not a complete LOTO process.',
     relatedTerms: ['isolation', 'permit to work', 'zero energy'],
     category: 'HSE',
   },
@@ -226,8 +202,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'sebep-sonuc testi',
     technicalExplanation:
       'An integrated test confirming that an initiating event produces every required system response.',
-    siteExample:
-      'The fire alarm cause-and-effect test requires the BMS and smoke-control teams.',
+    siteExample: 'The fire alarm cause-and-effect test requires the BMS and smoke-control teams.',
     commonWrongUsage: 'It is not only an alarm-device functional test.',
     relatedTerms: ['interface', 'integrated test', 'matrix'],
     category: 'Commissioning',
@@ -238,8 +213,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'tedarik suresi',
     technicalExplanation:
       'The elapsed time from confirmed order or release to availability for delivery.',
-    siteExample:
-      'The transformer lead time exceeds the current procurement allowance.',
+    siteExample: 'The transformer lead time exceeds the current procurement allowance.',
     commonWrongUsage: 'Lead time is not the same as shipping duration.',
     relatedTerms: ['ex-works', 'required-on-site', 'expediting'],
     category: 'Procurement',
@@ -250,8 +224,7 @@ const BASE_SITE_DICTIONARY: BaseSiteDictionaryTerm[] = [
     turkishMeaning: 'kisa vadeli is programi',
     technicalExplanation:
       'A detailed short-term plan, commonly covering two to six weeks, derived from the master programme.',
-    siteExample:
-      'Add the inspection dates to the three-week look-ahead programme.',
+    siteExample: 'Add the inspection dates to the three-week look-ahead programme.',
     commonWrongUsage: 'It should not replace the approved baseline programme.',
     relatedTerms: ['baseline', 'milestone', 'constraint'],
     category: 'Site Management',
@@ -262,8 +235,7 @@ const BASE_QUICK_AI_ACTIONS: BaseQuickAIAction[] = [
   {
     id: 'shorter',
     label: 'Make shorter',
-    instruction:
-      'Rewrite this more concisely without losing technical meaning.',
+    instruction: 'Rewrite this more concisely without losing technical meaning.',
   },
   {
     id: 'professional',
@@ -310,14 +282,12 @@ const BASE_QUICK_AI_ACTIONS: BaseQuickAIAction[] = [
   {
     id: 'contractor',
     label: 'For contractor',
-    instruction:
-      'Rewrite this as a clear site instruction suitable for a contractor.',
+    instruction: 'Rewrite this as a clear site instruction suitable for a contractor.',
   },
   {
     id: 'email',
     label: 'Turn into email',
-    instruction:
-      'Convert this into a complete professional email with a subject.',
+    instruction: 'Convert this into a complete professional email with a subject.',
   },
   {
     id: 'report',
@@ -348,14 +318,11 @@ export const SITE_DICTIONARY: SiteDictionaryTerm[] = [
   ...EXPANDED_SITE_DICTIONARY,
 ];
 
-export const QUICK_AI_ACTIONS: QuickAIAction[] = BASE_QUICK_AI_ACTIONS.map(
-  (action) => ({
-    ...action,
-    systemInstruction: `${action.instruction} Preserve facts, dates, standards, responsibilities and technical terminology. Never invent project evidence.`,
-    expectedOutputStyle:
-      'One polished engineering version followed by a short note describing the main improvement.',
-    exampleInput:
-      'Cable tray delayed because access not ready. We finish maybe Thursday.',
-    exampleOutput: `${action.label}: Cable-tray installation is delayed because the work area has not been released. Subject to access confirmation today, completion is forecast for Thursday.`,
-  })
-);
+export const QUICK_AI_ACTIONS: QuickAIAction[] = BASE_QUICK_AI_ACTIONS.map((action) => ({
+  ...action,
+  systemInstruction: `${action.instruction} Preserve facts, dates, standards, responsibilities and technical terminology. Never invent project evidence.`,
+  expectedOutputStyle:
+    'One polished engineering version followed by a short note describing the main improvement.',
+  exampleInput: 'Cable tray delayed because access not ready. We finish maybe Thursday.',
+  exampleOutput: `${action.label}: Cable-tray installation is delayed because the work area has not been released. Subject to access confirmation today, completion is forecast for Thursday.`,
+}));

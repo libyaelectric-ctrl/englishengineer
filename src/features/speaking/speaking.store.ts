@@ -1,12 +1,11 @@
 import { create } from 'zustand';
-import {
-  SpeakingEvaluationResult,
-  SpeakingHistoryEntry,
-  SpeakingMission,
-} from './speaking.types';
-import { SpeakingService } from './speaking.service';
-import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+
 import { logger } from '@/shared/logger';
+
+import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+
+import { SpeakingService } from './speaking.service';
+import { SpeakingEvaluationResult, SpeakingHistoryEntry, SpeakingMission } from './speaking.types';
 
 interface SpeakingStoreState {
   missions: SpeakingMission[];
@@ -46,9 +45,7 @@ const getActivityIndicator = (seconds: number): number[] =>
     return 4 + cycle * 3;
   });
 
-export const useSpeakingStore = create<
-  SpeakingStoreState & SpeakingStoreActions
->((set, get) => ({
+export const useSpeakingStore = create<SpeakingStoreState & SpeakingStoreActions>((set, get) => ({
   missions: SpeakingService.getMissions(),
   selectedMissionId: 'speaking_a1_site_introduction',
   transcript: '',
@@ -67,8 +64,7 @@ export const useSpeakingStore = create<
   initializeStore: () => {
     const state = SpeakingService.getState();
     set({
-      selectedMissionId:
-        state.lastSelectedMissionId || 'speaking_a1_site_introduction',
+      selectedMissionId: state.lastSelectedMissionId || 'speaking_a1_site_introduction',
       history: state.history,
       completedMissions: state.completedMissions,
       transcript: '',
@@ -130,12 +126,8 @@ export const useSpeakingStore = create<
     const { isRecording } = get();
     set((state) => ({
       timeSpentSeconds: state.timeSpentSeconds + 1,
-      recordingSeconds: isRecording
-        ? state.recordingSeconds + 1
-        : state.recordingSeconds,
-      volumeLevel: isRecording
-        ? getActivityIndicator(state.recordingSeconds + 1)
-        : DEFAULT_VOLUME,
+      recordingSeconds: isRecording ? state.recordingSeconds + 1 : state.recordingSeconds,
+      volumeLevel: isRecording ? getActivityIndicator(state.recordingSeconds + 1) : DEFAULT_VOLUME,
     }));
   },
 

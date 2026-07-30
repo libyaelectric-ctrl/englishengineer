@@ -180,13 +180,7 @@
     "definition": "A professional workplace term meaning garanti, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the warranty by email today?",
     "turkishExample": "Bugün e-posta ile garanti konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "supplier",
-      "delivery",
-      "material",
-      "approval",
-      "warranty"
-    ],
+    "relatedTerms": ["supplier", "delivery", "material", "approval", "warranty"],
     "commonMistakes": "Do not accept or write legal responsibility unless contract wording and management approval are clear. For “warranty”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -239,13 +233,7 @@
     "definition": "A professional workplace term meaning garanti dönem / süre, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The warranty period must be reviewed before submitting the claim.",
     "turkishExample": "Hak talebi sunulmadan önce garanti süresi dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "supplier",
-      "delivery",
-      "material",
-      "approval",
-      "warranty"
-    ],
+    "relatedTerms": ["supplier", "delivery", "material", "approval", "warranty"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “warranty period”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -256,15 +244,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b1",
-      "b2",
-      "contractual_term",
-      "engineering",
-      "EngVox",
-      "procurement",
-      "workplace"
-    ],
+    "tags": ["b1", "b2", "contractual_term", "engineering", "EngVox", "procurement", "workplace"],
     "source": "Source extract: Elevator Spesification.docx + Final QC life-wide normalization",
     "confidence": 0.91,
     "status": "approved",
@@ -352,13 +332,7 @@
     "definition": "A professional workplace term meaning iddia / hak talebi, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the claim before handover.",
     "turkishExample": "Ekip, teslimden önce iddia / hak talebi konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “claim”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -411,13 +385,7 @@
     "definition": "A professional workplace term meaning sözleşme, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The contract must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce sözleşme dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “contract”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -471,13 +439,7 @@
     "definition": "A professional workplace term meaning sorumluluk, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the responsibility before handover.",
     "turkishExample": "Ekip, teslimden önce sorumluluk konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not accept or write legal responsibility unless contract wording and management approval are clear. For “responsibility”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -530,13 +492,7 @@
     "definition": "A qa qc term meaning kabul, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "The QA/QC engineer reviewed the acceptance before closing the comment.",
     "turkishExample": "QA/QC mühendisi yorumu kapatmadan önce kabul gözden geçirdi.",
-    "relatedTerms": [
-      "inspection",
-      "approval",
-      "defect",
-      "report",
-      "compliance"
-    ],
+    "relatedTerms": ["inspection", "approval", "defect", "report", "compliance"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “acceptance”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -589,13 +545,7 @@
     "definition": "A qa qc term meaning onay, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "The approval is required before the material can be installed on site.",
     "turkishExample": "Malzeme sahada monte edilmeden önce onay gereklidir.",
-    "relatedTerms": [
-      "inspection",
-      "approval",
-      "defect",
-      "report",
-      "compliance"
-    ],
+    "relatedTerms": ["inspection", "approval", "defect", "report", "compliance"],
     "commonMistakes": "Do not confuse approval with acceptance; approval means formal permission, not contractual acceptance of liability. For “approval”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -648,13 +598,7 @@
     "definition": "A qa qc term meaning malzeme onayı, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "The team should use “material approval” carefully in formal project correspondence.",
     "turkishExample": "Ekip, resmî proje yazışmalarında “malzeme onayı” ifadesini dikkatli kullanmalıdır.",
-    "relatedTerms": [
-      "inspection",
-      "approval",
-      "defect",
-      "report",
-      "compliance"
-    ],
+    "relatedTerms": ["inspection", "approval", "defect", "report", "compliance"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “material approval”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -665,15 +609,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b1",
-      "b2",
-      "contractual_term",
-      "engineering",
-      "EngVox",
-      "qa-qc",
-      "quality-control"
-    ],
+    "tags": ["b1", "b2", "contractual_term", "engineering", "EngVox", "qa-qc", "quality-control"],
     "source": "EngVox curated technical phrase + Final QC life-wide normalization",
     "confidence": 0.94,
     "status": "approved",
@@ -707,13 +643,7 @@
     "definition": "A commissioning term meaning fabrika kabul testi, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "The team should use “factory acceptance test” carefully in formal project correspondence.",
     "turkishExample": "Ekip, resmî proje yazışmalarında “fabrika kabul testi” ifadesini dikkatli kullanmalıdır.",
-    "relatedTerms": [
-      "test",
-      "energisation",
-      "verification",
-      "calibration",
-      "handover"
-    ],
+    "relatedTerms": ["test", "energisation", "verification", "calibration", "handover"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “factory acceptance test”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -724,13 +654,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b2",
-      "commissioning",
-      "contractual_term",
-      "engineering",
-      "EngVox"
-    ],
+    "tags": ["b2", "commissioning", "contractual_term", "engineering", "EngVox"],
     "source": "EngVox curated technical phrase + Final QC life-wide normalization",
     "confidence": 0.94,
     "status": "approved",
@@ -764,13 +688,7 @@
     "definition": "A commissioning term meaning saha kabul testi, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "Please check the site acceptance test before the next inspection.",
     "turkishExample": "Lütfen bir sonraki muayeneden önce saha kabul testi kontrol edin.",
-    "relatedTerms": [
-      "test",
-      "energisation",
-      "verification",
-      "calibration",
-      "handover"
-    ],
+    "relatedTerms": ["test", "energisation", "verification", "calibration", "handover"],
     "commonMistakes": "Do not accept or write legal responsibility unless contract wording and management approval are clear. For “site acceptance test”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -781,13 +699,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b2",
-      "commissioning",
-      "contractual_term",
-      "engineering",
-      "EngVox"
-    ],
+    "tags": ["b2", "commissioning", "contractual_term", "engineering", "EngVox"],
     "source": "EngVox curated technical phrase + Final QC life-wide normalization",
     "confidence": 0.94,
     "status": "approved",
@@ -887,15 +799,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "speaking", "vocabulary"],
-    "tags": [
-      "b2",
-      "c2",
-      "engineering",
-      "EngVox",
-      "hse",
-      "safety",
-      "three_word_term"
-    ],
+    "tags": ["b2", "c2", "engineering", "EngVox", "hse", "safety", "three_word_term"],
     "source": "EngVox curated real collocation + Final QC life-wide normalization",
     "confidence": 0.86,
     "status": "approved",
@@ -929,13 +833,7 @@
     "definition": "A professional workplace term meaning garanti belgesi, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the warranty certificate before handover.",
     "turkishExample": "Ekip, teslimden önce garanti belgesi konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "supplier",
-      "delivery",
-      "material",
-      "approval",
-      "warranty"
-    ],
+    "relatedTerms": ["supplier", "delivery", "material", "approval", "warranty"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “warranty certificate”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -945,15 +843,7 @@
       "modal obligation"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b2",
-      "c2",
-      "contractual_term",
-      "engineering",
-      "EngVox",
-      "procurement",
-      "workplace"
-    ],
+    "tags": ["b2", "c2", "contractual_term", "engineering", "EngVox", "procurement", "workplace"],
     "source": "Source extract: Elevator Spesification.docx + Final QC life-wide normalization",
     "confidence": 0.91,
     "status": "approved",
@@ -987,13 +877,7 @@
     "definition": "A professional workplace term meaning yetkilendirme, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the authorization by email today?",
     "turkishExample": "Bugün e-posta ile yetkilendirme konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "In meetings, confirm whether this is a request, decision, comment or action item. For “authorization”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1045,13 +929,7 @@
     "definition": "A professional workplace term meaning yetkilendirmek, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the authorize before handover.",
     "turkishExample": "Ekip, teslimden önce yetkilendirmek konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “authorize”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1103,13 +981,7 @@
     "definition": "A professional workplace term meaning yetkilendirilmiş, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The authorized item must be reviewed before the report is closed.",
     "turkishExample": "Yetkilendirilmiş kalem rapor kapatılmadan önce gözden geçirilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “authorized”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -1162,13 +1034,7 @@
     "definition": "A professional workplace term meaning yetkilendirme, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the authorizing before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce yetkilendirme gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “authorizing”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1220,13 +1086,7 @@
     "definition": "A professional workplace term meaning madde / sözleşme maddesi, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the clause by email today?",
     "turkishExample": "Bugün e-posta ile madde / sözleşme maddesi konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "In meetings, confirm whether this is a request, decision, comment or action item. For “clause”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1278,13 +1138,7 @@
     "definition": "A professional workplace term meaning tazminat / bedel, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the compensation before handover.",
     "turkishExample": "Ekip, teslimden önce tazminat / bedel konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “compensation”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1336,13 +1190,7 @@
     "definition": "A professional workplace term meaning uyuşmazlık / ihtilaf, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team should use “dispute” carefully in formal project correspondence.",
     "turkishExample": "Ekip, resmî proje yazışmalarında “uyuşmazlık” ifadesini dikkatli kullanmalıdır.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “dispute”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -1395,13 +1243,7 @@
     "definition": "An adverb meaning “yasal olarak”, used to describe how or when an action is done.",
     "exampleSentence": "Please respond legally if the consultant sends comments.",
     "turkishExample": "Danışman yorum gönderirse lütfen yasal olarak yanıt verin.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not use “the legally” as a noun; use it to describe how or when an action happens.",
     "grammarFits": [
       "contractual language",
@@ -1454,13 +1296,7 @@
     "definition": "A professional workplace term meaning zorunlu, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the mandatory before handover.",
     "turkishExample": "Ekip, teslimden önce zorunlu konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “mandatory”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1512,13 +1348,7 @@
     "definition": "A professional workplace term meaning yükümlülük, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The obligation must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce yükümlülük dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “obligation”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -1572,13 +1402,7 @@
     "definition": "A professional workplace term meaning ceza, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team should use “penalty” carefully in formal project correspondence.",
     "turkishExample": "Ekip, resmî proje yazışmalarında “ceza” ifadesini dikkatli kullanmalıdır.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “penalty”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -1631,13 +1455,7 @@
     "definition": "A professional workplace term meaning eskalasyon, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the escalation before handover.",
     "turkishExample": "Ekip, teslimden önce eskalasyon konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “escalation”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1690,13 +1508,7 @@
     "definition": "A professional workplace term meaning fabrika kabul raporu, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the factory acceptance report before handover.",
     "turkishExample": "Ekip, teslimden önce fabrika kabul raporu konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not accept or write legal responsibility unless contract wording and management approval are clear. For “factory acceptance report”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -1748,13 +1560,7 @@
     "definition": "A professional workplace term meaning saha kabul raporu, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The site acceptance report must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce saha kabul raporu dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Contractual terms can create legal risk; avoid casual wording in claims, liability or dispute messages. For “site acceptance report”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -1807,13 +1613,7 @@
     "definition": "A professional workplace term meaning sonuç, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The consequence must be confirmed before the coordination meeting.",
     "turkishExample": "Koordinasyon toplantısından önce sonuç teyit edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “consequence”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -1866,13 +1666,7 @@
     "definition": "A professional workplace term meaning azaltmak / önlem almak, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the mitigate by email today?",
     "turkishExample": "Bugün e-posta ile azaltmak / önlem almak konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "In meetings, confirm whether this is a request, decision, comment or action item. For “mitigate”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1924,13 +1718,7 @@
     "definition": "A professional workplace term meaning azaltılmış, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the mitigated before handover.",
     "turkishExample": "Ekip, teslimden önce azaltılmış konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “mitigated”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -1982,13 +1770,7 @@
     "definition": "A professional workplace term meaning azaltma / önlem alma, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Mitigating the delay requires a clear recovery plan.",
     "turkishExample": "Gecikmeyi azaltmak için net bir toparlanma planı gerekir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “mitigating”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -2041,13 +1823,7 @@
     "definition": "A professional workplace term meaning önlem / azaltma, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the mitigation before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce önlem gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “mitigation”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -2100,13 +1876,7 @@
     "definition": "A professional workplace term meaning toparlanma / geri kazanım, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the recovery before handover.",
     "turkishExample": "Ekip, teslimden önce toparlanma / geri kazanım konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “recovery”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -2158,13 +1928,7 @@
     "definition": "A professional workplace term meaning belirsiz, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The requirement is uncertain, so it must be confirmed in writing.",
     "turkishExample": "Gereklilik belirsiz; bu yüzden yazılı olarak teyit edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “uncertain”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -2217,13 +1981,7 @@
     "definition": "A professional workplace term meaning belirsizlik, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the uncertainty before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce belirsizlik gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “uncertainty”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -2275,13 +2033,7 @@
     "definition": "A qa qc term meaning uygunluk, used in inspections, testing, safety or handover communication.",
     "exampleSentence": "Please attach the compliance evidence to the inspection file.",
     "turkishExample": "Lütfen uygunluk kanıtını inspeksiyon dosyasına ekleyin.",
-    "relatedTerms": [
-      "inspection",
-      "approval",
-      "defect",
-      "report",
-      "compliance"
-    ],
+    "relatedTerms": ["inspection", "approval", "defect", "report", "compliance"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “compliance”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -2292,15 +2044,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "vocabulary"],
-    "tags": [
-      "b2",
-      "c2",
-      "contractual_term",
-      "engineering",
-      "EngVox",
-      "qa-qc",
-      "standards"
-    ],
+    "tags": ["b2", "c2", "contractual_term", "engineering", "EngVox", "qa-qc", "standards"],
     "source": "Clean curated single-word rebuild + Final QC life-wide normalization",
     "confidence": 0.92,
     "status": "approved",
@@ -2334,13 +2078,7 @@
     "definition": "An adjective meaning “talep sahibi”, used to describe a condition, issue, status or requirement.",
     "exampleSentence": "The claimant must provide clear evidence before the dispute meeting.",
     "turkishExample": "Talep sahibi, uyuşmazlık toplantısından önce açık kanıt sunmalıdır.",
-    "relatedTerms": [
-      "work",
-      "site",
-      "communication",
-      "report",
-      "documentation"
-    ],
+    "relatedTerms": ["work", "site", "communication", "report", "documentation"],
     "commonMistakes": "Do not use “the claimant” alone as a noun; place it before the noun it describes.",
     "grammarFits": [
       "contractual language",
@@ -2395,13 +2133,7 @@
     "definition": "A professional workplace term meaning sözleşmesel, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The requirement is contractual, so it must be confirmed in writing.",
     "turkishExample": "Gereklilik sözleşmesel; bu yüzden yazılı olarak teyit edilmelidir.",
-    "relatedTerms": [
-      "work",
-      "site",
-      "communication",
-      "report",
-      "documentation"
-    ],
+    "relatedTerms": ["work", "site", "communication", "report", "documentation"],
     "commonMistakes": "Do not confuse approval with acceptance of liability or contractual responsibility. For “contractual”, confirm the contract context before using it.",
     "grammarFits": [
       "contractual language",
@@ -2457,13 +2189,7 @@
     "definition": "A practical English term meaning feragat / istisna onayı, used in daily work-life communication.",
     "exampleSentence": "The waiver must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce feragat dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "work",
-      "site",
-      "communication",
-      "report",
-      "documentation"
-    ],
+    "relatedTerms": ["work", "site", "communication", "report", "documentation"],
     "commonMistakes": "Check whether the word is being used in a daily, professional or technical context. For “waiver”, learn one real sentence instead of only the Turkish meaning.",
     "grammarFits": [
       "contractual language",
@@ -2518,13 +2244,7 @@
     "definition": "A practical English term meaning uygunsuzluk, used in daily work-life communication.",
     "exampleSentence": "The noncompliance must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce uygunsuzluk dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "work",
-      "site",
-      "communication",
-      "report",
-      "documentation"
-    ],
+    "relatedTerms": ["work", "site", "communication", "report", "documentation"],
     "commonMistakes": "Check whether the word is being used in a daily, professional or technical context. For “noncompliance”, learn one real sentence instead of only the Turkish meaning.",
     "grammarFits": [
       "contractual language",
@@ -2579,13 +2299,7 @@
     "definition": "A professional workplace term meaning tadil etmek / değiştirmek, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the amend by email today?",
     "turkishExample": "Bugün e-posta ile tadil etmek / değiştirmek konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "In meetings, confirm whether this is a request, decision, comment or action item. For “amend”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -2637,13 +2351,7 @@
     "definition": "An adjective meaning “tadil / değişiklik”, used to describe a condition, issue, status or requirement.",
     "exampleSentence": "The amendment must be confirmed before the coordination meeting.",
     "turkishExample": "Koordinasyon toplantısından önce tadil teyit edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not use “the amendment” alone as a noun; place it before the noun it describes.",
     "grammarFits": [
       "contractual language",
@@ -2696,13 +2404,7 @@
     "definition": "A professional workplace term meaning ihlal, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The breach must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce ihlal dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “breach”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -2756,13 +2458,7 @@
     "definition": "A professional workplace term meaning başlamak, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the commence before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce başlamak gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “commence”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -2814,13 +2510,7 @@
     "definition": "An adjective meaning “başlangıç”, used to describe a condition, issue, status or requirement.",
     "exampleSentence": "The commencement must be confirmed before the coordination meeting.",
     "turkishExample": "Koordinasyon toplantısından önce başlangıç teyit edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not use “the commencement” alone as a noun; place it before the noun it describes.",
     "grammarFits": [
       "contractual language",
@@ -2873,13 +2563,7 @@
     "definition": "An adverb meaning “sözleşmesel olarak”, used to describe how or when an action is done.",
     "exampleSentence": "Please respond contractually if the consultant sends comments.",
     "turkishExample": "Danışman yorum gönderirse lütfen sözleşmesel olarak yanıt verin.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not use “the contractually” as a noun; use it to describe how or when an action happens.",
     "grammarFits": [
       "contractual language",
@@ -2933,13 +2617,7 @@
     "definition": "A professional workplace term meaning sorumluluk / yükümlülük, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Do not accept liability unless the contract and management approval are clear.",
     "turkishExample": "Sözleşme ve yönetim onayı net değilse sorumluluğu kabul etmeyin.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not write “we accept all liability” unless there is a legal decision to accept responsibility. For “liability”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -2992,13 +2670,7 @@
     "definition": "A professional workplace term meaning olumsuz, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the adverse before handover.",
     "turkishExample": "Ekip, teslimden önce olumsuz konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “adverse”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -3050,13 +2722,7 @@
     "definition": "A professional workplace term meaning beklenmedik durum payı / yedek plan, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The contingency must be confirmed before the coordination meeting.",
     "turkishExample": "Koordinasyon toplantısından önce beklenmedik durum payı teyit edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “contingency”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -3109,13 +2775,7 @@
     "definition": "A professional workplace term meaning kritiklik, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the criticality before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce kritiklik gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “criticality”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -3167,13 +2827,7 @@
     "definition": "An adjective meaning “öngörülebilir”, used to describe a condition, issue, status or requirement.",
     "exampleSentence": "The foreseeable risk must be included in the mitigation plan.",
     "turkishExample": "Öngörülebilir risk azaltma planına dahil edilmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not use “the foreseeable” alone as a noun; place it before the noun it describes.",
     "grammarFits": [
       "contractual language",
@@ -3291,14 +2945,7 @@
       "formal reporting"
     ],
     "skillUse": ["reading", "writing", "speaking", "vocabulary"],
-    "tags": [
-      "c2",
-      "electrical",
-      "engineering",
-      "EngVox",
-      "lightning-protection",
-      "single_word"
-    ],
+    "tags": ["c2", "electrical", "engineering", "EngVox", "lightning-protection", "single_word"],
     "source": "Clean curated single-word rebuild + Final QC life-wide normalization",
     "confidence": 0.92,
     "status": "approved",
@@ -3547,13 +3194,7 @@
     "definition": "A professional workplace term meaning tahkim, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The arbitration must be reviewed carefully before the claim is submitted.",
     "turkishExample": "Hak talebi sunulmadan önce tahkim dikkatlice incelenmelidir.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Avoid direct Turkish word order; use a clear subject, verb and object in professional sentences. For “arbitration”, make the action owner and deadline clear.",
     "grammarFits": [
       "contractual language",
@@ -3606,13 +3247,7 @@
     "definition": "A professional workplace term meaning hakem, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The project team reviewed the arbitrator before updating the action list.",
     "turkishExample": "Proje ekibi aksiyon listesini güncellemeden önce hakem gözden geçirdi.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not overuse informal wording in reports or emails; keep the sentence clear and professional. For “arbitrator”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",
@@ -3664,13 +3299,7 @@
     "definition": "A professional workplace term meaning tazmin / tazminat yükümlülüğü, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "Could you confirm the indemnity by email today?",
     "turkishExample": "Bugün e-posta ile tazmin / tazminat yükümlülüğü konusunu teyit eder misiniz?",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not accept or write legal responsibility unless contract wording and management approval are clear. For “indemnity”, confirm the contract context before using it.",
     "grammarFits": [
       "questions",
@@ -3722,13 +3351,7 @@
     "definition": "A professional workplace term meaning dava / hukuki süreç, used in reports, meetings, emails or project coordination.",
     "exampleSentence": "The team agreed to follow up the litigation before handover.",
     "turkishExample": "Ekip, teslimden önce dava / hukuki süreç konusunu takip etmeyi kabul etti.",
-    "relatedTerms": [
-      "schedule",
-      "progress",
-      "meeting",
-      "action",
-      "responsibility"
-    ],
+    "relatedTerms": ["schedule", "progress", "meeting", "action", "responsibility"],
     "commonMistakes": "Do not confuse a verbal comment with a formally approved project decision. For “litigation”, make the action owner and deadline clear.",
     "grammarFits": [
       "questions",

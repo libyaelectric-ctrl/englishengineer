@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
 import { MessageSquare, X } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { useLocation } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
-import {
-  LocalizationService,
-  useLocalizationStore,
-} from '@/features/localization';
+
+import { LocalizationService, useLocalizationStore } from '@/features/localization';
+
 import { useBetaStore } from './beta.store';
 import { BetaFeedbackType } from './beta.types';
 
@@ -90,9 +92,7 @@ export const BetaFeedbackWidget = () => {
               <select
                 id="feedback-type"
                 value={type}
-                onChange={(event) =>
-                  setType(event.target.value as BetaFeedbackType)
-                }
+                onChange={(event) => setType(event.target.value as BetaFeedbackType)}
                 className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm font-semibold"
               >
                 <option value="bug_report">Bug Report</option>
@@ -119,25 +119,17 @@ export const BetaFeedbackWidget = () => {
                 id="feedback-context"
                 value={context}
                 onChange={(event) => setContext(event.target.value)}
-                placeholder={LocalizationService.translate(
-                  'feedback.context',
-                  language
-                )}
+                placeholder={LocalizationService.translate('feedback.context', language)}
                 className="w-full rounded-[10px] border border-border-soft px-3 py-2 text-sm"
               />
               <p className="text-xs leading-5 text-muted-copy">
-                Screenshot upload is not enabled yet. Add relevant visual
-                details to the message.
+                Screenshot upload is not enabled yet. Add relevant visual details to the message.
               </p>
               <div className="flex gap-2">
                 <Button onClick={close} variant="secondary" className="flex-1">
                   {LocalizationService.translate('feedback.cancel', language)}
                 </Button>
-                <Button
-                  onClick={submit}
-                  disabled={!message.trim()}
-                  className="flex-1"
-                >
+                <Button onClick={submit} disabled={!message.trim()} className="flex-1">
                   {LocalizationService.translate('feedback.submit', language)}
                 </Button>
               </div>

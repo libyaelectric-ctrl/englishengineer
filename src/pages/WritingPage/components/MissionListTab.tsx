@@ -1,11 +1,14 @@
 import { Clock } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
-  LevelContentFilter,
-  type ContentLevelFilter,
   type CefrLevel,
+  type ContentLevelFilter,
+  LevelContentFilter,
 } from '@/features/level-system';
+
 import { MissionCard } from './MissionCard';
 
 interface MissionListTabProps {
@@ -52,8 +55,7 @@ export const MissionListTab = ({
             Technical Mission Library
           </h3>
           <p className="text-xs text-muted-copy mt-0.5 font-medium">
-            Select a professional drafting scenario to begin technical revision
-            assessment
+            Select a professional drafting scenario to begin technical revision assessment
           </p>
         </div>
         {finishedCount > 0 && (
@@ -68,11 +70,7 @@ export const MissionListTab = ({
       </div>
 
       {writingHistory.length > 0 && (
-        <SectionCard
-          title="Recent Writing History"
-          subtitle="Last 5 submissions"
-          icon={Clock}
-        >
+        <SectionCard title="Recent Writing History" subtitle="Last 5 submissions" icon={Clock}>
           <div className="overflow-x-auto">
             <table className="w-full text-xs">
               <thead>
@@ -90,14 +88,9 @@ export const MissionListTab = ({
               </thead>
               <tbody>
                 {writingHistory.map((entry, i) => (
-                  <tr
-                    key={i}
-                    className="border-b border-border-soft last:border-0"
-                  >
+                  <tr key={i} className="border-b border-border-soft last:border-0">
                     <td className="py-2 text-foreground">{entry.date}</td>
-                    <td className="py-2 text-foreground font-mono font-bold">
-                      {entry.wordCount}
-                    </td>
+                    <td className="py-2 text-foreground font-mono font-bold">{entry.wordCount}</td>
                     <td className="py-2 text-foreground font-mono font-bold">
                       {entry.score > 0 ? `${entry.score}%` : '—'}
                     </td>
@@ -121,8 +114,7 @@ export const MissionListTab = ({
         ))}
         {visibleMissions.length === 0 && (
           <div className="col-span-full rounded-[4px] border border-border-soft bg-surface p-6 text-sm text-muted-copy">
-            No current-level content yet. No Writing missions are available for
-            this filter.
+            No current-level content yet. No Writing missions are available for this filter.
           </div>
         )}
       </div>

@@ -1,11 +1,9 @@
 import { Bookmark, CheckCircle2, Clock, Play, RefreshCw } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
+
+import { type CefrLevel, LevelAccessBadge, getContentAccessLabel } from '@/features/level-system';
 import { ReadingHelpers } from '@/features/reading';
-import {
-  getContentAccessLabel,
-  LevelAccessBadge,
-  type CefrLevel,
-} from '@/features/level-system';
 
 interface ReadingMissionCardProps {
   mission: {
@@ -26,11 +24,7 @@ interface ReadingMissionCardProps {
 }
 
 const cefrBarColor = (level: string) =>
-  level.startsWith('A')
-    ? '#3b82f6'
-    : level.startsWith('B')
-      ? '#f59e0b'
-      : '#10b981';
+  level.startsWith('A') ? '#3b82f6' : level.startsWith('B') ? '#f59e0b' : '#10b981';
 
 const difficultyBadgeClass = (color: string) =>
   color === 'rose'
@@ -70,10 +64,7 @@ export function ReadingMissionCard({
               {m.cefrLevel}
             </span>
             <LevelAccessBadge
-              label={getContentAccessLabel(
-                m.cefrLevel as CefrLevel,
-                currentLevel as CefrLevel
-              )}
+              label={getContentAccessLabel(m.cefrLevel as CefrLevel, currentLevel as CefrLevel)}
             />
             <span
               className={`text-[10px] font-bold font-mono px-2 py-0.5 rounded-[4px] uppercase tracking-wider ${difficultyBadgeClass(difficultyColor)}`}
@@ -81,8 +72,7 @@ export function ReadingMissionCard({
               {m.difficulty}
             </span>
             <span className="text-[10px] font-mono text-muted-copy ml-auto flex items-center gap-1 font-bold">
-              <Clock className="h-3 w-3 text-muted-copy" /> {m.estimatedMinutes}
-              M
+              <Clock className="h-3 w-3 text-muted-copy" /> {m.estimatedMinutes}M
             </span>
             <button
               type="button"

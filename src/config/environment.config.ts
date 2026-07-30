@@ -57,7 +57,8 @@ export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
       hostname.startsWith('your-') ||
       hostname.includes('placeholder')
     );
-  } catch {
+  } catch (e) {
+    logger.w('[ENV] isPlaceholderDomain failed', e);
     return false;
   }
 };
@@ -69,9 +70,7 @@ const VALID_MODES: readonly EnvironmentValidationResult['mode'][] = [
   'local',
 ];
 
-const normalizeEnvironmentMode = (
-  mode: string | undefined
-): EnvironmentValidationResult['mode'] =>
+const normalizeEnvironmentMode = (mode: string | undefined): EnvironmentValidationResult['mode'] =>
   VALID_MODES.includes(mode as EnvironmentValidationResult['mode'])
     ? (mode as EnvironmentValidationResult['mode'])
     : 'local';
@@ -91,9 +90,7 @@ const collectEnvironmentWarnings = (
 ): string[] => {
   const warnings: string[] = [];
   if (aiProvider === 'backend' && !hasAiProxyUrl) {
-    warnings.push(
-      'VITE_AI_PROVIDER=backend requires VITE_AI_PROXY_URL. AI will fall back safely.'
-    );
+    warnings.push('VITE_AI_PROVIDER=backend requires VITE_AI_PROXY_URL. AI will fall back safely.');
   }
   if (authProvider === 'supabase' && (!hasSupabaseUrl || !hasSupabaseAnonKey)) {
     warnings.push(
@@ -121,15 +118,11 @@ const collectEnvironmentErrors = (
 ): string[] => {
   const errors: string[] = [];
   if (unsafeFrontendKeys.length > 0) {
-    errors.push(
-      `Unsafe secret-like frontend env keys detected: ${unsafeFrontendKeys.join(', ')}`
-    );
+    errors.push(`Unsafe secret-like frontend env keys detected: ${unsafeFrontendKeys.join(', ')}`);
   }
   if (mode !== 'production') return errors;
   if (aiProvider !== 'backend' || !hasAiProxyUrl) {
-    errors.push(
-      'Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.'
-    );
+    errors.push('Production requires VITE_AI_PROVIDER=backend and VITE_AI_PROXY_URL.');
   }
   if (authProvider !== 'supabase' || !hasSupabaseUrl || !hasSupabaseAnonKey) {
     errors.push(

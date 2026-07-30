@@ -41,22 +41,19 @@ export const callOpenAI = async (
   fetchImpl: typeof fetch,
   jsonMode = false
 ): Promise<string> => {
-  const response = await fetchImpl(
-    'https://api.openai.com/v1/chat/completions',
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${config.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: config.model,
-        messages: [{ role: 'user', content: prompt }],
-        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
-      }),
-      signal,
-    }
-  );
+  const response = await fetchImpl('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${config.apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: config.model,
+      messages: [{ role: 'user', content: prompt }],
+      ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
+    }),
+    signal,
+  });
   return handleProviderResponse(response, (p) => {
     const r = p as { choices?: { message?: { content?: string } }[] };
     return r?.choices?.[0]?.message?.content;

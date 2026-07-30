@@ -1,9 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
 import { IdService } from '@/core/ids/id.service';
+
+import { eosPersistConfig } from '@/shared/storage/persist-middleware';
+
 import { useAIStore } from '@/features/ai/ai.store';
 import { AICoachSession } from '@/features/ai/ai.types';
+
 import { BillingPlanId } from './billing.types';
 
 export interface WorkspaceDocument {
@@ -29,11 +33,7 @@ interface WorkspaceStoreState {
   deleteWorkspace: (id: string) => void;
   switchWorkspace: (id: string) => void;
   updateWorkspaceMemory: (id: string, key: string, value: string) => void;
-  addDocumentToWorkspace: (
-    id: string,
-    docName: string,
-    docContent: string
-  ) => void;
+  addDocumentToWorkspace: (id: string, docName: string, docContent: string) => void;
   deleteDocumentFromWorkspace: (id: string, docId: string) => void;
   resetWorkspaces: () => void;
 }
@@ -61,11 +61,7 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
         createWorkspace: (name, planId) => {
           const currentWorkspaces = get().workspaces;
           const limit =
-            planId === 'free' || planId === 'pro'
-              ? 1
-              : planId === 'project'
-                ? 3
-                : Infinity;
+            planId === 'free' || planId === 'pro' ? 1 : planId === 'project' ? 3 : Infinity;
 
           if (currentWorkspaces.length >= limit) {
             return false;

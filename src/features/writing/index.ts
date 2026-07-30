@@ -23,10 +23,7 @@ export { WritingHelpers } from './writing.helpers';
 
 export { WritingModelAnswer } from './WritingModelAnswer';
 
-export {
-  type WritingTaskFormat,
-  getWritingTaskFormats,
-} from './writing.task-model';
+export { type WritingTaskFormat, getWritingTaskFormats } from './writing.task-model';
 
 export {
   type RealtimeSuggestion,

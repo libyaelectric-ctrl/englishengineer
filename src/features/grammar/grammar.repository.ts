@@ -1,12 +1,15 @@
 import { loadGrammarRulesByLevel } from '@/data/grammar';
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+
 import {
   extractCefrFromId,
   getLevelsThrough,
   includesNormalized,
 } from '@/core/learning/spaced-repetition.helpers';
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
+
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
+
 import { assertGrammarRules } from './grammar.schema';
 import type { GrammarRule } from './grammar.types';
 
@@ -57,12 +60,8 @@ export const GrammarRepository = {
     return loadLevel(level);
   },
 
-  async getGrammarRulesBySkill(
-    skill: LearningDataSkill
-  ): Promise<GrammarRule[]> {
-    return (await loadAll()).filter((rule) =>
-      includesNormalized(rule.skillUse, skill)
-    );
+  async getGrammarRulesBySkill(skill: LearningDataSkill): Promise<GrammarRule[]> {
+    return (await loadAll()).filter((rule) => includesNormalized(rule.skillUse, skill));
   },
 
   async getGrammarRulesByTaskType(taskType: string): Promise<GrammarRule[]> {
@@ -78,18 +77,14 @@ export const GrammarRepository = {
   },
 
   async getGrammarRulesByDomain(domain: string): Promise<GrammarRule[]> {
-    return (await loadAll()).filter((rule) =>
-      includesNormalized(rule.domainFit, domain)
-    );
+    return (await loadAll()).filter((rule) => includesNormalized(rule.domainFit, domain));
   },
 
   async getGrammarRulesForUserSkillLevel(
     skill: LearningDataSkill,
     level: CefrLevel
   ): Promise<GrammarRule[]> {
-    const rules = (
-      await Promise.all(getLevelsThrough(level).map(loadLevel))
-    ).flat();
+    const rules = (await Promise.all(getLevelsThrough(level).map(loadLevel))).flat();
     return rules.filter((rule) => includesNormalized(rule.skillUse, skill));
   },
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import {
   ADMIN_PANEL_ENABLED,
   AI_ACCESS_POLICY,
@@ -23,10 +24,7 @@ describe('decisions 85-90 product boundaries', () => {
   });
 
   it('reserves subscription and credit packs for future monetization', () => {
-    expect(FUTURE_MONETIZATION_OPTIONS).toEqual([
-      'Subscription',
-      'Extra AI credit packs',
-    ]);
+    expect(FUTURE_MONETIZATION_OPTIONS).toEqual(['Subscription', 'Extra AI credit packs']);
   });
 
   it('locks the engineering communication positioning and defers admin', () => {

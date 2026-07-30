@@ -1,5 +1,7 @@
 import React, { Suspense } from 'react';
+
 import { useLocation } from 'react-router-dom';
+
 import { cn } from '@/shared/utils/cn';
 
 const DashboardSidebar = React.lazy(() =>

@@ -1,40 +1,36 @@
+import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
+
 import type { JSX } from 'react';
 import { lazy, useState } from 'react';
-import {
-  FileText,
-  Mic,
-  RotateCcw,
-  MessageSquareText,
-  Trophy,
-  ShieldCheck,
-} from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
-import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { StatusBadge } from '@/shared/components/StatusBadge';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
+import { SectionCard } from '@/shared/components/SectionCard';
+import { SkillLockedState } from '@/shared/components/SkillLockedState';
+import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { LevelContentFilter } from '@/features/level-system';
-import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { useReadingStore } from '@/features/reading';
-import { useWritingStore } from '@/features/writing/writing.store';
+import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
+import { useWritingStore } from '@/features/writing/writing.store';
+
+import {
+  EvaluationScores,
+  MissionMetrics,
+  MissionSelector,
+  RoleplayCategoryFilter,
+  ScoreComparison,
+  VoiceMinuteWallet,
+  VoicePracticePanel,
+  useSpeakingPage,
+} from './SpeakingPage/index';
 
 const InterviewSimulator = lazy(() =>
   import('@/features/speaking/components/InterviewSimulator').then((m) => ({
     default: m.InterviewSimulator,
   }))
 );
-
-import {
-  VoiceMinuteWallet,
-  RoleplayCategoryFilter,
-  MissionSelector,
-  MissionMetrics,
-  VoicePracticePanel,
-  EvaluationScores,
-  ScoreComparison,
-  useSpeakingPage,
-} from './SpeakingPage/index';
 
 const READING_THRESHOLD = 5;
 const WRITING_THRESHOLD = 5;
@@ -110,10 +106,7 @@ const RoleplayTab = () => {
 
       {activeMission && (
         <>
-          <MissionMetrics
-            activeMission={activeMission}
-            completedMissions={completedMissions}
-          />
+          <MissionMetrics activeMission={activeMission} completedMissions={completedMissions} />
 
           <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
             <SectionCard
@@ -121,10 +114,7 @@ const RoleplayTab = () => {
               subtitle={activeMission.description}
               icon={MessageSquareText}
               headerActions={
-                <StatusBadge
-                  label={`${SPEAKING_MVP_MODE} · No microphone required`}
-                  tone="info"
-                />
+                <StatusBadge label={`${SPEAKING_MVP_MODE} · No microphone required`} tone="info" />
               }
             >
               <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-5 shadow-sm">
@@ -191,8 +181,8 @@ const RoleplayTab = () => {
                     Written Roleplay response
                   </label>
                   <p className="mt-1 text-xs leading-5 text-muted-copy font-medium">
-                    This is text-based communication practice, not real speech
-                    or pronunciation scoring.
+                    This is text-based communication practice, not real speech or pronunciation
+                    scoring.
                   </p>
                   <textarea
                     id="written-roleplay-response"
@@ -241,9 +231,7 @@ const RoleplayTab = () => {
             </SectionCard>
 
             <div className="space-y-6">
-              {evaluationResult && (
-                <EvaluationScores evaluationResult={evaluationResult} />
-              )}
+              {evaluationResult && <EvaluationScores evaluationResult={evaluationResult} />}
             </div>
           </div>
         </>
@@ -254,7 +242,11 @@ const RoleplayTab = () => {
 
 const TAB_CONFIG: Record<
   SpeakingTab,
-  { label: string; icon: typeof MessageSquareText; Component: React.LazyExoticComponent<() => JSX.Element | null> | (() => JSX.Element | null) }
+  {
+    label: string;
+    icon: typeof MessageSquareText;
+    Component: React.LazyExoticComponent<() => JSX.Element | null> | (() => JSX.Element | null);
+  }
 > = {
   roleplay: {
     label: 'Roleplay',
@@ -283,16 +275,11 @@ const SpeakingPage = () => {
   const writingStore = useWritingStore();
   const readingDone = Object.keys(readingStore.completedMissions || {}).length;
   const writingDone = Object.keys(writingStore.completedMissions || {}).length;
-  const canAccess =
-    readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
+  const canAccess = readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
 
   const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
-  const {
-    MAX_VOICE_MINUTES,
-    voiceMinutesUsedThisMonth,
-    scoreResult,
-    setScoreResult,
-  } = useSpeakingPage();
+  const { MAX_VOICE_MINUTES, voiceMinutesUsedThisMonth, scoreResult, setScoreResult } =
+    useSpeakingPage();
 
   if (!canAccess) {
     return (
@@ -311,9 +298,7 @@ const SpeakingPage = () => {
       {/* Speaking sticky header */}
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Speaking
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Speaking</h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {MAX_VOICE_MINUTES - voiceMinutesUsedThisMonth}m LEFT
           </span>
@@ -327,28 +312,25 @@ const SpeakingPage = () => {
           role="tablist"
           aria-label="Speaking mode"
         >
-          {(
-            Object.entries(TAB_CONFIG) as [
-              SpeakingTab,
-              (typeof TAB_CONFIG)[SpeakingTab],
-            ][]
-          ).map(([key, { label, icon: Icon }]) => (
-            <button
-              key={key}
-              role="tab"
-              type="button"
-              aria-selected={speakingTab === key}
-              onClick={() => setSpeakingTab(key)}
-              className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
-                speakingTab === key
-                  ? 'bg-primary text-primary-foreground border border-primary'
-                  : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
-              }`}
-            >
-              <Icon className="h-3 w-3" />
-              <span>{label}</span>
-            </button>
-          ))}
+          {(Object.entries(TAB_CONFIG) as [SpeakingTab, (typeof TAB_CONFIG)[SpeakingTab]][]).map(
+            ([key, { label, icon: Icon }]) => (
+              <button
+                key={key}
+                role="tab"
+                type="button"
+                aria-selected={speakingTab === key}
+                onClick={() => setSpeakingTab(key)}
+                className={`flex items-center gap-1.5 px-3 py-1 text-[10px] font-sans font-bold rounded-[4px] transition-all cursor-pointer uppercase tracking-wider ${
+                  speakingTab === key
+                    ? 'bg-primary text-primary-foreground border border-primary'
+                    : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
+                }`}
+              >
+                <Icon className="h-3 w-3" />
+                <span>{label}</span>
+              </button>
+            )
+          )}
         </div>
       </div>
 

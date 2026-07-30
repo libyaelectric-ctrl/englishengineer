@@ -1,16 +1,19 @@
+import { ArrowRight, Award, Gauge } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
-import { Award, Gauge, ArrowRight } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { ProgressBar } from '@/shared/components/ProgressBar';
+
 import { Heatmap } from '@/shared/components/Heatmap';
+import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
+
+import { MistakeLogEntry } from '@/features/learning-intelligence';
 import {
+  LearningProfileEngine,
   SKILL_NAMES,
   UserLearningProfile,
-  LearningProfileEngine,
   VocabularyMemorySummary,
   getEloBandRange,
 } from '@/features/profile';
-import { MistakeLogEntry } from '@/features/learning-intelligence';
 
 interface SkillsProgressSectionProps {
   profile: UserLearningProfile;
@@ -37,8 +40,7 @@ export const SkillsProgressSection = ({
     const timestamp = new Date(session.timestamp).getTime();
     return timestamp >= Date.now() - 7 * 24 * 60 * 60 * 1000;
   }).length;
-  const vocabularyMastery =
-    memory.total > 0 ? (memory.mastered / memory.total) * 100 : 0;
+  const vocabularyMastery = memory.total > 0 ? (memory.mastered / memory.total) * 100 : 0;
 
   return (
     <section
@@ -132,12 +134,8 @@ export const SkillsProgressSection = ({
                       className="h-1.5"
                     />
                     <div className="flex justify-between items-center px-1">
-                      <span className="text-[10px] text-muted-copy/70">
-                        1000 ELO (A1)
-                      </span>
-                      <span className="text-[10px] text-muted-copy/70">
-                        5000 ELO (C2+)
-                      </span>
+                      <span className="text-[10px] text-muted-copy/70">1000 ELO (A1)</span>
+                      <span className="text-[10px] text-muted-copy/70">5000 ELO (C2+)</span>
                     </div>
                   </div>
                 </div>
@@ -162,9 +160,7 @@ export const SkillsProgressSection = ({
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 {label}
               </p>
-              <p className="mt-1 text-base font-bold text-foreground">
-                {value}
-              </p>
+              <p className="mt-1 text-base font-bold text-foreground">{value}</p>
             </div>
           ))}
         </div>
@@ -178,15 +174,9 @@ export const SkillsProgressSection = ({
             <span>
               {memory.mastered} of {memory.total} terms mastered
             </span>
-            <span className="text-primary font-bold">
-              {memory.dueToday} terms due today
-            </span>
+            <span className="text-primary font-bold">{memory.dueToday} terms due today</span>
           </div>
-          <ProgressBar
-            value={vocabularyMastery}
-            color="emerald"
-            className="mt-3"
-          />
+          <ProgressBar value={vocabularyMastery} color="emerald" className="mt-3" />
         </div>
 
         {/* Unlocked Badges */}
@@ -205,9 +195,7 @@ export const SkillsProgressSection = ({
                 >
                   <Award className="h-4 w-4 text-success shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-bold text-foreground">
-                      {badge.label}
-                    </p>
+                    <p className="text-xs font-bold text-foreground">{badge.label}</p>
                     <p className="mt-0.5 text-[10px] text-muted-copy leading-4 font-medium">
                       {badge.description}
                     </p>
@@ -238,17 +226,11 @@ export const SkillsProgressSection = ({
                       {m.category}
                     </span>
                     <span className="text-[10px] font-bold text-rose-600 bg-rose-500/10 border border-rose-500/20 px-1.5 py-0.5 rounded-[4px] shadow-sm">
-                      {(m.repetitionCount ?? 1) >= 3
-                        ? 'Critical'
-                        : `${m.repetitionCount ?? 1}x`}
+                      {(m.repetitionCount ?? 1) >= 3 ? 'Critical' : `${m.repetitionCount ?? 1}x`}
                     </span>
                   </div>
-                  <p className="mt-1 font-bold text-foreground">
-                    &quot;{m.originalText}&quot;
-                  </p>
-                  <p className="mt-0.5 text-muted-copy font-medium">
-                    Correction: {m.correction}
-                  </p>
+                  <p className="mt-1 font-bold text-foreground">&quot;{m.originalText}&quot;</p>
+                  <p className="mt-0.5 text-muted-copy font-medium">Correction: {m.correction}</p>
                 </div>
               ))}
             </div>

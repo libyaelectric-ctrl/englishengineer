@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { PronunciationScorer } from './pronunciation-scorer';
 
 describe('PronunciationScorer', () => {
@@ -10,10 +11,7 @@ describe('PronunciationScorer', () => {
 
   describe('analyze', () => {
     it('gives perfect score for exact matches', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'coordination inspection compliance'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'coordination inspection compliance');
       expect(result.overallScore).toBe(100);
       expect(result.accentStrength).toBe('native');
       expect(result.accurateWordCount).toBe(3);
@@ -21,10 +19,7 @@ describe('PronunciationScorer', () => {
     });
 
     it('gives high score for near matches', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'coordination inspection compliance'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'coordination inspection compliance');
       expect(result.overallScore).toBeGreaterThanOrEqual(80);
     });
 
@@ -57,18 +52,12 @@ describe('PronunciationScorer', () => {
     });
 
     it('generates recommendations for inaccurate words', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'hello world test'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'hello world test');
       expect(result.recommendations.length).toBeGreaterThan(0);
     });
 
     it('generates positive feedback for good pronunciation', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'coordination inspection compliance'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'coordination inspection compliance');
       expect(result.feedback).toContain('clear');
     });
 
@@ -89,10 +78,7 @@ describe('PronunciationScorer', () => {
     });
 
     it('calculates accurate word count correctly', () => {
-      const result = PronunciationScorer.analyze(
-        targetWords,
-        'coordination xyz compliance'
-      );
+      const result = PronunciationScorer.analyze(targetWords, 'coordination xyz compliance');
       expect(result.accurateWordCount).toBe(2);
       expect(result.totalTargetWords).toBe(3);
     });

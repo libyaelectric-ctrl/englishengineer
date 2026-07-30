@@ -1,11 +1,7 @@
-import {
-  Award,
-  BookMarked,
-  ChevronRight,
-  Languages,
-  TriangleAlert,
-} from 'lucide-react';
+import { Award, BookMarked, ChevronRight, Languages, TriangleAlert } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
+
 import type { GrammarProgressSummary } from '@/features/grammar/grammar.progress';
 import type { ProfileBadge, VocabularyMemorySummary } from '@/features/profile';
 
@@ -28,9 +24,7 @@ export const LearningMemorySummary = ({
       label: 'Vocabulary memory',
       value: `${vocabulary.mastered} mastered`,
       detail:
-        vocabulary.dueToday > 0
-          ? `${vocabulary.dueToday} due today`
-          : 'Review queue is clear',
+        vocabulary.dueToday > 0 ? `${vocabulary.dueToday} due today` : 'Review queue is clear',
       href: '/vocabulary',
       icon: BookMarked,
       tone: 'border-primary/25 bg-primary/5 text-primary',
@@ -38,10 +32,7 @@ export const LearningMemorySummary = ({
     {
       label: 'Grammar path',
       value: `${grammar.strong} strong rules`,
-      detail:
-        grammar.due > 0
-          ? `${grammar.due} rules due`
-          : `${grammar.learning} learning`,
+      detail: grammar.due > 0 ? `${grammar.due} rules due` : `${grammar.learning} learning`,
       href: '/grammar',
       icon: Languages,
       tone: 'border-primary/25 bg-primary/5 text-primary',
@@ -49,10 +40,7 @@ export const LearningMemorySummary = ({
     {
       label: 'Mistake memory',
       value: `${repeatedMistakes} repeated patterns`,
-      detail:
-        repeatedMistakes > 0
-          ? 'Included in your review plan'
-          : 'No repeated pattern yet',
+      detail: repeatedMistakes > 0 ? 'Included in your review plan' : 'No repeated pattern yet',
       href: '/progress/next-steps',
       icon: TriangleAlert,
       tone: 'border-rose-500/25 bg-rose-500/5 text-rose-600',
@@ -84,9 +72,7 @@ export const LearningMemorySummary = ({
               <span className="block text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 {item.label}
               </span>
-              <span className="mt-0.5 block text-sm font-bold text-foreground">
-                {item.value}
-              </span>
+              <span className="mt-0.5 block text-sm font-bold text-foreground">{item.value}</span>
               <span className="mt-0.5 block text-xs leading-5 text-muted-copy font-medium">
                 {item.detail}
               </span>

@@ -38,30 +38,20 @@ for (const command of commands) {
     : command.args;
   const result = spawnSync(executable, args, {
     stdio: 'inherit',
-    ...(command.timeoutMs
-      ? { timeout: command.timeoutMs, killSignal: 'SIGTERM' }
-      : {}),
+    ...(command.timeoutMs ? { timeout: command.timeoutMs, killSignal: 'SIGTERM' } : {}),
   });
 
   if (result.error) {
     if (result.error.code === 'ETIMEDOUT') {
-      throw new Error(
-        `[quality:gate] ${command.label} exceeded ${command.timeoutMs}ms.`
-      );
+      throw new Error(`[quality:gate] ${command.label} exceeded ${command.timeoutMs}ms.`);
     }
-    throw new Error(
-      `[quality:gate] ${command.label} could not start: ${result.error.message}`
-    );
+    throw new Error(`[quality:gate] ${command.label} could not start: ${result.error.message}`);
   }
   if (result.signal) {
-    throw new Error(
-      `[quality:gate] ${command.label} ended by ${result.signal}.`
-    );
+    throw new Error(`[quality:gate] ${command.label} ended by ${result.signal}.`);
   }
   if (result.status !== 0) {
-    throw new Error(
-      `[quality:gate] ${command.label} failed with exit code ${result.status}.`
-    );
+    throw new Error(`[quality:gate] ${command.label} failed with exit code ${result.status}.`);
   }
 
   const durationSeconds = ((Date.now() - startedAt) / 1_000).toFixed(2);

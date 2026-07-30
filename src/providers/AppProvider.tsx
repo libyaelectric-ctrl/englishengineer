@@ -1,12 +1,16 @@
+import { reportEnvironmentValidation } from '@/config/environment.config';
+
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
-import { ThemeProvider } from './ThemeProvider';
-import { QueryProvider } from './QueryProvider';
-import { CloudSyncService, useAuthStore } from '@/features/auth';
-import { reportEnvironmentValidation } from '@/config/environment.config';
+
 import { logger } from '@/shared/logger';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
+
+import { CloudSyncService, useAuthStore } from '@/features/auth';
+
+import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
+import { QueryProvider } from './QueryProvider';
+import { ThemeProvider } from './ThemeProvider';
 
 interface AppProviderProps {
   children: ReactNode;
@@ -39,10 +43,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
     const scheduleLocalChangeSync = (event: Event) => {
       const storageKey = (event as CustomEvent<{ key?: string }>).detail?.key;
-      if (
-        !storageKey ||
-        !CloudSyncService.isSyncableStorageKey(storageKey, currentUser.id)
-      ) {
+      if (!storageKey || !CloudSyncService.isSyncableStorageKey(storageKey, currentUser.id)) {
         return;
       }
       if (syncTimer !== undefined) window.clearTimeout(syncTimer);

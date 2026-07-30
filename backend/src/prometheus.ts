@@ -1,5 +1,5 @@
-import { getPerformanceMetrics } from './performance-monitor.js';
 import { getEndpointMetrics } from './api-metrics.js';
+import { getPerformanceMetrics } from './performance-monitor.js';
 
 /**
  * Prometheus-compatible metrics endpoint.

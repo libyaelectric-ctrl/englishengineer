@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { WritingRealtimeAnalyzer } from './writing-realtime-analyzer';
 
 describe('WritingRealtimeAnalyzer', () => {
@@ -10,9 +11,7 @@ describe('WritingRealtimeAnalyzer', () => {
   });
 
   it('counts words and sentences correctly', () => {
-    const result = WritingRealtimeAnalyzer.analyze(
-      'Hello world. This is a test sentence.'
-    );
+    const result = WritingRealtimeAnalyzer.analyze('Hello world. This is a test sentence.');
     expect(result.wordCount).toBe(7);
     expect(result.sentenceCount).toBe(2);
   });
@@ -43,25 +42,19 @@ describe('WritingRealtimeAnalyzer', () => {
     const longSentence =
       'This is a very long sentence that contains more than thirty five words in total and it should definitely be flagged by the analyzer as being too complex for technical documentation purposes right now today indeed.';
     const result = WritingRealtimeAnalyzer.analyze(longSentence);
-    const longSentSuggestion = result.suggestions.find((s) =>
-      s.id.startsWith('long-sentence')
-    );
+    const longSentSuggestion = result.suggestions.find((s) => s.id.startsWith('long-sentence'));
     expect(longSentSuggestion).toBeDefined();
   });
 
   it('detects missing paragraphs in long text', () => {
     const longText = 'A'.repeat(300);
     const result = WritingRealtimeAnalyzer.analyze(longText);
-    const noParagraphs = result.suggestions.find(
-      (s) => s.id === 'no-paragraphs'
-    );
+    const noParagraphs = result.suggestions.find((s) => s.id === 'no-paragraphs');
     expect(noParagraphs).toBeDefined();
   });
 
   it('calculates readability score', () => {
-    const result = WritingRealtimeAnalyzer.analyze(
-      'The quick brown fox jumps over the lazy dog.'
-    );
+    const result = WritingRealtimeAnalyzer.analyze('The quick brown fox jumps over the lazy dog.');
     expect(result.readabilityScore).toBeGreaterThan(0);
     expect(result.readabilityScore).toBeLessThanOrEqual(100);
   });

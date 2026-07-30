@@ -1,15 +1,18 @@
-import { motion, AnimatePresence } from 'motion/react';
-import { BookMarked, ArrowRight } from 'lucide-react';
-import type {
-  VocabularyTerm,
-  VocabularyMenuStatus,
-  VocabularyMenuState,
-} from '@/features/vocabulary';
+import { ArrowRight, BookMarked } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { WordCard } from './WordCard';
+
+import type {
+  VocabularyMenuState,
+  VocabularyMenuStatus,
+  VocabularyTerm,
+} from '@/features/vocabulary';
+
 import { LearnedCard } from './LearnedCard';
 import { TAB_LABELS } from './VocabularyHeader';
+import { WordCard } from './WordCard';
 
 interface WordSetSectionProps {
   activeTab: VocabularyMenuStatus;
@@ -61,13 +64,15 @@ export function WordSetSection({
       )}
       {terms.length > 0 && wordSet.length === 0 && (
         <p className="rounded-[4px] border border-dashed border-border-soft bg-surface/60 p-8 text-center text-sm text-muted-copy">
-          No words currently have {activeTab.toLowerCase()} status. Select New
-          to begin a ten-word set.
+          No words currently have {activeTab.toLowerCase()} status. Select New to begin a ten-word
+          set.
         </p>
       )}
       {wordSet.length > 0 && (
         <div className="space-y-5">
-          <div className={`grid gap-4 ${activeTab === 'Learned' ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6' : 'lg:grid-cols-2 xl:grid-cols-3'}`}>
+          <div
+            className={`grid gap-4 ${activeTab === 'Learned' ? 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6' : 'lg:grid-cols-2 xl:grid-cols-3'}`}
+          >
             <AnimatePresence mode="popLayout">
               {wordSet.map((term, index) => (
                 <motion.div
@@ -95,19 +100,11 @@ export function WordSetSection({
           </div>
           <div className="flex justify-end border-t border-border-soft pt-4 gap-2">
             {wordSet.length > 0 && (
-              <Button
-                variant="outline"
-                className="rounded-[4px]"
-                onClick={onExportCSV}
-              >
+              <Button variant="outline" className="rounded-[4px]" onClick={onExportCSV}>
                 Export as CSV
               </Button>
             )}
-            <Button
-              variant="primary"
-              className="rounded-[4px] gap-1.5"
-              onClick={onLoadNextBatch}
-            >
+            <Button variant="primary" className="rounded-[4px] gap-1.5" onClick={onLoadNextBatch}>
               Next
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>

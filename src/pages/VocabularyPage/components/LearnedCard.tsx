@@ -1,11 +1,13 @@
+import { Volume2 } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+
 import {
-  repairVocabularyText,
   PronunciationService,
   type VocabularyTerm,
+  repairVocabularyText,
 } from '@/features/vocabulary';
-import { Volume2 } from 'lucide-react';
 
 interface LearnedCardProps {
   term: VocabularyTerm;
@@ -38,15 +40,11 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
           >
             <div className="flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold text-muted-copy">
-                  #{index + 1}
-                </span>
+                <span className="text-[10px] font-bold text-muted-copy">#{index + 1}</span>
                 <h4 className="text-lg font-bold text-foreground">
                   {repairVocabularyText(term.term)}
                 </h4>
-                <p className="text-[10px] text-muted-copy">
-                  {term.turkishMeaning}
-                </p>
+                <p className="text-[10px] text-muted-copy">{term.turkishMeaning}</p>
               </div>
               <button
                 type="button"
@@ -66,9 +64,7 @@ export function LearnedCard({ term, index }: LearnedCardProps) {
             exit={{ opacity: 0 }}
             className="flex items-center gap-2 rounded-[4px] border border-primary/15 bg-surface/60 px-3 py-2 hover:border-primary/40 hover:bg-surface transition-all cursor-pointer"
           >
-            <span className="text-[10px] font-bold text-muted-copy min-w-[24px]">
-              #{index + 1}
-            </span>
+            <span className="text-[10px] font-bold text-muted-copy min-w-[24px]">#{index + 1}</span>
             <span className="text-sm font-semibold text-foreground truncate flex-1">
               {repairVocabularyText(term.term)}
             </span>

@@ -1,8 +1,4 @@
-import {
-  CareerRole,
-  DailyCommunicationTask,
-  MistakeCategory,
-} from './learning-intelligence.types';
+import { CareerRole, DailyCommunicationTask, MistakeCategory } from './learning-intelligence.types';
 
 export const CAREER_ROLES: CareerRole[] = [
   'Electrical Works Chief',
@@ -30,29 +26,21 @@ export const MISTAKE_SUGGESTIONS: Record<MistakeCategory, string> = {
   Grammar: 'Check tense consistency, word order and subject-verb agreement.',
   Listening: 'Replay the key sentence and record the missed information.',
   'Writing Structure': 'Separate context, issue, impact and required action.',
-  'Speaking Response':
-    'Build a short response with one clear point per sentence.',
-  'CEFR Mismatch':
-    'Repeat the task with grammar and vocabulary at your current skill level.',
+  'Speaking Response': 'Build a short response with one clear point per sentence.',
+  'CEFR Mismatch': 'Repeat the task with grammar and vocabulary at your current skill level.',
   grammar: 'Check tense consistency and subject-verb agreement.',
   'word choice': 'Replace general words with the exact engineering term.',
   tone: 'Use a factual request with an owner and date instead of blame.',
   'unclear sentence': 'Separate cause, impact and required action.',
-  'Turkish thinking pattern':
-    'Use direct English word order: subject, action, object, condition.',
-  'missing article':
-    'Check whether a singular countable noun needs a, an or the.',
+  'Turkish thinking pattern': 'Use direct English word order: subject, action, object, condition.',
+  'missing article': 'Check whether a singular countable noun needs a, an or the.',
   'wrong preposition': 'Record the complete phrase, not the preposition alone.',
-  'weak technical explanation':
-    'Define the issue, evidence, consequence and next action.',
-  'repeated vocabulary gap':
-    'Save the missing term to Vocabulary Review with one site example.',
+  'weak technical explanation': 'Define the issue, evidence, consequence and next action.',
+  'repeated vocabulary gap': 'Save the missing term to Vocabulary Review with one site example.',
   clarity: 'Use one idea per sentence and name the responsible party.',
-  preposition:
-    'Learn the full collocation, for example responsible for or comply with.',
+  preposition: 'Learn the full collocation, for example responsible for or comply with.',
   article: 'Use the for a known project item and a/an for a first mention.',
-  'repeated phrase issue':
-    'Save one corrected professional phrase and reuse it in three contexts.',
+  'repeated phrase issue': 'Save one corrected professional phrase and reuse it in three contexts.',
 };
 
 export const BASE_DAILY_TASKS: DailyCommunicationTask[] = [
@@ -69,8 +57,7 @@ export const BASE_DAILY_TASKS: DailyCommunicationTask[] = [
     id: 'daily-writing',
     module: 'Writing',
     title: 'Write a site update',
-    description:
-      'Produce a concise progress note with cause, impact and action.',
+    description: 'Produce a concise progress note with cause, impact and action.',
     route: '/writing',
     estimatedMinutes: 12,
     level: 'A1',
@@ -113,10 +100,7 @@ export const BASE_DAILY_TASKS: DailyCommunicationTask[] = [
   },
 ];
 
-export const ROLE_PRIORITY: Record<
-  CareerRole,
-  DailyCommunicationTask['module'][]
-> = {
+export const ROLE_PRIORITY: Record<CareerRole, DailyCommunicationTask['module'][]> = {
   'Electrical Works Chief': [
     'Speaking',
     'Writing',
@@ -125,22 +109,8 @@ export const ROLE_PRIORITY: Record<
     'Listening',
     'Quick AI',
   ],
-  'MEP Coordinator': [
-    'Speaking',
-    'Listening',
-    'Writing',
-    'Reading',
-    'Vocabulary',
-    'Quick AI',
-  ],
-  'QA/QC Engineer': [
-    'Writing',
-    'Reading',
-    'Vocabulary',
-    'Speaking',
-    'Listening',
-    'Quick AI',
-  ],
+  'MEP Coordinator': ['Speaking', 'Listening', 'Writing', 'Reading', 'Vocabulary', 'Quick AI'],
+  'QA/QC Engineer': ['Writing', 'Reading', 'Vocabulary', 'Speaking', 'Listening', 'Quick AI'],
   'Commissioning Engineer': [
     'Listening',
     'Speaking',
@@ -149,46 +119,11 @@ export const ROLE_PRIORITY: Record<
     'Reading',
     'Quick AI',
   ],
-  'Site Engineer': [
-    'Speaking',
-    'Writing',
-    'Listening',
-    'Vocabulary',
-    'Reading',
-    'Quick AI',
-  ],
-  'Procurement Engineer': [
-    'Writing',
-    'Vocabulary',
-    'Reading',
-    'Speaking',
-    'Listening',
-    'Quick AI',
-  ],
-  'HSE Engineer': [
-    'Speaking',
-    'Writing',
-    'Vocabulary',
-    'Listening',
-    'Reading',
-    'Quick AI',
-  ],
-  'Data Center Engineer': [
-    'Listening',
-    'Speaking',
-    'Reading',
-    'Writing',
-    'Vocabulary',
-    'Quick AI',
-  ],
-  'Project Manager': [
-    'Speaking',
-    'Writing',
-    'Listening',
-    'Reading',
-    'Quick AI',
-    'Vocabulary',
-  ],
+  'Site Engineer': ['Speaking', 'Writing', 'Listening', 'Vocabulary', 'Reading', 'Quick AI'],
+  'Procurement Engineer': ['Writing', 'Vocabulary', 'Reading', 'Speaking', 'Listening', 'Quick AI'],
+  'HSE Engineer': ['Speaking', 'Writing', 'Vocabulary', 'Listening', 'Reading', 'Quick AI'],
+  'Data Center Engineer': ['Listening', 'Speaking', 'Reading', 'Writing', 'Vocabulary', 'Quick AI'],
+  'Project Manager': ['Speaking', 'Writing', 'Listening', 'Reading', 'Quick AI', 'Vocabulary'],
 };
 
 export const ROLE_RECOMMENDATIONS: Record<CareerRole, string[]> = {

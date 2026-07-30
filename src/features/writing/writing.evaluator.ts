@@ -1,10 +1,11 @@
+import { ScoringService } from '@/core/learning/scoring.service';
+
 import {
+  DetailedCorrectionFeedback,
+  WritingEvaluationResult,
   WritingMission,
   WritingSubmission,
-  WritingEvaluationResult,
-  DetailedCorrectionFeedback,
 } from './writing.types';
-import { ScoringService } from '@/core/learning/scoring.service';
 
 function customizeFeedback(
   scoringResult: {
@@ -33,9 +34,7 @@ function customizeFeedback(
   if (jargonDensityScore >= 100) {
     strengths.push('Excellent integration of precise engineering terms');
   } else {
-    weaknesses.push(
-      'Casual operational phrases limit professional jargon usage'
-    );
+    weaknesses.push('Casual operational phrases limit professional jargon usage');
   }
 
   if (professionalToneScore >= 90) {
@@ -45,13 +44,9 @@ function customizeFeedback(
   }
 
   if (autoFixesUsed === 0 && finalScore === 100) {
-    strengths.push(
-      'Manual mastery: Resolved all linguistic flags without auto-fix'
-    );
+    strengths.push('Manual mastery: Resolved all linguistic flags without auto-fix');
   } else if (autoFixesUsed > 0) {
-    strengths.push(
-      'Systemic review: Correctly leveraged compiler-assisted suggestions'
-    );
+    strengths.push('Systemic review: Correctly leveraged compiler-assisted suggestions');
   }
 
   const finalWeaknesses = weaknesses.filter((w) => w !== 'None detected');
@@ -59,9 +54,7 @@ function customizeFeedback(
   return {
     strengths: Array.from(new Set(strengths)),
     weaknesses:
-      finalWeaknesses.length > 0
-        ? Array.from(new Set(finalWeaknesses))
-        : ['None detected'],
+      finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
   };
 }
 
@@ -69,10 +62,7 @@ export const WritingEvaluator = {
   /**
    * Evaluates a writing submission locally using rule-based matching.
    */
-  evaluate(
-    mission: WritingMission,
-    submission: WritingSubmission
-  ): WritingEvaluationResult {
+  evaluate(mission: WritingMission, submission: WritingSubmission): WritingEvaluationResult {
     const { finalDraft, timeSpentMinutes, autoFixesUsed } = submission;
     const detailedCorrections: DetailedCorrectionFeedback[] = [];
 
@@ -117,25 +107,17 @@ export const WritingEvaluator = {
 
     // Sub-Scores out of 100
     const linguisticClarityScore =
-      totalGrammarCount > 0
-        ? Math.round((correctGrammarCount / totalGrammarCount) * 100)
-        : 100;
+      totalGrammarCount > 0 ? Math.round((correctGrammarCount / totalGrammarCount) * 100) : 100;
 
     const jargonDensityScore =
-      totalVocabCount > 0
-        ? Math.round((correctVocabCount / totalVocabCount) * 100)
-        : 100;
+      totalVocabCount > 0 ? Math.round((correctVocabCount / totalVocabCount) * 100) : 100;
 
     const professionalToneScore =
-      totalStyleCount > 0
-        ? Math.round((correctStyleCount / totalStyleCount) * 100)
-        : 100;
+      totalStyleCount > 0 ? Math.round((correctStyleCount / totalStyleCount) * 100) : 100;
 
     // Weighted final score
     const finalScore = Math.round(
-      linguisticClarityScore * 0.4 +
-        jargonDensityScore * 0.3 +
-        professionalToneScore * 0.3
+      linguisticClarityScore * 0.4 + jargonDensityScore * 0.3 + professionalToneScore * 0.3
     );
 
     // Standard rewards via core ScoringService

@@ -1,6 +1,8 @@
 import { LearningState } from '@/core/learning/learning.types';
+
 import { AssessmentProfile } from '@/features/assessment';
 import { CefrLevel } from '@/features/level-system';
+
 import {
   BASE_DAILY_TASKS,
   ROLE_PRIORITY,
@@ -16,8 +18,7 @@ import {
 export const getTasksForRole = (role: CareerRole): DailyCommunicationTask[] => {
   const priority = ROLE_PRIORITY[role];
   return [...BASE_DAILY_TASKS].sort(
-    (left, right) =>
-      priority.indexOf(left.module) - priority.indexOf(right.module)
+    (left, right) => priority.indexOf(left.module) - priority.indexOf(right.module)
   );
 };
 
@@ -33,9 +34,7 @@ export const getPersonalizedTasks = (
     weakArea.toLowerCase().includes(task.module.toLowerCase())
   )?.module;
   const hasLanguageMistake = mistakes.some((mistake) =>
-    ['grammar', 'word choice', 'preposition', 'article'].includes(
-      mistake.category
-    )
+    ['grammar', 'word choice', 'preposition', 'article'].includes(mistake.category)
   );
 
   return getTasksForRole(role)
@@ -47,8 +46,7 @@ export const getPersonalizedTasks = (
     .sort((left, right) => {
       const leftCompleted = completedTaskDates[left.id] === today ? 1 : 0;
       const rightCompleted = completedTaskDates[right.id] === today ? 1 : 0;
-      if (leftCompleted !== rightCompleted)
-        return leftCompleted - rightCompleted;
+      if (leftCompleted !== rightCompleted) return leftCompleted - rightCompleted;
       if (left.module === weakModule) return -1;
       if (right.module === weakModule) return 1;
       if (hasLanguageMistake && left.module === 'Writing') return -1;
@@ -81,13 +79,10 @@ const computeModuleAverages = (
 const computeRepeatedMistakes = (
   mistakes: MistakeLogEntry[]
 ): { repeated: string[]; topMistake: string } => {
-  const categoryCounts = mistakes.reduce<Record<string, number>>(
-    (counts, mistake) => {
-      counts[mistake.category] = (counts[mistake.category] ?? 0) + 1;
-      return counts;
-    },
-    {}
-  );
+  const categoryCounts = mistakes.reduce<Record<string, number>>((counts, mistake) => {
+    counts[mistake.category] = (counts[mistake.category] ?? 0) + 1;
+    return counts;
+  }, {});
   const repeated = Object.entries(categoryCounts)
     .filter(([, count]) => count > 1)
     .sort((a, b) => b[1] - a[1])
@@ -116,8 +111,7 @@ const getRecommendedPhrase = (careerRole: CareerRole): string =>
 
 const getQuickAIAction = (topMistake: string): string => {
   if (topMistake === 'tone') return 'More polite';
-  if (topMistake === 'grammar' || topMistake === 'article')
-    return 'Explain mistakes';
+  if (topMistake === 'grammar' || topMistake === 'article') return 'Explain mistakes';
   return 'More professional';
 };
 
@@ -139,14 +133,11 @@ export const buildSevenDayReport = (
 
   const averages = computeModuleAverages(recentSessions);
   const strongest =
-    [...averages].sort((a, b) => b.score - a.score)[0]?.module ??
-    'Collecting evidence';
+    [...averages].sort((a, b) => b.score - a.score)[0]?.module ?? 'Collecting evidence';
   const weakest =
-    [...averages].sort((a, b) => a.score - b.score)[0]?.module ??
-    'Not enough recent data';
+    [...averages].sort((a, b) => a.score - b.score)[0]?.module ?? 'Not enough recent data';
 
-  const { repeated, topMistake: topRepeatedMistake } =
-    computeRepeatedMistakes(mistakes);
+  const { repeated, topMistake: topRepeatedMistake } = computeRepeatedMistakes(mistakes);
 
   const completedTasks = Object.values(completedTaskDates).filter(
     (date) => new Date(date).getTime() >= threshold.getTime()

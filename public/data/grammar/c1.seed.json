@@ -46,11 +46,7 @@
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_017"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "The installation can proceed once the outstanding comments are closed, provided that access remains safe and the approved method statement is followed.",
@@ -113,11 +109,7 @@
     "grammarFits": ["simple sentence", "verb to be"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_061"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "electrical", "qa-qc", "project-management"],
     "taskPromptTemplate": "Write one site status sentence using am/is/are.",
     "minimumUserOutput": "The records indicate that the delay was not caused by the electrical works.",
@@ -170,27 +162,12 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Yan cümleleri virgül ve mantık ilişkisi olmadan yığmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "subordinate-clauses",
-      "restricted-access",
-      "retest",
-      "vendor-review"
-    ],
+    "linkedVocabularyTags": ["subordinate-clauses", "restricted-access", "retest", "vendor-review"],
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_011"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "Although access was restricted when the team arrived, the contractor confirmed that the inspection could continue safely.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -309,12 +286,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Reasonably kelimesini süs olarak kullanıp kanıt sunmamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "reasonably-considered",
-      "project-risk",
-      "revised-method",
-      "safety"
-    ],
+    "linkedVocabularyTags": ["reasonably-considered", "project-risk", "revised-method", "safety"],
     "grammarFits": ["verb to be", "hedging"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_041"],
@@ -644,12 +616,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Notwithstanding'i günlük konuşmada aşırı kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "notwithstanding",
-      "delay",
-      "safety-systems",
-      "supervision"
-    ],
+    "linkedVocabularyTags": ["notwithstanding", "delay", "safety-systems", "supervision"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_047"],
@@ -711,12 +678,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Regardless of sonrası tam cümle kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "regardless-of",
-      "permit",
-      "work-duration",
-      "test-records"
-    ],
+    "linkedVocabularyTags": ["regardless-of", "permit", "work-duration", "test-records"],
     "grammarFits": ["conjunctions"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_047"],
@@ -845,12 +807,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Acknowledged yapısını kabul/approval ile karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "acknowledged",
-      "access-limited",
-      "records",
-      "valid-comment"
-    ],
+    "linkedVocabularyTags": ["acknowledged", "access-limited", "records", "valid-comment"],
     "grammarFits": ["conjunctions", "hedging"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_051"],
@@ -860,12 +817,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Connect two engineering clauses using the target connector.",
     "minimumUserOutput": "While it is acknowledged that access was limited, the records show that work continued.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -917,12 +869,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Implementation to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "implementation",
-      "testing-procedure",
-      "downtime",
-      "controls"
-    ],
+    "linkedVocabularyTags": ["implementation", "testing-procedure", "downtime", "controls"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_082"],
@@ -986,12 +933,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Verification for/of farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "verification",
-      "alarm-matrix",
-      "cable-continuity",
-      "QAQC"
-    ],
+    "linkedVocabularyTags": ["verification", "alarm-matrix", "cable-continuity", "QAQC"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_082"],
@@ -1055,12 +997,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Rectification kelimesini repair ile tamamen aynı sanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "rectification",
-      "defect",
-      "open-comments",
-      "inspection"
-    ],
+    "linkedVocabularyTags": ["rectification", "defect", "open-comments", "inspection"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_082"],
@@ -1193,12 +1130,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Deviation to kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "deviation",
-      "approved-drawing",
-      "test-procedure",
-      "NCR"
-    ],
+    "linkedVocabularyTags": ["deviation", "approved-drawing", "test-procedure", "NCR"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_082"],
@@ -1262,12 +1194,7 @@
     "mistakeType": "lexical confusion",
     "commonMistakes": "Issue/defect/nonconformity farkını gözetmemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "nonconformity",
-      "labeling-requirements",
-      "test-certificates",
-      "NCR"
-    ],
+    "linkedVocabularyTags": ["nonconformity", "labeling-requirements", "test-certificates", "NCR"],
     "grammarFits": ["nominalization", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_084"],
@@ -1352,12 +1279,7 @@
       "roleplay",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the project position using a premise, evidence and conclusion structure.",
     "minimumUserOutput": "The room was accessible, as evidenced by the signed permit; therefore, the delay cannot be attributed to access.",
     "masteryCriteria": "User can build a controlled C1 argument by linking premise, evidence and conclusion in a consultant/client response.",
@@ -1478,12 +1400,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Deemed'i simple believed anlamında gevşek kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "deemed-to",
-      "submission",
-      "attachments",
-      "safety-clearance"
-    ],
+    "linkedVocabularyTags": ["deemed-to", "submission", "attachments", "safety-clearance"],
     "grammarFits": ["verb to be", "contractual wording"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_064"],
@@ -1624,11 +1541,7 @@
       "temporary-cables",
       "escape-corridor"
     ],
-    "grammarFits": [
-      "contractual wording",
-      "modal obligation",
-      "modal prohibition"
-    ],
+    "grammarFits": ["contractual wording", "modal obligation", "modal prohibition"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_063"],
     "canGenerateTaskTypes": [
@@ -1640,13 +1553,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "The contractor shall not energize the panel without written approval.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1698,12 +1605,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Subject to'yu automatic approval gibi yorumlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "is-subject-to",
-      "consultant-approval",
-      "payment",
-      "documentation"
-    ],
+    "linkedVocabularyTags": ["is-subject-to", "consultant-approval", "payment", "documentation"],
     "grammarFits": ["contractual wording"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_064"],
@@ -1768,12 +1670,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Give rise to sonrası fiil kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "give-rise-to",
-      "commissioning-risk",
-      "restricted-access",
-      "delay"
-    ],
+    "linkedVocabularyTags": ["give-rise-to", "commissioning-risk", "restricted-access", "delay"],
     "grammarFits": ["risk language", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_030"],
@@ -1854,13 +1751,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one risk statement with possible consequence and mitigation context.",
     "minimumUserOutput": "Late approval may expose the project to handover delay.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -1912,13 +1803,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Mitigate ile reduce anlamını bilmeden tekrar etmek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "mitigate",
-      "delay-risk",
-      "manpower",
-      "safety-risk",
-      "barriers"
-    ],
+    "linkedVocabularyTags": ["mitigate", "delay-risk", "manpower", "safety-risk", "barriers"],
     "grammarFits": ["risk language", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_091"],
@@ -1982,12 +1867,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "By sonrası to infinitive kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "risk-reduced-by",
-      "interface-risk",
-      "coordination",
-      "shutdown-risk"
-    ],
+    "linkedVocabularyTags": ["risk-reduced-by", "interface-risk", "coordination", "shutdown-risk"],
     "grammarFits": ["verb to be", "risk language", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_060"],
@@ -2051,12 +1931,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Include sonrası gereksiz are kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "mitigation-measures",
-      "supervision",
-      "progress-checks",
-      "settings"
-    ],
+    "linkedVocabularyTags": ["mitigation-measures", "supervision", "progress-checks", "settings"],
     "grammarFits": ["risk language", "technical reporting", "nominalization"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_018"],
@@ -2068,13 +1943,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "hse",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one risk statement with possible consequence and mitigation context.",
     "minimumUserOutput": "Mitigation measures include additional supervision and daily progress checks.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2126,12 +1995,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Outline kelimesini detail ile karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "report-outlines",
-      "commissioning-status",
-      "key-risks",
-      "handover"
-    ],
+    "linkedVocabularyTags": ["report-outlines", "commissioning-status", "key-risks", "handover"],
     "grammarFits": ["executive summary", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_094"],
@@ -2195,12 +2059,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Key issue ile minor issue farkını belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "key-issue",
-      "approval-delay",
-      "revised-drawings",
-      "safe-access"
-    ],
+    "linkedVocabularyTags": ["key-issue", "approval-delay", "revised-drawings", "safe-access"],
     "grammarFits": ["executive summary", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_094"],
@@ -2212,13 +2071,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Write one concise executive summary sentence about risk, impact or decision.",
     "minimumUserOutput": "The key issue is the delay in approval of the revised drawings.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2270,12 +2123,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Concern fiil/isim kullanımını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "main-risk",
-      "vendor-support",
-      "commissioning",
-      "comment-closure"
-    ],
+    "linkedVocabularyTags": ["main-risk", "vendor-support", "commissioning", "comment-closure"],
     "grammarFits": ["executive summary", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_035"],
@@ -2339,12 +2187,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Recommended action cümlesinde belirsiz aktör bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "recommended-action",
-      "life-safety-systems",
-      "manpower",
-      "Block-C"
-    ],
+    "linkedVocabularyTags": ["recommended-action", "life-safety-systems", "manpower", "Block-C"],
     "grammarFits": ["executive summary", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_061"],
@@ -2426,12 +2269,7 @@
       "email-writing",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the risky statement in liability-safe contractual wording.",
     "minimumUserOutput": "We respectfully disagree that the delay was caused by electrical works.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2553,12 +2391,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Evidence yok demeden önce available evidence sınırını belirtmemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "evidence-not-support",
-      "allegation",
-      "mobilization",
-      "testing-delay"
-    ],
+    "linkedVocabularyTags": ["evidence-not-support", "allegation", "mobilization", "testing-delay"],
     "grammarFits": ["dispute wording", "contractual wording"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_008"],
@@ -2623,11 +2456,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Correcting tone'u agresif yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "more-accurate-to-state",
-      "partial-completion",
-      "pending-approval"
-    ],
+    "linkedVocabularyTags": ["more-accurate-to-state", "partial-completion", "pending-approval"],
     "grammarFits": ["verb to be", "dispute wording", "contractual wording"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_043"],
@@ -2692,12 +2521,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Cannot proceed demek yerine daha diplomatik kalıp seçmemek.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "unable-to-proceed",
-      "safe-access",
-      "approved-drawing",
-      "dependency"
-    ],
+    "linkedVocabularyTags": ["unable-to-proceed", "safe-access", "approved-drawing", "dependency"],
     "grammarFits": ["formal email"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_027"],
@@ -2762,11 +2586,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Acceptance ile approval farkını belirsiz bırakmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "cannot-confirm-acceptance",
-      "test-records",
-      "certificates"
-    ],
+    "linkedVocabularyTags": ["cannot-confirm-acceptance", "test-records", "certificates"],
     "grammarFits": ["formal email"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_066"],
@@ -2917,12 +2737,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the statement with cautious professional hedging.",
     "minimumUserOutput": "Based on the attached records, the inspection was completed on 14 June.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -2974,12 +2789,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Evidence by yerine evidenced by kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "as-evidenced-by",
-      "signed-record",
-      "access-permit",
-      "on-time"
-    ],
+    "linkedVocabularyTags": ["as-evidenced-by", "signed-record", "access-permit", "on-time"],
     "grammarFits": ["technical reporting", "hedging"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_091"],
@@ -3112,12 +2922,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Documented on/in farkını karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "documented-in",
-      "NCR-closeout",
-      "test-sequence",
-      "procedure"
-    ],
+    "linkedVocabularyTags": ["documented-in", "NCR-closeout", "test-sequence", "procedure"],
     "grammarFits": ["technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_049"],
@@ -3318,11 +3123,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Should yapısında if'i aynı anda kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-condition-persist",
-      "further-testing",
-      "restricted-access"
-    ],
+    "linkedVocabularyTags": ["should-condition-persist", "further-testing", "restricted-access"],
     "grammarFits": ["conditionals"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_025"],
@@ -3385,12 +3186,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Were inversion ile normal past tense karıştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "were-to-remain",
-      "unresolved-issue",
-      "handover",
-      "recovery"
-    ],
+    "linkedVocabularyTags": ["were-to-remain", "unresolved-issue", "handover", "recovery"],
     "grammarFits": ["conditionals"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_011"],
@@ -3401,13 +3197,7 @@
       "meeting-response",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "qa-qc",
-      "hse",
-      "commissioning"
-    ],
+    "domainFit": ["general-site", "electrical", "qa-qc", "hse", "commissioning"],
     "taskPromptTemplate": "Write one project consequence using the target conditional structure.",
     "minimumUserOutput": "Were the issue to remain unresolved, handover readiness would be affected.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3459,19 +3249,11 @@
     "mistakeType": "liability wording",
     "commonMistakes": "If ve should'u aynı anda kullanmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "should-clarification-required",
-      "email-closing",
-      "documents"
-    ],
+    "linkedVocabularyTags": ["should-clarification-required", "email-closing", "documents"],
     "grammarFits": ["simple sentence", "verb to be"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_052"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "electrical"],
     "taskPromptTemplate": "Write one site status sentence using am/is/are.",
     "minimumUserOutput": "Should further clarification be required, please contact the electrical team.",
@@ -3540,13 +3322,7 @@
       "writing-production",
       "speaking-production"
     ],
-    "domainFit": [
-      "general-site",
-      "architecture",
-      "qa-qc",
-      "commissioning",
-      "project-management"
-    ],
+    "domainFit": ["general-site", "architecture", "qa-qc", "commissioning", "project-management"],
     "taskPromptTemplate": "Rewrite the sentence in passive voice to focus on the work, not the person.",
     "minimumUserOutput": "Had the inspection been completed earlier, the retest could have started on time.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -3598,20 +3374,11 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Not only sonrası inversion yapmamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "not-only-but-also",
-      "identified",
-      "rectified",
-      "testing-records"
-    ],
+    "linkedVocabularyTags": ["not-only-but-also", "identified", "rectified", "testing-records"],
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_093"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "commissioning"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "Not only was the issue identified, but it was also rectified before handover.",
@@ -3664,12 +3431,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Assumption'ı confirmed fact gibi sunmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "assumed-that",
-      "vendor-support",
-      "temporary-supply",
-      "planning"
-    ],
+    "linkedVocabularyTags": ["assumed-that", "vendor-support", "temporary-supply", "planning"],
     "grammarFits": ["passive voice", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_034"],
@@ -3871,20 +3633,11 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Participle clause öznesini ana cümle öznesiyle uyumsuz yapmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "having-reviewed",
-      "inspection",
-      "closeout-report",
-      "records"
-    ],
+    "linkedVocabularyTags": ["having-reviewed", "inspection", "closeout-report", "records"],
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_021"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "qa-qc", "project-management"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "Having completed the inspection, the team issued the closeout report.",
@@ -3947,17 +3700,8 @@
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_030"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
-    "domainFit": [
-      "general-site",
-      "electrical",
-      "commissioning",
-      "project-management"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
+    "domainFit": ["general-site", "electrical", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "The access route was blocked, delaying cable pulling activities.",
     "masteryCriteria": "User can recognize, correct and produce this C1 structure in engineering context; must use it correctly in writing and one speaking/meeting-response task.",
@@ -4018,11 +3762,7 @@
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_052"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "hse", "commissioning", "project-management"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "What matters is that the life safety systems are tested first.",
@@ -4075,20 +3815,11 @@
     "mistakeType": "liability wording",
     "commonMistakes": "That clause yerine which kullanarak cleft yapıyı bozmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "it-cleft",
-      "calibration-record",
-      "approval",
-      "access-restriction"
-    ],
+    "linkedVocabularyTags": ["it-cleft", "calibration-record", "approval", "access-restriction"],
     "grammarFits": ["simple sentence"],
     "difficulty": 5,
     "prerequisites": ["grammar_c1_058"],
-    "canGenerateTaskTypes": [
-      "reading-comprehension",
-      "writing-correction",
-      "speaking-production"
-    ],
+    "canGenerateTaskTypes": ["reading-comprehension", "writing-correction", "speaking-production"],
     "domainFit": ["general-site", "qa-qc", "commissioning"],
     "taskPromptTemplate": "Write one short site sentence using the target structure.",
     "minimumUserOutput": "It is the missing calibration record that prevents approval.",
@@ -4141,12 +3872,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "The fact that yapısını gereksiz tekrarla metni ağırlaştırmak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "fact-that",
-      "test-under-load",
-      "acceptance",
-      "issue-closure"
-    ],
+    "linkedVocabularyTags": ["fact-that", "test-under-load", "acceptance", "issue-closure"],
     "grammarFits": ["technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b1_061"],
@@ -4209,11 +3935,7 @@
     "mistakeType": "liability wording",
     "commonMistakes": "Request that sonrası should kullanımını gereksiz tekrarlamak.",
     "skillUse": ["reading", "writing", "speaking"],
-    "linkedVocabularyTags": [
-      "respectfully-request",
-      "comments-review",
-      "access-testing"
-    ],
+    "linkedVocabularyTags": ["respectfully-request", "comments-review", "access-testing"],
     "grammarFits": ["formal email", "technical reporting"],
     "difficulty": 5,
     "prerequisites": ["grammar_b2_073"],

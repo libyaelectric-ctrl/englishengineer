@@ -1,9 +1,12 @@
 import { Check } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
-import { isTaskCompletedToday } from '@/features/learning-intelligence';
-import { BetaService } from '@/features/beta';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
+
+import { BetaService } from '@/features/beta';
+import { isTaskCompletedToday } from '@/features/learning-intelligence';
 
 type Task = {
   id: string;
@@ -41,34 +44,23 @@ export const TaskGrid = ({
         {tasks.map((task, index) => {
           const completed = isTaskCompletedToday(task.id, completedTaskDates);
           return (
-            <Card
-              key={task.id}
-              className="flex flex-col gap-4 p-5 shadow-sm"
-              hoverEffect={false}
-            >
+            <Card key={task.id} className="flex flex-col gap-4 p-5 shadow-sm" hoverEffect={false}>
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
                     Priority {index + 1} · {task.module}
                   </p>
-                  <h3 className="mt-1 text-base font-bold text-foreground">
-                    {task.title}
-                  </h3>
+                  <h3 className="mt-1 text-base font-bold text-foreground">{task.title}</h3>
                 </div>
                 <button
                   onClick={() => {
                     toggleTask(task.id);
                     if (!completed) {
-                      BetaService.trackEvent(
-                        'daily_task_completed',
-                        '/progress/next-steps'
-                      );
+                      BetaService.trackEvent('daily_task_completed', '/progress/next-steps');
                     }
                   }}
                   className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border transition cursor-pointer ${completed ? 'border-success bg-success/10 text-success shadow-sm' : 'border-border-soft bg-surface text-muted-copy hover:border-primary hover:bg-primary/5 shadow-sm'}`}
-                  aria-label={
-                    completed ? 'Mark task incomplete' : 'Mark task complete'
-                  }
+                  aria-label={completed ? 'Mark task incomplete' : 'Mark task complete'}
                 >
                   <Check className="h-5 w-5" />
                 </button>

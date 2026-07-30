@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
 import {
   CheckCircle2,
   FileText,
@@ -8,26 +7,29 @@ import {
   ListChecks,
   RefreshCw,
 } from 'lucide-react';
-import { useListeningMissionsStore } from '@/features/listening';
-import {
-  type ListeningMission,
-  type ListeningEvaluationResult,
-} from '@/features/listening/listening.types';
-import { AudioPlayer } from '@/features/listening/AudioPlayer';
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+import { SkillLockedState } from '@/shared/components/SkillLockedState';
+
 import {
   type ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
   EmptyLevelState,
-  filterContentByLevel,
-  getContentAccessLabel,
   LevelAccessBadge,
   LevelContentFilter,
+  filterContentByLevel,
+  getContentAccessLabel,
   useSkillLevel,
 } from '@/features/level-system';
-
-import { Button } from '@/shared/components/Button';
-import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { SectionCard } from '@/shared/components/SectionCard';
+import { useListeningMissionsStore } from '@/features/listening';
+import { AudioPlayer } from '@/features/listening/AudioPlayer';
+import {
+  type ListeningEvaluationResult,
+  type ListeningMission,
+} from '@/features/listening/listening.types';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
 
@@ -251,8 +253,7 @@ const WorkspaceView = ({
 
             <label className="block text-sm font-bold text-foreground uppercase tracking-wider">
               <span className="flex items-center gap-2">
-                <KeyRound className="h-4 w-4 text-primary" /> Key words you
-                identified
+                <KeyRound className="h-4 w-4 text-primary" /> Key words you identified
               </span>
               <input
                 value={userKeywords}
@@ -337,47 +338,30 @@ const ListeningPage = () => {
   const writingStore = useWritingStore();
   const readingDone = Object.keys(readingStore.completedMissions || {}).length;
   const writingDone = Object.keys(writingStore.completedMissions || {}).length;
-  const canAccess =
-    readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
+  const canAccess = readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
 
   const missions = useListeningMissionsStore((s) => s.missions);
-  const selectedMissionId = useListeningMissionsStore(
-    (s) => s.selectedMissionId
-  );
+  const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
   const answers = useListeningMissionsStore((s) => s.answers);
   const summary = useListeningMissionsStore((s) => s.summary);
   const userKeywords = useListeningMissionsStore((s) => s.userKeywords);
   const evaluationResult = useListeningMissionsStore((s) => s.evaluationResult);
-  const initializeStore = useListeningMissionsStore(
-    (s) => s.initializeMissions
-  );
+  const initializeStore = useListeningMissionsStore((s) => s.initializeMissions);
   const selectMission = useListeningMissionsStore((s) => s.selectMission);
   const setAnswer = useListeningMissionsStore((s) => s.setAnswer);
   const setSummary = useListeningMissionsStore((s) => s.setSummary);
   const setUserKeywords = useListeningMissionsStore((s) => s.setUserKeywords);
-  const submitCurrentMission = useListeningMissionsStore(
-    (s) => s.submitCurrentMission
-  );
-  const resetCurrentMission = useListeningMissionsStore(
-    (s) => s.resetCurrentMission
-  );
+  const submitCurrentMission = useListeningMissionsStore((s) => s.submitCurrentMission);
+  const resetCurrentMission = useListeningMissionsStore((s) => s.resetCurrentMission);
   const currentLevel = useSkillLevel('listening').currentLevel;
-  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
-    DEFAULT_CONTENT_LEVEL_FILTER
-  );
+  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(DEFAULT_CONTENT_LEVEL_FILTER);
   const visibleMissions = useMemo(
     () => filterContentByLevel(missions, currentLevel, levelFilter),
     [currentLevel, levelFilter, missions]
   );
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string>('All');
-  const CATEGORIES = [
-    'All',
-    'Site Meetings',
-    'Technical',
-    'Safety',
-    'Commissioning',
-  ] as const;
+  const CATEGORIES = ['All', 'Site Meetings', 'Technical', 'Safety', 'Commissioning'] as const;
   const filteredMissions = useMemo(
     () =>
       categoryFilter === 'All'
@@ -388,8 +372,7 @@ const ListeningPage = () => {
     [visibleMissions, categoryFilter]
   );
   const currentMission =
-    visibleMissions.find((mission) => mission.id === selectedMissionId) ??
-    visibleMissions[0];
+    visibleMissions.find((mission) => mission.id === selectedMissionId) ?? visibleMissions[0];
 
   useEffect(() => initializeStore(), [initializeStore]);
 
@@ -409,9 +392,7 @@ const ListeningPage = () => {
     return (
       <div className="mx-auto max-w-5xl space-y-4 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/80 backdrop-blur-xl -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Listening
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Listening</h1>
         </div>
         <div className="space-y-6 pt-4">
           <LevelContentFilter
@@ -430,21 +411,17 @@ const ListeningPage = () => {
       {/* Sticky header — clean, rigid */}
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">
-            Listening
-          </h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">Listening</h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {currentLevel}
           </span>
           <p className="hidden text-[11px] font-medium text-muted-copy leading-tight sm:block">
-            Engineering site audio, technical meeting transcripts & listening
-            comprehension.
+            Engineering site audio, technical meeting transcripts & listening comprehension.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy rounded-[4px] border border-border-soft bg-surface px-2.5 py-1">
-            Mission{' '}
-            {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}/
+            Mission {visibleMissions.findIndex((m) => m.id === currentMission.id) + 1}/
             {visibleMissions.length}
           </span>
         </div>
@@ -490,10 +467,7 @@ const ListeningPage = () => {
                         {mission.cefrLevel}
                       </span>
                       <LevelAccessBadge
-                        label={getContentAccessLabel(
-                          mission.cefrLevel,
-                          currentLevel
-                        )}
+                        label={getContentAccessLabel(mission.cefrLevel, currentLevel)}
                       />
                     </div>
                     <span className="text-xs text-muted-copy font-bold">

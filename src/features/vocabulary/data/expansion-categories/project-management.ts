@@ -6,8 +6,7 @@ export const projectManagementCategories: ExpansionCategory[] = [
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['project management', 'planning', 'controls'],
-    context:
-      'project controls, reporting, scheduling, and stakeholder communication',
+    context: 'project controls, reporting, scheduling, and stakeholder communication',
     terms: [
       'baseline schedule',
       'critical path',
@@ -85,8 +84,7 @@ export const projectManagementCategories: ExpansionCategory[] = [
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['testing', 'commissioning', 'verification'],
-    context:
-      'testing and commissioning records across electrical and MEP systems',
+    context: 'testing and commissioning records across electrical and MEP systems',
     terms: [
       'test procedure',
       'test record',

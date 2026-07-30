@@ -1,5 +1,5 @@
-import type { GrammarRuleProgress } from './grammar.progress';
 import type { ErrorCategory } from './grammar.error-patterns';
+import type { GrammarRuleProgress } from './grammar.progress';
 
 export interface GrammarDashboardData {
   overallProgress: {
@@ -79,17 +79,13 @@ export const GrammarDashboardService = {
       categoryMap.get(cat)!.push(p);
     });
 
-    const categoryBreakdown = [...categoryMap.entries()].map(
-      ([category, rules]) => ({
-        category,
-        total: rules.length,
-        mastered: rules.filter((r) => r.reviewStatus === 'Strong').length,
-        learning: rules.filter((r) => r.reviewStatus === 'Learning').length,
-        strength: Math.round(
-          rules.reduce((sum, r) => sum + r.strength, 0) / rules.length
-        ),
-      })
-    );
+    const categoryBreakdown = [...categoryMap.entries()].map(([category, rules]) => ({
+      category,
+      total: rules.length,
+      mastered: rules.filter((r) => r.reviewStatus === 'Strong').length,
+      learning: rules.filter((r) => r.reviewStatus === 'Learning').length,
+      strength: Math.round(rules.reduce((sum, r) => sum + r.strength, 0) / rules.length),
+    }));
 
     const readingEvidence = values.filter(
       (p) => p.skillEvidence.reading && p.skillEvidence.reading.score >= 80
@@ -112,8 +108,7 @@ export const GrammarDashboardService = {
         learning,
         due,
         newRules,
-        masteryPercentage:
-          values.length > 0 ? Math.round((mastered / values.length) * 100) : 0,
+        masteryPercentage: values.length > 0 ? Math.round((mastered / values.length) * 100) : 0,
       },
       categoryBreakdown,
       errorPatternSummary: errorSummary,
@@ -140,24 +135,18 @@ export const GrammarDashboardService = {
       .sort((a, b) => a.strength - b.strength);
 
     if (weakCategories.length > 0) {
-      recs.push(
-        `Focus on weak areas: ${weakCategories.map((c) => c.category).join(', ')}.`
-      );
+      recs.push(`Focus on weak areas: ${weakCategories.map((c) => c.category).join(', ')}.`);
     }
 
     if (topErrorCategories.length > 0) {
       const top = topErrorCategories[0];
-      recs.push(
-        `Most errors in ${top.category} (${top.percentage}%). Review related rules.`
-      );
+      recs.push(`Most errors in ${top.category} (${top.percentage}%). Review related rules.`);
     }
 
     if (mastered === 0 && total > 0) {
       recs.push('Start with basic rules to build a strong foundation.');
     } else if (mastered / total > 0.8) {
-      recs.push(
-        'Excellent progress! Focus on transfer evidence for remaining rules.'
-      );
+      recs.push('Excellent progress! Focus on transfer evidence for remaining rules.');
     }
 
     if (recs.length === 0) {

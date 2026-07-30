@@ -59,10 +59,6 @@ export { StripeBillingProvider } from './stripe.provider';
 
 export { BillingStatusPanel } from './BillingStatusPanel';
 
-export {
-  type WorkspaceDocument,
-  type Workspace,
-  useWorkspaceStore,
-} from './workspace.store';
+export { type WorkspaceDocument, type Workspace, useWorkspaceStore } from './workspace.store';
 
 export { WorkspaceSelector } from './WorkspaceSelector';

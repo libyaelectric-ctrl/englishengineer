@@ -1,14 +1,13 @@
-import { describe, it } from 'node:test';
+import type { NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
-import type { Request, Response, NextFunction } from 'express';
-import { createBackendAuth, type BackendAuthConfig } from '../src/auth.js';
+import { describe, it } from 'node:test';
+
+import { type BackendAuthConfig, createBackendAuth } from '../src/auth.js';
 
 type MockResponse = Record<string, never>;
 type FetchImpl = typeof fetch;
 
-const mockFetch =
-  (response: unknown): FetchImpl =>
-  (async () => response) as unknown as FetchImpl;
+const mockFetch = (response: unknown): FetchImpl => (async () => response) as unknown as FetchImpl;
 
 const createMockRequest = (
   headers: Record<string, string> = {},
@@ -106,10 +105,7 @@ describe('createBackendAuth', () => {
         json: async () => mockUser,
       });
       const { requireBackendAuth } = createBackendAuth(config, fetchImpl);
-      const req = createMockRequest(
-        { authorization: 'Bearer supabase-token' },
-        {}
-      );
+      const req = createMockRequest({ authorization: 'Bearer supabase-token' }, {});
       const next: NextFunction = () => {};
       await requireBackendAuth(req, mockResponse as unknown as Response, next);
       assert.equal(req.auth?.userId, 'supabase-user-1');
@@ -123,10 +119,7 @@ describe('createBackendAuth', () => {
       } as unknown as BackendAuthConfig;
       const fetchImpl = mockFetch({ ok: false, status: 401 });
       const { requireBackendAuth } = createBackendAuth(config, fetchImpl);
-      const req = createMockRequest(
-        { authorization: 'Bearer invalid-token' },
-        {}
-      );
+      const req = createMockRequest({ authorization: 'Bearer invalid-token' }, {});
       let caughtError: (Error & { status?: number }) | undefined;
       const next: NextFunction = ((err?: unknown) => {
         caughtError = err as Error & { status?: number };

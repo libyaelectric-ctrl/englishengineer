@@ -15,14 +15,9 @@ export class EventStore {
     return Object.freeze([...this.events]);
   }
 
-  public getByType<T extends AppEvent['type']>(
-    type: T
-  ): readonly Extract<AppEvent, { type: T }>[] {
+  public getByType<T extends AppEvent['type']>(type: T): readonly Extract<AppEvent, { type: T }>[] {
     return Object.freeze(
-      this.events.filter((e) => e.type === type) as Extract<
-        AppEvent,
-        { type: T }
-      >[]
+      this.events.filter((e) => e.type === type) as Extract<AppEvent, { type: T }>[]
     );
   }
 

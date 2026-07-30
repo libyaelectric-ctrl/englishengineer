@@ -1,5 +1,6 @@
+import type { NextFunction, Request, Response } from 'express';
+
 import { ApiError } from '../errors.js';
-import type { Request, Response, NextFunction } from 'express';
 
 export const requireRole = (allowedRoles: string[] = []) => {
   return (req: Request, res: Response, next: NextFunction): void => {

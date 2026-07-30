@@ -1,31 +1,26 @@
 import { SupabaseClient } from '@supabase/supabase-js';
-import { UserProfile } from './auth.types';
-import { storage } from '@/shared/storage';
-import { generateId, getInitials } from './auth.helpers';
-import { SupabaseReadyConfig } from './auth.config';
-import { getSupabaseClient } from './supabase.client';
+
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+
+import { storage } from '@/shared/storage';
+
+import { SupabaseReadyConfig } from './auth.config';
+import { generateId, getInitials } from './auth.helpers';
+import { UserProfile } from './auth.types';
+import { getSupabaseClient } from './supabase.client';
 import {
+  SupabaseProfileRow,
   mapProfileToSupabaseRow,
   mapSupabaseRowToProfile,
-  SupabaseProfileRow,
 } from './supabase.types';
 
 const STORAGE_KEY = 'auth_user';
 
 export interface AuthAdapter {
   getCurrentUser: () => Promise<UserProfile | null>;
-  login: (
-    displayName: string,
-    email: string,
-    password?: string
-  ) => Promise<UserProfile>;
-  signUp?: (
-    displayName: string,
-    email: string,
-    password: string
-  ) => Promise<UserProfile>;
+  login: (displayName: string, email: string, password?: string) => Promise<UserProfile>;
+  signUp?: (displayName: string, email: string, password: string) => Promise<UserProfile>;
   demoLogin: () => Promise<UserProfile>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<UserProfile>;
@@ -68,16 +63,11 @@ export class LocalAuthAdapter implements AuthAdapter {
     email: string,
     allUsers: LocalUserProfile[]
   ): LocalUserProfile | undefined {
-    const found = allUsers.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
-    );
+    const found = allUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
     if (found) return found;
 
     const currentUser = storage.globalGet<LocalUserProfile>(STORAGE_KEY);
-    if (
-      currentUser &&
-      currentUser.email.toLowerCase() === email.toLowerCase()
-    ) {
+    if (currentUser && currentUser.email.toLowerCase() === email.toLowerCase()) {
       allUsers.push(currentUser);
       storage.globalSet(USERS_DB_KEY, allUsers);
       return currentUser;
@@ -86,11 +76,7 @@ export class LocalAuthAdapter implements AuthAdapter {
     return undefined;
   }
 
-  async login(
-    displayName: string,
-    email: string,
-    password?: string
-  ): Promise<UserProfile> {
+  async login(displayName: string, email: string, password?: string): Promise<UserProfile> {
     this.assertEnabled();
 
     if (!password || password.length < 6) {
@@ -129,11 +115,7 @@ export class LocalAuthAdapter implements AuthAdapter {
     return updated;
   }
 
-  async signUp(
-    displayName: string,
-    email: string,
-    password: string
-  ): Promise<UserProfile> {
+  async signUp(displayName: string, email: string, password: string): Promise<UserProfile> {
     this.assertEnabled();
 
     if (!password || password.length < 6) {
@@ -144,9 +126,7 @@ export class LocalAuthAdapter implements AuthAdapter {
     }
 
     const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
-    const existing = allUsers.find(
-      (u) => u.email.toLowerCase() === email.toLowerCase()
-    );
+    const existing = allUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
 
     if (existing) {
       throw new AppError({
@@ -219,9 +199,7 @@ export class LocalAuthAdapter implements AuthAdapter {
     // Update in users database as well
     const allUsers = storage.globalGet<LocalUserProfile[]>(USERS_DB_KEY) || [];
     const updatedUsers = allUsers.map((u) =>
-      u.email.toLowerCase() === currentUser.email.toLowerCase()
-        ? { ...u, ...updates }
-        : u
+      u.email.toLowerCase() === currentUser.email.toLowerCase() ? { ...u, ...updates } : u
     );
     storage.globalSet(USERS_DB_KEY, updatedUsers);
 
@@ -240,19 +218,11 @@ export class SupabaseReadyAuthAdapter implements AuthAdapter {
     return this.fallbackAdapter.getCurrentUser();
   }
 
-  async login(
-    displayName: string,
-    email: string,
-    password?: string
-  ): Promise<UserProfile> {
+  async login(displayName: string, email: string, password?: string): Promise<UserProfile> {
     return this.fallbackAdapter.login(displayName, email, password);
   }
 
-  async signUp(
-    displayName: string,
-    email: string,
-    password: string
-  ): Promise<UserProfile> {
+  async signUp(displayName: string, email: string, password: string): Promise<UserProfile> {
     if (this.fallbackAdapter.signUp) {
       return this.fallbackAdapter.signUp(displayName, email, password);
     }
@@ -307,11 +277,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     return this.loadProfile(data.user.id, fallbackProfile);
   }
 
-  async login(
-    displayName: string,
-    email: string,
-    password?: string
-  ): Promise<UserProfile> {
+  async login(displayName: string, email: string, password?: string): Promise<UserProfile> {
     if (!password) {
       throw new AppError({
         code: ErrorCode.VALIDATION,
@@ -330,23 +296,13 @@ export class SupabaseAuthAdapter implements AuthAdapter {
       });
     }
 
-    const fallbackProfile = this.toUserProfile(
-      data.user.id,
-      displayName,
-      data.user.email
-    );
+    const fallbackProfile = this.toUserProfile(data.user.id, displayName, data.user.email);
     return this.upsertAndLoadProfile(fallbackProfile);
   }
 
-  async signUp(
-    displayName: string,
-    email: string,
-    password: string
-  ): Promise<UserProfile> {
+  async signUp(displayName: string, email: string, password: string): Promise<UserProfile> {
     const emailRedirectTo =
-      typeof window === 'undefined'
-        ? undefined
-        : `${window.location.origin}/login`;
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/login`;
     const { data, error } = await this.client.auth.signUp({
       email,
       password,
@@ -362,19 +318,14 @@ export class SupabaseAuthAdapter implements AuthAdapter {
       });
     }
 
-    const fallbackProfile = this.toUserProfile(
-      data.user.id,
-      displayName,
-      data.user.email
-    );
+    const fallbackProfile = this.toUserProfile(data.user.id, displayName, data.user.email);
     return this.upsertAndLoadProfile(fallbackProfile);
   }
 
   async demoLogin(): Promise<UserProfile> {
     throw new AppError({
       code: ErrorCode.AUTH,
-      message:
-        'Demo login is local-only. Switch VITE_AUTH_PROVIDER to local for demo mode.',
+      message: 'Demo login is local-only. Switch VITE_AUTH_PROVIDER to local for demo mode.',
     });
   }
 
@@ -412,9 +363,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
 
   async resetPassword(email: string): Promise<void> {
     const redirectTo =
-      typeof window === 'undefined'
-        ? undefined
-        : `${window.location.origin}/login`;
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/login`;
     const { error } = await this.client.auth.resetPasswordForEmail(email, {
       redirectTo,
     });
@@ -423,11 +372,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     }
   }
 
-  private toUserProfile(
-    id: string,
-    displayName: string | undefined,
-    email: string
-  ): UserProfile {
+  private toUserProfile(id: string, displayName: string | undefined, email: string): UserProfile {
     const resolvedName = displayName || email.split('@')[0] || 'EngVox User';
     return {
       id,
@@ -443,10 +388,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     };
   }
 
-  private async loadProfile(
-    id: string,
-    fallback: UserProfile
-  ): Promise<UserProfile> {
+  private async loadProfile(id: string, fallback: UserProfile): Promise<UserProfile> {
     const { data, error } = await this.client
       .from('profiles')
       .select('*')
@@ -460,9 +402,7 @@ export class SupabaseAuthAdapter implements AuthAdapter {
     return mapSupabaseRowToProfile(data as SupabaseProfileRow);
   }
 
-  private async upsertAndLoadProfile(
-    profile: UserProfile
-  ): Promise<UserProfile> {
+  private async upsertAndLoadProfile(profile: UserProfile): Promise<UserProfile> {
     const { error } = await this.client
       .from('profiles')
       .upsert(mapProfileToSupabaseRow(profile), { onConflict: 'id' });

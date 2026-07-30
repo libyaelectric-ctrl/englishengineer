@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { useRef, useState } from 'react';
+
 import { GrammarLessonMap } from './GrammarLessonMap';
 
 const meta: Meta<typeof GrammarLessonMap> = {

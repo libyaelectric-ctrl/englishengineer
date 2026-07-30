@@ -1,9 +1,10 @@
 import { useState } from 'react';
+
 import { AdminHeader } from './AdminPage/AdminHeader';
-import { StatsGrid } from './AdminPage/StatsGrid';
-import { UsersTab } from './AdminPage/UsersTab';
 import { BillingTab } from './AdminPage/BillingTab';
+import { StatsGrid } from './AdminPage/StatsGrid';
 import { SystemTab } from './AdminPage/SystemTab';
+import { UsersTab } from './AdminPage/UsersTab';
 
 interface UserRecord {
   id: string;
@@ -88,9 +89,7 @@ const SYSTEM_LOGS = [
 
 export const AdminPage = () => {
   const [users, setUsers] = useState<UserRecord[]>(INITIAL_USERS);
-  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>(
-    'users'
-  );
+  const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>('users');
 
   const handleLogout = () => {
     // Logout ish logic removed - admin panel is now accessible via auth guard
@@ -98,23 +97,15 @@ export const AdminPage = () => {
 
   const handlePromote = (id: string) => {
     setUsers((prev) =>
-      prev.map((u) =>
-        u.id === id ? { ...u, plan: u.plan === 'Pro' ? 'Free' : 'Pro' } : u
-      )
+      prev.map((u) => (u.id === id ? { ...u, plan: u.plan === 'Pro' ? 'Free' : 'Pro' } : u))
     );
   };
 
   return (
     <div className="mx-auto w-full max-w-5xl animate-aurora-fade-in space-y-6 pt-12 sm:pt-0">
-      <AdminHeader
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onLogout={handleLogout}
-      />
+      <AdminHeader activeTab={activeTab} onTabChange={setActiveTab} onLogout={handleLogout} />
       <StatsGrid totalStudents={users.length} />
-      {activeTab === 'users' && (
-        <UsersTab users={users} onPromote={handlePromote} />
-      )}
+      {activeTab === 'users' && <UsersTab users={users} onPromote={handlePromote} />}
       {activeTab === 'billing' && <BillingTab />}
       {activeTab === 'system' && <SystemTab systemLogs={SYSTEM_LOGS} />}
     </div>

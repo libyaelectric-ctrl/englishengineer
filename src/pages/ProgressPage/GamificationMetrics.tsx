@@ -1,4 +1,5 @@
 import { Award, Coins, Flame, Star } from 'lucide-react';
+
 import { MetricCard } from '@/shared/components/MetricCard';
 
 export const GamificationMetrics = ({
@@ -6,9 +7,7 @@ export const GamificationMetrics = ({
   unlockedAchievements,
   totalAchievements,
 }: {
-  gamification: ReturnType<
-    typeof import('@/features/gamification').GamificationService.getSummary
-  >;
+  gamification: ReturnType<typeof import('@/features/gamification').GamificationService.getSummary>;
   unlockedAchievements: number;
   totalAchievements: number;
 }) => (

@@ -1,10 +1,12 @@
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';
-import { logger } from './shared/logger';
+
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 import { ObservabilityService } from '@/core/observability/observability.service';
+
+import App from './App';
+import './index.css';
+import { logger } from './shared/logger';
 
 // Defer Sentry init to after first paint for faster initial load
 requestIdleCallback(() => ObservabilityService.init());
@@ -36,9 +38,7 @@ if (typeof window !== 'undefined') {
     document.addEventListener('mousemove', (e) => {
       window.cancelAnimationFrame(mouseFrame);
       mouseFrame = window.requestAnimationFrame(() => {
-        const target = (e.target as HTMLElement).closest(
-          '.card-interactive'
-        ) as HTMLElement | null;
+        const target = (e.target as HTMLElement).closest('.card-interactive') as HTMLElement | null;
         if (!target) return;
         const rect = target.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -59,8 +59,7 @@ try {
     timestamp: new Date().toISOString(),
     payload: {
       environment: metaEnv?.MODE || 'development',
-      userAgent:
-        typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
       timestamp: Date.now(),
     },
   });
@@ -69,15 +68,12 @@ try {
   logger.e('Failed to emit app.started event', err);
 }
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <App />
-);
+ReactDOM.createRoot(document.getElementById('root')!).render(<App />);
 
 // Preload vocabulary data in background (non-blocking, lazy loaded)
 requestIdleCallback(async () => {
   try {
-    const { loadVocabularyEntries } =
-      await import('./features/vocabulary/data/vocabulary.data');
+    const { loadVocabularyEntries } = await import('./features/vocabulary/data/vocabulary.data');
     await loadVocabularyEntries();
   } catch (err: unknown) {
     logger.w('[preload] Vocabulary data preload failed:', err);

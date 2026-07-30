@@ -1,9 +1,7 @@
 import { storage } from '@/shared/storage';
+
 import { UI_TRANSLATIONS } from './localization.data';
-import type {
-  SupportedInterfaceLanguage,
-  TranslationKey,
-} from './localization.types';
+import type { SupportedInterfaceLanguage, TranslationKey } from './localization.types';
 
 const STORAGE_KEY = 'EngVox_interface_language';
 

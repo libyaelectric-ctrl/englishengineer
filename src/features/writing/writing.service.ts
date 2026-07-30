@@ -1,23 +1,26 @@
-import { storage } from '@/shared/storage';
-import { AppError } from '@/core/errors/app-error';
-import { ErrorCode } from '@/core/errors/error-codes';
-import { WRITING_MISSIONS } from './writing.data';
-import {
-  WritingMission,
-  WritingState,
-  WritingSubmission,
-  WritingEvaluationResult,
-  WritingHistoryEntry,
-} from './writing.types';
-import { WritingEvaluator } from './writing.evaluator';
-import { useLearningStore } from '@/core/learning';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
-import { LearningIntelligenceService } from '@/features/learning-intelligence';
-import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
 import {
   KnowledgePoolEntry,
   sortContentByPoolRatio,
 } from '@/core/content-selection/personalized-content.service';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
+import { useLearningStore } from '@/core/learning';
+
+import { storage } from '@/shared/storage';
+
+import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
+import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
+import { WRITING_MISSIONS } from './writing.data';
+import { WritingEvaluator } from './writing.evaluator';
+import {
+  WritingEvaluationResult,
+  WritingHistoryEntry,
+  WritingMission,
+  WritingState,
+  WritingSubmission,
+} from './writing.types';
 
 const STORAGE_KEY = 'EngVox_writing_state';
 
@@ -57,12 +60,10 @@ export const WritingService = {
   },
 
   getMissionsSortedByPoolRatio(
-    pool: KnowledgePoolEntry[] = useLearningStore
-      .getState()
-      .vocabularyPool.map((id) => ({
-        content_type: 'vocabulary',
-        content_id: id,
-      }))
+    pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
+      content_type: 'vocabulary',
+      content_id: id,
+    }))
   ): WritingMission[] {
     return sortContentByPoolRatio(this.getMissions(), pool);
   },
@@ -89,9 +90,7 @@ export const WritingService = {
 
     // 1. Evaluate submission using rule-based evaluator
     const evaluation = WritingEvaluator.evaluate(mission, submission);
-    VocabularyService.addDiscoveredTerms(
-      mission.corrections.map((correction) => correction.fix)
-    );
+    VocabularyService.addDiscoveredTerms(mission.corrections.map((correction) => correction.fix));
     evaluation.detailedCorrections
       .filter((correction) => !correction.isFixed)
       .forEach((correction) => {
@@ -131,9 +130,7 @@ export const WritingService = {
 
     // 7. Sync with global LearningStore to award XP, coins, and update ELO/achievements
     const learningStore = useLearningStore.getState();
-    const globalMissionExists = learningStore.missions.some(
-      (m) => m.id === mission.id
-    );
+    const globalMissionExists = learningStore.missions.some((m) => m.id === mission.id);
 
     if (globalMissionExists) {
       // If the mission exists in the global store, submit it there to update progress

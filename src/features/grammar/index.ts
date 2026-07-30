@@ -9,11 +9,7 @@ export { isGrammarRule, assertGrammarRules } from './grammar.schema';
 
 export { GrammarRepository } from './grammar.repository';
 
-export {
-  type GrammarTaskMix,
-  sortByCurriculumOrder,
-  GrammarEngine,
-} from './grammar.engine';
+export { type GrammarTaskMix, sortByCurriculumOrder, GrammarEngine } from './grammar.engine';
 
 export {
   type GrammarReviewStatus,
@@ -30,11 +26,7 @@ export { GrammarTransferService } from './grammar.transfer';
 
 export { type GrammarTab, useGrammarStore } from './grammar.store';
 
-export {
-  GrammarTeacherService,
-  type ChatMessage,
-  type TeacherResponse,
-} from './grammar-teacher';
+export { GrammarTeacherService, type ChatMessage, type TeacherResponse } from './grammar-teacher';
 
 export {
   type DifficultyLevel,
@@ -58,7 +50,4 @@ export {
   InteractiveDrillService,
 } from './grammar.drills';
 
-export {
-  type GrammarDashboardData,
-  GrammarDashboardService,
-} from './grammar.dashboard';
+export { type GrammarDashboardData, GrammarDashboardService } from './grammar.dashboard';

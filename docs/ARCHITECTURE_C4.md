@@ -32,6 +32,7 @@
 ## Container Diagram (Level 2)
 
 ### Frontend Container (React + Vite)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    React SPA (Vite)                           │
@@ -50,6 +51,7 @@
 ```
 
 ### Backend Container (Express + Node)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  Express API Server                         │
@@ -96,20 +98,21 @@ User Action → Feature Hook → Service → API → Backend → DB/AI
 
 ## Technology Stack
 
-| Layer | Technology | Version |
-|-------|-----------|---------|
-| Frontend | React | 19 |
-| Build | Vite | 6 |
-| Styling | Tailwind CSS | 4 |
-| State | Zustand | 5 |
-| Server State | TanStack Query | 5 |
-| Backend | Express | 5 |
-| Validation | Zod | 4 |
-| Auth | Supabase | 2 |
-| AI | Anthropic/OpenAI/Google | Latest |
-| Queue | BullMQ | 5 |
-| Monitoring | Sentry | 10 |
+| Layer        | Technology              | Version |
+| ------------ | ----------------------- | ------- |
+| Frontend     | React                   | 19      |
+| Build        | Vite                    | 6       |
+| Styling      | Tailwind CSS            | 4       |
+| State        | Zustand                 | 5       |
+| Server State | TanStack Query          | 5       |
+| Backend      | Express                 | 5       |
+| Validation   | Zod                     | 4       |
+| Auth         | Supabase                | 2       |
+| AI           | Anthropic/OpenAI/Google | Latest  |
+| Queue        | BullMQ                  | 5       |
+| Monitoring   | Sentry                  | 10      |
 
 ## Last Updated
+
 - **Date:** 2026-07-27
 - **Version:** 4.0.1

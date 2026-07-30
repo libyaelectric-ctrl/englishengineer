@@ -1,9 +1,13 @@
-import { useMemo, type FC } from 'react';
+import { ChevronRight, Clock, Users } from 'lucide-react';
+
+import { type FC, useMemo } from 'react';
+
 import { Link } from 'react-router-dom';
-import { Clock, ChevronRight, Users } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import type { TeamMember, TeamProgressSummary } from '../team.types';
 import type { OrganizationRole } from '../team.types';
 
@@ -61,10 +65,7 @@ function getAvatarColor(name: string): string {
   return colors[Math.abs(hash) % colors.length];
 }
 
-export const TeamMemberList: FC<TeamMemberListProps> = ({
-  members,
-  summaries,
-}) => {
+export const TeamMemberList: FC<TeamMemberListProps> = ({ members, summaries }) => {
   const memberRows = useMemo(
     () =>
       members.map((member) => {
@@ -82,9 +83,7 @@ export const TeamMemberList: FC<TeamMemberListProps> = ({
     >
       <div className="space-y-2">
         {memberRows.length === 0 ? (
-          <p className="py-8 text-center text-sm text-muted-copy">
-            No team members yet.
-          </p>
+          <p className="py-8 text-center text-sm text-muted-copy">No team members yet.</p>
         ) : (
           memberRows.map(({ member, summary }) => (
             <Link
@@ -103,14 +102,9 @@ export const TeamMemberList: FC<TeamMemberListProps> = ({
                   <span className="truncate text-sm font-medium text-foreground">
                     {member.displayName}
                   </span>
-                  <StatusBadge
-                    label={roleLabel[member.role]}
-                    tone={roleTone[member.role]}
-                  />
+                  <StatusBadge label={roleLabel[member.role]} tone={roleTone[member.role]} />
                 </div>
-                <p className="mt-0.5 text-xs text-muted-copy">
-                  {member.discipline}
-                </p>
+                <p className="mt-0.5 text-xs text-muted-copy">{member.discipline}</p>
               </div>
 
               <div className="hidden w-40 sm:block">

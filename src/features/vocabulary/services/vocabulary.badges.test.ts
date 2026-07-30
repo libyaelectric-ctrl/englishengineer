@@ -1,12 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import {
-  VocabularyBadgeService,
-  type VocabularyStats,
-} from './vocabulary.badges';
 
-const makeStats = (
-  overrides: Partial<VocabularyStats> = {}
-): VocabularyStats => ({
+import { VocabularyBadgeService, type VocabularyStats } from './vocabulary.badges';
+
+const makeStats = (overrides: Partial<VocabularyStats> = {}): VocabularyStats => ({
   totalWordsLearned: 0,
   wordsMastered: 0,
   currentStreak: 0,

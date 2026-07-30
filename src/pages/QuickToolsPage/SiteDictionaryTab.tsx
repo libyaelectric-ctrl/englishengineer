@@ -1,14 +1,13 @@
-import { useMemo, useState } from 'react';
 import { Heart, Lock, Plus, Search, Trash2, X } from 'lucide-react';
-import {
-  SITE_DICTIONARY,
-  useWorkToolsStore,
-  SiteDictionaryTerm,
-} from '@/features/work-tools';
+
+import { useMemo, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
-import { useBillingStore, canAccessFeature } from '@/features/billing';
 import { storage } from '@/shared/storage';
+
+import { canAccessFeature, useBillingStore } from '@/features/billing';
+import { SITE_DICTIONARY, SiteDictionaryTerm, useWorkToolsStore } from '@/features/work-tools';
 
 type CustomDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'> & {
   isCustom?: boolean;
@@ -16,14 +15,10 @@ type CustomDictionaryTerm = Omit<SiteDictionaryTerm, 'tags'> & {
 };
 
 export const SiteDictionaryTab = () => {
-  const { favoritePhraseIds, toggleFavorite, rememberSearch } =
-    useWorkToolsStore();
+  const { favoritePhraseIds, toggleFavorite, rememberSearch } = useWorkToolsStore();
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasProjectAccess = canAccessFeature(
-    subscription,
-    'projectWorkspace'
-  ).allowed;
+  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
 
   const [query, setQuery] = useState('');
   const [customTerms, setCustomTerms] = useState<CustomDictionaryTerm[]>(() => {
@@ -42,14 +37,9 @@ export const SiteDictionaryTab = () => {
 
   const filteredTerms = useMemo(() => {
     const normalized = query.trim().toLowerCase();
-    const allTerms: CustomDictionaryTerm[] = [
-      ...customTerms,
-      ...SITE_DICTIONARY,
-    ];
+    const allTerms: CustomDictionaryTerm[] = [...customTerms, ...SITE_DICTIONARY];
     return allTerms.filter((item) =>
-      `${item.term} ${item.turkishMeaning} ${item.category}`
-        .toLowerCase()
-        .includes(normalized)
+      `${item.term} ${item.turkishMeaning} ${item.category}`.toLowerCase().includes(normalized)
     );
   }, [query, customTerms]);
 
@@ -65,8 +55,7 @@ export const SiteDictionaryTab = () => {
       term: newTerm.trim(),
       turkishMeaning: newMeaning.trim(),
       category: newCategory.trim(),
-      technicalExplanation:
-        newExplanation.trim() || 'Custom terminology added to project scope.',
+      technicalExplanation: newExplanation.trim() || 'Custom terminology added to project scope.',
       siteExample: newExample.trim() || 'No example provided.',
       commonWrongUsage: newWrongUsage.trim() || 'None reported.',
       relatedTerms:
@@ -127,9 +116,7 @@ export const SiteDictionaryTab = () => {
           className="gap-1.5 h-11 rounded-[4px] bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer"
         >
           <Plus className="h-4 w-4" />
-          {!hasProjectAccess && (
-            <Lock className="h-3 w-3 text-white/85 shrink-0" />
-          )}
+          {!hasProjectAccess && <Lock className="h-3 w-3 text-white/85 shrink-0" />}
           Add Term
         </Button>
       </div>
@@ -207,9 +194,7 @@ export const SiteDictionaryTab = () => {
           </div>
 
           {termError && (
-            <p className="text-xs font-bold text-error uppercase tracking-wider">
-              {termError}
-            </p>
+            <p className="text-xs font-bold text-error uppercase tracking-wider">{termError}</p>
           )}
 
           <div className="flex justify-end gap-2">
@@ -247,9 +232,7 @@ export const SiteDictionaryTab = () => {
                     <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
                       {item.category}
                     </p>
-                    <h2 className="mt-1 text-sm font-bold text-foreground">
-                      {item.term}
-                    </h2>
+                    <h2 className="mt-1 text-sm font-bold text-foreground">{item.term}</h2>
                     <p className="text-xs font-semibold text-foreground mt-0.5">
                       {item.turkishMeaning}
                     </p>
@@ -269,9 +252,7 @@ export const SiteDictionaryTab = () => {
                       variant="ghost"
                       className="px-2 h-8 w-8 inline-flex items-center justify-center rounded-[4px] hover:bg-surface-hover"
                       onClick={() => toggleFavorite(item.id)}
-                      aria-label={
-                        favorite ? 'Remove favorite' : 'Save favorite'
-                      }
+                      aria-label={favorite ? 'Remove favorite' : 'Save favorite'}
                     >
                       <Heart
                         className={`h-4 w-4 ${favorite ? 'fill-rose-500 text-rose-500' : 'text-muted-copy'}`}
@@ -284,13 +265,10 @@ export const SiteDictionaryTab = () => {
                     {item.technicalExplanation}
                   </p>
                   <p className="rounded-[4px] border border-border-soft bg-surface-hover p-3 text-xs text-foreground font-medium shadow-sm">
-                    <strong className="text-foreground">Site:</strong>{' '}
-                    {item.siteExample}
+                    <strong className="text-foreground">Site:</strong> {item.siteExample}
                   </p>
                   <p className="text-xs text-warning font-medium">
-                    <strong className="text-foreground font-bold">
-                      Common mistake:
-                    </strong>{' '}
+                    <strong className="text-foreground font-bold">Common mistake:</strong>{' '}
                     {item.commonWrongUsage}
                   </p>
                 </div>

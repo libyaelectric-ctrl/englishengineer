@@ -1,20 +1,17 @@
+import { ArrowRight, BarChart3, BookOpen, History, Verified } from 'lucide-react';
+
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowRight,
-  BookOpen,
-  BarChart3,
-  History,
-  Verified,
-} from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+
+import type { GrammarProgressSummary } from '@/features/grammar';
 import {
   LearningMemorySummary,
-  type UnifiedReviewItem,
   type ReviewPriorityItem,
+  type UnifiedReviewItem,
 } from '@/features/learning-intelligence';
-import type { VocabularyMemorySummary, ProfileBadge } from '@/features/profile';
-import type { GrammarProgressSummary } from '@/features/grammar';
+import type { ProfileBadge, VocabularyMemorySummary } from '@/features/profile';
 
 interface Props {
   memory: VocabularyMemorySummary;
@@ -69,9 +66,7 @@ export const CurriculumMemoryTab = ({
               </div>
               <div className="flex justify-between border-b border-border-soft pb-1.5">
                 <span>Active Queue</span>
-                <span className="text-warning">
-                  {unifiedReviewQueue.length} TASKS DUE
-                </span>
+                <span className="text-warning">{unifiedReviewQueue.length} TASKS DUE</span>
               </div>
               <div className="flex justify-between">
                 <span>Sync Status</span>
@@ -100,10 +95,7 @@ export const CurriculumMemoryTab = ({
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {(unifiedReviewQueue.length > 0
-              ? unifiedReviewQueue
-              : reviewPriorities
-            )
+            {(unifiedReviewQueue.length > 0 ? unifiedReviewQueue : reviewPriorities)
               .slice(0, 4)
               .map((item, index) => {
                 const isFirst = index === 0;
@@ -151,9 +143,7 @@ export const CurriculumMemoryTab = ({
                       <Button
                         variant="ghost"
                         className="mt-4 w-full h-8 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm gap-1.5"
-                        onClick={() =>
-                          navigate((item as UnifiedReviewItem).route)
-                        }
+                        onClick={() => navigate((item as UnifiedReviewItem).route)}
                       >
                         Practice now <ArrowRight className="h-3.5 w-3.5" />
                       </Button>

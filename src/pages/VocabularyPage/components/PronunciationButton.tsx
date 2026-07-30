@@ -1,5 +1,7 @@
+import { Loader2, Volume2 } from 'lucide-react';
+
 import { useState } from 'react';
-import { Volume2, Loader2 } from 'lucide-react';
+
 import { PronunciationService } from '@/features/vocabulary';
 
 interface PronunciationButtonProps {
@@ -7,10 +9,7 @@ interface PronunciationButtonProps {
   className?: string;
 }
 
-export function PronunciationButton({
-  word,
-  className = '',
-}: PronunciationButtonProps) {
+export function PronunciationButton({ word, className = '' }: PronunciationButtonProps) {
   const [playing, setPlaying] = useState(false);
   const phonetic = PronunciationService.getPhonetic(word);
 
@@ -41,11 +40,7 @@ export function PronunciationButton({
           <Volume2 className="h-3.5 w-3.5" />
         )}
       </button>
-      {phonetic && (
-        <span className="text-[10px] font-mono text-muted-copy">
-          {phonetic}
-        </span>
-      )}
+      {phonetic && <span className="text-[10px] font-mono text-muted-copy">{phonetic}</span>}
     </div>
   );
 }

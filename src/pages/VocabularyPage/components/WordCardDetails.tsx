@@ -1,10 +1,12 @@
 import { ChevronDown } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
+
 import {
-  repairVocabularyText,
   PronunciationService,
   type VocabularyTerm,
+  repairVocabularyText,
 } from '@/features/vocabulary';
-import { Volume2 } from 'lucide-react';
+
 import { SentencePanel } from './SentencePanel';
 
 interface WordCardDetailsProps {
@@ -13,11 +15,7 @@ interface WordCardDetailsProps {
   onToggle: () => void;
 }
 
-export const WordCardDetails = ({
-  term,
-  showDetails,
-  onToggle,
-}: WordCardDetailsProps) => {
+export const WordCardDetails = ({ term, showDetails, onToggle }: WordCardDetailsProps) => {
   return (
     <div className="mt-3 rounded-[4px] border border-border-soft bg-surface/60 p-3 text-xs text-muted-copy shadow-sm">
       <button

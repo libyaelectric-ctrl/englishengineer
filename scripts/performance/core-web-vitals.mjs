@@ -4,15 +4,14 @@
  *
  * Run: node scripts/performance/core-web-vitals.mjs
  */
-
 import { performance } from 'perf_hooks';
 
 const BENCHMARKS = {
-  FCP: { target: 1800, unit: 'ms' },    // First Contentful Paint
-  LCP: { target: 2500, unit: 'ms' },    // Largest Contentful Paint
-  TTI: { target: 3500, unit: 'ms' },    // Time to Interactive
-  TBT: { target: 200, unit: 'ms' },     // Total Blocking Time
-  CLS: { target: 0.1, unit: '' },        // Cumulative Layout Shift
+  FCP: { target: 1800, unit: 'ms' }, // First Contentful Paint
+  LCP: { target: 2500, unit: 'ms' }, // Largest Contentful Paint
+  TTI: { target: 3500, unit: 'ms' }, // Time to Interactive
+  TBT: { target: 200, unit: 'ms' }, // Total Blocking Time
+  CLS: { target: 0.1, unit: '' }, // Cumulative Layout Shift
 };
 
 async function measureBundleSize() {
@@ -61,8 +60,12 @@ async function runBenchmarks() {
     const cssLimit = 200; // 200KB
 
     console.log('📊 Bundle Size Analysis');
-    console.log(`   JS:  ${jsKB}KB / ${jsLimit}KB ${bundle.jsSize > jsLimit * 1024 ? '❌ EXCEEDED' : '✅ OK'}`);
-    console.log(`   CSS: ${cssKB}KB / ${cssLimit}KB ${bundle.cssSize > cssLimit * 1024 ? '❌ EXCEEDED' : '✅ OK'}`);
+    console.log(
+      `   JS:  ${jsKB}KB / ${jsLimit}KB ${bundle.jsSize > jsLimit * 1024 ? '❌ EXCEEDED' : '✅ OK'}`
+    );
+    console.log(
+      `   CSS: ${cssKB}KB / ${cssLimit}KB ${bundle.cssSize > cssLimit * 1024 ? '❌ EXCEEDED' : '✅ OK'}`
+    );
     console.log();
   }
 

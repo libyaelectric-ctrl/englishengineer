@@ -1,8 +1,6 @@
 import { storage } from '@/shared/storage';
-import type {
-  VocabularyMenuState,
-  VocabularyMenuProgress,
-} from '../services/vocabulary.menu';
+
+import type { VocabularyMenuProgress, VocabularyMenuState } from '../services/vocabulary.menu';
 
 const SYNC_STORAGE_KEY = 'EngVox_vocabulary_sync';
 const SYNC_timestamp_KEY = 'EngVox_vocabulary_sync_timestamp';
@@ -33,9 +31,7 @@ const emptySyncState = (): VocabularySyncState => ({
 
 export const VocabularySyncService = {
   getSyncState(): VocabularySyncState {
-    return (
-      storage.get<VocabularySyncState>(SYNC_STORAGE_KEY) ?? emptySyncState()
-    );
+    return storage.get<VocabularySyncState>(SYNC_STORAGE_KEY) ?? emptySyncState();
   },
 
   saveSyncState(state: VocabularySyncState): void {
@@ -61,10 +57,8 @@ export const VocabularySyncService = {
         continue;
       }
 
-      const localTotal =
-        localProgress.correctReviews + localProgress.wrongReviews;
-      const remoteTotal =
-        remoteProgress.correctReviews + remoteProgress.wrongReviews;
+      const localTotal = localProgress.correctReviews + localProgress.wrongReviews;
+      const remoteTotal = remoteProgress.correctReviews + remoteProgress.wrongReviews;
 
       if (localTotal > remoteTotal) {
         merged[wordId] = localProgress;
@@ -73,8 +67,7 @@ export const VocabularySyncService = {
       } else {
         const localDate = new Date(localProgress.lastReviewed || 0).getTime();
         const remoteDate = new Date(remoteProgress.lastReviewed || 0).getTime();
-        merged[wordId] =
-          localDate >= remoteDate ? localProgress : remoteProgress;
+        merged[wordId] = localDate >= remoteDate ? localProgress : remoteProgress;
       }
     }
 
@@ -91,10 +84,8 @@ export const VocabularySyncService = {
       const remoteProgress = remote[wordId];
       if (!remoteProgress) continue;
 
-      const localTotal =
-        localProgress.correctReviews + localProgress.wrongReviews;
-      const remoteTotal =
-        remoteProgress.correctReviews + remoteProgress.wrongReviews;
+      const localTotal = localProgress.correctReviews + localProgress.wrongReviews;
+      const remoteTotal = remoteProgress.correctReviews + remoteProgress.wrongReviews;
 
       if (localTotal > 0 && remoteTotal > 0 && localTotal === remoteTotal) {
         const localDate = localProgress.lastReviewed || '';
@@ -114,10 +105,7 @@ export const VocabularySyncService = {
     return conflicts;
   },
 
-  prepareSyncPayload(
-    localState: VocabularyMenuState,
-    userId: string
-  ): VocabularySyncState {
+  prepareSyncPayload(localState: VocabularyMenuState, userId: string): VocabularySyncState {
     return {
       userId,
       progress: localState.progress,
@@ -131,10 +119,7 @@ export const VocabularySyncService = {
     payload: VocabularySyncState,
     currentLocal: VocabularyMenuState
   ): VocabularyMenuState {
-    const mergedProgress = this.mergeProgress(
-      currentLocal.progress,
-      payload.progress
-    );
+    const mergedProgress = this.mergeProgress(currentLocal.progress, payload.progress);
 
     return {
       progress: mergedProgress,

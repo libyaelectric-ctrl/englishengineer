@@ -1,16 +1,17 @@
 import Stripe from 'stripe';
-import { logger } from './logger.js';
-import { ApiError } from './errors.js';
-import { requireText, emptySubscription } from './billing-helpers.js';
+
+import { emptySubscription, requireText } from './billing-helpers.js';
 import type { SubscriptionSnapshot } from './billing-helpers.js';
-import { stripeRetry } from './utils/retry.js';
 import {
   handleCheckoutCompleted,
-  handleSubscriptionUpdated,
   handlePaymentFailed,
   handleSubscriptionDeleted,
+  handleSubscriptionUpdated,
 } from './billing-webhook-handlers.js';
 import type { BillingRepository } from './billing-webhook-handlers.js';
+import { ApiError } from './errors.js';
+import { logger } from './logger.js';
+import { stripeRetry } from './utils/retry.js';
 
 const dispatchWebhookEvent = async (
   repository: BillingRepository,
@@ -139,9 +140,7 @@ const resolveOrProvisionPriceId = async (
   return newPrice.id;
 };
 
-const resolveOrProvisionTopupPriceId = async (
-  stripeClient: Stripe
-): Promise<string> => {
+const resolveOrProvisionTopupPriceId = async (stripeClient: Stripe): Promise<string> => {
   const nickname = 'AI Coach Top-up 50 Credits';
   const existingPrices = await stripeClient.prices.list({
     active: true,
@@ -149,8 +148,7 @@ const resolveOrProvisionTopupPriceId = async (
     limit: 100,
   });
   const found = existingPrices.data.find(
-    (p) =>
-      p.nickname === nickname && p.unit_amount === 500 && p.currency === 'usd'
+    (p) => p.nickname === nickname && p.unit_amount === 500 && p.currency === 'usd'
   );
   if (found) {
     return found.id;
@@ -202,9 +200,7 @@ interface TopupCheckoutSessionBody {
 }
 
 const isValidUserId = (value: unknown): value is string =>
-  typeof value === 'string' &&
-  value.trim().length > 0 &&
-  !value.startsWith('demo_engineer_');
+  typeof value === 'string' && value.trim().length > 0 && !value.startsWith('demo_engineer_');
 
 const resolveSubscription = (
   sub: SubscriptionSnapshot | null,
@@ -213,9 +209,7 @@ const resolveSubscription = (
 ): SubscriptionSnapshot => {
   if (!sub) return emptySubscription();
   if (!configured || !hasStripe)
-    return sub.planId !== 'free' && sub.status !== 'none'
-      ? sub
-      : emptySubscription();
+    return sub.planId !== 'free' && sub.status !== 'none' ? sub : emptySubscription();
   return sub.stripeCustomerId ? sub : emptySubscription();
 };
 
@@ -253,22 +247,12 @@ const verifyStripeSignature = (
   }
 };
 
-const processWebhookEvent = async (
-  repository: BillingRepository,
-  event: Stripe.Event
-) => {
+const processWebhookEvent = async (repository: BillingRepository, event: Stripe.Event) => {
   const eventId = event.id;
   if (await repository.hasStripeEventBeenProcessed(eventId))
     return { received: true, duplicate: true, eventId };
-  const eventData = (event.data?.object ?? {}) as unknown as Record<
-    string,
-    unknown
-  >;
-  await dispatchWebhookEvent(
-    repository,
-    event.type,
-    eventData
-  );
+  const eventData = (event.data?.object ?? {}) as unknown as Record<string, unknown>;
+  await dispatchWebhookEvent(repository, event.type, eventData);
   await repository.markStripeEventProcessed(eventId, {
     type: event.type,
     processedAt: new Date().toISOString(),
@@ -277,21 +261,13 @@ const processWebhookEvent = async (
 };
 
 export interface BillingService {
-  createCheckoutSession(
-    userId: string,
-    body: CheckoutSessionBody
-  ): Promise<{ url: string }>;
+  createCheckoutSession(userId: string, body: CheckoutSessionBody): Promise<{ url: string }>;
   createTopupCheckoutSession(
     userId: string,
     body: TopupCheckoutSessionBody
   ): Promise<{ url: string }>;
-  createPortalSession(
-    userId: string,
-    body: PortalSessionBody
-  ): Promise<{ url: string }>;
-  getSubscriptionStatus(
-    userIdValue: string | null | undefined
-  ): Promise<SubscriptionSnapshot>;
+  createPortalSession(userId: string, body: PortalSessionBody): Promise<{ url: string }>;
+  getSubscriptionStatus(userIdValue: string | null | undefined): Promise<SubscriptionSnapshot>;
   processWebhook(
     rawBody: Buffer,
     signature: string | undefined,
@@ -337,11 +313,7 @@ export const createBillingService = ({
       const cancelUrl = requireText(body?.cancelUrl, 'cancelUrl');
       const planId = body?.planId || 'pro';
 
-      const price = await resolveOrProvisionPriceId(
-        config,
-        stripeClient!,
-        planId
-      );
+      const price = await resolveOrProvisionPriceId(config, stripeClient!, planId);
 
       const session = await stripeClient!.checkout.sessions.create({
         mode: 'subscription',
@@ -353,11 +325,7 @@ export const createBillingService = ({
         metadata: { userId, planId },
       });
       if (!session.url) {
-        throw new ApiError(
-          502,
-          'stripe_invalid_response',
-          'Stripe did not return a checkout URL.'
-        );
+        throw new ApiError(502, 'stripe_invalid_response', 'Stripe did not return a checkout URL.');
       }
       return { url: session.url };
     },
@@ -388,11 +356,7 @@ export const createBillingService = ({
         metadata: { userId, type: 'topup', credits: '50' },
       });
       if (!session.url) {
-        throw new ApiError(
-          502,
-          'stripe_invalid_response',
-          'Stripe did not return a checkout URL.'
-        );
+        throw new ApiError(502, 'stripe_invalid_response', 'Stripe did not return a checkout URL.');
       }
       return { url: session.url };
     },
@@ -448,12 +412,7 @@ export const createBillingService = ({
           'Stripe webhook verification is not configured.'
         );
 
-      const event = verifyStripeSignature(
-        stripeClient!,
-        rawBody,
-        signature,
-        config.webhookSecret
-      );
+      const event = verifyStripeSignature(stripeClient!, rawBody, signature, config.webhookSecret);
       if (typeof onEventDetected === 'function')
         onEventDetected('signature_verification', event.id, event.type);
 

@@ -1,10 +1,4 @@
-import {
-  AICoachResult,
-  AIProvider,
-  AIProviderStatus,
-  AIRequest,
-  AIResponse,
-} from './ai.types';
+import { AICoachResult, AIProvider, AIProviderStatus, AIRequest, AIResponse } from './ai.types';
 
 export interface MockExample {
   input: string;
@@ -15,18 +9,15 @@ const MOCK_STATUS: AIProviderStatus = {
   mode: 'mock',
   state: 'mock-fallback',
   label: 'Mock AI demo',
-  detail:
-    'Secure AI feedback is not connected. Local demo responses are active.',
+  detail: 'Secure AI feedback is not connected. Local demo responses are active.',
   isConnected: false,
 };
 
 export const createMockAIProvider = (examples: MockExample[]): AIProvider => ({
   getStatus: () => MOCK_STATUS,
 
-  analyzeText: (request: AIRequest): Promise<AIResponse> =>
-    createMockResponse(examples, request),
-  rewriteText: (request: AIRequest): Promise<AIResponse> =>
-    createMockResponse(examples, request),
+  analyzeText: (request: AIRequest): Promise<AIResponse> => createMockResponse(examples, request),
+  rewriteText: (request: AIRequest): Promise<AIResponse> => createMockResponse(examples, request),
   generatePractice: (request: AIRequest): Promise<AIResponse> =>
     createMockResponse(examples, request),
   evaluateEngineeringEnglish: (request: AIRequest): Promise<AIResponse> =>
@@ -46,10 +37,7 @@ const createMockResponse = async (
   const matchedExample = examples.find(
     (example) => example.input.toLowerCase() === request.prompt.toLowerCase()
   );
-  const structuredResult = createMockCoachResult(
-    request,
-    matchedExample?.output
-  );
+  const structuredResult = createMockCoachResult(request, matchedExample?.output);
 
   return {
     text: formatMockCoachText(structuredResult),
@@ -83,17 +71,11 @@ const TECHNICAL_TERMS = [
 
 const getPromptSignals = (prompt: string): string[] => {
   const normalizedPrompt = prompt.toLowerCase();
-  return TECHNICAL_TERMS.filter((term) =>
-    normalizedPrompt.includes(term)
-  ).slice(0, 5);
+  return TECHNICAL_TERMS.filter((term) => normalizedPrompt.includes(term)).slice(0, 5);
 };
 
-const createNativeRewrite = (
-  request: AIRequest,
-  exampleOutput?: string
-): string => {
-  if (exampleOutput)
-    return exampleOutput.replace('AI REFINEMENT:\n', '').replaceAll('"', '');
+const createNativeRewrite = (request: AIRequest, exampleOutput?: string): string => {
+  if (exampleOutput) return exampleOutput.replace('AI REFINEMENT:\n', '').replaceAll('"', '');
 
   const cleanPrompt = request.prompt.trim().replace(/\s+/g, ' ');
   if (request.modeId.includes('email')) {
@@ -131,11 +113,7 @@ const buildStrengths = (
   `Current learning profile shows Level ${context?.level || 1} / ELO ${context?.elo || 1000}.`,
 ];
 
-const buildWeaknesses = (
-  wordCount: number,
-  focusArea: string,
-  weakSkills: string[]
-): string[] => [
+const buildWeaknesses = (wordCount: number, focusArea: string, weakSkills: string[]): string[] => [
   `Priority practice area: ${focusArea}.`,
   wordCount < 18
     ? 'Add more context about impact, owner, evidence, or deadline.'
@@ -145,10 +123,7 @@ const buildWeaknesses = (
     : 'Continue rotating across Reading, Writing, Listening, Speaking, and Vocabulary.',
 ];
 
-const buildTechnicalVocabulary = (
-  promptSignals: string[],
-  contextWeakVocab: string[]
-): string[] =>
+const buildTechnicalVocabulary = (promptSignals: string[], contextWeakVocab: string[]): string[] =>
   Array.from(
     new Set([
       ...promptSignals,
@@ -164,10 +139,7 @@ const getToneFeedback = (modeId: string): string =>
     ? 'Use a respectful, evidence-led tone. Avoid blame and confirm corrective action clearly.'
     : 'Use a calm professional tone with clear ownership and dates.';
 
-const getRecommendedNextTask = (
-  operation: AIRequest['operation'],
-  focusArea: string
-): string =>
+const getRecommendedNextTask = (operation: AIRequest['operation'], focusArea: string): string =>
   operation === 'generateStudyPlan'
     ? `Complete a 20 minute plan: 8 minutes ${focusArea}, 7 minutes Vocabulary, 5 minutes speaking summary.`
     : `Run one ${focusArea} mission, then ask AI Coach to review the result.`;
@@ -216,16 +188,10 @@ const resolveContext = (context: AIRequest['context']) => {
   };
 };
 
-const createMockCoachResult = (
-  request: AIRequest,
-  exampleOutput?: string
-): AICoachResult => {
+const createMockCoachResult = (request: AIRequest, exampleOutput?: string): AICoachResult => {
   const ctx = resolveContext(request.context);
   const promptSignals = getPromptSignals(request.prompt);
-  const technicalVocabulary = buildTechnicalVocabulary(
-    promptSignals,
-    ctx.weakVocabulary
-  );
+  const technicalVocabulary = buildTechnicalVocabulary(promptSignals, ctx.weakVocabulary);
   const wordCount = request.prompt.trim().split(/\s+/).filter(Boolean).length;
 
   return {
@@ -240,10 +206,7 @@ const createMockCoachResult = (
     keyVocabulary: technicalVocabulary,
     grammarNotes: MOCK_GRAMMAR_NOTES,
     toneFeedback: getToneFeedback(request.modeId),
-    recommendedNextTask: getRecommendedNextTask(
-      request.operation,
-      ctx.focusArea
-    ),
+    recommendedNextTask: getRecommendedNextTask(request.operation, ctx.focusArea),
     estimatedCefrImpact: `Likely impact: stronger ${ctx.targetLevel} control if repeated 3 times this week.`,
     cefrEstimate: ctx.targetLevel,
     engineerEloImpactEstimate: formatEloImpact(wordCount),

@@ -1,8 +1,10 @@
 import { LearningState } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
+
 import { getStoredAIUsageSummary } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
 import {
   calculateAverage,
   calculateEstimatedCefr,
@@ -32,8 +34,7 @@ export const AnalyticsService = {
     const assessmentProfile = AssessmentService.getProfile(state);
     const weeklyActivity = calculateWeeklyActivity(state);
     const scoreValues = state.scoreHistory.map((item) => item.score);
-    const retention =
-      vocabularySummary.retentionPercentage || progress.averageScore;
+    const retention = vocabularySummary.retentionPercentage || progress.averageScore;
     const nextRecommendedStudy = getNextRecommendedStudy(
       state,
       skills.weakSkills,
@@ -68,8 +69,7 @@ export const AnalyticsService = {
         state.studySessions.map((session) => session.durationMinutes)
       ),
       retention,
-      improvementVelocity:
-        scoreValues.length > 0 ? calculateImprovementVelocity(state) : 0,
+      improvementVelocity: scoreValues.length > 0 ? calculateImprovementVelocity(state) : 0,
       assessmentProfile,
     };
   },

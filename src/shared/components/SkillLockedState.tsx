@@ -1,4 +1,5 @@
 import { Lock } from 'lucide-react';
+
 import { LockProgressBar } from './LockProgressBar';
 
 interface SkillLockedStateProps {
@@ -21,20 +22,11 @@ export const SkillLockedState = ({
       <Lock className="mx-auto h-10 w-10 text-primary" />
       <h2 className="text-lg font-bold text-foreground">{skillName} Locked</h2>
       <p className="text-xs text-muted-copy leading-relaxed">
-        Complete {readingThreshold} readings and {writingThreshold} writings to
-        unlock {skillName}.
+        Complete {readingThreshold} readings and {writingThreshold} writings to unlock {skillName}.
       </p>
       <div className="space-y-2 text-[10px]">
-        <LockProgressBar
-          label="Reading"
-          done={readingDone}
-          total={readingThreshold}
-        />
-        <LockProgressBar
-          label="Writing"
-          done={writingDone}
-          total={writingThreshold}
-        />
+        <LockProgressBar label="Reading" done={readingDone} total={readingThreshold} />
+        <LockProgressBar label="Writing" done={writingDone} total={writingThreshold} />
       </div>
     </div>
   </div>

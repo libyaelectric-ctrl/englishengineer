@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
-import { ApiError } from './errors.js';
+
 import type { Workspace, WorkspaceDocument } from '../types.js';
+import { ApiError } from './errors.js';
 
 interface WorkspaceConfig {
   configured: boolean;
@@ -28,16 +29,10 @@ export interface WorkspaceRepository {
     userId: string,
     doc: WorkspaceDocument
   ): Promise<Workspace | null>;
-  deleteDocument(
-    workspaceId: string,
-    userId: string,
-    docId: string
-  ): Promise<Workspace | null>;
+  deleteDocument(workspaceId: string, userId: string, docId: string): Promise<Workspace | null>;
 }
 
-export const createSupabaseWorkspaceRepository = (
-  config: WorkspaceConfig
-): WorkspaceRepository => {
+export const createSupabaseWorkspaceRepository = (config: WorkspaceConfig): WorkspaceRepository => {
   if (!config?.configured) {
     throw new ApiError(
       503,
@@ -46,11 +41,9 @@ export const createSupabaseWorkspaceRepository = (
     );
   }
 
-  const supabase = createClient(
-    config.supabaseUrl!,
-    config.supabaseServiceRoleKey!,
-    { auth: { persistSession: false } }
-  );
+  const supabase = createClient(config.supabaseUrl!, config.supabaseServiceRoleKey!, {
+    auth: { persistSession: false },
+  });
 
   return {
     async getWorkspaces(userId) {
@@ -176,11 +169,7 @@ export const createSupabaseWorkspaceRepository = (
         .single();
 
       if (error) {
-        throw new ApiError(
-          502,
-          'workspace_db_error',
-          `Failed to add document: ${error.message}`
-        );
+        throw new ApiError(502, 'workspace_db_error', `Failed to add document: ${error.message}`);
       }
       return data;
     },

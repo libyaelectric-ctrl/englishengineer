@@ -1,5 +1,6 @@
-import { createAIService } from '../backend/src/ai-core/index.js';
 import fs from 'node:fs';
+
+import { createAIService } from '../backend/src/ai-core/index.js';
 
 const EVAL_CASES = [
   {
@@ -52,9 +53,7 @@ async function runEvaluation() {
       if (missingKeywords.length > 0) {
         console.warn(`[FAIL] Missing keywords: ${missingKeywords.join(', ')}`);
       } else if (response.split(' ').length < testCase.minWords) {
-        console.warn(
-          `[FAIL] Response too short. Expected > ${testCase.minWords} words.`
-        );
+        console.warn(`[FAIL] Response too short. Expected > ${testCase.minWords} words.`);
       } else {
         console.log('[PASS] Output meets quality criteria.');
         passed++;
@@ -64,9 +63,7 @@ async function runEvaluation() {
     }
   }
 
-  console.log(
-    `\n--- Evaluation Complete: ${passed}/${EVAL_CASES.length} Passed ---`
-  );
+  console.log(`\n--- Evaluation Complete: ${passed}/${EVAL_CASES.length} Passed ---`);
 
   fs.writeFileSync(
     'docs/AI_EVALUATION_REPORT.md',

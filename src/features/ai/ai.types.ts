@@ -1,8 +1,5 @@
 export type AIProviderMode = 'mock' | 'backend' | 'backend-proxy';
-export type AIProviderState =
-  | 'mock-fallback'
-  | 'backend-configured'
-  | 'backend-error';
+export type AIProviderState = 'mock-fallback' | 'backend-configured' | 'backend-error';
 export type AIContractVersion = '2026-06-26.v1';
 export type AIOperation =
   | 'analyzeText'

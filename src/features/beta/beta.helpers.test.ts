@@ -1,13 +1,12 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { calculateProductAnalyticsSummary } from './beta.helpers';
-import { ProductAnalyticsEvent } from './beta.types';
+
 import type { ProductAnalyticsEventName } from '@/features/analytics/product-analytics.types';
 
-const event = (
-  name: ProductAnalyticsEventName,
-  daysAgo = 0
-): ProductAnalyticsEvent => ({
+import { calculateProductAnalyticsSummary } from './beta.helpers';
+import { ProductAnalyticsEvent } from './beta.types';
+
+const event = (name: ProductAnalyticsEventName, daysAgo = 0): ProductAnalyticsEvent => ({
   id: `${name}-${daysAgo}`,
   name,
   screen: '/test',
@@ -33,10 +32,8 @@ describe('closed beta analytics', () => {
 
   it('marks a returning-user signal across separate active dates', () => {
     expect(
-      calculateProductAnalyticsSummary([
-        event('screen_viewed'),
-        event('screen_viewed', 2),
-      ]).returningUsers
+      calculateProductAnalyticsSummary([event('screen_viewed'), event('screen_viewed', 2)])
+        .returningUsers
     ).toBe(1);
   });
 });

@@ -1,22 +1,11 @@
 import { type ComponentType } from 'react';
-import {
-  type LessonStatus,
-  getStatusLabel,
-  STATUS_STYLES,
-} from './GrammarPageHelpers';
 
-export const SectionHeading = ({
-  title,
-  subtitle,
-}: {
-  title: string;
-  subtitle?: string;
-}) => (
+import { type LessonStatus, STATUS_STYLES, getStatusLabel } from './GrammarPageHelpers';
+
+export const SectionHeading = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <div>
     <h2 className="text-xs font-black uppercase tracking-wide">{title}</h2>
-    {subtitle && (
-      <p className="mt-0.5 text-[11px] leading-4 text-muted-copy">{subtitle}</p>
-    )}
+    {subtitle && <p className="mt-0.5 text-[11px] leading-4 text-muted-copy">{subtitle}</p>}
   </div>
 );
 
@@ -46,13 +35,9 @@ export const LessonBlock = ({
   <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
     <div className="flex items-center gap-1.5">
       <Icon className="h-3.5 w-3.5 text-primary" />
-      <h2 className="text-xs font-bold uppercase tracking-wide text-foreground">
-        {title}
-      </h2>
+      <h2 className="text-xs font-bold uppercase tracking-wide text-foreground">{title}</h2>
     </div>
-    <p className="mt-2 break-words text-xs leading-relaxed text-muted-copy">
-      {body}
-    </p>
+    <p className="mt-2 break-words text-xs leading-relaxed text-muted-copy">{body}</p>
   </div>
 );
 

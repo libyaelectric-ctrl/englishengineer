@@ -1,13 +1,7 @@
+import { Check, Copy, FileCheck2, FileCode, Sparkles, UploadCloud } from 'lucide-react';
+
 import type { ChangeEvent } from 'react';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import {
-  FileCode,
-  UploadCloud,
-  FileCheck2,
-  Sparkles,
-  Copy,
-  Check,
-} from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface ExtractedTerm {
   word: string;
@@ -77,10 +71,7 @@ export const PdfSpecExtractor = () => {
 
   const handleCopyFlashcards = useCallback(() => {
     const text = extractedTerms
-      .map(
-        (t) =>
-          `\u2022 ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`
-      )
+      .map((t) => `\u2022 ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`)
       .join('\n\n');
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -100,8 +91,8 @@ export const PdfSpecExtractor = () => {
               21. 📄 PDF Specification Flashcard Extractor
             </h3>
             <p className="text-xs text-muted-copy">
-              Upload BS/ISO/ASTM specification PDFs to automatically extract
-              technical vocabulary and generate SRS study flashcards.
+              Upload BS/ISO/ASTM specification PDFs to automatically extract technical vocabulary
+              and generate SRS study flashcards.
             </p>
           </div>
         </div>
@@ -120,9 +111,7 @@ export const PdfSpecExtractor = () => {
         </div>
         <div>
           <p className="text-xs font-extrabold text-foreground">
-            {fileName
-              ? `Selected File: ${fileName}`
-              : 'Click or Drag Specification PDF here'}
+            {fileName ? `Selected File: ${fileName}` : 'Click or Drag Specification PDF here'}
           </p>
           <p className="text-[11px] text-muted-copy mt-0.5">
             Supports PDF, DOCX, TXT (BS EN, ISO 9001, ASTM specs up to 50MB)
@@ -173,16 +162,12 @@ export const PdfSpecExtractor = () => {
                 className="rounded-xl border border-border-soft bg-background p-4 space-y-2 hover:border-primary/40 transition-all shadow-sm"
               >
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-extrabold text-foreground">
-                    {term.word}
-                  </h4>
+                  <h4 className="text-xs font-extrabold text-foreground">{term.word}</h4>
                   <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
                     {term.category}
                   </span>
                 </div>
-                <p className="text-xs text-muted-copy leading-relaxed">
-                  {term.definition}
-                </p>
+                <p className="text-xs text-muted-copy leading-relaxed">{term.definition}</p>
                 <p className="text-[10px] font-mono font-semibold text-primary/80 pt-1 border-t border-border-soft/60">
                   {term.specClause}
                 </p>

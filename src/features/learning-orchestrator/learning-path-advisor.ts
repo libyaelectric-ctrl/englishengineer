@@ -1,4 +1,4 @@
-import type { SkillName, CefrBand } from '@/features/profile/profile.types';
+import type { CefrBand, SkillName } from '@/features/profile/profile.types';
 
 export interface LearningPathGoal {
   skill: SkillName;
@@ -19,13 +19,7 @@ export interface DailyPlan {
 export interface PlanTask {
   id: string;
   skill: SkillName;
-  type:
-    | 'vocabulary'
-    | 'grammar'
-    | 'reading'
-    | 'writing'
-    | 'listening'
-    | 'speaking';
+  type: 'vocabulary' | 'grammar' | 'reading' | 'writing' | 'listening' | 'speaking';
   title: string;
   description: string;
   estimatedMinutes: number;
@@ -86,11 +80,7 @@ function analyzeSkillGaps(
   });
 }
 
-function generateDailyTasks(
-  skill: SkillName,
-  level: CefrBand,
-  dayNumber: number
-): PlanTask[] {
+function generateDailyTasks(skill: SkillName, level: CefrBand, dayNumber: number): PlanTask[] {
   const tasks: PlanTask[] = [];
 
   // Each day focuses on one primary skill with variety
@@ -119,10 +109,7 @@ function generateDailyTasks(
   return tasks;
 }
 
-function buildWeeklyPlan(
-  goals: LearningPathGoal[],
-  startDate: Date
-): DailyPlan[] {
+function buildWeeklyPlan(goals: LearningPathGoal[], startDate: Date): DailyPlan[] {
   const plan: DailyPlan[] = [];
   const skillsToCover = goals.map((g) => g.skill);
 
@@ -162,9 +149,7 @@ function buildWeeklyPlan(
   return plan;
 }
 
-function calculateSkillDistribution(
-  plan: DailyPlan[]
-): Record<SkillName, number> {
+function calculateSkillDistribution(plan: DailyPlan[]): Record<SkillName, number> {
   const dist: Record<SkillName, number> = {
     vocabulary: 0,
     grammar: 0,
@@ -192,30 +177,21 @@ export const LearningPathAdvisor = {
     const startDate = new Date();
     const dailyPlan = buildWeeklyPlan(goals, startDate);
 
-    const totalEstimatedMinutes = dailyPlan.reduce(
-      (sum, day) => sum + day.estimatedMinutes,
-      0
-    );
+    const totalEstimatedMinutes = dailyPlan.reduce((sum, day) => sum + day.estimatedMinutes, 0);
 
     const skillDistribution = calculateSkillDistribution(dailyPlan);
 
-    const weakAreas = goals
-      .filter((g) => g.priority === 'high')
-      .map((g) => g.reason);
+    const weakAreas = goals.filter((g) => g.priority === 'high').map((g) => g.reason);
 
     const recommendations: string[] = [];
     if (weakAreas.length > 0) {
-      recommendations.push(
-        `Focus on high-priority gaps: ${weakAreas.join('; ')}`
-      );
+      recommendations.push(`Focus on high-priority gaps: ${weakAreas.join('; ')}`);
     }
     if (profession) {
       recommendations.push(`Tailored for ${profession} context`);
     }
     recommendations.push(`Target level: ${targetLevel}`);
-    recommendations.push(
-      `${totalEstimatedMinutes} minutes of practice per week`
-    );
+    recommendations.push(`${totalEstimatedMinutes} minutes of practice per week`);
 
     return {
       userId,

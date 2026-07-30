@@ -1,5 +1,7 @@
-import { storage } from '@/shared/storage';
 import { useLearningStore } from '@/core/learning';
+
+import { storage } from '@/shared/storage';
+
 import { getVocabularyEntries } from '../data/vocabulary.data';
 import { VocabularyEvaluator } from '../engine/vocabulary.evaluator';
 import {
@@ -94,16 +96,13 @@ export const VocabularyService = {
     const allowedIds = new Set(allowedEntries.map((entry) => entry.id));
     const dueIds = Object.values(state.reviewStates)
       .filter(
-        (reviewState) =>
-          allowedIds.has(reviewState.wordId) && isDueForReview(reviewState, now)
+        (reviewState) => allowedIds.has(reviewState.wordId) && isDueForReview(reviewState, now)
       )
       .sort(sortByNextReview)
       .map((reviewState) => reviewState.wordId);
 
     const seededIds =
-      dueIds.length > 0
-        ? dueIds
-        : allowedEntries.slice(0, limit).map((entry) => entry.id);
+      dueIds.length > 0 ? dueIds : allowedEntries.slice(0, limit).map((entry) => entry.id);
 
     return seededIds
       .map((id) => this.getEntryById(id))
@@ -116,34 +115,18 @@ export const VocabularyService = {
     const reviewedAt = new Date();
 
     answers.forEach((answer) => {
-      const previous =
-        state.reviewStates[answer.wordId] ||
-        createInitialReviewState(answer.wordId);
-      const quality = answer.isCorrect
-        ? answer.responseTimeSeconds <= 5
-          ? 5
-          : 4
-        : 2;
-      state.reviewStates[answer.wordId] = updateSm2ReviewState(
-        previous,
-        quality,
-        reviewedAt
-      );
+      const previous = state.reviewStates[answer.wordId] || createInitialReviewState(answer.wordId);
+      const quality = answer.isCorrect ? (answer.responseTimeSeconds <= 5 ? 5 : 4) : 2;
+      state.reviewStates[answer.wordId] = updateSm2ReviewState(previous, quality, reviewedAt);
       if (!answer.isCorrect) {
         VocabularyMemoryService.markEntryWeak(answer.wordId, reviewedAt);
       }
       if (answer.isCorrect) {
-        state.completedWords[answer.wordId] = Math.max(
-          state.completedWords[answer.wordId] || 0,
-          1
-        );
+        state.completedWords[answer.wordId] = Math.max(state.completedWords[answer.wordId] || 0, 1);
       }
     });
 
-    const evaluation = VocabularyEvaluator.evaluate(
-      answers,
-      state.reviewStates
-    );
+    const evaluation = VocabularyEvaluator.evaluate(answers, state.reviewStates);
     const today = getTodayDateKey();
     const yesterday = getPreviousDateKey(today);
     if (state.lastActivityDate === yesterday) {
@@ -187,18 +170,14 @@ export const VocabularyService = {
     const matchingIds = (getVocabularyEntries() ?? [])
       .filter((entry) =>
         normalizedTerms.some(
-          (term) =>
-            entry.word.toLowerCase().includes(term) || entry.tags.includes(term)
+          (term) => entry.word.toLowerCase().includes(term) || entry.tags.includes(term)
         )
       )
       .map((entry) => entry.id);
 
-    state.discoveredWords = Array.from(
-      new Set([...state.discoveredWords, ...matchingIds])
-    );
+    state.discoveredWords = Array.from(new Set([...state.discoveredWords, ...matchingIds]));
     matchingIds.forEach((id) => {
-      state.reviewStates[id] =
-        state.reviewStates[id] || createInitialReviewState(id);
+      state.reviewStates[id] = state.reviewStates[id] || createInitialReviewState(id);
       VocabularyMenuService.startLearning(id);
     });
     this.saveState(state);
@@ -208,42 +187,32 @@ export const VocabularyService = {
     const state = this.getState();
     const entries = this.getEntries();
     const learnedIds = new Set(Object.keys(state.completedWords));
-    const todayReviews = Object.values(state.reviewStates).filter(
-      (reviewState) => isDueForReview(reviewState)
+    const todayReviews = Object.values(state.reviewStates).filter((reviewState) =>
+      isDueForReview(reviewState)
     ).length;
-    const weakIds = state.history
-      .flatMap((entry) => entry.weakWords)
-      .slice(0, 8);
+    const weakIds = state.history.flatMap((entry) => entry.weakWords).slice(0, 8);
     const retentionPercentage =
       state.history.length > 0
         ? Math.round(
-            state.history.reduce((sum, item) => sum + item.retention, 0) /
-              state.history.length
+            state.history.reduce((sum, item) => sum + item.retention, 0) / state.history.length
           )
         : 0;
 
     const nextReview =
-      Object.values(state.reviewStates).sort(sortByNextReview)[0]?.nextReview ||
-      null;
+      Object.values(state.reviewStates).sort(sortByNextReview)[0]?.nextReview || null;
 
-    const categoryMastery = Array.from(
-      new Set(entries.map((entry) => entry.discipline))
-    ).map((discipline) => {
-      const categoryEntries = entries.filter(
-        (entry) => entry.discipline === discipline
-      );
-      const learned = categoryEntries.filter((entry) =>
-        learnedIds.has(entry.id)
-      ).length;
-      return {
-        discipline,
-        learned,
-        total: categoryEntries.length,
-        percentage: Math.round(
-          (learned / Math.max(categoryEntries.length, 1)) * 100
-        ),
-      };
-    });
+    const categoryMastery = Array.from(new Set(entries.map((entry) => entry.discipline))).map(
+      (discipline) => {
+        const categoryEntries = entries.filter((entry) => entry.discipline === discipline);
+        const learned = categoryEntries.filter((entry) => learnedIds.has(entry.id)).length;
+        return {
+          discipline,
+          learned,
+          total: categoryEntries.length,
+          percentage: Math.round((learned / Math.max(categoryEntries.length, 1)) * 100),
+        };
+      }
+    );
 
     return {
       wordsLearned: learnedIds.size,
@@ -269,16 +238,11 @@ export const VocabularyService = {
     this.saveState(DEFAULT_STATE);
   },
 
-  unlockVocabularyAchievements(
-    wordsLearned: number,
-    score: number,
-    streak: number
-  ): void {
+  unlockVocabularyAchievements(wordsLearned: number, score: number, streak: number): void {
     const learningStore = useLearningStore.getState();
     const newlyUnlockedIds = new Set<string>();
     VOCABULARY_ACHIEVEMENTS.forEach((achievement) => {
-      if (wordsLearned >= achievement.threshold)
-        newlyUnlockedIds.add(achievement.id);
+      if (wordsLearned >= achievement.threshold) newlyUnlockedIds.add(achievement.id);
     });
     if (score === 100) newlyUnlockedIds.add('ach_vocab_perfect_review');
     if (streak >= 30) newlyUnlockedIds.add('ach_vocab_30_day_retention');

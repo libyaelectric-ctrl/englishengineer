@@ -1,11 +1,12 @@
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
-import { useProfilePage } from './ProfilePage/useProfilePage';
+
 import {
+  LearningPreferencesSection,
   ProfileOverviewSection,
   SecuritySection,
   SkillsProgressSection,
-  LearningPreferencesSection,
 } from './ProfilePage/index';
+import { useProfilePage } from './ProfilePage/useProfilePage';
 
 const ProfileHeader = ({
   currentUser,
@@ -125,11 +126,7 @@ const ProfilePage = () => {
         subscription={subscription}
         completionPercent={completionPercent}
       />
-      <AlertBanner
-        message={message}
-        error={error}
-        billingError={billingError}
-      />
+      <AlertBanner message={message} error={error} billingError={billingError} />
 
       {activeSection === 'overview' && (
         <ProfileOverviewSection

@@ -1,26 +1,18 @@
 import { create } from 'zustand';
-import { BetaService } from './beta.service';
-import {
-  BetaFeedbackEntry,
-  BetaOnboardingProfile,
-  ProductAnalyticsSummary,
-} from './beta.types';
+
 import type { ProductAnalyticsEventName } from '@/features/analytics/product-analytics.types';
+
+import { BetaService } from './beta.service';
+import { BetaFeedbackEntry, BetaOnboardingProfile, ProductAnalyticsSummary } from './beta.types';
 
 interface BetaStoreState {
   onboardingProfile: BetaOnboardingProfile | null;
   feedbackEntries: BetaFeedbackEntry[];
   analyticsSummary: ProductAnalyticsSummary;
-  completeOnboarding: (
-    profile: Omit<BetaOnboardingProfile, 'completedAt'>
-  ) => void;
+  completeOnboarding: (profile: Omit<BetaOnboardingProfile, 'completedAt'>) => void;
   submitFeedback: (entry: Omit<BetaFeedbackEntry, 'id' | 'createdAt'>) => void;
   trackScreen: (screen: string) => void;
-  trackEvent: (
-    name: ProductAnalyticsEventName,
-    screen: string,
-    durationSeconds?: number
-  ) => void;
+  trackEvent: (name: ProductAnalyticsEventName, screen: string, durationSeconds?: number) => void;
 }
 
 export const useBetaStore = create<BetaStoreState>((set) => ({

@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { MarketplaceService } from './vocabulary-marketplace';
 
 describe('MarketplaceService', () => {
@@ -33,9 +34,7 @@ describe('MarketplaceService', () => {
       const results = MarketplaceService.searchContent('', {
         sortBy: 'downloads',
       });
-      expect(results[0].downloadCount).toBeGreaterThanOrEqual(
-        results[1].downloadCount
-      );
+      expect(results[0].downloadCount).toBeGreaterThanOrEqual(results[1].downloadCount);
     });
   });
 
@@ -72,11 +71,7 @@ describe('MarketplaceService', () => {
 
   describe('rateContent', () => {
     it('creates a rating', () => {
-      const rating = MarketplaceService.rateContent(
-        'mc-1',
-        5,
-        'Great content!'
-      );
+      const rating = MarketplaceService.rateContent('mc-1', 5, 'Great content!');
       expect(rating.contentId).toBe('mc-1');
       expect(rating.rating).toBe(5);
       expect(rating.review).toBe('Great content!');
@@ -102,9 +97,7 @@ describe('MarketplaceService', () => {
     it('returns top N items by download count', () => {
       const popular = MarketplaceService.getPopularContent(2);
       expect(popular).toHaveLength(2);
-      expect(popular[0].downloadCount).toBeGreaterThanOrEqual(
-        popular[1].downloadCount
-      );
+      expect(popular[0].downloadCount).toBeGreaterThanOrEqual(popular[1].downloadCount);
     });
   });
 });

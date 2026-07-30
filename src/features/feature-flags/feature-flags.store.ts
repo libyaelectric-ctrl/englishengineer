@@ -1,8 +1,9 @@
+import { FEATURE_FLAGS, getDefaultFlags } from '@/config/feature-flags.config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { FEATURE_FLAGS, getDefaultFlags } from '@/config/feature-flags.config';
-import { useBillingStore } from '@/features/billing';
+
 import { useAuthStore } from '@/features/auth';
+import { useBillingStore } from '@/features/billing';
 
 interface FeatureFlagsState {
   flags: Record<string, boolean>;
@@ -39,9 +40,7 @@ const isUserBlocked = (
   currentUser: { id?: string } | null
 ): boolean =>
   Boolean(
-    flagConfig.allowedUsers &&
-    currentUser?.id &&
-    !flagConfig.allowedUsers.includes(currentUser.id)
+    flagConfig.allowedUsers && currentUser?.id && !flagConfig.allowedUsers.includes(currentUser.id)
   );
 
 const isRolloutBlocked = (
@@ -71,13 +70,7 @@ export const useFeatureFlagsStore = create<FeatureFlagsState>()(
         if (!baseEnabled) return false;
         const { subscription } = useBillingStore.getState();
         const { currentUser } = useAuthStore.getState();
-        return isFlagEligible(
-          flagConfig,
-          subscription,
-          currentUser,
-          currentUser?.id,
-          key
-        );
+        return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
       },
     }),
     {

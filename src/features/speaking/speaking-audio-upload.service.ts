@@ -37,11 +37,7 @@ export async function uploadSpeakingAudio(
   const { apiBaseUrl = '', authHeaders = {}, fetchImpl = fetch } = options;
 
   if (!blob || blob.size === 0) {
-    throw new SpeakingAudioUploadError(
-      400,
-      'empty_audio',
-      'No audio was recorded to upload.'
-    );
+    throw new SpeakingAudioUploadError(400, 'empty_audio', 'No audio was recorded to upload.');
   }
 
   const contentType = blob.type || 'audio/webm';

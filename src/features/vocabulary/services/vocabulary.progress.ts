@@ -1,8 +1,4 @@
-export type WordStatus =
-  | 'new'
-  | 'learned'
-  | 'mastered'
-  | 'struggling';
+export type WordStatus = 'new' | 'learned' | 'mastered' | 'struggling';
 
 export interface WordProgress {
   wordId: string;
@@ -100,20 +96,29 @@ export const VocabularyProgressService = {
 
   getStatusLabel(status: WordStatus): string {
     switch (status) {
-      case 'new': return 'New';
-      case 'learned': return 'Learned';
-      case 'mastered': return 'Mastered';
-      case 'struggling': return 'Struggling';
-      default: return 'Unknown';
+      case 'new':
+        return 'New';
+      case 'learned':
+        return 'Learned';
+      case 'mastered':
+        return 'Mastered';
+      case 'struggling':
+        return 'Struggling';
+      default:
+        return 'Unknown';
     }
   },
 
   getStatusColor(status: WordStatus): string {
     switch (status) {
-      case 'learned': return 'green';
-      case 'mastered': return 'gold';
-      case 'struggling': return 'red';
-      default: return 'gray';
+      case 'learned':
+        return 'green';
+      case 'mastered':
+        return 'gold';
+      case 'struggling':
+        return 'red';
+      default:
+        return 'gray';
     }
   },
 };

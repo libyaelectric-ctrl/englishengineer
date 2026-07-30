@@ -1,13 +1,13 @@
 import { Plus, Search } from 'lucide-react';
-import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
-import type {
-  VocabularyTerm,
-  VocabularyMenuState,
-} from '@/features/vocabulary';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { WordCard } from './WordCard';
+
+import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
+import type { VocabularyMenuState, VocabularyTerm } from '@/features/vocabulary';
+
 import type { VocabularyUIState } from '../VocabularyPageReducer';
+import { WordCard } from './WordCard';
 
 interface SearchResultsSectionProps {
   hasSearched: boolean;
@@ -98,9 +98,7 @@ export function SearchResultsSection({
               <input
                 required
                 value={customDraft.term}
-                onChange={(event) =>
-                  onSetCustomDraft({ ...customDraft, term: event.target.value })
-                }
+                onChange={(event) => onSetCustomDraft({ ...customDraft, term: event.target.value })}
                 className="mt-1 min-h-11 w-full rounded-[4px] border border-border-soft px-3 font-normal bg-surface outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
             </label>
@@ -169,9 +167,7 @@ export function SearchResultsSection({
               <Button type="submit" className="rounded-[4px]">
                 <Plus className="h-4 w-4" /> Save to My Vocabulary
               </Button>
-              <span className="text-xs font-bold text-foreground0">
-                AI Assist Coming Soon
-              </span>
+              <span className="text-xs font-bold text-foreground0">AI Assist Coming Soon</span>
             </div>
           </form>
         )}

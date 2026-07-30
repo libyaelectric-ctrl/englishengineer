@@ -1,4 +1,5 @@
 import { storage } from '@/shared/storage';
+
 import { QuickAIDraft, WorkToolsPreferences } from './work-tools.types';
 
 const STORAGE_KEY = 'work_tools_preferences';
@@ -9,9 +10,7 @@ const EMPTY_PREFERENCES: WorkToolsPreferences = {
   quickAIDraft: null,
 };
 
-const normalizePreferences = (
-  preferences: WorkToolsPreferences | null
-): WorkToolsPreferences => ({
+const normalizePreferences = (preferences: WorkToolsPreferences | null): WorkToolsPreferences => ({
   favoritePhraseIds: preferences?.favoritePhraseIds ?? [],
   recentItemIds: preferences?.recentItemIds ?? [],
   recentSearches: preferences?.recentSearches ?? [],
@@ -35,25 +34,19 @@ export const WorkToolsService = {
     return true;
   },
 
-  remember(
-    itemId: string,
-    preferences: WorkToolsPreferences
-  ): WorkToolsPreferences {
+  remember(itemId: string, preferences: WorkToolsPreferences): WorkToolsPreferences {
     const next = {
       ...preferences,
-      recentItemIds: [
-        itemId,
-        ...preferences.recentItemIds.filter((id) => id !== itemId),
-      ].slice(0, 12),
+      recentItemIds: [itemId, ...preferences.recentItemIds.filter((id) => id !== itemId)].slice(
+        0,
+        12
+      ),
     };
     this.save(next);
     return next;
   },
 
-  rememberSearch(
-    search: string,
-    preferences: WorkToolsPreferences
-  ): WorkToolsPreferences {
+  rememberSearch(search: string, preferences: WorkToolsPreferences): WorkToolsPreferences {
     const normalized = search.trim();
     if (normalized.length < 2) return preferences;
     const next = {
@@ -69,10 +62,7 @@ export const WorkToolsService = {
     return next;
   },
 
-  toggleFavorite(
-    phraseId: string,
-    preferences: WorkToolsPreferences
-  ): WorkToolsPreferences {
+  toggleFavorite(phraseId: string, preferences: WorkToolsPreferences): WorkToolsPreferences {
     const exists = preferences.favoritePhraseIds.includes(phraseId);
     const next = {
       ...preferences,
@@ -84,10 +74,7 @@ export const WorkToolsService = {
     return next;
   },
 
-  setQuickAIDraft(
-    draft: QuickAIDraft,
-    preferences: WorkToolsPreferences
-  ): WorkToolsPreferences {
+  setQuickAIDraft(draft: QuickAIDraft, preferences: WorkToolsPreferences): WorkToolsPreferences {
     const next = {
       ...this.remember(draft.sourceId, preferences),
       quickAIDraft: draft,

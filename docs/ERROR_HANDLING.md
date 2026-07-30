@@ -6,19 +6,20 @@ EngineerOS is migrating to a standardized error handling system using `AppError`
 
 ## Current Status
 
-| Component | Status | Migration Date |
-|-----------|--------|----------------|
-| `src/shared/errors/` | ✅ Complete | 2026-07-27 |
-| `AppError` class | ✅ Complete | 2026-07-27 |
-| Error codes registry | ✅ Complete | 2026-07-27 |
-| Auth errors | 🟡 In Progress | TBD |
-| API errors | 🟡 In Progress | TBD |
-| AI errors | 🟡 In Progress | TBD |
-| Billing errors | 🟡 In Progress | TBD |
+| Component            | Status         | Migration Date |
+| -------------------- | -------------- | -------------- |
+| `src/shared/errors/` | ✅ Complete    | 2026-07-27     |
+| `AppError` class     | ✅ Complete    | 2026-07-27     |
+| Error codes registry | ✅ Complete    | 2026-07-27     |
+| Auth errors          | 🟡 In Progress | TBD            |
+| API errors           | 🟡 In Progress | TBD            |
+| AI errors            | 🟡 In Progress | TBD            |
+| Billing errors       | 🟡 In Progress | TBD            |
 
 ## Migration Pattern
 
 ### Before (Legacy)
+
 ```typescript
 throw new Error('User not authenticated');
 // or
@@ -26,6 +27,7 @@ return { error: 'Unauthorized' };
 ```
 
 ### After (Standardized)
+
 ```typescript
 import { AppError, ErrorCodes } from '@/shared/errors';
 
@@ -39,15 +41,15 @@ throw new AppError({
 
 ## Error Code Categories
 
-| Prefix | Range | Domain |
-|--------|-------|--------|
-| AUTH | 1xx | Authentication |
-| API | 2xx | General API |
-| AI | 3xx | AI Providers |
-| BILLING | 4xx | Payments |
-| DATA | 5xx | Data Layer |
-| STORAGE | 6xx | Storage |
-| NETWORK | 7xx | Network |
+| Prefix  | Range | Domain         |
+| ------- | ----- | -------------- |
+| AUTH    | 1xx   | Authentication |
+| API     | 2xx   | General API    |
+| AI      | 3xx   | AI Providers   |
+| BILLING | 4xx   | Payments       |
+| DATA    | 5xx   | Data Layer     |
+| STORAGE | 6xx   | Storage        |
+| NETWORK | 7xx   | Network        |
 
 ## Frontend Error Handling
 
@@ -112,4 +114,5 @@ it('should throw AppError on auth failure', () => {
 - [ ] Add Sentry error grouping by code
 
 ## Last Updated
+
 - **Date:** 2026-07-27

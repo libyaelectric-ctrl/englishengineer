@@ -1,12 +1,6 @@
+import { BookOpen, Database, Headphones, Languages, Mic2, PenTool } from 'lucide-react';
+
 import type { SkillName } from '@/features/profile';
-import {
-  BookOpen,
-  Database,
-  Headphones,
-  Languages,
-  Mic2,
-  PenTool,
-} from 'lucide-react';
 
 export const ICON_MAP: Record<string, typeof BookOpen> = {
   BookOpen,
@@ -34,17 +28,15 @@ export interface GraphNode {
   relatedGrammar?: string[];
 }
 
-export const SKILL_META: Record<
-  SkillName,
-  { label: string; route: string | null; icon: string }
-> = {
-  reading: { label: 'Reading', route: '/reading', icon: 'BookOpen' },
-  writing: { label: 'Writing', route: '/writing', icon: 'PenTool' },
-  listening: { label: 'Listening', route: '/listening', icon: 'Headphones' },
-  speaking: { label: 'Speaking', route: '/speaking', icon: 'Mic2' },
-  vocabulary: { label: 'Vocabulary', route: '/vocabulary', icon: 'Languages' },
-  grammar: { label: 'Grammar', route: '/grammar', icon: 'Database' },
-};
+export const SKILL_META: Record<SkillName, { label: string; route: string | null; icon: string }> =
+  {
+    reading: { label: 'Reading', route: '/reading', icon: 'BookOpen' },
+    writing: { label: 'Writing', route: '/writing', icon: 'PenTool' },
+    listening: { label: 'Listening', route: '/listening', icon: 'Headphones' },
+    speaking: { label: 'Speaking', route: '/speaking', icon: 'Mic2' },
+    vocabulary: { label: 'Vocabulary', route: '/vocabulary', icon: 'Languages' },
+    grammar: { label: 'Grammar', route: '/grammar', icon: 'Database' },
+  };
 
 export const DOMAINS = [
   'All',
@@ -71,14 +63,7 @@ export const GRAPH_NODES: GraphNode[] = [
       'The core alignment hub for B2 level engineering communications, connecting vocabulary domain filters to targeted skill tasks.',
     status: 'Active Target',
     strength: 78,
-    connections: [
-      'reading',
-      'writing',
-      'listening',
-      'speaking',
-      'vocabulary',
-      'grammar',
-    ],
+    connections: ['reading', 'writing', 'listening', 'speaking', 'vocabulary', 'grammar'],
   },
   {
     id: 'reading',
@@ -88,8 +73,7 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 145,
     color: '#10b981',
     size: 15,
-    description:
-      'Technical manuals, site constraints, sequence reports, and witness logs.',
+    description: 'Technical manuals, site constraints, sequence reports, and witness logs.',
     status: 'Proficient',
     strength: 84,
     connections: ['hub', 'topic-coordination', 'topic-hse'],
@@ -107,12 +91,7 @@ export const GRAPH_NODES: GraphNode[] = [
       'QA/QC inspector comments, recovery action plans, and professional email correspondence.',
     status: 'Needs Practice',
     strength: 54,
-    connections: [
-      'hub',
-      'topic-inspection',
-      'topic-tech-write',
-      'grammar-passive',
-    ],
+    connections: ['hub', 'topic-inspection', 'topic-tech-write', 'grammar-passive'],
     linkUrl: '/writing',
   },
   {
@@ -183,18 +162,11 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 95,
     color: '#3b82f6',
     size: 12,
-    description:
-      'Clarifying sequence, ownership, and constraint during coordination meetings.',
+    description: 'Clarifying sequence, ownership, and constraint during coordination meetings.',
     status: 'Unlocked',
     strength: 75,
     connections: ['reading', 'speaking'],
-    relatedVocab: [
-      'constraint',
-      'alignment',
-      'sequence',
-      'milestone',
-      'handover',
-    ],
+    relatedVocab: ['constraint', 'alignment', 'sequence', 'milestone', 'handover'],
     relatedGrammar: ['Passive reports', 'Future possibility'],
   },
   {
@@ -205,18 +177,11 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 335,
     color: '#3b82f6',
     size: 12,
-    description:
-      'Standardizing comment format, non-conformance reports, and corrective actions.',
+    description: 'Standardizing comment format, non-conformance reports, and corrective actions.',
     status: 'Unlocked',
     strength: 68,
     connections: ['writing', 'vocabulary'],
-    relatedVocab: [
-      'deviation',
-      'non-conformance',
-      'remediation',
-      'tolerance',
-      'insulation',
-    ],
+    relatedVocab: ['deviation', 'non-conformance', 'remediation', 'tolerance', 'insulation'],
     relatedGrammar: ['Passive voice (reports)', 'Present perfect for state'],
   },
   {
@@ -227,8 +192,7 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 95,
     color: '#3b82f6',
     size: 12,
-    description:
-      'Communicating hazards, emergency guidelines, and warning actions.',
+    description: 'Communicating hazards, emergency guidelines, and warning actions.',
     status: 'Unlocked',
     strength: 88,
     connections: ['listening', 'reading'],
@@ -243,18 +207,11 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 335,
     color: '#3b82f6',
     size: 12,
-    description:
-      'Writing specifications, summaries of delays, and request details clearly.',
+    description: 'Writing specifications, summaries of delays, and request details clearly.',
     status: 'Unlocked',
     strength: 63,
     connections: ['writing', 'grammar'],
-    relatedVocab: [
-      'specification',
-      'scope',
-      'variance',
-      'contingency',
-      'revision',
-    ],
+    relatedVocab: ['specification', 'scope', 'variance', 'contingency', 'revision'],
     relatedGrammar: ['Relative clauses', 'Gerunds as subjects'],
   },
   {
@@ -265,18 +222,11 @@ export const GRAPH_NODES: GraphNode[] = [
     y: 415,
     color: '#a855f7',
     size: 10,
-    description:
-      'Standardizing reports (e.g., "The cables were pulled...") to sound objective.',
+    description: 'Standardizing reports (e.g., "The cables were pulled...") to sound objective.',
     status: 'Proficient',
     strength: 78,
     connections: ['grammar', 'writing'],
-    relatedVocab: [
-      'installed',
-      'tested',
-      'witnessed',
-      'rejected',
-      'commissioned',
-    ],
+    relatedVocab: ['installed', 'tested', 'witnessed', 'rejected', 'commissioned'],
   },
   {
     id: 'grammar-conditionals',

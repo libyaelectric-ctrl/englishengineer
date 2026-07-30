@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+
 import type {
-  SkillName,
   DailyMission,
+  SkillName,
   SkillProfile,
   VocabularyMemorySummary,
 } from '@/features/profile';
@@ -32,9 +33,7 @@ export const CurriculumActionsGrid = ({
         {
           label: 'Continue Learning',
           value: primaryMission?.title ?? 'Build your first task',
-          detail: primaryMission
-            ? `${primaryMission.estimatedMinutes} min`
-            : 'Ready at A1',
+          detail: primaryMission ? `${primaryMission.estimatedMinutes} min` : 'Ready at A1',
           action: () => navigate(primaryMission?.route ?? '/reading'),
         },
         {
@@ -52,10 +51,7 @@ export const CurriculumActionsGrid = ({
         {
           label: 'Due Review',
           value: `${memory.dueToday} items`,
-          detail:
-            memory.weakWords > 0
-              ? `${memory.weakWords} weak words`
-              : 'Queue is current',
+          detail: memory.weakWords > 0 ? `${memory.weakWords} weak words` : 'Queue is current',
           action: () => navigate('/vocabulary'),
         },
       ].map((item, index) => (
@@ -64,9 +60,7 @@ export const CurriculumActionsGrid = ({
           type="button"
           onClick={item.action}
           className={`min-h-32 rounded-[4px] border p-4 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm cursor-pointer ${
-            index === 0
-              ? 'border-primary/40 bg-primary/5'
-              : 'border-border-soft bg-surface'
+            index === 0 ? 'border-primary/40 bg-primary/5' : 'border-border-soft bg-surface'
           }`}
         >
           <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
@@ -75,9 +69,7 @@ export const CurriculumActionsGrid = ({
           <span className="mt-2 block line-clamp-2 text-sm font-bold text-foreground">
             {item.value}
           </span>
-          <span className="mt-2 block text-xs text-muted-copy font-medium">
-            {item.detail}
-          </span>
+          <span className="mt-2 block text-xs text-muted-copy font-medium">{item.detail}</span>
         </button>
       ))}
     </section>

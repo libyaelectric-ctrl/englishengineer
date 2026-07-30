@@ -1,12 +1,14 @@
 import { useReducer } from 'react';
+
 import { useAuthStore } from '@/features/auth';
+import { useLocalizationStore } from '@/features/localization';
 import {
   LearningProfileRepository,
   type ProfessionId,
   type UserLearningProfile,
 } from '@/features/profile';
-import { useLocalizationStore } from '@/features/localization';
-import { editReducer, type ProfileEditState } from './ProfilePageReducer';
+
+import { type ProfileEditState, editReducer } from './ProfilePageReducer';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
@@ -16,10 +18,7 @@ const splitDisplayName = (displayName = '') => {
   return { firstName: parts[0] || '', lastName: parts.slice(1).join(' ') };
 };
 
-const buildEditValues = (
-  displayName: string | undefined,
-  profile: UserLearningProfile | null
-) => {
+const buildEditValues = (displayName: string | undefined, profile: UserLearningProfile | null) => {
   const name = splitDisplayName(displayName);
   if (!profile) {
     return {
@@ -77,24 +76,15 @@ export const useProfileEdit = (
     goals: editGoals,
   } = edit;
 
-  const setIsEditMode = (v: boolean) =>
-    dispatchEdit({ type: 'SET_EDIT_MODE', value: v });
-  const setEditFirstName = (v: string) =>
-    dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
-  const setEditLastName = (v: string) =>
-    dispatchEdit({ type: 'SET_LAST_NAME', value: v });
-  const setEditProfession = (v: string) =>
-    dispatchEdit({ type: 'SET_PROFESSION', value: v });
-  const setEditTrack = (v: string) =>
-    dispatchEdit({ type: 'SET_TRACK', value: v });
-  const setEditSubdomain = (v: string) =>
-    dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
-  const setEditIndustry = (v: string) =>
-    dispatchEdit({ type: 'SET_INDUSTRY', value: v });
-  const setEditLang = (v: 'en' | 'tr') =>
-    dispatchEdit({ type: 'SET_LANG', value: v });
-  const setEditGoals = (v: string[]) =>
-    dispatchEdit({ type: 'SET_GOALS', value: v });
+  const setIsEditMode = (v: boolean) => dispatchEdit({ type: 'SET_EDIT_MODE', value: v });
+  const setEditFirstName = (v: string) => dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
+  const setEditLastName = (v: string) => dispatchEdit({ type: 'SET_LAST_NAME', value: v });
+  const setEditProfession = (v: string) => dispatchEdit({ type: 'SET_PROFESSION', value: v });
+  const setEditTrack = (v: string) => dispatchEdit({ type: 'SET_TRACK', value: v });
+  const setEditSubdomain = (v: string) => dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
+  const setEditIndustry = (v: string) => dispatchEdit({ type: 'SET_INDUSTRY', value: v });
+  const setEditLang = (v: 'en' | 'tr') => dispatchEdit({ type: 'SET_LANG', value: v });
+  const setEditGoals = (v: string[]) => dispatchEdit({ type: 'SET_GOALS', value: v });
 
   const enterEditMode = () => {
     const values = buildEditValues(currentUser?.displayName, profile);
@@ -114,15 +104,12 @@ export const useProfileEdit = (
   const savePreferences = (userId: string) => {
     LearningProfileRepository.updatePreferences(userId, {
       professionId: (editProfession as ProfessionId) || null,
-      professionalTrack:
-        (editTrack as UserLearningProfile['professionalTrack']) || undefined,
+      professionalTrack: (editTrack as UserLearningProfile['professionalTrack']) || undefined,
       electricalSubdomain:
-        (editSubdomain as UserLearningProfile['electricalSubdomain']) ||
-        undefined,
+        (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
       industryId: (editIndustry as UserLearningProfile['industryId']) || null,
       interfaceLanguage: editLang,
-      communicationGoals:
-        editGoals as UserLearningProfile['communicationGoals'],
+      communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
     });
   };
 

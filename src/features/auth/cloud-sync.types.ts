@@ -7,13 +7,7 @@ export type CloudSyncReason =
   | 'online-return'
   | 'profile-updated';
 
-export type CloudSyncStatus =
-  | 'idle'
-  | 'queued'
-  | 'syncing'
-  | 'synced'
-  | 'offline'
-  | 'error';
+export type CloudSyncStatus = 'idle' | 'queued' | 'syncing' | 'synced' | 'offline' | 'error';
 
 export type SyncableStateKey =
   | 'learning'

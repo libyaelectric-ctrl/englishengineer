@@ -6,9 +6,12 @@
  * - Quick Tools: Simple input text transformation (rewrites, spelling fixes).
  * - AI Copilot: General engineering context chatbot assistant.
  */
-import { lazy, Suspense } from 'react';
+import { Suspense, lazy } from 'react';
+
 import { useParams } from 'react-router-dom';
+
 import { PageHeader } from '@/shared/components/PageHeader';
+
 import QuickToolsPage from './QuickToolsPage';
 import WorkToolsPage from './WorkToolsPage';
 
@@ -18,8 +21,7 @@ type ToolsSection = 'work' | 'quick' | 'ai';
 
 const ToolsPage = () => {
   const { section } = useParams<{ section: string }>();
-  const activeTab: ToolsSection =
-    section === 'quick' || section === 'ai' ? section : 'work';
+  const activeTab: ToolsSection = section === 'quick' || section === 'ai' ? section : 'work';
 
   return (
     <div className="space-y-7 animate-in fade-in duration-300 pt-12 sm:pt-0">
@@ -27,11 +29,7 @@ const ToolsPage = () => {
         title="Tools"
         description="Templates, quick phrases, and AI copilot — all in one place."
         badgeText={
-          activeTab === 'work'
-            ? 'WORK TOOLS'
-            : activeTab === 'quick'
-              ? 'QUICK TOOLS'
-              : 'AI COPILOT'
+          activeTab === 'work' ? 'WORK TOOLS' : activeTab === 'quick' ? 'QUICK TOOLS' : 'AI COPILOT'
         }
         badgeColor="border-cyan-200 bg-cyan-50 text-cyan-700"
       />

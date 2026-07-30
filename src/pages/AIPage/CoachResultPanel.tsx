@@ -2,7 +2,9 @@ import { Clipboard, Cpu, Download } from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import type { AICoachResult, AIProviderStatus } from '@/features/ai';
+
 import { ResultList } from './ResultList';
 
 interface CoachResultPanelProps {
@@ -24,8 +26,7 @@ const LimitedResponseBanner = ({
     <div className="rounded-[4px] border border-warning/30 bg-warning/5 p-4 text-xs font-medium text-warning shadow-sm">
       <p className="font-bold uppercase tracking-wider">Limited AI response</p>
       <p className="mt-1">
-        A complete structured result was unavailable. The readable response is
-        shown below.
+        A complete structured result was unavailable. The readable response is shown below.
       </p>
     </div>
   ) : null;
@@ -96,10 +97,7 @@ export const CoachResultPanel = ({
       </div>
 
       <div className="space-y-4">
-        <LimitedResponseBanner
-          isLimitedResponse={isLimitedResponse}
-          mode={providerStatus.mode}
-        />
+        <LimitedResponseBanner isLimitedResponse={isLimitedResponse} mode={providerStatus.mode} />
         <div className="rounded-[4px] border border-primary/25 bg-primary/5 p-4 shadow-sm">
           <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-primary">
             Summary
@@ -129,23 +127,11 @@ export const CoachResultPanel = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <ResultList
-            title="Strengths"
-            items={lastResult.strengths}
-            tone="success"
-          />
-          <ResultList
-            title="Weaknesses"
-            items={lastResult.weaknesses}
-            tone="danger"
-          />
+          <ResultList title="Strengths" items={lastResult.strengths} tone="success" />
+          <ResultList title="Weaknesses" items={lastResult.weaknesses} tone="danger" />
         </div>
 
-        <ResultList
-          title="Corrections"
-          items={lastResult.corrections}
-          tone="warning"
-        />
+        <ResultList title="Corrections" items={lastResult.corrections} tone="warning" />
 
         <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 shadow-sm">
           <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-copy">
@@ -168,8 +154,7 @@ export const CoachResultPanel = ({
               Tone & Next Task
             </p>
             <p className="text-xs text-muted-copy mt-1.5 leading-relaxed font-medium">
-              {lastResult.toneFeedback ||
-                'Tone feedback unavailable in this response.'}
+              {lastResult.toneFeedback || 'Tone feedback unavailable in this response.'}
             </p>
             <p className="mt-1.5 text-xs font-bold text-foreground leading-normal">
               {lastResult.recommendedNextTask}
@@ -178,8 +163,7 @@ export const CoachResultPanel = ({
               {lastResult.cefrEstimate || lastResult.estimatedCefrImpact}
             </p>
             <p className="text-xs text-success mt-1 font-semibold font-mono">
-              {lastResult.engineerEloImpactEstimate ||
-                'Skill progress impact not estimated.'}
+              {lastResult.engineerEloImpactEstimate || 'Skill progress impact not estimated.'}
             </p>
           </div>
         </div>

@@ -1,6 +1,7 @@
+import { useAppStore } from '@/store/app.store';
+
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
-import { useAppStore } from '@/store/app.store';
 
 interface ThemeProviderProps {
   children: ReactNode;

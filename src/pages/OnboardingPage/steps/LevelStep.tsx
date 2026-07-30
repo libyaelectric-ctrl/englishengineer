@@ -7,16 +7,12 @@ type LevelStepProps = {
   setSelfReportedCefr: (l: SelfReportedCefr) => void;
 };
 
-export const LevelStep = ({
-  selfReportedCefr,
-  setSelfReportedCefr,
-}: LevelStepProps) => (
+export const LevelStep = ({ selfReportedCefr, setSelfReportedCefr }: LevelStepProps) => (
   <section>
     <h2 className="text-xl font-medium">What is your current English level?</h2>
     <p className="mt-2 text-sm leading-6 text-muted-copy">
-      This is a self-reported starting reference, not a certificate or placement
-      result. Reading, Writing, Listening and Speaking still begin and progress
-      independently.
+      This is a self-reported starting reference, not a certificate or placement result. Reading,
+      Writing, Listening and Speaking still begin and progress independently.
     </p>
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
       {LEVELS.map((level) => (

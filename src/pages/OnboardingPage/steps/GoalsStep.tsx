@@ -1,12 +1,7 @@
 import { Check } from 'lucide-react';
-import {
-  CAREER_GOALS,
-  COMMUNICATION_GOALS,
-} from '@/features/profile/profile.preferences';
-import type {
-  CommunicationGoal,
-  SkillName,
-} from '@/features/profile/profile.types';
+
+import { CAREER_GOALS, COMMUNICATION_GOALS } from '@/features/profile/profile.preferences';
+import type { CommunicationGoal, SkillName } from '@/features/profile/profile.types';
 
 const focusOptions: Array<{ id: SkillName; label: string }> = [
   { id: 'reading', label: 'Reading' },
@@ -24,16 +19,8 @@ type GoalsStepProps = {
   setCareerGoal: (g: string) => void;
 };
 
-const toggle = <T extends string>(
-  value: T,
-  values: T[],
-  setValues: (next: T[]) => void
-) =>
-  setValues(
-    values.includes(value)
-      ? values.filter((item) => item !== value)
-      : [...values, value]
-  );
+const toggle = <T extends string>(value: T, values: T[], setValues: (next: T[]) => void) =>
+  setValues(values.includes(value) ? values.filter((item) => item !== value) : [...values, value]);
 
 export const GoalsStep = ({
   communicationGoals,
@@ -54,15 +41,11 @@ export const GoalsStep = ({
         <button
           type="button"
           key={item.id}
-          onClick={() =>
-            toggle(item.id, communicationGoals, setCommunicationGoals)
-          }
+          onClick={() => toggle(item.id, communicationGoals, setCommunicationGoals)}
           className={`flex min-h-11 items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${communicationGoals.includes(item.id) ? 'border-primary/30 bg-primary/10 text-primary' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-surface-hover'}`}
         >
           {item.label}
-          {communicationGoals.includes(item.id) && (
-            <Check className="h-4 w-4" />
-          )}
+          {communicationGoals.includes(item.id) && <Check className="h-4 w-4" />}
         </button>
       ))}
     </div>

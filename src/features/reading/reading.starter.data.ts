@@ -30,8 +30,7 @@ export const STARTER_READING_MISSIONS: ReadingMission[] = [
         questionText: 'What must workers wear?',
         choices: ['A) A helmet and safety shoes', 'B) A coat', 'C) A mask'],
         correctAnswer: 'A',
-        explanation:
-          'The notice says to wear a safety helmet and safety shoes.',
+        explanation: 'The notice says to wear a safety helmet and safety shoes.',
       },
       {
         id: 'reading_a1_q2',
@@ -48,8 +47,7 @@ export const STARTER_READING_MISSIONS: ReadingMission[] = [
   {
     id: 'reading_a2_daily_progress',
     title: 'Simple Daily Progress Note',
-    description:
-      'Read a short progress update with quantities and next actions.',
+    description: 'Read a short progress update with quantities and next actions.',
     discipline: 'Electrical Engineering',
     cefrLevel: 'A2',
     difficulty: 'Beginner',

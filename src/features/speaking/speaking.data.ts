@@ -1,5 +1,5 @@
-import { SpeakingMission } from './speaking.types';
 import { STARTER_SPEAKING_MISSIONS } from './speaking.starter.data';
+import { SpeakingMission } from './speaking.types';
 
 const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
   {
@@ -39,8 +39,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
   {
     id: 'speaking_toolbox_talk',
     title: 'Daily Toolbox Talk',
-    description:
-      'Deliver a concise daily safety and work-front briefing for site technicians.',
+    description: 'Deliver a concise daily safety and work-front briefing for site technicians.',
     scenarioType: 'toolbox_talk',
     discipline: 'Construction Safety',
     cefrLevel: 'B2',
@@ -57,11 +56,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'PPE',
       'unsafe',
     ],
-    grammarTargets: [
-      'before any work starts',
-      'must verify',
-      'report immediately',
-    ],
+    grammarTargets: ['before any work starts', 'must verify', 'report immediately'],
     confidenceMarkers: ['must', 'verify', 'report', 'stop', 'escalate'],
     syllabicTargets: [
       { word: 'Energized', IPA: '/ˈen.ər.dʒaɪzd/', score: 82 },
@@ -96,13 +91,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'coordination',
     ],
     grammarTargets: ['we acknowledge', 'we will submit', 'with evidence'],
-    confidenceMarkers: [
-      'acknowledge',
-      'submit',
-      'evidence',
-      'revise',
-      'comply',
-    ],
+    confidenceMarkers: ['acknowledge', 'submit', 'evidence', 'revise', 'comply'],
     syllabicTargets: [
       { word: 'Consultant', IPA: '/kənˈsʌl.tənt/', score: 90 },
       { word: 'Deviation', IPA: '/ˌdiː.viˈeɪ.ʃən/', score: 84 },
@@ -135,18 +124,8 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'standby',
       'response window',
     ],
-    grammarTargets: [
-      'keeps operational',
-      'by automatically transferring',
-      'within the agreed',
-    ],
-    confidenceMarkers: [
-      'proposed',
-      'keeps',
-      'automatically',
-      'agreed',
-      'assured',
-    ],
+    grammarTargets: ['keeps operational', 'by automatically transferring', 'within the agreed'],
+    confidenceMarkers: ['proposed', 'keeps', 'automatically', 'agreed', 'assured'],
     syllabicTargets: [
       { word: 'Redundancy', IPA: '/rɪˈdʌn.dən.si/', score: 88 },
       { word: 'Operational', IPA: '/ˌɑː.pəˈreɪ.ʃən.əl/', score: 84 },
@@ -213,18 +192,8 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'quality control',
       'operations',
     ],
-    grammarTargets: [
-      'can proceed once',
-      'are signed off',
-      'by quality control',
-    ],
-    confidenceMarkers: [
-      'proceed',
-      'verified',
-      'signed off',
-      'ready',
-      'accepted',
-    ],
+    grammarTargets: ['can proceed once', 'are signed off', 'by quality control'],
+    confidenceMarkers: ['proceed', 'verified', 'signed off', 'ready', 'accepted'],
     syllabicTargets: [
       { word: 'Commissioning', IPA: '/kəˈmɪʃ.ən.ɪŋ/', score: 88 },
       { word: 'Insulation', IPA: '/ˌɪn.səˈleɪ.ʃən/', score: 84 },
@@ -294,13 +263,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'but this design can',
       'if coordination is not verified',
     ],
-    confidenceMarkers: [
-      'because',
-      'therefore',
-      'tradeoff',
-      'introduce',
-      'mitigate',
-    ],
+    confidenceMarkers: ['because', 'therefore', 'tradeoff', 'introduce', 'mitigate'],
     syllabicTargets: [
       { word: 'Availability', IPA: '/availability/', score: 86 },
       { word: 'Inverter', IPA: '/inverter/', score: 88 },
@@ -315,8 +278,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
   {
     id: 'speaking_safety_briefing',
     title: 'Safety Briefing Escalation',
-    description:
-      'Give a clear safety escalation briefing for live electrical diagnostic work.',
+    description: 'Give a clear safety escalation briefing for live electrical diagnostic work.',
     scenarioType: 'safety_briefing',
     discipline: 'Electrical Safety',
     cefrLevel: 'B2',
@@ -334,13 +296,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'isolate',
     ],
     grammarTargets: ['if the', 'must stop', 'must be suspended'],
-    confidenceMarkers: [
-      'stop',
-      'suspend',
-      'isolate',
-      'immediately',
-      'escalate',
-    ],
+    confidenceMarkers: ['stop', 'suspend', 'isolate', 'immediately', 'escalate'],
     syllabicTargets: [
       { word: 'Indicator', IPA: '/ˈɪn.də.keɪ.t̬ɚ/', score: 88 },
       { word: 'Inspection', IPA: '/ɪnˈspek.ʃən/', score: 90 },
@@ -355,8 +311,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
   {
     id: 'speaking_design_coordination',
     title: 'Design Coordination Resolution',
-    description:
-      'Resolve a design interface clash between mechanical and electrical systems.',
+    description: 'Resolve a design interface clash between mechanical and electrical systems.',
     scenarioType: 'design_coordination',
     discipline: 'MEP Coordination',
     cefrLevel: 'C1',
@@ -374,13 +329,7 @@ const CORE_SPEAKING_MISSIONS: SpeakingMission[] = [
       'feeder cables',
     ],
     grammarTargets: ['to resolve', 'will split', 'while electrical maintains'],
-    confidenceMarkers: [
-      'resolve',
-      'maintains',
-      'coordinate',
-      'confirm',
-      'required',
-    ],
+    confidenceMarkers: ['resolve', 'maintains', 'coordinate', 'confirm', 'required'],
     syllabicTargets: [
       { word: 'Mechanical', IPA: '/məˈkæn.ɪ.kəl/', score: 89 },
       { word: 'Parallel', IPA: '/ˈper.ə.lel/', score: 83 },

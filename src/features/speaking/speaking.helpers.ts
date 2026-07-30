@@ -13,9 +13,7 @@ export const countWords = (value: string): number => {
 
 export const countSentences = (value: string): number => {
   const matches = value.trim().match(/[^.!?]+[.!?]+|[^.!?]+$/g);
-  return matches
-    ? matches.filter((sentence) => sentence.trim().length > 0).length
-    : 0;
+  return matches ? matches.filter((sentence) => sentence.trim().length > 0).length : 0;
 };
 
 export const countFillerWords = (value: string): number => {
@@ -50,9 +48,7 @@ export const calculateWordsPerMinute = (
   }
 
   const safeSeconds =
-    recordingSeconds > 0
-      ? recordingSeconds
-      : Math.max(30, Math.round((wordCount / 135) * 60));
+    recordingSeconds > 0 ? recordingSeconds : Math.max(30, Math.round((wordCount / 135) * 60));
   const minutes = Math.max(safeSeconds / 60, 0.25);
   const value = Math.min(240, Math.round(wordCount / minutes));
 
@@ -65,11 +61,8 @@ export const calculateWordsPerMinute = (
 export const keywordMatchRatio = (text: string, keywords: string[]): number => {
   if (keywords.length === 0) return 1;
   const normalized = normalizeSpeechText(text);
-  const matches = keywords.filter((keyword) =>
-    normalized.includes(normalizeSpeechText(keyword))
-  );
+  const matches = keywords.filter((keyword) => normalized.includes(normalizeSpeechText(keyword)));
   return matches.length / keywords.length;
 };
 
-export const formatSpeakingDifficulty = (difficulty: string): string =>
-  difficulty.toUpperCase();
+export const formatSpeakingDifficulty = (difficulty: string): string => difficulty.toUpperCase();

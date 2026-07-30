@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
 import { Trophy } from 'lucide-react';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface LevelUpCelebrationProps {
   level: number | null;
@@ -46,7 +47,8 @@ export function LevelUpCelebration({
 
   return (
     <div
-      role="button" tabIndex={0}
+      role="button"
+      tabIndex={0}
       aria-live="polite"
       onClick={handleDismiss}
       onKeyDown={(e) => {
@@ -67,9 +69,7 @@ export function LevelUpCelebration({
         <div className="rounded-full bg-primary/10 p-4 animate-bounce">
           <Trophy className="h-10 w-10 text-primary" />
         </div>
-        <p className="text-sm font-bold uppercase tracking-wider text-muted-copy">
-          Level Up
-        </p>
+        <p className="text-sm font-bold uppercase tracking-wider text-muted-copy">Level Up</p>
         <p className="text-3xl font-bold text-foreground">Level {level}</p>
         <p className="text-xs text-muted-copy">Tap anywhere to continue</p>
       </div>

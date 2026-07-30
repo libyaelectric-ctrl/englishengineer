@@ -38,14 +38,10 @@ export const KnowledgeCaptureService = {
     let grammarExposed = 0;
 
     if (normalizedTerms.length > 0) {
-      const levelTerms =
-        await VocabularyRepository.getVocabularyByLevel(cefrLevel);
+      const levelTerms = await VocabularyRepository.getVocabularyByLevel(cefrLevel);
       const progress = VocabularyMenuService.getState().progress;
       for (const term of levelTerms) {
-        if (
-          normalizedTerms.includes(normalize(term.term)) &&
-          !progress[term.id]
-        ) {
+        if (normalizedTerms.includes(normalize(term.term)) && !progress[term.id]) {
           VocabularyMenuService.startLearning(term.id);
           vocabularyAdded += 1;
         }
@@ -56,12 +52,9 @@ export const KnowledgeCaptureService = {
       const rules = await GrammarRepository.getGrammarRulesByLevel(cefrLevel);
       const matchedRuleIds = rules
         .filter((rule) => {
-          const searchable = normalize(
-            `${rule.title} ${rule.structure} ${rule.grammarCategory}`
-          );
+          const searchable = normalize(`${rule.title} ${rule.structure} ${rule.grammarCategory}`);
           return normalizedGrammar.some(
-            (hint) =>
-              searchable.includes(hint) || hint.includes(normalize(rule.title))
+            (hint) => searchable.includes(hint) || hint.includes(normalize(rule.title))
           );
         })
         .slice(0, 3)

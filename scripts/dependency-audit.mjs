@@ -4,7 +4,6 @@
  * Dependency Audit Script
  * Checks for vulnerabilities, outdated packages, and license compliance
  */
-
 import { execSync } from 'child_process';
 import { readFileSync } from 'fs';
 
@@ -62,14 +61,10 @@ try {
   const reviewedAdvisoryIds = new Set(['GHSA-qwww-vcr4-c8h2']);
   const allVulnAdvisoryIds = new Set(
     Object.values(audit.vulnerabilities || {}).flatMap((v) =>
-      (v.via || [])
-        .filter((x) => typeof x === 'object' && x.url)
-        .map((x) => x.url.split('/').pop())
+      (v.via || []).filter((x) => typeof x === 'object' && x.url).map((x) => x.url.split('/').pop())
     )
   );
-  const hasUnreviewedVuln = [...allVulnAdvisoryIds].some(
-    (id) => !reviewedAdvisoryIds.has(id)
-  );
+  const hasUnreviewedVuln = [...allVulnAdvisoryIds].some((id) => !reviewedAdvisoryIds.has(id));
 
   if (vulns.critical > 0) {
     log.error(`Critical vulnerabilities: ${vulns.critical}`);
@@ -121,12 +116,7 @@ try {
   });
   const deps = JSON.parse(result);
 
-  const forbiddenLicenses = [
-    'GPL-3.0',
-    'AGPL-3.0',
-    'GPL-3.0-only',
-    'AGPL-3.0-only',
-  ];
+  const forbiddenLicenses = ['GPL-3.0', 'AGPL-3.0', 'GPL-3.0-only', 'AGPL-3.0-only'];
   let licenseIssues = 0;
 
   const checkLicenses = (pkg) => {

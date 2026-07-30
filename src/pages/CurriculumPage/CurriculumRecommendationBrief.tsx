@@ -1,10 +1,14 @@
-import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+
+import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { GrammarProgressService } from '@/features/grammar';
+
 import { ICON_MAP } from './curriculum-data';
 
 interface Recommendation {
@@ -69,9 +73,7 @@ export const CurriculumRecommendationBrief = ({
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 Safe / Stretch
               </p>
-              <p className="mt-1.5 text-lg font-bold text-foreground font-mono">
-                75% / 25%
-              </p>
+              <p className="mt-1.5 text-lg font-bold text-foreground font-mono">75% / 25%</p>
             </Card>
             <Card
               hoverEffect={false}
@@ -91,9 +93,7 @@ export const CurriculumRecommendationBrief = ({
               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
                 AI required
               </p>
-              <p className="mt-1.5 text-lg font-bold text-success font-mono">
-                No
-              </p>
+              <p className="mt-1.5 text-lg font-bold text-success font-mono">No</p>
             </Card>
           </div>
 
@@ -131,9 +131,7 @@ export const CurriculumRecommendationBrief = ({
 
           <div className="grid gap-5 lg:grid-cols-2">
             <div>
-              <h3 className="text-sm font-bold text-foreground">
-                Vocabulary focus
-              </h3>
+              <h3 className="text-sm font-bold text-foreground">Vocabulary focus</h3>
               <div className="mt-3 flex flex-wrap gap-2">
                 {recommendation.vocabularyFocus.length > 0 ? (
                   recommendation.vocabularyFocus.map(({ term, bucket }) => (
@@ -146,16 +144,14 @@ export const CurriculumRecommendationBrief = ({
                   ))
                 ) : (
                   <span className="text-xs text-muted-copy font-medium">
-                    No matching vocabulary for this manual domain. Choose All to
-                    use the current-level database set.
+                    No matching vocabulary for this manual domain. Choose All to use the
+                    current-level database set.
                   </span>
                 )}
               </div>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-foreground">
-                Grammar focus
-              </h3>
+              <h3 className="text-sm font-bold text-foreground">Grammar focus</h3>
               <div className="mt-3 space-y-2">
                 {recommendation.grammarFocus.length > 0 ? (
                   recommendation.grammarFocus.map((rule) => (
@@ -175,18 +171,8 @@ export const CurriculumRecommendationBrief = ({
               {recommendation.grammarFocus.length > 0 && (
                 <p className="mt-2 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                   Review state:{' '}
-                  {
-                    GrammarProgressService.get(
-                      recommendation.grammarFocus[0].id
-                    ).reviewStatus
-                  }{' '}
-                  ·{' '}
-                  {
-                    GrammarProgressService.get(
-                      recommendation.grammarFocus[0].id
-                    ).strength
-                  }
-                  % strength
+                  {GrammarProgressService.get(recommendation.grammarFocus[0].id).reviewStatus} ·{' '}
+                  {GrammarProgressService.get(recommendation.grammarFocus[0].id).strength}% strength
                 </p>
               )}
             </div>
@@ -217,8 +203,8 @@ export const CurriculumRecommendationBrief = ({
             </Button>
           ) : (
             <p className="rounded-[4px] border border-warning/30 bg-warning/5 p-4 text-xs font-bold uppercase tracking-wider text-foreground shadow-sm">
-              Grammar selection is active in this hub. A dedicated Grammar task
-              runner is not connected in this sprint.
+              Grammar selection is active in this hub. A dedicated Grammar task runner is not
+              connected in this sprint.
             </p>
           )}
         </div>

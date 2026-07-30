@@ -1,5 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { assignVariant, isVariant, getFeatureVariant } from './ab-testing';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { assignVariant, getFeatureVariant, isVariant } from './ab-testing';
 
 describe('A/B Testing', () => {
   beforeEach(() => {

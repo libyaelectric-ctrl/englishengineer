@@ -1,18 +1,16 @@
 // @vitest-environment node
-import { describe, expect, it } from 'vitest';
 import { createLearningState } from '@/test/fixtures';
+import { describe, expect, it } from 'vitest';
+
 import { GamificationService } from './gamification.service';
 
 describe('gamification service bonus calculations', () => {
   it('applies streak XP multiplier for three day streak', () => {
-    const summary = GamificationService.getSummary(
-      createLearningState({ streak: 3 }),
-      {
-        rewardHistory: [],
-        claimedDailyLoginDate: null,
-        challengeProgress: {},
-      }
-    );
+    const summary = GamificationService.getSummary(createLearningState({ streak: 3 }), {
+      rewardHistory: [],
+      claimedDailyLoginDate: null,
+      challengeProgress: {},
+    });
 
     expect(summary.bonusSummary.xpMultiplier).toBe(1.1);
   });

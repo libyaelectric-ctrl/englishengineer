@@ -12,15 +12,9 @@ export interface ForgettingCurveData {
 
 const DEFAULT_STABILITY = 3;
 
-export const calculateRetention = (
-  daysSinceReview: number,
-  stability: number
-): number => {
+export const calculateRetention = (daysSinceReview: number, stability: number): number => {
   if (stability <= 0) return 0;
-  return Math.max(
-    0,
-    Math.min(100, Math.round(100 * Math.exp(-daysSinceReview / stability)))
-  );
+  return Math.max(0, Math.min(100, Math.round(100 * Math.exp(-daysSinceReview / stability))));
 };
 
 export const estimateStability = (

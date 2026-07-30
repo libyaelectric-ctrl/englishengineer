@@ -1,7 +1,9 @@
+import { Brain, Check, Edit2, Plus, Trash2, X } from 'lucide-react';
+
 import { useState } from 'react';
-import { Brain, Plus, Trash2, Edit2, Check, X } from 'lucide-react';
+
+import { canAccessFeature, useBillingStore } from '@/features/billing';
 import { useWorkspaceStore } from '@/features/billing/workspace.store';
-import { useBillingStore, canAccessFeature } from '@/features/billing';
 
 interface MemoryEntryItemProps {
   keyName: string;
@@ -60,9 +62,7 @@ const MemoryEntryItem = ({
     ) : (
       <>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold text-primary truncate">
-            {keyName}
-          </p>
+          <p className="text-[10px] font-bold text-primary truncate">{keyName}</p>
           <p className="mt-0.5 text-xs leading-4 text-foreground font-semibold break-words">
             {value}
           </p>
@@ -110,9 +110,7 @@ const AddMemoryForm = ({
   onCancel: () => void;
 }) => (
   <div className="mt-2 rounded-[4px] border border-primary/25 bg-primary/5 p-3 space-y-2 shadow-sm">
-    <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
-      New Memory Entry
-    </p>
+    <p className="text-[10px] font-bold uppercase tracking-wider text-primary">New Memory Entry</p>
     <input
       id="memory-new-key"
       type="text"
@@ -236,8 +234,7 @@ const WorkspaceMemoryContent = ({
     {!hasProjectAccess && entries.length > 0 && (
       <div className="mt-3 rounded-[4px] bg-surface-hover border border-border-soft p-2.5 text-center shadow-sm">
         <p className="text-[10px] font-bold uppercase tracking-wider text-muted-copy leading-normal">
-          Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to
-          edit details.
+          Workspace memory is read-only. Upgrade to the Project Plan ($39/mo) to edit details.
         </p>
       </div>
     )}
@@ -248,19 +245,14 @@ interface WorkspaceMemoryPanelProps {
   workspaceId: string;
 }
 
-export const WorkspaceMemoryPanel = ({
-  workspaceId,
-}: WorkspaceMemoryPanelProps) => {
+export const WorkspaceMemoryPanel = ({ workspaceId }: WorkspaceMemoryPanelProps) => {
   const { workspaces, updateWorkspaceMemory } = useWorkspaceStore();
   const workspace = workspaces.find((ws) => ws.id === workspaceId);
   const memory = workspace?.memory ?? {};
   const entries = Object.entries(memory).filter(([, v]) => v !== '');
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasProjectAccess = canAccessFeature(
-    subscription,
-    'projectWorkspace'
-  ).allowed;
+  const hasProjectAccess = canAccessFeature(subscription, 'projectWorkspace').allowed;
 
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
@@ -269,8 +261,7 @@ export const WorkspaceMemoryPanel = ({
   const [newValue, setNewValue] = useState('');
   const [keyError, setKeyError] = useState<string | null>(null);
 
-  const handleDelete = (key: string) =>
-    updateWorkspaceMemory(workspaceId, key, '');
+  const handleDelete = (key: string) => updateWorkspaceMemory(workspaceId, key, '');
 
   const validateAndAdd = () => {
     setKeyError(null);
@@ -341,9 +332,8 @@ export const WorkspaceMemoryPanel = ({
         )}
       </div>
       <p className="text-[10px] leading-4 text-muted-copy mb-3 font-medium">
-        Memory entries are automatically included in every AI request for this
-        workspace. Use them to store project context, team names, standards, or
-        preferences.
+        Memory entries are automatically included in every AI request for this workspace. Use them
+        to store project context, team names, standards, or preferences.
       </p>
       <WorkspaceMemoryContent
         entries={entries}

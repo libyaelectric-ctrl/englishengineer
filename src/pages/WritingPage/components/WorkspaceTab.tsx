@@ -1,13 +1,11 @@
-import {
-  type WritingCorrection,
-  type WritingEvaluationResult,
-} from '@/features/writing';
-import { WorkspaceHeader } from './WorkspaceHeader';
-import { DraftEditor } from './DraftEditor';
-import { StyleGuidelines } from './StyleGuidelines';
+import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
+
 import { CorrectionCheckpoint } from './CorrectionCheckpoint';
+import { DraftEditor } from './DraftEditor';
 import { DraftQualityIndicators } from './DraftQualityIndicators';
 import { EvaluationView } from './EvaluationView';
+import { StyleGuidelines } from './StyleGuidelines';
+import { WorkspaceHeader } from './WorkspaceHeader';
 
 interface Mission {
   id: string;

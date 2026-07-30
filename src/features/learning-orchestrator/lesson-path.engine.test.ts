@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
 import { getInitialUserLearningProfile } from '@/features/profile';
-import { getSharedLesson, LessonPathEngine } from './lesson-path.engine';
+
+import { LessonPathEngine, getSharedLesson } from './lesson-path.engine';
 
 describe('shared lesson path with independent skills', () => {
   it('uses the same topic for the same lesson number in every skill', () => {
@@ -21,12 +23,8 @@ describe('shared lesson path with independent skills', () => {
     });
     profile.skills.reading.completedTasks = 49;
     profile.skills.speaking.completedTasks = 14;
-    expect(
-      LessonPathEngine.getSkillProgress(profile, 'reading').lesson.number
-    ).toBe(50);
-    expect(
-      LessonPathEngine.getSkillProgress(profile, 'speaking').lesson.number
-    ).toBe(15);
+    expect(LessonPathEngine.getSkillProgress(profile, 'reading').lesson.number).toBe(50);
+    expect(LessonPathEngine.getSkillProgress(profile, 'speaking').lesson.number).toBe(15);
     expect(LessonPathEngine.getCatchUpSkill(profile)).toBe('speaking');
   });
 });

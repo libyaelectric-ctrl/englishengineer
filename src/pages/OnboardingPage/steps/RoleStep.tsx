@@ -36,9 +36,7 @@ export const RoleStep = ({
         Professional track
         <select
           value={professionalTrack}
-          onChange={(event) =>
-            setProfessionalTrack(event.target.value as ProfessionalTrack)
-          }
+          onChange={(event) => setProfessionalTrack(event.target.value as ProfessionalTrack)}
           className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
         >
           {PROFESSIONAL_TRACKS.map((item) => (
@@ -53,9 +51,7 @@ export const RoleStep = ({
         Electrical focus area
         <select
           value={electricalSubdomain}
-          onChange={(event) =>
-            setElectricalSubdomain(event.target.value as ElectricalSubdomain)
-          }
+          onChange={(event) => setElectricalSubdomain(event.target.value as ElectricalSubdomain)}
           className="premium-input mt-2 w-full px-3 py-3 rounded-lg"
         >
           {ELECTRICAL_SUBDOMAINS.map((item) => (

@@ -1,28 +1,25 @@
-import { useEffect, useMemo, useState, useRef } from 'react';
-import { useBillingStore, canAccessFeature } from '@/features/billing';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import type { ScoreResult } from '@/core/learning';
-import {
-  getSpeakingRoleplayCategory,
-  SPEAKING_MVP_MODE,
-  type SpeakingRoleplayCategory,
-  useSpeakingStore,
-} from '@/features/speaking';
+
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { canAccessFeature, useBillingStore } from '@/features/billing';
 import {
   type ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
   filterContentByLevel,
   useSkillLevel,
 } from '@/features/level-system';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import {
+  SPEAKING_MVP_MODE,
+  type SpeakingRoleplayCategory,
+  getSpeakingRoleplayCategory,
+  useSpeakingStore,
+} from '@/features/speaking';
 
 export type RoleplayFilter = 'All' | SpeakingRoleplayCategory;
 
-const ROLEPLAY_FILTERS: RoleplayFilter[] = [
-  'All',
-  'Daily',
-  'Work',
-  'Engineering',
-];
+const ROLEPLAY_FILTERS: RoleplayFilter[] = ['All', 'Daily', 'Work', 'Engineering'];
 
 const MAX_VOICE_MINUTES = 120;
 
@@ -42,10 +39,7 @@ export function useSpeakingPage() {
   } = useSpeakingStore();
 
   const subscription = useBillingStore((state) => state.subscription);
-  const hasMaxAccess = canAccessFeature(
-    subscription,
-    'realVoiceSpeaking'
-  ).allowed;
+  const hasMaxAccess = canAccessFeature(subscription, 'realVoiceSpeaking').allowed;
 
   // Voice minute wallet
   const voiceMinutesUsedThisMonth = useMemo(() => {
@@ -58,9 +52,7 @@ export function useSpeakingPage() {
           sum +
           (entry.evaluation?.wordsPerMinute
             ? Math.round(
-                (entry.evaluation.wordCount /
-                  Math.max(entry.evaluation.wordsPerMinute, 1)) *
-                  60
+                (entry.evaluation.wordCount / Math.max(entry.evaluation.wordsPerMinute, 1)) * 60
               )
             : 0),
         0
@@ -68,21 +60,14 @@ export function useSpeakingPage() {
     return Math.round(totalSeconds / 60);
   }, [history]);
 
-  const walletPercent = Math.min(
-    100,
-    (voiceMinutesUsedThisMonth / MAX_VOICE_MINUTES) * 100
-  );
+  const walletPercent = Math.min(100, (voiceMinutesUsedThisMonth / MAX_VOICE_MINUTES) * 100);
 
   // UI state
-  const [responseMode, setResponseMode] = useState<'written' | 'voice'>(
-    'written'
-  );
+  const [responseMode, setResponseMode] = useState<'written' | 'voice'>('written');
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
-  const [pronunciationScore, setPronunciationScore] = useState<number | null>(
-    null
-  );
+  const [pronunciationScore, setPronunciationScore] = useState<number | null>(null);
   const [phonemeFeedback, setPhonemeFeedback] = useState<
     Array<{ word: string; score: number; phonemes: string }>
   >([]);
@@ -92,9 +77,7 @@ export function useSpeakingPage() {
   const [waveformBars, setWaveformBars] = useState<number[]>(Array(24).fill(4));
 
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
-  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
-    DEFAULT_CONTENT_LEVEL_FILTER
-  );
+  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(DEFAULT_CONTENT_LEVEL_FILTER);
   const [roleplayFilter, setRoleplayFilter] = useState<RoleplayFilter>('All');
   const currentLevel = useSkillLevel('speaking').currentLevel;
 
@@ -108,15 +91,13 @@ export function useSpeakingPage() {
     () =>
       visibleMissions.filter(
         (mission) =>
-          roleplayFilter === 'All' ||
-          getSpeakingRoleplayCategory(mission) === roleplayFilter
+          roleplayFilter === 'All' || getSpeakingRoleplayCategory(mission) === roleplayFilter
       ),
     [roleplayFilter, visibleMissions]
   );
 
   const activeMission =
-    roleplayMissions.find((mission) => mission.id === selectedMissionId) ??
-    roleplayMissions[0];
+    roleplayMissions.find((mission) => mission.id === selectedMissionId) ?? roleplayMissions[0];
 
   // Effects
   useEffect(() => {

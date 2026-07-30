@@ -1,8 +1,11 @@
-import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+
+import { Link, useParams } from 'react-router-dom';
+
+import { StatusBadge } from '@/shared/components/StatusBadge';
+
 import { EntitlementGate } from '@/features/billing';
 import { getMemberSummary, useTeamStore } from '@/features/team';
-import { StatusBadge } from '@/shared/components/StatusBadge';
 
 const TeamMemberPage = () => {
   const { memberId = '' } = useParams();
@@ -12,10 +15,7 @@ const TeamMemberPage = () => {
   const summary = getMemberSummary(memberId, summaries);
   return (
     <main className="space-y-6 pt-12 sm:pt-0">
-      <Link
-        to="/team"
-        className="inline-flex items-center gap-2 text-sm font-medium text-primary"
-      >
+      <Link to="/team" className="inline-flex items-center gap-2 text-sm font-medium text-primary">
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
         Team workspace
       </Link>
@@ -34,32 +34,23 @@ const TeamMemberPage = () => {
           <div className="space-y-5">
             <header>
               <StatusBadge label="Demo summary" tone="warning" />
-              <h1 className="mt-2 text-2xl font-medium">
-                {member.displayName}
-              </h1>
+              <h1 className="mt-2 text-2xl font-medium">{member.displayName}</h1>
               <p className="mt-1 text-sm text-muted-copy">
-                {member.discipline} · Internal CEFR estimate{' '}
-                {summary.cefrEstimate}
+                {member.discipline} · Internal CEFR estimate {summary.cefrEstimate}
               </p>
             </header>
             <section className="grid gap-3 sm:grid-cols-3">
               <div className="rounded-xl border border-border-soft bg-surface p-5">
                 <p className="text-xs text-muted-copy">Overall progress</p>
-                <p className="mt-2 text-2xl font-medium">
-                  {summary.overallProgress}%
-                </p>
+                <p className="mt-2 text-2xl font-medium">{summary.overallProgress}%</p>
               </div>
               <div className="rounded-xl border border-border-soft bg-surface p-5">
                 <p className="text-xs text-muted-copy">Completed tasks</p>
-                <p className="mt-2 text-2xl font-medium">
-                  {summary.completedTasks}
-                </p>
+                <p className="mt-2 text-2xl font-medium">{summary.completedTasks}</p>
               </div>
               <div className="rounded-xl border border-border-soft bg-surface p-5">
                 <p className="text-xs text-muted-copy">CEFR estimate</p>
-                <p className="mt-2 text-2xl font-medium">
-                  {summary.cefrEstimate}
-                </p>
+                <p className="mt-2 text-2xl font-medium">{summary.cefrEstimate}</p>
               </div>
             </section>
             <section className="rounded-xl border border-border-soft bg-surface p-5">
@@ -68,9 +59,7 @@ const TeamMemberPage = () => {
                 {Object.entries(summary.skillScores).map(([skill, score]) => (
                   <div key={skill}>
                     <div className="flex justify-between text-xs">
-                      <span className="capitalize text-muted-copy">
-                        {skill}
-                      </span>
+                      <span className="capitalize text-muted-copy">{skill}</span>
                       <strong>{score}%</strong>
                     </div>
                     <div className="mt-1 h-2 rounded-full bg-surface-hover">

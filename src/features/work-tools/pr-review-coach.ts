@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
 
@@ -60,8 +61,7 @@ const ruleBasedTransform = (raw: string): PRReviewResult => {
     .filter(Boolean);
   const politePrefix = 'Thank you for your review feedback. ';
   if (sentences.length > 0) {
-    polished =
-      politePrefix + polished.charAt(0).toUpperCase() + polished.slice(1);
+    polished = politePrefix + polished.charAt(0).toUpperCase() + polished.slice(1);
   }
 
   const keyChanges: string[] = [];
@@ -108,8 +108,7 @@ export const PRReviewCoachService = {
       return {
         polishedText: text,
         toneAnalysis:
-          response.structuredResult?.toneFeedback ||
-          'AI-powered tone analysis applied.',
+          response.structuredResult?.toneFeedback || 'AI-powered tone analysis applied.',
         keyChanges: response.structuredResult?.strengths?.slice(0, 3) || [
           'Softened tone',
           'Added constructive framing',

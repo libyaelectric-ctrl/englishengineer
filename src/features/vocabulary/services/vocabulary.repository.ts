@@ -1,12 +1,15 @@
 import { loadVocabularyByLevel } from '@/data/vocabulary';
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+
 import {
+  type LearningDataSkill,
   extractCefrFromId,
   getLevelsThrough,
   includesNormalized,
-  type LearningDataSkill,
 } from '@/core/learning';
+
+import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+import type { CefrLevel } from '@/features/level-system/level-system.types';
+
 import { assertVocabularyTerms } from '../types/vocabulary.schema';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
@@ -43,10 +46,7 @@ const loadAll = async (): Promise<VocabularyTerm[]> =>
 
 export const VocabularyRepository = {
   getVocabularyTotalCount(): number {
-    return CEFR_LEVELS.reduce(
-      (total, level) => total + VOCABULARY_LEVEL_COUNTS[level],
-      0
-    );
+    return CEFR_LEVELS.reduce((total, level) => total + VOCABULARY_LEVEL_COUNTS[level], 0);
   },
 
   async getVocabularyTermById(id: string): Promise<VocabularyTerm | undefined> {
@@ -59,47 +59,33 @@ export const VocabularyRepository = {
     return loadLevel(level);
   },
 
-  async getVocabularyBySkill(
-    skill: LearningDataSkill
-  ): Promise<VocabularyTerm[]> {
-    return (await loadAll()).filter((term) =>
-      includesNormalized(term.skillUse, skill)
-    );
+  async getVocabularyBySkill(skill: LearningDataSkill): Promise<VocabularyTerm[]> {
+    return (await loadAll()).filter((term) => includesNormalized(term.skillUse, skill));
   },
 
   async getVocabularyByDomain(domain: string): Promise<VocabularyTerm[]> {
-    return (await loadAll()).filter(
-      (term) => term.domain.toLowerCase() === domain.toLowerCase()
-    );
+    return (await loadAll()).filter((term) => term.domain.toLowerCase() === domain.toLowerCase());
   },
 
-  async getVocabularyByContentDomain(
-    contentDomain: string
-  ): Promise<VocabularyTerm[]> {
+  async getVocabularyByContentDomain(contentDomain: string): Promise<VocabularyTerm[]> {
     return (await loadAll()).filter(
       (term) => term.contentDomain.toLowerCase() === contentDomain.toLowerCase()
     );
   },
 
-  async getVocabularyByLifeContext(
-    lifeContext: string
-  ): Promise<VocabularyTerm[]> {
+  async getVocabularyByLifeContext(lifeContext: string): Promise<VocabularyTerm[]> {
     return (await loadAll()).filter(
       (term) => term.lifeContext.toLowerCase() === lifeContext.toLowerCase()
     );
   },
 
-  async getVocabularyByPartOfSpeech(
-    partOfSpeech: string
-  ): Promise<VocabularyTerm[]> {
+  async getVocabularyByPartOfSpeech(partOfSpeech: string): Promise<VocabularyTerm[]> {
     return (await loadAll()).filter(
       (term) => term.partOfSpeech.toLowerCase() === partOfSpeech.toLowerCase()
     );
   },
 
-  async getVocabularyByGrammarFit(
-    grammarCategoryOrRule: string
-  ): Promise<VocabularyTerm[]> {
+  async getVocabularyByGrammarFit(grammarCategoryOrRule: string): Promise<VocabularyTerm[]> {
     return (await loadAll()).filter((term) =>
       includesNormalized(term.grammarFits, grammarCategoryOrRule)
     );
@@ -109,9 +95,7 @@ export const VocabularyRepository = {
     skill: LearningDataSkill,
     level: CefrLevel
   ): Promise<VocabularyTerm[]> {
-    const terms = (
-      await Promise.all(getLevelsThrough(level).map(loadLevel))
-    ).flat();
+    const terms = (await Promise.all(getLevelsThrough(level).map(loadLevel))).flat();
     return terms.filter((term) => includesNormalized(term.skillUse, skill));
   },
 

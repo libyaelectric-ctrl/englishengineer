@@ -27,7 +27,4 @@ export const buildReviewPriorities = (
       priority: SOURCE_WEIGHT[candidate.source] + (candidate.severity ?? 0),
       reason: SOURCE_REASON[candidate.source],
     }))
-    .sort(
-      (left, right) =>
-        right.priority - left.priority || left.label.localeCompare(right.label)
-    );
+    .sort((left, right) => right.priority - left.priority || left.label.localeCompare(right.label));

@@ -1,4 +1,5 @@
 import { ProgressBar } from '@/shared/components/ProgressBar';
+
 import type { SubscriptionSnapshot } from '@/features/billing';
 
 interface BillingPlanCardsProps {
@@ -19,14 +20,7 @@ interface UsageCardProps {
   helpText: string;
 }
 
-const UsageCard = ({
-  label,
-  display,
-  value,
-  max,
-  color,
-  helpText,
-}: UsageCardProps) => (
+const UsageCard = ({ label, display, value, max, color, helpText }: UsageCardProps) => (
   <div className="space-y-1.5">
     <div className="flex justify-between text-xs">
       <span className="font-bold text-foreground">{label}</span>
@@ -67,9 +61,7 @@ const DocumentUploadCard = ({
 }) => (
   <div className="space-y-1.5">
     <div className="flex justify-between text-xs">
-      <span className="font-bold text-foreground">
-        Monthly Document Uploads
-      </span>
+      <span className="font-bold text-foreground">Monthly Document Uploads</span>
       <span className="font-bold text-foreground">
         {isFree
           ? 'Blocked'
@@ -79,9 +71,7 @@ const DocumentUploadCard = ({
       </span>
     </div>
     <ProgressBar
-      value={
-        isFree ? 0 : isPro ? Math.min(100, (uploadedDocsCount / 2) * 100) : 100
-      }
+      value={isFree ? 0 : isPro ? Math.min(100, (uploadedDocsCount / 2) * 100) : 100}
       color={isFree ? 'rose' : uploadedDocsCount >= 2 ? 'amber' : 'primary'}
     />
     <p className="text-[10px] text-muted-copy">
@@ -111,9 +101,7 @@ const VoiceMinutesCard = ({
       </span>
     </div>
     <ProgressBar
-      value={
-        planId === 'exec' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100
-      }
+      value={planId === 'exec' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100}
       color={
         planId !== 'exec'
           ? 'cyan'
@@ -144,8 +132,7 @@ export const BillingPlanCards = ({
 }: BillingPlanCardsProps) => {
   const isPro = subscription.planId === 'pro';
   const isFree = subscription.planId === 'free';
-  const isMaxTier =
-    subscription.planId === 'exec' || subscription.planId === 'private';
+  const isMaxTier = subscription.planId === 'exec' || subscription.planId === 'private';
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">
@@ -200,17 +187,10 @@ export const BillingPlanCards = ({
         />
       )}
 
-      <DocumentUploadCard
-        isFree={isFree}
-        isPro={isPro}
-        uploadedDocsCount={uploadedDocsCount}
-      />
+      <DocumentUploadCard isFree={isFree} isPro={isPro} uploadedDocsCount={uploadedDocsCount} />
 
       {isMaxTier && (
-        <VoiceMinutesCard
-          planId={subscription.planId}
-          voiceMinutesUsed={voiceMinutesUsed}
-        />
+        <VoiceMinutesCard planId={subscription.planId} voiceMinutesUsed={voiceMinutesUsed} />
       )}
     </div>
   );

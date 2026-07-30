@@ -1,15 +1,16 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
-import { createFreeSubscription } from './billing.helpers';
+
 import {
   canAccessFeature,
+  canAccessProjectWorkspace,
   canCreateMission,
   canUseAICoach,
-  canAccessProjectWorkspace,
   canViewAdvancedAnalytics,
   getPlanLimitLabel,
   isSubscriptionActive,
 } from './billing.entitlements';
+import { createFreeSubscription } from './billing.helpers';
 import { SubscriptionSnapshot } from './billing.types';
 
 const proSubscription: SubscriptionSnapshot = {
@@ -28,15 +29,11 @@ describe('billing entitlements', () => {
   });
 
   it('blocks inactive paid subscription', () => {
-    expect(
-      isSubscriptionActive({ ...proSubscription, status: 'canceled' })
-    ).toBe(false);
+    expect(isSubscriptionActive({ ...proSubscription, status: 'canceled' })).toBe(false);
   });
 
   it('allows free users to access basic reading feature', () => {
-    expect(canAccessFeature(createFreeSubscription(), 'reading').allowed).toBe(
-      true
-    );
+    expect(canAccessFeature(createFreeSubscription(), 'reading').allowed).toBe(true);
   });
 
   it('blocks advanced analytics for free users with Pro requirement', () => {
@@ -66,12 +63,8 @@ describe('billing entitlements', () => {
   });
 
   it('formats plan limits for display', () => {
-    expect(
-      getPlanLimitLabel(createFreeSubscription(), 'dailyAICoachRequests')
-    ).toBe('1');
-    expect(getPlanLimitLabel(proSubscription, 'dailyAICoachRequests')).toBe(
-      '10'
-    );
+    expect(getPlanLimitLabel(createFreeSubscription(), 'dailyAICoachRequests')).toBe('1');
+    expect(getPlanLimitLabel(proSubscription, 'dailyAICoachRequests')).toBe('10');
   });
 
   it('keeps project workspace behind the Project entitlement', () => {
@@ -79,9 +72,6 @@ describe('billing entitlements', () => {
       allowed: false,
       requiredPlan: 'project',
     });
-    expect(
-      canAccessProjectWorkspace({ ...proSubscription, planId: 'project' })
-        .allowed
-    ).toBe(true);
+    expect(canAccessProjectWorkspace({ ...proSubscription, planId: 'project' }).allowed).toBe(true);
   });
 });

@@ -1,5 +1,6 @@
+import type { Express, NextFunction, Request, Response } from 'express';
+
 import { ApiError } from './errors.js';
-import type { Express, Request, Response, NextFunction } from 'express';
 
 export const registerProgressRoutes = (app: Express): void => {
   app.get(
@@ -7,8 +8,7 @@ export const registerProgressRoutes = (app: Express): void => {
     async (request: Request, response: Response, next: NextFunction) => {
       try {
         const userId = request.auth?.userId;
-        if (!userId)
-          throw new ApiError(401, 'authentication_required', 'Auth required');
+        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
 
         response.json({
           vocabulary: { total: 0, learned: 0, mastered: 0, struggling: 0 },

@@ -1,21 +1,9 @@
-import type { ElementType } from 'react';
-import { useState, useRef, useCallback, useEffect } from 'react';
-import {
-  Mic,
-  Volume2,
-  Sparkles,
-  ShieldAlert,
-  Users,
-  Briefcase,
-  CheckCircle2,
-} from 'lucide-react';
+import { Briefcase, CheckCircle2, Mic, ShieldAlert, Sparkles, Users, Volume2 } from 'lucide-react';
 
-type DefenseScenarioType =
-  | 'client'
-  | 'toolbox'
-  | 'fidic'
-  | 'subcontractor'
-  | 'presentation';
+import type { ElementType } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+type DefenseScenarioType = 'client' | 'toolbox' | 'fidic' | 'subcontractor' | 'presentation';
 
 interface ScenarioMeta {
   id: DefenseScenarioType;
@@ -75,8 +63,7 @@ const SCENARIOS: ScenarioMeta[] = [
 ];
 
 export const DefenseSimulator = () => {
-  const [activeScenario, setActiveScenario] =
-    useState<DefenseScenarioType>('client');
+  const [activeScenario, setActiveScenario] = useState<DefenseScenarioType>('client');
   const [isRecording, setIsRecording] = useState(false);
   const [userSpeechText, setUserSpeechText] = useState('');
   const [evaluation, setEvaluation] = useState<{
@@ -105,8 +92,7 @@ export const DefenseSimulator = () => {
       setEvaluation({
         score: 92,
         fluency: 'C1 Fluent',
-        vocabulary:
-          'Strong (mobilized, underground clashes, critical path recovery)',
+        vocabulary: 'Strong (mobilized, underground clashes, critical path recovery)',
         feedback:
           'Excellent technical defense! Your usage of "mobilized additional night shift crews" and "critical path recovery" convinced the client PM.',
       });
@@ -145,9 +131,7 @@ export const DefenseSimulator = () => {
               <div className="flex w-full items-center justify-between">
                 <span
                   className={`p-2 rounded-lg ${
-                    isActive
-                      ? 'bg-primary text-white'
-                      : 'bg-surface-hover text-muted-copy'
+                    isActive ? 'bg-primary text-white' : 'bg-surface-hover text-muted-copy'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -156,9 +140,7 @@ export const DefenseSimulator = () => {
                   {s.badge}
                 </span>
               </div>
-              <h3 className="mt-3 text-sm font-bold text-foreground">
-                {s.title}
-              </h3>
+              <h3 className="mt-3 text-sm font-bold text-foreground">{s.title}</h3>
               <p className="mt-1 text-xs text-muted-copy leading-relaxed line-clamp-2">
                 {s.subtitle}
               </p>
@@ -180,9 +162,7 @@ export const DefenseSimulator = () => {
               Live Audio AI Active
             </span>
           </div>
-          <p className="text-sm font-bold text-foreground leading-relaxed">
-            "{scenario.aiPrompt}"
-          </p>
+          <p className="text-sm font-bold text-foreground leading-relaxed">"{scenario.aiPrompt}"</p>
         </div>
 
         {/* Recording Controls & Live Audio Visualizer */}
@@ -226,9 +206,7 @@ export const DefenseSimulator = () => {
                   AI Defense Score: {evaluation.score}% ({evaluation.fluency})
                 </h4>
               </div>
-              <span className="text-[11px] font-bold text-muted-copy">
-                {evaluation.vocabulary}
-              </span>
+              <span className="text-[11px] font-bold text-muted-copy">{evaluation.vocabulary}</span>
             </div>
 
             <div className="space-y-1">
@@ -240,9 +218,7 @@ export const DefenseSimulator = () => {
               </p>
             </div>
 
-            <p className="text-xs text-foreground leading-relaxed">
-              {evaluation.feedback}
-            </p>
+            <p className="text-xs text-foreground leading-relaxed">{evaluation.feedback}</p>
           </div>
         )}
       </div>

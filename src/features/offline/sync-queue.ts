@@ -1,10 +1,7 @@
-import { storage } from '@/shared/storage';
 import { logger } from '@/shared/logger';
-import type {
-  SyncQueueItem,
-  SyncQueueState,
-  SyncQueueListener,
-} from './sync-queue.types';
+import { storage } from '@/shared/storage';
+
+import type { SyncQueueItem, SyncQueueListener, SyncQueueState } from './sync-queue.types';
 
 const STORAGE_KEY = 'sync_queue';
 const DEAD_LETTER_KEY = 'sync_dead_letter_queue';
@@ -38,9 +35,7 @@ const moveToDeadLetter = (item: SyncQueueItem): void => {
   const deadLetter = storage.get<SyncQueueItem[]>(DEAD_LETTER_KEY) || [];
   deadLetter.push({ ...item, timestamp: new Date().toISOString() });
   storage.set(DEAD_LETTER_KEY, deadLetter);
-  logger.w(
-    `[SyncQueue] Item ${item.id} moved to dead letter queue after ${item.retries} retries.`
-  );
+  logger.w(`[SyncQueue] Item ${item.id} moved to dead letter queue after ${item.retries} retries.`);
 };
 
 const getDeadLetterItems = (): SyncQueueItem[] =>
@@ -52,8 +47,7 @@ const clearDeadLetter = (): void => {
 
 const getSyncEndpoint = (): string => {
   const raw =
-    (import.meta as unknown as { env?: Record<string, string> }).env
-      ?.VITE_AI_PROXY_URL || '';
+    (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_AI_PROXY_URL || '';
   if (!raw) return '';
   const base = raw.replace(/\/+$/, '');
   return `${base}/api/v1/sync`;

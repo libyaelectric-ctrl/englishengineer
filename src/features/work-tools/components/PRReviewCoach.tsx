@@ -1,13 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import {
-  Clipboard,
-  Check,
-  Sparkles,
-  ArrowRight,
-  WandSparkles,
-} from 'lucide-react';
+import { ArrowRight, Check, Clipboard, Sparkles, WandSparkles } from 'lucide-react';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
+
 import { PRReviewCoachService, type PRReviewResult } from '../pr-review-coach';
 
 const SAMPLE_REVIEWS = [
@@ -78,8 +75,7 @@ export const PRReviewCoach = () => {
             PR Review Polite Coach
           </h2>
           <p className="text-xs leading-relaxed text-muted-copy">
-            Convert harsh or unclear code review comments into professional,
-            constructive feedback.
+            Convert harsh or unclear code review comments into professional, constructive feedback.
           </p>
         </div>
 
@@ -92,8 +88,8 @@ export const PRReviewCoach = () => {
               Paste harsh review comment
             </label>
             <p className="text-[10px] text-muted-copy leading-normal font-medium">
-              Paste the raw, harsh, or unclear code review comment you want to
-              transform into professional English.
+              Paste the raw, harsh, or unclear code review comment you want to transform into
+              professional English.
             </p>
             <textarea
               id="pr-review-input"
@@ -121,11 +117,7 @@ export const PRReviewCoach = () => {
           </div>
 
           <div className="pt-2">
-            <Button
-              onClick={handlePolish}
-              disabled={!input.trim() || isProcessing}
-              size="sm"
-            >
+            <Button onClick={handlePolish} disabled={!input.trim() || isProcessing} size="sm">
               {isProcessing ? (
                 'Processing...'
               ) : (
@@ -150,9 +142,7 @@ export const PRReviewCoach = () => {
             <p className="text-[10px] font-black uppercase tracking-wider text-muted-copy">
               Feedback Analysis & Tone Adjustment
             </p>
-            <p className="text-xs text-muted-copy leading-relaxed">
-              {result.toneAnalysis}
-            </p>
+            <p className="text-xs text-muted-copy leading-relaxed">{result.toneAnalysis}</p>
           </div>
 
           <div className="space-y-4">
@@ -160,9 +150,7 @@ export const PRReviewCoach = () => {
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-primary">
                 [ORIGINAL HARSH REVIEW]
               </p>
-              <p className="mt-2 text-xs text-foreground line-through opacity-60">
-                {input}
-              </p>
+              <p className="mt-2 text-xs text-foreground line-through opacity-60">{input}</p>
             </div>
 
             <div className="flex justify-center animate-in zoom-in duration-200">
@@ -185,10 +173,7 @@ export const PRReviewCoach = () => {
                 </p>
                 <ul className="mt-2 space-y-1.5">
                   {result.keyChanges.map((change, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-xs text-foreground"
-                    >
+                    <li key={i} className="flex items-start gap-2 text-xs text-foreground">
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
                       <span>{change}</span>
                     </li>
@@ -200,11 +185,7 @@ export const PRReviewCoach = () => {
 
           <div className="flex items-center gap-3 border-t border-border-soft pt-3">
             <Button variant="secondary" size="sm" onClick={handleCopy}>
-              {copied ? (
-                <Check className="h-3.5 w-3.5" />
-              ) : (
-                <Clipboard className="h-3.5 w-3.5" />
-              )}
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Clipboard className="h-3.5 w-3.5" />}
               {copied ? 'Copied' : 'Copy review'}
             </Button>
             {result.isAiPowered && (

@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { NavLink, useLocation } from 'react-router-dom';
 import { NAV_ITEMS } from '@/config/navigation.config';
+import { ChevronDown } from 'lucide-react';
+
+import React, { useState } from 'react';
+
+import { NavLink, useLocation } from 'react-router-dom';
+
 import { cn } from '@/shared/utils/cn';
-import {
-  NAVIGATION_TRANSLATIONS,
-  useLocalizationStore,
-} from '@/features/localization';
 import { prefetchRoute } from '@/shared/utils/prefetch';
+
+import { NAVIGATION_TRANSLATIONS, useLocalizationStore } from '@/features/localization';
 
 interface NavigationProps {
   onItemClick?: () => void;
@@ -27,9 +28,7 @@ export const Navigation = React.memo(({ onItemClick }: NavigationProps) => {
     const initial: Record<string, boolean> = {};
     NAV_ITEMS.forEach((item) => {
       if ('children' in item && item.children) {
-        initial[item.label] = item.children.some(
-          (child) => child.href === location.pathname
-        );
+        initial[item.label] = item.children.some((child) => child.href === location.pathname);
       }
     });
     return initial;

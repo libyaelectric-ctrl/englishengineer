@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+
 import { useLearningStore } from '@/core/learning/learning.store';
 
 describe('Learning Integration', () => {

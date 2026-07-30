@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { storage } from './index';
 
 const DB_NAME = 'engineeros-db';
@@ -43,10 +44,7 @@ interface IDBEntry<T> {
   updatedAt: string;
 }
 
-const idbGet = async <T>(
-  store: LargeDataStore,
-  key: string
-): Promise<T | null> => {
+const idbGet = async <T>(store: LargeDataStore, key: string): Promise<T | null> => {
   try {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -64,11 +62,7 @@ const idbGet = async <T>(
   }
 };
 
-const idbSet = async <T>(
-  store: LargeDataStore,
-  key: string,
-  value: T
-): Promise<boolean> => {
+const idbSet = async <T>(store: LargeDataStore, key: string, value: T): Promise<boolean> => {
   try {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -88,18 +82,12 @@ const idbSet = async <T>(
 };
 
 const IDB_MIGRATION_KEYS: Record<LargeDataStore, string[]> = {
-  vocabulary: [
-    'EngVox_vocabulary_state',
-    'EngVox_vocabulary_memory',
-    'EngVox_vocabulary_menu',
-  ],
+  vocabulary: ['EngVox_vocabulary_state', 'EngVox_vocabulary_memory', 'EngVox_vocabulary_menu'],
   learning: ['learning_state'],
   grammar: ['EngVox_grammar_progress'],
 };
 
-const migrateFromLocalStorage = async (
-  store: LargeDataStore
-): Promise<void> => {
+const migrateFromLocalStorage = async (store: LargeDataStore): Promise<void> => {
   const keys = IDB_MIGRATION_KEYS[store];
   for (const lsKey of keys) {
     const existing = await idbGet(store, lsKey);

@@ -1,17 +1,22 @@
-import { Check, MinusCircle, Sparkles, Building2, Zap } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Building2, Check, MinusCircle, Sparkles, Zap } from 'lucide-react';
+
 import { useEffect, useState } from 'react';
+
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+import { PageMetadata } from '@/shared/components/PageMetadata';
+
+import { ProductAnalyticsService } from '@/features/analytics';
+import { useAuthStore } from '@/features/auth';
 import {
+  BillingPlanId,
   COMMERCIAL_PLAN_CATALOG,
   CommercialPlanPreview,
   useBillingStore,
-  BillingPlanId,
 } from '@/features/billing';
-import { getBillingApiUrl } from '@/features/billing/billing.helpers';
-import { useAuthStore } from '@/features/auth';
-import { PageMetadata } from '@/shared/components/PageMetadata';
-import { ProductAnalyticsService } from '@/features/analytics';
 import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
+import { getBillingApiUrl } from '@/features/billing/billing.helpers';
+
 import { Navbar } from '@/pages/LandingPage/Navbar';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
@@ -32,8 +37,7 @@ const ACCESS_BADGES: Record<string, string> = {
   private: 'SECURE-PRIVATE',
 };
 
-const getAccessBadge = (id: string): string =>
-  ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
+const getAccessBadge = (id: string): string => ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
 
 const ANNUAL_PRICES: Record<string, string> = {
   pro: '$23',
@@ -50,20 +54,13 @@ const MONTHLY_PRICES: Record<string, string> = {
   private: '$999',
 };
 
-const getCalculatedPrice = (
-  plan: CommercialPlanPreview,
-  isAnnual: boolean
-): string => {
+const getCalculatedPrice = (plan: CommercialPlanPreview, isAnnual: boolean): string => {
   if (plan.id === 'free') return '$0';
   const prices = isAnnual ? ANNUAL_PRICES : MONTHLY_PRICES;
   return prices[plan.id] ?? plan.price;
 };
 
-const FreePlanButton = ({
-  currentUser,
-}: {
-  currentUser: { id: string } | null;
-}) => (
+const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
   <Link
     to={currentUser ? '/dashboard' : '/start'}
     className="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
@@ -74,10 +71,7 @@ const FreePlanButton = ({
 
 const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
 
-const PLAN_BADGES: Record<
-  string,
-  { icon: typeof Sparkles; label: string; color: string }
-> = {
+const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> = {
   pro: { icon: Sparkles, label: 'Recommended', color: 'bg-primary' },
   project: {
     icon: Building2,
@@ -169,19 +163,13 @@ const PricingPage = () => {
     ProductAnalyticsService.trackOnce('paywall_viewed', 'pricing');
   }, [initializeAuth]);
 
-  const {
-    isLoading: isCheckoutLoading,
-    startCheckout,
-    subscription,
-  } = useBillingStore();
+  const { isLoading: isCheckoutLoading, startCheckout, subscription } = useBillingStore();
 
-  const [billingReadiness, setBillingReadiness] = useState<
-    'loading' | 'ready' | 'unavailable'
-  >('loading');
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-  const [checkoutPlanId, setCheckoutPlanId] = useState<BillingPlanId | null>(
-    null
+  const [billingReadiness, setBillingReadiness] = useState<'loading' | 'ready' | 'unavailable'>(
+    'loading'
   );
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+  const [checkoutPlanId, setCheckoutPlanId] = useState<BillingPlanId | null>(null);
   const billingApiUrl = getBillingApiUrl();
 
   useEffect(() => {
@@ -192,9 +180,7 @@ const PricingPage = () => {
     let mounted = true;
     const check = async () => {
       try {
-        const res = await fetch(
-          new URL('/api/health', billingApiUrl).toString()
-        );
+        const res = await fetch(new URL('/api/health', billingApiUrl).toString());
         if (!res.ok) throw new Error();
         const h = await res.json();
         if (!mounted) return;
@@ -261,17 +247,14 @@ const PricingPage = () => {
             const isHighlighted = HIGHLIGHTED_PLANS.has(plan.id);
             const badge = PLAN_BADGES[plan.id];
             const isCurrent = subscription?.planId === plan.id;
-            const isThisLoading =
-              isCheckoutLoading && checkoutPlanId === plan.id;
+            const isThisLoading = isCheckoutLoading && checkoutPlanId === plan.id;
             const unavailable = isPlanUnavailable(plan);
 
             return (
               <article
                 key={plan.id}
                 className={`relative flex flex-col justify-between rounded-2xl border p-5 bg-surface/90 backdrop-blur-xl transition-all duration-300 hover:border-border-hover shadow-lg ${
-                  isHighlighted
-                    ? 'border-primary/60 ring-2 ring-primary/20'
-                    : 'border-border-soft'
+                  isHighlighted ? 'border-primary/60 ring-2 ring-primary/20' : 'border-border-soft'
                 }`}
               >
                 {badge && (
@@ -284,9 +267,7 @@ const PricingPage = () => {
 
                 <div>
                   <div className="flex items-start justify-between">
-                    <h3 className="text-base font-extrabold text-foreground">
-                      {plan.name}
-                    </h3>
+                    <h3 className="text-base font-extrabold text-foreground">{plan.name}</h3>
                     <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold tracking-wider text-muted-copy uppercase font-mono">
                       {getAccessBadge(plan.id)}
                     </span>
@@ -309,9 +290,7 @@ const PricingPage = () => {
                     <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
                       Target Audience:
                     </p>
-                    <p className="mt-0.5 text-xs font-bold text-foreground">
-                      {plan.bestFor}
-                    </p>
+                    <p className="mt-0.5 text-xs font-bold text-foreground">{plan.bestFor}</p>
                   </div>
 
                   <div className="mt-4 border-t border-border-soft pt-3">
@@ -346,10 +325,7 @@ const PricingPage = () => {
                       isCurrent={isCurrent}
                       inProgress={isThisLoading}
                       disabled={
-                        !billingEnabled ||
-                        isThisLoading ||
-                        isBillingHealthLoading ||
-                        unavailable
+                        !billingEnabled || isThisLoading || isBillingHealthLoading || unavailable
                       }
                       onClick={() => void handleCheckout(plan.id)}
                     />
@@ -370,14 +346,11 @@ const PricingPage = () => {
                 Interactive Team Seat Calculator
               </h2>
               <p className="text-xs text-muted-copy mt-0.5">
-                Bulk licensing for site engineering teams, QA/QC departments,
-                and MEP contractors.
+                Bulk licensing for site engineering teams, QA/QC departments, and MEP contractors.
               </p>
             </div>
             <div className="text-right">
-              <span className="text-lg font-black text-primary">
-                {teamSeats} Engineer Seats
-              </span>
+              <span className="text-lg font-black text-primary">{teamSeats} Engineer Seats</span>
               <span className="block text-xs font-bold text-muted-copy">
                 (${teamSeats * (isAnnual ? 15 : 19)} / month total)
               </span>
@@ -414,10 +387,7 @@ const PricingPage = () => {
           </div>
         </div>
 
-        <EnterpriseQuoteModal
-          isOpen={quoteModalOpen}
-          onClose={() => setQuoteModalOpen(false)}
-        />
+        <EnterpriseQuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
       </section>
 
       <section className="py-12 bg-surface/80 border-t border-b border-border-soft backdrop-blur-xl">
@@ -430,12 +400,12 @@ const PricingPage = () => {
               Compare All Plan Capabilities
             </h2>
             <p className="text-xs text-muted-copy font-medium max-w-lg mx-auto">
-              Detailed breakdown of AI allowances, voice meeting modules, team
-              seats, and security standards.
+              Detailed breakdown of AI allowances, voice meeting modules, team seats, and security
+              standards.
             </p>
           </div>
 
-          { }
+          {}
           <div
             className="overflow-x-auto rounded-2xl border border-border-soft shadow-xl bg-background"
             tabIndex={0}
@@ -459,9 +429,7 @@ const PricingPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {(
-                  ['learning', 'ai', 'analytics', 'team', 'limits'] as const
-                ).map((key) => (
+                {(['learning', 'ai', 'analytics', 'team', 'limits'] as const).map((key) => (
                   <tr
                     key={key}
                     className="border-b border-border-soft/60 last:border-0 hover:bg-surface/50 transition-colors"
@@ -470,10 +438,7 @@ const PricingPage = () => {
                       {key === 'ai' ? 'AI Voice & Writing Coach' : key}
                     </td>
                     {ACTIVE_PLANS.map((p) => (
-                      <td
-                        key={p.id}
-                        className="p-4 text-center text-muted-copy font-medium"
-                      >
+                      <td key={p.id} className="p-4 text-center text-muted-copy font-medium">
                         {p.comparison[key]}
                       </td>
                     ))}
@@ -482,15 +447,13 @@ const PricingPage = () => {
               </tbody>
             </table>
           </div>
-          { }
+          {}
         </div>
       </section>
 
       <section className="py-12 text-center bg-background border-t border-border-soft">
         <div className="mx-auto max-w-xl px-4 space-y-4">
-          <h3 className="text-base font-extrabold text-foreground">
-            Select Your Billing Cycle
-          </h3>
+          <h3 className="text-base font-extrabold text-foreground">Select Your Billing Cycle</h3>
 
           <div className="inline-flex items-center justify-center gap-4 rounded-2xl border border-border-soft bg-surface p-4 shadow-xl">
             <span
@@ -522,8 +485,8 @@ const PricingPage = () => {
           </div>
 
           <p className="text-[11px] text-muted-copy font-medium">
-            Switch anytime between monthly and annual billing. VAT & local taxes
-            included where applicable.
+            Switch anytime between monthly and annual billing. VAT & local taxes included where
+            applicable.
           </p>
         </div>
       </section>

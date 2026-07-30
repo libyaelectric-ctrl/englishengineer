@@ -1,18 +1,11 @@
+import { CheckCircle2, Download, FileText, Upload, XCircle } from 'lucide-react';
+
 import { useRef, useState } from 'react';
-import {
-  Download,
-  Upload,
-  FileText,
-  CheckCircle2,
-  XCircle,
-} from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import {
-  VocabularyCsvService,
-  type CsvWord,
-  type ImportResult,
-} from '@/features/vocabulary';
+
+import { type CsvWord, type ImportResult, VocabularyCsvService } from '@/features/vocabulary';
 
 interface CsvPanelProps {
   words: CsvWord[];
@@ -94,15 +87,11 @@ export function CsvPanel({ words, onImport }: CsvPanelProps) {
             ) : (
               <XCircle className="h-4 w-4 text-amber-500" />
             )}
-            <span className="text-xs font-bold text-foreground">
-              Import Result
-            </span>
+            <span className="text-xs font-bold text-foreground">Import Result</span>
           </div>
           <div className="space-y-1 text-[10px] text-muted-copy">
             <p>Total rows: {importResult.totalRows}</p>
-            <p className="text-emerald-600 font-bold">
-              Imported: {importResult.imported}
-            </p>
+            <p className="text-emerald-600 font-bold">Imported: {importResult.imported}</p>
             {importResult.skipped > 0 && (
               <p className="text-amber-600">Skipped: {importResult.skipped}</p>
             )}

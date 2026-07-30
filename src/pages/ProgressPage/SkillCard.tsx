@@ -1,11 +1,6 @@
 import { motion } from 'motion/react';
-import {
-  CEFR_LEVELS,
-  MAX_ELO,
-  getCEFRBand,
-  getCEFRIndex,
-  useAnimatedNumber,
-} from './utils';
+
+import { CEFR_LEVELS, MAX_ELO, getCEFRBand, getCEFRIndex, useAnimatedNumber } from './utils';
 
 export const SkillCard = ({
   skill,
@@ -44,9 +39,7 @@ export const SkillCard = ({
           </div>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-foreground tabular-nums">
-            {displayElo}
-          </div>
+          <div className="text-lg font-bold text-foreground tabular-nums">{displayElo}</div>
         </div>
       </div>
       <div className="relative h-2 w-full overflow-hidden rounded-[4px] bg-border-soft">

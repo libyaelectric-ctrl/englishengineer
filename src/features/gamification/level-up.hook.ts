@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+
 import { storage } from '@/shared/storage';
 
 const STORAGE_KEY = 'gamification.lastSeenLevel.v1';

@@ -17,15 +17,13 @@ export const QAQC_READING_MISSIONS: ReadingMission[] = [
         term: 'non-conformance report (NCR)',
         definition:
           'A formal document raised when work, materials, or a process fail to meet the specified requirements, recording the issue, its root cause, and the required corrective action.',
-        context:
-          'NON-CONFORMANCE REPORT — NCR-2026-0417.',
+        context: 'NON-CONFORMANCE REPORT — NCR-2026-0417.',
       },
       {
         term: 'slump test',
         definition:
           'A field test that measures the consistency and workability of fresh concrete by observing how far a sample slumps after a cone mold is removed.',
-        context:
-          'The slump test result measured 180mm, exceeding the specified tolerance.',
+        context: 'The slump test result measured 180mm, exceeding the specified tolerance.',
       },
       {
         term: 'plastic shrinkage cracking',
@@ -38,23 +36,20 @@ export const QAQC_READING_MISSIONS: ReadingMission[] = [
         term: 'disposition',
         definition:
           'The formal decision on how a non-conforming item will be handled — for example, reject and replace, repair, or accept as-is with justification.',
-        context:
-          'Disposition: REJECT AND REPLACE.',
+        context: 'Disposition: REJECT AND REPLACE.',
       },
       {
         term: 'corrective action',
         definition:
           'The action taken to fix an existing non-conformance and prevent the same defect from recurring in the immediate work.',
-        context:
-          'Corrective Action Owner: Site Civil Engineer.',
+        context: 'Corrective Action Owner: Site Civil Engineer.',
       },
     ],
     questions: [
       {
         id: 'ncr_q1',
         type: 'multiple_choice',
-        questionText:
-          'What was the primary measured deviation that triggered this NCR?',
+        questionText: 'What was the primary measured deviation that triggered this NCR?',
         choices: [
           'A) Incorrect rebar spacing',
           'B) Slump test result exceeding the specified tolerance',

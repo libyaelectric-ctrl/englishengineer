@@ -1,13 +1,8 @@
-import { requireRole } from './middleware/rbac.middleware.js';
-import { validateQuery, AdminAuditLogsQuerySchema } from './validation.js';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
+
 import { getAuditLogs } from './audit-log.js';
-import type {
-  Express,
-  Request,
-  Response,
-  NextFunction,
-  RequestHandler,
-} from 'express';
+import { requireRole } from './middleware/rbac.middleware.js';
+import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 
 export const registerAdminRoutes = (
   app: Express,

@@ -1,21 +1,18 @@
-import { useRef, useState, useEffect, useTransition } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  LogOut,
-  X,
-  Bell,
-  ChevronRight,
-  BookOpenCheck,
-  HardDrive,
-  Wallet,
-} from 'lucide-react';
+import { PRODUCT_VERSION } from '@/config/product.config';
 import { useAppStore } from '@/store/app.store';
+import { Bell, BookOpenCheck, ChevronRight, HardDrive, LogOut, Wallet, X } from 'lucide-react';
+
+import { useEffect, useRef, useState, useTransition } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
+import { ThemeToggle } from '@/shared/components/ThemeToggle';
+import { cn } from '@/shared/utils/cn';
+
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { cn } from '@/shared/utils/cn';
+
 import { Navigation } from './Navigation';
-import { ThemeToggle } from '@/shared/components/ThemeToggle';
-import { PRODUCT_VERSION } from '@/config/product.config';
 
 export const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useAppStore();
@@ -31,10 +28,7 @@ export const Sidebar = () => {
     if (!notificationsOpen) return undefined;
     const closePanel = (event: MouseEvent | KeyboardEvent) => {
       if (event instanceof KeyboardEvent && event.key !== 'Escape') return;
-      if (
-        event instanceof MouseEvent &&
-        notificationsRef.current?.contains(event.target as Node)
-      )
+      if (event instanceof MouseEvent && notificationsRef.current?.contains(event.target as Node))
         return;
       setNotificationsOpen(false);
     };
@@ -81,15 +75,9 @@ export const Sidebar = () => {
           {/* Logo */}
           <div className="flex h-16 shrink-0 items-center justify-between border-b border-border-soft px-4">
             <div className="flex items-center gap-2.5">
-              <img
-                src="/brand/logo.webp"
-                alt="EngVox"
-                className="h-9 w-9 rounded-[4px]"
-              />
+              <img src="/brand/logo.webp" alt="EngVox" className="h-9 w-9 rounded-[4px]" />
               <div className="flex flex-col">
-                <span className="text-lg font-bold leading-tight text-foreground">
-                  EngVox
-                </span>
+                <span className="text-lg font-bold leading-tight text-foreground">EngVox</span>
                 <span className="text-[10px] font-bold text-primary leading-tight font-mono">
                   v{PRODUCT_VERSION}
                 </span>
@@ -123,8 +111,7 @@ export const Sidebar = () => {
               <button
                 type="button"
                 onClick={() => {
-                  if (window.innerWidth < 1024 && isSidebarOpen)
-                    toggleSidebar();
+                  if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
                   startTransition(() => navigate('/billing'));
                 }}
                 className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
@@ -176,8 +163,7 @@ export const Sidebar = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
-                        if (window.innerWidth < 1024 && isSidebarOpen)
-                          toggleSidebar();
+                        if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
                         startTransition(() => navigate('/curriculum'));
                       }}
                       className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
@@ -199,8 +185,7 @@ export const Sidebar = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
-                        if (window.innerWidth < 1024 && isSidebarOpen)
-                          toggleSidebar();
+                        if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
                         startTransition(() => navigate('/profile'));
                       }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"
@@ -213,8 +198,7 @@ export const Sidebar = () => {
                           Local progress protection
                         </span>
                         <span className="mt-0.5 block text-xs text-muted-copy font-medium">
-                          Check cloud-sync and account status before changing
-                          devices.
+                          Check cloud-sync and account status before changing devices.
                         </span>
                       </span>
                       <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-copy transition-transform group-hover:translate-x-0.5" />

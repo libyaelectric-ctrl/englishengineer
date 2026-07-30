@@ -20,19 +20,14 @@ interface ImportMetaWithAuthEnv {
 
 const env = (import.meta as unknown as ImportMetaWithAuthEnv).env;
 
-export const isLocalAuthAllowed = (
-  isProduction: boolean,
-  explicitOverride?: string
-): boolean => !isProduction || explicitOverride === 'true';
+export const isLocalAuthAllowed = (isProduction: boolean, explicitOverride?: string): boolean =>
+  !isProduction || explicitOverride === 'true';
 
 const isSupabaseUrlValid = (url: string | null): boolean => {
   if (!url) return false;
   try {
     const parsed = new URL(url);
-    return (
-      parsed.hostname.endsWith('.supabase.co') ||
-      parsed.hostname === 'localhost'
-    );
+    return parsed.hostname.endsWith('.supabase.co') || parsed.hostname === 'localhost';
   } catch {
     return false;
   }
@@ -58,8 +53,7 @@ export const AUTH_CONFIG: {
   isProduction: boolean;
   localAuthAllowed: boolean;
 } = {
-  requestedProvider:
-    env?.VITE_AUTH_PROVIDER === 'supabase' ? 'supabase' : 'local',
+  requestedProvider: env?.VITE_AUTH_PROVIDER === 'supabase' ? 'supabase' : 'local',
   supabase: {
     url: env?.VITE_SUPABASE_URL || null,
     anonKey: env?.VITE_SUPABASE_ANON_KEY || null,

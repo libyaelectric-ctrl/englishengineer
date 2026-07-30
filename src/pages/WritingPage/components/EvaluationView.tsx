@@ -1,11 +1,11 @@
 import { FileText } from 'lucide-react';
-import { SectionCard } from '@/shared/components/SectionCard';
+
 import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+
+import type { WritingCorrection, WritingEvaluationResult } from '@/features/writing';
+
 import { WritingEvaluationResults } from '../WritingEvaluationResults';
-import type {
-  WritingCorrection,
-  WritingEvaluationResult,
-} from '@/features/writing';
 
 interface EvaluationViewProps {
   evaluationResult: WritingEvaluationResult;

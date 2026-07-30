@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Chaos Engineering - Resilience Tests', () => {
   test('backend handles network timeout gracefully', async ({ request }) => {
@@ -6,12 +6,9 @@ test.describe('Chaos Engineering - Resilience Tests', () => {
     setTimeout(() => controller.abort(), 100);
 
     try {
-      await request.get(
-        'https://englishengineer-production.up.railway.app/api/health',
-        {
-          signal: controller.signal,
-        }
-      );
+      await request.get('https://englishengineer-production.up.railway.app/api/health', {
+        signal: controller.signal,
+      });
     } catch {
       // Expected to timeout
     }

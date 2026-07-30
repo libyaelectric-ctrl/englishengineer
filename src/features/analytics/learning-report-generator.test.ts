@@ -1,8 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import {
-  LearningReportGenerator,
-  type ReportData,
-} from './learning-report-generator';
+import { describe, expect, it } from 'vitest';
+
+import { LearningReportGenerator, type ReportData } from './learning-report-generator';
 
 const mockReportData: ReportData = {
   generatedAt: '2026-07-10T12:00:00Z',
@@ -76,10 +74,7 @@ const mockReportData: ReportData = {
   ],
   strengths: ['Strong vocabulary retention', 'Consistent study habit'],
   weaknesses: ['Speaking confidence needs work', 'Grammar tense accuracy'],
-  recommendations: [
-    'Focus on speaking practice daily',
-    'Review grammar tenses weekly',
-  ],
+  recommendations: ['Focus on speaking practice daily', 'Review grammar tenses weekly'],
 };
 
 describe('LearningReportGenerator', () => {

@@ -21,6 +21,7 @@ const { data, error } = await client.auth.signInWithSSO({
 ```
 
 **Supported Providers:**
+
 - SAML 2.0
 - OpenID Connect
 - Azure AD
@@ -46,6 +47,7 @@ const role = await orgService.getUserRole(org.id, userId);
 ```
 
 **Features:**
+
 - Unlimited organizations
 - Role-based access (owner/admin/member)
 - Member invitations
@@ -76,6 +78,7 @@ const stats = await teamService.getTeamStats(team.id);
 ```
 
 **Features:**
+
 - Unlimited teams
 - Invitation system
 - Role-based permissions
@@ -97,6 +100,7 @@ const logs = await getAuditLogs({
 ```
 
 **Logged Events:**
+
 - Authentication (login, logout, signup)
 - Authorization (permission changes)
 - Data access (reads, writes, deletes)
@@ -119,6 +123,7 @@ const org = await orgService.updateOrg(orgId, {
 ```
 
 **Customizable:**
+
 - Logo and favicon
 - Primary colors
 - Login page
@@ -138,6 +143,7 @@ const analytics = await getOrgAnalytics(orgId, {
 ```
 
 **Metrics:**
+
 - User engagement
 - Learning progress
 - Content effectiveness
@@ -160,13 +166,14 @@ const apiKey = await generateApiKey({
 // Use API key
 const response = await fetch('https://api.englishengineer.com/v1/users', {
   headers: {
-    'Authorization': `Bearer ${apiKey}`,
+    Authorization: `Bearer ${apiKey}`,
     'Content-Type': 'application/json',
   },
 });
 ```
 
 **Features:**
+
 - RESTful API
 - API key management
 - Rate limiting per key
@@ -190,6 +197,7 @@ const compliance = {
 ```
 
 **Certifications:**
+
 - GDPR compliant
 - SOC2 Type 1 (in progress)
 - ISO 27001 (planned)
@@ -199,6 +207,7 @@ const compliance = {
 **Status:** Available
 
 **Enterprise Tier Includes:**
+
 - 24/7 email support
 - 4-hour response SLA
 - Dedicated account manager
@@ -219,6 +228,7 @@ await configureWebhook({
 ```
 
 **Supported Integrations:**
+
 - Slack notifications
 - Microsoft Teams
 - Jira
@@ -229,17 +239,17 @@ await configureWebhook({
 
 ## Pricing
 
-| Feature | Pro | Enterprise |
-|---------|-----|------------|
-| Users | Unlimited | Unlimited |
-| Teams | Unlimited | Unlimited |
-| SSO | ❌ | ✅ |
-| Custom Branding | ❌ | ✅ |
-| API Access | Read-only | Full access |
-| Support | Email | 24/7 + SLA |
-| Compliance | Basic | SOC2 ready |
-| Audit Logs | 30 days | 1 year |
-| Custom Integrations | ❌ | ✅ |
+| Feature             | Pro       | Enterprise  |
+| ------------------- | --------- | ----------- |
+| Users               | Unlimited | Unlimited   |
+| Teams               | Unlimited | Unlimited   |
+| SSO                 | ❌        | ✅          |
+| Custom Branding     | ❌        | ✅          |
+| API Access          | Read-only | Full access |
+| Support             | Email     | 24/7 + SLA  |
+| Compliance          | Basic     | SOC2 ready  |
+| Audit Logs          | 30 days   | 1 year      |
+| Custom Integrations | ❌        | ✅          |
 
 ---
 
@@ -304,6 +314,7 @@ Enterprise features include additional security measures:
 ## Support
 
 Enterprise customers receive:
+
 - Dedicated account manager
 - 24/7 email support
 - 4-hour response SLA

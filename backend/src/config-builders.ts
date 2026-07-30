@@ -1,59 +1,41 @@
-import {
-  hasText,
-  toPositiveInteger,
-  trimEnv,
-  stripWhitespace,
-  isTrue,
-  resolveProviderKey,
-} from './config-helpers.js';
-import { logger } from './logger.js';
 import type {
-  RuntimeEnvironment,
   AiConfig,
   AuthConfig,
-  StripeConfig,
+  BillingRepositoryMode,
   RateLimitConfig,
+  RateLimitStoreMode,
+  RuntimeEnvironment,
+  StripeConfig,
   VocabularyConfig,
   WorkspaceConfig,
-  BillingRepositoryMode,
-  RateLimitStoreMode,
 } from '../types.js';
+import {
+  hasText,
+  isTrue,
+  resolveProviderKey,
+  stripWhitespace,
+  toPositiveInteger,
+  trimEnv,
+} from './config-helpers.js';
+import { logger } from './logger.js';
 
-const SUPPORTED_AI_PROVIDERS = new Set<string>([
-  'mock',
-  'openai',
-  'anthropic',
-  'gemini',
-]);
+const SUPPORTED_AI_PROVIDERS = new Set<string>(['mock', 'openai', 'anthropic', 'gemini']);
 
 type Env = Record<string, string | undefined>;
 
 export const resolveEnvironment = (env: Env): RuntimeEnvironment => {
-  const valid: RuntimeEnvironment[] = [
-    'development',
-    'test',
-    'staging',
-    'production',
-  ];
+  const valid: RuntimeEnvironment[] = ['development', 'test', 'staging', 'production'];
   return valid.includes(env.NODE_ENV as RuntimeEnvironment)
     ? (env.NODE_ENV as RuntimeEnvironment)
     : 'development';
 };
 
-const validateModelConfig = (
-  configured: boolean,
-  provider: string,
-  env: Env
-): void => {
+const validateModelConfig = (configured: boolean, provider: string, env: Env): void => {
   if (configured && env.AI_MODEL !== undefined && !hasText(env.AI_MODEL)) {
-    throw new Error(
-      'AI_MODEL must not be empty when a real AI provider is selected.'
-    );
+    throw new Error('AI_MODEL must not be empty when a real AI provider is selected.');
   }
   if (configured && provider === 'anthropic' && !hasText(env.AI_MODEL)) {
-    throw new Error(
-      'AI_MODEL must not be empty when a real AI provider is selected.'
-    );
+    throw new Error('AI_MODEL must not be empty when a real AI provider is selected.');
   }
 };
 
@@ -86,10 +68,7 @@ export const resolveAI = (env: Env): AiConfig => {
   };
 };
 
-export const resolveAuth = (
-  env: Env,
-  runtimeEnv: RuntimeEnvironment
-): AuthConfig => {
+export const resolveAuth = (env: Env, runtimeEnv: RuntimeEnvironment): AuthConfig => {
   const supabaseAuthConfigured =
     hasText(env.SUPABASE_URL) &&
     (hasText(env.SUPABASE_ANON_KEY) || hasText(env.SUPABASE_SERVICE_ROLE_KEY));
@@ -111,27 +90,15 @@ export const resolveAuth = (
     allowInsecureDevAuth,
     supabaseUrl: supabaseAuthConfigured ? env.SUPABASE_URL!.trim() : null,
     supabaseAnonKey: supabaseAuthConfigured
-      ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY)!.replace(
-          /\s+/g,
-          ''
-        )
+      ? (env.SUPABASE_ANON_KEY || env.SUPABASE_SERVICE_ROLE_KEY)!.replace(/\s+/g, '')
       : null,
     supabaseJwtSecret: stripWhitespace(env.SUPABASE_JWT_SECRET),
   };
 };
 
-export const resolveStripe = (
-  env: Env,
-  runtimeEnv: RuntimeEnvironment
-): StripeConfig => {
-  const configured = [
-    env.STRIPE_SECRET_KEY,
-    env.STRIPE_PRICE_PRO_MONTHLY,
-  ].every(hasText);
-  const supabaseConfigured = [
-    env.SUPABASE_URL,
-    env.SUPABASE_SERVICE_ROLE_KEY,
-  ].every(hasText);
+export const resolveStripe = (env: Env, runtimeEnv: RuntimeEnvironment): StripeConfig => {
+  const configured = [env.STRIPE_SECRET_KEY, env.STRIPE_PRICE_PRO_MONTHLY].every(hasText);
+  const supabaseConfigured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText);
 
   const requestedBillingRepository = (
     env.BILLING_REPOSITORY ||
@@ -153,12 +120,8 @@ export const resolveStripe = (
     priceTeamMonthly: trimEnv(env.STRIPE_PRICE_TEAM_MONTHLY),
     environment: runtimeEnv,
     allowMemoryRepository:
-      runtimeEnv !== 'production' ||
-      isTrue(env.ALLOW_MEMORY_BILLING_REPOSITORY),
-    eventCacheTtlMs: toPositiveInteger(
-      env.STRIPE_EVENT_CACHE_TTL_MS,
-      86_400_000
-    ),
+      runtimeEnv !== 'production' || isTrue(env.ALLOW_MEMORY_BILLING_REPOSITORY),
+    eventCacheTtlMs: toPositiveInteger(env.STRIPE_EVENT_CACHE_TTL_MS, 86_400_000),
     eventCacheMax: toPositiveInteger(env.STRIPE_EVENT_CACHE_MAX, 5_000),
     repositoryMode: requestedBillingRepository as BillingRepositoryMode,
     supabaseUrl: supabaseConfigured ? env.SUPABASE_URL!.trim() : null,
@@ -184,31 +147,20 @@ const validateRateLimitStore = (
     );
 };
 
-export const resolveRateLimit = (
-  env: Env,
-  runtimeEnv: RuntimeEnvironment
-): RateLimitConfig => {
-  const upstashConfigured = [
-    env.UPSTASH_REDIS_REST_URL,
-    env.UPSTASH_REDIS_REST_TOKEN,
-  ].every(hasText);
+export const resolveRateLimit = (env: Env, runtimeEnv: RuntimeEnvironment): RateLimitConfig => {
+  const upstashConfigured = [env.UPSTASH_REDIS_REST_URL, env.UPSTASH_REDIS_REST_TOKEN].every(
+    hasText
+  );
   const requested = (
     env.RATE_LIMIT_STORE ?? (runtimeEnv === 'production' ? 'upstash' : 'memory')
   ).toLowerCase();
   const allowInMemory = isTrue(env.ALLOW_IN_MEMORY_RATE_LIMIT_IN_PRODUCTION);
-  validateRateLimitStore(
-    requested,
-    upstashConfigured,
-    runtimeEnv,
-    allowInMemory
-  );
+  validateRateLimitStore(requested, upstashConfigured, runtimeEnv, allowInMemory);
 
   const upstashUrl = upstashConfigured
     ? env.UPSTASH_REDIS_REST_URL!.trim().replace(/\/$/, '')
     : null;
-  const upstashToken = upstashConfigured
-    ? env.UPSTASH_REDIS_REST_TOKEN!.replace(/\s+/g, '')
-    : null;
+  const upstashToken = upstashConfigured ? env.UPSTASH_REDIS_REST_TOKEN!.replace(/\s+/g, '') : null;
   return {
     windowMs: toPositiveInteger(env.RATE_LIMIT_WINDOW_MS, 900_000),
     max: toPositiveInteger(env.RATE_LIMIT_MAX, 100),
@@ -234,14 +186,10 @@ export const resolveSupabase = (env: Env): { configured: boolean } => ({
 });
 
 export const resolveWorkspace = (env: Env): WorkspaceConfig => {
-  const configured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(
-    hasText
-  );
+  const configured = [env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY].every(hasText);
   return {
     configured,
     supabaseUrl: configured ? env.SUPABASE_URL!.trim() : null,
-    supabaseServiceRoleKey: configured
-      ? env.SUPABASE_SERVICE_ROLE_KEY!.replace(/\s+/g, '')
-      : null,
+    supabaseServiceRoleKey: configured ? env.SUPABASE_SERVICE_ROLE_KEY!.replace(/\s+/g, '') : null,
   };
 };

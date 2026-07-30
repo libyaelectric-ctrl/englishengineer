@@ -1,9 +1,11 @@
-import type { SkillName, UserLearningProfile } from '@/features/profile';
+import { CheckCircle2, Circle, Map, PlayCircle } from 'lucide-react';
+
 import type { LearningTaskRecommendation } from '@/features/learning-orchestrator';
-import { CurriculumSkillSelector } from './CurriculumSkillSelector';
+import type { SkillName, UserLearningProfile } from '@/features/profile';
+
 import { CurriculumRecommendationBrief } from './CurriculumRecommendationBrief';
 import { CurriculumSidebar } from './CurriculumSidebar';
-import { CheckCircle2, PlayCircle, Circle, Map } from 'lucide-react';
+import { CurriculumSkillSelector } from './CurriculumSkillSelector';
 
 interface SkillMeta {
   label: string;
@@ -27,8 +29,7 @@ const MODULES = [
   {
     id: 'MOD-01',
     title: 'Site Communication Fundamentals',
-    description:
-      'Basic vocabulary, tool names, routines, and simple instructions.',
+    description: 'Basic vocabulary, tool names, routines, and simple instructions.',
     lessons: [
       {
         num: 1,
@@ -60,8 +61,7 @@ const MODULES = [
   {
     id: 'MOD-02',
     title: 'Technical Operations & Safety',
-    description:
-      'Progress reports, safety protocols, inspection readiness, and coordination.',
+    description: 'Progress reports, safety protocols, inspection readiness, and coordination.',
     lessons: [
       {
         num: 6,
@@ -148,20 +148,13 @@ export const CurriculumFullTab = ({
       />
 
       {/* Top Brief + Control Sidebar (balanced height) */}
-      <div
-        id="gate-progress"
-        className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]"
-      >
+      <div id="gate-progress" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <CurriculumRecommendationBrief
           selectedMeta={selectedMeta}
           recommendation={recommendation}
           recommendationLoading={recommendationLoading}
         />
-        <CurriculumSidebar
-          domain={domain}
-          setDomain={setDomain}
-          profile={profile}
-        />
+        <CurriculumSidebar domain={domain} setDomain={setDomain} profile={profile} />
       </div>
 
       {/* Precision Engineering Roadmap List (full width) */}
@@ -173,8 +166,7 @@ export const CurriculumFullTab = ({
               Precision Engineering Roadmap
             </h2>
             <p className="text-xs text-muted-copy font-medium mt-0.5">
-              Complete roadmap modules mapped to your current CEFR learning
-              sequence
+              Complete roadmap modules mapped to your current CEFR learning sequence
             </p>
           </div>
         </div>

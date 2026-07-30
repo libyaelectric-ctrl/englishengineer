@@ -1,7 +1,7 @@
-import { ApiError } from './errors.js';
-import { logger } from './logger.js';
 import type { VocabularyConfig } from '../types.js';
 import type { VocabularyLookupResult } from '../types.js';
+import { ApiError } from './errors.js';
+import { logger } from './logger.js';
 
 const dictionaryEndpoint = (word: string): string =>
   `https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word)}`;
@@ -18,11 +18,7 @@ const fetchWithTimeout = async (
     return await fetchImpl(url, { ...init, signal: controller.signal });
   } catch (error: unknown) {
     if (error instanceof Error && error.name === 'AbortError') {
-      throw new ApiError(
-        504,
-        'vocabulary_lookup_timeout',
-        'External vocabulary lookup timed out.'
-      );
+      throw new ApiError(504, 'vocabulary_lookup_timeout', 'External vocabulary lookup timed out.');
     }
     throw new ApiError(
       502,
@@ -50,15 +46,12 @@ interface ParsedDictionaryResult {
 }
 
 const parseDictionaryResponse = (payload: unknown): ParsedDictionaryResult => {
-  const entry: DictionaryEntry | null = Array.isArray(payload)
-    ? payload[0]
-    : null;
+  const entry: DictionaryEntry | null = Array.isArray(payload) ? payload[0] : null;
   const definitions = entry?.meanings
     ?.flatMap((meaning) => meaning?.definitions ?? [])
     .map((item) => item?.definition)
     .filter(
-      (definition): definition is string =>
-        typeof definition === 'string' && !!definition.trim()
+      (definition): definition is string => typeof definition === 'string' && !!definition.trim()
     )
     .slice(0, 5);
 
@@ -99,9 +92,7 @@ const translateWithLibre = async (
         source: 'en',
         target: targetLang,
         format: 'text',
-        ...(config.libreTranslateApiKey
-          ? { api_key: config.libreTranslateApiKey }
-          : {}),
+        ...(config.libreTranslateApiKey ? { api_key: config.libreTranslateApiKey } : {}),
       }),
     },
     config.timeoutMs
@@ -121,12 +112,7 @@ const translateWithMyMemory = async (
 ): Promise<TranslationResult | null> => {
   if (!config.myMemoryEnabled) return null;
   const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${encodeURIComponent(targetLang)}`;
-  const response = await fetchWithTimeout(
-    fetchImpl,
-    url,
-    { method: 'GET' },
-    config.timeoutMs
-  );
+  const response = await fetchWithTimeout(fetchImpl, url, { method: 'GET' }, config.timeoutMs);
   if (!response.ok) return null;
   const payload = await response.json();
   return typeof payload?.responseData?.translatedText === 'string'
@@ -188,13 +174,7 @@ export const createUpstashVocabularyCache = ({
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify([
-          'SET',
-          key,
-          JSON.stringify(value),
-          'EX',
-          '604800',
-        ]),
+        body: JSON.stringify(['SET', key, JSON.stringify(value), 'EX', '604800']),
         signal: controller.signal,
       });
     } catch (err: unknown) {
@@ -224,10 +204,7 @@ const translateWithFallback = async (
 };
 
 export interface VocabularyLookupService {
-  lookup(query: {
-    word: string;
-    targetLang: string;
-  }): Promise<VocabularyLookupResult>;
+  lookup(query: { word: string; targetLang: string }): Promise<VocabularyLookupResult>;
 }
 
 const createMemoryCache = (): VocabularyCache => {

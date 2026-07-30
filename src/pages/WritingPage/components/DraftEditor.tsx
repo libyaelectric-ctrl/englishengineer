@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
-import { PenTool, AlertTriangle, Volume2, Send } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { AlertTriangle, PenTool, Send, Volume2 } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
-import { AITeacherService, type AITeacherChatMessage } from '@/features/ai';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { cn } from '@/shared/utils/cn';
+
+import { type AITeacherChatMessage, AITeacherService } from '@/features/ai';
 
 interface DraftEditorProps {
   title: string;
@@ -19,11 +22,7 @@ interface DraftEditorProps {
 }
 
 const wordCountColor = (count: number) =>
-  count > 200
-    ? 'text-green-500'
-    : count > 100
-      ? 'text-primary'
-      : 'text-muted-copy';
+  count > 200 ? 'text-green-500' : count > 100 ? 'text-primary' : 'text-muted-copy';
 
 const charBarColor = (len: number) =>
   len > 1000 ? 'bg-rose-500' : len > 500 ? 'bg-amber-500' : 'bg-emerald-500';
@@ -69,10 +68,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
     if (!chatInput.trim() || isTalking) return;
     const userMsg = chatInput.trim();
     setChatInput('');
-    const nextHistory = [
-      ...messages,
-      { role: 'user' as const, content: userMsg },
-    ];
+    const nextHistory = [...messages, { role: 'user' as const, content: userMsg }];
     setMessages(nextHistory);
     setIsTalking(true);
 
@@ -83,10 +79,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
         nextHistory,
         userMsg
       );
-      setMessages([
-        ...nextHistory,
-        { role: 'assistant' as const, content: response.message },
-      ]);
+      setMessages([...nextHistory, { role: 'assistant' as const, content: response.message }]);
     } finally {
       setIsTalking(false);
     }
@@ -107,15 +100,9 @@ Tell me what you want to write or paste a sentence you want to improve!`,
     >
       <div className="space-y-4">
         <div className="rounded-[4px] border border-border-soft bg-surface-hover p-4 text-sm text-foreground shadow-sm">
-          <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-            Scenario
-          </p>
-          <p className="mt-2 leading-6 font-normal">
-            {scenario ?? description}
-          </p>
-          {task && (
-            <p className="mt-3 font-bold text-foreground">Goal: {task}</p>
-          )}
+          <p className="text-xs font-bold uppercase tracking-wider text-foreground">Scenario</p>
+          <p className="mt-2 leading-6 font-normal">{scenario ?? description}</p>
+          {task && <p className="mt-3 font-bold text-foreground">Goal: {task}</p>}
           {expectedStructure && (
             <p className="mt-2 text-xs leading-5 text-muted-copy font-bold">
               Required points: {expectedStructure.join(' · ')}
@@ -133,9 +120,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
           />
         </label>
 
-        <p
-          className={`mt-1 text-right text-xs font-bold ${wordCountColor(wordCount)}`}
-        >
+        <p className={`mt-1 text-right text-xs font-bold ${wordCountColor(wordCount)}`}>
           {wordCount} words
         </p>
 
@@ -211,9 +196,7 @@ Tell me what you want to write or paste a sentence you want to improve!`,
             ))}
             {isTalking && (
               <div className="flex flex-col max-w-[85%] rounded-[4px] p-2.5 text-xs bg-primary/5 text-foreground border border-primary/10 mr-auto animate-pulse">
-                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">
-                  AI Coach 🎓
-                </p>
+                <p className="font-bold text-[10px] uppercase opacity-60 mb-0.5">AI Coach 🎓</p>
                 <p>Analyzing draft and context...</p>
               </div>
             )}

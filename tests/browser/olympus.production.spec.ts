@@ -1,28 +1,18 @@
-import { expect, test, type Page } from '@playwright/test';
+import { type Page, expect, test } from '@playwright/test';
 
 const isLightColor = (element: Element): boolean => {
   const parseColorValues = (c: string) => c.match(/[\d.]+/g)?.map(Number) || [];
   const isTransparent = (ch: number[]) => ch.length >= 4 && ch[3] === 0;
-  const allChannelsAbove = (
-    ch: number[],
-    start: number,
-    end: number,
-    threshold: number
-  ) => ch.slice(start, end).every((val) => val > threshold);
-  const hasBgImage = (b: string, ...patterns: string[]) =>
-    b && patterns.some((p) => b.includes(p));
-  const noBgImage = (b: string, ...patterns: string[]) =>
-    b && !patterns.some((p) => b.includes(p));
+  const allChannelsAbove = (ch: number[], start: number, end: number, threshold: number) =>
+    ch.slice(start, end).every((val) => val > threshold);
+  const hasBgImage = (b: string, ...patterns: string[]) => b && patterns.some((p) => b.includes(p));
+  const noBgImage = (b: string, ...patterns: string[]) => b && !patterns.some((p) => b.includes(p));
 
-  const { backgroundColor: color, backgroundImage: bgImg } =
-    getComputedStyle(element);
-  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251'))
-    return true;
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
+  if (hasBgImage(bgImg, 'rgba(255, 255, 255', 'rgba(248, 249, 251')) return true;
   const values = parseColorValues(color);
-  if (color.startsWith('oklab') || color.startsWith('oklch'))
-    return (values[0] || 0) > 0.8;
-  if (color.startsWith('color(srgb'))
-    return allChannelsAbove(values, 0, 3, 0.8);
+  if (color.startsWith('oklab') || color.startsWith('oklch')) return (values[0] || 0) > 0.8;
+  if (color.startsWith('color(srgb')) return allChannelsAbove(values, 0, 3, 0.8);
   if (isTransparent(values)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#141A22');
   return allChannelsAbove(values, 0, 3, 220);
 };
@@ -32,13 +22,10 @@ const isNotBlackButton = (element: Element): boolean => {
   const isTransparent = (ch: number[]) => ch.length >= 4 && ch[3] === 0;
   const someChannelAbove = (ch: number[], start: number, threshold: number) =>
     ch.slice(start).some((val) => val > threshold);
-  const hasBgImage = (b: string, ...patterns: string[]) =>
-    b && patterns.some((p) => b.includes(p));
-  const noBgImage = (b: string, ...patterns: string[]) =>
-    b && !patterns.some((p) => b.includes(p));
+  const hasBgImage = (b: string, ...patterns: string[]) => b && patterns.some((p) => b.includes(p));
+  const noBgImage = (b: string, ...patterns: string[]) => b && !patterns.some((p) => b.includes(p));
 
-  const { backgroundColor: color, backgroundImage: bgImg } =
-    getComputedStyle(element);
+  const { backgroundColor: color, backgroundImage: bgImg } = getComputedStyle(element);
   if (hasBgImage(bgImg, '#617FD8', '#4D6BC0', 'rgb(')) return true;
   const channels = parseColorValues(color);
   if (isTransparent(channels)) return noBgImage(bgImg, 'rgba(0, 0, 0', '#000');
@@ -48,9 +35,7 @@ const isNotBlackButton = (element: Element): boolean => {
 const demoLogin = async (page: Page) => {
   await page.goto('/login');
   await page.getByRole('button', { name: /demo/i }).click();
-  await expect(
-    page.getByRole('heading', { name: /command center/i })
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
 };
 
 const authenticatedPage = async (page: Page, path: string) => {
@@ -80,41 +65,33 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await expect(page.getByText(/demo engineer/i).first()).toBeVisible();
 
     await page.reload();
-    await expect(
-      page.getByRole('heading', { name: /command center/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
 
     await page.getByLabel(/logout/i).click();
     await expect(page).toHaveURL(/\/login/);
   });
 
-  test('core learning routes load through the authenticated shell', async ({
-    page,
-  }) => {
+  test('core learning routes load through the authenticated shell', async ({ page }) => {
     await authenticatedPage(page, '/reading');
-    await expect(
-      page.getByRole('heading', { name: /reading workspace/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /reading workspace/i })).toBeVisible();
     await expect(page.getByText(/technical mission library/i)).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'My Level', exact: true })
-    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'My Level', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
     await expect(page.getByText('Basic Site Safety Signs')).toBeVisible();
     await expect(page.getByText('C2', { exact: true })).toHaveCount(0);
     await page.getByRole('button', { name: 'All Levels', exact: true }).click();
-    await expect(
-      page.getByText('Locked', { exact: true }).first()
-    ).toBeVisible();
+    await expect(page.getByText('Locked', { exact: true }).first()).toBeVisible();
 
     await page.goto('/writing');
-    await expect(
-      page.getByRole('heading', { name: /writing composition/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /writing composition/i })).toBeVisible();
     await expect(page.getByText(/technical mission library/i)).toBeVisible();
     await expect(page.getByText('Simple Site Update')).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'My Level', exact: true })
-    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'My Level', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
 
     await page.goto('/listening');
     await expect(
@@ -122,48 +99,38 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     ).toBeVisible();
     await expect(page.getByText(/transcript/i).first()).toBeVisible();
     await expect(page.getByText('Safe Electrical Room')).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'My Level', exact: true })
-    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'My Level', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
 
     await page.goto('/speaking');
-    await expect(
-      page.getByRole('heading', { name: /speaking workspace/i })
-    ).toBeVisible();
-    await expect(
-      page.getByText(/typed responses are evaluated locally/i).first()
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /speaking workspace/i })).toBeVisible();
+    await expect(page.getByText(/typed responses are evaluated locally/i).first()).toBeVisible();
     await expect(
       page.getByRole('heading', { name: 'Site Introduction', exact: true })
     ).toBeVisible();
-    await expect(
-      page.getByRole('button', { name: 'My Level', exact: true })
-    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.getByRole('button', { name: 'My Level', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
 
     await page.goto('/vocabulary');
-    await expect(
-      page.getByRole('heading', { name: 'Vocabulary', exact: true })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Vocabulary', exact: true })).toBeVisible();
     await expect(page.getByPlaceholder(/search vocabulary/i)).toBeVisible();
     await expect(page.getByText('Lesson 1', { exact: true })).toBeVisible();
     await page.getByPlaceholder(/search vocabulary/i).fill('height');
     await page.getByRole('button', { name: /^search$/i }).click();
     await expect(page.getByText('Search Results')).toBeVisible();
     await page.getByRole('button', { name: 'Reset', exact: true }).click();
-    await page
-      .getByPlaceholder(/search vocabulary/i)
-      .fill('olympus-custom-term');
+    await page.getByPlaceholder(/search vocabulary/i).fill('olympus-custom-term');
     await page.getByRole('button', { name: /^search$/i }).click();
     await page.getByRole('button', { name: /add to my vocabulary/i }).click();
     const addForm = page.getByRole('form', { name: 'Add to My Vocabulary' });
     await addForm.getByLabel('Turkish meaning').fill('özel terim');
-    await addForm
-      .getByLabel('Example')
-      .fill('Use the custom term in this report.');
+    await addForm.getByLabel('Example').fill('Use the custom term in this report.');
     await addForm.getByLabel('Domain', { exact: true }).fill('communication');
-    await addForm
-      .getByRole('button', { name: /save to my vocabulary/i })
-      .click();
+    await addForm.getByRole('button', { name: /save to my vocabulary/i }).click();
     await expect(
       page.getByRole('heading', { name: 'olympus-custom-term', exact: true })
     ).toBeVisible();
@@ -173,15 +140,9 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     page,
   }) => {
     await authenticatedPage(page, '/analytics');
+    await expect(page.getByRole('heading', { name: /assessment profile/i })).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: /assessment profile/i })
-    ).toBeVisible();
-    await expect(
-      page
-        .getByText(
-          /not enough assessment data yet|not an official cefr certificate/i
-        )
-        .first()
+      page.getByText(/not enough assessment data yet|not an official cefr certificate/i).first()
     ).toBeVisible();
 
     await page.goto('/ai');
@@ -193,17 +154,11 @@ test.describe('EngineerOS Olympus real browser verification', () => {
         .first()
     ).toBeVisible();
     await expect(
-      page
-        .getByText(
-          /mock ai demo|ai service unavailable|protected ai connection/i
-        )
-        .first()
+      page.getByText(/mock ai demo|ai service unavailable|protected ai connection/i).first()
     ).toBeVisible();
 
     await page.goto('/profile');
-    await expect(
-      page.getByRole('heading', { name: /profile overview/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /profile overview/i })).toBeVisible();
 
     // Switch to billing tab to check billing state
     await page.getByRole('button', { name: 'Billing', exact: true }).click();
@@ -215,22 +170,16 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await page.getByLabel(/first name/i).fill('Olympus');
     await page.getByLabel(/last name/i).fill('Engineer');
     await page.getByRole('button', { name: /save changes/i }).click();
-    await expect(
-      page.getByText(/profile overview updated successfully/i)
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { level: 1, name: 'Olympus Engineer' })
-    ).toBeVisible();
+    await expect(page.getByText(/profile overview updated successfully/i)).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'Olympus Engineer' })).toBeVisible();
   });
 
   test('network, backend, audio, speech, offline, and corrupted storage resilience', async ({
     page,
   }) => {
     await page.addInitScript(() => {
-      delete (window as Window & { SpeechRecognition?: unknown })
-        .SpeechRecognition;
-      delete (window as Window & { webkitSpeechRecognition?: unknown })
-        .webkitSpeechRecognition;
+      delete (window as Window & { SpeechRecognition?: unknown }).SpeechRecognition;
+      delete (window as Window & { webkitSpeechRecognition?: unknown }).webkitSpeechRecognition;
       localStorage.setItem('eos_learning_state', '{corrupted');
     });
 
@@ -239,15 +188,11 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await demoLogin(page);
 
     await page.goto('/offline');
-    await expect(
-      page.getByRole('heading', { name: /offline (mode|pack)/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /offline (mode|pack)/i })).toBeVisible();
     await expect(page.getByText(/requires internet/i).first()).toBeVisible();
 
     await page.goto('/ai');
-    await expect(
-      page.getByRole('heading', { name: /engineering copilot/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /engineering copilot/i })).toBeVisible();
     await expect(page.getByText(/mock ai|backend/i).first()).toBeVisible();
 
     await page.goto('/listening');
@@ -258,42 +203,34 @@ test.describe('EngineerOS Olympus real browser verification', () => {
 
     await page.goto('/speaking');
     await expect(
-      page
-        .getByText(/no microphone required|text-based communication practice/i)
-        .first()
+      page.getByText(/no microphone required|text-based communication practice/i).first()
     ).toBeVisible();
   });
 
-  test('work tools, quick tools, and learning intelligence are wired', async ({
-    page,
-  }) => {
+  test('work tools, quick tools, and learning intelligence are wired', async ({ page }) => {
     await authenticatedPage(page, '/work-tools');
-    await expect(
-      page.getByRole('heading', { name: 'Tools', exact: true })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('tab', { name: 'Work Tools', exact: true })
-    ).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('heading', { name: 'Tools', exact: true })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Work Tools', exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     await expect(page.getByText(/ncr -> reply/i)).toBeVisible();
 
     await page.goto('/quick-tools');
-    await expect(
-      page.getByRole('tab', { name: 'Quick Tools', exact: true })
-    ).toHaveAttribute('aria-selected', 'true');
+    await expect(page.getByRole('tab', { name: 'Quick Tools', exact: true })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     await expect(
       page.getByText(/mock ai demo|protected ai connection ready/i).first()
     ).toBeVisible();
 
     await page.goto('/learning-plan');
-    await expect(
-      page.getByText(/today’s engineering communication tasks/i)
-    ).toBeVisible();
+    await expect(page.getByText(/today’s engineering communication tasks/i)).toBeVisible();
     await expect(page.getByText(/mistake log/i)).toBeVisible();
 
     await page.goto('/dashboard');
-    await expect(
-      page.getByRole('heading', { name: /dashboard/i })
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
 
     await page.getByLabel(/open closed beta feedback/i).click();
     await expect(page.getByText(/closed beta feedback/i)).toBeVisible();
@@ -304,18 +241,14 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await expect(page.getByLabel(/open closed beta feedback/i)).toBeVisible();
   });
 
-  test('level confidence and speaking result remain explicit and light', async ({
-    page,
-  }) => {
+  test('level confidence and speaking result remain explicit and light', async ({ page }) => {
     await authenticatedPage(page, '/dashboard');
     await expect(page.getByText(/starting level: a1 demo path/i)).toBeVisible();
     await expect(page.getByText(/demo default/i).first()).toBeVisible();
 
     await page.goto('/curriculum');
     await expect(page.getByText('Unified Review Queue')).toBeVisible();
-    await expect(
-      page.getByText('Lesson 1', { exact: true }).first()
-    ).toBeVisible();
+    await expect(page.getByText('Lesson 1', { exact: true }).first()).toBeVisible();
 
     await page.goto('/speaking');
     await page
@@ -338,9 +271,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await page.getByRole('button', { name: /dismiss diagnostics/i }).click();
   });
 
-  test('responsive desktop, tablet, and mobile viewports remain navigable', async ({
-    page,
-  }) => {
+  test('responsive desktop, tablet, and mobile viewports remain navigable', async ({ page }) => {
     await demoLogin(page);
 
     const viewports = [
@@ -355,24 +286,18 @@ test.describe('EngineerOS Olympus real browser verification', () => {
         height: viewport.height,
       });
       await page.goto('/dashboard');
-      await expect(
-        page.getByRole('heading', { name: /command center/i })
-      ).toBeVisible();
+      await expect(page.getByRole('heading', { name: /command center/i })).toBeVisible();
       await expect(page.getByLabel(/toggle navigation sidebar/i)).toBeVisible();
       for (const metric of ['score', 'elo', 'done']) {
         const fits = await page
           .getByTestId(`dashboard-summary-${metric}`)
-          .evaluate(
-            (element) => element.scrollWidth <= element.clientWidth + 1
-          );
+          .evaluate((element) => element.scrollWidth <= element.clientWidth + 1);
         expect(fits, `${metric} metric should not overflow`).toBe(true);
       }
     }
   });
 
-  test('light SaaS surfaces remain light during card hover', async ({
-    page,
-  }) => {
+  test('light SaaS surfaces remain light during card hover', async ({ page }) => {
     await demoLogin(page);
     const colorScheme = await page.evaluate(
       () => getComputedStyle(document.documentElement).colorScheme
@@ -393,19 +318,15 @@ test.describe('EngineerOS Olympus real browser verification', () => {
 
     const rightPanel = page.getByTestId('dashboard-right-panel');
     await expect(rightPanel).toBeVisible();
+    expect(await rightPanel.evaluate((element) => getComputedStyle(element).position)).toBe(
+      'sticky'
+    );
     expect(
-      await rightPanel.evaluate((element) => getComputedStyle(element).position)
-    ).toBe('sticky');
-    expect(
-      await rightPanel.evaluate(
-        (element) => getComputedStyle(element).borderLeftWidth
-      )
+      await rightPanel.evaluate((element) => getComputedStyle(element).borderLeftWidth)
     ).not.toBe('0px');
   });
 
-  test('keyboard navigation exposes visible focus and primary controls', async ({
-    page,
-  }) => {
+  test('keyboard navigation exposes visible focus and primary controls', async ({ page }) => {
     await page.goto('/login');
     await expect(page.getByLabel(/email address/i)).toBeVisible();
     await page.getByLabel(/email address/i).focus();
@@ -415,9 +336,7 @@ test.describe('EngineerOS Olympus real browser verification', () => {
     await page.getByLabel(/toggle navigation sidebar/i).focus();
     await expect(page.getByLabel(/toggle navigation sidebar/i)).toBeFocused();
     await page.keyboard.press('Tab');
-    const shellFocusedTag = await page.evaluate(
-      () => document.activeElement?.tagName
-    );
+    const shellFocusedTag = await page.evaluate(() => document.activeElement?.tagName);
     expect(shellFocusedTag).toMatch(/INPUT|BUTTON|A/);
   });
 });

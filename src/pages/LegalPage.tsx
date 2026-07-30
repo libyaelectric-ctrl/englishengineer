@@ -1,5 +1,6 @@
-import { PageMetadata } from '@/shared/components/PageMetadata';
 import { ShieldAlert } from 'lucide-react';
+
+import { PageMetadata } from '@/shared/components/PageMetadata';
 
 export type LegalDocument = 'terms' | 'privacy' | 'cookies' | 'refund';
 
@@ -9,8 +10,7 @@ const documents: Record<
 > = {
   terms: {
     title: 'Terms of Service',
-    summary:
-      'Terms and conditions for using the EngVox engineering communication platform.',
+    summary: 'Terms and conditions for using the EngVox engineering communication platform.',
     sections: [
       [
         'Acceptance of terms',
@@ -174,9 +174,7 @@ const LegalPage = ({ document }: { document: LegalDocument }) => {
       <PageMetadata title={content.title} description={content.summary} />
       <article className="mx-auto max-w-3xl px-4 sm:px-6">
         <p className="public-eyebrow">Product template</p>
-        <h1 className="mt-3 text-4xl font-medium text-foreground">
-          {content.title}
-        </h1>
+        <h1 className="mt-3 text-4xl font-medium text-foreground">{content.title}</h1>
         <p className="mt-4 leading-7 text-muted-copy">{content.summary}</p>
         <div
           className="mt-8 flex items-start gap-3 rounded-xl border border-warning/20 bg-warning/5 p-4 text-sm font-medium leading-6 text-foreground"
@@ -185,8 +183,8 @@ const LegalPage = ({ document }: { document: LegalDocument }) => {
         >
           <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
           <span>
-            This page is a product template and must be reviewed by legal
-            counsel before production launch.
+            This page is a product template and must be reviewed by legal counsel before production
+            launch.
           </span>
         </div>
         <div className="mt-8 space-y-8">

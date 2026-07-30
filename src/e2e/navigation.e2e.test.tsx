@@ -1,25 +1,24 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import DashboardPage from '@/pages/DashboardPage';
-import VocabularyPage from '@/pages/VocabularyPage';
 import GrammarPage from '@/pages/GrammarPage';
-import ReadingPage from '@/pages/ReadingPage';
-import WritingPage from '@/pages/WritingPage';
 import ListeningPage from '@/pages/ListeningPage';
-import SpeakingPage from '@/pages/SpeakingPage';
-import ProfilePage from '@/pages/ProfilePage';
-import ToolsPage from '@/pages/ToolsPage';
 import LoginPage from '@/pages/LoginPage';
+import ProfilePage from '@/pages/ProfilePage';
+import ReadingPage from '@/pages/ReadingPage';
+import SpeakingPage from '@/pages/SpeakingPage';
+import ToolsPage from '@/pages/ToolsPage';
+import VocabularyPage from '@/pages/VocabularyPage';
+import WritingPage from '@/pages/WritingPage';
 
 const createTestQueryClient = () =>
   new QueryClient({ defaultOptions: { queries: { retry: false } } });
 
-const renderWithRouter = (
-  component: React.ReactElement,
-  initialEntries = ['/']
-) =>
+const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) =>
   render(
     <QueryClientProvider client={createTestQueryClient()}>
       <MemoryRouter initialEntries={initialEntries}>{component}</MemoryRouter>
@@ -72,9 +71,7 @@ describe('Navigation E2E: Main routes render without errors', () => {
   it('/speaking renders', async () => {
     renderWithRouter(<SpeakingPage />, ['/speaking']);
     await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: /Speaking/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Speaking/i })).toBeInTheDocument();
     });
   });
 });
@@ -83,9 +80,7 @@ describe('Navigation E2E: Profile and Progress routes', () => {
   it('/profile/overview renders ProfilePage', async () => {
     renderWithRouter(<ProfilePage />, ['/profile/overview']);
     await waitFor(() => {
-      expect(
-        screen.getByText(/Manage your professional profile/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Manage your professional profile/i)).toBeInTheDocument();
     });
   });
 
@@ -144,9 +139,7 @@ describe('Navigation E2E: Lazy-loaded pages', () => {
     const { default: SpeakingPage } = await import('@/pages/SpeakingPage');
     renderWithRouter(<SpeakingPage />, ['/speaking']);
     await waitFor(() => {
-      expect(
-        screen.getByRole('heading', { name: /Speaking/i })
-      ).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Speaking/i })).toBeInTheDocument();
     });
   });
 });

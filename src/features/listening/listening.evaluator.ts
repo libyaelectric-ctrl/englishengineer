@@ -1,10 +1,11 @@
+import { ScoringService } from '@/core/learning/scoring.service';
+
 import {
+  ListeningDetailedAnswerFeedback,
+  ListeningEvaluationResult,
   ListeningMission,
   ListeningSubmission,
-  ListeningEvaluationResult,
-  ListeningDetailedAnswerFeedback,
 } from './listening.types';
-import { ScoringService } from '@/core/learning/scoring.service';
 
 const scoreComprehension = (
   mission: ListeningMission,
@@ -31,15 +32,9 @@ const scoreComprehension = (
   return { correct: correctCount, detailed };
 };
 
-const checkAnswer = (
-  userAns: string,
-  correctAnswer: string,
-  type: string
-): boolean => {
+const checkAnswer = (userAns: string, correctAnswer: string, type: string): boolean => {
   if (type === 'multiple_choice') {
-    return (
-      userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0)
-    );
+    return userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0);
   }
   if (type === 'true_false') {
     const cleanedUser = userAns.toLowerCase().trim();
@@ -65,8 +60,7 @@ const scoreKeywords = (
       summary.toLowerCase().includes(mk);
     if (isMatched) matchedCount++;
   });
-  const keywordRatio =
-    missionKeywords.length > 0 ? matchedCount / missionKeywords.length : 1.0;
+  const keywordRatio = missionKeywords.length > 0 ? matchedCount / missionKeywords.length : 1.0;
   return { keywordRatio, matchedCount };
 };
 
@@ -82,18 +76,14 @@ const scoreVocabulary = (
   vocabularyList.forEach((vt) => {
     if (lowerSummary.includes(vt) || lowerKeywords.includes(vt)) matchedCount++;
   });
-  const vocabRatio =
-    vocabularyList.length > 0 ? matchedCount / vocabularyList.length : 1.0;
+  const vocabRatio = vocabularyList.length > 0 ? matchedCount / vocabularyList.length : 1.0;
   return {
     vocabRatio,
     score: Math.round(vocabRatio * 60 + (comprehensionScore / 100) * 40),
   };
 };
 
-const scoreSummary = (
-  wordCount: number,
-  matchedKeywordsCount: number
-): number => {
+const scoreSummary = (wordCount: number, matchedKeywordsCount: number): number => {
   let summaryScore = 0;
   if (wordCount === 0) {
     summaryScore = 0;
@@ -137,9 +127,7 @@ const buildFeedback = (
   }
 
   if (vocabRatio >= 1.0) {
-    strengths.push(
-      'Demonstrated strong mastery of core technical vocabulary items'
-    );
+    strengths.push('Demonstrated strong mastery of core technical vocabulary items');
   } else {
     weaknesses.push('Technical glossary terms underutilized in synthesis');
   }
@@ -149,9 +137,7 @@ const buildFeedback = (
     summaryFeedback =
       'Your summary displays professional clarity and sufficient technical depth to guide downstream workflows.';
   } else {
-    weaknesses.push(
-      'Executive summary is too brief to convey full technical contexts'
-    );
+    weaknesses.push('Executive summary is too brief to convey full technical contexts');
     summaryFeedback =
       'Try to elaborate your summaries by documenting specific engineering values, directives, or safety guidelines.';
   }
@@ -160,15 +146,14 @@ const buildFeedback = (
 };
 
 export const ListeningEvaluator = {
-  evaluate(
-    mission: ListeningMission,
-    submission: ListeningSubmission
-  ): ListeningEvaluationResult {
+  evaluate(mission: ListeningMission, submission: ListeningSubmission): ListeningEvaluationResult {
     const { answers, summary, userKeywords, timeSpentMinutes } = submission;
 
     const totalQuestionsCount = mission.questions.length;
-    const { correct: correctQuestionsCount, detailed: detailedAnswers } =
-      scoreComprehension(mission, answers);
+    const { correct: correctQuestionsCount, detailed: detailedAnswers } = scoreComprehension(
+      mission,
+      answers
+    );
 
     const comprehensionScore =
       totalQuestionsCount > 0
@@ -201,10 +186,7 @@ export const ListeningEvaluator = {
     const summaryScore = scoreSummary(wordCount, matchedKeywordsCount);
 
     const finalScore = Math.round(
-      comprehensionScore * 0.4 +
-        keywordScore * 0.2 +
-        vocabularyScore * 0.2 +
-        summaryScore * 0.2
+      comprehensionScore * 0.4 + keywordScore * 0.2 + vocabularyScore * 0.2 + summaryScore * 0.2
     );
 
     const scoringResult = ScoringService.calculateScore({
@@ -239,9 +221,7 @@ export const ListeningEvaluator = {
       eloChange: scoringResult.eloChange,
       strengths: Array.from(new Set(strengths)),
       weaknesses:
-        finalWeaknesses.length > 0
-          ? Array.from(new Set(finalWeaknesses))
-          : ['None detected'],
+        finalWeaknesses.length > 0 ? Array.from(new Set(finalWeaknesses)) : ['None detected'],
       feedback: scoringResult.feedback,
       detailedAnswers,
       summaryFeedback,

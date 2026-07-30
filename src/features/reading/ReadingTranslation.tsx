@@ -1,11 +1,8 @@
-import { useState } from 'react';
 import { Languages } from 'lucide-react';
 
-export const ReadingTranslation = ({
-  translation,
-}: {
-  translation: string;
-}) => {
+import { useState } from 'react';
+
+export const ReadingTranslation = ({ translation }: { translation: string }) => {
   const [revealed, setRevealed] = useState(false);
   return (
     <div className="group mt-2">

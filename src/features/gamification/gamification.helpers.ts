@@ -1,14 +1,16 @@
-import { LearningState } from '@/core/learning/learning.types';
 import { IdService } from '@/core/ids/id.service';
+import { LearningState } from '@/core/learning/learning.types';
+
 import { AnalyticsSummary } from '@/features/analytics';
+
+import { LEVEL_REWARDS } from './gamification.rewards';
+import { LEVEL_XP_STEP } from './gamification.rules';
 import {
   GamificationMissionProgress,
   GamificationMissionTemplate,
   GamificationReward,
   GamificationRewardHistoryItem,
 } from './gamification.types';
-import { LEVEL_XP_STEP } from './gamification.rules';
-import { LEVEL_REWARDS } from './gamification.rewards';
 
 export const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
@@ -29,13 +31,10 @@ export const getLevelInfo = (xp: number) => {
   const levelStartXp = (currentLevel - 1) * LEVEL_XP_STEP;
   const nextLevelXp = currentLevel * LEVEL_XP_STEP;
   const xpRequired = Math.max(0, nextLevelXp - xp);
-  const progressPercentage = Math.round(
-    ((xp - levelStartXp) / LEVEL_XP_STEP) * 100
-  );
+  const progressPercentage = Math.round(((xp - levelStartXp) / LEVEL_XP_STEP) * 100);
   const nextReward =
-    LEVEL_REWARDS.find(
-      (reward) => reward.id === `reward_level_${currentLevel + 1}`
-    )?.title || 'Engineer Elite reward tier';
+    LEVEL_REWARDS.find((reward) => reward.id === `reward_level_${currentLevel + 1}`)?.title ||
+    'Engineer Elite reward tier';
 
   return {
     currentLevel,
@@ -72,17 +71,12 @@ export const getSessionCountForTemplate = (
         ? getWeekStart(now)
         : getMonthStart(now);
 
-  if (template.category === 'AI Coach')
-    return analytics.aiCoachUsage.totalSessions > 0 ? 1 : 0;
-  if (template.category === 'Analytics')
-    return analytics.recentSessions.length > 0 ? 1 : 0;
+  if (template.category === 'AI Coach') return analytics.aiCoachUsage.totalSessions > 0 ? 1 : 0;
+  if (template.category === 'Analytics') return analytics.recentSessions.length > 0 ? 1 : 0;
 
-  const sessions = state.studySessions.filter(
-    (session) => new Date(session.timestamp) >= fromDate
-  );
+  const sessions = state.studySessions.filter((session) => new Date(session.timestamp) >= fromDate);
   if (template.category === 'Mixed') return sessions.length;
-  return sessions.filter((session) => session.module === template.category)
-    .length;
+  return sessions.filter((session) => session.module === template.category).length;
 };
 
 export const buildMissionProgress = (

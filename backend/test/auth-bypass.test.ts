@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, test } from 'node:test';
+
 import { createApp } from '../src/app.js';
 import { createBackendConfig } from '../src/config.js';
 
@@ -106,19 +107,16 @@ test('demo engineer profiles are blocked from creating billing portal sessions i
     STRIPE_PRICE_PRO_MONTHLY: 'price_mock',
   });
 
-  const response = await fetch(
-    `${url}/api/billing/create-customer-portal-session`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-EngineerOS-User-Id': 'demo_engineer_abc123',
-      },
-      body: JSON.stringify({
-        returnUrl: 'http://localhost:3000/profile',
-      }),
-    }
-  );
+  const response = await fetch(`${url}/api/billing/create-customer-portal-session`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-EngineerOS-User-Id': 'demo_engineer_abc123',
+    },
+    body: JSON.stringify({
+      returnUrl: 'http://localhost:3000/profile',
+    }),
+  });
 
   assert.equal(response.status, 403);
   const body = await response.json();

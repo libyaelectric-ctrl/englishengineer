@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
-import { logger } from './logger.js';
+
 import type { SubscriptionSnapshot } from './billing-helpers.js';
+import { logger } from './logger.js';
 
 const assertConfigured = (config: {
   supabaseUrl?: string | null;
@@ -25,9 +26,7 @@ interface SubscriptionRow {
   topup_credits?: number;
 }
 
-const mapSubscriptionRow = (
-  row: SubscriptionRow | null
-): SubscriptionSnapshot | null =>
+const mapSubscriptionRow = (row: SubscriptionRow | null): SubscriptionSnapshot | null =>
   row
     ? {
         planId: row.plan_id,
@@ -42,10 +41,7 @@ const mapSubscriptionRow = (
       }
     : null;
 
-const mapSubscriptionSnapshot = (
-  userId: string,
-  snapshot: SubscriptionSnapshot
-) => ({
+const mapSubscriptionSnapshot = (userId: string, snapshot: SubscriptionSnapshot) => ({
   user_id: userId,
   plan_id: snapshot.planId,
   status: snapshot.status,
@@ -63,8 +59,7 @@ const handleDbError = (error: {
   code?: string;
   details?: string;
 }): Error => {
-  const message =
-    error.message || 'Supabase billing repository request failed.';
+  const message = error.message || 'Supabase billing repository request failed.';
   const dbError = new Error(message) as Error & {
     status: number;
     code: string;
@@ -79,15 +74,9 @@ const handleDbError = (error: {
 interface BillingRepository {
   mode: string;
   getSubscriptionStatus(userId: string): Promise<SubscriptionSnapshot | null>;
-  upsertSubscriptionStatus(
-    userId: string,
-    snapshot: SubscriptionSnapshot
-  ): Promise<void>;
+  upsertSubscriptionStatus(userId: string, snapshot: SubscriptionSnapshot): Promise<void>;
   hasStripeEventBeenProcessed(eventId: string): Promise<boolean>;
-  markStripeEventProcessed(
-    eventId: string,
-    metadata?: Record<string, unknown>
-  ): Promise<void>;
+  markStripeEventProcessed(eventId: string, metadata?: Record<string, unknown>): Promise<void>;
 }
 
 export const createSupabaseBillingRepository = (
@@ -106,8 +95,7 @@ export const createSupabaseBillingRepository = (
       const h = init.headers;
       if (h instanceof Headers) {
         h.forEach((value, key) => {
-          if (key.toLowerCase() === 'authorization')
-            headersObj['Authorization'] = value;
+          if (key.toLowerCase() === 'authorization') headersObj['Authorization'] = value;
           else if (key.toLowerCase() === 'apikey') headersObj['apikey'] = value;
           else headersObj[key] = value;
         });
@@ -134,14 +122,10 @@ export const createSupabaseBillingRepository = (
     return response;
   };
 
-  const supabase = createClient(
-    config.supabaseUrl,
-    config.supabaseServiceRoleKey,
-    {
-      auth: { persistSession: false },
-      global: { fetch: wrappedFetch as typeof fetch },
-    }
-  );
+  const supabase = createClient(config.supabaseUrl, config.supabaseServiceRoleKey, {
+    auth: { persistSession: false },
+    global: { fetch: wrappedFetch as typeof fetch },
+  });
 
   return {
     mode: 'supabase',
@@ -183,8 +167,7 @@ export const createSupabaseBillingRepository = (
       const { error } = await supabase.from('stripe_processed_events').upsert(
         {
           stripe_event_id: eventId,
-          event_type:
-            typeof metadata.type === 'string' ? metadata.type : 'unknown',
+          event_type: typeof metadata.type === 'string' ? metadata.type : 'unknown',
           processed_at:
             typeof metadata.processedAt === 'string'
               ? metadata.processedAt

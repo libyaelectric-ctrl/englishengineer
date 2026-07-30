@@ -1,4 +1,5 @@
 import path from 'node:path';
+
 import {
   CEFR_LEVELS,
   assertValidLevels,
@@ -15,10 +16,7 @@ import {
 } from './learning-database-utils.mjs';
 
 const root = process.cwd();
-const input = path.join(
-  root,
-  'data/import/EngineerOS_Grammar_Database_Final.xlsx'
-);
+const input = path.join(root, 'data/import/EngineerOS_Grammar_Database_Final.xlsx');
 const canonicalDir = path.join(root, 'data/canonical/grammar');
 const seedDir = path.join(root, 'src/data/grammar/by-level');
 const requiredColumns = [
@@ -40,10 +38,7 @@ const requiredColumns = [
   'ruleCefrLevel',
 ];
 
-const { headers, records: sourceRecords } = await readDatabaseSheet(
-  input,
-  'grammar_database'
-);
+const { headers, records: sourceRecords } = await readDatabaseSheet(input, 'grammar_database');
 requireColumns(headers, requiredColumns, 'Grammar database');
 
 const rules = sourceRecords.map((row) => ({
@@ -124,14 +119,8 @@ const report = {
   passed: duplicateIds.length === 0 && missingRequired.length === 0,
 };
 
-await writeJson(
-  path.join(canonicalDir, 'grammar-rules.normalized.json'),
-  rules
-);
-await writeJson(
-  path.join(canonicalDir, 'grammar-validation-report.json'),
-  report
-);
+await writeJson(path.join(canonicalDir, 'grammar-rules.normalized.json'), rules);
+await writeJson(path.join(canonicalDir, 'grammar-validation-report.json'), report);
 await writeJson(path.join(canonicalDir, 'grammar-taxonomy.json'), {
   cefrLevels: CEFR_LEVELS,
   categories: unique(rules.map((rule) => rule.grammarCategory)),

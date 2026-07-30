@@ -31,8 +31,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
         term: 'neutral grounding conductor',
         definition:
           'A conductor used to connect the neutral point of an electrical system to the earth grounding grid to stabilize voltage and provide a fault return path.',
-        context:
-          'The neutral grounding conductor was found to be incorrectly sized.',
+        context: 'The neutral grounding conductor was found to be incorrectly sized.',
       },
       {
         term: 'megger test',
@@ -84,14 +83,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
           'What severe risk is introduced if the undersized neutral grounding conductor is left unchanged during unbalanced fault conditions?',
         correctAnswer:
           'An undersized grounding conductor risks severe thermal heating, excessive temperatures, and mechanical degradation of the neutral path.',
-        keywords: [
-          'heating',
-          'thermal',
-          'degradation',
-          'temperature',
-          'fire',
-          'burn',
-        ],
+        keywords: ['heating', 'thermal', 'degradation', 'temperature', 'fire', 'burn'],
         explanation:
           'An undersized neutral conductor will experience excessive heating and potential mechanical degradation because it cannot safely carry the neutral fault current.',
       },
@@ -116,15 +108,13 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
         term: 'busbar',
         definition:
           'A metallic bar or strip, typically made of copper or aluminum, that conducts electricity within a switchboard, distribution board, or substation.',
-        context:
-          'An anomaly was captured on the Phase B incoming copper busbar joint.',
+        context: 'An anomaly was captured on the Phase B incoming copper busbar joint.',
       },
       {
         term: 'contact resistance',
         definition:
           'The resistance to current flow across the mating surfaces of electrical contacts, which increases significantly when connections are loose or oxidized.',
-        context:
-          'This temperature differential indicates high contact resistance.',
+        context: 'This temperature differential indicates high contact resistance.',
       },
       {
         term: 'THD-I',
@@ -208,15 +198,13 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
         term: 'load bank test',
         definition:
           'A test that applies an electrical load to a generator to verify its performance, stability, and heat dissipation capabilities under controlled conditions.',
-        context:
-          'The emergency diesel generator was subjected to an annual 4-hour load bank test.',
+        context: 'The emergency diesel generator was subjected to an annual 4-hour load bank test.',
       },
       {
         term: 'power factor',
         definition:
           'The ratio of actual active power (kW) flowing to the load, to the apparent power (kVA) in the circuit.',
-        context:
-          'At 100% load (1200 kW at 0.8 power factor), the generator operated smoothly.',
+        context: 'At 100% load (1200 kW at 0.8 power factor), the generator operated smoothly.',
       },
       {
         term: 'transient voltage dip',
@@ -238,12 +226,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
         type: 'multiple_choice',
         questionText:
           'What is the NFPA 110 standard tolerance window for full voltage recovery following a step load change?',
-        choices: [
-          'A) 1.4 seconds',
-          'B) 2.0 seconds',
-          'C) 4.0 hours',
-          'D) 0.8 seconds',
-        ],
+        choices: ['A) 1.4 seconds', 'B) 2.0 seconds', 'C) 4.0 hours', 'D) 0.8 seconds'],
         correctAnswer: 'B',
         explanation:
           'The passage mentions the nominal voltage recovered in 1.4 seconds, which is within the 2.0-second tolerance window specified by NFPA 110 Class 1.',
@@ -299,8 +282,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
         term: 'containment',
         definition:
           'System of physical pathways, ducts, conduits, and trays that support, organize, and protect electrical and data cables throughout a building.',
-        context:
-          'Work on the electrical containment systems along Corridor 2A has progressed.',
+        context: 'Work on the electrical containment systems along Corridor 2A has progressed.',
       },
       {
         term: 'trapeze hanger',
@@ -345,8 +327,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
           'What is the required minimum clearance (in mm) between the 415V power cable tray and the CAT6 data cable tray?',
         correctAnswer: '300',
         keywords: ['300', '300mm', '300 mm'],
-        explanation:
-          'The approved design guidelines require a minimum clearance of 300mm.',
+        explanation: 'The approved design guidelines require a minimum clearance of 300mm.',
       },
       {
         id: 'q5_3',
@@ -364,12 +345,7 @@ export const ELECTRICAL_READING_MISSIONS: ReadingMission[] = [
           'How is the subcontractor instructed to fix the clearance deficiency at column B4?',
         correctAnswer:
           'The subcontractor must relocate the data tray supports lower on the hanger rods.',
-        keywords: [
-          'supports lower',
-          'lower',
-          'hanger rods',
-          'relocate data tray',
-        ],
+        keywords: ['supports lower', 'lower', 'hanger rods', 'relocate data tray'],
         explanation:
           'The passage directs the subcontractor to relocate the data tray supports lower on the hanger rods to restore the necessary 300mm clearance.',
       },

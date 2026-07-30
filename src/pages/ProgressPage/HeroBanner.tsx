@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
+
 import {
   CEFR_LEVELS,
-  MIN_ELO,
   MAX_ELO,
+  MIN_ELO,
   getCEFRBand,
   getCEFRIndex,
   getRank,
@@ -20,8 +21,7 @@ export const HeroBanner = ({
   const totalCEFR = getCEFRBand(totalElo);
   const totalCEFRIdx = getCEFRIndex(totalCEFR);
   const rank = getRank(totalElo);
-  const nextCEFR =
-    CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
+  const nextCEFR = CEFR_LEVELS[Math.min(totalCEFRIdx + 1, CEFR_LEVELS.length - 1)];
   const eloForNext = Math.floor(
     ((totalCEFRIdx + 1) / CEFR_LEVELS.length) * (MAX_ELO - MIN_ELO) + MIN_ELO
   );
@@ -33,13 +33,7 @@ export const HeroBanner = ({
       <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
         <div className="relative flex-shrink-0">
           <svg className="w-32 h-32 -rotate-90">
-            <circle
-              cx="64"
-              cy="64"
-              r="56"
-              className="stroke-[#d9d9e3] fill-none"
-              strokeWidth="5"
-            />
+            <circle cx="64" cy="64" r="56" className="stroke-[#d9d9e3] fill-none" strokeWidth="5" />
             <motion.circle
               cx="64"
               cy="64"
@@ -50,8 +44,7 @@ export const HeroBanner = ({
               strokeDasharray={2 * Math.PI * 56}
               initial={{ strokeDashoffset: 2 * Math.PI * 56 }}
               animate={{
-                strokeDashoffset:
-                  2 * Math.PI * 56 * (1 - totalPercentage / 100),
+                strokeDashoffset: 2 * Math.PI * 56 * (1 - totalPercentage / 100),
               }}
               transition={{ duration: 2, ease: 'easeOut' }}
             />
@@ -60,9 +53,7 @@ export const HeroBanner = ({
             <span className="text-3xl font-bold text-foreground tabular-nums">
               {animatedTotalElo}
             </span>
-            <span className="text-[10px] text-muted-copy font-bold uppercase">
-              / 5000 ELO
-            </span>
+            <span className="text-[10px] text-muted-copy font-bold uppercase">/ 5000 ELO</span>
           </div>
         </div>
         <div className="flex-1 text-center md:text-left">
@@ -79,18 +70,14 @@ export const HeroBanner = ({
               🎯 Target: C1 Senior Tech Lead / Offshore Pitch Ready
             </span>
           </div>
-          <h2 className="text-xl font-bold text-foreground mb-1">
-            Engineering Mastery Level
-          </h2>
+          <h2 className="text-xl font-bold text-foreground mb-1">Engineering Mastery Level</h2>
           <p className="text-xs text-muted-copy leading-relaxed">
             {eloNeeded > 0
               ? `${eloNeeded} more Elo to reach ${nextCEFR}. Keep practicing!`
               : `Highest CEFR band reached. Maintain your excellence!`}
           </p>
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-[10px] font-bold text-muted-copy">
-              {totalCEFR}
-            </span>
+            <span className="text-[10px] font-bold text-muted-copy">{totalCEFR}</span>
             <div className="flex-1 h-2 rounded-full bg-border-soft overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
@@ -101,9 +88,7 @@ export const HeroBanner = ({
                 className="h-full rounded-full bg-primary"
               />
             </div>
-            <span className="text-[10px] font-bold text-muted-copy">
-              {nextCEFR}
-            </span>
+            <span className="text-[10px] font-bold text-muted-copy">{nextCEFR}</span>
           </div>
           <div className="mt-2.5 flex items-center justify-between text-[10px] font-medium text-muted-copy">
             <span className="flex items-center gap-1">
@@ -112,9 +97,7 @@ export const HeroBanner = ({
                 Learning Velocity: <strong>+180 ELO/week</strong>
               </span>
             </span>
-            <span className="font-bold text-primary">
-              ⏱️ Est. ~3.8 weeks to C1 Target
-            </span>
+            <span className="font-bold text-primary">⏱️ Est. ~3.8 weeks to C1 Target</span>
           </div>
         </div>
       </div>

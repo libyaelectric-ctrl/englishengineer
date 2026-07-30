@@ -1,7 +1,8 @@
-import { Moon, Sun, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useAppStore } from '@/store/app.store';
 import { PRODUCT_VERSION } from '@/config/product.config';
+import { useAppStore } from '@/store/app.store';
+import { Moon, Sparkles, Sun } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
 
 export const TopNavBar = () => {
   const theme = useAppStore((s) => s.theme);
@@ -31,9 +32,7 @@ export const TopNavBar = () => {
           <button
             type="button"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            title={
-              theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
-            }
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-border-soft bg-background/80 text-foreground transition hover:bg-surface-hover hover:border-primary/40 cursor-pointer shadow-sm"
           >
             {theme === 'dark' ? (

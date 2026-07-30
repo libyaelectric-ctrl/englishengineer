@@ -58,8 +58,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     cadence: 'per month',
     audience: 'For serious professional engineering communication practice.',
     bestFor: 'Career-focused engineers',
-    priceReason:
-      'Higher allowance for professional scenarios, tracking and AI feedback.',
+    priceReason: 'Higher allowance for professional scenarios, tracking and AI feedback.',
     benefits: [
       'Unlimited AI feedback and corrections',
       'Mistake Log and progress tracking',
@@ -86,8 +85,7 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     cadence: 'per month',
     audience: 'For engineers managing complex technical project scopes.',
     bestFor: 'Project leaders & designers',
-    priceReason:
-      'Unlocks project workspaces, persistent memory and custom scenarios.',
+    priceReason: 'Unlocks project workspaces, persistent memory and custom scenarios.',
     benefits: [
       '3 isolated Project Workspaces',
       'Persistent Workspace Memory (inject context into every AI session)',
@@ -114,11 +112,9 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     name: 'Exec',
     price: '$99',
     cadence: 'per month',
-    audience:
-      'For executives, business development leads and engineering directors.',
+    audience: 'For executives, business development leads and engineering directors.',
     bestFor: 'Directors & executive leads',
-    priceReason:
-      'Includes voice meetings, speech simulation and VIP priority coaching.',
+    priceReason: 'Includes voice meetings, speech simulation and VIP priority coaching.',
     benefits: [
       'Real Voice Speaking & Pronunciation Analysis',
       'Voice Meeting Simulator & Minute Wallet',
@@ -144,11 +140,9 @@ export const COMMERCIAL_PLAN_CATALOG: CommercialPlanPreview[] = [
     name: 'Private',
     price: '$999',
     cadence: 'per month',
-    audience:
-      'For ultra-secure private engineering firms and state-level projects.',
+    audience: 'For ultra-secure private engineering firms and state-level projects.',
     bestFor: 'Defense, space & government contractors',
-    priceReason:
-      'Runs on a dedicated private AI proxy server with complete zero-data retention.',
+    priceReason: 'Runs on a dedicated private AI proxy server with complete zero-data retention.',
     benefits: [
       'Dedicated private proxy server deployment',
       'Zero-data retention guarantee on AI requests',

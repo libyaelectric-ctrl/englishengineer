@@ -1,14 +1,15 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  LEARNING_GOALS,
-  PROFESSIONS,
   COUNTRIES,
-  TIMEZONES,
   DAILY_DURATION_OPTIONS,
   DAILY_TASK_COUNT_OPTIONS,
-  PROFESSIONAL_TRACKS,
-  INDUSTRIES,
   ELECTRICAL_SUBDOMAINS,
+  INDUSTRIES,
+  LEARNING_GOALS,
+  PROFESSIONAL_TRACKS,
+  PROFESSIONS,
+  TIMEZONES,
 } from './profile.preferences';
 
 describe('Profile Preferences', () => {

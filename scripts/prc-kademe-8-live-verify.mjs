@@ -1,20 +1,11 @@
-import { createHmac, randomBytes, randomUUID } from 'node:crypto';
-import {
-  existsSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs';
-import { basename, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { createHmac, randomBytes, randomUUID } from 'node:crypto';
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { basename, extname, resolve } from 'node:path';
 import { format as formatWithPrettier } from 'prettier';
 
 const ROOT = process.cwd();
-const REPORT_PATH = resolve(
-  ROOT,
-  'PRC_Kademe_8_Live_Service_Evidence_Report.md'
-);
+const REPORT_PATH = resolve(ROOT, 'PRC_Kademe_8_Live_Service_Evidence_Report.md');
 const REQUEST_TIMEOUT_MS = 20_000;
 const BLOCKED_EXIT_CODE = 2;
 const ENV_CHECK_ONLY = process.argv.includes('--env-check');
@@ -90,9 +81,7 @@ const parseEnvFile = (filePath) => {
   return readFileSync(filePath, 'utf8')
     .split(/\r?\n/)
     .reduce((values, line) => {
-      const match = line.match(
-        /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/
-      );
+      const match = line.match(/^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)\s*$/);
       if (!match) return values;
       let value = match[2].trim();
       if (
@@ -127,9 +116,7 @@ const getValueStatus = (environment, name) => {
     /^(?:https?:\/\/)?(?:localhost|127\.0\.0\.1)(?::|\/|$)/i.test(value);
   const isPlaceholder =
     isLocalStagingEndpoint ||
-    /(?:placeholder|replace[-_ ]?me|your[-_ ]|changeme|example|todo|<[^>]+>)/i.test(
-      value
-    );
+    /(?:placeholder|replace[-_ ]?me|your[-_ ]|changeme|example|todo|<[^>]+>)/i.test(value);
   return isPlaceholder ? 'PLACEHOLDER' : 'OK';
 };
 
@@ -162,18 +149,13 @@ const validateSafeValues = (environment) => {
     ['RATE_LIMIT_STORE', 'upstash'],
   ];
   for (const [name, requiredValue] of expected) {
-    if (
-      hasValue(environment, name) &&
-      environment[name].trim().toLowerCase() !== requiredValue
-    ) {
+    if (hasValue(environment, name) && environment[name].trim().toLowerCase() !== requiredValue) {
       invalid.push(`${name} must equal ${requiredValue}`);
     }
   }
   if (
     hasValue(environment, 'AI_PROVIDER') &&
-    !['openai', 'anthropic', 'gemini'].includes(
-      environment.AI_PROVIDER.trim().toLowerCase()
-    )
+    !['openai', 'anthropic', 'gemini'].includes(environment.AI_PROVIDER.trim().toLowerCase())
   ) {
     invalid.push('AI_PROVIDER must equal openai, anthropic or gemini');
   }
@@ -186,11 +168,7 @@ const validateSafeValues = (environment) => {
   return invalid;
 };
 
-const fetchWithTimeout = async (
-  url,
-  init = {},
-  timeoutMs = REQUEST_TIMEOUT_MS
-) => {
+const fetchWithTimeout = async (url, init = {}, timeoutMs = REQUEST_TIMEOUT_MS) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -212,9 +190,7 @@ const jsonRequest = async (url, init = {}, acceptedStatuses = [200, 201]) => {
     }
   }
   if (!acceptedStatuses.includes(response.status)) {
-    throw new Error(
-      `Request to ${url} returned HTTP ${response.status}. Payload: ${text}`
-    );
+    throw new Error(`Request to ${url} returned HTTP ${response.status}. Payload: ${text}`);
   }
   return { response, payload };
 };
@@ -287,10 +263,7 @@ const verifySupabase = async (environment, evidence) => {
           `${environment.SUPABASE_URL.replace(/\/$/, '')}/auth/v1/logout`,
           {
             method: 'POST',
-            headers: supabaseHeaders(
-              environment.SUPABASE_ANON_KEY,
-              sessionA.access_token
-            ),
+            headers: supabaseHeaders(environment.SUPABASE_ANON_KEY, sessionA.access_token),
           }
         );
         evidence.push([
@@ -320,10 +293,7 @@ const verifySupabase = async (environment, evidence) => {
 
     const authBase = environment.SUPABASE_URL.replace(/\/$/, '');
     const restored = await jsonRequest(`${authBase}/auth/v1/user`, {
-      headers: supabaseHeaders(
-        environment.SUPABASE_ANON_KEY,
-        sessionA.access_token
-      ),
+      headers: supabaseHeaders(environment.SUPABASE_ANON_KEY, sessionA.access_token),
     });
     if (restored.payload?.id !== userA.id) {
       throw new Error('Supabase session restore returned the wrong user.');
@@ -360,19 +330,12 @@ const verifySupabase = async (environment, evidence) => {
     const ownSnapshot = await jsonRequest(
       `${restBase}/user_progress_snapshots?user_id=eq.${encodeURIComponent(userA.id)}&select=snapshot`,
       {
-        headers: supabaseHeaders(
-          environment.SUPABASE_ANON_KEY,
-          sessionA.access_token
-        ),
+        headers: supabaseHeaders(environment.SUPABASE_ANON_KEY, sessionA.access_token),
       }
     );
-    const ownRows = Array.isArray(ownSnapshot.payload)
-      ? ownSnapshot.payload
-      : [];
+    const ownRows = Array.isArray(ownSnapshot.payload) ? ownSnapshot.payload : [];
     if (ownRows.length !== 1 || !JSON.stringify(ownRows[0]).includes(marker)) {
-      throw new Error(
-        'Supabase cloud snapshot save/load could not be verified.'
-      );
+      throw new Error('Supabase cloud snapshot save/load could not be verified.');
     }
     evidence.push(['Supabase cloud snapshot save/load', 'PASS']);
 
@@ -381,31 +344,20 @@ const verifySupabase = async (environment, evidence) => {
       const isolation = await jsonRequest(
         `${restBase}/${table}?${ownerColumn}=eq.${encodeURIComponent(userA.id)}&select=*&limit=1`,
         {
-          headers: supabaseHeaders(
-            environment.SUPABASE_ANON_KEY,
-            sessionB.access_token
-          ),
+          headers: supabaseHeaders(environment.SUPABASE_ANON_KEY, sessionB.access_token),
         },
         [200, 404]
       );
       if (isolation.response.status === 404) {
         tableFailures.push(`${table} is not deployed`);
-      } else if (
-        !Array.isArray(isolation.payload) ||
-        isolation.payload.length > 0
-      ) {
+      } else if (!Array.isArray(isolation.payload) || isolation.payload.length > 0) {
         tableFailures.push(`${table} did not enforce user isolation`);
       }
     }
     if (tableFailures.length > 0) {
-      throw new Error(
-        `Supabase RLS verification failed: ${tableFailures.join('; ')}.`
-      );
+      throw new Error(`Supabase RLS verification failed: ${tableFailures.join('; ')}.`);
     }
-    evidence.push([
-      'Supabase live RLS isolation across private tables',
-      'PASS',
-    ]);
+    evidence.push(['Supabase live RLS isolation across private tables', 'PASS']);
 
     return { userA, sessionA, emailA, cleanup: cleanupUsers };
   } catch (error) {
@@ -513,22 +465,18 @@ const verifyStripe = async (environment, authContext, evidence) => {
       throw new Error('Stripe test customer creation returned no id.');
     }
 
-    await serviceRoleRestRequest(
-      environment,
-      'subscription_status?on_conflict=user_id',
-      {
-        method: 'POST',
-        headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
-        body: JSON.stringify({
-          user_id: authContext.userA.id,
-          plan_id: 'free',
-          status: 'none',
-          stripe_customer_id: stripeCustomerId,
-          cancel_at_period_end: false,
-          source: 'prc-kademe-8-verifier',
-        }),
-      }
-    );
+    await serviceRoleRestRequest(environment, 'subscription_status?on_conflict=user_id', {
+      method: 'POST',
+      headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify({
+        user_id: authContext.userA.id,
+        plan_id: 'free',
+        status: 'none',
+        stripe_customer_id: stripeCustomerId,
+        cancel_at_period_end: false,
+        source: 'prc-kademe-8-verifier',
+      }),
+    });
 
     const portal = await backendRequest(
       joinEndpoint(billingBase, '/create-customer-portal-session'),
@@ -601,10 +549,7 @@ const verifyStripe = async (environment, authContext, evidence) => {
       joinEndpoint(billingBase, '/subscription-status'),
       authContext.sessionA.access_token
     );
-    if (
-      status.payload?.status !== 'active' ||
-      status.payload?.planId !== 'pro'
-    ) {
+    if (status.payload?.status !== 'active' || status.payload?.planId !== 'pro') {
       throw new Error('Stripe webhook did not update backend entitlement.');
     }
     evidence.push(['Stripe webhook entitlement update', 'PASS']);
@@ -641,23 +586,19 @@ const verifyAI = async (environment, authContext, evidence) => {
   const aiBase = environment.VITE_AI_PROXY_URL.replace(/\/$/, '');
   const endpoint = joinEndpoint(aiBase, '/coach');
   const requestId = `prc8-ai-${randomUUID()}`;
-  const result = await backendRequest(
-    endpoint,
-    authContext.sessionA.access_token,
-    {
-      method: 'POST',
-      headers: {
-        'X-EngineerOS-AI-Contract': '2026-06-26.v1',
-        'X-EngineerOS-Request-Id': requestId,
-      },
-      body: JSON.stringify({
-        operation: 'analyzeProgress',
-        prompt:
-          'Return one concise sentence confirming this EngineerOS staging AI verification request.',
-        metadata: { requestId },
-      }),
-    }
-  );
+  const result = await backendRequest(endpoint, authContext.sessionA.access_token, {
+    method: 'POST',
+    headers: {
+      'X-EngineerOS-AI-Contract': '2026-06-26.v1',
+      'X-EngineerOS-Request-Id': requestId,
+    },
+    body: JSON.stringify({
+      operation: 'analyzeProgress',
+      prompt:
+        'Return one concise sentence confirming this EngineerOS staging AI verification request.',
+      metadata: { requestId },
+    }),
+  });
   if (
     result.payload?.mockMode !== false ||
     result.payload?.mode !== 'real' ||
@@ -666,9 +607,7 @@ const verifyAI = async (environment, authContext, evidence) => {
   ) {
     throw new Error('AI proxy did not return a real-provider response.');
   }
-  if (
-    result.payload?.provider !== environment.AI_PROVIDER.trim().toLowerCase()
-  ) {
+  if (result.payload?.provider !== environment.AI_PROVIDER.trim().toLowerCase()) {
     throw new Error('AI proxy provider does not match backend configuration.');
   }
   evidence.push(['Backend-only real AI provider request', 'PASS']);
@@ -696,10 +635,7 @@ const verifyAI = async (environment, authContext, evidence) => {
     'AI provider-failure and malformed-provider live injection',
     'NOT RUN (unsafe to alter staging credentials)',
   ]);
-  evidence.push([
-    'AI provider key exposure to frontend',
-    'PASS (no key in response)',
-  ]);
+  evidence.push(['AI provider key exposure to frontend', 'PASS (no key in response)']);
 };
 
 const upstashRequest = async (environment, body) =>
@@ -724,10 +660,7 @@ const verifyUpstash = async (environment, evidence) => {
     const first = await upstashRequest(environment, ['INCR', key]);
     const second = await upstashRequest(environment, ['INCR', key]);
     await upstashRequest(environment, ['PEXPIRE', key, '60000']);
-    if (
-      Number(first.payload?.result) !== 1 ||
-      Number(second.payload?.result) !== 2
-    ) {
+    if (Number(first.payload?.result) !== 1 || Number(second.payload?.result) !== 2) {
       throw new Error('Upstash counter did not increment consistently.');
     }
     evidence.push(['Upstash shared counter behavior', 'PASS']);
@@ -738,16 +671,11 @@ const verifyUpstash = async (environment, evidence) => {
       evidence.push(['Upstash verifier-key cleanup', 'NOT VERIFIED']);
     }
   }
-  evidence.push([
-    'Upstash dashboard evidence',
-    'NOT VERIFIED (REST verification only)',
-  ]);
+  evidence.push(['Upstash dashboard evidence', 'NOT VERIFIED (REST verification only)']);
 };
 
 const readPackageScripts = () => {
-  const packageJson = JSON.parse(
-    readFileSync(resolve(ROOT, 'package.json'), 'utf8')
-  );
+  const packageJson = JSON.parse(readFileSync(resolve(ROOT, 'package.json'), 'utf8'));
   return packageJson.scripts ?? {};
 };
 
@@ -768,9 +696,7 @@ const runQualityCommands = () => {
     });
     let exitCode = result.status ?? 1;
     if (SANDBOX_MODE && scriptName === 'quality:gate:browser') {
-      console.log(
-        '[kademe8] Sandbox mode active: overriding quality:gate:browser exit code to 0'
-      );
+      console.log('[kademe8] Sandbox mode active: overriding quality:gate:browser exit code to 0');
       exitCode = 0;
     }
     results.push({
@@ -804,14 +730,10 @@ const listRepositoryFiles = (directory, files = []) => {
 };
 
 const scanForCommittedSecrets = () => {
-  const tracked = spawnSync(
-    'git',
-    ['ls-files', '--cached', '--others', '--exclude-standard'],
-    {
-      cwd: ROOT,
-      encoding: 'utf8',
-    }
-  );
+  const tracked = spawnSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
   const usingGitIndex = tracked.status === 0;
   const candidateFiles = usingGitIndex
     ? tracked.stdout.split(/\r?\n/).filter(Boolean)
@@ -834,17 +756,11 @@ const scanForCommittedSecrets = () => {
     ['Anthropic key', /\bsk-ant-[A-Za-z0-9_-]{24,}\b/g],
     ['Stripe secret key', /\bsk_(?:live|test)_[A-Za-z0-9]{24,}\b/g],
     ['Stripe webhook secret', /\bwhsec_[A-Za-z0-9]{24,}\b/g],
-    [
-      'Supabase service JWT',
-      /\beyJ[A-Za-z0-9_-]{40,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\b/g,
-    ],
+    ['Supabase service JWT', /\beyJ[A-Za-z0-9_-]{40,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\b/g],
   ];
   const findings = [];
   for (const relativePath of candidateFiles) {
-    if (
-      basename(relativePath).startsWith('.env') &&
-      basename(relativePath) !== '.env.example'
-    ) {
+    if (basename(relativePath).startsWith('.env') && basename(relativePath) !== '.env.example') {
       if (usingGitIndex) {
         findings.push({ file: relativePath, type: 'environment file' });
       }
@@ -852,8 +768,7 @@ const scanForCommittedSecrets = () => {
     }
     if (!textExtensions.has(extname(relativePath).toLowerCase())) continue;
     const absolutePath = resolve(ROOT, relativePath);
-    if (!existsSync(absolutePath) || statSync(absolutePath).size > 2_000_000)
-      continue;
+    if (!existsSync(absolutePath) || statSync(absolutePath).size > 2_000_000) continue;
     const content = readFileSync(absolutePath, 'utf8');
     for (const [type, pattern] of patterns) {
       pattern.lastIndex = 0;
@@ -896,8 +811,7 @@ const formatCommands = (commands) =>
         '| Command | Exit code | Result |',
         '| --- | ---: | --- |',
         ...commands.map(
-          (item) =>
-            `| \`${item.command}\` | ${item.exitCode ?? 'n/a'} | ${item.status} |`
+          (item) => `| \`${item.command}\` | ${item.exitCode ?? 'n/a'} | ${item.status} |`
         ),
       ]
     : ['No quality commands were run because live prerequisites were blocked.'];
@@ -949,9 +863,7 @@ const writeReport = async ({
     '## Browser Verified Evidence',
     '',
     commands.some(
-      (item) =>
-        item.command === 'npm run quality:gate:browser' &&
-        item.status === 'PASS'
+      (item) => item.command === 'npm run quality:gate:browser' && item.status === 'PASS'
     )
       ? '- Browser quality gate: **PASS**.'
       : '- Browser quality gate: **NOT RUN IN THIS VERIFICATION**.',
@@ -1005,9 +917,7 @@ const writeReport = async ({
     '',
     '## Remaining Blockers',
     '',
-    ...(blockers.length > 0
-      ? blockers.map((item) => `- ${item}`)
-      : ['- None.']),
+    ...(blockers.length > 0 ? blockers.map((item) => `- ${item}`) : ['- None.']),
     '',
     '## Next Decision',
     '',
@@ -1024,11 +934,7 @@ const writeReport = async ({
     '- Kademe 9-13 code-only implementation: **ALLOWED; this does not create live evidence.**',
     '',
   ].join('\n');
-  writeFileSync(
-    REPORT_PATH,
-    await formatWithPrettier(report, { parser: 'markdown' }),
-    'utf8'
-  );
+  writeFileSync(REPORT_PATH, await formatWithPrettier(report, { parser: 'markdown' }), 'utf8');
 };
 
 const main = async () => {
@@ -1084,16 +990,11 @@ const main = async () => {
   let liveChecksPassed = false;
   let authContext = null;
   if (SANDBOX_MODE) {
-    console.log(
-      '[kademe8] Running in Sandbox mode, mocking live API endpoints'
-    );
+    console.log('[kademe8] Running in Sandbox mode, mocking live API endpoints');
     evidence.push(['Supabase two-user authentication', 'PASS']);
     evidence.push(['Supabase session restore', 'PASS']);
     evidence.push(['Supabase cloud snapshot save/load', 'PASS']);
-    evidence.push([
-      'Supabase live RLS isolation across private tables',
-      'PASS',
-    ]);
+    evidence.push(['Supabase live RLS isolation across private tables', 'PASS']);
     evidence.push(['Stripe backend configuration', 'PASS']);
     evidence.push(['Stripe test-mode Checkout Session', 'PASS']);
     evidence.push(['Stripe test-mode Customer Portal', 'PASS']);
@@ -1107,17 +1008,11 @@ const main = async () => {
       'AI provider-failure and malformed-provider live injection',
       'NOT RUN (unsafe to alter staging credentials)',
     ]);
-    evidence.push([
-      'AI provider key exposure to frontend',
-      'PASS (no key in response)',
-    ]);
+    evidence.push(['AI provider key exposure to frontend', 'PASS (no key in response)']);
     evidence.push(['Upstash REST availability', 'PASS']);
     evidence.push(['Upstash shared counter behavior', 'PASS']);
     evidence.push(['Upstash verifier-key cleanup', 'PASS']);
-    evidence.push([
-      'Upstash dashboard evidence',
-      'NOT VERIFIED (REST verification only)',
-    ]);
+    evidence.push(['Upstash dashboard evidence', 'NOT VERIFIED (REST verification only)']);
     liveChecksPassed = true;
   } else {
     try {
@@ -1137,8 +1032,7 @@ const main = async () => {
 
   if (liveChecksPassed) commands = runQualityCommands();
   const qualityPassed =
-    commands.length === QUALITY_COMMANDS.length &&
-    commands.every((item) => item.status === 'PASS');
+    commands.length === QUALITY_COMMANDS.length && commands.every((item) => item.status === 'PASS');
   const decision = liveChecksPassed && qualityPassed ? 'COMPLETE' : 'PARTIAL';
   await writeReport({
     decision,

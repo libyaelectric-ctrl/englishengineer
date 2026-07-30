@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { TeamLeaderboardService } from './team-leaderboard';
 
 const mockMembers = [
@@ -67,25 +68,15 @@ describe('TeamLeaderboardService', () => {
 
     it('marks completed challenges', () => {
       const progress = { 'vocabulary-Vocabulary Master': 50 };
-      const challenges = TeamLeaderboardService.generateWeeklyChallenges(
-        progress,
-        1
-      );
-      const vocabChallenge = challenges.find(
-        (c) => c.title === 'Vocabulary Master'
-      );
+      const challenges = TeamLeaderboardService.generateWeeklyChallenges(progress, 1);
+      const vocabChallenge = challenges.find((c) => c.title === 'Vocabulary Master');
       expect(vocabChallenge?.isCompleted).toBe(true);
     });
 
     it('caps current value at target', () => {
       const progress = { 'vocabulary-Vocabulary Master': 100 };
-      const challenges = TeamLeaderboardService.generateWeeklyChallenges(
-        progress,
-        1
-      );
-      const vocabChallenge = challenges.find(
-        (c) => c.title === 'Vocabulary Master'
-      );
+      const challenges = TeamLeaderboardService.generateWeeklyChallenges(progress, 1);
+      const vocabChallenge = challenges.find((c) => c.title === 'Vocabulary Master');
       expect(vocabChallenge?.currentValue).toBe(50);
     });
 
@@ -98,10 +89,7 @@ describe('TeamLeaderboardService', () => {
 
   describe('buildTeamLeaderboard', () => {
     it('builds complete leaderboard with stats', () => {
-      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard(
-        'org-1',
-        mockMembers
-      );
+      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard('org-1', mockMembers);
       expect(leaderboard.organizationId).toBe('org-1');
       expect(leaderboard.entries).toHaveLength(3);
       expect(leaderboard.challenges).toHaveLength(8);
@@ -111,18 +99,12 @@ describe('TeamLeaderboardService', () => {
     });
 
     it('calculates average score', () => {
-      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard(
-        'org-1',
-        mockMembers
-      );
+      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard('org-1', mockMembers);
       expect(leaderboard.teamStats.averageScore).toBeGreaterThan(0);
     });
 
     it('includes generatedAt timestamp', () => {
-      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard(
-        'org-1',
-        mockMembers
-      );
+      const leaderboard = TeamLeaderboardService.buildTeamLeaderboard('org-1', mockMembers);
       expect(leaderboard.generatedAt).toBeDefined();
     });
   });

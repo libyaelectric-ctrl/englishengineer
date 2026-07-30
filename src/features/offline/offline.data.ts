@@ -52,8 +52,7 @@ export const OFFLINE_CAPABILITIES: OfflineCapability[] = [
   {
     id: 'audio',
     name: 'Listening Audio',
-    description:
-      'Available offline only after the browser has cached the audio asset.',
+    description: 'Available offline only after the browser has cached the audio asset.',
     status: 'limited',
   },
   {

@@ -1,8 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { eosPersistConfig, eosPersistPartial } from './persist-middleware';
+
 import { storage } from './index';
+import { eosPersistConfig, eosPersistPartial } from './persist-middleware';
 
 interface TestState {
   count: number;
@@ -118,10 +119,7 @@ describe('eosPersistPartial helper', () => {
           count: 0,
           secret: 'hidden',
         }),
-        eosPersistPartial<{ count: number; secret: string }>(
-          'test_partial_persist',
-          ['count']
-        )
+        eosPersistPartial<{ count: number; secret: string }>('test_partial_persist', ['count'])
       )
     );
 

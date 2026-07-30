@@ -1,20 +1,18 @@
+import { AlertTriangle, Home, Mail, RefreshCw } from 'lucide-react';
+import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
+
 import type { ReactNode } from 'react';
 import { useCallback } from 'react';
+
 import { Link } from 'react-router-dom';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { AlertTriangle, Home, RefreshCw, Mail } from 'lucide-react';
 
 interface ErrorBoundaryProviderProps {
   children: ReactNode;
 }
 
-const isDevelopment =
-  (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV === true;
+const isDevelopment = (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV === true;
 
-const ErrorFallback = ({
-  error,
-  resetErrorBoundary,
-}: FallbackProps) => {
+const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const errorDetails = error instanceof Error ? error.message : String(error);
 
   const handleReport = () => {
@@ -30,13 +28,11 @@ const ErrorFallback = ({
       <div className="premium-panel w-full max-w-xl space-y-6 p-8">
         <div className="flex items-center gap-3 text-rose-700">
           <AlertTriangle className="h-6 w-6" />
-          <h2 className="text-xl font-black tracking-tight uppercase">
-            Application Error
-          </h2>
+          <h2 className="text-xl font-black tracking-tight uppercase">Application Error</h2>
         </div>
         <p className="text-sm text-muted-copy leading-relaxed">
-          EngVox hit an unexpected error. Your progress is saved locally. Try
-          reloading or contact support if the issue persists.
+          EngVox hit an unexpected error. Your progress is saved locally. Try reloading or contact
+          support if the issue persists.
         </p>
         <div className="custom-scrollbar max-h-48 overflow-x-auto rounded-[12px] border border-rose-200 bg-rose-50 p-4 font-mono text-xs text-rose-700">
           {errorDetails || 'Unknown error'}
@@ -74,9 +70,7 @@ const ErrorFallback = ({
   );
 };
 
-export const ErrorBoundaryProvider = ({
-  children,
-}: ErrorBoundaryProviderProps) => {
+export const ErrorBoundaryProvider = ({ children }: ErrorBoundaryProviderProps) => {
   const handleReset = useCallback(() => {
     window.location.reload();
   }, []);

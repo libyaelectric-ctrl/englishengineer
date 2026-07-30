@@ -1,13 +1,15 @@
-import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   BarChart3,
   ClipboardCheck,
   Mail,
-  ShieldCheck,
   Settings2,
+  ShieldCheck,
   Users,
 } from 'lucide-react';
+
+import { Link } from 'react-router-dom';
+
 import { PageMetadata } from '@/shared/components/PageMetadata';
 
 const cases = [
@@ -15,14 +17,8 @@ const cases = [
     'Site coordination',
     'Prepare engineers to clarify sequence, ownership and constraints in coordination meetings.',
   ],
-  [
-    'QA/QC inspection',
-    'Practice concise comments, evidence requests and professional responses.',
-  ],
-  [
-    'Commissioning',
-    'Build confidence for testing updates, issues, witness points and handover.',
-  ],
+  ['QA/QC inspection', 'Practice concise comments, evidence requests and professional responses.'],
+  ['Commissioning', 'Build confidence for testing updates, issues, witness points and handover.'],
   [
     'Client meetings',
     'Explain progress, risk and recovery actions without losing technical precision.',
@@ -77,13 +73,12 @@ const BusinessPage = () => (
             Communication readiness for engineering organizations.
           </h1>
           <p className="mt-5 text-lg leading-8 text-muted-copy">
-            Give electrical, MEP, commissioning, QA/QC and project teams a
-            role-specific learning system with manager-level summaries.
+            Give electrical, MEP, commissioning, QA/QC and project teams a role-specific learning
+            system with manager-level summaries.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <Link to="/signup" className="public-primary-action">
-              Explore Team locally{' '}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Explore Team locally <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <button
               type="button"
@@ -99,13 +94,10 @@ const BusinessPage = () => (
             id="sales-status"
             className="mt-5 flex max-w-xl items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-xs leading-5 text-warning"
           >
-            <ShieldCheck
-              className="mt-0.5 h-4 w-4 shrink-0"
-              aria-hidden="true"
-            />
+            <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             <span>
-              Team access and the sales channel are still in preview. No email,
-              purchase or customer commitment is created here.
+              Team access and the sales channel are still in preview. No email, purchase or customer
+              commitment is created here.
             </span>
           </div>
         </div>
@@ -114,9 +106,7 @@ const BusinessPage = () => (
           <div className="flex items-center justify-between border-b border-border-soft pb-4">
             <div>
               <p className="text-sm font-medium">Team overview</p>
-              <p className="text-xs text-muted-copy">
-                Illustrative product preview
-              </p>
+              <p className="text-xs text-muted-copy">Illustrative product preview</p>
             </div>
             <span className="rounded-full border border-warning/30 bg-warning/10 px-3 py-1 text-[10px] font-medium text-warning">
               DEMO DATA
@@ -141,10 +131,7 @@ const BusinessPage = () => (
                   <strong>{value}%</strong>
                 </div>
                 <div className="mt-1 h-2 rounded-full bg-surface-hover">
-                  <div
-                    className="h-full rounded-full bg-primary"
-                    style={{ width: `${value}%` }}
-                  />
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${value}%` }} />
                 </div>
               </div>
             ))}
@@ -162,10 +149,7 @@ const BusinessPage = () => (
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {cases.map(([title, text]) => (
             <article key={title} className="public-card p-5">
-              <ClipboardCheck
-                className="h-5 w-5 text-primary"
-                aria-hidden="true"
-              />
+              <ClipboardCheck className="h-5 w-5 text-primary" aria-hidden="true" />
               <h3 className="mt-4 font-medium">{title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted-copy">{text}</p>
             </article>

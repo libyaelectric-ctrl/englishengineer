@@ -1,8 +1,4 @@
-import type {
-  LearningGoal,
-  ProfessionId,
-  UserLearningProfile,
-} from './profile.types';
+import type { LearningGoal, ProfessionId, UserLearningProfile } from './profile.types';
 
 export const LEARNING_GOALS: Array<{
   id: LearningGoal;
@@ -188,12 +184,12 @@ export const TIMEZONES = [
 export const getPreferredDomains = (
   profile: Pick<UserLearningProfile, 'goals' | 'professionId'>
 ): string[] => {
-  const goalDomains = LEARNING_GOALS.filter((goal) =>
-    profile.goals.includes(goal.id)
-  ).flatMap((goal) => goal.preferredDomains);
+  const goalDomains = LEARNING_GOALS.filter((goal) => profile.goals.includes(goal.id)).flatMap(
+    (goal) => goal.preferredDomains
+  );
   const professionDomains =
-    PROFESSIONS.find((profession) => profession.id === profile.professionId)
-      ?.preferredDomains ?? [];
+    PROFESSIONS.find((profession) => profession.id === profile.professionId)?.preferredDomains ??
+    [];
   return [...new Set([...professionDomains, ...goalDomains])];
 };
 

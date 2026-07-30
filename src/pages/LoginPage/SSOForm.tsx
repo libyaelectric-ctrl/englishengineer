@@ -1,4 +1,5 @@
-import { Mail, ArrowRight } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 
 interface SSOFormProps {
@@ -37,8 +38,7 @@ export const SSOForm = ({
         />
       </div>
       <p className="mt-1.5 text-[10px] leading-4 text-muted-copy font-medium">
-        Enter your organization's email domain or provider ID to redirect to
-        SAML SSO.
+        Enter your organization's email domain or provider ID to redirect to SAML SSO.
       </p>
     </div>
 

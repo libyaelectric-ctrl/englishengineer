@@ -1,5 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
+
+import { VocabularyEntry } from '../types/vocabulary.types';
 import { VocabularyEvaluator } from './vocabulary.evaluator';
 import {
   getPreviousDateKey,
@@ -8,7 +10,6 @@ import {
   normalizeVocabularyText,
   sortByNextReview,
 } from './vocabulary.helpers';
-import { VocabularyEntry } from '../types/vocabulary.types';
 
 const entry: VocabularyEntry = {
   id: 'transformer',
@@ -27,9 +28,7 @@ const entry: VocabularyEntry = {
 
 describe('vocabulary helpers and evaluator', () => {
   it('normalizes punctuation and spacing', () => {
-    expect(normalizeVocabularyText('  Transformer,   Device! ')).toBe(
-      'transformer device'
-    );
+    expect(normalizeVocabularyText('  Transformer,   Device! ')).toBe('transformer device');
   });
 
   it('requires exact normalized equality for correctness', () => {

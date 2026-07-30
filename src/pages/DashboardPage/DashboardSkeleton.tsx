@@ -1,4 +1,5 @@
 import { Target } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
 import { Skeleton } from '@/shared/components/Skeleton';
 

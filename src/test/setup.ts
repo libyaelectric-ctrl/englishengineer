@@ -1,4 +1,8 @@
+// Mock global fetch for local JSON seed files in Node/Vitest
+import fs from 'fs';
+import path from 'path';
 import { afterEach, vi } from 'vitest';
+
 import React from 'react';
 
 let cleanupDom: (() => void) | undefined;
@@ -43,20 +47,10 @@ vi.mock('react-virtuoso', () => ({
   },
 }));
 
-// Mock global fetch for local JSON seed files in Node/Vitest
-import fs from 'fs';
-import path from 'path';
-
 const originalFetch = globalThis.fetch;
-globalThis.fetch = async (
-  input: RequestInfo | URL,
-  init?: RequestInit
-): Promise<Response> => {
+globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
   const urlStr = typeof input === 'string' ? input : input.toString();
-  if (
-    urlStr.startsWith('/data/vocabulary/') ||
-    urlStr.startsWith('/data/grammar/')
-  ) {
+  if (urlStr.startsWith('/data/vocabulary/') || urlStr.startsWith('/data/grammar/')) {
     const relativePath = urlStr.replace(/^\//, '');
     const absolutePath = path.resolve(process.cwd(), 'public', relativePath);
     try {

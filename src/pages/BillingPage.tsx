@@ -1,22 +1,19 @@
-import { useState, useEffect } from 'react';
-import {
-  CreditCard,
-  Download,
-  ShieldCheck,
-  Wallet,
-  RefreshCw,
-  CheckCircle2,
-} from 'lucide-react';
+import { CheckCircle2, CreditCard, Download, RefreshCw, ShieldCheck, Wallet } from 'lucide-react';
+
+import { useEffect, useState } from 'react';
+
+import { Button } from '@/shared/components/Button';
+import { SectionCard } from '@/shared/components/SectionCard';
+import { logger } from '@/shared/logger';
+
+import { useAIStore } from '@/features/ai';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { useAIStore } from '@/features/ai';
-import { useLearningCockpit } from '@/features/profile';
 import { BillingStatusPanel } from '@/features/billing/BillingStatusPanel';
+import { useLearningCockpit } from '@/features/profile';
+
 import { BillingPlanCards } from './ProfilePage/BillingPlanCards';
 import { BillingUpgradeCTA } from './ProfilePage/BillingUpgradeCTA';
-import { SectionCard } from '@/shared/components/SectionCard';
-import { Button } from '@/shared/components/Button';
-import { logger } from '@/shared/logger';
 
 export const BillingPage = () => {
   const { currentUser } = useAuthStore();
@@ -56,7 +53,9 @@ export const BillingPage = () => {
 
   const handleUpgrade = () => {
     if (!currentUser?.id || !currentUser?.email) return;
-    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) => logger.e('Checkout failed:', err));
+    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) =>
+      logger.e('Checkout failed:', err)
+    );
   };
 
   const handleManageSubscription = () => {
@@ -87,15 +86,13 @@ export const BillingPage = () => {
             disabled={isBillingLoading}
             className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:bg-background transition-all cursor-pointer shadow-sm disabled:opacity-50"
           >
-            <RefreshCw
-              className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`h-3.5 w-3.5 ${isBillingLoading ? 'animate-spin' : ''}`} />
             Sync Status
           </button>
         </div>
         <p className="text-xs leading-5 text-muted-copy max-w-2xl font-medium">
-          Verify and adjust your subscription status, manage primary payment
-          card details, and download past invoices.
+          Verify and adjust your subscription status, manage primary payment card details, and
+          download past invoices.
         </p>
       </header>
 
@@ -130,9 +127,7 @@ export const BillingPage = () => {
                 todaysCoachSessions={todaysCoachSessions}
                 todaysAttempts={
                   learningState.studySessions.filter(
-                    (s) =>
-                      new Date(s.timestamp).toDateString() ===
-                      new Date().toDateString()
+                    (s) => new Date(s.timestamp).toDateString() === new Date().toDateString()
                   ).length
                 }
                 todaysReviews={memory.dueToday}
@@ -172,19 +167,12 @@ export const BillingPage = () => {
                 </thead>
                 <tbody className="divide-y divide-[#d9d9e3]">
                   {[].map((inv: { id: string; date: string; amount: string; status: string }) => (
-                    <tr
-                      key={inv.id}
-                      className="hover:bg-background transition-colors"
-                    >
+                    <tr key={inv.id} className="hover:bg-background transition-colors">
                       <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
                         {inv.id}
                       </td>
-                      <td className="px-4 py-3 text-xs font-medium text-muted-copy">
-                        {inv.date}
-                      </td>
-                      <td className="px-4 py-3 text-xs font-bold text-foreground">
-                        {inv.amount}
-                      </td>
+                      <td className="px-4 py-3 text-xs font-medium text-muted-copy">{inv.date}</td>
+                      <td className="px-4 py-3 text-xs font-bold text-foreground">{inv.amount}</td>
                       <td className="px-4 py-3 text-xs">
                         <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success">
                           {inv.status}
@@ -225,22 +213,16 @@ export const BillingPage = () => {
                   </span>
                 </div>
                 <div className="space-y-4">
-                  <p className="text-sm font-mono tracking-widest font-bold">
-                    {cardNumber}
-                  </p>
+                  <p className="text-sm font-mono tracking-widest font-bold">{cardNumber}</p>
                   <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider">
                     <div>
-                      <span className="block text-primary/70 text-[10px]">
-                        Cardholder
-                      </span>
+                      <span className="block text-primary/70 text-[10px]">Cardholder</span>
                       <span className="truncate max-w-[120px] block">
                         {cardName || 'Guest User'}
                       </span>
                     </div>
                     <div>
-                      <span className="block text-primary/70 text-[10px]">
-                        Expires
-                      </span>
+                      <span className="block text-primary/70 text-[10px]">Expires</span>
                       <span>{cardExpiry}</span>
                     </div>
                   </div>

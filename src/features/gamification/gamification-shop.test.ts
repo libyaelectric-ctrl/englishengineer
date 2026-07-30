@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import { ShopService } from './gamification-shop';
 
 describe('ShopService', () => {
@@ -9,10 +10,7 @@ describe('ShopService', () => {
     });
 
     it('marks owned items correctly', () => {
-      const catalog = ShopService.getCatalog([
-        'avatar-engineer',
-        'theme-dark-pro',
-      ]);
+      const catalog = ShopService.getCatalog(['avatar-engineer', 'theme-dark-pro']);
       const engineer = catalog.find((i) => i.id === 'avatar-engineer');
       const scientist = catalog.find((i) => i.id === 'avatar-scientist');
       expect(engineer?.isOwned).toBe(true);

@@ -9,12 +9,7 @@ export const SKILL_NAMES = [
 
 export type SkillName = (typeof SKILL_NAMES)[number];
 export type SkillElo = number;
-export type LearningGoal =
-  | 'daily'
-  | 'work'
-  | 'engineering'
-  | 'travel'
-  | 'management';
+export type LearningGoal = 'daily' | 'work' | 'engineering' | 'travel' | 'management';
 export type ProfessionId =
   | 'electrical-engineer'
   | 'mechanical-engineer'
@@ -91,11 +86,7 @@ export type CefrBand =
   | 'C1+'
   | 'C2'
   | 'C2+';
-export type SkillTrend =
-  | 'improving'
-  | 'steady'
-  | 'declining'
-  | 'not-enough-data';
+export type SkillTrend = 'improving' | 'steady' | 'declining' | 'not-enough-data';
 export type PromotionState = 'progressing' | 'ready' | 'maxed';
 
 export interface SkillProfile {
@@ -154,10 +145,7 @@ export interface VocabularyMemorySummary {
   weakWords: number;
 }
 
-export type MissionType =
-  | 'skill-practice'
-  | 'vocabulary-review'
-  | 'grammar-focus';
+export type MissionType = 'skill-practice' | 'vocabulary-review' | 'grammar-focus';
 export type MissionDifficulty = 'review' | 'current' | 'stretch';
 
 export interface DailyMission {

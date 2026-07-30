@@ -22,9 +22,7 @@ export const PronunciationService = {
     try {
       const stored = localStorage.getItem(CACHE_KEY);
       if (stored) {
-        const entries = JSON.parse(stored) as Array<
-          [string, { word: string; timestamp: number }]
-        >;
+        const entries = JSON.parse(stored) as Array<[string, { word: string; timestamp: number }]>;
         entries.forEach(([key, val]) => {
           this.cache.set(key, { ...val, audioBlob: new Blob() });
         });
@@ -41,7 +39,8 @@ export const PronunciationService = {
     }
 
     // Detect language: Turkish characters or Turkish-specific words
-    const isTurkish = /[çğıöşüÇĞİÖŞÜ]/.test(word) ||
+    const isTurkish =
+      /[çğıöşüÇĞİÖŞÜ]/.test(word) ||
       /^(ve|bir|bu|için|ile|için|ama|veya|olan|den|dan|de|da)$/.test(word.toLowerCase());
 
     const utterance = new SpeechSynthesisUtterance(word);
@@ -55,7 +54,10 @@ export const PronunciationService = {
       // Turkish voice priority
       const turkishVoice =
         voices.find((v) => v.lang.startsWith('tr') && v.name.includes('Google')) ??
-        voices.find((v) => v.lang.startsWith('tr') && (v.name.includes('Natural') || v.name.includes('Neural'))) ??
+        voices.find(
+          (v) =>
+            v.lang.startsWith('tr') && (v.name.includes('Natural') || v.name.includes('Neural'))
+        ) ??
         voices.find((v) => v.lang.startsWith('tr'));
       if (turkishVoice) utterance.voice = turkishVoice;
     } else {

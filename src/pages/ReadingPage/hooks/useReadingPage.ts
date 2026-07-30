@@ -1,12 +1,14 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
-import { useReadingStore, VocabularyItem } from '@/features/reading';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import { useLearningStore } from '@/core/learning';
+
 import {
   ContentLevelFilter,
   DEFAULT_CONTENT_LEVEL_FILTER,
   filterContentByLevel,
   useSkillLevel,
 } from '@/features/level-system';
+import { VocabularyItem, useReadingStore } from '@/features/reading';
 
 export function useReadingPage() {
   const {
@@ -28,19 +30,13 @@ export function useReadingPage() {
     getMissionsSortedByPoolRatio,
   } = useReadingStore();
 
-  const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>(
-    'missions'
-  );
+  const [activeTab, setActiveTab] = useState<'missions' | 'workspace'>('missions');
   const [selectedWord, setSelectedWord] = useState<VocabularyItem | null>(null);
   const [userErrors, setUserErrors] = useState<Record<string, string>>({});
-  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(
-    DEFAULT_CONTENT_LEVEL_FILTER
-  );
+  const [levelFilter, setLevelFilter] = useState<ContentLevelFilter>(DEFAULT_CONTENT_LEVEL_FILTER);
   const [bookmarkedIds, setBookmarkedIds] = useState<Set<string>>(() => {
     try {
-      return new Set(
-        JSON.parse(localStorage.getItem('reading_bookmarks') || '[]')
-      );
+      return new Set(JSON.parse(localStorage.getItem('reading_bookmarks') || '[]'));
     } catch {
       return new Set<string>();
     }
@@ -70,18 +66,11 @@ export function useReadingPage() {
   );
 
   const sortedMissions = useMemo(
-    () =>
-      poolEntries.length === 0
-        ? missions
-        : getMissionsSortedByPoolRatio(poolEntries),
+    () => (poolEntries.length === 0 ? missions : getMissionsSortedByPoolRatio(poolEntries)),
     [getMissionsSortedByPoolRatio, missions, poolEntries]
   );
 
-  const visibleMissions = filterContentByLevel(
-    sortedMissions,
-    currentLevel,
-    levelFilter
-  );
+  const visibleMissions = filterContentByLevel(sortedMissions, currentLevel, levelFilter);
 
   useEffect(() => {
     initializeStore();
@@ -120,8 +109,7 @@ export function useReadingPage() {
   }, [selectMission, selectedMissionId, visibleMissions]);
 
   const currentMission =
-    visibleMissions.find((m) => m.id === selectedMissionId) ||
-    visibleMissions[0];
+    visibleMissions.find((m) => m.id === selectedMissionId) || visibleMissions[0];
 
   const currentMissionIndex = currentMission
     ? visibleMissions.findIndex((mission) => mission.id === currentMission.id)
@@ -140,10 +128,7 @@ export function useReadingPage() {
   const finishedCount = Object.keys(completedMissions).length;
   const bestScoreAvg =
     finishedCount > 0
-      ? Math.round(
-          Object.values(completedMissions).reduce((a, b) => a + b, 0) /
-            finishedCount
-        )
+      ? Math.round(Object.values(completedMissions).reduce((a, b) => a + b, 0) / finishedCount)
       : 0;
 
   const handleLaunchMission = (missionId: string) => {
@@ -155,9 +140,7 @@ export function useReadingPage() {
 
   const handleSubmit = () => {
     if (!currentMission) return;
-    const unansweredList = currentMission.questions.filter(
-      (q) => !answers[q.id]
-    );
+    const unansweredList = currentMission.questions.filter((q) => !answers[q.id]);
     if (unansweredList.length > 0) {
       const errors: Record<string, string> = {};
       unansweredList.forEach((q) => {

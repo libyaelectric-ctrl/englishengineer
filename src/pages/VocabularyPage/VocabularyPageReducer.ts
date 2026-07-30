@@ -1,8 +1,6 @@
-import type {
-  VocabularyMenuState,
-  VocabularyMenuStatus,
-} from '@/features/vocabulary';
 import type { CefrLevel } from '@/features/level-system';
+import type { VocabularyMenuState, VocabularyMenuStatus } from '@/features/vocabulary';
+
 import { emptyFilters } from './VocabularyPageUtils';
 
 export interface VocabularyDataState {
@@ -90,10 +88,7 @@ type UIAction =
   | { type: 'SET_CUSTOM_DRAFT'; draft: VocabularyUIState['customDraft'] }
   | { type: 'START_SESSION' };
 
-export const uiReducer = (
-  state: VocabularyUIState,
-  action: UIAction
-): VocabularyUIState => {
+export const uiReducer = (state: VocabularyUIState, action: UIAction): VocabularyUIState => {
   switch (action.type) {
     case 'CHOOSE_TAB':
       return {

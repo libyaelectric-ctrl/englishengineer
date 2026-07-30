@@ -62,11 +62,7 @@ export interface MistakeLogEntry {
   isCritical?: boolean;
 }
 
-export type ReviewPrioritySource =
-  | 'weak-word'
-  | 'due-item'
-  | 'repeated-mistake'
-  | 'skill-weakness';
+export type ReviewPrioritySource = 'weak-word' | 'due-item' | 'repeated-mistake' | 'skill-weakness';
 
 export interface ReviewPriorityCandidate {
   id: string;

@@ -1,5 +1,6 @@
-import { AIProviderMode } from './ai.types';
 import { isConfiguredPublicUrl } from '@/config/environment.config';
+
+import { AIProviderMode } from './ai.types';
 
 interface AIEnv {
   VITE_AI_PROVIDER?: string;
@@ -13,8 +14,7 @@ interface ImportMetaWithEnv {
 const env = (import.meta as unknown as ImportMetaWithEnv).env;
 
 const requestedProvider =
-  env?.VITE_AI_PROVIDER === 'backend' ||
-  env?.VITE_AI_PROVIDER === 'backend-proxy'
+  env?.VITE_AI_PROVIDER === 'backend' || env?.VITE_AI_PROVIDER === 'backend-proxy'
     ? 'backend'
     : 'mock';
 const proxyUrl = isConfiguredPublicUrl(env?.VITE_AI_PROXY_URL)

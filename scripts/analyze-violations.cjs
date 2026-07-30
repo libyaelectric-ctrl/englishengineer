@@ -5,15 +5,16 @@ const SRC_DIR = path.join(process.cwd(), 'src');
 const FEATURES_DIR = path.join(SRC_DIR, 'features');
 
 function getFeatureDirs() {
-  return fs.readdirSync(FEATURES_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory())
-    .map(d => d.name);
+  return fs
+    .readdirSync(FEATURES_DIR, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name);
 }
 
 function getImportsFromFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf-8');
   const importMatches = content.match(/from\s+['"]([^'"]+)['"]/g) || [];
-  return importMatches.map(m => m.replace(/^from\s+['"]/, '').replace(/['"]$/, ''));
+  return importMatches.map((m) => m.replace(/^from\s+['"]/, '').replace(/['"]$/, ''));
 }
 
 // Feature-to-feature violations
@@ -22,9 +23,10 @@ const f2fMap = {};
 
 for (const feature of featureDirs) {
   const featurePath = path.join(FEATURES_DIR, feature);
-  const files = fs.readdirSync(featurePath, { withFileTypes: true })
-    .filter(f => f.name.endsWith('.ts') || f.name.endsWith('.tsx'))
-    .map(f => path.join(featurePath, f.name));
+  const files = fs
+    .readdirSync(featurePath, { withFileTypes: true })
+    .filter((f) => f.name.endsWith('.ts') || f.name.endsWith('.tsx'))
+    .map((f) => path.join(featurePath, f.name));
 
   for (const file of files) {
     const imports = getImportsFromFile(file);
@@ -41,14 +43,16 @@ for (const feature of featureDirs) {
 
 const keys = Object.keys(f2fMap).sort();
 let total = 0;
-keys.forEach(k => { total += f2fMap[k].length; });
+keys.forEach((k) => {
+  total += f2fMap[k].length;
+});
 
 console.log('=== FEATURE-TO-FEATURE VIOLATIONS ===');
 console.log('Total violations:', total, '| Unique pairs:', keys.length);
 console.log('');
-keys.forEach(k => {
+keys.forEach((k) => {
   console.log('[' + k + '] (' + f2fMap[k].length + ')');
-  f2fMap[k].forEach(v => console.log('  ' + v));
+  f2fMap[k].forEach((v) => console.log('  ' + v));
 });
 
 // Shared-to-core violations
@@ -78,4 +82,4 @@ walkDir(sharedPath, (filePath) => {
 
 console.log('\n=== SHARED-TO-CORE/FEATURES VIOLATIONS ===');
 console.log('Total:', s2cViolations.length);
-s2cViolations.forEach(v => console.log('  ' + v));
+s2cViolations.forEach((v) => console.log('  ' + v));

@@ -1,33 +1,32 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Mic,
-  MicOff,
-  RotateCcw,
-  Trophy,
+  ChevronRight,
   Clock,
   Code,
   Layers,
-  ChevronRight,
+  Mic,
+  MicOff,
+  RotateCcw,
   StopCircle,
+  Trophy,
 } from 'lucide-react';
+
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
-import { SectionCard } from '@/shared/components/SectionCard';
 import { ProgressBar } from '@/shared/components/ProgressBar';
+import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
-  InterviewSimulatorService,
-  type InterviewSession,
-  type InterviewType,
   type InterviewQuestion,
   type InterviewScore,
+  type InterviewSession,
+  InterviewSimulatorService,
+  type InterviewType,
 } from '../interview-simulator';
 
 type InterviewState = 'select' | 'interview' | 'results';
 
-const SelectView = ({
-  onSelect,
-}: {
-  onSelect: (type: InterviewType) => void;
-}) => (
+const SelectView = ({ onSelect }: { onSelect: (type: InterviewType) => void }) => (
   <div className="space-y-6 animate-in fade-in">
     <SectionCard
       title="Technical Interview Simulator"
@@ -41,12 +40,10 @@ const SelectView = ({
           className="group rounded-[4px] border border-border-soft bg-surface p-6 text-left transition-all hover:border-primary/40 hover:bg-primary/5 shadow-sm cursor-pointer"
         >
           <Layers className="h-8 w-8 text-primary" />
-          <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">
-            System Design
-          </h3>
+          <h3 className="mt-3 text-lg font-bold text-foreground tracking-tight">System Design</h3>
           <p className="mt-2 text-sm text-muted-copy font-normal">
-            Practice designing scalable systems. Cover architecture, trade-offs,
-            and technical decisions.
+            Practice designing scalable systems. Cover architecture, trade-offs, and technical
+            decisions.
           </p>
           <div className="mt-4 flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider">
             Start practice
@@ -64,8 +61,8 @@ const SelectView = ({
             Coding Interview
           </h3>
           <p className="mt-2 text-sm text-muted-copy font-normal">
-            Solve coding problems aloud. Practice explaining your approach,
-            complexity, and edge cases.
+            Solve coding problems aloud. Practice explaining your approach, complexity, and edge
+            cases.
           </p>
           <div className="mt-4 flex items-center gap-2 text-sm font-bold text-primary uppercase tracking-wider">
             Start practice
@@ -117,10 +114,7 @@ const ResultsView = ({
         </div>
 
         {scores.map((score, i) => (
-          <div
-            key={i}
-            className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
-          >
+          <div key={i} className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[10px] font-bold uppercase text-muted-copy tracking-wider">
@@ -156,9 +150,7 @@ const ResultsView = ({
                   <p className="text-[10px] uppercase text-muted-copy font-bold tracking-wider">
                     {label}
                   </p>
-                  <p className="text-sm font-bold text-foreground mt-0.5">
-                    {value}%
-                  </p>
+                  <p className="text-sm font-bold text-foreground mt-0.5">{value}%</p>
                 </div>
               ))}
             </div>
@@ -240,9 +232,7 @@ const startSpeechRecognition = (
       return result.isFinal ? result.item(0).transcript : '';
     }).join('');
     if (finalTranscript) {
-      setCurrentAnswer((prev) =>
-        prev ? `${prev} ${finalTranscript}` : finalTranscript
-      );
+      setCurrentAnswer((prev) => (prev ? `${prev} ${finalTranscript}` : finalTranscript));
     }
   };
 
@@ -304,17 +294,13 @@ const QuestionCard = ({
 }) => (
   <div
     className={`rounded-[4px] border p-5 shadow-sm ${
-      isTimeUp
-        ? 'border-rose-500/30 bg-rose-500/5'
-        : 'border-primary/25 bg-primary/5'
+      isTimeUp ? 'border-rose-500/30 bg-rose-500/5' : 'border-primary/25 bg-primary/5'
     }`}
   >
     <p className="text-xs font-bold uppercase text-primary tracking-wider">
       {question.difficulty.toUpperCase()} · {question.topics.join(', ')}
     </p>
-    <p className="mt-2 text-base leading-7 text-foreground font-normal">
-      {question.question}
-    </p>
+    <p className="mt-2 text-base leading-7 text-foreground font-normal">{question.question}</p>
   </div>
 );
 
@@ -337,11 +323,7 @@ const SubmitBar = ({
       disabled={!canSubmit || isScoring}
       className="bg-primary hover:bg-primary/90 text-white font-bold uppercase tracking-wider text-[11px] h-10 px-5 rounded-[4px] cursor-pointer border border-primary shadow-sm"
     >
-      {isScoring
-        ? 'Scoring...'
-        : isLastQuestion
-          ? 'Submit & Finish'
-          : 'Submit & Next'}
+      {isScoring ? 'Scoring...' : isLastQuestion ? 'Submit & Finish' : 'Submit & Next'}
     </Button>
     <Button
       variant="outline"
@@ -376,11 +358,9 @@ const InterviewView = ({
   submitAnswer: () => void;
   resetInterview: () => void;
 }) => {
-  const progress =
-    (session.currentQuestionIndex / session.questions.length) * 100;
+  const progress = (session.currentQuestionIndex / session.questions.length) * 100;
   const isTimeUp = timeRemaining === 0;
-  const isLastQuestion =
-    session.currentQuestionIndex + 1 === session.questions.length;
+  const isLastQuestion = session.currentQuestionIndex + 1 === session.questions.length;
 
   return (
     <div className="space-y-6 animate-in fade-in">
@@ -529,10 +509,7 @@ export const InterviewSimulator = () => {
       recordingSeconds: currentQuestion.timeLimitSeconds - timeRemaining,
     };
 
-    const score = await InterviewSimulatorService.scoreAnswer(
-      answer,
-      currentQuestion
-    );
+    const score = await InterviewSimulatorService.scoreAnswer(answer, currentQuestion);
     const updatedSession: InterviewSession = {
       ...session,
       answers: [...session.answers, answer],
@@ -545,17 +522,14 @@ export const InterviewSimulator = () => {
     setTimeRemaining(0);
     setIsScoring(false);
 
-    if (
-      updatedSession.currentQuestionIndex >= updatedSession.questions.length
-    ) {
+    if (updatedSession.currentQuestionIndex >= updatedSession.questions.length) {
       updatedSession.completedAt = new Date().toISOString();
       setSession(updatedSession);
       setState('results');
     } else {
       setSession(updatedSession);
       setTimeRemaining(
-        updatedSession.questions[updatedSession.currentQuestionIndex]
-          .timeLimitSeconds
+        updatedSession.questions[updatedSession.currentQuestionIndex].timeLimitSeconds
       );
     }
   }, [session, currentQuestion, currentAnswer, timeRemaining, stopTimer]);
@@ -574,9 +548,7 @@ export const InterviewSimulator = () => {
 
   const overallScore =
     scores.length > 0
-      ? Math.round(
-          scores.reduce((sum, s) => sum + s.overall, 0) / scores.length
-        )
+      ? Math.round(scores.reduce((sum, s) => sum + s.overall, 0) / scores.length)
       : 0;
 
   if (state === 'select') {

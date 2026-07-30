@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { PLACEMENT_QUESTIONS } from './placement.data';
 import { PlacementService } from './placement.service';
 import type { PlacementAnswers, PlacementResult } from './placement.types';
@@ -24,13 +25,9 @@ export const usePlacementStore = create<PlacementStore>((set, get) => ({
     })),
   next: () =>
     set((state) => ({
-      currentIndex: Math.min(
-        state.currentIndex + 1,
-        PLACEMENT_QUESTIONS.length - 1
-      ),
+      currentIndex: Math.min(state.currentIndex + 1, PLACEMENT_QUESTIONS.length - 1),
     })),
-  previous: () =>
-    set((state) => ({ currentIndex: Math.max(state.currentIndex - 1, 0) })),
+  previous: () => set((state) => ({ currentIndex: Math.max(state.currentIndex - 1, 0) })),
   submit: (userId) => {
     const result = PlacementService.submit(userId, get().answers);
     set({ result });

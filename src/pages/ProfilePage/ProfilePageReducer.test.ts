@@ -1,11 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+
 import {
-  uiReducer,
-  editReducer,
-  prefsReducer,
-  type ProfileUIState,
   type ProfileEditState,
   type ProfilePrefsState,
+  type ProfileUIState,
+  editReducer,
+  prefsReducer,
+  uiReducer,
 } from './ProfilePageReducer';
 
 const initialUi: ProfileUIState = {
@@ -112,10 +113,7 @@ describe('ProfilePage editReducer', () => {
   });
 
   it('RESET_EDIT sets isEditMode to false', () => {
-    const result = editReducer(
-      { ...initialEdit, isEditMode: true },
-      { type: 'RESET_EDIT' }
-    );
+    const result = editReducer({ ...initialEdit, isEditMode: true }, { type: 'RESET_EDIT' });
     expect(result.isEditMode).toBe(false);
   });
 });

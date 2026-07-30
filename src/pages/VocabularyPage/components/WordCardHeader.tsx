@@ -1,9 +1,10 @@
 import { Volume2 } from 'lucide-react';
+
 import {
-  repairVocabularyText,
   PronunciationService,
   type VocabularyMenuProgress,
   type VocabularyTerm,
+  repairVocabularyText,
 } from '@/features/vocabulary';
 
 interface WordCardHeaderProps {
@@ -13,20 +14,12 @@ interface WordCardHeaderProps {
   progress?: VocabularyMenuProgress;
 }
 
-export const WordCardHeader = ({
-  term,
-  showAnswer,
-  status,
-}: WordCardHeaderProps) => (
+export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps) => (
   <div className="flex flex-wrap items-start justify-between gap-3">
     <div>
-      <h3 className="text-xl font-bold text-foreground">
-        {repairVocabularyText(term.term)}
-      </h3>
+      <h3 className="text-xl font-bold text-foreground">{repairVocabularyText(term.term)}</h3>
       {showAnswer && (
-        <p className="mt-1 font-bold text-primary">
-          {repairVocabularyText(term.turkishMeaning)}
-        </p>
+        <p className="mt-1 font-bold text-primary">{repairVocabularyText(term.turkishMeaning)}</p>
       )}
     </div>
     <div className="flex flex-wrap items-center justify-end gap-1.5">

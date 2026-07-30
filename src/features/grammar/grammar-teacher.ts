@@ -1,6 +1,8 @@
 import { logger } from '@/shared/logger';
+
 import { AIService } from '@/features/ai';
 import type { MockExample } from '@/features/ai';
+
 import { GrammarRepository } from './grammar.repository';
 
 export interface ChatMessage {
@@ -51,10 +53,7 @@ Always end your message by asking a question, suggesting a translation practice,
 If the user is answering a translation or practice prompt, evaluate their response and tell them if they got it right or wrong.`;
 
     const chatHistoryText = history
-      .map(
-        (msg) =>
-          `${msg.role === 'user' ? 'Student' : 'Teacher'}: ${msg.content}`
-      )
+      .map((msg) => `${msg.role === 'user' ? 'Student' : 'Teacher'}: ${msg.content}`)
       .join('\n');
 
     const prompt = `${systemPrompt}\n\nChat History:\n${chatHistoryText}\nStudent: ${userMessage}\nTeacher:`;

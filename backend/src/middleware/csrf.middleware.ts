@@ -1,5 +1,6 @@
+import type { NextFunction, Request, Response } from 'express';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
-import type { Request, Response, NextFunction } from 'express';
+
 import { logger } from '../logger.js';
 
 const CSRF_TOKEN_LENGTH = 32;
@@ -51,11 +52,7 @@ const tokensMatch = (a: string, b: string): boolean => {
  * - Exempts: Stripe webhooks (raw body), health checks, GET requests
  * - Skipped ONLY in the automated test environment (NODE_ENV=test)
  */
-export const csrfProtection = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+export const csrfProtection = (req: Request, res: Response, next: NextFunction): void => {
   // CSRF is enforced in every environment except the automated test run.
   // Development and staging are NOT exempt — only NODE_ENV=test (set by the
   // "test" script in package.json) skips this check, so real environments

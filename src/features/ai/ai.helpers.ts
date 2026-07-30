@@ -1,8 +1,10 @@
-import { ProgressService } from '@/core/learning/progress.service';
-import { LearningState } from '@/core/learning/learning.types';
 import { IdService } from '@/core/ids/id.service';
+import { LearningState } from '@/core/learning/learning.types';
+import { ProgressService } from '@/core/learning/progress.service';
+
 import { UserProfile } from '@/features/auth/auth.types';
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+
 import {
   AICoachContext,
   AICoachMode,
@@ -25,11 +27,9 @@ export const AI_COACH_MODES: AICoachMode[] = [
   {
     id: 'consultant_reply_assistant',
     name: 'Consultant Reply Assistant',
-    description:
-      'Draft respectful, technically precise replies to consultant comments.',
+    description: 'Draft respectful, technically precise replies to consultant comments.',
     operation: 'rewriteText',
-    placeholder:
-      'Paste the consultant comment and your rough technical response.',
+    placeholder: 'Paste the consultant comment and your rough technical response.',
     templateIds: ['consultant_inspection_comment', 'material_submittal_reply'],
   },
   {
@@ -37,18 +37,15 @@ export const AI_COACH_MODES: AICoachMode[] = [
     name: 'Technical Email Assistant',
     description: 'Convert rough notes into professional project emails.',
     operation: 'rewriteText',
-    placeholder:
-      'Paste rough email notes for a client, consultant, supplier, or subcontractor.',
+    placeholder: 'Paste rough email notes for a client, consultant, supplier, or subcontractor.',
     templateIds: ['material_submittal_reply', 'generator_testing_issue'],
   },
   {
     id: 'ncr_response_assistant',
     name: 'NCR Response Assistant',
-    description:
-      'Structure non-conformance responses with cause, correction, and prevention.',
+    description: 'Structure non-conformance responses with cause, correction, and prevention.',
     operation: 'generatePractice',
-    placeholder:
-      'Paste the NCR description, root cause, correction, and evidence available.',
+    placeholder: 'Paste the NCR description, root cause, correction, and evidence available.',
     templateIds: ['qa_qc_ncr_response'],
   },
   {
@@ -56,28 +53,23 @@ export const AI_COACH_MODES: AICoachMode[] = [
     name: 'Delay Explanation Assistant',
     description: 'Explain project delays clearly without sounding defensive.',
     operation: 'rewriteText',
-    placeholder:
-      'Paste the delay reason, impact, mitigation, and revised date.',
+    placeholder: 'Paste the delay reason, impact, mitigation, and revised date.',
     templateIds: ['cable_tray_delay'],
   },
   {
     id: 'meeting_preparation_coach',
     name: 'Meeting Preparation Coach',
-    description:
-      'Prepare talking points, risks, decisions, and action wording.',
+    description: 'Prepare talking points, risks, decisions, and action wording.',
     operation: 'generateStudyPlan',
-    placeholder:
-      'Describe the meeting topic, attendees, open issues, and decision needed.',
+    placeholder: 'Describe the meeting topic, attendees, open issues, and decision needed.',
     templateIds: ['fat_preparation', 'fire_alarm_integration_issue'],
   },
   {
     id: 'vocabulary_explainer',
     name: 'Vocabulary Explainer',
-    description:
-      'Explain engineering vocabulary with examples and collocations.',
+    description: 'Explain engineering vocabulary with examples and collocations.',
     operation: 'generatePractice',
-    placeholder:
-      'Enter engineering terms you want explained in simple professional English.',
+    placeholder: 'Enter engineering terms you want explained in simple professional English.',
   },
   {
     id: 'grammar_explainer',
@@ -89,38 +81,30 @@ export const AI_COACH_MODES: AICoachMode[] = [
   {
     id: 'roleplay_simulator',
     name: 'Roleplay Simulator',
-    description:
-      'Practice realistic engineer-to-consultant or engineer-to-client dialogue.',
+    description: 'Practice realistic engineer-to-consultant or engineer-to-client dialogue.',
     operation: 'generatePractice',
-    placeholder:
-      'Describe the roleplay scenario, your role, and the other person.',
+    placeholder: 'Describe the roleplay scenario, your role, and the other person.',
   },
   {
     id: 'daily_learning_planner',
     name: 'Daily Learning Planner',
-    description:
-      'Create a focused daily practice plan from your current progress.',
+    description: 'Create a focused daily practice plan from your current progress.',
     operation: 'generateStudyPlan',
-    placeholder:
-      'Tell the copilot how much time you have today and your priority.',
+    placeholder: 'Tell the copilot how much time you have today and your priority.',
   },
   {
     id: 'career_mentor',
     name: 'Career Mentor',
-    description:
-      'Connect English practice with interviews, promotion, and international roles.',
+    description: 'Connect English practice with interviews, promotion, and international roles.',
     operation: 'analyzeProgress',
-    placeholder:
-      'Describe a career conversation, interview answer, or professional goal.',
+    placeholder: 'Describe a career conversation, interview answer, or professional goal.',
   },
   {
     id: 'writing_reviewer',
     name: 'Writing Reviewer',
-    description:
-      'Review any engineering text for tone, grammar, clarity, and CEFR signal.',
+    description: 'Review any engineering text for tone, grammar, clarity, and CEFR signal.',
     operation: 'evaluateEngineeringEnglish',
-    placeholder:
-      'Paste your engineering message, report paragraph, email, or response.',
+    placeholder: 'Paste your engineering message, report paragraph, email, or response.',
   },
   {
     id: 'document_analysis_assistant',
@@ -137,8 +121,7 @@ export const AI_COACH_MODES: AICoachMode[] = [
     description:
       'Optimize your professional bio, experience descriptions, and headlines for international engineering roles.',
     operation: 'rewriteText',
-    placeholder:
-      'Paste your current LinkedIn headline, about summary, and job descriptions.',
+    placeholder: 'Paste your current LinkedIn headline, about summary, and job descriptions.',
   },
   {
     id: 'custom_scenario_generator',
@@ -253,8 +236,7 @@ export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
   {
     id: 'cv_optimization_sample',
     title: 'CV Bullet Point Optimizer',
-    description:
-      'Enhance resume bullet points to highlight impact and metrics.',
+    description: 'Enhance resume bullet points to highlight impact and metrics.',
     modeId: 'cv_optimizer',
     prompt:
       'Optimize these CV bullet points for a Senior Electrical Engineer. Rough points: "Responsible for electrical design. Led a team of 4. Did cable sizing and calculations. Attended site meetings and coordinated with other teams."',
@@ -288,14 +270,10 @@ export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
 export const getCoachModeById = (modeId: AICoachModeId): AICoachMode =>
   AI_COACH_MODES.find((mode) => mode.id === modeId) || AI_COACH_MODES[0];
 
-export const getTemplatesForMode = (
-  modeId: AICoachModeId
-): AIPromptTemplate[] =>
+export const getTemplatesForMode = (modeId: AICoachModeId): AIPromptTemplate[] =>
   AI_PROMPT_TEMPLATES.filter((template) => template.modeId === modeId);
 
-export const summarizeUserProgress = (
-  learningState: LearningState
-): string[] => {
+export const summarizeUserProgress = (learningState: LearningState): string[] => {
   const summary = ProgressService.getSummary(learningState);
   return [
     `Level ${summary.level}`,
@@ -312,9 +290,7 @@ export const getWeakestSkills = (learningState: LearningState): string[] => {
 };
 
 export const getRecommendedFocus = (learningState: LearningState): string => {
-  const weakSkills = getWeakestSkills(learningState).filter(
-    (skill) => skill !== 'None'
-  );
+  const weakSkills = getWeakestSkills(learningState).filter((skill) => skill !== 'None');
   if (weakSkills.length > 0) return weakSkills[0];
 
   const recent = learningState.studySessions.slice(-1)[0]?.module;
@@ -332,10 +308,7 @@ export const buildCoachContext = (
   const recentActivities = learningState.studySessions
     .slice(-5)
     .reverse()
-    .map(
-      (session) =>
-        `${session.module}: ${session.score}% (${session.durationMinutes} min)`
-    );
+    .map((session) => `${session.module}: ${session.score}% (${session.durationMinutes} min)`);
 
   const mappedMistakes = (mistakeLog || []).slice(0, 15).map((entry) => ({
     originalText: entry.originalText || '',
@@ -358,9 +331,7 @@ export const buildCoachContext = (
     weakSkills: skills.weakSkills,
     strongSkills: skills.strongSkills,
     recentActivities,
-    weakVocabulary: vocabulary.weakVocabulary
-      .map((entry) => entry.word)
-      .slice(0, 8),
+    weakVocabulary: vocabulary.weakVocabulary.map((entry) => entry.word).slice(0, 8),
     wordsLearned: vocabulary.wordsLearned,
     vocabularyRetention: vocabulary.retentionPercentage,
     recommendedFocus: getRecommendedFocus(learningState),
@@ -368,8 +339,7 @@ export const buildCoachContext = (
   };
 };
 
-export const createCoachSessionId = (): string =>
-  IdService.createId('ai_coach');
+export const createCoachSessionId = (): string => IdService.createId('ai_coach');
 
 export const formatCoachResult = (result: AICoachResult): string =>
   [

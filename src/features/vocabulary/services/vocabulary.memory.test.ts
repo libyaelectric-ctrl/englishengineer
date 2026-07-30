@@ -1,10 +1,8 @@
-import { beforeEach, describe, expect, it, beforeAll } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+
 import { loadVocabularyEntries } from '../data/vocabulary.data';
-import {
-  filterMyVocabulary,
-  VocabularyMemoryService,
-} from './vocabulary.memory';
 import { VocabularyEntry } from '../types/vocabulary.types';
+import { VocabularyMemoryService, filterMyVocabulary } from './vocabulary.memory';
 
 let entries: VocabularyEntry[] = [];
 
@@ -22,9 +20,7 @@ describe('My Vocabulary memory and review queue', () => {
     const entry = entries.find((item) => item.CEFR === 'A1');
     expect(entry).toBeDefined();
     VocabularyMemoryService.addEntry(entry!);
-    expect(VocabularyMemoryService.getState().savedWords[0].term).toBe(
-      entry!.word
-    );
+    expect(VocabularyMemoryService.getState().savedWords[0].term).toBe(entry!.word);
   });
 
   it('does not duplicate an already saved word', () => {
@@ -42,11 +38,7 @@ describe('My Vocabulary memory and review queue', () => {
 
   it('marks a saved word as Mastered with a longer interval', () => {
     const now = new Date('2026-06-27T10:00:00.000Z');
-    const saved = VocabularyMemoryService.addEntry(
-      entries[0],
-      'EngVox Dictionary',
-      now
-    );
+    const saved = VocabularyMemoryService.addEntry(entries[0], 'EngVox Dictionary', now);
     VocabularyMemoryService.updateStatus(saved.id, 'Mastered', now);
     const updated = VocabularyMemoryService.getState().savedWords[0];
     expect(updated.status).toBe('Mastered');
@@ -63,11 +55,7 @@ describe('My Vocabulary memory and review queue', () => {
 
   it('places due words in the Review Queue', () => {
     const now = new Date('2026-06-27T10:00:00.000Z');
-    const saved = VocabularyMemoryService.addEntry(
-      entries[0],
-      'EngVox Dictionary',
-      now
-    );
+    const saved = VocabularyMemoryService.addEntry(entries[0], 'EngVox Dictionary', now);
     VocabularyMemoryService.updateStatus(saved.id, 'Review Today', now);
     expect(VocabularyMemoryService.getDueWords(now)).toHaveLength(1);
   });

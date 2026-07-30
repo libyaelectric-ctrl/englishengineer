@@ -31,9 +31,7 @@ export const ProgressService = {
     const totalMissionsCount = state.missions.length;
 
     const completionPercentage =
-      totalMissionsCount > 0
-        ? Math.round((completedMissionsCount / totalMissionsCount) * 100)
-        : 0;
+      totalMissionsCount > 0 ? Math.round((completedMissionsCount / totalMissionsCount) * 100) : 0;
 
     // Calculate average score of completed missions
     const completedWithScores = completed.filter((m) => m.score !== undefined);
@@ -72,20 +70,18 @@ export const ProgressService = {
     weakSkills: string[];
     strongSkills: string[];
   } {
-    const modules: (
-      | 'Reading'
-      | 'Writing'
-      | 'Listening'
-      | 'Speaking'
-      | 'Vocabulary'
-    )[] = ['Reading', 'Writing', 'Listening', 'Speaking', 'Vocabulary'];
+    const modules: ('Reading' | 'Writing' | 'Listening' | 'Speaking' | 'Vocabulary')[] = [
+      'Reading',
+      'Writing',
+      'Listening',
+      'Speaking',
+      'Vocabulary',
+    ];
 
     const stats = modules.map((m) => {
       const sessions = state.studySessions.filter((s) => s.module === m);
       const avg =
-        sessions.length > 0
-          ? sessions.reduce((acc, s) => acc + s.score, 0) / sessions.length
-          : 50; // default benchmark
+        sessions.length > 0 ? sessions.reduce((acc, s) => acc + s.score, 0) / sessions.length : 50; // default benchmark
       return { module: m, average: avg };
     });
 
@@ -93,9 +89,7 @@ export const ProgressService = {
     stats.sort((a, b) => a.average - b.average);
 
     const weakSkills = stats.filter((s) => s.average < 75).map((s) => s.module);
-    const strongSkills = stats
-      .filter((s) => s.average >= 75)
-      .map((s) => s.module);
+    const strongSkills = stats.filter((s) => s.average >= 75).map((s) => s.module);
 
     return {
       weakSkills: weakSkills.length > 0 ? weakSkills : ['None'],

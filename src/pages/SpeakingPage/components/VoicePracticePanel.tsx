@@ -1,5 +1,7 @@
-import { Lock, Mic, RotateCcw, Volume2, History, Check } from 'lucide-react';
+import { Check, History, Lock, Mic, RotateCcw, Volume2 } from 'lucide-react';
+
 import { useNavigate } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
 
 interface VoicePracticePanelProps {
@@ -30,9 +32,8 @@ const LockedView = () => {
           Voice Practice & Pronunciation Rating is Locked
         </p>
         <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
-          Real Voice Speaking, pronunciation analysis, and voice simulator
-          workflows are exclusive features of the Max Plan ($59/mo). Upgrade today
-          to practice speech dynamically.
+          Real Voice Speaking, pronunciation analysis, and voice simulator workflows are exclusive
+          features of the Max Plan ($59/mo). Upgrade today to practice speech dynamically.
         </p>
       </div>
       <Button
@@ -74,9 +75,7 @@ const VoiceWorkspace = ({
     ) : recordedAudio ? (
       <div className="flex flex-col items-center gap-2 relative z-10">
         <Volume2 className="h-8 w-8 text-primary animate-pulse" />
-        <p className="text-xs font-bold text-foreground">
-          Audio response successfully captured
-        </p>
+        <p className="text-xs font-bold text-foreground">Audio response successfully captured</p>
         <span className="text-[10px] text-muted-copy font-bold uppercase tracking-wider bg-[#d9d9e3]/30 px-2 py-0.5 rounded-[4px]">
           VOCAL-ACQUISITION: COMPLETE
         </span>
@@ -84,9 +83,7 @@ const VoiceWorkspace = ({
     ) : (
       <div className="flex flex-col items-center gap-2 text-center relative z-10">
         <Mic className="h-8 w-8 text-muted-copy" />
-        <p className="text-xs font-bold text-foreground">
-          Voice capture module ready
-        </p>
+        <p className="text-xs font-bold text-foreground">Voice capture module ready</p>
         <p className="text-[10px] text-muted-copy font-bold uppercase tracking-wider">
           Initialize capture sequence by starting microphone
         </p>
@@ -170,19 +167,13 @@ const VoiceControls = ({
   </div>
 );
 
-const PhonemeCard = ({
-  item,
-}: {
-  item: { word: string; score: number; phonemes: string };
-}) => {
+const PhonemeCard = ({ item }: { item: { word: string; score: number; phonemes: string } }) => {
   const isAccurate = item.score >= 90;
   return (
     <div className="rounded-[4px] bg-surface border border-border-soft p-3 text-center shadow-sm flex flex-col justify-between">
       <div>
         <p className="text-xs font-bold text-foreground">{item.word}</p>
-        <p className="text-[10px] font-mono text-muted-copy font-medium mt-1">
-          [{item.phonemes}]
-        </p>
+        <p className="text-[10px] font-mono text-muted-copy font-medium mt-1">[{item.phonemes}]</p>
       </div>
       <div className="mt-3 flex items-center justify-center gap-1">
         {isAccurate ? (
@@ -190,9 +181,7 @@ const PhonemeCard = ({
         ) : (
           <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
         )}
-        <span
-          className={`text-[10px] font-bold ${isAccurate ? 'text-primary' : 'text-amber-600'}`}
-        >
+        <span className={`text-[10px] font-bold ${isAccurate ? 'text-primary' : 'text-amber-600'}`}>
           {item.score}%
         </span>
       </div>

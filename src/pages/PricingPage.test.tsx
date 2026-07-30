@@ -1,9 +1,12 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import PricingPage from './PricingPage';
+
+import { MemoryRouter } from 'react-router-dom';
+
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
+
+import PricingPage from './PricingPage';
 
 vi.mock('@/features/auth', () => ({
   useAuthStore: vi.fn(),
@@ -49,10 +52,7 @@ describe('PricingPage', () => {
     );
 
     const startFreeLinks = screen.getAllByRole('link', { name: 'Start free' });
-    expect(startFreeLinks[startFreeLinks.length - 1]).toHaveAttribute(
-      'href',
-      '/start'
-    );
+    expect(startFreeLinks[startFreeLinks.length - 1]).toHaveAttribute('href', '/start');
   });
 
   it('authenticated user goes to dashboard', () => {
@@ -73,9 +73,10 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    expect(
-      screen.getByRole('link', { name: 'Go to dashboard' })
-    ).toHaveAttribute('href', '/dashboard');
+    expect(screen.getByRole('link', { name: 'Go to dashboard' })).toHaveAttribute(
+      'href',
+      '/dashboard'
+    );
   });
 
   it('successful billing health check clears the unavailable warning', async () => {
@@ -122,9 +123,7 @@ describe('PricingPage', () => {
     } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
-    const fetchSpy = vi
-      .spyOn(global, 'fetch')
-      .mockRejectedValue(new Error('Network error'));
+    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
 
     render(
       <MemoryRouter>
@@ -157,9 +156,7 @@ describe('PricingPage', () => {
     } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
-    const fetchSpy = vi
-      .spyOn(global, 'fetch')
-      .mockRejectedValue(new Error('Network error'));
+    const fetchSpy = vi.spyOn(global, 'fetch').mockRejectedValue(new Error('Network error'));
 
     render(
       <MemoryRouter>
@@ -169,9 +166,7 @@ describe('PricingPage', () => {
 
     // The unavailable warning should be hidden because planId is 'pro'
     await waitFor(() => {
-      expect(
-        screen.queryByText(/Stripe backend health check failed/i)
-      ).toBeNull();
+      expect(screen.queryByText(/Stripe backend health check failed/i)).toBeNull();
     });
 
     // Pro user sees the Current plan disabled button

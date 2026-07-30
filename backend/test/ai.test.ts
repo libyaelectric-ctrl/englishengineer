@@ -1,7 +1,8 @@
-import { describe, it } from 'node:test';
+import type { Express, NextFunction, Request, Response } from 'express';
 import assert from 'node:assert/strict';
-import type { Express, Request, Response, NextFunction } from 'express';
-import { registerAIRoutes, AI_ROUTES } from '../src/ai.js';
+import { describe, it } from 'node:test';
+
+import { AI_ROUTES, registerAIRoutes } from '../src/ai.js';
 import type { SubscriptionRepository } from '../src/subscription-repository.js';
 
 interface RegisteredRoute {
@@ -20,16 +21,12 @@ const createMockApp = () => {
   };
 };
 
-const noopMiddleware =
-  () => async (_req: Request, _res: Response, next: NextFunction) => next();
+const noopMiddleware = () => async (_req: Request, _res: Response, next: NextFunction) => next();
 
 describe('AI Routes', () => {
   it('exports AI_ROUTES mapping with expected paths', () => {
     assert.equal(AI_ROUTES['/api/ai/coach'], 'analyzeProgress');
-    assert.equal(
-      AI_ROUTES['/api/ai/writing-review'],
-      'evaluateEngineeringEnglish'
-    );
+    assert.equal(AI_ROUTES['/api/ai/writing-review'], 'evaluateEngineeringEnglish');
     assert.equal(AI_ROUTES['/api/ai/assessment-feedback'], 'analyzeText');
     assert.equal(AI_ROUTES['/api/ai/roleplay'], 'generatePractice');
   });
@@ -54,10 +51,7 @@ describe('AI Routes', () => {
 
     const paths = app.registered.map((r) => r.path);
     for (const expectedPath of Object.keys(AI_ROUTES)) {
-      assert.ok(
-        paths.includes(expectedPath),
-        `Expected route for ${expectedPath}`
-      );
+      assert.ok(paths.includes(expectedPath), `Expected route for ${expectedPath}`);
     }
   });
 
@@ -80,11 +74,7 @@ describe('AI Routes', () => {
     );
 
     for (const route of app.registered) {
-      assert.equal(
-        route.handlerCount,
-        4,
-        `Route ${route.path} should have 4 middleware/handlers`
-      );
+      assert.equal(route.handlerCount, 4, `Route ${route.path} should have 4 middleware/handlers`);
     }
   });
 

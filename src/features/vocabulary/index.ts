@@ -19,10 +19,7 @@ export {
   type VocabularySummary,
 } from './types/vocabulary.types';
 
-export {
-  isVocabularyTerm,
-  assertVocabularyTerms,
-} from './types/vocabulary.schema';
+export { isVocabularyTerm, assertVocabularyTerms } from './types/vocabulary.schema';
 
 export { VocabularyRepository } from './services/vocabulary.repository';
 
@@ -97,11 +94,7 @@ export {
   PronunciationService,
 } from './services/vocabulary.pronunciation';
 
-export {
-  type CsvWord,
-  type ImportResult,
-  VocabularyCsvService,
-} from './services/vocabulary.csv';
+export { type CsvWord, type ImportResult, VocabularyCsvService } from './services/vocabulary.csv';
 
 export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
 

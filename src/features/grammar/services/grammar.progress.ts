@@ -1,9 +1,4 @@
-export type RuleStatus =
-  | 'new'
-  | 'learning'
-  | 'learned'
-  | 'mastered'
-  | 'struggling';
+export type RuleStatus = 'new' | 'learning' | 'learned' | 'mastered' | 'struggling';
 
 export interface RuleProgress {
   ruleId: string;
@@ -66,9 +61,7 @@ export const GrammarProgressService = {
     return {
       ...current,
       status:
-        current.status === 'new' || current.status === 'learning'
-          ? 'learned'
-          : current.status,
+        current.status === 'new' || current.status === 'learning' ? 'learned' : current.status,
       correctCount: newCorrect,
       quizDates: newDates,
       lastPracticedAt: now,

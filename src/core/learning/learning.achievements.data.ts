@@ -177,8 +177,7 @@ export const DEFAULT_ACHIEVEMENTS: Achievement[] = [
   {
     id: 'ach_speaking_technical',
     title: 'Technical Speaker',
-    description:
-      'Complete 5 Speaking missions with technical vocabulary calibration',
+    description: 'Complete 5 Speaking missions with technical vocabulary calibration',
     criteriaType: 'module_count',
     criteriaValue: 5,
     moduleFilter: 'Speaking',

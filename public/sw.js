@@ -1,19 +1,12 @@
 const CACHE_VERSION = 'v3';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
-const STATIC_ASSETS = [
-  '/',
-  '/offline.html',
-  '/brand/logo.webp',
-  '/manifest.json',
-];
+const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.webp', '/manifest.json'];
 
 const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
 
 // Install: cache static assets
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
-  );
+  event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
   self.skipWaiting();
 });
 
@@ -23,9 +16,7 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(
-          keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
-        )
+        Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
       )
   );
   self.clients.claim();
@@ -128,9 +119,7 @@ self.addEventListener('fetch', (event) => {
         }
         return response;
       })
-      .catch(() =>
-        caches.match(request).then((cached) => cached || caches.match('/offline.html'))
-      )
+      .catch(() => caches.match(request).then((cached) => cached || caches.match('/offline.html')))
   );
 });
 

@@ -1,16 +1,21 @@
-import { useEffect, useReducer, useState, useCallback } from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { PRODUCT_VERSION } from '@/config/product.config';
+
+import { useCallback, useEffect, useReducer, useState } from 'react';
+
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { storage } from '@/shared/storage';
+
+import { useAIStore } from '@/features/ai';
+import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { useAIStore } from '@/features/ai';
+import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
+import { useLearningCockpit } from '@/features/profile';
 import { useSpeakingStore } from '@/features/speaking';
 import { useVocabularyStore } from '@/features/vocabulary';
-import { useLearningCockpit } from '@/features/profile';
-import { useLearningIntelligenceStore } from '@/features/learning-intelligence';
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
-import { storage } from '@/shared/storage';
-import { PRODUCT_VERSION } from '@/config/product.config';
-import { uiReducer, type ProfileUIState } from './ProfilePageReducer';
+
+import { type ProfileUIState, uiReducer } from './ProfilePageReducer';
 import { useProfileEdit } from './useProfileEdit';
 import { useProfilePreferences } from './useProfilePreferences';
 
@@ -39,23 +44,17 @@ export const useProfilePage = () => {
     showClearConfirmation: false,
     clearConfirmation: '',
   } satisfies ProfileUIState);
-  const { isSaving, message, error, showClearConfirmation, clearConfirmation } =
-    ui;
-  const setMessage = (v: string | null) =>
-    dispatchUI({ type: 'SET_MESSAGE', value: v });
-  const setError = (v: string | null) =>
-    dispatchUI({ type: 'SET_ERROR', value: v });
+  const { isSaving, message, error, showClearConfirmation, clearConfirmation } = ui;
+  const setMessage = (v: string | null) => dispatchUI({ type: 'SET_MESSAGE', value: v });
+  const setError = (v: string | null) => dispatchUI({ type: 'SET_ERROR', value: v });
   const setShowClearConfirmation = (v: React.SetStateAction<boolean>) => {
     const next = typeof v === 'function' ? v(ui.showClearConfirmation) : v;
-    if (next !== ui.showClearConfirmation)
-      dispatchUI({ type: 'TOGGLE_CLEAR_CONFIRMATION' });
+    if (next !== ui.showClearConfirmation) dispatchUI({ type: 'TOGGLE_CLEAR_CONFIRMATION' });
   };
   const setClearConfirmation = (v: string) =>
     dispatchUI({ type: 'SET_CLEAR_CONFIRMATION', value: v });
 
-  const { profile, memory, learningState } = useLearningCockpit(
-    currentUser?.id
-  );
+  const { profile, memory, learningState } = useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((s) => s.mistakeLog);
   const { sessions } = useAIStore();
   const todaysCoachSessions = sessions.filter(
@@ -83,11 +82,7 @@ export const useProfilePage = () => {
         (sum, e) =>
           sum +
           (e.evaluation?.wordsPerMinute
-            ? Math.round(
-                (e.evaluation.wordCount /
-                  Math.max(e.evaluation.wordsPerMinute, 1)) *
-                  60
-              )
+            ? Math.round((e.evaluation.wordCount / Math.max(e.evaluation.wordsPerMinute, 1)) * 60)
             : 0),
         0
       );
@@ -105,10 +100,7 @@ export const useProfilePage = () => {
   }, [currentUser?.id, initializeBilling, initializeSpeaking]);
 
   useEffect(() => {
-    if (
-      new URLSearchParams(location.search).get('billing') === 'success' &&
-      currentUser?.id
-    ) {
+    if (new URLSearchParams(location.search).get('billing') === 'success' && currentUser?.id) {
       ProductAnalyticsService.track('checkout_completed', '/profile', {
         metadata: { source: 'checkout_return' },
       });
@@ -119,9 +111,7 @@ export const useProfilePage = () => {
   const handleUpgrade = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError(
-        'Demo mode: Billing is available after connecting Supabase and Stripe.'
-      );
+      setError('Demo mode: Billing is available after connecting Supabase and Stripe.');
       return;
     }
     try {
@@ -131,31 +121,21 @@ export const useProfilePage = () => {
       });
       await startCheckout(currentUser.id, currentUser.email, 'pro');
     } catch (e: unknown) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : 'Billing is not available in demo mode.'
-      );
+      setError(e instanceof Error ? e.message : 'Billing is not available in demo mode.');
     }
   };
 
   const handleManageSubscription = async () => {
     if (!currentUser) return;
     if (currentUser.id.startsWith('demo_engineer_')) {
-      setError(
-        'Demo mode: Subscription management available after connecting Supabase + Stripe.'
-      );
+      setError('Demo mode: Subscription management available after connecting Supabase + Stripe.');
       return;
     }
     try {
       setError(null);
       await openCustomerPortal(currentUser.id);
     } catch (e: unknown) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : 'Billing portal is not available in demo mode.'
-      );
+      setError(e instanceof Error ? e.message : 'Billing portal is not available in demo mode.');
     }
   };
 
@@ -207,9 +187,7 @@ export const useProfilePage = () => {
       'ai_coach_pro_state',
     ].forEach((k) => storage.remove(k));
     if (currentUser?.id)
-      (await import('@/features/profile')).LearningProfileRepository.reset(
-        currentUser.id
-      );
+      (await import('@/features/profile')).LearningProfileRepository.reset(currentUser.id);
     storage.clear();
     navigate('/start');
   }, [clearConfirmation, currentUser?.id, navigate]);
@@ -219,8 +197,7 @@ export const useProfilePage = () => {
     if (currentUser?.displayName) c += 20;
     if (profile?.professionId) c += 20;
     if (profile?.industryId) c += 20;
-    if (profile?.communicationGoals && profile.communicationGoals.length > 0)
-      c += 10;
+    if (profile?.communicationGoals && profile.communicationGoals.length > 0) c += 10;
     return c;
   })();
 

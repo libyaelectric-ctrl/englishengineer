@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
+
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getSupabaseClient } from '@/features/auth/supabase.client';
+
 import { LoadingState } from '@/shared/components/LoadingState';
 import { logger } from '@/shared/logger';
+
+import { getSupabaseClient } from '@/features/auth/supabase.client';
 
 export default function AuthCallbackPage() {
   const navigate = useNavigate();
@@ -21,8 +24,7 @@ export default function AuthCallbackPage() {
 
       if (code) {
         // PKCE flow: exchange authorization code for session
-        const { error: exchangeError } =
-          await client.auth.exchangeCodeForSession(code);
+        const { error: exchangeError } = await client.auth.exchangeCodeForSession(code);
         if (exchangeError) {
           logger.e('OAuth code exchange failed:', exchangeError);
           setError(exchangeError.message);
@@ -50,9 +52,7 @@ export default function AuthCallbackPage() {
       <div style={{ padding: '2rem', textAlign: 'center' }}>
         <h2>Authentication Error</h2>
         <p style={{ color: 'red' }}>{error}</p>
-        <button onClick={() => navigate('/login', { replace: true })}>
-          Back to Login
-        </button>
+        <button onClick={() => navigate('/login', { replace: true })}>Back to Login</button>
       </div>
     );
   }

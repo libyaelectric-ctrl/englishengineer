@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -15,8 +15,7 @@ const loadPrompt = (filename: string): string => {
   return content;
 };
 
-export const getJsonStructureInstruction = (): string =>
-  loadPrompt('json-structure.md');
+export const getJsonStructureInstruction = (): string => loadPrompt('json-structure.md');
 
 interface PracticeContext {
   recentMistakes?: Array<{
@@ -28,9 +27,7 @@ interface PracticeContext {
   discipline?: string;
 }
 
-export const getCustomPracticePrompt = (
-  context: PracticeContext = {}
-): string => {
+export const getCustomPracticePrompt = (context: PracticeContext = {}): string => {
   const mistakes = context.recentMistakes || [];
   const weakVocab = context.weakVocabulary || [];
   const noData = mistakes.length === 0 && weakVocab.length === 0;

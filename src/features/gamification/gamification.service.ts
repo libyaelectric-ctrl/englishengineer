@@ -1,55 +1,37 @@
 import { LearningState } from '@/core/learning/learning.types';
+
 import { AnalyticsService } from '@/features/analytics';
-import { getLevelInfo, buildMissionProgress } from './gamification.helpers';
+
+import { buildMissionProgress, getLevelInfo } from './gamification.helpers';
 import {
   LEVEL_REWARDS,
   PERFECT_SESSION_REWARD,
   SESSION_COMPLETION_REWARD,
 } from './gamification.rewards';
-import {
-  GAMIFICATION_MISSION_TEMPLATES,
-  GAMIFICATION_TITLES,
-} from './gamification.rules';
-import {
-  GamificationPersistedState,
-  GamificationSummary,
-} from './gamification.types';
+import { GAMIFICATION_MISSION_TEMPLATES, GAMIFICATION_TITLES } from './gamification.rules';
+import { GamificationPersistedState, GamificationSummary } from './gamification.types';
 
 export const GamificationService = {
-  getSummary(
-    state: LearningState,
-    persisted: GamificationPersistedState
-  ): GamificationSummary {
+  getSummary(state: LearningState, persisted: GamificationPersistedState): GamificationSummary {
     const analytics = AnalyticsService.getSummary(state);
     const missionProgress = GAMIFICATION_MISSION_TEMPLATES.map((template) =>
       buildMissionProgress(template, state, analytics)
     );
-    const dailyMissions = missionProgress.filter(
-      (mission) => mission.template.cadence === 'daily'
-    );
+    const dailyMissions = missionProgress.filter((mission) => mission.template.cadence === 'daily');
     const weeklyMissions = missionProgress.filter(
       (mission) => mission.template.cadence === 'weekly'
     );
     const monthlyGoals = missionProgress.filter(
       (mission) => mission.template.cadence === 'monthly'
     );
-    const perfectSessions = state.studySessions.filter(
-      (session) => session.score >= 100
-    ).length;
-    const completedDaily = dailyMissions.filter(
-      (mission) => mission.isCompleted
-    ).length;
-    const completedWeekly = weeklyMissions.filter(
-      (mission) => mission.isCompleted
-    ).length;
-    const completedMonthly = monthlyGoals.filter(
-      (mission) => mission.isCompleted
-    ).length;
+    const perfectSessions = state.studySessions.filter((session) => session.score >= 100).length;
+    const completedDaily = dailyMissions.filter((mission) => mission.isCompleted).length;
+    const completedWeekly = weeklyMissions.filter((mission) => mission.isCompleted).length;
+    const completedMonthly = monthlyGoals.filter((mission) => mission.isCompleted).length;
     const levelInfo = getLevelInfo(state.xp);
     const nextLevelReward =
-      LEVEL_REWARDS.find(
-        (reward) => reward.id === `reward_level_${levelInfo.currentLevel + 1}`
-      ) || LEVEL_REWARDS[LEVEL_REWARDS.length - 1];
+      LEVEL_REWARDS.find((reward) => reward.id === `reward_level_${levelInfo.currentLevel + 1}`) ||
+      LEVEL_REWARDS[LEVEL_REWARDS.length - 1];
     const titles = GAMIFICATION_TITLES.filter(
       (title) => levelInfo.currentLevel >= title.threshold
     ).map((title) => title.title);
@@ -67,8 +49,7 @@ export const GamificationService = {
         comboBonus: completedDaily >= 2 ? 15 : 0,
         perfectSessionBonus: perfectSessions * PERFECT_SESSION_REWARD.xp,
         consistencyBonus: analytics.studyConsistency >= 70 ? 30 : 0,
-        comebackBonus:
-          state.streak === 1 && state.studySessions.length > 3 ? 20 : 0,
+        comebackBonus: state.streak === 1 && state.studySessions.length > 3 ? 20 : 0,
       },
       recentRewards: persisted.rewardHistory.slice(0, 8),
       achievementFeed: state.achievements
@@ -81,10 +62,7 @@ export const GamificationService = {
           xp: 0,
           coins: 0,
         }))
-        .sort(
-          (a, b) =>
-            new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-        )
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
         .slice(0, 8),
       nextReward: nextLevelReward || SESSION_COMPLETION_REWARD,
       challengeProgress: {

@@ -1,20 +1,14 @@
 import { create } from 'zustand';
-import { BillingService } from './billing.service';
-import {
-  BillingPlanId,
-  BillingState,
-  SubscriptionSnapshot,
-} from './billing.types';
+
 import { logger } from '@/shared/logger';
+
+import { BillingService } from './billing.service';
+import { BillingPlanId, BillingState, SubscriptionSnapshot } from './billing.types';
 
 interface BillingActions {
   initializeBilling: (userId: string | null) => Promise<void>;
   refreshBilling: (userId: string | null) => Promise<void>;
-  startCheckout: (
-    userId: string,
-    email: string,
-    planId: BillingPlanId
-  ) => Promise<void>;
+  startCheckout: (userId: string, email: string, planId: BillingPlanId) => Promise<void>;
   openCustomerPortal: (userId: string) => Promise<void>;
   startTopupCheckout: (userId: string, email: string) => Promise<void>;
   setSubscription: (subscription: SubscriptionSnapshot) => void;
@@ -65,8 +59,7 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       await BillingService.startCheckout(userId, email, planId);
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Checkout session failed.';
+      const message = error instanceof Error ? error.message : 'Checkout session failed.';
       set({ isLoading: false, error: message });
       throw error;
     }
@@ -77,10 +70,7 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       await BillingService.openCustomerPortal(userId);
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Customer portal session failed.';
+      const message = error instanceof Error ? error.message : 'Customer portal session failed.';
       set({ isLoading: false, error: message });
       throw error;
     }
@@ -91,8 +81,7 @@ export const useBillingStore = create<BillingState & BillingActions>((set) => ({
     try {
       await BillingService.startTopupCheckout(userId, email);
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Top-up checkout failed.';
+      const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
       set({ isLoading: false, error: message });
       throw error;
     }

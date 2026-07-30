@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { LocalAuthAdapter } from './auth.adapter';
 import { isLocalAuthAllowed } from './auth.config';
 
@@ -11,9 +12,9 @@ describe('LocalAuth production guard', () => {
 
   it('rejects local login when the adapter is disabled', async () => {
     const adapter = new LocalAuthAdapter(false);
-    await expect(
-      adapter.login('Test Engineer', 'engineer@example.com')
-    ).rejects.toThrow('Secure authentication is not configured.');
+    await expect(adapter.login('Test Engineer', 'engineer@example.com')).rejects.toThrow(
+      'Secure authentication is not configured.'
+    );
   });
 
   it('creates a fresh demo identity for each explicit demo start', async () => {

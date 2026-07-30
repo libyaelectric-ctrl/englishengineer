@@ -1,16 +1,11 @@
 import { ProgressBar } from '@/shared/components/ProgressBar';
+
 import { GamificationMissionProgress } from '@/features/gamification';
 
-export const MissionList = ({
-  missions,
-}: {
-  missions: GamificationMissionProgress[];
-}) => (
+export const MissionList = ({ missions }: { missions: GamificationMissionProgress[] }) => (
   <div className="space-y-4">
     {missions.map((mission) => {
-      const value = Math.round(
-        (mission.progress / mission.template.target) * 100
-      );
+      const value = Math.round((mission.progress / mission.template.target) * 100);
       return (
         <div
           key={mission.template.id}
@@ -21,9 +16,7 @@ export const MissionList = ({
               <p className="text-[10px] font-mono text-primary uppercase tracking-widest font-bold">
                 {mission.template.category}
               </p>
-              <h4 className="mt-1 text-base font-bold text-foreground">
-                {mission.template.title}
-              </h4>
+              <h4 className="mt-1 text-base font-bold text-foreground">{mission.template.title}</h4>
               <p className="text-xs text-muted-copy mt-1 font-medium">
                 {mission.template.description}
               </p>
@@ -35,16 +28,11 @@ export const MissionList = ({
                   : 'border-border-soft bg-surface-hover text-muted-copy'
               }`}
             >
-              {mission.isCompleted
-                ? 'Complete'
-                : `${mission.progress}/${mission.template.target}`}
+              {mission.isCompleted ? 'Complete' : `${mission.progress}/${mission.template.target}`}
             </span>
           </div>
           <div className="mt-4 space-y-2">
-            <ProgressBar
-              value={value}
-              color={mission.isCompleted ? 'emerald' : 'primary'}
-            />
+            <ProgressBar value={value} color={mission.isCompleted ? 'emerald' : 'primary'} />
             <div className="flex justify-between text-[10px] font-mono text-muted-copy font-bold">
               <span>+{mission.template.xpReward} XP</span>
               <span>+{mission.template.coinReward} coins</span>
@@ -56,30 +44,16 @@ export const MissionList = ({
   </div>
 );
 
-export const DetailRow = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+export const DetailRow = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-center justify-between border-b border-border-soft pb-2 last:border-b-0 last:pb-0">
     <span className="font-mono text-xs uppercase font-bold">{label}</span>
     <span className="font-bold text-foreground">{value}</span>
   </div>
 );
 
-export const MiniStat = ({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) => (
+export const MiniStat = ({ label, value }: { label: string; value: string }) => (
   <div className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
-    <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">
-      {label}
-    </p>
+    <p className="text-[10px] font-mono text-muted-copy uppercase font-bold">{label}</p>
     <p className="mt-1 text-2xl font-bold text-foreground">{value}</p>
   </div>
 );
@@ -103,16 +77,12 @@ export const FeedList = ({
         className="rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm"
       >
         <p className="text-sm font-bold text-foreground">{item.title}</p>
-        <p className="text-xs text-muted-copy mt-1 font-medium">
-          {item.description}
-        </p>
+        <p className="text-xs text-muted-copy mt-1 font-medium">{item.description}</p>
         <p className="text-[10px] font-mono text-primary mt-2 font-bold">
           {new Date(item.timestamp).toLocaleDateString()}
         </p>
       </div>
     ))}
-    {items.length === 0 && (
-      <p className="text-xs text-muted-copy font-medium">{emptyLabel}</p>
-    )}
+    {items.length === 0 && <p className="text-xs text-muted-copy font-medium">{emptyLabel}</p>}
   </div>
 );

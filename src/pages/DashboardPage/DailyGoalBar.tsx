@@ -1,4 +1,5 @@
 import { useLearningStore } from '@/core/learning';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
 const DAILY_GOAL = 10;

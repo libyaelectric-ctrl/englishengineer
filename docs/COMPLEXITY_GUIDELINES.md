@@ -14,6 +14,7 @@ complexity: ['warn', { max: 10 }],
 ## What is Cyclomatic Complexity?
 
 Number of independent paths through a function:
+
 - **1-5**: Simple, easy to test
 - **6-10**: Moderate, acceptable
 - **11-20**: Complex, should refactor
@@ -21,9 +22,9 @@ Number of independent paths through a function:
 
 ## Refactoring Targets
 
-| Function | File | Current | Target | Strategy |
-|----------|------|---------|--------|----------|
-| *(Audit in progress)* | | | | |
+| Function              | File | Current | Target | Strategy |
+| --------------------- | ---- | ------- | ------ | -------- |
+| _(Audit in progress)_ |      |         |        |          |
 
 ## Best Practices
 
@@ -49,4 +50,5 @@ npx eslint --rule 'complexity: [error, 10]' src/features/vocabulary/store/vocabu
 ```
 
 ## Last Updated
+
 - **Date:** 2026-07-27

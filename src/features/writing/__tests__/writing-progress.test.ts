@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { WritingProgressService } from '../writing-progress';
 
 describe('WritingProgressService', () => {

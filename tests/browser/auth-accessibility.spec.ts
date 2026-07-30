@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
 
 const AUTH_PAGES = [
   { name: 'Login', path: '/login' },
@@ -19,28 +19,20 @@ test.describe('Auth Pages Accessibility', () => {
       expect(results.violations).toEqual([]);
     });
 
-    test(`${page.name} form inputs have associated labels`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} form inputs have associated labels`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['label'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['label']).analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test(`${page.name} page has correct heading hierarchy`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} page has correct heading hierarchy`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['heading-order'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['heading-order']).analyze();
 
       const seriousViolations = results.violations.filter(
         (v) => v.impact === 'serious' || v.impact === 'critical'
@@ -48,22 +40,16 @@ test.describe('Auth Pages Accessibility', () => {
       expect(seriousViolations).toEqual([]);
     });
 
-    test(`${page.name} page meets color contrast requirements`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} page meets color contrast requirements`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['color-contrast'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['color-contrast']).analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test(`${page.name} page is navigable with keyboard`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} page is navigable with keyboard`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
@@ -83,26 +69,18 @@ test.describe('Auth Pages Accessibility', () => {
       await p.waitForLoadState('networkidle');
 
       const results = await new AxeBuilder({ page: p })
-        .withRules([
-          'aria-required-attr',
-          'aria-valid-attr',
-          'aria-valid-attr-value',
-        ])
+        .withRules(['aria-required-attr', 'aria-valid-attr', 'aria-valid-attr-value'])
         .analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test(`${page.name} page has accessible form error messages`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} page has accessible form error messages`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
       // Check that form elements have proper ARIA attributes
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['aria-required-attr'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['aria-required-attr']).analyze();
 
       expect(results.violations).toEqual([]);
     });
@@ -111,22 +89,16 @@ test.describe('Auth Pages Accessibility', () => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['link-name'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['link-name']).analyze();
 
       expect(results.violations).toEqual([]);
     });
 
-    test(`${page.name} page has proper document language`, async ({
-      page: p,
-    }) => {
+    test(`${page.name} page has proper document language`, async ({ page: p }) => {
       await p.goto(page.path);
       await p.waitForLoadState('networkidle');
 
-      const results = await new AxeBuilder({ page: p })
-        .withRules(['html-has-lang'])
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withRules(['html-has-lang']).analyze();
 
       expect(results.violations).toEqual([]);
     });

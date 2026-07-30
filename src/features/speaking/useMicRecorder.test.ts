@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { renderHook, act, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { useMicRecorder } from './useMicRecorder';
 
 class FakeMediaRecorder {
@@ -80,9 +81,7 @@ describe('useMicRecorder', () => {
   it('reports permission-denied when getUserMedia rejects with NotAllowedError', async () => {
     vi.stubGlobal('navigator', {
       mediaDevices: {
-        getUserMedia: vi
-          .fn()
-          .mockRejectedValue(new DOMException('denied', 'NotAllowedError')),
+        getUserMedia: vi.fn().mockRejectedValue(new DOMException('denied', 'NotAllowedError')),
       },
     });
     const { result } = renderHook(() => useMicRecorder());

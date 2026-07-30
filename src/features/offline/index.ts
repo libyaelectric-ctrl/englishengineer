@@ -1,15 +1,8 @@
 export { OFFLINE_CAPABILITIES } from './offline.data';
 
-export {
-  canUseCapability,
-  getCapabilityLabel,
-  getOfflineSummary,
-} from './offline.helpers';
+export { canUseCapability, getCapabilityLabel, getOfflineSummary } from './offline.helpers';
 
-export {
-  type OfflineCapabilityStatus,
-  type OfflineCapability,
-} from './offline.types';
+export { type OfflineCapabilityStatus, type OfflineCapability } from './offline.types';
 
 export {
   type SyncQueueItem,

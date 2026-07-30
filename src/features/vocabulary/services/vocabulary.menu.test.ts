@@ -1,10 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import type { VocabularyTerm } from '../types/vocabulary.types';
 import {
   CANONICAL_VOCABULARY_TOTAL,
+  VocabularyMenuService,
   getVocabularyReviewReason,
   searchVocabularyMenu,
-  VocabularyMenuService,
 } from './vocabulary.menu';
 
 const term = {
@@ -40,12 +41,8 @@ describe('Vocabulary menu progress', () => {
 
   it('masters only on the third correct review', () => {
     const now = new Date('2026-06-29T10:00:00.000Z');
-    expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe(
-      'Learned'
-    );
-    expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe(
-      'Learned'
-    );
+    expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe('Learned');
+    expect(VocabularyMenuService.reviewWord(term.id, true, now).status).toBe('Learned');
     const mastered = VocabularyMenuService.reviewWord(term.id, true, now);
     expect(mastered.status).toBe('Mastered');
     expect(mastered.correctReviews).toBe(3);
@@ -88,12 +85,7 @@ describe('Vocabulary menu progress', () => {
     const now = new Date('2026-06-29T10:00:00.000Z');
     VocabularyMenuService.reviewWord(term.id, false, now, term.term);
     VocabularyMenuService.reviewWord(term.id, false, now, term.term);
-    const progress = VocabularyMenuService.reviewWord(
-      term.id,
-      false,
-      now,
-      term.term
-    );
+    const progress = VocabularyMenuService.reviewWord(term.id, false, now, term.term);
     const summary = VocabularyMenuService.getSummary(
       VocabularyMenuService.getState(),
       CANONICAL_VOCABULARY_TOTAL,
@@ -112,9 +104,7 @@ describe('Vocabulary menu progress', () => {
   it('searches canonical fields, skill use, derived status, and advanced filters', () => {
     const state = VocabularyMenuService.getState();
     expect(searchVocabularyMenu([term], 'height', state)).toEqual([term]);
-    expect(searchVocabularyMenu([term], `y\u00fckseklik`, state)).toEqual([
-      term,
-    ]);
+    expect(searchVocabularyMenu([term], `y\u00fckseklik`, state)).toEqual([term]);
     expect(searchVocabularyMenu([term], 'noun', state)).toEqual([term]);
     expect(searchVocabularyMenu([term], 'reading', state)).toEqual([term]);
     expect(searchVocabularyMenu([term], 'New', state)).toEqual([term]);
@@ -149,10 +139,7 @@ describe('Vocabulary menu progress', () => {
       cefrLevel: 'B1',
       domain: 'commissioning',
     });
-    VocabularyMenuService.archiveMyVocabulary(
-      word.id,
-      new Date('2026-06-29T12:00:00Z')
-    );
+    VocabularyMenuService.archiveMyVocabulary(word.id, new Date('2026-06-29T12:00:00Z'));
     const state = VocabularyMenuService.getState();
     expect(state.myVocabulary).toHaveLength(1);
     expect(state.myVocabulary[0].archivedAt).not.toBeNull();
@@ -166,29 +153,16 @@ describe('Vocabulary menu progress', () => {
     const mastered = VocabularyMenuService.reviewWord(term.id, true, learnedAt);
     expect(mastered.nextReviewDate).toBe('2026-06-08T10:00:00.000Z');
     expect(
-      VocabularyMenuService.getSummary(
-        undefined,
-        5000,
-        new Date('2026-06-08T10:00:00Z')
-      ).dueToday
+      VocabularyMenuService.getSummary(undefined, 5000, new Date('2026-06-08T10:00:00Z')).dueToday
     ).toBe(1);
     expect(
-      VocabularyMenuService.reviewWord(
-        term.id,
-        false,
-        new Date('2026-06-08T10:00:00Z')
-      ).isForgotten
+      VocabularyMenuService.reviewWord(term.id, false, new Date('2026-06-08T10:00:00Z')).isForgotten
     ).toBe(true);
   });
 
   it('explains why weak and scheduled words return to review', () => {
     const now = new Date('2026-06-29T10:00:00.000Z');
-    const weak = VocabularyMenuService.reviewWord(
-      term.id,
-      false,
-      now,
-      term.term
-    );
+    const weak = VocabularyMenuService.reviewWord(term.id, false, now, term.term);
     expect(getVocabularyReviewReason(weak, now)).toContain('weak recall');
 
     const mastered = {
@@ -200,8 +174,6 @@ describe('Vocabulary menu progress', () => {
       wrongReviews: 0,
       nextReviewDate: now.toISOString(),
     };
-    expect(getVocabularyReviewReason(mastered, now)).toContain(
-      'maintenance review'
-    );
+    expect(getVocabularyReviewReason(mastered, now)).toContain('maintenance review');
   });
 });

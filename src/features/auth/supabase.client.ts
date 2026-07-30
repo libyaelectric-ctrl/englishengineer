@@ -1,4 +1,5 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
+
 import { AUTH_CONFIG } from './auth.config';
 import { EngVoxDatabase } from './supabase.types';
 
@@ -7,11 +8,7 @@ let cachedClient: SupabaseClient | null = null;
 export const isSupabaseConfigured = (): boolean => AUTH_CONFIG.isSupabaseReady;
 
 export const getSupabaseClient = (): SupabaseClient | null => {
-  if (
-    !AUTH_CONFIG.isSupabaseReady ||
-    !AUTH_CONFIG.supabase.url ||
-    !AUTH_CONFIG.supabase.anonKey
-  ) {
+  if (!AUTH_CONFIG.isSupabaseReady || !AUTH_CONFIG.supabase.url || !AUTH_CONFIG.supabase.anonKey) {
     return null;
   }
 

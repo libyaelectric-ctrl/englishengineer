@@ -51,27 +51,20 @@ const CATEGORY_LABELS: Record<ErrorCategory, string> = {
 
 const RECOMMENDATIONS: Record<ErrorCategory, string> = {
   tense: 'Review present/past/future tense forms. Practice timeline exercises.',
-  preposition:
-    'Focus on common preposition combinations. Read English texts actively.',
-  article:
-    'Practice a/an/the usage rules. Pay attention to countable/uncountable nouns.',
-  'subject-verb-agreement':
-    'Review singular/plural verb forms. Check subject before verb.',
+  preposition: 'Focus on common preposition combinations. Read English texts actively.',
+  article: 'Practice a/an/the usage rules. Pay attention to countable/uncountable nouns.',
+  'subject-verb-agreement': 'Review singular/plural verb forms. Check subject before verb.',
   'word-order': 'Practice basic SVO structure. Review adverb placement rules.',
   pronoun: 'Review pronoun-antecedent agreement. Practice relative pronouns.',
-  plural:
-    'Review regular/irregular plural forms. Practice countable noun rules.',
-  comparison:
-    'Review comparative/superlative forms. Practice than/as...as structures.',
-  conditionals:
-    'Review zero/first/second/third conditional forms and their meanings.',
+  plural: 'Review regular/irregular plural forms. Practice countable noun rules.',
+  comparison: 'Review comparative/superlative forms. Practice than/as...as structures.',
+  conditionals: 'Review zero/first/second/third conditional forms and their meanings.',
   'passive-voice':
     'Review passive form (be + past participle). Practice active-passive conversion.',
   other: 'Continue practicing grammar rules systematically.',
 };
 
-const normalize = (id: string): string =>
-  id.toLowerCase().replace(/[^a-z0-9]/g, '');
+const normalize = (id: string): string => id.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const CATEGORY_PATTERNS: Array<[RegExp, ErrorCategory]> = [
   [/tense|past|present|future|perfect|progressive/, 'tense'],
@@ -103,12 +96,7 @@ export const ErrorPatternAnalyzer = {
     storage.set(STORAGE_KEY, patterns);
   },
 
-  recordError(
-    ruleId: string,
-    ruleTitle: string,
-    exampleSentence?: string,
-    now = new Date()
-  ): void {
+  recordError(ruleId: string, ruleTitle: string, exampleSentence?: string, now = new Date()): void {
     const patterns = this.getPatterns();
     const category = categorizeRule(ruleId, ruleTitle);
     const key = `${normalize(ruleId)}_${category}`;
@@ -141,16 +129,13 @@ export const ErrorPatternAnalyzer = {
       .map(([category, count]) => ({
         category: category as ErrorCategory,
         count,
-        percentage:
-          totalErrors > 0 ? Math.round((count / totalErrors) * 100) : 0,
+        percentage: totalErrors > 0 ? Math.round((count / totalErrors) * 100) : 0,
       }))
       .sort((a, b) => b.count - a.count)
       .filter((c) => c.count > 0);
 
     const weakestCategory = topCategories[0]?.category ?? null;
-    const recommendations = topCategories
-      .slice(0, 3)
-      .map((c) => RECOMMENDATIONS[c.category]);
+    const recommendations = topCategories.slice(0, 3).map((c) => RECOMMENDATIONS[c.category]);
 
     return {
       totalErrors,
@@ -163,9 +148,7 @@ export const ErrorPatternAnalyzer = {
 
   getWeakAreasForPool(): string[] {
     const summary = this.getSummary();
-    return summary.topCategories
-      .filter((c) => c.percentage >= 10)
-      .map((c) => c.category);
+    return summary.topCategories.filter((c) => c.percentage >= 10).map((c) => c.category);
   },
 
   getCategoryLabel(category: ErrorCategory): string {

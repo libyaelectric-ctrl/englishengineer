@@ -1,10 +1,9 @@
-import type { CefrLevel } from '@/features/level-system';
-import type { GrammarRule } from '@/features/grammar/grammar.types';
 import { getCachedSeed, setCachedSeed } from '@/shared/utils/indexed-db';
 
-export const loadGrammarRulesByLevel = async (
-  level: CefrLevel
-): Promise<GrammarRule[]> => {
+import type { GrammarRule } from '@/features/grammar/grammar.types';
+import type { CefrLevel } from '@/features/level-system';
+
+export const loadGrammarRulesByLevel = async (level: CefrLevel): Promise<GrammarRule[]> => {
   const cacheKey = `grammar_seed_${level.toLowerCase()}`;
   const cached = await getCachedSeed<GrammarRule[]>(cacheKey);
   if (cached && cached.length > 0) {

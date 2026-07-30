@@ -50,19 +50,8 @@ export const STARTER_WRITING_MISSIONS: WritingMission[] = [
     eloReward: 4,
     scenario: 'The team completed a short cable tray section.',
     task: 'Write a clear two-sentence update.',
-    expectedStructure: [
-      'Work area',
-      'Completed work',
-      'Current status',
-      'Next action',
-    ],
-    targetVocabulary: [
-      'installed',
-      'cable tray',
-      'complete',
-      'work area',
-      'supervisor',
-    ],
+    expectedStructure: ['Work area', 'Completed work', 'Current status', 'Next action'],
+    targetVocabulary: ['installed', 'cable tray', 'complete', 'work area', 'supervisor'],
     grammarFocus: ['simple past', 'be verb'],
     assessmentRubric: starterRubric,
     sampleExcellentAnswer:
@@ -82,8 +71,7 @@ export const STARTER_WRITING_MISSIONS: WritingMission[] = [
     cefrLevel: 'A2',
     difficulty: 'Beginner',
     estimatedMinutes: 8,
-    initialDraft:
-      'Cable tray work complete in Corridor Two. Please inspect tomorrow morning.',
+    initialDraft: 'Cable tray work complete in Corridor Two. Please inspect tomorrow morning.',
     corrections: [
       {
         id: 'writing_a2_article',
@@ -112,19 +100,8 @@ export const STARTER_WRITING_MISSIONS: WritingMission[] = [
     eloReward: 6,
     scenario: 'Cable tray installation is ready for inspection.',
     task: 'Request an inspection and state the location and time.',
-    expectedStructure: [
-      'Greeting',
-      'Work status',
-      'Location',
-      'Inspection request',
-    ],
-    targetVocabulary: [
-      'complete',
-      'inspection',
-      'Corridor Two',
-      'arrange',
-      'tomorrow morning',
-    ],
+    expectedStructure: ['Greeting', 'Work status', 'Location', 'Inspection request'],
+    targetVocabulary: ['complete', 'inspection', 'Corridor Two', 'arrange', 'tomorrow morning'],
     grammarFocus: ['present simple', 'polite requests'],
     assessmentRubric: starterRubric,
     sampleExcellentAnswer:

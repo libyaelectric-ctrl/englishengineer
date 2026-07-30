@@ -1,5 +1,6 @@
-import test from 'node:test';
 import assert from 'node:assert/strict';
+import test from 'node:test';
+
 import { createBillingService } from '../src/billing-service.js';
 import { createMemorySubscriptionRepository } from '../src/subscription-repository.js';
 

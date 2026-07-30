@@ -1,4 +1,5 @@
-import { Shield, Users, Wallet, Settings, LogOut } from 'lucide-react';
+import { LogOut, Settings, Shield, Users, Wallet } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 
 interface AdminHeaderProps {
@@ -7,11 +8,7 @@ interface AdminHeaderProps {
   onLogout: () => void;
 }
 
-export const AdminHeader = ({
-  activeTab,
-  onTabChange,
-  onLogout,
-}: AdminHeaderProps) => {
+export const AdminHeader = ({ activeTab, onTabChange, onLogout }: AdminHeaderProps) => {
   return (
     <header className="premium-panel overflow-hidden p-6 sm:p-8">
       <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
@@ -22,15 +19,8 @@ export const AdminHeader = ({
               Authorized Access Only
             </span>
           </div>
-          <h1 className="mt-4 text-2xl font-bold text-foreground">
-            EngVox Command Console
-          </h1>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onLogout}
-            className="mt-2 text-xs"
-          >
+          <h1 className="mt-4 text-2xl font-bold text-foreground">EngVox Command Console</h1>
+          <Button variant="ghost" size="sm" onClick={onLogout} className="mt-2 text-xs">
             <LogOut className="h-3.5 w-3.5" /> Logout
           </Button>
         </div>

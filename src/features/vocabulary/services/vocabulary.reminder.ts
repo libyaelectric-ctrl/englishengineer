@@ -26,9 +26,7 @@ export const ReviewReminderService = {
   getSettings(): ReviewReminderSettings {
     try {
       const stored = localStorage.getItem(REMINDER_STORAGE_KEY);
-      return stored
-        ? { ...defaultSettings(), ...JSON.parse(stored) }
-        : defaultSettings();
+      return stored ? { ...defaultSettings(), ...JSON.parse(stored) } : defaultSettings();
     } catch {
       return defaultSettings();
     }
@@ -42,11 +40,7 @@ export const ReviewReminderService = {
     this.saveSettings({ ...this.getSettings(), ...partial });
   },
 
-  checkAndNotify(
-    dueCount: number,
-    currentStreak: number,
-    now = new Date()
-  ): ReviewReminderStatus {
+  checkAndNotify(dueCount: number, currentStreak: number, now = new Date()): ReviewReminderStatus {
     const settings = this.getSettings();
     const today = now.toISOString().split('T')[0];
     const lastChecked = localStorage.getItem(REMINDER_CHECK_KEY) ?? '';
@@ -89,18 +83,10 @@ export const ReviewReminderService = {
     const [hours, minutes] = timeOfDay.split(':').map(Number);
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
-    return (
-      currentHour === hours &&
-      currentMinute >= minutes &&
-      currentMinute < minutes + 15
-    );
+    return currentHour === hours && currentMinute >= minutes && currentMinute < minutes + 15;
   },
 
-  shouldShowBanner(
-    dueCount: number,
-    lastNotifiedDate: string,
-    now = new Date()
-  ): boolean {
+  shouldShowBanner(dueCount: number, lastNotifiedDate: string, now = new Date()): boolean {
     if (dueCount === 0) return false;
     const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     return lastNotifiedDate !== today;

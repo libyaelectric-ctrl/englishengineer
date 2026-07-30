@@ -1,14 +1,14 @@
-import { motion } from 'motion/react';
 import {
+  AlertTriangle,
+  BookOpen,
+  Brain,
+  Clock,
+  Layers,
   Target,
   TrendingUp,
   Zap,
-  Clock,
-  Layers,
-  BookOpen,
-  AlertTriangle,
-  Brain,
 } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export const QuickStats = ({
   totalElo,

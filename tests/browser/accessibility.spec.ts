@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
 
 const ALL_PAGES = [
   { name: 'Landing', path: '/', title: /EngVox/ },
@@ -21,9 +21,7 @@ test.describe('WCAG 2.1 AA Compliance', () => {
         await expect(p).toHaveTitle(page.title);
       }
 
-      const results = await new AxeBuilder({ page: p })
-        .withTags(WCAG_TAGS)
-        .analyze();
+      const results = await new AxeBuilder({ page: p }).withTags(WCAG_TAGS).analyze();
 
       expect(results.violations).toEqual([]);
     });
@@ -42,9 +40,7 @@ test.describe('Keyboard Navigation', () => {
     const firstFocused = await page.evaluate(() => {
       const el = document.activeElement;
       return (
-        el?.tagName +
-        ':' +
-        (el?.getAttribute('aria-label') || el?.textContent?.slice(0, 20) || '')
+        el?.tagName + ':' + (el?.getAttribute('aria-label') || el?.textContent?.slice(0, 20) || '')
       );
     });
 
@@ -53,9 +49,7 @@ test.describe('Keyboard Navigation', () => {
 
     // Skip-to-content link should work
     await page.keyboard.press('Tab');
-    const secondFocused = await page.evaluate(
-      () => document.activeElement?.tagName
-    );
+    const secondFocused = await page.evaluate(() => document.activeElement?.tagName);
     expect(secondFocused).toBeDefined();
   });
 
@@ -64,23 +58,17 @@ test.describe('Keyboard Navigation', () => {
 
     // Tab to email input
     await page.keyboard.press('Tab');
-    const emailFocused = await page.evaluate(() =>
-      document.activeElement?.getAttribute('type')
-    );
+    const emailFocused = await page.evaluate(() => document.activeElement?.getAttribute('type'));
     expect(emailFocused).toBe('email');
 
     // Tab to password input
     await page.keyboard.press('Tab');
-    const passFocused = await page.evaluate(() =>
-      document.activeElement?.getAttribute('type')
-    );
+    const passFocused = await page.evaluate(() => document.activeElement?.getAttribute('type'));
     expect(passFocused).toBe('password');
 
     // Tab to submit button
     await page.keyboard.press('Tab');
-    const btnFocused = await page.evaluate(
-      () => document.activeElement?.tagName
-    );
+    const btnFocused = await page.evaluate(() => document.activeElement?.tagName);
     expect(btnFocused).toBe('BUTTON');
   });
 
@@ -88,9 +76,7 @@ test.describe('Keyboard Navigation', () => {
     await page.goto('/');
 
     // Open a modal if present
-    const modalTrigger = page
-      .locator('[data-testid*="mascot"], [aria-label*="mascot"]')
-      .first();
+    const modalTrigger = page.locator('[data-testid*="mascot"], [aria-label*="mascot"]').first();
     if (await modalTrigger.isVisible()) {
       await modalTrigger.click();
       await page.waitForTimeout(300);
@@ -118,9 +104,7 @@ test.describe('Focus Management', () => {
     await expect(mainLandmark).toHaveCount(1);
   });
 
-  test('navigation landmark exists on authenticated pages', async ({
-    page,
-  }) => {
+  test('navigation landmark exists on authenticated pages', async ({ page }) => {
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
 
@@ -133,9 +117,7 @@ test.describe('Focus Management', () => {
   test('skip-to-content link exists on landing page', async ({ page }) => {
     await page.goto('/');
 
-    const skipLink = page.locator(
-      'a[href="#main-content"], a[href="#content"]'
-    );
+    const skipLink = page.locator('a[href="#main-content"], a[href="#content"]');
     await expect(skipLink).toHaveCount(1);
   });
 });
@@ -146,9 +128,7 @@ test.describe('Color Contrast', () => {
   test('landing page has sufficient color contrast', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['color-contrast'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -156,9 +136,7 @@ test.describe('Color Contrast', () => {
   test('login page has sufficient color contrast', async ({ page }) => {
     await page.goto('/login');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['color-contrast'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -167,14 +145,10 @@ test.describe('Color Contrast', () => {
 // ─── ARIA & Semantic HTML ───
 
 test.describe('ARIA and Semantic HTML', () => {
-  test('all images have alt text or are marked decorative', async ({
-    page,
-  }) => {
+  test('all images have alt text or are marked decorative', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['image-alt'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['image-alt']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -183,9 +157,7 @@ test.describe('ARIA and Semantic HTML', () => {
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['label'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['label']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -193,9 +165,7 @@ test.describe('ARIA and Semantic HTML', () => {
   test('links have discernible text', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['link-name'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['link-name']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -203,9 +173,7 @@ test.describe('ARIA and Semantic HTML', () => {
   test('buttons have accessible names', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['button-name'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['button-name']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -222,9 +190,7 @@ test.describe('Mobile Accessibility', () => {
   test('landing page passes accessibility on mobile', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withTags(WCAG_TAGS)
-      .analyze();
+    const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -232,9 +198,7 @@ test.describe('Mobile Accessibility', () => {
   test('login page passes accessibility on mobile', async ({ page }) => {
     await page.goto('/login');
 
-    const results = await new AxeBuilder({ page })
-      .withTags(WCAG_TAGS)
-      .analyze();
+    const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -243,9 +207,7 @@ test.describe('Mobile Accessibility', () => {
     await page.goto('/');
 
     // Check that mobile menu button exists
-    const menuButton = page
-      .locator('[aria-label*="navigation"], [aria-label*="menu"]')
-      .first();
+    const menuButton = page.locator('[aria-label*="navigation"], [aria-label*="menu"]').first();
     const isVisible = await menuButton.isVisible().catch(() => false);
 
     if (isVisible) {
@@ -278,9 +240,7 @@ test.describe('Screen Reader Support', () => {
   test('heading hierarchy is correct', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['heading-order'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['heading-order']).analyze();
 
     // Allow some flexibility — heading order violations are warnings, not errors
     const seriousViolations = results.violations.filter(
@@ -292,9 +252,7 @@ test.describe('Screen Reader Support', () => {
   test('landmark regions are properly defined', async ({ page }) => {
     await page.goto('/');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['region'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['region']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -307,9 +265,7 @@ test.describe('Form Accessibility', () => {
     await page.goto('/login');
     await page.waitForLoadState('networkidle');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['label'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['label']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -333,9 +289,7 @@ test.describe('Color and Contrast', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['color-contrast'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
 
     expect(results.violations).toEqual([]);
   });
@@ -344,9 +298,7 @@ test.describe('Color and Contrast', () => {
     await page.goto('/pricing');
     await page.waitForLoadState('networkidle');
 
-    const results = await new AxeBuilder({ page })
-      .withRules(['color-contrast'])
-      .analyze();
+    const results = await new AxeBuilder({ page }).withRules(['color-contrast']).analyze();
 
     expect(results.violations).toEqual([]);
   });

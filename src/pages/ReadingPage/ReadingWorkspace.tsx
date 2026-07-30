@@ -1,27 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import {
-  BookOpen,
-  HelpCircle,
-  Clock,
-  ArrowLeft,
   AlertTriangle,
-  Info,
+  ArrowLeft,
+  BookOpen,
   Check,
   ChevronLeft,
   ChevronRight,
+  Clock,
+  HelpCircle,
+  Info,
   Send,
 } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
-import { AITeacherService, type AITeacherChatMessage } from '@/features/ai';
-import { SectionCard } from '@/shared/components/SectionCard';
+
+import { useEffect, useState } from 'react';
+
+import { Link } from 'react-router-dom';
+
 import { Button } from '@/shared/components/Button';
-import {
-  ReadingHelpers,
-  VocabularyItem,
-  type ReadingEvaluationResult,
-} from '@/features/reading';
+import { SectionCard } from '@/shared/components/SectionCard';
+import { cn } from '@/shared/utils/cn';
+
+import { type AITeacherChatMessage, AITeacherService } from '@/features/ai';
+import { type ReadingEvaluationResult, ReadingHelpers, VocabularyItem } from '@/features/reading';
 import { ReadingTranslation } from '@/features/reading';
+
 import { ReadingEvaluationResults } from './ReadingEvaluationResults';
 
 interface ReadingWorkspaceProps {
@@ -89,17 +90,14 @@ What questions do you have about this passage?`,
       },
     ]);
     setChatInput('');
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setMessages/setChatInput are stable setters
   }, [currentMission.id]);
 
   const handleSendChat = async () => {
     if (!chatInput.trim() || isTalking) return;
     const userMsg = chatInput.trim();
     setChatInput('');
-    const nextHistory = [
-      ...messages,
-      { role: 'user' as const, content: userMsg },
-    ];
+    const nextHistory = [...messages, { role: 'user' as const, content: userMsg }];
     setMessages(nextHistory);
     setIsTalking(true);
 
@@ -110,10 +108,7 @@ What questions do you have about this passage?`,
         nextHistory,
         userMsg
       );
-      setMessages([
-        ...nextHistory,
-        { role: 'assistant' as const, content: response.message },
-      ]);
+      setMessages([...nextHistory, { role: 'assistant' as const, content: response.message }]);
     } finally {
       setIsTalking(false);
     }
@@ -123,8 +118,7 @@ What questions do you have about this passage?`,
     if (!vocabList || vocabList.length === 0)
       return <span className="whitespace-pre-wrap">{text}</span>;
 
-    const escapeRegExp = (str: string) =>
-      str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapeRegExp = (str: string) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const terms = vocabList.map((v) => escapeRegExp(v.term));
     const regex = new RegExp(`\\b(${terms.join('|')})\\b`, 'gi');
 
@@ -132,14 +126,11 @@ What questions do you have about this passage?`,
     return (
       <>
         {parts.map((part, index) => {
-          const matchingVocab = vocabList.find(
-            (v) => v.term.toLowerCase() === part.toLowerCase()
-          );
+          const matchingVocab = vocabList.find((v) => v.term.toLowerCase() === part.toLowerCase());
 
           if (matchingVocab) {
             const isSelected =
-              selectedWord?.term.toLowerCase() ===
-              matchingVocab.term.toLowerCase();
+              selectedWord?.term.toLowerCase() === matchingVocab.term.toLowerCase();
             const hasExplored = clickedVocab.includes(matchingVocab.term);
 
             return (
@@ -202,8 +193,7 @@ What questions do you have about this passage?`,
             <span className="text-xs font-mono text-primary bg-primary/5 px-3 py-1 rounded-[4px] border border-primary/25 font-bold">
               WPM:{' '}
               {Math.round(
-                (currentMission.passageText.split(/\s+/).length /
-                  Math.max(timeSpentSeconds, 1)) *
+                (currentMission.passageText.split(/\s+/).length / Math.max(timeSpentSeconds, 1)) *
                   60
               )}
             </span>
@@ -229,10 +219,7 @@ What questions do you have about this passage?`,
           >
             Next <ChevronRight className="h-4 w-4" />
           </Button>
-          <Link
-            to="/curriculum"
-            className="hidden text-xs font-bold text-primary sm:inline-flex"
-          >
+          <Link to="/curriculum" className="hidden text-xs font-bold text-primary sm:inline-flex">
             Hub
           </Link>
         </div>
@@ -253,10 +240,7 @@ What questions do you have about this passage?`,
               }
             >
               <div className="rounded-[4px] border border-border-soft bg-surface p-5 text-sm font-normal leading-[1.8] text-foreground md:text-base whitespace-pre-line">
-                {renderPassage(
-                  currentMission.passageText,
-                  currentMission.vocabulary
-                )}
+                {renderPassage(currentMission.passageText, currentMission.vocabulary)}
               </div>
             </SectionCard>
 
@@ -264,25 +248,21 @@ What questions do you have about this passage?`,
               <h5 className="text-xs font-bold uppercase text-muted-copy tracking-wider flex items-center gap-1.5">
                 <Info className="h-4 w-4 text-primary" />
                 <span>
-                  Domain Term Notes ({clickedVocab.length}/
-                  {currentMission.vocabulary.length} explored)
+                  Domain Term Notes ({clickedVocab.length}/{currentMission.vocabulary.length}{' '}
+                  explored)
                 </span>
               </h5>
 
               {selectedWord ? (
                 <div className="p-4 bg-primary/5 border border-primary/25 rounded-[4px] animate-in slide-in-from-top-2 duration-300 shadow-sm">
-                  <h6 className="font-mono text-sm text-primary font-bold">
-                    {selectedWord.term}
-                  </h6>
+                  <h6 className="font-mono text-sm text-primary font-bold">{selectedWord.term}</h6>
                   <p className="text-xs text-muted-copy mt-2 leading-relaxed font-medium">
                     <strong className="text-foreground">Definition:</strong>{' '}
                     {selectedWord.definition}
                   </p>
                   <p className="text-xs text-muted-copy mt-1 italic font-medium">
-                    <strong className="text-muted-copy not-italic">
-                      Context:
-                    </strong>{' '}
-                    "{selectedWord.context}"
+                    <strong className="text-muted-copy not-italic">Context:</strong> "
+                    {selectedWord.context}"
                   </p>
                   <ReadingTranslation
                     translation={
@@ -293,8 +273,8 @@ What questions do you have about this passage?`,
                 </div>
               ) : (
                 <p className="text-xs text-muted-copy italic py-2 font-medium">
-                  No word currently selected. Click any highlighted underlined
-                  word in the passage above to explore its technical note.
+                  No word currently selected. Click any highlighted underlined word in the passage
+                  above to explore its technical note.
                 </p>
               )}
             </div>
@@ -378,10 +358,7 @@ What questions do you have about this passage?`,
                     {q.type === 'multiple_choice' && q.choices && (
                       <div className="space-y-2 pt-1">
                         {q.choices.map((choice) => {
-                          const choiceLetter = choice
-                            .trim()
-                            .charAt(0)
-                            .toUpperCase();
+                          const choiceLetter = choice.trim().charAt(0).toUpperCase();
                           const isSelected = answers[q.id] === choiceLetter;
 
                           return (
@@ -395,9 +372,7 @@ What questions do you have about this passage?`,
                               }`}
                             >
                               <span>{choice}</span>
-                              {isSelected && (
-                                <Check className="h-4 w-4 text-white shrink-0 ml-2" />
-                              )}
+                              {isSelected && <Check className="h-4 w-4 text-white shrink-0 ml-2" />}
                             </button>
                           );
                         })}
@@ -407,8 +382,7 @@ What questions do you have about this passage?`,
                     {q.type === 'true_false' && (
                       <div className="flex gap-3 pt-1">
                         {['true', 'false'].map((option) => {
-                          const isSelected =
-                            answers[q.id]?.toLowerCase() === option;
+                          const isSelected = answers[q.id]?.toLowerCase() === option;
                           return (
                             <button
                               key={option}
@@ -428,8 +402,7 @@ What questions do you have about this passage?`,
                       </div>
                     )}
 
-                    {(q.type === 'short_answer' ||
-                      q.type === 'keyword_answer') && (
+                    {(q.type === 'short_answer' || q.type === 'keyword_answer') && (
                       <div className="pt-1">
                         <label className="block">
                           <span className="sr-only">{q.questionText}</span>
@@ -447,8 +420,7 @@ What questions do you have about this passage?`,
                         </label>
                         {q.type === 'short_answer' && (
                           <p className="text-[10px] text-muted-copy mt-1.5 leading-relaxed font-mono font-bold">
-                            Type a comprehensive response using correct
-                            engineering terminology.
+                            Type a comprehensive response using correct engineering terminology.
                           </p>
                         )}
                       </div>
@@ -486,9 +458,7 @@ What questions do you have about this passage?`,
       ) : (
         <>
           <div className="text-center py-4">
-            <p className="text-4xl font-bold text-primary">
-              {evaluationResult.finalScore}%
-            </p>
+            <p className="text-4xl font-bold text-primary">{evaluationResult.finalScore}%</p>
             <p className="text-sm text-muted-copy font-bold uppercase tracking-wider">
               Comprehension Score
             </p>

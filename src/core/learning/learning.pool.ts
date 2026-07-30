@@ -1,11 +1,11 @@
-import { storage } from '@/shared/storage';
-import { logger } from '@/shared/logger';
 import { eventBus } from '@/core/events/event-bus';
-import {
-  getSupabaseClient,
-  isSupabaseConfigured,
-} from '@/features/auth/supabase.client';
+
+import { logger } from '@/shared/logger';
+import { storage } from '@/shared/storage';
+
 import { useAuthStore } from '@/features/auth';
+import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth/supabase.client';
+
 import { useLearningStore } from './learning.store';
 
 const STORAGE_KEY = 'learning_state';
@@ -26,10 +26,7 @@ const syncPoolToSupabase = (
       { onConflict: 'user_id,content_type,content_id' }
     )
     .then(({ error }: { error: unknown }) => {
-      if (error)
-        logger.w(
-          `[${contentType}Pool] Supabase write failed: ${String(error)}`
-        );
+      if (error) logger.w(`[${contentType}Pool] Supabase write failed: ${String(error)}`);
     });
 };
 

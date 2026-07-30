@@ -1,5 +1,7 @@
+import { MoveLeft, ShieldAlert } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
-import { ShieldAlert, MoveLeft } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 
 const NotFoundPage = () => (
@@ -9,8 +11,7 @@ const NotFoundPage = () => (
     </div>
     <h1 className="text-6xl font-medium tracking-tighter">404 LOGIC FAULT</h1>
     <p className="text-muted-copy mt-4 max-w-md text-lg">
-      The sector you are trying to access has been deindexed or never existed in
-      the registry.
+      The sector you are trying to access has been deindexed or never existed in the registry.
     </p>
     <Link to="/dashboard" className="mt-12">
       <Button variant="outline" className="gap-3 px-8 h-14 text-lg rounded-lg">

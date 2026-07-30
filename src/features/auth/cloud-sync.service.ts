@@ -1,8 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+
 import { IdService } from '@/core/ids/id.service';
-import { storage } from '@/shared/storage';
+
 import { logger } from '@/shared/logger';
-import { getSupabaseClient, isSupabaseConfigured } from './supabase.client';
+import { storage } from '@/shared/storage';
+
 import {
   CloudProgressSnapshot,
   CloudSnapshotEnvelope,
@@ -11,8 +13,9 @@ import {
   CloudSyncState,
   SyncableStateKey,
 } from './cloud-sync.types';
+import { type ConflictInfo, resolveConflict } from './conflict-resolver';
+import { getSupabaseClient, isSupabaseConfigured } from './supabase.client';
 import { JsonObject, JsonValue } from './supabase.types';
-import { resolveConflict, type ConflictInfo } from './conflict-resolver';
 
 const QUEUE_KEY = 'cloud_sync_queue';
 const STATE_KEY = 'cloud_sync_state';
@@ -56,34 +59,23 @@ const STATIC_STORAGE_KEYS: Record<
   workspaces: 'EngVox_workspaces',
 };
 
-const getStorageKeys = (
-  key: SyncableStateKey,
-  userId: string | null
-): string[] => {
+const getStorageKeys = (key: SyncableStateKey, userId: string | null): string[] => {
   if (key === 'learningProfile') {
     return userId ? [`learning_profile_${userId}`] : [];
   }
   if (key === 'vocabularyReview') {
-    return [
-      'EngVox_vocabulary_state',
-      'EngVox_vocabulary_memory',
-      'EngVox_vocabulary_menu',
-    ];
+    return ['EngVox_vocabulary_state', 'EngVox_vocabulary_memory', 'EngVox_vocabulary_menu'];
   }
   return [STATIC_STORAGE_KEYS[key]];
 };
 
-const createEmptySnapshotData = (): Record<
-  SyncableStateKey,
-  JsonValue | null
-> =>
+const createEmptySnapshotData = (): Record<SyncableStateKey, JsonValue | null> =>
   Object.fromEntries(SYNCABLE_KEYS.map((key) => [key, null])) as Record<
     SyncableStateKey,
     JsonValue | null
   >;
 
-const isOnline = (): boolean =>
-  typeof navigator === 'undefined' || navigator.onLine;
+const isOnline = (): boolean => typeof navigator === 'undefined' || navigator.onLine;
 
 const emptyState = (): CloudSyncState => ({
   status: 'idle',
@@ -103,10 +95,7 @@ const toJsonValue = (value: unknown): JsonValue | null => {
 const isJsonObject = (value: unknown): value is JsonObject =>
   Boolean(value) && typeof value === 'object' && !Array.isArray(value);
 
-export const mergeArrays = (
-  local: JsonValue[],
-  remote: JsonValue[]
-): JsonValue[] => {
+export const mergeArrays = (local: JsonValue[], remote: JsonValue[]): JsonValue[] => {
   const seen = new Set<string>();
   return [...remote, ...local].filter((item) => {
     const key = JSON.stringify(item);
@@ -164,10 +153,7 @@ const mergeByType = (local: JsonValue, remote: JsonValue): JsonValue | null => {
   return local;
 };
 
-const mergeObjectsWithTimestamp = (
-  local: JsonObject,
-  remote: JsonObject
-): JsonValue => {
+const mergeObjectsWithTimestamp = (local: JsonObject, remote: JsonObject): JsonValue => {
   const localTs = getTimestamp(local);
   const remoteTs = getTimestamp(remote);
   if (localTs || remoteTs) {
@@ -184,16 +170,12 @@ export const mergeJsonValues = (
   return mergeByType(local, remote);
 };
 
-const isCloudProgressSnapshot = (
-  value: unknown
-): value is CloudProgressSnapshot => {
+const isCloudProgressSnapshot = (value: unknown): value is CloudProgressSnapshot => {
   if (!isJsonObject(value)) {
     return false;
   }
 
-  return (
-    value.schemaVersion === SNAPSHOT_SCHEMA_VERSION && isJsonObject(value.data)
-  );
+  return value.schemaVersion === SNAPSHOT_SCHEMA_VERSION && isJsonObject(value.data);
 };
 
 const extractSnapshot = (value: unknown): CloudProgressSnapshot | null => {
@@ -220,15 +202,13 @@ export const mergeSnapshots = (
     return { ...local, userId };
   }
 
-  const mergedData = SYNCABLE_KEYS.reduce<
-    Record<SyncableStateKey, JsonValue | null>
-  >((acc, key) => {
-    acc[key] = mergeJsonValues(
-      local.data[key] ?? null,
-      remote.data[key] ?? null
-    );
-    return acc;
-  }, createEmptySnapshotData());
+  const mergedData = SYNCABLE_KEYS.reduce<Record<SyncableStateKey, JsonValue | null>>(
+    (acc, key) => {
+      acc[key] = mergeJsonValues(local.data[key] ?? null, remote.data[key] ?? null);
+      return acc;
+    },
+    createEmptySnapshotData()
+  );
 
   return {
     schemaVersion: SNAPSHOT_SCHEMA_VERSION,
@@ -256,13 +236,9 @@ const saveState = (state: CloudSyncState): void => {
   stateListeners.forEach((listener) => listener(state));
 };
 
-const getQueue = (): CloudSyncQueueItem[] =>
-  storage.get<CloudSyncQueueItem[]>(QUEUE_KEY) || [];
+const getQueue = (): CloudSyncQueueItem[] => storage.get<CloudSyncQueueItem[]>(QUEUE_KEY) || [];
 
-const readSyncableData = (
-  key: SyncableStateKey,
-  userId: string | null
-): JsonValue | null => {
+const readSyncableData = (key: SyncableStateKey, userId: string | null): JsonValue | null => {
   const keys = getStorageKeys(key, userId);
   if (keys.length === 0) return null;
   if (keys.length === 1) {
@@ -277,11 +253,7 @@ const readSyncableData = (
   return Object.keys(grouped).length > 0 ? grouped : null;
 };
 
-const writeSyncableKey = (
-  key: SyncableStateKey,
-  value: JsonValue,
-  userId: string
-): void => {
+const writeSyncableKey = (key: SyncableStateKey, value: JsonValue, userId: string): void => {
   const keys = getStorageKeys(key, userId);
   if (keys.length === 1) {
     storage.set(keys[0], value);
@@ -316,18 +288,15 @@ const createSnapshot = (userId: string | null): CloudProgressSnapshot => {
     userId,
     capturedAt: now,
     source: 'local-first',
-    data: SYNCABLE_KEYS.reduce<Record<SyncableStateKey, JsonValue | null>>(
-      (acc, key) => {
-        const value = readSyncableData(key, userId);
-        if (isJsonObject(value)) {
-          acc[key] = { ...value, _lastUpdated: now };
-        } else {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      createEmptySnapshotData()
-    ),
+    data: SYNCABLE_KEYS.reduce<Record<SyncableStateKey, JsonValue | null>>((acc, key) => {
+      const value = readSyncableData(key, userId);
+      if (isJsonObject(value)) {
+        acc[key] = { ...value, _lastUpdated: now };
+      } else {
+        acc[key] = value;
+      }
+      return acc;
+    }, createEmptySnapshotData()),
   };
 };
 
@@ -349,10 +318,7 @@ const buildAttemptedQueue = (
   ];
 };
 
-const buildWriteErrorMessage = (
-  droppedCount: number,
-  writeError: { message: string }
-): string => {
+const buildWriteErrorMessage = (droppedCount: number, writeError: { message: string }): string => {
   if (droppedCount > 0) {
     return `${droppedCount} cloud sync item reached ${MAX_SYNC_ATTEMPTS} attempts and was removed. Last error: ${writeError.message}`;
   }
@@ -369,19 +335,14 @@ export const CloudSyncService = {
 
   isSyncableStorageKey(key: string, userId: string | null): boolean {
     if (isApplyingRemoteSnapshot) return false;
-    return SYNCABLE_KEYS.some((syncKey) =>
-      getStorageKeys(syncKey, userId).includes(key)
-    );
+    return SYNCABLE_KEYS.some((syncKey) => getStorageKeys(syncKey, userId).includes(key));
   },
 
   getState(): CloudSyncState {
     return storage.get<CloudSyncState>(STATE_KEY) || emptyState();
   },
 
-  async queueSync(
-    reason: CloudSyncReason,
-    userId: string | null = null
-  ): Promise<CloudSyncState> {
+  async queueSync(reason: CloudSyncReason, userId: string | null = null): Promise<CloudSyncState> {
     const queue = getQueue();
     const nextQueue = [
       ...queue,
@@ -414,10 +375,7 @@ export const CloudSyncService = {
     return this.performSync(client, userId);
   },
 
-  async performSync(
-    client: SupabaseClient,
-    userId: string
-  ): Promise<CloudSyncState> {
+  async performSync(client: SupabaseClient, userId: string): Promise<CloudSyncState> {
     const queue = getQueue();
     const localSnapshot = queue.at(-1)?.snapshot || createSnapshot(userId);
     saveState({
@@ -428,11 +386,7 @@ export const CloudSyncService = {
     });
 
     const remoteSnapshot = await this.fetchRemoteSnapshot(client, userId);
-    const mergedSnapshot = mergeSnapshots(
-      localSnapshot,
-      remoteSnapshot,
-      userId
-    );
+    const mergedSnapshot = mergeSnapshots(localSnapshot, remoteSnapshot, userId);
 
     const writeError = await this.writeSnapshot(client, userId, mergedSnapshot);
     if (writeError) {
@@ -482,10 +436,7 @@ export const CloudSyncService = {
       .maybeSingle();
 
     if (readError) {
-      logger.w(
-        'Cloud sync could not read the remote snapshot.',
-        readError.message
-      );
+      logger.w('Cloud sync could not read the remote snapshot.', readError.message);
     }
     return extractSnapshot(remoteRow?.snapshot ?? null);
   },
@@ -501,14 +452,12 @@ export const CloudSyncService = {
       payload: toJsonValue(mergedSnapshot),
     };
 
-    const { error: writeError } = await client
-      .from('user_progress_snapshots')
-      .upsert({
-        user_id: userId,
-        snapshot: envelope,
-        schema_version: SNAPSHOT_SCHEMA_VERSION,
-        updated_at: new Date().toISOString(),
-      });
+    const { error: writeError } = await client.from('user_progress_snapshots').upsert({
+      user_id: userId,
+      snapshot: envelope,
+      schema_version: SNAPSHOT_SCHEMA_VERSION,
+      updated_at: new Date().toISOString(),
+    });
 
     return writeError ?? null;
   },
@@ -519,9 +468,7 @@ export const CloudSyncService = {
     writeError: { message: string }
   ): CloudSyncState {
     const attemptedQueue = buildAttemptedQueue(queue, mergedSnapshot);
-    const failedQueue = attemptedQueue.filter(
-      (item) => item.attempts < MAX_SYNC_ATTEMPTS
-    );
+    const failedQueue = attemptedQueue.filter((item) => item.attempts < MAX_SYNC_ATTEMPTS);
     const droppedCount = attemptedQueue.length - failedQueue.length;
     saveQueue(failedQueue);
     return this.saveAndReturn({
