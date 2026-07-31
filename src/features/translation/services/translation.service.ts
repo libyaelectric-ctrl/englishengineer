@@ -2,7 +2,21 @@ import { logger } from '@/shared/logger';
 
 import { LocalTranslationEngine } from './local-translation.engine';
 
-export type SupportedLang = 'auto' | 'en' | 'tr' | 'ar' | 'zh' | 'ru' | 'de' | 'es' | 'it' | 'fr';
+export type SupportedLang =
+  | 'auto'
+  | 'en'
+  | 'tr'
+  | 'ar'
+  | 'zh'
+  | 'ru'
+  | 'de'
+  | 'es'
+  | 'it'
+  | 'fr'
+  | 'ja'
+  | 'ko'
+  | 'pt'
+  | 'pl';
 
 export interface TranslationRequest {
   text: string;
