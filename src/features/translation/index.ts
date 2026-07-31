@@ -1,5 +1,6 @@
 export { translationService, TranslationService } from './services/translation.service';
 export type {
+  SupportedLang,
   TranslationRequest,
   TranslationResult,
   WordAnalysis,
