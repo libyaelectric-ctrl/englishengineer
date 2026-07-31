@@ -30,8 +30,10 @@ export default {
       comment:
         'Features must not import from other features. Use core/shared for cross-feature communication.',
       severity: 'warn',
-      from: { path: '^src/features/[^/]+/' },
-      to: { path: '^src/features/[^/]+/(?!index)' },
+      from: { path: '^src/features/([^/]+)/' },
+      to: {
+        path: '^src/features/(?!$1/)[^/]+/(?!index)',
+      },
     },
   ],
   options: {
