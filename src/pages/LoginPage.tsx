@@ -24,6 +24,8 @@ import { Link } from 'react-router-dom';
 
 import { useLocalizationStore } from '@/features/localization';
 
+import { logger } from '@/shared/logger';
+
 import { Footer } from './LandingPage/Footer';
 import { Navbar } from './LandingPage/Navbar';
 import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
@@ -389,7 +391,7 @@ const LoginPage = () => {
       <WorkspaceSwitcherModal
         isOpen={workspaceOpen}
         onClose={() => setWorkspaceOpen(false)}
-        onSelectWorkspace={(wsName) => console.log('Switched to workspace:', wsName)}
+        onSelectWorkspace={(wsName) => { logger.i('Switched to workspace:', wsName); }}
       />
 
       <MagicLinkAuthModal

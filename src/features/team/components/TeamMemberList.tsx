@@ -8,6 +8,8 @@ import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
+import { getInitials } from '@/features/auth';
+
 import type { TeamMember, TeamProgressSummary } from '../team.types';
 import type { OrganizationRole } from '../team.types';
 
@@ -40,15 +42,6 @@ function formatLastActive(lastActiveAt: string | null): string {
   if (diffDays < 7) return `${diffDays}d ago`;
   if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
   return `${Math.floor(diffDays / 30)}mo ago`;
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
 }
 
 function getAvatarColor(name: string): string {

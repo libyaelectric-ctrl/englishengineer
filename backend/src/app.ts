@@ -61,7 +61,7 @@ const SECURITY_HEADERS = {
       scriptSrc: ["'self'"],
       styleSrc: ["'self'"],
       imgSrc: ["'self'", 'data:', 'https:'],
-      connectSrc: ["'self'", 'https://englishengineer-production.up.railway.app'],
+      connectSrc: ["'self'", config.appOrigin],
       fontSrc: ["'self'", 'https://fonts.gstatic.com'],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -169,7 +169,7 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     config.appOrigin,
     'https://englishengineer.vercel.app',
     'https://www.englishengineer.vercel.app',
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
 
   if (config.environment === 'production') {
     app.use((req: Request, res: Response, next: NextFunction) => {
