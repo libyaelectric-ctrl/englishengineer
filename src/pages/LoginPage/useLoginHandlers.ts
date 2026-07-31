@@ -49,8 +49,7 @@ export const useLoginHandlers = () => {
             email: `demo.${provider}@engvox.io`,
           },
         });
-        const { LearningProfileRepository } =
-          await import('@/features/profile/profile.repository');
+        const { LearningProfileRepository } = await import('@/features/profile/profile.repository');
         LearningProfileRepository.updatePreferences(loggedUser.id, {
           onboardingCompleted: true,
         });

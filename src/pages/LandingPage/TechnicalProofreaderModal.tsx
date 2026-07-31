@@ -107,7 +107,10 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
           {/* Input & Preset Buttons */}
           <form onSubmit={handleAnalyze} className="space-y-3">
             <div className="flex items-center justify-between">
-              <label htmlFor="draft-input" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <label
+                htmlFor="draft-input"
+                className="text-xs font-bold text-foreground flex items-center gap-1.5"
+              >
                 <FileText className="h-4 w-4 text-primary" /> Paste Draft Site Email / Report
               </label>
               <div className="flex gap-1.5">

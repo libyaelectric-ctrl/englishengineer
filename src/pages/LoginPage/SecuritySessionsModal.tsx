@@ -158,7 +158,10 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
               </div>
             </div>
             <div className="space-y-1">
-              <label htmlFor="totp-code" className="text-[10px] font-bold text-muted-copy uppercase">
+              <label
+                htmlFor="totp-code"
+                className="text-[10px] font-bold text-muted-copy uppercase"
+              >
                 Enter 6-Digit Verification Code
               </label>
               <input
