@@ -89,14 +89,24 @@ export const EmailPasswordForm = ({
       </Button>
     </form>
 
-    {isSupabaseMode && !isSignUpMode && (
+    <div className="space-y-1.5 pt-1">
       <button
         type="button"
         onClick={onShowSsoForm}
-        className="w-full text-center text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-primary cursor-pointer transition-colors pt-2"
+        className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-primary cursor-pointer transition-colors py-1 block"
       >
-        Sign in with Single Sign-On (SSO)
+        ✨ Or Sign in with Passwordless Magic Link
       </button>
-    )}
+
+      {isSupabaseMode && !isSignUpMode && (
+        <button
+          type="button"
+          onClick={onShowSsoForm}
+          className="w-full text-center text-[10px] font-bold uppercase tracking-wider text-muted-copy hover:text-primary cursor-pointer transition-colors block"
+        >
+          Sign in with Single Sign-On (SSO)
+        </button>
+      )}
+    </div>
   </>
 );
