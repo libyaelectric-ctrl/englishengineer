@@ -10,6 +10,7 @@ import { SkillLockedState } from '@/shared/components/SkillLockedState';
 import { StatusBadge } from '@/shared/components/StatusBadge';
 
 import { LevelContentFilter } from '@/features/level-system';
+import { isProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
 import { useReadingStore } from '@/features/reading';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
@@ -32,8 +33,8 @@ const InterviewSimulator = lazy(() =>
   }))
 );
 
-const READING_THRESHOLD = 5;
-const WRITING_THRESHOLD = 5;
+const READING_THRESHOLD = 3;
+const WRITING_THRESHOLD = 3;
 
 type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
@@ -275,7 +276,14 @@ const SpeakingPage = () => {
   const writingStore = useWritingStore();
   const readingDone = Object.keys(readingStore.completedMissions || {}).length;
   const writingDone = Object.keys(writingStore.completedMissions || {}).length;
-  const canAccess = readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
+
+  const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
+  const [previewMode, setPreviewMode] = useState(false);
+
+  const canAccess =
+    bypassUnlocked ||
+    previewMode ||
+    (readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD);
 
   const [speakingTab, setSpeakingTab] = useState<SpeakingTab>('roleplay');
   const { MAX_VOICE_MINUTES, voiceMinutesUsedThisMonth, scoreResult, setScoreResult } =
@@ -289,6 +297,8 @@ const SpeakingPage = () => {
         writingDone={writingDone}
         readingThreshold={READING_THRESHOLD}
         writingThreshold={WRITING_THRESHOLD}
+        onPreview={() => setPreviewMode(true)}
+        onUnlocked={() => setBypassUnlocked(true)}
       />
     );
   }

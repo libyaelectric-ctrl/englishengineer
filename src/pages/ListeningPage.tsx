@@ -24,6 +24,7 @@ import {
   getContentAccessLabel,
   useSkillLevel,
 } from '@/features/level-system';
+import { isProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import {
@@ -40,8 +41,8 @@ type Question = {
   choices?: string[];
 };
 
-const READING_THRESHOLD = 5;
-const WRITING_THRESHOLD = 5;
+const READING_THRESHOLD = 3;
+const WRITING_THRESHOLD = 3;
 
 const AnimatedScore = ({ value }: { value: number }) => {
   const [display, setDisplay] = useState(0);
@@ -338,7 +339,14 @@ const ListeningPage = () => {
   const writingStore = useWritingStore();
   const readingDone = Object.keys(readingStore.completedMissions || {}).length;
   const writingDone = Object.keys(writingStore.completedMissions || {}).length;
-  const canAccess = readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD;
+
+  const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
+  const [previewMode, setPreviewMode] = useState(false);
+
+  const canAccess =
+    bypassUnlocked ||
+    previewMode ||
+    (readingDone >= READING_THRESHOLD && writingDone >= WRITING_THRESHOLD);
 
   const missions = useListeningMissionsStore((s) => s.missions);
   const selectedMissionId = useListeningMissionsStore((s) => s.selectedMissionId);
@@ -384,6 +392,8 @@ const ListeningPage = () => {
         writingDone={writingDone}
         readingThreshold={READING_THRESHOLD}
         writingThreshold={WRITING_THRESHOLD}
+        onPreview={() => setPreviewMode(true)}
+        onUnlocked={() => setBypassUnlocked(true)}
       />
     );
   }
