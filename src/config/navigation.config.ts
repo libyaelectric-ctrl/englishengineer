@@ -52,6 +52,7 @@ export const TOOLS_NAV_ITEMS = [
   { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness },
   { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles },
   { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit },
+  { label: 'Translator', href: '/translator', icon: Languages },
 ] as const;
 
 export const PROFILE_NAV_ITEMS = [
@@ -81,6 +82,7 @@ export const NAV_ITEMS = [
     icon: BriefcaseBusiness,
     children: TOOLS_NAV_ITEMS,
   },
+  { label: 'Translator', href: '/translator', icon: Languages },
   { label: 'Team', href: '/team', icon: Users },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;

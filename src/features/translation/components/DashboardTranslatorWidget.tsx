@@ -14,6 +14,95 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { TranslationResult, translationService } from '../services/translation.service';
 
+type Lang = 'auto' | 'en' | 'tr';
+type TargetLang = 'en' | 'tr';
+
+const useDebouncedTranslation = (
+  inputText: string,
+  sourceLang: Lang,
+  targetLang: TargetLang,
+  autoTranslateEnabled: boolean,
+  executeTranslation: (text: string, src: Lang, tgt: TargetLang) => Promise<void>,
+  setTranslatedText: (v: string) => void,
+  setResultData: (v: TranslationResult | null) => void,
+) => {
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!autoTranslateEnabled) return;
+    if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    if (!inputText.trim()) {
+      setTranslatedText('');
+      setResultData(null);
+      return;
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      executeTranslation(inputText, sourceLang, targetLang);
+    }, 500);
+    return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+    };
+  }, [inputText, sourceLang, targetLang, autoTranslateEnabled, executeTranslation, setTranslatedText, setResultData]);
+};
+
+const ErrorBanner = ({ message, onDismiss }: { message: string; onDismiss: () => void }) => (
+  <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs font-semibold text-amber-600 flex items-center justify-between">
+    <span>⚠️ {message}</span>
+    <span
+      role="button"
+      tabIndex={0}
+      className="text-[10px] underline cursor-pointer"
+      onClick={onDismiss}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onDismiss(); }}
+    >
+      Dismiss
+    </span>
+  </div>
+);
+
+const WordAnalysisCard = ({ wordAnalysis, translatedText }: { wordAnalysis: TranslationResult['wordAnalysis']; translatedText: string }) => {
+  if (!wordAnalysis?.isSingleWord) return null;
+  return (
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
+      <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+        <div className="flex items-center gap-2">
+          <BookOpen className="h-4 w-4 text-emerald-600" />
+          <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
+            Single-Word Technical Analysis
+          </span>
+        </div>
+        <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 font-mono uppercase">
+          {wordAnalysis.partOfSpeech || 'General'}
+        </span>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div>
+          <span className="text-muted-copy font-bold">Word: </span>
+          <span className="font-extrabold text-foreground font-mono">{wordAnalysis.word}</span>
+        </div>
+        <div>
+          <span className="text-muted-copy font-bold">Primary Meaning: </span>
+          <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
+        </div>
+      </div>
+      {wordAnalysis.alternativeMeanings && wordAnalysis.alternativeMeanings.length > 0 && (
+        <div className="pt-1 text-xs space-y-1">
+          <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider block">
+            Alternative Meanings & Technical Synonyms:
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {wordAnalysis.alternativeMeanings.map((alt) => (
+              <span key={alt} className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground">
+                {alt}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const DashboardTranslatorWidget = () => {
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
@@ -25,8 +114,6 @@ export const DashboardTranslatorWidget = () => {
   const [copied, setCopied] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const executeTranslation = useCallback(
     async (textToTranslate: string, src: 'auto' | 'en' | 'tr', tgt: 'en' | 'tr') => {
       const trimmed = textToTranslate.trim();
@@ -36,19 +123,13 @@ export const DashboardTranslatorWidget = () => {
         setErrorMessage(null);
         return;
       }
-
       setIsTranslating(true);
       setErrorMessage(null);
-
       try {
-        const result = await translationService.translate({
-          text: trimmed,
-          sourceLang: src,
-          targetLang: tgt,
-        });
+        const result = await translationService.translate({ text: trimmed, sourceLang: src, targetLang: tgt });
         setTranslatedText(result.translatedText);
         setResultData(result);
-      } catch (err: unknown) {
+      } catch {
         setErrorMessage('Network or translation service unreachable. Fallback mode active.');
       } finally {
         setIsTranslating(false);
@@ -57,28 +138,7 @@ export const DashboardTranslatorWidget = () => {
     []
   );
 
-  // Auto-translate on input change (500ms debounce)
-  useEffect(() => {
-    if (!autoTranslateEnabled) return;
-
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    if (!inputText.trim()) {
-      setTranslatedText('');
-      setResultData(null);
-      return;
-    }
-
-    debounceTimerRef.current = setTimeout(() => {
-      executeTranslation(inputText, sourceLang, targetLang);
-    }, 500);
-
-    return () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-    };
-  }, [inputText, sourceLang, targetLang, autoTranslateEnabled, executeTranslation]);
+  useDebouncedTranslation(inputText, sourceLang, targetLang, autoTranslateEnabled, executeTranslation, setTranslatedText, setResultData);
 
   const handleManualTranslate = (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,7 +245,7 @@ export const DashboardTranslatorWidget = () => {
         {/* Source Input */}
         <div className="space-y-2 relative">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-foreground">Source Text / Word</label>
+            <label htmlFor="translator-source" className="text-xs font-bold text-foreground">Source Text / Word</label>
             {inputText && (
               <button
                 type="button"
@@ -197,6 +257,7 @@ export const DashboardTranslatorWidget = () => {
             )}
           </div>
           <textarea
+            id="translator-source"
             rows={4}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
@@ -259,66 +320,10 @@ export const DashboardTranslatorWidget = () => {
       </form>
 
       {/* Error / Fallback Notification Banner */}
-      {errorMessage && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs font-semibold text-amber-600 flex items-center justify-between">
-          <span>⚠️ {errorMessage}</span>
-          <span
-            className="text-[10px] underline cursor-pointer"
-            onClick={() => setErrorMessage(null)}
-          >
-            Dismiss
-          </span>
-        </div>
-      )}
+      {errorMessage && <ErrorBanner message={errorMessage} onDismiss={() => setErrorMessage(null)} />}
 
       {/* Single-Word Dynamic Quick Card */}
-      {resultData?.wordAnalysis?.isSingleWord && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
-          <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
-            <div className="flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-emerald-600" />
-              <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
-                Single-Word Technical Analysis
-              </span>
-            </div>
-            <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 font-mono uppercase">
-              {resultData.wordAnalysis.partOfSpeech || 'General'}
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-            <div>
-              <span className="text-muted-copy font-bold">Word: </span>
-              <span className="font-extrabold text-foreground font-mono">
-                {resultData.wordAnalysis.word}
-              </span>
-            </div>
-            <div>
-              <span className="text-muted-copy font-bold">Primary Meaning: </span>
-              <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
-            </div>
-          </div>
-
-          {resultData.wordAnalysis.alternativeMeanings &&
-            resultData.wordAnalysis.alternativeMeanings.length > 0 && (
-              <div className="pt-1 text-xs space-y-1">
-                <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider block">
-                  Alternative Meanings & Technical Synonyms:
-                </span>
-                <div className="flex flex-wrap gap-1.5">
-                  {resultData.wordAnalysis.alternativeMeanings.map((alt) => (
-                    <span
-                      key={alt}
-                      className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
-                    >
-                      {alt}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-        </div>
-      )}
+      <WordAnalysisCard wordAnalysis={resultData?.wordAnalysis} translatedText={translatedText} />
     </div>
   );
 };

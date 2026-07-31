@@ -67,33 +67,16 @@ const LOCAL_WORD_DB: Record<
   critical: { pos: 'adjective', tr: 'kritik', alts: ['hayati', 'belirleyici'] },
 };
 
+const NOUN_SUFFIXES = ['tion', 'ment', 'ence', 'ity'];
+const VERB_SUFFIXES = ['ize', 'ate', 'ing', 'ed'];
+const ADJ_SUFFIXES = ['able', 'ible', 'ive', 'ous'];
+
 export const detectPartOfSpeech = (word: string): WordAnalysis['partOfSpeech'] => {
   const lower = word.toLowerCase().trim();
   if (LOCAL_WORD_DB[lower]) return LOCAL_WORD_DB[lower].pos;
-  if (
-    lower.endsWith('tion') ||
-    lower.endsWith('ment') ||
-    lower.endsWith('ence') ||
-    lower.endsWith('ity')
-  ) {
-    return 'noun';
-  }
-  if (
-    lower.endsWith('ize') ||
-    lower.endsWith('ate') ||
-    lower.endsWith('ing') ||
-    lower.endsWith('ed')
-  ) {
-    return 'verb';
-  }
-  if (
-    lower.endsWith('able') ||
-    lower.endsWith('ible') ||
-    lower.endsWith('ive') ||
-    lower.endsWith('ous')
-  ) {
-    return 'adjective';
-  }
+  if (NOUN_SUFFIXES.some((s) => lower.endsWith(s))) return 'noun';
+  if (VERB_SUFFIXES.some((s) => lower.endsWith(s))) return 'verb';
+  if (ADJ_SUFFIXES.some((s) => lower.endsWith(s))) return 'adjective';
   if (lower.endsWith('ly')) return 'adverb';
   return 'general';
 };
@@ -113,7 +96,7 @@ export const analyzeSingleWord = (word: string, translatedText: string): WordAna
   let alternativeMeanings = dbMatch?.alts || [];
   if (alternativeMeanings.length === 0 && translatedText) {
     const rawAlts = translatedText
-      .split(/[,;\/]/)
+      .split(/[,;/]/)
       .map((s) => s.trim())
       .filter(Boolean);
     alternativeMeanings = Array.from(new Set(rawAlts));
@@ -152,51 +135,28 @@ export class TranslationService {
     return this.primaryEndpoint;
   }
 
-  public async translate({
-    text,
-    sourceLang = 'auto',
-    targetLang = 'tr',
-  }: TranslationRequest): Promise<TranslationResult> {
-    const trimmed = text.trim();
-    if (!trimmed) {
-      return {
-        originalText: text,
-        translatedText: '',
-        sourceLang,
-        targetLang,
-        serviceUsed: 'fallback',
-      };
-    }
-
-    // Try primary & LibreTranslate endpoints first
+  private async tryEndpoints(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
     const endpointsToTry = Array.from(new Set([this.primaryEndpoint, ...DEFAULT_ENDPOINTS]));
-
     for (const endpoint of endpointsToTry) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 4000);
-
         const response = await fetch(endpoint, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            q: trimmed,
-            source: sourceLang,
-            target: targetLang,
-            format: 'text',
-          }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ q: trimmed, source: sourceLang, target: targetLang, format: 'text' }),
           signal: controller.signal,
         });
-
         clearTimeout(timeoutId);
-
         if (response.ok) {
           const data = await response.json();
           const translatedText = data?.translatedText || '';
           if (translatedText) {
-            const wordAnalysis = analyzeSingleWord(trimmed, translatedText);
             return {
               originalText: text,
               translatedText,
@@ -204,7 +164,7 @@ export class TranslationService {
               targetLang,
               detectedLang: data?.detectedLanguage?.language || sourceLang,
               serviceUsed: 'libretranslate',
-              wordAnalysis,
+              wordAnalysis: analyzeSingleWord(trimmed, translatedText),
             };
           }
         }
@@ -212,55 +172,72 @@ export class TranslationService {
         logger.w(`[TranslationService] LibreTranslate endpoint failed (${endpoint})`, err);
       }
     }
+    return null;
+  }
 
-    // Fallback 1: MyMemory Translation API
+  private async tryMyMemory(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
     try {
       const srcPair = sourceLang === 'auto' ? (/[a-zA-Z]/.test(trimmed) ? 'en' : 'tr') : sourceLang;
-      const langpair = `${srcPair}|${targetLang}`;
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${langpair}`;
-
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${srcPair}|${targetLang}`;
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 4000);
-
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
-
       if (response.ok) {
         const data = await response.json();
         const translatedText = data?.responseData?.translatedText || '';
         if (translatedText && !translatedText.startsWith('MYMEMORY WARNING')) {
-          const wordAnalysis = analyzeSingleWord(trimmed, translatedText);
           return {
             originalText: text,
             translatedText,
             sourceLang,
             targetLang,
             serviceUsed: 'mymemory',
-            wordAnalysis,
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
           };
         }
       }
     } catch (err: unknown) {
       logger.w('[TranslationService] MyMemory fallback failed', err);
     }
+    return null;
+  }
 
-    // Fallback 2: Local dictionary fallback
+  public async translate({
+    text,
+    sourceLang = 'auto',
+    targetLang = 'tr',
+  }: TranslationRequest): Promise<TranslationResult> {
+    const trimmed = text.trim();
+    if (!trimmed) {
+      return { originalText: text, translatedText: '', sourceLang, targetLang, serviceUsed: 'fallback' };
+    }
+
+    const endpointResult = await this.tryEndpoints(trimmed, text, sourceLang, targetLang);
+    if (endpointResult) return endpointResult;
+
+    const myMemoryResult = await this.tryMyMemory(trimmed, text, sourceLang, targetLang);
+    if (myMemoryResult) return myMemoryResult;
+
     const lower = trimmed.toLowerCase();
     const localMatch = LOCAL_WORD_DB[lower];
     if (localMatch) {
       const translatedText = targetLang === 'tr' ? localMatch.tr : lower;
-      const wordAnalysis = analyzeSingleWord(trimmed, translatedText);
       return {
         originalText: text,
         translatedText,
         sourceLang,
         targetLang,
         serviceUsed: 'fallback',
-        wordAnalysis,
+        wordAnalysis: analyzeSingleWord(trimmed, translatedText),
       };
     }
 
-    // Ultimate Safe Return
     return {
       originalText: text,
       translatedText: trimmed,
