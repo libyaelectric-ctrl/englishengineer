@@ -2,8 +2,6 @@ const CACHE_VERSION = 'v3';
 const CACHE_NAME = `engvox-${CACHE_VERSION}`;
 const STATIC_ASSETS = ['/', '/offline.html', '/brand/logo.webp', '/manifest.json'];
 
-const MAX_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
-
 // Install: cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS)));
@@ -21,34 +19,6 @@ self.addEventListener('activate', (event) => {
   );
   self.clients.claim();
 });
-
-// Enforce cache size limit
-const enforceCacheSize = async (cache, maxSize) => {
-  const keys = await cache.keys();
-  let totalSize = 0;
-  const entries = [];
-
-  for (const key of keys) {
-    const response = await cache.match(key);
-    if (response) {
-      const blob = await response.blob();
-      totalSize += blob.size;
-      entries.push({ key, size: blob.size });
-    }
-  }
-
-  if (totalSize > maxSize) {
-    // Remove oldest entries until under limit
-    entries.sort((a, b) => a.size - b.size);
-    while (totalSize > maxSize && entries.length > 0) {
-      const entry = entries.shift();
-      if (entry) {
-        await cache.delete(entry.key);
-        totalSize -= entry.size;
-      }
-    }
-  }
-};
 
 // Fetch strategies
 self.addEventListener('fetch', (event) => {
@@ -147,7 +117,7 @@ const syncOfflineActions = async () => {
         });
         await cache.delete(request);
       }
-    } catch (e) {
+    } catch {
       // Will retry on next sync event
     }
   }

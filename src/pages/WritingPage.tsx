@@ -17,6 +17,10 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
+import {
+  type WritingCorrection,
+  type WritingEvaluationResult,
+} from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
 import { MissionListTab } from './WritingPage/components/MissionListTab';
@@ -217,6 +221,118 @@ const StatsBar = ({
   </div>
 );
 
+const WritingMainContent = ({
+  showStatsBar,
+  levelFilter,
+  currentLevel,
+  setLevelFilter,
+  finishedCount,
+  writingHistory,
+  visibleMissions,
+  completedMissions,
+  resetAllWritingProgress,
+  handleLaunchMission,
+  activeTab,
+  subTab,
+  currentMission,
+  draft,
+  setDraft,
+  timeSpentSeconds,
+  evaluationResult,
+  selectedMissionId,
+  selectedRule,
+  setSelectedRule,
+  userErrors,
+  showModelAnswer,
+  setShowModelAnswer,
+  activeCorrections,
+  getReadabilityScore,
+  handleApplyFix,
+  handleAutoFixAll,
+  handleSubmit,
+  resetCurrentMission,
+  handleBackToMissions,
+  moveMission,
+  currentMissionIndex,
+}: {
+  showStatsBar: boolean;
+  levelFilter: ContentLevelFilter;
+  currentLevel: CefrLevel;
+  setLevelFilter: (v: ContentLevelFilter) => void;
+  finishedCount: number;
+  writingHistory: Array<{ date: string; wordCount: number; score: number }>;
+  visibleMissions: Array<{ id: string; title: string; description: string; cefrLevel: CefrLevel; difficulty: string; estimatedMinutes: number; discipline: string }>;
+  completedMissions: Record<string, number>;
+  resetAllWritingProgress: () => void;
+  handleLaunchMission: (id: string) => void;
+  activeTab: string;
+  subTab: 'missions' | 'field-docs';
+  currentMission: { id: string; title: string; description: string; cefrLevel: CefrLevel; discipline: string; corrections: WritingCorrection[]; scenario?: string; task?: string; expectedStructure?: string[]; sampleExcellentAnswer?: string };
+  draft: string;
+  setDraft: (v: string) => void;
+  timeSpentSeconds: number;
+  evaluationResult: WritingEvaluationResult | null;
+  selectedMissionId: string;
+  selectedRule: WritingCorrection | null;
+  setSelectedRule: (rule: WritingCorrection | null) => void;
+  userErrors: Record<string, string>;
+  showModelAnswer: boolean;
+  setShowModelAnswer: React.Dispatch<React.SetStateAction<boolean>>;
+  activeCorrections: WritingCorrection[];
+  getReadabilityScore: () => number;
+  handleApplyFix: (original: string, fix: string) => void;
+  handleAutoFixAll: () => void;
+  handleSubmit: () => void;
+  resetCurrentMission: () => void;
+  handleBackToMissions: () => void;
+  moveMission: (dir: number) => void;
+  currentMissionIndex: number;
+}) => (
+  <>
+    {showStatsBar && (
+      <MissionListTab
+        levelFilter={levelFilter}
+        currentLevel={currentLevel}
+        setLevelFilter={setLevelFilter}
+        finishedCount={finishedCount}
+        writingHistory={writingHistory}
+        visibleMissions={visibleMissions}
+        completedMissions={completedMissions}
+        resetAllWritingProgress={resetAllWritingProgress}
+        handleLaunchMission={handleLaunchMission}
+      />
+    )}
+
+    {activeTab === 'missions' && subTab === 'field-docs' && <FieldDocAssistant />}
+
+    {activeTab === 'workspace' && (
+      <WorkspaceTab
+        currentMission={currentMission}
+        draft={draft}
+        setDraft={setDraft}
+        timeSpentSeconds={timeSpentSeconds}
+        evaluationResult={evaluationResult}
+        selectedMissionId={selectedMissionId}
+        selectedRule={selectedRule}
+        setSelectedRule={setSelectedRule}
+        userErrors={userErrors}
+        showModelAnswer={showModelAnswer}
+        setShowModelAnswer={setShowModelAnswer}
+        activeCorrections={activeCorrections}
+        getReadabilityScore={getReadabilityScore}
+        handleApplyFix={handleApplyFix}
+        handleAutoFixAll={handleAutoFixAll}
+        handleSubmit={handleSubmit}
+        resetCurrentMission={resetCurrentMission}
+        handleBackToMissions={handleBackToMissions}
+        moveMission={moveMission}
+        currentMissionIndex={currentMissionIndex}
+        visibleMissionsLength={visibleMissions.length}
+      />
+    )}
+  </>
+);
+
 const WritingPage = () => {
   const [subTab, setSubTab] = useState<'missions' | 'field-docs'>('missions');
   const vocabStats = useVocabularyStore((s) => s.stats);
@@ -302,47 +418,40 @@ const WritingPage = () => {
         />
       )}
 
-      {showStatsBar && (
-        <MissionListTab
-          levelFilter={levelFilter}
-          currentLevel={currentLevel}
-          setLevelFilter={setLevelFilter}
-          finishedCount={finishedCount}
-          writingHistory={writingHistory}
-          visibleMissions={visibleMissions}
-          completedMissions={completedMissions}
-          resetAllWritingProgress={resetAllWritingProgress}
-          handleLaunchMission={handleLaunchMission}
-        />
-      )}
-
-      {activeTab === 'missions' && subTab === 'field-docs' && <FieldDocAssistant />}
-
-      {activeTab === 'workspace' && (
-        <WorkspaceTab
-          currentMission={currentMission}
-          draft={draft}
-          setDraft={setDraft}
-          timeSpentSeconds={timeSpentSeconds}
-          evaluationResult={evaluationResult}
-          selectedMissionId={selectedMissionId}
-          selectedRule={selectedRule}
-          setSelectedRule={setSelectedRule}
-          userErrors={userErrors}
-          showModelAnswer={showModelAnswer}
-          setShowModelAnswer={setShowModelAnswer}
-          activeCorrections={activeCorrections}
-          getReadabilityScore={getReadabilityScore}
-          handleApplyFix={handleApplyFix}
-          handleAutoFixAll={handleAutoFixAll}
-          handleSubmit={handleSubmit}
-          resetCurrentMission={resetCurrentMission}
-          handleBackToMissions={handleBackToMissions}
-          moveMission={moveMission}
-          currentMissionIndex={currentMissionIndex}
-          visibleMissionsLength={visibleMissions.length}
-        />
-      )}
+      <WritingMainContent
+        showStatsBar={showStatsBar}
+        levelFilter={levelFilter}
+        currentLevel={currentLevel}
+        setLevelFilter={setLevelFilter}
+        finishedCount={finishedCount}
+        writingHistory={writingHistory}
+        visibleMissions={visibleMissions}
+        completedMissions={completedMissions}
+        resetAllWritingProgress={resetAllWritingProgress}
+        handleLaunchMission={handleLaunchMission}
+        activeTab={activeTab}
+        subTab={subTab}
+        currentMission={currentMission!}
+        draft={draft}
+        setDraft={setDraft}
+        timeSpentSeconds={timeSpentSeconds}
+        evaluationResult={evaluationResult}
+        selectedMissionId={selectedMissionId!}
+        selectedRule={selectedRule}
+        setSelectedRule={setSelectedRule}
+        userErrors={userErrors}
+        showModelAnswer={showModelAnswer}
+        setShowModelAnswer={setShowModelAnswer}
+        activeCorrections={activeCorrections}
+        getReadabilityScore={getReadabilityScore}
+        handleApplyFix={handleApplyFix}
+        handleAutoFixAll={handleAutoFixAll}
+        handleSubmit={handleSubmit}
+        resetCurrentMission={resetCurrentMission}
+        handleBackToMissions={handleBackToMissions}
+        moveMission={moveMission}
+        currentMissionIndex={currentMissionIndex}
+      />
     </div>
   );
 };

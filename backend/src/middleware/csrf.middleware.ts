@@ -44,6 +44,14 @@ const tokensMatch = (a: string, b: string): boolean => {
   }
 };
 
+const isCsrfExempt = (req: Request): boolean =>
+  req.path === '/api/health' ||
+  req.path === '/api/v1/health' ||
+  req.path === '/api/webhooks/stripe';
+
+const isStateChangingMethod = (method: string): boolean =>
+  method === 'POST' || method === 'PUT' || method === 'DELETE' || method === 'PATCH';
+
 /**
  * CSRF middleware using Double Submit Cookie pattern.
  *
@@ -53,41 +61,24 @@ const tokensMatch = (a: string, b: string): boolean => {
  * - Skipped ONLY in the automated test environment (NODE_ENV=test)
  */
 export const csrfProtection = (req: Request, res: Response, next: NextFunction): void => {
-  // CSRF is enforced in every environment except the automated test run.
-  // Development and staging are NOT exempt — only NODE_ENV=test (set by the
-  // "test" script in package.json) skips this check, so real environments
-  // (including local dev pointed at staging/prod services) stay protected.
   if (process.env.NODE_ENV === 'test') {
     next();
     return;
   }
 
-  const isStateChanging =
-    req.method === 'POST' ||
-    req.method === 'PUT' ||
-    req.method === 'DELETE' ||
-    req.method === 'PATCH';
-
-  // Exempt GET requests and health checks
-  if (!isStateChanging || req.path === '/api/health' || req.path === '/api/v1/health') {
-    // Set CSRF cookie on GET requests if not present
-    const cookies = parseCookies(req);
-    if (req.method === 'GET' && !cookies[CSRF_COOKIE_NAME]) {
-      const token = generateCsrfToken();
-      res.cookie(CSRF_COOKIE_NAME, token, {
-        httpOnly: false, // Frontend needs to read this
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        path: '/',
-        maxAge: 3600000, // 1 hour
-      });
+  if (!isStateChangingMethod(req.method) || isCsrfExempt(req)) {
+    if (req.method === 'GET') {
+      const cookies = parseCookies(req);
+      if (!cookies[CSRF_COOKIE_NAME]) {
+        res.cookie(CSRF_COOKIE_NAME, generateCsrfToken(), {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          path: '/',
+          maxAge: 3600000,
+        });
+      }
     }
-    next();
-    return;
-  }
-
-  // Exempt Stripe webhooks (they use signature verification, not CSRF)
-  if (req.path === '/api/webhooks/stripe') {
     next();
     return;
   }

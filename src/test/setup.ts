@@ -34,7 +34,7 @@ if (typeof globalThis.indexedDB === 'undefined') {
       };
       setTimeout(() => {
         if (typeof request.onerror === 'function') {
-          (request as any).onerror({ target: request });
+          (request as unknown as { onerror: (e: unknown) => void }).onerror({ target: request });
         }
       }, 0);
       return request;

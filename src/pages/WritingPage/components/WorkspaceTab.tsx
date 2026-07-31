@@ -21,17 +21,17 @@ interface Mission {
 }
 
 interface WorkspaceTabProps {
-  currentMission: Mission;
+  currentMission: Mission | null;
   draft: string;
   setDraft: (draft: string) => void;
   timeSpentSeconds: number;
   evaluationResult: WritingEvaluationResult | null;
-  selectedMissionId: string;
+  selectedMissionId: string | null;
   selectedRule: WritingCorrection | null;
   setSelectedRule: (rule: WritingCorrection | null) => void;
   userErrors: Record<string, string>;
   showModelAnswer: boolean;
-  setShowModelAnswer: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowModelAnswer: (v: boolean) => void;
   activeCorrections: WritingCorrection[];
   getReadabilityScore: () => number;
   handleApplyFix: (original: string, fix: string) => void;
@@ -69,67 +69,71 @@ export const WorkspaceTab = ({
   moveMission,
   currentMissionIndex,
   visibleMissionsLength,
-}: WorkspaceTabProps) => (
-  <div className="space-y-6">
-    <WorkspaceHeader
-      cefrLevel={currentMission.cefrLevel}
-      timeSpentSeconds={timeSpentSeconds}
-      currentMissionIndex={currentMissionIndex}
-      visibleMissionsLength={visibleMissionsLength}
-      onBack={handleBackToMissions}
-      onMove={moveMission}
-    />
+}: WorkspaceTabProps) => {
+  if (!currentMission) return null;
 
-    {!evaluationResult ? (
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-7 space-y-6">
-          <DraftEditor
-            title={currentMission.title}
-            description={currentMission.description}
-            discipline={currentMission.discipline}
-            scenario={currentMission.scenario}
-            task={currentMission.task}
-            expectedStructure={currentMission.expectedStructure}
-            draft={draft}
-            onDraftChange={setDraft}
-            getReadabilityScore={getReadabilityScore}
-            userErrors={userErrors}
-          />
-          <StyleGuidelines
-            corrections={currentMission.corrections}
-            activeCorrections={activeCorrections}
-            selectedRule={selectedRule}
-            onSelectRule={setSelectedRule}
-          />
-        </div>
-
-        <div className="lg:col-span-5 space-y-6">
-          <CorrectionCheckpoint
-            activeCorrections={activeCorrections}
-            onSelectRule={setSelectedRule}
-            onApplyFix={handleApplyFix}
-            onAutoFixAll={handleAutoFixAll}
-            onReset={resetCurrentMission}
-            onSubmit={handleSubmit}
-          />
-          <DraftQualityIndicators
-            getReadabilityScore={getReadabilityScore}
-            technicalDensity={getTechnicalDensity(selectedMissionId)}
-          />
-        </div>
-      </div>
-    ) : (
-      <EvaluationView
-        evaluationResult={evaluationResult}
-        currentMission={currentMission}
-        showModelAnswer={showModelAnswer}
-        setShowModelAnswer={setShowModelAnswer}
-        resetCurrentMission={resetCurrentMission}
-        setSelectedRule={setSelectedRule}
-        handleBackToMissions={handleBackToMissions}
+  return (
+    <div className="space-y-6">
+      <WorkspaceHeader
+        cefrLevel={currentMission.cefrLevel}
+        timeSpentSeconds={timeSpentSeconds}
         currentMissionIndex={currentMissionIndex}
-        moveMission={moveMission}
+        visibleMissionsLength={visibleMissionsLength}
+        onBack={handleBackToMissions}
+        onMove={moveMission}
       />
-    )}
-  </div>
-);
+
+      {!evaluationResult ? (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7 space-y-6">
+            <DraftEditor
+              title={currentMission.title}
+              description={currentMission.description}
+              discipline={currentMission.discipline}
+              scenario={currentMission.scenario}
+              task={currentMission.task}
+              expectedStructure={currentMission.expectedStructure}
+              draft={draft}
+              onDraftChange={setDraft}
+              getReadabilityScore={getReadabilityScore}
+              userErrors={userErrors}
+            />
+            <StyleGuidelines
+              corrections={currentMission.corrections}
+              activeCorrections={activeCorrections}
+              selectedRule={selectedRule}
+              onSelectRule={setSelectedRule}
+            />
+          </div>
+
+          <div className="lg:col-span-5 space-y-6">
+            <CorrectionCheckpoint
+              activeCorrections={activeCorrections}
+              onSelectRule={setSelectedRule}
+              onApplyFix={handleApplyFix}
+              onAutoFixAll={handleAutoFixAll}
+              onReset={resetCurrentMission}
+              onSubmit={handleSubmit}
+            />
+            <DraftQualityIndicators
+              getReadabilityScore={getReadabilityScore}
+              technicalDensity={getTechnicalDensity(selectedMissionId || '')}
+            />
+          </div>
+        </div>
+      ) : (
+        <EvaluationView
+          evaluationResult={evaluationResult}
+          currentMission={currentMission}
+          showModelAnswer={showModelAnswer}
+          setShowModelAnswer={setShowModelAnswer}
+          resetCurrentMission={resetCurrentMission}
+          setSelectedRule={setSelectedRule}
+          handleBackToMissions={handleBackToMissions}
+          currentMissionIndex={currentMissionIndex}
+          moveMission={moveMission}
+        />
+      )}
+    </div>
+  );
+};

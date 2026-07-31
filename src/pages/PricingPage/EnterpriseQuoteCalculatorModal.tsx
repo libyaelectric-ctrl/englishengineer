@@ -14,6 +14,129 @@ const REGIONS = [
   { id: 'ksa', name: 'Riyadh, KSA (Saudi Data Authority)', flag: '🇸🇦' },
 ];
 
+const SeatCalculator = ({
+  seats,
+  setSeats,
+}: {
+  seats: number;
+  setSeats: (value: number) => void;
+}) => (
+  <div className="space-y-2.5 rounded-xl border border-primary/20 bg-background/80 p-4">
+    <div className="flex items-center justify-between">
+      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+        <Layers className="h-4 w-4 text-primary" /> Enterprise Engineering Seats
+      </span>
+      <span className="text-base font-extrabold text-primary font-mono">
+        {seats} Seats
+      </span>
+    </div>
+    <input
+      type="range"
+      min={10}
+      max={200}
+      step={5}
+      value={seats}
+      onChange={(e) => setSeats(Number(e.target.value))}
+      className="w-full h-2 rounded-lg accent-primary cursor-pointer"
+    />
+    <div className="flex justify-between text-[10px] font-bold font-mono">
+      <span className={seats >= 10 ? 'text-emerald-500' : 'text-muted-copy'}>
+        10+ Seats (-15%)
+      </span>
+      <span
+        className={seats >= 25 ? 'text-emerald-500 font-extrabold' : 'text-muted-copy'}
+      >
+        25+ Seats (-25%)
+      </span>
+      <span className={seats >= 50 ? 'text-primary font-extrabold' : 'text-muted-copy'}>
+        50+ Seats (-35% Mega tier)
+      </span>
+    </div>
+  </div>
+);
+
+const RegionSelector = ({
+  selectedRegion,
+  setSelectedRegion,
+}: {
+  selectedRegion: string;
+  setSelectedRegion: (value: string) => void;
+}) => (
+  <div className="space-y-2">
+    <p className="text-xs font-bold text-foreground flex items-center gap-1.5">
+      <Globe className="h-4 w-4 text-primary" /> Data Residency & LLM Processing Region
+    </p>
+    <div className="grid grid-cols-2 gap-2">
+      {REGIONS.map((r) => (
+        <button
+          key={r.id}
+          type="button"
+          onClick={() => setSelectedRegion(r.id)}
+          className={`flex items-center gap-2 rounded-xl border p-2.5 text-left text-xs transition cursor-pointer ${
+            selectedRegion === r.id
+              ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
+              : 'border-border-soft bg-background hover:border-primary/40'
+          }`}
+        >
+          <span className="text-base">{r.flag}</span>
+          <span className="truncate">{r.name}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+const ServiceOptions = ({
+  dedicatedServer,
+  setDedicatedServer,
+  slaTier,
+  setSlaTier,
+}: {
+  dedicatedServer: boolean;
+  setDedicatedServer: (value: boolean) => void;
+  slaTier: '99.9' | '99.99';
+  setSlaTier: (value: '99.9' | '99.99') => void;
+}) => (
+  <div className="grid grid-cols-2 gap-3">
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => setDedicatedServer(!dedicatedServer)}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.currentTarget.click(); } }}
+      className={`rounded-xl border p-3 cursor-pointer transition ${
+        dedicatedServer
+          ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
+          : 'border-border-soft bg-background'
+      }`}
+    >
+      <div className="flex items-center gap-1.5 text-xs font-bold">
+        <Cpu className="h-4 w-4 text-primary" /> Dedicated Private LLM Proxy
+      </div>
+      <p className="text-[10px] text-muted-copy font-normal mt-1 leading-tight">
+        Isolated VPC & zero data retention guarantee (+ $499/mo).
+      </p>
+    </div>
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => setSlaTier(slaTier === '99.99' ? '99.9' : '99.99')}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.currentTarget.click(); } }}
+      className={`rounded-xl border p-3 cursor-pointer transition ${
+        slaTier === '99.99'
+          ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-600 font-bold shadow-sm'
+          : 'border-border-soft bg-background'
+      }`}
+    >
+      <div className="flex items-center gap-1.5 text-xs font-bold">
+        <ShieldCheck className="h-4 w-4 text-emerald-500" /> 99.99% Uptime SLA Tier
+      </div>
+      <p className="text-[10px] text-muted-copy font-normal mt-1 leading-tight">
+        15-min emergency response & dedicated Account Manager (+ $199/mo).
+      </p>
+    </div>
+  </div>
+);
+
 export const EnterpriseQuoteCalculatorModal = ({
   isOpen,
   onClose,
@@ -27,8 +150,7 @@ export const EnterpriseQuoteCalculatorModal = ({
 
   if (!isOpen) return null;
 
-  // Pricing math
-  const baseRatePerSeat = 35; // USD
+  const baseRatePerSeat = 35;
   let discountRate = 0;
   if (seats >= 50) discountRate = 0.35;
   else if (seats >= 25) discountRate = 0.25;
@@ -47,7 +169,6 @@ export const EnterpriseQuoteCalculatorModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
       <div className="w-full max-w-2xl rounded-2xl border border-primary/40 bg-surface/95 p-6 shadow-2xl space-y-6 relative light-sweep-container overflow-hidden max-h-[90vh] overflow-y-auto">
-        {/* Header */}
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
@@ -92,102 +213,15 @@ export const EnterpriseQuoteCalculatorModal = ({
           </div>
         ) : (
           <form onSubmit={handleSubmitRfq} className="space-y-5">
-            {/* ITEM 31 & 39: Seat Slider & Volume Discount Indicator */}
-            <div className="space-y-2.5 rounded-xl border border-primary/20 bg-background/80 p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                  <Layers className="h-4 w-4 text-primary" /> Enterprise Engineering Seats
-                </span>
-                <span className="text-base font-extrabold text-primary font-mono">
-                  {seats} Seats
-                </span>
-              </div>
-              <input
-                type="range"
-                min={10}
-                max={200}
-                step={5}
-                value={seats}
-                onChange={(e) => setSeats(Number(e.target.value))}
-                className="w-full h-2 rounded-lg accent-primary cursor-pointer"
-              />
+            <SeatCalculator seats={seats} setSeats={setSeats} />
+            <RegionSelector selectedRegion={selectedRegion} setSelectedRegion={setSelectedRegion} />
+            <ServiceOptions
+              dedicatedServer={dedicatedServer}
+              setDedicatedServer={setDedicatedServer}
+              slaTier={slaTier}
+              setSlaTier={setSlaTier}
+            />
 
-              {/* ITEM 39: Volume Discount Progress Bar */}
-              <div className="flex justify-between text-[10px] font-bold font-mono">
-                <span className={seats >= 10 ? 'text-emerald-500' : 'text-muted-copy'}>
-                  10+ Seats (-15%)
-                </span>
-                <span
-                  className={seats >= 25 ? 'text-emerald-500 font-extrabold' : 'text-muted-copy'}
-                >
-                  25+ Seats (-25%)
-                </span>
-                <span className={seats >= 50 ? 'text-primary font-extrabold' : 'text-muted-copy'}>
-                  50+ Seats (-35% Mega tier)
-                </span>
-              </div>
-            </div>
-
-            {/* ITEM 35: Data Residency Selector */}
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <Globe className="h-4 w-4 text-primary" /> Data Residency & LLM Processing Region
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {REGIONS.map((r) => (
-                  <button
-                    key={r.id}
-                    type="button"
-                    onClick={() => setSelectedRegion(r.id)}
-                    className={`flex items-center gap-2 rounded-xl border p-2.5 text-left text-xs transition cursor-pointer ${
-                      selectedRegion === r.id
-                        ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
-                        : 'border-border-soft bg-background hover:border-primary/40'
-                    }`}
-                  >
-                    <span className="text-base">{r.flag}</span>
-                    <span className="truncate">{r.name}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* ITEM 38: Dedicated LLM Instance & SLA Options */}
-            <div className="grid grid-cols-2 gap-3">
-              <div
-                onClick={() => setDedicatedServer(!dedicatedServer)}
-                className={`rounded-xl border p-3 cursor-pointer transition ${
-                  dedicatedServer
-                    ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
-                    : 'border-border-soft bg-background'
-                }`}
-              >
-                <div className="flex items-center gap-1.5 text-xs font-bold">
-                  <Cpu className="h-4 w-4 text-primary" /> Dedicated Private LLM Proxy
-                </div>
-                <p className="text-[10px] text-muted-copy font-normal mt-1 leading-tight">
-                  Isolated VPC & zero data retention guarantee (+ $499/mo).
-                </p>
-              </div>
-
-              <div
-                onClick={() => setSlaTier(slaTier === '99.99' ? '99.9' : '99.99')}
-                className={`rounded-xl border p-3 cursor-pointer transition ${
-                  slaTier === '99.99'
-                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-600 font-bold shadow-sm'
-                    : 'border-border-soft bg-background'
-                }`}
-              >
-                <div className="flex items-center gap-1.5 text-xs font-bold">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" /> 99.99% Uptime SLA Tier
-                </div>
-                <p className="text-[10px] text-muted-copy font-normal mt-1 leading-tight">
-                  15-min emergency response & dedicated Account Manager (+ $199/mo).
-                </p>
-              </div>
-            </div>
-
-            {/* Price Estimate Summary */}
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3.5 flex items-center justify-between">
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
@@ -205,13 +239,13 @@ export const EnterpriseQuoteCalculatorModal = ({
               </div>
             </div>
 
-            {/* Email RFQ Submission */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-foreground block">
+              <label htmlFor="company-email" className="text-xs font-bold text-foreground block">
                 Corporate Procurement Email
               </label>
               <div className="flex gap-2">
                 <input
+                  id="company-email"
                   required
                   type="email"
                   value={companyEmail}

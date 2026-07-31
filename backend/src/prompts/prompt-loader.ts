@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 
 const cache = new Map<string, string>();
 
-let supabaseClient: any = null;
+let supabaseClient: ReturnType<typeof createClient> | null = null;
 const getSupabaseClient = () => {
   if (supabaseClient) return supabaseClient;
   const url = process.env.SUPABASE_URL;
@@ -55,11 +55,11 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
           }
         );
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       logger.warn(
         '[PromptLoader] Database connection error fetching prompt, falling back to local file',
         {
-          error: err.message,
+          error: err instanceof Error ? err.message : String(err),
         }
       );
     }

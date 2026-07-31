@@ -15,6 +15,7 @@ import {
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
 import { SKILL_NAMES, type SkillName, useLearningCockpit } from '@/features/profile';
+import { DashboardTranslatorWidget } from '@/features/translation';
 
 import { DailyGoalBar } from './DashboardPage/DailyGoalBar';
 import { DashboardSkeleton } from './DashboardPage/DashboardSkeleton';
@@ -165,6 +166,10 @@ const DashboardPage = () => {
           profile={profile}
           skillSparklineData={skillSparklineData}
         />
+        {/* Independent Instant Engineering Translator Section */}
+        <section className="pt-2">
+          <DashboardTranslatorWidget />
+        </section>
       </div>
     </div>
   );
