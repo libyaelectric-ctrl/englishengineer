@@ -5,12 +5,15 @@ import {
   Copy,
   FileCheck2,
   FileText,
+  Lock,
   Sparkles,
   X,
   Zap,
 } from 'lucide-react';
 
 import { useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 import {
   ProofreadResult,
@@ -33,23 +36,42 @@ const SAMPLE_DRAFTS = [
   },
 ];
 
+const LIMIT_KEY = 'engvox_proofreader_guest_usage';
+
 export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofreaderModalProps) => {
+  const navigate = useNavigate();
   const [inputText, setInputText] = useState(SAMPLE_DRAFTS[0].text);
   const [analysisResult, setAnalysisResult] = useState<ProofreadResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const getUsageCount = (): number => {
+    try {
+      return parseInt(localStorage.getItem(LIMIT_KEY) || '0', 10);
+    } catch {
+      return 0;
+    }
+  };
+
+  const usageCount = getUsageCount();
+  const isLimitReached = usageCount >= 1;
+
   if (!isOpen) return null;
 
   const handleAnalyze = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputText.trim()) return;
+    if (!inputText.trim() || isLimitReached) return;
 
     setIsAnalyzing(true);
     setTimeout(() => {
       const result = analyzeTechnicalText(inputText);
       setAnalysisResult(result);
       setIsAnalyzing(false);
+      try {
+        localStorage.setItem(LIMIT_KEY, '1');
+      } catch {
+        // ignore
+      }
     }, 800);
   };
 
@@ -115,20 +137,49 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
             required
           />
 
-          <button
-            type="submit"
-            disabled={isAnalyzing || !inputText.trim()}
-            className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:opacity-50"
-          >
-            {isAnalyzing ? (
-              <span>Analyzing ASTM / FIDIC Terminology & Grammatical Precision...</span>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4" />
-                <span>Analyze & Refine Technical Correspondence</span>
-              </>
-            )}
-          </button>
+          {isLimitReached ? (
+            <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 space-y-3 animate-in fade-in">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-600">
+                <Lock className="h-4 w-4 shrink-0" />
+                <span>Guest Preview Limit Reached (1/1 Free Checks Used)</span>
+              </div>
+              <p className="text-[11px] text-muted-copy leading-relaxed">
+                You have used your 1 free guest technical check. Create a free account or upgrade to
+                Pro to unlock{' '}
+                <b>
+                  unlimited AI proofreading, PDF document uploads, and contract legal clause checks
+                </b>
+                .
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    navigate('/signup');
+                  }}
+                  className="flex-1 py-2 rounded-xl bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer shadow-md text-center"
+                >
+                  Create Free Account / Go Pro ➔
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              disabled={isAnalyzing || !inputText.trim()}
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover text-xs font-bold text-primary-foreground shadow-md transition cursor-pointer disabled:opacity-50"
+            >
+              {isAnalyzing ? (
+                <span>Analyzing ASTM / FIDIC Terminology & Grammatical Precision...</span>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  <span>Analyze & Refine Technical Correspondence (1 Free Check Left)</span>
+                </>
+              )}
+            </button>
+          )}
         </form>
 
         {/* Real Analysis Output */}

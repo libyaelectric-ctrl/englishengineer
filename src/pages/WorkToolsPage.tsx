@@ -3,6 +3,7 @@ import {
   Bot,
   Check,
   Clipboard,
+  FileCheck2,
   FileText,
   Heart,
   Mail,
@@ -33,7 +34,9 @@ const PRReviewCoach = lazy(() =>
   }))
 );
 
-type Tab = 'templates' | 'emails' | 'phrases' | 'review-coach';
+const FieldDocAssistant = lazy(() => import('@/features/writing/FieldDocAssistant'));
+
+type Tab = 'templates' | 'emails' | 'phrases' | 'review-coach' | 'field-docs';
 
 const TemplateCard = ({
   item,
@@ -248,6 +251,7 @@ const TAB_ITEMS = [
   ['emails', 'Email Templates', Mail],
   ['phrases', 'Phrase Library', BookOpenText],
   ['review-coach', 'PR Review Coach', WandSparkles],
+  ['field-docs', 'Field Doc & Technical Proofreader', FileCheck2],
 ] as const;
 
 const EMPTY_MESSAGES: Record<string, boolean> = {
@@ -323,6 +327,9 @@ const TabContent = ({
         ))}
       </div>
     );
+  }
+  if (tab === 'field-docs') {
+    return <FieldDocAssistant />;
   }
   return <PRReviewCoach />;
 };
