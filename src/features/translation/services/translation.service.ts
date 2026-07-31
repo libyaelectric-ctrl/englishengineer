@@ -110,6 +110,40 @@ export const analyzeSingleWord = (word: string, translatedText: string): WordAna
   };
 };
 
+const detectLanguageDirection = (
+  trimmed: string,
+  sourceLang: 'auto' | 'en' | 'tr',
+  targetLang: 'en' | 'tr',
+): { effectiveSource: string; effectiveTarget: string } => {
+  const hasTurkishChar =
+    /[çğıöşüÇĞİÖŞÜ]/.test(trimmed) ||
+    /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton)\b/i.test(trimmed);
+  const effectiveSource = sourceLang === 'auto' ? (hasTurkishChar ? 'tr' : 'en') : sourceLang;
+  const effectiveTarget =
+    targetLang === effectiveSource ? (effectiveSource === 'tr' ? 'en' : 'tr') : targetLang;
+  return { effectiveSource, effectiveTarget };
+};
+
+const findLocalFallback = (
+  trimmed: string,
+  text: string,
+  effectiveSource: string,
+  effectiveTarget: string,
+): TranslationResult | null => {
+  const lower = trimmed.toLowerCase();
+  const localMatch = LOCAL_WORD_DB[lower];
+  if (!localMatch) return null;
+  const translatedText = effectiveTarget === 'tr' ? localMatch.tr : lower;
+  return {
+    originalText: text,
+    translatedText,
+    sourceLang: effectiveSource,
+    targetLang: effectiveTarget,
+    serviceUsed: 'fallback',
+    wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+  };
+};
+
 export class TranslationService {
   private static instance: TranslationService;
   private primaryEndpoint: string;
@@ -229,15 +263,7 @@ export class TranslationService {
       };
     }
 
-    // Determine effective source & target languages to guarantee API compatibility
-    const hasTurkishChar =
-      /[çğıöşüÇĞİÖŞÜ]/.test(trimmed) ||
-      /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton)\b/i.test(
-        trimmed
-      );
-    const effectiveSource = sourceLang === 'auto' ? (hasTurkishChar ? 'tr' : 'en') : sourceLang;
-    const effectiveTarget =
-      targetLang === effectiveSource ? (effectiveSource === 'tr' ? 'en' : 'tr') : targetLang;
+    const { effectiveSource, effectiveTarget } = detectLanguageDirection(trimmed, sourceLang, targetLang);
 
     const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
@@ -245,19 +271,8 @@ export class TranslationService {
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    const lower = trimmed.toLowerCase();
-    const localMatch = LOCAL_WORD_DB[lower];
-    if (localMatch) {
-      const translatedText = effectiveTarget === 'tr' ? localMatch.tr : lower;
-      return {
-        originalText: text,
-        translatedText,
-        sourceLang: effectiveSource,
-        targetLang: effectiveTarget,
-        serviceUsed: 'fallback',
-        wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-      };
-    }
+    const localResult = findLocalFallback(trimmed, text, effectiveSource, effectiveTarget);
+    if (localResult) return localResult;
 
     return {
       originalText: text,
