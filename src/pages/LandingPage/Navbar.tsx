@@ -1,17 +1,25 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, Terminal } from 'lucide-react';
+import { useAppStore } from '@/store/app.store';
+import { ArrowRight, Moon, Sparkles, Sun } from 'lucide-react';
 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
-export function Navbar() {
+interface NavbarProps {
+  onDemoClick?: () => void;
+}
+
+export function Navbar({ onDemoClick }: NavbarProps) {
+  const theme = useAppStore((s) => s.theme);
+  const setTheme = useAppStore((s) => s.setTheme);
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-border-soft glass py-3 shadow-sm">
       <div className="flex w-full max-w-7xl items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded bg-primary p-0.5 shadow-sm transition-transform duration-300 group-hover:scale-105">
-            <div className="flex h-full w-full items-center justify-center rounded-[2px] bg-primary-foreground">
-              <Terminal className="h-4 w-4 text-primary" />
-            </div>
+          <div className="relative flex h-9 w-9 items-center justify-center rounded shadow-sm overflow-hidden transition-transform duration-300 group-hover:scale-105">
+            <img src="/brand/logo.webp" alt="EngVox Logo" className="h-full w-full object-cover" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
@@ -22,27 +30,60 @@ export function Navbar() {
             </span>
           </div>
         </Link>
-        <div className="hidden items-center gap-6 text-xs font-semibold uppercase tracking-wider md:flex">
-          <a href="#features" className="text-muted-copy hover:text-foreground transition-colors">
-            Features
-          </a>
-          <a
-            href="#disciplines"
-            className="text-muted-copy hover:text-foreground transition-colors"
-          >
-            Disciplines
-          </a>
-          <a href="#workflow" className="text-muted-copy hover:text-foreground transition-colors">
-            Workflow
-          </a>
-          <a href="#pricing" className="text-muted-copy hover:text-foreground transition-colors">
-            Pricing
-          </a>
-        </div>
+        {!isAuthPage && (
+          <div className="hidden items-center gap-6 text-xs font-semibold uppercase tracking-wider md:flex">
+            <a
+              href="#disciplines"
+              className="text-foreground/90 hover:text-primary transition-colors font-bold"
+            >
+              Disciplines
+            </a>
+            <a
+              href="#features"
+              className="text-foreground/90 hover:text-primary transition-colors font-bold"
+            >
+              Features
+            </a>
+            <a
+              href="#workflow"
+              className="text-foreground/90 hover:text-primary transition-colors font-bold"
+            >
+              Workflow
+            </a>
+            <a
+              href="#pricing"
+              className="text-foreground/90 hover:text-primary transition-colors font-bold"
+            >
+              Pricing
+            </a>
+          </div>
+        )}
         <div className="flex items-center gap-3">
+          {isAuthPage && onDemoClick && (
+            <button
+              onClick={onDemoClick}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm"
+              title="Launch Instant Demo Workspace"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
+              <span>Try Demo</span>
+            </button>
+          )}
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="inline-flex h-9 w-9 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? (
+              <Sun className="h-4 w-4 text-amber-500" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
           <Link
             to="/login"
-            className="hidden text-xs font-semibold text-muted-copy hover:text-foreground transition-colors sm:inline"
+            className="hidden text-xs font-semibold text-foreground/90 hover:text-primary transition-colors sm:inline"
           >
             Log in
           </Link>
@@ -57,4 +98,5 @@ export function Navbar() {
     </header>
   );
 }
+
 export default Navbar;

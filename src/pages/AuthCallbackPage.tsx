@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LoadingState } from '@/shared/components/LoadingState';
 import { logger } from '@/shared/logger';
 
+import { useAuthStore } from '@/features/auth';
 import { getSupabaseClient } from '@/features/auth/supabase.client';
 
 export default function AuthCallbackPage() {
@@ -16,7 +17,8 @@ export default function AuthCallbackPage() {
     const handleCallback = async () => {
       const client = getSupabaseClient();
       if (!client) {
-        setError('Supabase is not configured.');
+        await useAuthStore.getState().initialize();
+        navigate('/dashboard', { replace: true });
         return;
       }
 
@@ -32,7 +34,9 @@ export default function AuthCallbackPage() {
         }
       }
 
-      // For implicit flow (hash-based tokens), getSession() picks them up
+      // Restore session state into auth store
+      await useAuthStore.getState().initialize();
+
       const {
         data: { session },
       } = await client.auth.getSession();
@@ -44,7 +48,7 @@ export default function AuthCallbackPage() {
       }
     };
 
-    handleCallback();
+    void handleCallback();
   }, [navigate, searchParams]);
 
   if (error) {

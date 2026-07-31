@@ -8,9 +8,12 @@ import { getOrSet } from './cache/redis-cache.service.js';
 import { checkUserLimits } from './cost-tracker.js';
 import { ApiError } from './errors.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
+import { CircuitBreaker } from './utils/circuit-breaker.js';
 import { AiRequestBodySchema, validateBody } from './validation.js';
 
 export { createAIService, AI_CONTRACT_VERSION };
+
+const aiCircuitBreaker = new CircuitBreaker('AIService', 5, 30000);
 
 export const AI_ROUTES: Record<string, string> = {
   '/api/ai/coach': 'analyzeProgress',
@@ -184,7 +187,7 @@ export const registerAIRoutes = (
 
           const cacheKey = `ai:${defaultOperation}:${userId}:${JSON.stringify(body)}`;
           const { value: result } = await getOrSet(cacheKey, 3600, () =>
-            aiService.complete(defaultOperation, body)
+            aiCircuitBreaker.execute(() => aiService.complete(defaultOperation, body))
           );
 
           if (useTopup && !bypass) {

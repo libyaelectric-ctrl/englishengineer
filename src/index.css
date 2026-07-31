@@ -144,6 +144,9 @@ body {
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
   }
+  [data-theme='dark'] .glass {
+    background: rgba(10, 10, 26, 0.85);
+  }
   .glass-dark {
     background: rgba(10, 10, 26, 0.85);
     backdrop-filter: blur(24px);

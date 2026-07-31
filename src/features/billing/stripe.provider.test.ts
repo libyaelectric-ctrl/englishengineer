@@ -14,7 +14,7 @@ describe('StripeBillingProvider', () => {
     getBackendAuthHeaders.mockReset();
   });
 
-  it('posts checkout to /api/billing/create-checkout-session with bearer auth', async () => {
+  it('posts checkout to /api/v1/billing/create-checkout-session with bearer auth', async () => {
     getBackendAuthHeaders.mockResolvedValue({
       Authorization: 'Bearer supabase-access-token',
     });
@@ -36,7 +36,7 @@ describe('StripeBillingProvider', () => {
 
     expect(response.url).toBe('https://checkout.stripe.test/session');
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://billing.EngVox.test/api/billing/create-checkout-session',
+      'https://billing.EngVox.test/api/v1/billing/create-checkout-session',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({

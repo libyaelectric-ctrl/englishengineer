@@ -1,6 +1,12 @@
 import * as Sentry from '@sentry/node';
 import cors from 'cors';
-import express, { type Express, type NextFunction, type Request, type Response } from 'express';
+import express, {
+  type Express,
+  type NextFunction,
+  type Request,
+  type RequestHandler,
+  type Response,
+} from 'express';
 import helmet from 'helmet';
 import path from 'node:path';
 import type Stripe from 'stripe';
@@ -27,6 +33,7 @@ import {
   createIdempotencyStore,
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
+import { requireTenantContext } from './middleware/tenant.middleware.js';
 import { registerProgressRoutes } from './progress-routes.js';
 import { getPrometheusMetrics } from './prometheus.js';
 import { createRateLimitStore, createRateLimiter } from './rate-limit.js';
@@ -318,6 +325,50 @@ const registerRoutes = (
   const v1Router = express.Router();
   app.use('/api/v1', v1Router);
 
+  const adaptPath = (path: string) => {
+    if (path.startsWith('/api/')) {
+      return path.slice(4);
+    }
+    return path;
+  };
+
+  const v1RouterAdapter = {
+    get: (path: string, ...handlers: any[]) => {
+      v1Router.get(adaptPath(path), ...handlers);
+      app.get(path, ...handlers);
+      return v1RouterAdapter;
+    },
+    post: (path: string, ...handlers: any[]) => {
+      v1Router.post(adaptPath(path), ...handlers);
+      app.post(path, ...handlers);
+      return v1RouterAdapter;
+    },
+    put: (path: string, ...handlers: any[]) => {
+      v1Router.put(adaptPath(path), ...handlers);
+      app.put(path, ...handlers);
+      return v1RouterAdapter;
+    },
+    delete: (path: string, ...handlers: any[]) => {
+      v1Router.delete(adaptPath(path), ...handlers);
+      app.delete(path, ...handlers);
+      return v1RouterAdapter;
+    },
+    use: (...args: any[]) => {
+      if (typeof args[0] === 'string') {
+        const path = args[0];
+        const handlers = args.slice(1);
+        v1Router.use(adaptPath(path), ...handlers);
+        app.use(path, ...handlers);
+      } else {
+        v1Router.use(...args);
+        app.use(...args);
+      }
+      return v1RouterAdapter;
+    },
+    disable: () => {},
+    enabled: () => false,
+  };
+
   const healthHandler = async (_request: Request, response: Response) => {
     const startTime = Date.now();
     const health = toPublicHealth(config);
@@ -358,6 +409,28 @@ const registerRoutes = (
     }
   );
 
+  // Redirect middleware for legacy /api routes to /api/v1 routes
+  app.use((req: Request, res: Response, next: NextFunction): void => {
+    if (
+      process.env.NODE_ENV !== 'test' &&
+      req.path.startsWith('/api/') &&
+      !req.path.startsWith('/api/v1/') &&
+      req.path !== '/api/health' &&
+      req.path !== '/api/metrics' &&
+      req.path !== '/api/csp-report'
+    ) {
+      res.setHeader('Deprecation', 'true');
+      res.setHeader('Sunset', '2026-12-31');
+      res.setHeader(
+        'Link',
+        `<${req.protocol}://${req.get('host')}/api/v1${req.url.slice(4)}>; rel="successor-version"`
+      );
+      res.redirect(307, `/api/v1${req.url.slice(4)}`);
+      return;
+    }
+    next();
+  });
+
   const backendAuth = createBackendAuth(
     { ...config.auth, environment: config.environment } as BackendAuthConfig,
     fetchImpl
@@ -366,7 +439,7 @@ const registerRoutes = (
   const limiters = createAllRateLimiters(config, rateLimitStore);
 
   registerAIRoutes(
-    app,
+    v1RouterAdapter as unknown as Express,
     createAIService(config.ai, fetchImpl) as unknown as Parameters<typeof registerAIRoutes>[1],
     requireBackendAuth,
     limiters.ai,
@@ -393,13 +466,13 @@ const registerRoutes = (
         })
       : new Map();
   registerVocabularyRoutes(
-    app,
+    v1RouterAdapter as unknown as Express,
     createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as VocabularyCache),
     limiters.vocabulary
   );
 
   registerBillingRoutes(
-    app,
+    v1RouterAdapter as unknown as Express,
     createBillingService({
       config: config.stripe as unknown as BillingServiceConfig,
       stripeClient: stripeClient as Stripe,
@@ -420,9 +493,14 @@ const registerRoutes = (
   );
 
   const resolvedWorkspaceRepository = resolveWorkspaceRepo(workspaceRepository, config);
-  registerWorkspaceRoutes(app, requireBackendAuth, limiters.workspace, {
-    repository: resolvedWorkspaceRepository,
-  });
+  registerWorkspaceRoutes(
+    v1RouterAdapter as unknown as Express,
+    [requireBackendAuth, requireTenantContext] as unknown as RequestHandler,
+    limiters.workspace,
+    {
+      repository: resolvedWorkspaceRepository,
+    }
+  );
 
   const auditLogsHandler = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -437,7 +515,7 @@ const registerRoutes = (
     }
   };
 
-  app.get(
+  v1RouterAdapter.get(
     '/api/admin/audit-logs',
     requireBackendAuth,
     validateQuery(AdminAuditLogsQuerySchema),
@@ -446,27 +524,17 @@ const registerRoutes = (
 
   app.use('/api', limiters.global);
 
-  // Deprecation headers for legacy /api routes
-  app.use('/api', (req: Request, _res: Response, next: NextFunction) => {
-    if (!req.path.startsWith('/v1')) {
-      _res.setHeader('Deprecation', 'true');
-      _res.setHeader('Sunset', '2026-12-31');
-      _res.setHeader('Link', '</api/v1' + req.path + '>; rel="successor-version"');
-    }
-    next();
-  });
+  registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 
-  registerAdminRoutes(app, requireBackendAuth, limiters.global);
-
-  registerProgressRoutes(app);
-  registerReadingRoutes(app, requireBackendAuth);
-  registerWritingRoutes(app, requireBackendAuth);
-  registerListeningRoutes(app, requireBackendAuth);
-  registerSpeakingRoutes(app, requireBackendAuth);
+  registerProgressRoutes(v1RouterAdapter as unknown as Express);
+  registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
+  registerSpeakingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
   // this one directory only, never the whole filesystem.
   app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
-  registerGrammarRoutes(app);
+  registerGrammarRoutes(v1RouterAdapter as unknown as Express);
 };
 
 const initConnectionPool = (config: BackendConfig) => {

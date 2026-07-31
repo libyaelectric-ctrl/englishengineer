@@ -1,16 +1,19 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
-import { Terminal } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 
-export function Footer() {
+export function Footer({ className = '' }: { className?: string }) {
   return (
-    <footer className="border-t border-border-soft bg-background px-6 py-12 md:px-12">
+    <footer className={`border-t border-border-soft bg-background px-6 py-3 md:px-12 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded bg-primary">
-              <Terminal className="h-4 w-4 text-primary-foreground" />
+            <div className="relative flex h-8 w-8 items-center justify-center rounded shadow-sm overflow-hidden">
+              <img
+                src="/brand/logo.webp"
+                alt="EngVox Logo"
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm font-bold text-foreground">EngVox</span>
@@ -19,18 +22,18 @@ export function Footer() {
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-6 text-xs font-medium text-muted-copy">
-            <Link to="/legal/privacy" className="hover:text-foreground transition-colors">
+          <div className="flex items-center gap-6 text-xs font-medium text-foreground/80">
+            <Link to="/legal/privacy" className="hover:text-primary transition-colors">
               Privacy
             </Link>
-            <Link to="/legal/terms" className="hover:text-foreground transition-colors">
+            <Link to="/legal/terms" className="hover:text-primary transition-colors">
               Terms
             </Link>
-            <Link to="/business" className="hover:text-foreground transition-colors">
+            <Link to="/business" className="hover:text-primary transition-colors">
               Contact
             </Link>
           </div>
-          <p className="text-xs text-muted-copy">
+          <p className="text-xs text-muted-copy font-medium">
             © {new Date().getFullYear()} EngVox. All rights reserved.
           </p>
         </div>
@@ -38,4 +41,5 @@ export function Footer() {
     </footer>
   );
 }
+
 export default Footer;

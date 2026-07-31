@@ -44,7 +44,7 @@ export async function uploadSpeakingAudio(
 
   const contentType = blob.type || 'audio/webm';
 
-  const response = await fetchImpl(`${apiBaseUrl}/api/speaking/audio-upload`, {
+  const response = await fetchImpl(`${apiBaseUrl}/api/v1/speaking/audio-upload`, {
     method: 'POST',
     headers: {
       ...authHeaders,

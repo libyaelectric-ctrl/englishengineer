@@ -3,7 +3,10 @@ import { randomUUID } from 'node:crypto';
 import type { AiConfig } from '../../types.js';
 import { ApiError } from '../errors.js';
 import { logger } from '../logger.js';
-import { getCustomPracticePrompt, getJsonStructureInstruction } from '../prompts/prompt-loader.js';
+import {
+  getCustomPracticePrompt,
+  getJsonStructureInstructionAsync,
+} from '../prompts/prompt-loader.js';
 import { callAnthropic, callGemini, callOpenAI, mockText } from './providers.js';
 import type { ProviderConfig } from './providers.js';
 
@@ -26,10 +29,15 @@ const isCustomPracticeRequest = (prompt: string) => {
   );
 };
 
-const buildPrompt = (prompt: string, body: AiRequestBody, evaluation: boolean): string => {
+const buildPrompt = async (
+  prompt: string,
+  body: AiRequestBody,
+  evaluation: boolean
+): Promise<string> => {
   let finalPrompt = prompt;
   if (evaluation) {
-    finalPrompt = `${prompt}\n\n${getJsonStructureInstruction()}`;
+    const instruction = await getJsonStructureInstructionAsync();
+    finalPrompt = `${prompt}\n\n${instruction}`;
   }
   if (isCustomPracticeRequest(prompt) && body?.context) {
     const memoryContextPrompt = getCustomPracticePrompt(body.context);
@@ -133,7 +141,7 @@ export const createAIService = (config: AiConfig, fetchImpl: typeof fetch = fetc
     }
 
     const evaluation = isEvaluationOperation(operation, body);
-    const finalPrompt = buildPrompt(prompt, body, evaluation);
+    const finalPrompt = await buildPrompt(prompt, body, evaluation);
 
     const text = await withTimeout(
       (signal) => callProvider(config, finalPrompt, signal, fetchImpl, evaluation),

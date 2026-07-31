@@ -8,7 +8,7 @@
  *
  * CI Usage: node scripts/analyze-bundle.mjs --ci
  */
-import { readdirSync, readFileSync, statSync } from 'fs';
+import { readFileSync, readdirSync, statSync } from 'fs';
 import { join, resolve } from 'path';
 
 const DIST_DIR = resolve(process.cwd(), 'dist/assets');
@@ -29,9 +29,7 @@ function getInitialLoadFileNames() {
   const indexHtmlPath = join(DIST_ROOT, 'index.html');
   if (!exists(indexHtmlPath)) return null;
   const html = readFileSync(indexHtmlPath, 'utf-8');
-  const matches = [
-    ...html.matchAll(/(?:src|href)="\/assets\/([^"]+\.js)"/g),
-  ];
+  const matches = [...html.matchAll(/(?:src|href)="\/assets\/([^"]+\.js)"/g)];
   return new Set(matches.map((m) => m[1]));
 }
 
