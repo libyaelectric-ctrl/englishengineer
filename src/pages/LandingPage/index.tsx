@@ -6,20 +6,29 @@ import { logger } from '@/shared/logger';
 import { ProductAnalyticsService } from '@/features/analytics';
 
 import { BeforeAfterCard } from './BeforeAfterCard';
+import { CefrProgressMeterCard } from './CefrProgressMeterCard';
 import { CefrQuizWidget } from './CefrQuizWidget';
+import { DailyPracticeStreakWidget } from './DailyPracticeStreakWidget';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { FAQSection } from './FAQSection';
 import { FeatureSection } from './FeatureSection';
 import { Footer } from './Footer';
 import HeroSection from './HeroSection';
+import { KeyboardShortcutsModal } from './KeyboardShortcutsModal';
 import { Navbar } from './Navbar';
 import { PricingSection } from './PricingSection';
+import { PwaInstallBanner } from './PwaInstallBanner';
+import { ReportPdfExportModal } from './ReportPdfExportModal';
 import { SocialProofMarquee } from './SocialProofMarquee';
+import { TechnicalAudioPlayerWidget } from './TechnicalAudioPlayerWidget';
+import { VoicePitchMeterWidget } from './VoicePitchMeterWidget';
 import { WorkflowSection } from './WorkflowSection';
 import { STRUCTURED_DATA } from './constants';
 
 const LandingPage = () => {
   const [scrollShift, setScrollShift] = useState(0);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [reportExportOpen, setReportExportOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -66,6 +75,15 @@ const LandingPage = () => {
       <Navbar />
       <HeroSection scrollShift={scrollShift} />
       <SocialProofMarquee />
+
+      {/* Section 5 Interactive Widgets Grid (Gamification, Voice Pitch & Audio) */}
+      <section className="py-6 px-4 sm:px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
+        <DailyPracticeStreakWidget />
+        <VoicePitchMeterWidget />
+        <CefrProgressMeterCard />
+        <TechnicalAudioPlayerWidget />
+      </section>
+
       <DisciplineShowcase />
       <BeforeAfterCard />
       <FeatureSection />
@@ -73,6 +91,12 @@ const LandingPage = () => {
       <CefrQuizWidget />
       <PricingSection />
       <FAQSection />
+
+      {/* Section 5 Modals & Banners (PWA, Shortcuts, PDF Exporter) */}
+      <PwaInstallBanner />
+      <KeyboardShortcutsModal isOpen={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
+      <ReportPdfExportModal isOpen={reportExportOpen} onClose={() => setReportExportOpen(false)} />
+
       <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
     </main>
   );
