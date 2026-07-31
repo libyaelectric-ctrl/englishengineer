@@ -5,7 +5,6 @@ import {
   Copy,
   Globe2,
   Info,
-  Languages,
   RotateCcw,
   Sparkles,
   Volume2,
