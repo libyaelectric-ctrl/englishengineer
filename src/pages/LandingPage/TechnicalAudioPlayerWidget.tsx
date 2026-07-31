@@ -32,7 +32,10 @@ export const TechnicalAudioPlayerWidget = () => {
         {AUDIO_SAMPLE_TERMS.map((t, idx) => (
           <div
             key={t.term}
+            role="button"
+            tabIndex={0}
             onClick={() => handlePlay(idx)}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.currentTarget.click(); } }}
             className={`flex items-center justify-between rounded-xl border p-2.5 transition cursor-pointer ${
               activeIdx === idx && isPlaying
                 ? 'border-emerald-500/40 bg-emerald-500/10 shadow-sm'

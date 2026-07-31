@@ -43,7 +43,6 @@ import { registerSpeakingRoutes } from './speaking-routes.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { swaggerSpec } from './swagger.js';
-import { validateQuery } from './validation.js';
 import type { VocabularyCache } from './vocabulary-service.js';
 import {
   createUpstashVocabularyCache,
@@ -323,27 +322,27 @@ const registerRoutes = (
   };
 
   const v1RouterAdapter = {
-    get: (path: string, ...handlers: any[]) => {
+    get: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.get(adaptPath(path), ...handlers);
       app.get(path, ...handlers);
       return v1RouterAdapter;
     },
-    post: (path: string, ...handlers: any[]) => {
+    post: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.post(adaptPath(path), ...handlers);
       app.post(path, ...handlers);
       return v1RouterAdapter;
     },
-    put: (path: string, ...handlers: any[]) => {
+    put: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.put(adaptPath(path), ...handlers);
       app.put(path, ...handlers);
       return v1RouterAdapter;
     },
-    delete: (path: string, ...handlers: any[]) => {
+    delete: (path: string, ...handlers: RequestHandler[]) => {
       v1Router.delete(adaptPath(path), ...handlers);
       app.delete(path, ...handlers);
       return v1RouterAdapter;
     },
-    use: (...args: any[]) => {
+    use: (...args: (string | RequestHandler)[]) => {
       if (typeof args[0] === 'string') {
         const path = args[0];
         const handlers = args.slice(1);

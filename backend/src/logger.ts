@@ -42,21 +42,21 @@ export interface Logger {
 
 export const logger: Logger = {
   debug: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 0) console.debug(formatJSON('debug', msg, meta));
+    if (currentLevel <= 0) console.debug(formatJSON('debug', msg, meta)); // eslint-disable-line no-console
   },
   info: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 1) console.info(formatJSON('info', msg, meta));
+    if (currentLevel <= 1) console.info(formatJSON('info', msg, meta)); // eslint-disable-line no-console
   },
   warn: (msg: string, meta?: LogMeta) => {
-    if (currentLevel <= 2) console.warn(formatJSON('warn', msg, meta));
+    if (currentLevel <= 2) console.warn(formatJSON('warn', msg, meta)); // eslint-disable-line no-console
   },
   error: (msg: string, meta?: LogMeta, err?: Error) => {
     if (currentLevel <= 3) {
       const entry = formatJSON('error', msg, meta);
       if (err?.stack) {
-        console.error(entry, err.stack);
+        console.error(entry, err.stack); // eslint-disable-line no-console
       } else {
-        console.error(entry);
+        console.error(entry); // eslint-disable-line no-console
       }
     }
   },

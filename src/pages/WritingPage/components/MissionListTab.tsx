@@ -21,7 +21,7 @@ interface MissionListTabProps {
     id: string;
     title: string;
     description: string;
-    cefrLevel: CefrLevel;
+    cefrLevel: string;
     difficulty: string;
     estimatedMinutes: number;
     discipline: string;
@@ -106,7 +106,7 @@ export const MissionListTab = ({
         {visibleMissions.map((m) => (
           <MissionCard
             key={m.id}
-            mission={m}
+            mission={m as Parameters<typeof MissionCard>[0]['mission']}
             bestScore={completedMissions[m.id]}
             currentLevel={currentLevel}
             onLaunch={handleLaunchMission}

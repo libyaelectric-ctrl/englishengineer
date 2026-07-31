@@ -42,10 +42,10 @@ const verifyJwtLocally = async (
     const isValid = await subtle.verify(
       'HMAC',
       secretKey,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- DOM
-      // lib's `BufferSource` and Node's `NodeJS.ArrayBufferView` types
+      // DOM lib's `BufferSource` and Node's `NodeJS.ArrayBufferView` types
       // conflict after the @types/node bump; both are satisfied at
       // runtime by a real Buffer, this is a types-only workaround.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       signatureBytes as any,
       dataBytes
     );

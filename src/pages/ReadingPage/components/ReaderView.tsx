@@ -76,8 +76,8 @@ export const ReaderView = ({ title, content, onWordClick }: ReaderViewProps) => 
         {words.map((word, i) => (
           <span
             key={i}
-            role={onWordClick ? 'button' : undefined}
-            tabIndex={onWordClick ? 0 : undefined}
+            role="button"
+            tabIndex={0}
             onClick={() => onWordClick?.(word)}
             onKeyDown={(e) => {
               if (onWordClick && (e.key === 'Enter' || e.key === ' ')) {

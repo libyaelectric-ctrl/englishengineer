@@ -22,7 +22,6 @@ beforeAll(async () => {
     backendAvailable = false;
   }
   if (!backendAvailable) {
-    // eslint-disable-next-line no-console
     console.warn('Backend not available at localhost:8787 -- skipping integration smoke tests.');
   }
 });

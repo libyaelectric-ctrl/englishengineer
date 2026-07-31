@@ -33,38 +33,41 @@ export const useLoginHandlers = () => {
   const isProviderNotEnabled = (msg: string) =>
     msg.includes('not enabled') || msg.includes('Unsupported provider');
 
+  const handleDemoSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
+    try {
+      setError(null);
+      setSocialLoading(provider);
+      useLearningStore.getState().resetAll();
+      await demoLogin();
+      const loggedUser = useAuthStore.getState().currentUser;
+      if (loggedUser) {
+        const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+        useAuthStore.setState({
+          currentUser: {
+            ...loggedUser,
+            displayName: `${providerName} Demo Engineer`,
+            email: `demo.${provider}@engvox.io`,
+          },
+        });
+        const { LearningProfileRepository } =
+          await import('@/features/profile/profile.repository');
+        LearningProfileRepository.updatePreferences(loggedUser.id, {
+          onboardingCompleted: true,
+        });
+      }
+      setSocialLoading(null);
+      navigate(from, { replace: true });
+    } catch (err: unknown) {
+      setSocialLoading(null);
+      setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
+    }
+  };
+
   const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
     const client = getSupabaseClient();
 
-    // In demo / local mode (or when Supabase client is unconfigured), simulate instant social auth for smooth UX
     if (!client || isLocalDemoMode) {
-      try {
-        setError(null);
-        setSocialLoading(provider);
-        useLearningStore.getState().resetAll();
-        await demoLogin();
-        const loggedUser = useAuthStore.getState().currentUser;
-        if (loggedUser) {
-          const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
-          useAuthStore.setState({
-            currentUser: {
-              ...loggedUser,
-              displayName: `${providerName} Demo Engineer`,
-              email: `demo.${provider}@engvox.io`,
-            },
-          });
-          const { LearningProfileRepository } =
-            await import('@/features/profile/profile.repository');
-          LearningProfileRepository.updatePreferences(loggedUser.id, {
-            onboardingCompleted: true,
-          });
-        }
-        setSocialLoading(null);
-        navigate(from, { replace: true });
-      } catch (err: unknown) {
-        setSocialLoading(null);
-        setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
-      }
+      await handleDemoSocialLogin(provider);
       return;
     }
 
