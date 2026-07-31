@@ -501,11 +501,11 @@ const PricingPage = () => {
       <section className="py-10 px-6 md:px-12 max-w-7xl mx-auto border-t border-border-soft">
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
               Comparison Matrix
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Compare All Plan Capabilities
+              Compare All Plan Capabilities & Security
             </h2>
           </div>
           <p className="text-xs text-muted-copy max-w-xl leading-tight">
@@ -514,115 +514,120 @@ const PricingPage = () => {
           </p>
         </div>
 
-        <div
-          className="overflow-x-auto rounded-xl border border-primary/25 shadow-xl bg-background light-sweep-container"
-          tabIndex={0}
-          role="region"
-          aria-label="Plan comparison table"
-        >
-          <table className="w-full min-w-[750px] border-collapse text-left text-xs">
-            <thead className="bg-gradient-to-r from-primary/10 via-blue-500/10 to-indigo-500/10 border-b border-primary/25">
-              <tr>
-                <th className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground">
-                  Capabilities & Standards
-                </th>
-                {ACTIVE_PLANS.map((p) => (
-                  <th
-                    key={p.id}
-                    className={`p-4 text-xs font-extrabold tracking-wider text-center ${
-                      p.id === 'pro'
-                        ? 'bg-primary/15 border-x border-primary/30 text-primary'
-                        : 'text-foreground'
-                    }`}
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <span className="text-sm font-bold uppercase">{p.name}</span>
-                      <span className="text-[9px] font-mono font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded">
-                        {getAccessBadge(p.id)}
-                      </span>
-                    </div>
+        {/* 360° Rotating Ambient Light Ring Wrapper around Comparison Matrix */}
+        <div className="relative group">
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-45 animate-spin-slow pointer-events-none" />
+
+          <div
+            className="relative z-10 overflow-x-auto rounded-xl border border-primary/30 shadow-2xl bg-background/95 backdrop-blur-xl light-sweep-container"
+            tabIndex={0}
+            role="region"
+            aria-label="Plan comparison table"
+          >
+            <table className="w-full min-w-[750px] border-collapse text-left text-xs">
+              <thead className="bg-gradient-to-r from-primary/10 via-blue-500/10 to-indigo-500/10 border-b border-primary/25">
+                <tr>
+                  <th className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground">
+                    Capabilities & Standards
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {(
-                [
-                  {
-                    key: 'learning',
-                    label: 'Domain Learning Modules',
-                    icon: Sparkles,
-                    tooltip:
-                      'Access to 10 engineering disciplines, CEFR A1-C2 curriculum, and ASTM/Eurocode vocabulary.',
-                  },
-                  {
-                    key: 'ai',
-                    label: 'AI Voice & Writing Coach',
-                    icon: Cpu,
-                    tooltip:
-                      'Real-time oral defense practice, FIDIC contract correction, and technical presentation feedback.',
-                  },
-                  {
-                    key: 'analytics',
-                    label: 'Analytics & Skill Metrics',
-                    icon: Check,
-                    tooltip:
-                      'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
-                  },
-                  {
-                    key: 'team',
-                    label: 'Team Management & SSO',
-                    icon: Building2,
-                    tooltip:
-                      'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
-                  },
-                  {
-                    key: 'limits',
-                    label: 'Usage Allowance Limits',
-                    icon: Zap,
-                    tooltip:
-                      'Monthly voice practice minutes, document upload counts, and AI token limits.',
-                  },
-                ] as const
-              ).map((row) => (
-                <tr
-                  key={row.key}
-                  className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors group"
-                >
-                  <td className="p-3.5 font-bold text-foreground capitalize flex items-center gap-2 relative">
-                    <row.icon className="h-4 w-4 text-primary shrink-0" />
-                    <span>{row.label}</span>
-                    <HelpCircle className="h-3.5 w-3.5 text-muted-copy group-hover:text-primary transition cursor-help shrink-0" />
-                    {/* ITEM 18: Interactive Hover Tooltip */}
-                    <div className="absolute left-48 bottom-full mb-1 hidden group-hover:block z-50 w-64 p-2.5 bg-foreground text-background text-[10px] font-medium rounded-lg shadow-2xl leading-relaxed font-sans pointer-events-none">
-                      {row.tooltip}
-                    </div>
-                  </td>
-                  {ACTIVE_PLANS.map((p) => {
-                    const value = p.comparison[row.key];
-                    const isProCol = p.id === 'pro';
-                    const isUnlimited = value.toLowerCase().includes('unlimited');
-                    return (
-                      <td
-                        key={p.id}
-                        className={`p-3.5 text-center font-semibold text-xs leading-relaxed transition-colors ${
-                          isProCol ? 'bg-primary/5 border-x border-primary/20' : ''
-                        }`}
-                      >
-                        {isUnlimited ? (
-                          <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-600 font-mono">
-                            <Check className="h-3 w-3 text-emerald-500" /> {value}
-                          </span>
-                        ) : (
-                          <span className="text-foreground/90">{value}</span>
-                        )}
-                      </td>
-                    );
-                  })}
+                  {ACTIVE_PLANS.map((p) => (
+                    <th
+                      key={p.id}
+                      className={`p-4 text-xs font-extrabold tracking-wider text-center ${
+                        p.id === 'pro'
+                          ? 'bg-primary/15 border-x border-primary/30 text-primary'
+                          : 'text-foreground'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-sm font-bold uppercase">{p.name}</span>
+                        <span className="text-[9px] font-mono font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded">
+                          {getAccessBadge(p.id)}
+                        </span>
+                      </div>
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {(
+                  [
+                    {
+                      key: 'learning',
+                      label: 'Domain Learning Modules',
+                      icon: Sparkles,
+                      tooltip:
+                        'Access to 10 engineering disciplines, CEFR A1-C2 curriculum, and ASTM/Eurocode vocabulary.',
+                    },
+                    {
+                      key: 'ai',
+                      label: 'AI Voice & Writing Coach',
+                      icon: Cpu,
+                      tooltip:
+                        'Real-time oral defense practice, FIDIC contract correction, and technical presentation feedback.',
+                    },
+                    {
+                      key: 'analytics',
+                      label: 'Analytics & Skill Metrics',
+                      icon: Check,
+                      tooltip:
+                        'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
+                    },
+                    {
+                      key: 'team',
+                      label: 'Team Management & SSO',
+                      icon: Building2,
+                      tooltip:
+                        'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
+                    },
+                    {
+                      key: 'limits',
+                      label: 'Usage Allowance Limits',
+                      icon: Zap,
+                      tooltip:
+                        'Monthly voice practice minutes, document upload counts, and AI token limits.',
+                    },
+                  ] as const
+                ).map((row) => (
+                  <tr
+                    key={row.key}
+                    className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors group"
+                  >
+                    <td className="p-3.5 font-bold text-foreground capitalize flex items-center gap-2 relative">
+                      <row.icon className="h-4 w-4 text-primary shrink-0" />
+                      <span>{row.label}</span>
+                      <HelpCircle className="h-3.5 w-3.5 text-muted-copy group-hover:text-primary transition cursor-help shrink-0" />
+                      {/* ITEM 18: Interactive Hover Tooltip */}
+                      <div className="absolute left-48 bottom-full mb-1 hidden group-hover:block z-50 w-64 p-2.5 bg-foreground text-background text-[10px] font-medium rounded-lg shadow-2xl leading-relaxed font-sans pointer-events-none">
+                        {row.tooltip}
+                      </div>
+                    </td>
+                    {ACTIVE_PLANS.map((p) => {
+                      const value = p.comparison[row.key];
+                      const isProCol = p.id === 'pro';
+                      const isUnlimited = value.toLowerCase().includes('unlimited');
+                      return (
+                        <td
+                          key={p.id}
+                          className={`p-3.5 text-center font-semibold text-xs leading-relaxed transition-colors ${
+                            isProCol ? 'bg-primary/5 border-x border-primary/20' : ''
+                          }`}
+                        >
+                          {isUnlimited ? (
+                            <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-600 font-mono">
+                              <Check className="h-3 w-3 text-emerald-500" /> {value}
+                            </span>
+                          ) : (
+                            <span className="text-foreground/90">{value}</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
