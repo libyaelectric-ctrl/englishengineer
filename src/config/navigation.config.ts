@@ -82,7 +82,6 @@ export const NAV_ITEMS = [
     icon: BriefcaseBusiness,
     children: TOOLS_NAV_ITEMS,
   },
-  { label: 'Translator', href: '/translator', icon: Languages },
   { label: 'Team', href: '/team', icon: Users },
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;
