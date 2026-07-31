@@ -20,7 +20,7 @@ export interface TranslationResult {
   sourceLang: string;
   targetLang: string;
   detectedLang?: string;
-  serviceUsed: 'google_gtx' | 'lingva' | 'libretranslate' | 'mymemory' | 'fallback';
+  serviceUsed: 'google_gtx' | 'lingva' | 'ftapi' | 'libretranslate' | 'mymemory' | 'fallback';
   wordAnalysis?: WordAnalysis;
 }
 
@@ -30,16 +30,15 @@ const DEFAULT_ENDPOINTS = [
   'https://libretranslate.de/translate',
 ];
 
-// Offline / Local quick dictionary for instant single-word fallback
+// Offline / Local dictionary for instant fallback
 const LOCAL_WORD_DB: Record<
   string,
   { pos: WordAnalysis['partOfSpeech']; tr: string; alts: string[] }
 > = {
-  specification: {
-    pos: 'noun',
-    tr: 'şartname',
-    alts: ['teknik özellikler', 'tanımlama', 'spesifikasyon'],
-  },
+  enter: { pos: 'verb', tr: 'girmek', alts: ['giriniz', 'giriş yapmak', 'kaydetmek'] },
+  turkey: { pos: 'noun', tr: 'Türkiye', alts: ['hindi', 'Türkiye Cumhuriyeti'] },
+  come: { pos: 'verb', tr: 'gelmek', alts: ['ulaşmak', 'yaklaşmak', 'varım'] },
+  specification: { pos: 'noun', tr: 'şartname', alts: ['teknik özellikler', 'spesifikasyon'] },
   concrete: { pos: 'noun', tr: 'beton', alts: ['somut', 'katılaşmış', 'harç'] },
   slump: { pos: 'noun', tr: 'çökme testi', alts: ['düşüş', 'çökme', 'sarkma'] },
   reinforcement: { pos: 'noun', tr: 'donatı', alts: ['takviye', 'güçlendirme', 'armatür'] },
@@ -65,6 +64,12 @@ const LOCAL_WORD_DB: Record<
   verify: { pos: 'verb', tr: 'doğrulamak', alts: ['teyit etmek', 'kanıtlamak'] },
   robust: { pos: 'adjective', tr: 'dayanıklı', alts: ['sağlam', 'güçlü', 'dirençli'] },
   critical: { pos: 'adjective', tr: 'kritik', alts: ['hayati', 'belirleyici'] },
+  hello: { pos: 'general', tr: 'merhaba', alts: ['selam'] },
+  good: { pos: 'adjective', tr: 'iyi', alts: ['güzel', 'kaliteli'] },
+  project: { pos: 'noun', tr: 'proje', alts: ['tasarım', 'plan'] },
+  system: { pos: 'noun', tr: 'sistem', alts: ['düzenek', 'yapı'] },
+  user: { pos: 'noun', tr: 'kullanıcı', alts: ['üye'] },
+  data: { pos: 'noun', tr: 'veri', alts: ['bilgi'] },
 };
 
 const NOUN_SUFFIXES = ['tion', 'ment', 'ence', 'ity'];
@@ -151,6 +156,69 @@ export class TranslationService {
     return this.primaryEndpoint;
   }
 
+  private async tryLingva(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://lingva.ml/api/v1/${sourceLang}/${targetLang}/${encodeURIComponent(trimmed)}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        const data = await response.json();
+        if (data?.translation) {
+          return {
+            originalText: text,
+            translatedText: data.translation,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'lingva',
+            wordAnalysis: analyzeSingleWord(trimmed, data.translation),
+          };
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] Lingva proxy failed', err);
+    }
+    return null;
+  }
+
+  private async tryFtApi(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://ftapi.pythonanywhere.com/translate?sl=${sourceLang}&tl=${targetLang}&text=${encodeURIComponent(trimmed)}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        const data = await response.json();
+        const translatedText = data?.['destination-text'] || '';
+        if (translatedText) {
+          return {
+            originalText: text,
+            translatedText,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'ftapi',
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+          };
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] FtApi failed', err);
+    }
+    return null;
+  }
+
   private async tryGoogleGTX(
     trimmed: string,
     text: string,
@@ -231,7 +299,7 @@ export class TranslationService {
     for (const endpoint of endpointsToTry) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -288,19 +356,27 @@ export class TranslationService {
       targetLang
     );
 
-    // 1. Primary High-Speed Provider (Google GTX Client Endpoint)
+    // 1. Lingva Open-Source API Proxy (Primary CORS-compatible)
+    const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
+    if (lingvaResult) return lingvaResult;
+
+    // 2. Free Translation API Proxy
+    const ftResult = await this.tryFtApi(trimmed, text, effectiveSource, effectiveTarget);
+    if (ftResult) return ftResult;
+
+    // 3. Google GTX Engine
     const googleResult = await this.tryGoogleGTX(trimmed, text, effectiveSource, effectiveTarget);
     if (googleResult) return googleResult;
 
-    // 2. Secondary Provider (MyMemory Open API)
+    // 4. MyMemory Open API
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    // 3. Open-Source Endpoint (LibreTranslate / Argos)
+    // 5. Direct LibreTranslate / Argos Uptime Endpoints
     const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
 
-    // 4. Offline / Local Dictionary Fallback
+    // 6. Offline / Local Dictionary Fallback
     const lower = trimmed.toLowerCase();
     const localMatch = LOCAL_WORD_DB[lower];
     if (localMatch) {
@@ -315,13 +391,21 @@ export class TranslationService {
       };
     }
 
+    // Smart multi-word dictionary fallback if offline
+    const words = trimmed.split(/\s+/);
+    const translatedWords = words.map((w) => {
+      const db = LOCAL_WORD_DB[w.toLowerCase()];
+      return db ? (effectiveTarget === 'tr' ? db.tr : w) : w;
+    });
+    const fallbackTranslation = translatedWords.join(' ');
+
     return {
       originalText: text,
-      translatedText: trimmed,
+      translatedText: fallbackTranslation,
       sourceLang: effectiveSource,
       targetLang: effectiveTarget,
       serviceUsed: 'fallback',
-      wordAnalysis: analyzeSingleWord(trimmed, trimmed),
+      wordAnalysis: analyzeSingleWord(trimmed, fallbackTranslation),
     };
   }
 }
