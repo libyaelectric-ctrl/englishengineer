@@ -112,8 +112,9 @@ const LoginPage = () => {
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-background text-foreground relative selection:bg-primary selection:text-primary-foreground">
-      {/* Background Glows & Technical Grid */}
-      <div className="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[600px] rounded-full bg-gradient-to-br from-primary/15 via-blue-500/10 to-transparent blur-3xl opacity-60" />
+      {/* Background Ambient Motion Orbs & Technical Grid */}
+      <div className="pointer-events-none absolute -top-20 -left-20 h-96 w-96 rounded-full bg-gradient-to-tr from-primary/30 via-blue-500/20 to-indigo-500/30 blur-3xl opacity-60 animate-ambient-glow" />
+      <div className="pointer-events-none absolute -bottom-20 -right-20 h-96 w-96 rounded-full bg-gradient-to-br from-indigo-500/25 via-blue-600/20 to-primary/30 blur-3xl opacity-60 animate-ambient-glow" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
       {/* Fixed Top Navbar with Try Demo Action */}
@@ -123,7 +124,7 @@ const LoginPage = () => {
       <main className="fixed top-16 bottom-14 inset-x-0 z-10 flex items-center justify-center px-6 lg:px-12 overflow-hidden">
         <div className="w-full max-w-5xl h-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch py-3">
           {/* Left Column: Pre-select Engineering Discipline */}
-          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between">
+          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
             <div className="text-center space-y-0.5">
               <span className="inline-flex items-center gap-1 rounded-full bg-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
                 Pre-Selection
@@ -188,7 +189,7 @@ const LoginPage = () => {
           </div>
 
           {/* Right Column: Glassmorphic Auth Form */}
-          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between">
+          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
             {/* Header / Mode Switcher */}
             <div className="text-center space-y-1">
               <div className="inline-flex rounded-lg border border-border-soft bg-background p-1 text-xs mb-0.5">
@@ -216,7 +217,7 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              <h2 className="text-sm font-bold tracking-tight text-foreground leading-none">
+              <h2 className="text-sm font-extrabold tracking-tight text-foreground leading-none animated-gradient-title">
                 {h.isSignUpMode ? copy.signupTitle : copy.loginTitle}
               </h2>
               <p className="text-[10px] text-muted-copy font-medium">

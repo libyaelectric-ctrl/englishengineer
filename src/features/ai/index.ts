@@ -6,3 +6,5 @@ export * from './ai.persistence';
 export * from './ai.store';
 export { type MockExample } from './mock-ai.provider';
 export * from './ai-teacher.service';
+export { createBackendProxyProvider } from './backend-proxy.provider';
+export { createMockAIProvider } from './mock-ai.provider';

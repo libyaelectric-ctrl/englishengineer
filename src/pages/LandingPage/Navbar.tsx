@@ -63,12 +63,12 @@ export function Navbar({ onDemoClick }: NavbarProps) {
             >
               Workflow
             </a>
-            <a
-              href="#pricing"
+            <Link
+              to="/pricing"
               className="text-foreground/90 hover:text-primary transition-colors font-bold"
             >
               Pricing
-            </a>
+            </Link>
           </div>
         )}
 

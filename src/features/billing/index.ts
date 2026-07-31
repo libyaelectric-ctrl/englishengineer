@@ -62,3 +62,5 @@ export { BillingStatusPanel } from './BillingStatusPanel';
 export { type WorkspaceDocument, type Workspace, useWorkspaceStore } from './workspace.store';
 
 export { WorkspaceSelector } from './WorkspaceSelector';
+
+export { CurrencyConfig, type CurrencyOption } from './currency.config';

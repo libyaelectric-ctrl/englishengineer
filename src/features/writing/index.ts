@@ -32,3 +32,5 @@ export {
 } from './writing-realtime-analyzer';
 
 export { WritingRealtimeFeedback } from './WritingRealtimeFeedback';
+
+export { WritingProgressService } from './writing-progress';

@@ -14,7 +14,7 @@ import type Stripe from 'stripe';
 import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
 import { createAIService, registerAIRoutes } from './ai.js';
-import { getAuditLogs, initAuditLog } from './audit-log.js';
+import { initAuditLog } from './audit-log.js';
 import { createBackendAuth } from './auth.js';
 import type { BackendAuthConfig } from './auth.js';
 import { registerBillingRoutes } from './billing-routes.js';
@@ -43,7 +43,7 @@ import { registerSpeakingRoutes } from './speaking-routes.js';
 import type { SubscriptionRepository } from './subscription-repository.js';
 import { createSubscriptionRepository } from './subscription-repository.js';
 import { swaggerSpec } from './swagger.js';
-import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
+import { validateQuery } from './validation.js';
 import type { VocabularyCache } from './vocabulary-service.js';
 import {
   createUpstashVocabularyCache,
@@ -282,16 +282,6 @@ const resolveWorkspaceRepo = (
   }
 };
 
-const parseAuditLogsFilters = (req: Request) => {
-  const q = (req.validatedQuery ?? {}) as Record<string, unknown>;
-  return {
-    userId: typeof q.userId === 'string' ? q.userId : undefined,
-    action: typeof q.action === 'string' ? q.action : undefined,
-    since: typeof q.since === 'string' ? q.since : undefined,
-    limit: typeof q.limit === 'number' ? q.limit : undefined,
-  };
-};
-
 const applyI18nTranslation = (request: Request, mapped: ReturnType<typeof toErrorResponse>) => {
   if (!request.i18n || !mapped.body?.error?.code) return;
   const translated = request.i18n.t(mapped.body.error.code);
@@ -502,31 +492,11 @@ const registerRoutes = (
     }
   );
 
-  const auditLogsHandler = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.auth?.userId;
-      if (!userId) throw new ApiError(401, 'authentication_required', 'Authentication required.');
-      const isAdmin = userId === 'engineeros-dev-user' || req.auth?.source === 'internal-secret';
-      if (!isAdmin) throw new ApiError(403, 'admin_required', 'Admin access required.');
-      const filters = parseAuditLogsFilters(req);
-      res.json({ success: true, data: await getAuditLogs(filters) });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  v1RouterAdapter.get(
-    '/api/admin/audit-logs',
-    requireBackendAuth,
-    validateQuery(AdminAuditLogsQuerySchema),
-    auditLogsHandler
-  );
-
   app.use('/api', limiters.global);
 
   registerAdminRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth, limiters.global);
 
-  registerProgressRoutes(v1RouterAdapter as unknown as Express);
+  registerProgressRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerReadingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerWritingRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
   registerListeningRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);

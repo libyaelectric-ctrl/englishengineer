@@ -25,3 +25,5 @@ export { useReadingStore } from './reading.store';
 export { ReadingHelpers } from './reading.helpers';
 
 export { ReadingTranslation } from './ReadingTranslation';
+
+export { ReadingProgressService } from './reading-progress';

@@ -59,4 +59,26 @@ export const registerAdminRoutes = (
       }
     }
   );
+
+  app.get(
+    '/api/admin/audit-logs',
+    requireBackendAuth,
+    requireRole(['admin']),
+    rateLimiter,
+    validateQuery(AdminAuditLogsQuerySchema),
+    async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const filters = {
+          userId: (req.validatedQuery?.userId as string) || undefined,
+          action: (req.validatedQuery?.action as string) || undefined,
+          since: (req.validatedQuery?.since as string) || undefined,
+          limit: (req.validatedQuery?.limit as number) || 50,
+        };
+        const logs = await getAuditLogs(filters);
+        res.json({ success: true, data: logs });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 };
