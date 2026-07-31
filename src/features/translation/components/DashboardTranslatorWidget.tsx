@@ -103,6 +103,118 @@ const WordAnalysisCard = ({ wordAnalysis, translatedText }: { wordAnalysis: Tran
   );
 };
 
+interface TranslatorFormProps {
+  inputText: string;
+  setInputText: (v: string) => void;
+  translatedText: string;
+  isTranslating: boolean;
+  autoTranslateEnabled: boolean;
+  sourceLang: 'auto' | 'en' | 'tr';
+  setSourceLang: (v: 'auto' | 'en' | 'tr') => void;
+  targetLang: 'en' | 'tr';
+  setTargetLang: (v: 'en' | 'tr') => void;
+  resultData: TranslationResult | null;
+  copied: boolean;
+  onManualTranslate: (e: React.FormEvent) => void;
+  onSwapLanguages: () => void;
+  onCopy: () => void;
+  onClear: () => void;
+}
+
+const TranslationGrid = ({
+  inputText, setInputText, translatedText, isTranslating, autoTranslateEnabled,
+  resultData, copied, onManualTranslate, onCopy, onClear,
+}: Omit<TranslatorFormProps, 'sourceLang' | 'setSourceLang' | 'targetLang' | 'setTargetLang' | 'onSwapLanguages'>) => (
+  <form onSubmit={onManualTranslate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-2 relative">
+      <div className="flex items-center justify-between">
+        <label htmlFor="translator-source" className="text-xs font-bold text-foreground">Source Text / Word</label>
+        {inputText && (
+          <button type="button" onClick={onClear} className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1">
+            <RotateCcw className="h-3 w-3" /> Clear
+          </button>
+        )}
+      </div>
+      <textarea id="translator-source" rows={4} value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="Type or paste English/Turkish technical text or single word..." className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none transition-all" />
+      {!autoTranslateEnabled && (
+        <button type="submit" disabled={isTranslating || !inputText.trim()} className="w-full py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5">
+          <Zap className="h-3.5 w-3.5" /> Translate Now
+        </button>
+      )}
+    </div>
+    <div className="space-y-2 relative">
+      <div className="flex items-center justify-between">
+        <label className="text-xs font-bold text-foreground flex items-center gap-1">
+          Translated Output
+          {resultData?.serviceUsed && (
+            <span className="text-[9px] font-mono text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.2 rounded">via {resultData.serviceUsed}</span>
+          )}
+        </label>
+        {translatedText && (
+          <button type="button" onClick={onCopy} className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer">
+            {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+            <span>{copied ? 'Copied!' : 'Copy'}</span>
+          </button>
+        )}
+      </div>
+      <div className="relative">
+        <textarea rows={4} readOnly value={isTranslating ? 'Translating...' : translatedText} placeholder="Translation will appear here instantly..." className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed" />
+        {isTranslating && (
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
+            <Sparkles className="h-4 w-4 animate-spin" /> Translating...
+          </div>
+        )}
+      </div>
+    </div>
+  </form>
+);
+
+const TranslatorForm = ({
+  inputText, setInputText, translatedText, isTranslating, autoTranslateEnabled,
+  sourceLang, setSourceLang, targetLang, setTargetLang, resultData, copied,
+  onManualTranslate, onSwapLanguages, onCopy, onClear,
+}: TranslatorFormProps) => (
+  <>
+    <div className="flex items-center justify-between gap-3 bg-background p-2 rounded-xl border border-border-soft text-xs">
+      <div className="flex items-center gap-2">
+        <Globe2 className="h-4 w-4 text-primary shrink-0" />
+        <span className="font-bold text-muted-copy">From:</span>
+        <select
+          value={sourceLang}
+          onChange={(e) => setSourceLang(e.target.value as 'auto' | 'en' | 'tr')}
+          className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
+        >
+          <option value="auto">✨ Auto Detect</option>
+          <option value="en">English (EN)</option>
+          <option value="tr">Türkçe (TR)</option>
+        </select>
+      </div>
+      <button type="button" onClick={onSwapLanguages} className="p-1.5 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer" title="Swap English ↔ Türkçe">
+        <ArrowLeftRight className="h-4 w-4" />
+      </button>
+      <div className="flex items-center gap-2">
+        <span className="font-bold text-muted-copy">To:</span>
+        <select value={targetLang} onChange={(e) => setTargetLang(e.target.value as 'en' | 'tr')} className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer">
+          <option value="tr">Türkçe (TR)</option>
+          <option value="en">English (EN)</option>
+        </select>
+      </div>
+    </div>
+    <TranslationGrid
+      inputText={inputText}
+      setInputText={setInputText}
+      translatedText={translatedText}
+      isTranslating={isTranslating}
+      autoTranslateEnabled={autoTranslateEnabled}
+      resultData={resultData}
+      copied={copied}
+      onManualTranslate={onManualTranslate}
+      onCopy={onCopy}
+      onClear={onClear}
+    />
+  </>
+);
+
 export const DashboardTranslatorWidget = () => {
   const [inputText, setInputText] = useState('');
   const [translatedText, setTranslatedText] = useState('');
@@ -202,127 +314,26 @@ export const DashboardTranslatorWidget = () => {
         </label>
       </div>
 
-      {/* Language Bar & Swap Button */}
-      <div className="flex items-center justify-between gap-3 bg-background p-2 rounded-xl border border-border-soft text-xs">
-        <div className="flex items-center gap-2">
-          <Globe2 className="h-4 w-4 text-primary shrink-0" />
-          <span className="font-bold text-muted-copy">From:</span>
-          <select
-            value={sourceLang}
-            onChange={(e) => setSourceLang(e.target.value as 'auto' | 'en' | 'tr')}
-            className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
-          >
-            <option value="auto">✨ Auto Detect</option>
-            <option value="en">English (EN)</option>
-            <option value="tr">Türkçe (TR)</option>
-          </select>
-        </div>
+      <TranslatorForm
+        inputText={inputText}
+        setInputText={setInputText}
+        translatedText={translatedText}
+        isTranslating={isTranslating}
+        autoTranslateEnabled={autoTranslateEnabled}
+        sourceLang={sourceLang}
+        setSourceLang={setSourceLang}
+        targetLang={targetLang}
+        setTargetLang={setTargetLang}
+        resultData={resultData}
+        copied={copied}
+        onManualTranslate={handleManualTranslate}
+        onSwapLanguages={handleSwapLanguages}
+        onCopy={handleCopy}
+        onClear={handleClear}
+      />
 
-        <button
-          type="button"
-          onClick={handleSwapLanguages}
-          className="p-1.5 rounded-lg border border-primary/30 bg-primary/10 hover:bg-primary/20 text-primary transition-all cursor-pointer"
-          title="Swap English ↔ Türkçe"
-        >
-          <ArrowLeftRight className="h-4 w-4" />
-        </button>
-
-        <div className="flex items-center gap-2">
-          <span className="font-bold text-muted-copy">To:</span>
-          <select
-            value={targetLang}
-            onChange={(e) => setTargetLang(e.target.value as 'en' | 'tr')}
-            className="rounded-lg border border-border-soft bg-surface px-2.5 py-1 text-xs font-bold text-foreground focus:border-primary outline-none cursor-pointer"
-          >
-            <option value="tr">Türkçe (TR)</option>
-            <option value="en">English (EN)</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Main Text Area Inputs (Grid) */}
-      <form onSubmit={handleManualTranslate} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Source Input */}
-        <div className="space-y-2 relative">
-          <div className="flex items-center justify-between">
-            <label htmlFor="translator-source" className="text-xs font-bold text-foreground">Source Text / Word</label>
-            {inputText && (
-              <button
-                type="button"
-                onClick={handleClear}
-                className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1"
-              >
-                <RotateCcw className="h-3 w-3" /> Clear
-              </button>
-            )}
-          </div>
-          <textarea
-            id="translator-source"
-            rows={4}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Type or paste English/Turkish technical text or single word..."
-            className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none transition-all"
-          />
-          {!autoTranslateEnabled && (
-            <button
-              type="submit"
-              disabled={isTranslating || !inputText.trim()}
-              className="w-full py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-1.5"
-            >
-              <Zap className="h-3.5 w-3.5" /> Translate Now
-            </button>
-          )}
-        </div>
-
-        {/* Output Area */}
-        <div className="space-y-2 relative">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-foreground flex items-center gap-1">
-              Translated Output
-              {resultData?.serviceUsed && (
-                <span className="text-[9px] font-mono text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.2 rounded">
-                  via {resultData.serviceUsed}
-                </span>
-              )}
-            </label>
-            {translatedText && (
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer"
-              >
-                {copied ? (
-                  <Check className="h-3.5 w-3.5 text-emerald-500" />
-                ) : (
-                  <Copy className="h-3.5 w-3.5" />
-                )}
-                <span>{copied ? 'Copied!' : 'Copy'}</span>
-              </button>
-            )}
-          </div>
-
-          <div className="relative">
-            <textarea
-              rows={4}
-              readOnly
-              value={isTranslating ? 'Translating...' : translatedText}
-              placeholder="Translation will appear here instantly..."
-              className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed"
-            />
-            {isTranslating && (
-              <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
-                <Sparkles className="h-4 w-4 animate-spin" /> Translating...
-              </div>
-            )}
-          </div>
-        </div>
-      </form>
-
-      {/* Error / Fallback Notification Banner */}
       {errorMessage && <ErrorBanner message={errorMessage} onDismiss={() => setErrorMessage(null)} />}
 
-      {/* Single-Word Dynamic Quick Card */}
       <WordAnalysisCard wordAnalysis={resultData?.wordAnalysis} translatedText={translatedText} />
     </div>
   );

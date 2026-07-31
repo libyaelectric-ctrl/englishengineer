@@ -149,7 +149,12 @@ export class TranslationService {
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ q: trimmed, source: sourceLang, target: targetLang, format: 'text' }),
+          body: JSON.stringify({
+            q: trimmed,
+            source: sourceLang,
+            target: targetLang,
+            format: 'text',
+          }),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);
@@ -215,24 +220,40 @@ export class TranslationService {
   }: TranslationRequest): Promise<TranslationResult> {
     const trimmed = text.trim();
     if (!trimmed) {
-      return { originalText: text, translatedText: '', sourceLang, targetLang, serviceUsed: 'fallback' };
+      return {
+        originalText: text,
+        translatedText: '',
+        sourceLang,
+        targetLang,
+        serviceUsed: 'fallback',
+      };
     }
 
-    const endpointResult = await this.tryEndpoints(trimmed, text, sourceLang, targetLang);
+    // Determine effective source & target languages to guarantee API compatibility
+    const hasTurkishChar =
+      /[çğıöşüÇĞİÖŞÜ]/.test(trimmed) ||
+      /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton)\b/i.test(
+        trimmed
+      );
+    const effectiveSource = sourceLang === 'auto' ? (hasTurkishChar ? 'tr' : 'en') : sourceLang;
+    const effectiveTarget =
+      targetLang === effectiveSource ? (effectiveSource === 'tr' ? 'en' : 'tr') : targetLang;
+
+    const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
 
-    const myMemoryResult = await this.tryMyMemory(trimmed, text, sourceLang, targetLang);
+    const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
     const lower = trimmed.toLowerCase();
     const localMatch = LOCAL_WORD_DB[lower];
     if (localMatch) {
-      const translatedText = targetLang === 'tr' ? localMatch.tr : lower;
+      const translatedText = effectiveTarget === 'tr' ? localMatch.tr : lower;
       return {
         originalText: text,
         translatedText,
-        sourceLang,
-        targetLang,
+        sourceLang: effectiveSource,
+        targetLang: effectiveTarget,
         serviceUsed: 'fallback',
         wordAnalysis: analyzeSingleWord(trimmed, translatedText),
       };
@@ -241,8 +262,8 @@ export class TranslationService {
     return {
       originalText: text,
       translatedText: trimmed,
-      sourceLang,
-      targetLang,
+      sourceLang: effectiveSource,
+      targetLang: effectiveTarget,
       serviceUsed: 'fallback',
       wordAnalysis: analyzeSingleWord(trimmed, trimmed),
     };
