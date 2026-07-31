@@ -1,6 +1,6 @@
-import * as Sentry from '@sentry/react';
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
+import * as Sentry from '@sentry/react';
 
 import { RouterProvider } from 'react-router-dom';
 

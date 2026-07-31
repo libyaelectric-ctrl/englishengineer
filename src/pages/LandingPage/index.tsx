@@ -75,6 +75,8 @@ const LandingPage = () => {
       <Navbar />
       <HeroSection scrollShift={scrollShift} />
       <SocialProofMarquee />
+      <DisciplineShowcase />
+      <BeforeAfterCard />
 
       {/* Section 5 Interactive Widgets Grid (Gamification, Voice Pitch & Audio) */}
       <section className="py-6 px-4 sm:px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
@@ -84,8 +86,6 @@ const LandingPage = () => {
         <TechnicalAudioPlayerWidget />
       </section>
 
-      <DisciplineShowcase />
-      <BeforeAfterCard />
       <FeatureSection />
       <WorkflowSection />
       <CefrQuizWidget />

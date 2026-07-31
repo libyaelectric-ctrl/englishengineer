@@ -24,16 +24,12 @@ describe('SectionCard', () => {
   });
 
   it('renders headerActions when provided', () => {
-    render(
-      <SectionCard title="Actions" headerActions={<button>Action</button>} />
-    );
+    render(<SectionCard title="Actions" headerActions={<button>Action</button>} />);
     expect(screen.getByRole('button', { name: 'Action' })).toBeTruthy();
   });
 
   it('renders footer when provided', () => {
-    render(
-      <SectionCard title="Footer" footer={<span>Footer text</span>} />
-    );
+    render(<SectionCard title="Footer" footer={<span>Footer text</span>} />);
     expect(screen.getByText('Footer text')).toBeTruthy();
   });
 });
