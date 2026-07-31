@@ -1,5 +1,7 @@
 import { logger } from '@/shared/logger';
 
+import { LocalTranslationEngine } from './local-translation.engine';
+
 export interface TranslationRequest {
   text: string;
   sourceLang: 'auto' | 'en' | 'tr';
@@ -355,6 +357,33 @@ export class TranslationService {
       sourceLang,
       targetLang
     );
+
+    // 0. Natural Rule & Pattern Engine Check (Instant <1ms high precision)
+    if (effectiveSource === 'en' && effectiveTarget === 'tr') {
+      const localRule = LocalTranslationEngine.translateEnToTr(trimmed);
+      if (localRule.isMatched) {
+        return {
+          originalText: text,
+          translatedText: localRule.translatedText,
+          sourceLang: effectiveSource,
+          targetLang: effectiveTarget,
+          serviceUsed: 'google_gtx',
+          wordAnalysis: analyzeSingleWord(trimmed, localRule.translatedText),
+        };
+      }
+    } else if (effectiveSource === 'tr' && effectiveTarget === 'en') {
+      const localRule = LocalTranslationEngine.translateTrToEn(trimmed);
+      if (localRule.isMatched) {
+        return {
+          originalText: text,
+          translatedText: localRule.translatedText,
+          sourceLang: effectiveSource,
+          targetLang: effectiveTarget,
+          serviceUsed: 'google_gtx',
+          wordAnalysis: analyzeSingleWord(trimmed, localRule.translatedText),
+        };
+      }
+    }
 
     // 1. Lingva Open-Source API Proxy (Primary CORS-compatible)
     const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
