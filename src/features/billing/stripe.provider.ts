@@ -62,7 +62,7 @@ const parseErrorMessage = async (response: Response): Promise<string> => {
 };
 
 const buildBillingEndpoint = (billingApiUrl: string, route: string) =>
-  `${billingApiUrl.replace(/\/$/, '')}/api/billing/${route}`;
+  `${billingApiUrl.replace(/\/$/, '')}/api/v1/billing/${route}`;
 
 const postJson = async <TResponse, TBody extends object>(
   endpoint: string,

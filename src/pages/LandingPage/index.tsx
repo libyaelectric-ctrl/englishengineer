@@ -62,8 +62,8 @@ const LandingPage = () => {
       />
       <Navbar />
       <HeroSection scrollShift={scrollShift} />
-      <FeatureSection />
       <DisciplineShowcase />
+      <FeatureSection />
       <WorkflowSection />
       <PricingSection />
       <FAQSection />

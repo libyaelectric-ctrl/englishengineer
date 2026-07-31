@@ -2,14 +2,16 @@ import { ProductAnalyticsEvent, ProductAnalyticsSummary } from './beta.types';
 
 export const BETA_ONBOARDING_OPTIONS = {
   engineeringDisciplines: [
+    'Architecture',
+    'Chemical Engineering',
+    'Civil Engineering',
+    'Computer / Software Engineering',
     'Electrical Engineering',
-    'MEP Engineering',
-    'Commissioning',
-    'QA/QC',
-    'Project Engineering',
-    'Construction Management',
-    'Hospital Engineering',
-    'Data Center Engineering',
+    'Electronics Engineering',
+    'HSE Engineering',
+    'Industrial Engineering',
+    'Mechanical Engineering',
+    'Mechatronics / Robotics Engineering',
   ],
   experienceLevels: ['0-2 years', '3-5 years', '6-10 years', '10+ years'],
   englishLevels: ['A1', 'A2', 'B1-', 'B1', 'B1+', 'B2-', 'B2', 'B2+', 'C1-', 'C1', 'C1+', 'C2'],

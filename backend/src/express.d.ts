@@ -6,6 +6,7 @@ declare global {
       validatedBody?: Record<string, unknown>;
       validatedQuery?: Record<string, unknown>;
       auth?: AuthenticatedUser;
+      tenantId?: string;
       i18n?: {
         lang: string;
         t: (key: string) => string;

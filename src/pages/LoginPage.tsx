@@ -1,23 +1,109 @@
-import { PRODUCT_VERSION } from '@/config/product.config';
-import { ArrowRight, Award, CheckCircle2, Play, ShieldAlert, Sparkles, Zap } from 'lucide-react';
+import {
+  ArrowRight,
+  Bot,
+  Building2,
+  CheckCircle2,
+  Code2,
+  Cog,
+  Compass,
+  Cpu,
+  Factory,
+  FlaskConical,
+  Play,
+  ShieldAlert,
+  Zap,
+} from 'lucide-react';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import { useLocalizationStore } from '@/features/localization';
 
+import { Footer } from './LandingPage/Footer';
+import { Navbar } from './LandingPage/Navbar';
 import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
 import { SSOForm } from './LoginPage/SSOForm';
 import { SocialLoginButtons } from './LoginPage/SocialLoginButtons';
-import { TopNavBar } from './LoginPage/TopNavBar';
 import { AUTH_COPY } from './LoginPage/constants';
 import { useLoginHandlers } from './LoginPage/useLoginHandlers';
+
+const DISCIPLINES = [
+  {
+    id: 'architecture',
+    title: 'Architecture',
+    icon: Compass,
+    badge: 'Design, Spatial & BIM',
+  },
+  {
+    id: 'chemical',
+    title: 'Chemical Engineering',
+    icon: FlaskConical,
+    badge: 'Process & Safety',
+  },
+  {
+    id: 'civil',
+    title: 'Civil Engineering',
+    icon: Building2,
+    badge: 'Infrastructure & Structures',
+  },
+  {
+    id: 'computer_software',
+    title: 'Computer / Software Engineering',
+    icon: Code2,
+    badge: 'Cloud & Architecture',
+  },
+  {
+    id: 'electrical',
+    title: 'Electrical Engineering',
+    icon: Zap,
+    badge: 'Power & Systems',
+  },
+  {
+    id: 'electronics',
+    title: 'Electronics Engineering',
+    icon: Cpu,
+    badge: 'Embedded & Hardware',
+  },
+  {
+    id: 'hse',
+    title: 'HSE Engineering',
+    icon: ShieldAlert,
+    badge: 'Safety & Compliance',
+  },
+  {
+    id: 'industrial',
+    title: 'Industrial Engineering',
+    icon: Factory,
+    badge: 'Lean & Operations',
+  },
+  {
+    id: 'mechanical',
+    title: 'Mechanical Engineering',
+    icon: Cog,
+    badge: 'HVAC & Machinery',
+  },
+  {
+    id: 'mechatronics_robotics',
+    title: 'Mechatronics / Robotics Engineering',
+    icon: Bot,
+    badge: 'Automation & Control',
+  },
+];
 
 const LoginPage = () => {
   const h = useLoginHandlers();
   const language = useLocalizationStore((state) => state.language);
   const copy = AUTH_COPY[language] ?? AUTH_COPY.en;
+
+  const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(() => {
+    return localStorage.getItem('preselected_discipline');
+  });
+
+  const handleDisciplineSelect = (name: string) => {
+    setSelectedDiscipline(name);
+    localStorage.setItem('preselected_discipline', name);
+  };
 
   useEffect(() => {
     void h.initialize();
@@ -25,97 +111,91 @@ const LoginPage = () => {
   }, [h.initialize]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground relative overflow-hidden selection:bg-primary selection:text-primary-foreground">
+    <div className="h-screen w-screen overflow-hidden bg-background text-foreground relative selection:bg-primary selection:text-primary-foreground">
       {/* Background Glows & Technical Grid */}
       <div className="pointer-events-none absolute -top-40 left-1/4 h-[500px] w-[600px] rounded-full bg-gradient-to-br from-primary/15 via-blue-500/10 to-transparent blur-3xl opacity-60" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(128,128,128,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(128,128,128,0.03)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-      <TopNavBar />
+      {/* Fixed Top Navbar with Try Demo Action */}
+      <Navbar onDemoClick={h.handleDemoSubmit} />
 
-      <main className="flex flex-1 items-center justify-center p-6 lg:p-12 relative z-10">
-        <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left Panel: High Impact Engineering Showcase */}
-          <div className="hidden lg:flex flex-col justify-between space-y-8 pr-6">
-            <div className="space-y-4">
-              <span className="inline-flex items-center gap-2 rounded-full border border-border-soft bg-surface/80 backdrop-blur-xl px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-primary shadow-sm">
-                <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />
-                EngineerOS v{PRODUCT_VERSION} · Production Ready
+      {/* Fixed Middle Net Content Area - Bounded Strictly Between Top 64px (top-16) and Bottom 56px (bottom-14) */}
+      <main className="fixed top-16 bottom-14 inset-x-0 z-10 flex items-center justify-center px-6 lg:px-12 overflow-hidden">
+        <div className="w-full max-w-5xl h-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch py-3">
+          {/* Left Column: Pre-select Engineering Discipline */}
+          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between">
+            <div className="text-center space-y-0.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
+                Pre-Selection
               </span>
-
-              <h1 className="text-4xl font-extrabold tracking-tight text-foreground leading-tight">
-                Engineered for{' '}
-                <span className="bg-gradient-to-r from-primary via-blue-400 to-cyan-400 bg-clip-text text-transparent">
-                  Technical Excellence.
-                </span>
-              </h1>
-
-              <p className="text-sm leading-relaxed text-muted-copy font-medium max-w-md">
-                Join international MEP contractors, Civil leads, QA/QC inspectors, and software
-                engineers mastering technical communication.
+              <h2 className="text-sm font-bold text-foreground leading-none">
+                Choose Your Discipline
+              </h2>
+              <p className="text-[10px] text-muted-copy leading-tight">
+                Select your engineering field to pre-configure your curriculum.
               </p>
             </div>
 
-            {/* Feature Highlights Grid */}
-            <div className="space-y-3">
-              {[
-                {
-                  title: 'CEFR A1 to C2 Technical Path',
-                  desc: 'Calibrated specifically for engineering career milestones.',
-                  icon: Award,
-                },
-                {
-                  title: 'AI Voice & Site Briefing Tutor',
-                  desc: 'Practice site meetings, toolbox talks, and client submittals.',
-                  icon: Zap,
-                },
-                {
-                  title: 'FIDIC & RFI Corrections',
-                  desc: 'Professional AI review for technical claims and reports.',
-                  icon: CheckCircle2,
-                },
-              ].map((item) => {
-                const Icon = item.icon;
+            <div className="flex-1 flex flex-col justify-between gap-1 min-h-0 py-1">
+              {DISCIPLINES.map((d) => {
+                const Icon = d.icon;
+                const isSelected = selectedDiscipline === d.title;
                 return (
-                  <div
-                    key={item.title}
-                    className="flex items-start gap-3 rounded-xl border border-border-soft bg-surface/70 p-3.5 backdrop-blur-md transition-all hover:border-border-hover"
+                  <button
+                    key={d.id}
+                    onClick={() => handleDisciplineSelect(d.title)}
+                    className={`flex items-center gap-2.5 rounded-lg border py-1 px-3 text-left transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-primary bg-primary/5 text-primary shadow-sm font-semibold'
+                        : 'border-border-soft bg-background/50 text-foreground hover:border-primary/50'
+                    }`}
                   >
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border border-border-soft bg-background text-primary">
-                      <Icon className="h-3.5 w-3.5" />
+                    <div
+                      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
+                        isSelected
+                          ? 'border-primary bg-primary text-primary-foreground'
+                          : 'border-border-soft bg-surface text-muted-copy'
+                      }`}
+                    >
+                      <Icon className="h-3 w-3" />
                     </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-foreground">{item.title}</h3>
-                      <p className="mt-0.5 text-[11px] text-muted-copy leading-relaxed">
-                        {item.desc}
-                      </p>
+                    <div className="min-w-0 flex-1 flex items-center justify-between gap-2">
+                      <h4 className="text-xs font-bold truncate leading-none">{d.title}</h4>
+                      <span className="text-[9px] text-muted-copy truncate font-normal">
+                        {d.badge}
+                      </span>
                     </div>
-                  </div>
+                    {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />}
+                  </button>
                 );
               })}
             </div>
 
-            {/* Testimonial Quote */}
-            <div className="rounded-xl border border-border-soft bg-surface/90 p-4 backdrop-blur-md space-y-2">
-              <p className="text-xs italic text-muted-copy leading-relaxed">
-                &quot;EngVox allowed our commissioning team to present NFPA submittals confidently
-                to international clients in Dubai.&quot;
+            <div className="rounded-lg border border-border-soft bg-background/50 p-1.5 text-center">
+              <p className="text-[10px] text-muted-copy leading-none font-semibold">
+                {selectedDiscipline ? (
+                  <>
+                    Selected:{' '}
+                    <span className="font-bold text-primary truncate max-w-[200px] inline-block align-middle ml-1">
+                      {selectedDiscipline}
+                    </span>
+                  </>
+                ) : (
+                  'No discipline pre-selected.'
+                )}
               </p>
-              <div className="flex items-center justify-between text-[10px] font-bold text-foreground">
-                <span>— Lead Electrical Commissioning Engineer</span>
-                <span className="text-primary uppercase tracking-widest">Verified User</span>
-              </div>
             </div>
           </div>
 
-          {/* Right Panel: Glassmorphic Auth Form */}
-          <div className="w-full max-w-md mx-auto rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-8 shadow-2xl space-y-6 animate-in fade-in duration-300 hover:border-border-hover transition-colors">
+          {/* Right Column: Glassmorphic Auth Form */}
+          <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between">
             {/* Header / Mode Switcher */}
             <div className="text-center space-y-1">
-              <div className="inline-flex rounded-xl border border-border-soft bg-background p-1 text-xs mb-2">
+              <div className="inline-flex rounded-lg border border-border-soft bg-background p-1 text-xs mb-0.5">
                 <button
                   type="button"
                   onClick={() => h.isSignUpMode && h.toggleSignUpMode()}
-                  className={`rounded-lg px-4 py-1.5 font-bold transition-all cursor-pointer ${
+                  className={`rounded-md px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
                     !h.isSignUpMode
                       ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-copy hover:text-foreground'
@@ -126,7 +206,7 @@ const LoginPage = () => {
                 <button
                   type="button"
                   onClick={() => !h.isSignUpMode && h.toggleSignUpMode()}
-                  className={`rounded-lg px-4 py-1.5 font-bold transition-all cursor-pointer ${
+                  className={`rounded-md px-3.5 py-1 font-bold transition-all cursor-pointer text-xs ${
                     h.isSignUpMode
                       ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'text-muted-copy hover:text-foreground'
@@ -136,18 +216,18 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              <h2 className="text-lg font-bold tracking-tight text-foreground">
+              <h2 className="text-sm font-bold tracking-tight text-foreground leading-none">
                 {h.isSignUpMode ? copy.signupTitle : copy.loginTitle}
               </h2>
-              <p className="text-xs text-muted-copy font-medium">
+              <p className="text-[10px] text-muted-copy font-medium">
                 {h.isSignUpMode ? copy.signupSubtitle : copy.loginSubtitle}
               </p>
             </div>
 
             {/* Error Notification Alert */}
             {h.error && (
-              <div className="flex items-start gap-2.5 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-500 font-medium animate-in fade-in">
-                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="flex items-start gap-2 rounded-lg border border-rose-500/30 bg-rose-500/10 p-2 text-xs text-rose-500 font-medium animate-in fade-in">
+                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 <span>{h.error}</span>
               </div>
             )}
@@ -192,25 +272,25 @@ const LoginPage = () => {
 
             {/* Instant Demo Preview Login */}
             {h.isLocalDemoMode && (
-              <div className="rounded-xl border border-primary/30 bg-primary/5 p-3.5 text-center space-y-2">
+              <div className="rounded-lg border border-primary/30 bg-primary/5 p-1.5 text-center space-y-0.5">
                 <button
                   type="button"
                   onClick={h.handleDemoSubmit}
                   disabled={h.isLoading}
-                  className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer transition-colors"
                 >
-                  <Play className="h-3.5 w-3.5 fill-primary" />
+                  <Play className="h-3 w-3 fill-primary" />
                   <span>Launch Instant Demo Workspace</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <ArrowRight className="h-3 w-3" />
                 </button>
-                <p className="text-[10px] font-medium text-muted-copy leading-tight">
+                <p className="text-[8px] font-medium text-muted-copy leading-tight">
                   {copy.demoMessage}
                 </p>
               </div>
             )}
 
             {/* Terms & Privacy */}
-            <p className="text-center text-[10px] text-muted-copy leading-relaxed">
+            <p className="text-center text-[9px] text-muted-copy leading-relaxed">
               By continuing, you agree to EngVox{' '}
               <Link to="/legal/terms" className="underline hover:text-primary font-semibold">
                 Terms of Service
@@ -224,6 +304,9 @@ const LoginPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Fixed Bottom Footer */}
+      <Footer className="fixed bottom-0 inset-x-0 z-50" />
     </div>
   );
 };

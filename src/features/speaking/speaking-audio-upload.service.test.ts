@@ -30,7 +30,7 @@ describe('uploadSpeakingAudio', () => {
     });
 
     expect(fetchImpl).toHaveBeenCalledWith(
-      'http://localhost:8787/api/speaking/audio-upload',
+      'http://localhost:8787/api/v1/speaking/audio-upload',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({

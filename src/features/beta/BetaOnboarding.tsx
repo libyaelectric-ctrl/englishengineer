@@ -18,8 +18,16 @@ export const BetaOnboarding = () => {
   const userId = useAuthStore((state) => state.currentUser?.id);
   const onboardingProfile = useBetaStore((state) => state.onboardingProfile);
   const completeOnboarding = useBetaStore((state) => state.completeOnboarding);
+  const getInitialDiscipline = () => {
+    const saved = localStorage.getItem('preselected_discipline');
+    if (saved && BETA_ONBOARDING_OPTIONS.engineeringDisciplines.includes(saved)) {
+      return saved;
+    }
+    return BETA_ONBOARDING_OPTIONS.engineeringDisciplines[0];
+  };
+
   const [form, setForm] = useState<Omit<BetaOnboardingProfile, 'completedAt'>>({
-    engineeringDiscipline: BETA_ONBOARDING_OPTIONS.engineeringDisciplines[0],
+    engineeringDiscipline: getInitialDiscipline(),
     experienceLevel: BETA_ONBOARDING_OPTIONS.experienceLevels[1],
     currentEnglishLevel: BETA_ONBOARDING_OPTIONS.englishLevels[0],
     targetEnglishLevel: BETA_ONBOARDING_OPTIONS.englishLevels[6],
@@ -48,14 +56,16 @@ export const BetaOnboarding = () => {
 
   const finishOnboarding = () => {
     const professionByDiscipline: Record<string, ProfessionId> = {
+      Architecture: 'architect',
+      'Chemical Engineering': 'other',
+      'Civil Engineering': 'civil-engineer',
+      'Computer / Software Engineering': 'project-engineer',
       'Electrical Engineering': 'electrical-engineer',
-      'MEP Engineering': 'mep-engineer',
-      Commissioning: 'commissioning-engineer',
-      'QA/QC': 'qa-qc-engineer',
-      'Project Engineering': 'project-engineer',
-      'Construction Management': 'construction-manager',
-      'Hospital Engineering': 'mep-engineer',
-      'Data Center Engineering': 'electrical-engineer',
+      'Electronics Engineering': 'electrical-engineer',
+      'HSE Engineering': 'qa-qc-engineer',
+      'Industrial Engineering': 'project-engineer',
+      'Mechanical Engineering': 'mechanical-engineer',
+      'Mechatronics / Robotics Engineering': 'mechanical-engineer',
     };
     const minutes = Number.parseInt(form.dailyStudyGoal, 10) || 15;
     LearningProfileRepository.updatePreferences(userId ?? 'local-user', {

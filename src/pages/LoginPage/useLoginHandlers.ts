@@ -34,19 +34,43 @@ export const useLoginHandlers = () => {
     msg.includes('not enabled') || msg.includes('Unsupported provider');
 
   const handleSocialLogin = async (provider: 'google' | 'linkedin' | 'apple') => {
-    if (provider === 'apple') {
-      setError('Apple Sign In is coming soon. Please use Google or LinkedIn.');
-      return;
-    }
-
     const client = getSupabaseClient();
-    if (!client) {
-      setError('Social login requires Supabase authentication to be configured.');
+
+    // In demo / local mode (or when Supabase client is unconfigured), simulate instant social auth for smooth UX
+    if (!client || isLocalDemoMode) {
+      try {
+        setError(null);
+        setSocialLoading(provider);
+        useLearningStore.getState().resetAll();
+        await demoLogin();
+        const loggedUser = useAuthStore.getState().currentUser;
+        if (loggedUser) {
+          const providerName = provider.charAt(0).toUpperCase() + provider.slice(1);
+          useAuthStore.setState({
+            currentUser: {
+              ...loggedUser,
+              displayName: `${providerName} Demo Engineer`,
+              email: `demo.${provider}@engvox.io`,
+            },
+          });
+          const { LearningProfileRepository } =
+            await import('@/features/profile/profile.repository');
+          LearningProfileRepository.updatePreferences(loggedUser.id, {
+            onboardingCompleted: true,
+          });
+        }
+        setSocialLoading(null);
+        navigate(from, { replace: true });
+      } catch (err: unknown) {
+        setSocialLoading(null);
+        setError(getErrorMessage(err, `Failed to sign in with ${provider}`));
+      }
       return;
     }
 
+    // Supabase Auth Mode
     const capitalizedProvider = provider.charAt(0).toUpperCase() + provider.slice(1);
-    const notEnabledMsg = `${capitalizedProvider} login is not yet enabled. Please use email login or try the demo mode.`;
+    const notEnabledMsg = `${capitalizedProvider} login is not yet configured on Supabase. Use email login or try demo mode.`;
 
     try {
       setSocialLoading(provider);
