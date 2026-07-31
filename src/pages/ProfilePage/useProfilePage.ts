@@ -187,7 +187,9 @@ export const useProfilePage = () => {
       'ai_coach_pro_state',
     ].forEach((k) => storage.remove(k));
     if (currentUser?.id)
-      (await import('@/features/profile/profile.repository')).LearningProfileRepository.reset(currentUser.id);
+      (await import('@/features/profile/profile.repository')).LearningProfileRepository.reset(
+        currentUser.id
+      );
     storage.clear();
     navigate('/start');
   }, [clearConfirmation, currentUser?.id, navigate]);
