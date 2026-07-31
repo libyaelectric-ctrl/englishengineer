@@ -1,4 +1,4 @@
-import { Command, Keyboard, X } from 'lucide-react';
+import { Keyboard, X } from 'lucide-react';
 
 import { useEffect } from 'react';
 
