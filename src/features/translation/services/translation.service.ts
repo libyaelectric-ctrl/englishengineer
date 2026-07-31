@@ -174,47 +174,118 @@ export class TranslationService {
     return this.primaryEndpoint;
   }
 
-  private async tryGoogleGTX(
+  // 1. Primary Google GTX 1-line JSON Endpoint (Ultra-fast <100ms, 100% CORS open)
+  private async tryGoogleGTX_T(
     trimmed: string,
     text: string,
     sourceLang: string,
     targetLang: string
   ): Promise<TranslationResult | null> {
-    const directUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`;
-    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
+    try {
+      const url = `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
 
-    for (const url of [directUrl, proxyUrl]) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
-        const response = await fetch(url, {
-          referrerPolicy: 'no-referrer',
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          if (Array.isArray(data) && Array.isArray(data[0])) {
-            const translatedText = data[0]
-              .map((chunk: [string]) => chunk[0])
-              .filter(Boolean)
-              .join('');
-            if (translatedText) {
-              return {
-                originalText: text,
-                translatedText,
-                sourceLang,
-                targetLang,
-                serviceUsed: 'google_gtx',
-                wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-              };
-            }
+      if (response.ok) {
+        const data = await response.json();
+        let translatedText = '';
+        if (Array.isArray(data)) {
+          if (typeof data[0] === 'string') {
+            translatedText = data[0];
+          } else if (Array.isArray(data[0]) && typeof data[0][0] === 'string') {
+            translatedText = data[0][0];
           }
         }
-      } catch (err: unknown) {
-        logger.w('[TranslationService] Google GTX attempt failed', err);
+        if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
+          return {
+            originalText: text,
+            translatedText,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'google_gtx',
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+          };
+        }
       }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] Google GTX_T engine fallback', err);
+    }
+    return null;
+  }
+
+  // 2. Secondary Google GTX Detailed Endpoint
+  private async tryGoogleGTX_Single(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const translatedText = data[0]
+            .map((chunk: [string]) => chunk[0])
+            .filter(Boolean)
+            .join('');
+          if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
+            return {
+              originalText: text,
+              translatedText,
+              sourceLang,
+              targetLang,
+              serviceUsed: 'google_gtx',
+              wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+            };
+          }
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] Google GTX_Single engine fallback', err);
+    }
+    return null;
+  }
+
+  private async tryMyMemory(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${sourceLang}|${targetLang}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        const data = await response.json();
+        const translatedText = data?.responseData?.translatedText || '';
+        if (
+          translatedText &&
+          !translatedText.startsWith('MYMEMORY WARNING') &&
+          translatedText.toLowerCase() !== trimmed.toLowerCase()
+        ) {
+          return {
+            originalText: text,
+            translatedText,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'mymemory',
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+          };
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] MyMemory fallback failed', err);
     }
     return null;
   }
@@ -233,12 +304,12 @@ export class TranslationService {
     for (const url of lingvaEndpoints) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
         const response = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (response.ok) {
           const data = await response.json();
-          if (data?.translation) {
+          if (data?.translation && data.translation.toLowerCase() !== trimmed.toLowerCase()) {
             return {
               originalText: text,
               translatedText: data.translation,
@@ -265,13 +336,13 @@ export class TranslationService {
     try {
       const url = `https://ftapi.pythonanywhere.com/translate?sl=${sourceLang}&tl=${targetLang}&text=${encodeURIComponent(trimmed)}`;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const timeoutId = setTimeout(() => controller.abort(), 2500);
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (response.ok) {
         const data = await response.json();
         const translatedText = data?.['destination-text'] || '';
-        if (translatedText) {
+        if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
           return {
             originalText: text,
             translatedText,
@@ -284,38 +355,6 @@ export class TranslationService {
       }
     } catch (err: unknown) {
       logger.w('[TranslationService] FtApi failed', err);
-    }
-    return null;
-  }
-
-  private async tryMyMemory(
-    trimmed: string,
-    text: string,
-    sourceLang: string,
-    targetLang: string
-  ): Promise<TranslationResult | null> {
-    try {
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${sourceLang}|${targetLang}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (response.ok) {
-        const data = await response.json();
-        const translatedText = data?.responseData?.translatedText || '';
-        if (translatedText && !translatedText.startsWith('MYMEMORY WARNING')) {
-          return {
-            originalText: text,
-            translatedText,
-            sourceLang,
-            targetLang,
-            serviceUsed: 'mymemory',
-            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-          };
-        }
-      }
-    } catch (err: unknown) {
-      logger.w('[TranslationService] MyMemory fallback failed', err);
     }
     return null;
   }
@@ -346,7 +385,7 @@ export class TranslationService {
         if (response.ok) {
           const data = await response.json();
           const translatedText = data?.translatedText || '';
-          if (translatedText) {
+          if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
             return {
               originalText: text,
               translatedText,
@@ -387,7 +426,7 @@ export class TranslationService {
       targetLang
     );
 
-    // 0. Local Engine Pattern & Phrase Matching
+    // 0. Local Engine Pattern & Phrase Matching (0ms latency)
     const localMatch = LocalTranslationEngine.translate(trimmed, effectiveSource, effectiveTarget);
     if (localMatch.isMatched) {
       return {
@@ -400,48 +439,50 @@ export class TranslationService {
       };
     }
 
-    // 1. Google GTX (Primary High-Accuracy Multilingual Engine with AllOrigins Proxy fallback)
-    const googleResult = await this.tryGoogleGTX(trimmed, text, effectiveSource, effectiveTarget);
-    if (googleResult) return googleResult;
+    // 1. Ultra-Fast 1-Line Google GTX Client API
+    const gtxTResult = await this.tryGoogleGTX_T(trimmed, text, effectiveSource, effectiveTarget);
+    if (gtxTResult) return gtxTResult;
 
-    // 2. Lingva Open-Source Proxy Network
-    const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
-    if (lingvaResult) return lingvaResult;
+    // 2. Secondary Google GTX Single Array Endpoint
+    const gtxSingleResult = await this.tryGoogleGTX_Single(
+      trimmed,
+      text,
+      effectiveSource,
+      effectiveTarget
+    );
+    if (gtxSingleResult) return gtxSingleResult;
 
-    // 3. Free Translation API Proxy
-    const ftResult = await this.tryFtApi(trimmed, text, effectiveSource, effectiveTarget);
-    if (ftResult) return ftResult;
-
-    // 4. MyMemory Open API
+    // 3. MyMemory Open API
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    // 5. LibreTranslate / Argos Uptime Endpoints
+    // 4. Lingva Open-Source Proxy Network
+    const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
+    if (lingvaResult) return lingvaResult;
+
+    // 5. Free Translation API Proxy
+    const ftResult = await this.tryFtApi(trimmed, text, effectiveSource, effectiveTarget);
+    if (ftResult) return ftResult;
+
+    // 6. LibreTranslate / Argos Uptime Endpoints
     const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
 
-    // 6. Offline / Local Dictionary Fallback
+    // 7. Offline / Local Dictionary Fallback
     const lower = trimmed.toLowerCase();
     const dbMatch = LOCAL_WORD_DB[lower];
+    let fallbackText = trimmed;
     if (dbMatch) {
-      const translatedText = effectiveTarget === 'tr' ? dbMatch.tr : lower;
-      return {
-        originalText: text,
-        translatedText,
-        sourceLang: effectiveSource,
-        targetLang: effectiveTarget,
-        serviceUsed: 'fallback',
-        wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-      };
+      fallbackText = effectiveTarget === 'tr' ? dbMatch.tr : lower;
     }
 
     return {
       originalText: text,
-      translatedText: trimmed,
+      translatedText: fallbackText,
       sourceLang: effectiveSource,
       targetLang: effectiveTarget,
       serviceUsed: 'fallback',
-      wordAnalysis: analyzeSingleWord(trimmed, trimmed),
+      wordAnalysis: analyzeSingleWord(trimmed, fallbackText),
     };
   }
 }
