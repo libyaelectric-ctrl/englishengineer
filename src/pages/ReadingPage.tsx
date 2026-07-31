@@ -33,10 +33,12 @@ const LockedReadingView = ({
   vocabLearned,
   grammarLearned,
   onBypassUnlocked,
+  onPreview,
 }: {
   vocabLearned: number;
   grammarLearned: number;
   onBypassUnlocked: () => void;
+  onPreview: () => void;
 }) => {
   const [bypassOpen, setBypassOpen] = useState(false);
 
@@ -62,6 +64,15 @@ const LockedReadingView = ({
           >
             <KeyRound className="h-4 w-4" />
             <span>Placement Test or Senior Engineer Bypass</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onPreview}
+            className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-muted-copy hover:text-foreground transition cursor-pointer"
+          >
+            <Eye className="h-3.5 w-3.5 text-emerald-500" />
+            <span>Try 1 Free Sample Preview Mission</span>
           </button>
 
           <div className="flex gap-2 justify-center pt-1">
@@ -330,6 +341,7 @@ const ReadingPage = () => {
         vocabLearned={vocabLearned}
         grammarLearned={grammarLearned}
         onBypassUnlocked={() => setBypassUnlocked(true)}
+        onPreview={() => setPreviewMode(true)}
       />
     );
   }

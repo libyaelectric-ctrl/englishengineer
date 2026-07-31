@@ -1,4 +1,4 @@
-import { Eye, KeyRound, Lock, Sparkles } from 'lucide-react';
+import { Eye, KeyRound, Lock } from 'lucide-react';
 
 import { useState } from 'react';
 
