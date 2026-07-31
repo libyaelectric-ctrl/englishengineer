@@ -1,6 +1,7 @@
 import {
   ArrowRight,
   Bot,
+  Building,
   Building2,
   CheckCircle2,
   Code2,
@@ -9,8 +10,11 @@ import {
   Cpu,
   Factory,
   FlaskConical,
+  HelpCircle,
   Play,
   ShieldAlert,
+  ShieldCheck,
+  Sparkles,
   Zap,
 } from 'lucide-react';
 
@@ -23,8 +27,13 @@ import { useLocalizationStore } from '@/features/localization';
 import { Footer } from './LandingPage/Footer';
 import { Navbar } from './LandingPage/Navbar';
 import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
+import { GuidedSpotlightTour } from './LoginPage/GuidedSpotlightTour';
+import { MagicLinkAuthModal } from './LoginPage/MagicLinkAuthModal';
+import { OnboardingWizardModal } from './LoginPage/OnboardingWizardModal';
 import { SSOForm } from './LoginPage/SSOForm';
+import { SecuritySessionsModal } from './LoginPage/SecuritySessionsModal';
 import { SocialLoginButtons } from './LoginPage/SocialLoginButtons';
+import { WorkspaceSwitcherModal } from './LoginPage/WorkspaceSwitcherModal';
 import { AUTH_COPY } from './LoginPage/constants';
 import { useLoginHandlers } from './LoginPage/useLoginHandlers';
 
@@ -95,6 +104,12 @@ const LoginPage = () => {
   const h = useLoginHandlers();
   const language = useLocalizationStore((state) => state.language);
   const copy = AUTH_COPY[language] ?? AUTH_COPY.en;
+
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+  const [securityOpen, setSecurityOpen] = useState(false);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [magicLinkOpen, setMagicLinkOpen] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
 
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(() => {
     return localStorage.getItem('preselected_discipline');
@@ -293,6 +308,45 @@ const LoginPage = () => {
                 </div>
               )}
 
+              {/* Section 3 Interactive Auth Toolset Toolbar (Items 21-30) */}
+              <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1 border-t border-border-soft/60">
+                <button
+                  type="button"
+                  onClick={() => setOnboardingOpen(true)}
+                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
+                >
+                  <Sparkles className="h-2.5 w-2.5" /> 60s Onboarding
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setWorkspaceOpen(true)}
+                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
+                >
+                  <Building className="h-2.5 w-2.5 text-primary" /> Workspace Switcher
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSecurityOpen(true)}
+                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
+                >
+                  <ShieldCheck className="h-2.5 w-2.5 text-emerald-500" /> Security & 2FA
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMagicLinkOpen(true)}
+                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
+                >
+                  <Zap className="h-2.5 w-2.5 text-amber-500" /> Magic Link
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTourOpen(true)}
+                  className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
+                >
+                  <HelpCircle className="h-2.5 w-2.5" /> Guided Tour
+                </button>
+              </div>
+
               {/* Terms & Privacy & Back to Home */}
               <div className="text-center space-y-1">
                 <p className="text-[9px] text-muted-copy leading-relaxed">
@@ -319,6 +373,32 @@ const LoginPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Section 3 Modals (Items 21 - 30) */}
+      <OnboardingWizardModal
+        isOpen={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+        onComplete={(data) => {
+          setSelectedDiscipline(data.discipline);
+          localStorage.setItem('preselected_discipline', data.discipline);
+        }}
+      />
+
+      <SecuritySessionsModal isOpen={securityOpen} onClose={() => setSecurityOpen(false)} />
+
+      <WorkspaceSwitcherModal
+        isOpen={workspaceOpen}
+        onClose={() => setWorkspaceOpen(false)}
+        onSelectWorkspace={(wsName) => console.log('Switched to workspace:', wsName)}
+      />
+
+      <MagicLinkAuthModal
+        isOpen={magicLinkOpen}
+        onClose={() => setMagicLinkOpen(false)}
+        initialEmail={h.email}
+      />
+
+      <GuidedSpotlightTour isOpen={tourOpen} onClose={() => setTourOpen(false)} />
 
       {/* Fixed Bottom Footer */}
       <Footer className="fixed bottom-0 inset-x-0 z-50" />
