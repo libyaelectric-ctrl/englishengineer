@@ -6,9 +6,10 @@ import { Link, useLocation } from 'react-router-dom';
 
 interface NavbarProps {
   onDemoClick?: () => void;
+  onOpenProofreader?: () => void;
 }
 
-export function Navbar({ onDemoClick }: NavbarProps) {
+export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
   const location = useLocation();
@@ -69,6 +70,16 @@ export function Navbar({ onDemoClick }: NavbarProps) {
             >
               Pricing
             </Link>
+            {onOpenProofreader && (
+              <button
+                type="button"
+                onClick={onOpenProofreader}
+                className="inline-flex items-center gap-1 text-primary hover:underline transition-colors font-bold cursor-pointer"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>AI Proofreader</span>
+              </button>
+            )}
           </div>
         )}
 

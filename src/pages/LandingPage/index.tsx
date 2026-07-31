@@ -21,6 +21,7 @@ import { PwaInstallBanner } from './PwaInstallBanner';
 import { ReportPdfExportModal } from './ReportPdfExportModal';
 import { SocialProofMarquee } from './SocialProofMarquee';
 import { TechnicalAudioPlayerWidget } from './TechnicalAudioPlayerWidget';
+import { TechnicalProofreaderModal } from './TechnicalProofreaderModal';
 import { VoicePitchMeterWidget } from './VoicePitchMeterWidget';
 import { WorkflowSection } from './WorkflowSection';
 import { STRUCTURED_DATA } from './constants';
@@ -29,6 +30,7 @@ const LandingPage = () => {
   const [scrollShift, setScrollShift] = useState(0);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [reportExportOpen, setReportExportOpen] = useState(false);
+  const [proofreaderOpen, setProofreaderOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -72,7 +74,7 @@ const LandingPage = () => {
         canonical="/"
         jsonLd={STRUCTURED_DATA}
       />
-      <Navbar />
+      <Navbar onOpenProofreader={() => setProofreaderOpen(true)} />
       <HeroSection scrollShift={scrollShift} />
       <SocialProofMarquee />
       <DisciplineShowcase />
@@ -92,10 +94,14 @@ const LandingPage = () => {
       <PricingSection />
       <FAQSection />
 
-      {/* Section 5 Modals & Banners (PWA, Shortcuts, PDF Exporter) */}
+      {/* Modals & Banners */}
       <PwaInstallBanner />
       <KeyboardShortcutsModal isOpen={shortcutsOpen} onClose={() => setShortcutsOpen(false)} />
       <ReportPdfExportModal isOpen={reportExportOpen} onClose={() => setReportExportOpen(false)} />
+      <TechnicalProofreaderModal
+        isOpen={proofreaderOpen}
+        onClose={() => setProofreaderOpen(false)}
+      />
 
       <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
     </main>
