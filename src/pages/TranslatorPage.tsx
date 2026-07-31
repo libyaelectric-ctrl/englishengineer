@@ -5,6 +5,7 @@ import {
   Copy,
   Globe2,
   Info,
+  Keyboard,
   RotateCcw,
   Sparkles,
   Volume2,
@@ -48,6 +49,14 @@ const SPEECH_LANG_MAP: Record<string, string> = {
   ko: 'ko-KR',
   pt: 'pt-PT',
   pl: 'pl-PL',
+};
+
+const VIRTUAL_CHAR_BARS: Partial<Record<SupportedLang, string[]>> = {
+  ar: ['مرحبا', 'تعال', 'شكرا', 'نعم', 'لا', 'كيف حالك', 'السلام عليكم', 'مشروع'],
+  ru: ['Привет', 'Приходи', 'Спасибо', 'Да', 'Нет', 'Как дела', 'Здравствуйте'],
+  zh: ['你好', '过来', '谢谢', '是的', '不是', '工程', '项目'],
+  ja: ['こんにちは', '来て', 'ありがとう', 'はい', 'いいえ', 'プロジェクト'],
+  ko: ['안녕하세요', '오세요', '감사합니다', '네', '아니오', '프로젝트'],
 };
 
 const LanguageBar: React.FC<{
@@ -119,60 +128,89 @@ const SourceInputPanel: React.FC<{
   isPlayingAudio,
   handleClear,
   speakText,
-}) => (
-  <div className="space-y-2 relative flex flex-col justify-between">
-    <div>
-      <div className="flex items-center justify-between mb-2">
-        <label className="text-xs font-bold text-foreground flex items-center gap-2">
-          Source Text / Technical Document
-          {inputText.trim() && (
+}) => {
+  const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
+
+  return (
+    <div className="space-y-2 relative flex flex-col justify-between">
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-xs font-bold text-foreground flex items-center gap-2">
+            Source Text / Technical Document
+            {inputText.trim() && (
+              <button
+                type="button"
+                onClick={() => speakText(inputText, sourceLang, 'source')}
+                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${
+                  isPlayingAudio === 'source'
+                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
+                    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy'
+                }`}
+                title="Listen Source Text Audio"
+              >
+                <Volume2 className="h-3.5 w-3.5" />
+                <span>{isPlayingAudio === 'source' ? 'Playing...' : 'Audio'}</span>
+              </button>
+            )}
+          </label>
+
+          {inputText && (
             <button
               type="button"
-              onClick={() => speakText(inputText, sourceLang, 'source')}
-              className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${
-                isPlayingAudio === 'source'
-                  ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
-                  : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy'
-              }`}
-              title="Listen Source Text Audio"
+              onClick={handleClear}
+              className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1"
             >
-              <Volume2 className="h-3.5 w-3.5" />
-              <span>{isPlayingAudio === 'source' ? 'Playing...' : 'Audio'}</span>
+              <RotateCcw className="h-3 w-3" /> Clear Text
             </button>
           )}
-        </label>
+        </div>
 
-        {inputText && (
-          <button
-            type="button"
-            onClick={handleClear}
-            className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1"
-          >
-            <RotateCcw className="h-3 w-3" /> Clear Text
-          </button>
+        <textarea
+          rows={8}
+          dir={sourceLang === 'ar' ? 'rtl' : 'ltr'}
+          lang={sourceLang}
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          placeholder={
+            sourceLang === 'ar'
+              ? 'أدخل النص الفني أو المواصفات الهندسية...'
+              : 'Enter technical text, engineering specs, contract clauses, or any words to translate...'
+          }
+          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
+        />
+
+        {/* Quick Character / Phrase Helper for Non-Latin Keyboards */}
+        {quickChars && (
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 bg-background/50 p-2 rounded-lg border border-border-soft">
+            <span className="text-[10px] font-bold text-muted-copy flex items-center gap-1">
+              <Keyboard className="h-3 w-3 text-primary" /> Hızlı Ekle:
+            </span>
+            {quickChars.map((phrase) => (
+              <button
+                key={phrase}
+                type="button"
+                onClick={() => setInputText(inputText ? `${inputText} ${phrase}` : phrase)}
+                className="px-2 py-0.5 rounded bg-surface hover:bg-surface-hover border border-border-soft text-[11px] font-medium text-foreground transition cursor-pointer"
+              >
+                {phrase}
+              </button>
+            ))}
+          </div>
         )}
       </div>
 
-      <textarea
-        rows={9}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-        placeholder="Enter technical text, engineering specs, contract clauses, or any words to translate..."
-        className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
-      />
+      {!liveTranslateEnabled && (
+        <button
+          type="submit"
+          disabled={isTranslating || !inputText.trim()}
+          className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
+        >
+          <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
+        </button>
+      )}
     </div>
-
-    {!liveTranslateEnabled && (
-      <button
-        type="submit"
-        disabled={isTranslating || !inputText.trim()}
-        className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
-      >
-        <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
-      </button>
-    )}
-  </div>
-);
+  );
+};
 
 const OutputPanel: React.FC<{
   translatedText: string;
@@ -237,8 +275,10 @@ const OutputPanel: React.FC<{
 
     <div className="relative">
       <textarea
-        rows={9}
+        rows={8}
         readOnly
+        dir={targetLang === 'ar' ? 'rtl' : 'ltr'}
+        lang={targetLang}
         value={isTranslating ? 'Translating...' : translatedText}
         placeholder="Translated output will appear here automatically..."
         className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
@@ -412,12 +452,12 @@ export const TranslatorPage = () => {
     <main className="mx-auto w-full max-w-6xl space-y-6 pb-12 animate-in fade-in">
       <PageMetadata
         title="Engineering Multilingual Translator — Open-Source Engine"
-        description="Multilingual EN, TR, AR, ZH, RU, DE, ES, IT, FR technical translation engine with audio speech synthesis."
+        description="Multilingual EN, TR, AR, ZH, RU, DE, ES, IT, FR, JA, KO, PT, PL technical translation engine with audio speech synthesis."
       />
 
       <PageHeader
         title="Engineering Instant Translator"
-        description="Open-source multi-lingual engineering translation engine supporting EN, TR, AR, ZH, RU, DE, ES, IT & FR with audio speech synthesis."
+        description="Open-source multi-lingual engineering translation engine supporting 13 languages with audio speech synthesis and automatic RTL layout."
       />
 
       {/* Main Container Card - Full Width 6XL Spacing */}
