@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { LockProgressBar } from '@/shared/components/LockProgressBar';
 import { MetricCard } from '@/shared/components/MetricCard';
-import { PlacementBypassModal } from '@/shared/components/PlacementBypassModal';
 
 import { useGrammarStore } from '@/features/grammar';
 import {
@@ -16,6 +15,7 @@ import {
   type ContentLevelFilter,
   EmptyLevelState,
   LevelContentFilter,
+  PlacementBypassModal,
 } from '@/features/level-system';
 import { isProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
 import type { VocabularyItem } from '@/features/reading';

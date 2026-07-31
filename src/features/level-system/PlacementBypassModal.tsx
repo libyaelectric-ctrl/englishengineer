@@ -2,7 +2,7 @@ import { Award, CheckCircle2, KeyRound, Sparkles, X, Zap } from 'lucide-react';
 
 import { useState } from 'react';
 
-import { setProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
+import { setProgressionBypassed } from './progression-lock.helpers';
 
 interface PlacementBypassModalProps {
   isOpen: boolean;
