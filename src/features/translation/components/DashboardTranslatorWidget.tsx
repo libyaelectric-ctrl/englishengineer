@@ -129,11 +129,9 @@ const TranslationGrid = ({
     <div className="space-y-2 relative">
       <div className="flex items-center justify-between">
         <label htmlFor="translator-source" className="text-xs font-bold text-foreground">Source Text / Word</label>
-        {inputText && (
-          <button type="button" onClick={onClear} className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1">
-            <RotateCcw className="h-3 w-3" /> Clear
-          </button>
-        )}
+        <button type="button" onClick={onClear} disabled={!inputText} className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1 disabled:opacity-30">
+          <RotateCcw className="h-3 w-3" /> Clear
+        </button>
       </div>
       <textarea id="translator-source" rows={4} value={inputText} onChange={(e) => setInputText(e.target.value)} placeholder="Type or paste English/Turkish technical text or single word..." className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none transition-all" />
       {!autoTranslateEnabled && (
