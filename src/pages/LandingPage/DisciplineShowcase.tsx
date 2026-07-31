@@ -10,6 +10,7 @@ import {
   Factory,
   FlaskConical,
   ShieldAlert,
+  Volume2,
   Zap,
 } from 'lucide-react';
 
@@ -262,14 +263,52 @@ export function DisciplineShowcase() {
 
               {/* Right Column: Sample Term & Direct Practice CTA (5 Cols) */}
               <div className="lg:col-span-5 flex flex-col justify-between gap-3">
-                {/* Sample Term Box */}
-                <div className="rounded-lg bg-surface border border-border-soft p-3">
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-0.5">
-                    Sample Technical Term
-                  </span>
+                {/* ITEM 2: Sample Technical Term & Audio Preview Player */}
+                <div className="rounded-lg bg-surface border border-border-soft p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy">
+                      Sample Technical Term
+                    </span>
+                    <span className="text-[9px] font-bold text-emerald-600 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20 font-mono">
+                      AUDIO READY 🔊
+                    </span>
+                  </div>
                   <p className="text-xs sm:text-sm font-bold text-primary truncate">
                     {active.sampleTerm}
                   </p>
+
+                  {/* Audio Preview Trigger Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const synth = window.speechSynthesis;
+                      if (synth) {
+                        synth.cancel();
+                        const u = new SpeechSynthesisUtterance(
+                          `${active.title}. Sample term: ${active.sampleTerm}. ${active.scenarios[0]}`
+                        );
+                        u.rate = 0.95;
+                        synth.speak(u);
+                      }
+                    }}
+                    className="w-full flex items-center justify-between gap-2 rounded bg-primary/10 border border-primary/25 px-2.5 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition cursor-pointer"
+                  >
+                    <span className="flex items-center gap-1.5">
+                      <Volume2 className="h-3.5 w-3.5 text-primary animate-pulse" />
+                      <span>Listen 10s Technical Voice Sample</span>
+                    </span>
+                    <span className="flex items-center gap-0.5 h-3">
+                      <span className="w-0.5 h-2 bg-primary rounded-full animate-pulse" />
+                      <span
+                        className="w-0.5 h-3 bg-primary rounded-full animate-pulse"
+                        style={{ animationDelay: '150ms' }}
+                      />
+                      <span
+                        className="w-0.5 h-1.5 bg-primary rounded-full animate-pulse"
+                        style={{ animationDelay: '300ms' }}
+                      />
+                    </span>
+                  </button>
                 </div>
 
                 {/* Practice CTA Box */}

@@ -1,0 +1,1 @@
+export { PdfSpecExtractor } from './PdfSpecExtractor';

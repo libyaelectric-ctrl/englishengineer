@@ -66,3 +66,7 @@ gece.png
 .gnndz.txt
 bundle-report.html
 .env.staging
+
+# One-time analysis outputs
+analysis_output/
+*.py

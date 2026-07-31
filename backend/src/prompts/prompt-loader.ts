@@ -68,8 +68,6 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
   return loadPrompt('json-structure.md');
 };
 
-export const getJsonStructureInstruction = (): string => loadPrompt('json-structure.md');
-
 interface PracticeContext {
   recentMistakes?: Array<{
     category: string;

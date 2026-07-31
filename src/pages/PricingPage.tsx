@@ -1,4 +1,4 @@
-import { Building2, Check, MinusCircle, Sparkles, Zap } from 'lucide-react';
+import { Building2, Check, Cpu, Globe, HelpCircle, MinusCircle, Sparkles, Zap } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -17,8 +17,11 @@ import {
 } from '@/features/billing';
 import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
+import { CurrencyConfig } from '@/features/billing/currency.config';
 
 import { Navbar } from '@/pages/LandingPage/Navbar';
+import { PricingAddonsCard } from '@/pages/LandingPage/PricingAddonsCard';
+import { SalesChatModal } from '@/pages/LandingPage/SalesChatModal';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
@@ -40,25 +43,23 @@ const ACCESS_BADGES: Record<string, string> = {
 
 const getAccessBadge = (id: string): string => ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
 
-const ANNUAL_PRICES: Record<string, string> = {
-  pro: '$23',
-  project: '$47',
-  exec: '$79',
-  private: '$799',
+const BASE_USD_MAP: Record<string, { monthly: number; annual: number }> = {
+  free: { monthly: 0, annual: 0 },
+  pro: { monthly: 29, annual: 23 },
+  project: { monthly: 59, annual: 47 },
+  exec: { monthly: 99, annual: 79 },
+  private: { monthly: 999, annual: 799 },
 };
 
-const MONTHLY_PRICES: Record<string, string> = {
-  free: '$0',
-  pro: '$29',
-  project: '$59',
-  exec: '$99',
-  private: '$999',
-};
-
-const getCalculatedPrice = (plan: CommercialPlanPreview, isAnnual: boolean): string => {
-  if (plan.id === 'free') return '$0';
-  const prices = isAnnual ? ANNUAL_PRICES : MONTHLY_PRICES;
-  return prices[plan.id] ?? plan.price;
+const getCalculatedPrice = (
+  plan: CommercialPlanPreview,
+  isAnnual: boolean,
+  currencyCode = 'USD'
+): string => {
+  if (plan.id === 'free') return CurrencyConfig.formatPrice(0, currencyCode);
+  const p = BASE_USD_MAP[plan.id] || { monthly: 29, annual: 23 };
+  const usd = isAnnual ? p.annual : p.monthly;
+  return CurrencyConfig.formatPrice(usd, currencyCode);
 };
 
 const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
@@ -226,6 +227,8 @@ const PricingPage = () => {
     return isAnnual ? '/ mo (billed yearly)' : '/ month';
   };
 
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
+
   return (
     <main className="bg-background text-foreground min-h-screen relative z-10 pb-16 selection:bg-primary selection:text-primary-foreground">
       <PageMetadata
@@ -235,7 +238,7 @@ const PricingPage = () => {
 
       <Navbar />
 
-      {/* Header & Billing Cycle Switcher */}
+      {/* Header & Billing Cycle Switcher with Multi-Currency (Item 15) */}
       <section className="pt-20 sm:pt-24 pb-8 px-6 md:px-12 max-w-7xl mx-auto border-b border-border-soft">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
@@ -250,34 +253,52 @@ const PricingPage = () => {
             </h1>
           </div>
 
-          {/* Monthly / Annual Toggle */}
-          <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-2 shadow-sm shrink-0">
-            <span
-              className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Monthly
-            </span>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            {/* ITEM 15: Global Currency Switcher */}
+            <div className="flex items-center gap-1.5 bg-surface px-3 py-1.5 rounded-xl border border-border-soft text-xs font-bold shadow-sm">
+              <Globe className="h-4 w-4 text-primary" />
+              <select
+                value={selectedCurrency}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
+                className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
+              >
+                {CurrencyConfig.CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code} className="bg-background text-foreground">
+                    {c.flag} {c.code} ({c.symbol}) — {c.region}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => setIsAnnual(!isAnnual)}
-              className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
-            >
+            {/* Monthly / Annual Toggle */}
+            <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-2 shadow-sm">
               <span
-                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
-                  isAnnual ? 'translate-x-5' : 'translate-x-0'
-                }`}
-              />
-            </button>
-
-            <span
-              className={`text-xs font-bold transition-colors ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Annual{' '}
-              <span className="ml-1 rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[9px] font-bold uppercase border border-primary/20">
-                Save 20%
+                className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+              >
+                Monthly
               </span>
-            </span>
+
+              <button
+                type="button"
+                onClick={() => setIsAnnual(!isAnnual)}
+                className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
+                    isAnnual ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+
+              <span
+                className={`text-xs font-bold transition-colors ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+              >
+                Annual{' '}
+                <span className="ml-1 rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[9px] font-bold uppercase border border-primary/20">
+                  Save 20%
+                </span>
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -303,85 +324,94 @@ const PricingPage = () => {
             return (
               <article
                 key={plan.id}
-                className={`relative flex flex-col justify-between rounded-xl border p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+                className={`relative flex flex-col justify-between rounded-xl p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
                   isHighlighted
-                    ? 'border-2 border-primary shadow-md bg-surface relative scale-[1.01]'
+                    ? 'border-2 border-primary shadow-xl scale-[1.01]'
                     : 'border border-border-soft'
                 }`}
               >
+                {/* ITEM 16: Border-Beam Halo for Pro Plan */}
+                {plan.id === 'pro' && (
+                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-amber-400 via-primary to-indigo-600 blur-sm opacity-40 animate-ambient-glow pointer-events-none" />
+                )}
+
                 {badge && (
                   <div
-                    className={`absolute -top-2.5 left-3 rounded-full ${badge.color} px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
+                    className={`absolute -top-3 left-3 rounded-full ${badge.color} px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1 z-20`}
                   >
                     <badge.icon className="h-3 w-3" /> {badge.label}
                   </div>
                 )}
 
-                <div>
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-sm font-bold text-foreground">{plan.name}</h3>
-                    <span className="rounded border border-border-soft bg-background px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
-                      {getAccessBadge(plan.id)}
-                    </span>
-                  </div>
+                <div className="relative z-10 flex flex-col h-full justify-between">
+                  <div>
+                    <div className="flex items-start justify-between mb-2 gap-1">
+                      <h3 className="text-xs sm:text-sm font-extrabold text-foreground truncate">
+                        {plan.name}
+                      </h3>
+                      <span className="rounded border border-border-soft bg-background px-1.5 py-0.5 text-[8px] font-bold tracking-wider text-muted-copy uppercase font-mono shrink-0">
+                        {getAccessBadge(plan.id)}
+                      </span>
+                    </div>
 
-                  <div className="flex items-baseline gap-1 mb-2">
-                    <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
-                      {getCalculatedPrice(plan, isAnnual)}
-                    </span>
-                    <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
-                      {billingCycleLabel(plan.id)}
-                    </span>
-                  </div>
+                    <div className="flex items-baseline gap-1 mb-2 flex-wrap">
+                      <span className="text-xl sm:text-2xl font-extrabold tracking-tight text-foreground font-mono">
+                        {getCalculatedPrice(plan, isAnnual, selectedCurrency)}
+                      </span>
+                      <span className="text-[9px] font-bold text-muted-copy uppercase tracking-wider">
+                        {billingCycleLabel(plan.id)}
+                      </span>
+                    </div>
 
-                  <p className="text-xs text-muted-copy leading-relaxed font-medium min-h-[32px]">
-                    {plan.audience}
-                  </p>
-
-                  <div className="mt-2.5 rounded-lg border border-border-soft bg-background p-2">
-                    <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
-                      Target Audience:
+                    <p className="text-xs text-muted-copy leading-relaxed font-medium min-h-[32px]">
+                      {plan.audience}
                     </p>
-                    <p className="text-xs font-bold text-foreground truncate">{plan.bestFor}</p>
+
+                    <div className="mt-2.5 rounded-lg border border-border-soft bg-background p-2">
+                      <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
+                        Target Audience:
+                      </p>
+                      <p className="text-xs font-bold text-foreground truncate">{plan.bestFor}</p>
+                    </div>
+
+                    <div className="mt-3 border-t border-border-soft/60 pt-2.5">
+                      <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider mb-2">
+                        Key Included Features:
+                      </p>
+                      <ul className="space-y-2">
+                        {plan.benefits.map((b) => (
+                          <li
+                            key={b}
+                            className="flex items-start gap-2 text-xs text-foreground font-medium"
+                          >
+                            <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                            <span className="leading-tight">{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
 
-                  <div className="mt-3 border-t border-border-soft/60 pt-2.5">
-                    <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider mb-2">
-                      Key Included Features:
-                    </p>
-                    <ul className="space-y-2">
-                      {plan.benefits.map((b) => (
-                        <li
-                          key={b}
-                          className="flex items-start gap-2 text-xs text-foreground font-medium"
-                        >
-                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                          <span className="leading-tight">{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                  <div className="mt-4 pt-2.5 border-t border-border-soft">
+                    <div className="flex items-start gap-1.5 text-[10px] text-muted-copy font-medium mb-2.5">
+                      <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy/60" />
+                      <span className="leading-tight">{plan.notIncluded}</span>
+                    </div>
 
-                <div className="mt-4 pt-2.5 border-t border-border-soft">
-                  <div className="flex items-start gap-1.5 text-[10px] text-muted-copy font-medium mb-2.5">
-                    <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy/60" />
-                    <span className="leading-tight">{plan.notIncluded}</span>
+                    {plan.id === 'free' ? (
+                      <FreePlanButton currentUser={currentUser} />
+                    ) : (
+                      <PlanAction
+                        plan={plan}
+                        isCurrent={isCurrent}
+                        inProgress={isThisLoading}
+                        disabled={
+                          !billingEnabled || isThisLoading || isBillingHealthLoading || unavailable
+                        }
+                        onClick={() => void handleCheckout(plan.id)}
+                      />
+                    )}
                   </div>
-
-                  {plan.id === 'free' ? (
-                    <FreePlanButton currentUser={currentUser} />
-                  ) : (
-                    <PlanAction
-                      plan={plan}
-                      isCurrent={isCurrent}
-                      inProgress={isThisLoading}
-                      disabled={
-                        !billingEnabled || isThisLoading || isBillingHealthLoading || unavailable
-                      }
-                      onClick={() => void handleCheckout(plan.id)}
-                    />
-                  )}
                 </div>
               </article>
             );
@@ -389,25 +419,46 @@ const PricingPage = () => {
         </div>
       </section>
 
-      {/* Interactive Team Seat Calculator */}
+      {/* ITEM 19: Interactive Team Seat Calculator with Automatic Tiered Discounts */}
       <section className="py-8 px-6 md:px-12 max-w-7xl mx-auto border-t border-border-soft">
         <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-md space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-                Calculator
+              <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
+                Item 19 / Seat Calculator
               </span>
               <h2 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                 <Building2 className="h-4 w-4 text-primary" /> Enterprise Seat Calculator
               </h2>
             </div>
             <div className="text-right">
-              <span className="text-base font-extrabold text-primary">
+              <span className="text-base font-extrabold text-primary font-mono">
                 {teamSeats} Engineer Seats
               </span>
-              <span className="block text-xs font-bold text-muted-copy">
-                (${teamSeats * (isAnnual ? 15 : 19)} / month total)
-              </span>
+              {/* Dynamic Discount Calculation */}
+              {(() => {
+                const basePerSeatUsd = isAnnual ? 15 : 19;
+                let discountPct = 0;
+                if (teamSeats >= 10) discountPct = 25;
+                else if (teamSeats >= 5) discountPct = 15;
+
+                const discountedPerSeat = Math.round(basePerSeatUsd * (1 - discountPct / 100));
+                const totalUsd = teamSeats * discountedPerSeat;
+                const formattedTotal = CurrencyConfig.formatPrice(totalUsd, selectedCurrency);
+
+                return (
+                  <div className="flex items-center gap-1.5 justify-end">
+                    <span className="text-xs font-bold text-foreground font-mono">
+                      {formattedTotal}/month
+                    </span>
+                    {discountPct > 0 && (
+                      <span className="text-[9px] font-bold uppercase text-emerald-600 bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.2 rounded">
+                        {discountPct}% Tier Discount
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -420,9 +471,10 @@ const PricingPage = () => {
             className="w-full h-2 rounded-lg accent-primary cursor-pointer"
           />
 
-          <div className="flex justify-between text-[10px] font-bold text-muted-copy">
-            <span>2 Seats ($30/mo)</span>
-            <span>25 Seats ($375/mo)</span>
+          <div className="flex justify-between text-[10px] font-bold text-muted-copy font-mono">
+            <span>2 Seats (Standard)</span>
+            <span className="text-emerald-600">5-9 Seats (15% Team Discount)</span>
+            <span className="text-primary">10+ Seats (25% Bulk Discount)</span>
             <span>50+ Seats (Custom Enterprise)</span>
           </div>
 
@@ -441,7 +493,8 @@ const PricingPage = () => {
           </div>
         </div>
 
-        <EnterpriseQuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
+        {/* ITEM 17: Micro-Transaction Add-ons */}
+        <PricingAddonsCard />
       </section>
 
       {/* Comprehensive Feature Comparison Matrix */}
@@ -462,47 +515,121 @@ const PricingPage = () => {
         </div>
 
         <div
-          className="overflow-x-auto rounded-xl border border-border-soft shadow-md bg-background"
+          className="overflow-x-auto rounded-xl border border-primary/25 shadow-xl bg-background light-sweep-container"
           tabIndex={0}
           role="region"
           aria-label="Plan comparison table"
         >
-          <table className="w-full min-w-[700px] border-collapse text-left text-xs">
-            <thead className="bg-surface border-b border-border-soft">
+          <table className="w-full min-w-[750px] border-collapse text-left text-xs">
+            <thead className="bg-gradient-to-r from-primary/10 via-blue-500/10 to-indigo-500/10 border-b border-primary/25">
               <tr>
-                <th className="p-3.5 text-xs font-extrabold uppercase tracking-wider text-foreground">
-                  Capabilities & Limits
+                <th className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground">
+                  Capabilities & Standards
                 </th>
                 {ACTIVE_PLANS.map((p) => (
                   <th
                     key={p.id}
-                    className="p-3.5 text-xs font-extrabold uppercase tracking-wider text-foreground text-center"
+                    className={`p-4 text-xs font-extrabold tracking-wider text-center ${
+                      p.id === 'pro'
+                        ? 'bg-primary/15 border-x border-primary/30 text-primary'
+                        : 'text-foreground'
+                    }`}
                   >
-                    {p.name}
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-sm font-bold uppercase">{p.name}</span>
+                      <span className="text-[9px] font-mono font-bold text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.5 rounded">
+                        {getAccessBadge(p.id)}
+                      </span>
+                    </div>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {(['learning', 'ai', 'analytics', 'team', 'limits'] as const).map((key) => (
+              {(
+                [
+                  {
+                    key: 'learning',
+                    label: 'Domain Learning Modules',
+                    icon: Sparkles,
+                    tooltip:
+                      'Access to 10 engineering disciplines, CEFR A1-C2 curriculum, and ASTM/Eurocode vocabulary.',
+                  },
+                  {
+                    key: 'ai',
+                    label: 'AI Voice & Writing Coach',
+                    icon: Cpu,
+                    tooltip:
+                      'Real-time oral defense practice, FIDIC contract correction, and technical presentation feedback.',
+                  },
+                  {
+                    key: 'analytics',
+                    label: 'Analytics & Skill Metrics',
+                    icon: Check,
+                    tooltip:
+                      'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
+                  },
+                  {
+                    key: 'team',
+                    label: 'Team Management & SSO',
+                    icon: Building2,
+                    tooltip:
+                      'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
+                  },
+                  {
+                    key: 'limits',
+                    label: 'Usage Allowance Limits',
+                    icon: Zap,
+                    tooltip:
+                      'Monthly voice practice minutes, document upload counts, and AI token limits.',
+                  },
+                ] as const
+              ).map((row) => (
                 <tr
-                  key={key}
-                  className="border-b border-border-soft/60 last:border-0 hover:bg-surface/50 transition-colors"
+                  key={row.key}
+                  className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors group"
                 >
-                  <td className="p-3.5 font-bold text-foreground capitalize">
-                    {key === 'ai' ? 'AI Voice & Writing Coach' : key}
+                  <td className="p-3.5 font-bold text-foreground capitalize flex items-center gap-2 relative">
+                    <row.icon className="h-4 w-4 text-primary shrink-0" />
+                    <span>{row.label}</span>
+                    <HelpCircle className="h-3.5 w-3.5 text-muted-copy group-hover:text-primary transition cursor-help shrink-0" />
+                    {/* ITEM 18: Interactive Hover Tooltip */}
+                    <div className="absolute left-48 bottom-full mb-1 hidden group-hover:block z-50 w-64 p-2.5 bg-foreground text-background text-[10px] font-medium rounded-lg shadow-2xl leading-relaxed font-sans pointer-events-none">
+                      {row.tooltip}
+                    </div>
                   </td>
-                  {ACTIVE_PLANS.map((p) => (
-                    <td key={p.id} className="p-3.5 text-center text-muted-copy font-medium">
-                      {p.comparison[key]}
-                    </td>
-                  ))}
+                  {ACTIVE_PLANS.map((p) => {
+                    const value = p.comparison[row.key];
+                    const isProCol = p.id === 'pro';
+                    const isUnlimited = value.toLowerCase().includes('unlimited');
+                    return (
+                      <td
+                        key={p.id}
+                        className={`p-3.5 text-center font-semibold text-xs leading-relaxed transition-colors ${
+                          isProCol ? 'bg-primary/5 border-x border-primary/20' : ''
+                        }`}
+                      >
+                        {isUnlimited ? (
+                          <span className="inline-flex items-center gap-1 rounded bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold text-emerald-600 font-mono">
+                            <Check className="h-3 w-3 text-emerald-500" /> {value}
+                          </span>
+                        ) : (
+                          <span className="text-foreground/90">{value}</span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </section>
+
+      <EnterpriseQuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
+
+      {/* ITEM 20: Sales Chat Floating Trigger */}
+      <SalesChatModal />
 
       {/* Footer Link Back to Home */}
       <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">

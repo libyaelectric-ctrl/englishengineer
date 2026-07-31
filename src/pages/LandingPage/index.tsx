@@ -5,6 +5,8 @@ import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 
+import { BeforeAfterCard } from './BeforeAfterCard';
+import { CefrQuizWidget } from './CefrQuizWidget';
 import { DisciplineShowcase } from './DisciplineShowcase';
 import { FAQSection } from './FAQSection';
 import { FeatureSection } from './FeatureSection';
@@ -12,6 +14,7 @@ import { Footer } from './Footer';
 import HeroSection from './HeroSection';
 import { Navbar } from './Navbar';
 import { PricingSection } from './PricingSection';
+import { SocialProofMarquee } from './SocialProofMarquee';
 import { WorkflowSection } from './WorkflowSection';
 import { STRUCTURED_DATA } from './constants';
 
@@ -62,9 +65,12 @@ const LandingPage = () => {
       />
       <Navbar />
       <HeroSection scrollShift={scrollShift} />
+      <SocialProofMarquee />
       <DisciplineShowcase />
+      <BeforeAfterCard />
       <FeatureSection />
       <WorkflowSection />
+      <CefrQuizWidget />
       <PricingSection />
       <FAQSection />
       <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
