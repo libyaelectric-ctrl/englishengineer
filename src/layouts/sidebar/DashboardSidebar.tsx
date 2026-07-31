@@ -69,6 +69,7 @@ export function DashboardSidebar() {
             }
             variant="primary"
           />
+          <Action icon="🌐" label="Instant Translator" onClick={() => navigate('/translator')} />
           <Action icon="🎯" label="Placement Level Test" onClick={() => navigate('/placement')} />
           <Action icon="🤖" label="AI Copilot & Tools" onClick={() => navigate('/tools')} />
           <Action icon="👥" label="Team Management" onClick={() => navigate('/team')} />
