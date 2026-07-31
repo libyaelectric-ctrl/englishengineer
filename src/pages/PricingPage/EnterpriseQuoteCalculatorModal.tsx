@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Cpu, Globe, Layers, ShieldCheck, Sparkles, X, Zap } from 'lucide-react';
+import { ArrowRight, Check, Cpu, Globe, Layers, ShieldCheck, Sparkles, X } from 'lucide-react';
 
 import { useState } from 'react';
 

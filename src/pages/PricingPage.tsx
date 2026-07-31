@@ -6,7 +6,6 @@ import {
   FileText,
   Globe,
   MinusCircle,
-  ShieldCheck,
   Sparkles,
   Zap,
 } from 'lucide-react';
@@ -26,13 +25,19 @@ import {
   CommercialPlanPreview,
   useBillingStore,
 } from '@/features/billing';
-import { EnterpriseQuoteModal } from '@/features/billing/EnterpriseQuoteModal';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { CurrencyConfig } from '@/features/billing/currency.config';
 
 import { Navbar } from '@/pages/LandingPage/Navbar';
 import { PricingAddonsCard } from '@/pages/LandingPage/PricingAddonsCard';
 import { SalesChatModal } from '@/pages/LandingPage/SalesChatModal';
+
+import { DpaContractGeneratorModal } from './PricingPage/DpaContractGeneratorModal';
+import { EnterpriseQuoteCalculatorModal } from './PricingPage/EnterpriseQuoteCalculatorModal';
+import { InvoiceTaxManagerModal } from './PricingPage/InvoiceTaxManagerModal';
+import { SecurityWhitepaperModal } from './PricingPage/SecurityWhitepaperModal';
+import { SlaGuaranteeMatrix } from './PricingPage/SlaGuaranteeMatrix';
+import { TrustCenterBadges } from './PricingPage/TrustCenterBadges';
 
 const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
