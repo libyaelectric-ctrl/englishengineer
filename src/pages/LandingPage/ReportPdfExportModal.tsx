@@ -1,4 +1,4 @@
-import { CheckCircle2, Download, FileSpreadsheet, FileText, Sparkles, X } from 'lucide-react';
+import { CheckCircle2, Download, FileSpreadsheet, FileText, X } from 'lucide-react';
 
 import { useState } from 'react';
 
