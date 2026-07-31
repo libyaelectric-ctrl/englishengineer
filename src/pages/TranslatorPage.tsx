@@ -28,6 +28,10 @@ export const SUPPORTED_LANGUAGES: Array<{ code: SupportedLang; name: string; fla
   { code: 'es', name: 'Español (Spanish)', flag: '🇪🇸' },
   { code: 'it', name: 'Italiano (Italian)', flag: '🇮🇹' },
   { code: 'fr', name: 'Français (French)', flag: '🇫🇷' },
+  { code: 'ja', name: '日本語 (Japanese)', flag: '🇯🇵' },
+  { code: 'ko', name: '한국어 (Korean)', flag: '🇰🇷' },
+  { code: 'pt', name: 'Português (Portuguese)', flag: '🇵🇹' },
+  { code: 'pl', name: 'Polski (Polish)', flag: '🇵🇱' },
 ];
 
 const SPEECH_LANG_MAP: Record<string, string> = {
@@ -40,6 +44,10 @@ const SPEECH_LANG_MAP: Record<string, string> = {
   es: 'es-ES',
   it: 'it-IT',
   fr: 'fr-FR',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  pt: 'pt-PT',
+  pl: 'pl-PL',
 };
 
 const LanguageBar: React.FC<{
