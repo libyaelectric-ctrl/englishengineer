@@ -47,11 +47,11 @@ describe('Landing page E2E', () => {
   it('FAQ items are clickable', async () => {
     renderWithProviders(<LandingPage />);
 
-    const faqButton = screen.getByText('Is there a free plan?');
+    const faqButton = screen.getByText(/Is there a free plan/i);
     expect(faqButton).toBeInTheDocument();
     fireEvent.click(faqButton);
     await waitFor(() => {
-      expect(screen.getByText(/includes the core modules/i)).toBeInTheDocument();
+      expect(screen.getByText(/includes core learning modules/i)).toBeInTheDocument();
     });
   });
 });

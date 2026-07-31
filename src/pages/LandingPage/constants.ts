@@ -86,18 +86,33 @@ export const WORKFLOW = [
 
 export const FAQ_ITEMS = [
   {
-    question: 'Is there a free plan?',
+    question: 'Is there a free plan available?',
     answer:
-      'Yes. The free plan includes the core modules, vocabulary and grammar practice, and a small daily AI request allowance.',
+      'Yes. The free plan includes core learning modules, vocabulary & grammar drills, and daily AI request allowances with no credit card required.',
   },
   {
-    question: 'Who is EngVox built for?',
+    question: 'Who is EngVox specifically built for?',
     answer:
-      'EngVox is built for engineers, site teams and project professionals who need practical English for technical work.',
+      'EngVox is engineered for all 10 key disciplines: Architecture, Chemical, Civil, Computer/Software, Electrical, Electronics, HSE, Industrial, Mechanical, and Mechatronics/Robotics engineers, site managers, and technical project leads communicating internationally.',
   },
   {
-    question: 'Can teams use project workspaces?',
+    question: 'How do Project Workspaces & Persistent Memory work?',
     answer:
-      'Yes. Project plans add workspaces, memory and document support for recurring project communication.',
+      'Project plans allow you to create isolated workspaces where AI retains your project specs, FIDIC contract terms, and technical drawings across all coaching sessions.',
+  },
+  {
+    question: 'Is EngVox suitable for preparing for technical interviews or presentations?',
+    answer:
+      'Absolutely. Our AI Coach simulates oral defense panels, client design reviews, site safety briefings, and PR reviews with instant CEFR fluency feedback.',
+  },
+  {
+    question: 'Does EngVox support offline-first usage?',
+    answer:
+      'Yes. Core technical vocabulary, FIDIC contract glossaries, and practice scenarios work completely offline, synchronizing automatically when online.',
+  },
+  {
+    question: 'Can I upgrade, downgrade, or cancel my subscription at any time?',
+    answer:
+      'Yes. You can change plans or cancel anytime from your billing portal with zero hidden cancellation fees or long-term contracts.',
   },
 ];

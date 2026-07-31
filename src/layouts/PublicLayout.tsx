@@ -1,11 +1,13 @@
 import { useAppStore } from '@/store/app.store';
-import { Menu, Moon, Sun, X } from 'lucide-react';
+import { ArrowLeft, Menu, Moon, Sun, X } from 'lucide-react';
 
 import { useState } from 'react';
 
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { cn } from '@/shared/utils/cn';
+
+import { Footer } from '@/pages/LandingPage/Footer';
 
 const links = [
   { label: 'Features', href: '/#features' },
@@ -13,17 +15,44 @@ const links = [
   { label: 'Teams', href: '/business' },
 ];
 
+const FloatingBackToHome = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Do not show on landing page or dashboard routes
+  if (location.pathname === '/' || location.pathname.startsWith('/dashboard')) return null;
+
+  const handleBackToHome = () => {
+    navigate('/');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <button
+      onClick={handleBackToHome}
+      type="button"
+      className="fixed bottom-16 right-6 z-50 flex items-center gap-2 rounded-full border border-primary/30 bg-primary/95 text-primary-foreground px-4 py-2 text-xs font-bold shadow-2xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-primary cursor-pointer group"
+      title="Back to top of Landing Page"
+      aria-label="Back to top of Landing Page"
+    >
+      <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+      <span>Back to Home</span>
+    </button>
+  );
+};
+
 export const PublicLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const isLanding = location.pathname === '/';
   const isPricing = location.pathname === '/pricing';
+  const isDashboard = location.pathname.startsWith('/dashboard');
   const hideNav = isLanding || isPricing;
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
 
   return (
-    <div className="public-shell min-h-screen bg-transparent text-foreground">
+    <div className="public-shell min-h-screen bg-transparent text-foreground relative pb-16">
       <a
         href="#public-content"
         className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-[10px] bg-foreground px-4 py-2 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
@@ -85,7 +114,7 @@ export const PublicLayout = () => {
               </button>
               <Link
                 to="/login"
-                className="inline-flex min-h-10 items-center rounded-[10px] px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-surface-hover"
+                className="inline-flex items-center rounded border border-border-soft bg-surface px-4 py-2 text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-sm"
               >
                 Log in
               </Link>
@@ -133,40 +162,17 @@ export const PublicLayout = () => {
         </header>
       )}
 
-      {/* Hide footer on landing page */}
-      {!isLanding && (
-        <footer className="border-t border-border-soft bg-surface/80">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-              <p className="text-xs text-muted-copy">&copy; 2026 EngVox</p>
-              <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-copy">
-                <Link className="hover:text-foreground" to="/pricing">
-                  Pricing
-                </Link>
-                <Link className="hover:text-foreground" to="/business">
-                  Teams
-                </Link>
-                <Link className="hover:text-foreground" to="/legal/privacy">
-                  Privacy
-                </Link>
-                <Link className="hover:text-foreground" to="/legal/terms">
-                  Terms
-                </Link>
-                <Link className="hover:text-foreground" to="/legal/cookies">
-                  Cookies
-                </Link>
-                <Link className="hover:text-foreground" to="/legal/refund">
-                  Refunds
-                </Link>
-              </div>
-            </div>
-          </div>
-        </footer>
-      )}
-
       <div id="public-content" tabIndex={-1}>
         <Outlet />
       </div>
+
+      {/* Fixed Bottom Footer for All Public Pages */}
+      {!isDashboard && (
+        <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
+      )}
+
+      {/* Fixed Floating Back to Home Button on All Public Subpages */}
+      <FloatingBackToHome />
     </div>
   );
 };
