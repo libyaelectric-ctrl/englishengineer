@@ -1,4 +1,15 @@
-import { Building2, Check, Cpu, Globe, MinusCircle, Sparkles, Zap } from 'lucide-react';
+import {
+  Building2,
+  Check,
+  Cpu,
+  FileCheck,
+  FileText,
+  Globe,
+  MinusCircle,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+} from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -158,6 +169,10 @@ const PricingPage = () => {
   const [isAnnual, setIsAnnual] = useState(false);
   const [teamSeats, setTeamSeats] = useState(5);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [whitepaperOpen, setWhitepaperOpen] = useState(false);
+  const [slaOpen, setSlaOpen] = useState(false);
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const [dpaOpen, setDpaOpen] = useState(false);
 
   useEffect(() => {
     void initializeAuth();
@@ -626,7 +641,48 @@ const PricingPage = () => {
         </div>
       </section>
 
-      <EnterpriseQuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
+      {/* ITEM 32 & ITEM 40: Trust Center & Dedicated CSM Badges */}
+      <TrustCenterBadges
+        onOpenSecurityWhitepaper={() => setWhitepaperOpen(true)}
+        onOpenSlaMatrix={() => setSlaOpen(true)}
+      />
+
+      {/* Section 4 Quick Legal & Tax Toolbar */}
+      <section className="py-4 border-t border-border-soft/60 bg-background">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-wrap items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => setInvoiceOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-soft border border-border-soft px-3 py-1.5 text-xs font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
+          >
+            <FileText className="h-3.5 w-3.5 text-primary" /> Corporate Invoice & Tax ID
+          </button>
+          <button
+            type="button"
+            onClick={() => setDpaOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-soft border border-border-soft px-3 py-1.5 text-xs font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
+          >
+            <FileCheck className="h-3.5 w-3.5 text-emerald-500" /> Instant DPA & MSA Contract
+          </button>
+          <button
+            type="button"
+            onClick={() => setQuoteModalOpen(true)}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 border border-primary/30 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/20 transition cursor-pointer"
+          >
+            <Sparkles className="h-3.5 w-3.5" /> Custom Seat Quote Calculator
+          </button>
+        </div>
+      </section>
+
+      {/* Section 4 Modals (Items 31 - 40) */}
+      <EnterpriseQuoteCalculatorModal
+        isOpen={quoteModalOpen}
+        onClose={() => setQuoteModalOpen(false)}
+      />
+      <SecurityWhitepaperModal isOpen={whitepaperOpen} onClose={() => setWhitepaperOpen(false)} />
+      <SlaGuaranteeMatrix isOpen={slaOpen} onClose={() => setSlaOpen(false)} />
+      <InvoiceTaxManagerModal isOpen={invoiceOpen} onClose={() => setInvoiceOpen(false)} />
+      <DpaContractGeneratorModal isOpen={dpaOpen} onClose={() => setDpaOpen(false)} />
 
       {/* ITEM 20: Sales Chat Floating Trigger */}
       <SalesChatModal />
