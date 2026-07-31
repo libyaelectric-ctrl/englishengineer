@@ -1,4 +1,4 @@
-import { Building2, Check, Cpu, Globe, HelpCircle, MinusCircle, Sparkles, Zap } from 'lucide-react';
+import { Building2, Check, Cpu, Globe, MinusCircle, Sparkles, Zap } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
