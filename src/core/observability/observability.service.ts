@@ -1,6 +1,5 @@
-import * as Sentry from '@sentry/react';
-
 import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
+import * as Sentry from '@sentry/react';
 
 import { logger } from '@/shared/logger';
 
@@ -57,9 +56,7 @@ const initSentry = () => {
     tracesSampleRate: 0.1,
     replaysSessionSampleRate: 0,
     replaysOnErrorSampleRate: 1.0,
-    integrations: [
-      Sentry.browserTracingIntegration(),
-    ],
+    integrations: [Sentry.browserTracingIntegration()],
     beforeSend(event) {
       if (event.exception?.values?.[0]?.type === 'ChunkLoadError') {
         return null;
