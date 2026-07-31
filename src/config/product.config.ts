@@ -1,4 +1,4 @@
-export const PRODUCT_VERSION = '2.1.2';
+export const PRODUCT_VERSION = '2.4.7';
 export const APP_NAME = 'EngVox';
 export const APP_TAGLINE = 'Engineering Communication Operating System';
 

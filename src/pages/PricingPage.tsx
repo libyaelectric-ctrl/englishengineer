@@ -64,7 +64,7 @@ const getCalculatedPrice = (plan: CommercialPlanPreview, isAnnual: boolean): str
 const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
   <Link
     to={currentUser ? '/dashboard' : '/start'}
-    className="mt-5 flex h-10 w-full items-center justify-center rounded-xl border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
+    className="mt-4 flex h-9 w-full items-center justify-center rounded-lg border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
   >
     {currentUser ? 'Go to dashboard' : 'Start free'}
   </Link>
@@ -73,7 +73,7 @@ const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null })
 const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
 
 const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> = {
-  pro: { icon: Sparkles, label: 'Recommended', color: 'bg-primary' },
+  pro: { icon: Sparkles, label: 'Popular', color: 'bg-primary' },
   project: {
     icon: Building2,
     label: 'Engineering Teams',
@@ -112,7 +112,7 @@ const getPlanActionStyle = ({
   if (isCurrent) {
     return 'border border-success/30 bg-success/10 text-success cursor-not-allowed';
   }
-  return 'bg-primary text-white hover:bg-primary-hover';
+  return 'bg-primary text-white hover:bg-primary/95';
 };
 
 const PlanAction = ({
@@ -142,7 +142,7 @@ const PlanAction = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`flex h-10 w-full items-center justify-center rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-md ${style}`}
+      className={`flex h-9 w-full items-center justify-center rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${style}`}
     >
       {label}
     </button>
@@ -227,15 +227,63 @@ const PricingPage = () => {
   };
 
   return (
-    <main className="bg-background text-foreground min-h-screen relative z-10 pb-20 selection:bg-primary selection:text-primary-foreground">
+    <main className="bg-background text-foreground min-h-screen relative z-10 pb-16 selection:bg-primary selection:text-primary-foreground">
       <PageMetadata
-        title="Pricing Plans & Access Control"
-        description="Choose the EngVox access level calibrated for your engineering role."
+        title="Pricing Plans & Access Control — EngVox"
+        description="Choose the EngVox access level calibrated for your engineering role, project team, or executive organization."
       />
 
       <Navbar />
 
-      <section className="pt-24 pb-12 px-4 sm:px-6">
+      {/* Header & Billing Cycle Switcher */}
+      <section className="pt-20 sm:pt-24 pb-8 px-6 md:px-12 max-w-7xl mx-auto border-b border-border-soft">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2.5 mb-2">
+              <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                Pricing & Access Control
+              </span>
+              <span className="text-xs text-muted-copy font-medium">No hidden lock-in</span>
+            </div>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-foreground">
+              Transparent plans for individual engineers & project teams.
+            </h1>
+          </div>
+
+          {/* Monthly / Annual Toggle */}
+          <div className="flex items-center gap-3 rounded-xl border border-border-soft bg-surface p-2 shadow-sm shrink-0">
+            <span
+              className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Monthly
+            </span>
+
+            <button
+              type="button"
+              onClick={() => setIsAnnual(!isAnnual)}
+              className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
+            >
+              <span
+                className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
+                  isAnnual ? 'translate-x-5' : 'translate-x-0'
+                }`}
+              />
+            </button>
+
+            <span
+              className={`text-xs font-bold transition-colors ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
+            >
+              Annual{' '}
+              <span className="ml-1 rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[9px] font-bold uppercase border border-primary/20">
+                Save 20%
+              </span>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* 5-Plan Tier Cards */}
+      <section className="py-8 px-6 md:px-12 max-w-[1400px] mx-auto">
         {checkoutError && (
           <p
             className="mx-auto mb-4 max-w-xl rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs text-rose-500 font-bold uppercase tracking-wider text-center"
@@ -244,7 +292,7 @@ const PricingPage = () => {
             {checkoutError}
           </p>
         )}
-        <div className="mx-auto max-w-[1400px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 items-stretch">
           {ACTIVE_PLANS.map((plan) => {
             const isHighlighted = HIGHLIGHTED_PLANS.has(plan.id);
             const badge = PLAN_BADGES[plan.id];
@@ -255,48 +303,50 @@ const PricingPage = () => {
             return (
               <article
                 key={plan.id}
-                className={`relative flex flex-col justify-between rounded-2xl border p-5 bg-surface/90 backdrop-blur-xl transition-all duration-300 hover:border-border-hover shadow-lg ${
-                  isHighlighted ? 'border-primary/60 ring-2 ring-primary/20' : 'border-border-soft'
+                className={`relative flex flex-col justify-between rounded-xl border p-4 bg-surface transition-all duration-300 hover:border-primary/40 shadow-sm ${
+                  isHighlighted
+                    ? 'border-2 border-primary shadow-md bg-surface relative scale-[1.01]'
+                    : 'border border-border-soft'
                 }`}
               >
                 {badge && (
                   <div
-                    className={`absolute -top-3 left-4 rounded-full ${badge.color} px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
+                    className={`absolute -top-2.5 left-3 rounded-full ${badge.color} px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-md flex items-center gap-1`}
                   >
                     <badge.icon className="h-3 w-3" /> {badge.label}
                   </div>
                 )}
 
                 <div>
-                  <div className="flex items-start justify-between">
-                    <h3 className="text-base font-extrabold text-foreground">{plan.name}</h3>
-                    <span className="rounded-lg border border-border-soft bg-background px-2 py-0.5 text-[10px] font-bold tracking-wider text-muted-copy uppercase font-mono">
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-sm font-bold text-foreground">{plan.name}</h3>
+                    <span className="rounded border border-border-soft bg-background px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-muted-copy uppercase font-mono">
                       {getAccessBadge(plan.id)}
                     </span>
                   </div>
 
-                  <div className="mt-3">
-                    <span className="text-3xl font-extrabold tracking-tight text-foreground">
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground">
                       {getCalculatedPrice(plan, isAnnual)}
                     </span>
-                    <span className="ml-1 text-[11px] font-bold text-muted-copy uppercase tracking-wider">
+                    <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
                       {billingCycleLabel(plan.id)}
                     </span>
                   </div>
 
-                  <p className="mt-2.5 text-xs text-muted-copy leading-relaxed font-medium min-h-[2.5rem]">
+                  <p className="text-xs text-muted-copy leading-relaxed font-medium min-h-[32px]">
                     {plan.audience}
                   </p>
 
-                  <div className="mt-3 rounded-xl border border-border-soft bg-background p-2.5 shadow-inner">
-                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                  <div className="mt-2.5 rounded-lg border border-border-soft bg-background p-2">
+                    <p className="text-[9px] font-bold text-primary uppercase tracking-wider">
                       Target Audience:
                     </p>
-                    <p className="mt-0.5 text-xs font-bold text-foreground">{plan.bestFor}</p>
+                    <p className="text-xs font-bold text-foreground truncate">{plan.bestFor}</p>
                   </div>
 
-                  <div className="mt-4 border-t border-border-soft pt-3">
-                    <p className="text-[10px] font-bold text-muted-copy uppercase tracking-wider mb-2">
+                  <div className="mt-3 border-t border-border-soft/60 pt-2.5">
+                    <p className="text-[9px] font-bold text-muted-copy uppercase tracking-wider mb-2">
                       Key Included Features:
                     </p>
                     <ul className="space-y-2">
@@ -305,18 +355,18 @@ const PricingPage = () => {
                           key={b}
                           className="flex items-start gap-2 text-xs text-foreground font-medium"
                         >
-                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-success" />
-                          <span>{b}</span>
+                          <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                          <span className="leading-tight">{b}</span>
                         </li>
                       ))}
                     </ul>
                   </div>
                 </div>
 
-                <div className="mt-5 pt-3 border-t border-border-soft">
-                  <div className="flex items-start gap-2 text-[10px] text-muted-copy font-medium mb-3">
-                    <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy" />
-                    <span>{plan.notIncluded}</span>
+                <div className="mt-4 pt-2.5 border-t border-border-soft">
+                  <div className="flex items-start gap-1.5 text-[10px] text-muted-copy font-medium mb-2.5">
+                    <MinusCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-copy/60" />
+                    <span className="leading-tight">{plan.notIncluded}</span>
                   </div>
 
                   {plan.id === 'free' ? (
@@ -339,20 +389,22 @@ const PricingPage = () => {
         </div>
       </section>
 
-      <section className="py-10 px-4 sm:px-6">
-        <div className="mx-auto max-w-5xl rounded-2xl border border-primary/30 bg-primary/5 p-6 shadow-xl space-y-4">
+      {/* Interactive Team Seat Calculator */}
+      <section className="py-8 px-6 md:px-12 max-w-7xl mx-auto border-t border-border-soft">
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-md space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div>
-              <h2 className="text-sm font-extrabold text-foreground uppercase tracking-wider flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-primary" />
-                Interactive Team Seat Calculator
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+                Calculator
+              </span>
+              <h2 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+                <Building2 className="h-4 w-4 text-primary" /> Enterprise Seat Calculator
               </h2>
-              <p className="text-xs text-muted-copy mt-0.5">
-                Bulk licensing for site engineering teams, QA/QC departments, and MEP contractors.
-              </p>
             </div>
             <div className="text-right">
-              <span className="text-lg font-black text-primary">{teamSeats} Engineer Seats</span>
+              <span className="text-base font-extrabold text-primary">
+                {teamSeats} Engineer Seats
+              </span>
               <span className="block text-xs font-bold text-muted-copy">
                 (${teamSeats * (isAnnual ? 15 : 19)} / month total)
               </span>
@@ -374,14 +426,14 @@ const PricingPage = () => {
             <span>50+ Seats (Custom Enterprise)</span>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-primary/20 flex-wrap gap-2">
+          <div className="flex items-center justify-between pt-2 border-t border-primary/15 flex-wrap gap-2">
             <span className="text-xs text-muted-copy font-medium">
-              Need custom SSO, dedicated servers, or 50+ seats?
+              Need custom SSO, dedicated private proxy servers, or 50+ seats?
             </span>
             <button
               type="button"
               onClick={() => setQuoteModalOpen(true)}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary-hover transition cursor-pointer shadow-sm"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/95 transition cursor-pointer shadow-sm"
             >
               <span>Request Custom Enterprise Quote</span>
               <Zap className="h-3.5 w-3.5" />
@@ -392,104 +444,74 @@ const PricingPage = () => {
         <EnterpriseQuoteModal isOpen={quoteModalOpen} onClose={() => setQuoteModalOpen(false)} />
       </section>
 
-      <section className="py-12 bg-surface/80 border-t border-b border-border-soft backdrop-blur-xl">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6">
-          <div className="text-center mb-8 space-y-2">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-widest font-mono">
-              Comprehensive Feature Matrix
+      {/* Comprehensive Feature Comparison Matrix */}
+      <section className="py-10 px-6 md:px-12 max-w-7xl mx-auto border-t border-border-soft">
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+              Comparison Matrix
             </span>
-            <h2 className="text-2xl font-extrabold text-foreground">
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
               Compare All Plan Capabilities
             </h2>
-            <p className="text-xs text-muted-copy font-medium max-w-lg mx-auto">
-              Detailed breakdown of AI allowances, voice meeting modules, team seats, and security
-              standards.
-            </p>
           </div>
+          <p className="text-xs text-muted-copy max-w-xl leading-tight">
+            Detailed breakdown of AI allowances, voice meeting modules, team seats, and security
+            standards.
+          </p>
+        </div>
 
-          {}
-          <div
-            className="overflow-x-auto rounded-2xl border border-border-soft shadow-xl bg-background"
-            tabIndex={0}
-            role="region"
-            aria-label="Plan comparison table"
-          >
-            <table className="w-full min-w-[700px] border-collapse text-left text-xs">
-              <thead className="bg-surface border-b border-border-soft">
-                <tr>
-                  <th className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground">
-                    Capabilities & Limits
+        <div
+          className="overflow-x-auto rounded-xl border border-border-soft shadow-md bg-background"
+          tabIndex={0}
+          role="region"
+          aria-label="Plan comparison table"
+        >
+          <table className="w-full min-w-[700px] border-collapse text-left text-xs">
+            <thead className="bg-surface border-b border-border-soft">
+              <tr>
+                <th className="p-3.5 text-xs font-extrabold uppercase tracking-wider text-foreground">
+                  Capabilities & Limits
+                </th>
+                {ACTIVE_PLANS.map((p) => (
+                  <th
+                    key={p.id}
+                    className="p-3.5 text-xs font-extrabold uppercase tracking-wider text-foreground text-center"
+                  >
+                    {p.name}
                   </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(['learning', 'ai', 'analytics', 'team', 'limits'] as const).map((key) => (
+                <tr
+                  key={key}
+                  className="border-b border-border-soft/60 last:border-0 hover:bg-surface/50 transition-colors"
+                >
+                  <td className="p-3.5 font-bold text-foreground capitalize">
+                    {key === 'ai' ? 'AI Voice & Writing Coach' : key}
+                  </td>
                   {ACTIVE_PLANS.map((p) => (
-                    <th
-                      key={p.id}
-                      className="p-4 text-xs font-extrabold uppercase tracking-wider text-foreground text-center"
-                    >
-                      {p.name}
-                    </th>
+                    <td key={p.id} className="p-3.5 text-center text-muted-copy font-medium">
+                      {p.comparison[key]}
+                    </td>
                   ))}
                 </tr>
-              </thead>
-              <tbody>
-                {(['learning', 'ai', 'analytics', 'team', 'limits'] as const).map((key) => (
-                  <tr
-                    key={key}
-                    className="border-b border-border-soft/60 last:border-0 hover:bg-surface/50 transition-colors"
-                  >
-                    <td className="p-4 font-bold text-foreground capitalize">
-                      {key === 'ai' ? 'AI Voice & Writing Coach' : key}
-                    </td>
-                    {ACTIVE_PLANS.map((p) => (
-                      <td key={p.id} className="p-4 text-center text-muted-copy font-medium">
-                        {p.comparison[key]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {}
+              ))}
+            </tbody>
+          </table>
         </div>
       </section>
 
-      <section className="py-12 text-center bg-background border-t border-border-soft">
-        <div className="mx-auto max-w-xl px-4 space-y-4">
-          <h3 className="text-base font-extrabold text-foreground">Select Your Billing Cycle</h3>
-
-          <div className="inline-flex items-center justify-center gap-4 rounded-2xl border border-border-soft bg-surface p-4 shadow-xl">
-            <span
-              className={`text-xs font-bold transition-colors ${!isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Monthly Billing
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setIsAnnual(!isAnnual)}
-              className="relative inline-flex h-7 w-13 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out bg-primary"
-            >
-              <span
-                className={`inline-block h-6 w-6 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${
-                  isAnnual ? 'translate-x-6' : 'translate-x-0'
-                }`}
-              />
-            </button>
-
-            <span
-              className={`text-xs font-bold transition-colors ${isAnnual ? 'text-foreground' : 'text-muted-copy'}`}
-            >
-              Annual Billing{' '}
-              <span className="ml-1 rounded-full bg-success/20 px-2.5 py-0.5 text-[10px] font-extrabold text-success border border-success/30">
-                SAVE 20%
-              </span>
-            </span>
-          </div>
-
-          <p className="text-[11px] text-muted-copy font-medium">
-            Switch anytime between monthly and annual billing. VAT & local taxes included where
-            applicable.
-          </p>
+      {/* Footer Link Back to Home */}
+      <section className="px-6 md:px-12 pt-8 pb-4 max-w-7xl mx-auto border-t border-border-soft">
+        <div className="flex items-center justify-between text-xs text-muted-copy">
+          <span>EngVox Engineering Operating System © 2026</span>
+          <Link to="/" className="font-bold text-primary hover:underline flex items-center gap-1">
+            <span>Back to Home</span>
+            <Zap className="h-3.5 w-3.5" />
+          </Link>
         </div>
       </section>
     </main>

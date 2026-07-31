@@ -289,18 +289,28 @@ const LoginPage = () => {
               </div>
             )}
 
-            {/* Terms & Privacy */}
-            <p className="text-center text-[9px] text-muted-copy leading-relaxed">
-              By continuing, you agree to EngVox{' '}
-              <Link to="/legal/terms" className="underline hover:text-primary font-semibold">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link to="/legal/privacy" className="underline hover:text-primary font-semibold">
-                Privacy Policy
-              </Link>
-              .
-            </p>
+            {/* Terms & Privacy & Back to Home */}
+            <div className="text-center space-y-1">
+              <p className="text-[9px] text-muted-copy leading-relaxed">
+                By continuing, you agree to EngVox{' '}
+                <Link to="/legal/terms" className="underline hover:text-primary font-semibold">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link to="/legal/privacy" className="underline hover:text-primary font-semibold">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
+              <div className="pt-0.5">
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline"
+                >
+                  <span>← Back to Home</span>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </main>

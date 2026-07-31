@@ -43,7 +43,7 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased selection:bg-primary/20">
+    <main className="relative min-h-screen overflow-x-hidden bg-background text-foreground antialiased selection:bg-primary/20 pb-16">
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -67,7 +67,7 @@ const LandingPage = () => {
       <WorkflowSection />
       <PricingSection />
       <FAQSection />
-      <Footer />
+      <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
     </main>
   );
 };

@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { AnimatedSection, SectionIntro } from './AnimatedComponents';
+import { AnimatedSection } from './AnimatedComponents';
 
 const DISCIPLINES = [
   {
@@ -169,18 +169,26 @@ export function DisciplineShowcase() {
   return (
     <section
       id="disciplines"
-      className="border-t border-border-soft bg-surface px-6 py-12 md:px-12 md:py-20"
+      className="border-t border-border-soft bg-surface px-6 py-8 md:px-12 md:py-12"
     >
       <div className="mx-auto max-w-7xl">
-        <SectionIntro
-          eyebrow="Disciplines"
-          title={<>Built for 10 key engineering fields.</>}
-          desc="Click on any engineering discipline card below to dynamically update the scenarios, technical vocabulary, and workspace preview."
-          align="center"
-        />
+        {/* Single Row Compact Header */}
+        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
+              Disciplines
+            </span>
+            <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
+              Built for 10 key engineering fields.
+            </h2>
+          </div>
+          <p className="text-xs text-foreground/80 font-medium max-w-xl leading-tight">
+            Click any discipline card below to dynamically update scenarios & workspace preview.
+          </p>
+        </div>
 
         {/* 10-Discipline Grid selection list */}
-        <AnimatedSection className="mb-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
+        <AnimatedSection className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5">
           {DISCIPLINES.map((d) => {
             const Icon = d.icon;
             const isActive = activeTab === d.id;
@@ -188,19 +196,19 @@ export function DisciplineShowcase() {
               <button
                 key={d.id}
                 onClick={() => setActiveTab(d.id)}
-                className={`group/btn flex flex-col items-center justify-center rounded-lg p-5 text-center transition-all border cursor-pointer hover:shadow-md hover:scale-[1.02] ${
+                className={`group/btn flex flex-col items-center justify-center rounded-lg p-3 text-center transition-all border cursor-pointer hover:shadow-md hover:scale-[1.02] ${
                   isActive
-                    ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-105'
-                    : 'bg-background text-muted-copy border-border-soft hover:border-primary/50 hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-[1.02]'
+                    : 'bg-background text-muted-copy hover:text-foreground border-border-soft hover:border-primary/50'
                 }`}
               >
                 <Icon
-                  className={`h-6 w-6 mb-3 transition-colors ${
+                  className={`h-4.5 w-4.5 mb-1.5 transition-colors ${
                     isActive ? 'text-primary-foreground' : 'text-primary'
                   }`}
                 />
                 <span className="text-xs font-bold leading-tight">{d.title}</span>
-                <span className="mt-2 text-[9px] font-medium opacity-0 group-hover/btn:opacity-60 transition-opacity duration-200">
+                <span className="mt-1 text-[9px] font-medium opacity-0 group-hover/btn:opacity-60 transition-opacity duration-200">
                   {isActive ? 'Active' : 'Click to select'}
                 </span>
               </button>
@@ -208,58 +216,80 @@ export function DisciplineShowcase() {
           })}
         </AnimatedSection>
 
-        {/* Interactive Detail Panel */}
-        <AnimatedSection delay={100}>
-          <div className="rounded-xl border border-border-soft bg-background p-6 md:p-10 shadow-xl transition-all duration-300">
-            <div className="grid gap-8 md:grid-cols-2">
-              <div className="flex flex-col justify-between">
+        {/* Interactive Detail Panel - Compact & Dynamic Ambient Aura */}
+        <AnimatedSection delay={100} className="relative group">
+          {/* Rotating Ambient Light Ring */}
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary via-blue-500 to-indigo-600 blur-xl opacity-50 animate-spin-slow pointer-events-none group-hover:opacity-80 transition-opacity" />
+
+          <div className="relative rounded-xl border border-border-soft bg-background p-5 md:p-6 shadow-2xl transition-all duration-300 light-sweep-container overflow-hidden">
+            <div className="absolute -top-24 -right-24 h-72 w-72 rounded-full bg-primary/10 blur-2xl animate-ambient-glow pointer-events-none" />
+            <div className="grid gap-6 lg:grid-cols-12 items-stretch relative z-10">
+              {/* Left Column: Title, Description & Scenarios (7 Cols) */}
+              <div className="lg:col-span-7 flex flex-col justify-between space-y-4">
                 <div>
-                  <span className="inline-block rounded bg-soft border border-border-soft px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary mb-4">
-                    {active.badge}
-                  </span>
-                  <h3 className="text-2xl font-bold text-foreground">{active.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-copy">
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-foreground leading-none">
+                      {active.title}
+                    </h3>
+                    <span className="inline-flex items-center rounded-full bg-soft border border-border-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
+                      {active.badge}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-medium leading-relaxed text-foreground/85">
                     {active.description}
                   </p>
-
-                  <h4 className="mt-6 text-xs font-bold uppercase tracking-wider text-muted-copy mb-3">
-                    Project Scenarios Included
-                  </h4>
-                  <ul className="space-y-3">
-                    {active.scenarios.map((s) => (
-                      <li key={s} className="flex items-start gap-3">
-                        <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        <span className="text-sm text-foreground">{s}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
 
-                <div className="mt-8 rounded-lg bg-surface border border-border-soft p-4">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-                    Sample Technical Term
-                  </span>
-                  <p className="mt-1 text-sm font-semibold text-primary">{active.sampleTerm}</p>
+                {/* Included Scenarios Grid */}
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-copy mb-2 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                    <span>Project Scenarios Included</span>
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {active.scenarios.map((s) => (
+                      <div
+                        key={s}
+                        className="flex items-center gap-2 rounded-md bg-surface/80 border border-border-soft p-2 text-xs font-medium text-foreground"
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                        <span className="truncate">{s}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-center">
-                <div className="w-full max-w-sm rounded-xl bg-surface border border-border-soft p-8 text-center shadow-sm">
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-soft mb-4">
-                    <active.icon className="h-8 w-8 text-primary" />
+              {/* Right Column: Sample Term & Direct Practice CTA (5 Cols) */}
+              <div className="lg:col-span-5 flex flex-col justify-between gap-3">
+                {/* Sample Term Box */}
+                <div className="rounded-lg bg-surface border border-border-soft p-3">
+                  <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block mb-0.5">
+                    Sample Technical Term
+                  </span>
+                  <p className="text-xs sm:text-sm font-bold text-primary truncate">
+                    {active.sampleTerm}
+                  </p>
+                </div>
+
+                {/* Practice CTA Box */}
+                <div className="rounded-lg bg-primary/5 border border-primary/20 p-4 text-center flex-1 flex flex-col justify-between items-center">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <active.icon className="h-3.5 w-3.5" />
+                    </div>
+                    <h4 className="text-xs font-bold text-foreground">Practice {active.title}</h4>
                   </div>
-                  <h4 className="text-base font-bold text-foreground mb-2">
-                    Practice {active.title}
-                  </h4>
-                  <p className="text-xs leading-relaxed text-muted-copy">
+                  <p className="text-[11px] leading-relaxed text-muted-copy mb-3">
                     Interactive roleplay, professional writing reviews, and vocabulary drills tuned
                     for actual projects.
                   </p>
                   <Link
                     to="/signup"
-                    className="mt-6 inline-flex items-center justify-center gap-2 rounded bg-primary px-6 py-2.5 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
+                    className="w-full inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow transition-all hover:bg-primary/95"
                   >
-                    Start Practicing <ArrowUpRight className="h-4 w-4" />
+                    <span>Start Practicing</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
                   </Link>
                 </div>
               </div>

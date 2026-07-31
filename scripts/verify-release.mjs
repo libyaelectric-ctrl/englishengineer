@@ -19,7 +19,7 @@ const audioFiles = existsSync(resolve('public/audio'))
 const readJson = (path) => JSON.parse(readFileSync(resolve(path), 'utf8'));
 const frontendPackage = readJson('package.json');
 const backendPackage = readJson('backend/package.json');
-const expectedVersion = '2.1.2';
+const expectedVersion = '2.4.7';
 
 if (frontendPackage.version !== expectedVersion || backendPackage.version !== expectedVersion) {
   missing.push('frontend and backend versions must both be ' + expectedVersion);
@@ -27,7 +27,7 @@ if (frontendPackage.version !== expectedVersion || backendPackage.version !== ex
 
 const backendEnv = readFileSync(resolve('backend/.env.example'), 'utf8');
 if (!backendEnv.includes(`APP_VERSION=${expectedVersion}`)) {
-  missing.push('backend/.env.example APP_VERSION must be 4.0.1');
+  missing.push(`backend/.env.example APP_VERSION must be ${expectedVersion}`);
 }
 
 // AST-based content count functions
