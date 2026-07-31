@@ -2,7 +2,7 @@ import { Award, CheckCircle2, KeyRound, Sparkles, X, Zap } from 'lucide-react';
 
 import { useState } from 'react';
 
-import { setProgressionBypassed } from './progression-lock.helpers';
+import { setProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 interface PlacementBypassModalProps {
   isOpen: boolean;
@@ -28,7 +28,6 @@ export const PlacementBypassModal = ({
 
   const handlePassQuiz = () => {
     if (selectedOption === 1) {
-      // Correct answer: Extension of Time
       setQuizStep('passed');
       setTimeout(() => {
         setProgressionBypassed(true);

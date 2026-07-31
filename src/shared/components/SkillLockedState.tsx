@@ -2,9 +2,8 @@ import { Eye, KeyRound, Lock } from 'lucide-react';
 
 import { useState } from 'react';
 
-import { PlacementBypassModal } from '@/features/level-system/PlacementBypassModal';
-
 import { LockProgressBar } from './LockProgressBar';
+import { PlacementBypassModal } from './PlacementBypassModal';
 
 interface SkillLockedStateProps {
   skillName: string;

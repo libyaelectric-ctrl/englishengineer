@@ -8,9 +8,9 @@ import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillLockedState } from '@/shared/components/SkillLockedState';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import { LevelContentFilter } from '@/features/level-system';
-import { isProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
 import { useReadingStore } from '@/features/reading';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
 import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
