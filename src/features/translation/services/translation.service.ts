@@ -2,10 +2,12 @@ import { logger } from '@/shared/logger';
 
 import { LocalTranslationEngine } from './local-translation.engine';
 
+export type SupportedLang = 'auto' | 'en' | 'tr' | 'ar' | 'zh' | 'ru' | 'de' | 'es' | 'it' | 'fr';
+
 export interface TranslationRequest {
   text: string;
-  sourceLang: 'auto' | 'en' | 'tr';
-  targetLang: 'en' | 'tr';
+  sourceLang: SupportedLang;
+  targetLang: SupportedLang;
 }
 
 export interface WordAnalysis {
@@ -119,8 +121,8 @@ export const analyzeSingleWord = (word: string, translatedText: string): WordAna
 
 const detectLanguageDirection = (
   trimmed: string,
-  sourceLang: 'auto' | 'en' | 'tr',
-  targetLang: 'en' | 'tr'
+  sourceLang: SupportedLang,
+  targetLang: SupportedLang
 ): { effectiveSource: string; effectiveTarget: string } => {
   const hasTurkishChar =
     /[çğıöşüÇĞİÖŞÜ]/.test(trimmed) ||
