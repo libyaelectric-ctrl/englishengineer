@@ -30,5 +30,3 @@ export {
 export { LevelContentFilter, LevelAccessBadge, EmptyLevelState } from './LevelContentFilter';
 
 export { useSkillLevel } from './useSkillLevel';
-
-export { PlacementBypassModal } from './PlacementBypassModal';

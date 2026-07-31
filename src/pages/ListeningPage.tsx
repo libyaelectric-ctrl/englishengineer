@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillLockedState } from '@/shared/components/SkillLockedState';
+import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import {
   type ContentLevelFilter,
@@ -24,7 +25,6 @@ import {
   getContentAccessLabel,
   useSkillLevel,
 } from '@/features/level-system';
-import { isProgressionBypassed } from '@/features/level-system/progression-lock.helpers';
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
 import {
