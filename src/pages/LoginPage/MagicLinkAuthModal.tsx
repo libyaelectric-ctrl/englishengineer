@@ -77,7 +77,10 @@ export const MagicLinkAuthModal = ({
             </p>
 
             <div className="space-y-1.5">
-              <label htmlFor="magic-email" className="text-[10px] font-bold uppercase tracking-wider text-foreground block">
+              <label
+                htmlFor="magic-email"
+                className="text-[10px] font-bold uppercase tracking-wider text-foreground block"
+              >
                 Work Email Address
               </label>
               <div className="relative">

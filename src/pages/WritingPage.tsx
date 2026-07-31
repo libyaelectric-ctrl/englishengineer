@@ -17,10 +17,7 @@ import {
   LevelContentFilter,
 } from '@/features/level-system';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
-import {
-  type WritingCorrection,
-  type WritingEvaluationResult,
-} from '@/features/writing';
+import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
 import { MissionListTab } from './WritingPage/components/MissionListTab';
@@ -261,13 +258,32 @@ const WritingMainContent = ({
   setLevelFilter: (v: ContentLevelFilter) => void;
   finishedCount: number;
   writingHistory: Array<{ date: string; wordCount: number; score: number }>;
-  visibleMissions: Array<{ id: string; title: string; description: string; cefrLevel: CefrLevel; difficulty: string; estimatedMinutes: number; discipline: string }>;
+  visibleMissions: Array<{
+    id: string;
+    title: string;
+    description: string;
+    cefrLevel: CefrLevel;
+    difficulty: string;
+    estimatedMinutes: number;
+    discipline: string;
+  }>;
   completedMissions: Record<string, number>;
   resetAllWritingProgress: () => void;
   handleLaunchMission: (id: string) => void;
   activeTab: string;
   subTab: 'missions' | 'field-docs';
-  currentMission: { id: string; title: string; description: string; cefrLevel: CefrLevel; discipline: string; corrections: WritingCorrection[]; scenario?: string; task?: string; expectedStructure?: string[]; sampleExcellentAnswer?: string };
+  currentMission: {
+    id: string;
+    title: string;
+    description: string;
+    cefrLevel: CefrLevel;
+    discipline: string;
+    corrections: WritingCorrection[];
+    scenario?: string;
+    task?: string;
+    expectedStructure?: string[];
+    sampleExcellentAnswer?: string;
+  };
   draft: string;
   setDraft: (v: string) => void;
   timeSpentSeconds: number;

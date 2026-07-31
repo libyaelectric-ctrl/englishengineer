@@ -56,7 +56,10 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
         ) : (
           <form onSubmit={handleSave} className="space-y-3.5">
             <div className="space-y-1">
-              <label htmlFor="company-name" className="text-[10px] font-bold uppercase tracking-wider text-foreground block">
+              <label
+                htmlFor="company-name"
+                className="text-[10px] font-bold uppercase tracking-wider text-foreground block"
+              >
                 Company Legal Name
               </label>
               <input
@@ -70,7 +73,10 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="tax-id" className="text-[10px] font-bold uppercase tracking-wider text-foreground block">
+              <label
+                htmlFor="tax-id"
+                className="text-[10px] font-bold uppercase tracking-wider text-foreground block"
+              >
                 Tax ID / VAT Number
               </label>
               <input
@@ -84,7 +90,10 @@ export const InvoiceTaxManagerModal = ({ isOpen, onClose }: InvoiceTaxManagerMod
             </div>
 
             <div className="space-y-1">
-              <label htmlFor="billing-address" className="text-[10px] font-bold uppercase tracking-wider text-foreground block">
+              <label
+                htmlFor="billing-address"
+                className="text-[10px] font-bold uppercase tracking-wider text-foreground block"
+              >
                 Official Billing Address
               </label>
               <textarea

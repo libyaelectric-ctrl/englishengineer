@@ -26,9 +26,7 @@ const SeatCalculator = ({
       <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
         <Layers className="h-4 w-4 text-primary" /> Enterprise Engineering Seats
       </span>
-      <span className="text-base font-extrabold text-primary font-mono">
-        {seats} Seats
-      </span>
+      <span className="text-base font-extrabold text-primary font-mono">{seats} Seats</span>
     </div>
     <input
       type="range"
@@ -40,12 +38,8 @@ const SeatCalculator = ({
       className="w-full h-2 rounded-lg accent-primary cursor-pointer"
     />
     <div className="flex justify-between text-[10px] font-bold font-mono">
-      <span className={seats >= 10 ? 'text-emerald-500' : 'text-muted-copy'}>
-        10+ Seats (-15%)
-      </span>
-      <span
-        className={seats >= 25 ? 'text-emerald-500 font-extrabold' : 'text-muted-copy'}
-      >
+      <span className={seats >= 10 ? 'text-emerald-500' : 'text-muted-copy'}>10+ Seats (-15%)</span>
+      <span className={seats >= 25 ? 'text-emerald-500 font-extrabold' : 'text-muted-copy'}>
         25+ Seats (-25%)
       </span>
       <span className={seats >= 50 ? 'text-primary font-extrabold' : 'text-muted-copy'}>
@@ -102,7 +96,11 @@ const ServiceOptions = ({
       role="button"
       tabIndex={0}
       onClick={() => setDedicatedServer(!dedicatedServer)}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.currentTarget.click(); } }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.currentTarget.click();
+        }
+      }}
       className={`rounded-xl border p-3 cursor-pointer transition ${
         dedicatedServer
           ? 'border-primary bg-primary/10 text-primary font-bold shadow-sm'
@@ -120,7 +118,11 @@ const ServiceOptions = ({
       role="button"
       tabIndex={0}
       onClick={() => setSlaTier(slaTier === '99.99' ? '99.9' : '99.99')}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.currentTarget.click(); } }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.currentTarget.click();
+        }
+      }}
       className={`rounded-xl border p-3 cursor-pointer transition ${
         slaTier === '99.99'
           ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-600 font-bold shadow-sm'
