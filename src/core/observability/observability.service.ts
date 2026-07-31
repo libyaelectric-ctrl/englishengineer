@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/react';
+
 import { type EngVoxEnv, validateEnvironment } from '@/config/environment.config';
 
 import { logger } from '@/shared/logger';
@@ -36,9 +38,37 @@ const getHealthStatus = (errors: string[], warnings: string[]): HealthStatus => 
 
 let sentryInitialized = false;
 
-const initSentry = async () => {
+const initSentry = () => {
   if (sentryInitialized) return;
   sentryInitialized = true;
+
+  const dsn = env?.VITE_SENTRY_DSN;
+  const sampleRate = normalizeSampleRate(env?.VITE_ERROR_MONITORING_SAMPLE_RATE);
+
+  if (!dsn) {
+    logger.d('[Observability] Sentry DSN not configured, skipping initialization.');
+    return;
+  }
+
+  Sentry.init({
+    dsn,
+    environment: env?.VITE_ENVIRONMENT_MODE || 'development',
+    sampleRate,
+    tracesSampleRate: 0.1,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 1.0,
+    integrations: [
+      Sentry.browserTracingIntegration(),
+    ],
+    beforeSend(event) {
+      if (event.exception?.values?.[0]?.type === 'ChunkLoadError') {
+        return null;
+      }
+      return event;
+    },
+  });
+
+  logger.i('[Observability] Sentry initialized successfully.');
 };
 
 export const ObservabilityService = {

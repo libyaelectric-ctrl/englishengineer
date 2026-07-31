@@ -50,6 +50,7 @@
     "content:validate": "node scripts/verify-release.mjs"
   },
   "dependencies": {
+    "@sentry/react": "^10.69.0",
     "@supabase/supabase-js": "^2.108.2",
     "@tanstack/react-query": "^5.101.4",
     "clsx": "^2.1.1",

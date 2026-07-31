@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import { AppProvider } from '@/providers';
 import { router } from '@/routes/router';
 
@@ -7,10 +8,12 @@ import { ToastContainer } from '@/shared/components/Toast';
 
 export const App = () => {
   return (
-    <AppProvider>
-      <RouterProvider router={router} />
-      <ToastContainer />
-    </AppProvider>
+    <Sentry.ErrorBoundary fallback={<div>Bir hata oluştu. Lütfen sayfayı yenileyin.</div>}>
+      <AppProvider>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </AppProvider>
+    </Sentry.ErrorBoundary>
   );
 };
 
