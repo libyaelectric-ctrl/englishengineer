@@ -591,16 +591,11 @@ const PricingPage = () => {
                 ).map((row) => (
                   <tr
                     key={row.key}
-                    className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors group"
+                    className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors"
                   >
-                    <td className="p-3.5 font-bold text-foreground capitalize flex items-center gap-2 relative">
+                    <td className="p-3.5 font-bold text-foreground capitalize flex items-center gap-2">
                       <row.icon className="h-4 w-4 text-primary shrink-0" />
                       <span>{row.label}</span>
-                      <HelpCircle className="h-3.5 w-3.5 text-muted-copy group-hover:text-primary transition cursor-help shrink-0" />
-                      {/* ITEM 18: Interactive Hover Tooltip */}
-                      <div className="absolute left-48 bottom-full mb-1 hidden group-hover:block z-50 w-64 p-2.5 bg-foreground text-background text-[10px] font-medium rounded-lg shadow-2xl leading-relaxed font-sans pointer-events-none">
-                        {row.tooltip}
-                      </div>
                     </td>
                     {ACTIVE_PLANS.map((p) => {
                       const value = p.comparison[row.key];
