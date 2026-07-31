@@ -8,6 +8,10 @@ import {
   Terminal,
 } from 'lucide-react';
 
+const SITE_URL =
+  (import.meta as unknown as { env?: { VITE_SITE_URL?: string } }).env?.VITE_SITE_URL ||
+  'https://englishengineer.vercel.app';
+
 export const STRUCTURED_DATA = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -15,7 +19,7 @@ export const STRUCTURED_DATA = {
   applicationCategory: 'EducationalApplication',
   operatingSystem: 'Web',
   description: 'AI-powered English training for engineers.',
-  url: 'https://englishengineer.vercel.app',
+  url: SITE_URL,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 

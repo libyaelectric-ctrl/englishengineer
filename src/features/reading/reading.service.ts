@@ -23,7 +23,6 @@ import {
 
 const STORAGE_KEY = 'EngVox_reading_state';
 export const READING_CONTENT_SCHEMA_VERSION = 1;
-export const READING_LESSON_CAPACITY = 200;
 
 const getReadingCatalog = (): ReadingMission[] =>
   READING_MISSIONS.map((mission, index) => ({

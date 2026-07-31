@@ -14,11 +14,7 @@ export { READING_MISSIONS } from './reading.data';
 
 export { ReadingEvaluator } from './reading.evaluator';
 
-export {
-  READING_CONTENT_SCHEMA_VERSION,
-  READING_LESSON_CAPACITY,
-  ReadingService,
-} from './reading.service';
+export { ReadingService } from './reading.service';
 
 export { useReadingStore } from './reading.store';
 
