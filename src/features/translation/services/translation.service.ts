@@ -20,7 +20,7 @@ export interface TranslationResult {
   sourceLang: string;
   targetLang: string;
   detectedLang?: string;
-  serviceUsed: 'libretranslate' | 'argos' | 'mymemory' | 'fallback';
+  serviceUsed: 'google_gtx' | 'lingva' | 'libretranslate' | 'mymemory' | 'fallback';
   wordAnalysis?: WordAnalysis;
 }
 
@@ -30,7 +30,7 @@ const DEFAULT_ENDPOINTS = [
   'https://libretranslate.de/translate',
 ];
 
-// Offline / Local quick dictionary dictionary for instant single-word fallback
+// Offline / Local quick dictionary for instant single-word fallback
 const LOCAL_WORD_DB: Record<
   string,
   { pos: WordAnalysis['partOfSpeech']; tr: string; alts: string[] }
@@ -113,35 +113,17 @@ export const analyzeSingleWord = (word: string, translatedText: string): WordAna
 const detectLanguageDirection = (
   trimmed: string,
   sourceLang: 'auto' | 'en' | 'tr',
-  targetLang: 'en' | 'tr',
+  targetLang: 'en' | 'tr'
 ): { effectiveSource: string; effectiveTarget: string } => {
   const hasTurkishChar =
     /[çğıöşüÇĞİÖŞÜ]/.test(trimmed) ||
-    /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton)\b/i.test(trimmed);
+    /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton|gel|git|yap|gelin)\b/i.test(
+      trimmed
+    );
   const effectiveSource = sourceLang === 'auto' ? (hasTurkishChar ? 'tr' : 'en') : sourceLang;
   const effectiveTarget =
     targetLang === effectiveSource ? (effectiveSource === 'tr' ? 'en' : 'tr') : targetLang;
   return { effectiveSource, effectiveTarget };
-};
-
-const findLocalFallback = (
-  trimmed: string,
-  text: string,
-  effectiveSource: string,
-  effectiveTarget: string,
-): TranslationResult | null => {
-  const lower = trimmed.toLowerCase();
-  const localMatch = LOCAL_WORD_DB[lower];
-  if (!localMatch) return null;
-  const translatedText = effectiveTarget === 'tr' ? localMatch.tr : lower;
-  return {
-    originalText: text,
-    translatedText,
-    sourceLang: effectiveSource,
-    targetLang: effectiveTarget,
-    serviceUsed: 'fallback',
-    wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-  };
 };
 
 export class TranslationService {
@@ -169,6 +151,76 @@ export class TranslationService {
     return this.primaryEndpoint;
   }
 
+  private async tryGoogleGTX(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const translatedText = data[0]
+            .map((chunk: [string]) => chunk[0])
+            .filter(Boolean)
+            .join('');
+          if (translatedText) {
+            return {
+              originalText: text,
+              translatedText,
+              sourceLang,
+              targetLang,
+              serviceUsed: 'google_gtx',
+              wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+            };
+          }
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] Google GTX engine fallback', err);
+    }
+    return null;
+  }
+
+  private async tryMyMemory(
+    trimmed: string,
+    text: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<TranslationResult | null> {
+    try {
+      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${sourceLang}|${targetLang}`;
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (response.ok) {
+        const data = await response.json();
+        const translatedText = data?.responseData?.translatedText || '';
+        if (translatedText && !translatedText.startsWith('MYMEMORY WARNING')) {
+          return {
+            originalText: text,
+            translatedText,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'mymemory',
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+          };
+        }
+      }
+    } catch (err: unknown) {
+      logger.w('[TranslationService] MyMemory fallback failed', err);
+    }
+    return null;
+  }
+
   private async tryEndpoints(
     trimmed: string,
     text: string,
@@ -179,7 +231,7 @@ export class TranslationService {
     for (const endpoint of endpointsToTry) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -214,39 +266,6 @@ export class TranslationService {
     return null;
   }
 
-  private async tryMyMemory(
-    trimmed: string,
-    text: string,
-    sourceLang: string,
-    targetLang: string
-  ): Promise<TranslationResult | null> {
-    try {
-      const srcPair = sourceLang === 'auto' ? (/[a-zA-Z]/.test(trimmed) ? 'en' : 'tr') : sourceLang;
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${srcPair}|${targetLang}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (response.ok) {
-        const data = await response.json();
-        const translatedText = data?.responseData?.translatedText || '';
-        if (translatedText && !translatedText.startsWith('MYMEMORY WARNING')) {
-          return {
-            originalText: text,
-            translatedText,
-            sourceLang,
-            targetLang,
-            serviceUsed: 'mymemory',
-            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-          };
-        }
-      }
-    } catch (err: unknown) {
-      logger.w('[TranslationService] MyMemory fallback failed', err);
-    }
-    return null;
-  }
-
   public async translate({
     text,
     sourceLang = 'auto',
@@ -263,16 +282,38 @@ export class TranslationService {
       };
     }
 
-    const { effectiveSource, effectiveTarget } = detectLanguageDirection(trimmed, sourceLang, targetLang);
+    const { effectiveSource, effectiveTarget } = detectLanguageDirection(
+      trimmed,
+      sourceLang,
+      targetLang
+    );
 
-    const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
-    if (endpointResult) return endpointResult;
+    // 1. Primary High-Speed Provider (Google GTX Client Endpoint)
+    const googleResult = await this.tryGoogleGTX(trimmed, text, effectiveSource, effectiveTarget);
+    if (googleResult) return googleResult;
 
+    // 2. Secondary Provider (MyMemory Open API)
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    const localResult = findLocalFallback(trimmed, text, effectiveSource, effectiveTarget);
-    if (localResult) return localResult;
+    // 3. Open-Source Endpoint (LibreTranslate / Argos)
+    const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
+    if (endpointResult) return endpointResult;
+
+    // 4. Offline / Local Dictionary Fallback
+    const lower = trimmed.toLowerCase();
+    const localMatch = LOCAL_WORD_DB[lower];
+    if (localMatch) {
+      const translatedText = effectiveTarget === 'tr' ? localMatch.tr : lower;
+      return {
+        originalText: text,
+        translatedText,
+        sourceLang: effectiveSource,
+        targetLang: effectiveTarget,
+        serviceUsed: 'fallback',
+        wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+      };
+    }
 
     return {
       originalText: text,
