@@ -44,6 +44,8 @@ export function FAQSection() {
                 >
                   <button
                     onClick={() => setOpenQuestion(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
                     className="flex w-full items-center justify-between p-4 text-left cursor-pointer"
                   >
                     <span className="text-xs sm:text-sm font-bold text-foreground pr-3 leading-snug">
@@ -56,6 +58,8 @@ export function FAQSection() {
                     />
                   </button>
                   <div
+                    id={`faq-answer-${index}`}
+                    role="region"
                     className={`overflow-hidden transition-all duration-300 ${
                       isOpen ? 'max-h-96' : 'max-h-0'
                     }`}

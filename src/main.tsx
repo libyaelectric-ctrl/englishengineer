@@ -52,13 +52,13 @@ if (typeof window !== 'undefined') {
 
 // Publish app.started event to Core Event Bus
 try {
-  const metaEnv = (import.meta as unknown as { env?: { MODE?: string } }).env;
+  const metaEnv = import.meta.env;
   eventBus.publish({
     id: IdService.createId('sys'),
     type: 'app.started',
     timestamp: new Date().toISOString(),
     payload: {
-      environment: metaEnv?.MODE || 'development',
+      environment: metaEnv.MODE || 'development',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
       timestamp: Date.now(),
     },

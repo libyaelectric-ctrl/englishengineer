@@ -16,11 +16,7 @@ interface AuthEnv {
   PROD?: boolean;
 }
 
-interface ImportMetaWithAuthEnv {
-  env?: AuthEnv;
-}
-
-const env = (import.meta as unknown as ImportMetaWithAuthEnv).env;
+const env: AuthEnv | undefined = import.meta.env;
 
 export const isLocalAuthAllowed = (isProduction: boolean, explicitOverride?: string): boolean =>
   !isProduction || explicitOverride === 'true';

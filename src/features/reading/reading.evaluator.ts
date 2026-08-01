@@ -16,11 +16,13 @@ const evaluateMultipleChoice = (userAns: string, correctAnswer: string): boolean
   userAns.toUpperCase().charAt(0) === correctAnswer.toUpperCase().charAt(0);
 
 const evaluateTrueFalse = (userAns: string, correctAnswer: string): boolean => {
-  const u = userAns.toLowerCase();
-  const c = correctAnswer.toLowerCase();
-  return (
-    u === c || (u.startsWith('t') && c.startsWith('t')) || (u.startsWith('f') && c.startsWith('f'))
-  );
+  const u = userAns.toLowerCase().trim();
+  const c = correctAnswer.toLowerCase().trim();
+  const trueAliases = ['true', 't', 'yes', 'correct', 'right'];
+  const falseAliases = ['false', 'f', 'no', 'incorrect', 'wrong'];
+  if (trueAliases.includes(u) && trueAliases.includes(c)) return true;
+  if (falseAliases.includes(u) && falseAliases.includes(c)) return true;
+  return u === c;
 };
 
 const evaluateKeywordAnswer = (
@@ -103,12 +105,12 @@ export const ReadingEvaluator = {
     const comprehensionScore =
       counts.comprehension[0] > 0
         ? Math.round((counts.comprehension[1] / counts.comprehension[0]) * 100)
-        : 100;
+        : 0;
 
     const technicalAccuracyScore =
-      counts.tech[0] > 0 ? Math.round((counts.tech[1] / counts.tech[0]) * 100) : 100;
+      counts.tech[0] > 0 ? Math.round((counts.tech[1] / counts.tech[0]) * 100) : 0;
 
-    const qVocabRatio = counts.vocab[0] > 0 ? counts.vocab[1] / counts.vocab[0] : 1.0;
+    const qVocabRatio = counts.vocab[0] > 0 ? counts.vocab[1] / counts.vocab[0] : 0;
     const clickBonus = Math.min(30, clickedVocabCount * 15);
     const vocabularyScore = Math.min(100, Math.round(qVocabRatio * 70 + clickBonus));
 

@@ -53,12 +53,16 @@ export const SpeakingService = {
    */
   getMissionsSortedByPool(pool: string[]): SpeakingMission[] {
     if (pool.length === 0) return SPEAKING_MISSIONS;
-    const lowerPool = pool.map((w) => w.toLowerCase());
+    const poolSet = new Set(pool.map((w) => w.toLowerCase()));
     return [...SPEAKING_MISSIONS].sort((a, b) => {
       const aText = `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
       const bText = `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
-      const aCount = lowerPool.filter((w) => aText.includes(w)).length;
-      const bCount = lowerPool.filter((w) => bText.includes(w)).length;
+      let aCount = 0;
+      let bCount = 0;
+      for (const word of poolSet) {
+        if (aText.includes(word)) aCount++;
+        if (bText.includes(word)) bCount++;
+      }
       return bCount - aCount;
     });
   },

@@ -16,6 +16,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PageHeader } from '@/shared/components/PageHeader';
 import { PageMetadata } from '@/shared/components/PageMetadata';
+import { logger } from '@/shared/logger';
 
 import { SupportedLang, TranslationResult, translationService } from '@/features/translation';
 
@@ -327,8 +328,8 @@ export const TranslatorPage = () => {
         });
         setTranslatedText(result.translatedText);
         setResultData(result);
-      } catch {
-        // Handled gracefully in translationService
+      } catch (err) {
+        logger.e('[TranslatorPage] Translation failed', err);
       } finally {
         setIsTranslating(false);
       }

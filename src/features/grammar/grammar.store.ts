@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import type { GrammarRule } from './grammar.types';
-import { GrammarProgressService, type RuleProgress } from './services/grammar.progress';
+import { QuizGrammarProgressService, type RuleProgress } from './services/grammar.progress';
 
 export type GrammarTab = 'New' | 'Learning' | 'Due' | 'Strong';
 
@@ -58,16 +58,16 @@ export const useGrammarStore = create<GrammarStoreState & GrammarStoreActions>((
 
   markRuleViewed: (ruleId: string) => {
     set((state) => {
-      const current = state.ruleProgress[ruleId] || GrammarProgressService.addRule(ruleId);
-      const updated = GrammarProgressService.onView(current);
+      const current = state.ruleProgress[ruleId] || QuizGrammarProgressService.addRule(ruleId);
+      const updated = QuizGrammarProgressService.onView(current);
       return { ruleProgress: { ...state.ruleProgress, [ruleId]: updated } };
     });
   },
 
   markRuleAsLearned: (ruleId: string) => {
     set((state) => {
-      const current = state.ruleProgress[ruleId] || GrammarProgressService.addRule(ruleId);
-      const updated = GrammarProgressService.onQuizCorrect({
+      const current = state.ruleProgress[ruleId] || QuizGrammarProgressService.addRule(ruleId);
+      const updated = QuizGrammarProgressService.onQuizCorrect({
         ...current,
         status: 'learning',
       });
@@ -77,16 +77,16 @@ export const useGrammarStore = create<GrammarStoreState & GrammarStoreActions>((
 
   onQuizCorrect: (ruleId: string) => {
     set((state) => {
-      const current = state.ruleProgress[ruleId] || GrammarProgressService.addRule(ruleId);
-      const updated = GrammarProgressService.onQuizCorrect(current);
+      const current = state.ruleProgress[ruleId] || QuizGrammarProgressService.addRule(ruleId);
+      const updated = QuizGrammarProgressService.onQuizCorrect(current);
       return { ruleProgress: { ...state.ruleProgress, [ruleId]: updated } };
     });
   },
 
   onQuizIncorrect: (ruleId: string) => {
     set((state) => {
-      const current = state.ruleProgress[ruleId] || GrammarProgressService.addRule(ruleId);
-      const updated = GrammarProgressService.onQuizIncorrect(current);
+      const current = state.ruleProgress[ruleId] || QuizGrammarProgressService.addRule(ruleId);
+      const updated = QuizGrammarProgressService.onQuizIncorrect(current);
       return { ruleProgress: { ...state.ruleProgress, [ruleId]: updated } };
     });
   },
@@ -95,7 +95,7 @@ export const useGrammarStore = create<GrammarStoreState & GrammarStoreActions>((
     set((state) => {
       const current = state.ruleProgress[ruleId];
       if (!current || current.status !== 'struggling') return state;
-      const updated = GrammarProgressService.onStrugglingQuizCorrect(current);
+      const updated = QuizGrammarProgressService.onStrugglingQuizCorrect(current);
       return { ruleProgress: { ...state.ruleProgress, [ruleId]: updated } };
     });
   },
@@ -103,14 +103,38 @@ export const useGrammarStore = create<GrammarStoreState & GrammarStoreActions>((
   fetchGrammarStats: () => {
     set((state) => {
       const progress = Object.values(state.ruleProgress);
+      let newCount = 0;
+      let learningCount = 0;
+      let learnedCount = 0;
+      let masteredCount = 0;
+      let strugglingCount = 0;
+      for (const p of progress) {
+        switch (p.status) {
+          case 'new':
+            newCount++;
+            break;
+          case 'learning':
+            learningCount++;
+            break;
+          case 'learned':
+            learnedCount++;
+            break;
+          case 'mastered':
+            masteredCount++;
+            break;
+          case 'struggling':
+            strugglingCount++;
+            break;
+        }
+      }
       return {
         stats: {
           total: progress.length,
-          newCount: progress.filter((p) => p.status === 'new').length,
-          learning: progress.filter((p) => p.status === 'learning').length,
-          learned: progress.filter((p) => p.status === 'learned').length,
-          mastered: progress.filter((p) => p.status === 'mastered').length,
-          struggling: progress.filter((p) => p.status === 'struggling').length,
+          newCount,
+          learning: learningCount,
+          learned: learnedCount,
+          mastered: masteredCount,
+          struggling: strugglingCount,
         },
       };
     });

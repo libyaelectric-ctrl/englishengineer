@@ -60,7 +60,13 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
       </div>
 
       <div className="relative flex items-center justify-center py-2">
-        <svg width={size} height={size} className="overflow-visible">
+        <svg
+          width={size}
+          height={size}
+          className="overflow-visible"
+          role="img"
+          aria-label={`Skill radar chart showing: ${SKILL_LABELS.map((item) => `${item.label} ${getScore(item.key)}%`).join(', ')}`}
+        >
           {gridLevels.map((level) => {
             const levelPoints = SKILL_LABELS.map((_, index) => {
               const { x, y } = getCoordinates(index, level * 100);

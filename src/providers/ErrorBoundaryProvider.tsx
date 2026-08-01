@@ -10,7 +10,7 @@ interface ErrorBoundaryProviderProps {
   children: ReactNode;
 }
 
-const isDevelopment = (import.meta as unknown as { env?: { DEV?: boolean } }).env?.DEV === true;
+const isDevelopment = import.meta.env.DEV === true;
 
 const ErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
   const errorDetails = error instanceof Error ? error.message : String(error);

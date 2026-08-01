@@ -1,6 +1,6 @@
 import { CheckCircle2, Download, FileSpreadsheet, FileText, X } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ReportPdfExportModalProps {
   isOpen: boolean;
@@ -9,6 +9,17 @@ interface ReportPdfExportModalProps {
 
 export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalProps) => {
   const [exporting, setExporting] = useState<string | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    dialogRef.current?.focus();
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -22,7 +33,14 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden">
+      <div
+        ref={dialogRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Technical report export"
+        className="w-full max-w-md rounded-2xl border border-primary/30 bg-surface/95 p-5 shadow-2xl space-y-4 relative light-sweep-container overflow-hidden focus:outline-none"
+      >
         <div className="flex items-center justify-between border-b border-border-soft pb-3">
           <div className="flex items-center gap-2">
             <Download className="h-5 w-5 text-primary" />

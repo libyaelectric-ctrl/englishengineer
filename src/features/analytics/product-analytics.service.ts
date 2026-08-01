@@ -21,10 +21,6 @@ interface ProductAnalyticsEnv {
   VITE_PRODUCT_ANALYTICS_PROVIDER?: string;
 }
 
-interface ImportMetaWithProductAnalyticsEnv {
-  env?: ProductAnalyticsEnv;
-}
-
 const ONCE_KEY_PREFIX = 'product_analytics_once_';
 const skills = new Set(['reading', 'writing', 'listening', 'speaking', 'vocabulary', 'grammar']);
 const plans = new Set(['free', 'pro', 'enterprise']);
@@ -43,7 +39,7 @@ const getConfig = (): {
   enabled: boolean;
   mode: ProductAnalyticsProviderMode;
 } => {
-  const env = (import.meta as unknown as ImportMetaWithProductAnalyticsEnv).env;
+  const env: ProductAnalyticsEnv | undefined = import.meta.env;
   const enabled = String(env?.VITE_PRODUCT_ANALYTICS_ENABLED ?? 'true').toLowerCase() !== 'false';
   const requested = String(env?.VITE_PRODUCT_ANALYTICS_PROVIDER ?? 'local').toLowerCase();
   const mode: ProductAnalyticsProviderMode = ['local', 'console', 'posthog'].includes(requested)

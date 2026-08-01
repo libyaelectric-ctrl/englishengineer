@@ -9,5 +9,10 @@ export function getInitials(name: string): string {
 }
 
 export function generateId(): string {
-  return 'user_' + Math.random().toString(36).substring(2, 11);
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return 'user_' + Array.from(array)
+    .map((b) => b.toString(36).padStart(2, '0'))
+    .join('')
+    .slice(0, 12);
 }

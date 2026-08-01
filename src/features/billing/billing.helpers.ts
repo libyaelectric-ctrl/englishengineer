@@ -12,10 +12,6 @@ interface BillingEnv {
   VITE_BILLING_API_URL?: string;
 }
 
-interface ImportMetaWithBillingEnv {
-  env?: BillingEnv;
-}
-
 export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
   free: {
     id: 'free',
@@ -192,7 +188,7 @@ export const createFreeSubscription = (): SubscriptionSnapshot => ({
 });
 
 export const getBillingApiUrl = (): string | null => {
-  const env = (import.meta as unknown as ImportMetaWithBillingEnv).env;
+  const env: BillingEnv | undefined = import.meta.env;
   const value = env?.VITE_BILLING_API_URL?.trim();
   return isConfiguredPublicUrl(value) ? value?.replace(/\/$/, '') || null : null;
 };

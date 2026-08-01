@@ -102,11 +102,13 @@ export function CefrQuizWidget() {
                 {QUIZ_QUESTIONS[currentStep].question}
               </h3>
 
-              <div className="space-y-2">
+              <div className="space-y-2" role="radiogroup" aria-label="Quiz answer options">
                 {QUIZ_QUESTIONS[currentStep].options.map((opt, i) => (
                   <button
                     key={i}
                     type="button"
+                    role="radio"
+                    aria-checked={false}
                     onClick={() => handleSelectOption(opt.level)}
                     className="w-full text-left p-3 rounded-lg border border-border-soft bg-surface hover:border-primary/50 hover:bg-primary/5 transition-all text-xs font-medium text-foreground flex items-center justify-between group cursor-pointer"
                   >

@@ -70,7 +70,7 @@ describe('Architecture Rules', () => {
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     // Expect violations to be documented and decreasing over time
-    expect(violations.length).toBeLessThan(200);
+    expect(violations.length).toBeLessThan(150);
   });
 
   it('documents shared-to-core/features violations (technical debt)', () => {
@@ -99,7 +99,7 @@ describe('Architecture Rules', () => {
     console.log(`\n[Architecture] Shared-to-core/features violations: ${violations.length}`);
     console.log('See ARCHITECTURE.md for migration plan\n');
 
-    expect(violations.length).toBeLessThan(20);
+    expect(violations.length).toBeLessThan(15);
   });
 
   it('most features have an index.ts entry point', () => {

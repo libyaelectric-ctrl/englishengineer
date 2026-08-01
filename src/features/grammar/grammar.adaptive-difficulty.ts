@@ -102,6 +102,8 @@ export const AdaptiveDifficultyEngine = {
         return 2.0;
       case 'challenge':
         return 3.0;
+      default:
+        return 1.0;
     }
   },
 };

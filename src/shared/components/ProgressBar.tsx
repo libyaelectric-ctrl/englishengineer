@@ -15,7 +15,7 @@ export const ProgressBar = memo<ProgressBarProps>(
     value,
     max = 100,
     showValue = false,
-    animated: _animated = true,
+    animated = true,
     color = 'primary',
     className,
     ...props
@@ -44,7 +44,8 @@ export const ProgressBar = memo<ProgressBarProps>(
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-border-soft">
           <div
             className={cn(
-              'h-full rounded-full transition-all duration-500 ease-out',
+              'h-full rounded-full',
+              animated ? 'transition-all duration-500 ease-out' : '',
               colors[color]
             )}
             style={{ width: `${percentage}%` }}

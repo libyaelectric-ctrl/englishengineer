@@ -17,11 +17,7 @@ interface ObservabilityEnv {
   VITE_ENVIRONMENT_MODE?: string;
 }
 
-interface ImportMetaWithObservabilityEnv {
-  env?: ObservabilityEnv;
-}
-
-const env = (import.meta as unknown as ImportMetaWithObservabilityEnv).env;
+const env: ObservabilityEnv | undefined = import.meta.env;
 
 const normalizeSampleRate = (value: string | undefined): number => {
   const parsed = Number(value);
@@ -117,6 +113,13 @@ export const ObservabilityService = {
   /** Report error and log locally. */
   logError(error: ErrorReport): void {
     logger.e(`[Observability] Error: ${error.code}`, error.message, error.context);
+    if (sentryInitialized) {
+      Sentry.withScope((scope) => {
+        scope.setTag('error.code', error.code);
+        if (error.context) scope.setExtras(error.context);
+        Sentry.captureException(new Error(error.message));
+      });
+    }
   },
 
   /** Log performance metric locally. */

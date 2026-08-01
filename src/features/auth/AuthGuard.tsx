@@ -18,8 +18,11 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
   useEffect(() => {
     void initialize();
     const safetyTimer = window.setTimeout(() => {
-      useAuthStore.setState({ isLoading: false });
-    }, 2500);
+      const state = useAuthStore.getState();
+      if (state.isLoading && !state.isAuthenticated) {
+        useAuthStore.setState({ isLoading: false });
+      }
+    }, 5000);
     return () => window.clearTimeout(safetyTimer);
   }, [initialize]);
 

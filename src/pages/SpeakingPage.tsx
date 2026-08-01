@@ -1,7 +1,7 @@
 import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
-import { lazy, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
@@ -272,10 +272,10 @@ const SpeakingTabContent = ({ tab }: { tab: SpeakingTab }) => {
 };
 
 const SpeakingPage = () => {
-  const readingStore = useReadingStore();
-  const writingStore = useWritingStore();
-  const readingDone = Object.keys(readingStore.completedMissions || {}).length;
-  const writingDone = Object.keys(writingStore.completedMissions || {}).length;
+  const readingCompletedMissions = useReadingStore((s) => s.completedMissions);
+  const writingCompletedMissions = useWritingStore((s) => s.completedMissions);
+  const readingDone = Object.keys(readingCompletedMissions || {}).length;
+  const writingDone = Object.keys(writingCompletedMissions || {}).length;
 
   const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
   const [previewMode, setPreviewMode] = useState(false);
@@ -344,7 +344,15 @@ const SpeakingPage = () => {
         </div>
       </div>
 
-      <SpeakingTabContent tab={speakingTab} />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-20">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-border-soft border-t-primary" />
+          </div>
+        }
+      >
+        <SpeakingTabContent tab={speakingTab} />
+      </Suspense>
 
       <ScoreFeedbackOverlay
         result={scoreResult}

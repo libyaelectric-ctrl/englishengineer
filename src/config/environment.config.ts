@@ -21,10 +21,6 @@ export interface EngVoxEnv {
   VITE_PRODUCT_ANALYTICS_PROVIDER?: string;
 }
 
-interface ImportMetaWithEngVoxEnv {
-  env?: EngVoxEnv;
-}
-
 export interface EnvironmentValidationResult {
   isProductionReady: boolean;
   mode: 'local' | 'development' | 'staging' | 'production';
@@ -43,7 +39,7 @@ export interface EnvironmentValidationResult {
   };
 }
 
-const env = (import.meta as unknown as ImportMetaWithEngVoxEnv).env;
+const env = import.meta.env as unknown as EngVoxEnv | undefined;
 
 export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
   const normalized = value?.trim();

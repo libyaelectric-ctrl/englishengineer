@@ -1,6 +1,6 @@
 import { AlertTriangle, CheckCircle2, Info, Sparkles } from 'lucide-react';
 
-import { useMemo } from 'react';
+import { useDeferredValue, useMemo } from 'react';
 
 import { cn } from '@/shared/utils/cn';
 
@@ -39,9 +39,10 @@ const typeLabels: Record<RealtimeSuggestion['type'], string> = {
 };
 
 export const WritingRealtimeFeedback = ({ draft }: WritingRealtimeFeedbackProps) => {
-  const analysis = useMemo(() => WritingRealtimeAnalyzer.analyze(draft), [draft]);
+  const deferredDraft = useDeferredValue(draft);
+  const analysis = useMemo(() => WritingRealtimeAnalyzer.analyze(deferredDraft), [deferredDraft]);
 
-  if (!draft.trim()) {
+  if (!deferredDraft.trim()) {
     return (
       <div className="rounded-xl border border-border-soft bg-surface-hover p-5 text-center">
         <Sparkles className="mx-auto h-6 w-6 text-muted-copy mb-2" />

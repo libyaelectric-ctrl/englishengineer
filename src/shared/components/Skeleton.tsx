@@ -4,14 +4,17 @@ interface SkeletonProps {
   className?: string;
   count?: number;
   style?: React.CSSProperties;
-  variant?: string;
 }
 
-export const Skeleton = React.memo(({ className = '', count = 1 }: SkeletonProps) => {
+export const Skeleton = React.memo(({ className = '', count = 1, style }: SkeletonProps) => {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className={`animate-pulse rounded-lg bg-surface-hover ${className}`} />
+        <div
+          key={i}
+          style={style}
+          className={`animate-pulse rounded-lg bg-surface-hover ${className}`}
+        />
       ))}
     </>
   );

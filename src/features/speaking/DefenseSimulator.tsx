@@ -86,18 +86,28 @@ export const DefenseSimulator = () => {
     setIsRecording(false);
     if (evalTimerRef.current) clearTimeout(evalTimerRef.current);
     evalTimerRef.current = setTimeout(() => {
+      const inputLength = userSpeechText.length || Math.floor(Math.random() * 80) + 40;
+      const hasTechnicalTerms = /\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation|C\d{2}\/\d{2})\b/i.test(userSpeechText);
+      const wordCount = userSpeechText.split(/\s+/).filter(Boolean).length || Math.floor(inputLength / 6);
+      const score = Math.min(98, Math.max(45, (wordCount > 30 ? 25 : wordCount > 15 ? 15 : 0) + (hasTechnicalTerms ? 30 : 10) + Math.floor(Math.random() * 20) + 30));
+      const fluency = score >= 85 ? 'C1 Fluent' : score >= 70 ? 'B2 Competent' : score >= 55 ? 'B1 Developing' : 'A2 Basic';
+
+      const technicalWords = userSpeechText.match(/\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation)\b/gi) || [];
+      const vocabHighlight = technicalWords.length > 0 ? `Strong (${technicalWords.slice(0, 3).join(', ')})` : 'Developing — try using more technical terminology';
+
+      const feedbackByScore =
+        score >= 85
+          ? `Excellent defense! Your response directly addressed the scenario with clear technical reasoning. ${hasTechnicalTerms ? 'Good use of engineering terminology.' : 'Consider incorporating more domain-specific vocabulary for even stronger impact.'}`
+          : score >= 70
+            ? `Solid response. You covered the key points, but could strengthen your argument with more specific technical evidence or numerical data.`
+            : `Your answer needs more structure. Start with the problem, explain your mitigation strategy, and conclude with a recovery timeline.`;
+
       setUserSpeechText(
-        'Due to unforeseen underground utility clashes, we revised the ductwork routing. We mobilized additional night shift crews to recover 5 days by next Friday.'
+        userSpeechText || 'I will review the current status and provide an updated recovery plan by end of business tomorrow.'
       );
-      setEvaluation({
-        score: 92,
-        fluency: 'C1 Fluent',
-        vocabulary: 'Strong (mobilized, underground clashes, critical path recovery)',
-        feedback:
-          'Excellent technical defense! Your usage of "mobilized additional night shift crews" and "critical path recovery" convinced the client PM.',
-      });
+      setEvaluation({ score, fluency, vocabulary: vocabHighlight, feedback: feedbackByScore });
     }, 1200);
-  }, []);
+  }, [userSpeechText]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -172,6 +182,7 @@ export const DefenseSimulator = () => {
               <button
                 type="button"
                 onClick={handleStartRecording}
+                aria-label="Start recording audio defense answer"
                 className="flex items-center gap-2 rounded-xl bg-red-600 hover:bg-red-500 text-white px-6 py-3 text-xs font-extrabold transition-all shadow-md cursor-pointer"
               >
                 <Mic className="h-4 w-4 animate-pulse" />
@@ -181,6 +192,7 @@ export const DefenseSimulator = () => {
               <button
                 type="button"
                 onClick={handleStopRecording}
+                aria-label="Stop recording and evaluate response"
                 className="flex items-center gap-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white px-6 py-3 text-xs font-extrabold transition-all cursor-pointer"
               >
                 <Mic className="h-4 w-4 text-red-500 animate-ping" />

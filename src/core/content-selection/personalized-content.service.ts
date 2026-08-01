@@ -1,5 +1,5 @@
-import type { ReadingMission } from '@/features/reading/reading.types';
-import type { WritingMission } from '@/features/writing/writing.types';
+import type { ReadingMission } from '@/shared/types/reading.types';
+import type { WritingMission } from '@/shared/types/writing.types';
 
 export interface KnowledgePoolEntry {
   content_type: string;

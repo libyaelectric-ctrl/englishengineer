@@ -11,7 +11,7 @@ import {
   Zap,
 } from 'lucide-react';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -40,10 +40,48 @@ const LIMIT_KEY = 'engvox_proofreader_guest_usage';
 
 export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofreaderModalProps) => {
   const navigate = useNavigate();
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const [inputText, setInputText] = useState(SAMPLE_DRAFTS[0].text);
   const [analysisResult, setAnalysisResult] = useState<ProofreadResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    dialogRef.current?.focus();
+    return () => {
+      previousFocusRef.current?.focus();
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        onClose();
+      }
+      if (e.key === 'Tab' && dialogRef.current) {
+        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const getUsageCount = (): number => {
     try {
@@ -84,7 +122,14 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-3 sm:p-4 animate-in fade-in">
-      <div className="w-full max-w-3xl rounded-2xl border border-primary/40 bg-surface/95 p-5 sm:p-6 shadow-2xl relative light-sweep-container overflow-hidden max-h-[82vh] flex flex-col space-y-4">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Technical document proofreader"
+        tabIndex={-1}
+        className="w-full max-w-3xl rounded-2xl border border-primary/40 bg-surface/95 p-5 sm:p-6 shadow-2xl relative light-sweep-container overflow-hidden max-h-[82vh] flex flex-col space-y-4"
+      >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border-soft pb-3 shrink-0">
           <div className="flex items-center gap-2">
@@ -96,6 +141,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close proofreader"
             className="text-muted-copy hover:text-foreground cursor-pointer"
           >
             <X className="h-4 w-4" />

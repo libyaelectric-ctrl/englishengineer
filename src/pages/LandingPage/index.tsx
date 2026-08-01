@@ -44,9 +44,10 @@ const LandingPage = () => {
     let frame = 0;
     const handleScroll = () => {
       window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() =>
-        setScrollShift(Math.min(window.scrollY * 0.08, 72))
-      );
+      frame = window.requestAnimationFrame(() => {
+        const next = Math.min(window.scrollY * 0.08, 72);
+        setScrollShift((current) => (current === next ? current : next));
+      });
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
