@@ -8,10 +8,8 @@ import { useLearningStore } from '@/core/learning';
 
 import type { SkillName } from '@/shared/types/domain.types';
 import { useAuthStore } from '@/features/auth';
-import {
-  LearningProfileEngine,
-  LearningProfileRepository,
-} from '@/features/profile';
+import { LearningProfileEngine } from '@/features/profile/profile.engine';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 
 import type { LearningTaskRecommendation } from './learning-orchestrator.types';
 import { LearningTaskEngine } from './learning-task.engine';

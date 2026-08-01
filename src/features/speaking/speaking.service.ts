@@ -5,7 +5,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { storage } from '@/shared/storage';
 
-import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 
 import { getSpeakingHistoryDetails } from './speaking-mvp';

@@ -1,13 +1,4 @@
 export const PRODUCT_VERSION = '2.4.7';
-export const APP_NAME = 'EngVox';
-export const APP_TAGLINE = 'Engineering Communication Operating System';
-
-export const BREAKPOINTS = {
-  mobile: 640,
-  tablet: 768,
-  desktop: 1024,
-  wide: 1280,
-} as const;
 
 export const PRODUCT_POSITIONING =
   'EngVox - AI-powered English communication platform for engineers on international projects';

@@ -7,8 +7,8 @@ import {
   includesNormalized,
 } from '@/core/learning';
 
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+import { CEFR_LEVELS } from '@/shared/types/domain.types';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { assertVocabularyTerms } from '../types/vocabulary.schema';
 import type { VocabularyTerm } from '../types/vocabulary.types';

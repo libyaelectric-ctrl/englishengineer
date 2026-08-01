@@ -1,13 +1,13 @@
 import { storage } from '@/shared/storage';
 
-import { GrammarProgressService } from '@/features/grammar/grammar.progress';
-import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
-import { LearningProfileRepository } from '@/features/profile/profile.repository';
+import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import {
   clampSkillElo,
   getAdaptivePaceDecision,
   getCefrBandFromElo,
-} from '@/features/profile/profile.utils';
+} from '@/shared/utils/profile.utils';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 
 import type { TaskEvaluationInput, TaskEvaluationRecord } from './learning-orchestrator.types';

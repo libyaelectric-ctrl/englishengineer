@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { LearningProfileRepository } from '@/features/profile';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 
 import { PLACEMENT_QUESTIONS } from './placement.data';
 import { PlacementService } from './placement.service';

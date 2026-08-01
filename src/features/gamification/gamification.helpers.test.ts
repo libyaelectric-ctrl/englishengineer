@@ -2,7 +2,7 @@
 import { createLearningState } from '@/test/fixtures';
 import { describe, expect, it } from 'vitest';
 
-import { AnalyticsSummary } from '@/features/analytics';
+import { AnalyticsSummary } from '@/shared/types/analytics.types';
 
 import {
   buildMissionProgress,

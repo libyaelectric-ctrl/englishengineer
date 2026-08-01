@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getInitialUserLearningProfile } from '@/features/profile';
+import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
 
 import { LessonPathEngine, getSharedLesson } from './lesson-path.engine';
 

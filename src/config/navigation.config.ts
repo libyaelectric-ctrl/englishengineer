@@ -41,26 +41,26 @@ export const SKILL_NAV_ITEMS = [
   { label: 'Speaking', href: '/speaking', icon: Mic2 },
 ] as const;
 
-export const LEARNING_HUB_NAV_ITEMS = [
+const LEARNING_HUB_NAV_ITEMS = [
   { label: 'Today', href: '/curriculum/today', icon: Calendar },
   { label: 'Curriculum', href: '/curriculum/full', icon: Library },
   { label: 'Learning Memory', href: '/curriculum/memory', icon: BarChart3 },
   { label: 'Placement Test', href: '/placement', icon: Compass },
 ] as const;
 
-export const TOOLS_NAV_ITEMS = [
+const TOOLS_NAV_ITEMS = [
   { label: 'Work Tools', href: '/tools/work', icon: BriefcaseBusiness },
   { label: 'Quick Tools', href: '/tools/quick', icon: WandSparkles },
   { label: 'AI Copilot', href: '/tools/ai', icon: BrainCircuit },
 ] as const;
 
-export const PROFILE_NAV_ITEMS = [
+const PROFILE_NAV_ITEMS = [
   { label: 'Overview', href: '/profile/overview', icon: User },
   { label: 'Preferences', href: '/profile/preferences', icon: Settings },
   { label: 'Security & Data', href: '/profile/security', icon: Shield },
 ] as const;
 
-export const PROGRESS_NAV_ITEMS = [
+const PROGRESS_NAV_ITEMS = [
   { label: 'Overview', href: '/progress/overview', icon: Target },
   { label: 'Next Steps', href: '/progress/next-steps', icon: Trophy },
 ] as const;

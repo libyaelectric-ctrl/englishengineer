@@ -1,7 +1,7 @@
 import { IdService } from '@/core/ids/id.service';
 import { LearningState } from '@/core/learning/learning.types';
 
-import { AnalyticsSummary } from '@/features/analytics';
+import { AnalyticsSummary } from '@/shared/types/analytics.types';
 
 import { LEVEL_REWARDS } from './gamification.rewards';
 import { LEVEL_XP_STEP } from './gamification.rules';

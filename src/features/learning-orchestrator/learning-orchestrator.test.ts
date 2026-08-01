@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { LearningProfileRepository, getInitialUserLearningProfile } from '@/features/profile';
-import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabulary';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
+import { VocabularyMenuService } from '@/features/vocabulary';
+import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 
 import { LearningTaskEngine, getTaskLevelAllocation } from './learning-task.engine';
 import { TaskEvaluationService } from './task-evaluation.service';

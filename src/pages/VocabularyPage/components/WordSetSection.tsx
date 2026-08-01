@@ -1,8 +1,9 @@
 import { ArrowRight, BookMarked } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { playSound } from '@/shared/utils/sound';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
@@ -45,6 +46,20 @@ export function WordSetSection({
 }: WordSetSectionProps) {
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const activeIndexRef = useRef(0);
+  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
+
+  const toggleFlipCard = useCallback((termId: string) => {
+    setFlippedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(termId)) {
+        next.delete(termId);
+      } else {
+        next.add(termId);
+      }
+      return next;
+    });
+    playSound('flip');
+  }, []);
 
   const focusCard = useCallback(
     (index: number) => {
@@ -68,10 +83,21 @@ export function WordSetSection({
         e.preventDefault();
         focusCard(activeIndexRef.current + 1);
       }
+      if (e.code === 'Space') {
+        e.preventDefault();
+        const idx = activeIndexRef.current;
+        if (idx >= 0 && idx < wordSet.length) {
+          toggleFlipCard(wordSet[idx].id);
+        }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [focusCard]);
+  }, [focusCard, toggleFlipCard, wordSet]);
+
+  useEffect(() => {
+    setFlippedCards(new Set());
+  }, [activeTab]);
 
   return (
     <SectionCard
@@ -147,6 +173,8 @@ export function WordSetSection({
                       mode={mode}
                       onReview={onReview}
                       onLearn={onLearn}
+                      isFlipped={flippedCards.has(term.id)}
+                      onFlip={() => toggleFlipCard(term.id)}
                     />
                   )}
                 </motion.div>

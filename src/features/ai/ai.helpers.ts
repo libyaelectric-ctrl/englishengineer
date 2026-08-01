@@ -152,7 +152,7 @@ export const AI_COACH_MODES: AICoachMode[] = [
   },
 ];
 
-export const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
+const AI_PROMPT_TEMPLATES: AIPromptTemplate[] = [
   {
     id: 'hospital_electrical_site_report',
     title: 'Hospital Electrical Site Report',
@@ -273,23 +273,12 @@ export const getCoachModeById = (modeId: AICoachModeId): AICoachMode =>
 export const getTemplatesForMode = (modeId: AICoachModeId): AIPromptTemplate[] =>
   AI_PROMPT_TEMPLATES.filter((template) => template.modeId === modeId);
 
-export const summarizeUserProgress = (learningState: LearningState): string[] => {
-  const summary = ProgressService.getSummary(learningState);
-  return [
-    `Level ${summary.level}`,
-    `${summary.elo} ELO`,
-    `${summary.averageScore}% average score`,
-    `${summary.completedMissionsCount}/${summary.totalMissionsCount} missions completed`,
-    `${summary.streak} day streak`,
-  ];
-};
-
-export const getWeakestSkills = (learningState: LearningState): string[] => {
+const getWeakestSkills = (learningState: LearningState): string[] => {
   const skills = ProgressService.getSkillAnalysis(learningState);
   return skills.weakSkills;
 };
 
-export const getRecommendedFocus = (learningState: LearningState): string => {
+const getRecommendedFocus = (learningState: LearningState): string => {
   const weakSkills = getWeakestSkills(learningState).filter((skill) => skill !== 'None');
   if (weakSkills.length > 0) return weakSkills[0];
 
