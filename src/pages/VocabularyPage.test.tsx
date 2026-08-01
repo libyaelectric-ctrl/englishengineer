@@ -19,7 +19,7 @@ describe('VocabularyPage menu', () => {
 
   const renderLoadedPage = async () => {
     render(<VocabularyPage />);
-    await screen.findByText('height', {}, { timeout: 10_000 });
+    await screen.findAllByText('height');
   };
 
   const startTenWordSet = async () => {
@@ -38,7 +38,7 @@ describe('VocabularyPage menu', () => {
 
     await startTenWordSet();
     const firstCard = screen.getAllByTestId('vocabulary-word-card')[0];
-    expect(within(firstCard).getByText('height')).toBeInTheDocument();
+    expect(within(firstCard).getByRole('heading', { name: 'height' })).toBeInTheDocument();
     expect(within(firstCard).getByText('A1')).toBeInTheDocument();
   }, 10_000);
 

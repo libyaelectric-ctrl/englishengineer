@@ -1,4 +1,4 @@
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
+import { CEFR_LEVELS } from '@/shared/types/domain.types';
 
 import type { GrammarRule } from './grammar.types';
 

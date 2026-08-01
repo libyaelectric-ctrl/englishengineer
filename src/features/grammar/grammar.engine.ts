@@ -5,7 +5,7 @@ import {
   isCefrAtOrBelow,
 } from '@/core/learning';
 
-import type { CefrLevel } from '@/features/level-system';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { GrammarProgressService } from './grammar.progress';
 import { GrammarRepository } from './grammar.repository';

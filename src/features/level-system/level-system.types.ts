@@ -1,6 +1,6 @@
-export const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const;
+import { CEFR_LEVELS, type CefrLevel } from '@/shared/types/domain.types';
 
-export type CefrLevel = (typeof CEFR_LEVELS)[number];
+export { CEFR_LEVELS, type CefrLevel };
 export type SkillKey =
   | 'reading'
   | 'writing'

@@ -1,32 +1,7 @@
-import {
-  BarChart3,
-  BookMarked,
-  BookOpen,
-  BrainCircuit,
-  BriefcaseBusiness,
-  Calendar,
-  ChevronRight,
-  Command,
-  Headphones,
-  Home,
-  Languages,
-  Library,
-  Mic2,
-  Moon,
-  PenTool,
-  Search,
-  Settings,
-  Shield,
-  Sun,
-  Target,
-  Trophy,
-  User,
-  Wallet,
-  WandSparkles,
-} from 'lucide-react';
+import { ChevronRight, Command, Moon, Search, Sun } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import type { FC, KeyboardEvent } from 'react';
+import type { KeyboardEvent } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -34,209 +9,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCommandPalette } from '@/shared/hooks/useCommandPalette';
 import { cn } from '@/shared/utils/cn';
 
-const COMMANDS = [
-  // Skills
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: 'Home',
-    category: 'Navigate',
-    keywords: ['home', 'main'],
-  },
-  {
-    id: 'vocabulary',
-    label: 'Vocabulary',
-    href: '/vocabulary',
-    icon: 'BookMarked',
-    category: 'Skills',
-    keywords: ['words', 'kelime'],
-  },
-  {
-    id: 'grammar',
-    label: 'Grammar',
-    href: '/grammar',
-    icon: 'Languages',
-    category: 'Skills',
-    keywords: ['gr kuralları'],
-  },
-  {
-    id: 'reading',
-    label: 'Reading',
-    href: '/reading',
-    icon: 'BookOpen',
-    category: 'Skills',
-    keywords: ['okuma'],
-  },
-  {
-    id: 'writing',
-    label: 'Writing',
-    href: '/writing',
-    icon: 'PenTool',
-    category: 'Skills',
-    keywords: ['yazma'],
-  },
-  {
-    id: 'listening',
-    label: 'Listening',
-    href: '/listening',
-    icon: 'Headphones',
-    category: 'Skills',
-    keywords: ['dinleme'],
-  },
-  {
-    id: 'speaking',
-    label: 'Speaking',
-    href: '/speaking',
-    icon: 'Mic2',
-    category: 'Skills',
-    keywords: ['konuşma'],
-  },
-  // Learning Hub
-  {
-    id: 'curriculum-today',
-    label: "Today's Curriculum",
-    href: '/curriculum/today',
-    icon: 'Calendar',
-    category: 'Learning Hub',
-    keywords: ['bugün', 'plan'],
-  },
-  {
-    id: 'curriculum-full',
-    label: 'Full Curriculum',
-    href: '/curriculum/full',
-    icon: 'Library',
-    category: 'Learning Hub',
-    keywords: ['müfredat'],
-  },
-  {
-    id: 'curriculum-memory',
-    label: 'Learning Memory',
-    href: '/curriculum/memory',
-    icon: 'BarChart3',
-    category: 'Learning Hub',
-    keywords: ['bellek'],
-  },
-  // Progress
-  {
-    id: 'progress-overview',
-    label: 'Progress Overview',
-    href: '/progress/overview',
-    icon: 'Target',
-    category: 'Progress',
-    keywords: ['ilerleme'],
-  },
-  {
-    id: 'progress-next-steps',
-    label: 'Next Steps',
-    href: '/progress/next-steps',
-    icon: 'Trophy',
-    category: 'Progress',
-    keywords: ['sonraki', 'adım'],
-  },
-  // Tools
-  {
-    id: 'tools-work',
-    label: 'Work Tools',
-    href: '/tools/work',
-    icon: 'BriefcaseBusiness',
-    category: 'Tools',
-    keywords: ['iş'],
-  },
-  {
-    id: 'tools-quick',
-    label: 'Quick Tools',
-    href: '/tools/quick',
-    icon: 'WandSparkles',
-    category: 'Tools',
-    keywords: ['hızlı'],
-  },
-  {
-    id: 'tools-ai',
-    label: 'AI Copilot',
-    href: '/tools/ai',
-    icon: 'BrainCircuit',
-    category: 'Tools',
-    keywords: ['asistan', 'ai'],
-  },
-  // Profile
-  {
-    id: 'profile-overview',
-    label: 'Profile',
-    href: '/profile/overview',
-    icon: 'User',
-    category: 'Account',
-    keywords: ['hesap'],
-  },
-  {
-    id: 'profile-preferences',
-    label: 'Settings',
-    href: '/profile/preferences',
-    icon: 'Settings',
-    category: 'Account',
-    keywords: ['ayarlar'],
-  },
-  {
-    id: 'profile-billing',
-    label: 'Billing',
-    href: '/billing',
-    icon: 'Wallet',
-    category: 'Account',
-    keywords: ['fatura'],
-  },
-  {
-    id: 'profile-security',
-    label: 'Security & Data',
-    href: '/profile/security',
-    icon: 'Shield',
-    category: 'Account',
-    keywords: ['güvenlik'],
-  },
-  // Admin
-  {
-    id: 'admin',
-    label: 'Admin Panel',
-    href: '/admin',
-    icon: 'Settings',
-    category: 'Account',
-    keywords: ['admin'],
-  },
-  // Pricing (public)
-  {
-    id: 'pricing',
-    label: 'Pricing',
-    href: '/pricing',
-    icon: 'Wallet',
-    category: 'Account',
-    keywords: ['fiyat'],
-  },
-];
-
-const ICON_MAP: Record<string, FC<{ className?: string }>> = {
-  Home,
-  User,
-  BookMarked,
-  Languages,
-  BookOpen,
-  PenTool,
-  Headphones,
-  Mic2,
-  Library,
-  Calendar,
-  BarChart3,
-  Target,
-  Trophy,
-  BriefcaseBusiness,
-  WandSparkles,
-  BrainCircuit,
-  Shield,
-  Wallet,
-  Settings,
-  Moon,
-  Sun,
-};
-
-const CATEGORIES_ORDER = ['Navigate', 'Skills', 'Learning Hub', 'Progress', 'Tools', 'Account'];
+import { COMMANDS, ICON_MAP, CATEGORIES_ORDER } from './CommandPalette/commandPalette.data';
+import { useThemeToggle } from './CommandPalette/useThemeToggle';
 
 export const CommandPalette = () => {
   const { isOpen, close, recordVisit, getRecent, getFrequency } = useCommandPalette();
@@ -246,6 +20,7 @@ export const CommandPalette = () => {
   const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { currentTheme, toggleTheme } = useThemeToggle();
 
   useEffect(() => {
     if (isOpen) {
@@ -257,15 +32,6 @@ export const CommandPalette = () => {
 
   const recentHrefs = useMemo(() => (isOpen ? getRecent() : []), [isOpen, getRecent]);
   const frequency = useMemo(() => (isOpen ? getFrequency() : []), [isOpen, getFrequency]);
-
-  const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-  const toggleTheme = () => {
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    document.documentElement.classList.toggle('light', newTheme === 'light');
-    localStorage.setItem('theme', newTheme);
-  };
 
   const filtered = useMemo(() => {
     if (!search.trim()) return COMMANDS;
@@ -297,7 +63,6 @@ export const CommandPalette = () => {
     setSelectedIndex(0);
   }, [search]);
 
-  // Keep selected item visible
   useEffect(() => {
     if (!listRef.current) return;
     const btn = listRef.current.querySelector(`[data-index="${selectedIndex}"]`);
@@ -327,7 +92,6 @@ export const CommandPalette = () => {
     }
   };
 
-  // Build the "recent" section items
   const recentItems = useMemo(() => {
     if (search.trim()) return [];
     return recentHrefs
@@ -336,7 +100,6 @@ export const CommandPalette = () => {
       .slice(0, 3) as typeof COMMANDS;
   }, [search, recentHrefs]);
 
-  // Build "frequently visited" items (top 3 by frequency, excluding recent)
   const frequentItems = useMemo(() => {
     if (search.trim()) return [];
     const recentSet = new Set(recentHrefs);
@@ -347,7 +110,6 @@ export const CommandPalette = () => {
       .slice(0, 3);
   }, [search, recentHrefs, frequency]);
 
-  // Build display sections
   type Section =
     | { type: 'header'; label: string }
     | { type: 'item'; cmd: (typeof COMMANDS)[0]; globalIndex: number };
@@ -385,7 +147,6 @@ export const CommandPalette = () => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]">
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -395,7 +156,6 @@ export const CommandPalette = () => {
             onClick={close}
           />
 
-          {/* Panel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: -8 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -403,7 +163,6 @@ export const CommandPalette = () => {
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className="relative w-full max-w-xl overflow-hidden rounded-xl border border-border-soft bg-surface shadow-2xl"
           >
-            {/* Search input */}
             <div className="flex items-center border-b border-border-soft px-4">
               <Search className="h-5 w-5 shrink-0 text-muted-copy" />
               <input
@@ -435,11 +194,10 @@ export const CommandPalette = () => {
               </div>
             </div>
 
-            {/* Results */}
             <div ref={listRef} className="max-h-[360px] overflow-y-auto p-2 custom-scrollbar">
               {sections.length === 0 ? (
                 <div className="py-10 text-center text-sm text-muted-copy">
-                  No results for "{search}"
+                  No results for &quot;{search}&quot;
                 </div>
               ) : (
                 sections.map((section) => {
@@ -494,7 +252,6 @@ export const CommandPalette = () => {
               )}
             </div>
 
-            {/* Footer */}
             <div className="flex items-center justify-between border-t border-border-soft px-4 py-2 text-[10px] text-muted-copy/60">
               <div className="flex items-center gap-2">
                 <span className="flex items-center gap-1">
@@ -513,7 +270,7 @@ export const CommandPalette = () => {
                   navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">↵</kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">&#x21B5;</kbd>
                   select
                 </span>
               </div>

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import { CEFR_LEVELS } from '@/features/level-system';
+import { CEFR_LEVELS } from '@/shared/types/domain.types';
 
 import { GrammarEngine } from './grammar.engine';
 import { GrammarRepository } from './grammar.repository';

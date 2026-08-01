@@ -1,4 +1,4 @@
-import type { CefrLevel } from '@/features/level-system';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export type WritingTaskFormat = 'sentence' | 'message' | 'email' | 'report' | 'claim';
 

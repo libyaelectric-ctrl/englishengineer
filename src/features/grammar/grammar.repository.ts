@@ -7,8 +7,7 @@ import {
 } from '@/core/learning/spaced-repetition.helpers';
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
-import { CEFR_LEVELS } from '@/features/level-system/level-system.types';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+import { CEFR_LEVELS, type CefrLevel } from '@/shared/types/domain.types';
 
 import { assertGrammarRules } from './grammar.schema';
 import type { GrammarRule } from './grammar.types';

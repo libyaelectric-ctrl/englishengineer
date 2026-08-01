@@ -22,25 +22,11 @@ if (typeof globalThis.IntersectionObserver === 'undefined') {
   } as unknown as typeof globalThis.IntersectionObserver;
 }
 
-// Mock IndexedDB for jsdom tests
-if (typeof globalThis.indexedDB === 'undefined') {
-  globalThis.indexedDB = {
-    open: () => {
-      const request = {
-        onupgradeneeded: null,
-        onsuccess: null,
-        onerror: null,
-        error: new Error('IndexedDB blocked in tests'),
-      };
-      setTimeout(() => {
-        if (typeof request.onerror === 'function') {
-          (request as unknown as { onerror: (e: unknown) => void }).onerror({ target: request });
-        }
-      }, 0);
-      return request;
-    },
-  } as unknown as IDBFactory;
-}
+// IndexedDB is intentionally NOT mocked here.
+// IndexedDB functions in indexed-db.ts check isSupported() which returns false
+// when window.indexedDB is undefined, so getCachedSeed / setCachedSeed become
+// no-ops. Vocabulary data loads directly from JSON seed files via mock fetch.
+// This avoids complex async mock chains that cause test timeouts.
 
 afterEach(() => {
   cleanupDom?.();
