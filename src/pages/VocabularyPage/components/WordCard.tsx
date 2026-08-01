@@ -1,7 +1,7 @@
 import { CheckCircle2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { playSound } from '@/shared/utils/sound';
 
@@ -166,6 +166,20 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
   const [isFlipped, setIsFlipped] = useState(false);
   const status = progress?.status ?? 'new';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const activeTag = document.activeElement?.tagName.toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        setIsFlipped((f) => !f);
+        playSound('flip');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const handleLearnClick = (t: VocabularyTerm) => {
     playSound('ding');
