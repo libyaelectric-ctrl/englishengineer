@@ -69,15 +69,28 @@ interface WordCardFrontProps {
 }
 
 const WordCardFront: React.FC<WordCardFrontProps> = ({
-  term, progress, mode, status, showAnswer, answer, quizResult, knowThisCheck,
-  showDetails, onAnswerChange, onSetKnowThisCheck, onSubmit, onLearn, onReview,
-  onToggleDetails, onToggleFlip,
+  term,
+  progress,
+  mode,
+  status,
+  showAnswer,
+  answer,
+  quizResult,
+  knowThisCheck,
+  showDetails,
+  onAnswerChange,
+  onSetKnowThisCheck,
+  onSubmit,
+  onLearn,
+  onReview,
+  onToggleDetails,
+  onToggleFlip,
 }) => (
   <div
-    className={`absolute inset-0 flex flex-col justify-between rounded-xl bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
+    className={`absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-xl bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
     style={{ backfaceVisibility: 'hidden' }}
   >
-    <div className="space-y-4">
+    <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
       <WordCardHeader term={term} showAnswer={showAnswer} status={status} progress={progress} />
       {mode === 'Review' && progress && <ReviewReasonBanner term={term} progress={progress} />}
       {status === 'Learned' && mode === 'Quiz' && (
@@ -94,25 +107,46 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
           <NewWordHint />
           {mode === 'Quiz' ? (
             <QuizForm
-              term={term} answer={answer} quizResult={quizResult} knowThisCheck={knowThisCheck}
-              onAnswerChange={onAnswerChange} onSetKnowThisCheck={onSetKnowThisCheck}
-              onSubmit={onSubmit} onLearn={onLearn}
+              term={term}
+              answer={answer}
+              quizResult={quizResult}
+              knowThisCheck={knowThisCheck}
+              onAnswerChange={onAnswerChange}
+              onSetKnowThisCheck={onSetKnowThisCheck}
+              onSubmit={onSubmit}
+              onLearn={onLearn}
             />
           ) : (
-            <button type="button" onClick={() => { playSound('ding'); onLearn?.(term); }}
-              className="w-full rounded-md bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer">
+            <button
+              type="button"
+              onClick={() => {
+                playSound('ding');
+                onLearn?.(term);
+              }}
+              className="w-full rounded-md bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+            >
               I Know This
             </button>
           )}
         </div>
       )}
-      {mode === 'Review' && status !== 'Mastered' && <ReviewActions term={term} onReview={onReview} />}
+      {mode === 'Review' && status !== 'Mastered' && (
+        <ReviewActions term={term} onReview={onReview} />
+      )}
     </div>
-    <div className="mt-4 pt-3 border-t border-border-soft flex items-center justify-between">
-      <WordCardDetails term={term} showDetails={showDetails} onToggle={() => onToggleDetails((v) => !v)} />
-      <button type="button" onClick={onToggleFlip}
-        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary hover:bg-primary hover:text-white transition-all cursor-pointer">
-        <RotateCw className="h-3.5 w-3.5" /><span>3D Flip (Space)</span>
+    <div className="mt-4 flex shrink-0 items-center justify-between border-t border-border-soft pt-3">
+      <WordCardDetails
+        term={term}
+        showDetails={showDetails}
+        onToggle={() => onToggleDetails((v) => !v)}
+      />
+      <button
+        type="button"
+        onClick={onToggleFlip}
+        className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+      >
+        <RotateCw className="h-3.5 w-3.5" />
+        <span>3D Flip (Space)</span>
       </button>
     </div>
   </div>
@@ -139,8 +173,16 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
         playSound('flip');
       }
       if (isReviewable) {
-        if (e.key === '1') { e.preventDefault(); playSound('error'); onReview(term, false); }
-        if (e.key === '2' || e.key === '3' || e.key === '4') { e.preventDefault(); playSound('success'); onReview(term, true); }
+        if (e.key === '1') {
+          e.preventDefault();
+          playSound('error');
+          onReview(term, false);
+        }
+        if (e.key === '2' || e.key === '3' || e.key === '4') {
+          e.preventDefault();
+          playSound('success');
+          onReview(term, true);
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -173,7 +215,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
   return (
     <article
       data-testid="vocabulary-word-card"
-      className="relative h-full w-full min-h-[340px]"
+      className="relative h-[430px] min-h-[430px] w-full overflow-hidden rounded-xl"
       style={{ perspective: '1200px' }}
     >
       <div
@@ -184,21 +226,33 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
         }}
       >
         <WordCardFront
-          term={term} progress={progress} mode={mode} status={status} showAnswer={showAnswer}
-          answer={answer} quizResult={quizResult} knowThisCheck={knowThisCheck} showDetails={showDetails}
-          onAnswerChange={setAnswer} onSetKnowThisCheck={setKnowThisCheck} onSubmit={submitQuiz}
-          onLearn={onLearn} onReview={onReview} onToggleDetails={handleToggleDetails} onToggleFlip={toggleFlip}
+          term={term}
+          progress={progress}
+          mode={mode}
+          status={status}
+          showAnswer={showAnswer}
+          answer={answer}
+          quizResult={quizResult}
+          knowThisCheck={knowThisCheck}
+          showDetails={showDetails}
+          onAnswerChange={setAnswer}
+          onSetKnowThisCheck={setKnowThisCheck}
+          onSubmit={submitQuiz}
+          onLearn={onLearn}
+          onReview={onReview}
+          onToggleDetails={handleToggleDetails}
+          onToggleFlip={toggleFlip}
         />
 
         {/* BACK FACE (180deg ROTATED PHYSICAL BACK) */}
         <div
-          className="absolute inset-0 flex flex-col justify-between rounded-xl bg-gradient-to-br from-surface via-surface-hover to-primary/10 p-6 border-2 border-primary/40 shadow-2xl backdrop-blur-xl"
+          className="absolute inset-0 flex min-h-0 flex-col justify-between overflow-hidden rounded-xl bg-gradient-to-br from-surface via-surface-hover to-primary/10 p-6 border-2 border-primary/40 shadow-2xl backdrop-blur-xl"
           style={{
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)',
           }}
         >
-          <div className="space-y-4">
+          <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
             <div className="flex items-center justify-between border-b border-border-soft pb-3">
               <span className="text-xs font-extrabold uppercase tracking-wider text-primary">
                 🇹🇷 TÜRKÇE KARŞILIĞI & ŞANTİYE KULLANIMI
@@ -235,7 +289,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
             </div>
           </div>
 
-          <div className="pt-3 border-t border-border-soft flex items-center justify-between">
+          <div className="flex shrink-0 items-center justify-between border-t border-border-soft pt-3">
             <span className="text-[10px] font-mono font-bold text-muted-copy">
               CEFR: {term.cefrLevel}
             </span>

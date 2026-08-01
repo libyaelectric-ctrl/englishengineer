@@ -111,7 +111,7 @@ export function VocabularyHeader({
           <div className="hidden lg:flex items-center gap-1.5 rounded border border-border-soft bg-surface/80 px-2 py-1 text-[10px] font-mono text-muted-copy">
             <span className="rounded bg-primary/10 px-1 font-bold text-primary">Space</span> Flip |
             <span className="rounded bg-primary/10 px-1 font-bold text-primary">1-4</span> Rating |
-            <span className="rounded bg-primary/10 px-1 font-bold text-primary">J/K</span> Nav
+            <span className="rounded bg-primary/10 px-1 font-bold text-primary">←/→</span> Nav
           </div>
         </div>
 
