@@ -1,6 +1,6 @@
 import { CheckCircle2, RotateCw, Volume2 } from 'lucide-react';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 
 import { playSound } from '@/shared/utils/sound';
 
@@ -161,6 +161,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
   const [knowThisCheck, setKnowThisCheck] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const articleRef = useRef<HTMLElement>(null);
 
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
@@ -170,12 +171,18 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
     const handleKeyDown = (e: KeyboardEvent) => {
       const activeTag = document.activeElement?.tagName.toLowerCase();
       if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+      const isFocused =
+        articleRef.current &&
+        (document.activeElement === articleRef.current ||
+          document.activeElement?.contains(articleRef.current));
       if (e.code === 'Space') {
         e.preventDefault();
-        setIsFlipped((f) => !f);
-        playSound('flip');
+        if (isFocused) {
+          setIsFlipped((f) => !f);
+          playSound('flip');
+        }
       }
-      if (isReviewable) {
+      if (isReviewable && isFocused) {
         if (e.key === '1') {
           e.preventDefault();
           playSound('error');
@@ -217,6 +224,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
 
   return (
     <article
+      ref={articleRef}
       data-testid="vocabulary-word-card"
       className="relative h-[430px] min-h-[430px] w-full overflow-hidden rounded-xl"
       style={{ perspective: '1200px' }}
