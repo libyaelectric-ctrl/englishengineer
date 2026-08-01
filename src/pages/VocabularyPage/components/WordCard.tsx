@@ -127,6 +127,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
 
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
+  const isReviewable = mode === 'Review' && status !== 'Mastered';
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -137,10 +138,14 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
         setIsFlipped((f) => !f);
         playSound('flip');
       }
+      if (isReviewable) {
+        if (e.key === '1') { e.preventDefault(); playSound('error'); onReview(term, false); }
+        if (e.key === '2' || e.key === '3' || e.key === '4') { e.preventDefault(); playSound('success'); onReview(term, true); }
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [isReviewable, term, onReview]);
 
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
