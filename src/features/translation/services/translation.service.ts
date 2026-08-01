@@ -53,6 +53,13 @@ const LOCAL_WORD_DB: Record<
   string,
   { pos: WordAnalysis['partOfSpeech']; tr: string; alts: string[] }
 > = {
+  hi: { pos: 'general', tr: 'selam', alts: ['merhaba', 'selamlar', 'hey'] },
+  hello: { pos: 'general', tr: 'merhaba', alts: ['selam', 'günaydın', 'iyi günler'] },
+  hey: { pos: 'general', tr: 'selam', alts: ['hey', 'merhaba'] },
+  yes: { pos: 'general', tr: 'evet', alts: ['olur', 'tabiki', 'kabul'] },
+  no: { pos: 'general', tr: 'hayır', alts: ['yok', 'olmaz', 'red'] },
+  thanks: { pos: 'general', tr: 'teşekkürler', alts: ['teşekkür ederim', 'sağol'] },
+  please: { pos: 'general', tr: 'lütfen', alts: ['rica etsem', 'müsaadenizle'] },
   enter: { pos: 'verb', tr: 'girmek', alts: ['giriniz', 'giriş yapmak', 'kaydetmek'] },
   turkey: { pos: 'noun', tr: 'Türkiye', alts: ['hindi', 'Türkiye Cumhuriyeti'] },
   come: { pos: 'verb', tr: 'gelmek', alts: ['ulaşmak', 'yaklaşmak', 'varım'] },
@@ -82,7 +89,6 @@ const LOCAL_WORD_DB: Record<
   verify: { pos: 'verb', tr: 'doğrulamak', alts: ['teyit etmek', 'kanıtlamak'] },
   robust: { pos: 'adjective', tr: 'dayanıklı', alts: ['sağlam', 'güçlü', 'dirençli'] },
   critical: { pos: 'adjective', tr: 'kritik', alts: ['hayati', 'belirleyici'] },
-  hello: { pos: 'general', tr: 'merhaba', alts: ['selam'] },
   good: { pos: 'adjective', tr: 'iyi', alts: ['güzel', 'kaliteli'] },
   project: { pos: 'noun', tr: 'proje', alts: ['tasarım', 'plan'] },
   system: { pos: 'noun', tr: 'sistem', alts: ['düzenek', 'yapı'] },
@@ -181,61 +187,29 @@ export class TranslationService {
     sourceLang: string,
     targetLang: string
   ): Promise<TranslationResult | null> {
-    try {
-      const url = `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
+    const urlsToTry = [
+      `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`,
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`)}`,
+    ];
 
-      if (response.ok) {
-        const data = await response.json();
-        let translatedText = '';
-        if (Array.isArray(data)) {
-          if (typeof data[0] === 'string') {
-            translatedText = data[0];
-          } else if (Array.isArray(data[0]) && typeof data[0][0] === 'string') {
-            translatedText = data[0][0];
+    for (const url of urlsToTry) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+          const data = await response.json();
+          let translatedText = '';
+          if (Array.isArray(data)) {
+            if (typeof data[0] === 'string') {
+              translatedText = data[0];
+            } else if (Array.isArray(data[0]) && typeof data[0][0] === 'string') {
+              translatedText = data[0][0];
+            }
           }
-        }
-        if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
-          return {
-            originalText: text,
-            translatedText,
-            sourceLang,
-            targetLang,
-            serviceUsed: 'google_gtx',
-            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-          };
-        }
-      }
-    } catch (err: unknown) {
-      logger.w('[TranslationService] Google GTX_T engine fallback', err);
-    }
-    return null;
-  }
-
-  // 2. Secondary Google GTX Detailed Endpoint
-  private async tryGoogleGTX_Single(
-    trimmed: string,
-    text: string,
-    sourceLang: string,
-    targetLang: string
-  ): Promise<TranslationResult | null> {
-    try {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`;
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data) && Array.isArray(data[0])) {
-          const translatedText = data[0]
-            .map((chunk: [string]) => chunk[0])
-            .filter(Boolean)
-            .join('');
           if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
             return {
               originalText: text,
@@ -247,9 +221,9 @@ export class TranslationService {
             };
           }
         }
+      } catch (err: unknown) {
+        logger.w('[TranslationService] Google GTX engine attempt failed', err);
       }
-    } catch (err: unknown) {
-      logger.w('[TranslationService] Google GTX_Single engine fallback', err);
     }
     return null;
   }
@@ -439,36 +413,27 @@ export class TranslationService {
       };
     }
 
-    // 1. Ultra-Fast 1-Line Google GTX Client API
+    // 1. Ultra-Fast Google GTX API (With Proxy fallback)
     const gtxTResult = await this.tryGoogleGTX_T(trimmed, text, effectiveSource, effectiveTarget);
     if (gtxTResult) return gtxTResult;
 
-    // 2. Secondary Google GTX Single Array Endpoint
-    const gtxSingleResult = await this.tryGoogleGTX_Single(
-      trimmed,
-      text,
-      effectiveSource,
-      effectiveTarget
-    );
-    if (gtxSingleResult) return gtxSingleResult;
-
-    // 3. MyMemory Open API
+    // 2. MyMemory Open API
     const myMemoryResult = await this.tryMyMemory(trimmed, text, effectiveSource, effectiveTarget);
     if (myMemoryResult) return myMemoryResult;
 
-    // 4. Lingva Open-Source Proxy Network
+    // 3. Lingva Open-Source Proxy Network
     const lingvaResult = await this.tryLingva(trimmed, text, effectiveSource, effectiveTarget);
     if (lingvaResult) return lingvaResult;
 
-    // 5. Free Translation API Proxy
+    // 4. Free Translation API Proxy
     const ftResult = await this.tryFtApi(trimmed, text, effectiveSource, effectiveTarget);
     if (ftResult) return ftResult;
 
-    // 6. LibreTranslate / Argos Uptime Endpoints
+    // 5. LibreTranslate / Argos Uptime Endpoints
     const endpointResult = await this.tryEndpoints(trimmed, text, effectiveSource, effectiveTarget);
     if (endpointResult) return endpointResult;
 
-    // 7. Offline / Local Dictionary Fallback
+    // 6. Offline / Local Dictionary Fallback
     const lower = trimmed.toLowerCase();
     const dbMatch = LOCAL_WORD_DB[lower];
     let fallbackText = trimmed;

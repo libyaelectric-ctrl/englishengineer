@@ -10,6 +10,7 @@ describe('main navigation configuration', () => {
       'Progress',
       'Learning Hub',
       'Tools',
+      'Translator',
       'Team',
       'Profile',
     ]);
