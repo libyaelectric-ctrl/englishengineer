@@ -187,11 +187,17 @@ export class TranslationService {
     sourceLang: string,
     targetLang: string
   ): Promise<TranslationResult | null> {
-    const urlsToTry = [
+    const urlsToTry: string[] = [];
+    if (typeof window !== 'undefined' && window.location) {
+      urlsToTry.push(
+        `${window.location.origin}/api/translate?text=${encodeURIComponent(trimmed)}&sl=${sourceLang}&tl=${targetLang}`
+      );
+    }
+    urlsToTry.push(
       `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`,
       `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`,
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`)}`,
-    ];
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`)}`
+    );
 
     for (const url of urlsToTry) {
       try {
