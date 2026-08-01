@@ -149,9 +149,16 @@ const detectLanguageDirection = (
     /\b(ve|veya|bir|bu|ile|da|de|için|ne|nasıl|nasılsın|merhaba|iyi|şartname|beton|gel|git|yap|gelin)\b/i.test(
       trimmed
     );
-  const effectiveSource = sourceLang === 'auto' ? (hasTurkishChar ? 'tr' : 'en') : sourceLang;
-  const effectiveTarget =
-    targetLang === effectiveSource ? (effectiveSource === 'tr' ? 'en' : 'tr') : targetLang;
+  const effectiveSource = sourceLang;
+  let effectiveTarget = targetLang;
+  if (effectiveSource === 'auto') {
+    const inputIsTurkish = hasTurkishChar;
+    if (inputIsTurkish && targetLang === 'tr') {
+      effectiveTarget = 'en';
+    }
+  } else if (targetLang === effectiveSource) {
+    effectiveTarget = effectiveSource === 'tr' ? 'en' : 'tr';
+  }
   return { effectiveSource, effectiveTarget };
 };
 
