@@ -109,7 +109,13 @@ export const useVocabularyStore = create<VocabularyStoreState & VocabularyStoreA
         wordId: entry.id,
         mode,
         response: responses[entry.id] || '',
-        isCorrect: mode === 'flashcards' ? true : false,
+        isCorrect: (() => {
+          const responseText = (responses[entry.id] || '').trim().toLowerCase();
+          if (mode === 'flashcards') return responseText.length > 0;
+          const entryWord = entry.word.trim().toLowerCase();
+          const entryMeaning = (entry.meaning || '').trim().toLowerCase();
+          return responseText === entryWord || responseText === entryMeaning;
+        })(),
         responseTimeSeconds,
       }));
 

@@ -1,6 +1,25 @@
 import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
 
-export function SpeakingSidebar() {
+interface SpeakingSidebarProps {
+  submissionCount?: number;
+  avgScore?: number;
+  activeFilter?: string;
+  onFilterChange?: (filter: string) => void;
+  activeSort?: string;
+  onSortChange?: (sort: string) => void;
+}
+
+const FILTERS = ['All', 'Draft', 'Submitted', 'Graded'];
+const SORTS = ['Duration', 'Difficulty'];
+
+export function SpeakingSidebar({
+  submissionCount = 0,
+  avgScore = 0,
+  activeFilter = 'All',
+  onFilterChange,
+  activeSort = 'Duration',
+  onSortChange,
+}: SpeakingSidebarProps) {
   return (
     <aside className="w-64 space-y-4 p-4">
       <div className="rounded-[4px] border-2 border-primary bg-surface p-3">
@@ -9,10 +28,15 @@ export function SpeakingSidebar() {
           <span className="text-[10px] font-bold uppercase text-foreground">Filter</span>
         </div>
         <div className="space-y-1">
-          {['All', 'Draft', 'Submitted', 'Graded'].map((f) => (
+          {FILTERS.map((f) => (
             <button
               key={f}
-              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+              onClick={() => onFilterChange?.(f)}
+              className={`w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left transition ${
+                activeFilter === f
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
+              }`}
             >
               {f}
             </button>
@@ -25,10 +49,15 @@ export function SpeakingSidebar() {
           <span className="text-[10px] font-bold uppercase text-foreground">Sort</span>
         </div>
         <div className="space-y-1">
-          {['Duration', 'Difficulty'].map((s) => (
+          {SORTS.map((s) => (
             <button
               key={s}
-              className="w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left text-muted-copy hover:bg-surface-hover hover:text-foreground transition"
+              onClick={() => onSortChange?.(s)}
+              className={`w-full rounded-[4px] px-2 py-1.5 text-[10px] font-medium text-left transition ${
+                activeSort === s
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-copy hover:bg-surface-hover hover:text-foreground'
+              }`}
             >
               {s}
             </button>
@@ -43,11 +72,11 @@ export function SpeakingSidebar() {
         <div className="space-y-2 text-[10px]">
           <div className="flex justify-between text-muted-copy">
             <span>Submissions</span>
-            <span className="font-bold text-foreground">0</span>
+            <span className="font-bold text-foreground">{submissionCount}</span>
           </div>
           <div className="flex justify-between text-muted-copy">
             <span>Avg Score</span>
-            <span className="font-bold text-foreground">0%</span>
+            <span className="font-bold text-foreground">{avgScore}%</span>
           </div>
         </div>
       </div>

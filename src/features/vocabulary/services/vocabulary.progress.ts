@@ -75,7 +75,11 @@ export const VocabularyProgressService = {
 
   keepStruggling(current: WordProgress): WordProgress {
     if (current.status !== 'struggling') return current;
-    return current;
+    return {
+      ...current,
+      failCount: current.failCount + 1,
+      lastPracticedAt: new Date().toISOString(),
+    };
   },
 
   canStartQuiz(learnedCount: number): boolean {

@@ -71,5 +71,7 @@ export const AUTH_CONFIG: {
     isSupabaseKeyValid(env?.VITE_SUPABASE_ANON_KEY ?? null)
   ),
   isProduction: env?.PROD === true,
-  localAuthAllowed: true,
+  get localAuthAllowed() {
+    return isLocalAuthAllowed(this.isProduction, env?.VITE_ALLOW_LOCAL_AUTH);
+  },
 };

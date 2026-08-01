@@ -27,13 +27,68 @@ export interface AuthAdapter {
   resetPassword?: (email: string) => Promise<void>;
 }
 
-const hashPassword = async (password: string): Promise<string> => {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + 'engvox_salt_v1');
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  return Array.from(new Uint8Array(hashBuffer))
+const PBKDF2_ITERATIONS = 600_000;
+const DIGEST = 'SHA-256';
+
+const generateSalt = (): string => {
+  const array = new Uint8Array(16);
+  crypto.getRandomValues(array);
+  return Array.from(array)
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
+};
+
+const hexToBytes = (hex: string): Uint8Array =>
+  new Uint8Array(hex.match(/.{2}/g)!.map((b) => parseInt(b, 16)));
+
+const hashPassword = async (password: string, salt?: string): Promise<string> => {
+  const usedSalt = salt ?? generateSalt();
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: hexToBytes(usedSalt), iterations: PBKDF2_ITERATIONS, hash: DIGEST },
+    keyMaterial,
+    256
+  );
+  const hash = Array.from(new Uint8Array(derivedBits))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  return `${usedSalt}:${hash}`;
+};
+
+const verifyPassword = async (password: string, storedHash: string): Promise<boolean> => {
+  const idx = storedHash.indexOf(':');
+  if (idx === -1) return false;
+  const salt = storedHash.slice(0, idx);
+  const expectedHash = storedHash.slice(idx + 1);
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits']
+  );
+  const derivedBits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: hexToBytes(salt), iterations: PBKDF2_ITERATIONS, hash: DIGEST },
+    keyMaterial,
+    256
+  );
+  const computedHash = Array.from(new Uint8Array(derivedBits))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+  if (computedHash.length !== expectedHash.length) return false;
+  let result = 0;
+  for (let i = 0; i < computedHash.length; i++) {
+    result |= computedHash.charCodeAt(i) ^ expectedHash.charCodeAt(i);
+  }
+  return result === 0;
 };
 
 interface LocalUserProfile extends UserProfile {
@@ -96,14 +151,19 @@ export class LocalAuthAdapter implements AuthAdapter {
       });
     }
 
-    if (existing.passwordHash) {
-      const inputHash = await hashPassword(password);
-      if (inputHash !== existing.passwordHash) {
-        throw new AppError({
-          code: ErrorCode.AUTH,
-          message: 'Invalid email or password.',
-        });
-      }
+    if (!existing.passwordHash) {
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'This account was created without a password. Please reset your password.',
+      });
+    }
+
+    const isValid = await verifyPassword(password, existing.passwordHash);
+    if (!isValid) {
+      throw new AppError({
+        code: ErrorCode.AUTH,
+        message: 'Invalid email or password.',
+      });
     }
 
     const updated = {

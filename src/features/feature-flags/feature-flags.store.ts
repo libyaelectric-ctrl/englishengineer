@@ -91,5 +91,12 @@ function hashString(str: string): number {
 }
 
 export const useFeatureFlag = (key: string): boolean => {
-  return useFeatureFlagsStore((state) => state.isFeatureEnabled(key));
+  const flags = useFeatureFlagsStore((state) => state.flags);
+  const flagConfig = FEATURE_FLAGS[key];
+  const baseEnabled = flags[key] ?? flagConfig?.enabled;
+  const subscription = useBillingStore((state) => state.subscription);
+  const currentUser = useAuthStore((state) => state.currentUser);
+
+  if (!baseEnabled) return false;
+  return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
 };

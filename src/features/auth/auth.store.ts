@@ -76,6 +76,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
       storage.setUserId(user.id);
     } catch (e) {
       logger.e('Auth demo login failed.', e);
+      throw e;
     } finally {
       set({ isLoading: false });
     }

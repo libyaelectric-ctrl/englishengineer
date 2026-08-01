@@ -146,7 +146,7 @@ export const VocabularyService = {
       weakWords: evaluation.weakWords,
       strongWords: evaluation.strongWords,
     };
-    state.history = [historyEntry, ...state.history];
+    state.history = [historyEntry, ...state.history].slice(0, 100);
     this.saveState(state);
 
     const learningStore = useLearningStore.getState();
