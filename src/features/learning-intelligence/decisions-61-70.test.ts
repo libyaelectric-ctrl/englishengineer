@@ -7,7 +7,7 @@ import {
   getSpeakingRoleplayCategory,
 } from '@/features/speaking/speaking-mvp';
 import { SPEAKING_MISSIONS } from '@/features/speaking/speaking.data';
-import type { SpeakingEvaluationResult } from '@/features/speaking/speaking.types';
+import type { SpeakingEvaluationResult } from '@/shared/types/speaking.types';
 
 import {
   CRITICAL_MISTAKE_REPEAT_THRESHOLD,

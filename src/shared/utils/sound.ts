@@ -11,7 +11,7 @@ export const getSoundMuted = (): boolean => {
   }
 };
 
-export const setSoundMuted = (muted: boolean): void => {
+const setSoundMuted = (muted: boolean): void => {
   try {
     localStorage.setItem(SOUND_MUTED_KEY, muted ? 'true' : 'false');
     window.dispatchEvent(new CustomEvent('engvox_sound_toggle', { detail: { muted } }));
@@ -80,103 +80,4 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error' | 'flip') =
   }
 };
 
-export const getBestNaturalVoice = (): SpeechSynthesisVoice | null => {
-  if (!('speechSynthesis' in window)) return null;
-  const voices = window.speechSynthesis.getVoices();
-  if (!voices.length) return null;
 
-  // 1. Google US/UK English (Natural/High Quality)
-  const googleVoice = voices.find(
-    (v) => (v.name.includes('Google') || v.name.includes('Natural')) && v.lang.startsWith('en')
-  );
-  if (googleVoice) return googleVoice;
-
-  // 2. Microsoft Natural Female
-  const msNaturalFemale = voices.find(
-    (v) =>
-      (v.name.includes('Natural') || v.name.includes('Neural')) &&
-      v.lang.startsWith('tr') &&
-      v.name.toLowerCase().includes('female')
-  );
-  if (msNaturalFemale) return msNaturalFemale;
-
-  // 3. Microsoft Natural (any)
-  const msNatural = voices.find(
-    (v) =>
-      (v.name.includes('Online') || v.name.includes('Natural') || v.name.includes('Neural')) &&
-      v.lang.startsWith('en')
-  );
-  if (msNatural) return msNatural;
-
-  // 4. Apple female voices
-  const appleFemaleVoice = voices.find(
-    (v) =>
-      (v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Victoria')) &&
-      v.lang.startsWith('en')
-  );
-  if (appleFemaleVoice) return appleFemaleVoice;
-
-  // 6. Apple Siri
-  const appleVoice = voices.find((v) => v.name.includes('Siri') && v.lang.startsWith('en'));
-  if (appleVoice) return appleVoice;
-
-  // 7. Any English voice
-  const enVoice = voices.find(
-    (v) => v.lang === 'en-US' || v.lang === 'en-GB' || v.lang.startsWith('en')
-  );
-  return enVoice || null;
-};
-
-const findVoice = (
-  voices: SpeechSynthesisVoice[],
-  voiceName?: string
-): SpeechSynthesisVoice | null => {
-  if (voiceName) {
-    const named = voices.find((v) => v.name === voiceName);
-    if (named) return named;
-  }
-  return getBestNaturalVoice();
-};
-
-export const playNaturalTTS = (
-  text: string,
-  options?: {
-    onStart?: () => void;
-    onEnd?: () => void;
-    onError?: () => void;
-    pitch?: number;
-    rate?: number;
-    voiceName?: string;
-  }
-) => {
-  if (getSoundMuted()) return;
-  if (!('speechSynthesis' in window)) return;
-
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
-  utterance.rate = options?.rate ?? 0.92;
-  utterance.pitch = options?.pitch ?? 1.02;
-
-  const setVoiceAndSpeak = () => {
-    const voices = window.speechSynthesis.getVoices();
-    const selectedVoice = findVoice(voices, options?.voiceName);
-
-    if (selectedVoice) utterance.voice = selectedVoice;
-    if (options?.onStart) utterance.onstart = options.onStart;
-    if (options?.onEnd) utterance.onend = options.onEnd;
-    if (options?.onError) utterance.onerror = options.onError;
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const voices = window.speechSynthesis.getVoices();
-  if (voices.length > 0) {
-    setVoiceAndSpeak();
-  } else {
-    window.speechSynthesis.onvoiceschanged = () => {
-      window.speechSynthesis.onvoiceschanged = null;
-      setVoiceAndSpeak();
-    };
-    setVoiceAndSpeak();
-  }
-};

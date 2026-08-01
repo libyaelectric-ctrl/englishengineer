@@ -9,7 +9,7 @@ import { useLearningStore } from '@/core/learning';
 import { storage } from '@/shared/storage';
 
 import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
-import { LearningIntelligenceService } from '@/features/learning-intelligence';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
 
 import { WRITING_MISSIONS } from './writing.data';

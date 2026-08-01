@@ -1,10 +1,3 @@
-export const PROGRESSION_THRESHOLDS = {
-  READING: { VOCAB: 50, GRAMMAR: 3 },
-  WRITING: { VOCAB: 50, GRAMMAR: 3 },
-  LISTENING: { READING: 3, WRITING: 3 },
-  SPEAKING: { READING: 3, WRITING: 3 },
-};
-
 const BYPASS_STORAGE_KEY = 'engvox_progression_bypass_unlocked';
 
 export const isProgressionBypassed = (): boolean => {

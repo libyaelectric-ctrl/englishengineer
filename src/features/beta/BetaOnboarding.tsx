@@ -6,7 +6,8 @@ import { Button } from '@/shared/components/Button';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { LearningProfileRepository, type ProfessionId } from '@/features/profile';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import type { ProfessionId } from '@/shared/types/domain.types';
 
 import { BETA_ONBOARDING_OPTIONS } from './beta.helpers';
 import { useBetaStore } from './beta.store';

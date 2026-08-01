@@ -1,7 +1,7 @@
 import { includesNormalized } from '@/core/learning';
 
-import type { ReadingEvaluationResult, ReadingMission } from '@/features/reading';
-import type { WritingEvaluationResult, WritingMission } from '@/features/writing';
+import type { ReadingEvaluationResult, ReadingMission } from '@/shared/types/reading.types';
+import type { WritingEvaluationResult, WritingMission } from '@/shared/types/writing.types';
 
 import { GrammarProgressService } from './grammar.progress';
 import { GrammarRepository } from './grammar.repository';

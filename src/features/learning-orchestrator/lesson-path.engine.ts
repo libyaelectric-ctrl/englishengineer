@@ -1,6 +1,6 @@
 import type { SkillName, UserLearningProfile } from '@/shared/types/domain.types';
 import { SKILL_NAMES } from '@/shared/types/domain.types';
-import { LESSON_PATH_LENGTH, getSkillLessonNumber } from '@/features/profile/profile.utils';
+import { LESSON_PATH_LENGTH, getSkillLessonNumber } from '@/shared/utils/profile.utils';
 
 import type { SharedLesson, SkillLessonProgress } from './lesson-path.types';
 

@@ -4,7 +4,7 @@ import type { KnowledgePoolEntry } from '@/core/content-selection/personalized-c
 
 import { logger } from '@/shared/logger';
 
-import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
 
 import { ReadingService } from './reading.service';
 import { ReadingEvaluationResult, ReadingHistoryEntry, ReadingMission } from './reading.types';

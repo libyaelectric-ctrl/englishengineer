@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { logger } from '@/shared/logger';
 
-import { KnowledgeCaptureService } from '@/features/learning-intelligence/knowledge-capture.service';
+import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
 
 import { ListeningService } from './listening.service';
 import {

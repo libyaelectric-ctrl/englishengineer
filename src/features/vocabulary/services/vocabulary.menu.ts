@@ -2,8 +2,8 @@ import { eventBus } from '@/core/events/event-bus';
 
 import { storage } from '@/shared/storage';
 
-import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 import type { VocabularyTerm } from '../types/vocabulary.types';
 

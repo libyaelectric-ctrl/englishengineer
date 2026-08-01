@@ -1,7 +1,7 @@
 import { logger } from '@/shared/logger';
 
 import { AIService } from '@/features/ai';
-import type { MockExample } from '@/features/ai';
+import type { MockExample } from '@/shared/types/ai.types';
 
 export interface PRReviewInput {
   rawText: string;

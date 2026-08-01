@@ -1,6 +1,6 @@
 import type { CefrBand, SkillName } from '@/shared/types/domain.types';
-import type { GrammarRule } from '@/features/grammar/grammar.types';
-import type { VocabularyTerm } from '@/features/vocabulary/types/vocabulary.types';
+import type { GrammarRule } from '@/shared/types/grammar.types';
+import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
 export type TaskSourceBucket = 'memory' | 'current-new' | 'stretch';
 

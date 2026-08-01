@@ -1,6 +1,6 @@
 import { CheckCircle2, RotateCw, Volume2 } from 'lucide-react';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 import { playSound } from '@/shared/utils/sound';
 
@@ -37,9 +37,8 @@ interface WordCardProps {
   mode: VocabularySetMode;
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
   onLearn?: (term: VocabularyTerm) => void;
-  /** Controlled flip state — managed by parent WordSetSection */
-  isFlipped?: boolean;
-  onFlip?: () => void;
+  isFlipped: boolean;
+  onFlip: () => void;
 }
 
 const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
@@ -155,49 +154,14 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
   </div>
 );
 
-export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardProps) => {
+export const WordCard = ({ term, progress, mode, onReview, onLearn, isFlipped, onFlip }: WordCardProps) => {
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
-  const articleRef = useRef<HTMLElement>(null);
 
   const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
-  const isReviewable = mode === 'Review' && status !== 'Mastered';
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const activeTag = document.activeElement?.tagName.toLowerCase();
-      if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
-      const isFocused =
-        articleRef.current &&
-        (document.activeElement === articleRef.current ||
-          document.activeElement?.contains(articleRef.current));
-      if (e.code === 'Space') {
-        e.preventDefault();
-        if (isFocused) {
-          setIsFlipped((f) => !f);
-          playSound('flip');
-        }
-      }
-      if (isReviewable && isFocused) {
-        if (e.key === '1') {
-          e.preventDefault();
-          playSound('error');
-          onReview(term, false);
-        }
-        if (e.key === '2' || e.key === '3' || e.key === '4') {
-          e.preventDefault();
-          playSound('success');
-          onReview(term, true);
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isReviewable, term, onReview]);
 
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
@@ -217,14 +181,8 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
     setShowDetails(fn);
   };
 
-  const toggleFlip = () => {
-    setIsFlipped((f) => !f);
-    playSound('flip');
-  };
-
   return (
     <article
-      ref={articleRef}
       data-testid="vocabulary-word-card"
       className="relative h-[430px] min-h-[430px] w-full overflow-hidden rounded-xl"
       style={{ perspective: '1200px' }}
@@ -252,7 +210,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
           onLearn={onLearn}
           onReview={onReview}
           onToggleDetails={handleToggleDetails}
-          onToggleFlip={toggleFlip}
+          onToggleFlip={onFlip}
         />
 
         {/* BACK FACE (180deg ROTATED PHYSICAL BACK) */}
@@ -306,7 +264,7 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
             </span>
             <button
               type="button"
-              onClick={toggleFlip}
+              onClick={onFlip}
               className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
             >
               <RotateCw className="h-3.5 w-3.5" />

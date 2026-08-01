@@ -4,7 +4,7 @@ import type { CefrLevel } from '@/shared/types/domain.types';
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
-import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
+import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 
 import {
   type CefrBand,

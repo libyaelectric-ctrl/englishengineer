@@ -48,7 +48,7 @@ export interface DailyCommunicationTask {
   description: string;
   route: string;
   estimatedMinutes: number;
-  level: import('@/features/level-system').CefrLevel;
+  level: import('@/shared/types/domain.types').CefrLevel;
 }
 
 export interface MistakeLogEntry {
@@ -97,7 +97,7 @@ export interface SevenDayProgressReport {
   eloEstimate: number;
   cefrEstimate: string;
   recommendedNextTasks: string[];
-  currentLevel: import('@/features/level-system').CefrLevel;
+  currentLevel: import('@/shared/types/domain.types').CefrLevel;
   topRepeatedMistake: string;
   recommendedWorkTools: string;
   recommendedQuickAIAction: string;

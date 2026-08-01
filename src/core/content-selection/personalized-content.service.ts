@@ -6,7 +6,7 @@ export interface KnowledgePoolEntry {
   content_id: string;
 }
 
-export function scoreContentByPoolRatio(
+function scoreContentByPoolRatio(
   content: ReadingMission | WritingMission,
   pool: KnowledgePoolEntry[],
   targetRatio: number = 0.75
