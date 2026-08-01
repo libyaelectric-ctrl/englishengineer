@@ -1,6 +1,12 @@
 import { getSupabaseClient } from './supabase.client';
 
 let cachedOrgId: string | null = null;
+let cachedUserId: string | null = null;
+
+export const invalidateOrgCache = (): void => {
+  cachedOrgId = null;
+  cachedUserId = null;
+};
 
 export const getBackendAuthHeaders = async (
   localUserId?: string
@@ -12,6 +18,12 @@ export const getBackendAuthHeaders = async (
     const { data } = await client.auth.getSession();
     if (data.session?.access_token) {
       headers['Authorization'] = `Bearer ${data.session.access_token}`;
+
+      const sessionUserId = data.session.user?.id ?? null;
+      if (cachedUserId !== sessionUserId) {
+        cachedOrgId = null;
+        cachedUserId = sessionUserId;
+      }
 
       if (!cachedOrgId) {
         try {

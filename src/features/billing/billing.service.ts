@@ -27,6 +27,21 @@ const getReturnUrl = (path: string): string => {
   return `${window.location.origin}${path}`;
 };
 
+const ALLOWED_REDIRECT_HOSTS = ['checkout.stripe.com', 'billing.stripe.com', 'portal.stripe.com'];
+
+const safeRedirect = (url: string): void => {
+  try {
+    const parsed = new URL(url);
+    if (ALLOWED_REDIRECT_HOSTS.some((host) => parsed.hostname === host)) {
+      window.location.assign(url);
+    } else {
+      logger.w('[BILLING] Blocked redirect to untrusted host:', parsed.hostname);
+    }
+  } catch {
+    logger.w('[BILLING] Invalid redirect URL:', url);
+  }
+};
+
 const saveSubscription = (subscription: SubscriptionSnapshot): void => {
   storage.globalSet(STORAGE_KEY, subscription);
 };
@@ -83,7 +98,7 @@ export const BillingService = {
         cancelUrl: getReturnUrl('/billing?billing=cancelled'),
       });
 
-      window.location.assign(response.url);
+      safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({
@@ -109,7 +124,7 @@ export const BillingService = {
         returnUrl: getReturnUrl('/billing'),
       });
 
-      window.location.assign(response.url);
+      safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({
@@ -137,7 +152,7 @@ export const BillingService = {
         cancelUrl: getReturnUrl('/billing?topup=cancelled'),
       });
 
-      window.location.assign(response.url);
+      safeRedirect(response.url);
     } catch (error: unknown) {
       if (error instanceof Error) throw error;
       throw new AppError({

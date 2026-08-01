@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import { eventBus } from '@/core/events/event-bus';
+import { AppError } from '@/core/errors/app-error';
+import { ErrorCode } from '@/core/errors/error-codes';
 import { IdService } from '@/core/ids/id.service';
 
 import { logger } from '@/shared/logger';
@@ -147,7 +149,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         durationMinutes: number
       ) => {
         const mission = get().missions.find((m) => m.id === missionId);
-        if (!mission) throw new Error(`Mission ${missionId} not found`);
+        if (!mission) throw new AppError({ code: ErrorCode.VALIDATION, message: `Mission ${missionId} not found` });
 
         const result = ScoringService.calculateScore({
           module: mission.module,
@@ -253,7 +255,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         const todayStr = now.toISOString().split('T')[0];
         const currentStreak = calculateStreak(get().streak, get().lastActivityDate, now);
         const totalXP = get().xp + result.xp;
-        const computedLevel = Math.floor(totalXP / 500) + 1;
+        const computedLevel = Math.floor(totalXP / XP_PER_LEVEL) + 1;
 
         const skillName =
           module.toLowerCase() as import('@/features/profile/profile.types').SkillName;

@@ -8,6 +8,7 @@ import {
 } from './auth.adapter';
 import { AUTH_CONFIG } from './auth.config';
 import { UserProfile } from './auth.types';
+import { invalidateOrgCache } from './backend-auth';
 import { CloudSyncService } from './cloud-sync.service';
 
 const localAdapter = new LocalAuthAdapter(AUTH_CONFIG.localAuthAllowed);
@@ -90,6 +91,7 @@ export const AuthService = {
 
   async logout() {
     await Promise.all([activeAdapter.logout(), localAdapter.logout()]);
+    invalidateOrgCache();
   },
 
   async updateProfile(updates: Parameters<typeof activeAdapter.updateProfile>[0]) {

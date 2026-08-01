@@ -82,9 +82,13 @@ export const PronunciationService = {
     const cached = this.cache.get(normalized);
 
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+      const audioBlob =
+        cached.audioBlob && cached.audioBlob.size > 0 ? cached.audioBlob : new Blob();
+      const audioUrl =
+        audioBlob.size > 0 ? URL.createObjectURL(audioBlob) : '';
       return {
         word: normalized,
-        audioUrl: URL.createObjectURL(cached.audioBlob),
+        audioUrl,
         phonetic: null,
         source: 'browser-tts',
         cached: true,

@@ -8,7 +8,7 @@ import { ToastContainer } from '@/shared/components/Toast';
 
 export const App = () => {
   return (
-    <Sentry.ErrorBoundary fallback={<div>Bir hata oluştu. Lütfen sayfayı yenileyin.</div>}>
+    <Sentry.ErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
       <AppProvider>
         <RouterProvider router={router} />
         <ToastContainer />

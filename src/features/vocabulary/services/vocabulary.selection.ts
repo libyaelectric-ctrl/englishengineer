@@ -53,9 +53,12 @@ export const selectVocabularyLearningSet = (
 
   const preferred = eligible.filter((term) => options.preferredDomains?.includes(term.domain));
 
-  const ordered = [...due, ...preferred, ...current, ...stretch, ...remaining].filter(
-    (term, index, list) => list.indexOf(term) === index
-  );
+  const seen = new Set<string>();
+  const ordered = [...due, ...preferred, ...current, ...stretch, ...remaining].filter((term) => {
+    if (seen.has(term.id)) return false;
+    seen.add(term.id);
+    return true;
+  });
   const offset = Math.max(0, options.offset ?? 0);
   return ordered.slice(offset, offset + 9);
 };

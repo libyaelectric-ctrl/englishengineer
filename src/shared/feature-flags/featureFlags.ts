@@ -65,10 +65,9 @@ const FEATURE_FLAGS: Record<FeatureFlag, FeatureFlagConfig> = {
     allowedEnvironments: ['development'],
   },
   darkMode: {
-    enabled: false,
+    enabled: true,
     description: 'Dark mode theme support',
-    rolloutPercentage: 0,
-    allowedEnvironments: ['development'],
+    allowedEnvironments: ['development', 'staging', 'production'],
   },
   offlineGrammar: {
     enabled: true,
@@ -148,16 +147,22 @@ function getEnvironment(): 'development' | 'staging' | 'production' {
 }
 
 function getCurrentUserId(): string | null {
-  // In real app, get from auth store
-  return localStorage.getItem('user_id');
+  try {
+    const userStr = localStorage.getItem('auth_user');
+    if (userStr) {
+      const parsed = JSON.parse(userStr);
+      if (parsed?.id) return String(parsed.id);
+    }
+  } catch {
+    // ignore
+  }
+  return null;
 }
 
 function hashString(str: string): number {
-  let hash = 0;
+  let hash = 5381;
   for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash; // Convert to 32bit integer
+    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0;
   }
   return Math.abs(hash);
 }

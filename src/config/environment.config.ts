@@ -142,7 +142,7 @@ const collectEnvironmentErrors = (
 const readEnvValues = (source: EngVoxEnv | undefined) => {
   const v = source ?? {};
   return {
-    appVersion: v.VITE_APP_VERSION || '2.1.2',
+    appVersion: v.VITE_APP_VERSION || '2.4.7',
     aiProvider: v.VITE_AI_PROVIDER || 'mock',
     authProvider: v.VITE_AUTH_PROVIDER || 'local',
     hasAiProxyUrl: isConfiguredPublicUrl(v.VITE_AI_PROXY_URL),

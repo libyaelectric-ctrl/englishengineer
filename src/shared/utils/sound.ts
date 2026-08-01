@@ -26,16 +26,23 @@ export const toggleSoundMuted = (): boolean => {
   return next;
 };
 
+let sharedAudioCtx: AudioContext | null = null;
+
+const getAudioContext = (): AudioContext | null => {
+  if (sharedAudioCtx && sharedAudioCtx.state !== 'closed') return sharedAudioCtx;
+  const AudioContextClass =
+    window.AudioContext ??
+    (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+  if (!AudioContextClass) return null;
+  sharedAudioCtx = new AudioContextClass();
+  return sharedAudioCtx;
+};
+
 export const playSound = (type: 'pop' | 'ding' | 'success' | 'error' | 'flip') => {
   if (getSoundMuted()) return;
   try {
-    // Check if AudioContext is supported
-    const AudioContextClass =
-      window.AudioContext ??
-      (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-
-    const ctx = new AudioContextClass();
+    const ctx = getAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 

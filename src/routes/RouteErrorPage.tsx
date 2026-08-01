@@ -1,7 +1,16 @@
+import { useEffect, useRef } from 'react';
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+
+const CHUNK_ERROR_MESSAGES = [
+  'Failed to fetch dynamically imported module',
+  'Importing a module script failed',
+];
+const MAX_RELOAD_ATTEMPTS = 3;
+const RELOAD_KEY = 'engvox_chunk_reload_attempts';
 
 export const RouteErrorPage = () => {
   const error = useRouteError();
+  const reloadCountRef = useRef(0);
 
   const message = isRouteErrorResponse(error)
     ? `${error.status} ${error.statusText}`
@@ -9,14 +18,31 @@ export const RouteErrorPage = () => {
       ? error.message
       : 'The requested page could not be loaded.';
 
-  // Auto-reload the page if a chunk loading error occurs due to a new deployment
-  if (
-    message.includes('Failed to fetch dynamically imported module') ||
-    message.includes('Importing a module script failed')
-  ) {
-    window.location.reload();
-    return null;
-  }
+  const isChunkError = CHUNK_ERROR_MESSAGES.some((msg) => message.includes(msg));
+
+  useEffect(() => {
+    if (!isChunkError) return;
+    try {
+      reloadCountRef.current = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10);
+    } catch {
+      reloadCountRef.current = 0;
+    }
+    if (reloadCountRef.current < MAX_RELOAD_ATTEMPTS) {
+      try {
+        sessionStorage.setItem(RELOAD_KEY, String(reloadCountRef.current + 1));
+      } catch {
+        // ignore
+      }
+      const delay = Math.min(1000 * 2 ** reloadCountRef.current, 8000);
+      const timer = setTimeout(() => window.location.reload(), delay);
+      return () => clearTimeout(timer);
+    }
+    try {
+      sessionStorage.removeItem(RELOAD_KEY);
+    } catch {
+      // ignore
+    }
+  }, [isChunkError]);
   return (
     <main className="mx-auto mt-16 max-w-xl rounded-2xl border border-rose-200 bg-surface p-8 text-center shadow-sm">
       <h1 className="text-2xl font-black text-foreground">Route unavailable</h1>

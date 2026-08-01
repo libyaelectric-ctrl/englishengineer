@@ -19,6 +19,7 @@ const STORAGE_KEY = 'ab_assignments';
 
 const getStoredAssignments = (): Record<string, ABAssignment> => {
   try {
+    if (typeof localStorage === 'undefined') return {};
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : {};
   } catch (e) {
@@ -28,9 +29,14 @@ const getStoredAssignments = (): Record<string, ABAssignment> => {
 };
 
 const storeAssignment = (assignment: ABAssignment): void => {
-  const stored = getStoredAssignments();
-  stored[assignment.testId] = assignment;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  try {
+    if (typeof localStorage === 'undefined') return;
+    const stored = getStoredAssignments();
+    stored[assignment.testId] = assignment;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  } catch (e) {
+    logger.w('[AB_TESTING] Failed to store assignment', e);
+  }
 };
 
 const hashString = (str: string): number => {

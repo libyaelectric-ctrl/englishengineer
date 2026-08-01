@@ -1,14 +1,11 @@
 import { eventBus } from '@/core/events/event-bus';
 
 import { logger } from '@/shared/logger';
-import { storage } from '@/shared/storage';
 
 import { useAuthStore } from '@/features/auth';
 import { getSupabaseClient, isSupabaseConfigured } from '@/features/auth/supabase.client';
 
 import { useLearningStore } from './learning.store';
-
-const STORAGE_KEY = 'learning_state';
 
 const syncPoolToSupabase = (
   contentType: 'vocabulary' | 'grammar' | 'speaking',
@@ -35,10 +32,6 @@ export const addToVocabularyPool = (termId: string) => {
   if (current.includes(termId)) return;
   const updated = [...current, termId];
   useLearningStore.setState({ vocabularyPool: updated });
-  storage.set(STORAGE_KEY, {
-    ...useLearningStore.getState(),
-    vocabularyPool: updated,
-  });
   logger.i(`[VocabPool] +1 term → pool size: ${updated.length}`);
   syncPoolToSupabase('vocabulary', termId);
 };
@@ -48,10 +41,6 @@ export const addToGrammarPool = (ruleId: string) => {
   if (current.includes(ruleId)) return;
   const updated = [...current, ruleId];
   useLearningStore.setState({ grammarPool: updated });
-  storage.set(STORAGE_KEY, {
-    ...useLearningStore.getState(),
-    grammarPool: updated,
-  });
   logger.i(`[GrammarPool] +1 rule → pool size: ${updated.length}`);
   syncPoolToSupabase('grammar', ruleId);
 };
@@ -61,10 +50,6 @@ export const addToSpeakingPool = (missionId: string) => {
   if (current.includes(missionId)) return;
   const updated = [...current, missionId];
   useLearningStore.setState({ speakingPool: updated });
-  storage.set(STORAGE_KEY, {
-    ...useLearningStore.getState(),
-    speakingPool: updated,
-  });
   logger.i(`[SpeakingPool] +1 mission → pool size: ${updated.length}`);
   syncPoolToSupabase('speaking', missionId);
 };
