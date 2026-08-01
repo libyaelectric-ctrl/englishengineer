@@ -72,7 +72,6 @@ export const useArrowNavigation = ({
     const container = containerRef.current;
     if (!container) return;
 
-    // eslint-disable-next-line complexity
     const handleKeyDown = (e: KeyboardEvent) => {
       const items = container.querySelectorAll(itemSelector);
       if (items.length === 0) return;
