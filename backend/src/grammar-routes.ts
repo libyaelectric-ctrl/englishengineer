@@ -1,16 +1,18 @@
-import type { Express, NextFunction, Request, Response } from 'express';
+import type { Express, NextFunction, Request, RequestHandler, Response } from 'express';
 
-import { ApiError } from './errors.js';
 import { ProgressBodySchema, validateBody } from './validation.js';
 
-export const registerGrammarRoutes = (app: Express): void => {
+export const registerGrammarRoutes = (
+  app: Express,
+  requireBackendAuth: RequestHandler
+): void => {
   app.post(
     '/api/grammar/:id/progress',
+    requireBackendAuth,
     validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const _userId = request.auth!.userId;
 
         const ruleId = request.params.id;
         const { result } = request.validatedBody as {
@@ -31,10 +33,10 @@ export const registerGrammarRoutes = (app: Express): void => {
 
   app.get(
     '/api/grammar/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const _userId = request.auth!.userId;
 
         response.json({
           total: 0,
@@ -52,10 +54,10 @@ export const registerGrammarRoutes = (app: Express): void => {
 
   app.get(
     '/api/user/access-status',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const _userId = request.auth!.userId;
 
         response.json({
           vocabularyLearnedCount: 0,

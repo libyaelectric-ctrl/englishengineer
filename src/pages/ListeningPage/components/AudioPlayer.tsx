@@ -2,7 +2,7 @@ import { Pause, Play, SkipBack, SkipForward, Volume2 } from 'lucide-react';
 
 import { useEffect, useRef, useState } from 'react';
 
-const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5];
+import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
 
 interface AudioPlayerProps {
   audioUrl?: string;
@@ -96,7 +96,7 @@ export const AudioPlayer = ({ audioUrl, onTimeUpdate }: AudioPlayerProps) => {
       />
       <div className="flex items-center justify-between">
         <div className="flex gap-1">
-          {SPEEDS.map((s) => (
+          {PLAYBACK_SPEEDS.map((s) => (
             <button
               key={s}
               onClick={() => setSpeed(s)}

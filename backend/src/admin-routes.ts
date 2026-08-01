@@ -28,32 +28,10 @@ export const registerAdminRoutes = (
           system: {
             uptime: process.uptime(),
             memoryUsage: process.memoryUsage(),
-            version: '4.0.1',
+            version: '2.4.7',
           },
         };
         res.json({ success: true, data: stats });
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
-
-  app.get(
-    '/api/admin/activity',
-    requireBackendAuth,
-    requireRole(['admin']),
-    rateLimiter,
-    validateQuery(AdminAuditLogsQuerySchema),
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const filters = {
-          userId: (req.validatedQuery?.userId as string) || undefined,
-          action: (req.validatedQuery?.action as string) || undefined,
-          since: (req.validatedQuery?.since as string) || undefined,
-          limit: (req.validatedQuery?.limit as number) || 50,
-        };
-        const logs = await getAuditLogs(filters);
-        res.json({ success: true, data: logs });
       } catch (error) {
         next(error);
       }

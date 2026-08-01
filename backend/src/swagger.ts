@@ -2,7 +2,7 @@ export const swaggerSpec = {
   openapi: '3.0.0',
   info: {
     title: 'EngineerOS API',
-    version: '4.0.1',
+    version: '2.4.7',
     description: 'Backend API for EngineerOS English learning platform',
   },
   servers: [

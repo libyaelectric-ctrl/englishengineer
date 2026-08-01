@@ -7,10 +7,9 @@ import { logger } from '@/shared/logger';
 
 import { useListeningPlaybackStore } from './listening-playback.store';
 import { ListeningHelpers } from './listening.helpers';
-import type { ListeningPlaybackSpeed } from './listening.types';
+import { PLAYBACK_SPEEDS } from './listening.constants';
+import type { PlaybackSpeed } from './listening.constants';
 import type { ListeningMission } from './listening.types';
-
-const SPEED_OPTIONS: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
 
 interface AudioPlayerProps {
   mission: ListeningMission;
@@ -193,7 +192,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
   );
 
   const handleSpeedChange = useCallback(
-    (speed: ListeningPlaybackSpeed) => {
+    (speed: PlaybackSpeed) => {
       setPlaybackSpeed(speed);
     },
     [setPlaybackSpeed]
@@ -316,7 +315,7 @@ export const AudioPlayer = ({ mission }: AudioPlayerProps) => {
 
           {/* Speed control */}
           <div className="flex items-center justify-center gap-1.5 mt-3">
-            {SPEED_OPTIONS.map((speed) => (
+            {PLAYBACK_SPEEDS.map((speed) => (
               <button
                 key={speed}
                 onClick={() => handleSpeedChange(speed)}

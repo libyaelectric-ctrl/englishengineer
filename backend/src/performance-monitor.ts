@@ -13,6 +13,8 @@ interface MetricsState {
   system: SystemMetrics;
 }
 
+const MAX_REQUESTS = 1000;
+
 const metricsState: MetricsState = {
   requests: [],
   system: {
@@ -32,6 +34,15 @@ interface PerformanceMetricsResult {
   p99Duration: number;
   memoryUsage: NodeJS.MemoryUsage;
 }
+
+export const recordRequest = (duration: number, isError: boolean): void => {
+  metricsState.requests.push({ duration });
+  if (metricsState.requests.length > MAX_REQUESTS) {
+    metricsState.requests = metricsState.requests.slice(-MAX_REQUESTS);
+  }
+  metricsState.system.requestCount++;
+  if (isError) metricsState.system.errorCount++;
+};
 
 export const getPerformanceMetrics = (): PerformanceMetricsResult => {
   const now = Date.now();

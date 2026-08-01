@@ -424,6 +424,353 @@ const StatusMessage = ({ selectedStatus }: { selectedStatus: string }) => {
   );
 };
 
+// ─── Interactive Drill Panel ─────────────────────────────────────────────────
+
+type DrillMode = 'fill_blank' | 'correction' | 'reordering';
+
+const DRILL_LABELS: Record<DrillMode, string> = {
+  fill_blank: '✏️ Fill in the Blank',
+  correction: '🔍 Error Correction',
+  reordering: '🔀 Word Reordering',
+};
+
+const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) => {
+  const [activeDrill, setActiveDrill] = useState<DrillMode | null>(null);
+  const [userAnswer, setUserAnswer] = useState('');
+  const [wordTokens, setWordTokens] = useState<string[]>([]);
+  const [selectedTokens, setSelectedTokens] = useState<string[]>([]);
+  const [result, setResult] = useState<'correct' | 'wrong' | null>(null);
+  const [hintsUsed, setHintsUsed] = useState(0);
+
+  const firstExample = selectedRule.examples[0];
+
+  // Compute drill question depending on active mode
+  const fillSentence = (() => {
+    if (!firstExample) return { blanked: '', correct: '' };
+    const words = firstExample.english.split(' ');
+    const idx = Math.min(Math.floor(words.length / 2), words.length - 1);
+    const correct = words[idx].replace(/[.,!?;:]/g, '');
+    const blanked = words.map((w, i) => (i === idx ? '______' : w)).join(' ');
+    return { blanked, correct };
+  })();
+
+  const openDrill = (mode: DrillMode) => {
+    setActiveDrill((prev) => (prev === mode ? null : mode));
+    setUserAnswer('');
+    setResult(null);
+    setHintsUsed(0);
+    if (mode === 'reordering' && firstExample) {
+      const words = firstExample.english.split(' ').filter(Boolean);
+      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      setWordTokens(shuffled);
+      setSelectedTokens([]);
+    }
+  };
+
+  const normalise = (s: string) =>
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/[.,!?;:]/g, '')
+      .replace(/\s+/g, ' ');
+
+  const checkFillOrCorrection = () => {
+    const expected =
+      activeDrill === 'fill_blank' ? fillSentence.correct : selectedRule.correctedExampleEnglish;
+    setResult(normalise(userAnswer) === normalise(expected) ? 'correct' : 'wrong');
+  };
+
+  const checkReordering = () => {
+    const joined = selectedTokens.join(' ');
+    setResult(normalise(joined) === normalise(firstExample?.english ?? '') ? 'correct' : 'wrong');
+  };
+
+  const toggleToken = (token: string, fromSelected: boolean) => {
+    if (fromSelected) {
+      setSelectedTokens((prev) => {
+        const idx = prev.lastIndexOf(token);
+        return idx !== -1 ? [...prev.slice(0, idx), ...prev.slice(idx + 1)] : prev;
+      });
+      setWordTokens((prev) => [...prev, token]);
+    } else {
+      setWordTokens((prev) => {
+        const idx = prev.indexOf(token);
+        return idx !== -1 ? [...prev.slice(0, idx), ...prev.slice(idx + 1)] : prev;
+      });
+      setSelectedTokens((prev) => [...prev, token]);
+    }
+    setResult(null);
+  };
+
+  if (!firstExample) return null;
+
+  return (
+    <div className="rounded-[4px] border border-primary/20 bg-surface p-4 shadow-sm space-y-3">
+      <p className="text-[11px] font-bold uppercase tracking-wider text-primary">
+        🎯 Interactive Drills
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {(Object.keys(DRILL_LABELS) as DrillMode[]).map((mode) => (
+          <button
+            key={mode}
+            type="button"
+            onClick={() => openDrill(mode)}
+            className={cn(
+              'rounded-[4px] border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer',
+              activeDrill === mode
+                ? 'border-primary bg-primary text-white'
+                : 'border-border-soft bg-background text-muted-copy hover:border-primary/40 hover:text-primary'
+            )}
+          >
+            {DRILL_LABELS[mode]}
+          </button>
+        ))}
+      </div>
+
+      {activeDrill === 'fill_blank' && (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold text-muted-copy">
+            Fill in the missing word in the sentence:
+          </p>
+          <p className="rounded border border-border-soft bg-background px-3 py-2 text-sm font-mono font-bold text-foreground">
+            {fillSentence.blanked}
+          </p>
+          <p className="text-[10px] text-muted-copy italic">Turkish: {firstExample.turkish}</p>
+          {hintsUsed > 0 && (
+            <p className="text-[10px] text-amber-600 font-bold">
+              💡 Hint: Starts with &ldquo;{fillSentence.correct[0]}&rdquo; (
+              {fillSentence.correct.length} letters)
+            </p>
+          )}
+          <div className="flex items-center gap-2">
+            <input
+              value={userAnswer}
+              onChange={(e) => {
+                setUserAnswer(e.target.value);
+                setResult(null);
+              }}
+              placeholder="Type your answer..."
+              className="flex-1 rounded border border-border-soft bg-background px-3 py-1.5 text-xs outline-none focus:border-primary text-foreground"
+            />
+            <button
+              type="button"
+              onClick={checkFillOrCorrection}
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              Check
+            </button>
+            <button
+              type="button"
+              onClick={() => setHintsUsed((h) => h + 1)}
+              className="rounded border border-border-soft px-3 py-1.5 text-xs font-bold text-muted-copy hover:text-primary transition-colors cursor-pointer"
+            >
+              Hint
+            </button>
+          </div>
+          {result === 'correct' && (
+            <p className="text-xs font-bold text-success">✅ Correct! Great job.</p>
+          )}
+          {result === 'wrong' && (
+            <p className="text-xs font-bold text-rose-600">
+              ❌ Not quite. Expected: <span className="font-mono">{fillSentence.correct}</span>
+            </p>
+          )}
+        </div>
+      )}
+
+      {activeDrill === 'correction' && (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold text-muted-copy">
+            Find and correct the grammar mistake:
+          </p>
+          <p className="rounded border border-rose-300 bg-rose-50 dark:bg-rose-950/30 px-3 py-2 text-sm font-bold text-rose-800 dark:text-rose-300">
+            {selectedRule.badExampleEnglish}
+          </p>
+          <p className="text-[10px] text-muted-copy italic">
+            {selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}
+          </p>
+          <div className="flex items-center gap-2">
+            <input
+              value={userAnswer}
+              onChange={(e) => {
+                setUserAnswer(e.target.value);
+                setResult(null);
+              }}
+              placeholder="Write the corrected sentence..."
+              className="flex-1 rounded border border-border-soft bg-background px-3 py-1.5 text-xs outline-none focus:border-primary text-foreground"
+            />
+            <button
+              type="button"
+              onClick={checkFillOrCorrection}
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              Check
+            </button>
+          </div>
+          {result === 'correct' && (
+            <p className="text-xs font-bold text-success">✅ Correct! You spotted the mistake.</p>
+          )}
+          {result === 'wrong' && (
+            <p className="text-xs font-bold text-rose-600">
+              ❌ Not quite. Correct answer:{' '}
+              <span className="font-mono">{selectedRule.correctedExampleEnglish}</span>
+            </p>
+          )}
+        </div>
+      )}
+
+      {activeDrill === 'reordering' && (
+        <div className="space-y-3">
+          <p className="text-xs font-semibold text-muted-copy">
+            Tap words to build the sentence in the correct order:
+          </p>
+          {/* Answer area */}
+          <div className="min-h-9 flex flex-wrap gap-1.5 rounded border-2 border-dashed border-primary/30 bg-primary/5 p-2">
+            {selectedTokens.length === 0 && (
+              <span className="text-[10px] text-muted-copy italic">
+                Tap words below to place them here…
+              </span>
+            )}
+            {selectedTokens.map((token, i) => (
+              <button
+                key={`sel-${i}-${token}`}
+                type="button"
+                onClick={() => toggleToken(token, true)}
+                className="rounded border border-primary bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary cursor-pointer hover:bg-primary hover:text-white transition-colors"
+              >
+                {token}
+              </button>
+            ))}
+          </div>
+          {/* Word pool */}
+          <div className="flex flex-wrap gap-1.5">
+            {wordTokens.map((token, i) => (
+              <button
+                key={`pool-${i}-${token}`}
+                type="button"
+                onClick={() => toggleToken(token, false)}
+                className="rounded border border-border-soft bg-background px-2 py-0.5 text-xs font-semibold text-foreground cursor-pointer hover:border-primary/40 hover:text-primary transition-colors"
+              >
+                {token}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={checkReordering}
+              className="rounded bg-primary px-3 py-1.5 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
+            >
+              Check Order
+            </button>
+            <button
+              type="button"
+              onClick={() => openDrill('reordering')}
+              className="rounded border border-border-soft px-3 py-1.5 text-xs font-bold text-muted-copy hover:text-primary transition-colors cursor-pointer"
+            >
+              Reset
+            </button>
+          </div>
+          {result === 'correct' && (
+            <p className="text-xs font-bold text-success">✅ Perfect order!</p>
+          )}
+          {result === 'wrong' && (
+            <p className="text-xs font-bold text-rose-600">
+              ❌ Not quite right. Expected:{' '}
+              <span className="font-mono">{firstExample.english}</span>
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Export Panel ─────────────────────────────────────────────────────────────
+
+const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
+  const exportAnki = () => {
+    const header = 'Front,Back,Tags\n';
+    const lines = selectedRule.examples.map((ex) => {
+      const escape = (v: string) => `"${v.replace(/"/g, '""')}"`;
+      return `${escape(ex.english)},${escape(ex.turkish)},grammar ${selectedRule.cefrLevel} ${selectedRule.grammarCategory.replace(/\s+/g, '_')}`;
+    });
+    if (selectedRule.badExampleEnglish) {
+      lines.push(
+        `"${selectedRule.badExampleEnglish.replace(/"/g, '""')}","${(selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes).replace(/"/g, '""')}",grammar ${selectedRule.cefrLevel} mistakes`
+      );
+    }
+    const blob = new Blob([header + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `grammar-${selectedRule.id}-anki.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const exportPDF = () => {
+    const win = window.open('', '_blank');
+    if (!win) return;
+    const html = `
+      <!DOCTYPE html><html lang="en"><head>
+      <meta charset="UTF-8"/><title>${selectedRule.title} – Grammar Cheat Sheet</title>
+      <style>
+        body { font-family: system-ui, sans-serif; padding: 32px; max-width: 720px; margin: auto; color: #111; }
+        h1 { font-size: 22px; border-bottom: 3px solid #6366f1; padding-bottom: 8px; color: #4f46e5; }
+        .badge { display: inline-block; background: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 11px; border-radius: 4px; padding: 2px 8px; margin-left: 8px; }
+        .formula { background: #f1f5f9; border: 1px solid #6366f1; border-radius: 6px; padding: 10px 14px; font-family: monospace; font-weight: 700; font-size: 14px; color: #4f46e5; margin: 12px 0; }
+        h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin-top: 20px; }
+        .ex { border: 1px solid #e5e7eb; border-radius: 4px; padding: 8px 12px; margin: 6px 0; }
+        .en { font-weight: 700; font-size: 13px; }
+        .tr { font-size: 11px; color: #6b7280; margin-top: 2px; }
+        .mistake { border-color: #fca5a5; background: #fff1f2; }
+        .correct { border-color: #86efac; background: #f0fdf4; }
+        @media print { body { padding: 16px; } }
+      </style>
+      </head><body>
+      <h1>${selectedRule.ruleTitle || selectedRule.title} <span class="badge">${selectedRule.cefrLevel}</span></h1>
+      <div class="formula">${selectedRule.structure}</div>
+      <p style="font-size:13px">${selectedRule.turkishExplanation}</p>
+      <h3>Examples</h3>
+      ${selectedRule.examples.map((ex) => `<div class="ex"><div class="en">${ex.english}</div><div class="tr">${ex.turkish}</div></div>`).join('')}
+      ${
+        selectedRule.badExampleEnglish
+          ? `
+      <h3>Common Mistake</h3>
+      <div class="ex mistake"><div class="en">✗ ${selectedRule.badExampleEnglish}</div><div class="tr">${selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}</div></div>
+      <div class="ex correct"><div class="en">✓ ${selectedRule.correctedExampleEnglish}</div></div>`
+          : ''
+      }
+      </body></html>`;
+    win.document.write(html);
+    win.document.close();
+    win.print();
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 rounded-[4px] border border-border-soft bg-surface p-3">
+      <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+        Export:
+      </span>
+      <button
+        type="button"
+        onClick={exportAnki}
+        className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-[10px] font-bold text-muted-copy hover:border-primary/40 hover:text-primary transition-all cursor-pointer"
+      >
+        📥 Anki CSV
+      </button>
+      <button
+        type="button"
+        onClick={exportPDF}
+        className="inline-flex items-center gap-1.5 rounded-[4px] border border-border-soft bg-background px-3 py-1.5 text-[10px] font-bold text-muted-copy hover:border-primary/40 hover:text-primary transition-all cursor-pointer"
+      >
+        📄 PDF Sheet
+      </button>
+    </div>
+  );
+};
+
 export const GrammarLessonContent = ({
   selectedRule,
   selectedProgress,
@@ -631,6 +978,12 @@ export const GrammarLessonContent = ({
           />
         )}
       </div>
+
+      {/* Interactive Drill Modes */}
+      <InteractiveDrillPanel selectedRule={selectedRule} />
+
+      {/* Export Actions */}
+      <ExportPanel selectedRule={selectedRule} />
 
       <SkillLinksSection skillUse={selectedRule.skillUse} />
 

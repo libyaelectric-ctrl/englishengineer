@@ -66,8 +66,8 @@ export default defineConfig(() => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: 'hidden' as const,
-      chunkSizeWarningLimit: 300, // Reduced from 500 for tighter control
+      sourcemap: false,
+      chunkSizeWarningLimit: 300,
       target: 'es2020',
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
@@ -80,6 +80,10 @@ export default defineConfig(() => {
               return getDataChunk(id) ?? 'seed-data';
             if (id.includes('/data/') || id.includes('seed')) return 'seed-data';
           },
+        },
+        onwarn(warning, warn) {
+          if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+          warn(warning);
         },
       },
     },

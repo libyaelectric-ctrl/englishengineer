@@ -114,7 +114,7 @@ export const useListeningPlaybackStore = create<ListeningPlaybackState & Listeni
     setPlayingState: (playing: boolean) => set({ isPlaying: playing }),
 
     setPlaybackSpeed: (speed: ListeningPlaybackSpeed) => {
-      const allowedSpeeds: ListeningPlaybackSpeed[] = [0.75, 1, 1.25, 1.5];
+      const allowedSpeeds: ListeningPlaybackSpeed[] = [0.5, 0.75, 1, 1.25, 1.5];
       if (allowedSpeeds.includes(speed)) {
         set({ playbackSpeed: speed });
       }

@@ -457,7 +457,8 @@ const registerRoutes = (
   registerVocabularyRoutes(
     v1RouterAdapter as unknown as Express,
     createVocabularyLookupService(config.vocabulary, fetchImpl, vocabCache as VocabularyCache),
-    limiters.vocabulary
+    limiters.vocabulary,
+    requireBackendAuth
   );
 
   registerBillingRoutes(
@@ -503,7 +504,7 @@ const registerRoutes = (
   // Serves audio uploaded via POST /api/speaking/audio-upload. Scoped to
   // this one directory only, never the whole filesystem.
   app.use('/uploads/speaking', express.static(path.resolve(process.cwd(), 'uploads', 'speaking')));
-  registerGrammarRoutes(v1RouterAdapter as unknown as Express);
+  registerGrammarRoutes(v1RouterAdapter as unknown as Express, requireBackendAuth);
 };
 
 const initConnectionPool = (config: BackendConfig) => {

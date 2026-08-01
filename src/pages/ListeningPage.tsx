@@ -33,6 +33,7 @@ import {
 } from '@/features/listening/listening.types';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
+import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
 
 type Question = {
   id: string;
@@ -64,8 +65,6 @@ const AnimatedScore = ({ value }: { value: number }) => {
 
   return <span>{display}%</span>;
 };
-
-const SPEED_OPTIONS = [0.5, 0.75, 1.0, 1.25, 1.5] as const;
 
 const QuestionField = ({
   question,
@@ -198,7 +197,7 @@ const WorkspaceView = ({
           Playback Speed:
         </span>
         <div className="flex gap-1.5">
-          {SPEED_OPTIONS.map((speed) => (
+          {PLAYBACK_SPEEDS.map((speed) => (
             <button
               key={speed}
               type="button"
