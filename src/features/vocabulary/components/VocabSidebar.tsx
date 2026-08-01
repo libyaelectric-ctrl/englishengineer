@@ -97,7 +97,6 @@ export function VocabSidebar() {
     totalItems: summary.total,
     stats: [
       { label: 'New', value: summary.newWords, color: 'text-blue-500' },
-      { label: 'Learning', value: summary.learning, color: 'text-amber-500' },
       { label: 'Learned', value: learned, color: 'text-cyan-500' },
       { label: 'Mastered', value: summary.mastered, color: 'text-green-500' },
       { label: 'Struggling', value: struggling, color: 'text-red-500' },
