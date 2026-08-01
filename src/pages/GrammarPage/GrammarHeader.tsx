@@ -35,9 +35,14 @@ export const GrammarHeader = ({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="min-h-8 w-full rounded-[4px] border border-border-soft bg-surface pl-8 pr-2 text-xs outline-none focus:border-primary text-foreground"
-            placeholder="Search..."
+            placeholder="Search rules..."
           />
         </label>
+        {/* Keyboard Shortcuts Indicator */}
+        <div className="hidden lg:flex items-center gap-1.5 rounded border border-border-soft bg-surface/80 px-2 py-1 text-[10px] font-mono text-muted-copy">
+          <span className="rounded bg-primary/10 px-1 font-bold text-primary">Space</span> Next |
+          <span className="rounded bg-primary/10 px-1 font-bold text-primary">F</span> Search
+        </div>
       </div>
 
       {/* Level Switcher Tabs & Quiz Actions */}

@@ -5,6 +5,7 @@ import {
   HelpCircle,
   PenLine,
   Send,
+  Star,
   Target,
   TriangleAlert,
 } from 'lucide-react';
@@ -88,14 +89,54 @@ const LessonHeader = ({
 }) => {
   const badgeStyle = STATUS_BADGE_STYLES[selectedStatus] ?? DEFAULT_BADGE_STYLE;
   const hint = STATUS_HINTS[selectedStatus];
+  const [isStarred, setIsStarred] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('EngVox_favorite_grammar');
+      if (stored) {
+        const list: string[] = JSON.parse(stored);
+        setIsStarred(list.includes(selectedRule.id));
+      }
+    } catch {
+      // ignore
+    }
+  }, [selectedRule.id]);
+
+  const toggleStar = () => {
+    try {
+      const stored = localStorage.getItem('EngVox_favorite_grammar');
+      let list: string[] = stored ? JSON.parse(stored) : [];
+      if (list.includes(selectedRule.id)) {
+        list = list.filter((id) => id !== selectedRule.id);
+        setIsStarred(false);
+      } else {
+        list.push(selectedRule.id);
+        setIsStarred(true);
+      }
+      localStorage.setItem('EngVox_favorite_grammar', JSON.stringify(list));
+    } catch {
+      // ignore
+    }
+  };
 
   return (
-    <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm">
+    <div className="min-w-0 rounded-[4px] border border-border-soft bg-surface p-4 shadow-sm space-y-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
-            {selectedModule}
-          </p>
+          <div className="flex items-center gap-2">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-primary">
+              {selectedModule}
+            </p>
+            <button
+              type="button"
+              onClick={toggleStar}
+              className="text-muted-copy hover:text-amber-400 transition-colors cursor-pointer"
+              title={isStarred ? 'Remove from favorite rules' : 'Bookmark rule to favorites'}
+            >
+              <Star className={`h-4 w-4 ${isStarred ? 'fill-amber-400 text-amber-400' : ''}`} />
+            </button>
+          </div>
           <h2 className="mt-0.5 break-words text-base font-bold">
             {selectedRule.ruleTitle || selectedRule.title}
           </h2>
@@ -117,6 +158,16 @@ const LessonHeader = ({
           )}
         </div>
       </div>
+
+      {/* Visual Grammar Formula Badge */}
+      {selectedRule.structure && (
+        <div className="flex items-center gap-2 rounded border border-primary/20 bg-primary/5 p-2 text-xs font-mono">
+          <span className="font-bold text-primary text-[10px] uppercase tracking-wider">
+            Formula:
+          </span>
+          <span className="font-bold text-foreground">{selectedRule.structure}</span>
+        </div>
+      )}
     </div>
   );
 };
