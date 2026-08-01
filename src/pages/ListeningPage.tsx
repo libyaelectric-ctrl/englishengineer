@@ -334,10 +334,10 @@ const WorkspaceView = ({
 };
 
 const ListeningPage = () => {
-  const readingStore = useReadingStore();
-  const writingStore = useWritingStore();
-  const readingDone = Object.keys(readingStore.completedMissions || {}).length;
-  const writingDone = Object.keys(writingStore.completedMissions || {}).length;
+  const readingCompletedMissions = useReadingStore((s) => s.completedMissions);
+  const writingCompletedMissions = useWritingStore((s) => s.completedMissions);
+  const readingDone = Object.keys(readingCompletedMissions || {}).length;
+  const writingDone = Object.keys(writingCompletedMissions || {}).length;
 
   const [bypassUnlocked, setBypassUnlocked] = useState(() => isProgressionBypassed());
   const [previewMode, setPreviewMode] = useState(false);

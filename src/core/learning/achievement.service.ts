@@ -33,6 +33,8 @@ export const AchievementService = {
               (m) => m.module === ach.moduleFilter
             ).length;
             shouldUnlock = moduleCompletedCount >= ach.criteriaValue;
+          } else {
+            shouldUnlock = completedMissions.length >= ach.criteriaValue;
           }
           break;
 

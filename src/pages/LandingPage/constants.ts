@@ -8,9 +8,7 @@ import {
   Terminal,
 } from 'lucide-react';
 
-const SITE_URL =
-  (import.meta as unknown as { env?: { VITE_SITE_URL?: string } }).env?.VITE_SITE_URL ||
-  'https://englishengineer.vercel.app';
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://englishengineer.vercel.app';
 
 export const STRUCTURED_DATA = {
   '@context': 'https://schema.org',
@@ -22,13 +20,6 @@ export const STRUCTURED_DATA = {
   url: SITE_URL,
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
-
-export const STATS = [
-  { value: '6', label: 'skill modules' },
-  { value: 'A1-C2', label: 'CEFR path' },
-  { value: '90+', label: 'site scenarios' },
-  { value: '24/7', label: 'AI coach' },
-];
 
 export const FEATURES: Array<{
   icon: LucideIcon;

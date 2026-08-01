@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 import { cn } from '@/shared/utils/cn';
 
@@ -12,22 +12,26 @@ interface HeatmapProps {
 }
 
 export const Heatmap = memo(({ sessions }: HeatmapProps) => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const { days, activityMap } = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-  const days = Array.from({ length: 30 }).map((_, i) => {
-    const d = new Date(today);
-    d.setDate(d.getDate() - (29 - i));
-    return d;
-  });
+    const dayList = Array.from({ length: 30 }).map((_, i) => {
+      const d = new Date(today);
+      d.setDate(d.getDate() - (29 - i));
+      return d;
+    });
 
-  const activityMap = new Map<string, number>();
-  sessions.forEach((s) => {
-    const d = new Date(s.timestamp);
-    d.setHours(0, 0, 0, 0);
-    const key = d.toISOString();
-    activityMap.set(key, (activityMap.get(key) || 0) + s.score);
-  });
+    const map = new Map<string, number>();
+    sessions.forEach((s) => {
+      const d = new Date(s.timestamp);
+      d.setHours(0, 0, 0, 0);
+      const key = d.toISOString();
+      map.set(key, (map.get(key) || 0) + s.score);
+    });
+
+    return { days: dayList, activityMap: map };
+  }, [sessions]);
 
   return (
     <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-border-soft">
@@ -35,7 +39,7 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
         <h3 className="text-sm font-bold tracking-tight text-muted-copy">Daily Activity Streak</h3>
         <span className="text-xs font-semibold text-green-500">{sessions.length} sessions</span>
       </div>
-      <div className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar">
+      <div className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar" role="list" aria-label="Daily activity for the last 30 days">
         {days.map((day, i) => {
           const key = day.toISOString();
           const score = activityMap.get(key) || 0;
@@ -50,7 +54,9 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
           return (
             <div
               key={key}
+              role="listitem"
               title={`${day.toLocaleDateString()}: ${Math.round(score)} XP`}
+              aria-label={`${day.toLocaleDateString()}: ${Math.round(score)} XP earned`}
               className={cn(
                 'h-6 w-6 rounded-sm shrink-0 transition-all cursor-crosshair hover:scale-110',
                 levelClass,

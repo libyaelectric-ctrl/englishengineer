@@ -11,6 +11,8 @@ interface Toast {
   type: ToastType;
 }
 
+const TOAST_DISMISS_MS = 4000;
+
 let toastId = 0;
 let listeners: ((toast: Toast) => void)[] = [];
 
@@ -44,7 +46,7 @@ export const ToastContainer = () => {
         setTimeout(() => {
           setToasts((prev) => prev.filter((t) => t.id !== toast.id));
           timeouts.delete(toast.id);
-        }, 4000)
+        }, TOAST_DISMISS_MS)
       );
     };
     listeners.push(handler);

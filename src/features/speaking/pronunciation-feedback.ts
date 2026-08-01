@@ -1,3 +1,5 @@
+import { levenshteinSimilarity } from '@/shared/utils/string-utils';
+
 export interface PhonemeDetail {
   phoneme: string;
   position: 'initial' | 'medial' | 'final';
@@ -176,45 +178,25 @@ export const PronunciationFeedbackEngine = {
   },
 
   calculateSimilarity(a: string, b: string): number {
-    const s1 = a.toLowerCase().trim();
-    const s2 = b.toLowerCase().trim();
-    if (s1 === s2) return 1;
-
-    const matrix: number[][] = [];
-    for (let i = 0; i <= s1.length; i++) matrix[i] = [i];
-    for (let j = 0; j <= s2.length; j++) matrix[0][j] = j;
-    for (let i = 1; i <= s1.length; i++) {
-      for (let j = 1; j <= s2.length; j++) {
-        const cost = s1[i - 1] === s2[j - 1] ? 0 : 1;
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j - 1] + cost
-        );
-      }
-    }
-    const maxLen = Math.max(s1.length, s2.length);
-    return maxLen === 0 ? 1 : 1 - matrix[s1.length][s2.length] / maxLen;
+    return levenshteinSimilarity(a, b);
   },
 
-  extractPhonemeDetails(word: string, ipa: string, _recognized: string): PhonemeDetail[] {
-    const phonemes = ipa.replace(/[/[\]]/g, '').split('');
-    const wordChars = word.split('');
+  extractPhonemeDetails(word: string, ipa: string, recognized: string): PhonemeDetail[] {
+    const phonemes = ipa.replace(/[/[\]]/g, '').split(/(?=[ˈˌ])|[ˈˌ]/).filter(Boolean);
+    const overallAccuracy = this.calculateSimilarity(recognized.toLowerCase(), word.toLowerCase());
     const details: PhonemeDetail[] = [];
 
     phonemes.forEach((phoneme, i) => {
       const position = i === 0 ? 'initial' : i === phonemes.length - 1 ? 'final' : 'medial';
-      const expected = phoneme;
-      const recognizedChar = i < wordChars.length ? wordChars[i] : '';
-      const accuracy = this.calculateSimilarity(recognizedChar, expected) * 100;
+      const tip = PHONEME_TIPS[phoneme] ?? `Practice the "${phoneme}" sound in "${word}".`;
 
       details.push({
         phoneme,
         position,
-        expected,
-        recognized: recognizedChar,
-        accuracy: Math.round(accuracy),
-        tip: PHONEME_TIPS[phoneme] ?? `Practice the "${phoneme}" sound in "${word}".`,
+        expected: phoneme,
+        recognized: recognized.toLowerCase(),
+        accuracy: Math.round(overallAccuracy * 100),
+        tip,
       });
     });
 

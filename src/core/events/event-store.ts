@@ -3,16 +3,21 @@ import { AppEvent } from './event.types';
 export class EventStore {
   private readonly events: AppEvent[] = [];
   private readonly maxLimit = 1000;
+  private frozenView: readonly AppEvent[] | null = null;
 
   public append(event: AppEvent): void {
     if (this.events.length >= this.maxLimit) {
-      this.events.shift(); // Evict oldest event to keep memory bounded
+      this.events.shift();
     }
     this.events.push(event);
+    this.frozenView = null;
   }
 
   public getAll(): readonly AppEvent[] {
-    return Object.freeze([...this.events]);
+    if (!this.frozenView) {
+      this.frozenView = Object.freeze([...this.events]);
+    }
+    return this.frozenView;
   }
 
   public getByType<T extends AppEvent['type']>(type: T): readonly Extract<AppEvent, { type: T }>[] {
@@ -23,6 +28,7 @@ export class EventStore {
 
   public clear(): void {
     this.events.length = 0;
+    this.frozenView = null;
   }
 }
 

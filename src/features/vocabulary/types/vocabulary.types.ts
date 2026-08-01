@@ -39,7 +39,8 @@ export type VocabularyWordStatus =
   | 'Weak'
   | 'Leech'
   | 'Review Today'
-  | 'Mastered';
+  | 'Mastered'
+  | 'approved';
 
 export type VocabularyWordSource =
   | 'EngVox Dictionary'
@@ -79,7 +80,7 @@ export interface VocabularyTerm {
   primaryUseCase: string;
   category: string;
   termType: string;
-  partOfSpeech: string;
+  partOfSpeech: 'noun' | 'verb' | 'adjective' | 'adverb' | 'preposition' | 'conjunction' | 'interjection' | 'pronoun' | 'phrase';
   wordCount: number;
   definition: string;
   exampleSentence: string;
@@ -91,8 +92,8 @@ export interface VocabularyTerm {
   tags: string[];
   source: string;
   confidence: number;
-  status: string;
-  importTier: string;
+  status: VocabularyWordStatus;
+  importTier: 'core' | 'technical' | 'professional' | 'extended';
   isCore: boolean;
   isTechnical: boolean;
   isProfessionalPhrase: boolean;

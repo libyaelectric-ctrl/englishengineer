@@ -86,7 +86,11 @@ export function SalesChatModal() {
           </div>
 
           <div className="flex items-center gap-1.5 pt-1 border-t border-border-soft">
+            <label htmlFor="sales-chat-input" className="sr-only">
+              Sales chat message
+            </label>
             <input
+              id="sales-chat-input"
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}

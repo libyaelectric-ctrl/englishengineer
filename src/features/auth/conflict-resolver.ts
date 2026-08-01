@@ -41,6 +41,9 @@ export const createTimestampResolver = (): ConflictResolver => ({
     const localTime = new Date(conflict.localTimestamp).getTime();
     const remoteTime = new Date(conflict.remoteTimestamp).getTime();
 
+    if (Number.isNaN(localTime)) return 'remote';
+    if (Number.isNaN(remoteTime)) return 'local';
+
     if (localTime > remoteTime) return 'local';
     if (remoteTime > localTime) return 'remote';
     return 'remote';

@@ -12,12 +12,15 @@ import { TeamMemberList } from './TeamMemberList';
 import { TeamStats } from './TeamStats';
 
 export const TeamDashboard: FC = () => {
-  const team = useTeamStore();
+  const source = useTeamStore((s) => s.source);
+  const isLoading = useTeamStore((s) => s.isLoading);
+  const members = useTeamStore((s) => s.members);
+  const summaries = useTeamStore((s) => s.summaries);
+  const loadWorkspace = useTeamStore((s) => s.loadWorkspace);
 
   useEffect(() => {
-    void team.loadWorkspace();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- loadWorkspace is a stable Zustand action
-  }, [team.loadWorkspace]);
+    void loadWorkspace();
+  }, [loadWorkspace]);
 
   return (
     <main className="space-y-6 pt-12 sm:pt-0">
@@ -26,8 +29,8 @@ export const TeamDashboard: FC = () => {
           <div className="flex flex-wrap items-center gap-2">
             <h1 className="text-2xl font-medium text-foreground">Team Management</h1>
             <StatusBadge
-              label={team.source === 'demo' ? 'Demo data' : 'Backend data'}
-              tone={team.source === 'demo' ? 'warning' : 'success'}
+              label={source === 'demo' ? 'Demo data' : 'Backend data'}
+              tone={source === 'demo' ? 'warning' : 'success'}
             />
             <StatusBadge label="Admin panel" tone="info" />
           </div>
@@ -43,7 +46,7 @@ export const TeamDashboard: FC = () => {
         description="Bulk license assignment, team analytics, and member performance require a Project plan."
       >
         <div className="space-y-6">
-          {team.source === 'demo' && (
+          {source === 'demo' && (
             <div className="flex gap-3 rounded-xl border border-warning bg-warning p-4 text-sm text-warning">
               <ShieldAlert className="h-5 w-5 shrink-0" />
               <p>
@@ -53,17 +56,17 @@ export const TeamDashboard: FC = () => {
             </div>
           )}
 
-          {team.isLoading ? (
+          {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-border-soft border-t-primary" />
             </div>
           ) : (
             <>
-              <TeamStats members={team.members} summaries={team.summaries} />
+              <TeamStats members={members} summaries={summaries} />
 
               <div className="grid gap-6 lg:grid-cols-5">
                 <div className="lg:col-span-3">
-                  <TeamMemberList members={team.members} summaries={team.summaries} />
+                  <TeamMemberList members={members} summaries={summaries} />
                 </div>
                 <div className="lg:col-span-2">
                   <BulkLicenseAssign />

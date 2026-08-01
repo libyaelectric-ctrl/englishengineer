@@ -39,7 +39,8 @@ export const VocabularyCsvService = {
   },
 
   parseCsv(csvContent: string): CsvWord[] {
-    const lines = csvContent.split('\n').filter((line) => line.trim());
+    const normalizedContent = csvContent.replace(/\r\n?/g, '\n');
+    const lines = normalizedContent.split('\n').filter((line) => line.trim());
     if (lines.length < 2) return [];
 
     const header = lines[0].split(',').map((h) => h.trim().toLowerCase());

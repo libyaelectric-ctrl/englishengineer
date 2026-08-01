@@ -46,8 +46,7 @@ const clearDeadLetter = (): void => {
 };
 
 const getSyncEndpoint = (): string => {
-  const raw =
-    (import.meta as unknown as { env?: Record<string, string> }).env?.VITE_AI_PROXY_URL || '';
+  const raw = import.meta.env.VITE_AI_PROXY_URL || '';
   if (!raw) return '';
   const base = raw.replace(/\/+$/, '');
   return `${base}/api/v1/sync`;

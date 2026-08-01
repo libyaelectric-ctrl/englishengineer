@@ -71,10 +71,7 @@ export const ReadingService = {
   },
 
   getMissionsSortedByPoolRatio(
-    pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
-      content_type: 'vocabulary',
-      content_id: id,
-    }))
+    pool: KnowledgePoolEntry[] = []
   ): ReadingMission[] {
     return sortContentByPoolRatio(this.getMissions(), pool);
   },

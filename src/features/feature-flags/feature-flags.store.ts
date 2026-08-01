@@ -49,7 +49,7 @@ const isRolloutBlocked = (
   key: string
 ): boolean => {
   if (flagConfig.rolloutPercentage === undefined) return false;
-  const hash = userId ? hashString(userId + key) : Math.random() * 100;
+  const hash = userId ? hashString(userId + key) : 0;
   return hash % 100 >= flagConfig.rolloutPercentage;
 };
 
@@ -81,22 +81,20 @@ export const useFeatureFlagsStore = create<FeatureFlagsState>()(
 );
 
 function hashString(str: string): number {
-  let hash = 0;
+  let hash = 5381;
   for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
+    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0;
   }
   return Math.abs(hash);
 }
 
 export const useFeatureFlag = (key: string): boolean => {
-  const flags = useFeatureFlagsStore((state) => state.flags);
-  const flagConfig = FEATURE_FLAGS[key];
-  const baseEnabled = flags[key] ?? flagConfig?.enabled;
-  const subscription = useBillingStore((state) => state.subscription);
-  const currentUser = useAuthStore((state) => state.currentUser);
-
-  if (!baseEnabled) return false;
-  return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
+  return useFeatureFlagsStore((state) => {
+    const flagConfig = FEATURE_FLAGS[key];
+    const baseEnabled = state.flags[key] ?? flagConfig?.enabled;
+    if (!baseEnabled) return false;
+    const { subscription } = useBillingStore.getState();
+    const { currentUser } = useAuthStore.getState();
+    return isFlagEligible(flagConfig, subscription, currentUser, currentUser?.id, key);
+  });
 };

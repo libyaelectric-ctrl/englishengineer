@@ -1,6 +1,6 @@
 import { Award, Coins, TrendingUp, Zap } from 'lucide-react';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Button } from './Button';
 
@@ -29,14 +29,55 @@ export const ScoreFeedbackOverlay = React.memo(
     onAction,
     actionText = 'Return to Dashboard',
   }: ScoreFeedbackOverlayProps) => {
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const previousFocusRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+      if (!result) return;
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      dialogRef.current?.focus();
+      return () => {
+        previousFocusRef.current?.focus();
+      };
+    }, [result]);
+
+    useEffect(() => {
+      if (!result) return;
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          e.stopPropagation();
+          onClose();
+        }
+        if (e.key === 'Tab' && dialogRef.current) {
+          const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          if (focusable.length === 0) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      };
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [result, onClose]);
+
     if (!result) return null;
 
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 p-4 backdrop-blur-sm">
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Evaluation results"
+          tabIndex={-1}
           data-testid="speaking-result-panel"
           className="max-h-[calc(100vh-2rem)] w-full max-w-lg space-y-5 overflow-y-auto rounded-2xl border border-border-soft bg-surface p-6 shadow-xl"
         >

@@ -1,3 +1,10 @@
+/**
+ * In-memory grammar rule progress tracker for UI state.
+ * Note: This is distinct from the storage-backed GrammarProgressService
+ * in @/features/grammar/grammar.progress.ts which handles persistence.
+ * Renamed to QuizGrammarProgressService to avoid name collision.
+ */
+
 export type RuleStatus = 'new' | 'learning' | 'learned' | 'mastered' | 'struggling';
 
 export interface RuleProgress {
@@ -15,7 +22,7 @@ const QUIZ_THRESHOLD = 10;
 
 const getTodayKey = (): string => new Date().toISOString().split('T')[0];
 
-export const GrammarProgressService = {
+export const QuizGrammarProgressService = {
   addRule(ruleId: string): RuleProgress {
     return {
       ruleId,

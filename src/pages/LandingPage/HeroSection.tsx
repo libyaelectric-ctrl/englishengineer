@@ -137,7 +137,11 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
               </div>
 
               <div className="flex gap-2 items-center">
+                <label htmlFor="hero-demo-input" className="sr-only">
+                  Technical sentence input
+                </label>
                 <input
+                  id="hero-demo-input"
                   type="text"
                   value={demoInput}
                   onChange={(e) => setDemoInput(e.target.value)}

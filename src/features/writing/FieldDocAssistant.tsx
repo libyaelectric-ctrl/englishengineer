@@ -14,6 +14,7 @@ import type { ElementType, FormEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { logger } from '@/shared/logger';
 
 type DocType = 'rfi' | 'ncr' | 'rams' | 'eot';
 
@@ -104,12 +105,16 @@ export const FieldDocAssistant = () => {
     [conflictDetails, activeType, projectName, clauseRef]
   );
 
-  const handleCopy = useCallback(() => {
+  const handleCopy = useCallback(async () => {
     if (!generatedLetter) return;
-    navigator.clipboard.writeText(generatedLetter);
-    setCopied(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(generatedLetter);
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      logger.e('[FieldDocAssistant] Copy failed', err);
+    }
   }, [generatedLetter]);
 
   return (

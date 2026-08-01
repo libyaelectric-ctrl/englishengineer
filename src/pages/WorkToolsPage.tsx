@@ -11,7 +11,7 @@ import {
   WandSparkles,
 } from 'lucide-react';
 
-import { lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -444,17 +444,25 @@ const WorkToolsPage = ({ embedded = false }: { embedded?: boolean }) => {
         </label>
       </div>
 
-      <TabContent
-        tab={tab}
-        templates={templates}
-        emails={emails}
-        phrases={phrases}
-        copiedId={copiedId}
-        copy={copy}
-        openQuickAI={openQuickAI}
-        favoritePhraseIds={favoritePhraseIds}
-        toggleFavorite={toggleFavorite}
-      />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center py-20">
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-border-soft border-t-primary" />
+          </div>
+        }
+      >
+        <TabContent
+          tab={tab}
+          templates={templates}
+          emails={emails}
+          phrases={phrases}
+          copiedId={copiedId}
+          copy={copy}
+          openQuickAI={openQuickAI}
+          favoritePhraseIds={favoritePhraseIds}
+          toggleFavorite={toggleFavorite}
+        />
+      </Suspense>
 
       {showEmpty && (
         <Card className="py-12 text-center" hoverEffect={false}>

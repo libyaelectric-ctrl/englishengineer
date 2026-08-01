@@ -9,12 +9,6 @@ import type {
 
 const CACHE_KEY = 'EngVox_vocabulary_lookup_cache';
 
-interface ImportMetaWithVocabularyEnv {
-  env: {
-    VITE_VOCABULARY_API_URL?: string;
-  };
-}
-
 const normalize = (value: string): string =>
   value
     .trim()
@@ -54,8 +48,7 @@ export const lookupExternalVocabulary = async (
   } = {}
 ): Promise<ExternalLookupState> => {
   const normalizedWord = normalize(word);
-  const env = (import.meta as unknown as ImportMetaWithVocabularyEnv).env;
-  const apiUrl = options.apiUrl ?? env.VITE_VOCABULARY_API_URL?.trim();
+  const apiUrl = options.apiUrl ?? import.meta.env.VITE_VOCABULARY_API_URL?.trim();
   if (!apiUrl) return { status: 'not-configured' };
 
   const cache = readCache();

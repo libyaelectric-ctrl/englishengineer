@@ -7,11 +7,7 @@ interface AIEnv {
   VITE_AI_PROXY_URL?: string;
 }
 
-interface ImportMetaWithEnv {
-  env?: AIEnv;
-}
-
-const env = (import.meta as unknown as ImportMetaWithEnv).env;
+const env: AIEnv | undefined = import.meta.env;
 
 const requestedProvider =
   env?.VITE_AI_PROVIDER === 'backend' || env?.VITE_AI_PROVIDER === 'backend-proxy'

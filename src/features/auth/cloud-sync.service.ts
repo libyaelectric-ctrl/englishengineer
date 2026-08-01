@@ -21,6 +21,7 @@ const QUEUE_KEY = 'cloud_sync_queue';
 const STATE_KEY = 'cloud_sync_state';
 const SNAPSHOT_SCHEMA_VERSION = 1;
 const MAX_SYNC_ATTEMPTS = 5;
+const MAX_LISTENERS = 50;
 const stateListeners = new Set<(state: CloudSyncState) => void>();
 let isApplyingRemoteSnapshot = false;
 
@@ -85,11 +86,16 @@ const emptyState = (): CloudSyncState => ({
 });
 
 const toJsonValue = (value: unknown): JsonValue | null => {
-  if (value === undefined) {
+  if (value === undefined || value === null) {
     return null;
   }
-
-  return JSON.parse(JSON.stringify(value)) as JsonValue;
+  try {
+    if (typeof value === 'bigint') return Number(value);
+    return JSON.parse(JSON.stringify(value)) as JsonValue;
+  } catch {
+    logger.w('[CloudSync] Failed to serialize value to JSON');
+    return null;
+  }
 };
 
 const isJsonObject = (value: unknown): value is JsonObject =>
@@ -327,6 +333,10 @@ const buildWriteErrorMessage = (droppedCount: number, writeError: { message: str
 
 export const CloudSyncService = {
   subscribe(listener: (state: CloudSyncState) => void): () => void {
+    if (stateListeners.size >= MAX_LISTENERS) {
+      logger.w('[CloudSync] Maximum listener count reached, ignoring new subscription');
+      return () => {};
+    }
     stateListeners.add(listener);
     return () => {
       stateListeners.delete(listener);

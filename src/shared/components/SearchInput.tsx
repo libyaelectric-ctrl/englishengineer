@@ -2,6 +2,8 @@ import { Search, X } from 'lucide-react';
 
 import { memo, useEffect, useRef, useState } from 'react';
 
+const DEFAULT_DEBOUNCE_MS = 300;
+
 interface SearchInputProps {
   placeholder?: string;
   onSearch: (query: string) => void;
@@ -10,7 +12,7 @@ interface SearchInputProps {
 }
 
 export const SearchInput = memo(
-  ({ placeholder = 'Search...', onSearch, onClear, debounceMs = 300 }: SearchInputProps) => {
+  ({ placeholder = 'Search...', onSearch, onClear, debounceMs = DEFAULT_DEBOUNCE_MS }: SearchInputProps) => {
     const [query, setQuery] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<NodeJS.Timeout>(undefined);
@@ -77,7 +79,7 @@ export const useSearch = (initialValue = '') => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 300);
+    }, DEFAULT_DEBOUNCE_MS);
 
     return () => clearTimeout(timer);
   }, [query]);

@@ -56,16 +56,16 @@ export const addToSpeakingPool = (missionId: string) => {
 
 // Event bus → Pool bağlantısı
 eventBus.subscribe('vocabulary:mastered', (event) => {
-  const termId = (event.payload as { termId: string }).termId;
+  const { termId } = event.payload as { termId: string };
   addToVocabularyPool(termId);
 });
 
 eventBus.subscribe('grammar:mastered', (event) => {
-  const ruleId = (event.payload as { ruleId: string }).ruleId;
+  const { ruleId } = event.payload as { ruleId: string };
   addToGrammarPool(ruleId);
 });
 
 eventBus.subscribe('speaking:completed', (event) => {
-  const missionId = (event.payload as { missionId: string }).missionId;
+  const { missionId } = event.payload as { missionId: string };
   addToSpeakingPool(missionId);
 });

@@ -244,9 +244,17 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       },
 
       completeGenericPractice: (module: MissionModule, score: number, durationMinutes: number) => {
+        const difficultyMap: Record<string, import('./learning.types').MissionDifficulty> = {
+          Vocabulary: 'Beginner',
+          Grammar: 'Intermediate',
+          Reading: 'Intermediate',
+          Writing: 'Advanced',
+          Listening: 'Intermediate',
+          Speaking: 'Advanced',
+        };
         const result = ScoringService.calculateScore({
           module,
-          difficulty: 'Intermediate',
+          difficulty: difficultyMap[module] ?? 'Intermediate',
           performanceRatio: score / 100,
           timeSpentMinutes: durationMinutes,
         });
