@@ -46,19 +46,28 @@ export function WordSetSection({
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const activeIndexRef = useRef(0);
 
-  const focusCard = useCallback((index: number) => {
-    if (wordSet.length === 0) return;
-    const clamped = Math.max(0, Math.min(index, wordSet.length - 1));
-    activeIndexRef.current = clamped;
-    cardRefs.current[clamped]?.focus();
-  }, [wordSet.length]);
+  const focusCard = useCallback(
+    (index: number) => {
+      if (wordSet.length === 0) return;
+      const clamped = Math.max(0, Math.min(index, wordSet.length - 1));
+      activeIndexRef.current = clamped;
+      cardRefs.current[clamped]?.focus();
+    },
+    [wordSet.length]
+  );
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const activeTag = document.activeElement?.tagName.toLowerCase();
       if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
-      if (e.key === 'j' || e.key === 'J') { e.preventDefault(); focusCard(activeIndexRef.current - 1); }
-      if (e.key === 'k' || e.key === 'K') { e.preventDefault(); focusCard(activeIndexRef.current + 1); }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        focusCard(activeIndexRef.current - 1);
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        focusCard(activeIndexRef.current + 1);
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -123,9 +132,11 @@ export function WordSetSection({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  ref={(el) => { cardRefs.current[index] = el; }}
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
                   tabIndex={-1}
-                  className="outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+                  className={`outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl ${activeTab === 'Learned' ? '' : 'h-[430px]'}`}
                 >
                   {activeTab === 'Learned' ? (
                     <LearnedCard term={term} index={index} />
