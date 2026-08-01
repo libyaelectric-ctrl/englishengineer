@@ -1,5 +1,7 @@
 import { Plus, Search } from 'lucide-react';
+import { useState } from 'react';
 
+import { playSound } from '@/shared/utils/sound';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
@@ -40,6 +42,8 @@ export function SearchResultsSection({
   onSetCustomDraft,
   onAddCustomWord,
 }: SearchResultsSectionProps) {
+  const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
+
   if (!hasSearched) return null;
 
   if (searchResults.length > 0) {
@@ -58,6 +62,16 @@ export function SearchResultsSection({
               mode="View"
               onReview={onReview}
               onLearn={onLearn}
+              isFlipped={flippedCards.has(term.id)}
+              onFlip={() => {
+                setFlippedCards((prev) => {
+                  const next = new Set(prev);
+                  if (next.has(term.id)) next.delete(term.id);
+                  else next.add(term.id);
+                  return next;
+                });
+                playSound('flip');
+              }}
             />
           ))}
         </div>
