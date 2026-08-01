@@ -47,11 +47,29 @@ export function WordSetSection({
       subtitle={`CEFR: ${vocabularyProfile.cefrBand}`}
       icon={BookMarked}
       headerActions={
-        activeTab === 'New' ? (
-          <p className="text-[10px] text-muted-copy font-medium">
-            Click "I Know This" or test meaning to move to Learned
-          </p>
-        ) : null
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onExportCSV}
+            className="rounded border border-border-soft bg-surface px-2.5 py-1 text-[10px] font-bold text-muted-copy hover:border-primary/40 hover:text-foreground transition-all cursor-pointer"
+            title="Export deck for Anki"
+          >
+            📥 Anki CSV
+          </button>
+          <button
+            type="button"
+            onClick={() => window.print()}
+            className="rounded border border-border-soft bg-surface px-2.5 py-1 text-[10px] font-bold text-muted-copy hover:border-primary/40 hover:text-foreground transition-all cursor-pointer"
+            title="Print PDF Pocket Field Guide"
+          >
+            📄 PDF Sheet
+          </button>
+          {activeTab === 'New' && (
+            <p className="hidden md:block text-[10px] text-muted-copy font-medium">
+              Click "I Know This" to move to Learned
+            </p>
+          )}
+        </div>
       }
     >
       {loadError && (
