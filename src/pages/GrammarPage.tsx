@@ -1,5 +1,6 @@
 import { useGrammarStore } from '@/features/grammar';
 
+import { GrammarEnhancementPanel } from './GrammarPage/GrammarEnhancementPanel';
 import { GrammarHeader } from './GrammarPage/GrammarHeader';
 import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
 import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
@@ -42,6 +43,7 @@ const GrammarPage = () => {
     nextLesson,
     reviewTargets,
     masteredCount,
+    rulesWithProgress,
     selectRule,
     scrollLessonStrip,
     recordUsage,
@@ -107,6 +109,19 @@ const GrammarPage = () => {
 
         {reviewTargets.length > 0 && (
           <GrammarReviewQueue reviewTargets={reviewTargets} selectRule={selectRule} />
+        )}
+
+        {selectedRule && selectedProgress && (
+          <GrammarEnhancementPanel
+            selectedRule={selectedRule}
+            selectedProgress={selectedProgress}
+            rules={rules}
+            rulesWithProgress={rulesWithProgress}
+            query={query}
+            setQuery={setQuery}
+            selectRule={selectRule}
+            recordUsage={recordUsage}
+          />
         )}
       </main>
     </div>
