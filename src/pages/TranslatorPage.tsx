@@ -468,7 +468,7 @@ export const TranslatorPage = () => {
             <Info className="h-4 w-4 text-primary shrink-0" />
             <span>Infrastructure Attribution:</span>
             <span className="rounded-lg bg-primary/10 border border-primary/20 px-2.5 py-1 text-[10px] font-extrabold text-primary font-mono">
-              Powered by LibreTranslate Open-Source Engine
+              Powered by Google GTX & Lingva Open-Source Engines
             </span>
           </div>
 
