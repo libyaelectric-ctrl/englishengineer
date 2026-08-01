@@ -1,7 +1,7 @@
 import type { LearningState, MissionModule } from '@/core/learning/learning.types';
 
+import type { CefrLevel } from '@/shared/types/domain.types';
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';

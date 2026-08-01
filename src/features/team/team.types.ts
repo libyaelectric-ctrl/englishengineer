@@ -1,4 +1,4 @@
-import type { SkillName } from '@/features/profile/profile.types';
+import type { SkillName } from '@/shared/types/domain.types';
 
 export type OrganizationRole = 'admin' | 'manager' | 'learner';
 export type InvitationStatus = 'pending' | 'cancelled' | 'accepted';

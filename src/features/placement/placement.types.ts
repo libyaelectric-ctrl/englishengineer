@@ -1,4 +1,4 @@
-import type { CefrBand, SkillName } from '@/features/profile';
+import type { CefrBand, SkillName } from '@/shared/types/domain.types';
 
 export type PlacementDomain = 'reading' | 'vocabulary' | 'grammar';
 

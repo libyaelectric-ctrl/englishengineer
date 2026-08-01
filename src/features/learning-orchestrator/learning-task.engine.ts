@@ -1,11 +1,10 @@
 import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types';
 
+import type { CefrLevel, SkillName, UserLearningProfile } from '@/shared/types/domain.types';
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import { GrammarRepository } from '@/features/grammar/grammar.repository';
 import { LearningIntelligenceService } from '@/features/learning-intelligence/learning-intelligence.service';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { getPreferredDomains } from '@/features/profile/profile.preferences';
-import type { SkillName, UserLearningProfile } from '@/features/profile/profile.types';
 import {
   getBaseCefrLevel,
   getNextCefrBand,

@@ -1,6 +1,6 @@
 import { MissionDifficulty } from '@/core/learning/learning.types';
 
-import { CefrLevel } from '@/features/level-system';
+import { CefrLevel } from '@/shared/types/domain.types';
 
 export type ListeningQuestionType = 'multiple_choice' | 'true_false' | 'technical_fill_in';
 export type ListeningMissionType =

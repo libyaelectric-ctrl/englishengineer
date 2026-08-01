@@ -1,7 +1,6 @@
+import type { CefrLevel } from '@/shared/types/domain.types';
 import { MissionDifficulty } from '@/core/learning';
 import type { LearningDataSkill } from '@/core/learning';
-
-import { CefrLevel } from '@/features/level-system';
 
 export type VocabularyDiscipline =
   | 'Electrical Engineering'

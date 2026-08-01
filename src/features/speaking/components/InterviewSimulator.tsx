@@ -24,6 +24,8 @@ import {
   type InterviewType,
 } from '../interview-simulator';
 
+import { startSpeechRecognition, getInterviewTitle } from './interview.utils';
+
 type InterviewState = 'select' | 'interview' | 'results';
 
 const SelectView = ({ onSelect }: { onSelect: (type: InterviewType) => void }) => (
@@ -199,53 +201,6 @@ const ResultsView = ({
     </SectionCard>
   </div>
 );
-
-const startSpeechRecognition = (
-  w: Record<string, unknown>,
-  setCurrentAnswer: React.Dispatch<React.SetStateAction<string>>,
-  recognitionRef: React.MutableRefObject<unknown>,
-  setIsRecording: (v: boolean) => void
-) => {
-  const SpeechRecognitionConstructor = (w.SpeechRecognition ||
-    w.webkitSpeechRecognition) as new () => {
-    continuous: boolean;
-    interimResults: boolean;
-    lang: string;
-    onresult: ((event: unknown) => void) | null;
-    onerror: (() => void) | null;
-    onend: (() => void) | null;
-    stop: () => void;
-    start: () => void;
-  };
-  const recognition = new SpeechRecognitionConstructor();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
-
-  recognition.onresult = (event: unknown) => {
-    const e = event as { results: SpeechRecognitionResultList };
-    const finalTranscript = Array.from({ length: e.results.length }, (_, i) => {
-      const result = e.results[i] as unknown as {
-        isFinal: boolean;
-        item: (index: number) => { transcript: string };
-      };
-      return result.isFinal ? result.item(0).transcript : '';
-    }).join('');
-    if (finalTranscript) {
-      setCurrentAnswer((prev) => (prev ? `${prev} ${finalTranscript}` : finalTranscript));
-    }
-  };
-
-  recognition.onerror = () => setIsRecording(false);
-  recognition.onend = () => setIsRecording(false);
-
-  recognitionRef.current = recognition;
-  recognition.start();
-  setIsRecording(true);
-};
-
-const getInterviewTitle = (type: InterviewType) =>
-  type === 'system-design' ? 'System Design' : 'Coding';
 
 const RecordingControls = ({
   isRecording,

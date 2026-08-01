@@ -1,4 +1,4 @@
-import type { CefrBand, SkillName } from '@/features/profile/profile.types';
+import type { CefrBand, SkillName } from '@/shared/types/domain.types';
 
 export interface LearningPathGoal {
   skill: SkillName;

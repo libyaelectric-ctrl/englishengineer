@@ -1,7 +1,6 @@
 import {
   Building2,
   Check,
-  Cpu,
   FileCheck,
   FileText,
   Globe,
@@ -19,12 +18,7 @@ import { logger } from '@/shared/logger';
 
 import { ProductAnalyticsService } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
-import {
-  BillingPlanId,
-  COMMERCIAL_PLAN_CATALOG,
-  CommercialPlanPreview,
-  useBillingStore,
-} from '@/features/billing';
+import { BillingPlanId, useBillingStore } from '@/features/billing';
 import { getBillingApiUrl } from '@/features/billing/billing.helpers';
 import { CurrencyConfig } from '@/features/billing/currency.config';
 
@@ -39,132 +33,9 @@ import { SecurityWhitepaperModal } from './PricingPage/SecurityWhitepaperModal';
 import { SlaGuaranteeMatrix } from './PricingPage/SlaGuaranteeMatrix';
 import { TrustCenterBadges } from './PricingPage/TrustCenterBadges';
 
-const getErrorMessage = (error: unknown, fallback: string): string =>
-  error instanceof Error ? error.message : fallback;
-
-const isPlanUnavailable = (plan: CommercialPlanPreview) =>
-  plan.id === 'exec' || plan.id === 'private';
-
-const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
-  ['free', 'pro', 'project', 'exec', 'private'].includes(plan.id)
-);
-
-const ACCESS_BADGES: Record<string, string> = {
-  free: 'ACCESS-LVL-00',
-  pro: 'ACCESS-LVL-01',
-  project: 'ACCESS-LVL-02',
-  exec: 'ACCESS-LVL-03',
-  private: 'SECURE-PRIVATE',
-};
-
-const getAccessBadge = (id: string): string => ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
-
-const BASE_USD_MAP: Record<string, { monthly: number; annual: number }> = {
-  free: { monthly: 0, annual: 0 },
-  pro: { monthly: 29, annual: 23 },
-  project: { monthly: 59, annual: 47 },
-  exec: { monthly: 99, annual: 79 },
-  private: { monthly: 999, annual: 799 },
-};
-
-const getCalculatedPrice = (
-  plan: CommercialPlanPreview,
-  isAnnual: boolean,
-  currencyCode = 'USD'
-): string => {
-  if (plan.id === 'free') return CurrencyConfig.formatPrice(0, currencyCode);
-  const p = BASE_USD_MAP[plan.id] || { monthly: 29, annual: 23 };
-  const usd = isAnnual ? p.annual : p.monthly;
-  return CurrencyConfig.formatPrice(usd, currencyCode);
-};
-
-const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
-  <Link
-    to={currentUser ? '/dashboard' : '/start'}
-    className="mt-4 flex h-9 w-full items-center justify-center rounded-lg border border-border-soft bg-surface text-xs font-bold uppercase tracking-wider hover:bg-surface-hover transition-all cursor-pointer shadow-sm text-foreground"
-  >
-    {currentUser ? 'Go to dashboard' : 'Start free'}
-  </Link>
-);
-
-const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
-
-const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> = {
-  pro: { icon: Sparkles, label: 'Popular', color: 'bg-primary' },
-  project: {
-    icon: Building2,
-    label: 'Engineering Teams',
-    color: 'bg-blue-600',
-  },
-};
-
-const getPlanActionLabel = ({
-  planId,
-  isCurrent,
-  inProgress,
-  isUnavailable,
-}: {
-  planId: string;
-  isCurrent: boolean;
-  inProgress: boolean;
-  isUnavailable: boolean;
-}): string => {
-  if (isUnavailable) return 'Contact Sales';
-  if (isCurrent) return 'Current plan';
-  if (inProgress) return 'Loading...';
-  const plan = COMMERCIAL_PLAN_CATALOG.find((p) => p.id === planId);
-  return `Upgrade to ${plan?.name ?? planId}`;
-};
-
-const getPlanActionStyle = ({
-  isUnavailable,
-  isCurrent,
-}: {
-  isUnavailable: boolean;
-  isCurrent: boolean;
-}): string => {
-  if (isUnavailable) {
-    return 'border border-border-soft bg-surface text-muted-copy cursor-not-allowed opacity-60';
-  }
-  if (isCurrent) {
-    return 'border border-success/30 bg-success/10 text-success cursor-not-allowed';
-  }
-  return 'bg-primary text-white hover:bg-primary/95';
-};
-
-const PlanAction = ({
-  plan,
-  isCurrent,
-  inProgress,
-  disabled,
-  onClick,
-}: {
-  plan: CommercialPlanPreview;
-  isCurrent: boolean;
-  inProgress: boolean;
-  disabled: boolean;
-  onClick: () => void;
-}) => {
-  const unavailable = isPlanUnavailable(plan);
-  const label = getPlanActionLabel({
-    planId: plan.id,
-    isCurrent,
-    inProgress,
-    isUnavailable: unavailable,
-  });
-  const style = getPlanActionStyle({ isUnavailable: unavailable, isCurrent });
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex h-9 w-full items-center justify-center rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-sm ${style}`}
-    >
-      {label}
-    </button>
-  );
-};
+import { ACTIVE_PLANS, HIGHLIGHTED_PLANS, PLAN_BADGES, COMPARISON_ROWS } from './PricingPage/pricing.constants';
+import { getErrorMessage, isPlanUnavailable, getAccessBadge, getCalculatedPrice } from './PricingPage/pricing.utils';
+import { FreePlanButton, PlanAction } from './PricingPage/PlanAction';
 
 const PricingPage = () => {
   const navigate = useNavigate();
@@ -350,7 +221,6 @@ const PricingPage = () => {
                     : 'border border-border-soft'
                 }`}
               >
-                {/* ITEM 16: Border-Beam Halo for Pro Plan */}
                 {plan.id === 'pro' && (
                   <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-amber-400 via-primary to-indigo-600 blur-sm opacity-40 animate-ambient-glow pointer-events-none" />
                 )}
@@ -455,7 +325,6 @@ const PricingPage = () => {
               <span className="text-base font-extrabold text-primary font-mono">
                 {teamSeats} Engineer Seats
               </span>
-              {/* Dynamic Discount Calculation */}
               {(() => {
                 const basePerSeatUsd = isAnnual ? 15 : 19;
                 let discountPct = 0;
@@ -570,45 +439,7 @@ const PricingPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {(
-                  [
-                    {
-                      key: 'learning',
-                      label: 'Domain Learning Modules',
-                      icon: Sparkles,
-                      tooltip:
-                        'Access to 10 engineering disciplines, CEFR A1-C2 curriculum, and ASTM/Eurocode vocabulary.',
-                    },
-                    {
-                      key: 'ai',
-                      label: 'AI Voice & Writing Coach',
-                      icon: Cpu,
-                      tooltip:
-                        'Real-time oral defense practice, FIDIC contract correction, and technical presentation feedback.',
-                    },
-                    {
-                      key: 'analytics',
-                      label: 'Analytics & Skill Metrics',
-                      icon: Check,
-                      tooltip:
-                        'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
-                    },
-                    {
-                      key: 'team',
-                      label: 'Team Management & SSO',
-                      icon: Building2,
-                      tooltip:
-                        'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
-                    },
-                    {
-                      key: 'limits',
-                      label: 'Usage Allowance Limits',
-                      icon: Zap,
-                      tooltip:
-                        'Monthly voice practice minutes, document upload counts, and AI token limits.',
-                    },
-                  ] as const
-                ).map((row) => (
+                {COMPARISON_ROWS.map((row) => (
                   <tr
                     key={row.key}
                     className="border-b border-border-soft/60 last:border-0 hover:bg-primary/5 transition-colors"

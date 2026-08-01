@@ -1,6 +1,7 @@
 node_modules/
 build/
 dist/
+.next/
 .npm-cache/
 .vite/
 .git/

@@ -1,4 +1,4 @@
-import type { SkillName } from '@/features/profile';
+import type { SkillName } from '@/shared/types/domain.types';
 
 export interface ReportData {
   generatedAt: string;

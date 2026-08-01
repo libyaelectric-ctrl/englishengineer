@@ -1,7 +1,7 @@
 import { LearningState } from '@/core/learning/learning.types';
 
+import type { CefrLevel } from '@/shared/types/domain.types';
 import { AssessmentProfile } from '@/features/assessment';
-import { CefrLevel } from '@/features/level-system';
 
 import {
   BASE_DAILY_TASKS,

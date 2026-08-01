@@ -1,6 +1,6 @@
+import type { CefrLevel } from '@/shared/types/domain.types';
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { GrammarRepository } from '@/features/grammar/grammar.repository';
-import type { CefrLevel } from '@/features/level-system/level-system.types';
 import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
 import { VocabularyRepository } from '@/features/vocabulary/services/vocabulary.repository';
 

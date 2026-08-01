@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import type { SkillName } from '@/shared/types/domain.types';
 import { useAuthStore } from '@/features/auth';
 import {
   LearningProfileEngine,
   LearningProfileRepository,
-  type SkillName,
 } from '@/features/profile';
 
 import type { LearningTaskRecommendation } from './learning-orchestrator.types';
