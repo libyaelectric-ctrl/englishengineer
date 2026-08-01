@@ -130,6 +130,15 @@ const SourceInputPanel: React.FC<{
   speakText,
 }) => {
   const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
+  const isRtl = sourceLang === 'ar';
+  const sourcePlaceholder = isRtl
+    ? 'أدخل النص الفني أو المواصفات الهندسية...'
+    : 'Enter technical text, engineering specs, contract clauses, or any words to translate...';
+  const speakLabel = isPlayingAudio === 'source' ? 'Playing...' : 'Audio';
+  const speakBtnClass = isPlayingAudio === 'source'
+    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
+    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
+  const hasInput = inputText.trim().length > 0;
 
   return (
     <div className="space-y-2 relative flex flex-col justify-between">
@@ -137,24 +146,20 @@ const SourceInputPanel: React.FC<{
         <div className="flex items-center justify-between mb-2">
           <label className="text-xs font-bold text-foreground flex items-center gap-2">
             Source Text / Technical Document
-            {inputText.trim() && (
+            {hasInput && (
               <button
                 type="button"
                 onClick={() => speakText(inputText, sourceLang, 'source')}
-                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${
-                  isPlayingAudio === 'source'
-                    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
-                    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy'
-                }`}
+                className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
                 title="Listen Source Text Audio"
               >
                 <Volume2 className="h-3.5 w-3.5" />
-                <span>{isPlayingAudio === 'source' ? 'Playing...' : 'Audio'}</span>
+                <span>{speakLabel}</span>
               </button>
             )}
           </label>
 
-          {inputText && (
+          {hasInput && (
             <button
               type="button"
               onClick={handleClear}
@@ -167,19 +172,14 @@ const SourceInputPanel: React.FC<{
 
         <textarea
           rows={8}
-          dir={sourceLang === 'ar' ? 'rtl' : 'ltr'}
+          dir={isRtl ? 'rtl' : 'ltr'}
           lang={sourceLang}
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder={
-            sourceLang === 'ar'
-              ? 'أدخل النص الفني أو المواصفات الهندسية...'
-              : 'Enter technical text, engineering specs, contract clauses, or any words to translate...'
-          }
+          placeholder={sourcePlaceholder}
           className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
         />
 
-        {/* Quick Character / Phrase Helper for Non-Latin Keyboards */}
         {quickChars && (
           <div className="mt-2 flex flex-wrap items-center gap-1.5 bg-background/50 p-2 rounded-lg border border-border-soft">
             <span className="text-[10px] font-bold text-muted-copy flex items-center gap-1">
@@ -202,7 +202,7 @@ const SourceInputPanel: React.FC<{
       {!liveTranslateEnabled && (
         <button
           type="submit"
-          disabled={isTranslating || !inputText.trim()}
+          disabled={isTranslating || !hasInput}
           className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
         >
           <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
@@ -230,117 +230,128 @@ const OutputPanel: React.FC<{
   isPlayingAudio,
   handleCopy,
   speakText,
-}) => (
-  <div className="space-y-2 relative">
-    <div className="flex items-center justify-between mb-2">
-      <label className="text-xs font-bold text-foreground flex items-center gap-2">
-        Translated Output
-        {translatedText.trim() && (
+}) => {
+  const hasOutput = translatedText.trim().length > 0;
+  const speakLabel = isPlayingAudio === 'target' ? 'Playing...' : 'Audio';
+  const speakBtnClass = isPlayingAudio === 'target'
+    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
+    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
+  const isRtl = targetLang === 'ar';
+
+  return (
+    <div className="space-y-2 relative">
+      <div className="flex items-center justify-between mb-2">
+        <label className="text-xs font-bold text-foreground flex items-center gap-2">
+          Translated Output
+          {hasOutput && (
+            <button
+              type="button"
+              onClick={() => speakText(translatedText, targetLang, 'target')}
+              className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
+              title="Listen Translated Audio"
+            >
+              <Volume2 className="h-3.5 w-3.5" />
+              <span>{speakLabel}</span>
+            </button>
+          )}
+          {resultData?.serviceUsed && (
+            <span className="text-[9px] font-mono text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.2 rounded">
+              via {resultData.serviceUsed}
+            </span>
+          )}
+        </label>
+
+        {hasOutput && (
           <button
             type="button"
-            onClick={() => speakText(translatedText, targetLang, 'target')}
-            className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${
-              isPlayingAudio === 'target'
-                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
-                : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy'
-            }`}
-            title="Listen Translated Audio"
+            onClick={handleCopy}
+            className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer"
           >
-            <Volume2 className="h-3.5 w-3.5" />
-            <span>{isPlayingAudio === 'target' ? 'Playing...' : 'Audio'}</span>
+            {copied ? (
+              <Check className="h-3.5 w-3.5 text-emerald-500" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+            <span>{copied ? 'Copied!' : 'Copy Result'}</span>
           </button>
         )}
-        {resultData?.serviceUsed && (
-          <span className="text-[9px] font-mono text-primary bg-primary/10 border border-primary/20 px-1.5 py-0.2 rounded">
-            via {resultData.serviceUsed}
-          </span>
+      </div>
+
+      <div className="relative">
+        <textarea
+          rows={8}
+          readOnly
+          dir={isRtl ? 'rtl' : 'ltr'}
+          lang={targetLang}
+          value={isTranslating ? 'Translating...' : translatedText}
+          placeholder="Translated output will appear here automatically..."
+          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
+        />
+        {isTranslating && (
+          <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
+            <Sparkles className="h-4 w-4 animate-spin" /> Translating...
+          </div>
         )}
-      </label>
-
-      {translatedText && (
-        <button
-          type="button"
-          onClick={handleCopy}
-          className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer"
-        >
-          {copied ? (
-            <Check className="h-3.5 w-3.5 text-emerald-500" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" />
-          )}
-          <span>{copied ? 'Copied!' : 'Copy Result'}</span>
-        </button>
-      )}
+      </div>
     </div>
-
-    <div className="relative">
-      <textarea
-        rows={8}
-        readOnly
-        dir={targetLang === 'ar' ? 'rtl' : 'ltr'}
-        lang={targetLang}
-        value={isTranslating ? 'Translating...' : translatedText}
-        placeholder="Translated output will appear here automatically..."
-        className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
-      />
-      {isTranslating && (
-        <div className="absolute inset-0 bg-background/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center text-xs font-bold text-primary gap-2">
-          <Sparkles className="h-4 w-4 animate-spin" /> Translating...
-        </div>
-      )}
-    </div>
-  </div>
-);
+  );
+};
 
 const WordAnalysisCard: React.FC<{
   resultData: TranslationResult | null;
   translatedText: string;
-}> = ({ resultData, translatedText }) => (
-  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
-    <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
-      <div className="flex items-center gap-2">
-        <BookOpen className="h-4 w-4 text-emerald-600" />
-        <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
-          Single-Word Technical Analysis
-        </span>
-      </div>
-      <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 font-mono uppercase">
-        Kelime Türü: {resultData?.wordAnalysis?.partOfSpeech?.toUpperCase() || 'GENERAL'}
-      </span>
-    </div>
+}> = ({ resultData, translatedText }) => {
+  const alternatives = resultData?.wordAnalysis?.alternativeMeanings;
+  const hasAlternatives = alternatives && alternatives.length > 0;
+  const posLabel = resultData?.wordAnalysis?.partOfSpeech?.toUpperCase() || 'GENERAL';
 
-    <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
-      <div>
-        <span className="text-muted-copy font-bold">Word: </span>
-        <span className="font-extrabold text-foreground font-mono">
-          {resultData?.wordAnalysis?.word}
+  return (
+    <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4 space-y-2 animate-in fade-in">
+      <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+        <div className="flex items-center gap-2">
+          <BookOpen className="h-4 w-4 text-emerald-600" />
+          <span className="text-xs font-extrabold uppercase tracking-wider text-foreground">
+            Single-Word Technical Analysis
+          </span>
+        </div>
+        <span className="rounded bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 text-[10px] font-extrabold text-emerald-700 font-mono uppercase">
+          Kelime Türü: {posLabel}
         </span>
       </div>
-      <div>
-        <span className="text-muted-copy font-bold">Primary Meaning: </span>
-        <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
-      </div>
-    </div>
 
-    {resultData?.wordAnalysis?.alternativeMeanings?.length ? (
-      <div className="pt-1 text-xs space-y-1">
-        <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider block">
-          Alternatif Türkçe Karşılıkları & Teknik Eş Anlamlılar:
-        </span>
-        <div className="flex flex-wrap gap-1.5">
-          {resultData.wordAnalysis.alternativeMeanings.map((alt) => (
-            <span
-              key={alt}
-              className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
-            >
-              {alt}
-            </span>
-          ))}
+      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div>
+          <span className="text-muted-copy font-bold">Word: </span>
+          <span className="font-extrabold text-foreground font-mono">
+            {resultData?.wordAnalysis?.word}
+          </span>
+        </div>
+        <div>
+          <span className="text-muted-copy font-bold">Primary Meaning: </span>
+          <span className="font-extrabold text-emerald-600 font-mono">{translatedText}</span>
         </div>
       </div>
-    ) : null}
-  </div>
-);
+
+      {hasAlternatives && (
+        <div className="pt-1 text-xs space-y-1">
+          <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider block">
+            Alternatif Türkçe Karşılıkları & Teknik Eş Anlamlılar:
+          </span>
+          <div className="flex flex-wrap gap-1.5">
+            {alternatives!.map((alt) => (
+              <span
+                key={alt}
+                className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
+              >
+                {alt}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const TranslatorPage = () => {
   const [inputText, setInputText] = useState('');

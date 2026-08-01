@@ -187,52 +187,52 @@ export class TranslationService {
     return this.primaryEndpoint;
   }
 
-  // 1. Primary Google GTX 1-line JSON Endpoint (Ultra-fast <100ms, 100% CORS open)
+  private static parseGtxResponse(data: unknown): string {
+    if (Array.isArray(data)) {
+      if (typeof data[0] === 'string') return data[0];
+      if (Array.isArray(data[0]) && typeof data[0][0] === 'string') return data[0][0];
+    }
+    return '';
+  }
+
+  private static buildGtxUrls(trimmed: string, sourceLang: string, targetLang: string): string[] {
+    const encoded = encodeURIComponent(trimmed);
+    const urls: string[] = [];
+    if (typeof window !== 'undefined' && window.location) {
+      urls.push(`${window.location.origin}/api/translate?text=${encoded}&sl=${sourceLang}&tl=${targetLang}`);
+    }
+    urls.push(
+      `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`,
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encoded}`,
+      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`)}`
+    );
+    return urls;
+  }
+
   private async tryGoogleGTX_T(
     trimmed: string,
     text: string,
     sourceLang: string,
     targetLang: string
   ): Promise<TranslationResult | null> {
-    const urlsToTry: string[] = [];
-    if (typeof window !== 'undefined' && window.location) {
-      urlsToTry.push(
-        `${window.location.origin}/api/translate?text=${encodeURIComponent(trimmed)}&sl=${sourceLang}&tl=${targetLang}`
-      );
-    }
-    urlsToTry.push(
-      `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`,
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(trimmed)}`,
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encodeURIComponent(trimmed)}`)}`
-    );
-
-    for (const url of urlsToTry) {
+    for (const url of TranslationService.buildGtxUrls(trimmed, sourceLang, targetLang)) {
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3000);
         const response = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
 
-        if (response.ok) {
-          const data = await response.json();
-          let translatedText = '';
-          if (Array.isArray(data)) {
-            if (typeof data[0] === 'string') {
-              translatedText = data[0];
-            } else if (Array.isArray(data[0]) && typeof data[0][0] === 'string') {
-              translatedText = data[0][0];
-            }
-          }
-          if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
-            return {
-              originalText: text,
-              translatedText,
-              sourceLang,
-              targetLang,
-              serviceUsed: 'google_gtx',
-              wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-            };
-          }
+        if (!response.ok) continue;
+        const translatedText = TranslationService.parseGtxResponse(await response.json());
+        if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
+          return {
+            originalText: text,
+            translatedText,
+            sourceLang,
+            targetLang,
+            serviceUsed: 'google_gtx',
+            wordAnalysis: analyzeSingleWord(trimmed, translatedText),
+          };
         }
       } catch (err: unknown) {
         logger.w('[TranslationService] Google GTX engine attempt failed', err);
@@ -346,6 +346,34 @@ export class TranslationService {
     return null;
   }
 
+  private async postToEndpoint(
+    endpoint: string,
+    trimmed: string,
+    sourceLang: string,
+    targetLang: string
+  ): Promise<{ translatedText: string; detectedLang?: string } | null> {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: trimmed, source: sourceLang, target: targetLang, format: 'text' }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!response.ok) return null;
+      const data = await response.json();
+      const translatedText = data?.translatedText || '';
+      if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
+        return { translatedText, detectedLang: data?.detectedLanguage?.language };
+      }
+    } catch (err: unknown) {
+      logger.w(`[TranslationService] LibreTranslate endpoint failed (${endpoint})`, err);
+    }
+    return null;
+  }
+
   private async tryEndpoints(
     trimmed: string,
     text: string,
@@ -354,41 +382,39 @@ export class TranslationService {
   ): Promise<TranslationResult | null> {
     const endpointsToTry = Array.from(new Set([this.primaryEndpoint, ...DEFAULT_ENDPOINTS]));
     for (const endpoint of endpointsToTry) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000);
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            q: trimmed,
-            source: sourceLang,
-            target: targetLang,
-            format: 'text',
-          }),
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-        if (response.ok) {
-          const data = await response.json();
-          const translatedText = data?.translatedText || '';
-          if (translatedText && translatedText.toLowerCase() !== trimmed.toLowerCase()) {
-            return {
-              originalText: text,
-              translatedText,
-              sourceLang,
-              targetLang,
-              detectedLang: data?.detectedLanguage?.language || sourceLang,
-              serviceUsed: 'libretranslate',
-              wordAnalysis: analyzeSingleWord(trimmed, translatedText),
-            };
-          }
-        }
-      } catch (err: unknown) {
-        logger.w(`[TranslationService] LibreTranslate endpoint failed (${endpoint})`, err);
+      const result = await this.postToEndpoint(endpoint, trimmed, sourceLang, targetLang);
+      if (result) {
+        return {
+          originalText: text,
+          translatedText: result.translatedText,
+          sourceLang,
+          targetLang,
+          detectedLang: result.detectedLang || sourceLang,
+          serviceUsed: 'libretranslate',
+          wordAnalysis: analyzeSingleWord(trimmed, result.translatedText),
+        };
       }
     }
     return null;
+  }
+
+  private static offlineFallback(
+    trimmed: string,
+    text: string,
+    effectiveSource: string,
+    effectiveTarget: string
+  ): TranslationResult {
+    const lower = trimmed.toLowerCase();
+    const dbMatch = LOCAL_WORD_DB[lower];
+    const fallbackText = dbMatch && effectiveTarget === 'tr' ? dbMatch.tr : lower;
+    return {
+      originalText: text,
+      translatedText: fallbackText,
+      sourceLang: effectiveSource,
+      targetLang: effectiveTarget,
+      serviceUsed: 'fallback',
+      wordAnalysis: analyzeSingleWord(trimmed, fallbackText),
+    };
   }
 
   public async translate({
@@ -447,21 +473,7 @@ export class TranslationService {
     if (endpointResult) return endpointResult;
 
     // 6. Offline / Local Dictionary Fallback
-    const lower = trimmed.toLowerCase();
-    const dbMatch = LOCAL_WORD_DB[lower];
-    let fallbackText = trimmed;
-    if (dbMatch) {
-      fallbackText = effectiveTarget === 'tr' ? dbMatch.tr : lower;
-    }
-
-    return {
-      originalText: text,
-      translatedText: fallbackText,
-      sourceLang: effectiveSource,
-      targetLang: effectiveTarget,
-      serviceUsed: 'fallback',
-      wordAnalysis: analyzeSingleWord(trimmed, fallbackText),
-    };
+    return TranslationService.offlineFallback(trimmed, text, effectiveSource, effectiveTarget);
   }
 }
 

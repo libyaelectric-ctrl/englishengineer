@@ -1,11 +1,11 @@
-import { CheckCircle2 } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { CheckCircle2, RotateCw, Volume2 } from 'lucide-react';
 
 import { FormEvent, useEffect, useState } from 'react';
 
 import { playSound } from '@/shared/utils/sound';
 
 import {
+  PronunciationService,
   type VocabularyMenuProgress,
   type VocabularyTerm,
   repairVocabularyText,
@@ -39,115 +39,6 @@ interface WordCardProps {
   onLearn?: (term: VocabularyTerm) => void;
 }
 
-const StatusContent = ({
-  status,
-  progress,
-  term,
-  mode,
-  onReview,
-  showAnswer,
-  onLearn,
-}: {
-  status: string;
-  progress?: VocabularyMenuProgress;
-  term: VocabularyTerm;
-  mode: VocabularySetMode;
-  onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
-  showAnswer: boolean;
-  onLearn?: (term: VocabularyTerm) => void;
-}) => {
-  const isLearned = status === 'learned';
-  const isQuizMode = mode === 'Quiz';
-
-  return (
-    <>
-      {isLearned && isQuizMode && (
-        <div className="mt-3 inline-flex items-center gap-1.5 rounded-[4px] border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-          <CheckCircle2 className="h-4 w-4" /> Added to Learned List
-        </div>
-      )}
-      {isLearned && !isQuizMode && progress && (
-        <LearningReview term={term} progress={progress} mode={mode} onReview={onReview} />
-      )}
-      {status === 'mastered' && <MasteredBadge />}
-      {status === 'new' && (
-        <>
-          <NewWordHint />
-          <button
-            type="button"
-            onClick={() => onLearn?.(term)}
-            className="mt-2 w-full rounded-[4px] bg-primary px-3 py-2 text-xs font-bold text-white hover:bg-primary/90 transition-colors cursor-pointer"
-          >
-            I Know This
-          </button>
-        </>
-      )}
-      {showAnswer && (
-        <div className="mt-4 flex-1 space-y-2 text-sm leading-6 text-muted-copy">
-          <p>{repairVocabularyText(term.exampleSentence)}</p>
-          <p className="text-foreground0">{repairVocabularyText(term.turkishExample)}</p>
-        </div>
-      )}
-    </>
-  );
-};
-
-const CardActions = ({
-  mode,
-  status,
-  progress,
-  term,
-  onReview,
-  answer,
-  quizResult,
-  knowThisCheck,
-  setAnswer,
-  setKnowThisCheck,
-  submitQuiz,
-  onLearn,
-  showDetails,
-  setShowDetails,
-}: {
-  mode: VocabularySetMode;
-  status: string;
-  progress?: VocabularyMenuProgress;
-  term: VocabularyTerm;
-  onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
-  answer: string;
-  quizResult: boolean | null;
-  knowThisCheck: boolean;
-  setAnswer: (v: string) => void;
-  setKnowThisCheck: (v: boolean) => void;
-  submitQuiz: (e: FormEvent) => void;
-  onLearn?: (term: VocabularyTerm) => void;
-  showDetails: boolean;
-  setShowDetails: (fn: (v: boolean) => boolean) => void;
-}) => (
-  <>
-    {mode === 'Review' && progress && <ReviewReasonBanner term={term} progress={progress} />}
-    <WordCardDetails
-      term={term}
-      showDetails={showDetails}
-      onToggle={() => setShowDetails((v) => !v)}
-    />
-    {mode === 'Quiz' && status === 'New' && (
-      <QuizForm
-        term={term}
-        answer={answer}
-        quizResult={quizResult}
-        knowThisCheck={knowThisCheck}
-        onAnswerChange={setAnswer}
-        onSetKnowThisCheck={setKnowThisCheck}
-        onSubmit={submitQuiz}
-        onLearn={onLearn}
-      />
-    )}
-    {mode === 'Review' && status !== 'Mastered' && (
-      <ReviewActions term={term} onReview={onReview} />
-    )}
-  </>
-);
-
 const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {
   const expected = normalizeAnswer(turkishMeaning);
   const response = normalizeAnswer(answer);
@@ -164,7 +55,8 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
   const [knowThisCheck, setKnowThisCheck] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
-  const status = progress?.status ?? 'new';
+
+  const status = progress?.status ?? 'New';
   const showAnswer = mode !== 'Quiz' || quizResult !== null;
 
   useEffect(() => {
@@ -204,59 +96,160 @@ export const WordCard = ({ term, progress, mode, onReview, onLearn }: WordCardPr
     setShowDetails(fn);
   };
 
+  const toggleFlip = () => {
+    setIsFlipped((f) => !f);
+    playSound('flip');
+  };
+
   return (
     <article
       data-testid="vocabulary-word-card"
-      className={`flex h-full flex-col rounded-[4px] bg-surface/60 p-5 shadow-sm hover:shadow-md transition-all duration-300 relative ${getBorderClass(progress?.isWeak)}`}
-      style={{ perspective: '1000px' }}
+      className="relative h-full w-full min-h-[340px]"
+      style={{ perspective: '1200px' }}
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={isFlipped ? 'back' : 'front'}
-          initial={{ rotateY: isFlipped ? -90 : 90, opacity: 0 }}
-          animate={{ rotateY: 0, opacity: 1 }}
-          exit={{ rotateY: isFlipped ? 90 : -90, opacity: 0 }}
-          transition={{ duration: 0.25 }}
-          className="flex flex-col h-full"
-          style={{ transformStyle: 'preserve-3d' }}
+      <div
+        className="relative h-full w-full transition-transform duration-700 rounded-xl shadow-md hover:shadow-xl"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        }}
+      >
+        {/* FRONT FACE */}
+        <div
+          className={`absolute inset-0 flex flex-col justify-between rounded-xl bg-surface/90 p-5 border border-primary/20 backdrop-blur-md ${getBorderClass(progress?.isWeak)}`}
+          style={{ backfaceVisibility: 'hidden' }}
         >
-          <WordCardHeader term={term} showAnswer={showAnswer} status={status} progress={progress} />
-          <StatusContent
-            status={status}
-            progress={progress}
-            term={term}
-            mode={mode}
-            onReview={onReview}
-            showAnswer={showAnswer}
-            onLearn={onLearn}
-          />
-          <CardActions
-            mode={mode}
-            status={status}
-            progress={progress}
-            term={term}
-            onReview={onReview}
-            answer={answer}
-            quizResult={quizResult}
-            knowThisCheck={knowThisCheck}
-            setAnswer={setAnswer}
-            setKnowThisCheck={setKnowThisCheck}
-            submitQuiz={submitQuiz}
-            onLearn={handleLearnClick}
-            showDetails={showDetails}
-            setShowDetails={handleToggleDetails}
-          />
-        </motion.div>
-      </AnimatePresence>
-      {mode !== 'Quiz' && (
-        <button
-          type="button"
-          onClick={() => setIsFlipped((f) => !f)}
-          className="absolute top-3 right-3 text-[10px] font-bold text-primary hover:text-primary-hover transition-colors"
+          <div className="space-y-4">
+            <WordCardHeader
+              term={term}
+              showAnswer={showAnswer}
+              status={status}
+              progress={progress}
+            />
+
+            {mode === 'Review' && progress && (
+              <ReviewReasonBanner term={term} progress={progress} />
+            )}
+
+            {status === 'Learned' && mode === 'Quiz' && (
+              <div className="inline-flex items-center gap-1.5 rounded-md border border-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
+                <CheckCircle2 className="h-4 w-4" /> Added to Learned List
+              </div>
+            )}
+            {status === 'Learned' && mode !== 'Quiz' && progress && (
+              <LearningReview term={term} progress={progress} mode={mode} onReview={onReview} />
+            )}
+            {status === 'Mastered' && <MasteredBadge />}
+
+            {status === 'New' && (
+              <div className="space-y-2">
+                <NewWordHint />
+                {mode === 'Quiz' ? (
+                  <QuizForm
+                    term={term}
+                    answer={answer}
+                    quizResult={quizResult}
+                    knowThisCheck={knowThisCheck}
+                    onAnswerChange={setAnswer}
+                    onSetKnowThisCheck={setKnowThisCheck}
+                    onSubmit={submitQuiz}
+                    onLearn={onLearn}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleLearnClick(term)}
+                    className="w-full rounded-md bg-primary px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+                  >
+                    I Know This
+                  </button>
+                )}
+              </div>
+            )}
+
+            {mode === 'Review' && status !== 'Mastered' && (
+              <ReviewActions term={term} onReview={onReview} />
+            )}
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-border-soft flex items-center justify-between">
+            <WordCardDetails
+              term={term}
+              showDetails={showDetails}
+              onToggle={() => handleToggleDetails((v) => !v)}
+            />
+
+            <button
+              type="button"
+              onClick={toggleFlip}
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-[11px] font-extrabold text-primary hover:bg-primary hover:text-white transition-all cursor-pointer"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+              <span>3D Flip (Space)</span>
+            </button>
+          </div>
+        </div>
+
+        {/* BACK FACE (180deg ROTATED PHYSICAL BACK) */}
+        <div
+          className="absolute inset-0 flex flex-col justify-between rounded-xl bg-gradient-to-br from-surface via-surface-hover to-primary/10 p-6 border-2 border-primary/40 shadow-2xl backdrop-blur-xl"
+          style={{
+            backfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)',
+          }}
         >
-          {isFlipped ? 'Front' : 'Flip'}
-        </button>
-      )}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border-soft pb-3">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-primary">
+                🇹🇷 TÜRKÇE KARŞILIĞI & ŞANTİYE KULLANIMI
+              </span>
+              <button
+                type="button"
+                onClick={() => PronunciationService.speak(term.term)}
+                className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
+                title="Listen Pronunciation"
+              >
+                <Volume2 className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="text-center py-2">
+              <h2 className="text-2xl font-black text-foreground tracking-tight">
+                {repairVocabularyText(term.turkishMeaning)}
+              </h2>
+              <p className="text-xs font-mono text-muted-copy mt-1 font-semibold">{term.term}</p>
+            </div>
+
+            <div className="space-y-2 rounded-lg bg-surface/80 p-3 border border-border-soft text-xs leading-relaxed">
+              <p className="font-semibold text-foreground">
+                📌 <span className="font-bold text-primary">İngilizce Örnek:</span>{' '}
+                {repairVocabularyText(term.exampleSentence)}
+              </p>
+              <p className="font-medium text-muted-copy border-t border-border-soft/60 pt-1.5">
+                🇹🇷{' '}
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                  Türkçe Çevirisi:
+                </span>{' '}
+                {repairVocabularyText(term.turkishExample)}
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-border-soft flex items-center justify-between">
+            <span className="text-[10px] font-mono font-bold text-muted-copy">
+              CEFR: {term.cefrLevel}
+            </span>
+            <button
+              type="button"
+              onClick={toggleFlip}
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-xs font-extrabold text-white shadow hover:bg-primary/90 transition-all cursor-pointer"
+            >
+              <RotateCw className="h-3.5 w-3.5" />
+              <span>Kartın Ön Yüzü</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </article>
   );
 };
