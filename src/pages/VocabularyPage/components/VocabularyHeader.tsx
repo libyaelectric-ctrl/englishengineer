@@ -83,8 +83,8 @@ export function VocabularyHeader({
 
   return (
     <>
-      <div className="sticky top-0 z-30 mb-6 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl">
-        <div className="flex items-center gap-3">
+      <div className="sticky top-0 z-30 mb-4 flex flex-wrap h-auto min-h-16 items-center justify-between gap-3 border-b border-border-soft bg-background/95 p-2 backdrop-blur-xl">
+        <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-base font-bold tracking-tight text-foreground">Vocabulary</h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {vocabularyLevel}
@@ -106,6 +106,12 @@ export function VocabularyHeader({
                 }}
               />
             </div>
+          </div>
+          {/* Keyboard Shortcut Indicator */}
+          <div className="hidden lg:flex items-center gap-1.5 rounded border border-border-soft bg-surface/80 px-2 py-1 text-[10px] font-mono text-muted-copy">
+            <span className="rounded bg-primary/10 px-1 font-bold text-primary">Space</span> Flip |
+            <span className="rounded bg-primary/10 px-1 font-bold text-primary">1-4</span> Rating |
+            <span className="rounded bg-primary/10 px-1 font-bold text-primary">J/K</span> Nav
           </div>
         </div>
 
@@ -142,6 +148,33 @@ export function VocabularyHeader({
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Engineering Domain Sub-Specialty Filter Bar */}
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
+          Domain:
+        </span>
+        {[
+          'All Domains',
+          '🏗️ Civil',
+          '⚡ Electrical',
+          '💻 Software',
+          '⚙️ Mechanical',
+          '📋 Safety',
+        ].map((domain, idx) => (
+          <button
+            key={domain}
+            type="button"
+            className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold transition-all cursor-pointer ${
+              idx === 0
+                ? 'border-primary/40 bg-primary/10 text-primary'
+                : 'border-border-soft bg-surface text-muted-copy hover:border-primary/30 hover:text-foreground'
+            }`}
+          >
+            {domain}
+          </button>
+        ))}
       </div>
 
       {hasSearched && searchResults && searchResults.length > 0 && (
