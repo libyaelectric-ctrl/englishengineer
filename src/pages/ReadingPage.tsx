@@ -2,6 +2,7 @@ import { BookOpen, Eye, FileText, GraduationCap, KeyRound, Lock } from 'lucide-r
 
 import { useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
+import { PageContainer } from '@/shared/components/PageContainer';
 
 import { Link } from 'react-router-dom';
 
@@ -357,7 +358,7 @@ const ReadingPage = () => {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
+    <PageContainer>
       <div className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-border-soft bg-background/95 backdrop-blur-xl mb-6">
         <div className="flex items-center gap-3">
           <h1 className="text-base font-bold tracking-tight text-foreground">Reading</h1>
@@ -411,7 +412,7 @@ const ReadingPage = () => {
           moveMission={moveMission}
         />
       )}
-    </div>
+    </PageContainer>
   );
 };
 

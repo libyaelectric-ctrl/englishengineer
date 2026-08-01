@@ -8,6 +8,38 @@ import {
   keywordMatchRatio,
   normalizeSpeechText,
 } from './speaking.helpers';
+import {
+  CLARITY_KEYWORD_WEIGHT,
+  CLARITY_STRENGTH_THRESHOLD,
+  CONFIDENCE_FILLER_PENALTY,
+  CONFIDENCE_KEYWORD_WEIGHT,
+  CONFIDENCE_NO_FILLER_BONUS,
+  CONFIDENCE_SENTENCE_COUNT_DIVISOR,
+  CONFIDENCE_SENTENCE_WEIGHT,
+  FINAL_CLARITY_WEIGHT,
+  FINAL_CONFIDENCE_WEIGHT,
+  FINAL_FLUENCY_WEIGHT,
+  FINAL_GRAMMAR_WEIGHT,
+  FINAL_TECHNICAL_WEIGHT,
+  FILLER_PENALTY_CAP,
+  FILLER_PENALTY_MULTIPLIER,
+  FLUENCY_STRENGTH_THRESHOLD,
+  GRAMMAR_STRENGTH_THRESHOLD,
+  LENGTH_WEIGHT,
+  LOWER_TOLERANCE_MULTIPLIER,
+  MIN_PROMPT_TOKEN_LENGTH,
+  OVERSPEED_RANGE_FACTOR,
+  PACE_WEIGHT,
+  PROMPT_COVERAGE_WEIGHT,
+  SENTENCE_COUNT_DIVISOR,
+  SENTENCE_RATIO_WEIGHT,
+  TECHNICAL_KEYWORD_WEIGHT,
+  TECHNICAL_VOCABULARY_STRENGTH_THRESHOLD,
+  TECHNICAL_TARGET_TERM_WEIGHT,
+  UNREALISTIC_SPEED_MULTIPLIER,
+  UNREALISTIC_SPEED_PENALTY,
+  UPPER_TOLERANCE_MULTIPLIER,
+} from './speaking.constants';
 import { SpeakingEvaluationResult, SpeakingMission, SpeakingSubmission } from './speaking.types';
 
 const scoreFromRatio = (ratio: number): number => Math.round(Math.min(1, Math.max(0, ratio)) * 100);
@@ -15,17 +47,17 @@ const scoreFromRatio = (ratio: number): number => Math.round(Math.min(1, Math.ma
 const getPaceRatio = (wordsPerMinute: number, targetWpm: number): number => {
   if (targetWpm <= 0) return 1;
 
-  const lowerTolerance = targetWpm * 0.75;
-  const upperTolerance = targetWpm * 1.15;
-  const unrealisticUpper = targetWpm * 1.65;
+  const lowerTolerance = targetWpm * LOWER_TOLERANCE_MULTIPLIER;
+  const upperTolerance = targetWpm * UPPER_TOLERANCE_MULTIPLIER;
+  const unrealisticUpper = targetWpm * UNREALISTIC_SPEED_MULTIPLIER;
 
   if (wordsPerMinute >= lowerTolerance && wordsPerMinute <= upperTolerance) return 1;
   if (wordsPerMinute < lowerTolerance) return wordsPerMinute / lowerTolerance;
-  if (wordsPerMinute >= unrealisticUpper) return 0.45;
+  if (wordsPerMinute >= unrealisticUpper) return UNREALISTIC_SPEED_PENALTY;
 
   const overspeedRange = unrealisticUpper - upperTolerance;
   const overspeedAmount = wordsPerMinute - upperTolerance;
-  return 1 - (overspeedAmount / overspeedRange) * 0.55;
+  return 1 - (overspeedAmount / overspeedRange) * OVERSPEED_RANGE_FACTOR;
 };
 
 export const SpeakingEvaluator = {
@@ -42,21 +74,21 @@ export const SpeakingEvaluator = {
 
     const paceRatio = getPaceRatio(wordsPerMinute, mission.targetWpm);
     const lengthRatio = promptWordCount > 0 ? Math.min(wordCount / promptWordCount, 1) : 1;
-    const sentenceRatio = Math.min(sentenceCount / 2, 1);
-    const fillerPenalty = Math.min(fillerWordCount * 8, 35);
+    const sentenceRatio = Math.min(sentenceCount / SENTENCE_COUNT_DIVISOR, 1);
+    const fillerPenalty = Math.min(fillerWordCount * FILLER_PENALTY_MULTIPLIER, FILLER_PENALTY_CAP);
     const fluencyScore = Math.max(
       0,
-      scoreFromRatio(paceRatio * 0.5 + lengthRatio * 0.3 + sentenceRatio * 0.2) - fillerPenalty
+      scoreFromRatio(paceRatio * PACE_WEIGHT + lengthRatio * LENGTH_WEIGHT + sentenceRatio * SENTENCE_RATIO_WEIGHT) - fillerPenalty
     );
 
-    const promptTokens = normalizedPrompt.split(' ').filter((token) => token.length > 3);
+    const promptTokens = normalizedPrompt.split(' ').filter((token) => token.length > MIN_PROMPT_TOKEN_LENGTH);
     const matchedPromptTokens = promptTokens.filter((token) =>
       normalizedTranscript.includes(token)
     );
     const promptCoverageRatio =
       promptTokens.length > 0 ? matchedPromptTokens.length / promptTokens.length : 1;
     const clarityKeywordRatio = keywordMatchRatio(transcriptUsed, mission.confidenceMarkers);
-    const clarityScore = scoreFromRatio(promptCoverageRatio * 0.75 + clarityKeywordRatio * 0.25);
+    const clarityScore = scoreFromRatio(promptCoverageRatio * PROMPT_COVERAGE_WEIGHT + clarityKeywordRatio * CLARITY_KEYWORD_WEIGHT);
 
     const grammarScore = scoreFromRatio(keywordMatchRatio(transcriptUsed, mission.grammarTargets));
     const targetTermRatio = keywordMatchRatio(
@@ -64,20 +96,20 @@ export const SpeakingEvaluator = {
       mission.syllabicTargets.map((target) => target.word)
     );
     const technicalVocabularyScore = scoreFromRatio(
-      keywordMatchRatio(transcriptUsed, mission.expectedKeywords) * 0.7 + targetTermRatio * 0.3
+      keywordMatchRatio(transcriptUsed, mission.expectedKeywords) * TECHNICAL_KEYWORD_WEIGHT + targetTermRatio * TECHNICAL_TARGET_TERM_WEIGHT
     );
     const confidenceScore = scoreFromRatio(
-      keywordMatchRatio(transcriptUsed, mission.confidenceMarkers) * 0.55 +
-        Math.min(sentenceCount / 3, 1) * 0.25 +
-        (fillerWordCount === 0 ? 0.2 : 0.05)
+      keywordMatchRatio(transcriptUsed, mission.confidenceMarkers) * CONFIDENCE_KEYWORD_WEIGHT +
+        Math.min(sentenceCount / CONFIDENCE_SENTENCE_COUNT_DIVISOR, 1) * CONFIDENCE_SENTENCE_WEIGHT +
+        (fillerWordCount === 0 ? CONFIDENCE_NO_FILLER_BONUS : CONFIDENCE_FILLER_PENALTY)
     );
 
     const finalScore = Math.round(
-      fluencyScore * 0.22 +
-        clarityScore * 0.24 +
-        grammarScore * 0.18 +
-        technicalVocabularyScore * 0.24 +
-        confidenceScore * 0.12
+      fluencyScore * FINAL_FLUENCY_WEIGHT +
+        clarityScore * FINAL_CLARITY_WEIGHT +
+        grammarScore * FINAL_GRAMMAR_WEIGHT +
+        technicalVocabularyScore * FINAL_TECHNICAL_WEIGHT +
+        confidenceScore * FINAL_CONFIDENCE_WEIGHT
     );
 
     const scoringResult = ScoringService.calculateScore({
@@ -92,16 +124,16 @@ export const SpeakingEvaluator = {
       (item) => item !== 'None detected'
     );
 
-    if (fluencyScore >= 85) strengths.push('Stable pacing against target speaking rate');
+    if (fluencyScore >= FLUENCY_STRENGTH_THRESHOLD) strengths.push('Stable pacing against target speaking rate');
     else weaknesses.push('Speaking pace or transcript length needs more control');
 
-    if (clarityScore >= 85) strengths.push('Clear alignment with the prompt structure');
+    if (clarityScore >= CLARITY_STRENGTH_THRESHOLD) strengths.push('Clear alignment with the prompt structure');
     else weaknesses.push('Prompt details were omitted or heavily paraphrased');
 
-    if (technicalVocabularyScore >= 80) strengths.push('Strong use of engineering terminology');
+    if (technicalVocabularyScore >= TECHNICAL_VOCABULARY_STRENGTH_THRESHOLD) strengths.push('Strong use of engineering terminology');
     else weaknesses.push('Important technical vocabulary was missing');
 
-    if (grammarScore >= 80) strengths.push('Good command of required grammar patterns');
+    if (grammarScore >= GRAMMAR_STRENGTH_THRESHOLD) strengths.push('Good command of required grammar patterns');
     else weaknesses.push('Target grammar structures need more repetition');
 
     return {

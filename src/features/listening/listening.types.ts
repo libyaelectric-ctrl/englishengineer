@@ -15,7 +15,7 @@ export type ListeningMissionType =
   | 'Fire Alarm Test'
   | 'Daily Coordination';
 
-export type ListeningPlaybackSpeed = 0.75 | 1 | 1.25 | 1.5;
+export type ListeningPlaybackSpeed = 0.5 | 0.75 | 1 | 1.25 | 1.5;
 
 export interface ListeningQuestion {
   id: string;

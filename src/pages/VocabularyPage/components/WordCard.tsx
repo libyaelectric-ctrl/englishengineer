@@ -37,6 +37,9 @@ interface WordCardProps {
   mode: VocabularySetMode;
   onReview: (term: VocabularyTerm, isCorrect: boolean) => void;
   onLearn?: (term: VocabularyTerm) => void;
+  /** Controlled flip state — managed by parent WordSetSection */
+  isFlipped?: boolean;
+  onFlip?: () => void;
 }
 
 const checkQuizAnswer = (answer: string, turkishMeaning: string): boolean => {

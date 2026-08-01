@@ -2,7 +2,6 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import type { VocabularyLookupQuery } from '../types.js';
 import { getOrSet } from './cache/redis-cache.service.js';
-import { ApiError } from './errors.js';
 import {
   ProgressBodySchema,
   VocabularyLookupQuerySchema,
@@ -14,7 +13,8 @@ import type { VocabularyLookupService } from './vocabulary-service.js';
 export const registerVocabularyRoutes = (
   app: Express,
   service: VocabularyLookupService,
-  rateLimiter: RequestHandler
+  rateLimiter: RequestHandler,
+  requireBackendAuth: RequestHandler
 ): void => {
   app.get(
     '/api/vocabulary/lookup',
@@ -36,11 +36,11 @@ export const registerVocabularyRoutes = (
 
   app.post(
     '/api/vocabulary/:id/progress',
+    requireBackendAuth,
     validateBody(ProgressBodySchema),
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const _userId = request.auth!.userId;
 
         const wordId = request.params.id;
         const { result } = request.validatedBody as {
@@ -67,10 +67,10 @@ export const registerVocabularyRoutes = (
 
   app.get(
     '/api/vocabulary/stats',
+    requireBackendAuth,
     async (request: Request, response: Response, next: NextFunction) => {
       try {
-        const userId = request.auth?.userId;
-        if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
+        const _userId = request.auth!.userId;
 
         response.json({
           total: 0,

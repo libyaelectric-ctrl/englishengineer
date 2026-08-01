@@ -1,4 +1,5 @@
 import { useGrammarStore } from '@/features/grammar';
+import { PageContainer } from '@/shared/components/PageContainer';
 
 import { GrammarEnhancementPanel } from './GrammarPage/GrammarEnhancementPanel';
 import { GrammarHeader } from './GrammarPage/GrammarHeader';
@@ -54,7 +55,7 @@ const GrammarPage = () => {
   const selectedModule = selectedRule ? getModuleLabel(selectedRule.grammarCategory) : '';
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground">
+    <PageContainer className="space-y-6 min-h-screen bg-background pb-16 text-foreground">
       <GrammarHeader
         level={level}
         levelCounts={levelCounts}
@@ -124,7 +125,7 @@ const GrammarPage = () => {
           />
         )}
       </main>
-    </div>
+    </PageContainer>
   );
 };
 

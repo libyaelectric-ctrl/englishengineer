@@ -3,6 +3,7 @@ import { FileCheck, FileText, KeyRound, Layers, Lock, ShieldCheck } from 'lucide
 import { useState } from 'react';
 
 import { Link } from 'react-router-dom';
+import { PageContainer } from '@/shared/components/PageContainer';
 
 import { LockProgressBar } from '@/shared/components/LockProgressBar';
 import { MetricCard } from '@/shared/components/MetricCard';
@@ -214,8 +215,8 @@ const StatsBar = ({
       trend="No external AI required"
       trendDirection="neutral"
       statusColor="cyan"
-    />
-  </div>
+      />
+    </div>
 );
 
 const WritingMainContent = ({
@@ -418,7 +419,7 @@ const WritingPage = () => {
   const showStatsBar = activeTab === 'missions' && subTab === 'missions';
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 min-h-screen bg-background pb-16 text-foreground animate-in fade-in duration-300">
+    <PageContainer>
       <WritingHeader
         currentLevel={currentLevel}
         activeTab={activeTab}
@@ -468,7 +469,7 @@ const WritingPage = () => {
         moveMission={moveMission}
         currentMissionIndex={currentMissionIndex}
       />
-    </div>
+    </PageContainer>
   );
 };
 
