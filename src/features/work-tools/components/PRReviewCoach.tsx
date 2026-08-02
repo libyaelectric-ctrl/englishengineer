@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { Card } from '@/shared/components/Card';
+import { logger } from '@/shared/logger';
 
 import { PRReviewCoachService, type PRReviewResult } from '../pr-review-coach';
 
@@ -42,10 +43,14 @@ export const PRReviewCoach = () => {
 
   const handleCopy = useCallback(async () => {
     if (!result?.polishedText) return;
-    await navigator.clipboard.writeText(result.polishedText);
-    setCopied(true);
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    copyTimerRef.current = setTimeout(() => setCopied(false), 1400);
+    try {
+      await navigator.clipboard.writeText(result.polishedText);
+      setCopied(true);
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 1400);
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
   }, [result]);
 
   const handleSample = (sample: string) => {

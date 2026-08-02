@@ -1,5 +1,7 @@
 import { Check, Copy, FileCheck2, FileCode, Sparkles, UploadCloud } from 'lucide-react';
 
+import { logger } from '@/shared/logger';
+
 import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -73,8 +75,12 @@ export const PdfSpecExtractor = () => {
     const text = extractedTerms
       .map((t) => `\u2022 ${t.word} (${t.category}): ${t.definition} [Ref: ${t.specClause}]`)
       .join('\n\n');
-    navigator.clipboard.writeText(text);
-    setCopied(true);
+    try {
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
     if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
   }, [extractedTerms]);

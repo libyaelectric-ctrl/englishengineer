@@ -2,6 +2,7 @@ import { FormEvent, useMemo, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { logger } from '@/shared/logger';
 import { useLearningStore } from '@/core/learning';
 
 import {
@@ -199,7 +200,11 @@ export function useAIPage() {
 
   const handleCopyResult = async () => {
     if (!lastResult) return;
-    await navigator.clipboard.writeText(formatCoachResult(lastResult));
+    try {
+      await navigator.clipboard.writeText(formatCoachResult(lastResult));
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
   };
 
   const handleExportResult = () => {

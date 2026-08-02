@@ -7,6 +7,7 @@
  *   if (isFeatureEnabled('newDashboard')) { ... }
  */
 
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 export type FeatureFlag =
@@ -152,8 +153,8 @@ function getCurrentUserId(): string | null {
   try {
     const parsed = storage.get<Record<string, unknown>>('auth_user');
     if (parsed?.id) return String(parsed.id);
-  } catch {
-    // ignore
+  } catch (e) {
+    logger.w('[FeatureFlags] Failed to read auth_user from storage', e);
   }
   return null;
 }

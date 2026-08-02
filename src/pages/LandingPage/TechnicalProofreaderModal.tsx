@@ -11,6 +11,8 @@ import {
   Zap,
 } from 'lucide-react';
 
+import { logger } from '@/shared/logger';
+
 import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +88,8 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
   const getUsageCount = (): number => {
     try {
       return parseInt(localStorage.getItem(LIMIT_KEY) || '0', 10);
-    } catch {
+    } catch (e) {
+      logger.w('[TechnicalProofreader] Failed to read usage count from localStorage', e);
       return 0;
     }
   };
@@ -107,17 +110,21 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
       setIsAnalyzing(false);
       try {
         localStorage.setItem(LIMIT_KEY, '1');
-      } catch {
-        // ignore
+      } catch (e) {
+        logger.w('[TechnicalProofreader] Failed to write usage count to localStorage', e);
       }
     }, 800);
   };
 
   const handleCopy = () => {
     if (!analysisResult) return;
-    navigator.clipboard.writeText(analysisResult.improvedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(analysisResult.improvedText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
   };
 
   return (

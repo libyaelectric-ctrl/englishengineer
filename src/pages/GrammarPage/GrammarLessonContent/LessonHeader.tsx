@@ -2,6 +2,8 @@ import { Star } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { logger } from '@/shared/logger';
+
 import type { Rule } from './types';
 
 export const LessonHeader = ({
@@ -37,8 +39,8 @@ export const LessonHeader = ({
         const list: string[] = JSON.parse(stored);
         setIsStarred(list.includes(selectedRule.id));
       }
-    } catch {
-      // ignore
+    } catch (e) {
+      logger.w('[LessonHeader] Failed to read favorite grammar from localStorage', e);
     }
   }, [selectedRule.id]);
 
@@ -54,8 +56,8 @@ export const LessonHeader = ({
         setIsStarred(true);
       }
       localStorage.setItem('EngVox_favorite_grammar', JSON.stringify(list));
-    } catch {
-      // ignore
+    } catch (e) {
+      logger.w('[LessonHeader] Failed to write favorite grammar to localStorage', e);
     }
   };
 

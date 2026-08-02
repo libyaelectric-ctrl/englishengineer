@@ -1,5 +1,8 @@
 import type { Rule } from './types';
 
+const escapeHtml = (s: string) =>
+  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
 export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
   const exportAnki = () => {
     const header = 'Front,Back,Tags\n';
@@ -24,9 +27,10 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
   const exportPDF = () => {
     const win = window.open('', '_blank');
     if (!win) return;
+    const h = escapeHtml;
     const html = `
       <!DOCTYPE html><html lang="en"><head>
-      <meta charset="UTF-8"/><title>${selectedRule.title} – Grammar Cheat Sheet</title>
+      <meta charset="UTF-8"/><title>${h(selectedRule.title)} – Grammar Cheat Sheet</title>
       <style>
         body { font-family: system-ui, sans-serif; padding: 32px; max-width: 720px; margin: auto; color: #111; }
         h1 { font-size: 22px; border-bottom: 3px solid #6366f1; padding-bottom: 8px; color: #4f46e5; }
@@ -41,17 +45,17 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
         @media print { body { padding: 16px; } }
       </style>
       </head><body>
-      <h1>${selectedRule.ruleTitle || selectedRule.title} <span class="badge">${selectedRule.cefrLevel}</span></h1>
-      <div class="formula">${selectedRule.structure}</div>
-      <p style="font-size:13px">${selectedRule.turkishExplanation}</p>
+      <h1>${h(selectedRule.ruleTitle || selectedRule.title)} <span class="badge">${h(selectedRule.cefrLevel)}</span></h1>
+      <div class="formula">${h(selectedRule.structure)}</div>
+      <p style="font-size:13px">${h(selectedRule.turkishExplanation)}</p>
       <h3>Examples</h3>
-      ${selectedRule.examples.map((ex) => `<div class="ex"><div class="en">${ex.english}</div><div class="tr">${ex.turkish}</div></div>`).join('')}
+      ${selectedRule.examples.map((ex) => `<div class="ex"><div class="en">${h(ex.english)}</div><div class="tr">${h(ex.turkish)}</div></div>`).join('')}
       ${
         selectedRule.badExampleEnglish
           ? `
       <h3>Common Mistake</h3>
-      <div class="ex mistake"><div class="en">✗ ${selectedRule.badExampleEnglish}</div><div class="tr">${selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes}</div></div>
-      <div class="ex correct"><div class="en">✓ ${selectedRule.correctedExampleEnglish}</div></div>`
+      <div class="ex mistake"><div class="en">✗ ${h(selectedRule.badExampleEnglish)}</div><div class="tr">${h(selectedRule.badExampleTurkishExplanation || selectedRule.commonMistakes)}</div></div>
+      <div class="ex correct"><div class="en">✓ ${h(selectedRule.correctedExampleEnglish)}</div></div>`
           : ''
       }
       </body></html>`;

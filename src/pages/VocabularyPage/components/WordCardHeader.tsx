@@ -2,6 +2,8 @@ import { Star, Volume2 } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
+import { logger } from '@/shared/logger';
+
 import {
   PronunciationService,
   type VocabularyMenuProgress,
@@ -27,8 +29,8 @@ export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps
         const list: string[] = JSON.parse(stored);
         setIsStarred(list.includes(term.id));
       }
-    } catch {
-      // ignore
+    } catch (e) {
+      logger.w('[WordCardHeader] Failed to read favorite vocab from localStorage', e);
     }
   }, [term.id]);
 
@@ -44,8 +46,8 @@ export const WordCardHeader = ({ term, showAnswer, status }: WordCardHeaderProps
         setIsStarred(true);
       }
       localStorage.setItem('EngVox_favorite_vocab', JSON.stringify(list));
-    } catch {
-      // ignore
+    } catch (e) {
+      logger.w('[WordCardHeader] Failed to write favorite vocab to localStorage', e);
     }
   };
 

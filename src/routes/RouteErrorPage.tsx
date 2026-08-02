@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import { logger } from '@/shared/logger';
 
 const CHUNK_ERROR_MESSAGES = [
   'Failed to fetch dynamically imported module',
@@ -24,14 +25,15 @@ export const RouteErrorPage = () => {
     if (!isChunkError) return;
     try {
       reloadCountRef.current = parseInt(sessionStorage.getItem(RELOAD_KEY) || '0', 10);
-    } catch {
+    } catch (e) {
+      logger.w('[RouteError] Failed to read reload count from sessionStorage', e);
       reloadCountRef.current = 0;
     }
     if (reloadCountRef.current < MAX_RELOAD_ATTEMPTS) {
       try {
         sessionStorage.setItem(RELOAD_KEY, String(reloadCountRef.current + 1));
-      } catch {
-        // ignore
+      } catch (e) {
+        logger.w('[RouteError] Failed to write reload count to sessionStorage', e);
       }
       const delay = Math.min(1000 * 2 ** reloadCountRef.current, 8000);
       const timer = setTimeout(() => window.location.reload(), delay);
@@ -39,8 +41,8 @@ export const RouteErrorPage = () => {
     }
     try {
       sessionStorage.removeItem(RELOAD_KEY);
-    } catch {
-      // ignore
+    } catch (e) {
+      logger.w('[RouteError] Failed to remove reload count from sessionStorage', e);
     }
   }, [isChunkError]);
   return (

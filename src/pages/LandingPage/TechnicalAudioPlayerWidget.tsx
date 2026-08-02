@@ -49,6 +49,7 @@ export const TechnicalAudioPlayerWidget = () => {
             <div className="flex items-center gap-2.5">
               <button
                 type="button"
+                aria-label="Play"
                 className={`flex h-7 w-7 items-center justify-center rounded-lg transition ${
                   activeIdx === idx && isPlaying
                     ? 'bg-emerald-500 text-white animate-pulse'

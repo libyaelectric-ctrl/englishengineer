@@ -20,7 +20,8 @@ export const isProgressionBypassed = (): boolean => {
       return false;
     }
     return true;
-  } catch {
+  } catch (e) {
+    logger.w('[ProgressionLock] Failed to read bypass state from storage', e);
     return false;
   }
 };
@@ -36,8 +37,8 @@ export const setProgressionBypassed = (unlocked: boolean = true): void => {
     }
     storage.set(BYPASS_STORAGE_KEY, String(unlocked));
     window.dispatchEvent(new Event('engvox_progression_updated'));
-  } catch {
-    // ignore
+  } catch (e) {
+    logger.w('[ProgressionLock] Failed to write bypass state to storage', e);
   }
 };
 
