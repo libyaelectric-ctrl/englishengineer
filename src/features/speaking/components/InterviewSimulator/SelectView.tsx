@@ -1,6 +1,8 @@
-import { ChevronRight, Layers, Code, Trophy } from 'lucide-react';
+import { ChevronRight, Code, Layers, Trophy } from 'lucide-react';
+
 import { SectionCard } from '@/shared/components/SectionCard';
-import type { InterviewType } from '../../interview-simulator';
+
+import type { InterviewType } from '../../simulator/interview-simulator';
 
 export const SelectView = ({ onSelect }: { onSelect: (type: InterviewType) => void }) => (
   <div className="space-y-6 animate-in fade-in">

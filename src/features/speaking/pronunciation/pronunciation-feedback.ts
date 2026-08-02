@@ -182,7 +182,10 @@ export const PronunciationFeedbackEngine = {
   },
 
   extractPhonemeDetails(word: string, ipa: string, recognized: string): PhonemeDetail[] {
-    const phonemes = ipa.replace(/[/[\]]/g, '').split(/(?=[ˈˌ])|[ˈˌ]/).filter(Boolean);
+    const phonemes = ipa
+      .replace(/[/[\]]/g, '')
+      .split(/(?=[ˈˌ])|[ˈˌ]/)
+      .filter(Boolean);
     const overallAccuracy = this.calculateSimilarity(recognized.toLowerCase(), word.toLowerCase());
     const details: PhonemeDetail[] = [];
 

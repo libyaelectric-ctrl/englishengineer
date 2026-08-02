@@ -6,9 +6,9 @@ export {
   type SpeakingEvaluationResult,
   type SpeakingHistoryEntry,
   type SpeakingState,
-} from './speaking.types';
+} from './core/speaking.types';
 
-export { SPEAKING_MISSIONS } from './speaking.data';
+export { SPEAKING_MISSIONS } from './core/speaking.data';
 
 export {
   normalizeSpeechText,
@@ -19,30 +19,30 @@ export {
   calculateWordsPerMinute,
   keywordMatchRatio,
   formatSpeakingDifficulty,
-} from './speaking.helpers';
+} from './core/speaking.helpers';
 
-export { SpeakingEvaluator } from './speaking.evaluator';
+export { SpeakingEvaluator } from './core/speaking.evaluator';
 
-export { SpeakingService } from './speaking.service';
+export { SpeakingService } from './core/speaking.service';
 
-export { useSpeakingStore } from './speaking.store';
+export { useSpeakingStore } from './core/speaking.store';
 
 export {
   SPEAKING_MVP_MODE,
   SPEAKING_MVP_REQUIRES_MICROPHONE,
   getSpeakingRoleplayCategory,
   getSpeakingHistoryDetails,
-} from './speaking-mvp';
+} from './core/speaking-mvp';
 
 export {
   type PhonemeAnalysis,
   type PronunciationScoreResult,
   PronunciationScorer,
-} from './pronunciation-scorer';
+} from './pronunciation/pronunciation-scorer';
 
 export {
   type PhonemeDetail,
   type PronunciationFeedback,
   type PronunciationMap,
   PronunciationFeedbackEngine,
-} from './pronunciation-feedback';
+} from './pronunciation/pronunciation-feedback';

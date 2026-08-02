@@ -1,12 +1,14 @@
 import { Clock, Code, Layers, RotateCcw } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
+
 import {
   type InterviewQuestion,
   type InterviewSession,
   InterviewSimulatorService,
-} from '../../interview-simulator';
+} from '../../simulator/interview-simulator';
 import { getInterviewTitle } from '../interview.utils';
 import { QuestionCard, RecordingControls, SubmitBar } from './InterviewControls';
 
