@@ -21,5 +21,5 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "exclude": ["tests/**", "backend/**"]
+  "exclude": ["tests/**", "backend/**", "englishengineer/**"]
 }

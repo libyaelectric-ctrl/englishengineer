@@ -2,6 +2,8 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck } from 'lucide-reac
 
 import { useNavigate } from 'react-router-dom';
 
+import { useShallow } from 'zustand/shallow';
+
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
@@ -12,7 +14,18 @@ const PlacementPage = () => {
   const navigate = useNavigate();
   const userId = useAuthStore((state) => state.currentUser?.id ?? 'local-user');
   const { currentIndex, answers, result, answer, next, previous, submit, reset } =
-    usePlacementStore();
+    usePlacementStore(
+      useShallow((s) => ({
+        currentIndex: s.currentIndex,
+        answers: s.answers,
+        result: s.result,
+        answer: s.answer,
+        next: s.next,
+        previous: s.previous,
+        submit: s.submit,
+        reset: s.reset,
+      }))
+    );
   const question = PLACEMENT_QUESTIONS[currentIndex];
   const isLast = currentIndex === PLACEMENT_QUESTIONS.length - 1;
 

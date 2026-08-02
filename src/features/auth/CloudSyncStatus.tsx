@@ -54,7 +54,12 @@ interface CloudSyncStatusProps {
 export const CloudSyncStatusPanel = ({ providerMode }: CloudSyncStatusProps) => {
   const [state, setState] = useState<CloudSyncState>(() => CloudSyncService.getState());
 
-  useEffect(() => CloudSyncService.subscribe(setState), []);
+  useEffect(() => {
+    const unsubscribe = CloudSyncService.subscribe(setState);
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
 
   const presentation =
     providerMode === 'local'

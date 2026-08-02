@@ -55,14 +55,18 @@ const CurriculumPage = () => {
   useEffect(() => {
     let active = true;
     setRecommendationLoading(true);
-    void LearningTaskEngine.createRecommendation(profile, selectedSkill, {
+    LearningTaskEngine.createRecommendation(profile, selectedSkill, {
       domain: domain === 'All' ? undefined : domain,
       recommended: selectedSkill === weakestSkill,
-    }).then((next) => {
-      if (!active) return;
-      setRecommendation(next);
-      setRecommendationLoading(false);
-    });
+    })
+      .then((next) => {
+        if (!active) return;
+        setRecommendation(next);
+        setRecommendationLoading(false);
+      })
+      .catch(() => {
+        if (active) setRecommendationLoading(false);
+      });
     return () => {
       active = false;
     };
@@ -70,9 +74,11 @@ const CurriculumPage = () => {
 
   useEffect(() => {
     let active = true;
-    void UnifiedReviewQueueService.buildQueue(profile).then((queue) => {
-      if (active) setUnifiedReviewQueue(queue);
-    });
+    UnifiedReviewQueueService.buildQueue(profile)
+      .then((queue) => {
+        if (active) setUnifiedReviewQueue(queue);
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };

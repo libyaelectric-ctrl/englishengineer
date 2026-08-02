@@ -83,15 +83,17 @@ export function useGrammarPage() {
 
   useEffect(() => {
     let active = true;
-    void GrammarRepository.getAllRulesSorted().then(async (all) => {
-      if (!active) return;
-      setRules(all);
-      setUnlockedIds(await buildUnlockedSet(all));
-      if (!selectedId) {
-        const currentActive = all.find((r) => !GrammarProgressService.get(r.id).isPassed);
-        setSelectedId(currentActive?.id ?? all[0]?.id ?? null);
-      }
-    });
+    GrammarRepository.getAllRulesSorted()
+      .then(async (all) => {
+        if (!active) return;
+        setRules(all);
+        setUnlockedIds(await buildUnlockedSet(all));
+        if (!selectedId) {
+          const currentActive = all.find((r) => !GrammarProgressService.get(r.id).isPassed);
+          setSelectedId(currentActive?.id ?? all[0]?.id ?? null);
+        }
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };
@@ -99,15 +101,17 @@ export function useGrammarPage() {
 
   useEffect(() => {
     let active = true;
-    void Promise.all(
+    Promise.all(
       CEFR_LEVELS.map(async (cefrLevel) => {
         const levelRules = await GrammarRepository.getGrammarRulesByLevel(cefrLevel);
         return [cefrLevel, levelRules.length] as const;
       })
-    ).then((entries) => {
-      if (!active) return;
-      setLevelCounts(buildLevelCounts(entries));
-    });
+    )
+      .then((entries) => {
+        if (!active) return;
+        setLevelCounts(buildLevelCounts(entries));
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };
@@ -115,10 +119,12 @@ export function useGrammarPage() {
 
   useEffect(() => {
     let active = true;
-    void VocabularyRepository.getVocabularyForUserSkillLevel('grammar', level).then((terms) => {
-      if (!active) return;
-      setVocabularyIndex(buildVocabularyIndex(terms));
-    });
+    VocabularyRepository.getVocabularyForUserSkillLevel('grammar', level)
+      .then((terms) => {
+        if (!active) return;
+        setVocabularyIndex(buildVocabularyIndex(terms));
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };

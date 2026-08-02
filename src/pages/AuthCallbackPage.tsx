@@ -15,36 +15,39 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const handleCallback = async () => {
-      const client = getSupabaseClient();
-      if (!client) {
-        await useAuthStore.getState().initialize();
-        navigate('/dashboard', { replace: true });
-        return;
-      }
-
-      const code = searchParams.get('code');
-
-      if (code) {
-        // PKCE flow: exchange authorization code for session
-        const { error: exchangeError } = await client.auth.exchangeCodeForSession(code);
-        if (exchangeError) {
-          logger.e('OAuth code exchange failed:', exchangeError);
-          setError(exchangeError.message);
+      try {
+        const client = getSupabaseClient();
+        if (!client) {
+          await useAuthStore.getState().initialize();
+          navigate('/dashboard', { replace: true });
           return;
         }
-      }
 
-      // Restore session state into auth store
-      await useAuthStore.getState().initialize();
+        const code = searchParams.get('code');
 
-      const {
-        data: { session },
-      } = await client.auth.getSession();
+        if (code) {
+          const { error: exchangeError } = await client.auth.exchangeCodeForSession(code);
+          if (exchangeError) {
+            logger.e('OAuth code exchange failed:', exchangeError);
+            setError(exchangeError.message);
+            return;
+          }
+        }
 
-      if (session) {
-        navigate('/dashboard', { replace: true });
-      } else {
-        setError('No session found after OAuth callback.');
+        await useAuthStore.getState().initialize();
+
+        const {
+          data: { session },
+        } = await client.auth.getSession();
+
+        if (session) {
+          navigate('/dashboard', { replace: true });
+        } else {
+          setError('No session found after OAuth callback.');
+        }
+      } catch (err) {
+        logger.e('Auth callback error:', err);
+        setError(err instanceof Error ? err.message : 'Authentication failed.');
       }
     };
 

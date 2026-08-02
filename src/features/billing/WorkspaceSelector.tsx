@@ -2,6 +2,8 @@ import { ChevronDown, FolderOpen, Plus, Trash2, X } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useShallow } from 'zustand/shallow';
+
 import { BillingPlanId } from '@/features/billing/billing.types';
 import { Workspace, useWorkspaceStore } from '@/features/billing/workspace.store';
 
@@ -253,7 +255,15 @@ const WorkspaceDropdown = ({
 
 export const WorkspaceSelector = ({ planId }: WorkspaceSelectorProps) => {
   const { workspaces, activeWorkspaceId, createWorkspace, deleteWorkspace, switchWorkspace } =
-    useWorkspaceStore();
+    useWorkspaceStore(
+      useShallow((s) => ({
+        workspaces: s.workspaces,
+        activeWorkspaceId: s.activeWorkspaceId,
+        createWorkspace: s.createWorkspace,
+        deleteWorkspace: s.deleteWorkspace,
+        switchWorkspace: s.switchWorkspace,
+      }))
+    );
 
   const [isOpen, setIsOpen] = useState(false);
   const [showCreate, setShowCreate] = useState(false);

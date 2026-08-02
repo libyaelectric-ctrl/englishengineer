@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 
 import { useLearningStore } from '@/core/learning';
 
+import { useShallow } from 'zustand/shallow';
+
 import type { SkillName } from '@/shared/types/domain.types';
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileEngine } from '@/features/profile/profile.engine';
@@ -21,7 +23,25 @@ export const SkillEntryBrief = ({
   skill: SkillName;
   compact?: boolean;
 }) => {
-  const learning = useLearningStore();
+  const learning = useLearningStore(
+    useShallow((s) => ({
+      xp: s.xp,
+      level: s.level,
+      coins: s.coins,
+      elo: s.elo,
+      streak: s.streak,
+      lastActivityDate: s.lastActivityDate,
+      missions: s.missions,
+      studySessions: s.studySessions,
+      scoreHistory: s.scoreHistory,
+      xpHistory: s.xpHistory,
+      eloHistory: s.eloHistory,
+      achievements: s.achievements,
+      vocabularyPool: s.vocabularyPool,
+      grammarPool: s.grammarPool,
+      speakingPool: s.speakingPool,
+    }))
+  );
   const userId = useAuthStore((state) => state.currentUser?.id);
   const profile = useMemo(
     () =>
@@ -35,9 +55,11 @@ export const SkillEntryBrief = ({
 
   useEffect(() => {
     let active = true;
-    void LearningTaskEngine.createRecommendation(profile, skill).then((next) => {
-      if (active) setRecommendation(next);
-    });
+    LearningTaskEngine.createRecommendation(profile, skill)
+      .then((next) => {
+        if (active) setRecommendation(next);
+      })
+      .catch(() => {});
     return () => {
       active = false;
     };

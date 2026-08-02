@@ -3,6 +3,8 @@ import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
 import { useLearningStore } from '@/core/learning';
 
+import { useShallow } from 'zustand/shallow';
+
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';
 import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
@@ -12,7 +14,9 @@ const log = (_page: string, _action: string, _details: string) => {};
 export function GrammarSidebar() {
   useLearningStore((s) => s.studySessions.length);
   const g = GrammarProgressService.getSummary(360);
-  const { tab, setTab, rules, selectedId } = useGrammarStore();
+  const { tab, setTab, rules, selectedId } = useGrammarStore(
+    useShallow((s) => ({ tab: s.tab, setTab: s.setTab, rules: s.rules, selectedId: s.selectedId }))
+  );
   const selectedRule = rules.find((r) => r.id === selectedId) ?? rules[0];
   const selectedRuleIndex = selectedRule ? rules.findIndex((r) => r.id === selectedRule.id) : -1;
 

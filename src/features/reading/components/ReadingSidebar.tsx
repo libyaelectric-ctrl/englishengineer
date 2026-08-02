@@ -1,9 +1,13 @@
 import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
 
+import { useShallow } from 'zustand/shallow';
+
 import { useReadingStore } from '@/features/reading';
 
 export function ReadingSidebar() {
-  const { missions, completedMissions } = useReadingStore();
+  const { missions, completedMissions } = useReadingStore(
+    useShallow((s) => ({ missions: s.missions, completedMissions: s.completedMissions }))
+  );
   const done = Object.keys(completedMissions).length;
   const total = missions.length;
   const avgScore =
