@@ -45,7 +45,7 @@ export const useLearningCockpit = (userId?: string | null) => {
 
   const { data: missions, isPending: missionsLoading } = useQuery({
     queryKey: ['dailyMissions', profile, memory],
-    queryFn: () => LearningProfileEngine.generateDailyMissions(profile, memory!),
+    queryFn: () => (memory ? LearningProfileEngine.generateDailyMissions(profile, memory) : []),
     enabled: !!memory,
     staleTime: 5 * 60 * 1000,
   });

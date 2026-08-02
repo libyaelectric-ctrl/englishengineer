@@ -17,12 +17,12 @@ import { LessonPathEngine } from '@/features/learning-orchestrator';
 import { SKILL_NAMES, type SkillName, useLearningCockpit } from '@/features/profile';
 import { DashboardTranslatorWidget } from '@/features/translation';
 
-import { DailyGoalBar } from './DashboardPage/DailyGoalBar';
-import { DashboardSkeleton } from './DashboardPage/DashboardSkeleton';
-import { HeroPanel } from './DashboardPage/HeroPanel';
-import { ProgressCockpit } from './DashboardPage/ProgressCockpit';
-import { ReviewPriorities } from './DashboardPage/ReviewPriorities';
-import { SkillRadarChart } from './DashboardPage/SkillRadarChart';
+import { DailyGoalBar } from './DailyGoalBar';
+import { DashboardSkeleton } from './DashboardSkeleton';
+import { HeroPanel } from './HeroPanel';
+import { ProgressCockpit } from './ProgressCockpit';
+import { ReviewPriorities } from './ReviewPriorities';
+import { SkillRadarChart } from './SkillRadarChart';
 
 const COMPETENCY_HIGH_THRESHOLD = 80;
 const COMPETENCY_GOOD_THRESHOLD = 60;

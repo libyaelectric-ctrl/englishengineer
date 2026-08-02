@@ -2,13 +2,13 @@ import { CheckCircle2 } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
-import { MasteredHeatmap } from './VocabularyPage/components/MasteredHeatmap';
-import { QuizSection } from './VocabularyPage/components/QuizSection';
-import { SearchModal } from './VocabularyPage/components/SearchModal';
-import { SearchResultsSection } from './VocabularyPage/components/SearchResultsSection';
-import { VocabularyHeader } from './VocabularyPage/components/VocabularyHeader';
-import { WordSetSection } from './VocabularyPage/components/WordSetSection';
-import { useVocabularyPage } from './VocabularyPage/hooks/useVocabularyPage';
+import { MasteredHeatmap } from './components/MasteredHeatmap';
+import { QuizSection } from './components/QuizSection';
+import { SearchModal } from './components/SearchModal';
+import { SearchResultsSection } from './components/SearchResultsSection';
+import { VocabularyHeader } from './components/VocabularyHeader';
+import { WordSetSection } from './components/WordSetSection';
+import { useVocabularyPage } from './hooks/useVocabularyPage';
 
 const VocabularyPage = () => {
   const {

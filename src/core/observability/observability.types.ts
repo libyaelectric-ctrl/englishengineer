@@ -27,4 +27,6 @@ export interface ErrorReport {
   severity: 'low' | 'medium' | 'high' | 'critical';
   context?: Record<string, unknown>;
   timestamp?: string;
+  stack?: string;
+  url?: string;
 }

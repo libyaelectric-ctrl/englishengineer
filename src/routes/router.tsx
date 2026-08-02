@@ -11,8 +11,6 @@ import { AuthGuard } from '@/features/auth/AuthGuard';
 import { RequireAdminRole } from '@/features/auth/RequireAdminRole';
 import { OnboardingGate } from '@/features/profile';
 
-import AuthCallbackPage from '@/pages/AuthCallbackPage';
-
 import { RouteErrorPage } from './RouteErrorPage';
 
 const withSuspense = (Component: ComponentType) => (
@@ -34,10 +32,9 @@ const Admin = lazy(() => import('@/pages/AdminPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
-const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
-const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
+
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
 const Business = lazy(() => import('@/pages/BusinessPage'));
@@ -47,6 +44,7 @@ const TeamMember = lazy(() => import('@/pages/TeamMemberPage'));
 const Start = lazy(() => import('@/pages/StartPage'));
 const Placement = lazy(() => import('@/pages/PlacementPage'));
 const Translator = lazy(() => import('@/pages/TranslatorPage'));
+const AuthCallbackPage = lazy(() => import('@/pages/AuthCallbackPage'));
 
 export const router = createBrowserRouter([
   {
@@ -113,14 +111,8 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: 'onboarding',
-        element: withSuspense(Onboarding),
-      },
-      ...(['profile', 'role', 'goals', 'level', 'plan'] as const).map((step) => ({
-        path: `onboarding/${step}`,
-        element: withSuspense(Onboarding),
-      })),
+      
+      
       {
         path: 'profile',
         element: <Navigate to="/profile/overview" replace />,
@@ -193,14 +185,8 @@ export const router = createBrowserRouter([
         path: 'tools/:section',
         element: withSuspense(Tools),
       },
-      {
-        path: 'progress',
-        element: <Navigate to="/progress/overview" replace />,
-      },
-      {
-        path: 'progress/:section',
-        element: withSuspense(Progress),
-      },
+      
+      
       {
         path: 'learning-plan',
         element: <Navigate to="/progress/next-steps" replace />,
@@ -233,10 +219,11 @@ export const router = createBrowserRouter([
   },
   {
     path: '/auth/callback',
-    element: <AuthCallbackPage />,
+    element: withSuspense(AuthCallbackPage),
   },
   {
     path: '*',
     element: withSuspense(NotFound),
   },
 ]);
+
