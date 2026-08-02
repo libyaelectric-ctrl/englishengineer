@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { logger } from '@/shared/logger';
-import { storage } from '@/shared/storage';
 
 const STORAGE_KEY = 'gamification.lastSeenLevel.v1';
 
@@ -58,7 +57,3 @@ export function useLevelUpDetector(currentLevel: number): {
 
   return { justLeveledUp, acknowledge };
 }
-
-// Re-export storage.isAvailable for callers that want to guard rendering
-// entirely when local storage cannot persist the "last seen" level.
-export const isLevelTrackingAvailable = (): boolean => storage.isAvailable();

@@ -1,18 +1,5 @@
 export type WritingStatus = 'draft' | 'submitted' | 'graded';
 
-export interface WritingSubmission {
-  id: string;
-  promptId: string;
-  content: string;
-  score: number;
-  grammarScore: number;
-  vocabularyScore: number;
-  coherenceScore: number;
-  structureScore: number;
-  status: WritingStatus;
-  submittedAt: string | null;
-}
-
 const WORD_TARGETS: Record<string, number> = {
   A1: 100,
   A2: 150,
