@@ -1,5 +1,17 @@
 import { MissionDifficulty, MissionModule, ScoreResult } from './learning.types';
 
+const SCORE_TIER_EXCELLENT = 90;
+const SCORE_TIER_GOOD = 70;
+const XP_BASE = 60;
+const COINS_BASE = 15;
+const ELO_BASE = 4;
+const ELO_MIDPOINT = 50;
+const ELO_SCALE = 50;
+const MIN_ELO_CHANGE = 4;
+const DIFFICULTY_MULTIPLIER_BEGINNER = 1.0;
+const DIFFICULTY_MULTIPLIER_INTERMEDIATE = 1.5;
+const DIFFICULTY_MULTIPLIER_ADVANCED = 2.0;
+
 const getModuleFeedback = (
   module: MissionModule,
   score: number
@@ -72,7 +84,7 @@ const getModuleFeedback = (
     };
   }
 
-  const tier = score >= 90 ? 90 : score >= 70 ? 70 : 0;
+  const tier = score >= SCORE_TIER_EXCELLENT ? SCORE_TIER_EXCELLENT : score >= SCORE_TIER_GOOD ? SCORE_TIER_GOOD : 0;
   return {
     strengths: ranges[tier].s,
     weaknesses: ranges[tier].w,
@@ -90,11 +102,11 @@ export const ScoringService = {
     const score = Math.min(100, Math.max(0, Math.round(params.performanceRatio * 100)));
 
     const difficultyMultiplier =
-      params.difficulty === 'Intermediate' ? 1.5 : params.difficulty === 'Advanced' ? 2.0 : 1.0;
+      params.difficulty === 'Intermediate' ? DIFFICULTY_MULTIPLIER_INTERMEDIATE : params.difficulty === 'Advanced' ? DIFFICULTY_MULTIPLIER_ADVANCED : DIFFICULTY_MULTIPLIER_BEGINNER;
 
-    const xpEarned = Math.round(60 * difficultyMultiplier * (score / 100));
-    const coinsEarned = Math.round(15 * difficultyMultiplier * (score / 100));
-    const eloChange = Math.round(4 * difficultyMultiplier * ((score - 50) / 50));
+    const xpEarned = Math.round(XP_BASE * difficultyMultiplier * (score / 100));
+    const coinsEarned = Math.round(COINS_BASE * difficultyMultiplier * (score / 100));
+    const eloChange = Math.round(ELO_BASE * difficultyMultiplier * ((score - ELO_MIDPOINT) / ELO_SCALE));
 
     const { strengths, weaknesses, feedback } = getModuleFeedback(params.module, score);
 
@@ -102,7 +114,7 @@ export const ScoringService = {
       score,
       xp: xpEarned,
       coins: coinsEarned,
-      eloChange: eloChange === 0 && score > 0 ? 4 : eloChange,
+      eloChange: eloChange === 0 && score > 0 ? MIN_ELO_CHANGE : eloChange,
       strengths,
       weaknesses: weaknesses.length > 0 ? weaknesses : ['None detected'],
       feedback,
