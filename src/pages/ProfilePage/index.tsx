@@ -1,12 +1,10 @@
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
 
-import {
-  LearningPreferencesSection,
-  ProfileOverviewSection,
-  SecuritySection,
-  SkillsProgressSection,
-} from './ProfilePage/index';
-import { useProfilePage } from './ProfilePage/useProfilePage';
+import { LearningPreferencesSection } from './LearningPreferencesSection';
+import { ProfileOverviewSection } from './ProfileOverviewSection';
+import { SecuritySection } from './SecuritySection';
+import { SkillsProgressSection } from './SkillsProgressSection';
+import { useProfilePage } from './useProfilePage';
 
 const ProfileHeader = ({
   currentUser,

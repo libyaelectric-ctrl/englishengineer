@@ -2,7 +2,7 @@
   "name": "engvox-frontend",
   "private": true,
   "version": "2.4.7",
-  "author": "Özcan ERENSAYIN",
+  "author": "Ã–zcan ERENSAYIN",
   "type": "module",
   "scripts": {
     "prepare": "husky",
@@ -41,10 +41,8 @@
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:load": "k6 run scripts/performance/load-test.k6.js",
-    "test:lighthouse": "lighthouse https://englishengineer.vercel.app --output html --output-path ./docs/lighthouse-report.html",
-    "test:duplication": "jscpd --min-lines 5 --min-tokens 50 --reporters console",
     "analyze": "ANALYZE=true npm run build",
+    "download:seed": "node scripts/download-seed-data.mjs",
     "check:licenses": "license-checker --production --csv --out licenses.csv",
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
     "content:validate": "node scripts/verify-release.mjs"
@@ -58,10 +56,9 @@
     "lucide-react": "^0.546.0",
     "motion": "^12.42.0",
     "react": "^19.0.1",
-    "react-dom": "^19.2.8",
+    "react-dom": "^19.0.1",
     "react-error-boundary": "^6.1.2",
-    "react-router": "^8.3.0",
-    "react-router-dom": "^7.18.2",
+    "react-router-dom": "^7.11.0",
     "react-virtuoso": "^4.18.10",
     "tailwind-merge": "^3.6.0",
     "zustand": "^5.0.14"
@@ -124,8 +121,7 @@
   },
   "overrides": {
     "uuid": "^11.1.1",
-    "axios": "^1.7.9",
-    "react-router": "^8.3.0"
+    "axios": "^1.7.9"
   },
   "allowScripts": {
     "esbuild@0.25.12": true

@@ -25,8 +25,8 @@ import {
   ScoreComparison,
   VoiceMinuteWallet,
   VoicePracticePanel,
-  useSpeakingPage,
-} from './SpeakingPage/index';
+} from './components';
+import { useSpeakingPage } from './hooks/useSpeakingPage';
 
 const InterviewSimulator = lazy(() =>
   import('@/features/speaking/components/InterviewSimulator').then((m) => ({

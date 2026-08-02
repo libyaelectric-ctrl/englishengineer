@@ -22,7 +22,6 @@ export const prefetchRoute = (path: string) => {
     '/offline': () => import('@/pages/OfflinePage'),
     '/team': () => import('@/pages/TeamPage'),
     '/placement': () => import('@/pages/PlacementPage'),
-    '/onboarding': () => import('@/pages/OnboardingPage'),
     '/pricing': () => import('@/pages/PricingPage'),
   };
 

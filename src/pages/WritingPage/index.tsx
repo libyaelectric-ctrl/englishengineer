@@ -20,9 +20,9 @@ import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store
 import { type WritingCorrection, type WritingEvaluationResult } from '@/features/writing';
 import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 
-import { MissionListTab } from './WritingPage/components/MissionListTab';
-import { WorkspaceTab } from './WritingPage/components/WorkspaceTab';
-import { useWritingPage } from './WritingPage/hooks/useWritingPage';
+import { MissionListTab } from './components/MissionListTab';
+import { WorkspaceTab } from './components/WorkspaceTab';
+import { useWritingPage } from './hooks/useWritingPage';
 
 const EmptyMissionView = ({
   levelFilter,

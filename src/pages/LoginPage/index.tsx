@@ -26,18 +26,18 @@ import { logger } from '@/shared/logger';
 
 import { useLocalizationStore } from '@/features/localization';
 
-import { Footer } from './LandingPage/Footer';
-import { Navbar } from './LandingPage/Navbar';
-import { EmailPasswordForm } from './LoginPage/EmailPasswordForm';
-import { GuidedSpotlightTour } from './LoginPage/GuidedSpotlightTour';
-import { MagicLinkAuthModal } from './LoginPage/MagicLinkAuthModal';
-import { OnboardingWizardModal } from './LoginPage/OnboardingWizardModal';
-import { SSOForm } from './LoginPage/SSOForm';
-import { SecuritySessionsModal } from './LoginPage/SecuritySessionsModal';
-import { SocialLoginButtons } from './LoginPage/SocialLoginButtons';
-import { WorkspaceSwitcherModal } from './LoginPage/WorkspaceSwitcherModal';
-import { AUTH_COPY } from './LoginPage/constants';
-import { useLoginHandlers } from './LoginPage/useLoginHandlers';
+import { Footer } from '@/pages/LandingPage/Footer';
+import { Navbar } from '@/pages/LandingPage/Navbar';
+import { EmailPasswordForm } from './EmailPasswordForm';
+import { GuidedSpotlightTour } from './GuidedSpotlightTour';
+import { MagicLinkAuthModal } from './MagicLinkAuthModal';
+import { OnboardingWizardModal } from './OnboardingWizardModal';
+import { SSOForm } from './SSOForm';
+import { SecuritySessionsModal } from './SecuritySessionsModal';
+import { SocialLoginButtons } from './SocialLoginButtons';
+import { WorkspaceSwitcherModal } from './WorkspaceSwitcherModal';
+import { AUTH_COPY } from './constants';
+import { useLoginHandlers } from './useLoginHandlers';
 
 const DISCIPLINES = [
   {

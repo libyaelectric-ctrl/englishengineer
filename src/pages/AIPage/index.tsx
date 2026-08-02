@@ -1,13 +1,13 @@
 import { useBillingStore } from '@/features/billing';
 
-import { CoachInputForm } from './AIPage/CoachInputForm';
-import { CoachModeSelector } from './AIPage/CoachModeSelector';
-import { CoachResultPanel } from './AIPage/CoachResultPanel';
-import { MetricsGrid } from './AIPage/MetricsGrid';
-import { ProviderStatusPanel } from './AIPage/ProviderStatusPanel';
-import { UserContextSidebar } from './AIPage/UserContextSidebar';
-import { WorkspacePanel } from './AIPage/WorkspacePanel';
-import { useAIPage } from './AIPage/hooks/useAIPage';
+import { CoachInputForm } from './CoachInputForm';
+import { CoachModeSelector } from './CoachModeSelector';
+import { CoachResultPanel } from './CoachResultPanel';
+import { MetricsGrid } from './MetricsGrid';
+import { ProviderStatusPanel } from './ProviderStatusPanel';
+import { UserContextSidebar } from './UserContextSidebar';
+import { WorkspacePanel } from './WorkspacePanel';
+import { useAIPage } from './hooks/useAIPage';
 
 interface AIPageProps {
   embedded?: boolean;

@@ -7,10 +7,15 @@ let _entriesSync: VocabularyEntry[] | null = null;
 export function loadVocabularyEntries(): Promise<VocabularyEntry[]> {
   if (_entriesSync) return Promise.resolve(_entriesSync);
   if (!_entriesPromise) {
-    _entriesPromise = import('./vocabulary.data.json').then((mod) => {
-      _entriesSync = buildEntries(mod.default as VocabularyContentRow[]);
-      return _entriesSync;
-    });
+    _entriesPromise = import('./vocabulary.data.json')
+      .then((mod) => {
+        _entriesSync = buildEntries(mod.default as VocabularyContentRow[]);
+        return _entriesSync;
+      })
+      .catch((err) => {
+        _entriesPromise = null;
+        throw err;
+      });
   }
   return _entriesPromise;
 }

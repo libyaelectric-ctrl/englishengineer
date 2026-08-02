@@ -88,21 +88,24 @@ export const AnalyticsDashboardV2 = {
   ): HeatmapDay[] {
     const heatmap: HeatmapDay[] = [];
 
-    // Initialize 7 days x 24 hours grid
+    // Initialize 7 days x 24 hours grid & create index map for O(1) cell lookup
+    const cellMap = new Map<string, HeatmapDay>();
     for (let day = 0; day < 7; day++) {
       for (let hour = 0; hour < 24; hour++) {
-        heatmap.push({
+        const cell: HeatmapDay = {
           date: '',
           dayOfWeek: day,
           hour,
           activityCount: 0,
           minutesStudied: 0,
           averageScore: 0,
-        });
+        };
+        heatmap.push(cell);
+        cellMap.set(`${day}-${hour}`, cell);
       }
     }
 
-    // Populate from sessions
+    // Populate from sessions in O(S) time
     const hourScores: Record<string, number[]> = {};
     for (const session of studySessions) {
       const date = new Date(session.timestamp);
@@ -110,7 +113,7 @@ export const AnalyticsDashboardV2 = {
       const hour = date.getHours();
       const key = `${dayOfWeek}-${hour}`;
 
-      const cell = heatmap.find((h) => h.dayOfWeek === dayOfWeek && h.hour === hour);
+      const cell = cellMap.get(key);
       if (cell) {
         cell.activityCount++;
         cell.minutesStudied += session.durationMinutes;
