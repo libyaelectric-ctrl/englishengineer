@@ -25,8 +25,6 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
   };
 
   const exportPDF = () => {
-    const win = window.open('', '_blank');
-    if (!win) return;
     const h = escapeHtml;
     const html = `
       <!DOCTYPE html><html lang="en"><head>
@@ -59,9 +57,14 @@ export const ExportPanel = ({ selectedRule }: { selectedRule: Rule }) => {
           : ''
       }
       </body></html>`;
-    win.document.write(html);
-    win.document.close();
-    win.print();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank', 'noopener,noreferrer');
+    if (win) {
+      win.addEventListener('load', () => {
+        win.print();
+      });
+    }
   };
 
   return (
