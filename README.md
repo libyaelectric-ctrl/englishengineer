@@ -1,25 +1,92 @@
-# EngineerOS | Engineering Communication Operating System
+# EnglishEngineer (EngVox)
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/libyaelectric-ctrl/englishengineer/blob/main/LICENSE)
-[![CI](https://github.com/libyaelectric-ctrl/englishengineer/actions/workflows/ci.yml/badge.svg)](https://github.com/libyaelectric-ctrl/englishengineer/actions)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://englishengineer.vercel.app)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+> İnşaat mühendisleri için İngilizce eğitim platformu
 
-An offline-first Engineering English and career communication platform for professional engineers working in international project environments.
+## 🚀 Quick Start
 
-**Master the English you actually use on site.** Built for engineers who write
-reports, attend meetings and solve technical problems in English.
+### Prerequisites
+- Node.js 20+
+- npm 10+
+- Docker (opsiyonel)
 
-## Project Overview
+### Installation
 
-**EngineerOS** helps engineers practice the communication they need for real work: technical reports, site coordination, consultant responses, meetings, speaking practice, vocabulary review, analytics, AI-assisted coaching, and career-oriented learning.
+```bash
+# Clone
+git clone https://github.com/libyaelectric-ctrl/englishengineer.git
+cd englishengineer
 
-The current product is local-first and beta-ready. Production AI, cloud sync, and verified billing require backend configuration.
+# Install dependencies
+npm install
+npm run backend:install
 
-Product ownership and author attribution: **Özcan ERENSAYIN**.
+# Environment setup
+cp .env.example .env
+cp backend/.env.example backend/.env
+# .env dosyalarını kendi credential'larınla düzenle
 
-> **Kateıda bulunmak veya geliştirme ortamı kurmak istiyorsanız önce [docs/ONBOARDING.md](docs/ONBOARDING.md) dosyasına bakın.**
+# Seed veri indirme ve yükleme
+npm run download:seed
+npm run import:grammar
+npm run import:vocabulary
+```
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) for the official v2.0 to v4.0 development roadmap.
+### Development
+
+```bash
+# Frontend + backend birlikte
+npm run dev:all
+
+# Ya da ayrı ayrı
+npm run dev                    # Frontend (port 3000)
+npm --prefix backend run dev   # Backend (port 8787)
+```
+
+### Testing
+
+```bash
+npm run test              # Unit test
+npm run test:integration  # Integration test
+npm run e2e:browser       # E2E test (Playwright)
+npm run test:coverage     # Coverage raporu
+npm run backend:test      # Backend testleri
+```
+
+### Production Build
+
+```bash
+npm run build
+npm run verify:release
+```
+
+### Docker
+
+```bash
+docker compose up --build
+```
+
+## 📁 Proje Yapısı
+
+```
+src/
+├── features/       # Domain modülleri (auth, billing, vocabulary, speaking, grammar, ...)
+├── core/           # Paylaşılan çekirdek (errors, events, ids, learning)
+├── providers/      # React context provider'ları
+├── shared/         # Paylaşılan bileşenler & yardımcılar
+└── config/         # Uygulama konfigürasyonu
+
+backend/
+├── src/            # Express API rotaları & servisleri
+└── test/           # Backend testleri
+```
+
+## 🧪 Tech Stack
+
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, TanStack Query
+- **Backend:** Express, TypeScript (ESM), Supabase, Stripe, BullMQ
+- **Testing:** Vitest, Playwright, Storybook
+- **DevOps:** GitHub Actions, Docker, Sentry, Lighthouse CI
+
+## 📄 Lisans
+
+MIT — bkz. [LICENSE](LICENSE)
