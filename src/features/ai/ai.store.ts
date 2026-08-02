@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { devtools, persist } from 'zustand/middleware';
 
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
@@ -148,8 +148,9 @@ export const buildAIUsageSummary = (sessions: AICoachSession[]): AIUsageSummary 
 const STORAGE_KEY = 'ai_coach_pro_state';
 
 export const useAIStore = create<AIStoreState>()(
-  persist(
-    (set, get) => ({
+  devtools(
+    persist(
+      (set, get) => ({
       modes: AI_COACH_MODES,
       selectedModeId: 'site_report_writer',
       input: '',
@@ -289,5 +290,7 @@ export const useAIStore = create<AIStoreState>()(
       },
     }),
     eosPersistConfig(STORAGE_KEY)
+    ),
+    { name: 'AIStore' }
   )
 );

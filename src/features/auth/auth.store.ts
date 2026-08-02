@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
@@ -16,93 +17,98 @@ interface AuthActions {
   providerMode: 'local' | 'supabase';
 }
 
-export const useAuthStore = create<AuthState & AuthActions>((set) => ({
-  currentUser: null,
-  isAuthenticated: false,
-  isLoading: true,
-  providerMode: AuthService.getProviderMode(),
+export const useAuthStore = create<AuthState & AuthActions>()(
+  devtools(
+    (set) => ({
+      currentUser: null,
+      isAuthenticated: false,
+      isLoading: true,
+      providerMode: AuthService.getProviderMode(),
 
-  initialize: async () => {
-    set({ isLoading: true });
-    try {
-      const user = await AuthService.restoreSession();
-      if (user) {
-        set({ currentUser: user, isAuthenticated: true });
-        storage.setUserId(user.id);
-      } else {
-        set({ currentUser: null, isAuthenticated: false });
-        storage.setUserId(null);
-      }
-    } catch (e) {
-      logger.e('Auth initialization failed.', e);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      initialize: async () => {
+        set({ isLoading: true });
+        try {
+          const user = await AuthService.restoreSession();
+          if (user) {
+            set({ currentUser: user, isAuthenticated: true });
+            storage.setUserId(user.id);
+          } else {
+            set({ currentUser: null, isAuthenticated: false });
+            storage.setUserId(null);
+          }
+        } catch (e) {
+          logger.e('Auth initialization failed.', e);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  login: async (displayName, email, password) => {
-    set({ isLoading: true });
-    try {
-      const user = await AuthService.login(displayName, email, password);
-      set({ currentUser: user, isAuthenticated: true });
-      storage.setUserId(user.id);
-    } catch (e) {
-      logger.e('Auth login failed.', e);
-      throw e;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      login: async (displayName, email, password) => {
+        set({ isLoading: true });
+        try {
+          const user = await AuthService.login(displayName, email, password);
+          set({ currentUser: user, isAuthenticated: true });
+          storage.setUserId(user.id);
+        } catch (e) {
+          logger.e('Auth login failed.', e);
+          throw e;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  signUp: async (displayName, email, password) => {
-    set({ isLoading: true });
-    try {
-      const user = await AuthService.signUp(displayName, email, password);
-      set({ currentUser: user, isAuthenticated: true });
-      storage.setUserId(user.id);
-    } catch (e) {
-      logger.e('Auth sign up failed.', e);
-      throw e;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      signUp: async (displayName, email, password) => {
+        set({ isLoading: true });
+        try {
+          const user = await AuthService.signUp(displayName, email, password);
+          set({ currentUser: user, isAuthenticated: true });
+          storage.setUserId(user.id);
+        } catch (e) {
+          logger.e('Auth sign up failed.', e);
+          throw e;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  demoLogin: async () => {
-    set({ isLoading: true });
-    try {
-      const user = await AuthService.demoLogin();
-      set({ currentUser: user, isAuthenticated: true });
-      storage.setUserId(user.id);
-    } catch (e) {
-      logger.e('Auth demo login failed.', e);
-      throw e;
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      demoLogin: async () => {
+        set({ isLoading: true });
+        try {
+          const user = await AuthService.demoLogin();
+          set({ currentUser: user, isAuthenticated: true });
+          storage.setUserId(user.id);
+        } catch (e) {
+          logger.e('Auth demo login failed.', e);
+          throw e;
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  logout: async () => {
-    set({ isLoading: true });
-    try {
-      await AuthService.logout();
-      set({ currentUser: null, isAuthenticated: false });
-      storage.setUserId(null);
-    } catch (e) {
-      logger.e('Auth logout failed.', e);
-    } finally {
-      set({ isLoading: false });
-    }
-  },
+      logout: async () => {
+        set({ isLoading: true });
+        try {
+          await AuthService.logout();
+          set({ currentUser: null, isAuthenticated: false });
+          storage.setUserId(null);
+        } catch (e) {
+          logger.e('Auth logout failed.', e);
+        } finally {
+          set({ isLoading: false });
+        }
+      },
 
-  updateProfile: async (updates) => {
-    try {
-      const updated = await AuthService.updateProfile(updates);
-      set({ currentUser: updated });
-    } catch (e) {
-      logger.e('Auth profile update failed.', e);
-      throw e;
-    }
-  },
-}));
+      updateProfile: async (updates) => {
+        try {
+          const updated = await AuthService.updateProfile(updates);
+          set({ currentUser: updated });
+        } catch (e) {
+          logger.e('Auth profile update failed.', e);
+          throw e;
+        }
+      },
+    }),
+    { name: 'AuthStore' }
+  )
+);
 export default useAuthStore;

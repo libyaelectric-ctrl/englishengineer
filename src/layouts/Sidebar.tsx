@@ -4,6 +4,7 @@ import { Bell, BookOpenCheck, ChevronRight, HardDrive, LogOut, Wallet, X } from 
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 
+import { useShallow } from 'zustand/shallow';
 import { useNavigate } from 'react-router-dom';
 
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -15,9 +16,15 @@ import { useBillingStore } from '@/features/billing';
 import { Navigation } from './Navigation';
 
 export const Sidebar = () => {
-  const { isSidebarOpen, toggleSidebar } = useAppStore();
-  const { currentUser, logout } = useAuthStore();
-  const { subscription } = useBillingStore();
+  const { isSidebarOpen, toggleSidebar } = useAppStore(
+    useShallow((s) => ({ isSidebarOpen: s.isSidebarOpen, toggleSidebar: s.toggleSidebar }))
+  );
+  const { currentUser, logout } = useAuthStore(
+    useShallow((s) => ({ currentUser: s.currentUser, logout: s.logout }))
+  );
+  const { subscription } = useBillingStore(
+    useShallow((s) => ({ subscription: s.subscription }))
+  );
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
   const closeSidebarOnMobile = () => {

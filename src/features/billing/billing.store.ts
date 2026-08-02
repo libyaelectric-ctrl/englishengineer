@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 import { logger } from '@/shared/logger';
 
@@ -34,50 +35,57 @@ const fetchSubscription = async (
   }
 };
 
-export const useBillingStore = create<BillingState & BillingActions>((set) => ({
-  subscription: BillingService.getLocalSubscription(),
-  providerStatus: BillingService.getProviderStatus(),
-  isLoading: false,
-  error: null,
+export const useBillingStore = create<BillingState & BillingActions>()(
+  devtools(
+    (set) => ({
+      subscription: BillingService.getLocalSubscription(),
+      providerStatus: BillingService.getProviderStatus(),
+      isLoading: false,
+      error: null,
 
-  initializeBilling: async (userId) => fetchSubscription(set, userId, 'Billing initialization'),
-  refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
+      initializeBilling: async (userId) =>
+        fetchSubscription(set, userId, 'Billing initialization'),
+      refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
-  startCheckout: async (userId, email, planId) => {
-    set({ isLoading: true, error: null });
-    try {
-      await BillingService.startCheckout(userId, email, planId);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Checkout session failed.';
-      set({ isLoading: false, error: message });
-      throw error;
-    }
-  },
+      startCheckout: async (userId, email, planId) => {
+        set({ isLoading: true, error: null });
+        try {
+          await BillingService.startCheckout(userId, email, planId);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Checkout session failed.';
+          set({ isLoading: false, error: message });
+          throw error;
+        }
+      },
 
-  openCustomerPortal: async (userId) => {
-    set({ isLoading: true, error: null });
-    try {
-      await BillingService.openCustomerPortal(userId);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Customer portal session failed.';
-      set({ isLoading: false, error: message });
-      throw error;
-    }
-  },
+      openCustomerPortal: async (userId) => {
+        set({ isLoading: true, error: null });
+        try {
+          await BillingService.openCustomerPortal(userId);
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : 'Customer portal session failed.';
+          set({ isLoading: false, error: message });
+          throw error;
+        }
+      },
 
-  startTopupCheckout: async (userId, email) => {
-    set({ isLoading: true, error: null });
-    try {
-      await BillingService.startTopupCheckout(userId, email);
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
-      set({ isLoading: false, error: message });
-      throw error;
-    }
-  },
+      startTopupCheckout: async (userId, email) => {
+        set({ isLoading: true, error: null });
+        try {
+          await BillingService.startTopupCheckout(userId, email);
+        } catch (error) {
+          const message = error instanceof Error ? error.message : 'Top-up checkout failed.';
+          set({ isLoading: false, error: message });
+          throw error;
+        }
+      },
 
-  setSubscription: (subscription) => {
-    BillingService.persistSubscription(subscription);
-    set({ subscription });
-  },
-}));
+      setSubscription: (subscription) => {
+        BillingService.persistSubscription(subscription);
+        set({ subscription });
+      },
+    }),
+    { name: 'BillingStore' }
+  )
+);

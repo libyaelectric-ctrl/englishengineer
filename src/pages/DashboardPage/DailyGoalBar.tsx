@@ -1,13 +1,17 @@
 import { useLearningStore } from '@/core/learning';
 
+import { useShallow } from 'zustand/shallow';
+
 import { ProgressBar } from '@/shared/components/ProgressBar';
 
 const DAILY_GOAL = 10;
 
 export const DailyGoalBar = () => {
-  const learningState = useLearningStore();
+  const studySessions = useLearningStore(
+    useShallow((s) => s.studySessions)
+  );
   const today = new Date().toDateString();
-  const todayCount = learningState.studySessions.filter(
+  const todayCount = studySessions.filter(
     (s) => new Date(s.timestamp).toDateString() === today
   ).length;
   return (

@@ -40,13 +40,18 @@ export interface ActivityEntry {
   durationMinutes: number;
 }
 
+const escapeHtml = (str: string): string =>
+  str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
 function generateHTML(report: ReportData): string {
+  const h = escapeHtml;
+
   const skillRows = report.skillBreakdown
     .map(
       (s) => `
       <tr>
-        <td style="padding:8px;border-bottom:1px solid #eee;font-weight:600">${s.skill}</td>
-        <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${s.level}</td>
+        <td style="padding:8px;border-bottom:1px solid #eee;font-weight:600">${h(s.skill)}</td>
+        <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${h(s.level)}</td>
         <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${s.score}%</td>
         <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${s.sessionsCompleted}</td>
         <td style="padding:8px;border-bottom:1px solid #eee;text-align:center">${s.minutesSpent}m</td>
@@ -62,27 +67,24 @@ function generateHTML(report: ReportData): string {
     .map(
       (a) => `
       <tr>
-        <td style="padding:6px;border-bottom:1px solid #eee">${a.date}</td>
-        <td style="padding:6px;border-bottom:1px solid #eee">${a.skill}</td>
+        <td style="padding:6px;border-bottom:1px solid #eee">${h(a.date)}</td>
+        <td style="padding:6px;border-bottom:1px solid #eee">${h(a.skill)}</td>
         <td style="padding:6px;border-bottom:1px solid #eee;text-align:center">${a.score}%</td>
         <td style="padding:6px;border-bottom:1px solid #eee;text-align:center">${a.durationMinutes}m</td>
       </tr>`
     )
     .join('');
 
-  const strengthItems = report.strengths.map((s) => `<li style="margin:4px 0">${s}</li>`).join('');
+  const strengthItems = report.strengths.map((s) => `<li style="margin:4px 0">${h(s)}</li>`).join('');
   const weaknessItems = report.weaknesses
-    .map((w) => `<li style="margin:4px 0;color:#b45309">${w}</li>`)
+    .map((w) => `<li style="margin:4px 0;color:#b45309">${h(w)}</li>`)
     .join('');
   const recommendationItems = report.recommendations
-    .map((r) => `<li style="margin:4px 0">${r}</li>`)
+    .map((r) => `<li style="margin:4px 0">${h(r)}</li>`)
     .join('');
 
-  const escapeHtml = (str: string) =>
-    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-  const safeUserName = escapeHtml(report.userName);
-  const safeLevel = escapeHtml(report.overallLevel);
+  const safeUserName = h(report.userName);
+  const safeLevel = h(report.overallLevel);
 
   return `<!DOCTYPE html>
 <html>
@@ -191,7 +193,7 @@ export const LearningReportGenerator = {
     const html = generateHTML(data);
     const blob = new Blob([html], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener,noreferrer');
   },
 
   downloadAsHTML(data: ReportData, filename = 'learning-report.html'): void {
