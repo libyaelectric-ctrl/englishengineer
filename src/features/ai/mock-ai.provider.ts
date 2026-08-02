@@ -1,9 +1,6 @@
-import { AICoachResult, AIProvider, AIProviderStatus, AIRequest, AIResponse } from './ai.types';
+import { AICoachResult, AIProvider, AIProviderStatus, AIRequest, AIResponse, MockExample } from './ai.types';
 
-export interface MockExample {
-  input: string;
-  output: string;
-}
+export type { MockExample };
 
 const MOCK_STATUS: AIProviderStatus = {
   mode: 'mock',

@@ -166,7 +166,7 @@ export const BillingPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#d9d9e3]">
-                  {[].map((inv: { id: string; date: string; amount: string; status: string }) => (
+                  {([] as Array<{ id: string; date: string; amount: string; status: string }>).map((inv) => (
                     <tr key={inv.id} className="hover:bg-background transition-colors">
                       <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
                         {inv.id}

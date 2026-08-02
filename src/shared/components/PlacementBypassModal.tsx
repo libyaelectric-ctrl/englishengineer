@@ -119,7 +119,7 @@ export const PlacementBypassModal = ({
             <div className="space-y-2">
               {[
                 'Execution of Transport',
-                'Extension of Time (Correct)',
+                'Extension of Time',
                 'Equipment Overhead Tax',
                 'Estimate of Total Costs',
               ].map((opt, i) => (

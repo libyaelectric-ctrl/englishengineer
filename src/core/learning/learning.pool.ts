@@ -54,18 +54,24 @@ export const addToSpeakingPool = (missionId: string) => {
   syncPoolToSupabase('speaking', missionId);
 };
 
-// Event bus → Pool bağlantısı
-eventBus.subscribe('vocabulary:mastered', (event) => {
-  const { termId } = event.payload as { termId: string };
-  addToVocabularyPool(termId);
-});
+let poolSubscriptionsInitialized = false;
 
-eventBus.subscribe('grammar:mastered', (event) => {
-  const { ruleId } = event.payload as { ruleId: string };
-  addToGrammarPool(ruleId);
-});
+export const initPoolSubscriptions = () => {
+  if (poolSubscriptionsInitialized) return;
+  poolSubscriptionsInitialized = true;
 
-eventBus.subscribe('speaking:completed', (event) => {
-  const { missionId } = event.payload as { missionId: string };
-  addToSpeakingPool(missionId);
-});
+  eventBus.subscribe('vocabulary:mastered', (event) => {
+    const { termId } = event.payload as { termId: string };
+    addToVocabularyPool(termId);
+  });
+
+  eventBus.subscribe('grammar:mastered', (event) => {
+    const { ruleId } = event.payload as { ruleId: string };
+    addToGrammarPool(ruleId);
+  });
+
+  eventBus.subscribe('speaking:completed', (event) => {
+    const { missionId } = event.payload as { missionId: string };
+    addToSpeakingPool(missionId);
+  });
+};

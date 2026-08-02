@@ -78,11 +78,17 @@ function generateHTML(report: ReportData): string {
     .map((r) => `<li style="margin:4px 0">${r}</li>`)
     .join('');
 
+  const escapeHtml = (str: string) =>
+    str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  const safeUserName = escapeHtml(report.userName);
+  const safeLevel = escapeHtml(report.overallLevel);
+
   return `<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>EngVox Learning Report - ${report.userName}</title>
+  <title>EngVox Learning Report - ${safeUserName}</title>
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #1a1a1a; line-height: 1.6; }
     h1 { color: #1a1a1a; border-bottom: 2px solid #2563eb; padding-bottom: 8px; }
@@ -100,7 +106,7 @@ function generateHTML(report: ReportData): string {
 </head>
 <body>
   <h1>EngVox Learning Report</h1>
-  <p><strong>Student:</strong> ${report.userName} | <strong>Generated:</strong> ${new Date(report.generatedAt).toLocaleDateString()} | <strong>Level:</strong> ${report.overallLevel}</p>
+  <p><strong>Student:</strong> ${safeUserName} | <strong>Generated:</strong> ${new Date(report.generatedAt).toLocaleDateString()} | <strong>Level:</strong> ${safeLevel}</p>
 
   <div class="stat-grid">
     <div class="stat-card">

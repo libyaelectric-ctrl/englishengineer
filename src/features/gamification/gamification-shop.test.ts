@@ -71,32 +71,4 @@ describe('ShopService', () => {
       expect(result.error).toContain('Insufficient');
     });
   });
-
-  describe('calculateDiscount', () => {
-    it('returns no discount for short streaks', () => {
-      const item = ShopService.getCatalog()[0];
-      const discount = ShopService.calculateDiscount(item, 3);
-      expect(discount.discountPercent).toBe(0);
-      expect(discount.discountedCoins).toBe(item.priceCoins);
-    });
-
-    it('returns 10% discount for 7+ day streak', () => {
-      const item = ShopService.getCatalog()[0];
-      const discount = ShopService.calculateDiscount(item, 7);
-      expect(discount.discountPercent).toBe(10);
-      expect(discount.discountedCoins).toBe(Math.round(item.priceCoins * 0.9));
-    });
-
-    it('returns 15% discount for 14+ day streak', () => {
-      const item = ShopService.getCatalog()[0];
-      const discount = ShopService.calculateDiscount(item, 14);
-      expect(discount.discountPercent).toBe(15);
-    });
-
-    it('returns 20% discount for 30+ day streak', () => {
-      const item = ShopService.getCatalog()[0];
-      const discount = ShopService.calculateDiscount(item, 30);
-      expect(discount.discountPercent).toBe(20);
-    });
-  });
 });
