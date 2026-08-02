@@ -14,45 +14,34 @@ interface BillingActions {
   setSubscription: (subscription: SubscriptionSnapshot) => void;
 }
 
+const fetchSubscription = async (
+  set: (partial: Partial<BillingState & BillingActions>) => void,
+  userId: string | null,
+  label: string
+) => {
+  set({
+    isLoading: true,
+    error: null,
+    providerStatus: BillingService.getProviderStatus(),
+  });
+  try {
+    const subscription = await BillingService.refreshSubscription(userId);
+    set({ subscription, isLoading: false });
+  } catch (err) {
+    logger.e(`${label} failed, using local:`, err);
+    const localSubscription = BillingService.getLocalSubscription();
+    set({ subscription: localSubscription, isLoading: false });
+  }
+};
+
 export const useBillingStore = create<BillingState & BillingActions>((set) => ({
   subscription: BillingService.getLocalSubscription(),
   providerStatus: BillingService.getProviderStatus(),
   isLoading: false,
   error: null,
 
-  initializeBilling: async (userId) => {
-    set({
-      isLoading: true,
-      error: null,
-      providerStatus: BillingService.getProviderStatus(),
-    });
-    try {
-      const subscription = await BillingService.refreshSubscription(userId);
-      set({ subscription, isLoading: false });
-    } catch (err) {
-      logger.e('Billing initialization failed, using local:', err);
-      // Fallback to local subscription on any error
-      const localSubscription = BillingService.getLocalSubscription();
-      set({ subscription: localSubscription, isLoading: false });
-    }
-  },
-
-  refreshBilling: async (userId) => {
-    set({
-      isLoading: true,
-      error: null,
-      providerStatus: BillingService.getProviderStatus(),
-    });
-    try {
-      const subscription = await BillingService.refreshSubscription(userId);
-      set({ subscription, isLoading: false });
-    } catch (err) {
-      logger.e('Billing refresh failed, using local:', err);
-      // Fallback to local subscription on any error
-      const localSubscription = BillingService.getLocalSubscription();
-      set({ subscription: localSubscription, isLoading: false });
-    }
-  },
+  initializeBilling: async (userId) => fetchSubscription(set, userId, 'Billing initialization'),
+  refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
   startCheckout: async (userId, email, planId) => {
     set({ isLoading: true, error: null });

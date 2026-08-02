@@ -1,18 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useAppStore } from '@/store/app.store';
 
 export const useThemeToggle = () => {
-  const [currentTheme, setCurrentTheme] = useState(
-    () => document.documentElement.getAttribute('data-theme') || 'light'
-  );
+  const theme = useAppStore((s) => s.theme);
+  const setTheme = useAppStore((s) => s.setTheme);
 
-  const toggleTheme = useCallback(() => {
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    setCurrentTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-    document.documentElement.classList.toggle('light', newTheme === 'light');
-    localStorage.setItem('theme', newTheme);
-  }, [currentTheme]);
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
-  return { currentTheme, toggleTheme };
+  return { currentTheme: theme, toggleTheme };
 };
