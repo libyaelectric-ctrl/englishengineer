@@ -17,11 +17,11 @@ import {
 } from '@/features/learning-orchestrator';
 import { LearningProfileEngine, type SkillName, useLearningCockpit } from '@/features/profile';
 
-import { CurriculumActionsGrid } from './CurriculumPage/CurriculumActionsGrid';
-import { CurriculumFullTab } from './CurriculumPage/CurriculumFullTab';
-import { CurriculumMemoryTab } from './CurriculumPage/CurriculumMemoryTab';
-import { CurriculumTodayTab } from './CurriculumPage/CurriculumTodayTab';
-import { SKILL_META } from './CurriculumPage/curriculum-data';
+import { CurriculumActionsGrid } from './CurriculumActionsGrid';
+import { CurriculumFullTab } from './CurriculumFullTab';
+import { CurriculumMemoryTab } from './CurriculumMemoryTab';
+import { CurriculumTodayTab } from './CurriculumTodayTab';
+import { SKILL_META } from './curriculum-data';
 
 const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();

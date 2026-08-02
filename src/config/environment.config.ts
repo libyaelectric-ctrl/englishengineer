@@ -41,7 +41,8 @@ export interface EnvironmentValidationResult {
   };
 }
 
-const env = import.meta.env as unknown as EngVoxEnv | undefined;
+const rawEnv = import.meta.env as Record<string, string | undefined> | undefined;
+const env = rawEnv as EngVoxEnv | undefined;
 
 export const isConfiguredPublicUrl = (value: string | undefined): boolean => {
   const normalized = value?.trim();

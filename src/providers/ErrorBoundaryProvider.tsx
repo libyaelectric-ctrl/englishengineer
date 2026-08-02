@@ -6,6 +6,8 @@ import { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { ObservabilityService } from '@/core/observability/observability.service';
+
 interface ErrorBoundaryProviderProps {
   children: ReactNode;
 }
@@ -75,8 +77,19 @@ export const ErrorBoundaryProvider = ({ children }: ErrorBoundaryProviderProps) 
     window.location.reload();
   }, []);
 
+  const handleError = useCallback((error: unknown) => {
+    const err = error instanceof Error ? error : new Error(String(error));
+    ObservabilityService.logError({
+      code: 'unhandled_error',
+      message: err.message,
+      severity: 'high',
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+    });
+  }, []);
+
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset}>
+    <ErrorBoundary FallbackComponent={ErrorFallback} onReset={handleReset} onError={handleError}>
       {children}
     </ErrorBoundary>
   );

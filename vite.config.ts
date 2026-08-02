@@ -1,4 +1,4 @@
-import tailwindcss from '@tailwindcss/vite';
+﻿import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
@@ -19,10 +19,8 @@ const VENDOR_CHUNKS: [string, string][] = [
   ['isomorphic-dompurify', 'vendor-sanitize'],
   ['clsx', 'vendor-utils'],
   ['tailwind', 'vendor-utils'],
-  ['react-helmet', 'vendor-seo'],
   ['react-virtuoso', 'vendor-virtual'],
   ['react-error-boundary', 'vendor-error'],
-  ['web-vitals', 'vendor-vitals'],
 ];
 
 function getVendorChunk(id: string): string | undefined {
@@ -72,7 +70,6 @@ export default defineConfig(() => {
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
       rollupOptions: {
-        external: ['express', 'openai', 'stripe', 'cors', 'dotenv'],
         output: {
           manualChunks(id) {
             if (id.includes('node_modules')) return getVendorChunk(id);
@@ -89,3 +86,4 @@ export default defineConfig(() => {
     },
   };
 });
+

@@ -8,8 +8,69 @@ import App from './App';
 import './index.css';
 import { logger } from './shared/logger';
 
+// Polyfill: Safari < 16 does not support requestIdleCallback
+if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
+  (window as unknown as Record<string, unknown>).requestIdleCallback = (
+    cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
+    options?: { timeout?: number }
+  ): number => {
+    const start = Date.now();
+    return window.setTimeout(() => {
+      cb({
+        didTimeout: false,
+        timeRemaining() {
+          return Math.max(0, 50 - (Date.now() - start));
+        },
+      });
+    }, options?.timeout ?? 1);
+  };
+  (window as unknown as Record<string, unknown>).cancelIdleCallback = (id: number): void => {
+    clearTimeout(id);
+  };
+}
+
+
+
+// Global unhandled rejection handler for production error tracking
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+    ObservabilityService.logError({
+      code: 'unhandled_rejection',
+      message: error.message,
+      severity: 'high',
+      stack: error.stack,
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+    });
+    event.preventDefault(); // Prevent default browser behavior (console error)
+  });
+}
+
+// Polyfill: Safari < 16 does not support requestIdleCallback
+if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
+  (window as unknown as Record<string, unknown>).requestIdleCallback = (
+    cb: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void,
+    options?: { timeout?: number }
+  ): number => {
+    const start = Date.now();
+    return window.setTimeout(() => {
+      cb({
+        didTimeout: false,
+        timeRemaining() {
+          return Math.max(0, 50 - (Date.now() - start));
+        },
+      });
+    }, options?.timeout ?? 1);
+  };
+  (window as unknown as Record<string, unknown>).cancelIdleCallback = (id: number): void => {
+    clearTimeout(id);
+  };
+}
+
 // Defer Sentry init to after first paint for faster initial load
 requestIdleCallback(() => ObservabilityService.init());
+
 
 // Theme is handled by ThemeProvider — no manual DOM manipulation here
 
