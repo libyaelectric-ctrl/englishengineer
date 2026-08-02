@@ -376,9 +376,13 @@ export const TranslatorPage = () => {
 
   const handleCopy = () => {
     if (!translatedText) return;
-    navigator.clipboard.writeText(translatedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(translatedText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
   };
 
   const handleClear = () => {

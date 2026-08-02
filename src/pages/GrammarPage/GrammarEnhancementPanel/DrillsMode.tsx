@@ -1,6 +1,7 @@
 import { Check, ClipboardCheck, ListChecks, Shuffle } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Button } from '@/shared/components/Button';
+import { logger } from '@/shared/logger';
 import {
   type GrammarRule,
   type GrammarRuleProgress,
@@ -15,7 +16,8 @@ const readJson = <T,>(key: string, fallback: T): T => {
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
+  } catch (e) {
+    logger.w('[DrillsMode] Failed to read JSON from localStorage', e);
     return fallback;
   }
 };
@@ -23,7 +25,7 @@ const readJson = <T,>(key: string, fallback: T): T => {
 const writeJson = <T,>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch { /* localStorage unavailable */ }
+  } catch (e) { logger.w('[DrillsMode] Failed to write JSON to localStorage', e); }
 };
 
 const normalize = (value: string): string =>

@@ -19,6 +19,7 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import { logger } from '@/shared/logger';
 import { addOfflineAction, getOfflineActionCount } from '@/shared/utils/indexed-db';
 
 import {
@@ -89,7 +90,8 @@ const readJson = <T,>(key: string, fallback: T): T => {
   try {
     const raw = localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
+  } catch (e) {
+    logger.w('[GrammarEnhancementPanel] Failed to read JSON from localStorage', e);
     return fallback;
   }
 };
@@ -97,7 +99,7 @@ const readJson = <T,>(key: string, fallback: T): T => {
 const writeJson = <T,>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch { /* localStorage unavailable */ }
+  } catch (e) { logger.w('[GrammarEnhancementPanel] Failed to write JSON to localStorage', e); }
 };
 
 const downloadText = (filename: string, content: string, type = 'text/plain'): void => {

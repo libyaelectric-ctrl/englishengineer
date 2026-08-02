@@ -35,6 +35,7 @@ export const VoicePitchMeterWidget = () => {
         <button
           type="button"
           onClick={handleToggleRecord}
+          aria-label="Toggle microphone"
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full transition shadow-md cursor-pointer ${
             isRecording
               ? 'bg-rose-500 text-white animate-pulse'

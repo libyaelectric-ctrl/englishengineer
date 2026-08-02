@@ -115,6 +115,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close"
             className="text-muted-copy hover:text-foreground cursor-pointer"
           >
             <X className="h-4 w-4" />
@@ -163,6 +164,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
               <button
                 type="button"
                 onClick={() => setShowQrModal(false)}
+                aria-label="Close"
                 className="text-muted-copy hover:text-foreground"
               >
                 <X className="h-3.5 w-3.5" />

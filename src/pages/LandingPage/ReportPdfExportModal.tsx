@@ -51,6 +51,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
           <button
             type="button"
             onClick={onClose}
+            aria-label="Close"
             className="text-muted-copy hover:text-foreground cursor-pointer"
           >
             <X className="h-4 w-4" />

@@ -101,6 +101,7 @@ export function SalesChatModal() {
             <button
               type="button"
               onClick={handleSend}
+              aria-label="Send message"
               className="rounded bg-primary p-1.5 text-primary-foreground hover:bg-primary/90 cursor-pointer"
             >
               <Send className="h-3.5 w-3.5" />

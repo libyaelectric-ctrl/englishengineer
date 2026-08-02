@@ -11,6 +11,18 @@ import { getSupabaseClient } from '@/features/auth/supabase.client';
 
 import { type RouteLocationState, getErrorMessage } from './constants';
 
+const ALLOWED_SSO_HOSTS = ['supabase.com', 'auth0.com', 'okta.com'];
+
+const isSafeRedirectUrl = (url: string): boolean => {
+  try {
+    const parsed = new URL(url);
+    if (parsed.protocol !== 'https:') return false;
+    return ALLOWED_SSO_HOSTS.some((h) => parsed.hostname.endsWith(`.${h}`) || parsed.hostname === h);
+  } catch {
+    return false;
+  }
+};
+
 export const useLoginHandlers = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -139,6 +151,11 @@ export const useLoginHandlers = () => {
       });
       if (authError) throw authError;
       if (data?.url) {
+        if (!isSafeRedirectUrl(data.url)) {
+          setError('SSO provider returned an unexpected redirect URL.');
+          setSsoLoading(false);
+          return;
+        }
         window.location.href = data.url;
       } else {
         setError('No redirect URL returned from SSO provider.');

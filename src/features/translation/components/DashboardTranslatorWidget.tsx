@@ -12,6 +12,8 @@ import {
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { logger } from '@/shared/logger';
+
 import { TranslationResult, translationService } from '../services/translation.service';
 
 type Lang = 'auto' | 'en' | 'tr';
@@ -239,7 +241,8 @@ export const DashboardTranslatorWidget = () => {
         const result = await translationService.translate({ text: trimmed, sourceLang: src, targetLang: tgt });
         setTranslatedText(result.translatedText);
         setResultData(result);
-      } catch {
+      } catch (e) {
+        logger.w('[DashboardTranslator] Translation request failed', e);
         setErrorMessage('Network or translation service unreachable. Fallback mode active.');
       } finally {
         setIsTranslating(false);
@@ -267,9 +270,13 @@ export const DashboardTranslatorWidget = () => {
 
   const handleCopy = () => {
     if (!translatedText) return;
-    navigator.clipboard.writeText(translatedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(translatedText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+    }
   };
 
   const handleClear = () => {

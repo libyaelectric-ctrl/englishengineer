@@ -71,3 +71,4 @@ bundle-report.html
 # One-time analysis outputs
 analysis_output/
 *.py
+.env*

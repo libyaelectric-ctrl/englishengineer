@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
 import { QuickAIDraft, WorkToolsPreferences } from './work-tools.types';
@@ -30,8 +31,13 @@ export const WorkToolsService = {
 
   async copy(text: string): Promise<boolean> {
     if (!navigator.clipboard) return false;
-    await navigator.clipboard.writeText(text);
-    return true;
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      logger.w('[Clipboard] Failed to copy', e);
+      return false;
+    }
   },
 
   remember(itemId: string, preferences: WorkToolsPreferences): WorkToolsPreferences {

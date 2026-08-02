@@ -32,6 +32,7 @@ export const PwaInstallBanner = () => {
         <button
           type="button"
           onClick={() => setDismissed(true)}
+          aria-label="Close banner"
           className="text-muted-copy hover:text-foreground cursor-pointer"
         >
           <X className="h-3.5 w-3.5" />

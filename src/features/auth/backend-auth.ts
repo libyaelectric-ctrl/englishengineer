@@ -1,3 +1,4 @@
+import { logger } from '@/shared/logger';
 import { getSupabaseClient } from './supabase.client';
 
 let cachedOrgId: string | null = null;
@@ -35,8 +36,8 @@ export const getBackendAuthHeaders = async (
           if (membership?.organization_id) {
             cachedOrgId = membership.organization_id;
           }
-        } catch {
-          // Ignore and proceed without org context
+        } catch (e) {
+          logger.w('[BackendAuth] Failed to fetch organization membership', e);
         }
       }
 
