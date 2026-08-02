@@ -20,6 +20,11 @@ export const Sidebar = () => {
   const { subscription } = useBillingStore();
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
+  const closeSidebarOnMobile = () => {
+    if (window.innerWidth < 1024 && isSidebarOpen) {
+      toggleSidebar();
+    }
+  };
   const planName = subscription?.planId || 'free';
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
@@ -97,11 +102,7 @@ export const Sidebar = () => {
 
           {/* Navigation */}
           <div className="flex-1 overflow-y-auto custom-scrollbar px-3 py-4">
-            <Navigation
-              onItemClick={() => {
-                if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
-              }}
-            />
+            <Navigation onItemClick={closeSidebarOnMobile} />
           </div>
 
           {/* User Info + Billing */}
@@ -111,7 +112,7 @@ export const Sidebar = () => {
               <button
                 type="button"
                 onClick={() => {
-                  if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
+                  closeSidebarOnMobile();
                   startTransition(() => navigate('/billing'));
                 }}
                 className="flex h-10 w-full cursor-pointer items-center gap-3 rounded-[4px] border border-border-soft bg-surface px-3 text-left transition-all hover:border-primary hover:bg-primary/5 shadow-sm text-xs font-bold uppercase tracking-wider text-muted-copy hover:text-foreground"
@@ -163,7 +164,7 @@ export const Sidebar = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
-                        if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
+                        closeSidebarOnMobile();
                         startTransition(() => navigate('/curriculum'));
                       }}
                       className="group flex w-full items-start gap-3 border-b border-border-soft px-4 py-3 text-left transition-colors hover:bg-surface-hover"
@@ -185,7 +186,7 @@ export const Sidebar = () => {
                       type="button"
                       onClick={() => {
                         setNotificationsOpen(false);
-                        if (window.innerWidth < 1024 && isSidebarOpen) toggleSidebar();
+                        closeSidebarOnMobile();
                         startTransition(() => navigate('/profile'));
                       }}
                       className="group flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-surface-hover"

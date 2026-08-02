@@ -1,7 +1,7 @@
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
 
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, type ComponentType } from 'react';
 
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
@@ -14,6 +14,12 @@ import { OnboardingGate } from '@/features/profile';
 import AuthCallbackPage from '@/pages/AuthCallbackPage';
 
 import { RouteErrorPage } from './RouteErrorPage';
+
+const withSuspense = (Component: ComponentType) => (
+  <Suspense fallback={<LoadingState />}>
+    <Component />
+  </Suspense>
+);
 
 const Dashboard = lazy(() => import('@/pages/DashboardPage'));
 const Profile = lazy(() => import('@/pages/ProfilePage'));
@@ -49,35 +55,19 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Landing />
-          </Suspense>
-        ),
+        element: withSuspense(Landing),
       },
       {
         path: '/pricing',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Pricing />
-          </Suspense>
-        ),
+        element: withSuspense(Pricing),
       },
       {
         path: '/business',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Business />
-          </Suspense>
-        ),
+        element: withSuspense(Business),
       },
       {
         path: '/start',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Start />
-          </Suspense>
-        ),
+        element: withSuspense(Start),
       },
       {
         path: '/demo',
@@ -125,19 +115,11 @@ export const router = createBrowserRouter([
       },
       {
         path: 'onboarding',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Onboarding />
-          </Suspense>
-        ),
+        element: withSuspense(Onboarding),
       },
       ...(['profile', 'role', 'goals', 'level', 'plan'] as const).map((step) => ({
         path: `onboarding/${step}`,
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Onboarding />
-          </Suspense>
-        ),
+        element: withSuspense(Onboarding),
       })),
       {
         path: 'profile',
@@ -145,83 +127,43 @@ export const router = createBrowserRouter([
       },
       {
         path: 'profile/:section',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Profile />
-          </Suspense>
-        ),
+        element: withSuspense(Profile),
       },
       {
         path: 'billing',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Billing />
-          </Suspense>
-        ),
+        element: withSuspense(Billing),
       },
       {
         path: 'placement',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Placement />
-          </Suspense>
-        ),
+        element: withSuspense(Placement),
       },
       {
         path: 'translator',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Translator />
-          </Suspense>
-        ),
+        element: withSuspense(Translator),
       },
       {
         path: 'speaking',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Speaking />
-          </Suspense>
-        ),
+        element: withSuspense(Speaking),
       },
       {
         path: 'vocabulary',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Vocabulary />
-          </Suspense>
-        ),
+        element: withSuspense(Vocabulary),
       },
       {
         path: 'grammar',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Grammar />
-          </Suspense>
-        ),
+        element: withSuspense(Grammar),
       },
       {
         path: 'reading',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Reading />
-          </Suspense>
-        ),
+        element: withSuspense(Reading),
       },
       {
         path: 'writing',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Writing />
-          </Suspense>
-        ),
+        element: withSuspense(Writing),
       },
       {
         path: 'listening',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Listening />
-          </Suspense>
-        ),
+        element: withSuspense(Listening),
       },
       {
         path: 'ai',
@@ -241,11 +183,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'curriculum/:section',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Curriculum />
-          </Suspense>
-        ),
+        element: withSuspense(Curriculum),
       },
       {
         path: 'tools',
@@ -253,11 +191,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'tools/:section',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Tools />
-          </Suspense>
-        ),
+        element: withSuspense(Tools),
       },
       {
         path: 'progress',
@@ -265,11 +199,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'progress/:section',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Progress />
-          </Suspense>
-        ),
+        element: withSuspense(Progress),
       },
       {
         path: 'learning-plan',
@@ -281,45 +211,25 @@ export const router = createBrowserRouter([
       },
       {
         path: 'offline',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Offline />
-          </Suspense>
-        ),
+        element: withSuspense(Offline),
       },
       {
         path: 'team',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <Team />
-          </Suspense>
-        ),
+        element: withSuspense(Team),
       },
       {
         path: 'team/members/:memberId',
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeamMember />
-          </Suspense>
-        ),
+        element: withSuspense(TeamMember),
       },
     ],
   },
   {
     path: '/login',
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Login />
-      </Suspense>
-    ),
+    element: withSuspense(Login),
   },
   {
     path: '/signup',
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Login />
-      </Suspense>
-    ),
+    element: withSuspense(Login),
   },
   {
     path: '/auth/callback',
@@ -327,10 +237,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <NotFound />
-      </Suspense>
-    ),
+    element: withSuspense(NotFound),
   },
 ]);
