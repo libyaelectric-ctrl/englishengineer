@@ -8,7 +8,7 @@ import { GrammarProgressService } from '@/features/grammar';
 import {
   type UnifiedReviewItem,
   UnifiedReviewQueueService,
-  buildReviewPriorities,
+  buildReviewPrioritiesFromInput,
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import {
@@ -79,42 +79,16 @@ const CurriculumPage = () => {
   }, [profile]);
 
   const selectedMeta = SKILL_META[selectedSkill];
-  const reviewPriorities = buildReviewPriorities([
-    ...(memory.weakWords > 0
-      ? [
-          {
-            id: 'weak-words',
-            label: `${memory.weakWords} weak vocabulary items`,
-            source: 'weak-word' as const,
-            severity: memory.weakWords,
-          },
-        ]
-      : []),
-    ...(memory.dueToday > 0
-      ? [
-          {
-            id: 'due-vocabulary',
-            label: `${memory.dueToday} vocabulary items due`,
-            source: 'due-item' as const,
-            severity: memory.dueToday,
-          },
-        ]
-      : []),
-    ...mistakeLog
-      .filter((item) => (item.repetitionCount ?? 1) >= 3)
-      .map((item) => ({
-        id: item.id,
-        label: `${item.category}: ${item.originalText}`,
-        source: 'repeated-mistake' as const,
-        severity: item.repetitionCount,
-      })),
-    {
-      id: `skill-${weakestSkill}`,
-      label: `${weakestSkill[0].toUpperCase()}${weakestSkill.slice(1)} needs focused practice`,
-      source: 'skill-weakness' as const,
-      severity: Math.round(profile.skills[weakestSkill].weaknessScore / 10),
+  const reviewPriorities = buildReviewPrioritiesFromInput({
+    weakWords: memory.weakWords,
+    dueToday: memory.dueToday,
+    mistakeLog,
+    focusSkill: {
+      skill: weakestSkill,
+      weaknessScore: profile.skills[weakestSkill].weaknessScore,
+      label: `${weakestSkill[0].toUpperCase()}${weakestSkill.slice(1)}`,
     },
-  ]);
+  });
   const primaryMission = missions[0];
   const currentSkillProfile = profile.skills[weakestSkill];
   const grammarSummary = GrammarProgressService.getSummary(360);

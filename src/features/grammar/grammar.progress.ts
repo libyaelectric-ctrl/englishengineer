@@ -158,10 +158,13 @@ export const GrammarProgressService = {
     return progress;
   },
   async isLessonUnlocked(ruleId: string): Promise<boolean> {
-    const all = await GrammarRepository.getAllRulesSorted();
-    const index = all.findIndex((r) => r.id === ruleId);
+    let sorted = GrammarRepository.getAllRulesSortedSync();
+    if (!sorted) {
+      sorted = await GrammarRepository.getAllRulesSorted();
+    }
+    const index = sorted.findIndex((r) => r.id === ruleId);
     if (index <= 0) return true;
-    const prev = this.get(all[index - 1].id);
+    const prev = this.get(sorted[index - 1].id);
     return prev.isPassed === true || prev.reviewStatus === 'Strong' || prev.correctUsages >= 3;
   },
   recordPass(ruleId: string, now = new Date()): GrammarRuleProgress {

@@ -10,7 +10,7 @@ import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
 
 import { useAuthStore } from '@/features/auth';
 import {
-  buildReviewPriorities,
+  buildReviewPrioritiesFromInput,
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
@@ -24,6 +24,11 @@ import { ProgressCockpit } from './DashboardPage/ProgressCockpit';
 import { ReviewPriorities } from './DashboardPage/ReviewPriorities';
 import { SkillRadarChart } from './DashboardPage/SkillRadarChart';
 
+const COMPETENCY_HIGH_THRESHOLD = 80;
+const COMPETENCY_GOOD_THRESHOLD = 60;
+const COMPETENCY_DEVELOPING_THRESHOLD = 40;
+const STREAK_DAYS = 7;
+
 const SKILL_META: Record<SkillName, { label: string; route: string; icon: typeof BookOpen }> = {
   reading: { label: 'Reading', route: '/reading', icon: BookOpen },
   writing: { label: 'Writing', route: '/writing', icon: PenTool },
@@ -34,13 +39,13 @@ const SKILL_META: Record<SkillName, { label: string; route: string; icon: typeof
 };
 
 const getCompetencyLabel = (score: number) => {
-  if (score >= 80)
+  if (score >= COMPETENCY_HIGH_THRESHOLD)
     return {
       text: 'High Competency',
       color: 'text-success dark:text-success',
     };
-  if (score >= 60) return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
-  if (score >= 40)
+  if (score >= COMPETENCY_GOOD_THRESHOLD) return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
+  if (score >= COMPETENCY_DEVELOPING_THRESHOLD)
     return {
       text: 'Developing',
       color: 'text-warning dark:text-warning',
@@ -67,42 +72,12 @@ const DashboardPage = () => {
   const primaryMission = missions[0];
   const reviewPriorities = useMemo(
     () =>
-      buildReviewPriorities([
-        ...(memory.weakWords > 0
-          ? [
-              {
-                id: 'weak-words',
-                label: `${memory.weakWords} weak vocabulary items`,
-                source: 'weak-word' as const,
-                severity: memory.weakWords,
-              },
-            ]
-          : []),
-        ...(memory.dueToday > 0
-          ? [
-              {
-                id: 'due-words',
-                label: `${memory.dueToday} vocabulary reviews due`,
-                source: 'due-item' as const,
-                severity: memory.dueToday,
-              },
-            ]
-          : []),
-        ...mistakeLog
-          .filter((item) => (item.repetitionCount ?? 1) >= 3)
-          .map((item) => ({
-            id: item.id,
-            label: `${item.category}: ${item.originalText}`,
-            source: 'repeated-mistake' as const,
-            severity: item.repetitionCount,
-          })),
-        {
-          id: `skill-${focusSkill.skill}`,
-          label: `${focusMeta.label} needs the next practice`,
-          source: 'skill-weakness' as const,
-          severity: Math.round(focusSkill.weaknessScore / 10),
-        },
-      ]).slice(0, 3),
+      buildReviewPrioritiesFromInput({
+        weakWords: memory.weakWords,
+        dueToday: memory.dueToday,
+        mistakeLog,
+        focusSkill: { skill: focusSkill.skill, weaknessScore: focusSkill.weaknessScore, label: focusMeta.label },
+      }),
     [memory, mistakeLog, focusSkill, focusMeta]
   );
 
@@ -143,7 +118,7 @@ const DashboardPage = () => {
         <h1 className="text-base font-bold tracking-tight text-foreground">Dashboard</h1>
       </div>
       <div className="space-y-6">
-        <StreakFlameWidget streakDays={7} freezeAvailable={true} />
+        <StreakFlameWidget streakDays={STREAK_DAYS} freezeAvailable={true} />
         <DailyGoalBar />
         <HeroPanel
           userName={userName}

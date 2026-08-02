@@ -48,7 +48,7 @@ const describeReviewNotDue = (progress: GrammarRuleProgress): string => {
 export const getGrammarReviewReason = (progress: GrammarRuleProgress, now = new Date()): string => {
   const missingEvidence = getMissingGrammarTransferEvidence(progress);
   const reviewIsDue = getReviewIsDue(progress, now);
-  const hasStrongPractice = progress.correctUsages >= 3 && progress.strength >= 70;
+  const hasStrongPractice = progress.correctUsages >= MIN_CORRECT_USAGES_FOR_STRONG && progress.strength >= MIN_STRENGTH_FOR_STRONG;
 
   if (hasStrongPractice && missingEvidence.length > 0) {
     return describeStrongWithMissingEvidence(missingEvidence);
@@ -60,6 +60,14 @@ export const getGrammarReviewReason = (progress: GrammarRuleProgress, now = new 
 const STORAGE_KEY = 'EngVox_grammar_progress';
 const DAY_MS = 24 * 60 * 60 * 1000;
 const TRANSFER_MASTERY_SCORE = 80;
+const TOTAL_GRAMMAR_RULES = 360;
+const STRENGTH_CORRECT_BONUS = 25;
+const STRENGTH_INCORRECT_PENALTY = 20;
+const MIN_CORRECT_USAGES_FOR_STRONG = 3;
+const MIN_STRENGTH_FOR_STRONG = 70;
+const REVIEW_DAYS_STRONG = 14;
+const REVIEW_DAYS_CORRECT = 3;
+const REVIEW_DAYS_DEFAULT = 1;
 const initialProgress = (ruleId: string): GrammarRuleProgress => ({
   ruleId,
   exposures: 0,
@@ -100,7 +108,7 @@ const hasGrammarTransferMastery = (progress: GrammarRuleProgress): boolean =>
   getMissingGrammarTransferEvidence(progress).length === 0;
 
 const canBecomeStrong = (progress: GrammarRuleProgress): boolean =>
-  progress.correctUsages >= 3 && progress.strength >= 70 && hasGrammarTransferMastery(progress);
+  progress.correctUsages >= MIN_CORRECT_USAGES_FOR_STRONG && progress.strength >= MIN_STRENGTH_FOR_STRONG && hasGrammarTransferMastery(progress);
 
 const publishMastery = (ruleId: string, now: Date, progress: GrammarRuleProgress): void => {
   eventBus.publish({
@@ -120,7 +128,7 @@ export const GrammarProgressService = {
     return Object.fromEntries(Object.keys(load()).map((ruleId) => [ruleId, this.get(ruleId, now)]));
   },
 
-  getSummary(totalRules = 360, now = new Date()): LocalGrammarProgressSummary {
+  getSummary(totalRules = TOTAL_GRAMMAR_RULES, now = new Date()): LocalGrammarProgressSummary {
     const values = Object.values(this.getAll(now));
     return {
       tracked: values.length,
@@ -147,7 +155,7 @@ export const GrammarProgressService = {
     const index = all.findIndex((r) => r.id === ruleId);
     if (index <= 0) return true;
     const prev = this.get(all[index - 1].id);
-    return prev.isPassed === true || prev.reviewStatus === 'Strong' || prev.correctUsages >= 3;
+    return prev.isPassed === true || prev.reviewStatus === 'Strong' || prev.correctUsages >= MIN_CORRECT_USAGES_FOR_STRONG;
   },
   recordPass(ruleId: string, now = new Date()): GrammarRuleProgress {
     const current = this.get(ruleId, now);
@@ -171,12 +179,12 @@ export const GrammarProgressService = {
     const current = this.get(ruleId, now);
     const correctUsages = current.correctUsages + (correct ? 1 : 0);
     const incorrectUsages = current.incorrectUsages + (correct ? 0 : 1);
-    const strength = Math.max(0, Math.min(100, current.strength + (correct ? 25 : -20)));
+    const strength = Math.max(0, Math.min(100, current.strength + (correct ? STRENGTH_CORRECT_BONUS : -STRENGTH_INCORRECT_PENALTY)));
     const candidate = { ...current, correctUsages, incorrectUsages, strength };
     const strong = canBecomeStrong(candidate);
     const becameStrong = strong && current.reviewStatus !== 'Strong';
     const nextStatus = strong ? 'Strong' : 'Learning';
-    const reviewDays = strong ? 14 : correct ? 3 : 1;
+    const reviewDays = strong ? REVIEW_DAYS_STRONG : correct ? REVIEW_DAYS_CORRECT : REVIEW_DAYS_DEFAULT;
     const result = saveOne({
       ...current,
       exposures: current.exposures + 1,
@@ -214,7 +222,7 @@ export const GrammarProgressService = {
       ...candidate,
       reviewStatus: strong ? 'Strong' : candidate.reviewStatus,
       nextReviewDate: strong
-        ? new Date(now.getTime() + 14 * DAY_MS).toISOString()
+        ? new Date(now.getTime() + REVIEW_DAYS_STRONG * DAY_MS).toISOString()
         : candidate.nextReviewDate,
     });
     if (becameStrong) publishMastery(ruleId, now, result);

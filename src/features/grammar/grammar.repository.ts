@@ -13,6 +13,7 @@ import { assertGrammarRules } from './grammar.schema';
 import type { GrammarRule } from './grammar.types';
 
 const levelCache = new Map<CefrLevel, GrammarRule[]>();
+let sortedCache: GrammarRule[] | null = null;
 
 const loadLevel = async (level: CefrLevel): Promise<GrammarRule[]> => {
   const cached = levelCache.get(level);
@@ -39,14 +40,16 @@ const containsText = (value: string, query: string): boolean =>
 
 export const GrammarRepository = {
   async getAllRulesSorted(): Promise<GrammarRule[]> {
+    if (sortedCache) return sortedCache;
     const all = await loadAll();
-    return [...all].sort((a, b) => {
+    sortedCache = [...all].sort((a, b) => {
       const aVal = levelOrder[a.cefrLevel] || 0;
       const bVal = levelOrder[b.cefrLevel] || 0;
       if (aVal !== bVal) return aVal - bVal;
       if (a.difficulty !== b.difficulty) return a.difficulty - b.difficulty;
       return a.title.localeCompare(b.title);
     });
+    return sortedCache;
   },
 
   async getGrammarRuleById(id: string): Promise<GrammarRule | undefined> {
@@ -87,6 +90,10 @@ export const GrammarRepository = {
     return rules.filter((rule) => includesNormalized(rule.skillUse, skill));
   },
 
+  getAllRulesSortedSync(): GrammarRule[] | null {
+    return sortedCache;
+  },
+
   async searchGrammarRules(query: string): Promise<GrammarRule[]> {
     if (!query.trim()) return [];
     return (await loadAll()).filter(
@@ -100,5 +107,6 @@ export const GrammarRepository = {
 
   clearCache(): void {
     levelCache.clear();
+    sortedCache = null;
   },
 };

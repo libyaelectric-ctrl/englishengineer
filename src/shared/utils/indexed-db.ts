@@ -6,6 +6,8 @@
  */
 import { logger } from '@/shared/logger';
 
+import { openIDB, isIDBSupported } from './idb-helper';
+
 const DB_NAME = 'engvox_offline_cache';
 const DB_VERSION = 2;
 const STORE_SEED = 'seed_data';
@@ -25,42 +27,26 @@ interface OfflineAction {
   retries: number;
 }
 
-const isSupported = (): boolean => {
-  return typeof window !== 'undefined' && typeof window.indexedDB !== 'undefined';
+const ensureStores = (db: IDBDatabase): void => {
+  if (!db.objectStoreNames.contains(STORE_SEED)) {
+    db.createObjectStore(STORE_SEED, { keyPath: 'key' });
+  }
+  if (!db.objectStoreNames.contains(STORE_ACTIONS)) {
+    const store = db.createObjectStore(STORE_ACTIONS, {
+      keyPath: 'id',
+      autoIncrement: true,
+    });
+    store.createIndex('type', 'type', { unique: false });
+    store.createIndex('timestamp', 'timestamp', { unique: false });
+  }
 };
 
-const openDB = (): Promise<IDBDatabase> => {
-  return new Promise((resolve, reject) => {
-    if (!isSupported()) {
-      reject(new Error('IndexedDB not supported'));
-      return;
-    }
-
-    const request = window.indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
-      if (!db.objectStoreNames.contains(STORE_SEED)) {
-        db.createObjectStore(STORE_SEED, { keyPath: 'key' });
-      }
-      if (!db.objectStoreNames.contains(STORE_ACTIONS)) {
-        const store = db.createObjectStore(STORE_ACTIONS, {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
-        store.createIndex('type', 'type', { unique: false });
-        store.createIndex('timestamp', 'timestamp', { unique: false });
-      }
-    };
-
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-};
+const openDB = (): Promise<IDBDatabase> =>
+  openIDB({ dbName: DB_NAME, dbVersion: DB_VERSION, onUpgrade: ensureStores });
 
 // Seed data cache
 export async function getCachedSeed<T>(key: string): Promise<T | null> {
-  if (!isSupported()) return null;
+  if (!isIDBSupported()) return null;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -81,7 +67,7 @@ export async function getCachedSeed<T>(key: string): Promise<T | null> {
 }
 
 export async function setCachedSeed<T>(key: string, data: T): Promise<void> {
-  if (!isSupported()) return;
+  if (!isIDBSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -107,7 +93,7 @@ export async function addOfflineAction(
   payload: Record<string, unknown>
 ): Promise<string> {
   const id = `oa_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-  if (!isSupported()) return id;
+  if (!isIDBSupported()) return id;
   const action: OfflineAction = {
     id,
     type,
@@ -132,7 +118,7 @@ export async function addOfflineAction(
 }
 
 export async function getOfflineActions(): Promise<OfflineAction[]> {
-  if (!isSupported()) return [];
+  if (!isIDBSupported()) return [];
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -150,7 +136,7 @@ export async function getOfflineActions(): Promise<OfflineAction[]> {
 }
 
 export async function removeOfflineAction(id: string): Promise<void> {
-  if (!isSupported()) return;
+  if (!isIDBSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -166,7 +152,7 @@ export async function removeOfflineAction(id: string): Promise<void> {
 }
 
 export async function clearOfflineActions(): Promise<void> {
-  if (!isSupported()) return;
+  if (!isIDBSupported()) return;
   try {
     const db = await openDB();
     return new Promise((resolve) => {
@@ -182,7 +168,7 @@ export async function clearOfflineActions(): Promise<void> {
 }
 
 export async function getOfflineActionCount(): Promise<number> {
-  if (!isSupported()) return 0;
+  if (!isIDBSupported()) return 0;
   try {
     const db = await openDB();
     return new Promise((resolve) => {

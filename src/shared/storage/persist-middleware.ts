@@ -1,31 +1,28 @@
-import { type PersistOptions } from 'zustand/middleware';
+import { type PersistOptions, type PersistStorage } from 'zustand/middleware';
 
 import { storage } from './index';
 
 /**
  * A storage adapter that wraps the existing EngVox storage module.
  * Ensures Zustand persist middleware uses the same user-scoped localStorage.
- *
- * Zustand's PersistStorage<S> expects getItem to return parsed JSON objects,
- * but our adapter returns raw JSON strings. This works correctly because
- * Zustand's persist middleware calls JSON.parse on the returned string internally.
- * We use `as any` to satisfy the type system — this is the standard Zustand
- * pattern for custom string-based storage adapters.
  */
-const eosStorage = {
+const createPersistStorage = <S>(): PersistStorage<S> => ({
   getItem: (name: string) => {
-    return storage.get<string>(name) ?? null;
+    const value = storage.get<string>(name);
+    if (value === null) return null;
+    try {
+      return JSON.parse(value) as { state: S; version?: number };
+    } catch {
+      return null;
+    }
   },
-  setItem: (name: string, value: string) => {
-    storage.set(name, value);
+  setItem: (name: string, value: { state: S; version?: number }) => {
+    storage.set(name, JSON.stringify(value));
   },
   removeItem: (name: string) => {
     storage.remove(name);
   },
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Zustand PersistStorage expects parsed objects but we return strings; Zustand handles parsing internally
-const typedEosStorage = eosStorage as any;
+});
 
 /**
  * Creates Zustand persist middleware options using the EngVox storage module.
@@ -49,7 +46,7 @@ export const eosPersistConfig = <S>(
   partialize?: (state: S) => Partial<S>
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
-  storage: typedEosStorage,
+  storage: createPersistStorage<Partial<S>>(),
   ...(partialize ? { partialize } : {}),
 });
 
@@ -74,7 +71,7 @@ export const eosPersistPartial = <S extends Record<string, unknown>>(
   keysToPersist: (keyof S)[]
 ): Omit<PersistOptions<S, Partial<S>>, 'name'> & { name: string } => ({
   name: storageKey,
-  storage: typedEosStorage,
+  storage: createPersistStorage<Partial<S>>(),
   partialize: (state) => {
     const partial: Record<string, unknown> = {};
     for (const key of keysToPersist) {

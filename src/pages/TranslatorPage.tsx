@@ -259,7 +259,7 @@ const WordAnalysisCard: React.FC<{
         Alternatif Türkçe Karşılıkları & Teknik Eş Anlamlılar:
       </span>
       <div className="flex flex-wrap gap-1.5">
-        {alternatives!.map((alt) => (
+        {alternatives.map((alt) => (
           <span key={alt} className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground">
             {alt}
           </span>

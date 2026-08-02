@@ -1,13 +1,12 @@
-import { FileCheck, FileText, KeyRound, Layers, Lock, ShieldCheck } from 'lucide-react';
-
 import { useState } from 'react';
+import { FileCheck, FileText, Layers, ShieldCheck } from 'lucide-react';
 
 import { Link } from 'react-router-dom';
 import { PageContainer } from '@/shared/components/PageContainer';
 
-import { LockProgressBar } from '@/shared/components/LockProgressBar';
 import { MetricCard } from '@/shared/components/MetricCard';
-import { PlacementBypassModal } from '@/shared/components/PlacementBypassModal';
+import { SkillLockedState } from '@/shared/components/SkillLockedState';
+import { VOCAB_THRESHOLD, GRAMMAR_THRESHOLD } from '@/shared/constants/progression-thresholds';
 import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import { useGrammarStore } from '@/features/grammar';
@@ -24,70 +23,6 @@ import { FieldDocAssistant } from '@/features/writing/FieldDocAssistant';
 import { MissionListTab } from './WritingPage/components/MissionListTab';
 import { WorkspaceTab } from './WritingPage/components/WorkspaceTab';
 import { useWritingPage } from './WritingPage/hooks/useWritingPage';
-
-const VOCAB_THRESHOLD = 50;
-const GRAMMAR_THRESHOLD = 3;
-
-const LockedView = ({
-  vocabLearned,
-  grammarLearned,
-  onBypassUnlocked,
-}: {
-  vocabLearned: number;
-  grammarLearned: number;
-  onBypassUnlocked: () => void;
-}) => {
-  const [bypassOpen, setBypassOpen] = useState(false);
-
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-6">
-      <div className="max-w-md w-full rounded-[4px] border-2 border-primary bg-surface p-8 text-center space-y-4 shadow-2xl relative light-sweep-container overflow-hidden">
-        <Lock className="mx-auto h-10 w-10 text-primary" />
-        <h2 className="text-lg font-bold text-foreground">Writing Locked</h2>
-        <p className="text-xs text-muted-copy leading-relaxed">
-          Learn {VOCAB_THRESHOLD} vocabulary words and {GRAMMAR_THRESHOLD} grammar rules to unlock
-          Writing.
-        </p>
-        <div className="space-y-2 text-[10px]">
-          <LockProgressBar label="Vocabulary" done={vocabLearned} total={VOCAB_THRESHOLD} />
-          <LockProgressBar label="Grammar" done={grammarLearned} total={GRAMMAR_THRESHOLD} />
-        </div>
-
-        <div className="pt-2 space-y-2">
-          <button
-            type="button"
-            onClick={() => setBypassOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 rounded-lg bg-primary/15 border border-primary/30 px-3 py-2 text-xs font-bold text-primary hover:bg-primary/25 transition cursor-pointer"
-          >
-            <KeyRound className="h-4 w-4" />
-            <span>Placement Test or Senior Engineer Bypass</span>
-          </button>
-
-          <div className="flex gap-2 justify-center pt-1">
-            <Link
-              to="/vocabulary"
-              className="rounded-[4px] border-2 border-primary px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
-            >
-              Go to Vocabulary
-            </Link>
-            <Link
-              to="/grammar"
-              className="rounded-[4px] border-2 border-primary px-4 py-2 text-[10px] font-bold uppercase text-foreground transition hover:bg-surface-hover"
-            >
-              Go to Grammar
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <PlacementBypassModal
-        isOpen={bypassOpen}
-        onClose={() => setBypassOpen(false)}
-        onUnlocked={onBypassUnlocked}
-      />
-    </div>
-  );
-};
 
 const EmptyMissionView = ({
   levelFilter,
@@ -398,10 +333,17 @@ const WritingPage = () => {
 
   if (!canAccess) {
     return (
-      <LockedView
-        vocabLearned={vocabLearned}
-        grammarLearned={grammarLearned}
-        onBypassUnlocked={() => setBypassUnlocked(true)}
+      <SkillLockedState
+        skillName="Writing"
+        prerequisites={[
+          { label: 'Vocabulary', done: vocabLearned, threshold: VOCAB_THRESHOLD },
+          { label: 'Grammar', done: grammarLearned, threshold: GRAMMAR_THRESHOLD },
+        ]}
+        navigationLinks={[
+          { label: 'Vocabulary', route: '/vocabulary' },
+          { label: 'Grammar', route: '/grammar' },
+        ]}
+        onUnlocked={() => setBypassUnlocked(true)}
       />
     );
   }

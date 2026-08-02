@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillLockedState } from '@/shared/components/SkillLockedState';
+import { READING_THRESHOLD, WRITING_THRESHOLD } from '@/shared/constants/progression-thresholds';
 import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import {
@@ -41,9 +42,6 @@ type Question = {
   type: string;
   choices?: string[];
 };
-
-const READING_THRESHOLD = 3;
-const WRITING_THRESHOLD = 3;
 
 const AnimatedScore = ({ value }: { value: number }) => {
   const [display, setDisplay] = useState(0);
@@ -387,10 +385,10 @@ const ListeningPage = () => {
     return (
       <SkillLockedState
         skillName="Listening"
-        readingDone={readingDone}
-        writingDone={writingDone}
-        readingThreshold={READING_THRESHOLD}
-        writingThreshold={WRITING_THRESHOLD}
+        prerequisites={[
+          { label: 'Reading', done: readingDone, threshold: READING_THRESHOLD },
+          { label: 'Writing', done: writingDone, threshold: WRITING_THRESHOLD },
+        ]}
         onPreview={() => setPreviewMode(true)}
         onUnlocked={() => setBypassUnlocked(true)}
       />

@@ -53,18 +53,20 @@ describe('eosPersistConfig middleware', () => {
     useStore.getState().setName('updated');
 
     // Zustand persist is async, check via storage module
-    const stored = storage.get<{ state: TestState }>('test_persist_changes');
-    expect(stored).toBeTruthy();
+    // createPersistStorage wraps values with JSON.stringify, so raw storage contains a string
+    const raw = storage.get<string>('test_persist_changes');
+    expect(raw).toBeTruthy();
+    const stored = JSON.parse(raw!) as { state: TestState };
     expect(stored?.state?.count).toBe(2);
     expect(stored?.state?.name).toBe('updated');
   });
 
   it('restores state from storage on creation', () => {
-    // Pre-populate via storage module
-    storage.set('test_persist_restore', {
+    // Pre-populate via storage module as JSON string (how createPersistStorage stores)
+    storage.set('test_persist_restore', JSON.stringify({
       state: { count: 42, name: 'restored' },
       version: 0,
-    });
+    }));
 
     const useStore = create<TestState>()(
       persist(
@@ -98,10 +100,9 @@ describe('eosPersistConfig middleware', () => {
 
     useStore.setState({ count: 5, secret: 'topsecret' });
 
-    const stored = storage.get<{
-      state: { count: number; secret?: string };
-    }>('test_partial_option');
-    expect(stored).toBeTruthy();
+    const raw = storage.get<string>('test_partial_option');
+    expect(raw).toBeTruthy();
+    const stored = JSON.parse(raw!) as { state: { count: number; secret?: string } };
     expect(stored?.state?.count).toBe(5);
     expect(stored?.state?.secret).toBeUndefined();
   });
@@ -125,10 +126,9 @@ describe('eosPersistPartial helper', () => {
 
     useStore.setState({ count: 5, secret: 'topsecret' });
 
-    const stored = storage.get<{
-      state: { count: number; secret?: string };
-    }>('test_partial_persist');
-    expect(stored).toBeTruthy();
+    const raw = storage.get<string>('test_partial_persist');
+    expect(raw).toBeTruthy();
+    const stored = JSON.parse(raw!) as { state: { count: number; secret?: string } };
     expect(stored?.state?.count).toBe(5);
     expect(stored?.state?.secret).toBeUndefined();
   });

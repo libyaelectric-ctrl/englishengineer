@@ -27,6 +27,8 @@ import { ScoringService } from './scoring.service';
 
 const STORAGE_KEY = 'learning_state';
 const MAX_HISTORY_SIZE = 500;
+const INITIAL_ELO = 1000;
+const SECONDS_PER_MINUTE = 60;
 
 const mergeDefaults = <T extends { id: string }>(existing: T[], defaults: T[]): T[] => {
   const existingIds = new Set(existing.map((item) => item.id));
@@ -85,7 +87,7 @@ const emitLearningCompleted = (
     id: IdService.createId('evt'),
     type: 'learning.completed',
     timestamp: now.toISOString(),
-    payload: { module, topicId, score, durationSeconds: durationMinutes * 60 },
+    payload: { module, topicId, score, durationSeconds: durationMinutes * SECONDS_PER_MINUTE },
   });
 
   eventBus.publish({
@@ -114,18 +116,18 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       xp: 0,
       level: 1,
       coins: 0,
-      elo: 1000,
-      streak: 0,
-      lastActivityDate: null,
-      studySessions: [],
-      scoreHistory: [],
-      xpHistory: [],
-      eloHistory: [],
-      vocabularyPool: [],
-      grammarPool: [],
-      speakingPool: [],
+    elo: INITIAL_ELO,
+    streak: 0,
+    lastActivityDate: null,
+    studySessions: [],
+    scoreHistory: [],
+    xpHistory: [],
+    eloHistory: [],
+    vocabularyPool: [],
+    grammarPool: [],
+    speakingPool: [],
 
-      startMission: (missionId: string) => {
+    startMission: (missionId: string) => {
         const updated = get().missions.map((m) =>
           m.id === missionId ? { ...m, status: 'active' as const } : m
         );
@@ -269,8 +271,8 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           module.toLowerCase() as import('@/features/profile/profile.types').SkillName;
         const userId = useAuthStore.getState().currentUser?.id || 'local-user';
         const profile = LearningProfileRepository.getProfile(userId);
-        const currentSkillElo = profile.skills[skillName]?.elo || 1000;
-        const newSkillElo = Math.max(1000, currentSkillElo + result.eloChange);
+        const currentSkillElo = profile.skills[skillName]?.elo || INITIAL_ELO;
+        const newSkillElo = Math.max(INITIAL_ELO, currentSkillElo + result.eloChange);
 
         LearningProfileRepository.updateSkill(userId, skillName, {
           elo: newSkillElo,
@@ -354,7 +356,7 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
           xp: 0,
           level: 1,
           coins: 0,
-          elo: 1000,
+          elo: INITIAL_ELO,
           streak: 0,
           lastActivityDate: null,
           studySessions: [],
