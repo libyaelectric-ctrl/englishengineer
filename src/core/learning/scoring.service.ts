@@ -85,7 +85,6 @@ export const ScoringService = {
     module: MissionModule;
     difficulty: MissionDifficulty;
     performanceRatio: number;
-    mistakesCount?: number;
     timeSpentMinutes?: number;
   }): ScoreResult {
     const score = Math.min(100, Math.max(0, Math.round(params.performanceRatio * 100)));

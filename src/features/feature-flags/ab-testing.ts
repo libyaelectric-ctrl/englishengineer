@@ -1,6 +1,7 @@
 import { FEATURE_FLAGS } from '@/config/feature-flags.config';
 
 import { logger } from '@/shared/logger';
+import { djb2Hash } from '@/shared/utils/string-utils';
 
 interface ABTest {
   id: string;
@@ -39,21 +40,13 @@ const storeAssignment = (assignment: ABAssignment): void => {
   }
 };
 
-const hashString = (str: string): number => {
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-};
-
 export const assignVariant = (test: ABTest, userId: string): string => {
   const stored = getStoredAssignments();
   if (stored[test.id]) return stored[test.id].variant;
 
   const weights = test.weights || test.variants.map(() => 1);
   const totalWeight = weights.reduce((a, b) => a + b, 0);
-  const hash = hashString(`${test.id}:${userId}`) % totalWeight;
+  const hash = djb2Hash(`${test.id}:${userId}`) % totalWeight;
 
   let cumulative = 0;
   for (let i = 0; i < test.variants.length; i++) {

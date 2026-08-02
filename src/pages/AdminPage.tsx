@@ -92,7 +92,7 @@ export const AdminPage = () => {
   const [activeTab, setActiveTab] = useState<'users' | 'billing' | 'system'>('users');
 
   const handleLogout = () => {
-    // Logout ish logic removed - admin panel is now accessible via auth guard
+    window.location.href = '/login';
   };
 
   const handlePromote = (id: string) => {

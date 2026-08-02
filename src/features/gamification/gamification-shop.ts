@@ -170,7 +170,7 @@ const SHOP_CATALOG: ShopItem[] = [
     isLimited: false,
   },
   {
-    id: 'title polyglot',
+    id: 'title-polyglot',
     name: 'Polyglot Title',
     description: 'Display "Polyglot" next to your name',
     category: 'title',
@@ -224,25 +224,5 @@ export const ShopService = {
     };
 
     return { success: true, purchase };
-  },
-
-  calculateDiscount(
-    item: ShopItem,
-    streak: number
-  ): {
-    discountedCoins: number;
-    discountedXp: number;
-    discountPercent: number;
-  } {
-    let discountPercent = 0;
-    if (streak >= 30) discountPercent = 20;
-    else if (streak >= 14) discountPercent = 15;
-    else if (streak >= 7) discountPercent = 10;
-
-    return {
-      discountedCoins: Math.round(item.priceCoins * (1 - discountPercent / 100)),
-      discountedXp: Math.round(item.priceXp * (1 - discountPercent / 100)),
-      discountPercent,
-    };
   },
 };

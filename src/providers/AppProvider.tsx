@@ -7,6 +7,7 @@ import { logger } from '@/shared/logger';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
 import { CloudSyncService, useAuthStore } from '@/features/auth';
+import { initPoolSubscriptions } from '@/core/learning/learning.pool';
 
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { QueryProvider } from './QueryProvider';
@@ -22,6 +23,7 @@ export const AppProvider = ({ children }: AppProviderProps) => {
 
   useEffect(() => {
     reportEnvironmentValidation();
+    initPoolSubscriptions();
   }, []);
 
   useEffect(() => {

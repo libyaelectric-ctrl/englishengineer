@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware';
 
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
+import { djb2Hash } from '@/shared/utils/string-utils';
 
 interface FeatureFlagsState {
   flags: Record<string, boolean>;
@@ -49,7 +50,7 @@ const isRolloutBlocked = (
   key: string
 ): boolean => {
   if (flagConfig.rolloutPercentage === undefined) return false;
-  const hash = userId ? hashString(userId + key) : 0;
+  const hash = userId ? djb2Hash(userId + key) : 0;
   return hash % 100 >= flagConfig.rolloutPercentage;
 };
 
@@ -79,14 +80,6 @@ export const useFeatureFlagsStore = create<FeatureFlagsState>()(
     }
   )
 );
-
-function hashString(str: string): number {
-  let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = ((hash << 5) + hash + str.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
-}
 
 export const useFeatureFlag = (key: string): boolean => {
   return useFeatureFlagsStore((state) => {

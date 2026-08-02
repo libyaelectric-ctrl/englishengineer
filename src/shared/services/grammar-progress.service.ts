@@ -1,33 +1,18 @@
 import { eventBus } from '@/core/events/event-bus';
 
 import { storage } from '@/shared/storage';
+import {
+  type GrammarReviewStatus,
+  type GrammarTransferSkill,
+  type GrammarSkillEvidence,
+  type GrammarRuleProgress,
+} from '@/shared/types/grammar.types';
 
 import { GrammarRepository } from '@/shared/services/grammar.repository';
 
-export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
-export type GrammarTransferSkill = 'reading' | 'writing';
+export type { GrammarReviewStatus, GrammarTransferSkill, GrammarSkillEvidence, GrammarRuleProgress };
 
-export interface GrammarSkillEvidence {
-  skill: GrammarTransferSkill;
-  missionId: string;
-  score: number;
-  demonstratedAt: string;
-}
-
-export interface GrammarRuleProgress {
-  ruleId: string;
-  exposures: number;
-  correctUsages: number;
-  incorrectUsages: number;
-  strength: number;
-  reviewStatus: GrammarReviewStatus;
-  lastUsedAt: string | null;
-  nextReviewDate: string | null;
-  skillEvidence: Partial<Record<GrammarTransferSkill, GrammarSkillEvidence>>;
-  isPassed?: boolean;
-}
-
-export interface GrammarProgressSummary {
+export interface LocalGrammarProgressSummary {
   tracked: number;
   newRules: number;
   learning: number;
@@ -135,7 +120,7 @@ export const GrammarProgressService = {
     return Object.fromEntries(Object.keys(load()).map((ruleId) => [ruleId, this.get(ruleId, now)]));
   },
 
-  getSummary(totalRules = 360, now = new Date()): GrammarProgressSummary {
+  getSummary(totalRules = 360, now = new Date()): LocalGrammarProgressSummary {
     const values = Object.values(this.getAll(now));
     return {
       tracked: values.length,
