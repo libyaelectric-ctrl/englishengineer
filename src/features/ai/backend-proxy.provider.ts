@@ -90,6 +90,7 @@ const resolveProxyEndpoint = (proxyUrl: string, operation: AIOperation): string 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
 
+// Exported for testing only - not used by production code
 export const isAICoachResult = (value: unknown): value is AICoachResult => {
   if (!isRecord(value)) return false;
   return [
@@ -106,6 +107,7 @@ export const isAICoachResult = (value: unknown): value is AICoachResult => {
   ].every(Boolean);
 };
 
+// Exported for testing only - not used by production code
 export const mapHttpError = (status: number): BackendProxyError => {
   if (status === 408)
     return new BackendProxyError('backend_timeout', 'Backend AI request timed out.', true);
@@ -196,6 +198,7 @@ const validateStructuredResult = (data: Record<string, unknown>): void => {
   }
 };
 
+// Exported for testing only - not used by production code
 export const parseBackendResponse = (data: unknown): BackendProxyResponse => {
   if (!isRecord(data)) {
     throw new BackendProxyError(

@@ -32,6 +32,7 @@ import {
   WandSparkles,
 } from 'lucide-react';
 
+// Internal - used by NAV_ITEMS and tested in navigation.config.test.ts
 export const SKILL_NAV_ITEMS = [
   { label: 'Vocabulary', href: '/vocabulary', icon: BookMarked },
   { label: 'Grammar', href: '/grammar', icon: Languages },
@@ -86,4 +87,5 @@ export const NAV_ITEMS = [
   { label: 'Profile', href: null, icon: User, children: PROFILE_NAV_ITEMS },
 ] as const;
 
+// Exported for testing only - not used by production code
 export const MAIN_NAVIGATION_LABELS = NAV_ITEMS.map((item) => item.label);

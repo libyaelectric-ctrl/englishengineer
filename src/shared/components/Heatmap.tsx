@@ -2,6 +2,10 @@ import { memo, useMemo } from 'react';
 
 import { cn } from '@/shared/utils/cn';
 
+const HEATMAP_DAYS = 30;
+const ACTIVITY_LOW_THRESHOLD = 50;
+const ACTIVITY_MEDIUM_THRESHOLD = 200;
+
 interface StudySessionLike {
   timestamp: string;
   score: number;
@@ -16,9 +20,9 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const dayList = Array.from({ length: 30 }).map((_, i) => {
+    const dayList = Array.from({ length: HEATMAP_DAYS }).map((_, i) => {
       const d = new Date(today);
-      d.setDate(d.getDate() - (29 - i));
+      d.setDate(d.getDate() - (HEATMAP_DAYS - 1 - i));
       return d;
     });
 
@@ -39,16 +43,16 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
         <h3 className="text-sm font-bold tracking-tight text-muted-copy">Daily Activity Streak</h3>
         <span className="text-xs font-semibold text-green-500">{sessions.length} sessions</span>
       </div>
-      <div className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar" role="list" aria-label="Daily activity for the last 30 days">
+      <div className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar" role="list" aria-label={`Daily activity for the last ${HEATMAP_DAYS} days`}>
         {days.map((day, i) => {
           const key = day.toISOString();
           const score = activityMap.get(key) || 0;
           let levelClass = 'bg-surface border border-border-soft';
-          if (score > 0 && score <= 50)
+          if (score > 0 && score <= ACTIVITY_LOW_THRESHOLD)
             levelClass = 'bg-green-200 border-green-300 dark:bg-green-900/40 dark:border-green-800';
-          if (score > 50 && score <= 200)
+          if (score > ACTIVITY_LOW_THRESHOLD && score <= ACTIVITY_MEDIUM_THRESHOLD)
             levelClass = 'bg-green-400 border-green-500 dark:bg-green-700 dark:border-green-600';
-          if (score > 200)
+          if (score > ACTIVITY_MEDIUM_THRESHOLD)
             levelClass = 'bg-green-600 border-green-700 dark:bg-green-500 dark:border-green-400';
 
           return (
@@ -60,7 +64,7 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
               className={cn(
                 'h-6 w-6 rounded-sm shrink-0 transition-all cursor-crosshair hover:scale-110',
                 levelClass,
-                i === 29 && 'ring-2 ring-primary ring-offset-1 ring-offset-background'
+                i === HEATMAP_DAYS - 1 && 'ring-2 ring-primary ring-offset-1 ring-offset-background'
               )}
             />
           );

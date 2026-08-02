@@ -8,6 +8,7 @@ import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { SkillLockedState } from '@/shared/components/SkillLockedState';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { READING_THRESHOLD, WRITING_THRESHOLD } from '@/shared/constants/progression-thresholds';
 import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import { LevelContentFilter } from '@/features/level-system';
@@ -32,9 +33,6 @@ const InterviewSimulator = lazy(() =>
     default: m.InterviewSimulator,
   }))
 );
-
-const READING_THRESHOLD = 3;
-const WRITING_THRESHOLD = 3;
 
 type SpeakingTab = 'roleplay' | 'interview' | 'defense';
 
@@ -293,10 +291,10 @@ const SpeakingPage = () => {
     return (
       <SkillLockedState
         skillName="Speaking"
-        readingDone={readingDone}
-        writingDone={writingDone}
-        readingThreshold={READING_THRESHOLD}
-        writingThreshold={WRITING_THRESHOLD}
+        prerequisites={[
+          { label: 'Reading', done: readingDone, threshold: READING_THRESHOLD },
+          { label: 'Writing', done: writingDone, threshold: WRITING_THRESHOLD },
+        ]}
         onPreview={() => setPreviewMode(true)}
         onUnlocked={() => setBypassUnlocked(true)}
       />

@@ -2,6 +2,8 @@ import React, { useEffect, useReducer } from 'react';
 
 import { logger } from '@/shared/logger';
 
+import type { LearningGoal } from '@/shared/types/domain.types';
+
 import { useAuthStore } from '@/features/auth';
 import { LearningProfileRepository, type UserLearningProfile } from '@/features/profile';
 
@@ -19,6 +21,9 @@ const loadProfileToPrefs = (profile: UserLearningProfile): Omit<ProfilePrefsStat
   careerGoal: profile.careerGoal || '',
 });
 
+const isValidLearningGoal = (value: string): value is LearningGoal =>
+  ['daily', 'work', 'engineering', 'travel', 'management'].includes(value);
+
 const buildSavePayload = (
   userId: string,
   prefGoals: string[],
@@ -29,7 +34,7 @@ const buildSavePayload = (
   prefCareerGoal: string
 ) => {
   LearningProfileRepository.updatePreferences(userId, {
-    goals: prefGoals as unknown as UserLearningProfile['goals'],
+    goals: prefGoals.filter(isValidLearningGoal),
     dailyTarget: { minutes: prefMinutes, taskCount: prefTasks },
     weeklyTolerance: { allowedMissedDays: prefMissedDays },
     experienceLevel: (prefExpLevel as UserLearningProfile['experienceLevel']) || undefined,

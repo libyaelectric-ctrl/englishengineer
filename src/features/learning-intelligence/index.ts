@@ -21,7 +21,7 @@ export {
 
 export { useLearningIntelligenceStore } from './learning-intelligence.store';
 
-export { buildReviewPriorities } from './review-priority';
+export { buildReviewPriorities, buildReviewPrioritiesFromInput } from './review-priority';
 
 export { UnifiedReviewQueueService } from './review-queue';
 

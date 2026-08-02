@@ -2,29 +2,40 @@ import { Eye, KeyRound, Lock } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import { LockProgressBar } from './LockProgressBar';
 import { PlacementBypassModal } from './PlacementBypassModal';
 
+interface Prerequisite {
+  label: string;
+  done: number;
+  threshold: number;
+  route?: string;
+}
+
 interface SkillLockedStateProps {
   skillName: string;
-  readingDone: number;
-  writingDone: number;
-  readingThreshold: number;
-  writingThreshold: number;
+  prerequisites: Prerequisite[];
+  description?: string;
+  navigationLinks?: Array<{ label: string; route: string }>;
   onPreview?: () => void;
   onUnlocked?: () => void;
 }
 
 export const SkillLockedState = ({
   skillName,
-  readingDone,
-  writingDone,
-  readingThreshold,
-  writingThreshold,
+  prerequisites,
+  description,
+  navigationLinks,
   onPreview,
   onUnlocked,
 }: SkillLockedStateProps) => {
   const [bypassModalOpen, setBypassModalOpen] = useState(false);
+
+  const defaultDescription = prerequisites
+    .map((p) => `${p.threshold} ${p.label.toLowerCase()}`)
+    .join(' and ');
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6">
@@ -32,12 +43,12 @@ export const SkillLockedState = ({
         <Lock className="mx-auto h-10 w-10 text-primary" />
         <h2 className="text-lg font-bold text-foreground">{skillName} Locked</h2>
         <p className="text-xs text-muted-copy leading-relaxed">
-          Complete {readingThreshold} readings and {writingThreshold} writings to unlock {skillName}
-          .
+          {description ?? `Learn ${defaultDescription} to unlock ${skillName}.`}
         </p>
         <div className="space-y-2 text-[10px]">
-          <LockProgressBar label="Reading" done={readingDone} total={readingThreshold} />
-          <LockProgressBar label="Writing" done={writingDone} total={writingThreshold} />
+          {prerequisites.map((p) => (
+            <LockProgressBar key={p.label} label={p.label} done={p.done} total={p.threshold} />
+          ))}
         </div>
 
         {/* Bypass & Placement Test Options */}
@@ -60,6 +71,20 @@ export const SkillLockedState = ({
               <Eye className="h-3.5 w-3.5 text-emerald-500" />
               <span>Try 1 Free Sample Preview Mission</span>
             </button>
+          )}
+
+          {navigationLinks && navigationLinks.length > 0 && (
+            <div className="flex gap-2 justify-center pt-1">
+              {navigationLinks.map((link) => (
+                <Link
+                  key={link.route}
+                  to={link.route}
+                  className="text-xs font-semibold text-primary hover:underline"
+                >
+                  Go to {link.label}
+                </Link>
+              ))}
+            </div>
           )}
         </div>
       </div>

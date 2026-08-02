@@ -44,11 +44,15 @@ export const selectVocabularyLearningSet = (
     return progress ? isVocabularyProgressDue(progress, now) : false;
   });
   const current = eligible.filter((term) => term.cefrLevel === currentLevel);
+  const currentIds = new Set(current.map((t) => t.id));
   const stretch = eligible.filter(
-    (term) => term.cefrLevel === stretchLevel && !current.includes(term)
+    (term) => term.cefrLevel === stretchLevel && !currentIds.has(term.id)
   );
+
+  const dueIds = new Set(due.map((t) => t.id));
+  const stretchIds = new Set(stretch.map((t) => t.id));
   const remaining = eligible.filter(
-    (term) => !due.includes(term) && !current.includes(term) && !stretch.includes(term)
+    (term) => !dueIds.has(term.id) && !currentIds.has(term.id) && !stretchIds.has(term.id)
   );
 
   const preferred = eligible.filter((term) => options.preferredDomains?.includes(term.domain));

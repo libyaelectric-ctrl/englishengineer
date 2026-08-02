@@ -73,6 +73,13 @@ export interface LearnedQuizCompletion {
 
 const STORAGE_KEY = 'EngVox_vocabulary_menu';
 const DAY_MS = 24 * 60 * 60 * 1000;
+const FORGOTTEN_THRESHOLD_DAYS = 60;
+const MASTERY_THRESHOLD = 3;
+const REVIEW_DAYS_AFTER_FIRST = 1;
+const REVIEW_DAYS_AFTER_SECOND = 3;
+const REVIEW_DAYS_AFTER_MASTERY = 7;
+const WRONG_REVIEWS_FOR_LEECH = 3;
+const MAX_CORRECT_ON_STRUGGLE = 2;
 
 const emptyState = (): VocabularyMenuState => ({
   progress: {},
@@ -131,7 +138,7 @@ export const isVocabularyForgotten = (
 ): boolean => {
   if (progress.isForgotten) return true;
   if (!progress.lastReviewed) return false;
-  return now.getTime() - new Date(progress.lastReviewed).getTime() >= 60 * DAY_MS;
+  return now.getTime() - new Date(progress.lastReviewed).getTime() >= FORGOTTEN_THRESHOLD_DAYS * DAY_MS;
 };
 
 export const getVocabularyReviewReason = (
@@ -160,7 +167,7 @@ const buildCorrectReviewResult = (
   now: Date
 ): VocabularyMenuProgress => {
   const correctReviews = current.correctReviews + 1;
-  const isMastered = correctReviews >= 3;
+  const isMastered = correctReviews >= MASTERY_THRESHOLD;
   return {
     correctReviews,
     wrongReviews: current.wrongReviews,
@@ -169,7 +176,7 @@ const buildCorrectReviewResult = (
     isForgotten: isMastered ? false : current.isForgotten,
     isLeech: isMastered ? false : current.isLeech,
     lastReviewed: now.toISOString(),
-    nextReviewDate: addDays(now, isMastered ? 7 : correctReviews === 2 ? 3 : 1),
+    nextReviewDate: addDays(now, isMastered ? REVIEW_DAYS_AFTER_MASTERY : correctReviews === 2 ? REVIEW_DAYS_AFTER_SECOND : REVIEW_DAYS_AFTER_FIRST),
   };
 };
 
@@ -179,11 +186,11 @@ const buildIncorrectReviewResult = (
 ): VocabularyMenuProgress => {
   const wrongReviews = current.wrongReviews + 1;
   const tentative: VocabularyMenuProgress = {
-    correctReviews: Math.min(current.correctReviews, 2),
+    correctReviews: Math.min(current.correctReviews, MAX_CORRECT_ON_STRUGGLE),
     wrongReviews,
     status: 'Struggling',
     isWeak: true,
-    isForgotten: current.status === 'Mastered' || wrongReviews >= 3,
+    isForgotten: current.status === 'Mastered' || wrongReviews >= WRONG_REVIEWS_FOR_LEECH,
     isLeech: current.isLeech,
     lastReviewed: now.toISOString(),
     nextReviewDate: now.toISOString(),
@@ -414,13 +421,13 @@ export const VocabularyMenuService = {
       if (!current || current.status !== 'Learned') return;
       updatedProgress[wordId] = {
         ...current,
-        correctReviews: Math.max(3, current.correctReviews + 1),
+        correctReviews: Math.max(MASTERY_THRESHOLD, current.correctReviews + 1),
         status: 'Mastered',
         isWeak: false,
         isForgotten: false,
         isLeech: false,
         lastReviewed: now.toISOString(),
-        nextReviewDate: addDays(now, 7),
+        nextReviewDate: addDays(now, REVIEW_DAYS_AFTER_MASTERY),
       };
       newlyMastered.push(wordId);
     });
@@ -431,11 +438,11 @@ export const VocabularyMenuService = {
       const wrongReviews = current.wrongReviews + 1;
       const next: VocabularyMenuProgress = {
         ...current,
-        correctReviews: Math.min(current.correctReviews, 2),
+        correctReviews: Math.min(current.correctReviews, MAX_CORRECT_ON_STRUGGLE),
         wrongReviews,
         status: 'Struggling',
         isWeak: true,
-        isForgotten: wrongReviews >= 3,
+        isForgotten: wrongReviews >= WRONG_REVIEWS_FOR_LEECH,
         lastReviewed: now.toISOString(),
         nextReviewDate: now.toISOString(),
       };

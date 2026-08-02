@@ -1,5 +1,7 @@
 import { logger } from '@/shared/logger';
 
+import { openIDB } from '@/shared/utils/idb-helper';
+
 import { storage } from './index';
 
 const DB_NAME = 'engineeros-db';
@@ -7,36 +9,16 @@ const DB_VERSION = 1;
 const LARGE_DATA_STORES = ['vocabulary', 'learning', 'grammar'] as const;
 type LargeDataStore = (typeof LARGE_DATA_STORES)[number];
 
-let dbInstance: IDBDatabase | null = null;
-
-const openDB = (): Promise<IDBDatabase> => {
-  if (dbInstance) return Promise.resolve(dbInstance);
-  if (typeof indexedDB === 'undefined') {
-    return Promise.reject(new Error('IndexedDB not available'));
+const ensureStores = (db: IDBDatabase): void => {
+  for (const store of LARGE_DATA_STORES) {
+    if (!db.objectStoreNames.contains(store)) {
+      db.createObjectStore(store, { keyPath: 'key' });
+    }
   }
-
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      for (const store of LARGE_DATA_STORES) {
-        if (!db.objectStoreNames.contains(store)) {
-          db.createObjectStore(store, { keyPath: 'key' });
-        }
-      }
-    };
-
-    request.onsuccess = () => {
-      dbInstance = request.result;
-      resolve(dbInstance);
-    };
-
-    request.onerror = () => {
-      reject(request.error);
-    };
-  });
 };
+
+const openDB = (): Promise<IDBDatabase> =>
+  openIDB({ dbName: DB_NAME, dbVersion: DB_VERSION, onUpgrade: ensureStores });
 
 interface IDBEntry<T> {
   key: string;
