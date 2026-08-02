@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import {
   type InterviewQuestion,
   type InterviewScore,
   type InterviewSession,
   InterviewSimulatorService,
   type InterviewType,
-} from '../../interview-simulator';
+} from '../../simulator/interview-simulator';
 import { startSpeechRecognition } from '../interview.utils';
-import { SelectView } from './SelectView';
-import { ResultsView } from './ResultsView';
 import { InterviewView } from './InterviewView';
+import { ResultsView } from './ResultsView';
+import { SelectView } from './SelectView';
 
 type InterviewState = 'select' | 'interview' | 'results';
 

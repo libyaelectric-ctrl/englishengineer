@@ -1,7 +1,7 @@
 import { FileText, MessageSquareText, Mic, RotateCcw, ShieldCheck, Trophy } from 'lucide-react';
 
 import type { JSX } from 'react';
-import { lazy, Suspense, useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
 import { ScoreFeedbackOverlay } from '@/shared/components/ScoreFeedbackOverlay';
@@ -14,7 +14,7 @@ import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 import { LevelContentFilter } from '@/features/level-system';
 import { useReadingStore } from '@/features/reading';
 import { SPEAKING_MVP_MODE } from '@/features/speaking';
-import { DefenseSimulator } from '@/features/speaking/DefenseSimulator';
+import { DefenseSimulator } from '@/features/speaking/simulator/DefenseSimulator';
 import { useWritingStore } from '@/features/writing/writing.store';
 
 import {

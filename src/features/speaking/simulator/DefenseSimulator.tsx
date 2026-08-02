@@ -87,13 +87,39 @@ export const DefenseSimulator = () => {
     if (evalTimerRef.current) clearTimeout(evalTimerRef.current);
     evalTimerRef.current = setTimeout(() => {
       const inputLength = userSpeechText.length || Math.floor(Math.random() * 80) + 40;
-      const hasTechnicalTerms = /\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation|C\d{2}\/\d{2})\b/i.test(userSpeechText);
-      const wordCount = userSpeechText.split(/\s+/).filter(Boolean).length || Math.floor(inputLength / 6);
-      const score = Math.min(98, Math.max(45, (wordCount > 30 ? 25 : wordCount > 15 ? 15 : 0) + (hasTechnicalTerms ? 30 : 10) + Math.floor(Math.random() * 20) + 30));
-      const fluency = score >= 85 ? 'C1 Fluent' : score >= 70 ? 'B2 Competent' : score >= 55 ? 'B1 Developing' : 'A2 Basic';
+      const hasTechnicalTerms =
+        /\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation|C\d{2}\/\d{2})\b/i.test(
+          userSpeechText
+        );
+      const wordCount =
+        userSpeechText.split(/\s+/).filter(Boolean).length || Math.floor(inputLength / 6);
+      const score = Math.min(
+        98,
+        Math.max(
+          45,
+          (wordCount > 30 ? 25 : wordCount > 15 ? 15 : 0) +
+            (hasTechnicalTerms ? 30 : 10) +
+            Math.floor(Math.random() * 20) +
+            30
+        )
+      );
+      const fluency =
+        score >= 85
+          ? 'C1 Fluent'
+          : score >= 70
+            ? 'B2 Competent'
+            : score >= 55
+              ? 'B1 Developing'
+              : 'A2 Basic';
 
-      const technicalWords = userSpeechText.match(/\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation)\b/gi) || [];
-      const vocabHighlight = technicalWords.length > 0 ? `Strong (${technicalWords.slice(0, 3).join(', ')})` : 'Developing — try using more technical terminology';
+      const technicalWords =
+        userSpeechText.match(
+          /\b(critical\s+path|mobiliz|commissioning|arbitration|sub[\s-]?clause|unit\s+rate|ductwork|excavation|concrete|load\s+calculation)\b/gi
+        ) || [];
+      const vocabHighlight =
+        technicalWords.length > 0
+          ? `Strong (${technicalWords.slice(0, 3).join(', ')})`
+          : 'Developing — try using more technical terminology';
 
       const feedbackByScore =
         score >= 85
@@ -103,7 +129,8 @@ export const DefenseSimulator = () => {
             : `Your answer needs more structure. Start with the problem, explain your mitigation strategy, and conclude with a recovery timeline.`;
 
       setUserSpeechText(
-        userSpeechText || 'I will review the current status and provide an updated recovery plan by end of business tomorrow.'
+        userSpeechText ||
+          'I will review the current status and provide an updated recovery plan by end of business tomorrow.'
       );
       setEvaluation({ score, fluency, vocabulary: vocabHighlight, feedback: feedbackByScore });
     }, 1200);

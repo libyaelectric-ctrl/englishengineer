@@ -1,8 +1,10 @@
 import { RotateCcw, Trophy } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';
 import { SectionCard } from '@/shared/components/SectionCard';
-import type { InterviewScore, InterviewSession } from '../../interview-simulator';
+
+import type { InterviewScore, InterviewSession } from '../../simulator/interview-simulator';
 
 export const ResultsView = ({
   session,
