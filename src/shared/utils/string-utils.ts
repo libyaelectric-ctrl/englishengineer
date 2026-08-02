@@ -1,11 +1,19 @@
+const levenshteinCache = new Map<string, number>();
+const MAX_LEVENSHTEIN_CACHE_SIZE = 1000;
+
 /**
  * Calculates Levenshtein similarity between two strings.
  * Returns a value between 0 (completely different) and 1 (identical).
+ * Results are cached in a LRU-bounded map for performance.
  */
 export function levenshteinSimilarity(a: string, b: string): number {
   const s1 = a.toLowerCase().trim();
   const s2 = b.toLowerCase().trim();
   if (s1 === s2) return 1;
+
+  const cacheKey = s1 < s2 ? `${s1}::${s2}` : `${s2}::${s1}`;
+  const cached = levenshteinCache.get(cacheKey);
+  if (cached !== undefined) return cached;
 
   const matrix: number[][] = [];
   for (let i = 0; i <= s1.length; i++) matrix[i] = [i];
@@ -21,7 +29,15 @@ export function levenshteinSimilarity(a: string, b: string): number {
     }
   }
   const maxLen = Math.max(s1.length, s2.length);
-  return maxLen === 0 ? 1 : 1 - matrix[s1.length][s2.length] / maxLen;
+  const result = maxLen === 0 ? 1 : 1 - matrix[s1.length][s2.length] / maxLen;
+
+  if (levenshteinCache.size >= MAX_LEVENSHTEIN_CACHE_SIZE) {
+    const firstKey = levenshteinCache.keys().next().value;
+    if (firstKey) levenshteinCache.delete(firstKey);
+  }
+  levenshteinCache.set(cacheKey, result);
+
+  return result;
 }
 
 /**
@@ -59,5 +75,20 @@ export function getCefrBadgeStyles(level: string): string {
     case 'B1':
     default:
       return 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400';
+  }
+}
+
+/**
+ * Returns status color string for progress bars or indicator dots based on difficulty.
+ */
+export function getDifficultyColor(difficulty: string): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
+  switch (difficulty.toLowerCase()) {
+    case 'advanced':
+      return 'rose';
+    case 'intermediate':
+      return 'amber';
+    case 'beginner':
+    default:
+      return 'emerald';
   }
 }

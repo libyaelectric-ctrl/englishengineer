@@ -1,14 +1,14 @@
 import { useGrammarStore } from '@/features/grammar';
 import { PageContainer } from '@/shared/components/PageContainer';
 
-import { GrammarEnhancementPanel } from './GrammarPage/GrammarEnhancementPanel';
-import { GrammarHeader } from './GrammarPage/GrammarHeader';
-import { GrammarLessonContent } from './GrammarPage/GrammarLessonContent';
-import { GrammarLessonMap } from './GrammarPage/GrammarLessonMap';
-import { GrammarNextStep } from './GrammarPage/GrammarNextStep';
-import { getModuleLabel } from './GrammarPage/GrammarPageHelpers';
-import { GrammarReviewQueue } from './GrammarPage/GrammarReviewQueue';
-import { useGrammarPage } from './GrammarPage/hooks/useGrammarPage';
+import { GrammarEnhancementPanel } from './GrammarEnhancementPanel';
+import { GrammarHeader } from './GrammarHeader';
+import { GrammarLessonContent } from './GrammarLessonContent';
+import { GrammarLessonMap } from './GrammarLessonMap';
+import { GrammarNextStep } from './GrammarNextStep';
+import { getModuleLabel } from './GrammarPageHelpers';
+import { GrammarReviewQueue } from './GrammarReviewQueue';
+import { useGrammarPage } from './hooks/useGrammarPage';
 
 const getSelectedStatus = (progress: ReturnType<typeof useGrammarPage>['selectedProgress']) => {
   if (!progress) return 'New' as const;

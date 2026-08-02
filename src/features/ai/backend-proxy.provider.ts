@@ -343,7 +343,8 @@ export const createBackendProxyProvider = (proxyUrl: string | null): AIProvider 
 
     while (retryCount <= MAX_RETRIES) {
       try {
-        const data = await executeSingleAttempt(proxyUrl!, operation, requestId, payload);
+        const url = proxyUrl || '';
+        const data = await executeSingleAttempt(url, operation, requestId, payload);
         return buildSuccessResponse(data, operation, requestId, status, startedAt, retryCount);
       } catch (error) {
         lastError = error instanceof BackendProxyError ? error : mapUnknownError(error);

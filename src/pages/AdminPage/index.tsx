@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { AdminHeader } from './AdminPage/AdminHeader';
-import { BillingTab } from './AdminPage/BillingTab';
-import { StatsGrid } from './AdminPage/StatsGrid';
-import { SystemTab } from './AdminPage/SystemTab';
-import { UsersTab } from './AdminPage/UsersTab';
+import { AdminHeader } from './AdminHeader';
+import { BillingTab } from './BillingTab';
+import { StatsGrid } from './StatsGrid';
+import { SystemTab } from './SystemTab';
+import { UsersTab } from './UsersTab';
 
 interface UserRecord {
   id: string;

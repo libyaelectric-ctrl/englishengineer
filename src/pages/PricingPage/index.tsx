@@ -26,16 +26,16 @@ import { Navbar } from '@/pages/LandingPage/Navbar';
 import { PricingAddonsCard } from '@/pages/LandingPage/PricingAddonsCard';
 import { SalesChatModal } from '@/pages/LandingPage/SalesChatModal';
 
-import { DpaContractGeneratorModal } from './PricingPage/DpaContractGeneratorModal';
-import { EnterpriseQuoteCalculatorModal } from './PricingPage/EnterpriseQuoteCalculatorModal';
-import { InvoiceTaxManagerModal } from './PricingPage/InvoiceTaxManagerModal';
-import { SecurityWhitepaperModal } from './PricingPage/SecurityWhitepaperModal';
-import { SlaGuaranteeMatrix } from './PricingPage/SlaGuaranteeMatrix';
-import { TrustCenterBadges } from './PricingPage/TrustCenterBadges';
+import { DpaContractGeneratorModal } from './DpaContractGeneratorModal';
+import { EnterpriseQuoteCalculatorModal } from './EnterpriseQuoteCalculatorModal';
+import { InvoiceTaxManagerModal } from './InvoiceTaxManagerModal';
+import { SecurityWhitepaperModal } from './SecurityWhitepaperModal';
+import { SlaGuaranteeMatrix } from './SlaGuaranteeMatrix';
+import { TrustCenterBadges } from './TrustCenterBadges';
 
-import { ACTIVE_PLANS, HIGHLIGHTED_PLANS, PLAN_BADGES, COMPARISON_ROWS } from './PricingPage/pricing.constants';
-import { getErrorMessage, isPlanUnavailable, getAccessBadge, getCalculatedPrice } from './PricingPage/pricing.utils';
-import { FreePlanButton, PlanAction } from './PricingPage/PlanAction';
+import { ACTIVE_PLANS, HIGHLIGHTED_PLANS, PLAN_BADGES, COMPARISON_ROWS } from './pricing.constants';
+import { getErrorMessage, isPlanUnavailable, getAccessBadge, getCalculatedPrice } from './pricing.utils';
+import { FreePlanButton, PlanAction } from './PlanAction';
 
 const PricingPage = () => {
   const navigate = useNavigate();

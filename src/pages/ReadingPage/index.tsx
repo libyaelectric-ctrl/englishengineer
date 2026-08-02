@@ -22,10 +22,10 @@ import {
 import type { VocabularyItem } from '@/features/reading';
 import { useVocabularyStore } from '@/features/vocabulary/store/vocabulary.store';
 
-import { ReadingMissionCard } from './ReadingPage/ReadingMissionCard';
-import { ReadingWorkspace } from './ReadingPage/ReadingWorkspace';
-import { ReaderView } from './ReadingPage/components/ReaderView';
-import { useReadingPage } from './ReadingPage/hooks/useReadingPage';
+import { ReadingMissionCard } from './ReadingMissionCard';
+import { ReadingWorkspace } from './ReadingWorkspace';
+import { ReaderView } from './components/ReaderView';
+import { useReadingPage } from './hooks/useReadingPage';
 
 const EmptyMissionView = ({
   levelFilter,
