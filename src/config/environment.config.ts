@@ -1,5 +1,7 @@
 import { logger } from '@/shared/logger';
 
+import { PRODUCT_VERSION } from './product.config';
+
 export interface EngVoxEnv {
   VITE_APP_VERSION?: string;
   VITE_ENVIRONMENT_MODE?: string;
@@ -138,7 +140,7 @@ const collectEnvironmentErrors = (
 const readEnvValues = (source: EngVoxEnv | undefined) => {
   const v = source ?? {};
   return {
-    appVersion: v.VITE_APP_VERSION || '2.4.7',
+    appVersion: v.VITE_APP_VERSION || PRODUCT_VERSION,
     aiProvider: v.VITE_AI_PROVIDER || 'mock',
     authProvider: v.VITE_AUTH_PROVIDER || 'local',
     hasAiProxyUrl: isConfiguredPublicUrl(v.VITE_AI_PROXY_URL),

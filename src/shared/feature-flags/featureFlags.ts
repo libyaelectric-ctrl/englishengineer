@@ -7,6 +7,8 @@
  *   if (isFeatureEnabled('newDashboard')) { ... }
  */
 
+import { storage } from '@/shared/storage';
+
 export type FeatureFlag =
   | 'aiClaudeProvider'
   | 'aiOpenAIProvider'
@@ -148,11 +150,8 @@ function getEnvironment(): 'development' | 'staging' | 'production' {
 
 function getCurrentUserId(): string | null {
   try {
-    const userStr = localStorage.getItem('auth_user');
-    if (userStr) {
-      const parsed = JSON.parse(userStr);
-      if (parsed?.id) return String(parsed.id);
-    }
+    const parsed = storage.get<Record<string, unknown>>('auth_user');
+    if (parsed?.id) return String(parsed.id);
   } catch {
     // ignore
   }

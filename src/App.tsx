@@ -6,7 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { ToastContainer } from '@/shared/components/Toast';
 
-export const App = () => {
+export default function App() {
   return (
     <Sentry.ErrorBoundary fallback={<div>An error occurred. Please refresh the page.</div>}>
       <AppProvider>
@@ -15,6 +15,4 @@ export const App = () => {
       </AppProvider>
     </Sentry.ErrorBoundary>
   );
-};
-
-export default App;
+}
