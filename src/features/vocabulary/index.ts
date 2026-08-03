@@ -21,7 +21,7 @@ export {
 
 export { isVocabularyTerm, assertVocabularyTerms } from './types/vocabulary.schema';
 
-export { VocabularyRepository } from './services/vocabulary.repository';
+export { VocabularyRepository } from './services/core/vocabulary.repository';
 
 export { VocabularyEngine } from './engine/vocabulary.engine';
 
@@ -54,7 +54,7 @@ export {
   getSessionPriorityLabel,
 } from './engine/vocabulary.session-optimizer';
 
-export { VocabularyService } from './services/vocabulary.service';
+export { VocabularyService } from './services/core/vocabulary.service';
 
 export { useVocabularyStore } from './store/vocabulary.store';
 
@@ -62,39 +62,43 @@ export {
   isVocabularyWordDue,
   filterMyVocabulary,
   VocabularyMemoryService,
-} from './services/vocabulary.memory';
+} from './services/core/vocabulary.memory';
 
 export {
   type VocabularySyncState,
   type SyncConflict,
   VocabularySyncService,
-} from './services/vocabulary.sync';
+} from './services/core/vocabulary.sync';
 
 export {
   type ReviewReminderSettings,
   type ReviewReminderStatus,
   ReviewReminderService,
-} from './services/vocabulary.reminder';
+} from './services/engagement/vocabulary.reminder';
 
 export {
   type VocabularyBadge,
   type VocabularyStats,
   type BadgeUnlockResult,
   VocabularyBadgeService,
-} from './services/vocabulary.badges';
+} from './services/engagement/vocabulary.badges';
 
 export {
   type SentenceExample,
   type GenerateSentencesResult,
   SentenceGeneratorService,
-} from './services/vocabulary.sentences';
+} from './services/content/vocabulary.sentences';
 
 export {
   type PronunciationResult,
   PronunciationService,
-} from './services/vocabulary.pronunciation';
+} from './services/content/vocabulary.pronunciation';
 
-export { type CsvWord, type ImportResult, VocabularyCsvService } from './services/vocabulary.csv';
+export {
+  type CsvWord,
+  type ImportResult,
+  VocabularyCsvService,
+} from './services/content/vocabulary.csv';
 
 export { useVocabularyMemoryStore } from './store/vocabulary.memory.store';
 
@@ -103,7 +107,7 @@ export {
   lookupExternalVocabulary,
   isExternalVocabularyResult,
   clearVocabularyLookupCache,
-} from './services/vocabulary.search';
+} from './services/content/vocabulary.search';
 
 export {
   createInitialReviewState,
@@ -135,9 +139,9 @@ export {
   getVocabularyMenuStatus,
   searchVocabularyMenu,
   VocabularyMenuService,
-} from './services/vocabulary.menu';
+} from './services/core/vocabulary.menu';
 
 export {
   type VocabularyLearningSetOptions,
   selectVocabularyLearningSet,
-} from './services/vocabulary.selection';
+} from './services/core/vocabulary.selection';

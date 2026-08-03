@@ -1,6 +1,6 @@
 import { storage } from '@/shared/storage';
 
-import type { VocabularyMenuProgress, VocabularyMenuState } from '../services/vocabulary.menu';
+import type { VocabularyMenuProgress, VocabularyMenuState } from './vocabulary.menu';
 
 const SYNC_STORAGE_KEY = 'EngVox_vocabulary_sync';
 const SYNC_timestamp_KEY = 'EngVox_vocabulary_sync_timestamp';

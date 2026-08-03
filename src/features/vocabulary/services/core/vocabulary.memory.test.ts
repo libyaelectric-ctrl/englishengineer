@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
-import { loadVocabularyEntries } from '../data/vocabulary.data';
-import { VocabularyEntry } from '../types/vocabulary.types';
+import { loadVocabularyEntries } from '../../data/vocabulary.data';
+import { VocabularyEntry } from '../../types/vocabulary.types';
 import { VocabularyMemoryService, filterMyVocabulary } from './vocabulary.memory';
 
 let entries: VocabularyEntry[] = [];

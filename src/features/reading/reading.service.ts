@@ -9,7 +9,7 @@ import { useLearningStore } from '@/core/learning';
 import { storage } from '@/shared/storage';
 
 import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
 
 import { READING_MISSIONS } from './reading.data';
 import { ReadingEvaluator } from './reading.evaluator';
@@ -70,9 +70,7 @@ export const ReadingService = {
     return getReadingCatalog();
   },
 
-  getMissionsSortedByPoolRatio(
-    pool: KnowledgePoolEntry[] = []
-  ): ReadingMission[] {
+  getMissionsSortedByPoolRatio(pool: KnowledgePoolEntry[] = []): ReadingMission[] {
     return sortContentByPoolRatio(this.getMissions(), pool);
   },
 
