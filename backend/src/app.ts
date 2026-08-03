@@ -14,6 +14,7 @@ import type Stripe from 'stripe';
 import type { BackendConfig } from '../types.js';
 import { registerAdminRoutes } from './admin-routes.js';
 import { createAIService, registerAIRoutes } from './ai.js';
+import { recordEndpoint } from './api-metrics.js';
 import { initAuditLog } from './audit-log.js';
 import { createBackendAuth } from './auth.js';
 import type { BackendAuthConfig } from './auth.js';
@@ -34,6 +35,7 @@ import {
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
 import { requireTenantContext } from './middleware/tenant.middleware.js';
+import { getPerformanceMetrics, recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
 import { getPrometheusMetrics } from './prometheus.js';
 import { createRateLimitStore, createRateLimiter } from './rate-limit.js';
@@ -164,10 +166,16 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
   ];
   app.use(helmet(SECURITY_HEADERS as Parameters<typeof helmet>[0]));
 
+  const configuredOrigins = [config.appOrigin, ...(config.corsAllowedOrigins || [])].filter(
+    Boolean
+  ) as string[];
+
   const allowedOrigins = [
-    config.appOrigin,
-    'https://englishengineer.vercel.app',
-    'https://www.englishengineer.vercel.app',
+    ...new Set([
+      ...configuredOrigins,
+      'https://englishengineer.vercel.app',
+      'https://www.englishengineer.vercel.app',
+    ]),
   ].filter(Boolean) as string[];
 
   if (config.environment === 'production') {
@@ -216,7 +224,10 @@ const setupMiddleware = (app: Express, config: BackendConfig) => {
     const start = process.hrtime();
     res.on('finish', () => {
       const diff = process.hrtime(start);
-      const timeMs = (diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2);
+      const timeMs = parseFloat((diff[0] * 1e3 + diff[1] * 1e-6).toFixed(2));
+      const isError = res.statusCode >= 400;
+      recordRequest(timeMs, isError);
+      recordEndpoint(req.method, req.route?.path || req.originalUrl, timeMs, isError);
       logger.info('Timing', {
         method: req.method,
         path: req.originalUrl,
@@ -345,12 +356,13 @@ const registerRoutes = (
     use: (...args: (string | RequestHandler)[]) => {
       if (typeof args[0] === 'string') {
         const path = args[0];
-        const handlers = args.slice(1);
+        const handlers = args.slice(1) as RequestHandler[];
         v1Router.use(adaptPath(path), ...handlers);
         app.use(path, ...handlers);
       } else {
-        v1Router.use(...args);
-        app.use(...args);
+        const handlers = args as unknown as RequestHandler[];
+        v1Router.use(...handlers);
+        app.use(...handlers);
       }
       return v1RouterAdapter;
     },

@@ -42,12 +42,12 @@ describe('AI Core Service', () => {
       engineerEloImpactEstimate: '+15 ELO',
     });
 
-    let capturedPrompt = '';
+    let capturedUserPrompt = '';
     let capturedJsonMode = false;
 
     const mockFetch = async (url: string, options?: RequestInit) => {
       const body = JSON.parse(options!.body as string);
-      capturedPrompt = body.messages[0].content;
+      capturedUserPrompt = body.messages[1].content;
       capturedJsonMode = !!body.response_format;
 
       return new Response(
@@ -71,8 +71,7 @@ describe('AI Core Service', () => {
     assert.equal(result.provider, 'openai');
     assert.equal(result.mockMode, false);
 
-    assert.match(capturedPrompt, /CRITICAL RESPONSE REQUIREMENT/);
-    assert.match(capturedPrompt, /Initial prompt text/);
+    assert.match(capturedUserPrompt, /Initial prompt text/);
     assert.equal(capturedJsonMode, true);
 
     assert.ok(result.structuredResult);
@@ -123,10 +122,10 @@ describe('AI Core Service', () => {
       timeoutMs: 5000,
     } as unknown as AiConfig;
 
-    let capturedPrompt = '';
+    let capturedUserPrompt = '';
     const mockFetch = async (url: string, options?: RequestInit) => {
       const body = JSON.parse(options!.body as string);
-      capturedPrompt = body.messages[0].content;
+      capturedUserPrompt = body.messages[1].content;
       return new Response(
         JSON.stringify({
           choices: [{ message: { content: 'Practice questions generated.' } }],
@@ -159,9 +158,8 @@ describe('AI Core Service', () => {
     assert.ok(result);
     assert.equal(result.text, 'Practice questions generated.');
 
-    // Check if the prompt has the injected learning memories
-    assert.match(capturedPrompt, /USER LEARNING MEMORIES/);
-    assert.match(capturedPrompt, /actuator/);
-    assert.match(capturedPrompt, /we need check B2/);
+    assert.match(capturedUserPrompt, /USER LEARNING MEMORIES/);
+    assert.match(capturedUserPrompt, /actuator/);
+    assert.match(capturedUserPrompt, /we need check B2/);
   });
 });

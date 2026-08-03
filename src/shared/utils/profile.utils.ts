@@ -1,5 +1,5 @@
+import { INITIAL_ELO } from '@/shared/constants/elo.constants';
 import type { CefrLevel } from '@/shared/types/domain.types';
-
 import {
   type AdaptivePaceDecision,
   type AdaptivePaceInput,
@@ -11,7 +11,7 @@ import {
   type UserLearningProfile,
 } from '@/shared/types/domain.types';
 
-export const MIN_SKILL_ELO = 1000;
+export const MIN_SKILL_ELO = INITIAL_ELO;
 export const MAX_SKILL_ELO = 5000;
 export const MEMORY_BANK_WEIGHT = 0.7;
 export const CURRENT_LEVEL_NEW_WEIGHT = 0.2;

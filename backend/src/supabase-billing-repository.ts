@@ -114,7 +114,7 @@ export const createSupabaseBillingRepository = (
         });
       }
       const err = new Error(
-        `Supabase billing repository request failed with status ${response.status}. Details: ${bodyText}`
+        `Supabase billing repository request failed with status ${response.status}`
       ) as Error & { status: number };
       err.status = response.status;
       throw err;

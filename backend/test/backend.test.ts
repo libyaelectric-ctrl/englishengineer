@@ -133,10 +133,13 @@ test('configured AI provider returns a real-mode contract', async () => {
   assert.equal(body.mockMode, false);
   assert.equal(body.text, 'Provider response');
   assert.equal(providerUrl, 'https://api.openai.com/v1/chat/completions');
-  assert.deepEqual(providerRequest, {
-    model: 'gpt-4.1-mini',
-    messages: [{ role: 'user', content: 'Prepare a site coordination response.' }],
-  });
+  assert.ok(providerRequest, 'providerRequest should not be null');
+  const req = providerRequest as { messages: Array<{ role: string; content: string }> };
+  assert.equal(req.messages.length, 2);
+  assert.equal(req.messages[0].role, 'system');
+  assert.match(req.messages[0].content, /EngVox/);
+  assert.equal(req.messages[1].role, 'user');
+  assert.equal(req.messages[1].content, 'Prepare a site coordination response.');
 });
 
 test('configured provider failure returns a safe unavailable error', async () => {

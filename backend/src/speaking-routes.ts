@@ -24,6 +24,143 @@ const ALLOWED_AUDIO_TYPES: Record<string, string> = {
 
 const MAX_AUDIO_BYTES = 15 * 1024 * 1024; // 15MB, generous for a few minutes of speech
 
+interface SpeakingPrompt {
+  id: string;
+  title: string;
+  category: string;
+  level: string;
+  prompt: string;
+  durationHint: string;
+}
+
+interface SpeakingSubmission {
+  id: string;
+  promptId: string;
+  audioUrl: string;
+  overallScore: number;
+  pronunciationScore: number;
+  fluencyScore: number;
+  grammarScore: number;
+  vocabularyScore: number;
+  feedback: Record<string, string>;
+  status: 'graded';
+  submittedAt: string;
+}
+
+const SPEAKING_PROMPTS: SpeakingPrompt[] = [
+  {
+    id: 'sp-001',
+    title: 'Describe a Project You Worked On',
+    category: 'professional',
+    level: 'B1',
+    prompt:
+      'Describe a recent engineering project you were involved in. Explain your role, the challenges you faced, and the outcome.',
+    durationHint: '2-3 minutes',
+  },
+  {
+    id: 'sp-002',
+    title: 'Explain a Technical Concept',
+    category: 'technical',
+    level: 'B2',
+    prompt:
+      'Explain the concept of torque to a non-engineer. Use everyday examples to make your explanation clear.',
+    durationHint: '2-3 minutes',
+  },
+  {
+    id: 'sp-003',
+    title: 'Report a Workplace Issue',
+    category: 'professional',
+    level: 'B1',
+    prompt:
+      'You have noticed a safety hazard in your workplace. Describe the issue and explain what steps should be taken to address it.',
+    durationHint: '1-2 minutes',
+  },
+  {
+    id: 'sp-004',
+    title: 'Present a Design Proposal',
+    category: 'technical',
+    level: 'C1',
+    prompt:
+      'Present a brief proposal for redesigning a common household tool to improve its usability. Describe the current problems and your solution.',
+    durationHint: '3-4 minutes',
+  },
+  {
+    id: 'sp-005',
+    title: 'Discuss Sustainable Practices',
+    category: 'professional',
+    level: 'B2',
+    prompt:
+      'Discuss how engineers can incorporate sustainable practices into their daily work. Provide specific examples from your field.',
+    durationHint: '2-3 minutes',
+  },
+  {
+    id: 'sp-006',
+    title: 'Troubleshooting Scenario',
+    category: 'technical',
+    level: 'B1',
+    prompt:
+      'A hydraulic pump in your system is making unusual noises and not maintaining pressure. Walk through your troubleshooting steps.',
+    durationHint: '2-3 minutes',
+  },
+  {
+    id: 'sp-007',
+    title: 'Team Meeting Discussion',
+    category: 'professional',
+    level: 'B2',
+    prompt:
+      'You are leading a project status meeting. Summarize the current progress, highlight two risks, and propose mitigation strategies.',
+    durationHint: '3-4 minutes',
+  },
+  {
+    id: 'sp-008',
+    title: 'Explain a Reading or Lecture',
+    category: 'technical',
+    level: 'C1',
+    prompt:
+      'Summarize the key findings from a recent technical paper or lecture you attended. Explain why these findings are significant for your field.',
+    durationHint: '3-4 minutes',
+  },
+];
+
+// Per-user submission store
+const submissionStore = new Map<string, SpeakingSubmission[]>();
+
+function getUserSubmissions(userId: string): SpeakingSubmission[] {
+  if (!submissionStore.has(userId)) {
+    submissionStore.set(userId, []);
+  }
+  return submissionStore.get(userId)!;
+}
+
+function mockScore(): Omit<
+  SpeakingSubmission,
+  'id' | 'promptId' | 'audioUrl' | 'submittedAt' | 'status'
+> {
+  const pronunciationScore = 65 + Math.floor(Math.random() * 30);
+  const fluencyScore = 60 + Math.floor(Math.random() * 35);
+  const grammarScore = 62 + Math.floor(Math.random() * 33);
+  const vocabularyScore = 64 + Math.floor(Math.random() * 31);
+  const overallScore = Math.round(
+    (pronunciationScore + fluencyScore + grammarScore + vocabularyScore) / 4
+  );
+
+  const feedback: Record<string, string> = {};
+  if (pronunciationScore < 75) feedback.pronunciation = 'Focus on clearer consonant sounds.';
+  if (fluencyScore < 75) feedback.fluency = 'Try to reduce pauses between sentences.';
+  if (grammarScore < 75) feedback.grammar = 'Watch your verb tense consistency.';
+  if (vocabularyScore < 75) feedback.vocabulary = 'Incorporate more domain-specific terminology.';
+  if (overallScore >= 85) feedback.overall = 'Great performance! Keep refining your delivery.';
+
+  return {
+    overallScore,
+    pronunciationScore,
+    fluencyScore,
+    grammarScore,
+    vocabularyScore,
+    feedback,
+  };
+}
+
 export const registerSpeakingRoutes = (app: Express, requireBackendAuth: RequestHandler): void => {
   // Raw audio body parser scoped ONLY to this route -- does not affect the
   // rest of the app's express.json() parsing.
@@ -85,7 +222,10 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
         const limit = Number(request.query.limit) || 10;
         const offset = Number(request.query.offset) || 0;
-        response.json({ items: [], total: 0, limit, offset });
+
+        const paginated = SPEAKING_PROMPTS.slice(offset, offset + limit);
+
+        response.json({ items: paginated, total: SPEAKING_PROMPTS.length, limit, offset });
       } catch (error) {
         next(error);
       }
@@ -100,12 +240,36 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
       try {
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
-        response.json({
-          success: true,
-          id: 'mock-id',
-          overallScore: 0,
+
+        const { promptId, audioUrl } = request.validatedBody as {
+          promptId?: string;
+          audioUrl?: string;
+        };
+        const scoring = mockScore();
+        const submissionId = randomUUID();
+
+        const submission: SpeakingSubmission = {
+          id: submissionId,
+          promptId: promptId ?? 'unknown',
+          audioUrl: audioUrl ?? '',
+          overallScore: scoring.overallScore,
+          pronunciationScore: scoring.pronunciationScore,
+          fluencyScore: scoring.fluencyScore,
+          grammarScore: scoring.grammarScore,
+          vocabularyScore: scoring.vocabularyScore,
+          feedback: scoring.feedback,
           status: 'graded',
           submittedAt: new Date().toISOString(),
+        };
+
+        getUserSubmissions(userId).push(submission);
+
+        response.json({
+          success: true,
+          id: submissionId,
+          overallScore: scoring.overallScore,
+          status: 'graded' as const,
+          submittedAt: submission.submittedAt,
         });
       } catch (error) {
         next(error);
@@ -120,7 +284,32 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
       try {
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
-        response.json({ totalSubmissions: 0, averageScore: 0, byCategory: {} });
+
+        const subs = getUserSubmissions(userId);
+        const totalSubmissions = subs.length;
+        const averageScore =
+          totalSubmissions > 0
+            ? Math.round(
+                (subs.reduce((s, sub) => s + sub.overallScore, 0) / totalSubmissions) * 10
+              ) / 10
+            : 0;
+
+        const byCategory: Record<string, { count: number; avgScore: number }> = {};
+        const catMap = new Map<string, number[]>();
+        for (const sub of subs) {
+          const prompt = SPEAKING_PROMPTS.find((p) => p.id === sub.promptId);
+          const cat = prompt?.category ?? 'general';
+          if (!catMap.has(cat)) catMap.set(cat, []);
+          catMap.get(cat)!.push(sub.overallScore);
+        }
+        for (const [cat, scores] of catMap) {
+          byCategory[cat] = {
+            count: scores.length,
+            avgScore: Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10,
+          };
+        }
+
+        response.json({ totalSubmissions, averageScore, byCategory });
       } catch (error) {
         next(error);
       }
@@ -134,7 +323,17 @@ export const registerSpeakingRoutes = (app: Express, requireBackendAuth: Request
       try {
         const userId = request.auth?.userId;
         if (!userId) throw new ApiError(401, 'authentication_required', 'Auth required');
-        response.json({ notFound: true });
+
+        const id = request.params.id as string;
+        const subs = getUserSubmissions(userId);
+        const sub = subs.find((s) => s.id === id);
+
+        if (!sub) {
+          response.json({ notFound: true });
+          return;
+        }
+
+        response.json(sub);
       } catch (error) {
         next(error);
       }

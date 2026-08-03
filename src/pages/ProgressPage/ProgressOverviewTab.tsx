@@ -6,6 +6,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 import { StatusBadge } from '@/shared/components/StatusBadge';
+import { MAX_ELO, MIN_ELO, RANK_THRESHOLDS } from '@/shared/constants/elo.constants';
 
 import { AnalyticsService, useAnalyticsStore } from '@/features/analytics';
 import { useAuthStore } from '@/features/auth';
@@ -24,7 +25,7 @@ import { AnalyticsMetricCards } from './AnalyticsMetricCards';
 import { HeroBanner } from './HeroBanner';
 import { QuickStats } from './QuickStats';
 import { SkillSidebar } from './SkillSidebar';
-import { MAX_ELO, MIN_ELO, SKILLS, getCEFRBand } from './utils';
+import { SKILLS, getCEFRBand } from './utils';
 
 export const ProgressOverviewTab = () => {
   const { currentUser } = useAuthStore();
@@ -75,28 +76,28 @@ export const ProgressOverviewTab = () => {
   );
 
   const getRank = (elo: number) => {
-    if (elo >= 4500)
+    if (elo >= RANK_THRESHOLDS.GRANDMASTER)
       return {
         label: 'Grandmaster',
         icon: '👑',
         color:
           'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800/40',
       };
-    if (elo >= 3500)
+    if (elo >= RANK_THRESHOLDS.DIAMOND)
       return {
         label: 'Diamond',
         icon: '💎',
         color:
           'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/30 border-sky-200 dark:border-sky-800/40',
       };
-    if (elo >= 2500)
+    if (elo >= RANK_THRESHOLDS.PLATINUM)
       return {
         label: 'Platinum',
         icon: '🏆',
         color:
           'text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 border-violet-200 dark:border-violet-800/40',
       };
-    if (elo >= 1500)
+    if (elo >= RANK_THRESHOLDS.GOLD)
       return {
         label: 'Gold',
         icon: '🥇',
