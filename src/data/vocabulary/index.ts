@@ -13,22 +13,22 @@ export const loadVocabularyByLevel = async (level: CefrLevel): Promise<Vocabular
   let terms: VocabularyTerm[] = [];
   switch (level) {
     case 'A1':
-      terms = await (await import('./by-level/a1.seed')).loadA1VocabularyTerms();
+      terms = (await import('./by-level/a1.seed')).A1_VOCABULARY_TERMS;
       break;
     case 'A2':
-      terms = await (await import('./by-level/a2.seed')).loadA2VocabularyTerms();
+      terms = (await import('./by-level/a2.seed')).A2_VOCABULARY_TERMS;
       break;
     case 'B1':
-      terms = await (await import('./by-level/b1.seed')).loadB1VocabularyTerms();
+      terms = (await import('./by-level/b1.seed')).B1_VOCABULARY_TERMS;
       break;
     case 'B2':
-      terms = await (await import('./by-level/b2.seed')).loadB2VocabularyTerms();
+      terms = (await import('./by-level/b2.seed')).B2_VOCABULARY_TERMS;
       break;
     case 'C1':
-      terms = await (await import('./by-level/c1.seed')).loadC1VocabularyTerms();
+      terms = (await import('./by-level/c1.seed')).C1_VOCABULARY_TERMS;
       break;
     case 'C2':
-      terms = await (await import('./by-level/c2.seed')).loadC2VocabularyTerms();
+      terms = (await import('./by-level/c2.seed')).C2_VOCABULARY_TERMS;
       break;
   }
 

@@ -86,38 +86,47 @@ const terms = sourceRecords.map((row) => ({
 
 assertValidLevels(terms, 'Vocabulary database');
 const duplicateIds = duplicateValues(terms, 'id');
-const duplicateNormalizedTerms = duplicateValues(terms, 'normalizedTerm');
 const missingRequired = terms.filter(
   (term) => !term.id || !term.term || !term.normalizedTerm || !term.definition || !term.status
 );
+
+const seen = new Set();
+const deduped = [];
+for (const term of terms) {
+  if (seen.has(term.normalizedTerm)) continue;
+  seen.add(term.normalizedTerm);
+  deduped.length; // keep first occurrence
+  deduped.push(term);
+}
+const duplicateCount = terms.length - deduped.length;
+
 const report = {
   generatedAt: new Date().toISOString(),
   source: path.relative(root, input).replaceAll('\\', '/'),
   recordCount: terms.length,
+  deduplicatedCount: deduped.length,
   duplicateIds,
-  duplicateNormalizedTerms,
+  duplicateTermsRemoved: duplicateCount,
   missingRequiredCount: missingRequired.length,
-  cefrDistribution: distribution(terms, 'cefrLevel'),
-  statusDistribution: distribution(terms, 'status'),
-  passed:
-    duplicateIds.length === 0 &&
-    duplicateNormalizedTerms.length === 0 &&
-    missingRequired.length === 0,
+  cefrDistribution: distribution(deduped, 'cefrLevel'),
+  statusDistribution: distribution(deduped, 'status'),
+  domainDistribution: distribution(deduped, 'domain'),
+  passed: duplicateIds.length === 0 && missingRequired.length === 0,
 };
 
-await writeJson(path.join(canonicalDir, 'vocabulary.normalized.json'), terms);
+await writeJson(path.join(canonicalDir, 'vocabulary.normalized.json'), deduped);
 await writeJson(path.join(canonicalDir, 'vocabulary-validation-report.json'), report);
 await writeJson(path.join(canonicalDir, 'vocabulary-taxonomy.json'), {
   cefrLevels: CEFR_LEVELS,
-  domains: unique(terms.map((term) => term.domain)),
-  contentDomains: unique(terms.map((term) => term.contentDomain)),
-  lifeContexts: unique(terms.map((term) => term.lifeContext)),
-  registers: unique(terms.map((term) => term.register)),
-  primaryUseCases: unique(terms.map((term) => term.primaryUseCase)),
-  partsOfSpeech: unique(terms.map((term) => term.partOfSpeech)),
-  grammarFits: unique(terms.flatMap((term) => term.grammarFits)),
-  skills: unique(terms.flatMap((term) => term.skillUse)),
-  tags: unique(terms.flatMap((term) => term.tags)),
+  domains: unique(deduped.map((term) => term.domain)),
+  contentDomains: unique(deduped.map((term) => term.contentDomain)),
+  lifeContexts: unique(deduped.map((term) => term.lifeContext)),
+  registers: unique(deduped.map((term) => term.register)),
+  primaryUseCases: unique(deduped.map((term) => term.primaryUseCase)),
+  partsOfSpeech: unique(deduped.map((term) => term.partOfSpeech)),
+  grammarFits: unique(deduped.flatMap((term) => term.grammarFits)),
+  skills: unique(deduped.flatMap((term) => term.skillUse)),
+  tags: unique(deduped.flatMap((term) => term.tags)),
 });
 
 for (const level of CEFR_LEVELS) {
@@ -126,15 +135,15 @@ for (const level of CEFR_LEVELS) {
     typeImport: '@/features/vocabulary/vocabulary.types',
     typeName: 'VocabularyTerm',
     exportName: `${level}_VOCABULARY_TERMS`,
-    records: terms.filter((term) => term.cefrLevel === level),
+    records: deduped.filter((term) => term.cefrLevel === level),
   });
 }
 
 if (!report.passed) {
   throw new Error(
-    `Vocabulary import failed: ${duplicateIds.length} duplicate IDs, ${duplicateNormalizedTerms.length} duplicate normalized terms, ${missingRequired.length} incomplete records.`
+    `Vocabulary import failed: ${duplicateIds.length} duplicate IDs, ${missingRequired.length} incomplete records.`
   );
 }
 console.log(
-  `Vocabulary import complete: ${terms.length} terms (${JSON.stringify(report.cefrDistribution)}).`
+  `Vocabulary import complete: ${deduped.length} terms (${terms.length - deduped.length} duplicates removed) (${JSON.stringify(report.cefrDistribution)}).`
 );

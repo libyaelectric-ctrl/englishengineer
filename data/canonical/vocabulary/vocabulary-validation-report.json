@@ -1,0 +1,33 @@
+{
+  "generatedAt": "2026-08-03T17:59:04.917Z",
+  "source": "data/import/EngineerOS_Vocabulary_Database_Final.xlsx",
+  "recordCount": 14542,
+  "deduplicatedCount": 14199,
+  "duplicateIds": [],
+  "duplicateTermsRemoved": 343,
+  "missingRequiredCount": 0,
+  "cefrDistribution": {
+    "A1": 856,
+    "A2": 2164,
+    "B1": 4697,
+    "B2": 3998,
+    "C1": 2065,
+    "C2": 419
+  },
+  "statusDistribution": { "approved": 13711, "pending_review": 488 },
+  "domainDistribution": {
+    "architecture": 937,
+    "chemical": 924,
+    "civil": 935,
+    "electrical": 1492,
+    "electronics": 1037,
+    "engineering": 1104,
+    "general": 2327,
+    "hse": 1017,
+    "industrial": 1002,
+    "mechanical": 1109,
+    "mechatronics": 930,
+    "software": 1385
+  },
+  "passed": true
+}
