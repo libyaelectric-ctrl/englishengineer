@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const civilCategories: ExpansionCategory[] = [
   {
-    discipline: 'Civil Engineering',
+    discipline: 'civil',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['civil', 'structure', 'site'],
@@ -41,7 +41,7 @@ export const civilCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Architecture',
+    discipline: 'architecture',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['architecture', 'finishes', 'coordination'],
@@ -80,7 +80,7 @@ export const civilCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Construction',
+    discipline: 'civil',
     CEFR: 'B1',
     difficulty: 'Beginner',
     tags: ['construction', 'site', 'daily work'],

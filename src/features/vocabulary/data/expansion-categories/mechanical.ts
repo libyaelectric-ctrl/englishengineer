@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const mechanicalCategories: ExpansionCategory[] = [
   {
-    discipline: 'Mechanical Engineering',
+    discipline: 'mechanical',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['mechanical', 'hvac', 'piping'],

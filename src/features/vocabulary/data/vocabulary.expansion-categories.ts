@@ -1,9 +1,11 @@
 import { MissionDifficulty } from '@/core/learning';
 
-import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
+import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
+
+import { VocabularyEntry } from '../types/vocabulary.types';
 
 export type ExpansionCategory = {
-  discipline: VocabularyDiscipline;
+  discipline: VocabularyDomain;
   CEFR: VocabularyEntry['CEFR'];
   difficulty: MissionDifficulty;
   tags: string[];

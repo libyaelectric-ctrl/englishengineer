@@ -1,15 +1,27 @@
+/**
+ * Localization types — supports 12 interface languages.
+ *
+ * Supported: EN, TR (fully translated)
+ * Planned: AR, ES, IT, FR, DE, PT, RU, ZH, JA, KO
+ */
+
 export type SupportedInterfaceLanguage = 'en' | 'tr';
-export type PlannedInterfaceLanguage = 'ar' | 'es' | 'it' | 'fr';
+export type PlannedInterfaceLanguage =
+  'ar' | 'es' | 'it' | 'fr' | 'de' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko';
 
 export type InterfaceLanguageId = SupportedInterfaceLanguage | PlannedInterfaceLanguage;
 
 export interface InterfaceLanguageOption {
   id: InterfaceLanguageId;
   label: string;
+  nativeLabel: string;
   available: boolean;
+  /** Language flag emoji for UI display. */
+  flag: string;
 }
 
 export type TranslationKey =
+  // Navigation
   | 'nav.home'
   | 'nav.learningHub'
   | 'nav.skills'
@@ -21,6 +33,7 @@ export type TranslationKey =
   | 'nav.grammar'
   | 'nav.tools'
   | 'nav.profile'
+  // Common
   | 'common.language'
   | 'common.comingSoon'
   | 'common.cancel'
@@ -36,6 +49,7 @@ export type TranslationKey =
   | 'common.next'
   | 'common.copy'
   | 'common.copied'
+  // Translator
   | 'translator.title'
   | 'translator.sourcePlaceholder'
   | 'translator.outputPlaceholder'
@@ -46,15 +60,22 @@ export type TranslationKey =
   | 'translator.playing'
   | 'translator.listenAudio'
   | 'translator.quickAdd'
+  // Onboarding
   | 'onboarding.title'
+  | 'onboarding.selectDiscipline'
+  | 'onboarding.selectLanguage'
   | 'onboarding.professionalTrack'
   | 'onboarding.electricalFocus'
   | 'onboarding.industry'
   | 'onboarding.roleContext'
+  | 'onboarding.giftedModules'
+  | 'onboarding.giftedModulesDesc'
+  // Profile
   | 'profile.nameLanguage'
   | 'profile.firstName'
   | 'profile.lastName'
   | 'profile.save'
+  // Feedback
   | 'feedback.open'
   | 'feedback.title'
   | 'feedback.type'
@@ -62,14 +83,26 @@ export type TranslationKey =
   | 'feedback.context'
   | 'feedback.cancel'
   | 'feedback.submit'
+  // Pricing
   | 'pricing.title'
   | 'pricing.currentPlan'
+  | 'pricing.free'
+  | 'pricing.pro'
+  | 'pricing.project'
+  | 'pricing.baseIncludes'
+  | 'pricing.addons'
+  | 'pricing.monthly'
+  | 'pricing.annual'
+  // Learning Hub
   | 'learningHub.title'
+  // Grammar
   | 'grammar.meaningFunction'
   | 'grammar.form'
   | 'grammar.practice'
+  // Vocabulary
   | 'vocabulary.search'
   | 'vocabulary.saveLearned'
+  // Landing
   | 'landing.heroTag'
   | 'landing.heroTitle'
   | 'landing.heroSubtitle'
@@ -88,4 +121,25 @@ export type TranslationKey =
   | 'landing.startFreeUpgrade'
   | 'landing.faq'
   | 'landing.trust'
-  | 'landing.trustDesc';
+  | 'landing.trustDesc'
+  // Disciplines
+  | 'discipline.architecture'
+  | 'discipline.chemical'
+  | 'discipline.civil'
+  | 'discipline.electrical'
+  | 'discipline.electronics'
+  | 'discipline.hse'
+  | 'discipline.industrial'
+  | 'discipline.mechanical'
+  | 'discipline.mechatronics'
+  | 'discipline.software'
+  | 'discipline.architecture.desc'
+  | 'discipline.chemical.desc'
+  | 'discipline.civil.desc'
+  | 'discipline.electrical.desc'
+  | 'discipline.electronics.desc'
+  | 'discipline.hse.desc'
+  | 'discipline.industrial.desc'
+  | 'discipline.mechanical.desc'
+  | 'discipline.mechatronics.desc'
+  | 'discipline.software.desc';

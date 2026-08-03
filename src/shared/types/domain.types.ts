@@ -1,3 +1,5 @@
+import type { EngineeringDiscipline } from '../constants/engineering-disciplines';
+
 export const SKILL_NAMES = [
   'vocabulary',
   'grammar',
@@ -10,6 +12,11 @@ export const SKILL_NAMES = [
 export type SkillName = (typeof SKILL_NAMES)[number];
 export type SkillElo = number;
 export type LearningGoal = 'daily' | 'work' | 'engineering' | 'travel' | 'management';
+
+/**
+ * @deprecated Use `EngineeringDiscipline` from engineering-disciplines.ts.
+ * Kept for backwards compatibility during migration.
+ */
 export type ProfessionId =
   | 'electrical-engineer'
   | 'mechanical-engineer'
@@ -23,6 +30,7 @@ export type ProfessionId =
   | 'construction-manager'
   | 'site-supervisor'
   | 'other';
+
 export type IndustryId =
   | 'hospital'
   | 'data-center'
@@ -39,13 +47,21 @@ export type CommunicationGoal =
   | 'management'
   | 'interview-career';
 export type SelfReportedCefr = 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'unknown';
-export type InterfaceLanguage = 'en' | 'tr';
+
+/**
+ * Supported interface languages.
+ * Extended from 2 to 12 to support future language packs.
+ */
+export type InterfaceLanguage =
+  'en' | 'tr' | 'ar' | 'es' | 'it' | 'fr' | 'de' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko';
+
 export type ExperienceLevel =
-  | 'student'
-  | 'early-career'
-  | 'experienced'
-  | 'lead-manager'
-  | 'prefer-not-to-say';
+  'student' | 'early-career' | 'experienced' | 'lead-manager' | 'prefer-not-to-say';
+
+/**
+ * @deprecated Use `EngineeringDiscipline` directly.
+ * Kept for backwards compatibility during migration.
+ */
 export type ProfessionalTrack =
   | 'electrical'
   | 'mechanical'
@@ -59,6 +75,7 @@ export type ProfessionalTrack =
   | 'infrastructure'
   | 'healthcare-hospital'
   | 'industrial';
+
 export type ElectricalSubdomain =
   | 'low-voltage'
   | 'medium-voltage'
@@ -74,18 +91,7 @@ export type ElectricalSubdomain =
   | 'testing-inspection'
   | 'site-coordination';
 export type CefrBand =
-  | 'A1'
-  | 'A1+'
-  | 'A2'
-  | 'A2+'
-  | 'B1'
-  | 'B1+'
-  | 'B2'
-  | 'B2+'
-  | 'C1'
-  | 'C1+'
-  | 'C2'
-  | 'C2+';
+  'A1' | 'A1+' | 'A2' | 'A2+' | 'B1' | 'B1+' | 'B2' | 'B2+' | 'C1' | 'C1+' | 'C2' | 'C2+';
 export type SkillTrend = 'improving' | 'steady' | 'declining' | 'not-enough-data';
 export type PromotionState = 'progressing' | 'ready' | 'maxed';
 
@@ -109,12 +115,16 @@ export interface UserLearningProfile {
   userId: string;
   skills: Record<SkillName, SkillProfile>;
   goals: LearningGoal[];
+  /** @deprecated Use `discipline` instead. */
   professionId: ProfessionId | null;
+  /** The user's selected engineering discipline. */
+  discipline: EngineeringDiscipline;
   industryId: IndustryId | null;
   communicationGoals: CommunicationGoal[];
   selfReportedCefr: SelfReportedCefr;
   learningFocus: SkillName[];
   selectedPlan: 'free' | 'pro' | 'enterprise';
+  /** @deprecated Use `discipline` instead. */
   professionalTrack: ProfessionalTrack;
   electricalSubdomain: ElectricalSubdomain;
   experienceLevel: ExperienceLevel;

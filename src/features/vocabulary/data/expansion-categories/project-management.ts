@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const projectManagementCategories: ExpansionCategory[] = [
   {
-    discipline: 'Project Management',
+    discipline: 'engineering',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['project management', 'planning', 'controls'],
@@ -41,7 +41,7 @@ export const projectManagementCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Commissioning',
+    discipline: 'engineering',
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['commissioning', 'testing', 'handover'],
@@ -80,7 +80,7 @@ export const projectManagementCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Testing & Commissioning',
+    discipline: 'engineering',
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['testing', 'commissioning', 'verification'],

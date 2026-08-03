@@ -1,6 +1,8 @@
 import { MissionDifficulty } from '@/core/learning';
 
-import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
+import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
+
+import { VocabularyEntry } from '../types/vocabulary.types';
 import { expansionCategories } from './expansion-categories';
 import { resolveCollocations } from './expansion-data/collocations';
 import { examples, resolveExample } from './expansion-data/examples';
@@ -12,7 +14,7 @@ export interface VocabularyContentRow {
   word: string;
   partOfSpeech: PartOfSpeech;
   CEFR: VocabularyEntry['CEFR'];
-  discipline: VocabularyDiscipline;
+  discipline: VocabularyDomain;
   meaning: string;
   definition: string;
   example: string;
@@ -26,7 +28,7 @@ export const row = (
   word: string,
   partOfSpeech: PartOfSpeech,
   CEFR: VocabularyEntry['CEFR'],
-  discipline: VocabularyDiscipline,
+  discipline: VocabularyDomain,
   meaning: string,
   definition: string,
   example: string,
@@ -54,15 +56,13 @@ const getMeaning = (term: string, discipline: string): string => {
 
 const getDefinition = (term: string, discipline: string, context: string): string => {
   const definitions: Record<string, string> = {
-    'Electrical Engineering': `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında yaygın olarak kullanılır.`,
-    'Mechanical Engineering': `${term}, mekanik sistem tasarımında ve işletmesinde temel bir unsurdur. Sistem verimliliği ve güvenilirliği üzerinde doğrudan etkisi vardır.`,
-    'Civil Engineering': `${term}, yapısal bütünlük ve inşaat kalitesi açısından temel bir kavramdır. İnşaat mühendisliğinde yapısal uyumluluk için kritiktir.`,
-    Architecture: `${term}, yapılmış mekanların işlevsel ve estetik kalitesine katkıda bulunur. Mimari koordinasyon ve tasarım niyeti için gereklidir.`,
-    Construction: `${term}, inşaat sahalarında günlük olarak kullanılan pratik bir kavramdır. İnşaat kalitesi, güvenliği ve programı üzerinde etkisi vardır.`,
-    Commissioning: `${term}, sistem hazırlığını doğrulamak için devreye alma sırasında test edilir ve belgelenir. Teslim öncesi doğrulanmalıdır.`,
-    'QA/QC': `${term}, muayene ve doğrulama sırasında kullanılan bir kalite kontrol kavramdır. Proje şartnamelerine ve standartlarına uygunluğu sağlamaya yardımcı olur.`,
-    HSE: `${term}, saha güvenliği için kritik olan bir sağlık, güvenlik ve çevre kavramdır. Kazaları önlemeye ve düzenleyici uyuma yardımcı olur.`,
-    'Project Management': `${term}, planlama ve takip için kullanılan bir proje kontrol kavramıdır. Proje programı, maliyeti ve paydaş iletişimi üzerinde etkisi vardır.`,
+    electrical: `${term}, elektrik dağıtımında ve güvenlikte kritik bir bileşen veya kavramdır. ${context} alanında yaygın olarak kullanılır.`,
+    mechanical: `${term}, mekanik sistem tasarımında ve işletmesinde temel bir unsurdur. Sistem verimliliği ve güvenilirliği üzerinde doğrudan etkisi vardır.`,
+    civil: `${term}, yapısal bütünlük ve inşaat kalitesi açısından temel bir kavramdır. İnşaat mühendisliğinde yapısal uyumluluk için kritiktir.`,
+    architecture: `${term}, yapılmış mekanların işlevsel ve estetik kalitesine katkıda bulunur. Mimari koordinasyon ve tasarım niyeti için gereklidir.`,
+    hse: `${term}, saha güvenliği için kritik olan bir sağlık, güvenlik ve çevre kavramdır. Kazaları önlemeye ve düzenleyici uyuma yardımcı olur.`,
+    engineering: `${term}, ${context} alanında profesyonel bir mühendislik kavramıdır. Proje şartnamelerine ve standartlarına uygunluğu sağlamaya yardımcı olur.`,
+    general: `${term}, ${context} alanında profesyonel iletişim için kullanılan bir kavramdır.`,
   };
   return (
     definitions[discipline] ||

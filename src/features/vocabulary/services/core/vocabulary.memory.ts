@@ -103,7 +103,7 @@ export const VocabularyMemoryService = {
       term: result.word,
       turkishMeaning: result.translation ?? 'Translation not available',
       cefrLevel,
-      category: 'General Professional English',
+      category: 'general',
       exampleSentence: result.definitions[0] ?? 'Definition not available.',
       status: 'New',
       dateAdded: now.toISOString(),
