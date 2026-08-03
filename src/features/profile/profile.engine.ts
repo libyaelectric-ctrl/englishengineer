@@ -1,12 +1,11 @@
 import type { LearningState, MissionModule } from '@/core/learning/learning.types';
 
-import { MAX_ELO, PROMOTION_READY_THRESHOLD } from '@/shared/constants/elo.constants';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
-import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
+import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
 
 import {
   type CefrBand,
@@ -80,12 +79,7 @@ const withEvidence = (profile: SkillProfile, state: LearningState): SkillProfile
     accuracy,
     weaknessScore: 100 - accuracy,
     lastPracticedAt: latest?.timestamp ?? null,
-    promotionState:
-      elo === MAX_ELO
-        ? 'maxed'
-        : progressToNextBand >= PROMOTION_READY_THRESHOLD
-          ? 'ready'
-          : 'progressing',
+    promotionState: elo === 5000 ? 'maxed' : progressToNextBand >= 90 ? 'ready' : 'progressing',
   };
 };
 

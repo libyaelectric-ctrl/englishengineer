@@ -1,6 +1,8 @@
 import { Mic, MicOff, StopCircle } from 'lucide-react';
+
 import { Button } from '@/shared/components/Button';
-import type { InterviewQuestion } from '../../interview-simulator';
+
+import type { InterviewQuestion } from '../../simulator/interview-simulator';
 
 export const RecordingControls = ({
   isRecording,

@@ -5,7 +5,7 @@ import type {
   ExternalLookupState,
   ExternalVocabularyResult,
   VocabularyEntry,
-} from '../types/vocabulary.types';
+} from '../../types/vocabulary.types';
 
 const CACHE_KEY = 'EngVox_vocabulary_lookup_cache';
 

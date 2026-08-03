@@ -11,7 +11,7 @@ import type {
   VocabularyMemorySummary,
   VocabularyWordSource,
   VocabularyWordStatus,
-} from '../types/vocabulary.types';
+} from '../../types/vocabulary.types';
 
 const STORAGE_KEY = 'EngVox_vocabulary_memory';
 const DAY_MS = 24 * 60 * 60 * 1000;

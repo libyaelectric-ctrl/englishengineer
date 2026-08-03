@@ -1,9 +1,9 @@
-import type { VocabularyMenuProgress } from '../services/vocabulary.menu';
+import type { VocabularyMenuProgress } from '../services/core/vocabulary.menu';
 import {
   isLeechWord,
   isVocabularyForgotten,
   isVocabularyProgressDue,
-} from '../services/vocabulary.menu';
+} from '../services/core/vocabulary.menu';
 
 export interface PrioritizedWord {
   wordId: string;

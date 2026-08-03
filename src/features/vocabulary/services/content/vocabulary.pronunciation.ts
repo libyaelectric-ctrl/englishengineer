@@ -84,8 +84,7 @@ export const PronunciationService = {
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
       const audioBlob =
         cached.audioBlob && cached.audioBlob.size > 0 ? cached.audioBlob : new Blob();
-      const audioUrl =
-        audioBlob.size > 0 ? URL.createObjectURL(audioBlob) : '';
+      const audioUrl = audioBlob.size > 0 ? URL.createObjectURL(audioBlob) : '';
       return {
         word: normalized,
         audioUrl,

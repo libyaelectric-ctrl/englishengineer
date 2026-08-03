@@ -1,7 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { loadVocabularyEntries } from '../data/vocabulary.data';
-import { VocabularyEntry } from '../types/vocabulary.types';
+import { loadVocabularyEntries } from '../../data/vocabulary.data';
+import { VocabularyEntry } from '../../types/vocabulary.types';
 import {
   clearVocabularyLookupCache,
   lookupExternalVocabulary,

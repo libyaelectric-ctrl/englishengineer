@@ -5,7 +5,7 @@ import {
   READING_WRITING_UNLOCK_THRESHOLD,
   VocabularyProgressService,
   type WordProgress,
-} from '../services/vocabulary.progress';
+} from '../services/core/vocabulary.progress';
 
 describe('VocabularyProgressService', () => {
   it('addWord creates new word with status new', () => {

@@ -1,148 +1,92 @@
-# EngineerOS | Engineering Communication Operating System
+# EnglishEngineer (EngVox)
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/libyaelectric-ctrl/englishengineer/blob/main/LICENSE)
-[![CI](https://github.com/libyaelectric-ctrl/englishengineer/actions/workflows/ci.yml/badge.svg)](https://github.com/libyaelectric-ctrl/englishengineer/actions)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://englishengineer.vercel.app)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://react.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-v4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+> İnşaat mühendisleri için İngilizce eğitim platformu
 
-An offline-first Engineering English and career communication platform for professional engineers working in international project environments.
+## 🚀 Quick Start
 
-**Master the English you actually use on site.** Built for engineers who write
-reports, attend meetings and solve technical problems in English.
-
-## Project Overview
-
-**EngineerOS** helps engineers practice the communication they need for real work: technical reports, site coordination, consultant responses, meetings, speaking practice, vocabulary review, analytics, AI-assisted coaching, and career-oriented learning.
-
-The current product is local-first and beta-ready. Production AI, cloud sync, and verified billing require backend configuration.
-
-Product ownership and author attribution: **Ozcan ERENSAYIN**.
-
-## Prerequisites
-
+### Prerequisites
 - Node.js 20+
 - npm 10+
-- Supabase account (for production)
-- Stripe account (for billing)
+- Docker (opsiyonel)
 
-## Installation
+### Installation
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/libyaelectric-ctrl/englishengineer.git
 cd englishengineer
 
-# Install frontend dependencies
+# Install dependencies
 npm install
+npm run backend:install
 
-# Install backend dependencies
-npm --prefix backend install
-```
-
-## Environment Setup
-
-```bash
-# Copy environment templates
+# Environment setup
 cp .env.example .env
 cp backend/.env.example backend/.env
+# .env dosyalarını kendi credential'larınla düzenle
 
-# Edit .env files with your API keys
-# Frontend: .env (VITE_* variables)
-# Backend: backend/.env (all backend secrets)
+# Seed veri indirme ve yükleme
+npm run download:seed
+npm run import:grammar
+npm run import:vocabulary
 ```
 
-## Development
+### Development
 
 ```bash
-# Run frontend only (port 3000)
-npm run dev
-
-# Run frontend + backend concurrently
+# Frontend + backend birlikte
 npm run dev:all
+
+# Ya da ayrı ayrı
+npm run dev                    # Frontend (port 3000)
+npm --prefix backend run dev   # Backend (port 8787)
 ```
 
-## Testing
+### Testing
 
 ```bash
-# Run all frontend tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run backend tests
-npm --prefix backend test
-
-# Run integration tests
-npm run test:integration
-
-# Run E2E tests (Playwright)
-npm run e2e:browser
+npm run test              # Unit test
+npm run test:integration  # Integration test
+npm run e2e:browser       # E2E test (Playwright)
+npm run test:coverage     # Coverage raporu
+npm run backend:test      # Backend testleri
 ```
 
-## Quality Gates
+### Production Build
 
 ```bash
-# Type checking
-npm run typecheck
-
-# Linting
-npm run lint
-
-# Full quality gate
-npm run quality:gate
-
-# Build verification
 npm run build
+npm run verify:release
 ```
 
-## Deployment
-
-The project deploys automatically on push to `main`:
-
-- **Frontend**: Vercel (https://englishengineer.vercel.app)
-- **Backend**: Railway (https://englishengineer-production.up.railway.app)
-
-For manual deployment:
+### Docker
 
 ```bash
-# Deploy to production
-./scripts/deploy.sh production
-
-# Deploy to staging
-./scripts/deploy.sh staging
+docker compose up --build
 ```
 
-## Project Structure
+## 📁 Proje Yapısı
 
 ```
 src/
-  pages/          # Route-level components (index.tsx)
-  features/       # Feature modules (vocabulary, speaking, etc.)
-  shared/         # Shared components and utilities
-  config/         # App configuration
-  core/           # Core architecture rules
+├── features/       # Domain modülleri (auth, billing, vocabulary, speaking, grammar, ...)
+├── core/           # Paylaşılan çekirdek (errors, events, ids, learning)
+├── providers/      # React context provider'ları
+├── shared/         # Paylaşılan bileşenler & yardımcılar
+└── config/         # Uygulama konfigürasyonu
+
 backend/
-  src/            # Express.js API server
-  test/           # Backend tests (20 test files)
+├── src/            # Express API rotaları & servisleri
+└── test/           # Backend testleri
 ```
 
-## Tech Stack
+## 🧪 Tech Stack
 
-- **Frontend**: React 19, TypeScript 5.8, Vite, Tailwind CSS v4, Zustand
-- **Backend**: Node.js, Express, TypeScript, Supabase, Stripe
-- **Testing**: Vitest, Playwright
-- **Deploy**: Vercel (frontend), Railway (backend)
+- **Frontend:** React 19, TypeScript, Vite, Tailwind CSS v4, Zustand, TanStack Query
+- **Backend:** Express, TypeScript (ESM), Supabase, Stripe, BullMQ
+- **Testing:** Vitest, Playwright, Storybook
+- **DevOps:** GitHub Actions, Docker, Sentry, Lighthouse CI
 
-## Contributing
+## 📄 Lisans
 
-1. Create a feature branch from `main`
-2. Run `npm run quality:gate` before committing
-3. Pre-commit hooks run lint-staged automatically
-4. Submit a pull request
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
+MIT — bkz. [LICENSE](LICENSE)

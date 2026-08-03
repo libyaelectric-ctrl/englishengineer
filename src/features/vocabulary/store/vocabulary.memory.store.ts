@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import type { CefrLevel } from '@/features/level-system';
 
-import { VocabularyMemoryService } from '../services/vocabulary.memory';
+import { VocabularyMemoryService } from '../services/core/vocabulary.memory';
 import type {
   ExternalVocabularyResult,
   SavedVocabularyWord,
