@@ -49,7 +49,7 @@ const config = {
     '**/dist/**',
   ],
   timeoutMS: 30000,
-  concurrency: 1,
+  concurrency: 4,
 };
 
 export default config;

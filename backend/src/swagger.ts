@@ -76,7 +76,7 @@ export const swaggerSpec = {
         },
       },
     },
-    '/api/billing/checkout': {
+    '/api/billing/create-checkout-session': {
       post: {
         tags: ['Billing'],
         summary: 'Create Stripe checkout session',
@@ -285,7 +285,7 @@ export const swaggerSpec = {
         },
       },
     },
-    '/api/reading/{id}/score': {
+    '/api/reading/:id/progress': {
       post: {
         tags: ['Reading'],
         summary: 'Submit reading score',

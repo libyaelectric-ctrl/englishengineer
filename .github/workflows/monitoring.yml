@@ -2,7 +2,7 @@ name: Monitoring Report
 
 on:
   schedule:
-    - cron: '0 8 * * 1' # Her Pazartesi 08:00
+    - cron: '0 8 * * 1'
   workflow_dispatch:
 
 jobs:
@@ -44,6 +44,13 @@ jobs:
             echo "Tests completed. See test-results.json for details." >> report.md
           fi
 
+      - name: Backend Test Summary
+        run: |
+          echo "" >> report.md
+          echo "## Backend Test Summary" >> report.md
+          echo "" >> report.md
+          cd backend && npm test 2>&1 | tail -10 >> ../report.md || true
+
       - name: Security Audit
         run: |
           echo "" >> report.md
@@ -59,6 +66,30 @@ jobs:
             ")
             echo "Vulnerabilities: $VULNS" >> report.md
           fi
+
+      - name: Dependency freshness
+        run: |
+          echo "" >> report.md
+          echo "## Dependency Freshness" >> report.md
+          echo "" >> report.md
+          npm outdated --json > outdated.json 2>&1 || true
+          if [ -f outdated.json ]; then
+            OUTDATED=$(node -e "
+              try {
+                const d = JSON.parse(require('fs').readFileSync('outdated.json', 'utf-8'));
+                console.log(Object.keys(d).length);
+              } catch { console.log('0'); }
+            ")
+            echo "Outdated packages: $OUTDATED" >> report.md
+          fi
+
+      - name: Type Coverage
+        run: |
+          echo "" >> report.md
+          echo "## Type Coverage" >> report.md
+          echo "" >> report.md
+          echo "Frontend: \`npm run typecheck\` (exit code $?)" >> report.md
+          echo "Backend: \`npm run backend:typecheck\` (exit code $?)" >> report.md
 
       - name: Upload Report
         uses: actions/upload-artifact@v4

@@ -2,6 +2,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import { getAuditLogs } from './audit-log.js';
 import { requireRole } from './middleware/rbac.middleware.js';
+import { getPerformanceMetrics } from './performance-monitor.js';
 import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 
 export const registerAdminRoutes = (
@@ -16,19 +17,20 @@ export const registerAdminRoutes = (
     rateLimiter,
     async (req: Request, res: Response, next: NextFunction) => {
       try {
+        const perf = getPerformanceMetrics();
         const stats = {
-          totalUsers: 4,
-          activeSubscriptions: 2,
-          dailyAiUsage: 15,
-          revenue: {
-            mrr: 38,
-            arr: 456,
-            activePlans: { free: 2, pro: 2 },
+          performance: {
+            requestCount: perf.requestCount,
+            errorCount: perf.errorCount,
+            errorRate: perf.errorRate,
+            avgDuration: perf.avgDuration,
+            p95Duration: perf.p95Duration,
+            p99Duration: perf.p99Duration,
           },
           system: {
             uptime: process.uptime(),
             memoryUsage: process.memoryUsage(),
-            version: '2.4.7',
+            version: process.env.APP_VERSION || '2.4.7',
           },
         };
         res.json({ success: true, data: stats });

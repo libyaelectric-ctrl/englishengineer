@@ -92,6 +92,7 @@ export interface BackendConfig {
   vocabulary: VocabularyConfig;
   workspace: WorkspaceConfig;
   rateLimit: RateLimitConfig;
+  corsAllowedOrigins?: string[];
 }
 
 // --- Authentication ---
@@ -99,6 +100,7 @@ export interface BackendConfig {
 export interface AuthenticatedUser {
   userId: string;
   email?: string;
+  role?: string;
   source: 'internal-secret' | 'supabase-jwt' | 'local-jwt' | 'dev-bypass';
 }
 
@@ -121,10 +123,7 @@ export interface ApiResponse<T> {
 // --- AI ---
 
 export type AiOperation =
-  | 'analyzeProgress'
-  | 'evaluateEngineeringEnglish'
-  | 'analyzeText'
-  | 'generatePractice';
+  'analyzeProgress' | 'evaluateEngineeringEnglish' | 'analyzeText' | 'generatePractice';
 
 export interface AiRequestBody {
   prompt: string;
@@ -199,13 +198,7 @@ export interface WorkspaceDocumentBody {
 export type PlanId = 'free' | 'lite' | 'pro' | 'project' | 'max' | 'exec' | 'private' | 'team';
 
 export type SubscriptionStatus =
-  | 'none'
-  | 'active'
-  | 'canceled'
-  | 'past_due'
-  | 'incomplete'
-  | 'trialing'
-  | 'unpaid';
+  'none' | 'active' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | 'unpaid';
 
 export interface SubscriptionSnapshot {
   planId: PlanId;
@@ -215,7 +208,8 @@ export interface SubscriptionSnapshot {
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
   updatedAt: string;
-  source: 'backend' | 'repository';
+  source: string;
+  topupCredits: number;
 }
 
 export interface PlanMetadata {

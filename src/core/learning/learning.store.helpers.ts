@@ -6,15 +6,16 @@
 import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 
+import { INITIAL_ELO } from '@/shared/constants/elo.constants';
 import { logger } from '@/shared/logger';
 
-import type { LearningState } from './learning.types';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
+import type { LearningState } from './learning.types';
 
+export { INITIAL_ELO } from '@/shared/constants/elo.constants';
 export const STORAGE_KEY = 'learning_state';
 export const MAX_HISTORY_SIZE = 500;
-export const INITIAL_ELO = 1000;
 export const SECONDS_PER_MINUTE = 60;
 
 export const mergeDefaults = <T extends { id: string }>(existing: T[], defaults: T[]): T[] => {

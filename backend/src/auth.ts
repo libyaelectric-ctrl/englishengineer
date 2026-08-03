@@ -18,6 +18,7 @@ const base64urlDecode = (str: string): Buffer => {
 interface JwtPayload {
   sub?: string;
   email?: string;
+  role?: string;
   exp?: number;
 }
 
@@ -57,7 +58,7 @@ const verifyJwtLocally = async (
       return null;
     }
     return typeof payload.sub === 'string' && payload.sub
-      ? { userId: payload.sub, email: payload.email, source: 'local-jwt' }
+      ? { userId: payload.sub, email: payload.email, role: payload.role, source: 'local-jwt' }
       : null;
   } catch {
     return null;
@@ -101,6 +102,7 @@ const validateSupabaseToken = async (
       ? {
           userId: user.id as string,
           email: user.email as string | undefined,
+          role: (user.app_metadata as Record<string, unknown>)?.role as string | undefined,
           source: 'supabase-jwt',
         }
       : null;
@@ -146,6 +148,10 @@ export const createBackendAuth = (
         typeof request.headers['x-engineeros-user-email'] === 'string'
           ? request.headers['x-engineeros-user-email']
           : undefined,
+      role:
+        typeof request.headers['x-engineeros-user-role'] === 'string'
+          ? request.headers['x-engineeros-user-role']
+          : undefined,
       source: 'internal-secret',
     };
   };
@@ -163,9 +169,11 @@ export const createBackendAuth = (
     }
     if (!config.allowInsecureDevAuth) return null;
     const email = typeof request.body?.email === 'string' ? request.body.email : undefined;
+    const role = typeof request.body?.role === 'string' ? request.body.role : 'admin';
     return {
       userId: getRequestedUserId(request) ?? 'engineeros-dev-user',
       email,
+      role,
       source: 'dev-bypass',
     };
   };

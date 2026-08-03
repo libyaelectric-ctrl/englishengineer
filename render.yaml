@@ -15,7 +15,7 @@ services:
       - key: APP_ORIGIN
         sync: false
       - key: APP_VERSION
-        value: 2.1.2
+        value: 2.4.7
       - key: AI_PROVIDER
         value: gemini
       - key: AI_MODEL

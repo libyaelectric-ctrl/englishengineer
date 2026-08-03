@@ -33,6 +33,9 @@ backend/.env.production
 # Vercel
 .vercel
 
+# Backup files
+*.bak
+
 # Other
 .aider*
 stryker-results/

@@ -66,7 +66,7 @@ export default defineConfig(() => {
       outDir: 'dist',
       sourcemap: false,
       chunkSizeWarningLimit: 300,
-      target: 'es2020',
+      target: 'es2022',
       minify: 'esbuild' as const,
       cssMinify: 'esbuild' as const,
       rollupOptions: {
@@ -79,11 +79,13 @@ export default defineConfig(() => {
           },
         },
         onwarn(warning, warn) {
-          if (warning.code === 'CIRCULAR_DEPENDENCY') return;
+          if (warning.code === 'CIRCULAR_DEPENDENCY') {
+            console.warn(`[CircularDep] ${warning.ids?.join(' -> ') ?? warning.message}`);
+            return;
+          }
           warn(warning);
         },
       },
     },
   };
 });
-

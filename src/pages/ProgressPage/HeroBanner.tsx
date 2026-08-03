@@ -1,14 +1,8 @@
 import { motion } from 'motion/react';
 
-import {
-  CEFR_LEVELS,
-  MAX_ELO,
-  MIN_ELO,
-  getCEFRBand,
-  getCEFRIndex,
-  getRank,
-  useAnimatedNumber,
-} from './utils';
+import { MAX_ELO, MIN_ELO } from '@/shared/constants/elo.constants';
+
+import { CEFR_LEVELS, getCEFRBand, getCEFRIndex, getRank, useAnimatedNumber } from './utils';
 
 export const HeroBanner = ({
   totalElo,

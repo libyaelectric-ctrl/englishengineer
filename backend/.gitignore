@@ -1,4 +1,9 @@
 uploads/
+node_modules/
+dist/
+coverage/
+*.log
 .env
 .env.local
 .env.*.local
+.env.production

@@ -42,8 +42,9 @@ export const getJsonStructureInstructionAsync = async (): Promise<string> => {
         .eq('key', 'json-structure')
         .single();
 
-      if (!error && data?.content) {
-        const content = data.content.trim();
+      const row = data as { content?: string } | null;
+      if (!error && row?.content) {
+        const content = row.content.trim();
         cache.set(cacheKey, content);
         logger.info('[PromptLoader] Loaded JSON structure instruction from database');
         return content;

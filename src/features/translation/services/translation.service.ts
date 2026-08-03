@@ -1,22 +1,18 @@
 import { logger } from '@/shared/logger';
 
 import { LocalTranslationEngine } from './local-translation.engine';
+import {
+  FTAPI_URL,
+  GOOGLE_GTX_BASE,
+  GOOGLE_GTX_URLS,
+  LIBRETRANSLATE_ENDPOINTS,
+  LINGVA_ENDPOINTS,
+  MYMEMORY_URL,
+  REQUEST_TIMEOUTS,
+} from './translation.config';
 
 export type SupportedLang =
-  | 'auto'
-  | 'en'
-  | 'tr'
-  | 'ar'
-  | 'zh'
-  | 'ru'
-  | 'de'
-  | 'es'
-  | 'it'
-  | 'fr'
-  | 'ja'
-  | 'ko'
-  | 'pt'
-  | 'pl';
+  'auto' | 'en' | 'tr' | 'ar' | 'zh' | 'ru' | 'de' | 'es' | 'it' | 'fr' | 'ja' | 'ko' | 'pt' | 'pl';
 
 export interface TranslationRequest {
   text: string;
@@ -42,11 +38,7 @@ export interface TranslationResult {
   wordAnalysis?: WordAnalysis;
 }
 
-const DEFAULT_ENDPOINTS = [
-  import.meta.env.VITE_LIBRETRANSLATE_URL || 'https://translate.argosopentech.com/translate',
-  'https://libretranslate.com/translate',
-  'https://libretranslate.de/translate',
-];
+const DEFAULT_ENDPOINTS = [...LIBRETRANSLATE_ENDPOINTS];
 
 // Offline / Local dictionary for instant fallback
 const LOCAL_WORD_DB: Record<
@@ -199,12 +191,14 @@ export class TranslationService {
     const encoded = encodeURIComponent(trimmed);
     const urls: string[] = [];
     if (typeof window !== 'undefined' && window.location) {
-      urls.push(`${window.location.origin}/api/translate?text=${encoded}&sl=${sourceLang}&tl=${targetLang}`);
+      urls.push(
+        `${window.location.origin}/api/translate?text=${encoded}&sl=${sourceLang}&tl=${targetLang}`
+      );
     }
     urls.push(
-      `https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`,
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encoded}`,
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://translate.googleapis.com/translate_a/t?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`)}`
+      `${GOOGLE_GTX_URLS[0]}?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`,
+      `${GOOGLE_GTX_URLS[1]}?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encoded}`,
+      `${GOOGLE_GTX_URLS[2]}?url=${encodeURIComponent(`${GOOGLE_GTX_BASE}?client=gtx&sl=${sourceLang}&tl=${targetLang}&q=${encoded}`)}`
     );
     return urls;
   }
@@ -218,7 +212,7 @@ export class TranslationService {
     for (const url of TranslationService.buildGtxUrls(trimmed, sourceLang, targetLang)) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.GATEWAY);
         const response = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
 
@@ -248,9 +242,9 @@ export class TranslationService {
     targetLang: string
   ): Promise<TranslationResult | null> {
     try {
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(trimmed)}&langpair=${sourceLang}|${targetLang}`;
+      const url = `${MYMEMORY_URL}?q=${encodeURIComponent(trimmed)}&langpair=${sourceLang}|${targetLang}`;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.GATEWAY);
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (response.ok) {
@@ -283,15 +277,14 @@ export class TranslationService {
     sourceLang: string,
     targetLang: string
   ): Promise<TranslationResult | null> {
-    const lingvaEndpoints = [
-      `https://lingva.ml/api/v1/${sourceLang}/${targetLang}/${encodeURIComponent(trimmed)}`,
-      `https://lingva.lunar.icu/api/v1/${sourceLang}/${targetLang}/${encodeURIComponent(trimmed)}`,
-    ];
+    const lingvaEndpoints = LINGVA_ENDPOINTS.map(
+      (base) => `${base}/${sourceLang}/${targetLang}/${encodeURIComponent(trimmed)}`
+    );
 
     for (const url of lingvaEndpoints) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.FALLBACK);
         const response = await fetch(url, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (response.ok) {
@@ -321,9 +314,9 @@ export class TranslationService {
     targetLang: string
   ): Promise<TranslationResult | null> {
     try {
-      const url = `https://ftapi.pythonanywhere.com/translate?sl=${sourceLang}&tl=${targetLang}&text=${encodeURIComponent(trimmed)}`;
+      const url = `${FTAPI_URL}?sl=${sourceLang}&tl=${targetLang}&text=${encodeURIComponent(trimmed)}`;
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2500);
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.FALLBACK);
       const response = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (response.ok) {
@@ -354,11 +347,16 @@ export class TranslationService {
   ): Promise<{ translatedText: string; detectedLang?: string } | null> {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
+      const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUTS.ENDPOINT);
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ q: trimmed, source: sourceLang, target: targetLang, format: 'text' }),
+        body: JSON.stringify({
+          q: trimmed,
+          source: sourceLang,
+          target: targetLang,
+          format: 'text',
+        }),
         signal: controller.signal,
       });
       clearTimeout(timeoutId);

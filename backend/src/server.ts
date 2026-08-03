@@ -1,5 +1,5 @@
-import { createApp } from './src/app.js';
-import { createBackendConfig } from './src/config.js';
+import { createApp } from './app.js';
+import { createBackendConfig } from './config.js';
 
 process.on('unhandledRejection', (reason, _promise) => {
   console.error('[unhandled-rejection]', reason);
@@ -21,12 +21,12 @@ const server = app.listen(config.port, () => {
 
 // Track active connections for graceful drain
 let activeConnections = 0;
-server.on('connection', (conn) => {
+server.on('connection', (conn: import('net').Socket) => {
   activeConnections++;
   conn.on('close', () => activeConnections--);
 });
 
-const shutdown = (signal) => {
+const shutdown = (signal: string) => {
   if (isShuttingDown) return;
   isShuttingDown = true;
 

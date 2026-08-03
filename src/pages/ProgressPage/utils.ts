@@ -2,6 +2,8 @@ import { BookMarked, BookOpen, Headphones, Languages, MessageSquare, PenTool } f
 
 import { useEffect, useState } from 'react';
 
+import { RANK_THRESHOLDS } from '@/shared/constants/elo.constants';
+
 export const SKILLS = [
   {
     id: 'vocabulary',
@@ -67,8 +69,6 @@ export const CEFR_LEVELS = [
   'C2',
   'C2+',
 ];
-export const MIN_ELO = 1000;
-export const MAX_ELO = 5000;
 
 const CEFR_THRESHOLDS: [number, string][] = [
   [1333, 'A1+'],
@@ -92,25 +92,25 @@ export const getCEFRBand = (elo: number) => {
 export const getCEFRIndex = (cefr: string) => CEFR_LEVELS.indexOf(cefr);
 
 export const getRank = (elo: number) => {
-  if (elo >= 4500)
+  if (elo >= RANK_THRESHOLDS.GRANDMASTER)
     return {
       label: 'Grandmaster',
       icon: '👑',
       color: 'text-yellow-600 bg-yellow-50 border-yellow-200',
     };
-  if (elo >= 3500)
+  if (elo >= RANK_THRESHOLDS.DIAMOND)
     return {
       label: 'Diamond',
       icon: '💎',
       color: 'text-cyan-600 bg-cyan-50 border-cyan-200',
     };
-  if (elo >= 2500)
+  if (elo >= RANK_THRESHOLDS.PLATINUM)
     return {
       label: 'Platinum',
       icon: '🏆',
       color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
     };
-  if (elo >= 1500)
+  if (elo >= RANK_THRESHOLDS.GOLD)
     return {
       label: 'Gold',
       icon: '🥇',
