@@ -1,5 +1,10 @@
+import { useState } from 'react';
+
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
 
+import { LanguageDisciplineSection } from './LanguageDisciplineSection';
 import { LearningPreferencesSection } from './LearningPreferencesSection';
 import { ProfileOverviewSection } from './ProfileOverviewSection';
 import { SecuritySection } from './SecuritySection';
@@ -116,6 +121,17 @@ const ProfilePage = () => {
     completionPercent,
   } = state;
 
+  const [discipline, setDiscipline] = useState<EngineeringDiscipline>(
+    () => (localStorage.getItem('preselected_discipline') as EngineeringDiscipline) || 'electrical'
+  );
+  const [disciplineSaved, setDisciplineSaved] = useState(false);
+
+  const handleDisciplineSave = () => {
+    localStorage.setItem('preselected_discipline', discipline);
+    setDisciplineSaved(true);
+    setTimeout(() => setDisciplineSaved(false), 2000);
+  };
+
   return (
     <div className="mx-auto max-w-5xl space-y-10 animate-in fade-in duration-300 pt-12 sm:pt-0 text-foreground relative z-10">
       <ProfileHeader
@@ -188,6 +204,15 @@ const ProfilePage = () => {
           exportLocalData={exportLocalData}
           clearLocalData={clearLocalData}
           resetLearningProgress={resetLearningProgress}
+        />
+      )}
+
+      {activeSection === 'language-discipline' && (
+        <LanguageDisciplineSection
+          currentDiscipline={discipline}
+          onDisciplineChange={setDiscipline}
+          onSave={handleDisciplineSave}
+          saved={disciplineSaved}
         />
       )}
     </div>

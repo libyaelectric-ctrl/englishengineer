@@ -1,9 +1,9 @@
 import { INTERFACE_LANGUAGES } from '@/features/localization';
-import type { InterfaceLanguage } from '@/features/profile/profile.types';
+import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 type LanguageStepProps = {
-  language: InterfaceLanguage;
-  setLanguage: (l: InterfaceLanguage) => void;
+  language: SupportedInterfaceLanguage;
+  setLanguage: (l: SupportedInterfaceLanguage) => void;
 };
 
 export const LanguageStep = ({ language, setLanguage }: LanguageStepProps) => (
