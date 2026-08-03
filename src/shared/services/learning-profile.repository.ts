@@ -1,5 +1,4 @@
 import { storage } from '@/shared/storage';
-
 import {
   type LearningGoal,
   type ProfessionId,
@@ -120,6 +119,7 @@ export const LearningProfileRepository = {
     userId: string,
     update: Partial<{
       goals: LearningGoal[];
+      discipline: UserLearningProfile['discipline'];
       professionId: ProfessionId | null;
       industryId: UserLearningProfile['industryId'];
       communicationGoals: UserLearningProfile['communicationGoals'];

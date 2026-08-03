@@ -99,6 +99,7 @@ export const getInitialUserLearningProfile = (
     SKILL_NAMES.map((skill) => [skill, getInitialSkillProfile(skill)])
   ) as Record<SkillName, SkillProfile>,
   goals: [],
+  discipline: 'electrical',
   professionId: null,
   industryId: null,
   communicationGoals: [],

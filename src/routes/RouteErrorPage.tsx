@@ -1,5 +1,10 @@
+import { AlertTriangle } from 'lucide-react';
+
 import { useEffect, useRef } from 'react';
+
 import { Link, isRouteErrorResponse, useRouteError } from 'react-router-dom';
+
+import { Button } from '@/shared/components/Button';
 import { logger } from '@/shared/logger';
 
 const CHUNK_ERROR_MESSAGES = [
@@ -45,16 +50,19 @@ export const RouteErrorPage = () => {
       logger.w('[RouteError] Failed to remove reload count from sessionStorage', e);
     }
   }, [isChunkError]);
+
   return (
-    <main className="mx-auto mt-16 max-w-xl rounded-2xl border border-rose-200 bg-surface p-8 text-center shadow-sm">
-      <h1 className="text-2xl font-black text-foreground">Route unavailable</h1>
-      <p className="mt-3 text-sm leading-6 text-muted-copy">{message}</p>
-      <Link
-        to="/dashboard"
-        className="mt-5 inline-flex rounded-xl bg-sky-600 px-4 py-2 text-sm font-bold text-white"
-      >
-        Return Home
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+      <div className="p-6 bg-surface-hover rounded-xl mb-8 text-muted-copy">
+        <AlertTriangle className="h-16 w-16" />
+      </div>
+      <h1 className="text-6xl font-medium tracking-tighter">SYSTEM FAULT</h1>
+      <p className="text-muted-copy mt-4 max-w-md text-lg">{message}</p>
+      <Link to="/dashboard" className="mt-12">
+        <Button variant="outline" className="gap-3 px-8 h-14 text-lg rounded-lg">
+          Return to Command Center
+        </Button>
       </Link>
-    </main>
+    </div>
   );
 };

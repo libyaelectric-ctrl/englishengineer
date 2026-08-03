@@ -1,25 +1,19 @@
 // @vitest-environment node
 import { beforeAll, describe, expect, it } from 'vitest';
 
-import { VocabularyDiscipline, VocabularyEntry } from '../types/vocabulary.types';
+import type { VocabularyDomain } from '@/shared/constants/engineering-disciplines';
+
+import { VocabularyEntry } from '../types/vocabulary.types';
 import { loadVocabularyEntries } from './vocabulary.data';
 
-const requiredDisciplines: VocabularyDiscipline[] = [
-  'Electrical Engineering',
-  'Mechanical Engineering',
-  'Civil Engineering',
-  'Architecture',
-  'Construction',
-  'Commissioning',
-  'QA/QC',
-  'HSE',
-  'Procurement',
-  'Project Management',
-  'Hospital Projects',
-  'Data Centers',
-  'Oil & Gas',
-  'Testing & Commissioning',
-  'Professional Communication',
+const requiredDisciplines: VocabularyDomain[] = [
+  'electrical',
+  'mechanical',
+  'civil',
+  'architecture',
+  'hse',
+  'engineering',
+  'general',
 ];
 
 let entries: VocabularyEntry[] = [];
@@ -46,7 +40,7 @@ describe('vocabulary content pack integrity', () => {
   it('covers all Sprint B required disciplines', () => {
     const disciplines = new Set(entries.map((entry) => entry.discipline));
     requiredDisciplines.forEach((discipline) => {
-      expect(disciplines.has(discipline)).toBe(true);
+      expect(disciplines.has(discipline as any)).toBe(true);
     });
   });
 

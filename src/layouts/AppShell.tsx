@@ -30,7 +30,7 @@ export const AppShell: FC = () => {
       >
         Skip to main content
       </a>
-      <Suspense fallback={null}>
+      <Suspense fallback={<div className="hidden" aria-hidden="true" />}>
         <CommandPalette />
       </Suspense>
       {/* Nav1 - Left sidebar */}

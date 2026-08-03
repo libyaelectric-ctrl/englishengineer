@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const hseCategories: ExpansionCategory[] = [
   {
-    discipline: 'HSE',
+    discipline: 'hse',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['safety', 'hse', 'risk'],
@@ -41,7 +41,7 @@ export const hseCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'QA/QC',
+    discipline: 'engineering',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['quality', 'inspection', 'documentation'],
@@ -80,7 +80,7 @@ export const hseCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Procurement',
+    discipline: 'engineering',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['procurement', 'supplier', 'submittal'],

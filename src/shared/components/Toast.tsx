@@ -28,9 +28,11 @@ const icons = {
 };
 
 const colors = {
-  success: 'border-emerald-200 bg-emerald-50 text-emerald-700',
-  error: 'border-rose-200 bg-rose-50 text-rose-700',
-  info: 'border-blue-200 bg-blue-50 text-blue-700',
+  success:
+    'border-success/30 bg-success/10 text-success dark:border-success/40 dark:bg-success/15 dark:text-success',
+  error:
+    'border-error/30 bg-error/10 text-error dark:border-error/40 dark:bg-error/15 dark:text-error',
+  info: 'border-primary/30 bg-primary/10 text-primary dark:border-primary/40 dark:bg-primary/15 dark:text-primary',
 };
 
 export const ToastContainer = () => {

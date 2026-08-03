@@ -40,12 +40,10 @@ The primary color palette uses a distinctive deep engineering blue (`#0047bb`) t
 ### Font Family
 
 ```css
-font-family:
-  'Inter',
-  system-ui,
-  -apple-system,
-  sans-serif;
+font-family: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 ```
+
+Monospace: `'JetBrains Mono'`
 
 ### Type Scale
 
@@ -76,29 +74,30 @@ Based on Tailwind's default scale:
 ### Buttons
 
 ```tsx
+import { Button } from '@/shared/components/Button';
+
 // Primary Button
-<button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-  Click me
-</button>
+<Button variant="primary">Click me</Button>
 
 // Secondary Button
-<button className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">
-  Secondary
-</button>
+<Button variant="secondary">Secondary</Button>
+
+// Outline Button
+<Button variant="outline">Outline</Button>
 
 // Danger Button
-<button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
-  Delete
-</button>
+<Button variant="danger">Delete</Button>
 ```
 
 ### Cards
 
 ```tsx
-<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+import { Card } from '@/shared/components/Card';
+
+<Card>
   <h3 className="text-lg font-semibold mb-2">Card Title</h3>
-  <p className="text-gray-600">Card content goes here.</p>
-</div>
+  <p className="text-muted-copy">Card content goes here.</p>
+</Card>;
 ```
 
 ### Forms
@@ -106,7 +105,7 @@ Based on Tailwind's default scale:
 ```tsx
 <input
   type="text"
-  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+  className="w-full px-3 py-2 border border-border-soft rounded-[var(--radius-input)] focus:outline-none focus:ring-2 focus:ring-focus"
   placeholder="Enter text..."
 />
 ```
@@ -122,11 +121,11 @@ All text meets WCAG 2.1 AA contrast requirements:
 
 ### Focus States
 
-All interactive elements have visible focus indicators:
+All interactive elements have visible focus indicators using the `focus` semantic token:
 
 ```css
 :focus-visible {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 ```
@@ -144,22 +143,43 @@ All interactive elements have appropriate ARIA labels:
 
 ### Implementation
 
-Uses Tailwind's dark mode with class strategy:
+Uses CSS custom properties with `data-theme` attribute and class-based toggling. Theme state is managed via Zustand with auto-detection (dark after 6pm, light before 6am):
 
 ```tsx
-<div className="bg-white dark:bg-gray-900">
-  <p className="text-gray-900 dark:text-white">Content</p>
+// Theme is toggled via data-theme attribute on <html>
+<html data-theme="dark" class="dark">
+
+// Use semantic color tokens — they auto-adapt to theme
+<div className="bg-surface text-foreground border-border-soft">
+  <p className="text-muted-copy">Content</p>
 </div>
 ```
 
-### Color Overrides
+### Theme Tokens
 
-| Element    | Light      | Dark       |
-| ---------- | ---------- | ---------- |
-| Background | `white`    | `gray-900` |
-| Text       | `gray-900` | `white`    |
-| Border     | `gray-200` | `gray-700` |
-| Card       | `white`    | `gray-800` |
+All colors are defined as CSS custom properties in `index.css` and mapped to Tailwind via `@theme`. Use the semantic token names, not hardcoded colors:
+
+| Token           | Light     | Dark                    |
+| --------------- | --------- | ----------------------- |
+| `background`    | `#faf8ff` | `#0a0a1a`               |
+| `foreground`    | `#0a0a1a` | `#e2e4e7`               |
+| `surface`       | `#f3f3fd` | `#1c1f26`               |
+| `surface-hover` | `#e8e8f5` | `#252830`               |
+| `border-soft`   | `#d9d9e3` | `rgba(51,102,204,0.24)` |
+| `primary`       | `#0047bb` | `#3366cc`               |
+| `success`       | `#16a34a` | `#22c55e`               |
+| `error`         | `#dc2626` | `#ef4444`               |
+
+### Border Radius Tokens
+
+Defined as CSS custom properties and mapped to Tailwind:
+
+| Token             | Value |
+| ----------------- | ----- |
+| `--radius-button` | 4px   |
+| `--radius-input`  | 4px   |
+| `--radius-card`   | 4px   |
+| `--radius-dialog` | 4px   |
 
 ## Responsive Breakpoints
 
@@ -210,9 +230,9 @@ Using Lucide React icons:
 ```tsx
 import { Home, Settings, User } from 'lucide-react';
 
-<Home className="w-5 h-5" />
-<Settings className="w-6 h-6 text-gray-500" />
-<User className="w-4 h-4 text-blue-500" />
+<Home className="w-5 h-5 text-foreground" />
+<Settings className="w-6 h-6 text-muted-copy" />
+<User className="w-4 h-4 text-primary" />
 ```
 
 ## Animations
@@ -233,5 +253,5 @@ import { motion } from 'motion';
 
 ## Last Updated
 
-- **Date:** 2026-07-12
-- **Version:** 1.0
+- **Date:** 2026-08-02
+- **Version:** 2.0

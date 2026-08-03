@@ -1,29 +1,17 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
 import { MissionDifficulty } from '@/core/learning';
 import type { LearningDataSkill } from '@/core/learning';
 
-export type VocabularyDiscipline =
-  | 'Electrical Engineering'
-  | 'Mechanical Engineering'
-  | 'Civil Engineering'
-  | 'Architecture'
-  | 'Construction'
-  | 'Commissioning'
-  | 'Testing'
-  | 'Data Centers'
-  | 'Procurement'
-  | 'QA/QC'
-  | 'HSE'
-  | 'Hospital Projects'
-  | 'Oil & Gas'
-  | 'Testing & Commissioning'
-  | 'Professional Communication'
-  | 'Health & Safety'
-  | 'Project Management'
-  | 'Construction Site'
-  | 'Meetings'
-  | 'Safety'
-  | 'General Professional English';
+import type {
+  EngineeringDiscipline,
+  VocabularyDomain,
+} from '@/shared/constants/engineering-disciplines';
+import type { CefrLevel } from '@/shared/types/domain.types';
+
+/**
+ * @deprecated Use `EngineeringDiscipline` from shared/constants/engineering-disciplines.
+ * Kept for backwards compatibility. New code should use EngineeringDiscipline.
+ */
+export type VocabularyDiscipline = EngineeringDiscipline;
 
 export type VocabularyTrainingMode =
   | 'flashcards'
@@ -34,13 +22,7 @@ export type VocabularyTrainingMode =
   | 'synonym_challenge';
 
 export type VocabularyWordStatus =
-  | 'New'
-  | 'Learning'
-  | 'Weak'
-  | 'Leech'
-  | 'Review Today'
-  | 'Mastered'
-  | 'approved';
+  'New' | 'Learning' | 'Weak' | 'Leech' | 'Review Today' | 'Mastered' | 'approved';
 
 export type VocabularyWordSource =
   | 'EngVox Dictionary'
@@ -62,7 +44,7 @@ export interface VocabularyEntry {
   synonyms: string[];
   collocations: string[];
   difficulty: MissionDifficulty;
-  discipline: VocabularyDiscipline;
+  discipline: VocabularyDomain;
   CEFR: CefrLevel;
   tags: string[];
 }
@@ -80,7 +62,16 @@ export interface VocabularyTerm {
   primaryUseCase: string;
   category: string;
   termType: string;
-  partOfSpeech: 'noun' | 'verb' | 'adjective' | 'adverb' | 'preposition' | 'conjunction' | 'interjection' | 'pronoun' | 'phrase';
+  partOfSpeech:
+    | 'noun'
+    | 'verb'
+    | 'adjective'
+    | 'adverb'
+    | 'preposition'
+    | 'conjunction'
+    | 'interjection'
+    | 'pronoun'
+    | 'phrase';
   wordCount: number;
   definition: string;
   exampleSentence: string;
@@ -112,7 +103,7 @@ export interface SavedVocabularyWord {
   term: string;
   turkishMeaning: string;
   cefrLevel: CefrLevel;
-  category: VocabularyDiscipline;
+  category: VocabularyDomain;
   exampleSentence: string;
   status: VocabularyWordStatus;
   dateAdded: string;
@@ -206,7 +197,7 @@ export interface VocabularySummary {
   retentionPercentage: number;
   mostDifficultWords: VocabularyEntry[];
   categoryMastery: Array<{
-    discipline: VocabularyDiscipline;
+    discipline: VocabularyDomain;
     learned: number;
     total: number;
     percentage: number;

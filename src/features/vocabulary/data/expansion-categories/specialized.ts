@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const specializedCategories: ExpansionCategory[] = [
   {
-    discipline: 'Hospital Projects',
+    discipline: 'engineering',
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['hospital', 'healthcare', 'MEP'],
@@ -41,7 +41,7 @@ export const specializedCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Data Centers',
+    discipline: 'engineering',
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['data center', 'critical systems', 'resilience'],
@@ -80,7 +80,7 @@ export const specializedCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Oil & Gas',
+    discipline: 'engineering',
     CEFR: 'C1',
     difficulty: 'Advanced',
     tags: ['oil and gas', 'industrial', 'hazardous area'],
@@ -119,7 +119,7 @@ export const specializedCategories: ExpansionCategory[] = [
     ],
   },
   {
-    discipline: 'Professional Communication',
+    discipline: 'general',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['communication', 'emails', 'meetings'],

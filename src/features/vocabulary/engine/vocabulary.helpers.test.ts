@@ -21,7 +21,7 @@ const entry: VocabularyEntry = {
   synonyms: ['voltage converter'],
   collocations: ['step-up transformer'],
   difficulty: 'Intermediate',
-  discipline: 'Electrical Engineering',
+  discipline: 'electrical',
   CEFR: 'B2',
   tags: ['electrical'],
 };

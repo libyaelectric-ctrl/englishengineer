@@ -1,7 +1,7 @@
 import { AppShell } from '@/layouts/AppShell';
 import { PublicLayout } from '@/layouts/PublicLayout';
 
-import { Suspense, lazy, type ComponentType } from 'react';
+import { type ComponentType, Suspense, lazy } from 'react';
 
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 
@@ -34,6 +34,7 @@ const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
+const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
 
 const Landing = lazy(() => import('@/pages/LandingPage'));
 const Pricing = lazy(() => import('@/pages/PricingPage'));
@@ -111,8 +112,15 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      
-      
+      {
+        path: 'onboarding',
+        element: withSuspense(Onboarding),
+      },
+      {
+        path: 'onboarding/:step',
+        element: withSuspense(Onboarding),
+      },
+
       {
         path: 'profile',
         element: <Navigate to="/profile/overview" replace />,
@@ -185,8 +193,7 @@ export const router = createBrowserRouter([
         path: 'tools/:section',
         element: withSuspense(Tools),
       },
-      
-      
+
       {
         path: 'learning-plan',
         element: <Navigate to="/progress/next-steps" replace />,
@@ -226,4 +233,3 @@ export const router = createBrowserRouter([
     element: withSuspense(NotFound),
   },
 ]);
-

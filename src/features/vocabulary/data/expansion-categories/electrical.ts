@@ -2,7 +2,7 @@ import { ExpansionCategory } from '../vocabulary.expansion-categories';
 
 export const electricalCategories: ExpansionCategory[] = [
   {
-    discipline: 'Electrical Engineering',
+    discipline: 'electrical',
     CEFR: 'B2',
     difficulty: 'Intermediate',
     tags: ['electrical', 'power', 'installation'],
