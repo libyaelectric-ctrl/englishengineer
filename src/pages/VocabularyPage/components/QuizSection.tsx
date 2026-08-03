@@ -17,7 +17,7 @@ import {
   LEARNED_QUIZ_SIZE,
   isTurkishQuizAnswerCorrect,
   selectRandomQuizItems,
-} from '@/features/vocabulary/services/learned-quiz';
+} from '@/features/vocabulary/services/core/learned-quiz';
 
 interface QuizSectionProps {
   menuState: VocabularyMenuState;

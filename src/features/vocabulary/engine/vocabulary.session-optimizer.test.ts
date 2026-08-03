@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { VocabularyMenuProgress } from '../services/vocabulary.menu';
+import type { VocabularyMenuProgress } from '../services/core/vocabulary.menu';
 import {
   calculateWordPriority,
   getSessionPriorityLabel,

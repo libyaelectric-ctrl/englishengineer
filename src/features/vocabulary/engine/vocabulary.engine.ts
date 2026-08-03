@@ -3,7 +3,7 @@ import { type LearningDataSkill, includesNormalized, isCefrAtOrBelow } from '@/c
 import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrLevel } from '@/features/level-system';
 
-import { VocabularyRepository } from '../services/vocabulary.repository';
+import { VocabularyRepository } from '../services/core/vocabulary.repository';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const VocabularyEngine = {

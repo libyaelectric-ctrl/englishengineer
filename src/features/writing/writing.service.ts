@@ -6,11 +6,11 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
 import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
-import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
 
 import { WRITING_MISSIONS } from './writing.data';
 import { WritingEvaluator } from './writing.evaluator';

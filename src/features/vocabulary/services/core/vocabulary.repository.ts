@@ -10,8 +10,8 @@ import {
 import { CEFR_LEVELS } from '@/shared/types/domain.types';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
-import { assertVocabularyTerms } from '../types/vocabulary.schema';
-import type { VocabularyTerm } from '../types/vocabulary.types';
+import { assertVocabularyTerms } from '../../types/vocabulary.schema';
+import type { VocabularyTerm } from '../../types/vocabulary.types';
 
 const levelCache = new Map<CefrLevel, VocabularyTerm[]>();
 const pendingLevelLoads = new Map<CefrLevel, Promise<VocabularyTerm[]>>();

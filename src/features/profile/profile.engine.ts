@@ -1,10 +1,11 @@
 import type { LearningState, MissionModule } from '@/core/learning/learning.types';
 
+import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel } from '@/shared/types/domain.types';
+
 import { GrammarEngine } from '@/features/grammar/grammar.engine';
 import { VocabularyEngine } from '@/features/vocabulary/engine/vocabulary.engine';
-import { VocabularyMenuService } from '@/features/vocabulary/services/vocabulary.menu';
-import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
 
 import {
   type CefrBand,

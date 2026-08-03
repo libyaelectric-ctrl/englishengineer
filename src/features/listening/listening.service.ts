@@ -5,7 +5,7 @@ import { useLearningStore } from '@/core/learning';
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
 
 import { LISTENING_MISSIONS } from './listening.data';
 import { ListeningEvaluator } from './listening.evaluator';
