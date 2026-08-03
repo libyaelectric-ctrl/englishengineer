@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 
 import { ApiError } from './errors.js';
 import { logger } from './logger.js';
+import { recordRateLimit } from './performance-monitor.js';
 
 const logRateLimit = (scope: string, identity: string, count: number, max: number): void => {
   if (count > max) {
@@ -153,10 +154,12 @@ export const createRateLimiter = ({
         response.setHeader('X-RateLimit-Reset', resetSeconds);
         if (result.count > max) {
           logRateLimit(scope, identity, result.count, max);
+          recordRateLimit(scope, true);
           return next(
             new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.')
           );
         }
+        recordRateLimit(scope, false);
         return next();
       } catch (error) {
         if (error instanceof ApiError) return next(error);
@@ -215,10 +218,12 @@ export const createRateLimiter = ({
 
     if (bucket.count > max) {
       logRateLimit(scope, identity, bucket.count, max);
+      recordRateLimit(scope, true);
       return next(
         new ApiError(429, 'rate_limit_exceeded', 'Too many requests. Please try again later.')
       );
     }
+    recordRateLimit(scope, false);
     next();
   };
 };

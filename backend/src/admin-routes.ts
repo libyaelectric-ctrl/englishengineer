@@ -2,7 +2,7 @@ import type { Express, NextFunction, Request, RequestHandler, Response } from 'e
 
 import { getAuditLogs } from './audit-log.js';
 import { requireRole } from './middleware/rbac.middleware.js';
-import { getPerformanceMetrics } from './performance-monitor.js';
+import { getPerformanceMetrics, getRateLimitMetrics } from './performance-monitor.js';
 import { AdminAuditLogsQuerySchema, validateQuery } from './validation.js';
 
 export const registerAdminRoutes = (
@@ -56,6 +56,21 @@ export const registerAdminRoutes = (
         };
         const logs = await getAuditLogs(filters);
         res.json({ success: true, data: logs });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
+
+  app.get(
+    '/api/admin/rate-limit-metrics',
+    requireBackendAuth,
+    requireRole(['admin']),
+    rateLimiter,
+    async (_req: Request, res: Response, next: NextFunction) => {
+      try {
+        const metrics = getRateLimitMetrics();
+        res.json({ success: true, data: metrics });
       } catch (error) {
         next(error);
       }
