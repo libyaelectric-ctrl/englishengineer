@@ -26,10 +26,10 @@ describe('learning profile engine', () => {
     expect(snapshot.skills.speaking.cefrBand).toBe('A1');
   });
 
-  it('gets the 5000-term total from the vocabulary repository', async () => {
+  it('gets the 14199-term total from the vocabulary repository', async () => {
     const summary = await LearningProfileEngine.getVocabularyMemorySummary();
-    expect(summary.total).toBe(5000);
-    expect(summary.new).toBe(5000);
+    expect(summary.total).toBe(14199);
+    expect(summary.new).toBe(14199);
     expect(summary.mastered).toBe(0);
   });
 

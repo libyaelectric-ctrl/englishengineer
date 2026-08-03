@@ -9,19 +9,18 @@ import {
 
 import { CEFR_LEVELS } from '@/shared/types/domain.types';
 import type { CefrLevel } from '@/shared/types/domain.types';
-
 import { assertVocabularyTerms } from '@/shared/types/vocabulary.schema';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
 const levelCache = new Map<CefrLevel, VocabularyTerm[]>();
 const pendingLevelLoads = new Map<CefrLevel, Promise<VocabularyTerm[]>>();
 const VOCABULARY_LEVEL_COUNTS: Record<CefrLevel, number> = {
-  A1: 263,
-  A2: 667,
-  B1: 1651,
-  B2: 1847,
-  C1: 507,
-  C2: 65,
+  A1: 856,
+  A2: 2164,
+  B1: 4697,
+  B2: 3998,
+  C1: 2065,
+  C2: 419,
 };
 
 const loadLevel = async (level: CefrLevel): Promise<VocabularyTerm[]> => {

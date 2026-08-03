@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { ApiError } from '../src/errors.js';
-import { validateBody } from '../src/validation.js';
+import { _ApiError } from '../src/errors.js';
+import { _validateBody } from '../src/validation.js';
 import { ProgressBodySchema } from '../src/validation.js';
 
 interface GrammarRecord {

@@ -1,12 +1,11 @@
 import { eventBus } from '@/core/events/event-bus';
 
-import { storage } from '@/shared/storage';
-
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
+import { storage } from '@/shared/storage';
 import type { CefrLevel } from '@/shared/types/domain.types';
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 
-export const CANONICAL_VOCABULARY_TOTAL = 5000;
+export const CANONICAL_VOCABULARY_TOTAL = 14199;
 
 export type VocabularyMenuStatus = 'New' | 'Learning' | 'Learned' | 'Mastered' | 'Struggling';
 
@@ -138,7 +137,9 @@ export const isVocabularyForgotten = (
 ): boolean => {
   if (progress.isForgotten) return true;
   if (!progress.lastReviewed) return false;
-  return now.getTime() - new Date(progress.lastReviewed).getTime() >= FORGOTTEN_THRESHOLD_DAYS * DAY_MS;
+  return (
+    now.getTime() - new Date(progress.lastReviewed).getTime() >= FORGOTTEN_THRESHOLD_DAYS * DAY_MS
+  );
 };
 
 export const getVocabularyReviewReason = (
@@ -176,7 +177,14 @@ const buildCorrectReviewResult = (
     isForgotten: isMastered ? false : current.isForgotten,
     isLeech: isMastered ? false : current.isLeech,
     lastReviewed: now.toISOString(),
-    nextReviewDate: addDays(now, isMastered ? REVIEW_DAYS_AFTER_MASTERY : correctReviews === 2 ? REVIEW_DAYS_AFTER_SECOND : REVIEW_DAYS_AFTER_FIRST),
+    nextReviewDate: addDays(
+      now,
+      isMastered
+        ? REVIEW_DAYS_AFTER_MASTERY
+        : correctReviews === 2
+          ? REVIEW_DAYS_AFTER_SECOND
+          : REVIEW_DAYS_AFTER_FIRST
+    ),
   };
 };
 

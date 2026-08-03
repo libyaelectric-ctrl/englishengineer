@@ -35,7 +35,7 @@ import {
   setGlobalIdempotencyStore,
 } from './middleware/idempotency.middleware.js';
 import { requireTenantContext } from './middleware/tenant.middleware.js';
-import { getPerformanceMetrics, recordRequest } from './performance-monitor.js';
+import { recordRequest } from './performance-monitor.js';
 import { registerProgressRoutes } from './progress-routes.js';
 import { getPrometheusMetrics } from './prometheus.js';
 import { createRateLimitStore, createRateLimiter } from './rate-limit.js';

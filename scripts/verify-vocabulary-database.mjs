@@ -10,8 +10,8 @@ const terms = JSON.parse(await fs.readFile(canonicalPath, 'utf8'));
 const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
 
 assertValidLevels(terms, 'Canonical vocabulary database');
-if (terms.length !== 5000) {
-  throw new Error(`Expected 5000 vocabulary terms, found ${terms.length}.`);
+if (terms.length !== 14199) {
+  throw new Error(`Expected 14199 vocabulary terms, found ${terms.length}.`);
 }
 if (duplicateValues(terms, 'id').length > 0) {
   throw new Error('Canonical vocabulary database contains duplicate IDs.');

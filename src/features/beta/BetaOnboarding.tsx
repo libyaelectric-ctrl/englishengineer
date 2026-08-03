@@ -3,11 +3,17 @@ import { CheckCircle2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/shared/components/Button';
+import {
+  ENGINEERING_DISCIPLINES,
+  type EngineeringDiscipline,
+} from '@/shared/constants/engineering-disciplines';
+import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import type { ProfessionId } from '@/shared/types/domain.types';
 
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
-import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
-import type { ProfessionId } from '@/shared/types/domain.types';
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 
 import { BETA_ONBOARDING_OPTIONS } from './beta.helpers';
 import { useBetaStore } from './beta.store';
@@ -15,16 +21,26 @@ import { BetaOnboardingProfile } from './beta.types';
 
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
+const getDisciplineLabel = (
+  id: EngineeringDiscipline,
+  translate: (key: TranslationKey) => string
+): string => {
+  const labelKey = `discipline.${id}` as TranslationKey;
+  const translated = translate(labelKey);
+  return translated !== labelKey ? translated : id;
+};
+
 export const BetaOnboarding = () => {
   const userId = useAuthStore((state) => state.currentUser?.id);
   const onboardingProfile = useBetaStore((state) => state.onboardingProfile);
   const completeOnboarding = useBetaStore((state) => state.completeOnboarding);
+  const { translate } = useLocalizationStore();
   const getInitialDiscipline = () => {
     const saved = localStorage.getItem('preselected_discipline');
-    if (saved && BETA_ONBOARDING_OPTIONS.engineeringDisciplines.includes(saved)) {
-      return saved;
+    if (saved && ENGINEERING_DISCIPLINES.includes(saved as EngineeringDiscipline)) {
+      return saved as EngineeringDiscipline;
     }
-    return BETA_ONBOARDING_OPTIONS.engineeringDisciplines[0];
+    return ENGINEERING_DISCIPLINES[0];
   };
 
   const [form, setForm] = useState<Omit<BetaOnboardingProfile, 'completedAt'>>({
@@ -56,22 +72,24 @@ export const BetaOnboarding = () => {
   };
 
   const finishOnboarding = () => {
-    const professionByDiscipline: Record<string, ProfessionId> = {
-      Architecture: 'architect',
-      'Chemical Engineering': 'other',
-      'Civil Engineering': 'civil-engineer',
-      'Computer / Software Engineering': 'project-engineer',
-      'Electrical Engineering': 'electrical-engineer',
-      'Electronics Engineering': 'electrical-engineer',
-      'HSE Engineering': 'qa-qc-engineer',
-      'Industrial Engineering': 'project-engineer',
-      'Mechanical Engineering': 'mechanical-engineer',
-      'Mechatronics / Robotics Engineering': 'mechanical-engineer',
+    const professionByDiscipline: Record<EngineeringDiscipline, ProfessionId> = {
+      architecture: 'architect',
+      chemical: 'other',
+      civil: 'civil-engineer',
+      software: 'project-engineer',
+      electrical: 'electrical-engineer',
+      electronics: 'electrical-engineer',
+      hse: 'qa-qc-engineer',
+      industrial: 'project-engineer',
+      mechanical: 'mechanical-engineer',
+      mechatronics: 'mechanical-engineer',
     };
     const minutes = Number.parseInt(form.dailyStudyGoal, 10) || 15;
     LearningProfileRepository.updatePreferences(userId ?? 'local-user', {
       goals: ['work', 'engineering'],
-      professionId: professionByDiscipline[form.engineeringDiscipline] ?? 'electrical-engineer',
+      professionId:
+        professionByDiscipline[form.engineeringDiscipline as EngineeringDiscipline] ??
+        'electrical-engineer',
       dailyTarget: {
         minutes,
         taskCount: Math.max(1, Math.round(minutes / 10)),
@@ -83,7 +101,20 @@ export const BetaOnboarding = () => {
     window.dispatchEvent(new PopStateEvent('popstate'));
   };
 
-  const renderSelect = (label: string, key: keyof typeof form, options: string[]) => (
+  const disciplineLabels = ENGINEERING_DISCIPLINES.reduce(
+    (acc, id) => {
+      acc[id] = getDisciplineLabel(id, translate);
+      return acc;
+    },
+    {} as Record<EngineeringDiscipline, string>
+  );
+
+  const renderSelect = (
+    label: string,
+    key: keyof typeof form,
+    options: string[],
+    labelMap?: Record<string, string>
+  ) => (
     <label className="space-y-2">
       <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
         {label}
@@ -95,7 +126,7 @@ export const BetaOnboarding = () => {
       >
         {options.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {labelMap?.[option] ?? option}
           </option>
         ))}
       </select>
@@ -127,7 +158,8 @@ export const BetaOnboarding = () => {
           {renderSelect(
             'Engineering Discipline',
             'engineeringDiscipline',
-            BETA_ONBOARDING_OPTIONS.engineeringDisciplines
+            BETA_ONBOARDING_OPTIONS.engineeringDisciplines,
+            disciplineLabels
           )}
           {renderSelect(
             'Experience Level',

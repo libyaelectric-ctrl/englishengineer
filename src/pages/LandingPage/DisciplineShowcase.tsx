@@ -4,13 +4,14 @@ import {
   Building2,
   CheckCircle2,
   Code2,
-  Cog,
   Compass,
   Cpu,
   Factory,
   FlaskConical,
-  ShieldAlert,
+  HardHat,
+  ShieldCheck,
   Volume2,
+  Wrench,
   Zap,
 } from 'lucide-react';
 
@@ -18,23 +19,27 @@ import { useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import {
+  DISCIPLINE_META,
+  ENGINEERING_DISCIPLINES,
+} from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 
 import { AnimatedSection } from './AnimatedComponents';
 
-const DISCIPLINE_ICONS: Record<string, React.ElementType> = {
-  architecture: Compass,
+const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
+  architecture: Building2,
   chemical: FlaskConical,
-  civil: Building2,
+  civil: HardHat,
   software: Code2,
   electrical: Zap,
   electronics: Cpu,
-  hse: ShieldAlert,
+  hse: ShieldCheck,
   industrial: Factory,
-  mechanical: Cog,
+  mechanical: Wrench,
   mechatronics: Bot,
 };
 
@@ -106,10 +111,10 @@ const DISCIPLINE_SAMPLE_TERMS: Record<EngineeringDiscipline, string> = {
 
 export function DisciplineShowcase() {
   const translate = useLocalizationStore((s) => s.translate);
-  const [activeTab, setActiveTab] = useState<EngineeringDiscipline>('electrical');
+  const [activeTab, setActiveTab] = useState<EngineeringDiscipline>(ENGINEERING_DISCIPLINES[0]);
   const disciplineKeys = Object.keys(DISCIPLINE_META) as EngineeringDiscipline[];
   const meta = DISCIPLINE_META[activeTab];
-  const Icon = DISCIPLINE_ICONS[activeTab] || Compass;
+  const Icon = DISCIPLINE_ICONS[activeTab] || Building2;
 
   return (
     <section
@@ -155,7 +160,7 @@ export function DisciplineShowcase() {
                   }`}
                 />
                 <span className="text-xs font-bold leading-tight">
-                  {translate(`discipline.${id}` as any)}
+                  {translate(`discipline.${id}` as TranslationKey)}
                 </span>
                 <span
                   className={`mt-1 text-[9px] font-mono font-bold ${isActive ? 'text-primary-foreground/80' : 'text-primary/70'}`}

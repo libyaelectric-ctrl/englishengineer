@@ -127,8 +127,8 @@ describe('Vocabulary menu progress', () => {
     const state = VocabularyMenuService.getState();
     expect(state.myVocabulary).toHaveLength(1);
     expect(state.progress).toEqual({});
-    expect(VocabularyMenuService.getSummary(state).total).toBe(5000);
-    expect(VocabularyMenuService.getSummary(state).newWords).toBe(5000);
+    expect(VocabularyMenuService.getSummary(state).total).toBe(CANONICAL_VOCABULARY_TOTAL);
+    expect(VocabularyMenuService.getSummary(state).newWords).toBe(CANONICAL_VOCABULARY_TOTAL);
   });
 
   it('archives a custom word without deleting it or changing canonical totals', () => {
@@ -143,7 +143,7 @@ describe('Vocabulary menu progress', () => {
     const state = VocabularyMenuService.getState();
     expect(state.myVocabulary).toHaveLength(1);
     expect(state.myVocabulary[0].archivedAt).not.toBeNull();
-    expect(VocabularyMenuService.getSummary(state).total).toBe(5000);
+    expect(VocabularyMenuService.getSummary(state).total).toBe(CANONICAL_VOCABULARY_TOTAL);
   });
 
   it('keeps mastered words in rare SRS and marks a later failure forgotten', () => {
@@ -153,7 +153,11 @@ describe('Vocabulary menu progress', () => {
     const mastered = VocabularyMenuService.reviewWord(term.id, true, learnedAt);
     expect(mastered.nextReviewDate).toBe('2026-06-08T10:00:00.000Z');
     expect(
-      VocabularyMenuService.getSummary(undefined, 5000, new Date('2026-06-08T10:00:00Z')).dueToday
+      VocabularyMenuService.getSummary(
+        undefined,
+        CANONICAL_VOCABULARY_TOTAL,
+        new Date('2026-06-08T10:00:00Z')
+      ).dueToday
     ).toBe(1);
     expect(
       VocabularyMenuService.reviewWord(term.id, false, new Date('2026-06-08T10:00:00Z')).isForgotten

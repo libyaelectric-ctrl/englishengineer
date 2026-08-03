@@ -138,7 +138,7 @@ interface PlanLimitInfo {
   monthly: number | null;
 }
 
-const getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
+const _getAiPlanLimits = (): Record<string, PlanLimitInfo> => ({
   free: { daily: FREE_DAILY_LIMIT, monthly: null },
   pro: { daily: null, monthly: PAID_MONTHLY_LIMIT },
   project: { daily: null, monthly: PAID_MONTHLY_LIMIT },

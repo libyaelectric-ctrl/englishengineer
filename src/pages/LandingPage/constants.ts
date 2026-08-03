@@ -88,7 +88,7 @@ export const FAQ_ITEMS = [
   {
     question: 'Who is EngVox specifically built for?',
     answer:
-      'EngVox is engineered for all 10 key disciplines: Architecture, Chemical, Civil, Computer/Software, Electrical, Electronics, HSE, Industrial, Mechanical, and Mechatronics/Robotics engineers, site managers, and technical project leads communicating internationally.',
+      'EngVox is engineered for all 10 key disciplines: Architecture, Chemical, Civil, Software Engineering, Electrical, Electronics, HSE, Industrial, Mechanical, and Mechatronics/Robotics engineers, site managers, and technical project leads communicating internationally.',
   },
   {
     question: 'How do Project Workspaces & Persistent Memory work?',

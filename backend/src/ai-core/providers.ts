@@ -30,7 +30,7 @@ const INJECTION_PATTERNS = [
 ];
 
 const sanitizeUserInput = (input: string): string => {
-  let sanitized = input;
+  const sanitized = input;
   for (const pattern of INJECTION_PATTERNS) {
     if (pattern.test(sanitized)) {
       throw new ApiError(
