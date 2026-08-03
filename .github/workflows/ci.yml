@@ -127,11 +127,6 @@ jobs:
       - name: Check bundle size
         run: |
           echo "=== Bundle Size Budget ==="
-          # Measure only what the browser downloads on initial page load
-          # (the entry script + modulepreload chunks listed in
-          # index.html), not every lazy-loaded route/page chunk in
-          # dist/assets/. See deploy-production.yml for the same fix and
-          # a longer explanation.
           INITIAL_JS=$(grep -oE '(src|href)="/assets/[^"]+\.js"' dist/index.html | sed -E 's/^(src|href)="//;s/"$//')
           JS_SIZE=0
           for f in $INITIAL_JS; do
@@ -139,8 +134,8 @@ jobs:
             JS_SIZE=$((JS_SIZE + SIZE))
           done
           CSS_SIZE=$(du -sb dist/assets/*.css 2>/dev/null | awk '{s+=$1}END{print s}')
-          JS_LIMIT=2000000
-          CSS_LIMIT=200000
+          JS_LIMIT=1500000
+          CSS_LIMIT=150000
           echo "Initial-load JS: ${JS_SIZE} bytes (limit: ${JS_LIMIT})"
           echo "CSS: ${CSS_SIZE:-0} bytes (limit: ${CSS_LIMIT})"
           FAIL=0
@@ -161,3 +156,34 @@ jobs:
           name: dist
           path: dist/
           retention-days: 3
+
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: npx playwright test --project=chromium-desktop
+        env:
+          CI: true
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7
