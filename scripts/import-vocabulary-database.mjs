@@ -132,7 +132,7 @@ await writeJson(path.join(canonicalDir, 'vocabulary-taxonomy.json'), {
 for (const level of CEFR_LEVELS) {
   await writeSeedFile({
     filePath: path.join(seedDir, `${level.toLowerCase()}.seed.ts`),
-    typeImport: '@/features/vocabulary/vocabulary.types',
+    typeImport: '@/features/vocabulary/types/vocabulary.types',
     typeName: 'VocabularyTerm',
     exportName: `${level}_VOCABULARY_TERMS`,
     records: deduped.filter((term) => term.cefrLevel === level),

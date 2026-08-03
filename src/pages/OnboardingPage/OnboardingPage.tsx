@@ -9,13 +9,10 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
+import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 import { PlacementService } from '@/features/placement';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
-import type {
-  InterfaceLanguage,
-  SelfReportedCefr,
-  SkillName,
-} from '@/features/profile/profile.types';
+import type { SelfReportedCefr, SkillName } from '@/features/profile/profile.types';
 
 import { DisciplineStep } from './steps/DisciplineStep';
 import { LanguageStep } from './steps/LanguageStep';
@@ -96,8 +93,8 @@ const OnboardingPage = () => {
   const index = STEPS.indexOf(step);
 
   const [discipline, setDiscipline] = useState<EngineeringDiscipline>(initial.discipline);
-  const [interfaceLanguage, setInterfaceLanguage] = useState<InterfaceLanguage>(
-    initial.interfaceLanguage as InterfaceLanguage
+  const [interfaceLanguage, setInterfaceLanguage] = useState<SupportedInterfaceLanguage>(
+    initial.interfaceLanguage as SupportedInterfaceLanguage
   );
   const [selfReportedCefr, setSelfReportedCefr] = useState<SelfReportedCefr>(
     initial.selfReportedCefr
@@ -109,7 +106,7 @@ const OnboardingPage = () => {
     LearningProfileRepository.updatePreferences(userId, {
       discipline,
       professionalTrack: discipline as never,
-      interfaceLanguage,
+      interfaceLanguage: interfaceLanguage as never,
       selfReportedCefr,
       selectedPlan,
       learningFocus: [] as SkillName[],
