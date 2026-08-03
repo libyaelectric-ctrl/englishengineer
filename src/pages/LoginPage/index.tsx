@@ -5,16 +5,16 @@ import {
   Building2,
   CheckCircle2,
   Code2,
-  Cog,
-  Compass,
   Cpu,
   Factory,
   FlaskConical,
+  HardHat,
   HelpCircle,
   Play,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
+  Wrench,
   Zap,
 } from 'lucide-react';
 
@@ -22,9 +22,12 @@ import { useEffect, useState } from 'react';
 
 import { Link } from 'react-router-dom';
 
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { logger } from '@/shared/logger';
 
 import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
@@ -39,72 +42,30 @@ import { WorkspaceSwitcherModal } from './WorkspaceSwitcherModal';
 import { AUTH_COPY } from './constants';
 import { useLoginHandlers } from './useLoginHandlers';
 
-const DISCIPLINES = [
-  {
-    id: 'architecture',
-    title: 'Architecture',
-    icon: Compass,
-    badge: 'Design, Spatial & BIM',
-  },
-  {
-    id: 'chemical',
-    title: 'Chemical Engineering',
-    icon: FlaskConical,
-    badge: 'Process & Safety',
-  },
-  {
-    id: 'civil',
-    title: 'Civil Engineering',
-    icon: Building2,
-    badge: 'Infrastructure & Structures',
-  },
-  {
-    id: 'software',
-    title: 'Software Engineering',
-    icon: Code2,
-    badge: 'Cloud & Architecture',
-  },
-  {
-    id: 'electrical',
-    title: 'Electrical Engineering',
-    icon: Zap,
-    badge: 'Power & Systems',
-  },
-  {
-    id: 'electronics',
-    title: 'Electronics Engineering',
-    icon: Cpu,
-    badge: 'Embedded & Hardware',
-  },
-  {
-    id: 'hse',
-    title: 'HSE Engineering',
-    icon: ShieldAlert,
-    badge: 'Safety & Compliance',
-  },
-  {
-    id: 'industrial',
-    title: 'Industrial Engineering',
-    icon: Factory,
-    badge: 'Lean & Operations',
-  },
-  {
-    id: 'mechanical',
-    title: 'Mechanical Engineering',
-    icon: Cog,
-    badge: 'HVAC & Machinery',
-  },
-  {
-    id: 'mechatronics',
-    title: 'Mechatronics / Robotics',
-    icon: Bot,
-    badge: 'Automation & Control',
-  },
-];
+const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
+  architecture: Building2,
+  chemical: FlaskConical,
+  civil: HardHat,
+  software: Code2,
+  electrical: Zap,
+  electronics: Cpu,
+  hse: ShieldCheck,
+  industrial: Factory,
+  mechanical: Wrench,
+  mechatronics: Bot,
+};
+
+const DISCIPLINES = ENGINEERING_DISCIPLINES.map((id) => ({
+  id,
+  titleKey: `discipline.${id}` as TranslationKey,
+  badgeKey: `discipline.${id}.desc` as TranslationKey,
+  icon: DISCIPLINE_ICONS[id],
+}));
 
 const LoginPage = () => {
   const h = useLoginHandlers();
   const language = useLocalizationStore((state) => state.language);
+  const translate = useLocalizationStore((state) => state.translate);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const copy = (AUTH_COPY as any)[language] ?? AUTH_COPY.en;
 
@@ -117,9 +78,14 @@ const LoginPage = () => {
     return localStorage.getItem('preselected_discipline');
   });
 
-  const handleDisciplineSelect = (name: string) => {
-    setSelectedDiscipline(name);
-    localStorage.setItem('preselected_discipline', name);
+  const handleDisciplineSelect = (id: string) => {
+    setSelectedDiscipline(id);
+    localStorage.setItem('preselected_discipline', id);
+  };
+
+  const getDisciplineLabel = (id: string) => {
+    const translated = translate(`discipline.${id}` as TranslationKey);
+    return translated !== `discipline.${id}` ? translated : id;
   };
 
   useEffect(() => {
@@ -160,11 +126,11 @@ const LoginPage = () => {
               <div className="flex-1 flex flex-col justify-between gap-1 min-h-0 py-1">
                 {DISCIPLINES.map((d) => {
                   const Icon = d.icon;
-                  const isSelected = selectedDiscipline === d.title;
+                  const isSelected = selectedDiscipline === d.id;
                   return (
                     <button
                       key={d.id}
-                      onClick={() => handleDisciplineSelect(d.title)}
+                      onClick={() => handleDisciplineSelect(d.id)}
                       className={`flex items-center gap-2.5 rounded-lg border py-1 px-3 text-left transition-all cursor-pointer ${
                         isSelected
                           ? 'border-primary bg-primary/5 text-primary shadow-sm font-semibold'
@@ -181,9 +147,11 @@ const LoginPage = () => {
                         <Icon className="h-3 w-3" />
                       </div>
                       <div className="min-w-0 flex-1 flex items-center justify-between gap-2">
-                        <h4 className="text-xs font-bold truncate leading-none">{d.title}</h4>
+                        <h4 className="text-xs font-bold truncate leading-none">
+                          {translate(d.titleKey)}
+                        </h4>
                         <span className="text-[9px] text-muted-copy truncate font-normal">
-                          {d.badge}
+                          {translate(d.badgeKey)}
                         </span>
                       </div>
                       {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />}
@@ -198,7 +166,7 @@ const LoginPage = () => {
                     <>
                       Selected:{' '}
                       <span className="font-bold text-primary truncate max-w-[200px] inline-block align-middle ml-1">
-                        {selectedDiscipline}
+                        {getDisciplineLabel(selectedDiscipline)}
                       </span>
                     </>
                   ) : (

@@ -1,4 +1,16 @@
 import { CheckCircle2, Globe, Layers } from 'lucide-react';
+import {
+  Bot,
+  Building2,
+  Code2,
+  Cpu,
+  Factory,
+  FlaskConical,
+  HardHat,
+  ShieldCheck,
+  Wrench,
+  Zap,
+} from 'lucide-react';
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
@@ -8,6 +20,19 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { INTERFACE_LANGUAGES } from '@/features/localization/localization.data';
 import { useLocalizationStore } from '@/features/localization/localization.store';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+
+const DISCIPLINE_ICONS: Record<EngineeringDiscipline, typeof Bot> = {
+  architecture: Building2,
+  chemical: FlaskConical,
+  civil: HardHat,
+  electrical: Zap,
+  electronics: Cpu,
+  hse: ShieldCheck,
+  industrial: Factory,
+  mechanical: Wrench,
+  mechatronics: Bot,
+  software: Code2,
+};
 
 interface LanguageDisciplineSectionProps {
   currentDiscipline: EngineeringDiscipline;
@@ -70,6 +95,7 @@ export const LanguageDisciplineSection = ({
             {Object.entries(DISCIPLINE_META).map(([id, meta]) => {
               const discipline = id as EngineeringDiscipline;
               const isSelected = currentDiscipline === discipline;
+              const Icon = DISCIPLINE_ICONS[discipline];
               return (
                 <button
                   key={discipline}
@@ -80,7 +106,9 @@ export const LanguageDisciplineSection = ({
                       : 'border-border-soft bg-surface hover:border-primary/40 text-muted-copy hover:text-foreground'
                   }`}
                 >
-                  <span className="text-lg leading-none">{meta.icon}</span>
+                  <span className="text-lg leading-none">
+                    <Icon className="h-5 w-5" />
+                  </span>
                   <div className="min-w-0 flex-1">
                     <h4 className="text-xs font-bold truncate">{meta.labelKey}</h4>
                     <p className="text-[9px] text-muted-copy">

@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import { storage } from '@/shared/storage';
 
 import { SupabaseReadyConfig } from './auth.config';
@@ -200,10 +201,10 @@ export class LocalAuthAdapter implements AuthAdapter {
       displayName,
       email,
       passwordHash: await hashPassword(password),
-      role: 'Junior Electrical Engineer',
-      engineeringDiscipline: 'electrical',
+      role: 'Junior Engineer',
+      engineeringDiscipline: ENGINEERING_DISCIPLINES[0],
       targetLevel: 'Project Engineer',
-      location: 'Hospital Project',
+      location: 'Engineering Project',
       avatarInitials: getInitials(displayName),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -221,8 +222,8 @@ export class LocalAuthAdapter implements AuthAdapter {
       id: `demo_engineer_${generateId().slice(-8)}`,
       displayName: 'Demo Engineer',
       email: 'demo.engineer@local.EngVox',
-      role: 'Electrical Engineer',
-      engineeringDiscipline: 'electrical',
+      role: 'Engineer',
+      engineeringDiscipline: ENGINEERING_DISCIPLINES[0],
       targetLevel: 'Project communication confidence',
       location: 'Local Lite workspace',
       avatarInitials: 'DE',

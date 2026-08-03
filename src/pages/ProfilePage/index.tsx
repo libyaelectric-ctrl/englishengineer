@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
 
@@ -122,7 +123,9 @@ const ProfilePage = () => {
   } = state;
 
   const [discipline, setDiscipline] = useState<EngineeringDiscipline>(
-    () => (localStorage.getItem('preselected_discipline') as EngineeringDiscipline) || 'electrical'
+    () =>
+      (localStorage.getItem('preselected_discipline') as EngineeringDiscipline) ||
+      ENGINEERING_DISCIPLINES[0]
   );
   const [disciplineSaved, setDisciplineSaved] = useState(false);
 

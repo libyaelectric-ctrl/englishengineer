@@ -1,4 +1,5 @@
 import { INITIAL_ELO } from '@/shared/constants/elo.constants';
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 import type { CefrLevel } from '@/shared/types/domain.types';
 import {
   type AdaptivePaceDecision,
@@ -99,14 +100,14 @@ export const getInitialUserLearningProfile = (
     SKILL_NAMES.map((skill) => [skill, getInitialSkillProfile(skill)])
   ) as Record<SkillName, SkillProfile>,
   goals: [],
-  discipline: 'electrical',
+  discipline: ENGINEERING_DISCIPLINES[0],
   professionId: null,
   industryId: null,
   communicationGoals: [],
   selfReportedCefr: 'unknown',
   learningFocus: [],
   selectedPlan: 'free',
-  professionalTrack: 'electrical',
+  professionalTrack: ENGINEERING_DISCIPLINES[0],
   electricalSubdomain: 'low-voltage',
   experienceLevel: 'prefer-not-to-say',
   careerGoal: '',

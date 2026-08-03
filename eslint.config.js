@@ -8,6 +8,7 @@ export default tseslint.config(
   {
     ignores: [
       'dist',
+      'backend/dist',
       'coverage',
       'node_modules',
       '.npm-cache',
@@ -90,6 +91,16 @@ export default tseslint.config(
   // Auth callback — console used for debugging/logging
   {
     files: ['src/pages/AuthCallbackPage.tsx'],
+    rules: { 'no-console': 'off' },
+  },
+  // Backend server — console used for startup/shutdown logging
+  {
+    files: ['backend/src/server.ts'],
+    rules: { 'no-console': 'off' },
+  },
+  // Vite config — console used for circular dependency warnings
+  {
+    files: ['vite.config.ts'],
     rules: { 'no-console': 'off' },
   }
 );

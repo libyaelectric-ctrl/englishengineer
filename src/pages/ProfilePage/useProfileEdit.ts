@@ -1,5 +1,7 @@
 import { useReducer } from 'react';
 
+import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
+
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import {
@@ -24,7 +26,7 @@ const buildEditValues = (displayName: string | undefined, profile: UserLearningP
     return {
       ...name,
       profession: '',
-      track: 'electrical',
+      track: ENGINEERING_DISCIPLINES[0],
       subdomain: 'low-voltage',
       industry: '',
       lang: 'en' as const,
@@ -35,7 +37,7 @@ const buildEditValues = (displayName: string | undefined, profile: UserLearningP
     firstName: name.firstName,
     lastName: name.lastName,
     profession: profile.professionId ?? '',
-    track: profile.professionalTrack ?? 'electrical',
+    track: profile.professionalTrack ?? ENGINEERING_DISCIPLINES[0],
     subdomain: profile.electricalSubdomain ?? 'low-voltage',
     industry: profile.industryId ?? '',
     lang: (profile.interfaceLanguage ?? 'en') as 'en' | 'tr',
@@ -104,9 +106,10 @@ export const useProfileEdit = (
   const savePreferences = (userId: string) => {
     LearningProfileRepository.updatePreferences(userId, {
       professionId: (editProfession as ProfessionId) || null,
-      professionalTrack: (editTrack as UserLearningProfile['professionalTrack']) || undefined,
+      professionalTrack:
+        (editTrack as UserLearningProfile['professionalTrack']) || ENGINEERING_DISCIPLINES[0],
       electricalSubdomain:
-        (editSubdomain as UserLearningProfile['electricalSubdomain']) || undefined,
+        (editSubdomain as UserLearningProfile['electricalSubdomain']) || 'low-voltage',
       industryId: (editIndustry as UserLearningProfile['industryId']) || null,
       interfaceLanguage: editLang,
       communicationGoals: editGoals as UserLearningProfile['communicationGoals'],
