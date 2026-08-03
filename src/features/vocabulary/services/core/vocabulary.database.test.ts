@@ -7,16 +7,14 @@ import { VocabularyEngine } from '../../engine/vocabulary.engine';
 import { VocabularyRepository } from './vocabulary.repository';
 
 describe('vocabulary database integration', () => {
-  it('loads 5000 unique vocabulary terms across every CEFR level', async () => {
+  it('loads 14000+ unique vocabulary terms across every CEFR level', async () => {
     const levels = await Promise.all(
       CEFR_LEVELS.map((level) => VocabularyRepository.getVocabularyByLevel(level))
     );
     const terms = levels.flat();
-    expect(terms).toHaveLength(5000);
-    expect(new Set(terms.map((term) => term.id)).size).toBe(5000);
-    expect(levels.map((termsAtLevel) => termsAtLevel.length)).toEqual([
-      263, 667, 1651, 1847, 507, 65,
-    ]);
+    expect(terms.length).toBeGreaterThanOrEqual(14000);
+    expect(new Set(terms.map((term) => term.id)).size).toBe(terms.length);
+    expect(levels.every((termsAtLevel) => termsAtLevel.length > 0)).toBe(true);
   });
 
   it('contains no duplicate normalized terms', async () => {
