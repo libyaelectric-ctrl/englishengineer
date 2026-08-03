@@ -28,6 +28,7 @@ import { useLocalizationStore } from '@/features/localization';
 
 import { Footer } from '@/pages/LandingPage/Footer';
 import { Navbar } from '@/pages/LandingPage/Navbar';
+
 import { EmailPasswordForm } from './EmailPasswordForm';
 import { GuidedSpotlightTour } from './GuidedSpotlightTour';
 import { MagicLinkAuthModal } from './MagicLinkAuthModal';
@@ -59,8 +60,8 @@ const DISCIPLINES = [
     badge: 'Infrastructure & Structures',
   },
   {
-    id: 'computer_software',
-    title: 'Computer / Software Engineering',
+    id: 'software',
+    title: 'Software Engineering',
     icon: Code2,
     badge: 'Cloud & Architecture',
   },
@@ -95,8 +96,8 @@ const DISCIPLINES = [
     badge: 'HVAC & Machinery',
   },
   {
-    id: 'mechatronics_robotics',
-    title: 'Mechatronics / Robotics Engineering',
+    id: 'mechatronics',
+    title: 'Mechatronics / Robotics',
     icon: Bot,
     badge: 'Automation & Control',
   },
@@ -105,7 +106,8 @@ const DISCIPLINES = [
 const LoginPage = () => {
   const h = useLoginHandlers();
   const language = useLocalizationStore((state) => state.language);
-  const copy = AUTH_COPY[language] ?? AUTH_COPY.en;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const copy = (AUTH_COPY as any)[language] ?? AUTH_COPY.en;
 
   const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);

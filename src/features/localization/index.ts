@@ -1,6 +1,5 @@
 export {
   type SupportedInterfaceLanguage,
-  type PlannedInterfaceLanguage,
   type InterfaceLanguageId,
   type InterfaceLanguageOption,
   type TranslationKey,

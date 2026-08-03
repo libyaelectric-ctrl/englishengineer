@@ -1,23 +1,21 @@
 /**
- * Localization types — supports 12 interface languages.
+ * Localization types — supports 10 interface languages.
  *
- * Supported: EN, TR (fully translated)
- * Planned: AR, ES, IT, FR, DE, PT, RU, ZH, JA, KO
+ * Supported: EN, TR, AR, DE, ES, PT, FR, RU, ZH, JA
  */
 
-export type SupportedInterfaceLanguage = 'en' | 'tr';
-export type PlannedInterfaceLanguage =
-  'ar' | 'es' | 'it' | 'fr' | 'de' | 'pt' | 'ru' | 'zh' | 'ja' | 'ko';
+export type SupportedInterfaceLanguage =
+  'en' | 'tr' | 'ar' | 'de' | 'es' | 'pt' | 'fr' | 'ru' | 'zh' | 'ja';
 
-export type InterfaceLanguageId = SupportedInterfaceLanguage | PlannedInterfaceLanguage;
+export type InterfaceLanguageId = SupportedInterfaceLanguage;
 
 export interface InterfaceLanguageOption {
   id: InterfaceLanguageId;
   label: string;
   nativeLabel: string;
   available: boolean;
-  /** Language flag emoji for UI display. */
   flag: string;
+  dir?: 'ltr' | 'rtl';
 }
 
 export type TranslationKey =
