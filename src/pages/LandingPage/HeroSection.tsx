@@ -2,6 +2,8 @@ import { ArrowRight, CheckCircle2, Globe, Shield, Sparkles, Volume2, Zap } from 
 
 import { useEffect, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface HeroSectionProps {
   scrollShift: number;
 }
@@ -38,6 +40,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
   const [analysisResult, setAnalysisResult] = useState<(typeof SAMPLE_PRESETS)[0] | null>(
     SAMPLE_PRESETS[0]
   );
+  const translate = useLocalizationStore((s) => s.translate);
 
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 100);
@@ -79,13 +82,11 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
           </div>
 
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
-            <span className="text-foreground">The Engineering English </span>
-            <span className="animated-gradient-title block sm:inline">Operating System</span>
+            <span className="text-foreground">{translate('landing.heroTitle')}</span>
           </h1>
 
           <p className="text-xs sm:text-sm font-medium text-foreground/85 leading-relaxed max-w-2xl mx-auto">
-            AI-powered oral defense coaching, FIDIC contract writing, technical presentations, and
-            5,000+ domain-specific terms — all offline-first.
+            {translate('landing.heroSubtitle')}
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-semibold text-foreground/80 pt-1">
