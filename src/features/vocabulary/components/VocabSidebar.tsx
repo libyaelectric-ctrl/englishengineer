@@ -9,7 +9,7 @@ import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrie
 import {
   VocabularyMenuService,
   type VocabularyMenuState,
-} from '@/features/vocabulary/services/vocabulary.menu';
+} from '@/features/vocabulary/services/core/vocabulary.menu';
 
 const VOCAB_LEVELS = [
   { id: 'A1', max: 500 },

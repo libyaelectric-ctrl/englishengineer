@@ -2,18 +2,18 @@ import { useLearningStore } from '@/core/learning';
 
 import { storage } from '@/shared/storage';
 
-import { getVocabularyEntries } from '../data/vocabulary.data';
-import { VocabularyEvaluator } from '../engine/vocabulary.evaluator';
+import { getVocabularyEntries } from '../../data/vocabulary.data';
+import { VocabularyEvaluator } from '../../engine/vocabulary.evaluator';
 import {
   getPreviousDateKey,
   getTodayDateKey,
   isDueForReview,
   sortByNextReview,
-} from '../engine/vocabulary.helpers';
+} from '../../engine/vocabulary.helpers';
 import {
   createInitialReviewState,
   updateSm2ReviewState,
-} from '../spaced-repetition/vocabulary.spaced-repetition';
+} from '../../spaced-repetition/vocabulary.spaced-repetition';
 import {
   VocabularyAnswer,
   VocabularyEntry,
@@ -21,7 +21,7 @@ import {
   VocabularyHistoryEntry,
   VocabularyState,
   VocabularySummary,
-} from '../types/vocabulary.types';
+} from '../../types/vocabulary.types';
 import { VocabularyMemoryService } from './vocabulary.memory';
 import { VocabularyMenuService } from './vocabulary.menu';
 

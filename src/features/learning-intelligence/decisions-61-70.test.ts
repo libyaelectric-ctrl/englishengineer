@@ -1,13 +1,14 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import type { SpeakingEvaluationResult } from '@/shared/types/speaking.types';
+
 import {
   SPEAKING_MVP_MODE,
   SPEAKING_MVP_REQUIRES_MICROPHONE,
   getSpeakingHistoryDetails,
   getSpeakingRoleplayCategory,
-} from '@/features/speaking/speaking-mvp';
-import { SPEAKING_MISSIONS } from '@/features/speaking/speaking.data';
-import type { SpeakingEvaluationResult } from '@/shared/types/speaking.types';
+} from '@/features/speaking/core/speaking-mvp';
+import { SPEAKING_MISSIONS } from '@/features/speaking/core/speaking.data';
 
 import {
   CRITICAL_MISTAKE_REPEAT_THRESHOLD,

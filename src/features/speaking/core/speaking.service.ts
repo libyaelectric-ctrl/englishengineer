@@ -3,10 +3,10 @@ import { ErrorCode } from '@/core/errors/error-codes';
 import { eventBus } from '@/core/events/event-bus';
 import { useLearningStore } from '@/core/learning';
 
+import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
-import { VocabularyService } from '@/features/vocabulary/services/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
 
 import { getSpeakingHistoryDetails } from './speaking-mvp';
 import { SPEAKING_MISSIONS } from './speaking.data';

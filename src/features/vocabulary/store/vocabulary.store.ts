@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import { VocabularyProgressService, type WordProgress } from '../services/vocabulary.progress';
-import { VocabularyService } from '../services/vocabulary.service';
+import { VocabularyProgressService, type WordProgress } from '../services/core/vocabulary.progress';
+import { VocabularyService } from '../services/core/vocabulary.service';
 import {
   VocabularyEntry,
   VocabularyEvaluationResult,
