@@ -32,7 +32,6 @@ import { Navbar } from '@/pages/LandingPage/Navbar';
 import { EmailPasswordForm } from './EmailPasswordForm';
 import { GuidedSpotlightTour } from './GuidedSpotlightTour';
 import { MagicLinkAuthModal } from './MagicLinkAuthModal';
-import { OnboardingWizardModal } from './OnboardingWizardModal';
 import { SSOForm } from './SSOForm';
 import { SecuritySessionsModal } from './SecuritySessionsModal';
 import { SocialLoginButtons } from './SocialLoginButtons';
@@ -109,7 +108,6 @@ const LoginPage = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const copy = (AUTH_COPY as any)[language] ?? AUTH_COPY.en;
 
-  const [onboardingOpen, setOnboardingOpen] = useState(false);
   const [securityOpen, setSecurityOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
   const [magicLinkOpen, setMagicLinkOpen] = useState(false);
@@ -314,13 +312,12 @@ const LoginPage = () => {
 
               {/* Section 3 Interactive Auth Toolset Toolbar (Items 21-30) */}
               <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1 border-t border-border-soft/60">
-                <button
-                  type="button"
-                  onClick={() => setOnboardingOpen(true)}
+                <Link
+                  to="/onboarding"
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
                 >
-                  <Sparkles className="h-2.5 w-2.5" /> 60s Onboarding
-                </button>
+                  <Sparkles className="h-2.5 w-2.5" /> Onboarding
+                </Link>
                 <button
                   type="button"
                   onClick={() => setWorkspaceOpen(true)}
@@ -377,16 +374,6 @@ const LoginPage = () => {
           </div>
         </div>
       </main>
-
-      {/* Section 3 Modals (Items 21 - 30) */}
-      <OnboardingWizardModal
-        isOpen={onboardingOpen}
-        onClose={() => setOnboardingOpen(false)}
-        onComplete={(data) => {
-          setSelectedDiscipline(data.discipline);
-          localStorage.setItem('preselected_discipline', data.discipline);
-        }}
-      />
 
       <SecuritySessionsModal isOpen={securityOpen} onClose={() => setSecurityOpen(false)} />
 
