@@ -15,6 +15,7 @@ import {
   LearningTaskEngine,
   type LearningTaskRecommendation,
 } from '@/features/learning-orchestrator';
+import { useLocalizationStore } from '@/features/localization';
 import { LearningProfileEngine, type SkillName, useLearningCockpit } from '@/features/profile';
 
 import { CurriculumActionsGrid } from './CurriculumActionsGrid';
@@ -26,6 +27,7 @@ import { SKILL_META } from './curriculum-data';
 const CurriculumPage = () => {
   const { section } = useParams<{ section: string }>();
   const activeSection = section || 'today';
+  const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile, memory, missions, isLoading, learningState } = useLearningCockpit(
     currentUser?.id
@@ -110,7 +112,9 @@ const CurriculumPage = () => {
   return (
     <div className="mx-auto w-full max-w-5xl space-y-7 animate-in fade-in duration-300 pb-8 text-foreground relative z-10 font-sans">
       <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <h1 className="text-base font-bold tracking-tight text-foreground">Learning Hub</h1>
+        <h1 className="text-base font-bold tracking-tight text-foreground">
+          {translate('learningHub.title')}
+        </h1>
       </div>
 
       <CurriculumActionsGrid

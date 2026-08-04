@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
 
+import { useLocalizationStore } from '@/features/localization';
 import type { DailyMission } from '@/features/profile';
 
 interface Props {
@@ -19,19 +20,20 @@ interface Props {
 
 export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props) => {
   const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
   const streak = learningState?.streak ?? 0;
   const xp = learningState?.xp ?? 0;
   const targetXp = 100;
-  const progressPercent = Math.min(100, Math.round((xp % targetXp) * 1)); // Mock daily goal completion percentage
-  const displayProgressPercent = progressPercent > 0 ? progressPercent : 45; // Fallback to 45% if 0 for visual check
+  const progressPercent = Math.min(100, Math.round((xp % targetXp) * 1));
+  const displayProgressPercent = progressPercent > 0 ? progressPercent : 45;
 
   const dayIndexStr = `DAY-${streak < 9 ? '0' : ''}${streak + 1}`;
 
   return (
     <SectionCard
       id="today"
-      title="Recommended Today"
-      subtitle="Chosen from independent skill progress, vocabulary memory, current-level databases, and weaknesses"
+      title={translate('curriculum.recommendedToday')}
+      subtitle={translate('curriculum.recommendedTodayDesc')}
       icon={Sparkles}
     >
       <div className="font-sans relative space-y-6">
@@ -43,38 +45,37 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
           <div className="relative z-10 flex flex-wrap items-start justify-between gap-4 border-b border-border-soft pb-4">
             <div>
               <span className="font-mono text-[10px] font-bold text-muted-copy uppercase tracking-widest">
-                {dayIndexStr} // SYSTEM BRIEFING
+                {dayIndexStr} // {translate('curriculum.systemBriefing')}
               </span>
               <h2 className="text-sm font-bold text-foreground mt-1.5 tracking-tight">
-                Daily Operations Hub
+                {translate('curriculum.dailyOpsHub')}
               </h2>
               <p className="text-xs text-muted-copy mt-0.5 font-medium">
-                Verify system status metrics and complete active recommendations to maintain your
-                streak.
+                {translate('curriculum.dailyOpsDesc')}
               </p>
             </div>
             <div className="flex items-center gap-2">
               <span className="rounded-[4px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
-                OPS-CURRENT
+                {translate('curriculum.opsCurrent')}
               </span>
               <span className="rounded-[4px] border border-success/20 bg-success/5 px-2 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
-                STATUS-ONLINE
+                {translate('curriculum.statusOnline')}
               </span>
             </div>
           </div>
 
           <div className="relative z-10 mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Daily Streak Box nested using #f3f3fd */}
+            {/* Daily Streak Box */}
             <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex items-start gap-3">
               <span className="rounded-[4px] bg-surface border border-border-soft p-1.5 text-primary shrink-0 shadow-sm">
                 <Flame className="h-4 w-4" />
               </span>
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
-                  Daily Streak
+                  {translate('curriculum.dailyStreak')}
                 </span>
                 <span className="text-sm font-bold text-foreground mt-1 block">
-                  {streak} Days Active
+                  {streak} {translate('curriculum.daysActive')}
                 </span>
               </div>
             </div>
@@ -86,10 +87,10 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
               </span>
               <div>
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy block">
-                  Daily Intensity
+                  {translate('curriculum.dailyIntensity')}
                 </span>
                 <span className="text-sm font-bold text-foreground mt-1 block">
-                  {xp % 100} / 100 XP Target
+                  {xp % 100} {translate('curriculum.xpTarget')}
                 </span>
               </div>
             </div>
@@ -97,7 +98,7 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
             {/* Daily Progress loading bar */}
             <div className="rounded-[4px] border border-border-soft/60 bg-surface-hover p-3.5 flex flex-col justify-between">
               <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-                <span>Mission progress</span>
+                <span>{translate('curriculum.missionProgress')}</span>
                 <span>{displayProgressPercent}%</span>
               </div>
               <div className="w-full bg-[#d9d9e3] h-2.5 border border-border-soft mt-2 relative overflow-hidden rounded-[0px]">
@@ -138,7 +139,7 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
                         </span>
                         {isActive && (
                           <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
-                            ACTIVE
+                            {translate('curriculum.active')}
                           </span>
                         )}
                       </div>
@@ -163,7 +164,9 @@ export const CurriculumTodayTab = ({ isLoading, missions, learningState }: Props
                       }`}
                       onClick={() => navigate(mission.route)}
                     >
-                      {isActive ? 'Start active mission' : 'Review recommendation'}
+                      {isActive
+                        ? translate('curriculum.startActiveMission')
+                        : translate('curriculum.reviewRecommendation')}
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </article>

@@ -11,6 +11,7 @@ import {
   type ReviewPriorityItem,
   type UnifiedReviewItem,
 } from '@/features/learning-intelligence';
+import { useLocalizationStore } from '@/features/localization';
 import type { ProfileBadge, VocabularyMemorySummary } from '@/features/profile';
 
 interface Props {
@@ -31,12 +32,13 @@ export const CurriculumMemoryTab = ({
   reviewPriorities,
 }: Props) => {
   const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
 
   return (
     <SectionCard
       id="review"
-      title="Learning Memory"
-      subtitle="Everything you learn shapes what comes next"
+      title={translate('curriculum.learningMemory')}
+      subtitle={translate('curriculum.learningMemoryDesc')}
       icon={BookOpen}
     >
       <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)] font-sans relative">
@@ -56,21 +58,23 @@ export const CurriculumMemoryTab = ({
             <div className="flex items-center gap-2 text-foreground">
               <BarChart3 className="h-4 w-4 text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-wider">
-                Knowledge diagnostics
+                {translate('curriculum.knowledgeDiagnostics')}
               </span>
             </div>
             <div className="space-y-2 text-[10px] font-bold text-muted-copy uppercase tracking-wider">
               <div className="flex justify-between border-b border-border-soft pb-1.5">
-                <span>Memory Retention</span>
-                <span className="text-primary">88% STABLE</span>
+                <span>{translate('curriculum.memoryRetention')}</span>
+                <span className="text-primary">88% {translate('curriculum.stable')}</span>
               </div>
               <div className="flex justify-between border-b border-border-soft pb-1.5">
-                <span>Active Queue</span>
-                <span className="text-warning">{unifiedReviewQueue.length} TASKS DUE</span>
+                <span>{translate('curriculum.activeQueue')}</span>
+                <span className="text-warning">
+                  {unifiedReviewQueue.length} {translate('curriculum.tasksDue')}
+                </span>
               </div>
               <div className="flex justify-between">
-                <span>Sync Status</span>
-                <span className="text-success">DATABASE COMPLIANT</span>
+                <span>{translate('curriculum.syncStatus')}</span>
+                <span className="text-success">{translate('curriculum.dbCompliant')}</span>
               </div>
             </div>
           </div>
@@ -80,17 +84,17 @@ export const CurriculumMemoryTab = ({
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-primary">
-                Unified Review Queue
+                {translate('curriculum.unifiedReviewQueue')}
               </p>
               <p className="mt-1 text-xs text-muted-copy font-medium">
-                Focus on the most useful improvement first.
+                {translate('curriculum.unifiedReviewDesc')}
               </p>
             </div>
             <Link
               to="/progress/next-steps"
               className="text-xs font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer"
             >
-              View plan
+              {translate('curriculum.viewPlan')}
             </Link>
           </div>
 
@@ -117,7 +121,9 @@ export const CurriculumMemoryTab = ({
                             <span className="flex h-1.5 w-1.5 rounded-full bg-success" />
                           )}
                           <span className="text-[10px] font-bold text-muted-copy uppercase tracking-wider">
-                            {isFirst ? 'RECALL DUE' : 'MASTERED'}
+                            {isFirst
+                              ? translate('curriculum.recallDue')
+                              : translate('curriculum.mastered')}
                           </span>
                         </div>
                       </div>
@@ -126,7 +132,7 @@ export const CurriculumMemoryTab = ({
                         {item.label}
                       </p>
 
-                      {/* Secondary information block nested using #f3f3fd background */}
+                      {/* Secondary information block */}
                       <div className="mt-2.5 p-2 rounded-[4px] bg-surface-hover border border-border-soft/45 flex items-start gap-1.5">
                         {isFirst ? (
                           <History className="h-3 w-3 text-rose-500 shrink-0 mt-0.5" />
@@ -145,7 +151,7 @@ export const CurriculumMemoryTab = ({
                         className="mt-4 w-full h-8 inline-flex items-center justify-center rounded-[4px] border border-border-soft bg-surface hover:bg-surface-hover text-[10px] font-bold uppercase tracking-wider text-primary cursor-pointer shadow-sm gap-1.5"
                         onClick={() => navigate((item as UnifiedReviewItem).route)}
                       >
-                        Practice now <ArrowRight className="h-3.5 w-3.5" />
+                        {translate('curriculum.practiceNow')} <ArrowRight className="h-3.5 w-3.5" />
                       </Button>
                     )}
                   </div>
