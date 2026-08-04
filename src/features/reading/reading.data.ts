@@ -1,5 +1,6 @@
 import { ARCHITECTURE_READING_MISSIONS } from './reading.architecture.data';
 import { BUILDING_SYSTEMS_READING_MISSIONS } from './reading.building-systems.data';
+import { CHEMICAL_READING_MISSIONS } from './reading.chemical.data';
 import { ELECTRICAL_READING_MISSIONS } from './reading.electrical.data';
 import { MEP_READING_MISSIONS } from './reading.mep.data';
 import { QAQC_READING_MISSIONS } from './reading.qaqc.data';
@@ -12,6 +13,7 @@ const CORE_READING_MISSIONS: ReadingMission[] = [
   ...MEP_READING_MISSIONS,
   ...QAQC_READING_MISSIONS,
   ...ARCHITECTURE_READING_MISSIONS,
+  ...CHEMICAL_READING_MISSIONS,
 ];
 
 export const READING_MISSIONS: ReadingMission[] = [
