@@ -43,8 +43,7 @@ export const useBillingStore = create<BillingState & BillingActions>()(
       isLoading: false,
       error: null,
 
-      initializeBilling: async (userId) =>
-        fetchSubscription(set, userId, 'Billing initialization'),
+      initializeBilling: async (userId) => fetchSubscription(set, userId, 'Billing initialization'),
       refreshBilling: async (userId) => fetchSubscription(set, userId, 'Billing refresh'),
 
       startCheckout: async (userId, email, planId) => {

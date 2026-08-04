@@ -18,7 +18,7 @@ import {
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
-import { useLocalizationStore } from '@/features/localization';
+import { type TranslationKey, useLocalizationStore } from '@/features/localization';
 import { SKILL_NAMES, type SkillName, useLearningCockpit } from '@/features/profile';
 import { DashboardTranslatorWidget } from '@/features/translation';
 
@@ -184,7 +184,7 @@ const DashboardPage = () => {
           focusSkill={focusSkill}
           focusLessonNumber={focusLessonNumber}
           onStartLesson={handleStartLesson}
-          disciplineLabel={translate(disciplineMeta.labelKey as any)}
+          disciplineLabel={translate(disciplineMeta.labelKey as TranslationKey)}
           disciplineWordCount={disciplineMeta.wordCount + 3088}
         />
         <div className="grid gap-6 md:grid-cols-2">

@@ -1,9 +1,5 @@
 export type BetaFeedbackType =
-  | 'bug_report'
-  | 'content_issue'
-  | 'ux_problem'
-  | 'suggestion'
-  | 'other';
+  'bug_report' | 'content_issue' | 'ux_problem' | 'suggestion' | 'other';
 
 export interface BetaOnboardingProfile {
   engineeringDiscipline: string;

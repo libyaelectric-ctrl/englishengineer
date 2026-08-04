@@ -10,11 +10,7 @@ function fisherYatesShuffle<T>(array: T[]): T[] {
 }
 
 export type DrillType =
-  | 'fill_blank'
-  | 'correction'
-  | 'multiple_choice'
-  | 'reordering'
-  | 'transformation';
+  'fill_blank' | 'correction' | 'multiple_choice' | 'reordering' | 'transformation';
 
 export interface DrillQuestion {
   id: string;

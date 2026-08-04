@@ -11,7 +11,7 @@ import {
   WandSparkles,
 } from 'lucide-react';
 
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 

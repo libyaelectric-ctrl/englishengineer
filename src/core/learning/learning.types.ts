@@ -3,12 +3,7 @@ import { Timestamp } from '../entities/entity.types';
 export const XP_PER_LEVEL = 500;
 
 export type MissionModule =
-  | 'Reading'
-  | 'Writing'
-  | 'Listening'
-  | 'Speaking'
-  | 'Vocabulary'
-  | 'Grammar';
+  'Reading' | 'Writing' | 'Listening' | 'Speaking' | 'Vocabulary' | 'Grammar';
 export type MissionDifficulty = 'Beginner' | 'Intermediate' | 'Advanced';
 export type MissionStatus = 'available' | 'active' | 'completed' | 'locked';
 
@@ -42,12 +37,7 @@ export interface Achievement {
   title: string;
   description: string;
   criteriaType:
-    | 'first_mission'
-    | 'module_count'
-    | 'streak'
-    | 'xp_earned'
-    | 'perfect_score'
-    | 'fast_learner';
+    'first_mission' | 'module_count' | 'streak' | 'xp_earned' | 'perfect_score' | 'fast_learner';
   criteriaValue: number;
   moduleFilter?: MissionModule;
   unlocked: boolean;

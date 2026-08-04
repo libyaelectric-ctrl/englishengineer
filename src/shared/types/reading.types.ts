@@ -1,5 +1,6 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
 import type { MissionDifficulty } from '@/core/learning/learning.types';
+
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export type QuestionType = 'multiple_choice' | 'short_answer' | 'keyword_answer' | 'true_false';
 

@@ -24,7 +24,12 @@ const WEAKNESS_SCORE_DIVISOR = 10;
 interface ReviewPriorityInput {
   weakWords: number;
   dueToday: number;
-  mistakeLog: Array<{ id: string; category: string; originalText: string; repetitionCount?: number }>;
+  mistakeLog: Array<{
+    id: string;
+    category: string;
+    originalText: string;
+    repetitionCount?: number;
+  }>;
   focusSkill: { skill: string; weaknessScore: number; label: string };
 }
 

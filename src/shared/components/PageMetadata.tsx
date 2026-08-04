@@ -71,12 +71,14 @@ export const PageMetadata = ({ title, description, canonical, jsonLd }: PageMeta
         scriptEl.setAttribute('type', 'application/ld+json');
         document.head.appendChild(scriptEl);
       }
-      const sanitized = JSON.parse(JSON.stringify(jsonLd, (_key, value) => {
-        if (typeof value === 'string') {
-          return value.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, '').slice(0, 5000); // eslint-disable-line no-control-regex
-        }
-        return value;
-      }));
+      const sanitized = JSON.parse(
+        JSON.stringify(jsonLd, (_key, value) => {
+          if (typeof value === 'string') {
+            return value.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, '').slice(0, 5000); // eslint-disable-line no-control-regex
+          }
+          return value;
+        })
+      );
       scriptEl.textContent = JSON.stringify(sanitized);
     }
   }, [description, title, canonical, jsonLd]);

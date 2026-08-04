@@ -75,7 +75,9 @@ function generateHTML(report: ReportData): string {
     )
     .join('');
 
-  const strengthItems = report.strengths.map((s) => `<li style="margin:4px 0">${h(s)}</li>`).join('');
+  const strengthItems = report.strengths
+    .map((s) => `<li style="margin:4px 0">${h(s)}</li>`)
+    .join('');
   const weaknessItems = report.weaknesses
     .map((w) => `<li style="margin:4px 0;color:#b45309">${h(w)}</li>`)
     .join('');

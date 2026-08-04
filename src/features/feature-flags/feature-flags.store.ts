@@ -2,9 +2,10 @@ import { FEATURE_FLAGS, getDefaultFlags } from '@/config/feature-flags.config';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { djb2Hash } from '@/shared/utils/string-utils';
+
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
-import { djb2Hash } from '@/shared/utils/string-utils';
 
 interface FeatureFlagsState {
   flags: Record<string, boolean>;

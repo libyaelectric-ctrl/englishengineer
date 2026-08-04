@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useLearningStore } from './learning.store';
-import { DEFAULT_MISSIONS } from './learning.missions.data';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
+import { DEFAULT_MISSIONS } from './learning.missions.data';
+import { useLearningStore } from './learning.store';
 import { calculateStreak } from './learning.streak';
 
 vi.mock('@/shared/logger', () => ({

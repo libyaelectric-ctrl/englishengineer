@@ -1,4 +1,11 @@
-import { AICoachResult, AIProvider, AIProviderStatus, AIRequest, AIResponse, MockExample } from './ai.types';
+import {
+  AICoachResult,
+  AIProvider,
+  AIProviderStatus,
+  AIRequest,
+  AIResponse,
+  MockExample,
+} from './ai.types';
 
 export type { MockExample };
 

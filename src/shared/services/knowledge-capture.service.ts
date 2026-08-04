@@ -1,8 +1,8 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
 import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export interface KnowledgeCaptureInput {
   cefrLevel: CefrLevel;

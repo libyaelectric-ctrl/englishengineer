@@ -121,27 +121,44 @@ const SourceInputPanel: React.FC<{
   handleClear: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
 }> = (props) => {
-  const { inputText, setInputText, sourceLang, isTranslating, liveTranslateEnabled, isPlayingAudio, handleClear, speakText } = props;
+  const {
+    inputText,
+    setInputText,
+    sourceLang,
+    isTranslating,
+    liveTranslateEnabled,
+    isPlayingAudio,
+    handleClear,
+    speakText,
+  } = props;
   const quickChars = VIRTUAL_CHAR_BARS[sourceLang];
   const isRtl = sourceLang === 'ar';
   const sourcePlaceholder = isRtl
     ? 'أدخل النص الفني أو المواصفات الهندسية...'
     : 'Enter technical text, engineering specs, contract clauses, or any words to translate...';
   const speakLabel = isPlayingAudio === 'source' ? 'Playing...' : 'Audio';
-  const speakBtnClass = isPlayingAudio === 'source'
-    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
-    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
+  const speakBtnClass =
+    isPlayingAudio === 'source'
+      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
+      : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
   const hasInput = inputText.trim().length > 0;
   const speakBtn = hasInput ? (
-    <button type="button" onClick={() => speakText(inputText, sourceLang, 'source')}
+    <button
+      type="button"
+      onClick={() => speakText(inputText, sourceLang, 'source')}
       className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
-      title="Listen Source Text Audio">
-      <Volume2 className="h-3.5 w-3.5" /><span>{speakLabel}</span>
+      title="Listen Source Text Audio"
+    >
+      <Volume2 className="h-3.5 w-3.5" />
+      <span>{speakLabel}</span>
     </button>
   ) : null;
   const clearBtn = hasInput ? (
-    <button type="button" onClick={handleClear}
-      className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1">
+    <button
+      type="button"
+      onClick={handleClear}
+      className="text-[10px] text-muted-copy hover:text-rose-500 font-bold transition-colors cursor-pointer flex items-center gap-1"
+    >
       <RotateCcw className="h-3 w-3" /> Clear Text
     </button>
   ) : null;
@@ -151,16 +168,23 @@ const SourceInputPanel: React.FC<{
         <Keyboard className="h-3 w-3 text-primary" /> Hızlı Ekle:
       </span>
       {quickChars.map((phrase) => (
-        <button key={phrase} type="button" onClick={() => setInputText(inputText ? `${inputText} ${phrase}` : phrase)}
-          className="px-2 py-0.5 rounded bg-surface hover:bg-surface-hover border border-border-soft text-[11px] font-medium text-foreground transition cursor-pointer">
+        <button
+          key={phrase}
+          type="button"
+          onClick={() => setInputText(inputText ? `${inputText} ${phrase}` : phrase)}
+          className="px-2 py-0.5 rounded bg-surface hover:bg-surface-hover border border-border-soft text-[11px] font-medium text-foreground transition cursor-pointer"
+        >
           {phrase}
         </button>
       ))}
     </div>
   ) : null;
   const translateBtn = !liveTranslateEnabled ? (
-    <button type="submit" disabled={isTranslating || !hasInput}
-      className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3">
+    <button
+      type="submit"
+      disabled={isTranslating || !hasInput}
+      className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-xs font-extrabold hover:bg-primary-hover transition cursor-pointer shadow-md disabled:opacity-50 flex items-center justify-center gap-2 mt-3"
+    >
       <Zap className="h-4 w-4" /> {isTranslating ? 'Translating...' : 'Translate Text Now'}
     </button>
   ) : null;
@@ -174,9 +198,15 @@ const SourceInputPanel: React.FC<{
           </label>
           {clearBtn}
         </div>
-        <textarea rows={8} dir={isRtl ? 'rtl' : 'ltr'} lang={sourceLang} value={inputText}
-          onChange={(e) => setInputText(e.target.value)} placeholder={sourcePlaceholder}
-          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans" />
+        <textarea
+          rows={8}
+          dir={isRtl ? 'rtl' : 'ltr'}
+          lang={sourceLang}
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+          placeholder={sourcePlaceholder}
+          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-medium focus:border-primary outline-none transition-all leading-relaxed font-sans"
+        />
         {quickCharsBar}
       </div>
       {translateBtn}
@@ -194,18 +224,32 @@ const OutputPanel: React.FC<{
   handleCopy: () => void;
   speakText: (text: string, lang: SupportedLang, type: 'source' | 'target') => void;
 }> = (props) => {
-  const { translatedText, targetLang, isTranslating, resultData, copied, isPlayingAudio, handleCopy, speakText } = props;
+  const {
+    translatedText,
+    targetLang,
+    isTranslating,
+    resultData,
+    copied,
+    isPlayingAudio,
+    handleCopy,
+    speakText,
+  } = props;
   const hasOutput = translatedText.trim().length > 0;
   const speakLabel = isPlayingAudio === 'target' ? 'Playing...' : 'Audio';
-  const speakBtnClass = isPlayingAudio === 'target'
-    ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
-    : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
+  const speakBtnClass =
+    isPlayingAudio === 'target'
+      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 animate-pulse'
+      : 'border-border-soft bg-background hover:bg-surface-hover text-muted-copy';
   const isRtl = targetLang === 'ar';
   const speakBtn = hasOutput ? (
-    <button type="button" onClick={() => speakText(translatedText, targetLang, 'target')}
+    <button
+      type="button"
+      onClick={() => speakText(translatedText, targetLang, 'target')}
       className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded border transition cursor-pointer ${speakBtnClass}`}
-      title="Listen Translated Audio">
-      <Volume2 className="h-3.5 w-3.5" /><span>{speakLabel}</span>
+      title="Listen Translated Audio"
+    >
+      <Volume2 className="h-3.5 w-3.5" />
+      <span>{speakLabel}</span>
     </button>
   ) : null;
   const serviceTag = resultData?.serviceUsed ? (
@@ -214,9 +258,16 @@ const OutputPanel: React.FC<{
     </span>
   ) : null;
   const copyBtn = hasOutput ? (
-    <button type="button" onClick={handleCopy}
-      className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer">
-      {copied ? <Check className="h-3.5 w-3.5 text-emerald-500" /> : <Copy className="h-3.5 w-3.5" />}
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer"
+    >
+      {copied ? (
+        <Check className="h-3.5 w-3.5 text-emerald-500" />
+      ) : (
+        <Copy className="h-3.5 w-3.5" />
+      )}
       <span>{copied ? 'Copied!' : 'Copy Result'}</span>
     </button>
   ) : null;
@@ -235,10 +286,15 @@ const OutputPanel: React.FC<{
         {copyBtn}
       </div>
       <div className="relative">
-        <textarea rows={8} readOnly dir={isRtl ? 'rtl' : 'ltr'} lang={targetLang}
+        <textarea
+          rows={8}
+          readOnly
+          dir={isRtl ? 'rtl' : 'ltr'}
+          lang={targetLang}
           value={isTranslating ? 'Translating...' : translatedText}
           placeholder="Translated output will appear here automatically..."
-          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans" />
+          className="w-full rounded-xl border border-border-soft bg-background p-4 text-xs text-foreground font-semibold focus:border-primary outline-none leading-relaxed font-sans"
+        />
         {translatingOverlay}
       </div>
     </div>
@@ -260,7 +316,10 @@ const WordAnalysisCard: React.FC<{
       </span>
       <div className="flex flex-wrap gap-1.5">
         {alternatives.map((alt) => (
-          <span key={alt} className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground">
+          <span
+            key={alt}
+            className="rounded-md bg-surface border border-border-soft px-2 py-0.5 text-[11px] font-semibold text-foreground"
+          >
             {alt}
           </span>
         ))}
@@ -284,7 +343,9 @@ const WordAnalysisCard: React.FC<{
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
         <div>
           <span className="text-muted-copy font-bold">Word: </span>
-          <span className="font-extrabold text-foreground font-mono">{resultData?.wordAnalysis?.word}</span>
+          <span className="font-extrabold text-foreground font-mono">
+            {resultData?.wordAnalysis?.word}
+          </span>
         </div>
         <div>
           <span className="text-muted-copy font-bold">Primary Meaning: </span>

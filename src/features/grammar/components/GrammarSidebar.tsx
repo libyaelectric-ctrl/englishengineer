@@ -1,9 +1,8 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
+import { useShallow } from 'zustand/shallow';
 
 import { useLearningStore } from '@/core/learning';
-
-import { useShallow } from 'zustand/shallow';
 
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';

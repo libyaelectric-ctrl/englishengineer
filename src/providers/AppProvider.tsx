@@ -3,11 +3,12 @@ import { reportEnvironmentValidation } from '@/config/environment.config';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
+import { initPoolSubscriptions } from '@/core/learning/learning.pool';
+
 import { logger } from '@/shared/logger';
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
 import { CloudSyncService, useAuthStore } from '@/features/auth';
-import { initPoolSubscriptions } from '@/core/learning/learning.pool';
 
 import { ErrorBoundaryProvider } from './ErrorBoundaryProvider';
 import { QueryProvider } from './QueryProvider';

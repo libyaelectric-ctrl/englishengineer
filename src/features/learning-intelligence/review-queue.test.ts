@@ -2,9 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 
 import { GrammarProgressService } from '@/shared/services/grammar-progress.service';
 import { GrammarRepository } from '@/shared/services/grammar.repository';
-import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
-import { VocabularyMenuService } from '@/features/vocabulary';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
+import { getInitialUserLearningProfile } from '@/shared/utils/profile.utils';
+
+import { VocabularyMenuService } from '@/features/vocabulary';
 
 import { LearningIntelligenceService } from './learning-intelligence.service';
 import { UnifiedReviewQueueService } from './review-queue';

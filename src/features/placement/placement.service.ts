@@ -1,6 +1,5 @@
-import { storage } from '@/shared/storage';
-
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
+import { storage } from '@/shared/storage';
 import { getEloBandRange } from '@/shared/utils/profile.utils';
 
 import { PLACEMENT_QUESTIONS } from './placement.data';

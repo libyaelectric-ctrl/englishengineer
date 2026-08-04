@@ -43,5 +43,3 @@ export const CURRENCIES: Record<Currency, CurrencyConfig> = {
     exchangeRate: 0.79,
   },
 };
-
-

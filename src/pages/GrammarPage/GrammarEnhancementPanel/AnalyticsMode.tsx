@@ -1,8 +1,11 @@
 import { BarChart3 } from 'lucide-react';
+
 import { useMemo } from 'react';
+
 import { type GrammarRule, type GrammarRuleProgress } from '@/features/grammar';
+
 import { getModuleLabel } from '../GrammarPageHelpers';
-import { PanelShell, MiniMetric } from './shared';
+import { MiniMetric, PanelShell } from './shared';
 import { type RuleWithProgress } from './types';
 
 const getRetention = (progress: GrammarRuleProgress): number => {
@@ -61,9 +64,7 @@ export const AnalyticsMode = ({
         <MiniMetric label="CEFR readiness" value={`${cefrEstimate}%`} />
         <MiniMetric
           label="Due rules"
-          value={
-            rulesWithProgress.filter((item) => item.progress.reviewStatus === 'Due').length
-          }
+          value={rulesWithProgress.filter((item) => item.progress.reviewStatus === 'Due').length}
         />
         <MiniMetric label="Mastered" value={masteredCount} />
       </div>
@@ -71,10 +72,7 @@ export const AnalyticsMode = ({
         <div className="rounded-[4px] border border-border-soft bg-background p-3">
           <p className="text-xs font-black uppercase tracking-wide">Memory Retention Curve</p>
           <div className="mt-3 h-3 rounded-[4px] bg-surface-hover">
-            <div
-              className="h-full rounded-[4px] bg-success"
-              style={{ width: `${retention}%` }}
-            />
+            <div className="h-full rounded-[4px] bg-success" style={{ width: `${retention}%` }} />
           </div>
         </div>
         <div className="rounded-[4px] border border-border-soft bg-background p-3">

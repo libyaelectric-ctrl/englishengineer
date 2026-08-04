@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { CommercialPlanPreview } from '@/features/billing';
 
-import { isPlanUnavailable, getPlanActionLabel, getPlanActionStyle } from './pricing.utils';
+import { getPlanActionLabel, getPlanActionStyle, isPlanUnavailable } from './pricing.utils';
 
 export const FreePlanButton = ({ currentUser }: { currentUser: { id: string } | null }) => (
   <Link

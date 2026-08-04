@@ -1,5 +1,6 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
 import type { MissionDifficulty } from '@/core/learning/learning.types';
+
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export type CorrectionType = 'grammar' | 'style' | 'vocabulary';
 

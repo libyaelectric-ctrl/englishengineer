@@ -166,29 +166,35 @@ export const BillingPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#d9d9e3]">
-                  {([] as Array<{ id: string; date: string; amount: string; status: string }>).map((inv) => (
-                    <tr key={inv.id} className="hover:bg-background transition-colors">
-                      <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
-                        {inv.id}
-                      </td>
-                      <td className="px-4 py-3 text-xs font-medium text-muted-copy">{inv.date}</td>
-                      <td className="px-4 py-3 text-xs font-bold text-foreground">{inv.amount}</td>
-                      <td className="px-4 py-3 text-xs">
-                        <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success">
-                          {inv.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <button
-                          type="button"
-                          className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
-                          aria-label="Download receipt"
-                        >
-                          <Download className="h-4 w-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {([] as Array<{ id: string; date: string; amount: string; status: string }>).map(
+                    (inv) => (
+                      <tr key={inv.id} className="hover:bg-background transition-colors">
+                        <td className="px-4 py-3 text-xs font-mono font-bold text-foreground">
+                          {inv.id}
+                        </td>
+                        <td className="px-4 py-3 text-xs font-medium text-muted-copy">
+                          {inv.date}
+                        </td>
+                        <td className="px-4 py-3 text-xs font-bold text-foreground">
+                          {inv.amount}
+                        </td>
+                        <td className="px-4 py-3 text-xs">
+                          <span className="inline-flex items-center rounded-[4px] bg-success/15 border border-success/30 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-success">
+                            {inv.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            type="button"
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:border-primary hover:text-primary transition-all cursor-pointer shadow-sm"
+                            aria-label="Download receipt"
+                          >
+                            <Download className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>

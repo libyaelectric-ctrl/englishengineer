@@ -29,14 +29,14 @@ import {
 } from '@/features/grammar';
 
 import {
-  FieldMode,
-  DrillsMode,
-  CopilotMode,
   AnalyticsMode,
-  PanelShell,
+  CopilotMode,
+  DrillsMode,
+  FieldMode,
   MiniMetric,
-  type RuleWithProgress,
+  PanelShell,
   type ProofIssue,
+  type RuleWithProgress,
 } from './GrammarEnhancementPanel/index';
 
 type LabMode =
@@ -99,7 +99,9 @@ const readJson = <T,>(key: string, fallback: T): T => {
 const writeJson = <T,>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) { logger.w('[GrammarEnhancementPanel] Failed to write JSON to localStorage', e); }
+  } catch (e) {
+    logger.w('[GrammarEnhancementPanel] Failed to write JSON to localStorage', e);
+  }
 };
 
 const downloadText = (filename: string, content: string, type = 'text/plain'): void => {
@@ -176,7 +178,8 @@ export const GrammarEnhancementPanel = ({
         label: 'Binding modal',
         before: 'should be submitted',
         after: 'shall be submitted',
-        reason: 'Tender and specification language needs a binding modal when the action is mandatory.',
+        reason:
+          'Tender and specification language needs a binding modal when the action is mandatory.',
       },
       {
         label: 'Passive report style',

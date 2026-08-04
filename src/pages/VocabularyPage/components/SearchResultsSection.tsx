@@ -1,9 +1,10 @@
 import { Plus, Search } from 'lucide-react';
+
 import { useState } from 'react';
 
-import { playSound } from '@/shared/utils/sound';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { playSound } from '@/shared/utils/sound';
 
 import { CEFR_LEVELS, type CefrLevel } from '@/features/level-system';
 import type { VocabularyMenuState, VocabularyTerm } from '@/features/vocabulary';

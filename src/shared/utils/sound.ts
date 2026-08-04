@@ -90,7 +90,10 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error' | 'flip') =
     } else if (type === 'ding' || type === 'success') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(DING_FREQ_START, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(DING_FREQ_END, ctx.currentTime + DING_RAMP_DURATION);
+      osc.frequency.exponentialRampToValueAtTime(
+        DING_FREQ_END,
+        ctx.currentTime + DING_RAMP_DURATION
+      );
       gainNode.gain.setValueAtTime(DING_GAIN, ctx.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + DING_DURATION);
       osc.start(ctx.currentTime);
@@ -108,5 +111,3 @@ export const playSound = (type: 'pop' | 'ding' | 'success' | 'error' | 'flip') =
     logger.w('[SOUND] Audio playback failed', e);
   }
 };
-
-

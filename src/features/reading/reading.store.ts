@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import type { KnowledgePoolEntry } from '@/core/content-selection/personalized-content.service';
 
 import { logger } from '@/shared/logger';
-
 import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
 
 import { ReadingService } from './reading.service';

@@ -63,10 +63,13 @@ describe('eosPersistConfig middleware', () => {
 
   it('restores state from storage on creation', () => {
     // Pre-populate via storage module as JSON string (how createPersistStorage stores)
-    storage.set('test_persist_restore', JSON.stringify({
-      state: { count: 42, name: 'restored' },
-      version: 0,
-    }));
+    storage.set(
+      'test_persist_restore',
+      JSON.stringify({
+        state: { count: 42, name: 'restored' },
+        version: 0,
+      })
+    );
 
     const useStore = create<TestState>()(
       persist(

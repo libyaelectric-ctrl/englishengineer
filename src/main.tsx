@@ -29,8 +29,6 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
   };
 }
 
-
-
 // Global unhandled rejection handler for production error tracking
 if (typeof window !== 'undefined') {
   window.addEventListener('unhandledrejection', (event) => {
@@ -70,7 +68,6 @@ if (typeof window !== 'undefined' && !('requestIdleCallback' in window)) {
 
 // Defer Sentry init to after first paint for faster initial load
 requestIdleCallback(() => ObservabilityService.init());
-
 
 // Theme is handled by ThemeProvider — no manual DOM manipulation here
 

@@ -1,5 +1,4 @@
 import { logger } from '@/shared/logger';
-
 import { openIDB } from '@/shared/utils/idb-helper';
 
 import { storage } from './index';

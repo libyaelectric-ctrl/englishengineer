@@ -2,8 +2,9 @@ import { FormEvent, useMemo, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
-import { logger } from '@/shared/logger';
 import { useLearningStore } from '@/core/learning';
+
+import { logger } from '@/shared/logger';
 
 import {
   buildAIUsageSummary,

@@ -154,7 +154,15 @@ const WordCardFront: React.FC<WordCardFrontProps> = ({
   </div>
 );
 
-export const WordCard = ({ term, progress, mode, onReview, onLearn, isFlipped, onFlip }: WordCardProps) => {
+export const WordCard = ({
+  term,
+  progress,
+  mode,
+  onReview,
+  onLearn,
+  isFlipped,
+  onFlip,
+}: WordCardProps) => {
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);

@@ -1,13 +1,17 @@
 import { Sparkles } from 'lucide-react';
+
 import { useMemo } from 'react';
+
 import { Button } from '@/shared/components/Button';
+
 import {
   AdaptiveDifficultyEngine,
   type GrammarRule,
   type GrammarRuleProgress,
 } from '@/features/grammar';
+
 import { getModuleLabel } from '../GrammarPageHelpers';
-import { PanelShell, MiniMetric } from './shared';
+import { MiniMetric, PanelShell } from './shared';
 import { type ProofIssue } from './types';
 
 const scoreReport = (text: string, issues: ProofIssue[]): number => {

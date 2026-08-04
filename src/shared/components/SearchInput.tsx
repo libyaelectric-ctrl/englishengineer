@@ -12,7 +12,12 @@ interface SearchInputProps {
 }
 
 export const SearchInput = memo(
-  ({ placeholder = 'Search...', onSearch, onClear, debounceMs = DEFAULT_DEBOUNCE_MS }: SearchInputProps) => {
+  ({
+    placeholder = 'Search...',
+    onSearch,
+    onClear,
+    debounceMs = DEFAULT_DEBOUNCE_MS,
+  }: SearchInputProps) => {
     const [query, setQuery] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
     const debounceRef = useRef<NodeJS.Timeout>(undefined);

@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer } from 'react';
 
 import { logger } from '@/shared/logger';
-
 import type { LearningGoal } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
