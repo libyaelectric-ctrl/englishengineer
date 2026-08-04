@@ -2,12 +2,15 @@ import { Building2, MessageSquare, Send, X } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export function SalesChatModal() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: 'bot',
-      text: 'Hello! I am EngVox Enterprise Sales Lead. Are you looking for custom licensing or FIDIC contract training for your site team?',
+      text: translate('landing.salesChatWelcome'),
     },
   ]);
   const [input, setInput] = useState('');
@@ -23,7 +26,7 @@ export function SalesChatModal() {
         ...prev,
         {
           sender: 'bot',
-          text: 'Thank you! An Enterprise Specialist will send custom quote options & SLA details to your work email shortly.',
+          text: translate('landing.salesChatThanks'),
         },
       ]);
     }, 600);
@@ -39,7 +42,7 @@ export function SalesChatModal() {
           className="flex items-center gap-2 rounded-full bg-primary px-4 py-2.5 text-xs font-bold text-primary-foreground shadow-2xl hover:scale-105 transition-all cursor-pointer border border-white/20 light-sweep-container"
         >
           <MessageSquare className="h-4 w-4 text-emerald-300 animate-pulse" />
-          <span>Site Team Custom Quote 💬</span>
+          <span>{translate('landing.salesChatTitle')} 💬</span>
         </button>
       </div>
 
@@ -53,11 +56,11 @@ export function SalesChatModal() {
               </div>
               <div>
                 <h4 className="text-xs font-extrabold text-foreground leading-tight">
-                  EngVox Sales Specialist
+                  {translate('landing.salesChatName')}
                 </h4>
                 <p className="text-[9px] font-medium text-emerald-600 flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Online
-                  for Enterprise Quotes
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />{' '}
+                  {translate('landing.salesChatStatus')}
                 </p>
               </div>
             </div>
@@ -87,7 +90,7 @@ export function SalesChatModal() {
 
           <div className="flex items-center gap-1.5 pt-1 border-t border-border-soft">
             <label htmlFor="sales-chat-input" className="sr-only">
-              Sales chat message
+              {translate('landing.salesChatPlaceholder')}
             </label>
             <input
               id="sales-chat-input"
@@ -95,7 +98,7 @@ export function SalesChatModal() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask for site licenses, FIDIC add-on..."
+              placeholder={translate('landing.salesChatPlaceholder')}
               className="flex-1 rounded border border-border-soft bg-background px-2.5 py-1.5 text-xs text-foreground focus:border-primary focus:outline-none"
             />
             <button

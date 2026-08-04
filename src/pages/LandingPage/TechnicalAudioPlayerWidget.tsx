@@ -2,6 +2,8 @@ import { Play, Volume2 } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 const AUDIO_SAMPLE_TERMS = [
   { term: 'Extension of Time (EOT)', accent: 'UK (RP)', category: 'FIDIC Cl. 8.4' },
   { term: 'Reinforced Concrete Slump', accent: 'US (GenAm)', category: 'ASTM C143' },
@@ -9,6 +11,7 @@ const AUDIO_SAMPLE_TERMS = [
 ];
 
 export const TechnicalAudioPlayerWidget = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -22,10 +25,12 @@ export const TechnicalAudioPlayerWidget = () => {
     <div className="rounded-2xl border border-primary/25 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-primary font-mono flex items-center gap-1.5">
-          <Volume2 className="h-4 w-4 text-primary animate-pulse" /> 5,000+ Technical Terms Audio
-          Player
+          <Volume2 className="h-4 w-4 text-primary animate-pulse" />{' '}
+          {translate('landing.audioPlayerTitle')}
         </span>
-        <span className="text-[10px] font-bold text-muted-copy">UK/US Native Pronunciation</span>
+        <span className="text-[10px] font-bold text-muted-copy">
+          {translate('landing.audioPlayerSubtitle')}
+        </span>
       </div>
 
       <div className="space-y-2">

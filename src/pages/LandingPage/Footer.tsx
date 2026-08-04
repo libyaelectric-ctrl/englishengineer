@@ -2,7 +2,10 @@ import { PRODUCT_VERSION } from '@/config/product.config';
 
 import { Link } from 'react-router-dom';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export function Footer({ className = '' }: { className?: string }) {
+  const { translate } = useLocalizationStore();
   return (
     <footer className={`border-t border-border-soft bg-background px-6 py-3 md:px-12 ${className}`}>
       <div className="mx-auto max-w-7xl">
@@ -24,17 +27,17 @@ export function Footer({ className = '' }: { className?: string }) {
           </div>
           <div className="flex items-center gap-6 text-xs font-medium text-foreground/80">
             <Link to="/legal/privacy" className="hover:text-primary transition-colors">
-              Privacy
+              {translate('common.privacy')}
             </Link>
             <Link to="/legal/terms" className="hover:text-primary transition-colors">
-              Terms
+              {translate('common.terms')}
             </Link>
             <Link to="/business" className="hover:text-primary transition-colors">
-              Contact
+              {translate('common.contact')}
             </Link>
           </div>
           <p className="text-xs text-muted-copy font-medium">
-            © {new Date().getFullYear()} EngVox. All rights reserved.
+            © {new Date().getFullYear()} EngVox. {translate('common.allRightsReserved')}
           </p>
         </div>
       </div>

@@ -1,6 +1,9 @@
 import { Award, Flame, Target } from 'lucide-react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export const DailyPracticeStreakWidget = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const streakDays = 5;
   const targetMins = 25;
   const currentMins = 20;
@@ -15,17 +18,21 @@ export const DailyPracticeStreakWidget = () => {
           </div>
           <div>
             <div className="text-xs font-extrabold text-foreground flex items-center gap-1">
-              <span>{streakDays}-Day Practice Streak</span>
-              <span className="text-[10px] text-amber-500">🔥 On Fire!</span>
+              <span>{translate('landing.streakTitle').replace('{days}', String(streakDays))}</span>
+              <span className="text-[10px] text-amber-500">
+                {translate('landing.streakOnFire')}
+              </span>
             </div>
-            <div className="text-[10px] text-muted-copy">Daily Engineering English Habit</div>
+            <div className="text-[10px] text-muted-copy">{translate('landing.streakHabit')}</div>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 text-xs font-bold text-foreground font-mono">
           <Target className="h-3.5 w-3.5 text-primary" />
           <span>
-            {currentMins}/{targetMins} mins
+            {translate('landing.streakProgress')
+              .replace('{current}', String(currentMins))
+              .replace('{target}', String(targetMins))}
           </span>
         </div>
       </div>
@@ -39,22 +46,27 @@ export const DailyPracticeStreakWidget = () => {
           />
         </div>
         <div className="flex justify-between text-[9px] font-bold text-muted-copy">
-          <span>Daily Goal ({progressPct}%)</span>
-          <span className="text-emerald-500">5 mins remaining today</span>
+          <span>{translate('landing.streakGoal').replace('{pct}', String(progressPct))}</span>
+          <span className="text-emerald-500">
+            {translate('landing.streakRemaining').replace(
+              '{mins}',
+              String(targetMins - currentMins)
+            )}
+          </span>
         </div>
       </div>
 
       {/* Achievement Badges Row */}
       <div className="flex items-center justify-between pt-1 border-t border-amber-500/20 text-[10px] font-bold text-foreground">
         <span className="text-muted-copy flex items-center gap-1">
-          <Award className="h-3.5 w-3.5 text-amber-500" /> Unlocked Badges:
+          <Award className="h-3.5 w-3.5 text-amber-500" /> {translate('landing.streakBadges')}
         </span>
         <div className="flex items-center gap-1.5 font-mono">
           <span className="rounded bg-amber-500/15 border border-amber-500/30 px-1.5 py-0.2 text-[9px] text-amber-600">
-            ASTM Specialist
+            {translate('landing.streakBadge1')}
           </span>
           <span className="rounded bg-primary/15 border border-primary/30 px-1.5 py-0.2 text-[9px] text-primary">
-            FIDIC Master
+            {translate('landing.streakBadge2')}
           </span>
         </div>
       </div>

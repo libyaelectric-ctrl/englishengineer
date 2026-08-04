@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { COMMERCIAL_PLAN_CATALOG, CurrencyConfig } from '@/features/billing';
+import { useLocalizationStore } from '@/features/localization';
 
 import { AnimatedCard } from './AnimatedComponents';
 import { PricingAddonsCard } from './PricingAddonsCard';
@@ -38,6 +39,8 @@ function PricingPlanCard({
   displayPrice,
   isAnnual,
 }: PricingPlanCardProps) {
+  const translate = useLocalizationStore((s) => s.translate);
+
   return (
     <AnimatedCard
       delay={index * 50}
@@ -60,7 +63,7 @@ function PricingPlanCard({
             </h3>
             {isPrimary ? (
               <span className="rounded bg-gradient-to-r from-amber-500 to-primary text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md">
-                Most Popular
+                {translate('landing.pricingMostPopular')}
               </span>
             ) : null}
           </div>
@@ -70,7 +73,11 @@ function PricingPlanCard({
               {displayPrice}
             </span>
             <span className="text-xs text-muted-copy font-medium">
-              {plan.id === 'free' ? '' : isAnnual ? '/month (billed annually)' : '/month'}
+              {plan.id === 'free'
+                ? ''
+                : isAnnual
+                  ? translate('landing.pricingPerMonthAnnual')
+                  : translate('landing.pricingPerMonth')}
             </span>
           </div>
 
@@ -97,7 +104,9 @@ function PricingPlanCard({
                 : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'
             }`}
           >
-            {plan.id === 'free' ? 'Start Free' : 'Get Started'}
+            {plan.id === 'free'
+              ? translate('landing.pricingStartFree')
+              : translate('landing.pricingGetStarted')}
           </Link>
         </div>
       </div>
@@ -106,6 +115,7 @@ function PricingPlanCard({
 }
 
 export function PricingSection() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [isAnnual, setIsAnnual] = useState(false);
 
@@ -119,10 +129,10 @@ export function PricingSection() {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              Pricing & Plans
+              {translate('landing.pricingTitle')}
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Start free. Upgrade when ready.
+              {translate('landing.pricingSubtitle')}
             </h2>
           </div>
 
@@ -137,7 +147,7 @@ export function PricingSection() {
                   !isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'
                 }`}
               >
-                Monthly
+                {translate('landing.pricingMonthly')}
               </button>
               <button
                 type="button"
@@ -146,9 +156,9 @@ export function PricingSection() {
                   isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'
                 }`}
               >
-                <span>Annual</span>
+                <span>{translate('landing.pricingAnnual')}</span>
                 <span className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.2 rounded font-mono">
-                  -20%
+                  {translate('landing.pricingSave20')}
                 </span>
               </button>
             </div>

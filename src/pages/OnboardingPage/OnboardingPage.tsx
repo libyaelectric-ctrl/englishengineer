@@ -9,7 +9,10 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
-import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+import type {
+  SupportedInterfaceLanguage,
+  TranslationKey,
+} from '@/features/localization/localization.types';
 import { PlacementService } from '@/features/placement';
 import { LearningProfileRepository } from '@/features/profile/profile.repository';
 import type { SelfReportedCefr, SkillName } from '@/features/profile/profile.types';
@@ -22,11 +25,11 @@ import { PlanStep } from './steps/PlanStep';
 const STEPS = ['discipline', 'language', 'level', 'plan'] as const;
 type Step = (typeof STEPS)[number];
 
-const labels: Record<Step, string> = {
-  discipline: 'Your discipline',
-  language: 'Interface language',
-  level: 'Starting point',
-  plan: 'Plan',
+const labels: Record<Step, TranslationKey> = {
+  discipline: 'onboarding.yourDiscipline',
+  language: 'onboarding.interfaceLanguage',
+  level: 'onboarding.startingPoint',
+  plan: 'onboarding.plan',
 };
 
 const parseStep = (pathname: string): Step => {
@@ -46,41 +49,47 @@ const OnboardingFooter = ({
   isLiteMode: boolean;
   exploreLiteAtA1: () => void;
   continueFlow: () => void;
-}) => (
-  <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-surface-hover px-4 py-4 sm:px-7">
-    {index > 0 ? (
-      <Link
-        to={`/onboarding/${STEPS[index - 1]}`}
-        onClick={() => save()}
-        className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </Link>
-    ) : (
-      <span />
-    )}
-    <div className="flex flex-wrap items-center justify-end gap-2">
-      {isLiteMode && (
+}) => {
+  const { translate } = useLocalizationStore();
+
+  return (
+    <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-border-soft bg-surface-hover px-4 py-4 sm:px-7">
+      {index > 0 ? (
+        <Link
+          to={`/onboarding/${STEPS[index - 1]}`}
+          onClick={() => save()}
+          className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-surface"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          {translate('onboarding.back')}
+        </Link>
+      ) : (
+        <span />
+      )}
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {isLiteMode && (
+          <button
+            type="button"
+            onClick={exploreLiteAtA1}
+            className="min-h-11 rounded-lg px-3 text-sm font-medium text-muted-copy hover:bg-surface"
+          >
+            {translate('onboarding.exploreA1')}
+          </button>
+        )}
         <button
           type="button"
-          onClick={exploreLiteAtA1}
-          className="min-h-11 rounded-lg px-3 text-sm font-medium text-muted-copy hover:bg-surface"
+          onClick={continueFlow}
+          className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium"
         >
-          Explore now at A1
+          {index === STEPS.length - 1
+            ? translate('onboarding.continuePlacement')
+            : translate('onboarding.continue')}
+          <ArrowRight className="h-4 w-4" />
         </button>
-      )}
-      <button
-        type="button"
-        onClick={continueFlow}
-        className="public-primary-action min-w-0 px-4 sm:px-5 rounded-lg font-medium"
-      >
-        {index === STEPS.length - 1 ? 'Continue to placement' : 'Continue'}
-        <ArrowRight className="h-4 w-4" />
-      </button>
-    </div>
-  </footer>
-);
+      </div>
+    </footer>
+  );
+};
 
 const OnboardingPage = () => {
   const navigate = useNavigate();
@@ -179,19 +188,22 @@ const OnboardingPage = () => {
                 key={item}
                 className="min-w-0"
                 aria-current={item === step ? 'step' : undefined}
-                aria-label={`Step ${itemIndex + 1}: ${labels[item]}${itemIndex < index ? ', completed' : item === step ? ', current' : ''}`}
+                aria-label={`Step ${itemIndex + 1}: ${translate(labels[item])}${itemIndex < index ? ', completed' : item === step ? ', current' : ''}`}
               >
                 <div
                   className={`h-1.5 rounded-full ${itemIndex <= index ? 'bg-primary' : 'bg-border-soft'}`}
                 />
                 <span className="mt-2 hidden truncate text-[10px] font-medium text-muted-copy sm:block">
-                  {labels[item]}
+                  {translate(labels[item])}
                 </span>
               </li>
             ))}
           </ol>
           <p className="mt-3 text-xs font-medium text-muted-copy sm:hidden">
-            Step {index + 1} of {STEPS.length}: {labels[step]}
+            {translate('onboarding.stepOf')
+              .replace('{current}', String(index + 1))
+              .replace('{total}', String(STEPS.length))}
+            : {translate(labels[step])}
           </p>
         </header>
 

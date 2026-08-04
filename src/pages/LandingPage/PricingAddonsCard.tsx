@@ -1,35 +1,46 @@
-import { FileText, Mic, PlusCircle, Sparkles } from 'lucide-react';
+import { BookOpen, FileText, PlusCircle, Sparkles } from 'lucide-react';
 
 import { useState } from 'react';
 
-const ADDONS = [
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
+
+const ADDONS: Array<{
+  id: string;
+  titleKey: TranslationKey;
+  descKey: TranslationKey;
+  priceKey: TranslationKey;
+  unitKey: TranslationKey;
+  icon: typeof FileText;
+}> = [
   {
-    id: 'docs-50',
-    title: '+50 Document Analyses',
-    desc: 'Extra FIDIC contracts, RFI logs & ASTM specifications processing limit.',
-    price: '$9',
-    unit: 'one-time',
+    id: 'fidic-packs',
+    titleKey: 'landing.addon1Title',
+    descKey: 'landing.addon1Desc',
+    priceKey: 'landing.addon1Price',
+    unitKey: 'landing.addon1Unit',
     icon: FileText,
   },
   {
-    id: 'voice-120',
-    title: '+120 Voice Practice Mins',
-    desc: 'Extra AI oral defense coaching & technical interview simulation time.',
-    price: '$12',
-    unit: 'one-time',
-    icon: Mic,
+    id: 'astm-banks',
+    titleKey: 'landing.addon2Title',
+    descKey: 'landing.addon2Desc',
+    priceKey: 'landing.addon2Price',
+    unitKey: 'landing.addon2Unit',
+    icon: BookOpen,
   },
   {
-    id: 'terms-custom',
-    title: 'Custom Technical Dictionary',
-    desc: 'Upload 500+ private company terms for specialized team training.',
-    price: '$19',
-    unit: 'one-time',
+    id: 'site-glossaries',
+    titleKey: 'landing.addon3Title',
+    descKey: 'landing.addon3Desc',
+    priceKey: 'landing.addon3Price',
+    unitKey: 'landing.addon3Unit',
     icon: Sparkles,
   },
 ];
 
 export function PricingAddonsCard() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [addedIds, setAddedIds] = useState<string[]>([]);
 
   const toggleAddon = (id: string) => {
@@ -41,14 +52,12 @@ export function PricingAddonsCard() {
       <div className="mb-4 flex items-center justify-between border-b border-border-soft pb-2.5">
         <div className="flex items-center gap-2">
           <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
-            Item 17 / Add-On Micro-Transactions
+            {translate('landing.addonsDesc')}
           </span>
-          <h3 className="text-sm font-bold text-foreground">
-            Optional Micro-Addons (No Subscription Needed)
-          </h3>
+          <h3 className="text-sm font-bold text-foreground">{translate('landing.addonsTitle')}</h3>
         </div>
         <span className="text-[10px] text-muted-copy font-medium">
-          Add extra credits to any active plan
+          {translate('landing.addonsSubtitle')}
         </span>
       </div>
 
@@ -68,13 +77,18 @@ export function PricingAddonsCard() {
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-1.5 font-bold text-xs text-foreground">
                     <addon.icon className="h-3.5 w-3.5 text-primary" />
-                    <span>{addon.title}</span>
+                    <span>{translate(addon.titleKey)}</span>
                   </div>
                   <span className="text-xs font-extrabold text-primary font-mono">
-                    {addon.price}
+                    {translate(addon.priceKey)}
+                    <span className="ml-1 font-medium text-muted-copy">
+                      {translate(addon.unitKey)}
+                    </span>
                   </span>
                 </div>
-                <p className="text-[11px] text-muted-copy leading-snug">{addon.desc}</p>
+                <p className="text-[11px] text-muted-copy leading-snug">
+                  {translate(addon.descKey)}
+                </p>
               </div>
 
               <button
@@ -87,7 +101,9 @@ export function PricingAddonsCard() {
                 }`}
               >
                 <PlusCircle className="h-3.5 w-3.5" />
-                <span>{isAdded ? 'Added to Cart ✓' : 'Add to Plan'}</span>
+                <span>
+                  {isAdded ? translate('landing.addonsAdded') : translate('landing.addonsAdd')}
+                </span>
               </button>
             </div>
           );

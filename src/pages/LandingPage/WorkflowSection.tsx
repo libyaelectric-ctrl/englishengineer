@@ -2,36 +2,34 @@ import { ChevronRight, Layers, RefreshCw, Zap } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
+
 import { AnimatedSection } from './AnimatedComponents';
 
 const WORKFLOW = [
   {
-    kicker: '01 / DEFINE',
-    title: 'Profile the engineering context',
-    summary:
-      'Discipline, CEFR level, project role and communication goal are translated into a focused practice path.',
-    description:
-      'Establish your exact engineering discipline, site role, and project target to auto-generate personalized technical drills.',
+    kickerKey: 'landing.workflowStep1Kicker' as TranslationKey,
+    titleKey: 'landing.workflowStep1Title' as TranslationKey,
+    summaryKey: 'landing.workflowStep1Desc' as TranslationKey,
+    descriptionKey: 'landing.workflowStep1Desc' as TranslationKey,
   },
   {
-    kicker: '02 / COMPOSE',
-    title: 'Practice in realistic project scenes',
-    summary:
-      'The interface frames writing, speaking, reading and listening tasks around actual site communication.',
-    description:
-      'Simulate FIDIC contract negotiations, site safety briefings, technical RFI drafting, and oral defenses with live AI feedback.',
+    kickerKey: 'landing.workflowStep2Kicker' as TranslationKey,
+    titleKey: 'landing.workflowStep2Title' as TranslationKey,
+    summaryKey: 'landing.workflowStep2Desc' as TranslationKey,
+    descriptionKey: 'landing.workflowStep2Desc' as TranslationKey,
   },
   {
-    kicker: '03 / IMPROVE',
-    title: 'Turn feedback into the next action',
-    summary:
-      'AI review, mistake memory and analytics keep the learner moving from attempt to measurable progress.',
-    description:
-      'Every mistake is logged to your personal Mistake Memory bank with tailored remedial exercises for continuous mastery.',
+    kickerKey: 'landing.workflowStep3Kicker' as TranslationKey,
+    titleKey: 'landing.workflowStep3Title' as TranslationKey,
+    summaryKey: 'landing.workflowStep3Desc' as TranslationKey,
+    descriptionKey: 'landing.workflowStep3Desc' as TranslationKey,
   },
 ];
 
 export function WorkflowSection() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const activeStep = WORKFLOW[activeStepIndex];
 
@@ -45,14 +43,14 @@ export function WorkflowSection() {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              Workflow
+              {translate('landing.howItWorks')}
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Define, compose and improve through one guided loop.
+              {translate('landing.workflowTitle')}
             </h2>
           </div>
           <p className="text-xs text-foreground/80 font-medium max-w-xl leading-tight">
-            Click each step below to preview how EngVox transforms technical communication.
+            {translate('landing.workflowClickDesc')}
           </p>
         </div>
 
@@ -62,7 +60,7 @@ export function WorkflowSection() {
             const isActive = activeStepIndex === index;
             return (
               <button
-                key={item.title}
+                key={item.titleKey}
                 onClick={() => setActiveStepIndex(index)}
                 className={`p-3.5 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   isActive
@@ -78,7 +76,7 @@ export function WorkflowSection() {
                         : 'bg-soft border-border-soft text-primary'
                     }`}
                   >
-                    {item.kicker}
+                    {translate(item.kickerKey)}
                   </span>
                   <ChevronRight
                     className={`h-4 w-4 transition-transform ${
@@ -86,9 +84,9 @@ export function WorkflowSection() {
                     }`}
                   />
                 </div>
-                <h3 className="text-sm font-bold leading-tight mb-1">{item.title}</h3>
+                <h3 className="text-sm font-bold leading-tight mb-1">{translate(item.titleKey)}</h3>
                 <p className="text-xs leading-snug font-medium line-clamp-2 opacity-90">
-                  {item.summary}
+                  {translate(item.summaryKey)}
                 </p>
               </button>
             );
@@ -101,12 +99,14 @@ export function WorkflowSection() {
             <div className="space-y-1.5 max-w-3xl">
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-primary font-mono bg-soft border border-border-soft px-2 py-0.5 rounded">
-                  {activeStep.kicker}
+                  {translate(activeStep.kickerKey)}
                 </span>
-                <h4 className="text-base font-extrabold text-foreground">{activeStep.title}</h4>
+                <h4 className="text-base font-extrabold text-foreground">
+                  {translate(activeStep.titleKey)}
+                </h4>
               </div>
               <p className="text-xs sm:text-sm font-medium text-foreground/85 leading-normal">
-                {activeStep.description}
+                {translate(activeStep.descriptionKey)}
               </p>
             </div>
 
@@ -122,9 +122,9 @@ export function WorkflowSection() {
               </div>
               <div>
                 <span className="text-[9px] font-bold uppercase tracking-wider text-muted-copy block">
-                  Active Guided Action
+                  {translate('landing.workflowActive')}
                 </span>
-                <p className="text-xs font-bold text-primary">{activeStep.title}</p>
+                <p className="text-xs font-bold text-primary">{translate(activeStep.titleKey)}</p>
               </div>
             </div>
           </div>

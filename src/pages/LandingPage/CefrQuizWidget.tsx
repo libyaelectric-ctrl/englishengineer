@@ -2,46 +2,45 @@ import { HelpCircle, RefreshCw, Sparkles } from 'lucide-react';
 
 import { useState } from 'react';
 
-const QUIZ_QUESTIONS = [
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
+
+const QUIZ_QUESTIONS: Array<{
+  id: number;
+  question: TranslationKey;
+  options: Array<{ text: TranslationKey; level: string }>;
+}> = [
   {
     id: 1,
-    question: 'How do you state a delay notice under international site contracts?',
+    question: 'landing.cefrQuizQ1',
     options: [
-      { text: 'Heavy rain came, workers stopped, give money.', level: 'A2' },
-      { text: 'We delayed work due to bad weather yesterday.', level: 'B1' },
-      {
-        text: 'Pursuant to Clause 8.4, critical path delay is logged due to adverse climatic conditions.',
-        level: 'C1',
-      },
+      { text: 'landing.cefrQuizQ1A1', level: 'A2' },
+      { text: 'landing.cefrQuizQ1A2', level: 'B1' },
+      { text: 'landing.cefrQuizQ1A3', level: 'C1' },
     ],
   },
   {
     id: 2,
-    question: 'How do you report a technical RFI discrepancy on a BIM model?',
+    question: 'landing.cefrQuizQ2',
     options: [
-      { text: 'Rebar drawing is confusing, please check.', level: 'A2' },
-      { text: 'We found an error in drawing S-204 rebar detail.', level: 'B1' },
-      {
-        text: 'RFI #104: Clarification requested regarding top reinforcement rebar grade per BS 4449.',
-        level: 'C1',
-      },
+      { text: 'landing.cefrQuizQ2A1', level: 'A2' },
+      { text: 'landing.cefrQuizQ2A2', level: 'B1' },
+      { text: 'landing.cefrQuizQ2A3', level: 'C1' },
     ],
   },
   {
     id: 3,
-    question: 'How do you defend your technical presentation before the project board?',
+    question: 'landing.cefrQuizQ3',
     options: [
-      { text: 'The pump is good and will not break.', level: 'A2' },
-      { text: 'We tested the pump pressure and it passed.', level: 'B1' },
-      {
-        text: 'Hydrostatic test pressure envelopes confirm full compliance with ISO 10816 vibration limits.',
-        level: 'C1',
-      },
+      { text: 'landing.cefrQuizQ3A1', level: 'A2' },
+      { text: 'landing.cefrQuizQ3A2', level: 'B1' },
+      { text: 'landing.cefrQuizQ3A3', level: 'C1' },
     ],
   },
 ];
 
 export function CefrQuizWidget() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [calculatedLevel, setCalculatedLevel] = useState<string | null>(null);
@@ -75,14 +74,14 @@ export function CefrQuizWidget() {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
-              Item 06 / CEFR Assessment
+              {translate('landing.cefrQuizTitle')}
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              30-Second Engineering CEFR Level Calculator.
+              {translate('landing.cefrQuizDesc')}
             </h2>
           </div>
           <p className="text-xs text-foreground/80 font-medium max-w-xl leading-tight">
-            Answer 3 rapid technical scenarios to instantly estimate your site communication level.
+            {translate('landing.cefrQuizIntro')}
           </p>
         </div>
 
@@ -91,15 +90,17 @@ export function CefrQuizWidget() {
             <div className="space-y-4">
               <div className="flex items-center justify-between text-xs border-b border-border-soft pb-2">
                 <span className="font-bold text-primary font-mono flex items-center gap-1">
-                  <HelpCircle className="h-4 w-4 text-primary" /> Question 0{currentStep + 1} of 03
+                  <HelpCircle className="h-4 w-4 text-primary" />{' '}
+                  {translate('landing.cefrQuizProgress').replace('{n}', `0${currentStep + 1}`)}
                 </span>
                 <span className="text-muted-copy font-medium">
-                  {Math.round(((currentStep + 1) / 3) * 100)}% Complete
+                  {Math.round(((currentStep + 1) / 3) * 100)}
+                  {translate('landing.cefrQuizPercent')}
                 </span>
               </div>
 
               <h3 className="text-sm sm:text-base font-extrabold text-foreground">
-                {QUIZ_QUESTIONS[currentStep].question}
+                {translate(QUIZ_QUESTIONS[currentStep].question)}
               </h3>
 
               <div className="space-y-2" role="radiogroup" aria-label="Quiz answer options">
@@ -112,9 +113,9 @@ export function CefrQuizWidget() {
                     onClick={() => handleSelectOption(opt.level)}
                     className="w-full text-left p-3 rounded-lg border border-border-soft bg-surface hover:border-primary/50 hover:bg-primary/5 transition-all text-xs font-medium text-foreground flex items-center justify-between group cursor-pointer"
                   >
-                    <span>{opt.text}</span>
+                    <span>{translate(opt.text)}</span>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy group-hover:text-primary font-mono">
-                      Select ➔
+                      ➔
                     </span>
                   </button>
                 ))}
@@ -127,16 +128,12 @@ export function CefrQuizWidget() {
               </div>
 
               <h3 className="text-base sm:text-lg font-extrabold text-foreground">
-                Your Estimated Site Level:
+                {translate('landing.cefrQuizResult')}
               </h3>
 
               <div className="inline-block rounded-xl bg-primary text-primary-foreground px-6 py-2 text-base font-extrabold shadow-lg font-mono tracking-wider">
                 {calculatedLevel}
               </div>
-
-              <p className="text-xs text-foreground/80 max-w-md mx-auto leading-relaxed">
-                EngVox AI Coach has auto-generated a custom practice module for your level.
-              </p>
 
               <div className="pt-2">
                 <button
@@ -145,7 +142,7 @@ export function CefrQuizWidget() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border-soft bg-surface px-4 py-2 text-xs font-bold text-foreground hover:bg-surface-hover transition cursor-pointer"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  <span>Retake 30-Sec Test</span>
+                  <span>{translate('landing.cefrQuizRetake')}</span>
                 </button>
               </div>
             </div>

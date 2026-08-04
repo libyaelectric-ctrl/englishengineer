@@ -2,6 +2,8 @@ import { CheckCircle2, KeyRound, Laptop, LogOut, ShieldCheck, Smartphone, X } fr
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface SecuritySessionsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -54,6 +56,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
   const [totpCode, setTotpCode] = useState('');
   const [revokedNotice, setRevokedNotice] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const { translate } = useLocalizationStore();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -109,7 +112,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" />
             <h3 className="text-sm font-extrabold uppercase tracking-wider text-foreground">
-              Security & Active Sessions (SOC-2)
+              {translate('login.securityTitle')}
             </h3>
           </div>
           <button
@@ -134,11 +137,10 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
         <div className="rounded-xl border border-border-soft bg-background/80 p-3.5 flex items-center justify-between gap-3">
           <div className="space-y-0.5">
             <div className="text-xs font-bold text-foreground flex items-center gap-1.5 font-mono">
-              <KeyRound className="h-3.5 w-3.5 text-primary" /> 2FA Authenticator Protection (TOTP)
+              <KeyRound className="h-3.5 w-3.5 text-primary" />{' '}
+              {translate('login.security2faTitle')}
             </div>
-            <p className="text-[10px] text-muted-copy">
-              Require 6-digit TOTP code from Google Authenticator / 1Password on sign-in.
-            </p>
+            <p className="text-[10px] text-muted-copy">{translate('login.security2faDesc')}</p>
           </div>
           <button
             type="button"
@@ -149,7 +151,9 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
                 : 'bg-primary border-primary text-primary-foreground hover:bg-primary-hover'
             }`}
           >
-            {twoFactorEnabled ? 'Enabled ✓' : 'Enable 2FA'}
+            {twoFactorEnabled
+              ? translate('login.security2faEnabled')
+              : translate('login.security2faEnable')}
           </button>
         </div>
 
@@ -160,7 +164,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
             className="rounded-xl border border-primary/40 bg-primary/5 p-4 space-y-3 animate-in fade-in"
           >
             <div className="text-xs font-bold text-primary flex items-center justify-between">
-              <span>Scan QR Code with Authenticator App</span>
+              <span>{translate('login.securityQrTitle')}</span>
               <button
                 type="button"
                 onClick={() => setShowQrModal(false)}
@@ -182,7 +186,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
                 htmlFor="totp-code"
                 className="text-[10px] font-bold text-muted-copy uppercase"
               >
-                Enter 6-Digit Verification Code
+                {translate('login.securityCodeTitle')}
               </label>
               <input
                 id="totp-code"
@@ -199,7 +203,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
               disabled={totpCode.length !== 6}
               className="w-full h-10 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-500 transition disabled:opacity-50 cursor-pointer"
             >
-              Verify & Activate 2FA
+              {translate('login.securityVerify')}
             </button>
           </form>
         )}
@@ -207,14 +211,16 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
         {/* ITEM 26: Active Devices List */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-xs font-bold text-foreground">
-            <span>Active Session Devices ({sessions.length})</span>
+            <span>
+              {translate('login.securitySessions')} ({sessions.length})
+            </span>
             {sessions.length > 1 && (
               <button
                 type="button"
                 onClick={handleRevokeOtherSessions}
                 className="text-[10px] font-bold text-rose-500 hover:underline flex items-center gap-1 cursor-pointer"
               >
-                <LogOut className="h-3 w-3" /> Revoke Other Sessions
+                <LogOut className="h-3 w-3" /> {translate('login.securityRevoke')}
               </button>
             )}
           </div>
@@ -240,7 +246,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
                       <span>{s.device}</span>
                       {s.isCurrent && (
                         <span className="rounded bg-emerald-500/15 border border-emerald-500/30 px-1.5 py-0.2 text-[8px] font-bold text-emerald-600 font-mono">
-                          THIS DEVICE
+                          {translate('login.securityThisDevice')}
                         </span>
                       )}
                     </div>
@@ -263,7 +269,7 @@ export const SecuritySessionsModal = ({ isOpen, onClose }: SecuritySessionsModal
             onClick={onClose}
             className="text-xs font-bold text-primary hover:underline cursor-pointer"
           >
-            Close Security Settings
+            {translate('login.securityClose')}
           </button>
         </div>
       </div>

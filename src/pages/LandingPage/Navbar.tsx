@@ -84,7 +84,7 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
                 className="inline-flex items-center gap-1 text-primary hover:underline transition-colors font-bold cursor-pointer"
               >
                 <Sparkles className="h-3.5 w-3.5" />
-                <span>AI Proofreader</span>
+                <span>{translate('landing.aiProofreader')}</span>
               </button>
             )}
           </div>
@@ -121,8 +121,16 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="inline-flex h-9 w-9 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={
+              theme === 'dark'
+                ? translate('landing.switchLightMode')
+                : translate('landing.switchDarkMode')
+            }
+            title={
+              theme === 'dark'
+                ? translate('landing.switchLightMode')
+                : translate('landing.switchDarkMode')
+            }
           >
             {theme === 'dark' ? (
               <Sun className="h-4 w-4 text-amber-500" />
@@ -135,10 +143,10 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
             <button
               onClick={onDemoClick}
               className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm"
-              title="Launch Instant Demo Workspace"
+              title={translate('login.launchDemo')}
             >
               <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-              <span>Try Demo</span>
+              <span>{translate('landing.tryDemo')}</span>
             </button>
           )}
 

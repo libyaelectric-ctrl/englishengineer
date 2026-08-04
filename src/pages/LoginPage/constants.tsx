@@ -5,44 +5,8 @@ export interface RouteLocationState {
 export const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
-export const AUTH_COPY = {
-  en: {
-    loginTitle: 'Welcome back',
-    signupTitle: 'Create your account',
-    loginSubtitle: 'Sign in to continue learning',
-    signupSubtitle: 'Start your engineering English journey',
-    emailLabel: 'Email',
-    passwordLabel: 'Password',
-    loginButton: 'Sign in',
-    signupButton: 'Create account',
-    orContinueWith: 'or continue with',
-    noAccount: "Don't have an account?",
-    hasAccount: 'Already have an account?',
-    signupLink: 'Sign up',
-    loginLink: 'Sign in',
-    demoMessage: 'Demo mode: local-only, not a secure account.',
-    interfaceLanguage: 'Language',
-    forgotPassword: 'Forgot password?',
-  },
-  tr: {
-    loginTitle: 'Tekrar hoş geldin',
-    signupTitle: 'Hesabını oluştur',
-    loginSubtitle: 'Devam etmek için giriş yap',
-    signupSubtitle: 'İngilizce öğrenme yolculuğuna başla',
-    emailLabel: 'E-posta',
-    passwordLabel: 'Şifre',
-    loginButton: 'Giriş yap',
-    signupButton: 'Hesap oluştur',
-    orContinueWith: 'veya şununla devam et',
-    noAccount: 'Hesabın yok mu?',
-    hasAccount: 'Zaten hesabın var mı?',
-    signupLink: 'Kayıt ol',
-    loginLink: 'Giriş yap',
-    demoMessage: 'Demo modu: yalnızca yerel, güvenli hesap değil.',
-    interfaceLanguage: 'Dil',
-    forgotPassword: 'Şifremi unuttum?',
-  },
-} as const;
+// NOTE: Auth copy has been migrated to UI_TRANSLATIONS (login.* keys)
+// in src/features/localization/localization.data.ts.
 
 export const SOCIAL_PROVIDERS = [
   {

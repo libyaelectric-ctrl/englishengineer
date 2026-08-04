@@ -2,33 +2,41 @@ import { ArrowRight, CheckCircle2, XCircle } from 'lucide-react';
 
 import { useState } from 'react';
 
-const COMPARISONS = [
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
+
+const COMPARISONS: Array<{
+  category: TranslationKey;
+  before: TranslationKey;
+  after: TranslationKey;
+  risk: TranslationKey;
+  ready: TranslationKey;
+}> = [
   {
-    category: 'FIDIC Claim & Extension of Time (EOT)',
-    before:
-      'Hi, yesterday heavy rain happened. Workers cannot work on site. Please pay extra money and give more days.',
-    after:
-      'Pursuant to FIDIC Sub-Clause 8.4 [Extension of Time for Completion], we hereby give formal notice of critical path delay resulting from exceptionally adverse climatic conditions as logged in Site Diary #42.',
-    metrics: '+45% Professional Credibility | FIDIC Cl. 8.4 Compliant',
+    category: 'landing.comparison1Category',
+    before: 'landing.comparison1Before',
+    after: 'landing.comparison1After',
+    risk: 'landing.comparison1Risk',
+    ready: 'landing.comparison1Ready',
   },
   {
-    category: 'RFI & Technical Specification Inquiry',
-    before:
-      'The drawing for rebar is confusing. Tell us what steel size we use for slab beam B-12.',
-    after:
-      'RFI #104: Clarification requested regarding structural drawing S-204 detail B-12. Please confirm whether high-yield deformed bars to BS 4449 Grade 500B are specified for top reinforcement.',
-    metrics: 'Eliminated RFI Ambiguity | BS 4449 Specification Verified',
+    category: 'landing.comparison2Category',
+    before: 'landing.comparison2Before',
+    after: 'landing.comparison2After',
+    risk: 'landing.comparison2Risk',
+    ready: 'landing.comparison2Ready',
   },
   {
-    category: 'Site Safety Incident & HSE Report',
-    before: 'Worker almost fell down from scaffolding level 3. Fix safety belt now.',
-    after:
-      'HSE Incident Alert: Near-miss recorded at Scaffold Tower C, Level 3. Immediate stand-down ordered to audit 100% tie-off compliance and double-lanyard harness anchorage points per OSHA 1926.502.',
-    metrics: 'Audit-Ready HSE Terminology | OSHA 1926.502 Standard',
+    category: 'landing.comparison3Category',
+    before: 'landing.comparison3Before',
+    after: 'landing.comparison3After',
+    risk: 'landing.comparison3Risk',
+    ready: 'landing.comparison3Ready',
   },
 ];
 
 export function BeforeAfterCard() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = COMPARISONS[activeIndex];
 
@@ -38,15 +46,14 @@ export function BeforeAfterCard() {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono">
-              Before & After
+              {translate('landing.beforeAfterBadge')}
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Transform amateur site notes into audit-ready engineering English.
+              {translate('landing.beforeAfterTitle')}
             </h2>
           </div>
           <p className="text-xs text-foreground/80 font-medium max-w-xl leading-tight">
-            See how EngVox AI elevates daily site communications into precise international project
-            standards.
+            {translate('landing.beforeAfterDesc')}
           </p>
         </div>
 
@@ -63,7 +70,7 @@ export function BeforeAfterCard() {
                   : 'bg-surface border-border-soft text-muted-copy hover:text-foreground hover:border-primary/40'
               }`}
             >
-              {item.category}
+              {translate(item.category)}
             </button>
           ))}
         </div>
@@ -75,18 +82,18 @@ export function BeforeAfterCard() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-rose-600 font-mono">
-                  <XCircle className="h-3.5 w-3.5" /> Weak / Informal Site Note
+                  <XCircle className="h-3.5 w-3.5" /> {translate('landing.beforeWeakLabel')}
                 </span>
                 <span className="text-[9px] font-bold text-rose-500 uppercase">
-                  Risk: Delay & Dispute
+                  {translate(active.risk)}
                 </span>
               </div>
               <p className="text-xs text-foreground/90 leading-relaxed font-mono bg-background/60 p-3 rounded border border-rose-500/20">
-                "{active.before}"
+                "{translate(active.before)}"
               </p>
             </div>
             <div className="text-[10px] font-semibold text-rose-600/80 italic pt-1">
-              ⚠️ Lacks contract reference, standard clause numbers & precise technical metrics.
+              ⚠️ {translate('landing.beforeWarning')}
             </div>
           </div>
 
@@ -95,18 +102,15 @@ export function BeforeAfterCard() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600 font-mono">
-                  <CheckCircle2 className="h-3.5 w-3.5" /> EngVox AI Refined Standard
-                </span>
-                <span className="text-[9px] font-bold text-emerald-600 uppercase font-mono bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
-                  {active.metrics}
+                  <CheckCircle2 className="h-3.5 w-3.5" /> {translate('landing.afterRefinedLabel')}
                 </span>
               </div>
               <p className="text-xs text-foreground font-semibold leading-relaxed bg-background p-3 rounded border border-emerald-500/30 shadow-sm">
-                "{active.after}"
+                "{translate(active.after)}"
               </p>
             </div>
             <div className="flex items-center justify-between pt-1 text-[10px] text-emerald-600 font-bold">
-              <span>Ready to paste directly into Official Site Minutes & RFI logs</span>
+              <span>{translate(active.ready)}</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </div>
           </div>
