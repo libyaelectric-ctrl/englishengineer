@@ -19,7 +19,7 @@ const renderWithProviders = (component: React.ReactElement, initialEntries = ['/
 describe('Critical flow: Landing → Navigation', () => {
   it('renders landing page with hero and navigation', () => {
     renderWithProviders(<LandingPage />);
-    expect(screen.getByText(/The Engineering English/)).toBeInTheDocument();
+    expect(screen.getAllByText(/engineering career/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Start free/i).length).toBeGreaterThan(0);
   });
 

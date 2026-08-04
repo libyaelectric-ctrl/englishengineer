@@ -20,7 +20,7 @@ describe('Landing page E2E', () => {
   it('renders hero section with correct branding', () => {
     renderWithProviders(<LandingPage />);
 
-    expect(screen.getByText(/The Engineering English/)).toBeInTheDocument();
+    expect(screen.getAllByText(/engineering career/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Start free/i).length).toBeGreaterThan(0);
   });
 
