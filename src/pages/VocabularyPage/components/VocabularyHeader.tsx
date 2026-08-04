@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { getSoundMuted, toggleSoundMuted } from '@/shared/utils/sound';
 
+import { useLocalizationStore } from '@/features/localization';
 import type {
   VocabularyMenuState,
   VocabularyMenuStatus,
@@ -67,6 +68,7 @@ export function VocabularyHeader({
   onOpenSearch,
   menuState,
 }: VocabularyHeaderProps) {
+  const translate = useLocalizationStore((s) => s.translate);
   const [isSoundMuted, setIsSoundMuted] = useState(() => getSoundMuted());
   const masteredCount = Object.values(menuState.progress).filter(
     (word) => word.status === 'Mastered'
@@ -85,7 +87,9 @@ export function VocabularyHeader({
     <>
       <div className="sticky top-0 z-30 mb-4 flex flex-wrap h-auto min-h-16 items-center justify-between gap-3 border-b border-border-soft bg-background/95 p-2 backdrop-blur-xl">
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-base font-bold tracking-tight text-foreground">Vocabulary</h1>
+          <h1 className="text-base font-bold tracking-tight text-foreground">
+            {translate('vocabulary.title')}
+          </h1>
           <span className="rounded-[4px] border border-border-soft bg-surface px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
             {vocabularyLevel}
           </span>
@@ -134,7 +138,7 @@ export function VocabularyHeader({
                     : 'text-muted-copy hover:bg-primary/5 hover:text-primary'
                 }`}
               >
-                {TAB_LABELS[tab]}
+                {translate(`vocabulary.tab${tab}`)}
               </button>
             ))}
             <button
@@ -144,7 +148,7 @@ export function VocabularyHeader({
               className="flex items-center gap-1.5 rounded-[4px] px-3 py-1.5 text-[11px] font-bold text-muted-copy transition-all hover:bg-primary/5 hover:text-primary sm:px-2 sm:py-1 sm:text-[10px]"
             >
               <Search className="h-4 w-4 sm:h-3 sm:w-3" />
-              <span className="hidden sm:inline">Search</span>
+              <span className="hidden sm:inline">{translate('vocabulary.search')}</span>
             </button>
           </div>
         </div>
@@ -153,10 +157,10 @@ export function VocabularyHeader({
       {/* Engineering Domain Sub-Specialty Filter Bar */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-          Domain:
+          {translate('vocabulary.domain')}:
         </span>
         {[
-          'All Domains',
+          translate('vocabulary.allDomains'),
           '🏗️ Civil',
           '⚡ Electrical',
           '💻 Software',
@@ -179,8 +183,9 @@ export function VocabularyHeader({
 
       {hasSearched && searchResults && searchResults.length > 0 && (
         <p className="pb-3 text-[10px] font-medium text-muted-copy">
-          Showing {searchResults.length} of {allSearchResults?.length || searchResults.length}{' '}
-          results found
+          {translate('vocabulary.showingResults')
+            .replace('{count}', String(searchResults.length))
+            .replace('{total}', String(allSearchResults?.length || searchResults.length))}
         </p>
       )}
     </>

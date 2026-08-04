@@ -5,6 +5,7 @@ import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from 'react';
 import { SectionCard } from '@/shared/components/SectionCard';
 import { logger } from '@/shared/logger';
 
+import { useLocalizationStore } from '@/features/localization';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,
@@ -35,6 +36,7 @@ const learnedWordIds = (menuState: VocabularyMenuState): string[] =>
     .map(([wordId]) => wordId);
 
 export const QuizSection = ({ menuState }: QuizSectionProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [quizWords, setQuizWords] = useState<VocabularyTerm[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isStarting, setIsStarting] = useState(false);
@@ -123,17 +125,21 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
 
   return (
     <SectionCard
-      title="Learned Quiz"
-      subtitle="Test whether your learned words are ready for long-term recall."
+      title={translate('vocabulary.learnedQuiz')}
+      subtitle={translate('vocabulary.learnedQuizDesc')}
       icon={Award}
     >
       {!isRunning && !result && (
         <div className="space-y-4">
           <div className="grid gap-3 border-y border-border-soft py-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
-              <p className="text-sm font-medium text-foreground">100 learned words required.</p>
+              <p className="text-sm font-medium text-foreground">
+                {translate('vocabulary.quizWordsRequired')}
+              </p>
               <p className="mt-1 text-xs text-muted-copy">
-                Current: Learned: {learnedIds.length} / {LEARNED_QUIZ_MINIMUM}
+                {translate('vocabulary.currentLearned')
+                  .replace('{current}', String(learnedIds.length))
+                  .replace('{required}', String(LEARNED_QUIZ_MINIMUM))}
               </p>
             </div>
             <button
@@ -143,11 +149,11 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
               className="inline-flex min-h-10 items-center justify-center gap-2 rounded-[4px] bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-surface disabled:text-muted-copy"
             >
               {isStarting && <LoaderCircle className="h-3.5 w-3.5 animate-spin" />}
-              Start Quiz
+              {translate('vocabulary.startQuiz')}
             </button>
           </div>
           {!canStartQuiz && (
-            <p className="text-xs text-muted-copy">Learn at least 100 words to unlock the quiz.</p>
+            <p className="text-xs text-muted-copy">{translate('vocabulary.learnWordsToUnlock')}</p>
           )}
           {loadError && (
             <p role="alert" className="text-xs text-rose-600">
@@ -161,9 +167,11 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
         <form onSubmit={finishQuiz} className="space-y-5" noValidate>
           <div className="flex items-center justify-between border-b border-border-soft pb-3 text-xs text-muted-copy">
             <span>
-              {answeredCount} / {LEARNED_QUIZ_SIZE} answered
+              {translate('vocabulary.answered')
+                .replace('{count}', String(answeredCount))
+                .replace('{total}', String(LEARNED_QUIZ_SIZE))}
             </span>
-            <span>Complete any questions you are ready to answer.</span>
+            <span>{translate('vocabulary.completeQuestions')}</span>
           </div>
           <div className="space-y-4">
             {quizWords.map((word, index) => (
@@ -172,12 +180,14 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
                   htmlFor={`learned-quiz-${word.id}`}
                   className="block text-xs font-bold uppercase tracking-wider text-muted-copy"
                 >
-                  Question {index + 1} / {LEARNED_QUIZ_SIZE}
+                  {translate('vocabulary.question')} {index + 1} / {LEARNED_QUIZ_SIZE}
                 </label>
                 <p className="mt-2 text-xl font-semibold text-foreground">
                   {repairVocabularyText(word.term)}
                 </p>
-                <p className="mt-1 text-sm text-muted-copy">Type Turkish meaning:</p>
+                <p className="mt-1 text-sm text-muted-copy">
+                  {translate('vocabulary.typeTurkishMeaning')}
+                </p>
                 <input
                   ref={(element) => {
                     inputRefs.current[index] = element;
@@ -204,7 +214,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
               type="submit"
               className="min-h-10 rounded-[4px] bg-primary px-4 py-2 text-xs font-bold uppercase tracking-wider text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              Finish Quiz
+              {translate('vocabulary.finishQuiz')}
             </button>
           </div>
         </form>
@@ -215,33 +225,35 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
           <div className="flex items-center gap-3 border-b border-border-soft pb-4">
             <CheckCircle2 className="h-6 w-6 text-emerald-600" aria-hidden="true" />
             <div>
-              <h5 className="text-base font-semibold text-foreground">Quiz Complete</h5>
-              <p className="text-xs text-muted-copy">Your vocabulary pools have been updated.</p>
+              <h5 className="text-base font-semibold text-foreground">
+                {translate('vocabulary.quizComplete')}
+              </h5>
+              <p className="text-xs text-muted-copy">{translate('vocabulary.quizUpdated')}</p>
             </div>
           </div>
           <dl className="grid gap-3 text-sm sm:grid-cols-3">
             <div>
-              <dt className="text-muted-copy">Correct</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.correct')}</dt>
               <dd className="font-semibold text-emerald-600">{result.mastered.length}</dd>
             </div>
             <div>
-              <dt className="text-muted-copy">Wrong</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.wrong')}</dt>
               <dd className="font-semibold text-rose-600">{result.struggling.length}</dd>
             </div>
             <div>
-              <dt className="text-muted-copy">Skipped</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.skipped')}</dt>
               <dd className="font-semibold text-foreground">{result.kept.length}</dd>
             </div>
             <div>
-              <dt className="text-muted-copy">Moved to Mastered</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.movedToMastered')}</dt>
               <dd className="font-semibold text-emerald-600">{result.mastered.length}</dd>
             </div>
             <div>
-              <dt className="text-muted-copy">Moved to Struggling</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.movedToStruggling')}</dt>
               <dd className="font-semibold text-rose-600">{result.struggling.length}</dd>
             </div>
             <div>
-              <dt className="text-muted-copy">Stayed in Learned</dt>
+              <dt className="text-muted-copy">{translate('vocabulary.stayedInLearned')}</dt>
               <dd className="font-semibold text-foreground">{result.kept.length}</dd>
             </div>
           </dl>
@@ -251,7 +263,7 @@ export const QuizSection = ({ menuState }: QuizSectionProps) => {
               onClick={backToLearned}
               className="min-h-10 rounded-[4px] border border-border-soft px-4 py-2 text-xs font-bold uppercase tracking-wider text-foreground transition-colors hover:bg-surface-hover"
             >
-              Back to Learned
+              {translate('vocabulary.backToLearned')}
             </button>
           </div>
         </div>

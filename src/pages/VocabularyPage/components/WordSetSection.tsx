@@ -3,10 +3,11 @@ import { AnimatePresence, motion } from 'motion/react';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { playSound } from '@/shared/utils/sound';
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
+import { playSound } from '@/shared/utils/sound';
 
+import { useLocalizationStore } from '@/features/localization';
 import type {
   VocabularyMenuState,
   VocabularyMenuStatus,
@@ -14,7 +15,6 @@ import type {
 } from '@/features/vocabulary';
 
 import { LearnedCard } from './LearnedCard';
-import { TAB_LABELS } from './VocabularyHeader';
 import { WordCard } from './WordCard';
 
 interface WordSetSectionProps {
@@ -44,6 +44,7 @@ export function WordSetSection({
   onExportCSV,
   onLoadNextBatch,
 }: WordSetSectionProps) {
+  const translate = useLocalizationStore((s) => s.translate);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
   const activeIndexRef = useRef(0);
   const [flippedCards, setFlippedCards] = useState<Set<string>>(new Set());
@@ -101,7 +102,15 @@ export function WordSetSection({
 
   return (
     <SectionCard
-      title={`${TAB_LABELS[activeTab]} set`}
+      title={
+        activeTab === 'New'
+          ? translate('vocabulary.newSet')
+          : activeTab === 'Learned'
+            ? translate('vocabulary.learnedSet')
+            : activeTab === 'Mastered'
+              ? translate('vocabulary.masteredSet')
+              : translate('vocabulary.strugglingSet')
+      }
       subtitle={`CEFR: ${vocabularyProfile.cefrBand}`}
       icon={BookMarked}
       headerActions={
@@ -124,7 +133,7 @@ export function WordSetSection({
           </button>
           {activeTab === 'New' && (
             <p className="hidden md:block text-[10px] text-muted-copy font-medium">
-              Click "I Know This" to move to Learned
+              {translate('vocabulary.clickIKnowThis')}
             </p>
           )}
         </div>
@@ -136,12 +145,11 @@ export function WordSetSection({
         </p>
       )}
       {!loadError && terms.length === 0 && (
-        <p className="text-sm text-foreground0">Loading canonical words...</p>
+        <p className="text-sm text-foreground0">{translate('vocabulary.loadingWords')}</p>
       )}
       {terms.length > 0 && wordSet.length === 0 && (
         <p className="rounded-[4px] border border-dashed border-border-soft bg-surface/60 p-8 text-center text-sm text-muted-copy">
-          No words currently have {activeTab.toLowerCase()} status. Select New to begin a ten-word
-          set.
+          {translate('vocabulary.noWordsStatus').replace('{status}', activeTab.toLowerCase())}
         </p>
       )}
       {wordSet.length > 0 && (
@@ -184,11 +192,11 @@ export function WordSetSection({
           <div className="flex justify-end border-t border-border-soft pt-4 gap-2">
             {wordSet.length > 0 && (
               <Button variant="outline" className="rounded-[4px]" onClick={onExportCSV}>
-                Export as CSV
+                {translate('vocabulary.exportCSV')}
               </Button>
             )}
             <Button variant="primary" className="rounded-[4px] gap-1.5" onClick={onLoadNextBatch}>
-              Next
+              {translate('vocabulary.next')}
               <ArrowRight className="h-3.5 w-3.5" />
             </Button>
           </div>

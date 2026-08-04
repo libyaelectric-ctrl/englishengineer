@@ -3,6 +3,7 @@ import { Virtuoso } from 'react-virtuoso';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
+import { useLocalizationStore } from '@/features/localization';
 import { MyVocabularyWord, VocabularyMenuService } from '@/features/vocabulary';
 
 interface MyVocabularySectionProps {
@@ -87,6 +88,7 @@ const WordCard = ({
 };
 
 export const MyVocabularySection = ({ myVocabulary, onUpdate }: MyVocabularySectionProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const activeWords = myVocabulary.filter((word) => !word.archivedAt);
 
   const handleArchive = (id: string) => {
@@ -97,10 +99,14 @@ export const MyVocabularySection = ({ myVocabulary, onUpdate }: MyVocabularySect
   const rowCount = Math.ceil(activeWords.length / COL_COUNT);
 
   return (
-    <SectionCard title="My Vocabulary" subtitle="Custom terms saved by you" icon={BookMarked}>
+    <SectionCard
+      title={translate('vocabulary.myVocabulary')}
+      subtitle={translate('vocabulary.myVocabularyDesc')}
+      icon={BookMarked}
+    >
       {activeWords.length === 0 ? (
         <p className="rounded-[4px] border border-dashed border-border-soft bg-surface/60 p-8 text-center text-xs text-muted-copy">
-          Your custom vocabulary list is empty. Any custom terms you save will appear here.
+          {translate('vocabulary.myVocabularyEmpty')}
         </p>
       ) : (
         <Virtuoso
