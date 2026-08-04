@@ -46,6 +46,10 @@ vi.mock('@/config/navigation.config', () => ({
 vi.mock('@/features/localization', () => ({
   useLocalizationStore: vi.fn(() => ({ language: 'en' })),
   NAVIGATION_TRANSLATIONS: { en: {} },
+  INTERFACE_LANGUAGES: [
+    { id: 'en', label: 'English', nativeLabel: 'English', available: true, flag: '🇬🇧' },
+    { id: 'tr', label: 'Turkish', nativeLabel: 'Türkçe', available: true, flag: '🇹🇷' },
+  ],
 }));
 
 vi.mock('@/layouts/MobileBottomNavigation', () => ({

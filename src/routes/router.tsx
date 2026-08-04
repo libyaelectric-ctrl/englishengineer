@@ -32,6 +32,7 @@ const Admin = lazy(() => import('@/pages/AdminPage'));
 const Curriculum = lazy(() => import('@/pages/CurriculumPage'));
 const Offline = lazy(() => import('@/pages/OfflinePage'));
 const Tools = lazy(() => import('@/pages/ToolsPage'));
+const Progress = lazy(() => import('@/pages/ProgressPage'));
 const NotFound = lazy(() => import('@/pages/NotFoundPage'));
 const Login = lazy(() => import('@/pages/LoginPage'));
 const Onboarding = lazy(() => import('@/pages/OnboardingPage'));
@@ -172,6 +173,14 @@ export const router = createBrowserRouter([
       {
         path: 'analytics',
         element: <Navigate to="/progress/overview" replace />,
+      },
+      {
+        path: 'progress',
+        element: <Navigate to="/progress/overview" replace />,
+      },
+      {
+        path: 'progress/:section',
+        element: withSuspense(Progress),
       },
       {
         path: 'gamification',
