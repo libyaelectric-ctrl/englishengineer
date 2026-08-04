@@ -124,9 +124,11 @@ const ProfilePage = () => {
     completionPercent,
   } = state;
 
+  const disciplineLocked = Boolean(profile?.disciplineLockedAt);
   const [discipline, setDiscipline] = useState<EngineeringDiscipline>(
     () =>
-      (localStorage.getItem('preselected_discipline') as EngineeringDiscipline) ||
+      profile?.discipline ??
+      (localStorage.getItem('preselected_discipline') as EngineeringDiscipline) ??
       ENGINEERING_DISCIPLINES[0]
   );
   const [disciplineSaved, setDisciplineSaved] = useState(false);
@@ -226,6 +228,7 @@ const ProfilePage = () => {
           onDisciplineChange={setDiscipline}
           onSave={handleDisciplineSave}
           saved={disciplineSaved}
+          locked={disciplineLocked}
         />
       )}
     </div>
