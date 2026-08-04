@@ -2,6 +2,8 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 
+import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
@@ -61,20 +63,25 @@ export const ListeningService = {
   },
 
   /**
-   * Retrieves all available listening missions.
+   * Retrieves all available listening missions, optionally filtered by discipline.
    */
-  getMissions(): ListeningMission[] {
-    return LISTENING_MISSIONS;
+  getMissions(userDiscipline?: EngineeringDiscipline): ListeningMission[] {
+    if (!userDiscipline) return LISTENING_MISSIONS;
+    return filterMissionsByDiscipline(LISTENING_MISSIONS, userDiscipline);
   },
 
   /**
    * Returns missions sorted by how many pool words appear in their transcript.
    * Missions with more pool-word hits appear first.
    */
-  getMissionsSortedByPool(pool: string[]): ListeningMission[] {
-    if (pool.length === 0) return LISTENING_MISSIONS;
+  getMissionsSortedByPool(
+    pool: string[],
+    userDiscipline?: EngineeringDiscipline
+  ): ListeningMission[] {
+    const missions = this.getMissions(userDiscipline);
+    if (pool.length === 0) return missions;
     const lowerPool = pool.map((w) => w.toLowerCase());
-    return [...LISTENING_MISSIONS].sort((a, b) => {
+    return [...missions].sort((a, b) => {
       const aCount = lowerPool.filter((w) => a.transcript.toLowerCase().includes(w)).length;
       const bCount = lowerPool.filter((w) => b.transcript.toLowerCase().includes(w)).length;
       return bCount - aCount;

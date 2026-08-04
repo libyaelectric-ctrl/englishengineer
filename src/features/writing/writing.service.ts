@@ -6,6 +6,8 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 
+import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
@@ -53,19 +55,21 @@ export const WritingService = {
   },
 
   /**
-   * Retrieves all available writing missions.
+   * Retrieves all available writing missions, optionally filtered by discipline.
    */
-  getMissions(): WritingMission[] {
-    return WRITING_MISSIONS;
+  getMissions(userDiscipline?: EngineeringDiscipline): WritingMission[] {
+    if (!userDiscipline) return WRITING_MISSIONS;
+    return filterMissionsByDiscipline(WRITING_MISSIONS, userDiscipline);
   },
 
   getMissionsSortedByPoolRatio(
     pool: KnowledgePoolEntry[] = useLearningStore.getState().vocabularyPool.map((id) => ({
       content_type: 'vocabulary',
       content_id: id,
-    }))
+    })),
+    userDiscipline?: EngineeringDiscipline
   ): WritingMission[] {
-    return sortContentByPoolRatio(this.getMissions(), pool);
+    return sortContentByPoolRatio(this.getMissions(userDiscipline), pool);
   },
 
   /**
