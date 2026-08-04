@@ -143,6 +143,11 @@ export interface UserLearningProfile {
     allowedMissedDays: number;
   };
   onboardingCompleted: boolean;
+  /**
+   * ISO timestamp when the discipline was permanently locked.
+   * Set automatically when onboarding completes; once set, the discipline can never change.
+   */
+  disciplineLockedAt?: string;
   weeklyGoal: number;
   createdAt: string;
   updatedAt: string;

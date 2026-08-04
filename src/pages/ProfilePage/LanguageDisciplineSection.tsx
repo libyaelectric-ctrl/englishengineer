@@ -1,4 +1,4 @@
-import { CheckCircle2, Globe, Layers } from 'lucide-react';
+import { CheckCircle2, Globe, Layers, Lock } from 'lucide-react';
 import {
   Bot,
   Building2,
@@ -39,6 +39,8 @@ interface LanguageDisciplineSectionProps {
   onDisciplineChange: (discipline: EngineeringDiscipline) => void;
   onSave: () => void;
   saved: boolean;
+  /** When true the discipline is permanently locked and cannot be changed. */
+  locked?: boolean;
 }
 
 export const LanguageDisciplineSection = ({
@@ -46,6 +48,7 @@ export const LanguageDisciplineSection = ({
   onDisciplineChange,
   onSave,
   saved,
+  locked = false,
 }: LanguageDisciplineSectionProps) => {
   const { language, setLanguage } = useLocalizationStore();
 
@@ -87,10 +90,20 @@ export const LanguageDisciplineSection = ({
       {/* Engineering Discipline */}
       <SectionCard
         title="Engineering Discipline"
-        subtitle="Select your engineering field for tailored vocabulary and content"
+        subtitle={
+          locked
+            ? 'Your discipline was chosen at sign-up and is permanent'
+            : 'Select your engineering field for tailored vocabulary and content'
+        }
         icon={Layers}
       >
         <div className="space-y-4">
+          {locked && (
+            <p className="flex items-center gap-1.5 rounded-[4px] border border-primary/25 bg-primary/5 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-primary">
+              <Lock className="h-3 w-3" />
+              Permanently locked — this choice cannot be changed
+            </p>
+          )}
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {Object.entries(DISCIPLINE_META).map(([id, meta]) => {
               const discipline = id as EngineeringDiscipline;
@@ -99,11 +112,15 @@ export const LanguageDisciplineSection = ({
               return (
                 <button
                   key={discipline}
+                  type="button"
+                  disabled={locked}
                   onClick={() => onDisciplineChange(discipline)}
-                  className={`flex items-center gap-3 rounded-[4px] border px-3 py-3 text-left transition-all cursor-pointer ${
+                  className={`flex items-center gap-3 rounded-[4px] border px-3 py-3 text-left transition-all ${
                     isSelected
                       ? 'border-primary bg-primary/10 text-foreground shadow-sm'
-                      : 'border-border-soft bg-surface hover:border-primary/40 text-muted-copy hover:text-foreground'
+                      : locked
+                        ? 'border-border-soft bg-surface text-muted-copy/50 cursor-not-allowed'
+                        : 'border-border-soft bg-surface hover:border-primary/40 text-muted-copy hover:text-foreground cursor-pointer'
                   }`}
                 >
                   <span className="text-lg leading-none">
@@ -115,7 +132,12 @@ export const LanguageDisciplineSection = ({
                       {meta.wordCount?.toLocaleString() ?? '—'} words
                     </p>
                   </div>
-                  {isSelected && <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />}
+                  {isSelected &&
+                    (locked ? (
+                      <Lock className="h-3.5 w-3.5 text-primary shrink-0" />
+                    ) : (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                    ))}
                 </button>
               );
             })}

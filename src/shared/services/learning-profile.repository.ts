@@ -141,10 +141,27 @@ export const LearningProfileRepository = {
       dailyTarget: UserLearningProfile['dailyTarget'];
       weeklyTolerance: UserLearningProfile['weeklyTolerance'];
       onboardingCompleted: boolean;
+      disciplineLockedAt?: string;
     }>
   ): UserLearningProfile {
     const profile = this.getProfile(userId);
     const next = { ...profile, ...update, updatedAt: new Date().toISOString() };
+
+    // Discipline lock: once locked, the discipline can never be changed.
+    if (
+      profile.disciplineLockedAt &&
+      update.discipline !== undefined &&
+      update.discipline !== profile.discipline
+    ) {
+      next.discipline = profile.discipline;
+      next.professionalTrack = profile.professionalTrack;
+    }
+
+    // Auto-lock the discipline the first time onboarding completes.
+    if (next.onboardingCompleted && !next.disciplineLockedAt) {
+      next.disciplineLockedAt = next.updatedAt;
+    }
+
     this.saveProfile(next);
     return next;
   },
