@@ -2,7 +2,10 @@ import { CheckCircle2, Mic, MicOff, Sparkles, Volume2 } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export const VoicePitchMeterWidget = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [isRecording, setIsRecording] = useState(false);
   const [score, setScore] = useState<number | null>(null);
 
@@ -23,11 +26,11 @@ export const VoicePitchMeterWidget = () => {
     <div className="rounded-2xl border border-primary/30 bg-surface/90 backdrop-blur-md p-4 shadow-xl space-y-3 relative light-sweep-container overflow-hidden">
       <div className="flex items-center justify-between">
         <span className="text-xs font-bold uppercase tracking-wider text-primary font-mono flex items-center gap-1.5">
-          <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" /> Live Pitch & Pronunciation
-          Scorer
+          <Sparkles className="h-3.5 w-3.5 text-primary animate-pulse" />{' '}
+          {translate('landing.voiceMeterTitle')}
         </span>
         <span className="text-[10px] font-bold text-emerald-500 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">
-          CEFR C1 Vocal Analyzer
+          {translate('landing.voiceMeterSubtitle')}
         </span>
       </div>
 
@@ -48,7 +51,9 @@ export const VoicePitchMeterWidget = () => {
         <div className="flex-1 space-y-1">
           <div className="flex items-center justify-between text-xs font-bold text-foreground">
             <span>
-              {isRecording ? 'Listening & analyzing pitch...' : 'Click mic to record oral defense'}
+              {isRecording
+                ? translate('landing.voiceMeterListening')
+                : translate('landing.voiceMeterClickMic')}
             </span>
             <Volume2 className="h-3.5 w-3.5 text-primary" />
           </div>
@@ -76,10 +81,11 @@ export const VoicePitchMeterWidget = () => {
       {score !== null && (
         <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/30 p-2.5 flex items-center justify-between text-xs font-bold animate-in fade-in">
           <span className="text-emerald-600 flex items-center gap-1.5">
-            <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Pronunciation Accuracy: {score}%
+            <CheckCircle2 className="h-4 w-4 text-emerald-500" />{' '}
+            {translate('landing.voiceMeterAccuracy').replace('{score}', String(score))}
           </span>
           <span className="font-mono text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
-            Grade: C1 Precision
+            {translate('landing.voiceMeterGrade')}
           </span>
         </div>
       )}

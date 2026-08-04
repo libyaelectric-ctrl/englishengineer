@@ -11,12 +11,14 @@ import {
   Zap,
 } from 'lucide-react';
 
-import { logger } from '@/shared/logger';
-
 import { useEffect, useRef, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 
+import { logger } from '@/shared/logger';
+
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
 import {
   ProofreadResult,
   analyzeTechnicalText,
@@ -27,13 +29,13 @@ interface TechnicalProofreaderModalProps {
   onClose: () => void;
 }
 
-const SAMPLE_DRAFTS = [
+const SAMPLE_DRAFTS: Array<{ loadKey: TranslationKey; text: string }> = [
   {
-    title: 'FIDIC Weather Delay Email',
+    loadKey: 'landing.proofreaderLoad1',
     text: 'Dear engineer, concrete pouring is delay because rain, please give extra time for us.',
   },
   {
-    title: 'ASTM Concrete Slump Failure',
+    loadKey: 'landing.proofreaderLoad2',
     text: 'Resident engineer, concrete is bad on Truck 4, please reply fast on how to fix.',
   },
 ];
@@ -41,6 +43,7 @@ const SAMPLE_DRAFTS = [
 const LIMIT_KEY = 'engvox_proofreader_guest_usage';
 
 export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofreaderModalProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const navigate = useNavigate();
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -142,7 +145,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
           <div className="flex items-center gap-2">
             <FileCheck2 className="h-5 w-5 text-primary animate-pulse" />
             <h3 className="text-sm sm:text-base font-extrabold uppercase tracking-wider text-foreground">
-              Technical Document & Site Correspondence Proofreader
+              {translate('landing.proofreaderTitle')}
             </h3>
           </div>
           <button
@@ -164,12 +167,12 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 htmlFor="draft-input"
                 className="text-xs font-bold text-foreground flex items-center gap-1.5"
               >
-                <FileText className="h-4 w-4 text-primary" /> Paste Draft Site Email / Report
+                <FileText className="h-4 w-4 text-primary" /> {translate('landing.proofreaderDesc')}
               </label>
               <div className="flex gap-1.5">
                 {SAMPLE_DRAFTS.map((sample) => (
                   <button
-                    key={sample.title}
+                    key={sample.loadKey}
                     type="button"
                     onClick={() => {
                       setInputText(sample.text);
@@ -177,7 +180,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                     }}
                     className="rounded-md bg-primary/10 border border-primary/20 px-2.5 py-0.5 text-[10px] font-bold text-primary hover:bg-primary/20 transition cursor-pointer"
                   >
-                    Load {sample.title}
+                    {translate(sample.loadKey)}
                   </button>
                 ))}
               </div>
@@ -191,7 +194,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 setInputText(e.target.value);
                 setAnalysisResult(null);
               }}
-              placeholder="Paste your site email, RFI, or daily report here..."
+              placeholder={translate('landing.proofreaderPlaceholder')}
               className="w-full rounded-xl border border-border-soft bg-background p-3 text-xs text-foreground font-medium focus:border-primary outline-none"
               required
             />
@@ -200,7 +203,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
               <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 space-y-3 animate-in fade-in">
                 <div className="flex items-center gap-2 text-xs font-bold text-amber-600">
                   <Lock className="h-4 w-4 shrink-0" />
-                  <span>Guest Preview Limit Reached (1/1 Free Checks Used)</span>
+                  <span>{translate('landing.proofreaderLimitReached')}</span>
                 </div>
                 <p className="text-[11px] text-muted-copy leading-relaxed">
                   You have used your 1 free guest technical check. Create a free account or upgrade
@@ -235,7 +238,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 ) : (
                   <>
                     <Sparkles className="h-4 w-4" />
-                    <span>Analyze & Refine Technical Correspondence (1 Free Check Left)</span>
+                    <span>{translate('landing.proofreaderAnalyzeButton')}</span>
                   </>
                 )}
               </button>
@@ -250,7 +253,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-                      Formality Score
+                      {translate('landing.proofreaderFormalityScore')}
                     </span>
                     <div className="text-lg font-extrabold text-emerald-600 font-mono">
                       {analysisResult.formalityScore}%
@@ -262,7 +265,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                 <div className="rounded-xl border border-primary/30 bg-primary/10 p-3 flex items-center justify-between">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-muted-copy">
-                      Technical Precision Score
+                      {translate('landing.proofreaderPrecisionScore')}
                     </span>
                     <div className="text-lg font-extrabold text-primary font-mono">
                       {analysisResult.technicalPrecisionScore}%
@@ -307,8 +310,8 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Refined C1/C2 Technical
-                    Version
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />{' '}
+                    {translate('landing.proofreaderRefinedTitle')}
                   </span>
                   <button
                     type="button"
@@ -320,7 +323,7 @@ export const TechnicalProofreaderModal = ({ isOpen, onClose }: TechnicalProofrea
                     ) : (
                       <Copy className="h-3.5 w-3.5" />
                     )}
-                    <span>{copied ? 'Copied!' : 'Copy Refined Text'}</span>
+                    <span>{copied ? '✓' : translate('landing.proofreaderCopyButton')}</span>
                   </button>
                 </div>
 

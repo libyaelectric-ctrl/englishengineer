@@ -2,10 +2,13 @@ import { ChevronDown } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 import { AnimatedSection } from './AnimatedComponents';
 import { FAQ_ITEMS } from './constants';
 
 export function FAQSection() {
+  const translate = useLocalizationStore((s) => s.translate);
   const [openQuestion, setOpenQuestion] = useState<number | null>(0);
 
   return (
@@ -18,14 +21,14 @@ export function FAQSection() {
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              FAQ
+              {translate('landing.faqTitle')}
             </span>
             <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              Common questions.
+              {translate('landing.faqSubtitle')}
             </h2>
           </div>
           <p className="text-xs text-foreground/80 font-medium max-w-xl leading-tight">
-            Clear answers regarding plans, AI coaching, engineering disciplines, and offline usage.
+            {translate('landing.faqDesc')}
           </p>
         </div>
 
@@ -49,7 +52,7 @@ export function FAQSection() {
                     className="flex w-full items-center justify-between p-4 text-left cursor-pointer"
                   >
                     <span className="text-xs sm:text-sm font-bold text-foreground pr-3 leading-snug">
-                      {item.question}
+                      {translate(item.questionKey)}
                     </span>
                     <ChevronDown
                       className={`h-4 w-4 shrink-0 text-primary transition-transform duration-200 ${
@@ -65,7 +68,7 @@ export function FAQSection() {
                     }`}
                   >
                     <p className="border-t border-border-soft/60 px-4 py-3 text-xs font-medium text-foreground/85 leading-normal">
-                      {item.answer}
+                      {translate(item.answerKey)}
                     </p>
                   </div>
                 </div>

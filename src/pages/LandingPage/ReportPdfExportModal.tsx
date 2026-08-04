@@ -2,12 +2,15 @@ import { CheckCircle2, Download, FileSpreadsheet, FileText, X } from 'lucide-rea
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface ReportPdfExportModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [exporting, setExporting] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +48,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
           <div className="flex items-center gap-2">
             <Download className="h-5 w-5 text-primary" />
             <h3 className="text-sm font-extrabold uppercase tracking-wider text-foreground">
-              Technical Email & Report Exporter
+              {translate('landing.exportTitle')}
             </h3>
           </div>
           <button
@@ -58,10 +61,7 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
           </button>
         </div>
 
-        <p className="text-xs text-muted-copy leading-relaxed">
-          Export AI-refined site correspondence, FIDIC Extension of Time (EOT) claims, and technical
-          audit reports directly to PDF or Word DOCX formats.
-        </p>
+        <p className="text-xs text-muted-copy leading-relaxed">{translate('landing.exportDesc')}</p>
 
         {exporting ? (
           <div className="rounded-xl bg-emerald-500/15 border border-emerald-500/30 p-4 text-center text-xs font-bold text-emerald-600 flex items-center justify-center gap-2 animate-in fade-in">
@@ -76,8 +76,10 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
               className="flex flex-col items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 p-4 hover:bg-primary/20 transition cursor-pointer"
             >
               <FileText className="h-8 w-8 text-primary" />
-              <div className="text-xs font-bold text-foreground">Export as PDF</div>
-              <div className="text-[9px] text-muted-copy">Official Printable Document</div>
+              <div className="text-xs font-bold text-foreground">
+                {translate('landing.exportPdf')}
+              </div>
+              <div className="text-[9px] text-muted-copy">{translate('landing.exportPdfDesc')}</div>
             </button>
 
             <button
@@ -86,8 +88,12 @@ export const ReportPdfExportModal = ({ isOpen, onClose }: ReportPdfExportModalPr
               className="flex flex-col items-center justify-center gap-2 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition cursor-pointer"
             >
               <FileSpreadsheet className="h-8 w-8 text-blue-500" />
-              <div className="text-xs font-bold text-foreground">Export as DOCX</div>
-              <div className="text-[9px] text-muted-copy">Editable Microsoft Word</div>
+              <div className="text-xs font-bold text-foreground">
+                {translate('landing.exportDocx')}
+              </div>
+              <div className="text-[9px] text-muted-copy">
+                {translate('landing.exportDocxDesc')}
+              </div>
             </button>
           </div>
         )}

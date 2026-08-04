@@ -2,6 +2,8 @@ import { Building, Check, Plus, Shield, Users, X } from 'lucide-react';
 
 import { useEffect, useRef, useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface WorkspaceSwitcherModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -49,6 +51,7 @@ export const WorkspaceSwitcherModal = ({
   onClose,
   onSelectWorkspace,
 }: WorkspaceSwitcherModalProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [workspaces, setWorkspaces] = useState<Workspace[]>(INITIAL_WORKSPACES);
   const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -85,7 +88,7 @@ export const WorkspaceSwitcherModal = ({
           <div className="flex items-center gap-2">
             <Building className="h-5 w-5 text-primary" />
             <h3 className="text-sm font-extrabold uppercase tracking-wider text-foreground">
-              Switch Project Workspace (Multi-Tenant)
+              {translate('login.workspaceTitle')}
             </h3>
           </div>
           <button
@@ -97,10 +100,7 @@ export const WorkspaceSwitcherModal = ({
           </button>
         </div>
 
-        <p className="text-xs text-muted-copy">
-          Select an active enterprise team workspace or personal sandbox to isolate your ASTM
-          termsets and FIDIC contract archives.
-        </p>
+        <p className="text-xs text-muted-copy">{translate('login.workspaceDesc')}</p>
 
         {/* Workspaces List */}
         <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -127,7 +127,8 @@ export const WorkspaceSwitcherModal = ({
                     <Shield className="h-3 w-3 text-primary" /> {w.role}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Users className="h-3 w-3 text-muted-copy" /> {w.membersCount} members
+                    <Users className="h-3 w-3 text-muted-copy" /> {w.membersCount}{' '}
+                    {translate('login.workspaceMembers')}
                   </span>
                 </div>
               </div>
@@ -143,14 +144,14 @@ export const WorkspaceSwitcherModal = ({
             className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" />
-            <span>Create New Team Workspace</span>
+            <span>{translate('login.workspaceCreate')}</span>
           </button>
           <button
             type="button"
             onClick={onClose}
             className="text-xs font-bold text-muted-copy hover:text-foreground cursor-pointer"
           >
-            Close
+            {translate('login.workspaceClose')}
           </button>
         </div>
       </div>

@@ -2,7 +2,10 @@ import { Download, Smartphone, WifiOff, X } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export const PwaInstallBanner = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [dismissed, setDismissed] = useState(false);
   const [installed, setInstalled] = useState(false);
 
@@ -23,9 +26,9 @@ export const PwaInstallBanner = () => {
             <Smartphone className="h-4 w-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-foreground">EngVox PWA Mobile App</div>
+            <div className="text-xs font-bold text-foreground">{translate('landing.pwaTitle')}</div>
             <div className="text-[10px] text-muted-copy flex items-center gap-1">
-              <WifiOff className="h-2.5 w-2.5 text-emerald-500" /> Offline-First Site Practice
+              <WifiOff className="h-2.5 w-2.5 text-emerald-500" /> {translate('landing.pwaDesc')}
             </div>
           </div>
         </div>
@@ -41,19 +44,19 @@ export const PwaInstallBanner = () => {
 
       {installed ? (
         <div className="text-[10px] font-bold text-emerald-600 bg-emerald-500/15 border border-emerald-500/30 rounded-lg p-2 text-center">
-          ✓ App Installed! Launch from your home screen.
+          {translate('landing.pwaInstalled')}
         </div>
       ) : (
         <div className="flex items-center justify-between pt-1">
           <span className="text-[9px] text-muted-copy font-medium">
-            Install for zero-lag offline audio
+            {translate('landing.pwaInstallDesc')}
           </span>
           <button
             type="button"
             onClick={handleInstall}
             className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1 text-[10px] font-bold text-primary-foreground hover:bg-primary-hover transition cursor-pointer shadow-sm"
           >
-            <Download className="h-3 w-3" /> Install App
+            <Download className="h-3 w-3" /> {translate('landing.pwaInstallButton')}
           </button>
         </div>
       )}

@@ -2,20 +2,24 @@ import { Keyboard, X } from 'lucide-react';
 
 import { useEffect } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+import type { TranslationKey } from '@/features/localization/localization.types';
+
 interface KeyboardShortcutsModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const SHORTCUTS = [
-  { key: 'Ctrl + K', desc: 'Open Universal Command Palette & Search Hub' },
-  { key: 'Ctrl + /', desc: 'Open Keyboard Shortcuts Cheat Sheet' },
-  { key: 'Shift + D', desc: 'Switch Engineering Discipline' },
-  { key: 'Shift + T', desc: 'Toggle Dark / Light Theme Mode' },
-  { key: 'Esc', desc: 'Close Active Modal / Overlay' },
+const SHORTCUTS: Array<{ key: TranslationKey; desc: TranslationKey }> = [
+  { key: 'landing.shortcut1Key', desc: 'landing.shortcut1Desc' },
+  { key: 'landing.shortcut2Key', desc: 'landing.shortcut2Desc' },
+  { key: 'landing.shortcut3Key', desc: 'landing.shortcut3Desc' },
+  { key: 'landing.shortcut4Key', desc: 'landing.shortcut4Desc' },
+  { key: 'landing.shortcut5Key', desc: 'landing.shortcut5Desc' },
 ];
 
 export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsModalProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === '/') {
@@ -37,7 +41,7 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsMod
           <div className="flex items-center gap-2">
             <Keyboard className="h-5 w-5 text-primary" />
             <h3 className="text-sm font-extrabold uppercase tracking-wider text-foreground">
-              Keyboard Shortcuts Cheat Sheet (Ctrl + /)
+              {translate('landing.shortcutsTitle')}
             </h3>
           </div>
           <button
@@ -55,9 +59,9 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsMod
               key={s.key}
               className="flex items-center justify-between rounded-xl border border-border-soft bg-background/80 p-2.5 text-xs font-medium"
             >
-              <span className="text-foreground">{s.desc}</span>
+              <span className="text-foreground">{translate(s.desc)}</span>
               <kbd className="rounded bg-primary/10 border border-primary/20 px-2 py-0.5 font-mono text-[10px] font-bold text-primary shadow-xs">
-                {s.key}
+                {translate(s.key)}
               </kbd>
             </div>
           ))}
@@ -69,7 +73,7 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }: KeyboardShortcutsMod
             onClick={onClose}
             className="text-xs font-bold text-primary hover:underline cursor-pointer"
           >
-            Close Shortcuts Window
+            {translate('landing.shortcutsClose')}
           </button>
         </div>
       </div>

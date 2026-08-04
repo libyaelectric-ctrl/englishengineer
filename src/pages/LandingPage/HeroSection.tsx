@@ -78,7 +78,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span>1,420+ Engineers practicing site English right now</span>
+            <span>{translate('landing.heroSocialProof')}</span>
           </div>
 
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
@@ -91,13 +91,13 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
 
           <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-semibold text-foreground/80 pt-1">
             <span className="flex items-center gap-1.5">
-              <Shield className="h-3.5 w-3.5 text-primary" /> SOC-2 Ready
+              <Shield className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature1')}
             </span>
             <span className="flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-primary" /> Offline First
+              <Zap className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature2')}
             </span>
             <span className="flex items-center gap-1.5">
-              <Globe className="h-3.5 w-3.5 text-primary" /> CEFR Aligned
+              <Globe className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature3')}
             </span>
           </div>
         </div>
@@ -109,10 +109,11 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-extrabold uppercase tracking-wider text-primary flex items-center gap-1.5 font-mono">
-                  <Sparkles className="h-4 w-4 text-primary animate-pulse" /> Try AI Coach Demo
+                  <Sparkles className="h-4 w-4 text-primary animate-pulse" />{' '}
+                  {translate('landing.demoTitle')}
                 </span>
                 <span className="text-[10px] font-semibold text-muted-copy">
-                  Click preset to simulate
+                  {translate('landing.demoClickPreset')}
                 </span>
               </div>
 
@@ -132,14 +133,20 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                         : 'bg-background border-border-soft text-muted-copy hover:text-foreground hover:border-primary/40'
                     }`}
                   >
-                    Preset {idx + 1}
+                    {
+                      [
+                        translate('landing.demoPreset1'),
+                        translate('landing.demoPreset2'),
+                        translate('landing.demoPreset3'),
+                      ][idx]
+                    }
                   </button>
                 ))}
               </div>
 
               <div className="flex gap-2 items-center">
                 <label htmlFor="hero-demo-input" className="sr-only">
-                  Technical sentence input
+                  {translate('landing.demoInputLabel')}
                 </label>
                 <input
                   id="hero-demo-input"
@@ -147,7 +154,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                   value={demoInput}
                   onChange={(e) => setDemoInput(e.target.value)}
                   className="flex-1 rounded-lg border border-border-soft bg-background px-3 py-2 text-xs text-foreground font-medium focus:border-primary focus:outline-none shadow-inner"
-                  placeholder="Type a technical site sentence..."
+                  placeholder={translate('landing.demoInputPlaceholder')}
                 />
                 <button
                   type="button"
@@ -155,7 +162,11 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                   disabled={isAnalyzing}
                   className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer shrink-0"
                 >
-                  <span>{isAnalyzing ? 'Analyzing...' : 'Test AI'}</span>
+                  <span>
+                    {isAnalyzing
+                      ? translate('landing.demoAnalyzing')
+                      : translate('landing.demoTestButton')}
+                  </span>
                   <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -165,8 +176,8 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                 <div className="rounded-xl border border-emerald-500/35 bg-emerald-500/10 p-3 space-y-1.5 animate-fadeIn">
                   <div className="flex items-center justify-between text-xs">
                     <span className="font-bold text-emerald-600 flex items-center gap-1">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" /> Refined Technical
-                      English
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />{' '}
+                      {translate('landing.demoRefinedTitle')}
                     </span>
                     <span className="font-bold text-primary uppercase font-mono bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
                       {analysisResult.level}
@@ -176,7 +187,9 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                     "{analysisResult.refined}"
                   </p>
                   <div className="text-[10px] font-bold text-muted-copy flex items-center gap-1 pt-0.5">
-                    <span className="text-primary font-mono">Recognized Term:</span>
+                    <span className="text-primary font-mono">
+                      {translate('landing.demoRecognizedTerm')}
+                    </span>
                     <span>{analysisResult.term}</span>
                   </div>
                 </div>
@@ -197,31 +210,31 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                   <div className="grid gap-4 sm:grid-cols-2 items-center">
                     <div>
                       <div className="inline-flex items-center gap-2 rounded bg-white/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white mb-2 font-mono">
-                        AI Coach Engine
+                        {translate('landing.aiCoachEngine')}
                       </div>
                       <h3 className="text-base sm:text-lg font-bold text-white leading-tight">
-                        CEFR Assessment &<br />
-                        Personalized Path
+                        {translate('landing.cefrAssessment')}
                       </h3>
                       <p className="mt-1.5 text-xs text-white/80 leading-relaxed">
-                        Adaptive learning engine that maps your skill gaps and builds a custom
-                        curriculum based on your discipline and project role.
+                        {translate('landing.aiCoachDesc')}
                       </p>
                     </div>
                     <div className="flex justify-center">
                       <div className="grid grid-cols-2 gap-2 w-full">
-                        {[
-                          { l: 'Writing', v: 'C1' },
-                          { l: 'Speaking', v: 'B2' },
-                          { l: 'Listening', v: 'B2+' },
-                          { l: 'Reading', v: 'C1' },
-                        ].map((i) => (
+                        {(
+                          [
+                            { l: 'landing.skillWriting', v: 'C1' },
+                            { l: 'landing.skillSpeaking', v: 'B2' },
+                            { l: 'landing.skillListening', v: 'B2+' },
+                            { l: 'landing.skillReading', v: 'C1' },
+                          ] as const
+                        ).map((i) => (
                           <div
                             key={i.l}
                             className="rounded-lg bg-white/10 p-2.5 text-center border border-white/10"
                           >
                             <div className="text-[10px] text-white/70 font-medium uppercase tracking-wider">
-                              {i.l}
+                              {translate(i.l)}
                             </div>
                             <div className="text-base font-bold text-white mt-0.5">{i.v}</div>
                           </div>
@@ -235,7 +248,7 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                     <div className="flex items-center gap-2 text-white">
                       <Volume2 className="h-4 w-4 text-emerald-400 animate-pulse shrink-0" />
                       <span className="text-[10px] font-bold uppercase tracking-wider font-mono">
-                        Live Voice Waveform Processor
+                        {translate('landing.liveVoiceTitle')}
                       </span>
                     </div>
                     {/* Waveform Bar Animation */}

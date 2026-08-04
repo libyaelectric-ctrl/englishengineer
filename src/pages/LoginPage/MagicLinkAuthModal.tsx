@@ -2,6 +2,8 @@ import { ArrowRight, CheckCircle2, Mail, Sparkles, X } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface MagicLinkAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -16,6 +18,7 @@ export const MagicLinkAuthModal = ({
   const [email, setEmail] = useState(initialEmail);
   const [isSent, setIsSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { translate } = useLocalizationStore();
 
   if (!isOpen) return null;
 
@@ -36,7 +39,7 @@ export const MagicLinkAuthModal = ({
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
             <h3 className="text-sm font-extrabold uppercase tracking-wider text-foreground">
-              Passwordless Magic Link Login
+              {translate('login.magicLinkTitle')}
             </h3>
           </div>
           <button
@@ -54,11 +57,12 @@ export const MagicLinkAuthModal = ({
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <div className="space-y-1">
-              <h4 className="text-base font-bold text-foreground">Magic Link Sent!</h4>
+              <h4 className="text-base font-bold text-foreground">
+                {translate('login.magicLinkSent')}
+              </h4>
               <p className="text-xs text-muted-copy">
-                We've sent a 1-click instant login link to{' '}
-                <span className="font-bold text-primary font-mono">{email}</span>. Check your inbox
-                to enter your workspace.
+                {translate('login.magicLinkNoPass').replace('{email}', '')}
+                <span className="font-bold text-primary font-mono">{email}</span>
               </p>
             </div>
             <button
@@ -66,14 +70,13 @@ export const MagicLinkAuthModal = ({
               onClick={onClose}
               className="w-full h-10 rounded-lg bg-primary text-primary-foreground font-bold text-xs hover:bg-primary-hover transition cursor-pointer"
             >
-              Done & Close
+              {translate('login.magicLinkDone')}
             </button>
           </div>
         ) : (
           <form onSubmit={handleSendLink} className="space-y-4">
             <p className="text-xs text-muted-copy leading-relaxed">
-              No password needed! Enter your work email and we'll send you an instant 1-click login
-              link.
+              {translate('login.magicLinkDesc')}
             </p>
 
             <div className="space-y-1.5">
@@ -81,7 +84,7 @@ export const MagicLinkAuthModal = ({
                 htmlFor="magic-email"
                 className="text-[10px] font-bold uppercase tracking-wider text-foreground block"
               >
-                Work Email Address
+                {translate('login.magicLinkEmail')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-copy" />
@@ -102,7 +105,7 @@ export const MagicLinkAuthModal = ({
               disabled={loading || !email}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary hover:bg-primary-hover text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md transition disabled:opacity-50 cursor-pointer"
             >
-              {loading ? 'Sending Magic Link...' : 'Send Magic Link Email'}
+              {loading ? translate('login.magicLinkSending') : translate('login.magicLinkSend')}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
           </form>

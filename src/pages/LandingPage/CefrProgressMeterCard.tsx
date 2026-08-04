@@ -1,6 +1,9 @@
 import { CheckCircle2, TrendingUp } from 'lucide-react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 export const CefrProgressMeterCard = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const currentLevel = 'B2+ Professional';
   const targetLevel = 'C1 Technical Defenses';
   const progressPct = 82;
@@ -10,10 +13,12 @@ export const CefrProgressMeterCard = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4 text-emerald-500" />
-          <span className="text-xs font-bold text-foreground">Interactive CEFR Progress Meter</span>
+          <span className="text-xs font-bold text-foreground">
+            {translate('landing.cefrMeterTitle')}
+          </span>
         </div>
         <span className="font-mono text-[10px] font-bold text-emerald-600 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded">
-          {progressPct}% to C1 Target
+          {progressPct}% {translate('landing.cefrMeterToTarget')}
         </span>
       </div>
 
@@ -46,13 +51,16 @@ export const CefrProgressMeterCard = () => {
         <div className="space-y-1">
           <div className="text-xs font-bold text-foreground flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
-            <span>Current: {currentLevel}</span>
+            <span>
+              {translate('landing.cefrMeterCurrent')} {currentLevel}
+            </span>
           </div>
           <div className="text-[10px] text-muted-copy">
-            Next Milestone: <span className="font-bold text-primary">{targetLevel}</span>
+            {translate('landing.cefrMeterNextMilestone')}{' '}
+            <span className="font-bold text-primary">{targetLevel}</span>
           </div>
           <div className="text-[9px] text-emerald-600 font-semibold pt-0.5">
-            +14% gain in ASTM/FIDIC vocabulary accuracy this week.
+            {translate('landing.cefrMeterGain')}
           </div>
         </div>
       </div>

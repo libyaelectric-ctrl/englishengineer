@@ -142,46 +142,51 @@ export const BetaOnboarding = () => {
           </div>
           <div>
             <p className="text-xs font-black uppercase tracking-[0.18em] text-muted-copy">
-              Closed Beta Setup
+              {translate('beta.title')}
             </p>
             <h2 className="mt-2 text-3xl font-black text-foreground">
-              Calibrate EngVox for your work.
+              {translate('beta.subtitle')}
             </h2>
-            <p className="mt-2 text-sm leading-6 text-muted-copy">
-              Only essential beta fields are collected locally. You can use the product without
-              connecting a production backend.
-            </p>
+            <p className="mt-2 text-sm leading-6 text-muted-copy">{translate('beta.dataNotice')}</p>
           </div>
         </div>
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {renderSelect(
-            'Engineering Discipline',
+            translate('beta.discipline'),
             'engineeringDiscipline',
             BETA_ONBOARDING_OPTIONS.engineeringDisciplines,
             disciplineLabels
           )}
           {renderSelect(
-            'Experience Level',
+            translate('beta.experienceLevel'),
             'experienceLevel',
             BETA_ONBOARDING_OPTIONS.experienceLevels
           )}
           {renderSelect(
-            'Current English Level',
+            translate('beta.currentLevel'),
             'currentEnglishLevel',
             BETA_ONBOARDING_OPTIONS.englishLevels
           )}
           {renderSelect(
-            'Target English Level',
+            translate('beta.targetLevel'),
             'targetEnglishLevel',
             BETA_ONBOARDING_OPTIONS.englishLevels
           )}
-          {renderSelect('Industry', 'industry', BETA_ONBOARDING_OPTIONS.industries)}
-          {renderSelect('Daily Study Goal', 'dailyStudyGoal', BETA_ONBOARDING_OPTIONS.dailyGoals)}
-          {renderSelect('Career Goal', 'careerGoal', BETA_ONBOARDING_OPTIONS.careerGoals)}
+          {renderSelect(translate('beta.industry'), 'industry', BETA_ONBOARDING_OPTIONS.industries)}
+          {renderSelect(
+            translate('beta.dailyGoal'),
+            'dailyStudyGoal',
+            BETA_ONBOARDING_OPTIONS.dailyGoals
+          )}
+          {renderSelect(
+            translate('beta.careerGoal'),
+            'careerGoal',
+            BETA_ONBOARDING_OPTIONS.careerGoals
+          )}
           <label className="space-y-2">
             <span className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
-              Timezone
+              {translate('beta.timezone')}
             </span>
             <input
               value={form.timezone}
@@ -193,14 +198,14 @@ export const BetaOnboarding = () => {
 
         <div className="mt-5 rounded-[12px] border border-border-soft bg-surface-hover p-4">
           <p className="text-[10px] font-black uppercase tracking-[0.16em] text-muted-copy">
-            Choose your starting path
+            {translate('beta.startPath')}
           </p>
           <div className="mt-3 grid gap-2 sm:grid-cols-3">
             {(
               [
-                ['start_a1', 'Start from A1'],
-                ['placement_check', 'Placement check'],
-                ['explore_demo', 'Explore demo content'],
+                ['start_a1', 'beta.pathA1'],
+                ['placement_check', 'beta.pathPlacement'],
+                ['explore_demo', 'beta.pathDemo'],
               ] as const
             ).map(([value, label]) => (
               <button
@@ -214,28 +219,24 @@ export const BetaOnboarding = () => {
                 }
                 className={`rounded-[10px] border px-3 py-3 text-sm font-semibold transition ${form.learningPathChoice === value ? 'border-sky-300 bg-primary/5 text-sky-900' : 'border-border-soft bg-surface text-foreground hover:border-primary/20 hover:bg-primary/5/50'}`}
               >
-                {label}
+                {translate(label)}
               </button>
             ))}
           </div>
           <p className="mt-3 text-xs leading-5 text-muted-copy">
             {form.learningPathChoice === 'placement_check'
-              ? 'Placement check is coming soon. Your level remains A1 until task evidence creates an estimate.'
+              ? translate('beta.placementSoon')
               : form.learningPathChoice === 'explore_demo'
-                ? 'Demo content may show advanced previews, but your learning path still starts at A1.'
-                : 'Your sequential learning path starts at A1.'}
+                ? translate('beta.demoPreview')
+                : translate('beta.a1Path')}
           </p>
         </div>
 
-        <p className="mt-4 text-xs leading-5 text-muted-copy">
-          Your level starts at A1 in demo mode. EngVox updates the estimate after enough completed
-          tasks. Scores are internal Engineering Communication estimates, not official CEFR
-          certificates.
-        </p>
+        <p className="mt-4 text-xs leading-5 text-muted-copy">{translate('beta.demoNotice')}</p>
 
         <div className="mt-6 flex justify-end">
           <Button onClick={finishOnboarding} className="bg-sky-600 text-white hover:bg-sky-700">
-            Enter Closed Beta
+            {translate('beta.enterBeta')}
           </Button>
         </div>
       </div>

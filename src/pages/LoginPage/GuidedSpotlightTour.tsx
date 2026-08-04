@@ -2,6 +2,8 @@ import { ArrowRight, CheckCircle2, Sparkles, X } from 'lucide-react';
 
 import { useState } from 'react';
 
+import { useLocalizationStore } from '@/features/localization';
+
 interface GuidedSpotlightTourProps {
   isOpen: boolean;
   onClose: () => void;
@@ -31,6 +33,7 @@ const TOUR_STEPS = [
 ];
 
 export const GuidedSpotlightTour = ({ isOpen, onClose }: GuidedSpotlightTourProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const [stepIndex, setStepIndex] = useState(0);
 
   if (!isOpen) return null;
@@ -52,7 +55,7 @@ export const GuidedSpotlightTour = ({ isOpen, onClose }: GuidedSpotlightTourProp
         {/* Step Indicator Header */}
         <div className="flex items-center justify-between">
           <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary font-mono bg-primary/10 border border-primary/20 px-2 py-0.5 rounded">
-            Spotlight Tour ({stepIndex + 1}/{TOUR_STEPS.length})
+            {translate('login.tourTitle')} ({stepIndex + 1}/{TOUR_STEPS.length})
           </span>
           <button
             type="button"
@@ -79,14 +82,14 @@ export const GuidedSpotlightTour = ({ isOpen, onClose }: GuidedSpotlightTourProp
             onClick={onClose}
             className="text-xs font-bold text-muted-copy hover:text-foreground cursor-pointer"
           >
-            End Tour
+            {translate('login.tourEnd')}
           </button>
           <button
             type="button"
             onClick={handleNext}
             className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground hover:bg-primary/90 transition shadow-md cursor-pointer"
           >
-            <span>{isLast ? 'Get Started' : 'Next Step'}</span>
+            <span>{isLast ? translate('login.tourGetStarted') : translate('login.tourNext')}</span>
             {isLast ? (
               <CheckCircle2 className="h-3.5 w-3.5" />
             ) : (

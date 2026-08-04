@@ -39,7 +39,6 @@ import { SSOForm } from './SSOForm';
 import { SecuritySessionsModal } from './SecuritySessionsModal';
 import { SocialLoginButtons } from './SocialLoginButtons';
 import { WorkspaceSwitcherModal } from './WorkspaceSwitcherModal';
-import { AUTH_COPY } from './constants';
 import { useLoginHandlers } from './useLoginHandlers';
 
 const DISCIPLINE_ICONS: Record<EngineeringDiscipline, React.ElementType> = {
@@ -64,10 +63,7 @@ const DISCIPLINES = ENGINEERING_DISCIPLINES.map((id) => ({
 
 const LoginPage = () => {
   const h = useLoginHandlers();
-  const language = useLocalizationStore((state) => state.language);
   const translate = useLocalizationStore((state) => state.translate);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const copy = (AUTH_COPY as any)[language] ?? AUTH_COPY.en;
 
   const [securityOpen, setSecurityOpen] = useState(false);
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
@@ -113,13 +109,13 @@ const LoginPage = () => {
             <div className="w-full rounded-2xl border border-border-soft bg-surface/90 backdrop-blur-xl p-4.5 shadow-xl hover:border-border-hover transition-colors h-full flex flex-col justify-between relative light-sweep-container overflow-hidden">
               <div className="text-center space-y-0.5">
                 <span className="inline-flex items-center gap-1 rounded-full bg-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary border border-border-soft">
-                  Pre-Selection
+                  {translate('login.preSelection')}
                 </span>
                 <h2 className="text-sm font-bold text-foreground leading-none">
-                  Choose Your Discipline
+                  {translate('login.chooseDiscipline')}
                 </h2>
                 <p className="text-[10px] text-muted-copy leading-tight">
-                  Select your engineering field to pre-configure your curriculum.
+                  {translate('login.disciplineDesc')}
                 </p>
               </div>
 
@@ -164,13 +160,13 @@ const LoginPage = () => {
                 <p className="text-[10px] text-muted-copy leading-none font-semibold">
                   {selectedDiscipline ? (
                     <>
-                      Selected:{' '}
+                      {translate('login.selected')}{' '}
                       <span className="font-bold text-primary truncate max-w-[200px] inline-block align-middle ml-1">
                         {getDisciplineLabel(selectedDiscipline)}
                       </span>
                     </>
                   ) : (
-                    'No discipline pre-selected.'
+                    translate('login.noDiscipline')
                   )}
                 </p>
               </div>
@@ -190,7 +186,7 @@ const LoginPage = () => {
                         : 'text-muted-copy hover:text-foreground'
                     }`}
                   >
-                    Sign In
+                    {translate('login.signIn')}
                   </button>
                   <button
                     type="button"
@@ -201,15 +197,19 @@ const LoginPage = () => {
                         : 'text-muted-copy hover:text-foreground'
                     }`}
                   >
-                    Create Account
+                    {translate('login.createAccount')}
                   </button>
                 </div>
 
                 <h2 className="text-sm font-extrabold tracking-tight text-foreground leading-none animated-gradient-title">
-                  {h.isSignUpMode ? copy.signupTitle : copy.loginTitle}
+                  {h.isSignUpMode
+                    ? translate('login.createYourAccount')
+                    : translate('login.welcomeBack')}
                 </h2>
                 <p className="text-[10px] text-muted-copy font-medium">
-                  {h.isSignUpMode ? copy.signupSubtitle : copy.loginSubtitle}
+                  {h.isSignUpMode
+                    ? translate('login.startJourney')
+                    : translate('login.signInContinue')}
                 </p>
               </div>
 
@@ -225,7 +225,6 @@ const LoginPage = () => {
               <SocialLoginButtons
                 socialLoading={h.socialLoading}
                 onSocialLogin={h.handleSocialLogin}
-                orContinueWith={copy.orContinueWith}
               />
 
               {/* Forms: SSO vs Email/Password */}
@@ -255,7 +254,6 @@ const LoginPage = () => {
                     h.setShowSsoForm(true);
                     h.setError(null);
                   }}
-                  copy={copy}
                 />
               )}
 
@@ -269,11 +267,11 @@ const LoginPage = () => {
                     className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline cursor-pointer transition-colors"
                   >
                     <Play className="h-3 w-3 fill-primary" />
-                    <span>Launch Instant Demo Workspace</span>
+                    <span>{translate('login.launchDemo')}</span>
                     <ArrowRight className="h-3 w-3" />
                   </button>
                   <p className="text-[8px] font-medium text-muted-copy leading-tight">
-                    {copy.demoMessage}
+                    {translate('login.demoMessage')}
                   </p>
                 </div>
               )}
@@ -284,57 +282,51 @@ const LoginPage = () => {
                   to="/onboarding"
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
                 >
-                  <Sparkles className="h-2.5 w-2.5" /> Onboarding
+                  <Sparkles className="h-2.5 w-2.5" /> {translate('login.onboarding')}
                 </Link>
                 <button
                   type="button"
                   onClick={() => setWorkspaceOpen(true)}
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
                 >
-                  <Building className="h-2.5 w-2.5 text-primary" /> Workspace Switcher
+                  <Building className="h-2.5 w-2.5 text-primary" />{' '}
+                  {translate('login.workspaceSwitcher')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setSecurityOpen(true)}
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
                 >
-                  <ShieldCheck className="h-2.5 w-2.5 text-emerald-500" /> Security & 2FA
+                  <ShieldCheck className="h-2.5 w-2.5 text-emerald-500" />{' '}
+                  {translate('login.security2fa')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setMagicLinkOpen(true)}
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-foreground hover:border-primary/40 transition cursor-pointer"
                 >
-                  <Zap className="h-2.5 w-2.5 text-amber-500" /> Magic Link
+                  <Zap className="h-2.5 w-2.5 text-amber-500" /> {translate('login.magicLink')}
                 </button>
                 <button
                   type="button"
                   onClick={() => setTourOpen(true)}
                   className="inline-flex items-center gap-1 rounded bg-soft border border-border-soft px-2 py-0.5 text-[9px] font-bold text-primary hover:border-primary/40 transition cursor-pointer"
                 >
-                  <HelpCircle className="h-2.5 w-2.5" /> Guided Tour
+                  <HelpCircle className="h-2.5 w-2.5" /> {translate('login.guidedTour')}
                 </button>
               </div>
 
               {/* Terms & Privacy & Back to Home */}
               <div className="text-center space-y-1">
                 <p className="text-[9px] text-muted-copy leading-relaxed">
-                  By continuing, you agree to EngVox{' '}
-                  <Link to="/legal/terms" className="underline hover:text-primary font-semibold">
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link to="/legal/privacy" className="underline hover:text-primary font-semibold">
-                    Privacy Policy
-                  </Link>
-                  .
+                  {translate('login.termsPrivacy')}
                 </p>
                 <div className="pt-0.5">
                   <Link
                     to="/"
                     className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline"
                   >
-                    <span>← Back to Home</span>
+                    <span>{translate('login.backToHome')}</span>
                   </Link>
                 </div>
               </div>
