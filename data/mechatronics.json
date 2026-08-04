@@ -1,0 +1,302 @@
+[
+  {
+    "id": "mechatronics_a2_robot_commissioning",
+    "title": "Robot Commissioning Report",
+    "description": "Read a basic robot commissioning report and understand key setup steps.",
+    "discipline": "Mechatronics Engineering",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 6,
+    "passageText": "Robot Commissioning Report\nDate: 2024-03-10\nTechnician: J. Müller\n\nThe robot arm was installed in Cell 3. First, we connected the power cable. Then we turned on the controller. The robot has six axes. We checked each axis one by one. All joints moved correctly. We set the home position. The gripper was attached and tested. It opened and closed ten times without error. The robot is now ready for production. Safety fences are in place. The emergency stop button was tested and works.",
+    "vocabulary": [
+      {
+        "term": "commissioning",
+        "definition": "The process of testing and starting a machine or system for the first time.",
+        "context": "Robot Commissioning Report",
+        "turkishTranslation": "devreye alma"
+      },
+      {
+        "term": "axis",
+        "definition": "A line around which a robot joint rotates or moves.",
+        "context": "The robot has six axes.",
+        "turkishTranslation": "eksen"
+      },
+      {
+        "term": "home position",
+        "definition": "The starting or reference position of a robot.",
+        "context": "We set the home position.",
+        "turkishTranslation": "başlangıç konumu"
+      },
+      {
+        "term": "gripper",
+        "definition": "A tool attached to a robot arm that holds or picks up objects.",
+        "context": "The gripper was attached and tested.",
+        "turkishTranslation": "tutucu"
+      },
+      {
+        "term": "emergency stop",
+        "definition": "A button that immediately stops a machine in a dangerous situation.",
+        "context": "The emergency stop button was tested and works.",
+        "turkishTranslation": "acil durdurma"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "Where was the robot arm installed?",
+        "choices": ["A) Cell 1", "B) Cell 3", "C) Cell 6", "D) Cell 10"],
+        "correctAnswer": "B",
+        "explanation": "The report states 'The robot arm was installed in Cell 3.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The gripper opened and closed ten times without error during testing.",
+        "correctAnswer": "true",
+        "explanation": "The passage says 'It opened and closed ten times without error.'"
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "How many axes does the robot have?",
+        "keywords": ["six", "6"],
+        "correctAnswer": "The robot has six axes.",
+        "explanation": "The report clearly states 'The robot has six axes.'"
+      }
+    ],
+    "xpReward": 40,
+    "coinReward": 15,
+    "eloReward": 12,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "mechatronics_b1_plc_program_description",
+    "title": "PLC Program Description",
+    "description": "Read a PLC program description for a conveyor system and answer comprehension questions.",
+    "discipline": "Mechatronics Engineering",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 9,
+    "passageText": "PLC Program Description – Conveyor System v2.4\nProject: Bottling Line A\nAuthor: S. Karahan | Date: 2024-05-15\n\nThis document describes the ladder logic program used to control the main conveyor in the bottling plant. The program runs on a Siemens S7-1200 PLC. It has three operating modes: Manual, Auto, and Maintenance.\n\nIn Auto mode, the conveyor starts automatically when a bottle is detected by the photoelectric sensor at position PE-01. The belt runs at 0.5 m/s. If the downstream sensor PE-02 detects a jam, the belt stops and a yellow warning light turns on. The operator must clear the jam and press the reset button to restart.\n\nIn Manual mode, the operator uses a push button on the HMI panel to start or stop the belt. All safety interlocks remain active in both modes. The program was tested for 48 hours without any faults.",
+    "vocabulary": [
+      {
+        "term": "ladder logic",
+        "definition": "A programming language for PLCs that looks like an electrical relay diagram.",
+        "context": "This document describes the ladder logic program used to control the main conveyor in the bottling plant.",
+        "turkishTranslation": "merdiven diyagramı"
+      },
+      {
+        "term": "photoelectric sensor",
+        "definition": "A sensor that detects objects using a beam of light.",
+        "context": "The conveyor starts automatically when a bottle is detected by the photoelectric sensor at position PE-01.",
+        "turkishTranslation": "fotoelektrik sensör"
+      },
+      {
+        "term": "interlock",
+        "definition": "A safety mechanism that prevents a machine from operating under unsafe conditions.",
+        "context": "All safety interlocks remain active in both modes.",
+        "turkishTranslation": "kilitleme"
+      },
+      {
+        "term": "jam",
+        "definition": "A blockage that stops objects from moving through a machine.",
+        "context": "If the downstream sensor PE-02 detects a jam, the belt stops and a yellow warning light turns on.",
+        "turkishTranslation": "sıkışma"
+      },
+      {
+        "term": "HMI panel",
+        "definition": "Human-Machine Interface panel; a screen or button panel used by operators to control a machine.",
+        "context": "The operator uses a push button on the HMI panel to start or stop the belt.",
+        "turkishTranslation": "operatör paneli"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What speed does the conveyor belt run at in Auto mode?",
+        "choices": ["A) 0.2 m/s", "B) 0.3 m/s", "C) 0.5 m/s", "D) 1.0 m/s"],
+        "correctAnswer": "C",
+        "explanation": "The passage states 'The belt runs at 0.5 m/s' in Auto mode."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "Safety interlocks are disabled when the system is in Manual mode.",
+        "correctAnswer": "false",
+        "explanation": "The passage states 'All safety interlocks remain active in both modes,' meaning they are never disabled."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "Which sensor triggers the belt to stop when a jam is detected?",
+        "keywords": ["PE-02", "downstream sensor"],
+        "correctAnswer": "The downstream sensor PE-02 stops the belt when a jam is detected.",
+        "explanation": "The passage says 'If the downstream sensor PE-02 detects a jam, the belt stops.'"
+      }
+    ],
+    "xpReward": 45,
+    "coinReward": 18,
+    "eloReward": 13,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "mechatronics_b2_sensor_calibration_record",
+    "title": "Sensor Calibration Record",
+    "description": "Analyse a formal sensor calibration record for an industrial pressure transmitter.",
+    "discipline": "Mechatronics Engineering",
+    "cefrLevel": "B2",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 11,
+    "passageText": "Sensor Calibration Record\nDocument No.: CAL-2024-0087\nEquipment: Pressure Transmitter PT-104\nLocation: Hydraulic Station 2 – Assembly Hall B\nCalibration Date: 2024-06-20 | Next Due: 2025-06-20\nPerformed By: T. Aydın (Certified Calibration Technician)\n\nPurpose:\nThis record documents the calibration of pressure transmitter PT-104, which is used to monitor hydraulic pressure in the clamping circuit of Press No. 4. Accurate pressure readings are critical to ensure correct clamping force and product quality.\n\nProcedure:\nThe transmitter was isolated from the process line and connected to a reference deadweight tester with a certified accuracy of ±0.01%. Input pressures of 0, 25, 50, 75, and 100 bar were applied in ascending and descending order. The output signal (4–20 mA) was measured at each step using a calibrated multimeter.\n\nResults:\nAll measured values fell within the accepted tolerance of ±0.5% full scale. The maximum deviation recorded was +0.28% at 75 bar. No adjustments were required. The transmitter is confirmed fit for service.\n\nConclusion:\nPT-104 meets the performance specification defined in the site metrology plan. Calibration certificate issued.",
+    "vocabulary": [
+      {
+        "term": "calibration",
+        "definition": "The process of adjusting or verifying a measurement instrument against a known standard.",
+        "context": "This record documents the calibration of pressure transmitter PT-104.",
+        "turkishTranslation": "kalibrasyon"
+      },
+      {
+        "term": "deadweight tester",
+        "definition": "A primary pressure standard device that uses calibrated weights to generate known pressures.",
+        "context": "The transmitter was isolated from the process line and connected to a reference deadweight tester with a certified accuracy of ±0.01%.",
+        "turkishTranslation": "ağırlıklı basınç kalibratörü"
+      },
+      {
+        "term": "tolerance",
+        "definition": "The acceptable range of variation in a measurement or dimension.",
+        "context": "All measured values fell within the accepted tolerance of ±0.5% full scale.",
+        "turkishTranslation": "tolerans"
+      },
+      {
+        "term": "deviation",
+        "definition": "The difference between a measured value and its expected or reference value.",
+        "context": "The maximum deviation recorded was +0.28% at 75 bar.",
+        "turkishTranslation": "sapma"
+      },
+      {
+        "term": "fit for service",
+        "definition": "A formal confirmation that equipment meets the requirements needed for continued use.",
+        "context": "The transmitter is confirmed fit for service.",
+        "turkishTranslation": "kullanıma uygun"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "At which pressure value was the maximum deviation recorded during calibration?",
+        "choices": ["A) 25 bar", "B) 50 bar", "C) 75 bar", "D) 100 bar"],
+        "correctAnswer": "C",
+        "explanation": "The record states 'The maximum deviation recorded was +0.28% at 75 bar.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The technician had to make adjustments to PT-104 after measuring the output signals.",
+        "correctAnswer": "false",
+        "explanation": "The passage clearly states 'No adjustments were required,' confirming no changes were made."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "What type of output signal does pressure transmitter PT-104 produce?",
+        "keywords": ["4–20 mA", "4-20 mA", "milliamp"],
+        "correctAnswer": "PT-104 produces a 4–20 mA output signal.",
+        "explanation": "The procedure section states 'The output signal (4–20 mA) was measured at each step using a calibrated multimeter.'"
+      }
+    ],
+    "xpReward": 50,
+    "coinReward": 20,
+    "eloReward": 14,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "mechatronics_c1_servo_drive_setup_note",
+    "title": "Servo Drive Setup Note",
+    "description": "Critically read a detailed servo drive configuration note and evaluate technical claims.",
+    "discipline": "Mechatronics Engineering",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 13,
+    "passageText": "Servo Drive Configuration Note\nDocument Ref.: SDN-2024-112\nSystem: High-Speed Indexing Unit – Production Line 7\nDrive Model: Lenze i700 (400 V, 11 kW)\nMotor: Synchronous Servo Motor LSH 106 (2500 PPR Encoder)\nIssued By: R. Özdemir (Motion Control Engineer) | Date: 2024-07-03\n\n1. Scope\nThis note documents the parameter configuration and commissioning verification carried out for the servo axis designated AX-03, which drives the rotary indexing table in Line 7. Should any discrepancy arise between this note and the machine builder's specification, the machine builder's document shall take precedence.\n\n2. Encoder Configuration\nThe motor encoder was configured as a 2500 PPR incremental device. The drive was set to quadrature input mode, resulting in an effective resolution of 10,000 counts per revolution. It was verified that the encoder cable shield was grounded at the drive end only, as grounding at both ends would introduce ground loops that could corrupt position feedback.\n\n3. Current and Velocity Loop Tuning\nThe current loop bandwidth was set to 2000 Hz. The velocity loop proportional gain (Kp) was initially set to 0.8 and increased incrementally until oscillation was observed at Kp = 1.6, whereupon it was reduced by 20% to yield a stable operating value of 1.28. Integral time (Ti) was subsequently adjusted to eliminate steady-state velocity error. If the inertia ratio between load and motor exceeds 10:1, additional feed-forward gain may be required to maintain acceptable tracking performance.\n\n4. Fault History and Actions\nDuring initial power-up, an encoder signal loss fault (Fault Code F0021) was triggered due to a loose connector at terminal X5. The connector was re-seated and the fault was cleared. No further faults were recorded over a 72-hour burn-in test. The axis is approved for handover to production.",
+    "vocabulary": [
+      {
+        "term": "quadrature input mode",
+        "definition": "An encoder reading method that uses two signals 90 degrees apart to determine position and direction with four times the base resolution.",
+        "context": "The drive was set to quadrature input mode, resulting in an effective resolution of 10,000 counts per revolution.",
+        "turkishTranslation": "quadrature giriş modu"
+      },
+      {
+        "term": "ground loop",
+        "definition": "An unwanted electrical current that flows between two grounded points at different potentials, causing signal interference.",
+        "context": "Grounding at both ends would introduce ground loops that could corrupt position feedback.",
+        "turkishTranslation": "toprak döngüsü"
+      },
+      {
+        "term": "velocity loop proportional gain",
+        "definition": "A tuning parameter (Kp) in a servo controller that determines how aggressively the drive corrects speed errors.",
+        "context": "The velocity loop proportional gain (Kp) was initially set to 0.8 and increased incrementally until oscillation was observed at Kp = 1.6.",
+        "turkishTranslation": "hız döngüsü oransal kazancı"
+      },
+      {
+        "term": "inertia ratio",
+        "definition": "The ratio of the load's moment of inertia to the motor's moment of inertia; high ratios make servo tuning more difficult.",
+        "context": "If the inertia ratio between load and motor exceeds 10:1, additional feed-forward gain may be required to maintain acceptable tracking performance.",
+        "turkishTranslation": "eylemsizlik oranı"
+      },
+      {
+        "term": "burn-in test",
+        "definition": "An extended period of continuous machine operation before delivery, used to detect early failures.",
+        "context": "No further faults were recorded over a 72-hour burn-in test.",
+        "turkishTranslation": "uzun süreli ön çalışma testi"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What was the final stable value of the velocity loop proportional gain (Kp) used for AX-03?",
+        "choices": ["A) 0.8", "B) 1.6", "C) 1.28", "D) 2.0"],
+        "correctAnswer": "C",
+        "explanation": "The note states Kp was increased until oscillation at 1.6, then 'reduced by 20% to yield a stable operating value of 1.28.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "According to the document, the encoder cable shield should be grounded at both the drive end and the motor end to ensure signal integrity.",
+        "correctAnswer": "false",
+        "explanation": "The note specifies the shield 'was grounded at the drive end only,' because grounding at both ends would introduce ground loops that corrupt position feedback."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "What fault code was triggered during initial power-up, and what caused it?",
+        "keywords": ["F0021", "encoder signal loss", "loose connector", "terminal X5"],
+        "correctAnswer": "Fault Code F0021 (encoder signal loss) was triggered by a loose connector at terminal X5.",
+        "explanation": "Section 4 states 'an encoder signal loss fault (Fault Code F0021) was triggered due to a loose connector at terminal X5.'"
+      }
+    ],
+    "xpReward": 55,
+    "coinReward": 22,
+    "eloReward": 15,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  }
+]
