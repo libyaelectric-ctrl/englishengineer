@@ -97,7 +97,8 @@ data/content/reading/chemical.json
 Kurallar:
 
 - `id`: `<disiplin>_<seviye>_<konu>` küçük harf, alt çizgili, benzersiz
-- `difficulty`: A2 → `Beginner`, B1 → `Intermediate`, B2 → `Upper Intermediate`, C1 → `Advanced`
+- `difficulty`: A2 → `Beginner`, B1 → `Intermediate`, B2 → `Intermediate`, C1 → `Advanced`
+  (app'te sadece bu 3 değer geçerli: `Beginner | Intermediate | Advanced`)
 - `estimatedMinutes`: A2 5-7, B1 8-10, B2 10-12, C1 12-15
 - Ödüller: A2 → xp 40/coin 15/elo 12; B1 → 45/18/13; B2 → 50/20/14; C1 → 55/22/15
 
