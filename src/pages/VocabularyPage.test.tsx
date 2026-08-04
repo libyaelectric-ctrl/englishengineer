@@ -6,6 +6,12 @@ import { VocabularyMenuService, VocabularyRepository } from '@/features/vocabula
 
 import VocabularyPage from './VocabularyPage';
 
+// Keep tests independent of the (large) translation corpus bundle.
+vi.mock('@/features/vocabulary/services/translation/vocabulary-translation.hook', () => ({
+  useTermMeaningResolver: () => (_term: string, source: { turkishMeaning?: string }) =>
+    source.turkishMeaning ?? _term,
+}));
+
 describe('VocabularyPage menu', () => {
   beforeAll(async () => {
     VocabularyRepository.clearCache();

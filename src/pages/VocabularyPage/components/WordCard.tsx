@@ -4,12 +4,14 @@ import { FormEvent, useState } from 'react';
 
 import { playSound } from '@/shared/utils/sound';
 
+import { useLocalizationStore } from '@/features/localization';
 import {
   PronunciationService,
   type VocabularyMenuProgress,
   type VocabularyTerm,
   repairVocabularyText,
 } from '@/features/vocabulary';
+import { useTermMeaningResolver } from '@/features/vocabulary/services/translation/vocabulary-translation.hook';
 
 import { WordCardDetails } from './WordCardDetails';
 import { WordCardHeader } from './WordCardHeader';
@@ -163,6 +165,8 @@ export const WordCard = ({
   isFlipped,
   onFlip,
 }: WordCardProps) => {
+  const language = useLocalizationStore((s) => s.language);
+  const resolveMeaning = useTermMeaningResolver(language);
   const [answer, setAnswer] = useState('');
   const [quizResult, setQuizResult] = useState<boolean | null>(null);
   const [knowThisCheck, setKnowThisCheck] = useState(false);
@@ -174,7 +178,9 @@ export const WordCard = ({
   const submitQuiz = (event: FormEvent) => {
     event.preventDefault();
     if (!answer.trim() || quizResult !== null) return;
-    const correct = checkQuizAnswer(answer, term.turkishMeaning);
+    const correct =
+      checkQuizAnswer(answer, resolveMeaning(term.term, term)) ||
+      checkQuizAnswer(answer, term.turkishMeaning);
     setQuizResult(correct);
     if (correct) {
       playSound('success');
@@ -232,7 +238,7 @@ export const WordCard = ({
           <div className="min-h-0 space-y-4 overflow-y-auto pr-1">
             <div className="flex items-center justify-between border-b border-border-soft pb-3">
               <span className="text-xs font-extrabold uppercase tracking-wider text-primary">
-                🇹🇷 TÜRKÇE KARŞILIĞI & ŞANTİYE KULLANIMI
+                MEANING & SITE USAGE
               </span>
               <button
                 type="button"
@@ -246,7 +252,7 @@ export const WordCard = ({
 
             <div className="text-center py-2">
               <h2 className="text-2xl font-black text-foreground tracking-tight">
-                {repairVocabularyText(term.turkishMeaning)}
+                {repairVocabularyText(resolveMeaning(term.term, term))}
               </h2>
               <p className="text-xs font-mono text-muted-copy mt-1 font-semibold">{term.term}</p>
             </div>
