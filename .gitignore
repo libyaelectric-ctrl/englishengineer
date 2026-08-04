@@ -86,3 +86,6 @@ analysis_output/
 !scripts/requirements-translations.txt
 .env*
 !scripts/.env.example
+
+public/data/*.json
+public/audio/*.mp3
