@@ -11,6 +11,7 @@ export default defineConfig({
     pool: 'threads',
     maxWorkers: 2,
     testTimeout: 15_000,
+    hookTimeout: 30_000,
     teardownTimeout: 10_000,
     exclude: [
       'node_modules/**',

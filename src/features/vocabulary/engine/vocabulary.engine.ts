@@ -4,6 +4,7 @@ import type { GrammarRule } from '@/features/grammar/grammar.types';
 import type { CefrLevel } from '@/features/level-system';
 
 import { VocabularyRepository } from '../services/core/vocabulary.repository';
+import { resolveTermMeaningAsync } from '../services/translation/vocabulary-translation.service';
 import type { VocabularyTerm } from '../types/vocabulary.types';
 
 export const VocabularyEngine = {
@@ -57,12 +58,13 @@ export const VocabularyEngine = {
     );
   },
 
-  async getVocabularyExplanation(
-    termId: string,
-    language: 'english' | 'turkish'
-  ): Promise<string | null> {
+  async getVocabularyExplanation(termId: string, language: string): Promise<string | null> {
     const term = await VocabularyRepository.getVocabularyTermById(termId);
     if (!term) return null;
-    return language === 'turkish' ? term.turkishMeaning : term.definition;
+    if (language === 'english' || language === 'en') return term.definition;
+    if (language === 'turkish' || language === 'tr') {
+      return term.turkishMeaning || term.definition;
+    }
+    return resolveTermMeaningAsync(term.term, term, language);
   },
 };
