@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
+import { useLocalizationStore } from '@/features/localization';
 import type {
   DailyMission,
   SkillName,
@@ -23,6 +24,7 @@ export const CurriculumActionsGrid = ({
   setSelectedSkill,
 }: Props) => {
   const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
 
   return (
     <section
@@ -31,27 +33,32 @@ export const CurriculumActionsGrid = ({
     >
       {[
         {
-          label: 'Continue Learning',
-          value: primaryMission?.title ?? 'Build your first task',
-          detail: primaryMission ? `${primaryMission.estimatedMinutes} min` : 'Ready at A1',
+          label: translate('curriculum.continueLearning'),
+          value: primaryMission?.title ?? translate('curriculum.buildFirstTask'),
+          detail: primaryMission
+            ? `${primaryMission.estimatedMinutes} min`
+            : translate('curriculum.readyAtA1'),
           action: () => navigate(primaryMission?.route ?? '/reading'),
         },
         {
-          label: "Today's Best Task",
-          value: primaryMission?.reason ?? 'Start with a current-level task',
+          label: translate('curriculum.todaysBestTask'),
+          value: primaryMission?.reason ?? translate('curriculum.startCurrentLevel'),
           detail: primaryMission?.cefrBand ?? currentSkillProfile.cefrBand,
           action: () => navigate(primaryMission?.route ?? '/reading'),
         },
         {
-          label: 'Improve Next',
+          label: translate('curriculum.improveNext'),
           value: weakestSkill[0].toUpperCase() + weakestSkill.slice(1),
-          detail: `${currentSkillProfile.cefrBand} · independent skill priority`,
+          detail: `${currentSkillProfile.cefrBand} · ${translate('curriculum.independentSkillPriority')}`,
           action: () => setSelectedSkill(weakestSkill as SkillName),
         },
         {
-          label: 'Due Review',
-          value: `${memory.dueToday} items`,
-          detail: memory.weakWords > 0 ? `${memory.weakWords} weak words` : 'Queue is current',
+          label: translate('curriculum.dueReview'),
+          value: `${memory.dueToday} ${translate('curriculum.items')}`,
+          detail:
+            memory.weakWords > 0
+              ? `${memory.weakWords} ${translate('curriculum.weakWords')}`
+              : translate('curriculum.queueCurrent'),
           action: () => navigate('/vocabulary'),
         },
       ].map((item, index) => (

@@ -1,6 +1,7 @@
 import { CheckCircle2, Circle, Map, PlayCircle } from 'lucide-react';
 
 import type { LearningTaskRecommendation } from '@/features/learning-orchestrator';
+import { useLocalizationStore } from '@/features/localization';
 import type { SkillName, UserLearningProfile } from '@/features/profile';
 
 import { CurriculumRecommendationBrief } from './CurriculumRecommendationBrief';
@@ -135,6 +136,7 @@ export const CurriculumFullTab = ({
   recommendationLoading,
   selectedMeta,
 }: Props) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const currentLessonNumber = recommendation?.lessonNumber ?? 1;
 
   return (
@@ -163,10 +165,10 @@ export const CurriculumFullTab = ({
           <Map className="h-5 w-5 text-primary" />
           <div>
             <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
-              Precision Engineering Roadmap
+              {translate('curriculum.roadmap')}
             </h2>
             <p className="text-xs text-muted-copy font-medium mt-0.5">
-              Complete roadmap modules mapped to your current CEFR learning sequence
+              {translate('curriculum.roadmapDesc')}
             </p>
           </div>
         </div>
@@ -184,7 +186,7 @@ export const CurriculumFullTab = ({
               <div className="relative z-10 flex items-start justify-between gap-3 border-b border-border-soft pb-4">
                 <div>
                   <span className="font-mono text-[10px] font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded-[4px] border border-primary/10">
-                    {mod.id} // LEVEL MODULE
+                    {mod.id} // {translate('curriculum.levelModule')}
                   </span>
                   <h3 className="text-sm font-bold text-foreground mt-2 tracking-tight">
                     {mod.title}
@@ -235,12 +237,12 @@ export const CurriculumFullTab = ({
                           </span>
                           {isActive && (
                             <span className="rounded-[4px] bg-primary/10 border border-primary/25 px-1.5 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
-                              ACTIVE TARGET
+                              {translate('curriculum.activeTarget')}
                             </span>
                           )}
                           {isCompleted && (
                             <span className="rounded-[4px] bg-success/10 border border-success/25 px-1.5 py-0.5 text-[10px] font-bold text-success uppercase tracking-wider">
-                              SYNCED
+                              {translate('curriculum.synced')}
                             </span>
                           )}
                         </div>
