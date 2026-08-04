@@ -1,0 +1,74 @@
+[
+  {
+    "term": "chocolate",
+    "domain": "general",
+    "cefrLevel": "A1",
+    "meaning_tr": "çikolata",
+    "definition_en": "A general English term meaning \"çikolata\".",
+    "example_en": "This project relies heavily on the chocolate.",
+    "missing_langs": [
+      "tr",
+      "ar",
+      "de",
+      "es",
+      "pt",
+      "fr",
+      "ru",
+      "zh",
+      "ja",
+      "it",
+      "vi",
+      "pl",
+      "id",
+      "nl"
+    ]
+  },
+  {
+    "term": "classmate",
+    "domain": "general",
+    "cefrLevel": "A1",
+    "meaning_tr": "sınıf arkadaşı",
+    "definition_en": "A general English term meaning \"sınıf arkadaşı\".",
+    "example_en": "The team documented the classmate in the report.",
+    "missing_langs": [
+      "tr",
+      "ar",
+      "de",
+      "es",
+      "pt",
+      "fr",
+      "ru",
+      "zh",
+      "ja",
+      "it",
+      "vi",
+      "pl",
+      "id",
+      "nl"
+    ]
+  },
+  {
+    "term": "classroom",
+    "domain": "general",
+    "cefrLevel": "A1",
+    "meaning_tr": "sınıf",
+    "definition_en": "A general English term meaning \"sınıf\".",
+    "example_en": "Proper training is required to work with the classroom safely.",
+    "missing_langs": [
+      "tr",
+      "ar",
+      "de",
+      "es",
+      "pt",
+      "fr",
+      "ru",
+      "zh",
+      "ja",
+      "it",
+      "vi",
+      "pl",
+      "id",
+      "nl"
+    ]
+  }
+]

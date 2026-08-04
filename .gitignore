@@ -13,6 +13,7 @@ playwright-report/
 .playwright-cli/
 .vercel-tmp/
 __pycache__/
+data/translations/results/
 *.zip
 
 # Environment files
@@ -83,6 +84,7 @@ analysis_output/
 !scripts/.env.example
 !scripts/translate-vocabulary-nllb.py
 !scripts/translate-grammar-deepl.py
+!scripts/translate-vocabulary-chunks.py
 !scripts/requirements-translations.txt
 .env*
 !scripts/.env.example
