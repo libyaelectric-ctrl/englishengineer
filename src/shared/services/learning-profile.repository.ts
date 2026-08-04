@@ -53,6 +53,7 @@ const mergeProfileDefaults = (
 ): Omit<UserLearningProfile, 'userId' | 'skills'> => ({
   ...stored,
   goals: pickArrayOrFallback(stored.goals, initial.goals),
+  discipline: pickOrFallback(stored.discipline, initial.discipline),
   professionId: pickOrFallback(stored.professionId, initial.professionId),
   industryId: pickOrFallback(stored.industryId, initial.industryId),
   communicationGoals: pickArrayOrFallback(stored.communicationGoals, initial.communicationGoals),
@@ -71,6 +72,7 @@ const mergeProfileDefaults = (
   placementBand: pickOrFallback(stored.placementBand, initial.placementBand),
   dailyTarget: mergeDailyTarget(stored, initial),
   weeklyTolerance: mergeWeeklyTolerance(stored, initial),
+  weeklyGoal: pickOrFallback(stored.weeklyGoal, initial.weeklyGoal),
   onboardingCompleted: pickOrFallback(stored.onboardingCompleted, initial.onboardingCompleted),
 });
 

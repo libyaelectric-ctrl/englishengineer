@@ -7,6 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { ProgressService } from '@/core/learning';
 
 import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
+import {
+  DISCIPLINE_META,
+  type EngineeringDiscipline,
+} from '@/shared/constants/engineering-disciplines';
 
 import { useAuthStore } from '@/features/auth';
 import {
@@ -14,6 +18,7 @@ import {
   useLearningIntelligenceStore,
 } from '@/features/learning-intelligence';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { useLocalizationStore } from '@/features/localization';
 import { SKILL_NAMES, type SkillName, useLearningCockpit } from '@/features/profile';
 import { DashboardTranslatorWidget } from '@/features/translation';
 
@@ -29,36 +34,81 @@ const COMPETENCY_GOOD_THRESHOLD = 60;
 const COMPETENCY_DEVELOPING_THRESHOLD = 40;
 const STREAK_DAYS = 7;
 
-const SKILL_META: Record<SkillName, { label: string; route: string; icon: typeof BookOpen }> = {
-  reading: { label: 'Reading', route: '/reading', icon: BookOpen },
-  writing: { label: 'Writing', route: '/writing', icon: PenTool },
-  listening: { label: 'Listening', route: '/listening', icon: Headphones },
-  speaking: { label: 'Speaking', route: '/speaking', icon: Mic2 },
-  vocabulary: { label: 'Vocabulary', route: '/vocabulary', icon: BookMarked },
-  grammar: { label: 'Grammar', route: '/grammar', icon: Languages },
+const SKILL_ICONS: Record<SkillName, typeof BookOpen> = {
+  reading: BookOpen,
+  writing: PenTool,
+  listening: Headphones,
+  speaking: Mic2,
+  vocabulary: BookMarked,
+  grammar: Languages,
+};
+
+const SKILL_ROUTES: Record<SkillName, string> = {
+  reading: '/reading',
+  writing: '/writing',
+  listening: '/listening',
+  speaking: '/speaking',
+  vocabulary: '/vocabulary',
+  grammar: '/grammar',
+};
+
+const SKILL_I18N_KEYS: Record<
+  SkillName,
+  | 'nav.reading'
+  | 'nav.writing'
+  | 'nav.listening'
+  | 'nav.speaking'
+  | 'nav.vocabulary'
+  | 'nav.grammar'
+> = {
+  reading: 'nav.reading',
+  writing: 'nav.writing',
+  listening: 'nav.listening',
+  speaking: 'nav.speaking',
+  vocabulary: 'nav.vocabulary',
+  grammar: 'nav.grammar',
 };
 
 const getCompetencyLabel = (score: number) => {
   if (score >= COMPETENCY_HIGH_THRESHOLD)
     return {
-      text: 'High Competency',
+      textKey: 'dashboard.highCompetency' as const,
       color: 'text-success dark:text-success',
     };
-  if (score >= COMPETENCY_GOOD_THRESHOLD) return { text: 'Good Progress', color: 'text-primary dark:text-primary' };
+  if (score >= COMPETENCY_GOOD_THRESHOLD)
+    return { textKey: 'dashboard.goodProgress' as const, color: 'text-primary dark:text-primary' };
   if (score >= COMPETENCY_DEVELOPING_THRESHOLD)
     return {
-      text: 'Developing',
+      textKey: 'dashboard.developing' as const,
       color: 'text-warning dark:text-warning',
     };
-  return { text: 'Beginner', color: 'text-error dark:text-error' };
+  return { textKey: 'dashboard.beginner' as const, color: 'text-error dark:text-error' };
 };
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const translate = useLocalizationStore((s) => s.translate);
   const currentUser = useAuthStore((state) => state.currentUser);
   const { profile, memory, missions, learningState } = useLearningCockpit(currentUser?.id);
   const mistakeLog = useLearningIntelligenceStore((state) => state.mistakeLog);
   const summary = ProgressService.getSummary(learningState);
+
+  const discipline: EngineeringDiscipline =
+    (profile?.discipline as EngineeringDiscipline) ?? 'electrical';
+  const disciplineMeta = DISCIPLINE_META[discipline];
+
+  const skillMeta = useMemo(() => {
+    const result = {} as Record<SkillName, { label: string; route: string; icon: typeof BookOpen }>;
+    for (const key of SKILL_NAMES) {
+      result[key] = {
+        label: translate(SKILL_I18N_KEYS[key]),
+        route: SKILL_ROUTES[key],
+        icon: SKILL_ICONS[key],
+      };
+    }
+    return result;
+  }, [translate]);
+
   const focusSkill = useMemo(
     () =>
       [...SKILL_NAMES]
@@ -68,7 +118,7 @@ const DashboardPage = () => {
         )[0],
     [profile]
   );
-  const focusMeta = SKILL_META[focusSkill.skill];
+  const focusMeta = skillMeta[focusSkill.skill];
   const primaryMission = missions[0];
   const reviewPriorities = useMemo(
     () =>
@@ -76,15 +126,18 @@ const DashboardPage = () => {
         weakWords: memory.weakWords,
         dueToday: memory.dueToday,
         mistakeLog,
-        focusSkill: { skill: focusSkill.skill, weaknessScore: focusSkill.weaknessScore, label: focusMeta.label },
+        focusSkill: {
+          skill: focusSkill.skill,
+          weaknessScore: focusSkill.weaknessScore,
+          label: focusMeta.label,
+        },
       }),
     [memory, mistakeLog, focusSkill, focusMeta]
   );
 
   const competency = getCompetencyLabel(summary.averageScore);
+  const competencyText = translate(competency.textKey);
   const userName = currentUser?.displayName || 'Engineer';
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
 
   const skillSparklineData = useMemo(() => {
     const result: Record<SkillName, number[]> = {} as Record<SkillName, number[]>;
@@ -115,21 +168,24 @@ const DashboardPage = () => {
   return (
     <div className="mx-auto w-full max-w-4xl animate-aurora-fade-in space-y-6 pb-8">
       <div className="sticky top-0 z-20 border-b border-border-soft bg-background/95 backdrop-blur-xl py-3.5 mb-6">
-        <h1 className="text-base font-bold tracking-tight text-foreground">Dashboard</h1>
+        <h1 className="text-base font-bold tracking-tight text-foreground">
+          {translate('dashboard.title')}
+        </h1>
       </div>
       <div className="space-y-6">
         <StreakFlameWidget streakDays={STREAK_DAYS} freezeAvailable={true} />
         <DailyGoalBar />
         <HeroPanel
           userName={userName}
-          greeting={greeting}
           summary={summary}
-          competency={competency}
+          competency={{ text: competencyText, color: competency.color }}
           primaryMission={primaryMission}
           focusMeta={focusMeta}
           focusSkill={focusSkill}
           focusLessonNumber={focusLessonNumber}
           onStartLesson={handleStartLesson}
+          disciplineLabel={translate(disciplineMeta.labelKey as any)}
+          disciplineWordCount={disciplineMeta.wordCount + 3088}
         />
         <div className="grid gap-6 md:grid-cols-2">
           <SkillRadarChart profile={profile} />
@@ -137,7 +193,7 @@ const DashboardPage = () => {
         </div>
         <ProgressCockpit
           skillNames={SKILL_NAMES}
-          skillMeta={SKILL_META}
+          skillMeta={skillMeta}
           profile={profile}
           skillSparklineData={skillSparklineData}
         />

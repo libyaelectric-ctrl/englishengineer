@@ -54,10 +54,15 @@ const uniqueTerms = (items: SelectedVocabularyTerm[]): SelectedVocabularyTerm[] 
   });
 };
 
-const isEligible = (term: VocabularyTerm, skill: SkillName, domain?: string): boolean =>
+const isEligible = (
+  term: VocabularyTerm,
+  skill: SkillName,
+  domain?: string,
+  allowedDomains?: string[]
+): boolean =>
   term.status === 'approved' &&
   term.skillUse.includes(skill) &&
-  (!domain || term.domain === domain);
+  (!domain ? !allowedDomains || allowedDomains.includes(term.domain) : term.domain === domain);
 
 const rankPreferredDomains = (
   terms: VocabularyTerm[],
@@ -141,7 +146,7 @@ export const LearningTaskEngine = {
     const currentLevel = getBaseCefrLevel(band);
     const stretchLevel = getBaseCefrLevel(getNextCefrBand(band));
     const memory = VocabularyMenuService.getState();
-    const preferredDomains = domain ? [] : getPreferredDomains(profile);
+    const preferredDomains = getPreferredDomains(profile);
     const memoryIds = Object.entries(memory.progress)
       .filter(([, progress]) => ['Learned', 'Mastered'].includes(progress.status))
       .map(([id]) => id);
@@ -152,14 +157,18 @@ export const LearningTaskEngine = {
     ]);
     const memoryTerms = known
       .filter((term): term is VocabularyTerm => Boolean(term))
-      .filter((term) => isEligible(term, skill, domain))
+      .filter((term) => isEligible(term, skill, domain, preferredDomains))
       .map((term) => ({ term, bucket: 'memory' as const }))
       .slice(0, 7);
     const currentNew = rankPreferredDomains(currentTerms, preferredDomains)
-      .filter((term) => isEligible(term, skill, domain) && !memory.progress[term.id])
+      .filter(
+        (term) => isEligible(term, skill, domain, preferredDomains) && !memory.progress[term.id]
+      )
       .map((term) => ({ term, bucket: 'current-new' as const }));
     const stretchNew = rankPreferredDomains(stretchTerms, preferredDomains)
-      .filter((term) => isEligible(term, skill, domain) && !memory.progress[term.id])
+      .filter(
+        (term) => isEligible(term, skill, domain, preferredDomains) && !memory.progress[term.id]
+      )
       .map((term) => ({ term, bucket: 'stretch' as const }));
     const currentPriority = currentNew.slice(0, 2);
     const priorityIds = new Set([
@@ -186,9 +195,10 @@ export const LearningTaskEngine = {
     const safeCefr = skillProfile.cefrBand;
     const stretchCefr = getNextCefrBand(safeCefr);
     const baseLevel = getBaseCefrLevel(safeCefr);
+    const domain = options.domain || profile.discipline;
     const [vocabularyFocus, selectedGrammar] = await Promise.all([
       this.selectTaskVocabulary(profile, skill, options.domain),
-      GrammarEngine.selectGrammarForTask(skill, baseLevel, TASK_TYPE[skill], options.domain),
+      GrammarEngine.selectGrammarForTask(skill, baseLevel, TASK_TYPE[skill], domain),
     ]);
     const grammarFocus = await resolveGrammarFocus(skill, baseLevel, selectedGrammar);
     const intelligence = LearningIntelligenceService.load();

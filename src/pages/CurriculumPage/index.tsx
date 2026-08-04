@@ -34,6 +34,12 @@ const CurriculumPage = () => {
   const weakestSkill = useMemo(() => LearningTaskEngine.getWeakestSkill(profile), [profile]);
   const [selectedSkill, setSelectedSkill] = useState<SkillName>('reading');
   const [domain, setDomain] = useState('All');
+
+  useEffect(() => {
+    if (profile?.discipline && domain === 'All') {
+      setDomain(profile.discipline);
+    }
+  }, [profile?.discipline]);
   const [recommendation, setRecommendation] = useState<LearningTaskRecommendation | null>(null);
   const [recommendationLoading, setRecommendationLoading] = useState(true);
   const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<UnifiedReviewItem[]>([]);

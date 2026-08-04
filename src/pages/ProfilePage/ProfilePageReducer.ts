@@ -39,7 +39,7 @@ export interface ProfileEditState {
   firstName: string;
   lastName: string;
   profession: string;
-  track: string;
+  discipline: string;
   subdomain: string;
   industry: string;
   lang: 'en' | 'tr';
@@ -51,7 +51,7 @@ type EditAction =
   | { type: 'SET_FIRST_NAME'; value: string }
   | { type: 'SET_LAST_NAME'; value: string }
   | { type: 'SET_PROFESSION'; value: string }
-  | { type: 'SET_TRACK'; value: string }
+  | { type: 'SET_DISCIPLINE'; value: string }
   | { type: 'SET_SUBDOMAIN'; value: string }
   | { type: 'SET_INDUSTRY'; value: string }
   | { type: 'SET_LANG'; value: 'en' | 'tr' }
@@ -62,7 +62,7 @@ const EDIT_FIELD_MAP: Partial<Record<EditAction['type'], keyof ProfileEditState>
   SET_FIRST_NAME: 'firstName',
   SET_LAST_NAME: 'lastName',
   SET_PROFESSION: 'profession',
-  SET_TRACK: 'track',
+  SET_DISCIPLINE: 'discipline',
   SET_SUBDOMAIN: 'subdomain',
   SET_INDUSTRY: 'industry',
   SET_LANG: 'lang',

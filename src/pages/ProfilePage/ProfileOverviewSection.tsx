@@ -5,11 +5,7 @@ import type { Achievement } from '@/core/learning/learning.types';
 import { SectionCard } from '@/shared/components/SectionCard';
 
 import type { UserLearningProfile } from '@/features/profile';
-import {
-  COMMUNICATION_GOALS,
-  PROFESSIONAL_TRACKS,
-  PROFESSIONS,
-} from '@/features/profile/profile.preferences';
+import { COMMUNICATION_GOALS, PROFESSIONS } from '@/features/profile/profile.preferences';
 
 interface ProfileOverviewSectionProps {
   currentUser: { displayName?: string; email?: string } | null;
@@ -20,7 +16,7 @@ interface ProfileOverviewSectionProps {
   editFirstName: string;
   editLastName: string;
   editProfession: string;
-  editTrack: string;
+  editDiscipline: string;
   editSubdomain: string;
   editIndustry: string;
   editLang: 'en' | 'tr';
@@ -108,10 +104,8 @@ const InfoGrid = ({
       code: 'ID-05',
     },
     {
-      label: 'Engineering Track',
-      value:
-        PROFESSIONAL_TRACKS.find((t) => t.id === profile.professionalTrack)?.label ||
-        'Electrical Engineering',
+      label: 'Engineering Discipline',
+      value: profile.discipline || 'Not Selected',
       icon: Layers,
       code: 'ID-06',
     },

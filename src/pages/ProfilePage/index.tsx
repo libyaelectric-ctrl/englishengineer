@@ -3,6 +3,8 @@ import { useState } from 'react';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import { ENGINEERING_DISCIPLINES } from '@/shared/constants/engineering-disciplines';
 
+import { useLocalizationStore } from '@/features/localization';
+import { LearningProfileRepository } from '@/features/profile';
 import { PROFESSIONS } from '@/features/profile/profile.preferences';
 
 import { LanguageDisciplineSection } from './LanguageDisciplineSection';
@@ -87,7 +89,7 @@ const ProfilePage = () => {
     editFirstName,
     editLastName,
     editProfession,
-    editTrack,
+    editDiscipline,
     editSubdomain,
     editIndustry,
     editLang,
@@ -128,9 +130,17 @@ const ProfilePage = () => {
       ENGINEERING_DISCIPLINES[0]
   );
   const [disciplineSaved, setDisciplineSaved] = useState(false);
+  const language = useLocalizationStore((s) => s.language);
 
   const handleDisciplineSave = () => {
     localStorage.setItem('preselected_discipline', discipline);
+    if (currentUser?.id) {
+      LearningProfileRepository.updatePreferences(currentUser.id, {
+        discipline,
+        professionalTrack: discipline as never,
+        interfaceLanguage: language as never,
+      });
+    }
     setDisciplineSaved(true);
     setTimeout(() => setDisciplineSaved(false), 2000);
   };
@@ -155,7 +165,7 @@ const ProfilePage = () => {
           editFirstName={editFirstName}
           editLastName={editLastName}
           editProfession={editProfession}
-          editTrack={editTrack}
+          editDiscipline={editDiscipline}
           editSubdomain={editSubdomain}
           editIndustry={editIndustry}
           editLang={editLang}

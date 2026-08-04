@@ -64,7 +64,7 @@ export function useVocabularyPage() {
     activeTab: 'New' as VocabularyMenuStatus,
     mode: 'Quiz' as VocabularySetMode,
     batchOffset: 0,
-    learningDomain: 'All',
+    learningDomain: learningProfile.discipline || 'All',
     showFilters: false,
     showAddForm: false,
     customDraft: {

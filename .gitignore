@@ -18,6 +18,8 @@ playwright-report/
 .env.*.local
 .env.vercel.*
 !.env.example
+!.scripts/.env.example
+!scripts/.env.example
 backend/.env
 backend/.env.local
 backend/.env.*.local
@@ -74,4 +76,10 @@ bundle-report.html
 # One-time analysis outputs
 analysis_output/
 *.py
+!.env.example
+!scripts/.env.example
+!scripts/translate-vocabulary-nllb.py
+!scripts/translate-grammar-deepl.py
+!scripts/requirements-translations.txt
 .env*
+!scripts/.env.example

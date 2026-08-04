@@ -1,23 +1,39 @@
+import { useLocalizationStore } from '@/features/localization';
 import type { SkillName, UserLearningProfile } from '@/features/profile';
 
 interface SkillRadarChartProps {
   profile: UserLearningProfile;
 }
 
-const SKILL_LABELS: { key: SkillName; label: string }[] = [
-  { key: 'vocabulary', label: 'Vocabulary' },
-  { key: 'grammar', label: 'Grammar' },
-  { key: 'reading', label: 'Reading' },
-  { key: 'writing', label: 'Writing' },
-  { key: 'listening', label: 'Listening' },
-  { key: 'speaking', label: 'Speaking' },
+const SKILL_I18N_KEYS: {
+  key: SkillName;
+  labelKey:
+    | 'nav.vocabulary'
+    | 'nav.grammar'
+    | 'nav.reading'
+    | 'nav.writing'
+    | 'nav.listening'
+    | 'nav.speaking';
+}[] = [
+  { key: 'vocabulary', labelKey: 'nav.vocabulary' },
+  { key: 'grammar', labelKey: 'nav.grammar' },
+  { key: 'reading', labelKey: 'nav.reading' },
+  { key: 'writing', labelKey: 'nav.writing' },
+  { key: 'listening', labelKey: 'nav.listening' },
+  { key: 'speaking', labelKey: 'nav.speaking' },
 ];
 
 export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
+  const translate = useLocalizationStore((s) => s.translate);
   const size = 260;
   const center = size / 2;
   const radius = 90;
-  const totalAxes = SKILL_LABELS.length;
+  const totalAxes = SKILL_I18N_KEYS.length;
+
+  const skillLabels = SKILL_I18N_KEYS.map((item) => ({
+    key: item.key,
+    label: translate(item.labelKey),
+  }));
 
   const getScore = (skillKey: SkillName): number => {
     const sp = profile.skills[skillKey];
@@ -35,7 +51,7 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
     return { x, y };
   };
 
-  const dataPoints = SKILL_LABELS.map((item, index) => {
+  const dataPoints = skillLabels.map((item, index) => {
     const score = getScore(item.key);
     return getCoordinates(index, score);
   });
@@ -48,14 +64,14 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
       <div className="flex w-full items-center justify-between border-b border-border-soft pb-3 mb-2">
         <div>
           <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            Competency Radar
+            {translate('dashboard.competencyRadar')}
           </h3>
           <p className="text-[11px] font-medium text-muted-copy">
-            6-Axis Technical Skill Footprint
+            {translate('dashboard.skillFootprint')}
           </p>
         </div>
         <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary uppercase tracking-wider">
-          CEFR Matched
+          {translate('dashboard.cefrMatched')}
         </span>
       </div>
 
@@ -65,13 +81,15 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
           height={size}
           className="overflow-visible"
           role="img"
-          aria-label={`Skill radar chart showing: ${SKILL_LABELS.map((item) => `${item.label} ${getScore(item.key)}%`).join(', ')}`}
+          aria-label={`Skill radar chart showing: ${skillLabels.map((item) => `${item.label} ${getScore(item.key)}%`).join(', ')}`}
         >
           {gridLevels.map((level) => {
-            const levelPoints = SKILL_LABELS.map((_, index) => {
-              const { x, y } = getCoordinates(index, level * 100);
-              return `${x},${y}`;
-            }).join(' ');
+            const levelPoints = skillLabels
+              .map((_, index) => {
+                const { x, y } = getCoordinates(index, level * 100);
+                return `${x},${y}`;
+              })
+              .join(' ');
             return (
               <polygon
                 key={level}
@@ -83,7 +101,7 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
             );
           })}
 
-          {SKILL_LABELS.map((_, index) => {
+          {skillLabels.map((_, index) => {
             const { x, y } = getCoordinates(index, 100);
             return (
               <line
@@ -104,7 +122,7 @@ export const SkillRadarChart = ({ profile }: SkillRadarChartProps) => {
             strokeWidth="2"
           />
 
-          {SKILL_LABELS.map((item, index) => {
+          {skillLabels.map((item, index) => {
             const score = getScore(item.key);
             const point = getCoordinates(index, score);
             const labelCoord = getCoordinates(index, 118);

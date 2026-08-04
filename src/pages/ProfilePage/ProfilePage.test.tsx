@@ -22,7 +22,7 @@ vi.mock('./useProfilePage', () => ({
     editFirstName: '',
     editLastName: '',
     editProfession: '',
-    editTrack: '',
+    editDiscipline: '',
     editSubdomain: '',
     editIndustry: '',
     editLang: '',

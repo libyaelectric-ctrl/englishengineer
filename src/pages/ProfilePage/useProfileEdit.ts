@@ -26,7 +26,7 @@ const buildEditValues = (displayName: string | undefined, profile: UserLearningP
     return {
       ...name,
       profession: '',
-      track: ENGINEERING_DISCIPLINES[0],
+      discipline: ENGINEERING_DISCIPLINES[0],
       subdomain: 'low-voltage',
       industry: '',
       lang: 'en' as const,
@@ -37,7 +37,7 @@ const buildEditValues = (displayName: string | undefined, profile: UserLearningP
     firstName: name.firstName,
     lastName: name.lastName,
     profession: profile.professionId ?? '',
-    track: profile.professionalTrack ?? ENGINEERING_DISCIPLINES[0],
+    discipline: profile.discipline ?? ENGINEERING_DISCIPLINES[0],
     subdomain: profile.electricalSubdomain ?? 'low-voltage',
     industry: profile.industryId ?? '',
     lang: (profile.interfaceLanguage ?? 'en') as 'en' | 'tr',
@@ -59,7 +59,7 @@ export const useProfileEdit = (
     firstName: '',
     lastName: '',
     profession: '',
-    track: '',
+    discipline: '',
     subdomain: '',
     industry: '',
     lang: 'en' as 'en' | 'tr',
@@ -71,7 +71,7 @@ export const useProfileEdit = (
     firstName: editFirstName,
     lastName: editLastName,
     profession: editProfession,
-    track: editTrack,
+    discipline: editDiscipline,
     subdomain: editSubdomain,
     industry: editIndustry,
     lang: editLang,
@@ -82,7 +82,7 @@ export const useProfileEdit = (
   const setEditFirstName = (v: string) => dispatchEdit({ type: 'SET_FIRST_NAME', value: v });
   const setEditLastName = (v: string) => dispatchEdit({ type: 'SET_LAST_NAME', value: v });
   const setEditProfession = (v: string) => dispatchEdit({ type: 'SET_PROFESSION', value: v });
-  const setEditTrack = (v: string) => dispatchEdit({ type: 'SET_TRACK', value: v });
+  const setEditDiscipline = (v: string) => dispatchEdit({ type: 'SET_DISCIPLINE', value: v });
   const setEditSubdomain = (v: string) => dispatchEdit({ type: 'SET_SUBDOMAIN', value: v });
   const setEditIndustry = (v: string) => dispatchEdit({ type: 'SET_INDUSTRY', value: v });
   const setEditLang = (v: 'en' | 'tr') => dispatchEdit({ type: 'SET_LANG', value: v });
@@ -93,7 +93,7 @@ export const useProfileEdit = (
     setEditFirstName(values.firstName);
     setEditLastName(values.lastName);
     setEditProfession(values.profession);
-    setEditTrack(values.track);
+    setEditDiscipline(values.discipline);
     setEditSubdomain(values.subdomain);
     setEditIndustry(values.industry);
     setEditLang(values.lang);
@@ -106,8 +106,10 @@ export const useProfileEdit = (
   const savePreferences = (userId: string) => {
     LearningProfileRepository.updatePreferences(userId, {
       professionId: (editProfession as ProfessionId) || null,
+      discipline:
+        (editDiscipline as UserLearningProfile['discipline']) || ENGINEERING_DISCIPLINES[0],
       professionalTrack:
-        (editTrack as UserLearningProfile['professionalTrack']) || ENGINEERING_DISCIPLINES[0],
+        (editDiscipline as UserLearningProfile['professionalTrack']) || ENGINEERING_DISCIPLINES[0],
       electricalSubdomain:
         (editSubdomain as UserLearningProfile['electricalSubdomain']) || 'low-voltage',
       industryId: (editIndustry as UserLearningProfile['industryId']) || null,
@@ -141,7 +143,7 @@ export const useProfileEdit = (
     editFirstName,
     editLastName,
     editProfession,
-    editTrack,
+    editDiscipline,
     editSubdomain,
     editIndustry,
     editLang,
@@ -149,7 +151,7 @@ export const useProfileEdit = (
     setEditFirstName,
     setEditLastName,
     setEditProfession,
-    setEditTrack,
+    setEditDiscipline,
     setEditSubdomain,
     setEditIndustry,
     setEditLang,

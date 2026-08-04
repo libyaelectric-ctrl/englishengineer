@@ -91,7 +91,7 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
         )}
 
         <div className="flex items-center gap-2.5">
-          {/* 15 Language Quick Switcher Dropdown */}
+          {/* Language Quick Switcher — between logo and theme toggle */}
           <div className="relative group">
             <div className="flex items-center gap-1 rounded border border-border-soft bg-surface px-2 py-1.5 text-xs font-medium text-foreground cursor-pointer hover:border-primary/40 transition-colors">
               <span className="text-sm leading-none">{currentLangOption.flag}</span>
@@ -100,7 +100,7 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
               </span>
               <Globe className="h-3.5 w-3.5 text-muted-copy ml-0.5" />
             </div>
-            <div className="absolute right-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
+            <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
               {INTERFACE_LANGUAGES.map((lang) => (
                 <button
                   key={lang.id}
@@ -118,17 +118,6 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
             </div>
           </div>
 
-          {isAuthPage && onDemoClick && (
-            <button
-              onClick={onDemoClick}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm"
-              title="Launch Instant Demo Workspace"
-            >
-              <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-              <span>Try Demo</span>
-            </button>
-          )}
-
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="inline-flex h-9 w-9 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
@@ -142,13 +131,24 @@ export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
             )}
           </button>
 
+          {isAuthPage && onDemoClick && (
+            <button
+              onClick={onDemoClick}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm"
+              title="Launch Instant Demo Workspace"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
+              <span>Try Demo</span>
+            </button>
+          )}
+
           {!isAuthPage && (
             <>
               <Link
                 to="/login"
                 className="inline-flex items-center rounded border border-border-soft bg-surface px-3 sm:px-4 py-2 text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-sm"
               >
-                Log in
+                {translate('common.login') || 'Log in'}
               </Link>
               <Link
                 to="/signup"

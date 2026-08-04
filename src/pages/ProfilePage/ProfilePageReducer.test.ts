@@ -22,7 +22,7 @@ const initialEdit: ProfileEditState = {
   firstName: '',
   lastName: '',
   profession: '',
-  track: '',
+  discipline: '',
   subdomain: '',
   industry: '',
   lang: 'en',
