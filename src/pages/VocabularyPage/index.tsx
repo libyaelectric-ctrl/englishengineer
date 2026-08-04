@@ -2,6 +2,8 @@ import { CheckCircle2 } from 'lucide-react';
 
 import { SectionCard } from '@/shared/components/SectionCard';
 
+import { useLocalizationStore } from '@/features/localization';
+
 import { MasteredHeatmap } from './components/MasteredHeatmap';
 import { QuizSection } from './components/QuizSection';
 import { SearchModal } from './components/SearchModal';
@@ -11,6 +13,7 @@ import { WordSetSection } from './components/WordSetSection';
 import { useVocabularyPage } from './hooks/useVocabularyPage';
 
 const VocabularyPage = () => {
+  const translate = useLocalizationStore((s) => s.translate);
   const {
     vocabularyLevel,
     loadError,
@@ -121,8 +124,8 @@ const VocabularyPage = () => {
 
         {activeTab === 'Mastered' && (
           <SectionCard
-            title="Mastered Words Activity"
-            subtitle="Your learning activity over the last 12 weeks"
+            title={translate('vocabulary.masteredActivity')}
+            subtitle={translate('vocabulary.masteredActivityDesc')}
             icon={CheckCircle2}
           >
             <MasteredHeatmap menuState={menuState} />
