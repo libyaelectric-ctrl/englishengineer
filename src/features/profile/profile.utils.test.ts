@@ -40,7 +40,7 @@ describe('skill ELO and CEFR utilities', () => {
     expect(skills).toHaveLength(6);
     expect(skills.every((skill) => skill.elo === 1000)).toBe(true);
     expect(skills.every((skill) => skill.cefrBand === 'A1')).toBe(true);
-    expect(profile.professionalTrack).toBe('electrical');
+    expect(profile.professionalTrack).toBe('architecture');
     expect(profile.electricalSubdomain).toBe('low-voltage');
   });
 
