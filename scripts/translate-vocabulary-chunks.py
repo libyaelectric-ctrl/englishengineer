@@ -4,12 +4,14 @@ EngVox Vocabulary Translation Pipeline (chunk-based, resumable)
 Translates the full vocabulary corpus (14k+ words) into 14 target languages
 via small chunks that can be processed by:
   - DeepL API (automatic)          -> mode: deepl
+  - Azure Translator (automatic)   -> mode: azure
+  - Yandex Translate (automatic)   -> mode: yandex
   - another AI / human translator  -> mode: extract (hand chunks out, merge results)
 
 Data flow:
   data/canonical/vocabulary/vocabulary.normalized.json   (source, 14199 terms)
     -> extract  -> data/translations/chunks/chunk-NNN.json
-    -> translate (DeepL or external AI)
+    -> translate (DeepL, Azure, Yandex, or external AI)
     -> results  -> data/translations/results/chunk-NNN.<lang>.json
     -> merge    -> data/translations/vocabulary-translations.json
 
@@ -18,6 +20,10 @@ Usage:
   python scripts/translate-vocabulary-chunks.py extract --priority p1 --chunk-size 300
   python scripts/translate-vocabulary-chunks.py deepl --chunk 001 --lang tr
   python scripts/translate-vocabulary-chunks.py deepl --chunk 001 --lang all
+  python scripts/translate-vocabulary-chunks.py azure --chunk 001 --lang tr
+  python scripts/translate-vocabulary-chunks.py azure --chunk 001 --lang all
+  python scripts/translate-vocabulary-chunks.py yandex --chunk 001 --lang tr
+  python scripts/translate-vocabulary-chunks.py yandex --chunk 001 --lang all
   python scripts/translate-vocabulary-chunks.py merge
   python scripts/translate-vocabulary-chunks.py validate --file data/translations/results/chunk-001.ar.json
 
@@ -47,6 +53,20 @@ DEEPL_LANGUAGES = {
     "tr": "TR", "ar": "AR", "de": "DE", "es": "ES", "pt": "PT-BR",
     "fr": "FR", "ru": "RU", "zh": "ZH", "ja": "JA", "it": "IT",
     "vi": "VI", "pl": "PL", "id": "ID", "nl": "NL",
+}
+
+# Azure Translator language codes
+AZURE_LANGUAGES = {
+    "tr": "tr", "ar": "ar", "de": "de", "es": "es", "pt": "pt-BR",
+    "fr": "fr", "ru": "ru", "zh": "zh-Hans", "ja": "ja", "it": "it",
+    "vi": "vi", "pl": "pl", "id": "id", "nl": "nl",
+}
+
+# Yandex Translate language codes
+YANDEX_LANGUAGES = {
+    "tr": "tr", "ar": "ar", "de": "de", "es": "es", "pt": "pt",
+    "fr": "fr", "ru": "ru", "zh": "zh", "ja": "ja", "it": "it",
+    "vi": "vi", "pl": "pl", "id": "id", "nl": "nl",
 }
 
 BATCH_SEP = "\n|||SEP|||\n"
@@ -190,10 +210,172 @@ def cmd_deepl(args):
             print(f"[{lang}] {out_path.name} exists, skip (--force to redo)")
             continue
         deepl_lang = DEEPL_LANGUAGES[lang]
+        if lang == "tr":
+            # Turkish is the source language for meanings: no API call needed.
+            result = {
+                c["term"]: {
+                    "meaning": c["meaning_tr"],
+                    "definition": c["definition_en"],
+                    "example": c["example_en"],
+                }
+                for c in chunk
+            }
+        else:
+            # meanings: TR -> target ; definitions/examples: EN -> target (unless --meanings-only)
+            meanings = batch_translate(translator, [c["meaning_tr"] for c in chunk], deepl_lang, "TR")
+            if getattr(args, "meanings_only", False):
+                defs = [c["definition_en"] for c in chunk]
+                exs = [c["example_en"] for c in chunk]
+            else:
+                defs = batch_translate(translator, [c["definition_en"] for c in chunk], deepl_lang, "EN")
+                exs = batch_translate(translator, [c["example_en"] for c in chunk], deepl_lang, "EN")
+            result = {
+                chunk[i]["term"]: {"meaning": meanings[i], "definition": defs[i], "example": exs[i]}
+                for i in range(len(chunk))
+            }
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=1)
+        print(f"[{lang}] wrote {out_path.name} ({len(result)} terms)")
+
+
+def azure_batch_translate(texts, target_lang, source_lang, api_key, region):
+    """Translate a batch of texts using Azure Translator REST API."""
+    import requests
+    import uuid
+
+    non_empty = [(i, t) for i, t in enumerate(texts) if t and t.strip()]
+    if not non_empty:
+        return texts[:]
+
+    # Azure Translator API endpoint
+    endpoint = f"https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from={source_lang}&to={target_lang}"
+
+    headers = {
+        "Ocp-Apim-Subscription-Key": api_key,
+        "Ocp-Apim-Subscription-Region": region,
+        "Content-Type": "application/json",
+        "X-ClientTraceId": str(uuid.uuid4()),
+    }
+
+    body = [{"text": t} for _, t in non_empty]
+
+    response = requests.post(endpoint, headers=headers, json=body, timeout=60)
+    response.raise_for_status()
+    results = response.json()
+
+    out = texts[:]
+    for idx, (orig_i, _) in enumerate(non_empty):
+        if idx < len(results) and results[idx].get("translations"):
+            out[orig_i] = results[idx]["translations"][0]["text"].strip()
+    return out
+
+
+def cmd_azure(args):
+    import requests
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    api_key = os.getenv("AZURE_TRANSLATOR_KEY")
+    region = os.getenv("AZURE_TRANSLATOR_REGION")
+    if not api_key or not region:
+        print("Error: set AZURE_TRANSLATOR_KEY and AZURE_TRANSLATOR_REGION in .env")
+        sys.exit(1)
+
+    chunk_path = CHUNKS_DIR / f"chunk-{args.chunk}.json"
+    if not chunk_path.exists():
+        print(f"Error: {chunk_path} not found (run extract first)")
+        sys.exit(1)
+    chunk = json.load(open(chunk_path, encoding="utf-8"))
+    langs = TARGET_LANGUAGES if args.lang == "all" else [args.lang]
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    for lang in langs:
+        out_path = RESULTS_DIR / f"chunk-{args.chunk}.{lang}.json"
+        if out_path.exists() and not args.force:
+            print(f"[{lang}] {out_path.name} exists, skip (--force to redo)")
+            continue
+        azure_lang = AZURE_LANGUAGES[lang]
         # meanings: TR -> target ; definitions/examples: EN -> target
-        meanings = batch_translate(translator, [c["meaning_tr"] for c in chunk], deepl_lang, "TR")
-        defs = batch_translate(translator, [c["definition_en"] for c in chunk], deepl_lang, "EN")
-        exs = batch_translate(translator, [c["example_en"] for c in chunk], deepl_lang, "EN")
+        meanings = azure_batch_translate([c["meaning_tr"] for c in chunk], azure_lang, "tr", api_key, region)
+        defs = azure_batch_translate([c["definition_en"] for c in chunk], azure_lang, "en", api_key, region)
+        exs = azure_batch_translate([c["example_en"] for c in chunk], azure_lang, "en", api_key, region)
+        result = {
+            chunk[i]["term"]: {"meaning": meanings[i], "definition": defs[i], "example": exs[i]}
+            for i in range(len(chunk))
+        }
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=1)
+        print(f"[{lang}] wrote {out_path.name} ({len(result)} terms)")
+
+
+def yandex_batch_translate(texts, target_lang, source_lang, api_key):
+    """Translate a batch of texts using Yandex Translate API v1.5 (legacy)."""
+    import requests
+
+    non_empty = [(i, t) for i, t in enumerate(texts) if t and t.strip()]
+    if not non_empty:
+        return texts[:]
+
+    # Yandex Translate API v1.5 endpoint (legacy)
+    endpoint = "https://translate.yandex.net/api/v1.5/tr.json/translate"
+
+    # lang format: "source-target" (e.g., "tr-de")
+    lang_pair = f"{source_lang}-{target_lang}"
+
+    # Join texts with a delimiter that won't appear in translations
+    joined = BATCH_SEP.join(t for _, t in non_empty)
+
+    data = {
+        "key": api_key,
+        "text": joined,
+        "lang": lang_pair,
+    }
+
+    response = requests.post(endpoint, data=data, timeout=60)
+    response.raise_for_status()
+    results = response.json()
+
+    if results.get("code") != 200:
+        raise Exception(f"Yandex API error: {results.get('message', 'Unknown error')}")
+
+    translated_texts = results.get("text", [""])
+    parts = translated_texts[0].split("|||SEP|||")
+
+    out = texts[:]
+    for idx, (orig_i, _) in enumerate(non_empty):
+        if idx < len(parts):
+            out[orig_i] = parts[idx].strip()
+    return out
+
+
+def cmd_yandex(args):
+    import requests
+    from dotenv import load_dotenv
+
+    load_dotenv()
+    api_key = os.getenv("YANDEX_API_KEY")
+    if not api_key:
+        print("Error: set YANDEX_API_KEY in .env")
+        sys.exit(1)
+
+    chunk_path = CHUNKS_DIR / f"chunk-{args.chunk}.json"
+    if not chunk_path.exists():
+        print(f"Error: {chunk_path} not found (run extract first)")
+        sys.exit(1)
+    chunk = json.load(open(chunk_path, encoding="utf-8"))
+    langs = TARGET_LANGUAGES if args.lang == "all" else [args.lang]
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+
+    for lang in langs:
+        out_path = RESULTS_DIR / f"chunk-{args.chunk}.{lang}.json"
+        if out_path.exists() and not args.force:
+            print(f"[{lang}] {out_path.name} exists, skip (--force to redo)")
+            continue
+        yandex_lang = YANDEX_LANGUAGES[lang]
+        # meanings: TR -> target ; definitions/examples: EN -> target
+        meanings = yandex_batch_translate([c["meaning_tr"] for c in chunk], yandex_lang, "tr", api_key)
+        defs = yandex_batch_translate([c["definition_en"] for c in chunk], yandex_lang, "en", api_key)
+        exs = yandex_batch_translate([c["example_en"] for c in chunk], yandex_lang, "en", api_key)
         result = {
             chunk[i]["term"]: {"meaning": meanings[i], "definition": defs[i], "example": exs[i]}
             for i in range(len(chunk))
@@ -287,6 +469,21 @@ def main():
     p.add_argument("--chunk", required=True, help="chunk number, e.g. 001")
     p.add_argument("--lang", required=True, help="target lang code or 'all'")
     p.add_argument("--force", action="store_true")
+    p.add_argument(
+        "--meanings-only",
+        action="store_true",
+        help="translate only meanings (quota saver); keep EN definition/example",
+    )
+
+    p = sub.add_parser("azure")
+    p.add_argument("--chunk", required=True, help="chunk number, e.g. 001")
+    p.add_argument("--lang", required=True, help="target lang code or 'all'")
+    p.add_argument("--force", action="store_true")
+
+    p = sub.add_parser("yandex")
+    p.add_argument("--chunk", required=True, help="chunk number, e.g. 001")
+    p.add_argument("--lang", required=True, help="target lang code or 'all'")
+    p.add_argument("--force", action="store_true")
 
     p = sub.add_parser("validate")
     p.add_argument("--file", required=True)
@@ -294,7 +491,7 @@ def main():
     sub.add_parser("merge")
 
     args = parser.parse_args()
-    {"stats": cmd_stats, "extract": cmd_extract, "deepl": cmd_deepl,
+    {"stats": cmd_stats, "extract": cmd_extract, "deepl": cmd_deepl, "azure": cmd_azure, "yandex": cmd_yandex,
      "validate": cmd_validate, "merge": cmd_merge}[args.cmd](args)
 
 
