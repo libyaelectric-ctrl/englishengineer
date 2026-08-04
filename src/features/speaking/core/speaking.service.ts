@@ -3,6 +3,8 @@ import { ErrorCode } from '@/core/errors/error-codes';
 import { eventBus } from '@/core/events/event-bus';
 import { useLearningStore } from '@/core/learning';
 
+import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
@@ -43,18 +45,23 @@ export const SpeakingService = {
     storage.set(STORAGE_KEY, state);
   },
 
-  getMissions(): SpeakingMission[] {
-    return SPEAKING_MISSIONS;
+  getMissions(userDiscipline?: EngineeringDiscipline): SpeakingMission[] {
+    if (!userDiscipline) return SPEAKING_MISSIONS;
+    return filterMissionsByDiscipline(SPEAKING_MISSIONS, userDiscipline);
   },
 
   /**
    * Returns missions sorted by how many pool words appear in their prompt/keywords.
    * Missions with more pool-word hits appear first.
    */
-  getMissionsSortedByPool(pool: string[]): SpeakingMission[] {
-    if (pool.length === 0) return SPEAKING_MISSIONS;
+  getMissionsSortedByPool(
+    pool: string[],
+    userDiscipline?: EngineeringDiscipline
+  ): SpeakingMission[] {
+    const missions = this.getMissions(userDiscipline);
+    if (pool.length === 0) return missions;
     const poolSet = new Set(pool.map((w) => w.toLowerCase()));
-    return [...SPEAKING_MISSIONS].sort((a, b) => {
+    return [...missions].sort((a, b) => {
       const aText = `${a.promptText} ${a.expectedKeywords.join(' ')}`.toLowerCase();
       const bText = `${b.promptText} ${b.expectedKeywords.join(' ')}`.toLowerCase();
       let aCount = 0;

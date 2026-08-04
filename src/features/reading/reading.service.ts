@@ -6,6 +6,8 @@ import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
 import { useLearningStore } from '@/core/learning';
 
+import { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
+import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { storage } from '@/shared/storage';
 
 import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
@@ -64,14 +66,19 @@ export const ReadingService = {
   },
 
   /**
-   * Retrieves all available reading missions.
+   * Retrieves all available reading missions, optionally filtered by discipline.
    */
-  getMissions(): ReadingMission[] {
-    return getReadingCatalog();
+  getMissions(userDiscipline?: EngineeringDiscipline): ReadingMission[] {
+    const all = getReadingCatalog();
+    if (!userDiscipline) return all;
+    return filterMissionsByDiscipline(all, userDiscipline);
   },
 
-  getMissionsSortedByPoolRatio(pool: KnowledgePoolEntry[] = []): ReadingMission[] {
-    return sortContentByPoolRatio(this.getMissions(), pool);
+  getMissionsSortedByPoolRatio(
+    pool: KnowledgePoolEntry[] = [],
+    userDiscipline?: EngineeringDiscipline
+  ): ReadingMission[] {
+    return sortContentByPoolRatio(this.getMissions(userDiscipline), pool);
   },
 
   /**
