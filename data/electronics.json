@@ -1,0 +1,322 @@
+[
+  {
+    "id": "electronics_a2_resistor",
+    "title": "Reading a Resistor Label",
+    "description": "A short inspection note about identifying resistors on a PCB.",
+    "discipline": "Electronics Engineering",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 6,
+    "passageText": "PCB Inspection Note – Unit 04\n\nThis board has ten resistors. Each resistor has a label. The label shows the resistance value in ohms. For example, R3 is 100 ohms and R7 is 470 ohms. A resistor limits the flow of current in a circuit. If the value is too low, too much current flows and the component can burn. If the value is too high, the circuit does not work well. Always check the label before you place a resistor on the board. Use a multimeter to measure the value and confirm it is correct. Write the result in the inspection log.",
+    "vocabulary": [
+      {
+        "term": "resistor",
+        "definition": "A component that limits electric current in a circuit.",
+        "context": "Each resistor has a label.",
+        "turkishTranslation": "direnç"
+      },
+      {
+        "term": "ohm",
+        "definition": "The unit used to measure electrical resistance.",
+        "context": "The label shows the resistance value in ohms.",
+        "turkishTranslation": "ohm"
+      },
+      {
+        "term": "current",
+        "definition": "The flow of electric charge through a conductor.",
+        "context": "A resistor limits the flow of current in a circuit.",
+        "turkishTranslation": "akım"
+      },
+      {
+        "term": "multimeter",
+        "definition": "A tool used to measure voltage, current, and resistance.",
+        "context": "Use a multimeter to measure the value and confirm it is correct.",
+        "turkishTranslation": "multimetre"
+      },
+      {
+        "term": "inspection log",
+        "definition": "A written record of checks done during quality control.",
+        "context": "Write the result in the inspection log.",
+        "turkishTranslation": "denetim kaydı"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What does a resistor do in a circuit?",
+        "choices": [
+          "A) It stores electric charge.",
+          "B) It limits the flow of current.",
+          "C) It increases the voltage.",
+          "D) It measures resistance."
+        ],
+        "correctAnswer": "B",
+        "explanation": "The passage states: 'A resistor limits the flow of current in a circuit.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "If the resistance value is too high, the circuit does not work well.",
+        "correctAnswer": "true",
+        "explanation": "The passage states: 'If the value is too high, the circuit does not work well.'"
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "What tool should you use to measure the resistance value of a component?",
+        "keywords": ["multimeter"],
+        "correctAnswer": "A multimeter.",
+        "explanation": "The passage says: 'Use a multimeter to measure the value and confirm it is correct.'"
+      }
+    ],
+    "xpReward": 40,
+    "coinReward": 15,
+    "eloReward": 12,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "electronics_b1_soldering",
+    "title": "Soldering Procedure for Through-Hole Components",
+    "description": "A step-by-step soldering procedure document for through-hole PCB assembly.",
+    "discipline": "Electronics Engineering",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 9,
+    "passageText": "Soldering Procedure – Rev 2.1\nDepartment: PCB Assembly\n\nThis procedure describes the correct method for soldering through-hole components onto a printed circuit board (PCB). Before you begin, make sure the soldering iron is set to 350 °C. A temperature that is too high can damage the component or lift the copper pad from the board.\n\nStep 1: Insert the component leads through the correct holes on the PCB. Bend the leads slightly on the underside to hold the component in place.\n\nStep 2: Touch the soldering iron tip to the junction of the lead and the pad. Heat the joint for two seconds before you apply solder.\n\nStep 3: Apply solder wire to the joint, not to the iron. The solder should flow smoothly around the pad. A good solder joint looks shiny and has a volcano shape.\n\nStep 4: Remove the iron and allow the joint to cool for five seconds. Do not move the component during this time.\n\nIf the joint looks dull or grainy, it is a cold solder joint and must be redone. After completing all joints, inspect the board visually before testing.",
+    "vocabulary": [
+      {
+        "term": "through-hole",
+        "definition": "A mounting method where component leads pass through holes drilled in the PCB.",
+        "context": "This procedure describes the correct method for soldering through-hole components onto a printed circuit board (PCB).",
+        "turkishTranslation": "delikten geçirmeli"
+      },
+      {
+        "term": "copper pad",
+        "definition": "A small area of copper on a PCB surface used to solder a component lead.",
+        "context": "A temperature that is too high can damage the component or lift the copper pad from the board.",
+        "turkishTranslation": "bakır ped"
+      },
+      {
+        "term": "solder joint",
+        "definition": "The point where solder connects a component lead to the PCB pad.",
+        "context": "A good solder joint looks shiny and has a volcano shape.",
+        "turkishTranslation": "lehim noktası"
+      },
+      {
+        "term": "cold solder joint",
+        "definition": "A defective solder connection that appears dull and has poor electrical contact.",
+        "context": "If the joint looks dull or grainy, it is a cold solder joint and must be redone.",
+        "turkishTranslation": "soğuk lehim"
+      },
+      {
+        "term": "junction",
+        "definition": "The point where two surfaces or conductors meet.",
+        "context": "Touch the soldering iron tip to the junction of the lead and the pad.",
+        "turkishTranslation": "birleşim noktası"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "According to the procedure, where should you apply the solder wire?",
+        "choices": [
+          "A) Directly to the soldering iron tip.",
+          "B) To the top of the component body.",
+          "C) To the joint between the lead and the pad.",
+          "D) To the underside of the PCB only."
+        ],
+        "correctAnswer": "C",
+        "explanation": "The procedure states: 'Apply solder wire to the joint, not to the iron.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "A good solder joint appears dull and grainy after cooling.",
+        "correctAnswer": "false",
+        "explanation": "The passage says a good joint 'looks shiny and has a volcano shape.' A dull, grainy joint is a cold solder joint."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "What temperature should the soldering iron be set to before beginning?",
+        "keywords": ["350", "350 °C", "350°C"],
+        "correctAnswer": "350 °C",
+        "explanation": "The procedure specifies: 'make sure the soldering iron is set to 350 °C.'"
+      }
+    ],
+    "xpReward": 45,
+    "coinReward": 18,
+    "eloReward": 13,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "electronics_b2_oscilloscope",
+    "title": "Oscilloscope Reading Log – Signal Analysis",
+    "description": "An oscilloscope reading log used to analyze waveform anomalies in a power supply circuit.",
+    "discipline": "Electronics Engineering",
+    "cefrLevel": "B2",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 11,
+    "passageText": "Oscilloscope Reading Log\nDate: 2026-07-28 | Engineer: M. Arslan | Unit: PSU-07\n\nPurpose: Verify output voltage waveform stability on the 12 V DC rail of power supply unit PSU-07 following a reported intermittent shutdown fault.\n\nTest Setup: A Tektronix TDS2024C oscilloscope was connected across the output terminals using 10× probe attenuation. The time base was set to 5 ms/div and the vertical scale to 500 mV/div.\n\nObservations: The nominal output was measured at 11.94 V, which is within the ±2% tolerance specified in the datasheet. However, high-frequency ripple was observed at approximately 120 Hz, with a peak-to-peak amplitude of 180 mV. This exceeds the maximum allowable ripple of 100 mV stated in the component specification. Additionally, irregular voltage spikes of up to 380 mV were captured during load transitions, suggesting inadequate bulk capacitance or a failing electrolytic capacitor on the output stage.\n\nConclusion: The unit fails the ripple voltage criterion. It is recommended that C12 (1000 µF, 25 V electrolytic) be replaced and the test repeated. The unit should not be returned to service until it passes re-inspection.",
+    "vocabulary": [
+      {
+        "term": "ripple",
+        "definition": "Residual periodic variation in DC voltage output caused by incomplete smoothing.",
+        "context": "High-frequency ripple was observed at approximately 120 Hz, with a peak-to-peak amplitude of 180 mV.",
+        "turkishTranslation": "dalgalanma (ripple)"
+      },
+      {
+        "term": "probe attenuation",
+        "definition": "A reduction factor applied by the oscilloscope probe to scale down the measured voltage.",
+        "context": "A Tektronix TDS2024C oscilloscope was connected across the output terminals using 10× probe attenuation.",
+        "turkishTranslation": "prob zayıflaması"
+      },
+      {
+        "term": "peak-to-peak amplitude",
+        "definition": "The total vertical distance between the highest and lowest points of a waveform.",
+        "context": "High-frequency ripple was observed at approximately 120 Hz, with a peak-to-peak amplitude of 180 mV.",
+        "turkishTranslation": "tepeden tepeye genlik"
+      },
+      {
+        "term": "bulk capacitance",
+        "definition": "Large-value capacitance used to smooth and stabilize DC power supply output voltage.",
+        "context": "Irregular voltage spikes of up to 380 mV were captured during load transitions, suggesting inadequate bulk capacitance or a failing electrolytic capacitor on the output stage.",
+        "turkishTranslation": "toplu kapasitans"
+      },
+      {
+        "term": "load transition",
+        "definition": "A sudden change in the current drawn by a circuit from its power supply.",
+        "context": "Irregular voltage spikes of up to 380 mV were captured during load transitions.",
+        "turkishTranslation": "yük geçişi"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "Why does the engineer conclude that PSU-07 fails the test?",
+        "choices": [
+          "A) The nominal output voltage is outside the ±2% tolerance.",
+          "B) The ripple voltage exceeds the 100 mV maximum allowable limit.",
+          "C) The oscilloscope probe attenuation was set incorrectly.",
+          "D) The unit did not power on during testing."
+        ],
+        "correctAnswer": "B",
+        "explanation": "The log states the ripple amplitude was 180 mV, which 'exceeds the maximum allowable ripple of 100 mV stated in the component specification.'"
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The measured output voltage of 11.94 V is within the ±2% tolerance specified in the datasheet.",
+        "correctAnswer": "true",
+        "explanation": "The log states: 'The nominal output was measured at 11.94 V, which is within the ±2% tolerance specified in the datasheet.'"
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "Which specific component does the engineer recommend replacing to fix the ripple issue?",
+        "keywords": ["C12", "electrolytic", "capacitor"],
+        "correctAnswer": "C12 (1000 µF, 25 V electrolytic capacitor)",
+        "explanation": "The conclusion states: 'It is recommended that C12 (1000 µF, 25 V electrolytic) be replaced and the test repeated.'"
+      }
+    ],
+    "xpReward": 50,
+    "coinReward": 20,
+    "eloReward": 14,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "electronics_c1_emc",
+    "title": "EMC Pre-Compliance Test Summary Report",
+    "description": "An EMC pre-compliance test summary evaluating radiated emissions against CISPR 32 limits.",
+    "discipline": "Electronics Engineering",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 13,
+    "passageText": "EMC Pre-Compliance Test Summary\nDocument No.: EMC-RPT-2026-041 | Revision: A\nProduct: IoT Gateway Module – Model GW-300\nTest Facility: Internal RF Anechoic Chamber\nEngineer: Dr. S. Yıldız | Date: 2026-07-30\n\n1. Scope\nThis report summarises the results of radiated emissions pre-compliance testing conducted on the GW-300 IoT Gateway Module in accordance with CISPR 32:2015, Class B limits. Testing was performed to identify potential non-conformances prior to submission for formal third-party certification. Should any emission levels be found to exceed the applicable limits, corrective action shall be implemented before the certification campaign proceeds.\n\n2. Test Configuration\nThe device under test (DUT) was operated in its maximum emissions state, with all wireless interfaces active and continuous data throughput at 100 Mbps via the Ethernet port. Measurements were conducted at a 3-metre test distance using a biconical antenna for the 30–300 MHz range and a log-periodic antenna for the 300 MHz–1 GHz range.\n\n3. Results and Analysis\nRadiated emission levels were found to be compliant across most of the frequency spectrum. However, a margin exceedance of 4.2 dB was recorded at 144 MHz, which is attributed to harmonic radiation from the 48 MHz system clock. A secondary exceedance of 2.8 dB was detected at 480 MHz, coinciding with the USB 2.0 high-speed data bus frequency. Both exceedances were reproducible across three separate measurement runs, indicating that they are not artefacts of measurement uncertainty.\n\n4. Recommended Corrective Actions\nIt is strongly recommended that ferrite beads be added to the clock signal trace and that shielding be applied to the USB interface connector. Additionally, the PCB layout should be reviewed to minimise loop areas on high-frequency signal lines, as excessive loop area is a well-established contributor to unintended radiation. If these measures are implemented, re-testing should be scheduled within 30 days to confirm compliance before the regulatory submission deadline.",
+    "vocabulary": [
+      {
+        "term": "radiated emissions",
+        "definition": "Unintentional electromagnetic energy transmitted through the air from an electronic device.",
+        "context": "This report summarises the results of radiated emissions pre-compliance testing conducted on the GW-300 IoT Gateway Module in accordance with CISPR 32:2015, Class B limits.",
+        "turkishTranslation": "yayılan emisyonlar"
+      },
+      {
+        "term": "margin exceedance",
+        "definition": "The amount by which a measured value surpasses the permitted regulatory limit.",
+        "context": "A margin exceedance of 4.2 dB was recorded at 144 MHz, which is attributed to harmonic radiation from the 48 MHz system clock.",
+        "turkishTranslation": "sınır aşımı"
+      },
+      {
+        "term": "ferrite bead",
+        "definition": "A passive component placed on a signal line to suppress high-frequency electromagnetic noise.",
+        "context": "It is strongly recommended that ferrite beads be added to the clock signal trace and that shielding be applied to the USB interface connector.",
+        "turkishTranslation": "ferrit boncuk"
+      },
+      {
+        "term": "loop area",
+        "definition": "The physical area enclosed by a current-carrying conductor loop, which influences unintended radiation.",
+        "context": "The PCB layout should be reviewed to minimise loop areas on high-frequency signal lines, as excessive loop area is a well-established contributor to unintended radiation.",
+        "turkishTranslation": "döngü alanı"
+      },
+      {
+        "term": "harmonic radiation",
+        "definition": "Electromagnetic emissions at integer multiples of a fundamental clock or signal frequency.",
+        "context": "A margin exceedance of 4.2 dB was recorded at 144 MHz, which is attributed to harmonic radiation from the 48 MHz system clock.",
+        "turkishTranslation": "harmonik radyasyon"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What is the most likely cause of the emission exceedance detected at 144 MHz?",
+        "choices": [
+          "A) Interference from the biconical antenna used during testing.",
+          "B) Harmonic radiation originating from the 48 MHz system clock.",
+          "C) Excessive loop area on the Ethernet port connector.",
+          "D) Measurement uncertainty introduced by the 3-metre test distance."
+        ],
+        "correctAnswer": "B",
+        "explanation": "The report states: 'a margin exceedance of 4.2 dB was recorded at 144 MHz, which is attributed to harmonic radiation from the 48 MHz system clock.' 144 MHz is the third harmonic of 48 MHz."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The two emission exceedances were observed only once and may be due to measurement uncertainty.",
+        "correctAnswer": "false",
+        "explanation": "The report states: 'Both exceedances were reproducible across three separate measurement runs, indicating that they are not artefacts of measurement uncertainty.'"
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "According to the recommended corrective actions, what two mitigation measures should be applied to address the emission exceedances?",
+        "keywords": ["ferrite beads", "shielding", "clock signal trace", "USB"],
+        "correctAnswer": "Ferrite beads added to the clock signal trace and shielding applied to the USB interface connector.",
+        "explanation": "Section 4 states: 'It is strongly recommended that ferrite beads be added to the clock signal trace and that shielding be applied to the USB interface connector.'"
+      }
+    ],
+    "xpReward": 55,
+    "coinReward": 22,
+    "eloReward": 15,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  }
+]

@@ -1,0 +1,317 @@
+[
+  {
+    "id": "civil_a2_concrete_pour",
+    "title": "Concrete Pour Procedure",
+    "description": "Understanding basic steps for a concrete pour on a small foundation.",
+    "discipline": "Civil Engineering",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 6,
+    "passageText": "The crew arrived at the site early in the morning. First, they cleaned the formwork to remove any debris. Next, they placed a steel reinforcement cage inside the form. Then, the concrete truck arrived and poured the mix slowly. Workers used a vibrator to remove air bubbles. After the concrete settled, they leveled the surface with a trowel. Finally, the formwork was stripped, and the slab began to cure.",
+    "vocabulary": [
+      {
+        "term": "formwork",
+        "definition": "Temporary molds used to shape concrete.",
+        "context": "First, they cleaned the formwork to remove any debris.",
+        "turkishTranslation": "kalıp işleri"
+      },
+      {
+        "term": "reinforcement cage",
+        "definition": "Steel bars arranged to strengthen concrete.",
+        "context": "They placed a steel reinforcement cage inside the form.",
+        "turkishTranslation": "donatı kafesi"
+      },
+      {
+        "term": "vibrator",
+        "definition": "Tool that shakes concrete to eliminate air pockets.",
+        "context": "Workers used a vibrator to remove air bubbles.",
+        "turkishTranslation": "titreşim aleti"
+      },
+      {
+        "term": "trowel",
+        "definition": "Flat tool for smoothing concrete surfaces.",
+        "context": "They leveled the surface with a trowel.",
+        "turkishTranslation": "kelle"
+      },
+      {
+        "term": "cure",
+        "definition": "Process where concrete hardens over time.",
+        "context": "The slab began to cure after the formwork was stripped.",
+        "turkishTranslation": "sertleşme"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What is the first step before pouring concrete?",
+        "choices": [
+          "A) Placing reinforcement",
+          "B) Cleaning the formwork",
+          "C) Using a vibrator",
+          "D) Stripping the formwork"
+        ],
+        "correctAnswer": "B",
+        "explanation": "The passage says the crew cleaned the formwork first."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The concrete truck arrives after the reinforcement cage is placed.",
+        "correctAnswer": "true",
+        "explanation": "The passage describes the cage placement before the truck arrives."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "Which tool is used to remove air bubbles from concrete?",
+        "keywords": ["vibrator"],
+        "correctAnswer": "vibrator",
+        "explanation": "The passage mentions workers used a vibrator to remove air bubbles."
+      }
+    ],
+    "xpReward": 40,
+    "coinReward": 15,
+    "eloReward": 12,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "civil_b1_method_statement",
+    "title": "Method Statement for Temporary Support",
+    "description": "Reading a method statement for installing temporary supports during excavation.",
+    "discipline": "Civil Engineering",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 9,
+    "passageText": "Before any excavation begins, a method statement must be prepared to describe the installation of temporary supports. The document outlines the selection of steel shoring sections, the required spacing, and the load calculations for each support point. It also specifies safety procedures, such as the use of personal protective equipment and the placement of warning signs around the work zone. All personnel must review the statement and sign off to confirm understanding. Once approved, the crew proceeds to assemble the shoring according to the illustrated steps, ensuring that each brace is securely bolted before advancing to the next level of excavation.",
+    "vocabulary": [
+      {
+        "term": "method statement",
+        "definition": "Written description of how a task will be performed safely.",
+        "context": "Before any excavation begins, a method statement must be prepared.",
+        "turkishTranslation": "metod bildirimi"
+      },
+      {
+        "term": "temporary supports",
+        "definition": "Short‑term structures used to hold soil in place during digging.",
+        "context": "Installation of temporary supports during excavation.",
+        "turkishTranslation": "geçici destekler"
+      },
+      {
+        "term": "shoring",
+        "definition": "System of props that prevent collapse of excavation walls.",
+        "context": "Selection of steel shoring sections.",
+        "turkishTranslation": "kaldıraç"
+      },
+      {
+        "term": "load calculations",
+        "definition": "Determination of forces that structures must withstand.",
+        "context": "Load calculations for each support point.",
+        "turkishTranslation": "yük hesaplamaları"
+      },
+      {
+        "term": "personal protective equipment",
+        "definition": "Gear worn to reduce risk of injury.",
+        "context": "Use of personal protective equipment.",
+        "turkishTranslation": "kişisel koruyucu ekipman"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What must be prepared before excavation?",
+        "choices": [
+          "A) Load calculations",
+          "B) Method statement",
+          "C) Warning signs",
+          "D) Shoring sections"
+        ],
+        "correctAnswer": "B",
+        "explanation": "The passage states a method statement must be prepared first."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "All personnel must sign off after reviewing the method statement.",
+        "correctAnswer": "true",
+        "explanation": "The passage explains that all personnel must sign off to confirm understanding."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "Which equipment is used to protect workers?",
+        "keywords": ["personal protective equipment"],
+        "correctAnswer": "personal protective equipment",
+        "explanation": "The passage mentions the use of personal protective equipment."
+      }
+    ],
+    "xpReward": 45,
+    "coinReward": 18,
+    "eloReward": 13,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "civil_b2_inspection_report",
+    "title": "Inspection Report for Bridge Expansion Joint",
+    "description": "Analyzing a technical inspection report for a bridge expansion joint.",
+    "discipline": "Civil Engineering",
+    "cefrLevel": "B2",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 11,
+    "passageText": "The routine inspection of the north‑west bridge expansion joint was conducted on 12 March 2026. Visual examination revealed minor cracking along the rubber seal, with a width of approximately 2 mm. Non‑destructive testing using ultrasonic pulse velocity indicated a localized reduction in material density, suggesting early degradation. The report recommends the removal of the existing seal, cleaning of the joint cavity, and installation of a new neoprene gasket with a reinforcement fabric to improve durability. The work schedule proposes a three‑day shutdown, with traffic diversion to the parallel overpass. The engineer in charge approved the corrective actions, citing compliance with the relevant bridge design standards.",
+    "vocabulary": [
+      {
+        "term": "expansion joint",
+        "definition": "A flexible connection that accommodates movement in structures.",
+        "context": "Inspection of the north‑west bridge expansion joint was conducted...",
+        "turkishTranslation": "genişleme derzi"
+      },
+      {
+        "term": "ultrasonic pulse velocity",
+        "definition": "A non‑destructive test measuring the speed of sound through material.",
+        "context": "Testing using ultrasonic pulse velocity indicated a reduction in density.",
+        "turkishTranslation": "ultrasonik darbe hızı"
+      },
+      {
+        "term": "neoprene gasket",
+        "definition": "A synthetic rubber seal used to prevent water ingress.",
+        "context": "Installation of a new neoprene gasket with reinforcement fabric.",
+        "turkishTranslation": "neopren contası"
+      },
+      {
+        "term": "traffic diversion",
+        "definition": "Redirecting vehicles to an alternate route during construction.",
+        "context": "Traffic diversion to the parallel overpass.",
+        "turkishTranslation": "trafik yönlendirme"
+      },
+      {
+        "term": "design standards",
+        "definition": "Official guidelines governing structural design.",
+        "context": "Compliance with the relevant bridge design standards.",
+        "turkishTranslation": "tasarım standartları"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What defect was observed on the expansion joint?",
+        "choices": [
+          "A) Corrosion of steel clamps",
+          "B) Minor cracking of the rubber seal",
+          "C) Displacement of the joint plates",
+          "D) Excessive wear of the bearing"
+        ],
+        "correctAnswer": "B",
+        "explanation": "The passage states minor cracking along the rubber seal."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "The corrective action includes installing a new neoprene gasket.",
+        "correctAnswer": "true",
+        "explanation": "The report recommends installing a new neoprene gasket."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "How long is the planned shutdown for the repair?",
+        "keywords": ["three‑day"],
+        "correctAnswer": "three‑day",
+        "explanation": "The work schedule proposes a three‑day shutdown."
+      }
+    ],
+    "xpReward": 50,
+    "coinReward": 20,
+    "eloReward": 14,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  },
+  {
+    "id": "civil_c1_contract_specification",
+    "title": "Contract Specification for High‑Rise Concrete Structure",
+    "description": "Interpreting a detailed contract specification for a skyscraper concrete frame.",
+    "discipline": "Civil Engineering",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 14,
+    "passageText": "The contract specification delineates the performance criteria for the high‑rise concrete structure to be erected at the downtown site. All reinforced concrete columns shall achieve a minimum compressive strength of 45 MPa at 28 days, verified by core testing in accordance with ASTM C42. The mix design shall incorporate a supplementary cementitious material not exceeding 20 % by mass to enhance durability and reduce permeability. Formwork tolerances are limited to ± 5 mm for vertical faces and ± 10 mm for horizontal slabs. Any deviation from the stipulated dimensions shall trigger a formal non‑conformance report, requiring corrective measures prior to acceptance. The contractor must submit a quality assurance plan that references ISO 9001, and all sub‑contractors shall be required to maintain evidence of competence in high‑rise construction. The client reserves the right to audit the construction processes at any stage, and penalties up to 2 % of the contract value may be imposed for late delivery beyond the agreed milestones, as stated in clause 12.5.",
+    "vocabulary": [
+      {
+        "term": "compressive strength",
+        "definition": "The capacity of a material to withstand loads that reduce size.",
+        "context": "Columns shall achieve a minimum compressive strength of 45 MPa at 28 days.",
+        "turkishTranslation": "basınç dayanımı"
+      },
+      {
+        "term": "supplementary cementitious material",
+        "definition": "Additive mixed with cement to improve performance.",
+        "context": "Mix design shall incorporate a supplementary cementitious material not exceeding 20 %.",
+        "turkishTranslation": "tamamlayıcı çimento maddesi"
+      },
+      {
+        "term": "formwork tolerances",
+        "definition": "Allowable deviations in concrete mould dimensions.",
+        "context": "Formwork tolerances are limited to ± 5 mm for vertical faces.",
+        "turkishTranslation": "kalıp toleransları"
+      },
+      {
+        "term": "non‑conformance report",
+        "definition": "Document that records deviations from specifications.",
+        "context": "Deviation shall trigger a formal non‑conformance report.",
+        "turkishTranslation": "uyumsuzluk raporu"
+      },
+      {
+        "term": "quality assurance plan",
+        "definition": "A systematic approach to ensure product quality.",
+        "context": "Contractor must submit a quality assurance plan that references ISO 9001.",
+        "turkishTranslation": "kalite güvence planı"
+      }
+    ],
+    "questions": [
+      {
+        "id": "q1",
+        "type": "multiple_choice",
+        "questionText": "What is the required compressive strength for the columns?",
+        "choices": ["A) 30 MPa", "B) 45 MPa", "C) 60 MPa", "D) 75 MPa"],
+        "correctAnswer": "B",
+        "explanation": "The passage specifies a minimum of 45 MPa."
+      },
+      {
+        "id": "q2",
+        "type": "true_false",
+        "questionText": "Formwork tolerances for horizontal slabs may deviate up to ± 10 mm.",
+        "correctAnswer": "true",
+        "explanation": "The passage allows ± 10 mm for horizontal slabs."
+      },
+      {
+        "id": "q3",
+        "type": "keyword_answer",
+        "questionText": "Which ISO standard must the quality assurance plan reference?",
+        "keywords": ["ISO 9001"],
+        "correctAnswer": "ISO 9001",
+        "explanation": "The contract requires referencing ISO 9001."
+      }
+    ],
+    "xpReward": 55,
+    "coinReward": 22,
+    "eloReward": 15,
+    "sourceMetadata": {
+      "origin": "EngVox original",
+      "author": "AI Content Generation",
+      "schemaVersion": 1
+    }
+  }
+]

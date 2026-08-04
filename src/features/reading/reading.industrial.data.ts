@@ -1,0 +1,362 @@
+import type { ReadingMission } from './reading.types';
+
+export const INDUSTRIAL_READING_MISSIONS: ReadingMission[] = [
+  {
+    id: 'industrial_a2_production_planning',
+    title: 'Production Planning Memo',
+    description:
+      'Read a simple production planning memo and understand basic scheduling terms used on the factory floor.',
+    discipline: 'Industrial Engineering',
+    cefrLevel: 'A2',
+    difficulty: 'Beginner',
+    estimatedMinutes: 6,
+    passageText:
+      'To: All Line Workers\nFrom: Production Manager\nDate: 3 August 2026\n\nThis week we will make 500 units of Product A. Each shift is 8 hours long. We have two shifts each day. The daily target is 100 units. Workers must check the schedule board every morning. If a machine stops, tell the supervisor at once. We want zero delays. Please keep your work area clean and safe. Stock parts are in the storage room. Do not take extra parts. Follow the plan and we will meet our target on time.',
+    vocabulary: [
+      {
+        term: 'shift',
+        definition: 'A fixed period of work time, usually 8 hours.',
+        context: 'Each shift is 8 hours long.',
+        turkishTranslation: 'vardiya',
+      },
+      {
+        term: 'target',
+        definition: 'The number of items you must produce in a set time.',
+        context: 'The daily target is 100 units.',
+        turkishTranslation: 'hedef',
+      },
+      {
+        term: 'supervisor',
+        definition: 'A person who watches over and directs workers.',
+        context: 'If a machine stops, tell the supervisor at once.',
+        turkishTranslation: 'amir / nezaretçi',
+      },
+      {
+        term: 'schedule',
+        definition: 'A plan that shows when tasks will happen.',
+        context: 'Workers must check the schedule board every morning.',
+        turkishTranslation: 'program / çizelge',
+      },
+      {
+        term: 'storage room',
+        definition: 'A place where parts or goods are kept until needed.',
+        context: 'Stock parts are in the storage room.',
+        turkishTranslation: 'depo / ambar',
+      },
+    ],
+    questions: [
+      {
+        id: 'industrial_a2_production_planning_q1',
+        type: 'multiple_choice',
+        questionText: 'How many units is the daily production target?',
+        choices: ['A) 500 units', 'B) 100 units', 'C) 8 units', 'D) 200 units'],
+        correctAnswer: 'B',
+        explanation: "The memo states 'The daily target is 100 units.'",
+      },
+      {
+        id: 'industrial_a2_production_planning_q2',
+        type: 'true_false',
+        questionText: 'Workers should take extra parts from the storage room if they need them.',
+        correctAnswer: 'false',
+        explanation: "The memo clearly says 'Do not take extra parts.'",
+      },
+      {
+        id: 'industrial_a2_production_planning_q3',
+        type: 'keyword_answer',
+        questionText: 'What should a worker do immediately if a machine stops?',
+        keywords: ['supervisor', 'tell', 'inform', 'report'],
+        correctAnswer: 'Tell the supervisor at once.',
+        explanation: "The memo instructs: 'If a machine stops, tell the supervisor at once.'",
+      },
+    ],
+    xpReward: 40,
+    coinReward: 15,
+    eloReward: 12,
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
+  },
+  {
+    id: 'industrial_b1_oee_report',
+    title: 'Overall Equipment Effectiveness (OEE) Report',
+    description:
+      'Read a monthly OEE report from a manufacturing plant and answer questions about equipment performance metrics.',
+    discipline: 'Industrial Engineering',
+    cefrLevel: 'B1',
+    difficulty: 'Intermediate',
+    estimatedMinutes: 9,
+    passageText:
+      'Monthly OEE Report – July 2026\nPlant: Ankara Assembly Facility\n\nOverall Equipment Effectiveness (OEE) measures how well a machine is being used compared to its full potential. OEE has three parts: Availability, Performance, and Quality. This month, the main assembly line recorded an Availability of 87%, a Performance rate of 91%, and a Quality rate of 96%. The combined OEE score is 76.1%.\n\nThe biggest cause of lost availability was unplanned downtime. Two breakdowns happened on Line 3, each lasting about two hours. Maintenance teams responded within 30 minutes each time, but the repairs took longer than expected.\n\nWorld-class OEE is considered to be 85% or above. Our current score of 76.1% shows that we need to improve. The engineering team will review the preventive maintenance schedule next week. Reducing unplanned stoppages is the top priority for August.',
+    vocabulary: [
+      {
+        term: 'overall equipment effectiveness (OEE)',
+        definition: 'A metric that measures how efficiently a machine or production line is used.',
+        context:
+          'Overall Equipment Effectiveness (OEE) measures how well a machine is being used compared to its full potential.',
+        turkishTranslation: 'genel ekipman etkinliği',
+      },
+      {
+        term: 'availability',
+        definition: 'The percentage of planned production time that a machine is actually running.',
+        context: 'The main assembly line recorded an Availability of 87%.',
+        turkishTranslation: 'kullanılabilirlik',
+      },
+      {
+        term: 'unplanned downtime',
+        definition: 'Unexpected periods when a machine stops working and production halts.',
+        context: 'The biggest cause of lost availability was unplanned downtime.',
+        turkishTranslation: 'plansız duruş',
+      },
+      {
+        term: 'preventive maintenance',
+        definition: 'Scheduled service work done to prevent breakdowns before they happen.',
+        context: 'The engineering team will review the preventive maintenance schedule next week.',
+        turkishTranslation: 'önleyici bakım',
+      },
+      {
+        term: 'world-class',
+        definition: 'At the highest international standard of performance.',
+        context: 'World-class OEE is considered to be 85% or above.',
+        turkishTranslation: 'dünya standartlarında',
+      },
+    ],
+    questions: [
+      {
+        id: 'industrial_b1_oee_report_q1',
+        type: 'multiple_choice',
+        questionText: 'What was the main reason for the low Availability score in July?',
+        choices: [
+          'A) Poor quality raw materials',
+          'B) Unplanned downtime caused by two breakdowns on Line 3',
+          'C) A shortage of maintenance staff',
+          'D) Low Performance rate on all lines',
+        ],
+        correctAnswer: 'B',
+        explanation:
+          "The report states 'The biggest cause of lost availability was unplanned downtime. Two breakdowns happened on Line 3.'",
+      },
+      {
+        id: 'industrial_b1_oee_report_q2',
+        type: 'true_false',
+        questionText:
+          "The plant's OEE score of 76.1% meets the world-class standard of 85% or above.",
+        correctAnswer: 'false',
+        explanation:
+          'The report says world-class OEE is 85% or above, and the plant scored 76.1%, which is below that threshold.',
+      },
+      {
+        id: 'industrial_b1_oee_report_q3',
+        type: 'keyword_answer',
+        questionText: 'What is the top engineering priority for August according to the report?',
+        keywords: ['unplanned', 'stoppages', 'downtime', 'reduce', 'reducing'],
+        correctAnswer: 'Reducing unplanned stoppages.',
+        explanation:
+          "The report ends with: 'Reducing unplanned stoppages is the top priority for August.'",
+      },
+    ],
+    xpReward: 45,
+    coinReward: 18,
+    eloReward: 13,
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
+  },
+  {
+    id: 'industrial_b2_lean_kaizen_summary',
+    title: 'Lean Kaizen Event Summary',
+    description:
+      'Read a kaizen event summary report from a lean manufacturing initiative and evaluate the improvements achieved.',
+    discipline: 'Industrial Engineering',
+    cefrLevel: 'B2',
+    difficulty: 'Intermediate',
+    estimatedMinutes: 11,
+    passageText:
+      "Kaizen Event Summary Report\nEvent Title: Welding Cell Waste Reduction\nDate: 21–25 July 2026 | Facilitator: Senior IE, M. Demir\n\nA five-day kaizen event was conducted in the welding cell of the Bursa fabrication plant to address excessive cycle time and material movement waste. The cross-functional team consisted of six operators, two process engineers, and a quality technician.\n\nDuring the current-state value stream mapping, the team identified that 38% of operator motion was non-value-adding, primarily due to poorly arranged tooling and distant material racks. Three major wastes were categorised: overprocessing, unnecessary motion, and waiting.\n\nThe team redesigned the cell layout using 5S principles, relocated consumable racks within arm's reach of each welding station, and standardised the torch changeover procedure. A new work instruction was created and laminated at each station.\n\nAs a result of these changes, cycle time was reduced from 4.2 minutes to 2.9 minutes per unit — a 31% improvement. First-pass yield increased from 88% to 94%. The projected annual saving, based on a two-shift operation running 250 days per year, is estimated at ₺480,000. A 30-day follow-up audit is scheduled to verify that gains are sustained.",
+    vocabulary: [
+      {
+        term: 'kaizen',
+        definition:
+          'A Japanese business philosophy of continuous, incremental improvement involving all employees.',
+        context:
+          'A five-day kaizen event was conducted in the welding cell of the Bursa fabrication plant.',
+        turkishTranslation: 'sürekli iyileştirme (kaizen)',
+      },
+      {
+        term: 'value stream mapping',
+        definition:
+          'A lean tool used to visualise all steps in a production process, including value-adding and non-value-adding activities.',
+        context:
+          'During the current-state value stream mapping, the team identified that 38% of operator motion was non-value-adding.',
+        turkishTranslation: 'değer akışı haritalama',
+      },
+      {
+        term: 'non-value-adding',
+        definition:
+          "Activities that consume resources but do not contribute to the product's value from the customer's perspective.",
+        context:
+          '38% of operator motion was non-value-adding, primarily due to poorly arranged tooling and distant material racks.',
+        turkishTranslation: 'değer katmayan',
+      },
+      {
+        term: '5S principles',
+        definition:
+          'A workplace organisation method: Sort, Set in order, Shine, Standardise, Sustain.',
+        context: 'The team redesigned the cell layout using 5S principles.',
+        turkishTranslation: '5S ilkeleri',
+      },
+      {
+        term: 'first-pass yield',
+        definition:
+          'The percentage of units that pass quality inspection without any rework or repair on the first attempt.',
+        context: 'First-pass yield increased from 88% to 94%.',
+        turkishTranslation: 'ilk geçiş verimi',
+      },
+    ],
+    questions: [
+      {
+        id: 'industrial_b2_lean_kaizen_summary_q1',
+        type: 'multiple_choice',
+        questionText:
+          'Which of the following best describes the primary cause of non-value-adding motion identified in the kaizen event?',
+        choices: [
+          'A) Insufficient operator training and outdated welding equipment',
+          'B) Poorly arranged tooling and distant material racks',
+          'C) Excessive overtime hours leading to worker fatigue',
+          'D) Inadequate quality control procedures at the welding station',
+        ],
+        correctAnswer: 'B',
+        explanation:
+          "The report states non-value-adding motion was 'primarily due to poorly arranged tooling and distant material racks.'",
+      },
+      {
+        id: 'industrial_b2_lean_kaizen_summary_q2',
+        type: 'true_false',
+        questionText:
+          'The cycle time per unit increased after the kaizen improvements were implemented.',
+        correctAnswer: 'false',
+        explanation:
+          'Cycle time was reduced from 4.2 minutes to 2.9 minutes — a 31% improvement, not an increase.',
+      },
+      {
+        id: 'industrial_b2_lean_kaizen_summary_q3',
+        type: 'keyword_answer',
+        questionText:
+          'What action is planned to confirm that the kaizen improvements are maintained over time?',
+        keywords: ['audit', 'follow-up', '30-day', 'verify', 'sustained'],
+        correctAnswer: 'A 30-day follow-up audit is scheduled to verify that gains are sustained.',
+        explanation:
+          "The report ends: 'A 30-day follow-up audit is scheduled to verify that gains are sustained.'",
+      },
+    ],
+    xpReward: 50,
+    coinReward: 20,
+    eloReward: 14,
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
+  },
+  {
+    id: 'industrial_c1_ergonomics_assessment',
+    title: 'Ergonomics Risk Assessment Report',
+    description:
+      'Read a formal ergonomics assessment report containing technical analysis of musculoskeletal risk factors and recommended engineering controls.',
+    discipline: 'Industrial Engineering',
+    cefrLevel: 'C1',
+    difficulty: 'Advanced',
+    estimatedMinutes: 14,
+    passageText:
+      "Ergonomics Risk Assessment Report\nFacility: İzmir Automotive Components Plant – Station 7B\nAssessed by: Occupational Health & Safety Engineer, Dr. E. Çelik\nDate of Assessment: 29 July 2026\n\nExecutive Summary\nThis assessment was undertaken to evaluate musculoskeletal disorder (MSD) risk factors at Assembly Station 7B, where workers perform repetitive overhead fastening operations for an average of 6.2 hours per shift. Elevated rates of upper-limb discomfort reported over the preceding quarter provided the impetus for this formal evaluation.\n\nMethodology\nThe Rapid Upper Limb Assessment (RULA) tool was applied to three randomly selected operators across two consecutive shifts. Postural angles were measured using video-based motion capture. Force requirements were quantified by means of a calibrated push-pull gauge. All assessments were conducted under standard production conditions without prior notification to operators, thereby minimising observer bias.\n\nFindings\nRULA grand scores ranged from 6 to 7 across all observed tasks, indicating that further investigation and prompt changes are required. Shoulder abduction angles consistently exceeded 80°, well beyond the recommended threshold of 45°. Additionally, static neck flexion of greater than 30° was sustained for periods exceeding 4 minutes without interruption, which is associated with significantly elevated cervical strain risk.\n\nRecommendations\nIt is recommended that the workstation height be adjusted by installation of a pneumatic lift table, which would allow the work surface to be raised or lowered to suit each operator's anthropometric profile. Furthermore, a job rotation programme should be implemented such that no single operator performs overhead fastening for more than 90 consecutive minutes. Should these engineering and administrative controls prove insufficient, the procurement of powered torque tools capable of reducing grip force by at least 40% is strongly advised. A re-assessment shall be conducted within 60 days of implementation to confirm risk reduction.",
+    vocabulary: [
+      {
+        term: 'musculoskeletal disorder (MSD)',
+        definition:
+          'An injury or pain affecting muscles, nerves, tendons, joints, or spinal discs, often caused by repetitive or forceful work.',
+        context:
+          'This assessment was undertaken to evaluate musculoskeletal disorder (MSD) risk factors at Assembly Station 7B.',
+        turkishTranslation: 'kas-iskelet sistemi bozukluğu',
+      },
+      {
+        term: 'RULA (Rapid Upper Limb Assessment)',
+        definition:
+          'A validated ergonomic tool that evaluates the posture, force, and repetition of upper-limb tasks to estimate MSD risk.',
+        context:
+          'The Rapid Upper Limb Assessment (RULA) tool was applied to three randomly selected operators across two consecutive shifts.',
+        turkishTranslation: 'hızlı üst ekstremite değerlendirmesi',
+      },
+      {
+        term: 'shoulder abduction',
+        definition:
+          'The movement of raising the arm away from the body to the side, which increases stress on the shoulder joint when sustained.',
+        context:
+          'Shoulder abduction angles consistently exceeded 80°, well beyond the recommended threshold of 45°.',
+        turkishTranslation: 'omuz abduksiyonu',
+      },
+      {
+        term: 'anthropometric profile',
+        definition:
+          'The set of physical body measurements (height, reach, limb length) that characterise an individual worker.',
+        context:
+          "A pneumatic lift table would allow the work surface to be raised or lowered to suit each operator's anthropometric profile.",
+        turkishTranslation: 'antropometrik profil',
+      },
+      {
+        term: 'observer bias',
+        definition:
+          'The tendency for workers to alter their behaviour when they know they are being watched, which can distort assessment results.',
+        context:
+          'All assessments were conducted under standard production conditions without prior notification to operators, thereby minimising observer bias.',
+        turkishTranslation: 'gözlemci yanlılığı',
+      },
+    ],
+    questions: [
+      {
+        id: 'industrial_c1_ergonomics_assessment_q1',
+        type: 'multiple_choice',
+        questionText: 'Why were assessments conducted without prior notification to the operators?',
+        choices: [
+          'A) To reduce the time required to complete the RULA evaluation',
+          'B) To comply with occupational health and safety legislation',
+          'C) To minimise observer bias and ensure authentic working postures were captured',
+          'D) To prevent workers from requesting additional breaks during observation',
+        ],
+        correctAnswer: 'C',
+        explanation:
+          "The report states assessments were conducted 'without prior notification to operators, thereby minimising observer bias.'",
+      },
+      {
+        id: 'industrial_c1_ergonomics_assessment_q2',
+        type: 'true_false',
+        questionText:
+          'The report recommends that a re-assessment should be carried out within 60 days after the recommended controls have been put in place.',
+        correctAnswer: 'true',
+        explanation:
+          "The final sentence states: 'A re-assessment shall be conducted within 60 days of implementation to confirm risk reduction.'",
+      },
+      {
+        id: 'industrial_c1_ergonomics_assessment_q3',
+        type: 'keyword_answer',
+        questionText:
+          'According to the recommendations, what is the maximum duration a single operator should perform overhead fastening without rotation?',
+        keywords: ['90', 'minutes', 'consecutive', '90 minutes'],
+        correctAnswer:
+          'No single operator should perform overhead fastening for more than 90 consecutive minutes.',
+        explanation:
+          "The recommendations specify that 'no single operator performs overhead fastening for more than 90 consecutive minutes.'",
+      },
+    ],
+    xpReward: 55,
+    coinReward: 22,
+    eloReward: 15,
+    sourceMetadata: {
+      origin: 'EngVox original',
+      author: 'AI Content Generation',
+      schemaVersion: 1,
+    },
+  },
+];
