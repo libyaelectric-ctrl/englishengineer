@@ -6,9 +6,9 @@ import { Button } from '@/shared/components/Button';
 import { logger } from '@/shared/logger';
 
 import { useListeningPlaybackStore } from './listening-playback.store';
-import { ListeningHelpers } from './listening.helpers';
 import { PLAYBACK_SPEEDS } from './listening.constants';
 import type { PlaybackSpeed } from './listening.constants';
+import { ListeningHelpers } from './listening.helpers';
 import type { ListeningMission } from './listening.types';
 
 interface AudioPlayerProps {

@@ -1,11 +1,7 @@
 import { JsonObject, JsonValue } from './supabase.types';
 
 export type CloudSyncReason =
-  | 'auth-state-ready'
-  | 'manual-sync'
-  | 'local-change'
-  | 'online-return'
-  | 'profile-updated';
+  'auth-state-ready' | 'manual-sync' | 'local-change' | 'online-return' | 'profile-updated';
 
 export type CloudSyncStatus = 'idle' | 'queued' | 'syncing' | 'synced' | 'offline' | 'error';
 

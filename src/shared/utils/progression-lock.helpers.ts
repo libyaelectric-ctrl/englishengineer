@@ -1,5 +1,4 @@
 import { logger } from '@/shared/logger';
-
 import { storage } from '@/shared/storage';
 
 const BYPASS_STORAGE_KEY = 'engvox_progression_bypass_unlocked';

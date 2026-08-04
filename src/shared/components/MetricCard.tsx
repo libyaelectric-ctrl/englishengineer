@@ -13,14 +13,7 @@ interface MetricCardProps extends HTMLAttributes<HTMLDivElement> {
   trend?: string;
   trendDirection?: 'up' | 'down' | 'neutral';
   statusColor?:
-    | 'primary'
-    | 'emerald'
-    | 'cyan'
-    | 'amber'
-    | 'rose'
-    | 'success'
-    | 'warning'
-    | 'danger';
+    'primary' | 'emerald' | 'cyan' | 'amber' | 'rose' | 'success' | 'warning' | 'danger';
 }
 
 export const MetricCard = memo<MetricCardProps>(

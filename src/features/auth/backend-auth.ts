@@ -1,4 +1,5 @@
 import { logger } from '@/shared/logger';
+
 import { getSupabaseClient } from './supabase.client';
 
 let cachedOrgId: string | null = null;

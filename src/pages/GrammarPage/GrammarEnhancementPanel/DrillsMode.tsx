@@ -1,12 +1,16 @@
 import { Check, ClipboardCheck, ListChecks, Shuffle } from 'lucide-react';
+
 import { useMemo, useState } from 'react';
+
 import { Button } from '@/shared/components/Button';
 import { logger } from '@/shared/logger';
+
 import {
   type GrammarRule,
   type GrammarRuleProgress,
   InteractiveDrillService,
 } from '@/features/grammar';
+
 import { PanelShell } from './shared';
 import { type ProofIssue } from './types';
 
@@ -25,7 +29,9 @@ const readJson = <T,>(key: string, fallback: T): T => {
 const writeJson = <T,>(key: string, value: T): void => {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch (e) { logger.w('[DrillsMode] Failed to write JSON to localStorage', e); }
+  } catch (e) {
+    logger.w('[DrillsMode] Failed to write JSON to localStorage', e);
+  }
 };
 
 const normalize = (value: string): string =>
@@ -230,9 +236,7 @@ export const DrillsMode = ({
                 onClick={() =>
                   recordUsage(
                     normalize(sentenceOrder.join(' ')) ===
-                      normalize(
-                        reorderDrill?.correctAnswer ?? selectedRule.correctedExampleEnglish
-                      )
+                      normalize(reorderDrill?.correctAnswer ?? selectedRule.correctedExampleEnglish)
                   )
                 }
                 className="rounded-[4px]"
@@ -255,5 +259,3 @@ export const DrillsMode = ({
     </PanelShell>
   );
 };
-
-

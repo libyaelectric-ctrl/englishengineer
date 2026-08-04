@@ -1,5 +1,7 @@
 import { Layers3 } from 'lucide-react';
+
 import { type ReactNode } from 'react';
+
 import { SectionHeading } from '../GrammarPageComponents';
 
 export const PanelShell = ({

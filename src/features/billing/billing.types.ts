@@ -1,13 +1,7 @@
 export type BillingPlanId = 'free' | 'pro' | 'project' | 'exec' | 'private';
 
 export type SubscriptionStatus =
-  | 'none'
-  | 'trialing'
-  | 'active'
-  | 'past_due'
-  | 'canceled'
-  | 'incomplete'
-  | 'enterprise_pending';
+  'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
 
 export type BillingFeature =
   | 'reading'

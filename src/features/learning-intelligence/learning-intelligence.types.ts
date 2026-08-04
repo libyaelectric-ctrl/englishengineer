@@ -10,12 +10,7 @@ export type CareerRole =
   | 'Project Manager';
 
 export type DailyTaskModule =
-  | 'Reading'
-  | 'Writing'
-  | 'Listening'
-  | 'Speaking'
-  | 'Vocabulary'
-  | 'Quick AI';
+  'Reading' | 'Writing' | 'Listening' | 'Speaking' | 'Vocabulary' | 'Quick AI';
 
 export type CoreMistakeType =
   | 'Vocabulary'

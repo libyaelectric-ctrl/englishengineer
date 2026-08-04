@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { eventBus } from '@/core/events/event-bus';
 import { AppError } from '@/core/errors/app-error';
 import { ErrorCode } from '@/core/errors/error-codes';
+import { eventBus } from '@/core/events/event-bus';
 import { IdService } from '@/core/ids/id.service';
 
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
@@ -14,14 +14,14 @@ import { LearningProfileRepository } from '@/features/profile/profile.repository
 import { AchievementService } from './achievement.service';
 import { DEFAULT_ACHIEVEMENTS } from './learning.achievements.data';
 import { DEFAULT_MISSIONS } from './learning.missions.data';
-import { calculateStreak } from './learning.streak';
 import {
-  ensureArrays,
-  emitLearningCompleted,
-  mergeDefaults,
-  MAX_HISTORY_SIZE,
   INITIAL_ELO,
+  MAX_HISTORY_SIZE,
+  emitLearningCompleted,
+  ensureArrays,
+  mergeDefaults,
 } from './learning.store.helpers';
+import { calculateStreak } from './learning.streak';
 import {
   LearningState,
   MissionModule,
@@ -56,18 +56,18 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
       xp: 0,
       level: 1,
       coins: 0,
-    elo: INITIAL_ELO,
-    streak: 0,
-    lastActivityDate: null,
-    studySessions: [],
-    scoreHistory: [],
-    xpHistory: [],
-    eloHistory: [],
-    vocabularyPool: [],
-    grammarPool: [],
-    speakingPool: [],
+      elo: INITIAL_ELO,
+      streak: 0,
+      lastActivityDate: null,
+      studySessions: [],
+      scoreHistory: [],
+      xpHistory: [],
+      eloHistory: [],
+      vocabularyPool: [],
+      grammarPool: [],
+      speakingPool: [],
 
-    startMission: (missionId: string) => {
+      startMission: (missionId: string) => {
         const updated = get().missions.map((m) =>
           m.id === missionId ? { ...m, status: 'active' as const } : m
         );
@@ -91,7 +91,11 @@ export const useLearningStore = create<LearningState & LearningStoreActions>()(
         durationMinutes: number
       ) => {
         const mission = get().missions.find((m) => m.id === missionId);
-        if (!mission) throw new AppError({ code: ErrorCode.VALIDATION, message: `Mission ${missionId} not found` });
+        if (!mission)
+          throw new AppError({
+            code: ErrorCode.VALIDATION,
+            message: `Mission ${missionId} not found`,
+          });
 
         const result = ScoringService.calculateScore({
           module: mission.module,

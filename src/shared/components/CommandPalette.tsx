@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useCommandPalette } from '@/shared/hooks/useCommandPalette';
 import { cn } from '@/shared/utils/cn';
 
-import { COMMANDS, ICON_MAP, CATEGORIES_ORDER } from './CommandPalette/commandPalette.data';
+import { CATEGORIES_ORDER, COMMANDS, ICON_MAP } from './CommandPalette/commandPalette.data';
 import { useThemeToggle } from './CommandPalette/useThemeToggle';
 
 export const CommandPalette = () => {
@@ -270,7 +270,9 @@ export const CommandPalette = () => {
                   navigate
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">&#x21B5;</kbd>
+                  <kbd className="rounded border border-border-soft px-1 py-px text-[10px]">
+                    &#x21B5;
+                  </kbd>
                   select
                 </span>
               </div>

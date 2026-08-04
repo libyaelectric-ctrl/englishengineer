@@ -15,10 +15,7 @@ export const LockProgressBar = ({ label, done, total }: LockProgressBarProps) =>
         </span>
       </div>
       <div className="h-1.5 rounded-full bg-border-soft overflow-hidden">
-        <div
-          className="h-full bg-primary transition-all"
-          style={{ width: `${percentage}%` }}
-        />
+        <div className="h-full bg-primary transition-all" style={{ width: `${percentage}%` }} />
       </div>
     </>
   );

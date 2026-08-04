@@ -1,4 +1,5 @@
 import { FileText, PenLine } from 'lucide-react';
+
 import { Link } from 'react-router-dom';
 
 import type { GrammarRuleProgress } from '@/features/grammar';

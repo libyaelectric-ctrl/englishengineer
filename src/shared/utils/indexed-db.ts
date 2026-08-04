@@ -6,7 +6,7 @@
  */
 import { logger } from '@/shared/logger';
 
-import { openIDB, isIDBSupported } from './idb-helper';
+import { isIDBSupported, openIDB } from './idb-helper';
 
 const DB_NAME = 'engvox_offline_cache';
 const DB_VERSION = 2;

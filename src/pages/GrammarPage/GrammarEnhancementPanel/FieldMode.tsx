@@ -1,4 +1,5 @@
 import { Layers3 } from 'lucide-react';
+
 import { PanelShell } from './shared';
 
 const FIELD_PACKS = [
@@ -44,9 +45,7 @@ export const FieldMode = ({ setQuery }: { setQuery: (query: string) => void }) =
           onClick={() => setQuery(pack.title.split(' ')[0])}
           className="rounded-[4px] border border-border-soft bg-background p-3 text-left hover:border-primary/40"
         >
-          <p className="text-xs font-black uppercase tracking-wide text-foreground">
-            {pack.title}
-          </p>
+          <p className="text-xs font-black uppercase tracking-wide text-foreground">{pack.title}</p>
           <p className="mt-1 font-mono text-[11px] font-bold text-primary">{pack.formula}</p>
           <p className="mt-2 text-xs leading-relaxed text-muted-copy">{pack.example}</p>
         </button>

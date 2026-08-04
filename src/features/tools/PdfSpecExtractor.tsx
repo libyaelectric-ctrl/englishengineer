@@ -1,9 +1,9 @@
 import { Check, Copy, FileCheck2, FileCode, Sparkles, UploadCloud } from 'lucide-react';
 
-import { logger } from '@/shared/logger';
-
 import type { ChangeEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { logger } from '@/shared/logger';
 
 interface ExtractedTerm {
   word: string;

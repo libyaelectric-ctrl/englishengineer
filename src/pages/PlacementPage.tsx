@@ -1,8 +1,7 @@
 import { ArrowLeft, ArrowRight, CheckCircle2, ClipboardCheck } from 'lucide-react';
+import { useShallow } from 'zustand/shallow';
 
 import { useNavigate } from 'react-router-dom';
-
-import { useShallow } from 'zustand/shallow';
 
 import { Button } from '@/shared/components/Button';
 import { ProgressBar } from '@/shared/components/ProgressBar';

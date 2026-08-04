@@ -81,7 +81,9 @@ export function getCefrBadgeStyles(level: string): string {
 /**
  * Returns status color string for progress bars or indicator dots based on difficulty.
  */
-export function getDifficultyColor(difficulty: string): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
+export function getDifficultyColor(
+  difficulty: string
+): 'emerald' | 'amber' | 'rose' | 'primary' | 'cyan' {
   switch (difficulty.toLowerCase()) {
     case 'advanced':
       return 'rose';

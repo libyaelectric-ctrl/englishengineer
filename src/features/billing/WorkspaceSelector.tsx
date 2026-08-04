@@ -1,8 +1,7 @@
 import { ChevronDown, FolderOpen, Plus, Trash2, X } from 'lucide-react';
+import { useShallow } from 'zustand/shallow';
 
 import { useState } from 'react';
-
-import { useShallow } from 'zustand/shallow';
 
 import { BillingPlanId } from '@/features/billing/billing.types';
 import { Workspace, useWorkspaceStore } from '@/features/billing/workspace.store';

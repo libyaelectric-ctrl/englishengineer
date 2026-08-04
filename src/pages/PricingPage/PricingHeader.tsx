@@ -1,4 +1,5 @@
 import { Globe } from 'lucide-react';
+
 import { CurrencyConfig } from '@/features/billing/currency.config';
 
 interface PricingHeaderProps {

@@ -17,7 +17,9 @@ const isSafeRedirectUrl = (url: string): boolean => {
   try {
     const parsed = new URL(url);
     if (parsed.protocol !== 'https:') return false;
-    return ALLOWED_SSO_HOSTS.some((h) => parsed.hostname.endsWith(`.${h}`) || parsed.hostname === h);
+    return ALLOWED_SSO_HOSTS.some(
+      (h) => parsed.hostname.endsWith(`.${h}`) || parsed.hostname === h
+    );
   } catch {
     return false;
   }

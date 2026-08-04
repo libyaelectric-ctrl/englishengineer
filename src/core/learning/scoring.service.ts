@@ -84,7 +84,12 @@ const getModuleFeedback = (
     };
   }
 
-  const tier = score >= SCORE_TIER_EXCELLENT ? SCORE_TIER_EXCELLENT : score >= SCORE_TIER_GOOD ? SCORE_TIER_GOOD : 0;
+  const tier =
+    score >= SCORE_TIER_EXCELLENT
+      ? SCORE_TIER_EXCELLENT
+      : score >= SCORE_TIER_GOOD
+        ? SCORE_TIER_GOOD
+        : 0;
   return {
     strengths: ranges[tier].s,
     weaknesses: ranges[tier].w,
@@ -102,11 +107,17 @@ export const ScoringService = {
     const score = Math.min(100, Math.max(0, Math.round(params.performanceRatio * 100)));
 
     const difficultyMultiplier =
-      params.difficulty === 'Intermediate' ? DIFFICULTY_MULTIPLIER_INTERMEDIATE : params.difficulty === 'Advanced' ? DIFFICULTY_MULTIPLIER_ADVANCED : DIFFICULTY_MULTIPLIER_BEGINNER;
+      params.difficulty === 'Intermediate'
+        ? DIFFICULTY_MULTIPLIER_INTERMEDIATE
+        : params.difficulty === 'Advanced'
+          ? DIFFICULTY_MULTIPLIER_ADVANCED
+          : DIFFICULTY_MULTIPLIER_BEGINNER;
 
     const xpEarned = Math.round(XP_BASE * difficultyMultiplier * (score / 100));
     const coinsEarned = Math.round(COINS_BASE * difficultyMultiplier * (score / 100));
-    const eloChange = Math.round(ELO_BASE * difficultyMultiplier * ((score - ELO_MIDPOINT) / ELO_SCALE));
+    const eloChange = Math.round(
+      ELO_BASE * difficultyMultiplier * ((score - ELO_MIDPOINT) / ELO_SCALE)
+    );
 
     const { strengths, weaknesses, feedback } = getModuleFeedback(params.module, score);
 

@@ -45,7 +45,11 @@ export const InteractiveDrillPanel = ({ selectedRule }: { selectedRule: Rule }) 
   };
 
   const normalise = (s: string) =>
-    s.trim().toLowerCase().replace(/[.,!?;:]/g, '').replace(/\s+/g, ' ');
+    s
+      .trim()
+      .toLowerCase()
+      .replace(/[.,!?;:]/g, '')
+      .replace(/\s+/g, ' ');
 
   const checkFillOrCorrection = () => {
     const expected =

@@ -11,8 +11,11 @@ export function getInitials(name: string): string {
 export function generateId(): string {
   const array = new Uint8Array(16);
   crypto.getRandomValues(array);
-  return 'user_' + Array.from(array)
-    .map((b) => b.toString(36).padStart(2, '0'))
-    .join('')
-    .slice(0, 12);
+  return (
+    'user_' +
+    Array.from(array)
+      .map((b) => b.toString(36).padStart(2, '0'))
+      .join('')
+      .slice(0, 12)
+  );
 }

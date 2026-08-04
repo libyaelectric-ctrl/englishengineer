@@ -1,5 +1,6 @@
-import type { CefrLevel } from '@/shared/types/domain.types';
 import type { LearningDataSkill } from '@/core/learning';
+
+import type { CefrLevel } from '@/shared/types/domain.types';
 
 export interface GrammarExample {
   english: string;

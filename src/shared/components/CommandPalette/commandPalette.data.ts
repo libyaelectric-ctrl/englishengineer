@@ -6,6 +6,7 @@ import {
   BriefcaseBusiness,
   Calendar,
   Headphones,
+  Home,
   Languages,
   Library,
   Mic2,
@@ -19,8 +20,8 @@ import {
   User,
   Wallet,
   WandSparkles,
-  Home,
 } from 'lucide-react';
+
 import type { FC } from 'react';
 
 export const COMMANDS = [
@@ -218,4 +219,11 @@ export const ICON_MAP: Record<string, FC<{ className?: string }>> = {
   Sun,
 };
 
-export const CATEGORIES_ORDER = ['Navigate', 'Skills', 'Learning Hub', 'Progress', 'Tools', 'Account'];
+export const CATEGORIES_ORDER = [
+  'Navigate',
+  'Skills',
+  'Learning Hub',
+  'Progress',
+  'Tools',
+  'Account',
+];

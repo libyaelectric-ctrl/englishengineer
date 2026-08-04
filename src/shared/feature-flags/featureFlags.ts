@@ -6,7 +6,6 @@
  *   if (isFeatureEnabled('aiClaudeProvider')) { ... }
  *   if (isFeatureEnabled('newDashboard')) { ... }
  */
-
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 

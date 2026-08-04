@@ -32,25 +32,14 @@ export const PRODUCT_ANALYTICS_EVENT_NAMES = [
 export type ProductAnalyticsEventName = (typeof PRODUCT_ANALYTICS_EVENT_NAMES)[number];
 
 export type ProductAnalyticsSkill =
-  | 'reading'
-  | 'writing'
-  | 'listening'
-  | 'speaking'
-  | 'vocabulary'
-  | 'grammar';
+  'reading' | 'writing' | 'listening' | 'speaking' | 'vocabulary' | 'grammar';
 
 export interface ProductAnalyticsMetadata {
   skill?: ProductAnalyticsSkill;
   missionId?: string;
   plan?: 'free' | 'pro' | 'enterprise';
   subscriptionStatus?:
-    | 'none'
-    | 'trialing'
-    | 'active'
-    | 'past_due'
-    | 'canceled'
-    | 'incomplete'
-    | 'enterprise_pending';
+    'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
   source?: 'user' | 'system' | 'checkout_return';
   rating?: number;
 }

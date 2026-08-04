@@ -1,4 +1,5 @@
 import { type GrammarRule, type GrammarRuleProgress } from '@/features/grammar';
+
 import { getLessonStatus } from '../GrammarPageHelpers';
 
 export type RuleWithProgress = {

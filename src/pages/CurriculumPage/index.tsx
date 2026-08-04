@@ -41,7 +41,7 @@ const CurriculumPage = () => {
     if (profile?.discipline && domain === 'All') {
       setDomain(profile.discipline);
     }
-  }, [profile?.discipline]);
+  }, [profile?.discipline, domain]);
   const [recommendation, setRecommendation] = useState<LearningTaskRecommendation | null>(null);
   const [recommendationLoading, setRecommendationLoading] = useState(true);
   const [unifiedReviewQueue, setUnifiedReviewQueue] = useState<UnifiedReviewItem[]>([]);

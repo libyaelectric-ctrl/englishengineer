@@ -40,10 +40,13 @@ export const openIDB = (options: IDBOpenOptions): Promise<IDBDatabase> => {
   });
 };
 
-export const isIDBSupported = (): boolean =>
-  typeof indexedDB !== 'undefined';
+export const isIDBSupported = (): boolean => typeof indexedDB !== 'undefined';
 
-export const idbGet = async <T>(dbName: string, storeName: string, key: string): Promise<T | null> => {
+export const idbGet = async <T>(
+  dbName: string,
+  storeName: string,
+  key: string
+): Promise<T | null> => {
   try {
     const db = await openIDB({ dbName, dbVersion: 1 });
     return new Promise((resolve, reject) => {
@@ -58,7 +61,12 @@ export const idbGet = async <T>(dbName: string, storeName: string, key: string):
   }
 };
 
-export const idbSet = async <T>(dbName: string, storeName: string, key: string, value: T): Promise<boolean> => {
+export const idbSet = async <T>(
+  dbName: string,
+  storeName: string,
+  key: string,
+  value: T
+): Promise<boolean> => {
   try {
     const db = await openIDB({ dbName, dbVersion: 1 });
     return new Promise((resolve, reject) => {

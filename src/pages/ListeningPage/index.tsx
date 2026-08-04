@@ -28,13 +28,13 @@ import {
 } from '@/features/level-system';
 import { useListeningMissionsStore } from '@/features/listening';
 import { AudioPlayer } from '@/features/listening/AudioPlayer';
+import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
 import {
   type ListeningEvaluationResult,
   type ListeningMission,
 } from '@/features/listening/listening.types';
 import { useReadingStore } from '@/features/reading';
 import { useWritingStore } from '@/features/writing/writing.store';
-import { PLAYBACK_SPEEDS } from '@/features/listening/listening.constants';
 
 type Question = {
   id: string;

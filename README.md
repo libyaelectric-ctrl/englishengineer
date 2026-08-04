@@ -5,6 +5,7 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 20+
 - npm 10+
 - Docker (opsiyonel)

@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 
 import { logger } from '@/shared/logger';
-
 import { KnowledgeCaptureService } from '@/shared/services/knowledge-capture.service';
 
 import { ListeningService } from './listening.service';

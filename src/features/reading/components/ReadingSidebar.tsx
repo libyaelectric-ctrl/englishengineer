@@ -1,5 +1,4 @@
 import { ArrowUpDown, BarChart3, Filter } from 'lucide-react';
-
 import { useShallow } from 'zustand/shallow';
 
 import { useReadingStore } from '@/features/reading';

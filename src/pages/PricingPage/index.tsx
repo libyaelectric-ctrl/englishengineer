@@ -29,13 +29,17 @@ import { SalesChatModal } from '@/pages/LandingPage/SalesChatModal';
 import { DpaContractGeneratorModal } from './DpaContractGeneratorModal';
 import { EnterpriseQuoteCalculatorModal } from './EnterpriseQuoteCalculatorModal';
 import { InvoiceTaxManagerModal } from './InvoiceTaxManagerModal';
+import { FreePlanButton, PlanAction } from './PlanAction';
 import { SecurityWhitepaperModal } from './SecurityWhitepaperModal';
 import { SlaGuaranteeMatrix } from './SlaGuaranteeMatrix';
 import { TrustCenterBadges } from './TrustCenterBadges';
-
-import { ACTIVE_PLANS, HIGHLIGHTED_PLANS, PLAN_BADGES, COMPARISON_ROWS } from './pricing.constants';
-import { getErrorMessage, isPlanUnavailable, getAccessBadge, getCalculatedPrice } from './pricing.utils';
-import { FreePlanButton, PlanAction } from './PlanAction';
+import { ACTIVE_PLANS, COMPARISON_ROWS, HIGHLIGHTED_PLANS, PLAN_BADGES } from './pricing.constants';
+import {
+  getAccessBadge,
+  getCalculatedPrice,
+  getErrorMessage,
+  isPlanUnavailable,
+} from './pricing.utils';
 
 const PricingPage = () => {
   const navigate = useNavigate();

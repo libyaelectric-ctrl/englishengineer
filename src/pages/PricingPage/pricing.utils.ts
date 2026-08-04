@@ -1,7 +1,7 @@
 import { COMMERCIAL_PLAN_CATALOG, CommercialPlanPreview } from '@/features/billing';
 import { CurrencyConfig } from '@/features/billing/currency.config';
 
-import { BASE_USD_MAP, ACCESS_BADGES } from './pricing.constants';
+import { ACCESS_BADGES, BASE_USD_MAP } from './pricing.constants';
 
 export const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;

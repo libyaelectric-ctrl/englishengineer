@@ -43,7 +43,11 @@ export const Heatmap = memo(({ sessions }: HeatmapProps) => {
         <h3 className="text-sm font-bold tracking-tight text-muted-copy">Daily Activity Streak</h3>
         <span className="text-xs font-semibold text-green-500">{sessions.length} sessions</span>
       </div>
-      <div className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar" role="list" aria-label={`Daily activity for the last ${HEATMAP_DAYS} days`}>
+      <div
+        className="flex gap-1.5 overflow-x-auto py-1 custom-scrollbar"
+        role="list"
+        aria-label={`Daily activity for the last ${HEATMAP_DAYS} days`}
+      >
         {days.map((day, i) => {
           const key = day.toISOString();
           const score = activityMap.get(key) || 0;

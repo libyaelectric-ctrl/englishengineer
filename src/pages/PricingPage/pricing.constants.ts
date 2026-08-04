@@ -24,14 +24,15 @@ export const BASE_USD_MAP: Record<string, { monthly: number; annual: number }> =
 
 export const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
 
-export const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> = {
-  pro: { icon: Sparkles, label: 'Popular', color: 'bg-primary' },
-  project: {
-    icon: Building2,
-    label: 'Engineering Teams',
-    color: 'bg-blue-600',
-  },
-};
+export const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> =
+  {
+    pro: { icon: Sparkles, label: 'Popular', color: 'bg-primary' },
+    project: {
+      icon: Building2,
+      label: 'Engineering Teams',
+      color: 'bg-blue-600',
+    },
+  };
 
 export const COMPARISON_ROWS = [
   {
@@ -52,21 +53,18 @@ export const COMPARISON_ROWS = [
     key: 'analytics',
     label: 'Analytics & Skill Metrics',
     icon: Sparkles,
-    tooltip:
-      'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
+    tooltip: 'CEFR progression tracking, team performance dashboards, and error diagnostic logs.',
   },
   {
     key: 'team',
     label: 'Team Management & SSO',
     icon: Building2,
-    tooltip:
-      'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
+    tooltip: 'Group seat allocation, SAML/Okta single sign-on, and central billing control.',
   },
   {
     key: 'limits',
     label: 'Usage Allowance Limits',
     icon: Sparkles,
-    tooltip:
-      'Monthly voice practice minutes, document upload counts, and AI token limits.',
+    tooltip: 'Monthly voice practice minutes, document upload counts, and AI token limits.',
   },
 ] as const;

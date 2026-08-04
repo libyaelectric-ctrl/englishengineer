@@ -1,10 +1,4 @@
-import {
-  BookOpen,
-  CheckCircle2,
-  HelpCircle,
-  Target,
-  TriangleAlert,
-} from 'lucide-react';
+import { BookOpen, CheckCircle2, HelpCircle, Target, TriangleAlert } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
 
@@ -17,20 +11,20 @@ import {
   getGrammarReviewReason,
 } from '@/features/grammar';
 
-import { LessonBlock, SectionHeading } from './GrammarPageComponents';
-import { compact } from './GrammarPageHelpers';
-import { ChatPanel, QuizPanel } from './GrammarLessonContent/LessonActionPanels';
 import { ExportPanel } from './GrammarLessonContent/ExportPanel';
 import { InteractiveDrillPanel } from './GrammarLessonContent/InteractiveDrillPanel';
+import { ChatPanel, QuizPanel } from './GrammarLessonContent/LessonActionPanels';
 import { LessonHeader } from './GrammarLessonContent/LessonHeader';
 import {
-  MasteryBar,
   LinkedVocabularySection,
-  StatsGrid,
+  MasteryBar,
   SkillLinksSection,
+  StatsGrid,
   StatusMessage,
 } from './GrammarLessonContent/LessonInfoSections';
-import type { Rule, QuizItem } from './GrammarLessonContent/types';
+import type { QuizItem, Rule } from './GrammarLessonContent/types';
+import { LessonBlock, SectionHeading } from './GrammarPageComponents';
+import { compact } from './GrammarPageHelpers';
 
 export type { Rule, QuizItem };
 

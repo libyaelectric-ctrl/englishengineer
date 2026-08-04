@@ -1,12 +1,13 @@
-import { useState } from 'react';
 import { FileCheck, FileText, Layers, ShieldCheck } from 'lucide-react';
 
+import { useState } from 'react';
+
 import { Link } from 'react-router-dom';
-import { PageContainer } from '@/shared/components/PageContainer';
 
 import { MetricCard } from '@/shared/components/MetricCard';
+import { PageContainer } from '@/shared/components/PageContainer';
 import { SkillLockedState } from '@/shared/components/SkillLockedState';
-import { VOCAB_THRESHOLD, GRAMMAR_THRESHOLD } from '@/shared/constants/progression-thresholds';
+import { GRAMMAR_THRESHOLD, VOCAB_THRESHOLD } from '@/shared/constants/progression-thresholds';
 import { isProgressionBypassed } from '@/shared/utils/progression-lock.helpers';
 
 import { useGrammarStore } from '@/features/grammar';
@@ -150,8 +151,8 @@ const StatsBar = ({
       trend="No external AI required"
       trendDirection="neutral"
       statusColor="cyan"
-      />
-    </div>
+    />
+  </div>
 );
 
 const WritingMainContent = ({
