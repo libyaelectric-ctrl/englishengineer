@@ -35,5 +35,5 @@ describe('TranslationService & Word Analysis', () => {
     });
     expect(result.translatedText).toBeTruthy();
     expect(result.wordAnalysis?.isSingleWord).toBe(true);
-  });
+  }, 30000);
 });

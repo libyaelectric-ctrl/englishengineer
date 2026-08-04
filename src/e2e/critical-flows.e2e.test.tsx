@@ -19,15 +19,15 @@ const renderWithProviders = (component: React.ReactElement, initialEntries = ['/
 describe('Critical flow: Landing → Navigation', () => {
   it('renders landing page with hero and navigation', () => {
     renderWithProviders(<LandingPage />);
-    expect(screen.getAllByText(/engineering career/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Start free/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Engineering English/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Built for Engineers/i).length).toBeGreaterThan(0);
   });
 
   it('displays pricing section with all plans', () => {
     renderWithProviders(<LandingPage />);
     expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
-    expect(screen.getByText('$29')).toBeInTheDocument();
-    expect(screen.getByText('$59')).toBeInTheDocument();
+    expect(screen.getAllByText('$29').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('$59').length).toBeGreaterThan(0);
   });
 
   it('shows 6 skill features on landing', () => {

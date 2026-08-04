@@ -10,6 +10,9 @@ coverage/
 *.log
 test-results/
 playwright-report/
+.playwright-cli/
+.vercel-tmp/
+__pycache__/
 *.zip
 
 # Environment files
