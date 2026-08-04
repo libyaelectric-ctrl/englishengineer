@@ -34,6 +34,12 @@ export const selectVocabularyLearningSet = (
     if (term.status !== 'approved') return false;
     if (!term.skillUse.includes(options.skillUse)) return false;
     if (options.domain && term.domain !== options.domain) return false;
+    if (
+      !options.domain &&
+      options.preferredDomains &&
+      !options.preferredDomains.includes(term.domain)
+    )
+      return false;
     const termStatus = getVocabularyMenuStatus(term.id, state);
     if (options.status === 'Learned' || options.status === 'Learning') {
       return termStatus === 'Learned' || termStatus === 'Learning';

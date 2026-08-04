@@ -1,10 +1,10 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 import { useAppStore } from '@/store/app.store';
 import { Bell, BookOpenCheck, ChevronRight, HardDrive, LogOut, Wallet, X } from 'lucide-react';
+import { useShallow } from 'zustand/shallow';
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 
-import { useShallow } from 'zustand/shallow';
 import { useNavigate } from 'react-router-dom';
 
 import { ThemeToggle } from '@/shared/components/ThemeToggle';
@@ -12,6 +12,8 @@ import { cn } from '@/shared/utils/cn';
 
 import { useAuthStore } from '@/features/auth';
 import { useBillingStore } from '@/features/billing';
+import { INTERFACE_LANGUAGES, useLocalizationStore } from '@/features/localization';
+import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
 
 import { Navigation } from './Navigation';
 
@@ -22,11 +24,12 @@ export const Sidebar = () => {
   const { currentUser, logout } = useAuthStore(
     useShallow((s) => ({ currentUser: s.currentUser, logout: s.logout }))
   );
-  const { subscription } = useBillingStore(
-    useShallow((s) => ({ subscription: s.subscription }))
-  );
+  const { subscription } = useBillingStore(useShallow((s) => ({ subscription: s.subscription })));
   const navigate = useNavigate();
   const [, startTransition] = useTransition();
+  const { language, setLanguage } = useLocalizationStore();
+  const currentLangOption =
+    INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
   const closeSidebarOnMobile = () => {
     if (window.innerWidth < 1024 && isSidebarOpen) {
       toggleSidebar();
@@ -96,6 +99,31 @@ export const Sidebar = () => {
               </div>
             </div>
             <div className="flex items-center gap-1.5">
+              {/* Language Switcher */}
+              <div className="relative group">
+                <button
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-[4px] border border-border-soft bg-surface text-muted-copy hover:text-foreground hover:border-primary/40 transition-colors cursor-pointer"
+                  aria-label="Change language"
+                >
+                  <span className="text-sm leading-none">{currentLangOption.flag}</span>
+                </button>
+                <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
+                  {INTERFACE_LANGUAGES.map((lang) => (
+                    <button
+                      key={lang.id}
+                      onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
+                      className={`flex items-center gap-2.5 rounded px-2.5 py-1.5 text-left text-xs transition-colors cursor-pointer ${
+                        language === lang.id
+                          ? 'bg-primary/10 text-primary font-bold'
+                          : 'text-foreground hover:bg-surface-hover'
+                      }`}
+                    >
+                      <span className="text-sm leading-none">{lang.flag}</span>
+                      <span className="truncate">{lang.nativeLabel}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               <ThemeToggle />
               <button
                 onClick={toggleSidebar}

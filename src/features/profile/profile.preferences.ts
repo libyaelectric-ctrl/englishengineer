@@ -182,15 +182,15 @@ export const TIMEZONES = [
 ] as const;
 
 export const getPreferredDomains = (
-  profile: Pick<UserLearningProfile, 'goals' | 'professionId'>
+  profile: Pick<UserLearningProfile, 'goals' | 'professionId' | 'discipline'>
 ): string[] => {
-  const goalDomains = LEARNING_GOALS.filter((goal) => profile.goals.includes(goal.id)).flatMap(
-    (goal) => goal.preferredDomains
-  );
+  if (profile.discipline) {
+    return [profile.discipline, 'general', 'engineering'];
+  }
   const professionDomains =
     PROFESSIONS.find((profession) => profession.id === profile.professionId)?.preferredDomains ??
     [];
-  return [...new Set([...professionDomains, ...goalDomains])];
+  return [...new Set([...professionDomains, 'general', 'engineering'])];
 };
 
 export const getWeeklyStreakStatus = (

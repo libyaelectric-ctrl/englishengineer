@@ -84,12 +84,12 @@ export const BetaOnboarding = () => {
       mechanical: 'mechanical-engineer',
       mechatronics: 'mechanical-engineer',
     };
+    const discipline = form.engineeringDiscipline as EngineeringDiscipline;
     const minutes = Number.parseInt(form.dailyStudyGoal, 10) || 15;
     LearningProfileRepository.updatePreferences(userId ?? 'local-user', {
+      discipline,
       goals: ['work', 'engineering'],
-      professionId:
-        professionByDiscipline[form.engineeringDiscipline as EngineeringDiscipline] ??
-        'electrical-engineer',
+      professionId: professionByDiscipline[discipline] ?? 'electrical-engineer',
       dailyTarget: {
         minutes,
         taskCount: Math.max(1, Math.round(minutes / 10)),

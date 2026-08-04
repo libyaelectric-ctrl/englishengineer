@@ -9,6 +9,7 @@ import { SectionCard } from '@/shared/components/SectionCard';
 
 import { useFeatureFlag } from '@/features/feature-flags';
 import { LessonPathEngine } from '@/features/learning-orchestrator';
+import { useLocalizationStore } from '@/features/localization';
 import { type SkillName, type UserLearningProfile, getEloBandRange } from '@/features/profile';
 
 import { Sparkline } from './Sparkline';
@@ -29,12 +30,17 @@ interface ProgressCockpitProps {
 export const ProgressCockpit = React.memo(
   ({ skillNames, skillMeta, profile, skillSparklineData }: ProgressCockpitProps) => {
     const navigate = useNavigate();
+    const translate = useLocalizationStore((s) => s.translate);
     const advancedAnalytics = useFeatureFlag('advanced-analytics');
+    const advancedLabel = advancedAnalytics ? translate('dashboard.advanced') : '';
 
     return (
       <SectionCard
-        title="Progress Cockpit"
-        subtitle={`${skillNames.length} skills tracked — Detailed ELO, CEFR, and Global progression${advancedAnalytics ? ' (Advanced)' : ''}`}
+        title={translate('dashboard.progressCockpit')}
+        subtitle={
+          translate('dashboard.progressCockpitDesc').replace('{count}', String(skillNames.length)) +
+          advancedLabel
+        }
         icon={Target}
         className="animate-on-scroll"
       >
@@ -60,7 +66,7 @@ export const ProgressCockpit = React.memo(
                   <div className="text-right">
                     <span className="block text-sm font-bold text-foreground">{meta.label}</span>
                     <span className="block text-[10px] font-medium text-muted-copy">
-                      Lesson {lesson}
+                      {translate('dashboard.lesson')} {lesson}
                     </span>
                   </div>
                 </div>
@@ -68,9 +74,9 @@ export const ProgressCockpit = React.memo(
                 <p className="mt-3 text-[10px] text-muted-copy leading-4">
                   {isSimulated
                     ? skill === 'listening'
-                      ? 'Simulated listening talks. Available for practice.'
-                      : 'Simulated site meeting discussions. Available for practice.'
-                    : `Accuracy: ${skillProfile.accuracy}%. Completed Tasks: ${skillProfile.completedTasks}.`}
+                      ? translate('dashboard.simulatedListening')
+                      : translate('dashboard.simulatedSpeaking')
+                    : `${translate('dashboard.accuracy')}: ${skillProfile.accuracy}%. ${translate('dashboard.completedTasks')}: ${skillProfile.completedTasks}.`}
                 </p>
 
                 <Sparkline
@@ -84,7 +90,7 @@ export const ProgressCockpit = React.memo(
                     <div className="flex justify-between items-end px-1">
                       <div className="flex flex-col items-start">
                         <span className="text-[10px] uppercase tracking-widest text-muted-copy/70">
-                          Min
+                          {translate('dashboard.min')}
                         </span>
                         <span className="text-[10px] font-medium text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).min}
@@ -97,7 +103,7 @@ export const ProgressCockpit = React.memo(
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="text-[10px] uppercase tracking-widest text-muted-copy/70">
-                          Max
+                          {translate('dashboard.max')}
                         </span>
                         <span className="text-[10px] font-medium text-muted-copy">
                           {getEloBandRange(skillProfile.cefrBand).max}
@@ -112,10 +118,10 @@ export const ProgressCockpit = React.memo(
                     />
                     <div className="flex justify-between items-center px-1 pt-0.5">
                       <span className="text-[10px] font-bold text-primary">
-                        {skillProfile.cefrBand} Level
+                        {skillProfile.cefrBand} {translate('dashboard.level')}
                       </span>
                       <span className="text-[10px] font-medium text-muted-copy">
-                        {skillProfile.progressToNextBand}% to next level
+                        {skillProfile.progressToNextBand}% {translate('dashboard.toNextLevel')}
                       </span>
                     </div>
                   </div>
@@ -124,7 +130,7 @@ export const ProgressCockpit = React.memo(
                   <div className="space-y-1.5 border-t border-border-soft/50 pt-2.5">
                     <div className="flex justify-between items-center px-1">
                       <span className="text-[10px] font-medium text-muted-copy">
-                        Global Progress (A1 - C2+)
+                        {translate('dashboard.globalProgress')}
                       </span>
                       <span className="text-[10px] font-bold text-foreground">
                         {Math.round(((skillProfile.elo - 1000) / 4000) * 100)}%
