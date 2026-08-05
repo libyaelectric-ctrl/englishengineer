@@ -6,7 +6,7 @@ import { LearningProfileRepository } from '@/shared/services/learning-profile.re
 import { getBaseCefrLevel } from '@/shared/utils/profile.utils';
 
 import { useAuthStore } from '@/features/auth';
-import { LearningProfileEngine } from '@/features/profile/profile.engine';
+import { LearningProfileEngine } from '@/shared/services/learning-profile-engine.service';
 
 import type { SkillKey } from './level-system.types';
 

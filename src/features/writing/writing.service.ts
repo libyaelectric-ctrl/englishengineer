@@ -11,8 +11,8 @@ import { filterMissionsByDiscipline } from '@/shared/constants/mission-disciplin
 import { LearningIntelligenceService } from '@/shared/services/learning-intelligence.service';
 import { storage } from '@/shared/storage';
 
-import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import { WRITING_MISSIONS } from './writing.data';
 import { WritingEvaluator } from './writing.evaluator';

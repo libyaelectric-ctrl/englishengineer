@@ -3,7 +3,7 @@ import { ProgressService } from '@/core/learning/progress.service';
 
 import { getStoredAIUsageSummary } from '@/features/ai';
 import { AssessmentService } from '@/features/assessment';
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import {
   calculateAverage,

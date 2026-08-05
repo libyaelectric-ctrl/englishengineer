@@ -7,7 +7,7 @@ import { filterMissionsByDiscipline } from '@/shared/constants/mission-disciplin
 import { logger } from '@/shared/logger';
 import { storage } from '@/shared/storage';
 
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import { LISTENING_MISSIONS } from './listening.data';
 import { ListeningEvaluator } from './listening.evaluator';

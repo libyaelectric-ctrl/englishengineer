@@ -36,6 +36,16 @@ export type MistakeCategory =
   | 'article'
   | 'repeated phrase issue';
 
+export interface DailyCommunicationTask {
+  id: string;
+  module: DailyTaskModule;
+  title: string;
+  description: string;
+  route: string;
+  estimatedMinutes: number;
+  level: import('@/shared/types/domain.types').CefrLevel;
+}
+
 export interface MistakeLogEntry {
   id: string;
   category: MistakeCategory;
@@ -47,9 +57,44 @@ export interface MistakeLogEntry {
   isCritical?: boolean;
 }
 
+export type ReviewPrioritySource = 'weak-word' | 'due-item' | 'repeated-mistake' | 'skill-weakness';
+
+export interface ReviewPriorityCandidate {
+  id: string;
+  label: string;
+  source: ReviewPrioritySource;
+  severity?: number;
+}
+
+export interface ReviewPriorityItem extends ReviewPriorityCandidate {
+  priority: number;
+  reason: string;
+}
+
+export interface UnifiedReviewItem extends ReviewPriorityItem {
+  route: string;
+  detail: string;
+}
+
 export interface LearningIntelligencePreferences {
   careerRole: CareerRole;
   completedTaskDates: Record<string, string>;
   mistakeLog: MistakeLogEntry[];
   lastReportDate: string | null;
+}
+
+export interface SevenDayProgressReport {
+  completedTasks: number;
+  improvedSkill: string;
+  weakArea: string;
+  repeatedMistakes: string[];
+  nextWeekFocus: string;
+  eloEstimate: number;
+  cefrEstimate: string;
+  recommendedNextTasks: string[];
+  currentLevel: import('@/shared/types/domain.types').CefrLevel;
+  topRepeatedMistake: string;
+  recommendedWorkTools: string;
+  recommendedQuickAIAction: string;
+  recommendedPhraseCategory: string;
 }

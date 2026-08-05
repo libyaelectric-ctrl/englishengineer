@@ -6,8 +6,8 @@ import { IdService } from '@/core/ids/id.service';
 import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
-import { useAIStore } from '@/features/ai/ai.store';
-import { AICoachSession } from '@/features/ai/ai.types';
+import { useAIStore } from '@/features/ai';
+import { AICoachSession } from '@/shared/types/ai.types';
 
 import { BillingPlanId } from './billing.types';
 

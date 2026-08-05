@@ -7,9 +7,9 @@ import type { CefrLevel, SkillName, UserLearningProfile } from '@/shared/types/d
 import type { VocabularyTerm } from '@/shared/types/vocabulary.types';
 import { getBaseCefrLevel, getNextCefrBand, getTaskBandMix } from '@/shared/utils/profile.utils';
 
-import { GrammarEngine } from '@/features/grammar/grammar.engine';
-import { getPreferredDomains } from '@/features/profile/profile.preferences';
-import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
+import { GrammarEngine } from '@/shared/services/grammar.engine';
+import { getPreferredDomains } from '@/shared/services/profile-preferences.service';
+import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 import type {
   LearningTaskRecommendation,

@@ -14,7 +14,7 @@ import {
 
 import { Button } from '@/shared/components/Button';
 import { SectionCard } from '@/shared/components/SectionCard';
-import { DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
+import { CORE_VOCABULARY_WORD_COUNT, DISCIPLINE_META } from '@/shared/constants/engineering-disciplines';
 import type { EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 
 import { INTERFACE_LANGUAGES } from '@/features/localization/localization.data';
@@ -129,7 +129,7 @@ export const LanguageDisciplineSection = ({
                   <div className="min-w-0 flex-1">
                     <h4 className="text-xs font-bold truncate">{meta.labelKey}</h4>
                     <p className="text-[9px] text-muted-copy">
-                      {meta.wordCount?.toLocaleString() ?? '—'} words
+                      {((meta.wordCount ?? 0) + CORE_VOCABULARY_WORD_COUNT).toLocaleString()} words
                     </p>
                   </div>
                   {isSelected &&

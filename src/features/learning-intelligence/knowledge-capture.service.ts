@@ -3,7 +3,7 @@ import { GrammarRepository } from '@/shared/services/grammar.repository';
 import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { CefrLevel } from '@/shared/types/domain.types';
 
-import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
+import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 export interface KnowledgeCaptureInput {
   cefrLevel: CefrLevel;

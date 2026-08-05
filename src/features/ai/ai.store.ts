@@ -9,7 +9,7 @@ import { logger } from '@/shared/logger';
 import { eosPersistConfig } from '@/shared/storage/persist-middleware';
 
 import { UserProfile } from '@/features/auth/auth.types';
-import { useLearningIntelligenceStore } from '@/features/learning-intelligence/learning-intelligence.store';
+import { useLearningIntelligenceStore } from '@/shared/stores/learning-intelligence.store';
 
 import {
   AI_COACH_MODES,

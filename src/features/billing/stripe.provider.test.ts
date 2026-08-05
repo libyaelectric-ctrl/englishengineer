@@ -4,7 +4,7 @@ import { StripeBillingProvider } from './stripe.provider';
 
 const getBackendAuthHeaders = vi.fn();
 
-vi.mock('@/features/auth/backend-auth', () => ({
+vi.mock('@/shared/services/backend-auth.service', () => ({
   getBackendAuthHeaders: (...args: unknown[]) => getBackendAuthHeaders(...args),
 }));
 

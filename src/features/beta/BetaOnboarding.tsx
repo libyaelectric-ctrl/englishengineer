@@ -10,7 +10,7 @@ import {
 import { LearningProfileRepository } from '@/shared/services/learning-profile.repository';
 import type { ProfessionId } from '@/shared/types/domain.types';
 
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { ProductAnalyticsService } from '@/shared/services/product-analytics.service';
 import { useAuthStore } from '@/features/auth';
 import { useLocalizationStore } from '@/features/localization';
 import type { TranslationKey } from '@/features/localization/localization.types';

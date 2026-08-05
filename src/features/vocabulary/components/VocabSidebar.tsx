@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { STORAGE_CHANGE_EVENT } from '@/shared/storage';
 
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import {
   VocabularyMenuService,
   type VocabularyMenuState,

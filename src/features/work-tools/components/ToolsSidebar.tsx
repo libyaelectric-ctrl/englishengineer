@@ -1,7 +1,7 @@
 import { SkillSidebar } from '@/layouts/sidebar/SkillSidebar';
 import type { SidebarConfig } from '@/layouts/sidebar/sidebar.config';
 
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 import type { SkillName } from '@/features/profile/profile.types';
 
 export function ToolsSidebar() {

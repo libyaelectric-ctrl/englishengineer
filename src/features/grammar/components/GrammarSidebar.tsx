@@ -6,7 +6,7 @@ import { useLearningStore } from '@/core/learning';
 
 import { GrammarProgressService } from '@/features/grammar/grammar.progress';
 import { useGrammarStore } from '@/features/grammar/grammar.store';
-import { SkillEntryBrief } from '@/features/learning-orchestrator/SkillEntryBrief';
+import { SkillEntryBrief } from '@/features/learning-orchestrator';
 
 const log = (_page: string, _action: string, _details: string) => {};
 
