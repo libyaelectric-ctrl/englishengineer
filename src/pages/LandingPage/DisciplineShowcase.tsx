@@ -20,6 +20,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
+  CORE_VOCABULARY_WORD_COUNT,
+  CROSS_DOMAIN_WORD_COUNTS,
   DISCIPLINE_META,
   ENGINEERING_DISCIPLINES,
 } from '@/shared/constants/engineering-disciplines';
@@ -111,6 +113,8 @@ const DISCIPLINE_SAMPLE_TERMS: Record<EngineeringDiscipline, string> = {
 
 export function DisciplineShowcase() {
   const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const isTr = language === 'tr';
   const [activeTab, setActiveTab] = useState<EngineeringDiscipline>(ENGINEERING_DISCIPLINES[0]);
   const disciplineKeys = Object.keys(DISCIPLINE_META) as EngineeringDiscipline[];
   const meta = DISCIPLINE_META[activeTab];
@@ -137,13 +141,13 @@ export function DisciplineShowcase() {
           </p>
         </div>
 
-        {/* 10-Discipline Grid with Word Counts */}
-        <AnimatedSection className="mb-6 grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5">
+        {/* 10-Discipline Grid with Word Counts (own domain + General + Engineering core) */}
+        <AnimatedSection className="mb-1.5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5">
           {disciplineKeys.map((id) => {
             const d = DISCIPLINE_META[id];
             const DisciplineIcon = DISCIPLINE_ICONS[id] || Compass;
             const isActive = activeTab === id;
-            const wordCount = d.wordCount ?? 0;
+            const wordCount = (d.wordCount ?? 0) + CORE_VOCABULARY_WORD_COUNT;
             return (
               <button
                 key={id}
@@ -171,6 +175,12 @@ export function DisciplineShowcase() {
             );
           })}
         </AnimatedSection>
+        <p className="mb-6 text-[10px] font-medium text-muted-copy">
+          *{' '}
+          {isTr
+            ? `Her sayıya Genel (${CROSS_DOMAIN_WORD_COUNTS.general.toLocaleString('tr-TR')}) + Mühendislik (${CROSS_DOMAIN_WORD_COUNTS.engineering.toLocaleString('tr-TR')}) çekirdek kelimeleri dahildir`
+            : `Each total includes General (${CROSS_DOMAIN_WORD_COUNTS.general.toLocaleString()}) + Engineering (${CROSS_DOMAIN_WORD_COUNTS.engineering.toLocaleString()}) core vocabulary`}
+        </p>
 
         {/* Interactive Detail Panel */}
         <AnimatedSection delay={100} className="relative group">
@@ -187,7 +197,7 @@ export function DisciplineShowcase() {
                       {translate(`discipline.${activeTab}`)}
                     </h3>
                     <span className="inline-flex items-center rounded-full bg-soft border border-border-soft px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-primary">
-                      {meta?.wordCount?.toLocaleString() ?? '—'} words
+                      {((meta?.wordCount ?? 0) + CORE_VOCABULARY_WORD_COUNT).toLocaleString()} words
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm font-medium leading-relaxed text-foreground/85">

@@ -7,9 +7,9 @@ import { useLocalizationStore } from '@/features/localization';
 export function Footer({ className = '' }: { className?: string }) {
   const { translate } = useLocalizationStore();
   return (
-    <footer className={`border-t border-border-soft bg-background px-6 py-3 md:px-12 ${className}`}>
+    <footer className={`border-t border-border-soft bg-background px-6 py-2 md:px-12 ${className}`}>
       <div className="mx-auto max-w-7xl">
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-3">
             <div className="relative flex h-8 w-8 items-center justify-center rounded shadow-sm overflow-hidden">
               <img

@@ -41,7 +41,7 @@ export function BeforeAfterCard() {
   const active = COMPARISONS[activeIndex];
 
   return (
-    <section className="border-t border-border-soft bg-background px-6 py-8 md:px-12 md:py-10">
+    <section className="bg-surface px-6 py-7 md:px-12 md:py-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
           <div className="flex items-center gap-2.5 flex-wrap">
