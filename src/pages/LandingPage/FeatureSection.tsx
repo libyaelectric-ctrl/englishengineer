@@ -9,7 +9,7 @@ export function FeatureSection() {
   return (
     <section
       id="features"
-      className="border-t border-border-soft bg-background px-6 py-8 md:px-12 md:py-12"
+      className="bg-background px-6 py-7 md:px-12 md:py-8"
     >
       <div className="mx-auto max-w-7xl">
         {/* Single Row Compact Header */}

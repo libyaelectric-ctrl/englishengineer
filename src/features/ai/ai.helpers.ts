@@ -3,7 +3,7 @@ import { LearningState } from '@/core/learning/learning.types';
 import { ProgressService } from '@/core/learning/progress.service';
 
 import { UserProfile } from '@/features/auth/auth.types';
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import {
   AICoachContext,

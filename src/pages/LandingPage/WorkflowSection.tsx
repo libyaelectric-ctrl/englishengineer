@@ -36,7 +36,7 @@ export function WorkflowSection() {
   return (
     <section
       id="workflow"
-      className="border-t border-border-soft bg-surface px-6 py-8 md:px-12 md:py-10"
+      className="bg-surface px-6 py-7 md:px-12 md:py-8"
     >
       <div className="mx-auto max-w-7xl">
         {/* Compact Single Row Header */}

@@ -1,4 +1,5 @@
-import { ArrowRight, CheckCircle2, Globe, Shield, Sparkles, Volume2, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Sparkles, Volume2 } from 'lucide-react';
+
 
 import { useEffect, useState } from 'react';
 
@@ -41,6 +42,14 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
     SAMPLE_PRESETS[0]
   );
   const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const isTr = language === 'tr';
+
+  const HERO_STATS = [
+    { value: '10', labelEn: 'Disciplines', labelTr: 'Disiplin' },
+    { value: 'A2–C1', labelEn: 'CEFR Levels', labelTr: 'CEFR Seviyesi' },
+    { value: '15', labelEn: 'Languages', labelTr: 'Arayüz Dili' },
+  ];
 
   useEffect(() => {
     const t = setTimeout(() => setIsVisible(true), 100);
@@ -70,37 +79,6 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
         }`}
       >
-        {/* Full Width Centered Top Header: Badge, H1 Title, and Subtitle */}
-        <div className="w-full text-center max-w-3xl mx-auto space-y-3.5 mb-8 relative z-10">
-          {/* ITEM 3: Gerçek Zamanlı Canlı Aktivite Rozeti */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-bold text-emerald-600 shadow-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>{translate('landing.heroSocialProof')}</span>
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight tracking-tight">
-            <span className="text-foreground">{translate('landing.heroTitle')}</span>
-          </h1>
-
-          <p className="text-xs sm:text-sm font-medium text-foreground/85 leading-relaxed max-w-2xl mx-auto">
-            {translate('landing.heroSubtitle')}
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-5 text-xs font-semibold text-foreground/80 pt-1">
-            <span className="flex items-center gap-1.5">
-              <Shield className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature1')}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Zap className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature2')}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Globe className="h-3.5 w-3.5 text-primary" /> {translate('landing.heroFeature3')}
-            </span>
-          </div>
-        </div>
 
         {/* 2 Equal Columns: Left (Try AI Coach Sandbox) & Right (AI Coach Visual Processor) */}
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch relative z-10">
@@ -241,6 +219,21 @@ export const HeroSection = ({ scrollShift }: HeroSectionProps) => {
                         ))}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Trust stats (moved from bottom strip) */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {HERO_STATS.map((s) => (
+                      <div
+                        key={s.labelEn}
+                        className="rounded-lg bg-white/10 border border-white/15 px-2 py-1.5 text-center"
+                      >
+                        <div className="text-sm font-extrabold text-white leading-none">{s.value}</div>
+                        <div className="text-[9px] text-white/70 font-medium uppercase tracking-wider mt-0.5 leading-tight">
+                          {isTr ? s.labelTr : s.labelEn}
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* ITEM 7: Hero Waveform Audio Visualizer */}

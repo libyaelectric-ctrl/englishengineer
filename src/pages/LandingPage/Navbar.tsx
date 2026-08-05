@@ -1,6 +1,8 @@
 import { PRODUCT_VERSION } from '@/config/product.config';
 import { useAppStore } from '@/store/app.store';
-import { ArrowLeft, ArrowRight, Globe, Moon, Sparkles, Sun } from 'lucide-react';
+import { ArrowRight, ChevronDown, Moon, Sun } from 'lucide-react';
+
+import { useState } from 'react';
 
 import { Link, useLocation } from 'react-router-dom';
 
@@ -12,161 +14,163 @@ interface NavbarProps {
   onOpenProofreader?: () => void;
 }
 
-export function Navbar({ onDemoClick, onOpenProofreader }: NavbarProps) {
+export function Navbar({ onDemoClick, onOpenProofreader: _ }: NavbarProps) {
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
   const location = useLocation();
   const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
-
   const { language, setLanguage, translate } = useLocalizationStore();
-  const currentLangOption =
-    INTERFACE_LANGUAGES.find((l) => l.id === language) || INTERFACE_LANGUAGES[0];
+  const [langOpen, setLangOpen] = useState(false);
+  const currentLang = INTERFACE_LANGUAGES.find((l) => l.id === language);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 flex justify-center border-b border-border-soft glass py-3 shadow-sm">
-      <div className="flex w-full max-w-7xl items-center justify-between px-6">
-        <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded shadow-sm overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <img src="/brand/logo.webp" alt="EngVox Logo" className="h-full w-full object-cover" />
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-base font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
-              EngVox
-            </span>
-            <div className="flex items-center gap-1.5 rounded bg-soft px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-              </span>
-              <span>v{PRODUCT_VERSION}</span>
-            </div>
-          </div>
-        </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border-soft glass shadow-sm">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="flex items-center gap-3 py-2 h-11">
 
-        {isAuthPage ? (
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-muted-copy hover:text-primary transition-colors"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            <span>{translate('common.back')}</span>
+          {/* ── Left: Logo ── */}
+          <Link to="/" className="flex items-center gap-2 group cursor-pointer shrink-0">
+            <div className="flex h-7 w-7 items-center justify-center rounded overflow-hidden transition-transform duration-200 group-hover:scale-105">
+              <img src="/brand/logo.webp" alt="EngVox" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-bold text-foreground group-hover:text-primary transition-colors">EngVox</span>
+              <span className="rounded bg-soft px-1.5 py-px text-[9px] font-bold uppercase tracking-wider text-primary font-mono border border-border-soft flex items-center gap-1">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                </span>
+                v{PRODUCT_VERSION}
+              </span>
+            </div>
           </Link>
-        ) : (
-          <div className="hidden items-center gap-6 text-xs font-semibold uppercase tracking-wider md:flex">
-            <a
-              href="#disciplines"
-              className="text-foreground/90 hover:text-primary transition-colors font-bold"
+
+          {/* ── Language Flags: inline raised row (md+), compact popover on small screens ── */}
+          <div className="hidden md:flex items-center gap-1 lg:gap-1.5 shrink-0 mx-3 lg:mx-6">
+            {INTERFACE_LANGUAGES.map((lang) => (
+              <button
+                key={lang.id}
+                type="button"
+                title={lang.nativeLabel}
+                aria-label={`Switch to ${lang.label}`}
+                onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
+                className={`flex items-center justify-center rounded-md w-7 h-7 text-base leading-none border transition-all cursor-pointer select-none ${
+                  language === lang.id
+                    ? 'bg-primary/15 border-primary ring-1 ring-primary/60 -translate-y-0.5 shadow-md'
+                    : 'bg-surface border-border-soft opacity-60 hover:opacity-100 hover:-translate-y-0.5 hover:shadow-md shadow-[0_1px_2px_rgba(0,0,0,0.12)]'
+                }`}
+              >
+                {lang.flag}
+              </button>
+            ))}
+          </div>
+
+          {/* Mobile fallback: compact language popover */}
+          <div className="relative shrink-0 md:hidden">
+            <button
+              type="button"
+              onClick={() => setLangOpen((o) => !o)}
+              aria-expanded={langOpen}
+              aria-label="Change interface language"
+              className="flex items-center gap-1 rounded border border-border-soft bg-surface px-1.5 py-1 text-base leading-none transition-colors hover:border-primary/40 cursor-pointer"
             >
-              {translate('landing.navDisciplines')}
-            </a>
-            <a
-              href="#features"
-              className="text-foreground/90 hover:text-primary transition-colors font-bold"
-            >
-              {translate('landing.navFeatures')}
-            </a>
-            <a
-              href="#workflow"
-              className="text-foreground/90 hover:text-primary transition-colors font-bold"
-            >
-              {translate('landing.howItWorks')}
-            </a>
-            <Link
-              to="/pricing"
-              className="text-foreground/90 hover:text-primary transition-colors font-bold"
-            >
-              {translate('landing.navPricing')}
-            </Link>
-            {onOpenProofreader && (
+              <span>{currentLang?.flag ?? '🌐'}</span>
+              <ChevronDown className="h-3 w-3 text-muted-copy" />
+            </button>
+            {langOpen && (
+              <div className="absolute left-0 top-full mt-1.5 z-50 grid grid-cols-5 gap-0.5 rounded-lg border border-border-soft bg-background p-1.5 shadow-xl">
+                {INTERFACE_LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.id}
+                    type="button"
+                    title={lang.nativeLabel}
+                    aria-label={`Switch to ${lang.label}`}
+                    onClick={() => {
+                      setLanguage(lang.id as SupportedInterfaceLanguage);
+                      setLangOpen(false);
+                    }}
+                    className={`flex items-center justify-center rounded w-7 h-7 text-base leading-none transition-all cursor-pointer select-none ${
+                      language === lang.id
+                        ? 'bg-primary/10 ring-1 ring-primary'
+                        : 'opacity-50 hover:opacity-100 hover:bg-surface'
+                    }`}
+                  >
+                    {lang.flag}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* ── Spacer ── */}
+          <div className="flex-1" />
+
+          {/* ── Right: Nav Links + Theme + Auth ── */}
+          <div className="flex items-center gap-1 shrink-0">
+            {!isAuthPage && (
+              <>
+                <a
+                  href="#disciplines"
+                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
+                >
+                  {translate('landing.navDisciplines')}
+                </a>
+                <a
+                  href="#features"
+                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
+                >
+                  {translate('landing.navFeatures')}
+                </a>
+                <Link
+                  to="/pricing"
+                  className="hidden md:inline-flex items-center rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wide text-foreground/70 hover:text-primary hover:bg-surface transition-colors"
+                >
+                  {translate('landing.navPricing')}
+                </Link>
+
+                {/* Separator before theme toggle */}
+                <div className="hidden md:block h-4 w-px bg-border-soft mx-1" />
+              </>
+            )}
+
+            {/* Try Demo (auth pages only — wired by LoginPage) */}
+            {onDemoClick && (
               <button
                 type="button"
-                onClick={onOpenProofreader}
-                className="inline-flex items-center gap-1 text-primary hover:underline transition-colors font-bold cursor-pointer"
+                onClick={onDemoClick}
+                className="inline-flex items-center rounded border border-primary/40 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/20 transition-colors"
               >
-                <Sparkles className="h-3.5 w-3.5" />
-                <span>{translate('landing.aiProofreader')}</span>
+                {translate('landing.tryDemo')}
               </button>
             )}
-          </div>
-        )}
 
-        <div className="flex items-center gap-2.5">
-          {/* Language Quick Switcher — between logo and theme toggle */}
-          <div className="relative group">
-            <div className="flex items-center gap-1 rounded border border-border-soft bg-surface px-2 py-1.5 text-xs font-medium text-foreground cursor-pointer hover:border-primary/40 transition-colors">
-              <span className="text-sm leading-none">{currentLangOption.flag}</span>
-              <span className="hidden sm:inline font-mono uppercase text-[11px] font-bold">
-                {currentLangOption.id}
-              </span>
-              <Globe className="h-3.5 w-3.5 text-muted-copy ml-0.5" />
-            </div>
-            <div className="absolute left-0 top-full mt-1 hidden group-hover:flex flex-col rounded-lg border border-border-soft bg-surface p-1.5 shadow-xl min-w-[160px] max-h-[320px] overflow-y-auto z-50 animate-in fade-in duration-150">
-              {INTERFACE_LANGUAGES.map((lang) => (
-                <button
-                  key={lang.id}
-                  onClick={() => setLanguage(lang.id as SupportedInterfaceLanguage)}
-                  className={`flex items-center gap-2.5 rounded px-2.5 py-1.5 text-left text-xs transition-colors cursor-pointer ${
-                    language === lang.id
-                      ? 'bg-primary/10 text-primary font-bold'
-                      : 'text-foreground hover:bg-surface-hover'
-                  }`}
-                >
-                  <span className="text-sm leading-none">{lang.flag}</span>
-                  <span className="truncate">{lang.nativeLabel}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="inline-flex h-9 w-9 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
-            aria-label={
-              theme === 'dark'
-                ? translate('landing.switchLightMode')
-                : translate('landing.switchDarkMode')
-            }
-            title={
-              theme === 'dark'
-                ? translate('landing.switchLightMode')
-                : translate('landing.switchDarkMode')
-            }
-          >
-            {theme === 'dark' ? (
-              <Sun className="h-4 w-4 text-amber-500" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
-          </button>
-
-          {isAuthPage && onDemoClick && (
+            {/* Theme Toggle */}
             <button
-              onClick={onDemoClick}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 text-xs font-bold text-amber-600 hover:bg-amber-500/20 transition-all cursor-pointer shadow-sm"
-              title={translate('login.launchDemo')}
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="inline-flex h-7 w-7 items-center justify-center rounded border border-border-soft bg-background text-muted-copy hover:text-foreground transition-colors cursor-pointer"
+              aria-label={theme === 'dark' ? translate('landing.switchLightMode') : translate('landing.switchDarkMode')}
             >
-              <Sparkles className="h-3.5 w-3.5 text-amber-500 animate-pulse" />
-              <span>{translate('landing.tryDemo')}</span>
+              {theme === 'dark' ? <Sun className="h-3.5 w-3.5 text-amber-500" /> : <Moon className="h-3.5 w-3.5" />}
             </button>
-          )}
 
-          {!isAuthPage && (
-            <>
-              <Link
-                to="/login"
-                className="inline-flex items-center rounded border border-border-soft bg-surface px-3 sm:px-4 py-2 text-xs font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors shadow-sm"
-              >
-                {translate('common.login') || 'Log in'}
-              </Link>
-              <Link
-                to="/signup"
-                className="inline-flex items-center gap-1.5 rounded bg-primary px-3 sm:px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors"
-              >
-                <span>{translate('landing.startFree')}</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </>
-          )}
+            {!isAuthPage && (
+              <>
+                <Link
+                  to="/login"
+                  className="hidden sm:inline-flex items-center rounded border border-border-soft bg-surface px-2.5 py-1 text-[11px] font-semibold text-foreground hover:bg-surface-hover hover:border-primary/40 transition-colors ml-1"
+                >
+                  {translate('common.login') || 'Log in'}
+                </Link>
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center gap-1 rounded bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm hover:bg-primary-hover transition-colors ml-0.5"
+                >
+                  {translate('landing.startFree')}
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

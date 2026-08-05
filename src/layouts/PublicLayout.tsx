@@ -7,7 +7,8 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 
 import { cn } from '@/shared/utils/cn';
 
-import { Footer } from '@/pages/LandingPage/Footer';
+
+
 
 const links = [
   { label: 'Features', href: '/#features' },
@@ -46,19 +47,13 @@ export const PublicLayout = () => {
   const location = useLocation();
   const isLanding = location.pathname === '/';
   const isPricing = location.pathname === '/pricing';
-  const isDashboard = location.pathname.startsWith('/dashboard');
   const hideNav = isLanding || isPricing;
   const theme = useAppStore((s) => s.theme);
   const setTheme = useAppStore((s) => s.setTheme);
 
   return (
     <div className="public-shell min-h-screen bg-transparent text-foreground relative pb-16">
-      <a
-        href="#public-content"
-        className="fixed left-4 top-3 z-[60] -translate-y-20 rounded-[10px] bg-foreground px-4 py-2 text-sm font-semibold text-white shadow-lg transition-transform focus:translate-y-0"
-      >
-        Skip to content
-      </a>
+
 
       {/* Hide nav on landing and pricing pages - they have their own glass morphism nav */}
       {!hideNav && (
@@ -166,10 +161,7 @@ export const PublicLayout = () => {
         <Outlet />
       </div>
 
-      {/* Fixed Bottom Footer for All Public Pages */}
-      {!isDashboard && (
-        <Footer className="fixed bottom-0 inset-x-0 z-50 glass border-t border-border-soft shadow-sm" />
-      )}
+
 
       {/* Fixed Floating Back to Home Button on All Public Subpages */}
       <FloatingBackToHome />
