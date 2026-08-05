@@ -117,9 +117,9 @@ export const useProfilePage = () => {
     try {
       setError(null);
       ProductAnalyticsService.track('checkout_started', '/profile', {
-        metadata: { plan: 'pro', source: 'user' },
+        metadata: { plan: 'junior', source: 'user' },
       });
-      await startCheckout(currentUser.id, currentUser.email, 'pro');
+      await startCheckout(currentUser.id, currentUser.email, 'junior');
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Billing is not available in demo mode.');
     }

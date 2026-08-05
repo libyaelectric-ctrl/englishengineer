@@ -10,8 +10,8 @@ export function DashboardSidebar() {
   const currentUser = useAuthStore((state) => state.currentUser);
   const subscription = useBillingStore((state) => state.subscription);
 
-  const planName = subscription?.planId || 'free';
-  const isFree = planName === 'free';
+  const planName = subscription?.planId || 'junior';
+  const isFree = planName === 'junior';
   const userInitials = (currentUser?.displayName || 'Eng')
     .split(' ')
     .map((n) => n[0])

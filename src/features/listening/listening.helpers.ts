@@ -31,7 +31,7 @@ export const ListeningHelpers = {
       ['Field', 'FLD'],
       ['Testing', 'TST'],
       ['Safety', 'SFT'],
-      ['Project', 'PM'],
+      ['specialist', 'PM'],
       ['Mechanical', 'ME'],
     ];
     const match = mappings.find(([keyword]) => discipline.includes(keyword));

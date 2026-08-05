@@ -54,7 +54,7 @@ export const UsersTab = ({ users, onPromote }: UsersTabProps) => {
                 <td className="py-3.5 px-4">
                   <span
                     className={`rounded px-1.5 py-0.5 font-semibold text-[10px] ${
-                      u.plan.includes('Pro')
+                      u.plan.includes('senior')
                         ? 'bg-blue-100 text-blue-800'
                         : 'bg-surface-hover text-muted-copy'
                     }`}

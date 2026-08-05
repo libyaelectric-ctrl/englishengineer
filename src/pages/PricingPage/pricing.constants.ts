@@ -3,7 +3,7 @@ import { Building2, Sparkles } from 'lucide-react';
 import { COMMERCIAL_PLAN_CATALOG } from '@/features/billing';
 
 export const ACTIVE_PLANS = COMMERCIAL_PLAN_CATALOG.filter((plan) =>
-  ['free', 'pro', 'project', 'exec', 'private'].includes(plan.id)
+  ['junior', 'senior', 'specialist', 'master', 'team'].includes(plan.id)
 );
 
 export const ACCESS_BADGES: Record<string, string> = {
@@ -22,7 +22,7 @@ export const BASE_USD_MAP: Record<string, { monthly: number; annual: number }> =
   private: { monthly: 999, annual: 799 },
 };
 
-export const HIGHLIGHTED_PLANS = new Set(['pro', 'project']);
+export const HIGHLIGHTED_PLANS = new Set(['senior', 'specialist']);
 
 export const PLAN_BADGES: Record<string, { icon: typeof Sparkles; label: string; color: string }> =
   {

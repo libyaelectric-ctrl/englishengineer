@@ -18,13 +18,13 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   'gamification-leaderboard': {
     enabled: false,
     description: 'Team leaderboard for gamification',
-    allowedPlans: ['pro', 'project', 'exec', 'private', 'team'],
+    allowedPlans: ['senior', 'specialist', 'master', 'team', 'team'],
   },
   'advanced-analytics': {
     enabled: false,
     description: 'Advanced analytics dashboard',
     rolloutPercentage: 50,
-    allowedPlans: ['exec', 'private', 'team'],
+    allowedPlans: ['master', 'team', 'team'],
   },
   'voice-practice-v2': {
     enabled: true,
@@ -38,7 +38,7 @@ export const FEATURE_FLAGS: Record<string, FeatureFlag> = {
   'workspace-collaboration': {
     enabled: false,
     description: 'Real-time workspace collaboration',
-    allowedPlans: ['project', 'exec', 'private', 'team'],
+    allowedPlans: ['specialist', 'master', 'team', 'team'],
   },
   'offline-mode': {
     enabled: true,

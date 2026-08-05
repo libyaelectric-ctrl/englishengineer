@@ -40,7 +40,7 @@ describe('Billing Checkout Flow', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: startCheckoutMock,
-      subscription: { planId: 'free', status: 'none' },
+      subscription: { planId: 'junior', status: 'none' },
       providerStatus: { isConfigured: true, mode: 'backend' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
@@ -68,20 +68,20 @@ describe('Billing Checkout Flow', () => {
     });
     fireEvent.click(pricingButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
+    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'senior');
     startCheckoutMock.mockClear();
     unmount();
 
     // 2. Render BillingStatusPanel (as used in ProfilePage) and trigger onUpgrade callback
     const handleUpgradeMock = async () => {
-      await startCheckoutMock('user-123', 'engineer@example.com', 'pro');
+      await startCheckoutMock('user-123', 'engineer@example.com', 'senior');
     };
 
     render(
       <MemoryRouter>
         <BillingStatusPanel
           subscription={{
-            planId: 'free',
+            planId: 'junior',
             status: 'none',
             currentPeriodEnd: null,
             cancelAtPeriodEnd: false,
@@ -107,6 +107,6 @@ describe('Billing Checkout Flow', () => {
     });
     fireEvent.click(profileButton);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'pro');
+    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'senior');
   });
 });

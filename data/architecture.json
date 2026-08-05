@@ -1,0 +1,131 @@
+[
+  {
+    "id": "architecture_a1_reading_blueprints",
+    "title": "Reading Simple Floor Plans",
+    "description": "Learn to identify basic symbols and rooms on a residential floor plan.",
+    "discipline": "Architecture",
+    "cefrLevel": "A1",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 5,
+    "passageText": "An architect draws a floor plan to show the layout of a house. The plan shows rooms, doors, and walls. Each room has a label. The living room is usually large. The kitchen is near the dining area. Bedrooms are placed for privacy. Doors are shown as gaps in walls. Windows are thin lines on exterior walls. The scale helps builders measure real dimensions from the drawing.",
+    "vocabulary": [
+      { "term": "floor plan", "description": "A drawing that shows the layout of rooms from above.", "context": "The architect drew a floor plan to show the layout of the house.", "turkishTranslation": "kat planı" },
+      { "term": "layout", "description": "The way rooms and spaces are arranged.", "context": "The plan shows rooms, doors, and walls in the layout.", "turkishTranslation": "yerleşim düzeni" },
+      { "term": "scale", "description": "The ratio between drawing size and real size.", "context": "The scale helps builders measure real dimensions from the drawing.", "turkishTranslation": "ölçek" },
+      { "term": "exterior wall", "description": "An outer wall of a building.", "context": "Windows are thin lines on exterior walls.", "turkishTranslation": "dış duvar" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What does a floor plan show?", "choices": ["The roof design", "The layout of rooms", "The electrical wiring", "The plumbing system"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "Where are windows shown on a floor plan?", "choices": ["On interior walls", "On the ceiling", "On exterior walls", "On the floor"], "correctIndex": 2 },
+      { "id": "q3", "prompt": "What does the scale help builders do?", "choices": ["Choose colors", "Measure real dimensions", "Paint walls", "Plant trees"], "correctIndex": 1 }
+    ],
+    "xpReward": 25,
+    "coinReward": 8,
+    "eloReward": 4,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "architecture_a2_building_materials",
+    "title": "Building Materials Overview",
+    "description": "Identify common materials used in residential construction.",
+    "discipline": "Architecture",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 6,
+    "passageText": "Architects choose materials based on strength, cost, and appearance. Concrete is strong under compression and is used for foundations and columns. Steel reinforcement adds tensile strength to concrete structures. Brick is common for walls because it is durable and fire-resistant. Timber is used for roofs and floors in many homes. Glass allows natural light into buildings while protecting from weather. Insulation materials reduce heat loss and improve energy efficiency.",
+    "vocabulary": [
+      { "term": "compression", "description": "A force that pushes material together.", "context": "Concrete is strong under compression.", "turkishTranslation": "basınç" },
+      { "term": "tensile strength", "description": "Resistance to being pulled apart.", "context": "Steel reinforcement adds tensile strength to concrete structures.", "turkishTranslation": "çekme dayanımı" },
+      { "term": "fire-resistant", "description": "Able to withstand high temperatures without burning.", "context": "Brick is common for walls because it is durable and fire-resistant.", "turkishTranslation": "yanmaz" },
+      { "term": "insulation", "description": "Material that reduces heat transfer.", "context": "Insulation materials reduce heat loss and improve energy efficiency.", "turkishTranslation": "yalıtım" },
+      { "term": "durable", "description": "Able to last a long time without damage.", "context": "Brick is common for walls because it is durable.", "turkishTranslation": "dayanıklı" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "Why is steel added to concrete?", "choices": ["To add color", "To increase tensile strength", "To reduce weight", "To absorb water"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does insulation do?", "choices": ["Conducts heat", "Reduces heat loss", "Absorbs sound only", "Reflects light"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "Which material is fire-resistant and used for walls?", "choices": ["Timber", "Glass", "Brick", "Steel"], "correctIndex": 2 }
+    ],
+    "xpReward": 35,
+    "coinReward": 10,
+    "eloReward": 6,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "architecture_b1_structural_systems",
+    "title": "Structural Systems in Buildings",
+    "description": "Understand how loads travel through a building frame.",
+    "discipline": "Architecture",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 8,
+    "passageText": "A building's structural system transfers loads safely to the ground. Vertical loads include the weight of the structure itself, occupants, and furniture. Lateral loads come from wind and earthquakes. In a frame structure, beams carry floor loads to columns, which transfer them to the foundation. Shear walls resist horizontal forces. The foundation spreads the load across the soil. Architects and structural engineers collaborate to select the appropriate system for each project.",
+    "vocabulary": [
+      { "term": "vertical load", "description": "A downward force caused by weight.", "context": "Vertical loads include the weight of the structure itself.", "turkishTranslation": "dikey yük" },
+      { "term": "lateral load", "description": "A horizontal force such as wind or seismic load.", "context": "Lateral loads come from wind and earthquakes.", "turkishTranslation": "yanal yük" },
+      { "term": "shear wall", "description": "A wall designed to resist horizontal forces.", "context": "Shear walls resist horizontal forces.", "turkishTranslation": "perde duvar" },
+      { "term": "foundation", "description": "The part of a building that transfers loads to the ground.", "context": "The foundation spreads the load across the soil.", "turkishTranslation": "temel" },
+      { "term": "seismic", "description": "Related to earthquakes.", "context": "Lateral loads come from wind and earthquakes.", "turkishTranslation": "sismik" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What carries floor loads to columns in a frame structure?", "choices": ["Foundations", "Beams", "Walls", "Roofs"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What resists horizontal forces like wind?", "choice": ["Floor slabs", "Doors", "Shear windows", "Shear walls"], "correctIndex": 3 },
+      { "id": "q3", "prompt": "Who collaborates with architects on structural systems?", "choices": ["Plumbers", "Structural engineers", "Electricians", "Painters"], "correctIndex": 1 }
+    ],
+    "xpReward": 50,
+    "coinReward": 15,
+    "eloReward": 8,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "architecture_b2_sustainable_design",
+    "title": "Sustainable Design Principles",
+    "description": "Explore energy-efficient strategies in modern architecture.",
+    "discipline": "Architecture",
+    "cefrLevel": "B2",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 10,
+    "passageText": "Sustainable architecture minimizes environmental impact while maximizing occupant comfort. Passive design strategies use natural sunlight and ventilation to reduce energy consumption. High-performance glazing limits heat gain in summer and heat loss in winter. Green roofs provide insulation and reduce stormwater runoff. Solar panels generate renewable electricity on site. Rainwater harvesting systems collect water for irrigation and non-potable uses. Life-cycle assessment evaluates the environmental impact of materials from extraction to disposal.",
+    "vocabulary": [
+      { "term": "passive design", "description": "Design that uses natural energy sources without mechanical systems.", "context": "Passive design strategies use natural sunlight and ventilation.", "turkishTranslation": "pasif tasarım" },
+      { "term": "glazing", "description": "Glass used in windows and facades.", "context": "High-performance glazing limits heat gain in summer.", "turkishTranslation": "cam kaplaması" },
+      { "term": "stormwater runoff", "description": "Rainwater that flows over surfaces into drainage systems.", "context": "Green roofs provide insulation and reduce stormwater runoff.", "turkishTranslation": "yağmur suyu akışı" },
+      { "term": "rainwater harvesting", "description": "Collecting and storing rainwater for reuse.", "context": "Rainwater harvesting systems collect water for irrigation.", "turkishTranslation": "yağmur suyu hasadı" },
+      { "term": "life-cycle assessment", "description": "Analysis of environmental impact across a material's lifespan.", "context": "Life-cycle assessment evaluates the environmental impact of materials.", "turkishTranslation": "yaşam döngüsü değerlendirmesi" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What does passive design rely on?", "choices": ["Mechanical systems", "Natural sunlight and ventilation", "Fossil fuels", "Artificial lighting"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What is a benefit of green roofs?", "choices": ["Increased runoff", "Insulation and reduced stormwater", "Higher energy use", "More glass"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What does life-cycle assessment evaluate?", "choices": ["Cost only", "Environmental impact from extraction to disposal", "Color options", "Sound levels"], "correctIndex": 1 }
+    ],
+    "xpReward": 70,
+    "coinReward": 22,
+    "eloReward": 12,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "architecture_c1_urban_planning",
+    "title": "Urban Planning Fundamentals",
+    "description": "Understand how cities are organized and zoned for different uses.",
+    "discipline": "Architecture",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 12,
+    "passageText": "Urban planning shapes the physical and functional organization of cities. Zoning regulations separate residential, commercial, and industrial areas to minimize conflicts. Mixed-use developments combine housing, retail, and offices in a single district to reduce commuting distances. Transit-oriented development clusters housing and services around public transport hubs. Planners analyze population density, infrastructure capacity, and environmental constraints to guide growth. Public participation ensures that community needs influence planning decisions.",
+    "vocabulary": [
+      { "term": "zoning", "description": "The division of land into areas with different permitted uses.", "context": "Zoning regulations separate residential, commercial, and industrial areas.", "turkishTranslation": "imar planı" },
+      { "term": "mixed-use development", "description": "A project combining residential, commercial, and office spaces.", "context": "Mixed-use developments combine housing, retail, and offices.", "turkishTranslation": "karma kullanımlı gelişim" },
+      { "term": "transit-oriented development", "description": "Urban design focused around public transport hubs.", "context": "Transit-oriented development clusters housing around transport hubs.", "turkishTranslation": "ulaşım odaklı gelişim" },
+      { "term": "population density", "description": "The number of people living in a given area.", "context": "Planners analyze population density to guide growth.", "turkishTranslation": "nüfus yoğunluğu" },
+      { "term": "infrastructure capacity", "description": "The ability of systems like roads and utilities to serve demand.", "context": "Planners analyze infrastructure capacity and environmental constraints.", "turkishTranslation": "altyapı kapasitesi" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What does zoning separate?", "choices": ["Colors and textures", "Residential, commercial, and industrial areas", "Heights only", "Roof types"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does transit-oriented development focus on?", "choices": ["Airports", "Public transport hubs", "Parking lots", "Highways"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "Why is public participation important in planning?", "choices": ["It reduces costs", "It ensures community needs influence decisions", "It speeds up construction", "It eliminates regulations"], "correctIndex": 1 }
+    ],
+    "xpReward": 85,
+    "coinReward": 28,
+    "eloReward": 16,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  }
+]

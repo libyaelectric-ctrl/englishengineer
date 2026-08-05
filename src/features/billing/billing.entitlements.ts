@@ -7,26 +7,26 @@ import {
 } from './billing.types';
 
 const PREMIUM_FEATURES: Partial<Record<BillingFeature, BillingPlanId>> = {
-  advancedAnalytics: 'pro',
-  fullGamification: 'pro',
-  missionCreation: 'pro',
-  futureAI: 'pro',
-  unlimitedAIFeedback: 'pro',
-  cloudSync: 'pro',
-  advancedTasks: 'pro',
-  projectWorkspace: 'project',
-  persistentProjectMemory: 'project',
-  customScenarioGeneration: 'project',
-  linkedinOptimization: 'project',
-  persistentAIAgent: 'project',
-  realVoiceSpeaking: 'exec',
-  pronunciationAnalysis: 'exec',
-  voiceMeetingSimulator: 'exec',
-  voiceMinuteWallet: 'exec',
+  advancedAnalytics: 'senior',
+  fullGamification: 'junior',
+  missionCreation: 'junior',
+  futureAI: 'master',
+  unlimitedAIFeedback: 'senior',
+  cloudSync: 'junior',
+  advancedTasks: 'senior',
+  projectWorkspace: 'specialist',
+  persistentProjectMemory: 'specialist',
+  customScenarioGeneration: 'master',
+  linkedinOptimization: 'master',
+  persistentAIAgent: 'master',
+  realVoiceSpeaking: 'specialist',
+  pronunciationAnalysis: 'specialist',
+  voiceMeetingSimulator: 'specialist',
+  voiceMinuteWallet: 'master',
 };
 
 export const isSubscriptionActive = (subscription: SubscriptionSnapshot): boolean =>
-  subscription.planId === 'free' ||
+  subscription.planId === 'junior' ||
   subscription.status === 'active' ||
   subscription.status === 'trialing';
 
@@ -41,7 +41,7 @@ export const canAccessFeature = (
     return {
       allowed: false,
       reason: 'Subscription is not active.',
-      requiredPlan: requiredPlan || 'pro',
+      requiredPlan: requiredPlan || 'junior',
     };
   }
 
@@ -55,8 +55,8 @@ export const canAccessFeature = (
 
   return {
     allowed: false,
-    reason: `${feature} requires ${requiredPlan || 'pro'} access.`,
-    requiredPlan: requiredPlan || 'pro',
+    reason: `${feature} requires ${requiredPlan || 'junior'} access.`,
+    requiredPlan: requiredPlan || 'junior',
   };
 };
 
@@ -84,8 +84,8 @@ export const canUseAICoach = (
 
   return {
     allowed: false,
-    reason: `Free AI Coach limit reached for today. Upgrade to Pro or purchase top-up credits.`,
-    requiredPlan: 'pro',
+    reason: `Daily AI Coach limit reached. Upgrade to Senior or purchase top-up credits.`,
+    requiredPlan: 'senior',
   };
 };
 
@@ -114,7 +114,7 @@ export const canAccessPersistentAIAgent = (subscription: SubscriptionSnapshot): 
 export const canAccessRealVoiceSpeaking = (subscription: SubscriptionSnapshot): EntitlementResult =>
   canAccessFeature(subscription, 'realVoiceSpeaking');
 
-const PLAN_HIERARCHY: BillingPlanId[] = ['free', 'pro', 'project', 'exec', 'private'];
+const PLAN_HIERARCHY: BillingPlanId[] = ['junior', 'senior', 'specialist', 'master', 'team'];
 
 const getPlanLevel = (planId: BillingPlanId): number => PLAN_HIERARCHY.indexOf(planId);
 
@@ -142,8 +142,10 @@ const LIMIT_FIELDS = [
 ] as const;
 
 const getTargetWorkspaceLimit = (targetPlanId: BillingPlanId): number => {
-  if (targetPlanId === 'free' || targetPlanId === 'pro') return 1;
-  if (targetPlanId === 'project' || targetPlanId === 'exec') return 3;
+  if (targetPlanId === 'junior') return 1;
+  if (targetPlanId === 'senior') return 2;
+  if (targetPlanId === 'specialist') return 3;
+  if (targetPlanId === 'master') return 5;
   return Infinity;
 };
 

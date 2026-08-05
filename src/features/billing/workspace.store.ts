@@ -62,7 +62,7 @@ export const useWorkspaceStore = create<WorkspaceStoreState>()(
         createWorkspace: (name, planId) => {
           const currentWorkspaces = get().workspaces;
           const limit =
-            planId === 'free' || planId === 'pro' ? 1 : planId === 'project' ? 3 : Infinity;
+            planId === 'junior' ? 1 : planId === 'senior' ? 2 : planId === 'specialist' ? 3 : planId === 'master' ? 5 : Infinity;
 
           if (currentWorkspaces.length >= limit) {
             return false;

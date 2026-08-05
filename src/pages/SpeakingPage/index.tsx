@@ -75,7 +75,7 @@ const RoleplayTab = () => {
 
   return (
     <>
-      {hasMaxAccess && subscription.planId === 'exec' && (
+      {hasMaxAccess && subscription.planId === 'master' && (
         <VoiceMinuteWallet
           voiceMinutesUsedThisMonth={voiceMinutesUsedThisMonth}
           maxVoiceMinutes={MAX_VOICE_MINUTES}

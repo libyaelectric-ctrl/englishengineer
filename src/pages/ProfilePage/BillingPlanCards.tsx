@@ -97,13 +97,13 @@ const VoiceMinutesCard = ({
         🎙️ Monthly Voice Minutes
       </span>
       <span className="font-bold text-foreground">
-        {planId === 'exec' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}
+        {planId === 'master' ? `${voiceMinutesUsed} / 300 min` : 'Unlimited'}
       </span>
     </div>
     <ProgressBar
-      value={planId === 'exec' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100}
+      value={planId === 'master' ? Math.min(100, (voiceMinutesUsed / 300) * 100) : 100}
       color={
-        planId !== 'exec'
+        planId !== 'master'
           ? 'cyan'
           : voiceMinutesUsed >= 270
             ? 'rose'
@@ -113,7 +113,7 @@ const VoiceMinutesCard = ({
       }
     />
     <p className="text-[10px] text-muted-copy">
-      {planId === 'exec'
+      {planId === 'master'
         ? voiceMinutesUsed >= 300
           ? '⚠️ Monthly voice minute quota reached. Upgrade to Private for unlimited minutes.'
           : `✓ ${300 - voiceMinutesUsed} voice minutes remaining this month. Usage resets on the 1st.`
@@ -130,9 +130,9 @@ export const BillingPlanCards = ({
   uploadedDocsCount,
   voiceMinutesUsed,
 }: BillingPlanCardsProps) => {
-  const isPro = subscription.planId === 'pro';
-  const isFree = subscription.planId === 'free';
-  const isMaxTier = subscription.planId === 'exec' || subscription.planId === 'private';
+  const isPro = subscription.planId === 'senior';
+  const isFree = subscription.planId === 'junior';
+  const isMaxTier = subscription.planId === 'master' || subscription.planId === 'team';
 
   return (
     <div className="grid gap-5 sm:grid-cols-2">

@@ -35,7 +35,7 @@ export const Sidebar = () => {
       toggleSidebar();
     }
   };
-  const planName = subscription?.planId || 'free';
+  const planName = subscription?.planId || 'junior';
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
 

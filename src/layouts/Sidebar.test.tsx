@@ -22,7 +22,7 @@ vi.mock('@/features/auth', () => ({
 
 vi.mock('@/features/billing', () => ({
   useBillingStore: vi.fn(() => ({
-    subscription: { planId: 'pro' },
+    subscription: { planId: 'senior' },
   })),
 }));
 

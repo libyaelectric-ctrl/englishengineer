@@ -28,7 +28,7 @@ const createSubscription = (
   status: SubscriptionStatus,
   overrides: Partial<SubscriptionSnapshot> = {}
 ): SubscriptionSnapshot => ({
-  planId: status === 'none' ? 'free' : 'pro',
+  planId: status === 'none' ? 'junior' : 'senior',
   status,
   currentPeriodEnd: '2026-08-01T00:00:00.000Z',
   cancelAtPeriodEnd: false,
@@ -54,9 +54,9 @@ const renderPanel = (subscription: SubscriptionSnapshot, providerStatus = backen
 describe('BillingStatusPanel', () => {
   it.each([
     {
-      name: 'free',
+      name: 'junior',
       subscription: createSubscription('none'),
-      statusLabel: 'Free',
+      statusLabel: 'junior',
       message: 'No paid subscription is active. Free plan limits apply.',
     },
     {

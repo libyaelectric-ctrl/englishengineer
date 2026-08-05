@@ -201,7 +201,7 @@ describe('EngVox release candidate E2E smoke fallback', () => {
 
   it('16. billing backend missing error prevents checkout overclaiming', async () => {
     await expect(
-      BillingService.startCheckout('user_1', 'engineer@example.com', 'pro')
+      BillingService.startCheckout('user_1', 'engineer@example.com', 'senior')
     ).rejects.toThrow();
   });
 

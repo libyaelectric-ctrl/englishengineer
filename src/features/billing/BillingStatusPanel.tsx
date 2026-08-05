@@ -40,7 +40,7 @@ export const BillingStatusPanel = ({
   const navigate = useNavigate();
   const presentation = getBillingStatusPresentation(subscription, providerStatus);
   const paidAccessIsActive =
-    presentation.planId !== 'free' &&
+    presentation.planId !== 'junior' &&
     (subscription.status === 'active' || subscription.status === 'trialing');
   const canOpenPortal = providerStatus.isConfigured && Boolean(subscription.stripeCustomerId);
 
