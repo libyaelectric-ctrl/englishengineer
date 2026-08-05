@@ -73,7 +73,7 @@ describe('Architecture Rules', () => {
     expect(violations.length).toBeLessThan(150);
   });
 
-  it('documents shared-to-core/features violations (technical debt)', () => {
+  it('documents shared-to-features violations (technical debt)', () => {
     const sharedPath = join(SRC_DIR, 'shared');
     const violations: string[] = [];
 
@@ -86,7 +86,9 @@ describe('Architecture Rules', () => {
         } else if (entry.name.endsWith('.ts') || entry.name.endsWith('.tsx')) {
           const imports = getImportsFromFile(fullPath);
           for (const imp of imports) {
-            if (imp.startsWith('@/core/') || imp.startsWith('@/features/')) {
+            // Shared→core is the sanctioned direction (core is the base layer);
+            // only shared→features pulls the shared layer up to feature level.
+            if (imp.startsWith('@/features/')) {
               violations.push(`${fullPath.replace(SRC_DIR, '.')} imports from ${imp}`);
             }
           }
@@ -96,7 +98,7 @@ describe('Architecture Rules', () => {
 
     checkDir(sharedPath);
 
-    console.log(`\n[Architecture] Shared-to-core/features violations: ${violations.length}`);
+    console.log(`\n[Architecture] Shared-to-features violations: ${violations.length}`);
     console.log('See ARCHITECTURE.md for migration plan\n');
 
     expect(violations.length).toBeLessThan(15);

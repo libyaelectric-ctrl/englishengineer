@@ -1,6 +1,6 @@
 import { LearningState, MissionModule, ScoreResult } from '@/core/learning/learning.types';
 
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import {
   averageScores,

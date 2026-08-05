@@ -52,6 +52,7 @@ export interface GrammarRule {
   notes: string;
 }
 
+export type GrammarExplanationLanguage = 'english' | 'turkish';
 export type GrammarReviewStatus = 'New' | 'Learning' | 'Due' | 'Strong';
 export type GrammarTransferSkill = 'reading' | 'writing';
 

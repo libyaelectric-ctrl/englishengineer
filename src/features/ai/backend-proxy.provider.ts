@@ -1,6 +1,6 @@
 import { IdService } from '@/core/ids/id.service';
 
-import { getBackendAuthHeaders } from '@/features/auth/backend-auth';
+import { getBackendAuthHeaders } from '@/shared/services/backend-auth.service';
 
 import {
   AICoachContext,

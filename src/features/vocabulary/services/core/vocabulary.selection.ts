@@ -2,7 +2,7 @@ import type { LearningDataSkill } from '@/core/learning/spaced-repetition.types'
 
 import type { CefrBand } from '@/shared/types/domain.types';
 
-import { getBaseCefrLevel, getNextCefrBand } from '@/features/profile/profile.utils';
+import { getBaseCefrLevel, getNextCefrBand } from '@/shared/utils/profile.utils';
 
 import type { VocabularyTerm } from '../../types/vocabulary.types';
 import {

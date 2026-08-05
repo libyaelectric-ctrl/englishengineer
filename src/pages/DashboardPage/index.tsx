@@ -8,6 +8,7 @@ import { ProgressService } from '@/core/learning';
 
 import { StreakFlameWidget } from '@/shared/components/StreakFlameWidget';
 import {
+  CORE_VOCABULARY_WORD_COUNT,
   DISCIPLINE_META,
   type EngineeringDiscipline,
 } from '@/shared/constants/engineering-disciplines';
@@ -185,7 +186,7 @@ const DashboardPage = () => {
           focusLessonNumber={focusLessonNumber}
           onStartLesson={handleStartLesson}
           disciplineLabel={translate(disciplineMeta.labelKey as TranslationKey)}
-          disciplineWordCount={disciplineMeta.wordCount + 3088}
+          disciplineWordCount={disciplineMeta.wordCount + CORE_VOCABULARY_WORD_COUNT}
         />
         <div className="grid gap-6 md:grid-cols-2">
           <SkillRadarChart profile={profile} />

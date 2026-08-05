@@ -8,7 +8,7 @@ import {
   getCefrBandFromElo,
 } from '@/shared/utils/profile.utils';
 
-import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
+import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 import type { TaskEvaluationInput, TaskEvaluationRecord } from './learning-orchestrator.types';
 

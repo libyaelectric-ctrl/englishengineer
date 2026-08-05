@@ -11,7 +11,7 @@ import { LearningProfileRepository } from '@/shared/services/learning-profile.re
 import type { SkillName } from '@/shared/types/domain.types';
 
 import { useAuthStore } from '@/features/auth';
-import { LearningProfileEngine } from '@/features/profile/profile.engine';
+import { LearningProfileEngine } from '@/shared/services/learning-profile-engine.service';
 
 import type { LearningTaskRecommendation } from './learning-orchestrator.types';
 import { LearningTaskEngine } from './learning-task.engine';

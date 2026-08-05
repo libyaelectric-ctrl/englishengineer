@@ -22,7 +22,7 @@ export {
   GrammarProgressService,
 } from './grammar.progress';
 
-export { GrammarTransferService } from './grammar.transfer';
+export { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
 
 export { type GrammarTab, useGrammarStore } from './grammar.store';
 

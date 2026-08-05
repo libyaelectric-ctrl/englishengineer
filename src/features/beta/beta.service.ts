@@ -3,7 +3,7 @@ import { IdService } from '@/core/ids/id.service';
 import { storage } from '@/shared/storage';
 import type { ProductAnalyticsEventName } from '@/shared/types/product-analytics.types';
 
-import { ProductAnalyticsService } from '@/features/analytics/product-analytics.service';
+import { ProductAnalyticsService } from '@/shared/services/product-analytics.service';
 
 import { calculateProductAnalyticsSummary } from './beta.helpers';
 import { BetaFeedbackEntry, BetaOnboardingProfile } from './beta.types';

@@ -10,8 +10,8 @@ import { EngineeringDiscipline } from '@/shared/constants/engineering-discipline
 import { filterMissionsByDiscipline } from '@/shared/constants/mission-discipline-map';
 import { storage } from '@/shared/storage';
 
-import { GrammarTransferService } from '@/features/grammar/grammar.transfer';
-import { VocabularyService } from '@/features/vocabulary/services/core/vocabulary.service';
+import { GrammarTransferService } from '@/shared/services/grammar-transfer.service';
+import { VocabularyService } from '@/features/vocabulary';
 
 import { READING_MISSIONS } from './reading.data';
 import { ReadingEvaluator } from './reading.evaluator';

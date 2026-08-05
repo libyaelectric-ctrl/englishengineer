@@ -4,8 +4,7 @@ import { VocabularyRepository } from '@/shared/services/vocabulary.repository';
 import type { UserLearningProfile } from '@/shared/types/domain.types';
 import { SKILL_NAMES } from '@/shared/types/domain.types';
 
-import { isVocabularyProgressDue } from '@/features/vocabulary/services/core/vocabulary.menu';
-import { VocabularyMenuService } from '@/features/vocabulary/services/core/vocabulary.menu';
+import { isVocabularyProgressDue, VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 
 import { LearningIntelligenceService } from './learning-intelligence.service';
 import type { ReviewPriorityCandidate, UnifiedReviewItem } from './learning-intelligence.types';

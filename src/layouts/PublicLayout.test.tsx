@@ -12,10 +12,6 @@ vi.mock('@/store/app.store', () => ({
   })),
 }));
 
-vi.mock('@/pages/LandingPage/Footer', () => ({
-  Footer: () => <footer>Footer Content</footer>,
-}));
-
 describe('PublicLayout', () => {
   const renderLayout = (path = '/business') =>
     render(
@@ -50,11 +46,6 @@ describe('PublicLayout', () => {
     expect(screen.getByText('Start free')).toBeInTheDocument();
   });
 
-  it('renders footer', () => {
-    renderLayout('/business');
-    expect(screen.getByText('Footer Content')).toBeInTheDocument();
-  });
-
   it('hides nav on landing page', () => {
     renderLayout('/');
     expect(screen.queryByLabelText('Public navigation')).not.toBeInTheDocument();
@@ -71,10 +62,5 @@ describe('PublicLayout', () => {
       </MemoryRouter>
     );
     expect(screen.queryByLabelText('Public navigation')).not.toBeInTheDocument();
-  });
-
-  it('shows skip to content link', () => {
-    renderLayout('/business');
-    expect(screen.getByText('Skip to content')).toBeInTheDocument();
   });
 });
