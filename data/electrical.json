@@ -1,0 +1,131 @@
+[
+  {
+    "id": "electrical_a1_basic_circuit",
+    "title": "A Simple Electrical Circuit",
+    "description": "Learn the basic components of a simple electrical circuit.",
+    "discipline": "Electrical Engineering",
+    "cefrLevel": "A1",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 5,
+    "passageText": "A simple circuit has three main parts. The battery provides electrical energy. Wires carry the current from the battery to the bulb. The bulb lights up when current flows. A switch controls the circuit. When the switch is closed, current flows and the bulb is on. When the switch is open, the circuit is broken and the bulb is off. Current is measured in amperes. Voltage is measured in volts. These are the basics of electrical engineering.",
+    "vocabulary": [
+      { "term": "circuit", "description": "A closed path through which electricity flows.", "context": "A simple circuit has three main parts.", "turkishTranslation": "devre" },
+      { "term": "battery", "description": "A device that provides electrical energy.", "context": "The battery provides electrical energy.", "turkishTranslation": "pil" },
+      { "term": "current", "description": "The flow of electricity through a conductor.", "context": "Wires carry the current from the battery to the bulb.", "turkishTranslation": "akım" },
+      { "term": "voltage", "description": "The force that pushes electric current through a circuit.", "context": "Voltage is measured in volts.", "turkishTranslation": "voltaj" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What provides energy in a circuit?", "choices": ["The bulb", "The battery", "The switch", "The wire"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What happens when the switch is open?", "choices": ["The bulb brightens", "The circuit is broken and the bulb is off", "The battery charges", "The voltage increases"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What unit measures electrical current?", "choices": ["Volts", "Amperes", "Watts", "Ohms"], "correctIndex": 1 }
+    ],
+    "xpReward": 25,
+    "coinReward": 8,
+    "eloReward": 4,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "electrical_a2_ohms_law",
+    "title": "Ohm's Law Basics",
+    "description": "Understand the relationship between voltage, current, and resistance.",
+    "discipline": "Electrical Engineering",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 6,
+    "passageText": "Ohm's Law describes the relationship between voltage, current, and resistance. The law states that voltage equals current multiplied by resistance. A higher voltage produces more current. Higher resistance reduces current. Electricians use this law to design safe circuits. A fuse protects a circuit by melting when current is too high. Too much current can overheat wires and cause fires. Circuit breakers serve the same purpose and can be reset after they trip.",
+    "vocabulary": [
+      { "term": "resistance", "description": "The opposition to the flow of electric current.", "context": "Higher resistance reduces current.", "turkishTranslation": "direnç" },
+      { "term": "fuse", "description": "A safety device that melts when current is too high.", "context": "A fuse protects a circuit by melting when current is too high.", "turkishTranslation": "sigorta" },
+      { "term": "circuit breaker", "description": "A resetable safety device that trips when current is too high.", "context": "Circuit breakers can be reset after they trip.", "turkishTranslation": "sigorta otomatı" },
+      { "term": "overheat", "description": "To become dangerously hot.", "context": "Too much current can overheat wires.", "turkishTranslation": "aşırı ısınmak" },
+      { "term": "trip", "description": "To disconnect automatically when a fault is detected.", "context": "Circuit breakers can be reset after they trip.", "turkishTranslation": "devreyi kesmek" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What does Ohm's Law relate?", "choices": ["Color and brightness", "Voltage, current, and resistance", "Weight and size", "Sound and light"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What happens when resistance increases?", "choices": ["Current decreases", "Current increases", "Voltage doubles", "Nothing changes"], "correctIndex": 0 },
+      { "id": "q3", "prompt": "What does a fuse do?", "choices": ["Increases voltage", "Melts to protect the circuit", "Stores energy", "Makes light"], "correctIndex": 1 }
+    ],
+    "xpReward": 35,
+    "coinReward": 10,
+    "eloReward": 6,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "electrical_b1_transformers",
+    "title": "How Transformers Work",
+    "description": "Understand the principle of electromagnetic induction in transformers.",
+    "discipline": "Electrical Engineering",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 9,
+    "passageText": "Transformers change the voltage of alternating current. They work on the principle of electromagnetic induction. A transformer has two coils of wire wound around an iron core. The primary coil receives the input voltage. The changing magnetic field induces a voltage in the secondary coil. The ratio of turns between the coils determines the voltage change. Step-up transformers increase voltage for efficient long-distance transmission. Step-down transformers reduce voltage for safe domestic use. Transformers are essential components of power grids.",
+    "vocabulary": [
+      { "term": "electromagnetic induction", "description": "The process of generating voltage through a changing magnetic field.", "context": "Transformers work on the principle of electromagnetic induction.", "turkishTranslation": "elektromanyetik indüksiyon" },
+      { "term": "primary coil", "description": "The input coil of a transformer.", "context": "The primary coil receives the input voltage.", "turkishTranslation": "birincil bobin" },
+      { "term": "secondary coil", "description": "The output coil of a transformer.", "context": "The changing magnetic field induces a voltage in the secondary coil.", "turkishTranslation": "ikincil bobin" },
+      { "term": "step-up transformer", "description": "A transformer that increases voltage.", "context": "Step-up transformers increase voltage for transmission.", "turkishTranslation": "yükseltici transformatör" },
+      { "term": "step-down transformer", "description": "A transformer that decreases voltage.", "context": "Step-down transformers reduce voltage for domestic use.", "turkishTranslation": "alçaltıcı transformatör" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What principle do transformers use?", "choices": ["Gravity", "Electromagnetic induction", "Friction", "Sound waves"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What determines the voltage change in a transformer?", "choices": ["The wire color", "The ratio of coil turns", "The iron weight", "The temperature"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "Why do step-up transformers increase voltage?", "choices": ["To reduce wire size", "For efficient long-distance transmission", "To make noise", "To cool the system"], "correctIndex": 1 }
+    ],
+    "xpReward": 50,
+    "coinReward": 15,
+    "eloReward": 8,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "electrical_b2_power_distribution",
+    "title": "Power Distribution Systems",
+    "description": "Learn how electricity is delivered from power plants to consumers.",
+    "discipline": "Electrical Engineering",
+    "cefrLevel": "B2",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 11,
+    "passageText": "Power distribution systems deliver electricity from generation plants to end users. High-voltage transmission lines carry power over long distances to reduce energy losses. Substations use transformers to step down voltage for regional distribution. Distribution lines carry medium-voltage power to local transformers near consumers. Smart grids use digital communication to monitor and balance supply and demand in real time. Distributed energy resources such as rooftop solar panels feed power back into the grid. Protective relays detect faults and isolate damaged sections to maintain system stability.",
+    "vocabulary": [
+      { "term": "transmission line", "description": "High-voltage lines that carry electricity over long distances.", "context": "High-voltage transmission lines carry power over long distances.", "turkishTranslation": "iletim hattı" },
+      { "term": "substation", "description": "A facility that transforms voltage levels for distribution.", "context": "Substations use transformers to step down voltage.", "turkishTranslation": "trafo merkezi" },
+      { "term": "smart grid", "description": "An electricity network that uses digital technology to monitor and manage power flow.", "context": "Smart grids use digital communication to monitor supply and demand.", "turkishTranslation": "akıllı şebeke" },
+      { "term": "distributed energy resource", "description": "Small-scale power generation located near consumers.", "context": "Distributed energy resources such as rooftop solar panels feed power back.", "turkishTranslation": "dağıtık enerji kaynağı" },
+      { "term": "protective relay", "description": "A device that detects faults and isolates damaged sections.", "context": "Protective relays detect faults and isolate damaged sections.", "turkishTranslation": "koruma rölesi" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "Why is electricity transmitted at high voltage?", "choices": ["To reduce energy losses", "To increase current", "To make it visible", "To store energy"], "correctIndex": 0 },
+      { "id": "q2", "prompt": "What does a substation do?", "choices": ["Generates power", "Transforms voltage levels for distribution", "Stores batteries", "Measures rainfall"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What feeds power back into the grid?", "choices": ["Old batteries", "Distributed energy resources like rooftop solar", "Water pipes", "Wind speed"], "correctIndex": 1 }
+    ],
+    "xpReward": 70,
+    "coinReward": 22,
+    "eloReward": 12,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "electrical_c1_motor_control",
+    "title": "Industrial Motor Control Systems",
+    "description": "Explore how variable frequency drives control industrial motors.",
+    "discipline": "Electrical Engineering",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 13,
+    "passageText": "Variable frequency drives control the speed and torque of AC motors by adjusting the frequency and voltage of the power supply. This enables precise process control and significant energy savings compared to fixed-speed operation. Power semiconductor devices such as insulated-gate bipolar transistors switch rapidly to synthesize the desired output waveform. Regenerative braking allows the drive to return energy to the power supply during deceleration. Proper heat dissipation through heatsinks and cooling fans is essential for reliable operation. Motor control centers house multiple drives and protection devices in a single enclosure.",
+    "vocabulary": [
+      { "term": "variable frequency drive", "description": "A device that controls motor speed by varying the power frequency.", "context": "Variable frequency drives control the speed and torque of AC motors.", "turkishTranslation": "değişken frekans sürücüsü" },
+      { "term": "torque", "description": "The rotational force produced by a motor.", "context": "Drives control the speed and torque of AC motors.", "turkishTranslation": "tork" },
+      { "term": "insulated-gate bipolar transistor", "description": "A power semiconductor used for fast switching.", "context": "Insulated-gate bipolar transistors switch rapidly to synthesize the output.", "turkishTranslation": "yalıtımlı kapılı bipolar tranzistör" },
+      { "term": "regenerative braking", "description": "A process that returns energy to the supply during deceleration.", "context": "Regenerative braking allows the drive to return energy to the power supply.", "turkishTranslation": "rejeneren frenleme" },
+      { "term": "motor control center", "description": "An enclosure housing multiple motor drives and protection devices.", "context": "Motor control centers house multiple drives in a single enclosure.", "turkishTranslation": "motor kontrol merkezi" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "How do variable frequency drives control motor speed?", "choices": ["By changing the color", "By adjusting the frequency and voltage", "By adding weight", "By reducing size"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does regenerative braking do?", "choices": ["Stops the motor instantly", "Returns energy to the power supply", "Increases heat", "Changes direction"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "Why is heat dissipation important?", "choices": ["For aesthetics", "For reliable operation", "To increase speed", "To reduce cost"], "correctIndex": 1 }
+    ],
+    "xpReward": 90,
+    "coinReward": 30,
+    "eloReward": 18,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  }
+]

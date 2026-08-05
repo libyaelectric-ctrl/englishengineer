@@ -23,7 +23,7 @@ interface ProductAnalyticsEnv {
 
 const ONCE_KEY_PREFIX = 'product_analytics_once_';
 const skills = new Set(['reading', 'writing', 'listening', 'speaking', 'vocabulary', 'grammar']);
-const plans = new Set(['free', 'pro', 'enterprise']);
+const plans = new Set(['junior', 'senior', 'enterprise']);
 const subscriptionStatuses = new Set([
   'none',
   'trialing',

@@ -118,7 +118,7 @@ const PricingPage = () => {
   };
 
   const billingCycleLabel = (planId: string) => {
-    if (planId === 'free') return '/ permanent';
+    if (planId === 'junior') return '/ permanent';
     return isAnnual ? '/ mo (billed yearly)' : '/ month';
   };
 
@@ -225,7 +225,7 @@ const PricingPage = () => {
                     : 'border border-border-soft'
                 }`}
               >
-                {plan.id === 'pro' && (
+                {plan.id === 'senior' && (
                   <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-amber-400 via-primary to-indigo-600 blur-sm opacity-40 animate-ambient-glow pointer-events-none" />
                 )}
 
@@ -292,7 +292,7 @@ const PricingPage = () => {
                       <span className="leading-tight">{plan.notIncluded}</span>
                     </div>
 
-                    {plan.id === 'free' ? (
+                    {plan.id === 'junior' ? (
                       <FreePlanButton currentUser={currentUser} />
                     ) : (
                       <PlanAction
@@ -427,7 +427,7 @@ const PricingPage = () => {
                     <th
                       key={p.id}
                       className={`p-4 text-xs font-extrabold tracking-wider text-center ${
-                        p.id === 'pro'
+                        p.id === 'senior'
                           ? 'bg-primary/15 border-x border-primary/30 text-primary'
                           : 'text-foreground'
                       }`}
@@ -454,7 +454,7 @@ const PricingPage = () => {
                     </td>
                     {ACTIVE_PLANS.map((p) => {
                       const value = p.comparison[row.key];
-                      const isProCol = p.id === 'pro';
+                      const isProCol = p.id === 'senior';
                       const isUnlimited = value.toLowerCase().includes('unlimited');
                       return (
                         <td

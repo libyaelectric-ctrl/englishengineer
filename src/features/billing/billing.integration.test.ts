@@ -29,7 +29,7 @@ describe('Billing Integration', () => {
   it('can update subscription state', () => {
     useBillingStore.setState({
       subscription: {
-        planId: 'pro',
+        planId: 'senior',
         status: 'active',
         currentPeriodEnd: new Date().toISOString(),
         cancelAtPeriodEnd: false,
@@ -40,7 +40,7 @@ describe('Billing Integration', () => {
     });
 
     const state = useBillingStore.getState();
-    expect(state.subscription?.planId).toBe('pro');
+    expect(state.subscription?.planId).toBe('senior');
     expect(state.subscription?.status).toBe('active');
   });
 

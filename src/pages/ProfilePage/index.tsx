@@ -38,7 +38,7 @@ const ProfileHeader = ({
       </div>
       <div className="flex items-center gap-2">
         <span className="rounded-[4px] border border-primary/25 bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary">
-          {subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial'}
+          {subscription.planId === 'senior' ? 'Pro Access' : 'Free Trial'}
         </span>
         <span className="rounded-[4px] border border-border-soft bg-surface px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-copy">
           Profile Completion: {completionPercent}%

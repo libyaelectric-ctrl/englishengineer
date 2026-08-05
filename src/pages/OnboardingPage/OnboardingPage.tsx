@@ -108,7 +108,12 @@ const OnboardingPage = () => {
   const [selfReportedCefr, setSelfReportedCefr] = useState<SelfReportedCefr>(
     initial.selfReportedCefr
   );
-  const [selectedPlan, setSelectedPlan] = useState(initial.selectedPlan);
+  type PlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
+  const [selectedPlan, setSelectedPlan] = useState<PlanId>(
+    (['junior', 'senior', 'specialist', 'master', 'team'].includes(initial.selectedPlan as string)
+      ? initial.selectedPlan as PlanId
+      : 'junior')
+  );
   const isLiteMode = new URLSearchParams(location.search).get('mode') === 'lite';
 
   const save = (complete = false) => {

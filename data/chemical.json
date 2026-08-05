@@ -1,0 +1,131 @@
+[
+  {
+    "id": "chemical_a1_lab_safety",
+    "title": "Basic Laboratory Safety",
+    "description": "Learn essential safety rules for working in a chemistry laboratory.",
+    "discipline": "Chemical Engineering",
+    "cefrLevel": "A1",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 5,
+    "passageText": "Laboratory safety is the first rule of any experiment. Always wear safety goggles to protect your eyes. A lab coat protects your clothes and skin. Never taste or smell chemicals directly. Read the label on every bottle before use. Keep flammable materials away from open flames. Clean spills immediately. Know the location of the fire extinguisher and the emergency shower. Report all accidents to your supervisor immediately.",
+    "vocabulary": [
+      { "term": "safety goggles", "description": "Protective eyewear used in laboratories.", "context": "Always wear safety goggles to protect your eyes.", "turkishTranslation": "gözlük" },
+      { "term": "lab coat", "description": "A protective garment worn in laboratories.", "context": "A lab coat protects your clothes and skin.", "turkishTranslation": "laboratuvar önlüğü" },
+      { "term": "flammable", "description": "Able to catch fire easily.", "context": "Keep flammable materials away from open flames.", "turkishTranslation": "yanıcı" },
+      { "term": "spill", "description": "Accidental overflow of liquid.", "context": "Clean spills immediately.", "turkishTranslation": "dökülme" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What should you always wear to protect your eyes?", "choices": ["Sunglasses", "Safety goggles", "A hat", "A scarf"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What should you do with flammable materials?", "choices": ["Heat them", "Keep them away from open flames", "Taste them", "Pour them down the drain"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What do you do after a spill?", "choices": ["Ignore it", "Clean it immediately", "Add water", "Leave the lab"], "correctIndex": 1 }
+    ],
+    "xpReward": 25,
+    "coinReward": 8,
+    "eloReward": 4,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "chemical_a2_distillation_process",
+    "title": "Simple Distillation",
+    "description": "Understand how distillation separates liquid mixtures.",
+    "discipline": "Chemical Engineering",
+    "cefrLevel": "A2",
+    "difficulty": "Beginner",
+    "estimatedMinutes": 7,
+    "passageText": "Distillation is a process that separates liquids based on their boiling points. The mixture is heated in a flask. The component with the lower boiling point evaporates first. The vapor travels through a condenser, where cool water flows around the outside. The vapor cools and condenses back into liquid. The pure liquid is collected in a receiving flask. This method is used to purify water and separate alcohol from water.",
+    "vocabulary": [
+      { "term": "distillation", "description": "A separation process based on boiling points.", "context": "Distillation is a process that separates liquids.", "turkishTranslation": "damıtma" },
+      { "term": "boiling point", "description": "The temperature at which a liquid turns to vapor.", "context": "The component with the lower boiling point evaporates first.", "turkishTranslation": "kaynama noktası" },
+      { "term": "evaporate", "description": "To change from liquid to vapor.", "context": "The component with the lower boiling point evaporates first.", "turkishTranslation": "buharlaşmak" },
+      { "term": "condenser", "description": "A device that cools vapor back into liquid.", "context": "The vapor travels through a condenser.", "turkishTranslation": "yoğaltıcı" },
+      { "term": "condense", "description": "To change from vapor back to liquid.", "context": "The vapor cools and condenses back into liquid.", "turkishTranslation": "yoğunlaştırmak" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What property does distillation use to separate liquids?", "choices": ["Color", "Boiling point", "Density", "Smell"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does the condenser do?", "choices": ["Heats the mixture", "Cools the vapor into liquid", "Measures temperature", "Stirs the liquid"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What is collected in the receiving flask?", "choices": ["The raw mixture", "The pure liquid", "Waste solids", "Hot steam"], "correctIndex": 1 }
+    ],
+    "xpReward": 40,
+    "coinReward": 12,
+    "eloReward": 7,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "chemical_b1_reaction_kinetics",
+    "title": "Chemical Reaction Rates",
+    "description": "Understand what factors affect the speed of chemical reactions.",
+    "discipline": "Chemical Engineering",
+    "cefrLevel": "B1",
+    "difficulty": "Intermediate",
+    "estimatedMinutes": 9,
+    "passageText": "Reaction kinetics studies how fast chemical reactions occur. Temperature has a major effect: higher temperatures increase molecular movement and collision frequency, speeding up reactions. Catalysts accelerate reactions without being consumed. Concentration also matters because more reactant particles lead to more collisions. Surface area is important for solid reactants; smaller particles react faster. Pressure affects gas-phase reactions significantly. Engineers optimize these factors to maximize yield and minimize cost in industrial processes.",
+    "vocabulary": [
+      { "term": "reaction kinetics", "description": "The study of reaction speeds.", "context": "Reaction kinetics studies how fast chemical reactions occur.", "turkishTranslation": "reaksiyon kinetiği" },
+      { "term": "catalyst", "description": "A substance that speeds up a reaction without being consumed.", "context": "Catalysts accelerate reactions without being consumed.", "turkishTranslation": "katalizör" },
+      { "term": "concentration", "description": "The amount of substance per unit volume.", "context": "Concentration also matters because more reactant particles lead to more collisions.", "turkishTranslation": "konsantrasyon" },
+      { "term": "surface area", "description": "The total area exposed by a solid.", "context": "Surface area is important for solid reactants.", "turkishTranslation": "yüzey alanı" },
+      { "term": "yield", "description": "The amount of product obtained from a reaction.", "context": "Engineers optimize these factors to maximize yield.", "turkishTranslation": "verim" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What effect does higher temperature have on reactions?", "choices": ["Slows them down", "Speeds them up", "Has no effect", "Changes the color"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does a catalyst do?", "choices": ["Slows the reaction", "Speeds up the reaction without being consumed", "Changes the product", "Adds heat"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "Why do smaller solid particles react faster?", "choices": ["They are lighter", "They have more surface area", "They dissolve completely", "They absorb moisture"], "correctIndex": 1 }
+    ],
+    "xpReward": 55,
+    "coinReward": 16,
+    "eloReward": 9,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "chemical_b2_process_control",
+    "title": "Process Control Systems",
+    "description": "Learn how chemical plants maintain safe and efficient operations.",
+    "discipline": "Chemical Engineering",
+    "cefrLevel": "B2",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 11,
+    "passageText": "Process control systems maintain variables like temperature, pressure, and flow rate at desired setpoints. Sensors measure the current value of each variable. A controller compares the measurement to the setpoint and calculates the required adjustment. The final control element, typically a valve, adjusts the process. Feedback control loops continuously correct deviations. Distributed control systems allow operators to monitor entire plants from a central control room. Safety instrumented systems automatically shut down processes when dangerous conditions are detected.",
+    "vocabulary": [
+      { "term": "setpoint", "description": "The desired value for a process variable.", "context": "Systems maintain variables at desired setpoints.", "turkishTranslation": "ayar noktası" },
+      { "term": "controller", "description": "A device that calculates adjustments based on measurements.", "context": "A controller compares the measurement to the setpoint.", "turkishTranslation": "kontrolör" },
+      { "term": "feedback control", "description": "A system that corrects deviations continuously.", "context": "Feedback control loops continuously correct deviations.", "turkishTranslation": "geri beslemeli kontrol" },
+      { "term": "distributed control system", "description": "A system that monitors and controls an entire plant centrally.", "context": "Distributed control systems allow operators to monitor entire plants.", "turkishTranslation": "dağıtık kontrol sistemi" },
+      { "term": "safety instrumented system", "description": "A system that automatically shuts down dangerous processes.", "context": "Safety instrumented systems automatically shut down processes.", "turkishTranslation": "güvenlik enstrümantasyon sistemi" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "What does a sensor measure?", "choices": ["The cost", "The current value of a variable", "The color", "The sound"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does the final control element typically adjust?", "context": ["Temperature", "A valve", "A report", "A label"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What does a distributed control system allow?", "choices": ["Cooking meals", "Monitoring entire plants from a central room", "Playing music", "Designing buildings"], "correctIndex": 1 }
+    ],
+    "xpReward": 75,
+    "coinReward": 24,
+    "eloReward": 14,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  },
+  {
+    "id": "chemical_c1_reactor_design",
+    "title": "Chemical Reactor Design",
+    "description": "Explore the principles behind industrial reactor selection and design.",
+    "discipline": "Chemical Engineering",
+    "cefrLevel": "C1",
+    "difficulty": "Advanced",
+    "estimatedMinutes": 13,
+    "passageText": "Reactor design is central to chemical engineering. Batch reactors process materials in discrete quantities and are suitable for small-scale or multi-product plants. Continuous stirred-tank reactors maintain uniform composition throughout and operate at steady state. Plug-flow reactors move material through a tube with minimal back-mixing, achieving high conversion. Fluidized-bed reactors suspend solid catalyst particles in upward-flowing gas, providing excellent heat transfer. Engineers select reactor type based on reaction kinetics, heat transfer requirements, and economic factors.",
+    "vocabulary": [
+      { "term": "batch reactor", "description": "A reactor that processes material in discrete quantities.", "context": "Batch reactors process materials in discrete quantities.", "turkishTranslation": "parti reaktör" },
+      { "term": "continuous stirred-tank reactor", "description": "A reactor that maintains uniform composition with continuous flow.", "context": "Continuous stirred-tank reactors maintain uniform composition throughout.", "turkishTranslation": "sürekli karıtlı tank reaktörü" },
+      { "term": "plug-flow reactor", "description": "A reactor where material flows through a tube with minimal mixing.", "context": "Plug-flow reactors move material through a tube.", "turkishTranslation": "tıkaç akış reaktörü" },
+      { "term": "fluidized-bed reactor", "description": "A reactor that suspends solid particles in flowing gas.", "context": "Fluidized-bed reactors suspend solid catalyst particles.", "turkishTranslation": "akışkan yatak reaktörü" },
+      { "term": "conversion", "description": "The fraction of reactant transformed into product.", "context": "Plug-flow reactors achieve high conversion.", "turkishTranslation": "dönüşüm" }
+    ],
+    "questions": [
+      { "id": "q1", "prompt": "When is a batch reactor most suitable?", "choices": ["Large-scale continuous production", "Small-scale or multi-product plants", "High-pressure gas reactions", "Nuclear reactions"], "correctIndex": 1 },
+      { "id": "q2", "prompt": "What does a plug-flow reactor minimize?", "choices": ["Temperature", "Back-mixing", "Pressure", "Cost"], "correctIndex": 1 },
+      { "id": "q3", "prompt": "What type of reactor provides excellent heat transfer through suspended particles?", "choices": ["Batch", "Fluidized-bed", "Open tank", "Glass beaker"], "correctIndex": 1 }
+    ],
+    "xpReward": 90,
+    "coinReward": 30,
+    "eloReward": 18,
+    "sourceMetadata": { "origin": "EngVox original", "schemaVersion": 1 }
+  }
+]

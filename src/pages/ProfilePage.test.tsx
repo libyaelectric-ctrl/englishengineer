@@ -8,7 +8,7 @@ import ProfilePage from './ProfilePage';
 const mockState = {
   activeSection: 'overview',
   currentUser: { id: 'user-1', displayName: 'Ali', email: 'ali@test.com' },
-  subscription: { planId: 'free' },
+  subscription: { planId: 'junior' },
   profile: { professionId: 'software-engineer' },
   memory: { weakWords: 0, dueToday: 0 },
   learningState: { achievements: [] },

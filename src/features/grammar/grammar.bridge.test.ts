@@ -33,7 +33,7 @@ const makeRule = (overrides: Partial<GrammarRule> = {}): GrammarRule => ({
   mistakeType: 'tense',
   commonMistakes: 'Using present tense for past events',
   skillUse: ['reading', 'writing'],
-  linkedVocabularyTags: ['project', 'report'],
+  linkedVocabularyTags: ['specialist', 'report'],
   grammarFits: ['tense'],
   difficulty: 3,
   prerequisites: [],
@@ -57,9 +57,9 @@ const makeRule = (overrides: Partial<GrammarRule> = {}): GrammarRule => ({
 describe('GrammarVocabularyBridge', () => {
   describe('extractVocabularyFromRule', () => {
     it('extracts linked vocabulary tags', () => {
-      const rule = makeRule({ linkedVocabularyTags: ['project', 'report'] });
+      const rule = makeRule({ linkedVocabularyTags: ['specialist', 'report'] });
       const tags = GrammarVocabularyBridge.extractVocabularyFromRule(rule);
-      expect(tags).toContain('project');
+      expect(tags).toContain('specialist');
       expect(tags).toContain('report');
     });
 
@@ -75,10 +75,10 @@ describe('GrammarVocabularyBridge', () => {
   describe('getGrammarRulesForVocabulary', () => {
     it('finds rules linked to vocabulary', () => {
       const rules = [
-        makeRule({ id: 'r1', linkedVocabularyTags: ['project'] }),
+        makeRule({ id: 'r1', linkedVocabularyTags: ['specialist'] }),
         makeRule({ id: 'r2', linkedVocabularyTags: ['report'] }),
       ];
-      const found = GrammarVocabularyBridge.getGrammarRulesForVocabulary(['project'], rules);
+      const found = GrammarVocabularyBridge.getGrammarRulesForVocabulary(['specialist'], rules);
       expect(found).toHaveLength(1);
       expect(found[0].id).toBe('r1');
     });
@@ -86,14 +86,14 @@ describe('GrammarVocabularyBridge', () => {
 
   describe('getVocabularyForGrammarRule', () => {
     it('finds vocabulary linked to rule', () => {
-      const rule = makeRule({ linkedVocabularyTags: ['project', 'report'] });
+      const rule = makeRule({ linkedVocabularyTags: ['specialist', 'report'] });
       const vocabulary = [
-        { id: 'v1', term: 'project', tags: ['project', 'engineering'] },
+        { id: 'v1', term: 'specialist', tags: ['specialist', 'engineering'] },
         { id: 'v2', term: 'house', tags: ['building'] },
       ];
       const found = GrammarVocabularyBridge.getVocabularyForGrammarRule(rule, vocabulary);
       expect(found).toHaveLength(1);
-      expect(found[0].term).toBe('project');
+      expect(found[0].term).toBe('specialist');
     });
   });
 });

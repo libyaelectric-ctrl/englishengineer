@@ -1,4 +1,4 @@
-export type BillingPlanId = 'free' | 'pro' | 'project' | 'exec' | 'private';
+export type BillingPlanId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export type SubscriptionStatus =
   'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';

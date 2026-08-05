@@ -53,7 +53,7 @@ export const BillingPage = () => {
 
   const handleUpgrade = () => {
     if (!currentUser?.id || !currentUser?.email) return;
-    startCheckout(currentUser.id, currentUser.email, 'pro').catch((err) =>
+    startCheckout(currentUser.id, currentUser.email, 'senior').catch((err) =>
       logger.e('Checkout failed:', err)
     );
   };

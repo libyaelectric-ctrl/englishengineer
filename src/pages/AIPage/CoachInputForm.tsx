@@ -44,7 +44,7 @@ const PlanLockBanner = ({
     </div>
     <div className="space-y-2">
       <h4 className="text-sm font-bold text-foreground">
-        {name} is a {isProLocked ? 'Pro' : 'Project'} Plan Feature
+        {name} is a {isProLocked ? 'senior' : 'specialist'} Plan Feature
       </h4>
       <p className="text-xs text-muted-copy max-w-md mx-auto leading-relaxed font-medium">
         {isProLocked
@@ -57,7 +57,7 @@ const PlanLockBanner = ({
       onClick={() => onNavigate('/pricing')}
       className="h-9 bg-primary hover:bg-primary/95 text-xs font-bold uppercase tracking-wider text-white shadow-sm cursor-pointer rounded-[4px] px-6 transition-all inline-flex items-center justify-center"
     >
-      Upgrade to {isProLocked ? 'Pro' : 'Project'} Plan
+      Upgrade to {isProLocked ? 'senior' : 'specialist'} Plan
     </Button>
   </div>
 );

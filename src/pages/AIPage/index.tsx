@@ -25,9 +25,9 @@ export const AIPage = ({ embedded = false }: AIPageProps) => {
         </div>
       )}
 
-      {(subscription.planId === 'project' ||
-        subscription.planId === 'exec' ||
-        subscription.planId === 'private') && (
+      {(subscription.planId === 'specialist' ||
+        subscription.planId === 'master' ||
+        subscription.planId === 'team') && (
         <WorkspacePanel
           planId={subscription.planId}
           activeWorkspaceId={h.activeWorkspaceId}

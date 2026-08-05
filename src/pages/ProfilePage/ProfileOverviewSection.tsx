@@ -87,7 +87,7 @@ const InfoGrid = ({
     },
     {
       label: 'Account Access',
-      value: subscription.planId === 'pro' ? 'Pro Access' : 'Free Trial',
+      value: subscription.planId === 'senior' ? 'Pro Access' : 'Free Trial',
       icon: ShieldCheck,
       code: 'ID-03',
     },

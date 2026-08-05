@@ -42,7 +42,7 @@ describe('PricingPage', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'free', status: 'none' },
+      subscription: { planId: 'junior', status: 'none' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
     render(
@@ -64,7 +64,7 @@ describe('PricingPage', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'free', status: 'none' },
+      subscription: { planId: 'junior', status: 'none' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
     render(
@@ -88,7 +88,7 @@ describe('PricingPage', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'free', status: 'none' },
+      subscription: { planId: 'junior', status: 'none' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return success health check
@@ -119,7 +119,7 @@ describe('PricingPage', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'free', status: 'none' },
+      subscription: { planId: 'junior', status: 'none' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
@@ -152,7 +152,7 @@ describe('PricingPage', () => {
     vi.mocked(useBillingStore).mockReturnValue({
       isLoading: false,
       startCheckout: vi.fn(),
-      subscription: { planId: 'pro', status: 'active' },
+      subscription: { planId: 'senior', status: 'active' },
     } as unknown as ReturnType<typeof useBillingStore>);
 
     // Mock global fetch to return failure
@@ -164,7 +164,7 @@ describe('PricingPage', () => {
       </MemoryRouter>
     );
 
-    // The unavailable warning should be hidden because planId is 'pro'
+    // The unavailable warning should be hidden because planId is 'senior'
     await waitFor(() => {
       expect(screen.queryByText(/Stripe backend health check failed/i)).toBeNull();
     });

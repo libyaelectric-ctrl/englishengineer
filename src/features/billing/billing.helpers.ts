@@ -13,10 +13,10 @@ interface BillingEnv {
 }
 
 export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
-  free: {
-    id: 'free',
-    name: 'Free',
-    description: 'Limited EngVox access for evaluation and learning warm-up.',
+  junior: {
+    id: 'junior',
+    name: 'Junior',
+    description: 'Essential learning core: placement test, vocabulary, grammar, and progress tracking.',
     isFutureReady: false,
     features: [
       'reading',
@@ -27,18 +27,21 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       'aiCoach',
       'analytics',
       'gamification',
+      'fullGamification',
+      'missionCreation',
+      'cloudSync',
     ],
     limits: {
-      dailyAICoachRequests: 1,
-      moduleAttemptsPerDay: 1,
-      vocabularyReviewsPerDay: 5,
+      dailyAICoachRequests: 3,
+      moduleAttemptsPerDay: 5,
+      vocabularyReviewsPerDay: 20,
       documentUploadsPerMonth: 0,
     },
   },
-  pro: {
-    id: 'pro',
-    name: 'Pro',
-    description: 'Unlimited individual learning with AI writing feedback and mistake logs.',
+  senior: {
+    id: 'senior',
+    name: 'Senior',
+    description: 'Everything in Junior plus translator, advanced reading, and writing feedback.',
     isFutureReady: false,
     features: [
       'reading',
@@ -52,22 +55,21 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       'gamification',
       'fullGamification',
       'missionCreation',
-      'futureAI',
       'unlimitedAIFeedback',
       'cloudSync',
       'advancedTasks',
     ],
     limits: {
-      dailyAICoachRequests: 10,
-      moduleAttemptsPerDay: 10,
-      vocabularyReviewsPerDay: 10,
-      documentUploadsPerMonth: 2,
+      dailyAICoachRequests: 15,
+      moduleAttemptsPerDay: 20,
+      vocabularyReviewsPerDay: 50,
+      documentUploadsPerMonth: 10,
     },
   },
-  project: {
-    id: 'project',
-    name: 'Project',
-    description: 'Collaborative workspaces, persistent memory, and LinkedIn tools.',
+  specialist: {
+    id: 'specialist',
+    name: 'Specialist',
+    description: 'Everything in Senior plus speaking practice, listening, and project workspaces.',
     isFutureReady: false,
     features: [
       'reading',
@@ -81,29 +83,27 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       'gamification',
       'fullGamification',
       'missionCreation',
-      'futureAI',
       'unlimitedAIFeedback',
       'cloudSync',
       'advancedTasks',
       'projectWorkspace',
       'persistentProjectMemory',
-      'customScenarioGeneration',
-      'linkedinOptimization',
-      'persistentAIAgent',
+      'realVoiceSpeaking',
+      'pronunciationAnalysis',
+      'voiceMeetingSimulator',
     ],
     limits: {
-      dailyAICoachRequests: 'unlimited',
-      moduleAttemptsPerDay: 'unlimited',
-      vocabularyReviewsPerDay: 'unlimited',
-      documentUploadsPerMonth: 20,
+      dailyAICoachRequests: 50,
+      moduleAttemptsPerDay: 50,
+      vocabularyReviewsPerDay: 100,
+      documentUploadsPerMonth: 50,
     },
   },
-
-  exec: {
-    id: 'exec',
-    name: 'Exec',
-    description: 'Dedicated executive coaching, offline audio, and priority slots.',
-    isFutureReady: false,
+  master: {
+    id: 'master',
+    name: 'Master',
+    description: 'Full access: all modules including tools, AI copilot, and LinkedIn optimization.',
+    isFutureReady: true,
     features: [
       'reading',
       'writing',
@@ -137,10 +137,10 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
       documentUploadsPerMonth: 'unlimited',
     },
   },
-  private: {
-    id: 'private',
-    name: 'Private',
-    description: 'Ultimate personalized English training and dedicated private proxy.',
+  team: {
+    id: 'team',
+    name: 'Team',
+    description: 'Enterprise solution for engineering teams. Coming soon.',
     isFutureReady: true,
     features: [
       'reading',
@@ -178,7 +178,7 @@ export const BILLING_PLANS: Record<BillingPlanId, BillingPlan> = {
 };
 
 export const createFreeSubscription = (): SubscriptionSnapshot => ({
-  planId: 'free',
+  planId: 'junior',
   status: 'none',
   currentPeriodEnd: null,
   cancelAtPeriodEnd: false,
@@ -233,13 +233,13 @@ export const getBillingStatusPresentation = (
 ): BillingStatusPresentation => {
   if (!providerStatus.isConfigured) {
     return {
-      planId: 'free',
-      planLabel: 'Free',
-      statusLabel: 'Local free access',
+      planId: 'junior',
+      planLabel: 'Junior',
+      statusLabel: 'Local Junior access',
       statusTone: 'warning',
       message:
-        'Billing backend is not connected. This is local Free access, not a verified paid subscription.',
-      entitlementLabel: 'Free entitlements only',
+        'Billing backend is not connected. This is local Junior access, not a verified paid subscription.',
+      entitlementLabel: 'Junior entitlements',
       entitlementTone: 'neutral',
       periodLabel: 'Renewal',
       periodValue: 'Not scheduled',
@@ -340,10 +340,10 @@ export const getBillingStatusPresentation = (
     default:
       return {
         ...base,
-        statusLabel: 'Free',
+        statusLabel: 'Junior',
         statusTone: 'neutral',
-        message: 'No paid subscription is active. Free plan limits apply.',
-        entitlementLabel: 'Free entitlements active',
+        message: 'No paid subscription is active. Junior plan limits apply.',
+        entitlementLabel: 'Junior entitlements active',
         entitlementTone: 'neutral',
         periodLabel: 'Renewal',
       };

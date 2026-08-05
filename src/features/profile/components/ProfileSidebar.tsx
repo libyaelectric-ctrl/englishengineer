@@ -16,7 +16,7 @@ export function ProfileSidebar() {
     currentLevel: 'Senior Engineer',
     stats: [
       { label: 'Name', value: currentUser?.displayName || 'User' },
-      { label: 'Plan', value: 'Pro', color: 'text-amber-500' },
+      { label: 'Plan', value: 'senior', color: 'text-amber-500' },
     ],
     progressBars: [{ label: 'Readiness', value: 85, max: 100, color: '#3b82f6' }],
     actions: [],

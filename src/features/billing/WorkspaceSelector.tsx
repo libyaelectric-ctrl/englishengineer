@@ -11,11 +11,11 @@ interface WorkspaceSelectorProps {
 }
 
 const PLAN_WORKSPACE_LIMIT: Record<BillingPlanId, number | null> = {
-  free: 1,
-  pro: 1,
-  project: 3,
-  exec: 3,
-  private: null,
+  junior: 1,
+  senior: 2,
+  specialist: 3,
+  master: 5,
+  team: null,
 };
 
 const WorkspaceListItem = ({

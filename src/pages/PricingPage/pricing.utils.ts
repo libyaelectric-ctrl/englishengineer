@@ -7,7 +7,7 @@ export const getErrorMessage = (error: unknown, fallback: string): string =>
   error instanceof Error ? error.message : fallback;
 
 export const isPlanUnavailable = (plan: CommercialPlanPreview) =>
-  plan.id === 'exec' || plan.id === 'private';
+  plan.id === 'master' || plan.id === 'team';
 
 export const getAccessBadge = (id: string): string => ACCESS_BADGES[id] ?? 'ACCESS-LVL-01';
 
@@ -16,7 +16,7 @@ export const getCalculatedPrice = (
   isAnnual: boolean,
   currencyCode = 'USD'
 ): string => {
-  if (plan.id === 'free') return CurrencyConfig.formatPrice(0, currencyCode);
+  if (plan.id === 'junior') return CurrencyConfig.formatPrice(0, currencyCode);
   const p = BASE_USD_MAP[plan.id] || { monthly: 29, annual: 23 };
   const usd = isAnnual ? p.annual : p.monthly;
   return CurrencyConfig.formatPrice(usd, currencyCode);

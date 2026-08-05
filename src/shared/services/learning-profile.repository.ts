@@ -142,6 +142,7 @@ export const LearningProfileRepository = {
       weeklyTolerance: UserLearningProfile['weeklyTolerance'];
       onboardingCompleted: boolean;
       disciplineLockedAt?: string;
+      branchLockConfirmations?: number;
     }>
   ): UserLearningProfile {
     const profile = this.getProfile(userId);

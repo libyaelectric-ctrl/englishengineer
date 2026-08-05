@@ -7,7 +7,7 @@ describe('storage namespace controls', () => {
 
   it('exports only EngVox namespace values without prefixes', () => {
     storage.set('learning_state', { xp: 120 });
-    localStorage.setItem('unrelated_key', 'private');
+    localStorage.setItem('unrelated_key', 'team');
 
     expect(storage.exportAll()).toEqual({ learning_state: { xp: 120 } });
   });

@@ -37,7 +37,7 @@ export type ProductAnalyticsSkill =
 export interface ProductAnalyticsMetadata {
   skill?: ProductAnalyticsSkill;
   missionId?: string;
-  plan?: 'free' | 'pro' | 'enterprise';
+  plan?: 'junior' | 'senior' | 'specialist' | 'master' | 'team';
   subscriptionStatus?:
     'none' | 'trialing' | 'active' | 'past_due' | 'canceled' | 'incomplete' | 'enterprise_pending';
   source?: 'user' | 'system' | 'checkout_return';

@@ -37,7 +37,7 @@ const makeRule = (overrides: Partial<GrammarRule> = {}): GrammarRule => ({
   mistakeType: 'tense',
   commonMistakes: 'Wrong tense',
   skillUse: ['reading', 'writing'],
-  linkedVocabularyTags: ['project'],
+  linkedVocabularyTags: ['specialist'],
   grammarFits: ['tense'],
   difficulty: 3,
   prerequisites: [],

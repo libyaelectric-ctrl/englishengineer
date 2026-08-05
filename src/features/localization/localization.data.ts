@@ -243,7 +243,7 @@ export const UI_TRANSLATIONS: Record<
     'login.signupButton': 'Create account',
     'login.noDiscipline': 'No discipline pre-selected.',
     'landing.shortcut2Desc': 'Toggle shortcuts panel',
-    'pricing.free': 'Free',
+    'pricing.free': 'junior',
     'landing.step1': 'Profile your role',
     'onboarding.speaking': 'Speaking',
     'landing.pricing': 'Pricing',
@@ -374,7 +374,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'ASME & API Inspection Reports',
     'vocabulary.mastered': 'Mastered',
     'dashboard.simulatedListening': 'Simulated listening talks. Available for practice.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SYNCED',
     'landing.workflowStep1Desc':
       'Establish your exact engineering discipline, site role, and project target to auto-generate personalized technical drills.',
@@ -500,7 +500,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq': 'FAQ',
     'landing.cefrQuizQ3A1': 'We are late because of the weather.',
     'dashboard.demoDefault': 'Demo default',
-    'pricing.project': 'Project',
+    'pricing.project': 'specialist',
     'landing.shortcut3Desc': 'Flip vocabulary card',
     'nav.writing': 'Writing',
     'curriculum.stable': 'STABLE',
@@ -571,7 +571,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Language',
     'onboarding.planDesc':
       'Plan selection does not activate billing. Local mode remains Free until the backend verifies a subscription.',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Weak Words',
     'nav.home': 'Home',
     'landing.heroSocialProof': '1,420+ Engineers practicing site English right now',
@@ -617,7 +617,7 @@ export const UI_TRANSLATIONS: Record<
     'common.error': 'Something went wrong',
     'landing.addonsAdded': 'Added to Cart ✓',
     'landing.voiceMeterSubtitle': 'CEFR C1 Vocal Analyzer',
-    'onboarding.free': 'Free',
+    'onboarding.free': 'junior',
     'beta.targetLevel': 'Target English Level',
     'feedback.submit': 'Submit Feedback',
     'landing.listenVoiceSample': 'Listen 10s Technical Voice Sample',
@@ -1058,7 +1058,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'ASME ve API Muayene Raporları',
     'vocabulary.mastered': 'Hakim Olunan',
     'dashboard.simulatedListening': 'Simüle edilmiş dinleme konuşmaları. Pratik için hazır.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SENKRONİZE',
     'landing.workflowStep1Desc':
       'Kişiselleştirilmiş teknik alıştırmaları otomatik oluşturmak için tam mühendislik disiplininizi, saha rolünüzü ve proje hedefinizi belirleyin.',
@@ -1259,7 +1259,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Dil',
     'onboarding.planDesc':
       'Plan seçimi faturalandırmayı etkinleştirmez. Arka uç bir aboneliği doğrulayana kadar yerel mod Ücretsiz kalır.',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Zayıf Kelimeler',
     'nav.home': 'Ana Sayfa',
     'landing.heroSocialProof': '1.420+ Mühendis şu anda şantiye İngilizcesi çalışıyor',
@@ -2446,7 +2446,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'ASME- und API-Prüfberichte',
     'vocabulary.mastered': 'Beherrscht',
     'dashboard.simulatedListening': 'Simulierte Hörverstehen-Gespräche. Zum Üben verfügbar.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SYNCHRONISIERT',
     'landing.workflowStep1Desc':
       'Geben Sie Ihr genaues Fachgebiet, Ihre Rolle vor Ort und das Projektziel an, um maßgeschneiderte technische Übungen automatisch zu generieren.',
@@ -2653,7 +2653,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Sprache',
     'onboarding.planDesc':
       'Die Auswahl eines Tarifs löst keine Abrechnung aus. Der lokale Modus bleibt kostenlos, bis das Backend ein Abonnement überprüft hat.',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Schwache Wörter',
     'nav.home': 'Startseite',
     'landing.heroSocialProof': 'Über 1.420 Ingenieure üben gerade Englisch auf der Baustelle',
@@ -3157,7 +3157,7 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.mastered': 'Dominadas',
     'dashboard.simulatedListening':
       'Conversaciones de comprensión auditiva simuladas. Disponibles para practicar.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SINCRONIZADO',
     'landing.workflowStep1Desc':
       'Indica tu disciplina de ingeniería concreta, tu función en la obra y el objetivo del proyecto para generar automáticamente ejercicios técnicos personalizados.',
@@ -3865,7 +3865,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'Relatórios de inspeção da ASME e da API',
     'vocabulary.mastered': 'Dominadas',
     'dashboard.simulatedListening': 'Conversas de escuta simuladas. Disponível para praticar.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SINCRONIZADO',
     'landing.workflowStep1Desc':
       'Defina sua área de engenharia específica, sua função no canteiro de obras e a meta do projeto para gerar automaticamente exercícios técnicos personalizados.',
@@ -4579,7 +4579,7 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.mastered': 'Maîtrisés',
     'dashboard.simulatedListening':
       "Conversations d'écoute simulées. Disponibles pour s'entraîner.",
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SYNCHRONISÉ',
     'landing.workflowStep1Desc':
       "Précisez votre discipline d'ingénierie, votre fonction sur le chantier et l'objectif du projet afin de générer automatiquement des exercices techniques personnalisés.",
@@ -4788,7 +4788,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Langue',
     'onboarding.planDesc':
       "Le choix d'un forfait ne déclenche pas la facturation. Le mode local reste gratuit jusqu'à ce que le serveur vérifie l'abonnement.",
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Mots Faibles',
     'nav.home': 'Accueil',
     'landing.heroSocialProof':
@@ -6165,7 +6165,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.pwaDesc': '“离线优先”网站实践',
     'common.language': '语言',
     'onboarding.planDesc': '选择套餐不会触发计费。在后端验证订阅之前，本地模式仍保持免费状态。',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': '薄弱词汇',
     'nav.home': '首页',
     'landing.heroSocialProof': '目前有 1,420 多名工程师正在网站上练习英语',
@@ -7350,7 +7350,7 @@ export const UI_TRANSLATIONS: Record<
     'vocabulary.mastered': 'Padroneggiate',
     'dashboard.simulatedListening':
       'Conversazioni di ascolto simulate. Disponibili per esercitarsi.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SINCRONIZZATO',
     'landing.workflowStep1Desc':
       "Indica la tua disciplina ingegneristica specifica, il tuo ruolo in cantiere e l'obiettivo del progetto per generare automaticamente esercitazioni tecniche personalizzate.",
@@ -7556,7 +7556,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Lingua',
     'onboarding.planDesc':
       "La selezione del piano non comporta l'addebito. La modalità locale rimane gratuita fino a quando il sistema di gestione non verifica l'abbonamento.",
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Parole Deboli',
     'nav.home': 'Home',
     'landing.heroSocialProof':
@@ -8059,7 +8059,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'Báo cáo kiểm tra ASME & API',
     'vocabulary.mastered': 'Thành thạo',
     'dashboard.simulatedListening': 'Cuộc hội thoại nghe mô phỏng. Có sẵn để luyện tập.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'ĐÃ ĐỒNG BỘ',
     'landing.workflowStep1Desc':
       'Hãy xác định chính xác chuyên ngành kỹ thuật, vai trò tại công trường và mục tiêu dự án của bạn để hệ thống tự động tạo ra các bài tập kỹ thuật được cá nhân hóa.',
@@ -8768,7 +8768,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'Raporty z kontroli zgodne z normami ASME i API',
     'vocabulary.mastered': 'Opanowane',
     'dashboard.simulatedListening': 'Symulowane rozmowy słuchowe. Dostępne do ćwiczeń.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'SYNCHRONIZOWANE',
     'landing.workflowStep1Desc':
       'Określ swoją konkretną specjalizację inżynierską, stanowisko na budowie oraz cel projektu, aby automatycznie wygenerować spersonalizowane ćwiczenia techniczne.',
@@ -9473,7 +9473,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'Laporan Inspeksi ASME & API',
     'vocabulary.mastered': 'Dikuasai',
     'dashboard.simulatedListening': 'Percakapan mendengarkan simulasi. Tersedia untuk latihan.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'TERSINKRONISASI',
     'landing.workflowStep1Desc':
       'Tentukan bidang teknik Anda secara tepat, peran Anda di lokasi proyek, dan sasaran proyek untuk menghasilkan latihan teknis yang disesuaikan secara otomatis.',
@@ -9677,7 +9677,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Bahasa',
     'onboarding.planDesc':
       'Pemilihan paket tidak memicu proses penagihan. Mode lokal tetap gratis sampai sistem backend memverifikasi langganan.',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Kata Lemah',
     'nav.home': 'Beranda',
     'landing.heroSocialProof':
@@ -10180,7 +10180,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.sector3Desc': 'ASME- en API-inspectierapporten',
     'vocabulary.mastered': 'Beheerst',
     'dashboard.simulatedListening': 'Gesimuleerde luistergesprekken. Beschikbaar om te oefenen.',
-    'pricing.pro': 'Pro',
+    'pricing.pro': 'senior',
     'curriculum.synced': 'GESYNCHRONISEERD',
     'landing.workflowStep1Desc':
       'Geef uw exacte technische vakgebied, functie op de bouwplaats en projectdoelstelling op om automatisch op maat gemaakte technische oefeningen te genereren.',
@@ -10308,7 +10308,7 @@ export const UI_TRANSLATIONS: Record<
     'landing.faq': 'Veelgestelde vragen',
     'landing.cefrQuizQ3A1': 'We zijn te laat vanwege het weer.',
     'dashboard.demoDefault': 'Standaard demo',
-    'pricing.project': 'Project',
+    'pricing.project': 'specialist',
     'landing.shortcut3Desc': 'Woordkaart om te draaien',
     'nav.writing': 'Schrijven',
     'curriculum.stable': 'STABIEL',
@@ -10384,7 +10384,7 @@ export const UI_TRANSLATIONS: Record<
     'common.language': 'Taal',
     'onboarding.planDesc':
       'Het selecteren van een abonnement leidt niet tot facturering. De lokale modus blijft gratis totdat de backend het abonnement heeft geverifieerd.',
-    'onboarding.pro': 'Pro',
+    'onboarding.pro': 'senior',
     'vocabulary.weakWords': 'Zwakke Woorden',
     'nav.home': 'Home',
     'landing.heroSocialProof':

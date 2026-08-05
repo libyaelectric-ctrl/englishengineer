@@ -34,7 +34,7 @@ export interface ModuleDefinition {
 // Packages
 // ---------------------------------------------------------------------------
 
-export type PackageTier = 'free' | 'pro' | 'project';
+export type PackageTier = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
 export interface PackageDefinition {
   tier: PackageTier;
@@ -42,38 +42,54 @@ export interface PackageDefinition {
   baseModules: ModuleId[];
   /** Add-on modules available for purchase. */
   availableAddons: ModuleId[];
-  /** Monthly price in USD (0 for free). */
+  /** Monthly price in USD (0 for junior/free). */
   monthlyPriceUsd: number;
-  /** Annual price in USD (0 for free). */
+  /** Annual price in USD (0 for junior/free). */
   annualPriceUsd: number;
   /** Maximum team members (1 = individual). */
   maxMembers: number;
 }
 
 export const PACKAGES: Record<PackageTier, PackageDefinition> = {
-  free: {
-    tier: 'free',
+  junior: {
+    tier: 'junior',
     baseModules: ['vocabulary', 'grammar'],
     availableAddons: [],
-    monthlyPriceUsd: 0,
-    annualPriceUsd: 0,
-    maxMembers: 1,
-  },
-  pro: {
-    tier: 'pro',
-    baseModules: ['vocabulary', 'grammar'],
-    availableAddons: ['reading', 'writing', 'listening', 'speaking'],
     monthlyPriceUsd: 29,
     annualPriceUsd: 290,
     maxMembers: 1,
   },
-  project: {
-    tier: 'project',
-    baseModules: ['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'],
-    availableAddons: [],
+  senior: {
+    tier: 'senior',
+    baseModules: ['vocabulary', 'grammar'],
+    availableAddons: ['reading', 'writing'],
     monthlyPriceUsd: 59,
     annualPriceUsd: 590,
-    maxMembers: 10,
+    maxMembers: 1,
+  },
+  specialist: {
+    tier: 'specialist',
+    baseModules: ['vocabulary', 'grammar', 'reading', 'writing'],
+    availableAddons: ['listening', 'speaking'],
+    monthlyPriceUsd: 79,
+    annualPriceUsd: 790,
+    maxMembers: 3,
+  },
+  master: {
+    tier: 'master',
+    baseModules: ['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'],
+    availableAddons: [],
+    monthlyPriceUsd: 99,
+    annualPriceUsd: 990,
+    maxMembers: 5,
+  },
+  team: {
+    tier: 'team',
+    baseModules: ['vocabulary', 'grammar', 'reading', 'writing', 'listening', 'speaking'],
+    availableAddons: [],
+    monthlyPriceUsd: 999,
+    annualPriceUsd: 9990,
+    maxMembers: 100,
   },
 };
 

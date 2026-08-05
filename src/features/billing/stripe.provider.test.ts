@@ -29,7 +29,7 @@ describe('StripeBillingProvider', () => {
     const response = await provider.createCheckoutSession({
       userId: 'user_123',
       email: 'engineer@example.com',
-      planId: 'pro',
+      planId: 'senior',
       successUrl: 'https://app.EngVox.test/profile?billing=success',
       cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
     });
@@ -46,7 +46,7 @@ describe('StripeBillingProvider', () => {
         body: JSON.stringify({
           userId: 'user_123',
           email: 'engineer@example.com',
-          planId: 'pro',
+          planId: 'senior',
           successUrl: 'https://app.EngVox.test/profile?billing=success',
           cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
         }),
@@ -65,7 +65,7 @@ describe('StripeBillingProvider', () => {
       provider.createCheckoutSession({
         userId: 'user_123',
         email: 'engineer@example.com',
-        planId: 'pro',
+        planId: 'senior',
         successUrl: 'https://app.EngVox.test/profile?billing=success',
         cancelUrl: 'https://app.EngVox.test/profile?billing=cancelled',
       })

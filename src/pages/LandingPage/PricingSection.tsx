@@ -1,214 +1,184 @@
-import { CheckCircle2, Globe, Sparkles } from 'lucide-react';
-
 import { useState } from 'react';
-
+import { Check, X, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
-import { COMMERCIAL_PLAN_CATALOG, CurrencyConfig } from '@/features/billing';
+import { motion } from 'motion/react';
+import { CurrencyConfig } from '@/features/billing';
+import { getLandingTranslations } from './landing-i18n';
 import { useLocalizationStore } from '@/features/localization';
 
-import { AnimatedCard } from './AnimatedComponents';
-import { PricingAddonsCard } from './PricingAddonsCard';
-import { SalesChatModal } from './SalesChatModal';
+type PackageId = 'junior' | 'senior' | 'specialist' | 'master' | 'team';
 
-const LANDING_PLANS = COMMERCIAL_PLAN_CATALOG.filter((p) =>
-  ['free', 'pro', 'project'].includes(p.id)
-);
-
-const BASE_USD_PRICES: Record<string, number> = {
-  free: 0,
-  pro: 29,
-  project: 59,
-};
-
-interface PricingPlanCardProps {
-  plan: (typeof LANDING_PLANS)[number];
-  index: number;
-  isPrimary: boolean;
-  basePrice: number;
-  discountedPrice?: number;
-  displayPrice: string;
-  isAnnual: boolean;
+interface PackageInfo {
+  id: PackageId;
+  name: string;
+  price: number;
+  description: string;
+  highlighted: boolean;
+  comingSoon: boolean;
 }
 
-function PricingPlanCard({
-  plan,
-  index,
-  isPrimary,
-  basePrice: _basePrice,
-  displayPrice,
-  isAnnual,
-}: PricingPlanCardProps) {
-  const translate = useLocalizationStore((s) => s.translate);
+const PACKAGES: PackageInfo[] = [
+  { id: 'junior', name: 'Junior', price: 29, description: 'Essential learning core for daily practice.', highlighted: false, comingSoon: false },
+  { id: 'senior', name: 'Senior', price: 59, description: 'Expand to reading, writing, and translation.', highlighted: true, comingSoon: false },
+  { id: 'specialist', name: 'Specialist', price: 79, description: 'Add speaking and listening practice.', highlighted: false, comingSoon: false },
+  { id: 'master', name: 'Master', price: 99, description: 'Full access including tools and AI copilot.', highlighted: false, comingSoon: false },
+  { id: 'team', name: 'Team', price: 999, description: 'Enterprise solution for engineering teams.', highlighted: false, comingSoon: true },
+];
 
-  return (
-    <AnimatedCard
-      delay={index * 50}
-      className={`flex flex-col p-5 h-full justify-between transition-all duration-300 rounded-xl relative ${
-        isPrimary
-          ? 'border-2 border-primary shadow-2xl bg-surface scale-[1.02] light-sweep-container overflow-hidden'
-          : 'border border-border-soft bg-surface'
-      }`}
-    >
-      {isPrimary && (
-        <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-amber-400 via-primary to-indigo-600 blur-lg opacity-60 animate-spin-slow pointer-events-none" />
-      )}
-
-      <div className="relative z-10 flex flex-col h-full justify-between">
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground flex items-center gap-1.5">
-              {plan.name}
-              {isPrimary && <Sparkles className="h-4 w-4 text-amber-500 animate-bounce" />}
-            </h3>
-            {isPrimary ? (
-              <span className="rounded bg-gradient-to-r from-amber-500 to-primary text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-md">
-                {translate('landing.pricingMostPopular')}
-              </span>
-            ) : null}
-          </div>
-
-          <div className="flex items-baseline gap-1.5 mb-2">
-            <span className="text-3xl font-extrabold tracking-tight text-foreground font-mono">
-              {displayPrice}
-            </span>
-            <span className="text-xs text-muted-copy font-medium">
-              {plan.id === 'free'
-                ? ''
-                : isAnnual
-                  ? translate('landing.pricingPerMonthAnnual')
-                  : translate('landing.pricingPerMonth')}
-            </span>
-          </div>
-
-          <p className="text-xs leading-relaxed text-muted-copy min-h-[32px]">{plan.priceReason}</p>
-
-          <div className="my-4 border-t border-border-soft/60" />
-
-          <ul className="space-y-2.5">
-            {plan.benefits.map((f: string) => (
-              <li key={f} className="flex items-start gap-2.5">
-                <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                <span className="text-xs text-foreground leading-tight">{f}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="mt-6 pt-2">
-          <Link
-            to="/signup"
-            className={`block w-full rounded-lg px-4 py-2.5 text-center text-xs font-bold transition-all shadow-sm ${
-              isPrimary
-                ? 'bg-primary text-primary-foreground hover:bg-primary/95 shadow-md'
-                : 'bg-background text-foreground border border-border-soft hover:bg-surface-hover'
-            }`}
-          >
-            {plan.id === 'free'
-              ? translate('landing.pricingStartFree')
-              : translate('landing.pricingGetStarted')}
-          </Link>
-        </div>
-      </div>
-    </AnimatedCard>
-  );
-}
+const MODULES: Array<{ key: string; label: string; tiers: Record<PackageId, boolean | string> }> = [
+  { key: 'placement', label: 'Placement Test', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'learningHub', label: 'Learning Hub', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'progress', label: 'Progress Tracking', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'vocabulary', label: 'Vocabulary', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'grammar', label: 'Grammar', tiers: { junior: true, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'translator', label: 'Translator', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'reading', label: 'Reading', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'writing', label: 'Writing', tiers: { junior: false, senior: true, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'speaking', label: 'Speaking', tiers: { junior: false, senior: false, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'listening', label: 'Listening', tiers: { junior: false, senior: false, specialist: true, master: true, team: 'Coming Soon' } },
+  { key: 'tools', label: 'Tool', tiers: { junior: false, senior: false, specialist: false, master: true, team: 'Coming Soon' } },
+  { key: 'aiCopilot', label: 'AI Copilot', tiers: { junior: false, senior: false, specialist: false, master: true, team: 'Coming Soon' } },
+];
 
 export function PricingSection() {
-  const translate = useLocalizationStore((s) => s.translate);
+  const language = useLocalizationStore((s) => s.language);
+  const t = getLandingTranslations(language);
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const [isAnnual, setIsAnnual] = useState(false);
+
+  const tp = (key: keyof typeof t, fallback: string) => t[key] ?? fallback;
+
+  const formatPrice = (usd: number) => {
+    if (usd === 0) return tp('pricingFree' as keyof typeof t, 'junior');
+    const annual = isAnnual ? Math.round(usd * 0.8) : usd;
+    return CurrencyConfig.formatPrice(annual, selectedCurrency);
+  };
 
   return (
     <section
       id="pricing"
-      className="border-t border-border-soft bg-background px-6 py-8 md:px-12 md:py-12 relative"
+      className="py-24 bg-white dark:bg-slate-900 text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl">
-        {/* Single Row Compact Header with Multi-Currency Selector (Item 15) */}
-        <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border-soft pb-4">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center rounded bg-soft border border-border-soft px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
-              {translate('landing.pricingTitle')}
-            </span>
-            <h2 className="text-base sm:text-lg font-bold tracking-tight text-foreground">
-              {translate('landing.pricingSubtitle')}
-            </h2>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
+            {t.pricingTitle ?? 'Simple, Transparent Pricing'}
+          </h2>
+          <p className="mt-4 text-slate-600 dark:text-slate-400 text-base sm:text-lg">
+            {t.pricingSubtitle ?? 'Choose your plan. Every plan includes your discipline-specific vocabulary pool.'}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mb-10">
+          <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+            <button
+              type="button"
+              onClick={() => setIsAnnual(false)}
+              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all ${!isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
+            >
+              {t.pricingMonthly ?? 'Monthly'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsAnnual(true)}
+              className={`px-3 py-1.5 rounded text-sm font-semibold transition-all flex items-center gap-1.5 ${isAnnual ? 'bg-white dark:bg-slate-700 shadow-sm text-slate-900 dark:text-white' : 'text-slate-500'}`}
+            >
+              <span>{t.pricingAnnual ?? 'Annual'}</span>
+              <span className="text-[10px] bg-emerald-500 text-white px-1.5 py-0.5 rounded font-mono">-{t.pricingSave20 ?? '20%'}</span>
+            </button>
           </div>
 
-          {/* ITEM 15: Global Currency & Region Switcher */}
-          <div className="flex items-center gap-3 flex-wrap">
-            {/* Annual Toggle with Savings Badge */}
-            <div className="flex items-center gap-2 bg-surface p-1 rounded-lg border border-border-soft text-xs font-bold">
-              <button
-                type="button"
-                onClick={() => setIsAnnual(false)}
-                className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
-                  !isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'
-                }`}
-              >
-                {translate('landing.pricingMonthly')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsAnnual(true)}
-                className={`px-2.5 py-1 rounded transition-all cursor-pointer flex items-center gap-1 ${
-                  isAnnual ? 'bg-primary text-white shadow-sm' : 'text-muted-copy'
-                }`}
-              >
-                <span>{translate('landing.pricingAnnual')}</span>
-                <span className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.2 rounded font-mono">
-                  {translate('landing.pricingSave20')}
+          <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 px-2.5 py-1.5 rounded-lg">
+            <Globe className="h-3.5 w-3.5 text-blue-500" />
+            <select
+              value={selectedCurrency}
+              onChange={(e) => setSelectedCurrency(e.target.value)}
+              className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
+            >
+              {CurrencyConfig.CURRENCIES.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.flag} {c.code}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-12">
+          {PACKAGES.map((pkg, idx) => (
+            <motion.div
+              key={pkg.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}
+              className={`relative rounded-2xl p-5 border flex flex-col ${pkg.highlighted ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10 ring-2 ring-blue-500/20 scale-[1.03]' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'} ${pkg.comingSoon ? 'opacity-70' : ''}`}
+            >
+              {pkg.highlighted && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] bg-blue-600 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  {t.pricingMostPopular ?? 'Most Popular'}
                 </span>
-              </button>
-            </div>
-
-            <div className="flex items-center gap-1.5 bg-surface px-2.5 py-1 rounded-lg border border-border-soft text-xs font-bold">
-              <Globe className="h-3.5 w-3.5 text-primary" />
-              <select
-                value={selectedCurrency}
-                onChange={(e) => setSelectedCurrency(e.target.value)}
-                className="bg-transparent text-xs font-bold text-foreground focus:outline-none cursor-pointer"
+              )}
+              {pkg.comingSoon && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] bg-slate-500 text-white px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                  {t.pricingComingSoon ?? 'Coming Soon'}
+                </span>
+              )}
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white">{pkg.name}</h3>
+              <div className="mt-2 mb-3">
+                <span className="text-3xl font-extrabold text-slate-900 dark:text-white font-mono">
+                  {formatPrice(pkg.price)}
+                </span>
+                {pkg.price > 0 && (
+                  <span className="text-xs text-slate-500">/{isAnnual ? (t.pricingYear ?? 'yr') : (t.pricingMonth ?? 'mo')}</span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 flex-1">{pkg.description}</p>
+              <Link
+                to={pkg.comingSoon ? '#' : `/onboarding?plan=${pkg.id}`}
+                onClick={(e) => pkg.comingSoon && e.preventDefault()}
+                className={`block w-full rounded-lg px-3 py-2 text-center text-xs font-bold transition-all ${pkg.comingSoon ? 'bg-slate-300 dark:bg-slate-600 text-slate-500 cursor-not-allowed' : pkg.highlighted ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md' : 'bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 hover:bg-slate-800'}`}
               >
-                {CurrencyConfig.CURRENCIES.map((c) => (
-                  <option key={c.code} value={c.code} className="bg-background text-foreground">
-                    {c.flag} {c.code} ({c.symbol}) — {c.region}
-                  </option>
+                {pkg.comingSoon ? (t.pricingNotifyMe ?? 'Notify Me') : (t.pricingGetStarted ?? 'Get Started')}
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 dark:border-slate-700">
+                <th className="text-left py-3 pr-4 font-semibold text-slate-600 dark:text-slate-400 w-1/3">{t.pricingFeature ?? 'Feature'}</th>
+                {PACKAGES.map((pkg) => (
+                  <th key={pkg.id} className="py-3 px-2 text-center font-bold text-slate-900 dark:text-white text-xs">{pkg.name}</th>
                 ))}
-              </select>
-            </div>
-          </div>
+              </tr>
+            </thead>
+            <tbody>
+              {MODULES.map((mod) => (
+                <tr key={mod.key} className="border-b border-slate-100 dark:border-slate-800">
+                  <td className="py-3 pr-4 text-slate-700 dark:text-slate-300">{mod.label}</td>
+                  {PACKAGES.map((pkg) => {
+                    const value = mod.tiers[pkg.id];
+                    return (
+                      <td key={pkg.id} className="py-3 px-2 text-center">
+                        {value === true ? (
+                          <Check className="w-4 h-4 text-emerald-500 mx-auto" />
+                        ) : value === false ? (
+                          <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        ) : (
+                          <span className="text-[10px] text-slate-400">{value}</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-
-        {/* Compact 3-Tier Grid with ITEM 16 Border-Beam Halo */}
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 items-stretch">
-          {LANDING_PLANS.map((plan, index) => {
-            const isPrimary = plan.id === 'pro';
-            const basePrice = BASE_USD_PRICES[plan.id] || 0;
-            const discountedPrice = isAnnual ? Math.round(basePrice * 0.8) : basePrice;
-            const displayPrice = CurrencyConfig.formatPrice(discountedPrice, selectedCurrency);
-
-            return (
-              <PricingPlanCard
-                key={plan.id}
-                plan={plan}
-                index={index}
-                isPrimary={isPrimary}
-                basePrice={basePrice}
-                discountedPrice={discountedPrice}
-                displayPrice={displayPrice}
-                isAnnual={isAnnual}
-              />
-            );
-          })}
-        </div>
-
-        {/* ITEM 17: Micro-Transaction Add-ons */}
-        <PricingAddonsCard />
       </div>
-
-      {/* ITEM 20: Sales Chat Trigger & Modal */}
-      <SalesChatModal />
     </section>
   );
 }

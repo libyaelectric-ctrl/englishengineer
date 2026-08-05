@@ -27,7 +27,7 @@ vi.mock('@/features/auth', () => ({
 
 vi.mock('@/features/billing', () => ({
   useBillingStore: vi.fn(() => ({
-    subscription: { planId: 'free' },
+    subscription: { planId: 'junior' },
   })),
 }));
 

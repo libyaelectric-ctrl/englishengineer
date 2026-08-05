@@ -25,7 +25,7 @@ const INITIAL_USERS: UserRecord[] = [
     discipline: 'Electrical Engineering',
     level: 'B2',
     elo: 1680,
-    plan: 'Pro',
+    plan: 'senior',
     joinedAt: '2026-07-01',
   },
   {
@@ -35,7 +35,7 @@ const INITIAL_USERS: UserRecord[] = [
     discipline: 'Mechanical Engineering',
     level: 'A2',
     elo: 1210,
-    plan: 'Free',
+    plan: 'junior',
     joinedAt: '2026-07-05',
   },
   {
@@ -45,7 +45,7 @@ const INITIAL_USERS: UserRecord[] = [
     discipline: 'Civil Engineering',
     level: 'C1',
     elo: 1890,
-    plan: 'Pro',
+    plan: 'senior',
     joinedAt: '2026-07-06',
   },
   {
@@ -55,7 +55,7 @@ const INITIAL_USERS: UserRecord[] = [
     discipline: 'Mechanical Engineering',
     level: 'B1',
     elo: 1420,
-    plan: 'Pro',
+    plan: 'senior',
     joinedAt: '2026-07-08',
   },
 ];
@@ -97,7 +97,7 @@ export const AdminPage = () => {
 
   const handlePromote = (id: string) => {
     setUsers((prev) =>
-      prev.map((u) => (u.id === id ? { ...u, plan: u.plan === 'Pro' ? 'Free' : 'Pro' } : u))
+      prev.map((u) => (u.id === id ? { ...u, plan: u.plan === 'senior' ? 'junior' : 'senior' } : u))
     );
   };
 

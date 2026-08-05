@@ -123,7 +123,7 @@ export interface UserLearningProfile {
   communicationGoals: CommunicationGoal[];
   selfReportedCefr: SelfReportedCefr;
   learningFocus: SkillName[];
-  selectedPlan: 'free' | 'pro' | 'enterprise';
+  selectedPlan: 'junior' | 'senior' | 'specialist' | 'master' | 'team';
   /** @deprecated Use `discipline` instead. */
   professionalTrack: ProfessionalTrack;
   electricalSubdomain: ElectricalSubdomain;
@@ -148,6 +148,10 @@ export interface UserLearningProfile {
    * Set automatically when onboarding completes; once set, the discipline can never change.
    */
   disciplineLockedAt?: string;
+  /**
+   * Number of times the user confirmed the permanent-branch warning during onboarding (2-3 expected).
+   */
+  branchLockConfirmations: number;
   weeklyGoal: number;
   createdAt: string;
   updatedAt: string;
