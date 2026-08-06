@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-
-
 interface LearningOverview {
   vocabulary: { total: number; learned: number; mastered: number; struggling: number };
   grammar: { total: number; learned: number; mastered: number; struggling: number };
