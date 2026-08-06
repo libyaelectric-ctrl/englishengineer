@@ -239,6 +239,10 @@ export type TranslationKey =
   | 'dashboard.goToGeneral'
   | 'dashboard.loaded'
   | 'dashboard.terms'
+  | 'dashboard.contentError'
+  | 'dashboard.yourPool'
+  | 'dashboard.items'
+  | 'dashboard.domains'
   // Curriculum
   | 'curriculum.continueLearning'
   | 'curriculum.buildFirstTask'

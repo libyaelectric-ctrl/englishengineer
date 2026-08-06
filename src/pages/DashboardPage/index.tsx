@@ -30,6 +30,7 @@ import { HeroPanel } from './HeroPanel';
 import { ProgressCockpit } from './ProgressCockpit';
 import { ReviewPriorities } from './ReviewPriorities';
 import { SkillRadarChart } from './SkillRadarChart';
+import { ContentPoolWidget } from './ContentPoolWidget';
 
 const COMPETENCY_HIGH_THRESHOLD = 80;
 const COMPETENCY_GOOD_THRESHOLD = 60;
@@ -178,6 +179,7 @@ const DashboardPage = () => {
         <StreakFlameWidget streakDays={STREAK_DAYS} freezeAvailable={true} />
         <DailyGoalBar />
         <DisciplineCard discipline={discipline} isLocked={!!profile.disciplineLockedAt} isLoading={!profile} />
+        <ContentPoolWidget discipline={discipline} />
         <HeroPanel
           userName={userName}
           summary={summary}

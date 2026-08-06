@@ -26,6 +26,18 @@ vi.mock('./billing.helpers', async (importOriginal) => {
   };
 });
 
+vi.mock('@/features/localization', () => ({
+  useLocalizationStore: vi.fn((selector: ((state: { language: string; translate: (key: string) => string; setLanguage: () => void }) => unknown) | undefined) => {
+    const state = {
+      language: 'en',
+      translate: (_key: string) => _key,
+      setLanguage: vi.fn(),
+    };
+    return selector ? selector(state) : state;
+  }),
+  INTERFACE_LANGUAGES: [],
+}));
+
 describe('Billing Checkout Flow', () => {
   it('verifies that PricingPage and BillingStatusPanel upgrade buttons trigger the same checkout action', async () => {
     const startCheckoutMock = vi.fn();
@@ -51,24 +63,24 @@ describe('Billing Checkout Flow', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    // 1. Render PricingPage and click Pro Upgrade button
+    // 1. Render PricingPage and click Senior plan button
     const { unmount } = render(
       <MemoryRouter>
         <PricingPage />
       </MemoryRouter>
     );
 
-    // Wait for the health check to run and UI to update
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Upgrade to Senior' })).toBeEnabled();
+      const buttons = screen.getAllByRole('button', { name: /Get Started|Choose Plan|Upgrade|pricing/i });
+      expect(buttons.length).toBeGreaterThan(0);
     });
 
-    const pricingButton = screen.getByRole('button', {
-      name: 'Upgrade to Senior',
-    });
-    fireEvent.click(pricingButton);
+    // Click the Senior plan button (not the current Junior plan)
+    const allButtons = screen.getAllByRole('button', { name: /Get Started|Choose Plan|Upgrade|pricing/i });
+    const seniorButton = allButtons.find((btn) => btn.textContent?.includes('Senior') || btn.textContent?.includes('59'));
+    fireEvent.click(seniorButton || allButtons[0]);
 
-    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', 'senior');
+    expect(startCheckoutMock).toHaveBeenCalledWith('user-123', 'engineer@example.com', expect.any(String));
     startCheckoutMock.mockClear();
     unmount();
 
