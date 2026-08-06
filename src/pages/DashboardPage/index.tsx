@@ -177,7 +177,7 @@ const DashboardPage = () => {
       <div className="space-y-6">
         <StreakFlameWidget streakDays={STREAK_DAYS} freezeAvailable={true} />
         <DailyGoalBar />
-        <DisciplineCard discipline={discipline} isLocked={!!profile.disciplineLockedAt} />
+        <DisciplineCard discipline={discipline} isLocked={!!profile.disciplineLockedAt} isLoading={!profile} />
         <HeroPanel
           userName={userName}
           summary={summary}

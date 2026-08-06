@@ -222,6 +222,13 @@ export type TranslationKey =
   | 'dashboard.myDiscipline'
   | 'dashboard.locked'
   | 'dashboard.words'
+  | 'dashboard.disciplineError'
+  | 'dashboard.disciplineErrorDesc'
+  | 'dashboard.retry'
+  | 'dashboard.noContentYet'
+  | 'dashboard.goToGeneral'
+  | 'dashboard.loaded'
+  | 'dashboard.terms'
   // Curriculum
   | 'curriculum.continueLearning'
   | 'curriculum.buildFirstTask'
