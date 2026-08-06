@@ -31,10 +31,6 @@ const Row = ({ index, style, data }: any) => {
 };
 
 export const VirtualizedVocabularyList: React.FC<Props> = ({ items }) => {
-  if (!items || items.length === 0) {
-    return <div className="p-10 text-center text-gray-500">��erik y�kleniyor veya bo�...</div>;
-  }
-
   return (
     <div className="h-[600px] w-full bg-white rounded-lg shadow-sm border">
       <AutoSizer>
