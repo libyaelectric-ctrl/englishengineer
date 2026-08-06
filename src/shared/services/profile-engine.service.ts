@@ -5,6 +5,7 @@ import { GrammarEngine } from '@/shared/services/grammar.engine';
 import { VocabularyEngine } from '@/shared/services/vocabulary.engine';
 import { VocabularyMenuService } from '@/shared/services/vocabulary-menu.service';
 import type { CefrLevel } from '@/shared/types/domain.types';
+import { type EngineeringDiscipline } from '@/shared/constants/engineering-disciplines';
 import {
   type CefrBand,
   type DailyMission,
@@ -53,6 +54,44 @@ const getSessionDelta = (score: number): number => {
   if (score >= 85) return 12;
   if (score >= 60) return 4;
   return -8;
+};
+
+const BASE_DOMAINS = ['general', 'engineering'] as const;
+
+export const getDisciplineDomains = async (
+  userId: string,
+  discipline?: EngineeringDiscipline
+): Promise<string[]> => {
+  const resolvedDiscipline = discipline ?? 'general';
+
+  if (!resolvedDiscipline || resolvedDiscipline === 'general') {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (no discipline)`);
+    }
+    return [...BASE_DOMAINS];
+  }
+
+  try {
+    const disciplineTerms = await VocabularyRepository.getVocabularyByDomain(resolvedDiscipline);
+
+    if (disciplineTerms.length === 0) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (empty discipline: ${resolvedDiscipline})`);
+      }
+      return [...BASE_DOMAINS];
+    }
+
+    const domains = [...BASE_DOMAINS, resolvedDiscipline];
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[ProfileEngine] User ${userId} selected domains: [${domains.join(', ')}]`);
+    }
+    return domains;
+  } catch {
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[ProfileEngine] User ${userId} selected domains: [general, engineering] (error fallback)`);
+    }
+    return [...BASE_DOMAINS];
+  }
 };
 
 const withEvidence = (profile: SkillProfile, state: LearningState): SkillProfile => {
@@ -182,7 +221,7 @@ export const LearningProfileEngine = {
     const grammarLevel = toCefrLevel(profile.skills.grammar.cefrBand);
     const vocabularyLevel = toCefrLevel(profile.skills.vocabulary.cefrBand);
     const grammarMix = profile.skills.grammar.completedTasks % 4 === 3 ? 'stretch' : 'safe';
-    const branchDomains = ['general', 'engineering', profile.discipline];
+    const branchDomains = await getDisciplineDomains(profile.userId, profile.discipline);
     const [grammarRules, vocabularyTerms] = await Promise.all([
       GrammarEngine.selectGrammarForTask(
         weakest.skill,

@@ -10,6 +10,7 @@
     "dev:all": "concurrently -n \"frontend,backend\" -c \"blue,green\" \"npm run dev\" \"npm --prefix backend run dev\"",
     "build": "set NODE_OPTIONS=--max-old-space-size=4096 && tsc --noEmit && set NODE_OPTIONS=--max-old-space-size=4096 && vite build --configLoader runner",
     "clean": "node -e \"const fs=require('fs'); ['dist','.vite','.npm-cache'].forEach((p)=>fs.rmSync(p,{recursive:true,force:true}));\"",
+    "clean:cache": "node -e \"const fs=require('fs'); ['node_modules/.cache','.vite'].forEach((p)=>{try{fs.rmSync(p,{recursive:true,force:true})}catch{}})\"",
     "test": "vitest run --configLoader runner --reporter dot --exclude 'src/e2e/**' --exclude 'e2e/**' --exclude '.mimocode/**' --exclude 'tests/**' --exclude 'src/shared/tests/integration/**'",
     "test:integration": "vitest run --configLoader runner src/shared/tests/integration",
     "test:watch": "vitest --configLoader runner",
@@ -46,6 +47,9 @@
     "check:licenses": "license-checker --production --csv --out licenses.csv",
     "check:licenses:reject": "license-checker --production --failOn 'GPL-3.0;AGPL-3.0'",
     "content:validate": "node scripts/verify-release.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
   },
   "dependencies": {
     "@sentry/react": "^10.69.0",
