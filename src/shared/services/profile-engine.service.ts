@@ -182,6 +182,7 @@ export const LearningProfileEngine = {
     const grammarLevel = toCefrLevel(profile.skills.grammar.cefrBand);
     const vocabularyLevel = toCefrLevel(profile.skills.vocabulary.cefrBand);
     const grammarMix = profile.skills.grammar.completedTasks % 4 === 3 ? 'stretch' : 'safe';
+    const branchDomains = ['general', 'engineering', profile.discipline];
     const [grammarRules, vocabularyTerms] = await Promise.all([
       GrammarEngine.selectGrammarForTask(
         weakest.skill,
@@ -190,7 +191,7 @@ export const LearningProfileEngine = {
         undefined,
         grammarMix
       ),
-      VocabularyEngine.selectVocabularyForTask('vocabulary', vocabularyLevel),
+      VocabularyEngine.selectVocabularyForTask('vocabulary', vocabularyLevel, undefined, undefined, undefined, branchDomains),
     ]);
     const grammarFocus =
       grammarRules[0] ??

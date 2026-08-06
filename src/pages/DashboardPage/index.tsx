@@ -25,6 +25,7 @@ import { DashboardTranslatorWidget } from '@/features/translation';
 
 import { DailyGoalBar } from './DailyGoalBar';
 import { DashboardSkeleton } from './DashboardSkeleton';
+import { DisciplineCard } from './DisciplineCard';
 import { HeroPanel } from './HeroPanel';
 import { ProgressCockpit } from './ProgressCockpit';
 import { ReviewPriorities } from './ReviewPriorities';
@@ -176,6 +177,7 @@ const DashboardPage = () => {
       <div className="space-y-6">
         <StreakFlameWidget streakDays={STREAK_DAYS} freezeAvailable={true} />
         <DailyGoalBar />
+        <DisciplineCard discipline={discipline} isLocked={!!profile.disciplineLockedAt} />
         <HeroPanel
           userName={userName}
           summary={summary}
