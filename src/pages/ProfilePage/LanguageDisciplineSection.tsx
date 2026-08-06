@@ -20,6 +20,7 @@ import type { EngineeringDiscipline } from '@/shared/constants/engineering-disci
 import { INTERFACE_LANGUAGES } from '@/features/localization/localization.data';
 import { useLocalizationStore } from '@/features/localization/localization.store';
 import type { SupportedInterfaceLanguage } from '@/features/localization/localization.types';
+import { ContentPreview } from '@/pages/OnboardingPage/steps/ContentPreview';
 
 const DISCIPLINE_ICONS: Record<EngineeringDiscipline, typeof Bot> = {
   architecture: Building2,
@@ -36,6 +37,7 @@ const DISCIPLINE_ICONS: Record<EngineeringDiscipline, typeof Bot> = {
 
 interface LanguageDisciplineSectionProps {
   currentDiscipline: EngineeringDiscipline;
+  profileDiscipline?: EngineeringDiscipline;
   onDisciplineChange: (discipline: EngineeringDiscipline) => void;
   onSave: () => void;
   saved: boolean;
@@ -45,6 +47,7 @@ interface LanguageDisciplineSectionProps {
 
 export const LanguageDisciplineSection = ({
   currentDiscipline,
+  profileDiscipline,
   onDisciplineChange,
   onSave,
   saved,
@@ -142,6 +145,9 @@ export const LanguageDisciplineSection = ({
               );
             })}
           </div>
+          {!locked && currentDiscipline !== profileDiscipline && (
+            <ContentPreview discipline={currentDiscipline} />
+          )}
         </div>
       </SectionCard>
 

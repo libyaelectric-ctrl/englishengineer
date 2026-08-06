@@ -225,6 +225,7 @@ const ProfilePage = () => {
       {activeSection === 'language-discipline' && (
         <LanguageDisciplineSection
           currentDiscipline={discipline}
+          profileDiscipline={profile?.discipline}
           onDisciplineChange={setDiscipline}
           onSave={handleDisciplineSave}
           saved={disciplineSaved}
