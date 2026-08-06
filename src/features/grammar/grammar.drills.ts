@@ -139,11 +139,11 @@ export const InteractiveDrillService = {
     return types.flatMap((type) => DRILL_GENERATORS[type]?.(rule) ?? []);
   },
 
-  generateMixedDrills(rules: GrammarRule[], count = 10): DrillQuestion[] {
+  generateMixedDrills(rules: GrammarRule[]): DrillQuestion[] {
     const allDrills = rules.flatMap((rule) =>
       this.generateDrills(rule, ['fill_blank', 'multiple_choice', 'correction'])
     );
-    return fisherYatesShuffle(allDrills).slice(0, count);
+    return fisherYatesShuffle(allDrills);
   },
 
   checkAnswer(question: DrillQuestion, userAnswer: string): boolean {

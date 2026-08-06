@@ -8,7 +8,6 @@ import { GrammarRepository } from './grammar.repository';
 import type { GrammarRule } from './grammar.types';
 
 const TRANSFER_SCORE_THRESHOLD = 80;
-const MAX_EVIDENCE_RULES_PER_MISSION = 8;
 
 const normalize = (value: string): string =>
   value
@@ -88,7 +87,6 @@ const findTransferRules = async (
     }))
     .filter(({ score }) => score >= (focusTerms.length > 0 ? 6 : 5))
     .sort((a, b) => b.score - a.score || a.rule.difficulty - b.rule.difficulty)
-    .slice(0, MAX_EVIDENCE_RULES_PER_MISSION)
     .map(({ rule }) => rule);
 };
 

@@ -55,14 +55,11 @@ export const calculateWordPriority = (
 export const prioritizeWords = (
   wordIds: string[],
   progressMap: Record<string, VocabularyMenuProgress>,
-  now = new Date(),
-  limit?: number
+  now = new Date()
 ): PrioritizedWord[] => {
-  const prioritized = wordIds
+  return wordIds
     .map((id) => calculateWordPriority(id, progressMap[id], now))
     .sort((a, b) => b.priority - a.priority);
-
-  return limit ? prioritized.slice(0, limit) : prioritized;
 };
 
 export const getSessionPriorityLabel = (reason: PrioritizedWord['reason']): string => {
